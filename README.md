@@ -6,9 +6,9 @@ Installation
 ------------
 
 1. Clone the client repository into a directory of your choice:
-  - `git clone https://github.com/OpenBazaar/OpenBazaar-Client.git`
+  - `git clone git@github.com:OpenBazaar/openbazaar-desktop.git`
 2. Navigate into the new folder created in (1)
-  - `cd OpenBazaar-Client`
+  - `cd openbazaar-desktop`
 3. `npm install`
 
 Running
