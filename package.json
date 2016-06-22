@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "build-sass": "node-sass --source-map true --include-path styles styles/main.scss .tmp/styles/main.css",
     "watch-sass": "nodemon -e scss -x \"npm run build-sass\"",
-    "watch-lint": "nodemon -e js -x \"npm run lint\""
+    "watch-lint": "nodemon -e js -x \"npm run lint\"",
+    "browsersync": "browser-sync start --host 'fatasspickles' -f '*.js,*.html,.tmp/styles/*.css'"
   },
   "repository": {
     "type": "git",
