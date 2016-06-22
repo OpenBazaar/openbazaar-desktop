@@ -1,5 +1,7 @@
 #OpenBazaar Client v2
 
+[![Build Status](https://travis-ci.org/OpenBazaar/OpenBazaar-Client.svg)](https://travis-ci.org/OpenBazaar/OpenBazaar-Client)
+
 Installation
 ------------
 
