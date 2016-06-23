@@ -14,7 +14,10 @@ Installation
 Running
 -------
 
-`npm start` will compile your SASS / re-compile on changes and launch the Electron app.
+`npm start` will:
+- compile your SASS / re-compile on changes
+- run BrowserSync in watch mode so the app automatically refreshes on JS and HTML changes and dynamically injects any CSS / Sass changes.
+- launch the Electron app
 
 Linting
 -------
