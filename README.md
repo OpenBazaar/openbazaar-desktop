@@ -15,7 +15,7 @@ Running
 -------
 
 `npm start` will:
-- compile your SASS / re-compile on changes
+- compile your Sass / re-compile on changes
 - run BrowserSync in watch mode so the app automatically refreshes on JS and HTML changes and dynamically injects any CSS / Sass changes.
 - launch the Electron app
 
@@ -23,6 +23,6 @@ Linting
 -------
 `npm run lint` will run eslint on the JS files.
 
-`npm run watch-lint` will run eslint on any JS file changes.
+`npm run lint:watch` will run eslint on any JS file changes.
 
 _If contributing, PR's with linting errors will not be merged._
