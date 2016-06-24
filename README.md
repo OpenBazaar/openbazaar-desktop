@@ -25,4 +25,8 @@ Linting
 
 `npm run lint:watch` will run eslint on any JS file changes.
 
-_If contributing, PR's with linting errors will not be merged._
+Testing
+-------
+`npm run test` will execute test files in the test folder.
+
+`npm run test:watch` will execute the tests on any file changes.
