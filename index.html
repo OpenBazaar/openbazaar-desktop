@@ -1,4 +1,4 @@
-<!-- This file will be run from ./.tmp/, so make paths relative to there -->
+<!-- This file will be run from ./.tmp/, so make (non-include) paths relative to there -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,20 +7,21 @@
     <link rel="stylesheet" href="./styles/main.css">
   </head>
   <body>
-    <h1>Hello World! Yo.</h1>
+    <h1>Hello World! Yo!</h1>
     We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
     <script>
+      window.ob = {};
+      window.ob.env = '<!-- NODE_ENV -->';
+
       // install babel hooks in the renderer process
       require('babel-register');
       require('../js/start');
     </script>
-    <!-- @if NODE_ENV='development' -->
     <script>
-      <!-- @echo bsClientScript -->
-    </script>
-    <!-- @endif -->
+      <!-- BROWSER_SYNC_PLACEHOLDER (DO NOT REMOVE OR ALTER!) -->
+    </script>script>
   </body>
 </html>
 
