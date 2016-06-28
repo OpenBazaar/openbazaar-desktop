@@ -1,9 +1,10 @@
+<!-- This file will be run from ./.tmp/, so make paths relative to there -->
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
-    <link rel="stylesheet" href=".tmp/styles/main.css">
+    <link rel="stylesheet" href="./styles/main.css">
   </head>
   <body>
     <h1>Hello World! Yo.</h1>
@@ -13,8 +14,13 @@
     <script>
       // install babel hooks in the renderer process
       require('babel-register');
-      require('./js/start');
+      require('../js/start');
     </script>
+    <!-- @if NODE_ENV='development' -->
+    <script>
+      <!-- @echo bsClientScript -->
+    </script>
+    <!-- @endif -->
   </body>
 </html>
 
