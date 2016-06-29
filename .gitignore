@@ -2,10 +2,4 @@ node_modules
 npm-debug.log
 .DS_Store
 .tmp
-.idea/*.xml
 .idea/**
-
-.idea/inspectionProfiles/profiles_settings.xml
-.idea/inspectionProfiles/Project_Default.xml
-.idea/vcs.xml
-.idea/inspectionProfiles/Project_Default.xml
