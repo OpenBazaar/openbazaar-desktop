@@ -16,7 +16,7 @@ Running
 
 `npm start` will:
 - compile your Sass / re-compile on changes
-- run BrowserSync in watch mode so the app automatically refreshes on JS and HTML changes and dynamically injects any CSS / Sass changes<sub>**</sub>.
+- run BrowserSync in watch mode so the app automatically refreshes on JS and HTML changes and dynamically injects any CSS / Sass changes**.
 - launch the Electron app
 
 ** At this time, the app will not refresh on main.js (or other root folder JS changes). This would require the entire Electron app to refresh and BrowserSync is only refreshing our browser.
