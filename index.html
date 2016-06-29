@@ -3,14 +3,13 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>OpenBazaar</title>
     <link rel="stylesheet" href="./styles/main.css">
   </head>
   <body>
-    <h1>Hello World! Yo!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <div id="appFrame">
+      <div id="pageNavContainer"></div>
+    </div>
     <script>
       window.ob = {};
       window.ob.env = '<!-- NODE_ENV -->';
@@ -21,7 +20,7 @@
     </script>
     <script>
       <!-- BROWSER_SYNC_PLACEHOLDER (DO NOT REMOVE OR ALTER!) -->
-    </script>script>
+    </script>
   </body>
 </html>
 
