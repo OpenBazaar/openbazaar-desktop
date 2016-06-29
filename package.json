@@ -4,15 +4,17 @@
   "description": "",
   "main": "bootstrapper.js",
   "scripts": {
-    "start": "npm-run-all sass:build --parallel browsersync sass:watch start-app",
-    "start-app": "electron .",
+    "start": "NODE_ENV=development npm-run-all sass:build process-index --parallel sass:watch index:watch browsersync start-app",
+    "start-app": "NODE_ENV=development electron .",
     "test": "mocha --compilers js:babel-core/register --recursive",
     "test:watch": "npm run test -- --watch",
     "lint": "eslint .",
-    "lint:watch": "nodemon -e js -x \"npm run lint\"",    
+    "lint:watch": "nodemon -e js -x \"npm run lint\"",
     "sass:build": "node-sass --source-map true --include-path styles styles/main.scss .tmp/styles/main.css",
     "sass:watch": "nodemon -e scss -x \"npm run sass:build\"",
-    "browsersync": "browser-sync start -f '**/*.js,**/*.html,.tmp/styles/*.css'"
+    "index:watch": "nodemon -w index.html -x \"npm run process-index\"",
+    "browsersync": "browser-sync start --no-ui -f 'js/**/(*.js|*.html),.tmp/**/(*.css|*.html)'",
+    "process-index": "NODE_ENV=development babel-node ./bin/processIndex.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
   },
   "homepage": "https://github.com/rmisio/ob-client-v2#readme",
   "devDependencies": {
+    "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.5",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-2": "^6.5.0",
