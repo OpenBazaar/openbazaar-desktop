@@ -4,8 +4,8 @@
   "description": "",
   "main": "bootstrapper.js",
   "scripts": {
-    "start": "NODE_ENV=development npm-run-all sass:build process-index --parallel sass:watch index:watch browsersync start-app",
-    "start-app": "NODE_ENV=development electron .",
+    "start": "set NODE_ENV=development&& npm-run-all sass:build process-index --parallel sass:watch index:watch browsersync start-app",
+    "start-app": "set NODE_ENV=development&& electron .",
     "test": "mocha --compilers js:babel-core/register --recursive",
     "test:watch": "npm run test -- --watch",
     "lint": "eslint .",
@@ -13,8 +13,8 @@
     "sass:build": "node-sass --source-map true --include-path styles styles/main.scss .tmp/styles/main.css",
     "sass:watch": "nodemon -e scss -x \"npm run sass:build\"",
     "index:watch": "nodemon -w index.html -x \"npm run process-index\"",
-    "browsersync": "browser-sync start --no-ui -f 'js/**/(*.js|*.html),.tmp/**/(*.css|*.html)'",
-    "process-index": "NODE_ENV=development babel-node ./bin/processIndex.js"
+    "browsersync": "browser-sync start --no-ui -f 'js' '.tmp'",
+    "process-index": "set NODE_ENV=development&& babel-node ./bin/processIndex.js"
   },
   "repository": {
     "type": "git",
