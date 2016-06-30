@@ -1,4 +1,83 @@
-body { 
-  margin: 0; 
-  background-color: $green-puke;
+@import './variables';
+
+body {
+  background-color: $text;
+  overflow: hidden;
+  /*fonts*/
+  color: $text;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: $baseFontSize;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.4px;
+  line-height: 1.2;
+  margin: 0;
 }
+
+a {
+  color: $text2;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-user-drag: none;
+  transition: color .15s  cubic-bezier(0, 0, 0.2, 1);
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    color: $text;
+  }
+}
+
+p {
+  white-space: pre-line;
+  margin: 0 0 1em 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+hr {
+  border: $text;
+  width: 100%;
+}
+
+ul {
+  margin: 0;
+}
+
+input::-webkit-input-placeholder,
+select::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: $text3;
+}
+
+input,
+select,
+textarea {
+  border: none;
+  outline: none;
+}
+
+textarea {
+  background: none;
+  outline: none;
+  -webkit-appearance: none;
+  width: 100%;
+  resize: none;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  transition: border 0.3s;
+}
+
+textarea:focus {
+  border: 1px solid #fff;
+  outline: none;
+}
+
+
+
