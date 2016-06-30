@@ -4,5 +4,27 @@
 
 
 .bar {
+  height: 50px;
+  box-sizing: border-box;
+}
 
+.disc {
+  //the disc can contain an image or an icon, and is usually a clickable element
+  box-sizing: border-box;
+}
+
+.border {
+  //use on wrapping containers that should have a border. The element should also have a colBorder class.
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.borderBottom {
+  //use to separate stacked containers. The element should also have the colBorder class.
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }

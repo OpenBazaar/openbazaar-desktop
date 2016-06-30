@@ -1,11 +1,13 @@
 // colors
 $text: rgb(37,37,37);
-$text2: rgb(144,144,145);
-$text3: rgb(189,189,190);
-$primary: rgb(252,252,253);
-$border: rgb(224,225,228);
-$emphasis1: rgb(253,16,57);
+$text2: adjust-color($text, $lightness: +41%);
+$text3: adjust-color($text, $lightness: +59%);
+$primary: hsl(0,0,15);
+$secondary: adjust-color($primary, $lightness: +14%);
+$background: adjust-color($primary, $lightness: +81%);
+$border: adjust-color($primary, $lightness: +74%);
+$emphasis1: rgb(253,166,57);
 
-//typography
-$baseFontSize: 13px;
+// typography
+$baseFontSize: 11px;
 

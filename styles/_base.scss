@@ -1,13 +1,15 @@
 @import './variables';
 
 body {
-  background-color: $text;
+  background-color: $background;
   overflow: hidden;
   /*fonts*/
   color: $text;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: $baseFontSize;
-  font-weight: 400;
+  font: {
+    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    size: $baseFontSize;
+    weight: 400;
+  }
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.4px;
   line-height: 1.2;
@@ -79,5 +81,73 @@ textarea:focus {
   outline: none;
 }
 
+form {
+  margin: 0;
+}
 
+// typography
 
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6 {
+  margin: 0 0 0.5em 0;
+  line-height: 1;
+  font-weight: 700;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+h1, .h1 {
+  font-size: 36px;
+}
+
+h2, .h2 {
+  font-size: 22px;
+}
+
+h3, .h3 {
+  font-size: 18px;
+}
+
+h4, .h4 {
+  font-size: 16px;
+}
+
+h5, .h5 {
+  font-size: 14px;
+}
+
+h6, .h6 {
+  font-size: 12px;
+}
+
+// theme color styles. All elements that have a background color should have one of these applied.
+// The text class will be applied to the body element, if text is colored differently, apply it to the nearest
+// parent container.
+
+.colPrimary {
+  background-color: $primary;
+}
+
+.colSecondary {
+  background-color: $secondary;
+}
+
+.colText {
+  background-color: $text;
+}
+
+.colText2 {
+  background-color: $text2;
+}
+
+.colText3 {
+  background-color: $text3;
+}
+
+.colBorder {
+  background-color: $border;
+}
+
+.colEmphasis1 {
+  background-color: $emphasis1;
+}
