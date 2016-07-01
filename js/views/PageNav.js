@@ -7,7 +7,7 @@ const remote = electron.remote;
 export default class PageNavView extends View {
   constructor(options) {
     super({
-      className: 'page-nav',
+      className: 'pageNav winStyleWindowControls',
       events: {
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
