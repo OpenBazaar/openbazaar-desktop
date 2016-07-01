@@ -1,4 +1,17 @@
 .page-nav {
+  .windowControls {
+    float: left;
+    margin-right: 10px;
+
+    a {
+      margin-right: 5px;
+
+      i {
+        font-size: 24px;
+      }
+    }
+  }
+
   input {
     width: 300px;
     height: 20px;

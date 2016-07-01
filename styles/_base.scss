@@ -2,3 +2,9 @@ body {
   margin: 0; 
   background-color: $ob-background;
 }
+
+a {
+  &:hover {
+    cursor: pointer;
+  }
+}

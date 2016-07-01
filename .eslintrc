@@ -1,6 +1,7 @@
 {
   "extends": [
-    "airbnb"
+    "airbnb",
+    "plugin:import/electron"
   ],
   "parserOptions":{
     "ecmaFeatures": {
