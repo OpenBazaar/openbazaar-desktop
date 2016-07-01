@@ -5,6 +5,9 @@
   <title>OpenBazaar Stylesheet</title>
   <link rel="stylesheet" href="./.tmp/styles/main.css">
   <style>
+    body {
+      overflow: auto;
+    }
     main {
       padding: 20px;
     }
@@ -67,6 +70,74 @@
             <div class="box">
               borderStacked element 3
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div>
+      <h1>Grid</h1>
+      <p>The grid doesn't have gutters. To add gutters, use a padding class on the column.</p>
+      <div class="txt-centered">
+        <h2>Basic Grid</h2>
+        <div class="flexRow row">
+          <div class="col12 border colBorder pad">12</div>
+        </div>
+        <div class="flexRow row">
+          <div class="col1 border colBorder pad">1</div>
+          <div class="col11 border colBorder pad">11</div>
+        </div>
+        <div class="flexRow row">
+          <div class="col2 border colBorder pad">2</div>
+          <div class="col10 border colBorder pad">10</div>
+        </div>
+        <div class="flexRow row">
+          <div class="col3 border colBorder pad">3</div>
+          <div class="col9 border colBorder pad">9</div>
+        </div>
+        <div class="flexRow flexFlushSides row">
+          <div class="col3 padSm">
+            <div class="box border colBorder pad">
+              An example of gutters (3)
+            </div>
+          </div>
+          <div class="col4 padSm">
+            <div class="box border colBorder pad">
+              An example of gutters (4)
+            </div>
+          </div>
+          <div class="col5 padSm">
+            <div class="box border colBorder pad">
+              An example of gutters (9)
+            </div>
+          </div>
+        </div>
+        <div class="flexRow row">
+          <div class="col4 border colBorder pad">4</div>
+          <div class="col8 border colBorder pad">
+            <div class="flexRow padSm">
+              <div class="col6 pad colBorder border">
+                Nested column 6
+              </div>
+              <div class="col6 pad colBorder border">
+                Nested column 6
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flexCol padSm border colBorder">
+          <div class="col12 pad border colBorder rowSm">
+            Vertical Column 12
+          </div>
+          <div class="col12 pad border colBorder rowSm">
+            Vertical Column 12
+          </div>
+          <div class="col12 pad border colBorder rowSm">
+            Vertical Column 12
+          </div>
+          <div class="col12 pad border colBorder rowSm">
+            Vertical Column 12
           </div>
         </div>
       </div>

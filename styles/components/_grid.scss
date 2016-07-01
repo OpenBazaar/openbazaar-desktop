@@ -1,29 +1,146 @@
-.flexRow {
+.flex {
   //items inside a flexRow will automatically be evenly spaced.
   //Usually the children should be divs with no other classes.
   //Flexrows can be nexted inside each other
   display: flex;
-  align-items: stretch; //this stretches the items to 100% height
+  align-items: flex-start;
   width: 100%; //if the row has absolute or fixed positioning, expand it
   box-sizing: border-box;
+  flex-direction: row; //align children left to right horizontally
 
   & > * {
-    flex: {
-      grow: 1;
-      shrink: 1;
-      basis: auto;
-    }
+    flex: 1 1 auto; //each child will grow or shrink as needed
   }
 }
 
-.flexRowVCent {
-  //creates a row with vertically centered children
-  @extend .flexRow;
+.flexCol {
+  @extend .flex;
+  flex-direction: column; //align children from top to bottom vertically
+}
+
+.flexVCent {
+  //creates a container with vertically centered children
+  @extend .flex;
   align-items: center;
 }
 
-.flexRowVTop {
-  //creates a row with children aligned to the top
-  @extend .flexRow;
-  align-items: start;
+.flexHCent {
+  //creates a container with horizontally centered children
+  @extend .flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.flexHRight {
+  //creates a container with children aligned to the right
+  @extend .flex;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+//colums and rows
+
+.flexRow {
+  @extend .flex;
+  //use this to contain columns
+  align-items: stretch; //this stretches the items to 100% height
+}
+
+.flexRow.flexFlushSides > *:first-child {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.flexRow.flexFlushSides > *:last-child {
+  padding-right: 0;
+  margin-right: 0;
+}
+
+.flexCol.flexFlushSides > *:first-child {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.flexCol.flexFlushSides > *:last-child {
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.col {
+  //use .col for a column that will adapt to the number of siblings present. 3 col elements will each be 1/3 of the width of the row.
+  box-sizing: border-box;
+  position: relative;
+  flex: 0 0 auto; //do not shrink or grow columns
+}
+
+.col12 {
+  @extend .col;
+  flex-basis: 100%;
+  min-width: 100%;
+}
+
+.col11 {
+  @extend .col;
+  flex-basis: 91.66666666666666%;
+  max-width: 91.66666666666666%;
+}
+
+.col10 {
+  @extend .col;
+  flex-basis: 83.33333333333334%;
+  max-width: 83.33333333333334%;
+}
+
+.col9 {
+  @extend .col;
+  flex-basis: 75%;
+  max-width: 75%;
+}
+
+.col8 {
+  @extend .col;
+  flex-basis: 66.66666666666666%;
+  max-width: 66.66666666666666%;
+}
+
+.col7 {
+  @extend .col;
+  flex-basis: 58.333333333333336%;
+  max-width: 58.333333333333336%;
+}
+
+.col6 {
+  @extend .col;
+  flex-basis: 50%;
+  max-width: 50%;
+}
+
+.col5 {
+  @extend .col;
+  flex-basis: 41.66666666666667%;
+  max-width: 41.66666666666667%;
+}
+
+.col4 {
+  @extend .col;
+  flex-basis: 33.33333333333333%;
+  max-width: 33.33333333333333%;
+}
+
+.col3 {
+  @extend .col;
+  flex-basis: 25%;
+  max-width: 25%;
+}
+
+.col2 {
+  @extend .col;
+  flex-basis: 16.666666666666664%;
+  max-width: 16.666666666666664%;
+}
+
+.col1 {
+  @extend .col;
+  flex-basis: 8.333333333333332%;
+  max-width: 8.333333333333332%;
 }

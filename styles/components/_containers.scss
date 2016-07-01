@@ -2,6 +2,9 @@
 
 .box {
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden; //this clears floats and prevents content from breaking out of the box
+  //if the container is absolutely positioned, it will usually need a width applied
 }
 
 
