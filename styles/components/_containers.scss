@@ -1,30 +1,75 @@
-.box {
+@import '../variables';
 
+.box {
+  box-sizing: border-box;
 }
 
 
 .bar {
+  @extend .box;
   height: 50px;
-  box-sizing: border-box;
 }
 
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element
+  @extend .box;
   box-sizing: border-box;
+  border-radius:25%;
+  min-width: 50px;
 }
 
 .border {
   //use on wrapping containers that should have a border. The element should also have a colBorder class.
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
+  border-width: 1px;
+  border-style: solid;
 }
 
 .borderBottom {
   //use to separate stacked containers. The element should also have the colBorder class.
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
+  border-bottom: {
+    width: 1px;
+    style: solid;
+    color: inherit;
+  }
+
+}
+
+.borderStacked > * {
+  //use on parent element to separate stacked child containers. The element should also have the colBorder class.
+  @extend .borderBottom;
 
   &:last-child {
     border-bottom: none;
   }
+}
+
+//containers should have one of the standard padding sizes
+//padKids classes go on wrapper elements, to make all direct children have that padding
+
+.padSm,
+.padSmKids > * {
+  padding: $pad / 2;
+}
+
+.pad,
+.padKids > * {
+  padding: $pad;
+}
+
+.padBg,
+.padBgKids > * {
+  padding: $pad * 2;
+}
+//elements should hae standard spacing between them vertically. There shouldn't be more than a few row classes.
+
+.rowSm {
+  margin-bottom: $row / 2;
+
+}
+.row {
+  margin-bottom: $row;
+}
+
+.rowBg {
+  margin-bottom: $row * 2;
 }

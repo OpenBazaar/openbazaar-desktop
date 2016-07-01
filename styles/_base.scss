@@ -17,7 +17,6 @@ body {
 }
 
 a {
-  color: $text2;
   text-decoration: none;
   cursor: pointer;
   -webkit-user-drag: none;
@@ -26,26 +25,14 @@ a {
   &:hover,
   &:focus {
     text-decoration: underline;
-    color: $text;
-  }
-}
-
-p {
-  white-space: pre-line;
-  margin: 0 0 1em 0;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  a {
-    text-decoration: underline;
   }
 }
 
 hr {
-  border: $text;
-  width: 100%;
+  border: none;
+  border-bottom: 1px solid;
+  -webkit-margin-before: 0.5em;
+  -webkit-margin-after: 0.5em;
 }
 
 ul {
@@ -85,41 +72,6 @@ form {
   margin: 0;
 }
 
-// typography
-
-h1,h2,h3,h4,h5,h6,
-.h1,.h2,.h3,.h4,.h5,.h6 {
-  margin: 0 0 0.5em 0;
-  line-height: 1;
-  font-weight: 700;
-  -webkit-user-select: none;
-  cursor: default;
-}
-
-h1, .h1 {
-  font-size: 36px;
-}
-
-h2, .h2 {
-  font-size: 22px;
-}
-
-h3, .h3 {
-  font-size: 18px;
-}
-
-h4, .h4 {
-  font-size: 16px;
-}
-
-h5, .h5 {
-  font-size: 14px;
-}
-
-h6, .h6 {
-  font-size: 12px;
-}
-
 // theme color styles. All elements that have a background color should have one of these applied.
 // The text class will be applied to the body element, if text is colored differently, apply it to the nearest
 // parent container.
@@ -132,20 +84,34 @@ h6, .h6 {
   background-color: $secondary;
 }
 
+.colBackground {
+  background-color: $background;
+}
+
 .colText {
-  background-color: $text;
+  color: $text;
+
+  & a {
+    color: $text2;
+  }
 }
 
 .colText2 {
-  background-color: $text2;
+  color: $text2;
+
+  & a {
+    color: $text3;
+  }
 }
 
 .colText3 {
-  background-color: $text3;
+  color: $text3;
+
+  //links in text color 3 are the same color, or they'd be too hard to see
 }
 
 .colBorder {
-  background-color: $border;
+  border-color: $border;
 }
 
 .colEmphasis1 {

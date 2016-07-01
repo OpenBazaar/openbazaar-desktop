@@ -1,0 +1,29 @@
+.flexRow {
+  //items inside a flexRow will automatically be evenly spaced.
+  //Usually the children should be divs with no other classes.
+  //Flexrows can be nexted inside each other
+  display: flex;
+  align-items: stretch; //this stretches the items to 100% height
+  width: 100%; //if the row has absolute or fixed positioning, expand it
+  box-sizing: border-box;
+
+  & > * {
+    flex: {
+      grow: 1;
+      shrink: 1;
+      basis: auto;
+    }
+  }
+}
+
+.flexRowVCent {
+  //creates a row with vertically centered children
+  @extend .flexRow;
+  align-items: center;
+}
+
+.flexRowVTop {
+  //creates a row with children aligned to the top
+  @extend .flexRow;
+  align-items: start;
+}
