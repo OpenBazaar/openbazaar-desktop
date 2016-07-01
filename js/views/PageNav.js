@@ -1,13 +1,14 @@
 import electron from 'electron';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
+import app from '../app';
 
 const remote = electron.remote;
 
-export default class PageNavView extends View {
+export default class PageNav extends View {
   constructor(options) {
     super({
-      className: 'pageNav winStyleWindowControls',
+      className: 'pageNav',
       events: {
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
@@ -15,6 +16,23 @@ export default class PageNavView extends View {
       },
       ...options,
     });
+
+    this.listenTo(app.localSettings, 'change:mac_style_win_controls',
+      this.onWinControlsStyleChange);
+    this.setWinControlsStyle(app.localSettings.get('mac_style_win_controls') ? 'mac' : 'win');
+  }
+
+  setWinControlsStyle(style) {
+    if (style !== 'mac' && style !== 'win') {
+      throw new Error('Style must be \'mac\' or \'win\'.');
+    }
+
+    this.$el.removeClass('winStyleWindowControls macStyleWindowControls');
+    this.$el.addClass(style === 'mac' ? 'macStyleWindowControls' : 'winStyleWindowControls');
+  }
+
+  onWinControlsStyleChange(model, useMacStyle) {
+    this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
   }
 
   navCloseClick() {
