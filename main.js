@@ -14,7 +14,17 @@ let win;
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+    width: 1200,
+    height: 760,
+    minWidth: 1024,
+    minHeight: 700,
+    center: true,
+    title: 'OpenBazaar',
+    frame: false,
+    // icon: 'imgs/openbazaar-icon.png',
+    titleBarStyle: 'hidden',
+  });
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/.tmp/index.html`);
