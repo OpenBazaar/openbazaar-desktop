@@ -76,3 +76,67 @@
 .rowBg {
   margin-bottom: $row * 2;
 }
+
+.margRSm {
+  margin-right: $marg / 2;
+}
+
+.margR {
+  margin-right: $marg;
+}
+
+.margLSm {
+  margin-left: $marg / 2;
+}
+
+.margL {
+  margin-left: $marg;
+}
+
+.gutterHSm > * {
+  margin-right: $marg / 2;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.gutterH > * {
+  margin-right: $marg;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.gutterHBg > * {
+  margin-right: $marg * 2;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.gutterVSm > * {
+  margin-bottom: $marg / 2;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gutterV > * {
+  margin-bottom: $marg;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gutterVBg > * {
+  margin-bottom: $marg * 2;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

@@ -38,6 +38,11 @@
   text-align: right;
 }
 
+.flexNoGrow > * {
+  //prevent the children of the flex container from expanding if you don't want to use wrappers
+  flex-grow: 0;
+}
+
 //colums and rows
 
 .flexRow {
@@ -45,6 +50,8 @@
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
 }
+
+//use the flush sides class if the children set their own margins and padding
 
 .flexRow.flexFlushSides > *:first-child {
   padding-left: 0;
