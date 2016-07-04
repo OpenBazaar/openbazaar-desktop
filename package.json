@@ -13,7 +13,7 @@
     "sass:build": "node-sass --source-map true --include-path styles styles/main.scss .tmp/styles/main.css",
     "sass:watch": "nodemon -e scss -x \"npm run sass:build\"",
     "index:watch": "nodemon -w index.html -x \"npm run process-index\"",
-    "browsersync": "browser-sync start --no-ui -f 'js,.tmp/**/*.css,.tmp/**/*.html'",
+    "browsersync": "browser-sync start --no-ui -f 'js, .tmp/**/*.css, .tmp/**/*.html, !.tmp/test/**/*'",
     "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js"
   },
   "repository": {

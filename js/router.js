@@ -1,5 +1,4 @@
 import { Router } from 'backbone';
-import $ from 'jquery';
 
 export default class ObRouter extends Router {
   constructor() {
@@ -12,7 +11,5 @@ export default class ObRouter extends Router {
     ];
 
     routes.forEach((route) => this.route.apply(this, route));
-
-    this.$obContainer = $('#obContainer');
   }
 }
