@@ -1,0 +1,7 @@
+<h1>Welcome to the Channel of <%= ob.handle || ob.id %>!</h1>
+<% if (ob.category || ob.layer) { %>
+<ul>
+  <% if (ob.category) { %><li>Category: <%= ob.category %></li><% } %>
+  <% if (ob.layer) { %><li>Layer: <%= ob.layer %></li><% } %>
+</ul>
+<% } %>
