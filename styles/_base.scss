@@ -8,3 +8,13 @@ a {
     cursor: pointer;
   }
 }
+
+#pageContainer {
+  padding: 0 25px 25px;
+
+  // temporary until we have a loading modal
+  &:empty::after {
+    content: "Loading...";
+    font-size: 30px;
+  }
+}

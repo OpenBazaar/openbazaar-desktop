@@ -3,7 +3,7 @@
 
 import $ from 'jquery';
 
-export default function getGuid(handle, resolver) {
+export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
   let url = resolver || 'https://resolver.onename.com/v2/users/';
 

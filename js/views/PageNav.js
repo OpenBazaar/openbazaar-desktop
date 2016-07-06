@@ -13,6 +13,7 @@ export default class PageNav extends View {
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
+        'keyup .js-addressBar': 'onKeyupAddressBar',
       },
       ...options,
     });
@@ -55,6 +56,46 @@ export default class PageNav extends View {
       remote.getCurrentWindow().maximize();
       // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Restore'));
     }
+  }
+
+  getAddressBar() {
+    if (this.$addressBar) {
+      return this.$addressBar;
+    }
+
+    return this.$('.js-addressBar');
+  }
+
+  onKeyupAddressBar(e) {
+    if (e.which === 13) {
+      let text = this.getAddressBar().val();
+
+      if (text.startsWith('ob://')) text = text.slice(5);
+
+      if (text.charAt(0) === '@' && text.length > 1) {
+        // a handle
+        app.router.navigate((text.split(' ')[0]), { trigger: true });
+      } else if (text.indexOf('/') !== -1) {
+        // a url
+        app.router.navigate(text.replace(' ', ''), { trigger: true });
+      } else if (text.startsWith('Qm')) {
+        // a guid
+        app.router.navigate(text.split(' ')[0], { trigger: true });
+      } else {
+        // tag(s)
+        const tags = text.trim()
+          .replace(',', ' ')
+          .replace(/\s+/g, ' ') // collapse multiple spaces into single spaces
+          .split(' ')
+          .map((frag) => (frag.charAt(0) === '#' ? frag.slice(1) : frag));
+
+        alert(`boom - Searching for tags: ${tags.join(', ')}`);
+      }
+    }
+  }
+
+  setAddressBar(text = '') {
+    this.getAddressBar().val(text);
   }
 
   render() {
