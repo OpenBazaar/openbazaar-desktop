@@ -8,4 +8,3 @@ app.localSettings.fetch().fail(() => app.localSettings.save());
 
 const pageNav = new PageNav();
 $('#pageNavContainer').append(pageNav.render().el);
-
