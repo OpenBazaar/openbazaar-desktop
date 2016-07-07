@@ -1,5 +1,3 @@
-@import './variables';
-
 body {
   background-color: $background;
   overflow: hidden;
@@ -97,6 +95,7 @@ form {
 }
 
 .colText2 {
+  //for faded text
   color: $text2;
 
   & a {
@@ -105,6 +104,7 @@ form {
 }
 
 .colText3 {
+  //use when text2 needs to be "activated"
   color: $text3;
 
   //links in text color 3 are the same color, or they'd be too hard to see
@@ -112,6 +112,10 @@ form {
 
 .colBorder {
   border-color: $border;
+}
+
+.colBorderBackground {
+  background-color: $border;
 }
 
 .colEmphasis1 {

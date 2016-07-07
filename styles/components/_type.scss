@@ -55,12 +55,6 @@ p {
   font-size: 9px;
 }
 
-[class *= "ion-"]:before {
-  //make icons slightly larger than the text they're next to
-  font-size: 1.2em;
-  pointer-events: none;
-}
-
 .txt-unleaded {
   line-height: 1;
   margin-bottom: 0;

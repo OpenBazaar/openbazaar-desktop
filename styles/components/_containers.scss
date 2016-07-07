@@ -1,6 +1,5 @@
-@import '../variables';
-
 .box {
+  display: block;
   box-sizing: border-box;
   position: relative;
   overflow: hidden; //this clears floats and prevents content from breaking out of the box
@@ -10,15 +9,25 @@
 
 .bar {
   @extend .box;
-  height: 50px;
+  height: $bar;
+  padding: 0 $pad;
+
+  input: {
+    height: 100%;
+    padding: $pad;
+  }
 }
 
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element
   @extend .box;
   box-sizing: border-box;
-  border-radius:25%;
-  min-width: 50px;
+  border-radius:50%;
+  width: 42px;
+  height: 42px;
+  //fill the disc with any background image
+  background-position: center;
+  background-size: cover;
 }
 
 .border {
