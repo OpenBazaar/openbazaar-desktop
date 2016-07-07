@@ -1,0 +1,7 @@
+{
+  "rules":{
+    // mocha discourages passing in arrow functions as callbacks
+    "prefer-arrow-callback": 0,
+    "func-names": 0
+  }  
+}
