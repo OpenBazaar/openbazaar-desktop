@@ -2,7 +2,27 @@
   padding: 10px;
   -webkit-app-region: drag;
 
+  .navBar .btn,
+  .navBar .iconBtn {
+    height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
+    line-height: 1em;
+  }
+
+  a, input, .btn, .iconBtn {
+    -webkit-app-region: no-drag;
+  }
+
   .windowControls {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    flex-direction: row;
+
+    & > * {
+      flex: 0 0 auto;
+    }
+
+
     a {
       width: 12px;
       height: 12px;
@@ -10,15 +30,17 @@
       position: relative;
     }
   }
-  
+
   &.macStyleWindowControls {
+    .windowControlsHolder {
+      order: -1;
+    }
     .windowControls {
       margin-right: 10px;
-      float: left;
 
       a {
-        border-radius: 6px;
-        margin-right: 5px;        
+        border-radius: 50%;
+        margin-right: 5px;
 
         &.navClose {
           background-color: #E45A5A;
@@ -35,8 +57,6 @@
         i {
           visibility: hidden;
           font-size: 16px;
-          @include center;
-          margin-top: 1px;
         }
 
         &:hover i {
@@ -47,31 +67,32 @@
   }
 
   &.winStyleWindowControls {
+    .windowControlsHolder {
+      order: 1000; //set to be the last item in the flex container
+      padding-right: $pad / 2;
+    }
     .windowControls {
-      float: right;
 
       a {
         margin-right: 8px;
+        height: 28px;
 
         i {
           font-size: 28px;
-          display: block;
-          height: 100%;
-          margin-top: -7px;
 
           &:hover {
             color: white;
           }
-        }        
+        }
 
         &.navClose {
-          float: right;
-          margin-left: 2px;
-          margin-right: 0;
+
         }
 
         &.navMax {
-          border: 1px solid black;
+          border-width: 1px;
+          border-style: solid;
+          height: 12px;
 
           i {
             visibility: hidden
@@ -81,10 +102,5 @@
         }
       }
     }
-  }    
-
-  input {
-    width: 300px;
-    height: 20px;
   }
 }

@@ -1,0 +1,94 @@
+//containers should have one of the standard padding sizes
+//padKids classes go on wrapper elements, to make all direct children have that padding
+
+.padSm,
+.padSmKids > * {
+  padding: $pad / 2;
+}
+
+.pad,
+.padKids > * {
+  padding: $pad;
+}
+
+.padBg,
+.padBgKids > * {
+  padding: $pad * 2;
+}
+//elements should hae standard spacing between them vertically. There shouldn't be more than a few row classes.
+
+.rowSm {
+  margin-bottom: $row / 2;
+
+}
+.row {
+  margin-bottom: $row;
+}
+
+.rowBg {
+  margin-bottom: $row * 2;
+}
+
+.margRSm {
+  margin-right: $marg / 2;
+}
+
+.margR {
+  margin-right: $marg;
+}
+
+.margLSm {
+  margin-left: $marg / 2;
+}
+
+.margL {
+  margin-left: $marg;
+}
+
+.gutterHSm > * {
+  margin-right: $marg / 2;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.gutterH > * {
+  margin-right: $marg;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.gutterHBg > * {
+  margin-right: $marg * 2;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.gutterVSm > * {
+  margin-bottom: $marg / 2;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gutterV > * {
+  margin-bottom: $marg;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.gutterVBg > * {
+  margin-bottom: $marg * 2;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

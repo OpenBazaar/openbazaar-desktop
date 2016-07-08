@@ -89,7 +89,7 @@ form {
 .colText {
   color: $text;
 
-  & a {
+  & a:not(.btn, .iconBtn) {
     color: $text2;
   }
 }
@@ -98,7 +98,7 @@ form {
   //for faded text
   color: $text2;
 
-  & a {
+  & a:not(.btn, .iconBtn) {
     color: $text3;
   }
 }

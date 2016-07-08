@@ -9,12 +9,11 @@
 .btn {
   @extend .ctrl;
   display: inline-block; //add height and width, collapse the width
+  cursor: pointer;
 
-  &.iconBtn {
-    //this button has only an icon in it
-    font-weight: 700;
-    font-size: 16px;
-    padding: 0 12px;
+  &:hover,
+  &:focus {
+    text-decoration: none;
   }
 
   .bar & {
@@ -26,6 +25,14 @@
   & *[class *= "ion-"]:before {
     pointer-events: none; // don't fire clicks on icons in buttons
   }
+}
+
+.iconBtn {
+  //this button has only an icon in it
+  @extend .btn;
+  font-weight: 700;
+  font-size: 20px;
+  padding: 0 12px;
 }
 
 .buttonStrip {
