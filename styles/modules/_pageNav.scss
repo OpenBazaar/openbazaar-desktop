@@ -41,6 +41,7 @@
       a {
         border-radius: 50%;
         margin-right: 5px;
+        box-sizing: border-box;
 
         &.navClose {
           background-color: #E45A5A;
@@ -69,36 +70,35 @@
   &.winStyleWindowControls {
     .windowControlsHolder {
       order: 1000; //set to be the last item in the flex container
-      padding-right: $pad / 2;
+      padding-left: $pad / 2;
     }
     .windowControls {
 
       a {
         margin-right: 8px;
-        height: 28px;
+        height: 30px;
 
         i {
-          font-size: 28px;
+          font-size: 30px;
+          line-height:1em;
+        }
 
-          &:hover {
-            color: white;
-          }
+        &.navMin {
+          order: 1;
+          height: 12px;
+          border-bottom-width: 1px;
+          border-bottom-style: solid;
         }
 
         &.navClose {
-
+          order: 3;
         }
 
         &.navMax {
           border-width: 1px;
           border-style: solid;
           height: 12px;
-
-          i {
-            visibility: hidden
-          }
-
-          &:hover { border-color: white }
+          order: 2;
         }
       }
     }

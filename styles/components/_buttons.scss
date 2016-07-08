@@ -21,10 +21,6 @@
     height: $bar;
     border: none;
   }
-
-  & *[class *= "ion-"]:before {
-    pointer-events: none; // don't fire clicks on icons in buttons
-  }
 }
 
 .iconBtn {
@@ -53,4 +49,9 @@
     border-right-width: 1px;
   }
 
+}
+
+*[class *= "ion-"]:before {
+  pointer-events: none; // don't fire clicks on icons
+  line-height: 1em;
 }
