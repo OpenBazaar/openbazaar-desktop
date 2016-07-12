@@ -1,2 +1,22 @@
 // colors
-$ob-background: #ACD1E9;
+$text: hsl(0,0,15);
+$text2: adjust-color($text, $lightness: +41%);
+$text3: adjust-color($text, $lightness: +59%);
+$primary: hsl(0,0%,100%);
+$secondary: adjust-color($primary, $lightness: -20%);
+$background: adjust-color($primary, $lightness: -4%);
+$border: adjust-color($primary, $lightness: -11%);
+$emphasis1: rgb(253,166,57);
+
+// typography
+$baseFontSize: 10px;
+
+//layout
+$row: 10px;
+$pad: 10px;
+$marg: 10px;
+
+//controls
+$corner: 2px;
+$bar: 50px;
+

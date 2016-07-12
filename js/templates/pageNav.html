@@ -1,12 +1,51 @@
-<div class="windowControls windowControlsMac">
-  <a class="navClose js-navClose">
-    <i class="ion-ios-close-empty"></i>
-  </a>
-  <a class="navMin js-navMin">
-    <i class="ion-ios-minus-empty"></i>
-  </a>
-  <a class="navMax js-navMax">
-    <i class="ion-ios-plus-empty"></i>
-  </a>
-</div>
-<input type="text" class="js-addressBar" placeholder="Type a @handle, OpenBazaar ID or #tag" />
+<header class="borderStacked colBorder">
+  <nav class="bar colPrimary">
+    <div class="flexRow">
+      <div class="windowControlsHolder">
+        <div class="windowControls windowControlsMac">
+          <a class="navClose js-navClose">
+            <i class="ion-ios-close-empty"></i>
+          </a>
+          <a class="navMin js-navMin"></a>
+          <a class="navMax js-navMax"></a>
+        </div>
+      </div>
+      <div>
+        <div class="flexVCent">
+          <a class="iconBtn ion-chevron-left"></a>
+          <a class="iconBtn ion-chevron-right"></a>
+          <a class="iconBtn ion-refresh"></a>
+        </div>
+      </div>
+      <div class="rowDivV colBorderBackground"></div>
+      <div>
+        <div class="flexVCent">
+          <span class="iconBtn">
+            <i class="ion-search"></i>
+          </span>
+        </div>
+      </div>
+      <div class="flexGrow">
+        <div class="flexVCent">
+          <input type="text" class="js-addressBar flexGrow" placeholder="Type a @handle, OpenBazaar ID or #tag" />
+        </div>
+      </div>
+      <div class="rowDivV colBorderBackground"></div>
+      <div>
+        <div class="flexVCent">
+          <a class="iconBtn ion-android-notifications"></a>
+          <a class="discSm border colBorder"
+          <% if (ob.navimage) { %>
+          //this will be updated to the real image parameter
+          style="background-image: url(ob.navImage), url('../imgs/defaultUser.png')"
+          <% } else { %>
+            style="background-image: url('../imgs/defaultUser.png')"
+          <% } %>
+          ></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <nav class="bar colPrimary"></nav>
+
+</header>

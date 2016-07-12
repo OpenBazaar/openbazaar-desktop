@@ -9,7 +9,8 @@
 // as described in the docs.
 
 import Backbone from 'backbone';
-import localStorageSync from 'backbone.localstorage'; // eslint-disable-line
+// eslint-disable-next-line no-unused-vars
+import localStorageSync from 'backbone.localstorage';
 
 Backbone.sync = Backbone.ajaxSync;
 delete Backbone.ajaxSync;
