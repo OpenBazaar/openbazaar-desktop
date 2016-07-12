@@ -114,6 +114,12 @@ export default class ObRouter extends Router {
     }
 
     this.getUser(guid).done((user) => {
+      const displayArgs = args.filter((arg) => arg !== null).join('/');
+      const handle = user.get('handle');
+
+      this.navigate(`${handle ? `@${handle}` : user.id}/${tab}` +
+        `${displayArgs ? `/${displayArgs}` : ''}`);
+
       this.loadPage(
         new UserPage({
           ...pageOpts,
