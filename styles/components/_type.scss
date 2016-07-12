@@ -1,0 +1,93 @@
+// typography
+
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6 {
+  margin: 0;
+  line-height: 1;
+  font-weight: 700;
+  -webkit-user-select: none;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0.5em;
+  cursor: default;
+}
+
+h1, .h1 {
+  font-size: 36px;
+}
+
+h2, .h2 {
+  font-size: 22px;
+}
+
+h3, .h3 {
+  font-size: 18px;
+}
+
+h4, .h4 {
+  font-size: 16px;
+}
+
+h5, .h5 {
+  font-size: 14px;
+}
+
+h6, .h6 {
+  font-size: 12px;
+}
+
+p {
+  white-space: pre-line;
+  margin: 0;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 1em;
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+* p:last-child {
+  //if the paragraph is the last item in the container, remove the bottom margin
+  -webkit-margin-after: 0;
+}
+
+.note {
+  font-size: 9px;
+}
+
+.txt-unleaded {
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+.txt-centered {
+  text-align: center;
+}
+
+.unbold {
+  font-weight: 400;
+}
+
+.noOverflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.clamp2 {
+  /* adds an ellipses to the end of wrapped text after 2 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.clamp4 {
+  /* adds an ellipses to the end of wrapped text after 4 lines */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}

@@ -1,0 +1,67 @@
+.box {
+  display: block;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden; //this clears floats and prevents content from breaking out of the box
+  //if the container is absolutely positioned, it will usually need a width applied
+}
+
+.boxList > * {
+  //convenience class that turns all the direct descendants into blocks. Useful for lists of anchors or spans.
+  @extend .box;
+}
+
+
+.bar {
+  @extend .box;
+  height: $bar;
+  padding: 0 $pad;
+
+  input: {
+    height: 100%;
+    padding: $pad;
+  }
+}
+
+.disc {
+  //the disc can contain an image or an icon, and is usually a clickable element
+  @extend .box;
+  box-sizing: border-box;
+  border-radius:50%;
+  width: 42px;
+  height: 42px;
+  //fill the disc with any background image
+  background-position: center;
+  background-size: cover;
+}
+
+.discSm {
+  @extend .disc;
+  width: 38px;
+  height: 38px;
+}
+
+.border {
+  //use on wrapping containers that should have a border. The element should also have a colBorder class.
+  border-width: 1px;
+  border-style: solid;
+}
+
+.borderBottom {
+  //use to separate stacked containers. The element should also have the colBorder class.
+  border-bottom: {
+    width: 1px;
+    style: solid;
+    color: inherit;
+  }
+
+}
+
+.borderStacked > * {
+  //use on parent element to separate stacked child containers. The element should also have the colBorder class.
+  @extend .borderBottom;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

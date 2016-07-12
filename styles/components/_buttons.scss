@@ -1,0 +1,57 @@
+.ctrl {
+  line-height: 33px;
+  padding: 0 21px;
+  border-radius: $corner;
+  border-width: 1px;
+  border-style:solid;
+}
+
+.btn {
+  @extend .ctrl;
+  display: inline-block; //add height and width, collapse the width
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+
+  .bar & {
+    line-height: $bar;
+    height: $bar;
+    border: none;
+  }
+}
+
+.iconBtn {
+  //this button has only an icon in it
+  @extend .btn;
+  font-weight: 700;
+  font-size: 20px;
+  padding: 0 12px;
+}
+
+.buttonStrip {
+  //creates a set of buttons with no gaps between them
+  & > * {
+    border-radius: 0;
+    border-right-width: 0;
+    display: block; //block-inline elements have a space after them
+    float: left; //float left will collapse the button and position it correctly
+  }
+  & > *:first-child {
+    border-top-left: $corner;
+    border-bottom-left: $corner;
+  }
+  & > *:last-child {
+    border-top-right: $corner;
+    border-bottom-right: $corner;
+    border-right-width: 1px;
+  }
+
+}
+
+*[class *= "ion-"]:before {
+  pointer-events: none; // don't fire clicks on icons
+  line-height: 1em;
+}
