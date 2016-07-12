@@ -34,7 +34,14 @@
       <div>
         <div class="flexVCent">
           <a class="iconBtn ion-android-notifications"></a>
-          <a class="discSm border colBorder" style="background-image: url('/imgs/defaultUser.png')"></a>
+          <a class="discSm border colBorder"
+          <% if(ob.navimage){ %>
+          //this will be updated to the real image parameter
+          style="background-image: url(ob.navImage), url('imgs/defaultUser.png')"
+          <% } else { %>
+            style="background-image: url('imgs/defaultUser.png')"
+          <% } %>
+          ></a>
         </div>
       </div>
     </div>
