@@ -87,7 +87,9 @@ export default class PageNav extends View {
   }
 
   setAddressBar(text = '') {
-    this.getAddressBar().val(text);
+    if (this.$addressBar) {
+      this.$addressBar.val(text);
+    }
   }
 
   render() {

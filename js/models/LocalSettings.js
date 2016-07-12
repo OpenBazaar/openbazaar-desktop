@@ -1,7 +1,9 @@
+import electron from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
-import { isMac } from '../utils/platform';
 import is from 'is_js';
+
+const remote = electron.remote;
 
 export default class LocalSettings extends Model {
   localStorage() {
@@ -14,7 +16,7 @@ export default class LocalSettings extends Model {
 
   defaults() {
     return {
-      mac_style_win_controls: isMac(),
+      mac_style_win_controls: remote.process.platform === 'darwin',
     };
   }
 
