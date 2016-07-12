@@ -58,17 +58,9 @@ export default class PageNav extends View {
     }
   }
 
-  getAddressBar() {
-    if (this.$addressBar) {
-      return this.$addressBar;
-    }
-
-    return this.$('.js-addressBar');
-  }
-
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.getAddressBar().val();
+      let text = this.$addressBar.val();
 
       if (text.startsWith('ob://')) text = text.slice(5);
 
@@ -102,6 +94,8 @@ export default class PageNav extends View {
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t());
     });
+
+    this.$addressBar = this.$('.js-addressBar');
 
     return this;
   }
