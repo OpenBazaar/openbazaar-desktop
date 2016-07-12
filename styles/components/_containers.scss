@@ -6,6 +6,11 @@
   //if the container is absolutely positioned, it will usually need a width applied
 }
 
+.boxList > * {
+  //convenience class that turns all the direct descendants into blocks. Useful for lists of anchors or spans.
+  @extend .box;
+}
+
 
 .bar {
   @extend .box;
