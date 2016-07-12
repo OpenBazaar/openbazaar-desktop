@@ -67,9 +67,6 @@ export default class PageNav extends View {
       if (text.charAt(0) === '@' && text.length > 1) {
         // a handle
         app.router.navigate((text.split(' ')[0]), { trigger: true });
-      } else if (text.indexOf('/') !== -1) {
-        // a url
-        app.router.navigate(text.replace(' ', ''), { trigger: true });
       } else if (text.startsWith('Qm')) {
         // a guid
         app.router.navigate(text.split(' ')[0], { trigger: true });

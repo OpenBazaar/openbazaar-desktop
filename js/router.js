@@ -2,7 +2,8 @@ import $ from 'jquery';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
-import Channel from './views/Channel';
+import UserPage from './views/UserPage';
+import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 
 export default class ObRouter extends Router {
@@ -25,8 +26,10 @@ export default class ObRouter extends Router {
     this.pageNavVw = options.pageNavVw;
 
     const routes = [
-      [/^@([^\/]+)\/channel[\/]?([^\/]*)[\/]?([^\/]*)$/, 'channelViaHandle'],
-      [/^(Qm[a-zA-Z0-9]+)\/channel[\/]?([^\/]*)[\/]?([^\/]*)$/, 'channel'],
+      [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
+      [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
+      ['transactions', 'transactions'],
+      ['transactions/:tab', 'transactions'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -39,6 +42,14 @@ export default class ObRouter extends Router {
     $(window).on('hashchange', () => {
       this.setAddressBarText();
     });
+  }
+
+  setAddressBarText() {
+    if (location.hash.startsWith('#transactions')) {
+      this.pageNavVw.setAddressBar();
+    } else {
+      this.pageNavVw.setAddressBar(location.hash.slice(1));
+    }
   }
 
   execute(callback, args) {
@@ -54,16 +65,6 @@ export default class ObRouter extends Router {
 
     this.currentPage = vw;
     getPageContainer().append(vw.el);
-  }
-
-  setAddressBarText(text = location.hash) {
-    let addressBarText = text;
-
-    if (addressBarText.startsWith('#')) {
-      addressBarText = addressBarText.slice(1);
-    }
-
-    this.pageNavVw.setAddressBar(addressBarText);
   }
 
   // Temporary fudge, since we're actually hitting the one name api,
@@ -95,26 +96,41 @@ export default class ObRouter extends Router {
     return deferred.promise();
   }
 
-  channelViaHandle(handle, ...args) {
+  userViaHandle(handle, ...args) {
     this.getGuid(handle).done((guid) => {
-      this.channel(guid, ...args);
+      this.user(guid, ...args);
     }).fail(() => {
       this.userNotFound();
     });
   }
 
-  channel(guid, category, layer) {
+  user(guid, tab, ...args) {
+    tab = tab || 'store'; // eslint-disable-line no-param-reassign
+    const pageOpts = { tab };
+
+    if (tab === 'channel') {
+      pageOpts.category = args[0];
+      pageOpts.layer = args[1];
+    }
+
     this.getUser(guid).done((user) => {
       this.loadPage(
-        new Channel({
-          category,
-          layer,
+        new UserPage({
+          ...pageOpts,
           model: user,
         }).render()
       );
     }).fail(() => {
       this.userNotFound();
     });
+  }
+
+  transactions(tab) {
+    tab = tab || 'inbound'; // eslint-disable-line no-param-reassign
+
+    this.loadPage(
+      new TransactionsPage({ tab }).render()
+    );
   }
 
   userNotFound() {
