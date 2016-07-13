@@ -44,6 +44,3 @@ app.router = new ObRouter({
   pageNavVw: pageNav,
 });
 Backbone.history.start();
-
-import { getGuid } from './utils';
-getGuid('sampatt');
