@@ -1,4 +1,5 @@
 import electron from 'electron';
+import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
@@ -61,15 +62,29 @@ export default class PageNav extends View {
   onKeyupAddressBar(e) {
     if (e.which === 13) {
       let text = this.$addressBar.val();
+      let isGuid = true;
 
       if (text.startsWith('ob://')) text = text.slice(5);
 
-      if (text.charAt(0) === '@' && text.length > 1) {
+      const firstTerm = text.split(' ')[0];
+
+      try {
+        multihashes.validate(multihashes.fromB58String(firstTerm));
+      } catch (exc) {
+        isGuid = false;
+      }
+
+      // temporary way to check for GUIDs, since our dummy guids from
+      // start.js aren't valid v2 guids, but are registered with the
+      // one-name api.
+      if (firstTerm.startsWith('Qm')) isGuid = true;
+      // end - temporary guid check
+
+      if (isGuid) {
+        app.router.navigate(firstTerm, { trigger: true });
+      } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
-        app.router.navigate((text.split(' ')[0]), { trigger: true });
-      } else if (text.startsWith('Qm')) {
-        // a guid
-        app.router.navigate(text.split(' ')[0], { trigger: true });
+        app.router.navigate(firstTerm, { trigger: true });
       } else {
         // tag(s)
         const tags = text.trim()
