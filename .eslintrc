@@ -9,11 +9,18 @@
     }
   },
   "rules": {
+    "no-underscore-dangle": 0,
     "new-cap": [
       "error",
       {
         "capIsNewExceptions": ["$.Deferred"]
       }
-    ]
+    ],
+    "no-param-reassign": [
+      2,
+      { 
+        "props": false
+      }
+    ]    
   }  
 }

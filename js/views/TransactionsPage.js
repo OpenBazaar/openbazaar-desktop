@@ -1,7 +1,7 @@
-import { View } from 'backbone';
+import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class TransactionsPage extends View {
+export default class TransactionsPage extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
