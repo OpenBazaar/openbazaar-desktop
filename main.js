@@ -1,6 +1,3 @@
-// need to eslint ignore electron imports until the
-// the next npm release for eslint-plugin-import.
-// https://github.com/benmosher/eslint-plugin-import/issues/393
 import electron from 'electron';
 
 // Module to control application life.

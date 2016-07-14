@@ -121,3 +121,13 @@ form {
 .colEmphasis1 {
   background-color: $emphasis1;
 }
+
+#pageContainer {
+  padding: 0 25px 25px;
+
+  // temporary until we have a loading modal
+  &:empty::after {
+    content: "Loading...";
+    font-size: 30px;
+  }
+}

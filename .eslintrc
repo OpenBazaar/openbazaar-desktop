@@ -3,9 +3,17 @@
     "airbnb",
     "plugin:import/electron"
   ],
-  "parserOptions":{
+  "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
     }
+  },
+  "rules": {
+    "new-cap": [
+      "error",
+      {
+        "capIsNewExceptions": ["$.Deferred"]
+      }
+    ]
   }  
 }

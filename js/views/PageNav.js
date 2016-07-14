@@ -1,4 +1,5 @@
 import electron from 'electron';
+import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
@@ -13,6 +14,7 @@ export default class PageNav extends View {
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
+        'keyup .js-addressBar': 'onKeyupAddressBar',
       },
       ...options,
     });
@@ -57,10 +59,57 @@ export default class PageNav extends View {
     }
   }
 
+  onKeyupAddressBar(e) {
+    if (e.which === 13) {
+      let text = this.$addressBar.val();
+      let isGuid = true;
+
+      if (text.startsWith('ob://')) text = text.slice(5);
+
+      const firstTerm = text.split(' ')[0];
+
+      try {
+        multihashes.validate(multihashes.fromB58String(firstTerm));
+      } catch (exc) {
+        isGuid = false;
+      }
+
+      // temporary way to check for GUIDs, since our dummy guids from
+      // start.js aren't valid v2 guids, but are registered with the
+      // one-name api.
+      if (firstTerm.startsWith('Qm')) isGuid = true;
+      // end - temporary guid check
+
+      if (isGuid) {
+        app.router.navigate(firstTerm, { trigger: true });
+      } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
+        // a handle
+        app.router.navigate(firstTerm, { trigger: true });
+      } else {
+        // tag(s)
+        const tags = text.trim()
+          .replace(',', ' ')
+          .replace(/\s+/g, ' ') // collapse multiple spaces into single spaces
+          .split(' ')
+          .map((frag) => (frag.charAt(0) === '#' ? frag.slice(1) : frag));
+
+        alert(`boom - Searching for tags: ${tags.join(', ')}`);
+      }
+    }
+  }
+
+  setAddressBar(text = '') {
+    if (this.$addressBar) {
+      this.$addressBar.val(text);
+    }
+  }
+
   render() {
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t());
     });
+
+    this.$addressBar = this.$('.js-addressBar');
 
     return this;
   }
