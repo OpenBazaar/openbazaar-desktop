@@ -70,6 +70,16 @@ form {
   margin: 0;
 }
 
+ul, ol {
+  &.unstyled {
+    padding: 0;
+    
+    li {
+      list-style-type: none;
+    }  
+  }
+}
+
 // theme color styles. All elements that have a background color should have one of these applied.
 // The text class will be applied to the body element, if text is colored differently, apply it to the nearest
 // parent container.

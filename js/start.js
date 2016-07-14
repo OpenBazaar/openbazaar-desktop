@@ -4,7 +4,7 @@ import app from './app';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
-
+import Chat from './views/Chat.js';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
@@ -38,6 +38,9 @@ app.localSettings.fetch().fail(() => app.localSettings.save());
 
 const pageNav = new PageNav();
 $('#pageNavContainer').append(pageNav.render().el);
+
+const chatApp = new Chat();
+$('#chatContainer').append(chatApp.render().el);
 
 app.router = new ObRouter({
   usersCl,
