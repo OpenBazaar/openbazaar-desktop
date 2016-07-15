@@ -8,7 +8,7 @@ export default class Settings extends View {
       events: {
 
       },
-      ...options
+      ...options,
     });
     this.options = options;
   }
@@ -22,20 +22,22 @@ export default class Settings extends View {
     return this;
   }
 
-  openSubView(sView = this.currentSubView){
-
+  openSubView(sView = this.currentSubView) {
+    console.log(sView); // open the sView
   }
 
-  resetSubView(sView = this.currentSubView){
-    //set tab back to its previous values
+  resetSubView(sView = this.currentSubView) {
+    // set tab back to its previous values
+    console.log(sView); // open the sView
   }
 
-  saveSubView(sView = this.currentSubView){
-
+  saveSubView(sView = this.currentSubView) {
+    console.log(sView); // open the sView
   }
 
-  close(){
-    //closes the parent modal
+  close() {
+    // closes the parent modal
+    console.log('close the modal');
   }
 }
 

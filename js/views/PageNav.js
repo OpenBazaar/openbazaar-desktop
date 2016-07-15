@@ -2,7 +2,6 @@ import electron from 'electron';
 import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
-import Settings from '../views/Settings';
 import app from '../app';
 
 const remote = electron.remote;
@@ -17,7 +16,7 @@ export default class PageNav extends View {
         'click .js-navMax': 'navMaxClick',
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
-        'click .js-navSettings': 'navSettingsClick'
+        'click .js-navSettings': 'navSettingsClick',
       },
       ...options,
     });
@@ -62,7 +61,7 @@ export default class PageNav extends View {
     }
   }
 
-  navListBtnClick(){
+  navListBtnClick() {
     this.$('.js-navList').toggleClass('open');
   }
 
@@ -111,8 +110,8 @@ export default class PageNav extends View {
     }
   }
 
-  navSettingsClick(){
-    //activate settings modal here
+  navSettingsClick() {
+    // activate settings modal here
   }
 
   render() {
