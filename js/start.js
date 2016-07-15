@@ -48,5 +48,11 @@ app.router = new ObRouter({
 });
 Backbone.history.start();
 
+// temporary test code
 import TestModal from './views/modals/Test';
-new TestModal().render().open();
+let testModal;
+window.testModals = () => {
+  if (testModal) testModal.remove();
+  testModal = new TestModal();
+  testModal.render().open();
+};
