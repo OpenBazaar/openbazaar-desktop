@@ -5,40 +5,20 @@ import BaseVw from '../baseVw';
 import { getHtml, getAppFrame } from '../../utils/selectors';
 
 export default class BaseModal extends BaseVw {
-  // initialOptions() {
-  //   return {
-  //     dismissOnOverlayClick: true,
-  //     dismissOnEscPress: true,
-  //     showCloseButton: true,
-  //     closeButtonClass: 'btn-corner btn-cornerTR btn-cornerTROutR btn-flushTop',
-  //     // This will be concatenated to the className of your view which extends
-  //     // baseModal. You really shouldn't have to use this option, unless you
-  //     // don't want 'modal-opaque' (i.e. remove 'modal' at your own risk!)
-  //     baseModalClass: 'modal modal-opaque',
-  //     innerWrapperClass: 'modal-child modal-childMain custCol-primary custCol-text'
-  //   };
-  // }
-
   constructor(options = {}) {
-    console.log(`filbert ${options.className}`);
-    super({
+    const opts = {
       dismissOnOverlayClick: true,
       dismissOnEscPress: true,
       showCloseButton: true,
-      closeButtonClass: 'btn-corner btn-cornerTR btn-cornerTROutR btn-flushTop',
-      // This will be concatenated to the className of your view which extends
-      // baseModal. You really shouldn't have to use this option, unless you
-      // don't want 'modal-opaque' (i.e. remove 'modal' at your own risk!)
-      baseModalClass: 'modal modal-opaque',
-      innerWrapperClass: 'modal-child modal-childMain custCol-primary custCol-text',
+      closeButtonClass: 'modalClose ion-close-round',
+      modelContentClass: 'modalContent',
       ...options,
-    });
+    };
 
-    this.__options = options;
-    console.log('chuck the duck');
+    super(opts);
+
+    this.__options = opts;
     this._open = false;
-
-    // _.bindAll(this, '__onDocKeypress');
 
     if (typeof BaseModal.__openModals === 'undefined') {
       BaseModal.__openModals = [];
@@ -51,30 +31,15 @@ export default class BaseModal extends BaseVw {
   }
 
   className() {
-    console.log('slippy');
-    return `${this.__options.baseModalClass} ${_.result(this, 'className', '')} ` +
-      `${this.__options.className || ''}`;
+    return 'modal';
   }
 
   events() {
-    // const events = _.result(this, 'events', {});
-    console.log('hello');
-    console.log(JSON.stringify(this.events));
-
     return {
       click: '__modalClick',
-      'click .js-modal-close': '__closeClick',
+      'click .jsModalClose': '__closeClick',
     };
   }
-
-  // __onDocKeypress(e) {
-  //   var topModal = this.__getTopModal();
-
-  //   if (this.__options.dismissOnEscPress && e.keyCode === 27 &&
-  //     topModal && topModal === this) {
-  //     this.close();
-  //   }
-  // },
 
   __modalClick(e) {
     if (this.__options.dismissOnOverlayClick && e.target === this.el) {
@@ -85,26 +50,6 @@ export default class BaseModal extends BaseVw {
   __closeClick() {
     this.close();
   }
-
-  // __getTopModal: function() {
-  //   var openModals = baseModal.__openModals.slice();
-
-  //   openModals = openModals.map((modal, i) => {
-  //     return { modal: modal, index: i };
-  //   });
-
-  //   openModals = openModals.sort((a, b) => {
-  //     var aZindex = parseInt(window.getComputedStyle(a.modal.el).zIndex) || 0,
-  //         bZindex = parseInt(window.getComputedStyle(b.modal.el).zIndex) || 0;
-
-  //     if (aZindex === bZindex) {
-  //       return (a.index < b.index) ? -1 : (a.index > b.index) ? 1 : 0;
-  //     }
-  //     return (aZindex < bZindex) ? -1 : (aZindex > bZindex) ? 1 : 0;
-  //   });
-
-  //   return openModals[openModals.length - 1] && openModals[openModals.length - 1].modal;
-  // },
 
   isOpen() {
     return this._open;
@@ -129,7 +74,7 @@ export default class BaseModal extends BaseVw {
       modalIndex = BaseModal.__openModals.indexOf(this);
       if (modalIndex >= 0) BaseModal.__openModals.splice(modalIndex, 1);
       if (!BaseModal.__openModals.length) getHtml().removeClass('modalOpen');
-      getAppFrame().removeChild(this.el);
+      getAppFrame()[0].removeChild(this.el);
       this._open = false;
       this.trigger('close');
     }
@@ -161,13 +106,13 @@ export default class BaseModal extends BaseVw {
   }
 
   render() {
-    loadTemplate('./js/templates/baseModal.html', (t) => {
+    loadTemplate('modals/baseModal.html', (t) => {
       this.$el.html(t(
-        _.extend({}, this.__options, { innerContent: self.el.innerHTML }))
+        _.extend({}, this.__options, { innerContent: this.el.innerHTML }))
       );
     });
 
-    this.$modalClose = this.$('.js-modal-close');
+    this.$modalClose = this.$('.jsModalClose');
 
     return this;
   }

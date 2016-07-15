@@ -1,6 +1,4 @@
-<div class="js-modal-inner-wrap <%= ob.innerWrapperClass %>">
-  <div class="js-modal-close <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>">
-    <h2 class="ion-android-close clickable"></h2>
-  </div>    
+<div class="<%= ob.modelContentClass %>">
+  <i class="jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>"></i>
   <%= ob.innerContent %>
 </div>

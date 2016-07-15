@@ -1,6 +1,5 @@
 import BaseModal from './BaseModal';
 import loadTemplate from '../../utils/loadTemplate';
-import TestModal2 from './Test2';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -9,22 +8,22 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} testModal`;
+    return `${super.className()} testModal2`;
   }
 
   events() {
     return {
-      'click .jsLaunchChild': 'onClickLaunchChild',
+      'click .jsTestEvent': 'onClickTestEvent',
       ...super.events(),
     };
   }
 
-  onClickLaunchChild() {
-    new TestModal2().render().open();
+  onClickTestEvent() {
+    alert('who be that yo?');
   }
 
   render() {
-    loadTemplate('modals/testModal.html', (t) => {
+    loadTemplate('modals/testModal2.html', (t) => {
       this.$el.html(t());
       super.render();
     });

@@ -80,6 +80,10 @@ ul, ol {
   }
 }
 
+#ov1 .hide {
+  display: none;
+}
+
 // theme color styles. All elements that have a background color should have one of these applied.
 // The text class will be applied to the body element, if text is colored differently, apply it to the nearest
 // parent container.
@@ -133,11 +137,18 @@ ul, ol {
 }
 
 #pageContainer {
-  padding: 0 25px 25px;
+  padding: 25px;
 
   // temporary until we have a loading modal
   &:empty::after {
     content: "Loading...";
     font-size: 30px;
   }
+}
+
+#chatContainer {
+  position: fixed;
+  right: 15px;
+  top: 70px;
+  z-index: 1;
 }
