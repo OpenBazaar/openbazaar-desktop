@@ -32,9 +32,9 @@
       </div>
       <div class="rowDivV colBorderBackground"></div>
       <div>
-        <div class="flexVCent">
+        <div class="flexVCent box">
           <a class="iconBtn ion-android-notifications"></a>
-          <a class="discSm border colBorder"
+          <a class="discSm border colBorder js-navListBtn"
           <% if (ob.navimage) { %>
           //this will be updated to the real image parameter
           style="background-image: url(ob.navImage), url('../imgs/defaultUser.png')"
@@ -42,10 +42,15 @@
             style="background-image: url('../imgs/defaultUser.png')"
           <% } %>
           ></a>
+          <nav class="box border boxList navList colBorder colPrimary padKids shad2 foldDown js-navList">
+            <a href="">Foo</a>
+            <a href="">Foo</a>
+            <a href="">Foo</a>
+            <a href="#transactions">Transactions</a>
+            <a class="js-navSettings">Settings</a>
+          </nav>
         </div>
       </div>
     </div>
   </nav>
-  <nav class="bar colPrimary"></nav>
-
 </header>

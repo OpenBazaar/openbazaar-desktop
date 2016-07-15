@@ -2,6 +2,7 @@ import electron from 'electron';
 import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
+import Settings from '../views/Settings';
 import app from '../app';
 
 const remote = electron.remote;
@@ -15,6 +16,8 @@ export default class PageNav extends View {
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
         'keyup .js-addressBar': 'onKeyupAddressBar',
+        'click .js-navListBtn': 'navListBtnClick',
+        'click .js-navSettings': 'navSettingsClick'
       },
       ...options,
     });
@@ -57,6 +60,10 @@ export default class PageNav extends View {
       remote.getCurrentWindow().maximize();
       // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Restore'));
     }
+  }
+
+  navListBtnClick(){
+    this.$('.js-navList').toggleClass('open');
   }
 
   onKeyupAddressBar(e) {
@@ -102,6 +109,10 @@ export default class PageNav extends View {
     if (this.$addressBar) {
       this.$addressBar.val(text);
     }
+  }
+
+  navSettingsClick(){
+    //activate settings modal here
   }
 
   render() {

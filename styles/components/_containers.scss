@@ -2,8 +2,6 @@
   display: block;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden; //this clears floats and prevents content from breaking out of the box
-  //if the container is absolutely positioned, it will usually need a width applied
 }
 
 .boxList > * {
@@ -22,6 +20,15 @@
     padding: $pad;
   }
 }
+
+.pageContent {
+  padding: $pad;
+
+  .chatOpen & {
+    width: calc(100% - #{$chatOpen});
+  }
+}
+
 
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element

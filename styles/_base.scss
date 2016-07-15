@@ -122,12 +122,31 @@ form {
   background-color: $emphasis1;
 }
 
-#pageContainer {
-  padding: 0 25px 25px;
+#pageNavContainer {
+  position: relative;
+  z-index: 2;
+}
 
+#contentArea {
+  position: relative;
+  z-index: 1;
+}
+
+#pageContainer {
+  position: relative;
   // temporary until we have a loading modal
   &:empty::after {
     content: "Loading...";
     font-size: 30px;
+  }
+}
+
+#chatContainer {
+  position: fixed;
+  top: 100px;
+  right: 0;
+  width: $chatClosed;
+  .chatOpen & {
+    width: $chatOpen;
   }
 }

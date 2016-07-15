@@ -9,9 +9,28 @@
   </head>
   <body>
     <div id="appFrame">
-      <div id="pageNavContainer"></div>
-      <div id="pageContainer"></div>
+      <section id="pageNavContainer"></section>
+      <section id="contentFrame" class="flexRow">
+        <section id="pageContainer" class="flexGrow"></section>
+        <section id="chatContainer">
+          <a id="chatToggle" class="btn">Toggle</a>
+          <ul>
+            <li>Example chat content</li>
+            <li>This will expand to the width of the content</li>
+            <li>Example chat content</li>
+            <li>Example chat content</li>
+            <li>Example chat content</li>
+          </ul>
+        </section>
+      </section>
     </div>
+    <script>
+      <!--just demo stuff-->
+      let chatToggle = document.getElementById("chatToggle");
+      chatToggle.addEventListener('click', function(){
+        document.body.classList.toggle('chatOpen');
+      })
+    </script>
     <script>
       // install babel hooks in the renderer process
       require('babel-register');
