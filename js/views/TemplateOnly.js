@@ -6,7 +6,7 @@
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class TemplateOnly extends BaseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
 

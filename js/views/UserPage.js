@@ -1,7 +1,7 @@
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class UserPage extends BaseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     if (!options.model) {

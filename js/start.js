@@ -47,3 +47,6 @@ app.router = new ObRouter({
   pageNavVw: pageNav,
 });
 Backbone.history.start();
+
+import TestModal from './views/modals/Test';
+const testModal = new TestModal().render().open();

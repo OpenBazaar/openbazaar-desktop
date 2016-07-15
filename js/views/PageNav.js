@@ -6,7 +6,7 @@ import app from '../app';
 
 const remote = electron.remote;
 
-export default class PageNav extends View {
+export default class extends View {
   constructor(options) {
     super({
       className: 'pageNav',
