@@ -49,4 +49,4 @@ app.router = new ObRouter({
 Backbone.history.start();
 
 import TestModal from './views/modals/Test';
-const testModal = new TestModal().render().open();
+new TestModal().render().open();
