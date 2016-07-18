@@ -49,13 +49,13 @@
 }
 
 .border {
-  //use on wrapping containers that should have a border. The element should also have a colBorder class.
+  //use on wrapping containers that should have a border. The element should also have a clrBr class.
   border-width: 1px;
   border-style: solid;
 }
 
 .borderBottom {
-  //use to separate stacked containers. The element should also have the colBorder class.
+  //use to separate stacked containers. The element should also have the clrBr class.
   border-bottom: {
     width: 1px;
     style: solid;
@@ -65,10 +65,20 @@
 }
 
 .borderStacked > * {
-  //use on parent element to separate stacked child containers. The element should also have the colBorder class.
+  //use on parent element to separate stacked child containers. The element should also have the clrBr class.
   @extend .borderBottom;
 
   &:last-child {
     border-bottom: none;
   }
+}
+
+.listBox {
+  //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
+  @extend .box, .border, .boxList;
+}
+
+.listLink {
+  padding: $pad;
+  font-size: 1.4rem;
 }

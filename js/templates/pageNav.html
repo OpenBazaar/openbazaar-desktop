@@ -1,5 +1,5 @@
-<header class="borderStacked colBorder">
-  <nav class="bar colPrimary navBar">
+<header class="border clrBr">
+  <nav class="bar clrP navBar">
     <div class="flexRow">
       <div class="windowControlsHolder">
         <div class="windowControls windowControlsMac">
@@ -17,7 +17,7 @@
           <a class="iconBtn ion-refresh"></a>
         </div>
       </div>
-      <div class="rowDivV colBorderBackground"></div>
+      <div class="rowDivV clrBrBackground"></div>
       <div>
         <div class="flexVCent">
           <span class="iconBtn">
@@ -30,11 +30,11 @@
           <input type="text" class="js-addressBar flexGrow" placeholder="Type a @handle, OpenBazaar ID or #tag" />
         </div>
       </div>
-      <div class="rowDivV colBorderBackground"></div>
+      <div class="rowDivV clrBrBackground"></div>
       <div>
         <div class="flexVCent box">
           <a class="iconBtn ion-android-notifications"></a>
-          <a class="discSm border colBorder js-navListBtn"
+          <a class="discSm border clrBr js-navListBtn"
           <% if (ob.navimage) { %>
           //this will be updated to the real image parameter
           style="background-image: url(ob.navImage), url('../imgs/defaultUser.png')"
@@ -42,12 +42,17 @@
             style="background-image: url('../imgs/defaultUser.png')"
           <% } %>
           ></a>
-          <nav class="box border boxList navList colBorder colPrimary padKids shad2 foldDown js-navList">
-            <a href="">Foo</a>
-            <a href="">Foo</a>
-            <a href="">Foo</a>
-            <a href="#transactions">Transactions</a>
-            <a class="js-navSettings">Settings</a>
+          <nav class="navList listBox clrBr clrP shad1 foldDown js-navList">
+            <a href="" class="listLink">Current Node <i class="ion-android-arrow-dropdown floR"></i> </a>
+            <hr class="unleaded">
+            <a href="" class="listLink"><i class="ion-android-bulb"></i> Foo <span class="floR clrT2">Cltrl + ?</span> </a>
+            <a href="" class="listLink"><i class="ion-android-cloud-circle"></i> Foo</a>
+            <hr>
+            <a href="#transactions" class="listLink"><i class="ion-log-out"></i> Purchases</a>
+            <a href="#transactions" class="listLink"><i class="ion-log-in"></i> Sales</a>
+            <a href="#transactions" class="listLink"><i class="ion-briefcase"></i> Cases</a>
+            <hr>
+            <a class="listLink js-navSettings"><i class="ion-toggle-filled"></i> Settings</a>
           </nav>
         </div>
       </div>
