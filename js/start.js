@@ -6,6 +6,7 @@ import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import Chat from './views/Chat.js';
 import LoadingModal from './views/modals/Loading';
+import SimpleMessageModal from './views/modals/SimpleMessage';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
@@ -43,6 +44,13 @@ app.loadingModal = new LoadingModal({
   dismissOnEscPress: false,
   showCloseButton: false,
 }).render().open();
+
+// create our re-usable simple message modal instance
+app.simpleMessageModal = new SimpleMessageModal({ removeOnClose: false }).render();
+app.simpleMessageModal._origRemove = app.simpleMessageModal.remove;
+app.simpleMessageModal.remove = () => {
+  throw new Error('This is a shared instance that should not be removed.');
+};
 
 const pageNav = new PageNav();
 $('#pageNavContainer').append(pageNav.render().el);

@@ -8,9 +8,10 @@
 
   .modalContent {
     padding: 20px;
-    width: 500px;
+    min-width: 300px;
     max-height: 500px;
     background-color: #fff;
+    overflow: auto;
     @include center;
   }
 
