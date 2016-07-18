@@ -1,7 +1,6 @@
-import _ from 'underscore';
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
-import BaseModal from './baseModal';
+import BaseModal from './BaseModal';
 
 /*
 Used to show a dialog with optional buttons. By default, the dialog removes itself on close. In it's
@@ -29,12 +28,13 @@ dialog. The buttons should be provided in the following format:
   }]
 }
 
-Please Note: This Dialog is designed for simple messages with optional classes or buttons on the bottom. If
-you find that your situation needs custom markup, css (beyond the classes you can optionally pass in),
-and/or behavior (e.g. tabs, etc.), you should write a custom view and extend from the Base Modal.
+Please Note: This Dialog is designed for simple messages with optional classes or buttons on
+the bottom. If you find that your situation needs custom markup, css (beyond the classes you
+can optionally pass in) and/or behavior (e.g. tabs, etc.), you should write a custom view
+and extend from the Base Modal.
 
-Also, if it's just a super simple message you need, please use the simpleMessageModal instance attached to
-our app instance.
+Also, if it's just a super simple message you need, please use the simpleMessageModal
+instance attached to our app instance.
 */
 
 export default class extends BaseModal {
@@ -46,31 +46,31 @@ export default class extends BaseModal {
       titleClass: '',
       messageClass: '',
       buttons: [],
-      ...options
+      ...options,
     };
 
     super(opts);
     this.options = opts;
 
-    let events = {};
+    const events = {};
 
     if (opts.buttons && opts.buttons.length) {
       opts.buttons.forEach((btn) => {
         const serializedBut = JSON.stringify(btn);
 
         if (!btn.text || !btn.fragment) {
-          throw new Error(`The button, '${serializedBut.slice(0, 10)}',` +
-            ` is missing either a text or fragment property. Both are required.`);
+          throw new Error(`The button, '${serializedBut.slice(0, 10)}', is missing `
+            + 'either a text or fragment property. Both are required.');
         }
 
-        events['click .js-' + btn.fragment] = 'onBtnClick';
+        events[`click .js-${btn.fragment}`] = 'onBtnClick';
       });
 
       this.events = () => ({ ...super.events() || {}, ...events });
       this.delegateEvents(this.events);
     }
 
-    this.options.removeOnClose && this.on('close', () => this.remove());
+    if (this.options.removeOnClose) this.on('close', () => this.remove());
   }
 
   className() {
@@ -78,7 +78,7 @@ export default class extends BaseModal {
   }
 
   onBtnClick(e) {
-    this.trigger('click-' + $(e.target).data('event-name'));
+    this.trigger(`click-${$(e.target).data('event-name')}`);
   }
 
   render() {
