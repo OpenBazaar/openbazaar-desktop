@@ -1,5 +1,6 @@
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
+import Dialog from './modals/Dialog';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -19,6 +20,25 @@ export default class extends BaseVw {
         category: this.options.category || '',
         layer: this.options.layer || '',
       }));
+    });
+
+    new Dialog({
+      title: 'Houston, We Have A problem!',
+      message: 'How can you eat your pudding, if you haven\'t eaten your meat!?',
+      buttons: [{
+        text: 'OK',
+        fragment: 'ok',
+      }, {
+        text: 'Cancel',
+        fragment: 'cancel',
+      }],
+    }).render()
+    .open()
+    .on('click-ok', () => {
+      alert('You clicked OK');
+    })
+    .on('click-cancel', () => {
+      alert('You clicked cancel');
     });
 
     return this;

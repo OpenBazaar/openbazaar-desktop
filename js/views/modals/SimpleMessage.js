@@ -33,10 +33,10 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} messageModal`;
+    return `${super.className()} messageModal simpleMessage`;
   }
 
-  open(title, message) {
+  open(title = this.options.title, message = this.options.message) {
     if (!title && !message) {
       throw new Error('Please provide a title and / or message.');
     }
