@@ -3,7 +3,7 @@ import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
-import { getBody } from '../utils/selectors';
+import { getDoc } from '../utils/selectors';
 
 const remote = electron.remote;
 
@@ -18,9 +18,12 @@ export default class PageNav extends View {
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click document': 'onDocClick',
       },
       ...options,
     });
+
+    getDoc().on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:mac_style_win_controls',
       this.onWinControlsStyleChange);
@@ -76,7 +79,7 @@ export default class PageNav extends View {
     }
   }
 
-  onBodyClick(e) {
+  onDocClick(e) {
     if (!this.$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
       this.togglePopMenu();
     }
@@ -140,7 +143,10 @@ export default class PageNav extends View {
     this.$navList = this.$('.js-navList');
     this.$popMenus = this.$('.js-navPopMenu');
 
-    getBody().on('click', (e) => { this.onBodyClick(e); });
     return this;
+  }
+
+  remove() {
+    getDoc().off('click', this.onDocClick);
   }
 }
