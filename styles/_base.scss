@@ -92,7 +92,7 @@ form {
 
 #pageContainer {
   position: relative;
-  
+
   // temporary until we have a loading modal
   &:empty::after {
     content: "Loading...";

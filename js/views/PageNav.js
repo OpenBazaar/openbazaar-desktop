@@ -3,6 +3,7 @@ import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
+import { getBody } from '../utils/selectors';
 
 const remote = electron.remote;
 
@@ -62,24 +63,22 @@ export default class PageNav extends View {
   }
 
   navListBtnClick() {
-    const $popMenu = this.$('.js-navList');
+    const $popMenu = this.$navList;
     this.togglePopMenu($popMenu);
   }
 
   togglePopMenu($popMenu) {
-    const onOpen = $popMenu.data('onOpen');
-    const onClose = $popMenu.data('onClose');
-
-    // close any other open popMenus
-    this.$('.js-navPopMenu').not($popMenu).removeClass('open');
-
-    // close or open the curren menu
-    $popMenu.toggleClass('open');
-
-    if ($popMenu.hasClass('open')) {
-      if (onOpen && this[onOpen]) this[onOpen].call(this);
+    if ($popMenu) {
+      this.$popMenus.not($popMenu).removeClass('open');
+      $popMenu.toggleClass('open');
     } else {
-      if (onClose && this[onClose]) this[onClose].call(this);
+      this.$popMenus.removeClass('open');
+    }
+  }
+
+  onBodyClick(e) {
+    if (!this.$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
+      this.togglePopMenu();
     }
   }
 
@@ -138,7 +137,10 @@ export default class PageNav extends View {
     });
 
     this.$addressBar = this.$('.js-addressBar');
+    this.$navList = this.$('.js-navList');
+    this.$popMenus = this.$('.js-navPopMenu');
 
+    getBody().on('click', (e) => { this.onBodyClick(e); });
     return this;
   }
 }
