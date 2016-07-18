@@ -3,7 +3,6 @@ import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
-import { getDoc } from '../utils/selectors';
 import $ from 'jquery';
 
 const remote = electron.remote;
@@ -147,6 +146,6 @@ export default class PageNav extends View {
   }
 
   remove() {
-    getDoc().off('click', this.onDocClick);
+    $(document).off('click', this.onDocClick);
   }
 }
