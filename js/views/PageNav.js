@@ -18,7 +18,6 @@ export default class PageNav extends View {
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
-        'click document': 'onDocClick',
       },
       ...options,
     });
