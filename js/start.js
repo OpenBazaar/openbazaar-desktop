@@ -5,6 +5,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import Chat from './views/Chat.js';
+import LoadingModal from './views/modals/loading';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
@@ -36,6 +37,13 @@ app.user = usersCl.at(0);
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
+// create and launch loading modal
+app.loadingModal = new LoadingModal({
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render().open();
+
 const pageNav = new PageNav();
 $('#pageNavContainer').append(pageNav.render().el);
 
@@ -46,6 +54,10 @@ app.router = new ObRouter({
   usersCl,
   pageNavVw: pageNav,
 });
+
+app.loadingModal.close();
+
+// start history
 Backbone.history.start();
 
 // temporary test code

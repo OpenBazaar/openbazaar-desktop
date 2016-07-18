@@ -138,12 +138,6 @@ ul, ol {
 
 #pageContainer {
   padding: 25px;
-
-  // temporary until we have a loading modal
-  &:empty::after {
-    content: "Loading...";
-    font-size: 30px;
-  }
 }
 
 #chatContainer {

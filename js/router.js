@@ -2,6 +2,7 @@ import $ from 'jquery';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
+import app from './app';
 import UserPage from './views/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
@@ -53,7 +54,7 @@ export default class ObRouter extends Router {
   }
 
   execute(callback, args) {
-    getPageContainer().empty();
+    app.loadingModal.open();
 
     if (callback) callback.apply(this, args);
   }
@@ -65,6 +66,7 @@ export default class ObRouter extends Router {
 
     this.currentPage = vw;
     getPageContainer().append(vw.el);
+    app.loadingModal.close();
   }
 
   // Temporary fudge, since we're actually hitting the one name api,
