@@ -80,7 +80,7 @@ export default class PageNav extends View {
   }
 
   onDocClick(e) {
-    if (!this.$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
+    if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
       this.togglePopMenu();
     }
   }
