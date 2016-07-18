@@ -92,6 +92,7 @@ form {
 
 #pageContainer {
   position: relative;
+  
   // temporary until we have a loading modal
   &:empty::after {
     content: "Loading...";
@@ -104,6 +105,7 @@ form {
   top: 100px;
   right: 0;
   width: $chatClosed;
+
   .chatOpen & {
     width: $chatOpen;
   }
