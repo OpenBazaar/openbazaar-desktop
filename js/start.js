@@ -5,7 +5,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import Chat from './views/Chat.js';
-import LoadingModal from './views/modals/loading';
+import LoadingModal from './views/modals/Loading';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
