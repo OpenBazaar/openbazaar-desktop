@@ -4,6 +4,7 @@ import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { getDoc } from '../utils/selectors';
+import $ from 'jquery';
 
 const remote = electron.remote;
 
@@ -22,7 +23,7 @@ export default class PageNav extends View {
       ...options,
     });
 
-    getDoc().on('click', this.onDocClick.bind(this));
+    $(document).on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:mac_style_win_controls',
       this.onWinControlsStyleChange);
