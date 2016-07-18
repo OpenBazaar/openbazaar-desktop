@@ -62,7 +62,25 @@ export default class PageNav extends View {
   }
 
   navListBtnClick() {
-    this.$('.js-navList').toggleClass('open');
+    const $popMenu = this.$('.js-navList');
+    this.togglePopMenu($popMenu);
+  }
+
+  togglePopMenu($popMenu) {
+    const onOpen = $popMenu.data('onOpen');
+    const onClose = $popMenu.data('onClose');
+
+    // close any other open popMenus
+    this.$('.js-navPopMenu').not($popMenu).removeClass('open');
+
+    // close or open the curren menu
+    $popMenu.toggleClass('open');
+
+    if ($popMenu.hasClass('open')) {
+      if (onOpen && this[onOpen]) this[onOpen].call(this);
+    } else {
+      if (onClose && this[onClose]) this[onClose].call(this);
+    }
   }
 
   onKeyupAddressBar(e) {
