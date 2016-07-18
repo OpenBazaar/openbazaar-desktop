@@ -1,7 +1,7 @@
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class Settings extends View {
+export default class extends View {
   constructor(options = {}) {
     super({
       className: 'settings',
