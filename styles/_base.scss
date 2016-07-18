@@ -1,6 +1,4 @@
-body {
-  background-color: $background;
-  overflow: hidden;
+html {
   /*fonts*/
   color: $text;
   font: {
@@ -11,6 +9,11 @@ body {
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.4px;
   line-height: 1.2;
+}
+
+body {
+  background-color: $background;
+  overflow: hidden;
   margin: 0;
 }
 
@@ -31,6 +34,11 @@ hr {
   border-bottom: 1px solid;
   -webkit-margin-before: 0.5em;
   -webkit-margin-after: 0.5em;
+
+  &.unleaded {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+  }
 }
 
 ul {
@@ -70,64 +78,35 @@ form {
   margin: 0;
 }
 
-// theme color styles. All elements that have a background color should have one of these applied.
-// The text class will be applied to the body element, if text is colored differently, apply it to the nearest
-// parent container.
+//index containers and sections
 
-.colPrimary {
-  background-color: $primary;
+#pageNavContainer {
+  position: relative;
+  z-index: 2;
 }
 
-.colSecondary {
-  background-color: $secondary;
-}
-
-.colBackground {
-  background-color: $background;
-}
-
-.colText {
-  color: $text;
-
-  & a:not(.btn, .iconBtn) {
-    color: $text2;
-  }
-}
-
-.colText2 {
-  //for faded text
-  color: $text2;
-
-  & a:not(.btn, .iconBtn) {
-    color: $text3;
-  }
-}
-
-.colText3 {
-  //use when text2 needs to be "activated"
-  color: $text3;
-
-  //links in text color 3 are the same color, or they'd be too hard to see
-}
-
-.colBorder {
-  border-color: $border;
-}
-
-.colBorderBackground {
-  background-color: $border;
-}
-
-.colEmphasis1 {
-  background-color: $emphasis1;
+#contentArea {
+  position: relative;
+  z-index: 1;
 }
 
 #pageContainer {
-  padding: 0 25px 25px;
+  position: relative;
 
   // temporary until we have a loading modal
   &:empty::after {
     content: "Loading...";
     font-size: 30px;
+  }
+}
+
+#chatContainer {
+  position: fixed;
+  top: 100px;
+  right: 0;
+  width: $chatClosed;
+
+  .chatOpen & {
+    width: $chatOpen;
   }
 }

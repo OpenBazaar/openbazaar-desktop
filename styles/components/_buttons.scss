@@ -55,3 +55,17 @@
   pointer-events: none; // don't fire clicks on icons
   line-height: 1em;
 }
+
+.foldDown {
+  //a hidden element that folds down when a parent or sibling is interacted with
+  //this element will need a width applied in most cases
+  position: absolute;
+  top: 100%;
+  right: 0;
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+  transition: 0.2s ease;
+
+  &.open {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
