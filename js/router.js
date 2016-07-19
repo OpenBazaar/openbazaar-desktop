@@ -6,6 +6,7 @@ import app from './app';
 import UserPage from './views/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
+import TestModalsPage from './views/TestModalsPage';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -31,6 +32,7 @@ export default class ObRouter extends Router {
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
+      ['test-modals', 'testModals'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -139,6 +141,12 @@ export default class ObRouter extends Router {
 
     this.loadPage(
       new TransactionsPage({ tab }).render()
+    );
+  }
+
+  testModals() {
+    this.loadPage(
+      new TestModalsPage().render()
     );
   }
 

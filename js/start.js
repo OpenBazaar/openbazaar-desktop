@@ -63,12 +63,3 @@ app.loadingModal.close();
 
 // start history
 Backbone.history.start();
-
-// temporary test code
-import TestModal from './views/modals/Test';
-let testModal;
-window.testModals = () => {
-  if (testModal) testModal.remove();
-  testModal = new TestModal();
-  testModal.render().open();
-};
