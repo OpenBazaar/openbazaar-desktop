@@ -6,6 +6,7 @@ import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import SimpleMessageModal from './views/modals/SimpleMessage';
+import Profile from './models/Profile';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
@@ -29,10 +30,6 @@ const usersCl = new Collection([
     handle: 'openbazaar',
   },
 ]);
-
-// Represents the user who's node this is (i.e. you). Fudging
-// it for now.
-app.user = usersCl.at(0);
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -59,7 +56,17 @@ app.router = new ObRouter({
   pageNavVw: pageNav,
 });
 
-app.loadingModal.close();
-
-// start history
-Backbone.history.start();
+// get the server config
+$.get(app.getServerUrl('ob/config')).done((data) => {
+  app.profile = new Profile({ id: data.guid })
+    .fetch()
+    .done(() => {
+      // start history
+      app.pageNav.navigable = true;
+      Backbone.history.start();
+      app.loadingModal.close();
+    })
+    .fail(() => {
+      app.loadingModal.close();
+    });
+});

@@ -17,3 +17,8 @@
 @mixin chatOpeningTransition($property) {
   transition: $property 0.5s ease;
 }
+
+@mixin disabled {
+  pointer-events: none;
+  opacity: 0.2;
+}

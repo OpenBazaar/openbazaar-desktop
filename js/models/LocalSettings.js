@@ -5,7 +5,7 @@ import is from 'is_js';
 
 const remote = electron.remote;
 
-export default class LocalSettings extends Model {
+export default class extends Model {
   localStorage() {
     return new LocalStorageSync('__localSettings');
   }

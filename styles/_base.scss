@@ -92,6 +92,10 @@ ul, ol {
   display: none;
 }
 
+#ov1 .disabled {
+  @include disabled;
+}
+
 // index containers and sections
 #pageNavContainer {
   position: relative;

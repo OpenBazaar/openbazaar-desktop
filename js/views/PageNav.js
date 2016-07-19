@@ -9,8 +9,7 @@ const remote = electron.remote;
 
 export default class extends View {
   constructor(options) {
-    super({
-      className: 'pageNav',
+    const opts = {
       events: {
         'click .js-navBack': 'navBackClick',
         'click .js-navFwd': 'navFwdClick',
@@ -21,14 +20,37 @@ export default class extends View {
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
       },
+      navigable: false,
       ...options,
-    });
+    };
 
+    opts.className = `pageNav ${opts.navigable ? '' : 'notNavigable'}`;
+    super(opts);
+
+    this.options = opts;
     $(document).on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:mac_style_win_controls',
       this.onWinControlsStyleChange);
     this.setWinControlsStyle(app.localSettings.get('mac_style_win_controls') ? 'mac' : 'win');
+  }
+
+  get navigable() {
+    return this.options.navigable;
+  }
+
+  set navigable(navigable) {
+    const prevNavigable = this.options.navigable;
+
+    this.options.navigable = !!navigable;
+
+    if (this.options.navigable !== prevNavigable) {
+      if (this.options.navigable) {
+        this.$el.removeClass('notNavigable');
+      } else {
+        this.$el.addClass('notNavigable');
+      }
+    }
   }
 
   navBackClick() {
