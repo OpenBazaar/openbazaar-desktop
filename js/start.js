@@ -58,15 +58,52 @@ app.router = new ObRouter({
 
 // get the server config
 $.get(app.getServerUrl('ob/config')).done((data) => {
-  app.profile = new Profile({ id: data.guid })
-    .fetch()
+  app.profile = new Profile({ id: data.guid });
+  app.profile.fetch()
     .done(() => {
       // start history
       app.pageNav.navigable = true;
       Backbone.history.start();
       app.loadingModal.close();
     })
-    .fail(() => {
-      app.loadingModal.close();
+    .fail((jqXhr) => {
+      if (jqXhr.status === 400) {
+        // for now we'll consider 400 - Bad Request to mean
+        // onboarding is needed. After some pending server changes
+        // 404 should mean onboarding is needed.
+        // todo: follow up with cpacia to ensure the server change is
+        // made.
+
+        // for now we'll just manually save the profile with
+        // some default / dummy values. Later, we'll make the
+        // onboarding modal.
+
+        // $.ajax({
+        //   type: 'PUT',
+        //   url: 'http://localhost:8080/ob/profile/',
+        //   contentType: "application/json",
+        //   data: JSON.stringify({"sugar":"snap peas","id":"QmVjzn843Jr4Uc6hn278U2EqaBwByWaSXPXxnZe5U15HMa"}),
+        //   dataType: "json"          
+        // }).fail((...args) => {
+        //   console.log('hip');
+        //   window.hip = args;
+        // });
+
+        app.profile.save({}, {
+          // type: 'POST',
+        })
+        .done(() => {
+          console.log('warrick dunn');
+        })
+        .fail((...args) => {
+          console.log('fat ass failure');
+          window.fat = args;
+          window.ass = app.profile;
+        });
+      } else {
+        app.loadingModal.close();
+        app.simpleMessageModal.open('Unable To Get Profile',
+          'There was an error fetching your profile and we are therefore unable to proceed.');
+      }
     });
 });

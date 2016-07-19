@@ -3,9 +3,16 @@ import app from '../app';
 // import is from 'is_js';
 
 export default class extends Model {
+  // constructor(options = {}) {
+  //   super({
+  //     idAttribute: 'guid',
+  //     ...options,
+  //   });
+  // }
+
   // defaults() {
   //   return {
-  //     mac_style_win_controls: remote.process.platform === 'darwin',
+  //     sugar: 'snap peas',
   //   };
   // }
 
@@ -32,12 +39,16 @@ export default class extends Model {
   }
 
   sync(method, model, options) {
+    console.log(`the method-man is ${method}`);
+
+    // the server doesn't want the id field
+    options.attrs = options.attrs || model.toJSON(options);
+    delete options.attrs.id;
+
     if (method === 'read') {
-      // options.url = `${window.baseApiUrl}/ipns/${model.id}/profile`;
       options.url = app.getServerUrl(`ipns/${model.id}/profile`);
-    } else if (method === 'update') {
-      // options.url = `${window.baseApiUrl}/profile/${model.id}`;
-      options.url = app.getServerUrl(`ob/profile/${model.id}`);
+    } else {
+      options.url = app.getServerUrl(`ob/profile/${app.profile.id !== model.id ? model.id : ''}`);
     }
 
     return super.sync(method, model, options);
