@@ -3,10 +3,10 @@
 // any context passed into render as context for the template.
 //
 // If you need something beyond that, this view is probably not for you.
-import { View } from 'backbone';
+import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class TemplateOnly extends View {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
 

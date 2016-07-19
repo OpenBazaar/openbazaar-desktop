@@ -2,9 +2,11 @@ import $ from 'jquery';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
+import app from './app';
 import UserPage from './views/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
+import TestModalsPage from './views/TestModalsPage';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -30,6 +32,7 @@ export default class ObRouter extends Router {
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
+      ['test-modals', 'testModals'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -53,7 +56,8 @@ export default class ObRouter extends Router {
   }
 
   execute(callback, args) {
-    getPageContainer().empty();
+    app.simpleMessageModal.close();
+    app.loadingModal.open();
 
     if (callback) callback.apply(this, args);
   }
@@ -65,6 +69,7 @@ export default class ObRouter extends Router {
 
     this.currentPage = vw;
     getPageContainer().append(vw.el);
+    app.loadingModal.close();
   }
 
   // Temporary fudge, since we're actually hitting the one name api,
@@ -118,7 +123,7 @@ export default class ObRouter extends Router {
       const handle = user.get('handle');
 
       this.navigate(`${handle ? `@${handle}` : user.id}/${tab}` +
-        `${displayArgs ? `/${displayArgs}` : ''}`);
+        `${displayArgs ? `/${displayArgs}` : ''}`, { replace: true });
 
       this.loadPage(
         new UserPage({
@@ -136,6 +141,12 @@ export default class ObRouter extends Router {
 
     this.loadPage(
       new TransactionsPage({ tab }).render()
+    );
+  }
+
+  testModals() {
+    this.loadPage(
+      new TestModalsPage().render()
     );
   }
 
