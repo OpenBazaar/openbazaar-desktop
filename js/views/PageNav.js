@@ -3,6 +3,7 @@ import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
+import $ from 'jquery';
 
 const remote = electron.remote;
 
@@ -17,9 +18,13 @@ export default class extends View {
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
         'keyup .js-addressBar': 'onKeyupAddressBar',
+        'click .js-navListBtn': 'navListBtnClick',
+        'click .js-navSettings': 'navSettingsClick',
       },
       ...options,
     });
+
+    $(document).on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:mac_style_win_controls',
       this.onWinControlsStyleChange);
@@ -69,6 +74,26 @@ export default class extends View {
     }
   }
 
+  navListBtnClick() {
+    const $popMenu = this.$navList;
+    this.togglePopMenu($popMenu);
+  }
+
+  togglePopMenu($popMenu) {
+    if ($popMenu) {
+      this.$popMenus.not($popMenu).removeClass('open');
+      $popMenu.toggleClass('open');
+    } else {
+      this.$popMenus.removeClass('open');
+    }
+  }
+
+  onDocClick(e) {
+    if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
+      this.togglePopMenu();
+    }
+  }
+
   onKeyupAddressBar(e) {
     if (e.which === 13) {
       let text = this.$addressBar.val();
@@ -114,13 +139,23 @@ export default class extends View {
     }
   }
 
+  navSettingsClick() {
+    // activate settings modal here
+  }
+
   render() {
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t());
     });
 
     this.$addressBar = this.$('.js-addressBar');
+    this.$navList = this.$('.js-navList');
+    this.$popMenus = this.$('.js-navPopMenu');
 
     return this;
+  }
+
+  remove() {
+    $(document).off('click', this.onDocClick);
   }
 }

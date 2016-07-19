@@ -1,7 +1,5 @@
-body {
-  background-color: $background;
-  overflow: hidden;
-  /*fonts*/
+html {
+  // fonts
   color: $text;
   font: {
     family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -11,6 +9,11 @@ body {
   -webkit-font-smoothing: antialiased;
   letter-spacing: 0.4px;
   line-height: 1.2;
+}
+
+body {
+  background-color: $background;
+  overflow: hidden;
   margin: 0;
 }
 
@@ -31,6 +34,11 @@ hr {
   border-bottom: 1px solid;
   -webkit-margin-before: 0.5em;
   -webkit-margin-after: 0.5em;
+
+  &.unleaded {
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+  }
 }
 
 ul {
@@ -109,7 +117,7 @@ ul, ol {
 }
 
 .colText2 {
-  //for faded text
+  // for faded text
   color: $text2;
 
   & a:not(.btn, .iconBtn) {
@@ -118,31 +126,41 @@ ul, ol {
 }
 
 .colText3 {
-  //use when text2 needs to be "activated"
+  // use when text2 needs to be "activated"
   color: $text3;
 
-  //links in text color 3 are the same color, or they'd be too hard to see
+  // links in text color 3 are the same color, or they'd be too hard to see
 }
 
 .colBorder {
   border-color: $border;
 }
 
-.colBorderBackground {
-  background-color: $border;
+// index containers and sections
+#pageNavContainer {
+  position: relative;
+  z-index: 2;
 }
 
-.colEmphasis1 {
-  background-color: $emphasis1;
+#contentArea {
+  position: relative;
+  z-index: 1;
 }
 
 #pageContainer {
   padding: 25px;
+  position: relative;  
 }
 
 #chatContainer {
   position: fixed;
-  right: 15px;
-  top: 70px;
-  z-index: 1;
+  top: 100px;
+  right: 0;
+  width: $chatClosed;
+  z-index: 1; // chat needs to be on top of modals
+  @include chatOpeningTransition(width);
+
+  .chatOpen & {
+    width: $chatOpen;
+  }
 }

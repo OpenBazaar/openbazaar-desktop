@@ -13,6 +13,11 @@
     background-color: #fff;
     overflow: auto;
     @include center;
+    @include chatOpeningTransition(left);
+
+    .chatOpen & {
+      left: calc(50% - 150px);
+    }
   }
 
   .modalClose {

@@ -13,3 +13,7 @@
     transform: translate(0, -50%);
   }
 }
+
+@mixin chatOpeningTransition($property) {
+  transition: $property 0.5s ease;
+}

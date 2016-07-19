@@ -2,8 +2,6 @@
   display: block;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden; //this clears floats and prevents content from breaking out of the box
-  //if the container is absolutely positioned, it will usually need a width applied
 }
 
 .boxList > * {
@@ -22,6 +20,15 @@
     padding: $pad;
   }
 }
+
+.pageContent {
+  padding: $pad;
+
+  .chatOpen & {
+    width: calc(100% - #{$chatOpen});
+  }
+}
+
 
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element
@@ -42,13 +49,13 @@
 }
 
 .border {
-  //use on wrapping containers that should have a border. The element should also have a colBorder class.
+  //use on wrapping containers that should have a border. The element should also have a clrBr class.
   border-width: 1px;
   border-style: solid;
 }
 
 .borderBottom {
-  //use to separate stacked containers. The element should also have the colBorder class.
+  //use to separate stacked containers. The element should also have the clrBr class.
   border-bottom: {
     width: 1px;
     style: solid;
@@ -58,10 +65,20 @@
 }
 
 .borderStacked > * {
-  //use on parent element to separate stacked child containers. The element should also have the colBorder class.
+  //use on parent element to separate stacked child containers. The element should also have the clrBr class.
   @extend .borderBottom;
 
   &:last-child {
     border-bottom: none;
   }
+}
+
+.listBox {
+  //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
+  @extend .box, .border, .boxList;
+}
+
+.listLink {
+  padding: $pad;
+  font-size: 1.4rem;
 }

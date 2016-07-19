@@ -4,7 +4,6 @@ import app from './app';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
-import Chat from './views/Chat.js';
 import LoadingModal from './views/modals/Loading';
 import SimpleMessageModal from './views/modals/SimpleMessage';
 
@@ -54,9 +53,6 @@ app.simpleMessageModal.remove = () => {
 
 const pageNav = new PageNav();
 $('#pageNavContainer').append(pageNav.render().el);
-
-const chatApp = new Chat();
-$('#chatContainer').append(chatApp.render().el);
 
 app.router = new ObRouter({
   usersCl,
