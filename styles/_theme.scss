@@ -50,6 +50,15 @@
   background-color: $border;
 }
 
+.clrTx1Br {
+  border-color: $text;
+}
+
 .clrE1 {
   background-color: $emphasis1;
+}
+
+.clrO {
+  //overlay color
+  background-color: $overlay;
 }

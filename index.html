@@ -11,22 +11,32 @@
     <div id="appFrame">
       <section id="pageNavContainer"></section>
       <section id="contentFrame" class="flexRow">
-        <section id="pageContainer" class="flexGrow"></section>
+        <section id="pageContainer" class="flexExpand"></section>
         <section id="chatContainer">
-          <a id="chatToggle" class="btn">Toggle</a>
-          <ul>
-            <li>Example chat content</li>
-            <li>This will expand to the width of the content</li>
-            <li>Example chat content</li>
-            <li>Example chat content</li>
-            <li>Example chat content</li>
-          </ul>
+          <div class="padSmKids">
+            <div>
+              <a class="discSm border clrBr js-navListBtn" style="background-image: url('../imgs/defaultUser.png')"></a>
+            </div>
+            <div>
+              <a class="discSm border clrBr js-navListBtn" style="background-image: url('../imgs/defaultUser.png')"></a>
+            </div>
+            <div>
+              <a class="discSm border clrBr js-navListBtn" style="background-image: url('../imgs/defaultUser.png')"></a>
+            </div>
+            <div>
+              <a class="discSm border clrBr js-navListBtn" style="background-image: url('../imgs/defaultUser.png')"></a>
+            </div>
+            <div>
+              <a class="discSm border clrBr js-navListBtn" style="background-image: url('../imgs/defaultUser.png')"></a>
+            </div>
+          </div>
+          <p>Example chat content</p>
         </section>
       </section>
     </div>
     <script>
       <!--just demo stuff-->
-      let chatToggle = document.getElementById("chatToggle");
+      let chatToggle = document.getElementById("chatContainer");
       chatToggle.addEventListener('click', function(){
         document.body.classList.toggle('chatOpen');
       })

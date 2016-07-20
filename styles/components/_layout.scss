@@ -5,7 +5,7 @@
   display: flex;
   align-items: flex-start;
   width: 100%; //if the element has absolute or fixed positioning, expand it
-  height: 100%; //if the container has a height, fill it.
+  height: 100%; //if the container has a height, fill it. If the parent is absolute, the row must be too.
   box-sizing: border-box;
   flex-direction: row; //align children left to right horizontally
 
@@ -99,7 +99,7 @@
   text-align: right;
 }
 
-.flexGrow {
+.flexExpand {
   //make a child of a flex element expand to fill the remaining space
   flex-grow: 1;
 }
@@ -284,4 +284,12 @@
 
 .floL {
   float: left;
+}
+
+.posA {
+  position: absolute;
+}
+
+.posR {
+  position: relative;
 }

@@ -81,10 +81,10 @@ form {
 ul, ol {
   &.unstyled {
     padding: 0;
-    
+
     li {
       list-style-type: none;
-    }  
+    }
   }
 }
 
@@ -105,7 +105,7 @@ ul, ol {
 
 #pageContainer {
   padding: 25px;
-  position: relative;  
+  position: relative;
 }
 
 #chatContainer {
@@ -113,8 +113,8 @@ ul, ol {
   top: 100px;
   right: 0;
   width: $chatClosed;
+  height: calc(100% - 100px);
   z-index: 1; // chat needs to be on top of modals
-  background-color: rgba(255, 255, 255, 0.6);
   @include chatOpeningTransition(width);
 
   .chatOpen & {

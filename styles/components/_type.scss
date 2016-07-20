@@ -5,37 +5,37 @@ h1,h2,h3,h4,h5,h6,
   margin: 0;
   line-height: 1;
   font-weight: 700;
-  -webkit-user-select: none;
   -webkit-margin-before: 0;
   -webkit-margin-after: 0.5em;
-  cursor: default;
 }
 
 // all font sizes are multiples of the base rem. This allows us to increase or decrease all the fonts by changing the
 // font size on the html element (useful for accessibility and small screens).
 
-h1, .h1 {
-  font-size: 3.6rem;
+// us h classes for headlines, tx classes for body text
+
+h1, .h1, .tx1 {
+  font-size: $tx1;
 }
 
-h2, .h2 {
-  font-size: 2.2rem;
+h2, .h2, .tx2 {
+  font-size: $tx2;
 }
 
-h3, .h3 {
-  font-size: 1.8rem;
+h3, .h3, .tx3 {
+  font-size: $tx3;
 }
 
-h4, .h4 {
-  font-size: 1.6rem;
+h4, .h4, .tx4 {
+  font-size: $tx4;
 }
 
-h5, .h5 {
-  font-size: 1.4rem;
+h5, .h5, .tx5 {
+  font-size: $tx5;
 }
 
-h6, .h6 {
-  font-size: 1.2rem;
+h6, .h6, .tx6 {
+  font-size: $tx6;
 }
 
 p {

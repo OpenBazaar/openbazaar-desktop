@@ -24,7 +24,7 @@
 .pageContent {
   padding: $pad;
   width: calc(100% - #{$chatClosed});
-  background-color: pink; // temporary to see transition when chat opens 
+  background-color: pink; // temporary to see transition when chat opens
   @include chatOpeningTransition(width);
 
   .chatOpen & {
@@ -79,9 +79,9 @@
 .listBox {
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
   @extend .box, .border, .boxList;
-}
 
-.listLink {
-  padding: $pad;
-  font-size: 1.4rem;
+  .listLink {
+    padding: $pad;
+    font-size: 1.4rem;
+  }
 }

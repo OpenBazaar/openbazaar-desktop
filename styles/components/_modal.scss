@@ -4,19 +4,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: $overlay;
 
   .modalContent {
     padding: 25px;
     min-width: 300px;
     max-height: 500px;
-    background-color: $modalBackground;
     overflow: auto;
     @include center;
+    left: calc(50% - #{$chatClosed / 2});
     @include chatOpeningTransition(left);
 
     .chatOpen & {
-      left: calc(50% - 150px);
+      left: calc(50% - #{$chatOpen / 2});
     }
   }
 
