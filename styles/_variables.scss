@@ -7,6 +7,7 @@ $secondary: adjust-color($primary, $lightness: -20%);
 $background: adjust-color($primary, $lightness: -4%);
 $border: adjust-color($primary, $lightness: -11%);
 $emphasis1: rgb(253,166,57);
+$modalBackground: rgb(255,255,255);
 
 // typography
 $baseFontSize: 10px;

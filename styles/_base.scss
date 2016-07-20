@@ -1,5 +1,5 @@
 html {
-  /*fonts*/
+  // fonts
   color: $text;
   font: {
     family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -78,8 +78,21 @@ form {
   margin: 0;
 }
 
-//index containers and sections
+ul, ol {
+  &.unstyled {
+    padding: 0;
+    
+    li {
+      list-style-type: none;
+    }  
+  }
+}
 
+#ov1 .hide {
+  display: none;
+}
+
+// index containers and sections
 #pageNavContainer {
   position: relative;
   z-index: 2;
@@ -91,13 +104,8 @@ form {
 }
 
 #pageContainer {
-  position: relative;
-
-  // temporary until we have a loading modal
-  &:empty::after {
-    content: "Loading...";
-    font-size: 30px;
-  }
+  padding: 25px;
+  position: relative;  
 }
 
 #chatContainer {
@@ -105,6 +113,9 @@ form {
   top: 100px;
   right: 0;
   width: $chatClosed;
+  z-index: 1; // chat needs to be on top of modals
+  background-color: rgba(255, 255, 255, 0.6);
+  @include chatOpeningTransition(width);
 
   .chatOpen & {
     width: $chatOpen;

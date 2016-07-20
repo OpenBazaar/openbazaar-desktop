@@ -4,7 +4,8 @@ import app from './app';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
-
+import LoadingModal from './views/modals/Loading';
+import SimpleMessageModal from './views/modals/SimpleMessage';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
@@ -36,6 +37,20 @@ app.user = usersCl.at(0);
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
+// create and launch loading modal
+app.loadingModal = new LoadingModal({
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render().open();
+
+// create our re-usable simple message modal instance
+app.simpleMessageModal = new SimpleMessageModal({ removeOnClose: false }).render();
+app.simpleMessageModal._origRemove = app.simpleMessageModal.remove;
+app.simpleMessageModal.remove = () => {
+  throw new Error('This is a shared instance that should not be removed.');
+};
+
 const pageNav = new PageNav();
 $('#pageNavContainer').append(pageNav.render().el);
 
@@ -43,4 +58,8 @@ app.router = new ObRouter({
   usersCl,
   pageNavVw: pageNav,
 });
+
+app.loadingModal.close();
+
+// start history
 Backbone.history.start();

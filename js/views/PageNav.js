@@ -7,11 +7,13 @@ import $ from 'jquery';
 
 const remote = electron.remote;
 
-export default class PageNav extends View {
+export default class extends View {
   constructor(options) {
     super({
       className: 'pageNav',
       events: {
+        'click .js-navBack': 'navBackClick',
+        'click .js-navFwd': 'navFwdClick',
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
@@ -27,6 +29,14 @@ export default class PageNav extends View {
     this.listenTo(app.localSettings, 'change:mac_style_win_controls',
       this.onWinControlsStyleChange);
     this.setWinControlsStyle(app.localSettings.get('mac_style_win_controls') ? 'mac' : 'win');
+  }
+
+  navBackClick() {
+    window.history.back();
+  }
+
+  navFwdClick() {
+    window.history.forward();
   }
 
   setWinControlsStyle(style) {

@@ -23,6 +23,9 @@
 
 .pageContent {
   padding: $pad;
+  width: calc(100% - #{$chatClosed});
+  background-color: pink; // temporary to see transition when chat opens 
+  @include chatOpeningTransition(width);
 
   .chatOpen & {
     width: calc(100% - #{$chatOpen});

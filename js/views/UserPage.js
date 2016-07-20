@@ -1,7 +1,7 @@
-import { View } from 'backbone';
+import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class UserPage extends View {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     if (!options.model) {
