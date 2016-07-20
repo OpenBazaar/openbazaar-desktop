@@ -56,16 +56,19 @@ app.router = new ObRouter({ usersCl });
 // get the server config
 $.get(app.getServerUrl('ob/config')).done((data) => {
   app.profile = new Profile({ id: data.guid });
+
+  // console.log('hello');
+  // window.hello = app.profile;
+  // window.hello.on('change', () => {
+  //   console.log('the times are a changin');
+  // });
+
   app.profile.fetch()
     .done(() => {
-      // start history
       app.pageNav.navigable = true;
       Backbone.history.start();
       app.loadingModal.close();
-      console.log('hello');
-      window.hello = app.profile;
-    })
-    .fail((jqXhr) => {
+    }).fail((jqXhr) => {
       if (jqXhr.status === 400) {
         // for now we'll consider 400 - Bad Request to mean
         // onboarding is needed. After some pending server changes
@@ -77,19 +80,26 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
         // some default / dummy values. Later, we'll make the
         // onboarding modal.
 
-        app.profile.save({}, {
+        const profileSave = app.profile.save({}, {
           type: 'POST',
-        }).done(() => {
-          console.log('warrick dunn');
-        }).fail((...args) => {
-          console.log('fat ass failure');
-          window.fat = args;
-          window.ass = app.profile;
         });
+
+        if (!profileSave) {
+          throw new Error('Client side validation failed on your new Profile model.' +
+            'Ensure your defaults are valid.');
+        } else {
+          profileSave.done(() => {
+            app.pageNav.navigable = true;
+            Backbone.history.start();
+            app.loadingModal.close();
+          }).fail((failData) => {
+            app.loadingModal.close();
+            app.simpleMessageModal.open('Unable To Save Profile', failData.reason || '');
+          });
+        }
       } else {
         app.loadingModal.close();
-        app.simpleMessageModal.open('Unable To Get Profile',
-          'There was an error fetching your profile and we are therefore unable to proceed.');
+        app.simpleMessageModal.open('Unable To Get Profile');
       }
     });
 });
