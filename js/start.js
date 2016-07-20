@@ -48,13 +48,10 @@ app.simpleMessageModal.remove = () => {
   throw new Error('This is a shared instance that should not be removed.');
 };
 
-const pageNav = new PageNav();
-$('#pageNavContainer').append(pageNav.render().el);
+app.pageNav = new PageNav();
+$('#pageNavContainer').append(app.pageNav.render().el);
 
-app.router = new ObRouter({
-  usersCl,
-  pageNavVw: pageNav,
-});
+app.router = new ObRouter({ usersCl });
 
 // get the server config
 $.get(app.getServerUrl('ob/config')).done((data) => {
@@ -65,6 +62,8 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
       app.pageNav.navigable = true;
       Backbone.history.start();
       app.loadingModal.close();
+      console.log('hello');
+      window.hello = app.profile;
     })
     .fail((jqXhr) => {
       if (jqXhr.status === 400) {
@@ -78,24 +77,11 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
         // some default / dummy values. Later, we'll make the
         // onboarding modal.
 
-        // $.ajax({
-        //   type: 'PUT',
-        //   url: 'http://localhost:8080/ob/profile/',
-        //   contentType: "application/json",
-        //   data: JSON.stringify({"sugar":"snap peas","id":"QmVjzn843Jr4Uc6hn278U2EqaBwByWaSXPXxnZe5U15HMa"}),
-        //   dataType: "json"          
-        // }).fail((...args) => {
-        //   console.log('hip');
-        //   window.hip = args;
-        // });
-
         app.profile.save({}, {
-          // type: 'POST',
-        })
-        .done(() => {
+          type: 'POST',
+        }).done(() => {
           console.log('warrick dunn');
-        })
-        .fail((...args) => {
+        }).fail((...args) => {
           console.log('fat ass failure');
           window.fat = args;
           window.ass = app.profile;

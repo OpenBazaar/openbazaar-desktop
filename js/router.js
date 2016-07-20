@@ -21,12 +21,6 @@ export default class ObRouter extends Router {
 
     this.usersCl = options.usersCl;
 
-    if (!options.pageNavVw) {
-      throw new Error('Please provide the app\'s pageNavVw.');
-    }
-
-    this.pageNavVw = options.pageNavVw;
-
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
@@ -49,9 +43,9 @@ export default class ObRouter extends Router {
 
   setAddressBarText() {
     if (location.hash.startsWith('#transactions')) {
-      this.pageNavVw.setAddressBar();
+      app.pageNav.setAddressBar();
     } else {
-      this.pageNavVw.setAddressBar(location.hash.slice(1));
+      app.pageNav.setAddressBar(location.hash.slice(1));
     }
   }
 
