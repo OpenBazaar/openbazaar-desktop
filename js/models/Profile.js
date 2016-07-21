@@ -68,6 +68,14 @@ export default class extends Model {
       }
     });
 
+    if (attrs.email && is.not.email(attrs.email)) {
+      addError('email', 'Please provide a valid email.');
+    }
+
+    if (attrs.website && is.not.url(attrs.website)) {
+      addError('website', 'Please provide a valid url.');
+    }
+
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;
@@ -77,6 +85,15 @@ export default class extends Model {
     // the server doesn't want the id field
     options.attrs = options.attrs || model.toJSON(options);
     delete options.attrs.id;
+
+    // ensure certain fields that shouldn't be updated don't go
+    // to the server
+    if (method !== 'read') {
+      delete options.attrs.followerCount;
+      delete options.attrs.followingCount;
+      delete options.attrs.listingCount;
+      delete options.attrs.lastModified;
+    }
 
     if (method === 'read') {
       options.url = app.getServerUrl(`ipns/${model.id}/profile`);

@@ -7,6 +7,7 @@ import UserPage from './views/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import TestModalsPage from './views/TestModalsPage';
+import TestProfilePage from './views/TestProfilePage';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -27,6 +28,7 @@ export default class ObRouter extends Router {
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       ['test-modals', 'testModals'],
+      ['test-profile', 'testProfile'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -141,6 +143,12 @@ export default class ObRouter extends Router {
   testModals() {
     this.loadPage(
       new TestModalsPage().render()
+    );
+  }
+
+  testProfile() {
+    this.loadPage(
+      new TestProfilePage().render()
     );
   }
 

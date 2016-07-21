@@ -57,11 +57,11 @@ app.router = new ObRouter({ usersCl });
 $.get(app.getServerUrl('ob/config')).done((data) => {
   app.profile = new Profile({ id: data.guid });
 
-  // console.log('hello');
-  // window.hello = app.profile;
-  // window.hello.on('change', () => {
-  //   console.log('the times are a changin');
-  // });
+  console.log('hello');
+  window.hello = app.profile;
+  window.hello.on('change', () => {
+    console.log('the times are a changin');
+  });
 
   app.profile.fetch()
     .done(() => {
