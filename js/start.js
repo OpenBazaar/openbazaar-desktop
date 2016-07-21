@@ -63,7 +63,10 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
     console.log('the times are a changin');
   });
 
-  app.profile.fetch()
+  // todo: for now busting cache on fetch pending
+  // issue where my server is not running the latest
+  // code which solves this.
+  app.profile.fetch({ cache: false })
     .done(() => {
       app.pageNav.navigable = true;
       Backbone.history.start();

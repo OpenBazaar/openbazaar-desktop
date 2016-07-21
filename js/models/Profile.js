@@ -1,20 +1,15 @@
+import _ from 'underscore';
 import { Model } from 'backbone';
 import app from '../app';
 import is from 'is_js';
 
 export default class extends Model {
-  // constructor(options = {}) {
-  //   super({
-  //     idAttribute: 'guid',
-  //     ...options,
-  //   });
-  // }
-
   defaults() {
     return {
       primaryColor: '#086A9E',
       secondaryColor: '#317DB8',
       textColor: '#ffffff',
+      social: [],
     };
   }
 
@@ -47,8 +42,38 @@ export default class extends Model {
     return updatedAttrs;
   }
 
-  set(attrs, options) {
-    return super.set(this.standardizeColorFields(attrs), options);
+  set(key, val, options) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val;
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    if (attrs.social) {
+      // if (!_.isEqual(attrs.social, this._social)) {
+      if (!_.isEqual(attrs.social, this.attributes.social)) {
+        // if the object contents are not equal, we'll clone a new object so
+        // the change is event is fired.
+        // this._social = JSON.parse(JSON.stringify(attrs.social)); // deep clone
+        attrs.social = JSON.parse(JSON.stringify(attrs.social)); // deep clone
+      }
+    }
+
+    return super.set(this.standardizeColorFields(attrs), opts);
+  }
+
+  get socialTypes() {
+    return [
+      'facebook',
+      'twitter',
+      'instagram',
+      'other',
+    ];
   }
 
   validate(attrs) {
@@ -74,6 +99,22 @@ export default class extends Model {
 
     if (attrs.website && is.not.url(attrs.website)) {
       addError('website', 'Please provide a valid url.');
+    }
+
+    if (is.not.array(attrs.social)) {
+      addError('social', 'Social must be an array.');
+    } else {
+      attrs.social.forEach((item, index) => {
+        if (is.not.string(item.username) || !item.username.length) {
+          addError(`social[${index}].username`, 'Please provide a username.');
+        }
+
+        if (is.not.string(item.type)) {
+          addError(`social[${index}].type`, 'Please provide a type.');
+        } else if (this.socialTypes.indexOf(item.type) === -1) {
+          addError(`social[${index}].type`, 'Type must be one of the required types.');
+        }
+      });
     }
 
     if (Object.keys(errObj).length) return errObj;
