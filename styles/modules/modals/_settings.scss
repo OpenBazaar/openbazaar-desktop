@@ -21,11 +21,19 @@
       }
     }
 
+    .settingsTabContent {
+      height: 560px;
+    }
+
+    .settingsTabFormWrapper {
+      height: 510px;
+    }
+
     .settingsControls {
       position: absolute;
       bottom: 0;
       height: 80px;
-      padding: $pad;
+      padding: $pad * 1.5;
       border-top-style: solid;
       border-top-width: 1px;
       align-items: center;

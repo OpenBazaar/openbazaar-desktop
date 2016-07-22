@@ -1,15 +1,163 @@
-<div class="bar clrBr borderBottom">
-  <h2 class="h1">Page</h2>
+<div class="bar padM clrBr borderBottom">
+  <h2>Page</h2>
 </div>
-<div class="pad">
-  <div class="box border clrP padSm">
+<div class="padM scrollBox settingsTabFormWrapper">
+  <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
-        Language
+        <label>Name</label>
       </div>
       <div class="col9">
-        form stuff
+        <input type="text" class="clrBr" name="name">
       </div>
     </div>
-  </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Handle</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="handle">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Short Description</label>
+      </div>
+      <div class="col9">
+        <textarea rows="3" maxlength="160" name="shortDescription" class="clrBr"></textarea>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>About</label>
+      </div>
+      <div class="col9">
+        <textarea rows="6" name="about" class="clrBr"></textarea>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Public Location</label>
+      </div>
+      <div class="col9">
+        <select id="settingsLocationSelect">
+          <% _.each(ob.countryList, function(country){ %>
+          <option value="<%= country.dataName %>" <% if (country.dataName == ob.location)
+          print('selected') %>><%= country.name %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>NSFW Content</label>
+      </div>
+      <div class="col9">
+        <div class="btnStrip">
+          <div class="btn clrBr">
+            <input type="radio"
+                   name="nsfw"
+                   value=true
+                   id="settingsNSFWInputTrue"
+            <% if(ob.NSFW) { %>checked<% } %>>
+            <label for="settingsNSFWInputTrue">On</label>
+          </div>
+          <div class="btn clrBr">
+            <input type="radio"
+                   name="nsfw"
+                   value=false
+                   id="settingsNSFWInputFalse"
+            <% if(!ob.NSFW) { %>checked<% } %>>
+            <label for="settingsNSFWInputFalse">Off</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Avatar</label>
+      </div>
+      <div class="col9">
+        <label>Photo Upload</label>
+      </div>
+    </div>
+    <div class="flexRow">
+      <h3>Social</h3>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Website</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="website">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Email</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="email">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Social Media Accounts</label>
+      </div>
+      <div class="col9">
+        Fancy input thing here
+      </div>
+    </div>
+    <div class="flexRow">
+      <h3>Theme</h3>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Standard Themes</label>
+      </div>
+      <div class="col9">
+        thumbnails of themes
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Cover Photo</label>
+      </div>
+      <div class="col9">
+        <label>Photo Upload</label>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Primary Color</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="primaryColor">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Secondary Color</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="secondaryColor">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Text Color</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="textColor">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Background Color</label>
+      </div>
+      <div class="col9">
+        <input type="text" class="clrBr" name="backgroundColor">
+      </div>
+    </div>
+  </form>
 </div>

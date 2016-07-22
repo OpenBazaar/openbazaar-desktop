@@ -4,10 +4,26 @@
 
 .clrP {
   background-color: $primary;
+
+  input[type="radio"] + label:before {
+    background: $secondary;
+  }
+
+  input[type="radio"]:checked + label:before {
+    box-shadow: inset 0 0 0 3px $secondary;
+  }
 }
 
 .clrS {
   background-color: $secondary;
+
+  input[type="radio"] + label:before {
+    background: $primary;
+  }
+
+  input[type="radio"]:checked + label:before {
+    box-shadow: inset 0 0 0 3px $primary;
+  }
 }
 
 .clrBk {
@@ -20,28 +36,50 @@
   & a:not(.btn, .iconBtn) {
     color: $text2;
   }
+
+  input[type="radio"]:checked + label:before {
+    background: $text;
+  }
 }
 
 .clrT2 {
-  //for faded text
+  // for faded text
   color: $text2;
 
   & a:not(.btn, .iconBtn) {
     color: $text3;
   }
+
+  input[type="radio"]:checked + label:before {
+    background: $text2;
+  }
 }
 
 .clrT3 {
-  //use when text2 needs to be "activated"
+  // use when text2 needs to be "activated"
   color: $text3;
 
-  //links in text color 3 are the same color, or they'd be too hard to see
+  // links in text color 3 are the same color, or they'd be too hard to see
+
+  input[type="radio"]:checked + label:before {
+    background: $text3;
+  }
 }
 
 .clrBr {
   border-color: $border;
 
   hr {
+    border-color: $border;
+  }
+}
+
+// select2 dropdowns always use the theme border color.
+// Override them in the view stylesheet if necessary.
+
+.select2-container {
+  .select2-dropdown,
+  .select2-selection {
     border-color: $border;
   }
 }
@@ -59,6 +97,6 @@
 }
 
 .clrO {
-  //overlay color
+  // overlay color
   background-color: $overlay;
 }

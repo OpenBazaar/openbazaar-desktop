@@ -9,6 +9,13 @@
   @extend .box;
 }
 
+.scrollBox {
+  @extend .box;
+  //a height must be set on this element
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 
 .bar {
   @extend .box;

@@ -11,6 +11,11 @@
     -webkit-app-region: no-drag;
   }
 
+  input {
+    height: auto;
+    border: none;
+  }
+
   .windowControls {
     display: flex;
     align-items: center;
