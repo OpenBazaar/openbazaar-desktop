@@ -1,0 +1,33 @@
+.testProfilePage {
+  font-size: 18px;
+
+  input, textarea {
+    display: block;
+    border: 1px solid black;
+    font-size: 16px;
+    margin: 5px 0 10px;
+    width: 300px;
+    padding: 10px;
+    height: 20px;
+  }
+
+  textarea {
+    width: 320px;
+    height: 180px;
+  }
+
+  .buttonBar {
+    margin-top: 15px;
+
+    input {
+      width: 100px;
+      display: inline;
+      height: auto;
+
+      &:hover {
+        cursor: pointer;
+        background-color: white;
+      }
+    }
+  }
+}

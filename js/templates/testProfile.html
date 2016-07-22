@@ -1,0 +1,26 @@
+<%
+  // email, website, social, primaryColor, secondaryColor, textColor
+%>
+
+<form>
+  <label>
+    Email:
+    <input type="email" name="email" value="<%= ob.email %>" />
+  </label>
+  <label>
+    Website:
+    <input type="url" name="website" value="<%= ob.website %>" />
+  </label>
+  <label>
+    About:
+    <textarea name="about"><%= ob.about %></textarea>
+  </label>  
+  <label>
+    Primary Color:
+    <input type="color" name="primaryColor" value="<%= ob.primaryColor %>" />
+  </label>  
+  <div class="buttonBar">
+    <input type="reset" />
+    <input type="submit" />
+  </div>  
+</form>
