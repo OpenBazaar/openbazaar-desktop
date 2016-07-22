@@ -113,7 +113,7 @@ ul, ol {
   padding: 25px;
   position: relative;
   overflow-y: scroll;
-  height: calc(100% - 50px);
+  height: calc(100% - #{$bar});
   box-sizing: border-box;
 }
 
