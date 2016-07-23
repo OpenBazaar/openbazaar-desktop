@@ -42,12 +42,13 @@ export default class extends BaseModal {
   selectTab(targ) {
     const targTab = targ.data('tab');
     const TabView = `Settings${targTab}`;
+    let newTabView;
 
     this.$('.js-tab').removeClass('clrT active');
     targ.addClass('clrT active');
 
-    if (!this[TabView] && this.TabViews[TabView]) {
-      const newTabView = new this.TabViews[TabView]();
+    if (this.TabViews[TabView]) {
+      newTabView = this[TabView] || new this.TabViews[TabView]();
       if (this.currentTabView) this.currentTabView.remove();
       this.currentTabView = newTabView;
       this.tabContent.append(newTabView.render().el);
@@ -75,9 +76,10 @@ export default class extends BaseModal {
       this.$el.html(t(this.options));
 
       super.render();
+
+      this.tabContent = this.$('.js-tabContent');
+      this.selectTab(this.$('.js-tab[data-tab="General"]'));
     });
-    this.tabContent = this.$('.js-tabContent');
-    this.selectTab(this.$('.js-tab[data-tab="General"]'));
 
     return this;
   }

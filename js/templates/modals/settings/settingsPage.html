@@ -5,39 +5,40 @@
   <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
-        <label>Name</label>
+        <label for="settingsName">Name</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="name">
+        <input type="text" class="clrBr" name="name" id="settingsName" value="<%= ob.name %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Handle</label>
+        <label for="settingsHandle">Handle</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="handle">
+        <input type="text" class="clrBr" name="handle" id="settingsHandle" value="<%= ob.handle %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Short Description</label>
+        <label for="settingsShortDescription">Short Description</label>
       </div>
       <div class="col9">
-        <textarea rows="3" maxlength="160" name="shortDescription" class="clrBr"></textarea>
+        <textarea rows="3" maxlength="160" name="shortDescription" id="settingsShortDescription"
+                  class="clrBr"><%= ob.shortDescription %></textarea>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>About</label>
+        <label for="settingsAbout">About</label>
       </div>
       <div class="col9">
-        <textarea rows="6" name="about" class="clrBr"></textarea>
+        <textarea rows="6" name="about" class="clrBr" id="settingsAbout"><%= ob.about %></textarea>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Public Location</label>
+        <label for="settingsLocationSelect">Public Location</label>
       </div>
       <div class="col9">
         <select id="settingsLocationSelect">
@@ -86,18 +87,19 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Website</label>
+        <label for="settingsWebsite">Website</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="website">
+        <input type="text" class="clrBr" name="website" id="settingsWebsite"
+               value="<%= ob.website %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Email</label>
+        <label for="settingsEmail">Email</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="email">
+        <input type="text" class="clrBr" name="email" id="settingsEmail" value="<%= ob.email %>">
       </div>
     </div>
     <div class="flexRow">
@@ -129,34 +131,39 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Primary Color</label>
+        <label for="settingsPrimaryColor">Primary Color</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="primaryColor">
+        <input type="text" class="clrBr" name="primaryColor" id="settingsPrimaryColor"
+               value="<%= ob.primaryColor %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Secondary Color</label>
+        <label for="settingsSecondaryColor">Secondary Color</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="secondaryColor">
+        <input type="text" class="clrBr" name="secondaryColor" id="settingsSecondaryColor"
+               value="<%= ob.secondaryColor %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Text Color</label>
+        <label for="settingsTextColor">Text Color</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="textColor">
+        <input type="text" class="clrBr" name="textColor" id="settingsTextColor"
+               value="<%= ob.textColor %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Background Color</label>
+        <label for="settingsBackgroundColor">Background Color</label>
       </div>
       <div class="col9">
-        <input type="text" class="clrBr" name="backgroundColor">
+        <input type="text" class="clrBr" name="backgroundColor" id="settingsBackgroundColor"
+               value="<%= ob.backgroundColor
+               %>">
       </div>
     </div>
   </form>

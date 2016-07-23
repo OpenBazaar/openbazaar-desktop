@@ -53,15 +53,6 @@ export default class extends View {
       { code: 'USD', name: 'United States Dollar' },
       { code: 'EUR', name: 'Euro' },
     ];
-
-    this.options = {
-      // test data
-      languageList: this.languageList,
-      countryList: this.countryList,
-      currencyList: this.currencyList,
-    };
-
-    this.options = Object.assign({}, options, this.userModel, this.options);
   }
 
   save() {
@@ -76,14 +67,21 @@ export default class extends View {
 
   render() {
     loadTemplate('modals/settings/settingsGeneral.html', (t) => {
-      this.$el.html(t(this.options));
+      this.$el.html(t({
+        languageList: this.languageList,
+        countryList: this.countryList,
+        currencyList: this.currencyList,
+        ...this.userModel,
+      }));
+
+      setTimeout(() => {
+        this.$('#settingsLanguageSelect').select2();
+        this.$('#settingsCountrySelect').select2();
+        this.$('#settingsCurrencySelect').select2();
+      }, 0);
     });
 
-    setTimeout(() => {
-      this.$('#settingsLanguageSelect').select2();
-      this.$('#settingsCountrySelect').select2();
-      this.$('#settingsCurrencySelect').select2();
-    }, 0);
+
 
 
     return this;

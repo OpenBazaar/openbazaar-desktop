@@ -10,10 +10,8 @@ export default class extends View {
       },
       ...options,
     });
-
-    // temp data. This view will need the user model, the languages, the countries, and the
+  // temp data. This view will need the user model, the languages, the countries, and the
     // currencies.
-
     this.profileModel = {
       handle: '@example',
       name: 'exampleName',
@@ -25,25 +23,18 @@ export default class extends View {
       nsfw: false,
       vendor: false,
       moderator: false,
-      primaryColor: '',
-      secondaryColor: '',
-      textColor: '',
+      primaryColor: '#000000',
+      secondaryColor: '#000000',
+      textColor: '#000000',
+      backgroundColor: '#000000',
       followerCount: 0,
       followingCount: 0,
       listingCount: 0,
     };
-
     this.countryList = [
       { code: 'USA', dataName: 'UNITED_STATES', name: 'United States' },
       { code: 'DZD', dataName: 'ALGERIA', name: 'Algeria' },
     ];
-
-    this.options = {
-      // test data
-      countryList: this.countryList,
-    };
-
-    this.options = Object.assign({}, options, this.profileModel, this.options);
   }
 
   save() {
@@ -58,7 +49,10 @@ export default class extends View {
 
   render() {
     loadTemplate('modals/settings/settingsPage.html', (t) => {
-      this.$el.html(t(this.options));
+      this.$el.html(t({
+        countryList: this.countryList,
+        ...this.profileModel,
+      }));
     });
 
     setTimeout(() => {
