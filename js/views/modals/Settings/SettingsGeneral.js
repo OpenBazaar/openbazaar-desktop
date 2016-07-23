@@ -56,12 +56,10 @@ export default class extends View {
   }
 
   save() {
-    console.log('saved general');
     // save the form
   }
 
   cancel() {
-    console.log('cancel general');
     // cancel the form
   }
 
@@ -80,9 +78,6 @@ export default class extends View {
         this.$('#settingsCurrencySelect').select2();
       }, 0);
     });
-
-
-
 
     return this;
   }

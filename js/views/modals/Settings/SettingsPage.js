@@ -38,12 +38,10 @@ export default class extends View {
   }
 
   save() {
-    console.log('saved page');
     // save the form
   }
 
   cancel() {
-    console.log('cancel page');
     // cancel the form
   }
 
