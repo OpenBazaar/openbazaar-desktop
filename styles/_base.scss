@@ -81,10 +81,10 @@ form {
 ul, ol {
   &.unstyled {
     padding: 0;
-    
+
     li {
       list-style-type: none;
-    }  
+    }
   }
 }
 
@@ -96,20 +96,29 @@ ul, ol {
   @include disabled;
 }
 
+#appFrame {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+#contentFrame {
+  height: 100%;
+}
+
 // index containers and sections
 #pageNavContainer {
   position: relative;
   z-index: 2;
 }
 
-#contentArea {
-  position: relative;
-  z-index: 1;
-}
 
 #pageContainer {
   padding: 25px;
-  position: relative;  
+  position: relative;
+  overflow-y: scroll;
+  height: calc(100% - 50px);
+  box-sizing: border-box;
 }
 
 #chatContainer {

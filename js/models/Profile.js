@@ -1,9 +1,9 @@
 import _ from 'underscore';
-import { Model } from 'backbone';
+import BaseModel from './BaseModel';
 import app from '../app';
 import is from 'is_js';
 
-export default class extends Model {
+export default class extends BaseModel {
   defaults() {
     return {
       primaryColor: '#086A9E',
@@ -55,12 +55,13 @@ export default class extends Model {
     }
 
     if (attrs.social) {
-      // if (!_.isEqual(attrs.social, this._social)) {
-      if (!_.isEqual(attrs.social, this.attributes.social)) {
+      if (!_.isEqual(attrs.social, this._social)) {
+        this.attributes.social = this._social;
+
         // if the object contents are not equal, we'll clone a new object so
         // the change is event is fired.
-        // this._social = JSON.parse(JSON.stringify(attrs.social)); // deep clone
-        attrs.social = JSON.parse(JSON.stringify(attrs.social)); // deep clone
+        this._social = JSON.parse(JSON.stringify(attrs.social)); // deep clone
+        attrs.social = JSON.parse(JSON.stringify(attrs.social));
       }
     }
 
@@ -104,6 +105,9 @@ export default class extends Model {
     if (is.not.array(attrs.social)) {
       addError('social', 'Social must be an array.');
     } else {
+      // used to give errors on dupes of the same type
+      const groupedByType = _.groupBy(attrs.social, 'type');
+
       attrs.social.forEach((item, index) => {
         if (is.not.string(item.username) || !item.username.length) {
           addError(`social[${index}].username`, 'Please provide a username.');
@@ -113,6 +117,13 @@ export default class extends Model {
           addError(`social[${index}].type`, 'Please provide a type.');
         } else if (this.socialTypes.indexOf(item.type) === -1) {
           addError(`social[${index}].type`, 'Type must be one of the required types.');
+        }
+
+        // if there are dupes of the same type, give an error to all
+        // dupes after the first one
+        if (groupedByType[item.type].length > 1 &&
+          groupedByType[item.type].indexOf(item) > 0) {
+          addError(`social[${index}].type`, 'You already have a social account of this type.');
         }
       });
     }

@@ -57,12 +57,6 @@ app.router = new ObRouter({ usersCl });
 $.get(app.getServerUrl('ob/config')).done((data) => {
   app.profile = new Profile({ id: data.guid });
 
-  console.log('hello');
-  window.hello = app.profile;
-  window.hello.on('change', () => {
-    console.log('the times are a changin');
-  });
-
   // todo: for now busting cache on fetch pending
   // issue where my server is not running the latest
   // code which solves this.

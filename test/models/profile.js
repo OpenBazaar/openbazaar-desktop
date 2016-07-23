@@ -25,6 +25,14 @@ describe('a profile model', () => {
       expect(profile.changedAttributes()).to.not.equal(false);
       expect(profile.changedAttributes()).to.include.keys('social');
 
+      // changing one of the social items on reference
+      // obtained via get
+      const anotherSocial = profile.get('social');
+      anotherSocial[0].name = 'Dennis';
+      profile.set('social', anotherSocial);
+      expect(profile.changedAttributes()).to.not.equal(false);
+      expect(profile.changedAttributes()).to.include.keys('social');
+
       // adding an additional social item
       social.push({ name: 'bill', type: 'instagram' });
       profile.set('social', social);
@@ -53,6 +61,9 @@ describe('a profile model', () => {
       const profile = new Profile({ social });
 
       profile.set('social', JSON.parse(JSON.stringify(social)));
+      expect(profile.changedAttributes()).to.equal(false);
+
+      profile.set('social', profile.get('social'));
       expect(profile.changedAttributes()).to.equal(false);
     });
   });
