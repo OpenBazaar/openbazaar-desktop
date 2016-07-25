@@ -1,0 +1,68 @@
+<div class="bar padM clrBr borderBottom">
+  <h2>General</h2>
+</div>
+<div class="padM scrollBox settingsTabFormWrapper">
+  <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
+    <div class="flexRow">
+      <div class="col3">
+        <label>Language</label>
+      </div>
+      <div class="col9">
+        <select id="settingsLanguageSelect">
+          <% _.each(ob.languageList, function(lang){ %>
+            <option value="<%= lang.code %>" <% if (lang.code == ob.Language) print('selected') %>><%= lang.name %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Country</label>
+      </div>
+      <div class="col9">
+        <select id="settingsCountrySelect">
+          <% _.each(ob.countryList, function(country){ %>
+          <option value="<%= country.dataName %>" <% if (country.dataName == ob.Country) print('selected') %>><%= country.name %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>Currency</label>
+      </div>
+      <div class="col9">
+        <select id="settingsCurrencySelect">
+          <% _.each(ob.currencyList, function(currency){ %>
+          <option value="<%= currency.code %>" <% if (currency.code == ob.LocalCurrency) print('selected') %>><%= currency.name %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>View NSFW Content</label>
+      </div>
+      <div class="col9">
+        <div class="btnStrip">
+          <div class="btn clrBr">
+            <input type="radio"
+                   name="ShowNsfw"
+                   value=true
+                   id="settingsViewNSFWInputTrue"
+            <% if(ob.NSFW) { %>checked<% } %>>
+            <label for="settingsViewNSFWInputTrue">On</label>
+          </div>
+          <div class="btn clrBr">
+            <input type="radio"
+                   name="ShowNsfw"
+                   value=false
+                   id="settingsViewNSFWInputFalse"
+            <% if(!ob.NSFW) { %>checked<% } %>>
+            <label for="settingsViewNSFWInputFalse">Off</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

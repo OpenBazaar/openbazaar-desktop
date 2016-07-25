@@ -56,26 +56,38 @@ select,
 textarea {
   border: none;
   outline: none;
+  background: none;
+}
+
+select {
+  width: 100%;
 }
 
 textarea {
   background: none;
   outline: none;
   -webkit-appearance: none;
-  width: 100%;
   resize: none;
-  box-sizing: border-box;
-  border: 1px solid transparent;
-  transition: border 0.3s;
 }
 
-textarea:focus {
-  border: 1px solid #fff;
-  outline: none;
+input[type="text"],
+textarea {
+  border-style: solid;
+  border-width: 1px;
+  //use the color class to set the border color
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: $pad;
 }
 
 form {
   margin: 0;
+  font-size: $tx5;
+
+  label {
+    line-height: $formElementHeight;
+  }
 }
 
 ul, ol {
@@ -117,7 +129,7 @@ ul, ol {
   padding: 25px;
   position: relative;
   overflow-y: scroll;
-  height: calc(100% - 50px);
+  height: calc(100% - #{$bar});
   box-sizing: border-box;
 }
 
@@ -126,8 +138,8 @@ ul, ol {
   top: 100px;
   right: 0;
   width: $chatClosed;
+  height: calc(100% - 100px);
   z-index: 1; // chat needs to be on top of modals
-  background-color: rgba(255, 255, 255, 0.6);
   @include chatOpeningTransition(width);
 
   .chatOpen & {

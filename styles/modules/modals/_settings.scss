@@ -1,0 +1,53 @@
+.settings {
+
+  .modalContent {
+    width: 906px;
+    min-height: 640px;
+    padding: 0;
+
+    .tabColumn {
+      width: 194px;
+
+      .tab {
+        padding: $pad/2 $pad/2 $pad/2 $pad;
+
+        &.active {
+          // use the clrBr class for the border color
+          border-right: none;
+          border-top: none;
+          border-bottom: none;
+          border-left: solid 1px;
+        }
+      }
+    }
+
+    .settingsTabContent {
+      height: 560px;
+    }
+
+    .settingsTabFormWrapper {
+      height: 510px;
+    }
+
+    .settingsControls {
+      position: absolute;
+      bottom: 0;
+      height: 80px;
+      padding: $pad * 1.5;
+      border-top-style: solid;
+      border-top-width: 1px;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: right;
+
+      & > .btn {
+        margin-right: $padSm;
+        font-size: $tx4;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}

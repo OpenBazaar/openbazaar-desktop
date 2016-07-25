@@ -15,8 +15,12 @@
     .iconBtn,
     .addressBar,
     .navListBtn {
-      @include disabled;
-    }
+    @include disabled;
+  }
+
+  input[type="text"] {
+    height: auto;
+    border: none;
   }
 
   .windowControls {
@@ -112,6 +116,8 @@
   }
 
   .navList {
-    width: 200px;
+    box-sizing: border-box;
+    width: 260px;
+    padding: $pad;
   }
 }

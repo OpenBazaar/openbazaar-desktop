@@ -1,9 +1,10 @@
 .loadingModal {
-  .modalContent {  
+  .modalContent {
     width: 100%;
     height: 100%;
     padding: 0;
     max-height: none;
+    left: 50%; //don't adjust for the chat sidebar
 
     .chatOpen & {
       // since the loading modal is full screen, we don't

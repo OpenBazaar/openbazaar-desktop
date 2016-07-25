@@ -5,7 +5,7 @@
   display: flex;
   align-items: flex-start;
   width: 100%; //if the element has absolute or fixed positioning, expand it
-  height: 100%; //if the container has a height, fill it.
+  height: 100%; //if the container has a height, fill it. If the parent is absolute, the row must be too.
   box-sizing: border-box;
   flex-direction: row; //align children left to right horizontally
 
@@ -99,7 +99,7 @@
   text-align: right;
 }
 
-.flexGrow {
+.flexExpand {
   //make a child of a flex element expand to fill the remaining space
   flex-grow: 1;
 }
@@ -114,73 +114,73 @@
 .col12 {
   @extend .col;
   flex-basis: 100%;
-  min-width: 100%;
+  width: 100%;
 }
 
 .col11 {
   @extend .col;
   flex-basis: 91.66666666666666%;
-  max-width: 91.66666666666666%;
+  width: 91.66666666666666%;
 }
 
 .col10 {
   @extend .col;
   flex-basis: 83.33333333333334%;
-  max-width: 83.33333333333334%;
+  width: 83.33333333333334%;
 }
 
 .col9 {
   @extend .col;
   flex-basis: 75%;
-  max-width: 75%;
+  width: 75%;
 }
 
 .col8 {
   @extend .col;
   flex-basis: 66.66666666666666%;
-  max-width: 66.66666666666666%;
+  width: 66.66666666666666%;
 }
 
 .col7 {
   @extend .col;
   flex-basis: 58.333333333333336%;
-  max-width: 58.333333333333336%;
+  width: 58.333333333333336%;
 }
 
 .col6 {
   @extend .col;
   flex-basis: 50%;
-  max-width: 50%;
+  width: 50%;
 }
 
 .col5 {
   @extend .col;
   flex-basis: 41.66666666666667%;
-  max-width: 41.66666666666667%;
+  width: 41.66666666666667%;
 }
 
 .col4 {
   @extend .col;
   flex-basis: 33.33333333333333%;
-  max-width: 33.33333333333333%;
+  width: 33.33333333333333%;
 }
 
 .col3 {
   @extend .col;
   flex-basis: 25%;
-  max-width: 25%;
+  width: 25%;
 }
 
 .col2 {
   @extend .col;
   flex-basis: 16.666666666666664%;
-  max-width: 16.666666666666664%;
+  width: 16.666666666666664%;
 }
 
 .col1 {
   @extend .col;
   flex-basis: 8.333333333333332%;
-  max-width: 8.333333333333332%;
+  width: 8.333333333333332%;
 }
 
 //containers should have one of the standard padding sizes
@@ -188,7 +188,7 @@
 
 .padSm,
 .padSmKids > * {
-  padding: $pad / 2;
+  padding: $padSm;
 }
 
 .pad,
@@ -196,42 +196,56 @@
   padding: $pad;
 }
 
+.padM,
+.padMKids > * {
+  padding: $padMd;
+}
+
 .padBg,
 .padBgKids > * {
-  padding: $pad * 2;
+  padding: $padLg;
+}
+
+.padStack > *:not(:last-child) {
+  //use if the children should collapse the padding between them
+  padding-bottom: 0;
 }
 //elements should hae standard spacing between them vertically. There shouldn't be more than a few row classes.
 
 .rowSm {
-  margin-bottom: $row / 2;
+  margin-bottom: $padSm;
 
 }
 .row {
-  margin-bottom: $row;
+  margin-bottom: $pad;
+}
+
+.rowM {
+  margin-bottom: $padMd;
 }
 
 .rowBg {
-  margin-bottom: $row * 2;
+  margin-bottom: $padLg;
 }
 
 .margRSm {
-  margin-right: $marg / 2;
+  margin-right: $padSm;
 }
 
 .margR {
-  margin-right: $marg;
+  margin-right: $pad;
 }
 
 .margLSm {
-  margin-left: $marg / 2;
+  margin-left: $padSm;
 }
 
 .margL {
-  margin-left: $marg;
+  margin-left: $pad;
 }
 
 .gutterHSm > * {
-  margin-right: $marg / 2;
+  margin-right: $padSm;
 
   &:last-child {
     margin-right: 0;
@@ -239,7 +253,7 @@
 }
 
 .gutterH > * {
-  margin-right: $marg;
+  margin-right: $pad;
 
   &:last-child {
     margin-right: 0;
@@ -247,7 +261,7 @@
 }
 
 .gutterHBg > * {
-  margin-right: $marg * 2;
+  margin-right: $padLg;
 
   &:last-child {
     margin-right: 0;
@@ -255,7 +269,7 @@
 }
 
 .gutterVSm > * {
-  margin-bottom: $marg / 2;
+  margin-bottom: $padSm;
 
   &:last-child {
     margin-bottom: 0;
@@ -263,7 +277,7 @@
 }
 
 .gutterV > * {
-  margin-bottom: $marg;
+  margin-bottom: $pad;
 
   &:last-child {
     margin-bottom: 0;
@@ -271,7 +285,7 @@
 }
 
 .gutterVBg > * {
-  margin-bottom: $marg * 2;
+  margin-bottom: $padLg;
 
   &:last-child {
     margin-bottom: 0;
@@ -284,4 +298,12 @@
 
 .floL {
   float: left;
+}
+
+.posA {
+  position: absolute;
+}
+
+.posR {
+  position: relative;
 }
