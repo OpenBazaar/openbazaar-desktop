@@ -22,7 +22,7 @@
   height: $bar;
   padding: 0 $pad;
 
-  input: {
+  input[type="text"] {
     height: 100%;
     padding: $pad;
   }
