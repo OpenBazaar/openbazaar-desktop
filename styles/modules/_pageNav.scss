@@ -109,6 +109,8 @@
   }
 
   .navList {
-    width: 200px;
+    box-sizing: border-box;
+    width: 260px;
+    padding: $pad;
   }
 }

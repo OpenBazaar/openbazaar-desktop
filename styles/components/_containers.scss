@@ -87,8 +87,27 @@
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
   @extend .box, .border, .boxList;
 
-  .listLink {
+  .listGroup {
     padding: $pad;
+    margin-bottom: $pad / 2;
+    border-width: 1px;
+    border-style: solid;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .listLink {
+    padding: $padSm;
     font-size: 1.4rem;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: $padSm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }

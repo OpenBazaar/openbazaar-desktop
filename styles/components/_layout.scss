@@ -188,7 +188,7 @@
 
 .padSm,
 .padSmKids > * {
-  padding: $pad / 2;
+  padding: $padSm;
 }
 
 .pad,
@@ -198,12 +198,12 @@
 
 .padM,
 .padMKids > * {
-  padding: $pad * 1.5;
+  padding: $padMd;
 }
 
 .padBg,
 .padBgKids > * {
-  padding: $pad * 2;
+  padding: $padLg;
 }
 
 .padStack > *:not(:last-child) {
@@ -213,7 +213,7 @@
 //elements should hae standard spacing between them vertically. There shouldn't be more than a few row classes.
 
 .rowSm {
-  margin-bottom: $pad / 2;
+  margin-bottom: $padSm;
 
 }
 .row {
@@ -221,31 +221,31 @@
 }
 
 .rowM {
-  margin-bottom: $pad * 1.5;
+  margin-bottom: $padMd;
 }
 
 .rowBg {
-  margin-bottom: $pad * 2;
+  margin-bottom: $padLg;
 }
 
 .margRSm {
-  margin-right: $marg / 2;
+  margin-right: $padSm;
 }
 
 .margR {
-  margin-right: $marg;
+  margin-right: $pad;
 }
 
 .margLSm {
-  margin-left: $marg / 2;
+  margin-left: $padSm;
 }
 
 .margL {
-  margin-left: $marg;
+  margin-left: $pad;
 }
 
 .gutterHSm > * {
-  margin-right: $marg / 2;
+  margin-right: $padSm;
 
   &:last-child {
     margin-right: 0;
@@ -253,7 +253,7 @@
 }
 
 .gutterH > * {
-  margin-right: $marg;
+  margin-right: $pad;
 
   &:last-child {
     margin-right: 0;
@@ -261,7 +261,7 @@
 }
 
 .gutterHBg > * {
-  margin-right: $marg * 2;
+  margin-right: $padLg;
 
   &:last-child {
     margin-right: 0;
@@ -269,7 +269,7 @@
 }
 
 .gutterVSm > * {
-  margin-bottom: $marg / 2;
+  margin-bottom: $padSm;
 
   &:last-child {
     margin-bottom: 0;
@@ -277,7 +277,7 @@
 }
 
 .gutterV > * {
-  margin-bottom: $marg;
+  margin-bottom: $pad;
 
   &:last-child {
     margin-bottom: 0;
@@ -285,7 +285,7 @@
 }
 
 .gutterVBg > * {
-  margin-bottom: $marg * 2;
+  margin-bottom: $padLg;
 
   &:last-child {
     margin-bottom: 0;
