@@ -101,13 +101,30 @@
   .listLink {
     padding: $padSm;
     font-size: 1.4rem;
-    display: inline-block;
+    display: flex;
     width: 100%;
     box-sizing: border-box;
     margin-bottom: $padSm;
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    & > * {
+      flex-shrink: 0;
+      box-sizing: border-box;
+      padding-right: $padSm;
+
+      &:last-child {
+        padding-right: 0;
+      }
+
+      &:first-child {
+        // expand the first child to fill as much space as it can.
+        // The second child (shortcut text) will be pushed to the right.
+        flex-shrink: 1;
+        flex-grow: 1;
+      }
     }
   }
 }

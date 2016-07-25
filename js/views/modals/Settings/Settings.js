@@ -15,7 +15,7 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
 
-    this.tabElCache = {};
+    this.tabViewCache = {};
     this.tabViews = { SettingsGeneral, SettingsPage };
 
     if (this.options.removeOnClose) this.on('close', () => this.remove());
@@ -41,21 +41,18 @@ export default class extends BaseModal {
 
   selectTab(targ) {
     const tabViewName = targ.data('tab');
+    let tabView = this.tabViewCache[tabViewName];
 
-    this.$('.js-tab').removeClass('clrT active');
-    targ.addClass('clrT active');
-
-    if (this.currentTabName !== tabViewName) {
-      if (this.tabElCache[this.currentTabName]) {
-        this.tabElCache[this.currentTabName].detach();
+    if (!this.currentTabView || this.currentTabView !== tabView) {
+      this.$('.js-tab').removeClass('clrT active');
+      targ.addClass('clrT active');
+      if (this.currentTabView) this.currentTabView.$el.detach();
+      if (!tabView) {
+        tabView = new this.tabViews[tabViewName]();
+        tabView.render();
       }
-      if (!this[tabViewName]) {
-        this[tabViewName] = new this.tabViews[tabViewName]();
-        this.tabElCache[tabViewName] = this[tabViewName].render().$el;
-      }
-      this.$tabContent.append(this.tabElCache[tabViewName]);
-      this.currentTabView = this[tabViewName];
-      this.currentTabName = tabViewName;
+      this.$tabContent.append(tabView.$el);
+      this.currentTabView = tabView;
     }
   }
 
