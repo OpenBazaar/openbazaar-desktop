@@ -1,7 +1,7 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
-import SettingsGeneral from './SettingsGeneral';
-import SettingsPage from './SettingsPage';
+import settingsGeneral from './SettingsGeneral';
+import settingsPage from './SettingsPage';
 import $ from 'jquery';
 
 export default class extends BaseModal {
@@ -16,7 +16,7 @@ export default class extends BaseModal {
     this.options = opts;
 
     this.tabViewCache = {};
-    this.tabViews = { SettingsGeneral, SettingsPage };
+    this.tabViews = { settingsGeneral, settingsPage };
 
     if (this.options.removeOnClose) this.on('close', () => this.remove());
   }
@@ -79,7 +79,7 @@ export default class extends BaseModal {
       super.render();
 
       this.$tabContent = this.$('.js-tabContent');
-      this.selectTab(this.$('.js-tab[data-tab="SettingsGeneral"]'));
+      this.selectTab(this.$('.js-tab[data-tab="settingsGeneral"]'));
     });
 
     return this;
