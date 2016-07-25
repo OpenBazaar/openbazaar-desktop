@@ -121,7 +121,7 @@ export default class extends BaseModel {
 
         // if there are dupes of the same type, give an error to all
         // dupes after the first one
-        if (groupedByType[item.type].length > 1 &&
+        if (item.type !== 'other' && groupedByType[item.type].length > 1 &&
           groupedByType[item.type].indexOf(item) > 0) {
           addError(`social[${index}].type`, 'You already have a social account of this type.');
         }
