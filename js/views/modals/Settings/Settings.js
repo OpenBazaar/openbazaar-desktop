@@ -15,8 +15,8 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
 
-    this.currentTabView = '';
-    this.TabViews = { SettingsGeneral, SettingsPage };
+    this.tabElCache = {};
+    this.tabViews = { SettingsGeneral, SettingsPage };
 
     if (this.options.removeOnClose) this.on('close', () => this.remove());
   }
@@ -40,18 +40,22 @@ export default class extends BaseModal {
   }
 
   selectTab(targ) {
-    const targTab = targ.data('tab');
-    const TabView = `Settings${targTab}`;
-    let newTabView;
+    const tabViewName = targ.data('tab');
 
     this.$('.js-tab').removeClass('clrT active');
     targ.addClass('clrT active');
 
-    if (this.TabViews[TabView]) {
-      newTabView = this[TabView] || new this.TabViews[TabView]();
-      if (this.currentTabView) this.currentTabView.remove();
-      this.currentTabView = newTabView;
-      this.tabContent.append(newTabView.render().el);
+    if (this.currentTabName !== tabViewName) {
+      if (this.tabElCache[this.currentTabName]) {
+        this.tabElCache[this.currentTabName].detach();
+      }
+      if (!this[tabViewName]) {
+        this[tabViewName] = new this.tabViews[tabViewName]();
+        this.tabElCache[tabViewName] = this[tabViewName].render().$el;
+      }
+      this.tabContent.append(this.tabElCache[tabViewName]);
+      this.currentTabView = this[tabViewName];
+      this.currentTabName = tabViewName;
     }
   }
 
@@ -78,7 +82,7 @@ export default class extends BaseModal {
       super.render();
 
       this.tabContent = this.$('.js-tabContent');
-      this.selectTab(this.$('.js-tab[data-tab="General"]'));
+      this.selectTab(this.$('.js-tab[data-tab="SettingsGeneral"]'));
     });
 
     return this;

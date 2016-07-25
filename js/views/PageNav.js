@@ -141,7 +141,9 @@ export default class extends View {
   }
 
   navSettingsClick() {
-    new SettingsModal().render().open();
+    if (!this.settingsModal || !this.settingsModal.isOpen()) {
+      this.settingsModal = new SettingsModal().render().open();
+    }
     this.togglePopMenu();
   }
 
