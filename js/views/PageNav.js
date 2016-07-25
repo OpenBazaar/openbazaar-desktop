@@ -4,6 +4,7 @@ import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
+import SettingsModal from './modals/Settings/Settings';
 
 const remote = electron.remote;
 
@@ -140,7 +141,10 @@ export default class extends View {
   }
 
   navSettingsClick() {
-    // activate settings modal here
+    if (!this.settingsModal || !this.settingsModal.isOpen()) {
+      this.settingsModal = new SettingsModal().render().open();
+    }
+    this.togglePopMenu();
   }
 
   render() {

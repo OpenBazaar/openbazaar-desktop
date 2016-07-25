@@ -9,13 +9,20 @@
   @extend .box;
 }
 
+.scrollBox {
+  @extend .box;
+  //a height must be set on this element
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
 
 .bar {
   @extend .box;
   height: $bar;
   padding: 0 $pad;
 
-  input: {
+  input[type="text"] {
     height: 100%;
     padding: $pad;
   }
@@ -24,7 +31,7 @@
 .pageContent {
   padding: $pad;
   width: calc(100% - #{$chatClosed});
-  background-color: pink; // temporary to see transition when chat opens 
+  background-color: pink; // temporary to see transition when chat opens
   @include chatOpeningTransition(width);
 
   .chatOpen & {
@@ -79,9 +86,46 @@
 .listBox {
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
   @extend .box, .border, .boxList;
-}
 
-.listLink {
-  padding: $pad;
-  font-size: 1.4rem;
+  .listGroup {
+    padding: $pad;
+    margin-bottom: $pad / 2;
+    border-width: 1px;
+    border-style: solid;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .listLink {
+    padding: $padSm;
+    font-size: 1.4rem;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: $padSm;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    & > * {
+      flex-shrink: 0;
+      box-sizing: border-box;
+      padding-right: $padSm;
+      word-break: break-all;
+
+      &:last-child {
+        padding-right: 0;
+      }
+
+      &:first-child {
+        // expand the first child to fill as much space as it can.
+        // The second child (shortcut text) will be pushed to the right.
+        flex-shrink: 1;
+        flex-grow: 1;
+      }
+    }
+  }
 }

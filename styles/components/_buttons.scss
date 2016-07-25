@@ -11,7 +11,11 @@
   display: inline-block; //add height and width, collapse the width
   cursor: pointer;
 
-  &:hover,
+  &:hover {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
   &:focus {
     text-decoration: none;
   }
@@ -21,6 +25,47 @@
     height: $bar;
     border: none;
   }
+
+  //radio and checkbox inputs can be placed inside a button
+
+  input[type="radio"] {
+    display: none;
+
+    & + label {
+
+      &:hover {
+        cursor: inherit;
+      }
+
+      &:before {
+        content: '';
+        display: inline-block;
+        box-sizing: border-box;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        border-width: 1px;
+        border-style: solid;
+        vertical-align: middle;
+        position: relative;
+        top: -0.1em;
+        margin-right: 0.4em;
+        margin-left: -0.25em;
+        //background color is assigned by the theme
+
+        &:hover {
+          cursor: inherit;
+        }
+      }
+    }
+
+    //checked state is set by the theme
+  }
+}
+
+.btnTxt {
+  @extend .btn;
+  border: none;
 }
 
 .iconBtn {
@@ -31,21 +76,21 @@
   padding: 0 12px;
 }
 
-.buttonStrip {
+.btnStrip {
   //creates a set of buttons with no gaps between them
-  & > * {
+  & > .btn {
     border-radius: 0;
     border-right-width: 0;
     display: block; //block-inline elements have a space after them
     float: left; //float left will collapse the button and position it correctly
   }
-  & > *:first-child {
-    border-top-left: $corner;
-    border-bottom-left: $corner;
+  & > .btn:first-child {
+    border-top-left-radius: $corner;
+    border-bottom-left-radius: $corner;
   }
-  & > *:last-child {
-    border-top-right: $corner;
-    border-bottom-right: $corner;
+  & > .btn:last-child {
+    border-top-right-radius: $corner;
+    border-bottom-right-radius: $corner;
     border-right-width: 1px;
   }
 

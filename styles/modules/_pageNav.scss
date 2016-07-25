@@ -11,6 +11,11 @@
     -webkit-app-region: no-drag;
   }
 
+  input[type="text"] {
+    height: auto;
+    border: none;
+  }
+
   .windowControls {
     display: flex;
     align-items: center;
@@ -104,6 +109,8 @@
   }
 
   .navList {
-    width: 200px;
+    box-sizing: border-box;
+    width: 260px;
+    padding: $pad;
   }
 }

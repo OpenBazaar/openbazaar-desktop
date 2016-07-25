@@ -11,7 +11,7 @@ export default class BaseModal extends BaseVw {
       dismissOnEscPress: true,
       showCloseButton: true,
       closeButtonClass: 'modalClose ion-close-round',
-      modelContentClass: 'modalContent',
+      modelContentClass: 'modalContent clrP',
       ...options,
     };
 

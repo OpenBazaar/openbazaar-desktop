@@ -25,9 +25,9 @@
           </span>
         </div>
       </div>
-      <div class="flexGrow">
+      <div class="flexExpand">
         <div class="flexVCent">
-          <input type="text" class="js-addressBar flexGrow" placeholder="Type a @handle, OpenBazaar ID or #tag" />
+          <input type="text" class="js-addressBar flexExpand" placeholder="Type a @handle, OpenBazaar ID or #tag" />
         </div>
       </div>
       <div class="rowDivV clrBrBackground"></div>
@@ -43,16 +43,45 @@
           <% } %>
           ></a>
           <nav class="navList listBox clrBr clrP shad1 foldDown js-navList js-navPopMenu">
-            <a class="listLink">Current Node <i class="ion-android-arrow-dropdown floR"></i> </a>
-            <hr class="unleaded">
-            <a class="listLink"><i class="ion-android-bulb"></i> Foo <span class="floR clrT2">Cltrl + ?</span> </a>
-            <a class="listLink"><i class="ion-android-cloud-circle"></i> Foo</a>
-            <hr>
-            <a href="#transactions" class="listLink"><i class="ion-log-out"></i> Purchases</a>
-            <a href="#transactions" class="listLink"><i class="ion-log-in"></i> Sales</a>
-            <a href="#transactions" class="listLink"><i class="ion-briefcase"></i> Cases</a>
-            <hr>
-            <a class="listLink js-navSettings"><i class="ion-toggle-filled"></i> Settings</a>
+            <div class="listGroup clrS clrBr">
+              <a class="listLink clrS clrBr">Current Node <i
+                class="ion-arrow-right-b floR"></i> </a>
+            </div>
+            <div class="listGroup clrS clrBr">
+              <a class="listLink">
+                <span>My Page</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+              <a class="listLink">
+                <span>Customize Page</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+              <a class="listLink">
+                <span>Create Listing</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+            </div>
+            <div class="listGroup clrS clrBr">
+              <a href="#transactions" class="listLink">
+                <span>Purchases</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+              <a href="#transactions" class="listLink">
+                <span>Sales</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+              <a href="#transactions" class="listLink">
+                <span>Cases</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+            </div>
+            <div class="listGroup clrS clrBr">
+              <a class="listLink js-navSettings">
+                <span>Settings</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+            </div>
+            <div class="listGroup clrS clrBr">
+              <a href="#transactions" class="listLink">
+                <span>About OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+              <a href="#transactions" class="listLink">
+                <span>Support OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
+              </a>
+            </div>
           </nav>
         </div>
       </div>
