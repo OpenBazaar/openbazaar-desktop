@@ -5,7 +5,7 @@ import * as templateHelpers from './templateHelpers';
 
 const templateCache = {};
 
-export default function (templateFile, callback, root = `${__dirname}/../templates/`) {
+export default function loadTemplate(templateFile, callback, root = `${__dirname}/../templates/`) {
   if (!templateFile) {
     throw new Error('Please provide a path to the template.');
   }
@@ -20,7 +20,21 @@ export default function (templateFile, callback, root = `${__dirname}/../templat
     templateCache[templateFile] = template;
   }
 
-  const wrappedTmpl = (context) => template({ ...templateHelpers, ...(context || {}) });
+  const sendBackTmpl = () => {
+    const wrappedTmpl = (context) => template({ ...templateHelpers, ...(context || {}) });
+    callback(wrappedTmpl);
+  };
 
-  callback(wrappedTmpl);
+  // todo: if we need more template that we want to provide as template
+  // helpers, find a way to abstract it.
+  if (!templateHelpers.formErrorTmpl) {
+    templateHelpers.formErrorTmpl = 'its coming'; // hack to avoid infinite recursion
+    loadTemplate('formError.html', (t) => {
+      templateHelpers.formErrorTmpl = t;
+      sendBackTmpl();
+    });
+  } else {
+    sendBackTmpl();
+  }
 }
+

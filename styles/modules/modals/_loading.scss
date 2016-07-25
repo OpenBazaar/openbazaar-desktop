@@ -6,6 +6,12 @@
     max-height: none;
     left: 50%; //don't adjust for the chat sidebar
 
+    .chatOpen & {
+      // since the loading modal is full screen, we don't
+      // want it to adjust to the chat opening.
+      left: 50%;
+    }
+
     .loadingText {
       @include center;
     }

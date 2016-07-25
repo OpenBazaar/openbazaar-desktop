@@ -1,0 +1,55 @@
+<form>
+  <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
+  <label class="<% if (ob.errors.email) print('error') %>">
+    Email:
+    <input type="email" name="email" value="<%= ob.email %>" />
+  </label class="<% if (ob.errors.website) print('error') %>">
+  <% if (ob.errors.website) print(ob.formErrorTmpl({ errors: ob.errors.website })) %>
+  <label class="<% if (ob.errors.website) print('error') %>">
+    Website:
+    <input type="url" name="website" value="<%= ob.website %>" />
+  </label>
+  <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
+  <label  class="<% if (ob.errors.about) print('error') %>">
+    About:
+    <textarea name="about"><%= ob.about %></textarea>
+  </label>  
+  <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>  
+  <label class="<% if (ob.errors.primaryColor) print('error') %>">
+    Primary Color (hex color):
+    <span class="labelSubText">Left as plain text field to see validation in action.</span>
+    <input type="text" name="primaryColor" value="<%= ob.primaryColor %>" />
+  </label>
+  <label>
+    Social Accounts:
+  </label>
+  <% if (ob.social && ob.social.length) { %>
+       <div> <% // wrapping div needeed for JS to properly calc index %>
+       <% ob.social.forEach((socialAcct, index) => { %>
+         <div class="socialAccount">
+           <% if (ob.errors[`social[${index}].type`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].type`] })) %>  
+           <label>
+              Type:
+             <select name="<%= `social[${index}].type` %>">
+               <% ob.socialTypes.forEach((type) => { %>
+                  <option value="<%= type %>"<% if (socialAcct.type === type) print('selected')%>><% print(type.charAt(0).toUpperCase() + type.slice(1)) %></option>
+               <% }) %>
+             </select>
+           </label>
+           <% if (ob.errors[`social[${index}].username`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].username`] })) %>  
+           <label>
+              Username:
+              <input name="<%= `social[${index}].username` %>" type="text" value="<%= socialAcct.username %>" />
+            </label>
+           <button type="button" class="js-RemoveSocial">Remove</button>
+         </div>
+    <% }); %>
+      </div>
+   <% } %>  
+  <button type="button" class="js-AddSocial btnAddSocial">Add</button>
+
+  <div class="buttonBar">
+    <input type="reset" />
+    <input type="submit" />
+  </div>  
+</form>

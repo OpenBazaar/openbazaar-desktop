@@ -1,0 +1,67 @@
+.testProfilePage {
+  font-size: 18px;
+
+  input, textarea {
+    display: block;
+    border: 1px solid black;
+    font-size: 16px;
+    margin: 10px 0 25px;
+    width: 300px;
+    padding: 10px;
+    height: 20px;
+  }
+
+  textarea {
+    width: 320px;
+    height: 180px;
+  }
+
+  label {
+    .labelSubText {
+      display: block;
+      font-size: 14px;
+      margin: 6px 0;
+    }
+  }
+
+  .btnAddSocial {
+    display: block;
+  }
+
+  .buttonBar {
+    margin-top: 15px;
+
+    input {
+      width: 100px;
+      display: inline;
+      height: auto;
+
+      &:hover {
+        cursor: pointer;
+        background-color: white;
+      }
+    }
+  }
+
+  .socialAccount {
+    display: block;
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #CCC;
+    margin: 10px 0;
+
+    input {
+      width: auto;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+
+    label {
+      display: block;
+    }
+
+    select {
+      margin-bottom: 10px;
+    }
+  }
+}

@@ -6,6 +6,7 @@ import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import SimpleMessageModal from './views/modals/SimpleMessage';
+import Profile from './models/Profile';
 
 // Until we have legitimate profile models interfacing with the server,
 // we'll create a dummy "users" collection with a dummy set of  "user" models
@@ -30,10 +31,6 @@ const usersCl = new Collection([
   },
 ]);
 
-// Represents the user who's node this is (i.e. you). Fudging
-// it for now.
-app.user = usersCl.at(0);
-
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
@@ -51,15 +48,55 @@ app.simpleMessageModal.remove = () => {
   throw new Error('This is a shared instance that should not be removed.');
 };
 
-const pageNav = new PageNav();
-$('#pageNavContainer').append(pageNav.render().el);
+app.pageNav = new PageNav();
+$('#pageNavContainer').append(app.pageNav.render().el);
 
-app.router = new ObRouter({
-  usersCl,
-  pageNavVw: pageNav,
+app.router = new ObRouter({ usersCl });
+
+// get the server config
+$.get(app.getServerUrl('ob/config')).done((data) => {
+  app.profile = new Profile({ id: data.guid });
+
+  // todo: for now busting cache on fetch pending
+  // issue where my server is not running the latest
+  // code which solves this.
+  app.profile.fetch({ cache: false })
+    .done(() => {
+      app.pageNav.navigable = true;
+      Backbone.history.start();
+      app.loadingModal.close();
+    }).fail((jqXhr) => {
+      if (jqXhr.status === 400) {
+        // for now we'll consider 400 - Bad Request to mean
+        // onboarding is needed. After some pending server changes
+        // 404 should mean onboarding is needed.
+        // todo: follow up with cpacia to ensure the server change is
+        // made.
+
+        // for now we'll just manually save the profile with
+        // some default / dummy values. Later, we'll make the
+        // onboarding modal.
+
+        const profileSave = app.profile.save({}, {
+          type: 'POST',
+        });
+
+        if (!profileSave) {
+          throw new Error('Client side validation failed on your new Profile model.' +
+            'Ensure your defaults are valid.');
+        } else {
+          profileSave.done(() => {
+            app.pageNav.navigable = true;
+            Backbone.history.start();
+            app.loadingModal.close();
+          }).fail((failData) => {
+            app.loadingModal.close();
+            app.simpleMessageModal.open('Unable To Save Profile', failData.reason || '');
+          });
+        }
+      } else {
+        app.loadingModal.close();
+        app.simpleMessageModal.open('Unable To Get Profile');
+      }
+    });
 });
-
-app.loadingModal.close();
-
-// start history
-Backbone.history.start();

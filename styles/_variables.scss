@@ -7,6 +7,8 @@ $secondary: adjust-color($primary, $lightness: +5%);
 $background: adjust-color($primary, $lightness: -4%);
 $border: adjust-color($primary, $lightness: -11%);
 $emphasis1: rgb(253,166,57);
+$modalBackground: rgb(255,255,255);
+$error: red;
 $overlay: adjust-color($primary, $lightness: -80%, $alpha: -0.8);
 
 // typography

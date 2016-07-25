@@ -7,6 +7,7 @@ import UserPage from './views/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import TestModalsPage from './views/TestModalsPage';
+import TestProfilePage from './views/TestProfilePage';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -21,18 +22,13 @@ export default class ObRouter extends Router {
 
     this.usersCl = options.usersCl;
 
-    if (!options.pageNavVw) {
-      throw new Error('Please provide the app\'s pageNavVw.');
-    }
-
-    this.pageNavVw = options.pageNavVw;
-
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       ['test-modals', 'testModals'],
+      ['test-profile', 'testProfile'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -49,9 +45,9 @@ export default class ObRouter extends Router {
 
   setAddressBarText() {
     if (location.hash.startsWith('#transactions')) {
-      this.pageNavVw.setAddressBar();
+      app.pageNav.setAddressBar();
     } else {
-      this.pageNavVw.setAddressBar(location.hash.slice(1));
+      app.pageNav.setAddressBar(location.hash.slice(1));
     }
   }
 
@@ -147,6 +143,12 @@ export default class ObRouter extends Router {
   testModals() {
     this.loadPage(
       new TestModalsPage().render()
+    );
+  }
+
+  testProfile() {
+    this.loadPage(
+      new TestProfilePage().render()
     );
   }
 

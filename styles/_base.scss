@@ -104,6 +104,10 @@ ul, ol {
   display: none;
 }
 
+#ov1 .disabled {
+  @include disabled;
+}
+
 #appFrame {
   position: absolute;
   height: 100%;

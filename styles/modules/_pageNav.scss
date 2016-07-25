@@ -11,6 +11,14 @@
     -webkit-app-region: no-drag;
   }
 
+  &.notNavigable {
+    .iconBtn,
+    .addressBar,
+    .navListBtn {
+      @include disabled;
+    }
+  }
+
   input[type="text"] {
     height: auto;
     border: none;
