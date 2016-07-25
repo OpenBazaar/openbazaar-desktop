@@ -114,6 +114,7 @@
       flex-shrink: 0;
       box-sizing: border-box;
       padding-right: $padSm;
+      word-break: break-all;
 
       &:last-child {
         padding-right: 0;
