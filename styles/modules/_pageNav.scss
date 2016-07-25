@@ -15,7 +15,8 @@
     .iconBtn,
     .addressBar,
     .navListBtn {
-    @include disabled;
+      @include disabled;
+    }
   }
 
   input[type="text"] {
