@@ -49,6 +49,7 @@ export default class extends BaseModal {
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
         tabView = new this.tabViews[tabViewName]();
+        this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }
       this.$tabContent.append(tabView.$el);
