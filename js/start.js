@@ -100,3 +100,13 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
       }
     });
 });
+
+import Settings from './models/Settings';
+console.log('settings');
+window.settings = new Settings();
+
+const shipAddrs = window.settings.get('ShippingAddresses');
+shipAddrs.on('change', (model) => {
+  console.log(`for the model at index ${shipAddrs.indexOf(model)}, ` +
+    `these attrs have changed: ${JSON.stringify(model.changed)}`);
+});
