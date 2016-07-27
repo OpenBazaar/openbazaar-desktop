@@ -12,6 +12,7 @@ export default class BaseModal extends BaseVw {
       showCloseButton: true,
       closeButtonClass: 'modalClose ion-close-round',
       modelContentClass: 'modalContent clrP',
+      removeOnClose: false,
       ...options,
     };
 
@@ -77,6 +78,10 @@ export default class BaseModal extends BaseVw {
       getAppFrame()[0].removeChild(this.el);
       this._open = false;
       this.trigger('close');
+    }
+
+    if (this.__options.removeOnClose) {
+      this.remove();
     }
 
     return this;

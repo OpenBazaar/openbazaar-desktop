@@ -39,12 +39,12 @@ Also, if it's just a super simple message you need, please check out the SimpleM
 export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
-      removeOnClose: true,
       title: '',
       message: '',
       titleClass: '',
       messageClass: '',
       buttons: [],
+      removeOnClose: true,
       ...options,
     };
 
@@ -68,8 +68,6 @@ export default class extends BaseModal {
       this.events = () => ({ ...super.events() || {}, ...events });
       this.delegateEvents(this.events);
     }
-
-    if (this.options.removeOnClose) this.on('close', () => this.remove());
   }
 
   className() {

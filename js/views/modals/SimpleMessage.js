@@ -20,7 +20,6 @@ export default class extends BaseModal {
     super(opts);
 
     this.options = opts;
-    if (this.options.removeOnClose) this.on('close', () => this.remove());
     this.title = options.title;
     this.message = options.message;
   }
