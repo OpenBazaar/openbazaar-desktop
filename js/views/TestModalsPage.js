@@ -3,6 +3,7 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import TestModal from './modals/Test';
 import Dialog from './modals/Dialog';
+import SimpleMessageModal from './modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -23,8 +24,9 @@ export default class extends BaseVw {
   }
 
   onClickSimple() {
-    app.simpleMessageModal.open('Who do you think you are?',
-      'I seemed to have misplaced my shoes and glasses.');
+    new SimpleMessageModal()
+      .render()
+      .open('Who do you think you are?', 'I seemed to have misplaced my shoes and glasses.');
   }
 
   onClickDialog() {

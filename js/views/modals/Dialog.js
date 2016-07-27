@@ -33,8 +33,7 @@ the bottom. If you find that your situation needs custom markup, css (beyond the
 can optionally pass in) and/or behavior (e.g. tabs, etc.), you should write a custom view
 and extend from the Base Modal.
 
-Also, if it's just a super simple message you need, please use the simpleMessageModal
-instance attached to our app instance.
+Also, if it's just a super simple message you need, please check out the SimpleMessageModal.
 */
 
 export default class extends BaseModal {

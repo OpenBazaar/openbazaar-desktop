@@ -2,13 +2,6 @@ import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
 
 /*
-  An instance of this modal is attached to our App instance, which allows you to display a
-  simple message as follows:
-
-  import app from './app'; // adjust path as needed
-
-  app.simpleMessageModal.open('The Beatles', 'We all need a little help from our friends.');
-
   Please Note: This Modal is designed for a very simple message (containing a title and a
   message body). If you need something beyond that, check out the Dialog which will allow
   you to optionally pass in classes as well as buttons. If you need something beyond that,

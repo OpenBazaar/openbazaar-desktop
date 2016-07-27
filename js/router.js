@@ -57,7 +57,6 @@ export default class ObRouter extends Router {
   }
 
   execute(callback, args) {
-    app.simpleMessageModal.close();
     app.loadingModal.open();
 
     if (callback) callback.apply(this, args);

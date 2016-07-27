@@ -2,6 +2,7 @@ import $ from 'jquery';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
+import SimpleMessageModal from './modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -55,7 +56,9 @@ export default class extends BaseVw {
       formSave.done(() => {
         new Notification('Save complete', { silent: true }); // eslint-disable-line no-new
       }).fail((data) => {
-        app.simpleMessageModal.open('There was an error saving the data.', data.reason || '');
+        new SimpleMessageModal()
+          .render()
+          .open('There was an error saving the data.', data.reason || '');
       });
     }
 
