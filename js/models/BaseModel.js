@@ -31,6 +31,9 @@ import { Model } from 'backbone';
     }
   }
 
+  The main reason you would want to provide a custom Model / Collection is if you want to
+  declare defaults for the nested attributes.
+
   === setting nested attributes ===
 
   You have multiple options:
@@ -97,7 +100,8 @@ import { Model } from 'backbone';
   === events ===
 
   Events related to the nested attributes need to be directly bound to the nested
-  model / collection:
+  model / collection (e,g. if a nested model changes, the parent's change event
+  will -not- fire):
 
   this.listenTo(parentModel.get('SMTPSettings'), 'change', () => {});
   this.listenTo(parentModel.get('SMTPSettings'), 'change:notifications', () => {});

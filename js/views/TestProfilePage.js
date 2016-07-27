@@ -9,6 +9,8 @@ export default class extends BaseVw {
     this.options = options;
 
     this.listenTo(app.profile, 'change', this.render, this);
+    // this.listenTo(app.profile.get('social'), 'add', this.onAddSocial, this);
+    // this.listenTo(app.profile.get('social'), 'remove', this.onRemoveSocial, this);
   }
 
   events() {
@@ -30,23 +32,28 @@ export default class extends BaseVw {
   }
 
   onClickAddSocial() {
-    const social = app.profile.get('social') || [];
-
-    social.push({
-      type: app.profile.socialTypes[0],
-      username: '',
-    });
-
-    app.profile.set('social', social);
+    app.profile.get('social')
+      .push({
+        type: app.profile.socialTypes[0],
+        username: '',
+      });
   }
 
   onClickRemoveSocial(e) {
     const index = $(e.target).parents('.socialAccount').index();
     const social = app.profile.get('social');
 
-    social.splice(index, 1);
-    app.profile.set('social', social);
+    social.remove(social.at(index));
   }
+
+  // onAddSocial(md, cl, options) {
+  //   console.log('sugar');
+  //   window.sugar = options;
+  // }
+
+  // onRemoveSocial(md, cl, options) {
+
+  // }
 
   saveForm() {
     app.profile.set(this.getFormData());

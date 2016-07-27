@@ -57,6 +57,9 @@ app.router = new ObRouter({ usersCl });
 $.get(app.getServerUrl('ob/config')).done((data) => {
   app.profile = new Profile({ id: data.guid });
 
+  console.log('hello');
+  window.hello = app.profile;
+
   // todo: for now busting cache on fetch pending
   // issue where my server is not running the latest
   // code which solves this.
@@ -101,12 +104,12 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
     });
 });
 
-import Settings from './models/Settings';
-console.log('settings');
-window.settings = new Settings();
+// import Settings from './models/Settings';
+// console.log('settings');
+// window.settings = new Settings();
 
-const shipAddrs = window.settings.get('ShippingAddresses');
-shipAddrs.on('change', (model) => {
-  console.log(`for the model at index ${shipAddrs.indexOf(model)}, ` +
-    `these attrs have changed: ${JSON.stringify(model.changed)}`);
-});
+// const shipAddrs = window.settings.get('ShippingAddresses');
+// shipAddrs.on('change', (model) => {
+//   console.log(`for the model at index ${shipAddrs.indexOf(model)}, ` +
+//     `these attrs have changed: ${JSON.stringify(model.changed)}`);
+// });
