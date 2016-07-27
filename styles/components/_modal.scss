@@ -1,13 +1,13 @@
 .modal {
   position: absolute;
-  top: 50px;
+  top: $bar;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: $overlay;
 
   .modalContent {
-    padding: 25px;
+    padding: $padHg;
     min-width: 300px;
     max-height: 500px;
     overflow: auto;

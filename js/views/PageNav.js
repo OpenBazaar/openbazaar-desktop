@@ -4,7 +4,7 @@ import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
-import SettingsModal from './modals/Settings/Settings';
+import SettingsModal from './modals/settings/Settings';
 
 const remote = electron.remote;
 
@@ -106,8 +106,10 @@ export default class extends View {
     if ($popMenu) {
       this.$popMenus.not($popMenu).removeClass('open');
       $popMenu.toggleClass('open');
+      this.$navOverlay.addClass('open');
     } else {
       this.$popMenus.removeClass('open');
+      this.$navOverlay.removeClass('open');
     }
   }
 
@@ -177,6 +179,7 @@ export default class extends View {
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');
     this.$popMenus = this.$('.js-navPopMenu');
+    this.$navOverlay = this.$('.js-navOverlay');
 
     return this;
   }

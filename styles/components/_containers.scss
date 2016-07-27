@@ -85,7 +85,7 @@
 
 .listBox {
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
-  @extend .box, .border, .boxList;
+  @extend .box, .boxList;
 
   .listGroup {
     padding: $pad;

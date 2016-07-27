@@ -1,15 +1,15 @@
 // colors
-$text: hsl(0,0,15);
-$text2: adjust-color($text, $lightness: +41%);
+$text: hsl(0,0,14.8);
+$text2: adjust-color($text, $lightness: +43.2%);
 $text3: adjust-color($text, $lightness: +59%);
-$primary: hsl(0,0%,95%);
-$secondary: adjust-color($primary, $lightness: +5%);
-$background: adjust-color($primary, $lightness: -4%);
-$border: adjust-color($primary, $lightness: -11%);
+$primary: hsl(0,0%,100%);
+$secondary: adjust-color($primary, $lightness: -4%);
+$background: adjust-color($primary, $lightness: -10%);
+$border: adjust-color($primary, $lightness: -14%);
 $emphasis1: rgb(253,166,57);
 $modalBackground: rgb(255,255,255);
 $error: red;
-$overlay: adjust-color($primary, $lightness: -80%, $alpha: -0.8);
+$overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
 
 // typography
 $baseFontSize: 10px;
@@ -22,16 +22,17 @@ $tx6: 1.2rem;
 
 $formElementHeight: 4rem;
 
-//layout
+// layout
 $pad: 10px;
 $padSm: $pad / 2;
 $padMd: $pad * 1.5;
 $padLg: $pad * 2;
+$padHg: $pad * 2.5;
 $marg: 10px;
 $chatClosed: 50px; //fake number
 $chatOpen: 200px; //fake number
 
-//controls
+// controls
 $corner: 2px;
 $bar: 50px;
 

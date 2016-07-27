@@ -120,5 +120,16 @@
     box-sizing: border-box;
     width: 260px;
     padding: $pad;
+    z-index: 1;
+  }
+
+  .navOverlay {
+    display: none;
+    position: fixed;
+    z-index: 0;
+
+    &.open {
+      display: block;
+    }
   }
 }

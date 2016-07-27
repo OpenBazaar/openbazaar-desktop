@@ -42,13 +42,15 @@
             style="background-image: url('../imgs/defaultUser.png')"
           <% } %>
           ></a>
-          <nav class="navList listBox clrBr clrP shad1 foldDown js-navList js-navPopMenu">
-            <div class="listGroup clrS clrBr">
-              <a class="listLink clrS clrBr">Current Node <i
-                class="ion-arrow-right-b floR"></i> </a>
-            </div>
-            <div class="listGroup clrS clrBr">
+          <nav class="navList listBox clrS shad1 foldDown js-navList js-navPopMenu">
+            <div class="listGroup clrP clrBr">
               <a class="listLink">
+                <span>Current Node</span>
+                <span><i class="ion-arrow-right-b floR"></i></span>
+              </a>
+            </div>
+            <div class="listGroup clrP clrBr">
+              <a class="listLink" href="#Qma06aa22a38f0e62221ab74464c311bd88305f88c">
                 <span>My Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
               <a class="listLink">
@@ -58,7 +60,7 @@
                 <span>Create Listing</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
-            <div class="listGroup clrS clrBr">
+            <div class="listGroup clrP clrBr">
               <a href="#transactions" class="listLink">
                 <span>Purchases</span><span class="clrT2">Cltrl + ?</span>
               </a>
@@ -69,12 +71,12 @@
                 <span>Cases</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
-            <div class="listGroup clrS clrBr">
+            <div class="listGroup clrP clrBr">
               <a class="listLink js-navSettings">
                 <span>Settings</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
-            <div class="listGroup clrS clrBr">
+            <div class="listGroup clrP clrBr">
               <a href="#transactions" class="listLink">
                 <span>About OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
               </a>
@@ -88,3 +90,4 @@
     </div>
   </nav>
 </header>
+<div class="navOverlay modal js-navOverlay"></div>

@@ -100,3 +100,7 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
       }
     });
 });
+
+app.loadingModal.close();
+app.pageNav.navigable = true;
+Backbone.history.start();
