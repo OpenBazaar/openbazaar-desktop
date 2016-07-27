@@ -98,7 +98,6 @@ export default class extends BaseModel {
     }
 
     const socialAccounts = attrs.social;
-
     // used to give errors on dupes of the same type
     const groupedByType = socialAccounts.groupBy('type');
 
@@ -118,7 +117,7 @@ export default class extends BaseModel {
       // if there are dupes of the same type, give an error to all
       // dupes after the first one
       if (socialAttrs.type !== 'other' && groupedByType[socialAttrs.type].length > 1 &&
-        groupedByType[socialAttrs.type].indexOf(socialAttrs) > 0) {
+        groupedByType[socialAttrs.type].indexOf(socialMd) > 0) {
         addError(`social[${index}].type`, 'You already have a social account of this type.');
       }
     });

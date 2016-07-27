@@ -9,8 +9,7 @@ export default class extends BaseVw {
     this.options = options;
 
     this.listenTo(app.profile, 'change', this.render, this);
-    // this.listenTo(app.profile.get('social'), 'add', this.onAddSocial, this);
-    // this.listenTo(app.profile.get('social'), 'remove', this.onRemoveSocial, this);
+    this.listenTo(app.profile.get('social'), 'update', this.render, this);
   }
 
   events() {
@@ -46,15 +45,6 @@ export default class extends BaseVw {
     social.remove(social.at(index));
   }
 
-  // onAddSocial(md, cl, options) {
-  //   console.log('sugar');
-  //   window.sugar = options;
-  // }
-
-  // onRemoveSocial(md, cl, options) {
-
-  // }
-
   saveForm() {
     app.profile.set(this.getFormData());
     const formSave = app.profile.save();
@@ -76,8 +66,7 @@ export default class extends BaseVw {
   getFormData() {
     const formData = {};
 
-    this.$fields = this.$fields || this.$('input[name], textarea[name], select[name]');
-    this.$fields.each((index, field) => {
+    this.$('input[name], textarea[name], select[name]').each((index, field) => {
       const $field = $(field);
       const name = $field.attr('name');
       const leftBracketIndex = name.indexOf('[');
@@ -115,7 +104,6 @@ export default class extends BaseVw {
         socialTypes: app.profile.socialTypes,
         errors: app.profile.validationError || {},
       }));
-      this.$fields = null;
     });
 
     return this;
