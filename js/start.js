@@ -34,17 +34,18 @@ const usersCl = new Collection([
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
+app.pageNav = new PageNav();
+$('#pageNavContainer').append(app.pageNav.render().el);
+
+app.router = new ObRouter({ usersCl });
+
 // create and launch loading modal
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
+  removeOnRoute: false,
 }).render().open();
-
-app.pageNav = new PageNav();
-$('#pageNavContainer').append(app.pageNav.render().el);
-
-app.router = new ObRouter({ usersCl });
 
 // get the server config
 $.get(app.getServerUrl('ob/config')).done((data) => {
