@@ -1,7 +1,7 @@
-import _ from 'underscore';
 import BaseModel from './BaseModel';
 import app from '../app';
 import is from 'is_js';
+import SocialAccounts from '../collections/SocialAccounts';
 
 export default class extends BaseModel {
   defaults() {
@@ -17,6 +17,12 @@ export default class extends BaseModel {
     // url is handled by sync, but backbone bombs if I don't have
     // something explicitly set
     return 'use-sync';
+  }
+
+  nested() {
+    return {
+      social: SocialAccounts,
+    };
   }
 
   getColorFields() {
@@ -52,17 +58,6 @@ export default class extends BaseModel {
       opts = val;
     } else {
       (attrs = {})[key] = val;
-    }
-
-    if (attrs.social) {
-      if (!_.isEqual(attrs.social, this._social)) {
-        this.attributes.social = this._social;
-
-        // if the object contents are not equal, we'll clone a new object so
-        // the change is event is fired.
-        this._social = JSON.parse(JSON.stringify(attrs.social)); // deep clone
-        attrs.social = JSON.parse(JSON.stringify(attrs.social));
-      }
     }
 
     return super.set(this.standardizeColorFields(attrs), opts);
@@ -102,31 +97,30 @@ export default class extends BaseModel {
       addError('website', 'Please provide a valid url.');
     }
 
-    if (is.not.array(attrs.social)) {
-      addError('social', 'Social must be an array.');
-    } else {
-      // used to give errors on dupes of the same type
-      const groupedByType = _.groupBy(attrs.social, 'type');
+    const socialAccounts = attrs.social;
+    // used to give errors on dupes of the same type
+    const groupedByType = socialAccounts.groupBy('type');
 
-      attrs.social.forEach((item, index) => {
-        if (is.not.string(item.username) || !item.username.length) {
-          addError(`social[${index}].username`, 'Please provide a username.');
-        }
+    socialAccounts.forEach((socialMd, index) => {
+      const socialAttrs = socialMd.attributes;
 
-        if (is.not.string(item.type)) {
-          addError(`social[${index}].type`, 'Please provide a type.');
-        } else if (this.socialTypes.indexOf(item.type) === -1) {
-          addError(`social[${index}].type`, 'Type must be one of the required types.');
-        }
+      if (is.not.string(socialAttrs.username) || !socialAttrs.username.length) {
+        addError(`social[${index}].username`, 'Please provide a username.');
+      }
 
-        // if there are dupes of the same type, give an error to all
-        // dupes after the first one
-        if (item.type !== 'other' && groupedByType[item.type].length > 1 &&
-          groupedByType[item.type].indexOf(item) > 0) {
-          addError(`social[${index}].type`, 'You already have a social account of this type.');
-        }
-      });
-    }
+      if (is.not.string(socialAttrs.type)) {
+        addError(`social[${index}].type`, 'Please provide a type.');
+      } else if (this.socialTypes.indexOf(socialAttrs.type) === -1) {
+        addError(`social[${index}].type`, 'Type must be one of the required types.');
+      }
+
+      // if there are dupes of the same type, give an error to all
+      // dupes after the first one
+      if (socialAttrs.type !== 'other' && groupedByType[socialAttrs.type].length > 1 &&
+        groupedByType[socialAttrs.type].indexOf(socialMd) > 0) {
+        addError(`social[${index}].type`, 'You already have a social account of this type.');
+      }
+    });
 
     if (Object.keys(errObj).length) return errObj;
 
