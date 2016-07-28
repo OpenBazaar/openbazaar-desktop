@@ -1,6 +1,5 @@
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
-import app from '../app';
 import TestModal from './modals/Test';
 import Dialog from './modals/Dialog';
 import SimpleMessageModal from './modals/SimpleMessage';
