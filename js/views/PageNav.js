@@ -114,7 +114,7 @@ export default class extends View {
   }
 
   onDocClick(e) {
-    if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
+    if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn').length) {
       this.togglePopMenu();
     }
   }
