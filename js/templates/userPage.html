@@ -1,4 +1,24 @@
-<nav class="bar clrP clrBr">Tabs and things go here</nav>
+<nav id="pageTabBar" class="bar clrP clrBr">
+
+      <div class="flexVCent">
+        <div>
+          <div class="userIcon disc clrBr2 clrSh1" style="background-image: url('../imgs/defaultUser.png')"></div>
+        </div>
+        <div>
+           <h1 class="h3 txtUnb">Name of the user</h1>
+          <div>Stars(x) follows you</div>
+        </div>
+        <div class="flexExpand">
+          <div class="flexHRight flexVCent gutterH">
+            <a class="btn">Home</a>
+            <a class="btn">Store</a>
+            <a class="btn">Following</a>
+            <a class="btn">Followers</a>
+          </div>
+        </div>
+      </div>
+
+</nav>
 <div class="pageContent">
 
   <h1>Welcome to the user page of <%= ob.handle || ob.id %>!</h1>

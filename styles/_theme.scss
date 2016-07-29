@@ -79,6 +79,10 @@ $excludedLinks: ".btn, .iconBtn, .listLink";
   }
 }
 
+.clrBr2 {
+  border-color: $border2;
+}
+
 // select2 dropdowns always use the theme border color.
 // Override them in the view stylesheet if necessary.
 
@@ -104,4 +108,13 @@ $excludedLinks: ".btn, .iconBtn, .listLink";
 .clrO {
   // overlay color
   background-color: $overlay;
+}
+
+//shadows should be set by the theme too
+.clrSh1 {
+  box-shadow: 0 1px 2px adjust-color($primary, $lightness: -61%, $alpha: -0.5%);
+}
+
+.clrSh2 {
+  box-shadow: 0 1px 0 adjust-color($primary, $lightness: -5%);
 }

@@ -11,6 +11,16 @@ export default class extends BaseVw {
     this.options = options;
   }
 
+  className() {
+    return 'userPage';
+  }
+
+  events() {
+    return {
+      // 'click .launchCustomModal': 'onClickCustom',
+    };
+  }
+
   render() {
     loadTemplate('userPage.html', (t) => {
       this.$el.html(t({

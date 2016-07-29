@@ -1,0 +1,16 @@
+.userPage {
+
+  #pageTabBar.bar {
+    height: 55px;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    .userIcon {
+      border-width: 2px;
+      border-style: solid;
+      width: 46px;
+      height: 46px;
+      margin-right: $pad;
+    }
+  }
+}

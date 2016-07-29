@@ -124,13 +124,20 @@ ul, ol {
   z-index: 2;
 }
 
-
 #pageContainer {
-  padding: 25px;
+  padding: $bar + $padHg $padHg $padHg $padHg;
   position: relative;
   overflow-y: scroll;
   height: calc(100% - #{$bar});
   box-sizing: border-box;
+}
+
+#pageTabBar.bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding-left: $padHg;
 }
 
 #chatContainer {

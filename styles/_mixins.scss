@@ -22,11 +22,3 @@
   pointer-events: none;
   opacity: 0.2;
 }
-
-@mixin shad1 {
-  box-shadow: 0 1px 2px adjust-color($primary, $lightness: -61%, $alpha: -0.5%);
-}
-
-@mixin shad2 {
-  box-shadow: 0 1px 0 adjust-color($primary, $lightness: -5%);
-}

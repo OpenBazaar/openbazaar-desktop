@@ -6,6 +6,7 @@ $primary: hsl(0,0%,100%);
 $secondary: adjust-color($primary, $lightness: -4%);
 $background: adjust-color($primary, $lightness: -10%);
 $border: adjust-color($primary, $lightness: -14%);
+$border2: adjust-color($primary, $lightness: 100%);
 $emphasis1: rgb(253,166,57);
 $modalBackground: rgb(255,255,255);
 $error: red;

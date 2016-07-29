@@ -104,6 +104,11 @@
   flex-grow: 1;
 }
 
+.flexItemCenter {
+  //use on a flex child to set contents to vertically center if the parent doesn't
+  align-self: center;
+}
+
 .col {
   //use .col for a column that will adapt to the number of siblings present. 3 col elements will each be 1/3 of the width of the row.
   box-sizing: border-box;
@@ -260,7 +265,7 @@
   }
 }
 
-.gutterHBg > * {
+.gutterHLg > * {
   margin-right: $padLg;
 
   &:last-child {
@@ -284,7 +289,7 @@
   }
 }
 
-.gutterVBg > * {
+.gutterVLg > * {
   margin-bottom: $padLg;
 
   &:last-child {
