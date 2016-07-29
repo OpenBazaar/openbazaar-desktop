@@ -23,10 +23,10 @@
   <label>
     Social Accounts:
   </label>
-  <div class="js-socialContainer">
+  <div>
   <% if (ob.social && ob.social.length) { %>
      <% ob.social.forEach((socialAcct, index) => { %>
-      <div class="socialAccount js-socialAccount">
+      <div class="socialAccount">
         <% if (ob.errors[`social[${index}].type`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].type`] })) %>  
        <label>
           Type:

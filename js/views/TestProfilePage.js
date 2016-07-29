@@ -77,10 +77,6 @@ export default class extends BaseVw {
     this.render();
   }
 
-  getSocialContainer() {
-    return this.$socialContainer || this.$('.js-socialContainer');
-  }
-
   saveForm() {
     const formSave = app.profile.save();
 
@@ -113,8 +109,6 @@ export default class extends BaseVw {
         socialTypes: app.profile.socialTypes,
         errors: app.profile.validationError || {},
       }));
-
-      this.$socialContainer = null;
     });
 
     return this;
