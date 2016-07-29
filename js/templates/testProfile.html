@@ -23,29 +23,29 @@
   <label>
     Social Accounts:
   </label>
+  <div>
   <% if (ob.social && ob.social.length) { %>
-       <div> <% // wrapping div needeed for JS to properly calc index %>
-       <% ob.social.forEach((socialAcct, index) => { %>
-         <div class="socialAccount">
-           <% if (ob.errors[`social[${index}].type`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].type`] })) %>  
-           <label>
-              Type:
-             <select name="<%= `social[${index}].type` %>">
-               <% ob.socialTypes.forEach((type) => { %>
-                  <option value="<%= type %>"<% if (socialAcct.type === type) print('selected')%>><% print(type.charAt(0).toUpperCase() + type.slice(1)) %></option>
-               <% }) %>
-             </select>
-           </label>
-           <% if (ob.errors[`social[${index}].username`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].username`] })) %>  
-           <label>
-              Username:
-              <input name="<%= `social[${index}].username` %>" type="text" value="<%= socialAcct.username %>" />
-            </label>
-           <button type="button" class="js-RemoveSocial">Remove</button>
-         </div>
-    <% }); %>
+     <% ob.social.forEach((socialAcct, index) => { %>
+      <div class="socialAccount">
+        <% if (ob.errors[`social[${index}].type`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].type`] })) %>  
+       <label>
+          Type:
+         <select name="<%= `social[${index}].type` %>">
+           <% ob.socialTypes.forEach((type) => { %>
+              <option value="<%= type %>"<% if (socialAcct.type === type) print('selected')%>><% print(type.charAt(0).toUpperCase() + type.slice(1)) %></option>
+           <% }) %>
+         </select>
+       </label>
+       <% if (ob.errors[`social[${index}].username`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].username`] })) %>  
+       <label>
+          Username:
+          <input name="<%= `social[${index}].username` %>" type="text" value="<%= socialAcct.username %>" />
+        </label>
+       <button type="button" class="js-RemoveSocial">Remove</button>
       </div>
+    <% }); %>
    <% } %>  
+  </div>
   <button type="button" class="js-AddSocial btnAddSocial">Add</button>
 
   <div class="buttonBar">

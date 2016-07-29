@@ -57,10 +57,12 @@ export default class ObRouter extends Router {
   }
 
   execute(callback, args) {
-    app.simpleMessageModal.close();
     app.loadingModal.open();
 
-    if (callback) callback.apply(this, args);
+    if (callback) {
+      this.trigger('will-route');
+      callback.apply(this, args);
+    }
   }
 
   loadPage(vw) {

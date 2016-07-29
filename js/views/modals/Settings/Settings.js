@@ -17,8 +17,6 @@ export default class extends BaseModal {
 
     this.tabViewCache = {};
     this.tabViews = { SettingsGeneral, SettingsPage };
-
-    if (this.options.removeOnClose) this.on('close', () => this.remove());
   }
 
   className() {

@@ -3,6 +3,7 @@ import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 import { getHtml, getAppFrame } from '../../utils/selectors';
+import app from '../../app';
 
 export default class BaseModal extends BaseVw {
   constructor(options = {}) {
@@ -12,6 +13,8 @@ export default class BaseModal extends BaseVw {
       showCloseButton: true,
       closeButtonClass: 'modalClose ion-close-round',
       modelContentClass: 'modalContent clrP',
+      removeOnClose: false,
+      removeOnRoute: true,
       ...options,
     };
 
@@ -28,6 +31,8 @@ export default class BaseModal extends BaseVw {
       $(document).on('keyup', BaseModal.__onDocKeypress);
       BaseModal.__docKeyPressHandlerBound = true;
     }
+
+    if (this.__options.removeOnRoute) this.listenTo(app.router, 'will-route', this.remove);
   }
 
   className() {
@@ -79,17 +84,30 @@ export default class BaseModal extends BaseVw {
       this.trigger('close');
     }
 
+    if (this.__options.removeOnClose) {
+      this.remove();
+    }
+
     return this;
   }
 
   setModalOptions(options) {
     if (!options) return this;
 
-    this.__options = { ...this.__options, ...options };
-
     if (typeof options.showCloseButton !== 'undefined') {
       this.$modalClose[options.showCloseButton ? 'removeClass' : 'addClass']('hide');
     }
+
+    if (typeof options.removeOnRoute !== 'undefined' &&
+      options.removeOnRoute !== this.__options.removeOnRoute) {
+      if (options.removeOnRoute) {
+        this.listenTo(app.router, 'will-route', this.remove);
+      } else {
+        this.stopListening(app.router, 'will-route');
+      }
+    }
+
+    this.__options = { ...this.__options, ...options };
 
     return this;
   }
@@ -100,6 +118,7 @@ export default class BaseModal extends BaseVw {
 
   remove() {
     if (this.isOpen()) this.close();
+    app.router.off(null, this.onRoute);
     super.remove();
 
     return this;

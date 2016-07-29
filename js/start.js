@@ -34,24 +34,18 @@ const usersCl = new Collection([
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
+app.pageNav = new PageNav();
+$('#pageNavContainer').append(app.pageNav.render().el);
+
+app.router = new ObRouter({ usersCl });
+
 // create and launch loading modal
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
+  removeOnRoute: false,
 }).render().open();
-
-// create our re-usable simple message modal instance
-app.simpleMessageModal = new SimpleMessageModal({ removeOnClose: false }).render();
-app.simpleMessageModal._origRemove = app.simpleMessageModal.remove;
-app.simpleMessageModal.remove = () => {
-  throw new Error('This is a shared instance that should not be removed.');
-};
-
-app.pageNav = new PageNav();
-$('#pageNavContainer').append(app.pageNav.render().el);
-
-app.router = new ObRouter({ usersCl });
 
 // get the server config
 $.get(app.getServerUrl('ob/config')).done((data) => {
@@ -91,12 +85,21 @@ $.get(app.getServerUrl('ob/config')).done((data) => {
             app.loadingModal.close();
           }).fail((failData) => {
             app.loadingModal.close();
-            app.simpleMessageModal.open('Unable To Save Profile', failData.reason || '');
+            new SimpleMessageModal()
+              .render()
+              .open('Unable To Save Profile', failData.reason || '');
           });
         }
       } else {
         app.loadingModal.close();
-        app.simpleMessageModal.open('Unable To Get Profile');
+        new SimpleMessageModal()
+          .render()
+          .open('Unable To Get Profile');
       }
     });
+}).fail(() => {
+  app.loadingModal.close();
+  new SimpleMessageModal()
+    .render()
+    .open('Unable to obtain the server configuration.', 'Is your server running?');
 });
