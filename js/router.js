@@ -44,18 +44,25 @@ export default class ObRouter extends Router {
   }
 
   setAddressBarText() {
-    if (location.hash.startsWith('#transactions')) {
-      app.pageNav.setAddressBar();
+    if (
+      location.hash.startsWith('#transactions') ||
+      location.hash.startsWith('#test-')
+    ) {
+      // certain pages should not have their route visible
+      // in the address bar
+      app.pageNav.setAddressBar('');
     } else {
       app.pageNav.setAddressBar(location.hash.slice(1));
     }
   }
 
   execute(callback, args) {
-    app.simpleMessageModal.close();
     app.loadingModal.open();
 
-    if (callback) callback.apply(this, args);
+    if (callback) {
+      this.trigger('will-route');
+      callback.apply(this, args);
+    }
   }
 
   loadPage(vw) {
