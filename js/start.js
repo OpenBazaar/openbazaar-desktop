@@ -51,9 +51,6 @@ app.loadingModal = new LoadingModal({
 $.get(app.getServerUrl('ob/config')).done((data) => {
   app.profile = new Profile({ id: data.guid });
 
-  console.log('hello');
-  window.hello = app.profile;
-
   // todo: for now busting cache on fetch pending
   // issue where my server is not running the latest
   // code which solves this.
