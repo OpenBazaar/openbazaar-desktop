@@ -3,14 +3,15 @@ import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import SimpleMessageModal from './modals/SimpleMessage';
+import SocialAccount from '../models/SocialAccount';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
 
-    this.listenTo(app.profile, 'change', this.render, this);
-    this.listenTo(app.profile.get('social'), 'update', this.render, this);
+    this.listenTo(app.profile.get('social'), 'add', this.render, this);
+    this.listenTo(app.profile.get('social'), 'remove', this.onRemoveSocial, this);
   }
 
   events() {
@@ -19,6 +20,7 @@ export default class extends BaseVw {
       'click input[type=reset]': 'onResetForm',
       'click .js-AddSocial': 'onClickAddSocial',
       'click .js-RemoveSocial': 'onClickRemoveSocial',
+      'change input[name], textarea[name], select[name]': 'onChangeFormField',
     };
   }
 
@@ -31,12 +33,33 @@ export default class extends BaseVw {
     this.saveForm();
   }
 
+  onChangeFormField(e) {
+    // when the UI changes, update the model
+    const $field = $(e.target);
+    const name = $field.attr('name');
+    const leftBracketIndex = name.indexOf('[');
+
+    if (leftBracketIndex !== -1) {
+      // nested collection
+      const nestedIndex = parseInt(name.slice(leftBracketIndex + 1, name.indexOf(']')), 10);
+      const attr = name.slice(name.indexOf('.') + 1);
+      const topAttr = name.slice(0, leftBracketIndex);
+      const model = app.profile.get(topAttr).at(nestedIndex);
+
+      if (model) {
+        model.set(attr, e.target.value);
+      } else {
+        app.profile.get(topAttr)
+          .add(new SocialAccount({ attr: e.target.value }));
+      }
+    } else {
+      app.profile.set(name, e.target.value);
+    }
+  }
+
   onClickAddSocial() {
     app.profile.get('social')
-      .push({
-        type: app.profile.socialTypes[0],
-        username: '',
-      });
+      .add(new SocialAccount());
   }
 
   onClickRemoveSocial(e) {
@@ -46,8 +69,19 @@ export default class extends BaseVw {
     social.remove(social.at(index));
   }
 
+  onRemoveSocial() {
+    // since the validation is index based and
+    // removing alters the indexes in the collection,
+    // we need to revalidate
+    app.profile.set(app.profile.toJSON(), { validate: true });
+    this.render();
+  }
+
+  getSocialContainer() {
+    return this.$socialContainer || this.$('.js-socialContainer');
+  }
+
   saveForm() {
-    app.profile.set(this.getFormData());
     const formSave = app.profile.save();
 
     if (formSave) {
@@ -66,38 +100,10 @@ export default class extends BaseVw {
     this.render();
   }
 
-  getFormData() {
-    const formData = {};
-
-    this.$('input[name], textarea[name], select[name]').each((index, field) => {
-      const $field = $(field);
-      const name = $field.attr('name');
-      const leftBracketIndex = name.indexOf('[');
-
-      // nested arrays - for now, only abstracted out for one level of nesting
-      if (leftBracketIndex !== -1) {
-        const nestedIndex = parseInt(name.slice(leftBracketIndex + 1, name.indexOf(']')), 10);
-        const type = name.slice(name.indexOf('.') + 1);
-        const topAttr = name.slice(0, leftBracketIndex);
-
-        formData[topAttr] = formData[topAttr] || [];
-
-        formData[topAttr][nestedIndex] =
-          formData[topAttr][nestedIndex] || {};
-
-        formData[topAttr][nestedIndex][type] = field.value;
-      } else {
-        formData[name] = field.value;
-      }
-    });
-
-    return formData;
-  }
-
   onResetForm(e) {
     e.preventDefault();
     app.profile.reset();
-    if (!app.profile.hasChanged()) this.render();
+    this.render();
   }
 
   render() {
@@ -107,6 +113,8 @@ export default class extends BaseVw {
         socialTypes: app.profile.socialTypes,
         errors: app.profile.validationError || {},
       }));
+
+      this.$socialContainer = null;
     });
 
     return this;

@@ -120,6 +120,8 @@ export default class extends BaseModel {
         groupedByType[socialAttrs.type].indexOf(socialMd) > 0) {
         addError(`social[${index}].type`, 'You already have a social account of this type.');
       }
+
+      // todo: dont allow multiple others with the same username.
     });
 
     if (Object.keys(errObj).length) return errObj;

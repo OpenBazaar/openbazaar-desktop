@@ -52,8 +52,12 @@ import { Model } from 'backbone';
     }
   });
 
-  // can be set directly on the nested model / collection
+  // can be set directly on the nested model / collection (see note)
   parentModel.get('SMTPSettings').set('notifications', false);
+
+  Please Note: For a nested collection, unless the models have IDs, it's
+  recommended that you directly update the models on the nested collection,
+  at least if you want the relevant events to fire properly.
 
   === saving nested attributes ===
 
@@ -141,7 +145,7 @@ export default class extends Model {
         const nestedInstance = this.attributes[nestedKey];
 
         if (nestedInstance) {
-          nestedInstance.set(nestedData || {});
+          if (nestedData) nestedInstance.set(nestedData);
           delete attrs[nestedKey];
         } else {
           attrs[nestedKey] = new NestedClass(nestedData);
