@@ -13,6 +13,10 @@
 
   &.dialog {
     // specific to dialog styling
+
+    .buttonWrap {
+      text-align: center;
+    }
   }
 
   &.simpleMessage {
