@@ -8,19 +8,12 @@ import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import TestModalsPage from './views/TestModalsPage';
 import TestProfilePage from './views/TestProfilePage';
+import Profile from './models/Profile';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
     super(options);
     this.options = options;
-
-    // Temporarily requiring a dummy 'users' collection. Eventually, we'll
-    // be getting this data via fetches to the server
-    if (!options.usersCl) {
-      throw new Error('Need me some dummy users!');
-    }
-
-    this.usersCl = options.usersCl;
 
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
@@ -75,37 +68,8 @@ export default class ObRouter extends Router {
     app.loadingModal.close();
   }
 
-  // Temporary fudge, since we're actually hitting the one name api,
-  // but I'd like the guids to match the 2.0 format of being prefaced with Qm.
-  // Once we're getting the data from the server, this method will go bye-bye
-  // and will directly call getGuid from the util module.
-  getGuid(guid) {
-    const deferred = $.Deferred();
-
-    getGuid(guid).done((id) => deferred.resolve(`Qm${id}`))
-      .fail((...args) => deferred.reject(...args));
-
-    return deferred.promise();
-  }
-
-  getUser(guid) {
-    const deferred = $.Deferred();
-    const user = this.usersCl.get(guid);
-
-    // setting timeout to simulate the latency of an async call
-    setTimeout(() => {
-      if (user) {
-        deferred.resolve(user);
-      } else {
-        deferred.reject();
-      }
-    }, parseInt(Math.random() * 1000, 10));
-
-    return deferred.promise();
-  }
-
   userViaHandle(handle, ...args) {
-    this.getGuid(handle).done((guid) => {
+    getGuid(handle).done((guid) => {
       this.user(guid, ...args);
     }).fail(() => {
       this.userNotFound();
@@ -121,17 +85,19 @@ export default class ObRouter extends Router {
       pageOpts.layer = args[1];
     }
 
-    this.getUser(guid).done((user) => {
-      const displayArgs = args.filter((arg) => arg !== null).join('/');
-      const handle = user.get('handle');
+    const profile = new Profile({ id: guid });
 
-      this.navigate(`${handle ? `@${handle}` : user.id}/${tab}` +
+    profile.fetch().done(() => {
+      const displayArgs = args.filter((arg) => arg !== null).join('/');
+      const handle = profile.get('handle');
+
+      this.navigate(`${handle ? `@${handle}` : profile.id}/${tab}` +
         `${displayArgs ? `/${displayArgs}` : ''}`, { replace: true });
 
       this.loadPage(
         new UserPage({
           ...pageOpts,
-          model: user,
+          model: profile,
         }).render()
       );
     }).fail(() => {
