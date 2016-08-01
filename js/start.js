@@ -138,6 +138,7 @@ function isOnboardingNeeded() {
 }
 
 const onboardDeferred = $.Deferred();
+let profileSaveUsePut = false;
 
 function onboard() {
   // for now we'll just manually save the profile and settings
@@ -147,7 +148,7 @@ function onboard() {
 
   if (!Object.keys(app.profile.lastSyncedAttrs).length) {
     profileSave = app.profile.save({}, {
-      type: 'POST',
+      type: profileSaveUsePut ? 'PUT' : 'POST',
     });
 
     if (!profileSave) {
@@ -170,6 +171,14 @@ function onboard() {
   $.when(profileSave, settingsSave).done(() => {
     onboardDeferred.resolve(true);
   }).fail((jqXhr) => {
+    if (jqXhr === profileSave && jqXhr.responseJSON &&
+      jqXhr.responseJSON.reason === 'Profile already exists. Use PUT.') {
+      // todo: when this server bug is fixed, we shouldn't have to do this
+      // extra request to use PUT.
+      // https://github.com/OpenBazaar/openbazaar-go/issues/53
+      profileSaveUsePut = true;
+    }
+
     const retryOnboardingSaveDialog = new Dialog({
       title: `Unable to save your ${jqXhr === profileSave ? 'profile' : 'settings'} data.`,
       message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
@@ -217,9 +226,9 @@ fetchConfig().done((data) => {
   app.settings = new Settings();
 
   onboardIfNeeded().done(() => {
-    location.hash = location.hash || app.profile.id;
     app.pageNav.navigable = true;
-    Backbone.history.start();
     app.loadingModal.close();
+    location.hash = location.hash || app.profile.id;
+    Backbone.history.start();
   });
 });

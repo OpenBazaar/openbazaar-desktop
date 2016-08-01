@@ -85,9 +85,23 @@ export default class ObRouter extends Router {
       pageOpts.layer = args[1];
     }
 
-    const profile = new Profile({ id: guid });
+    let profile;
+    let profileFetch;
+    let onWillRoute;
 
-    profile.fetch().done(() => {
+    if (guid === app.profile.id) {
+      // don't fetch our own profile, since we have it already
+      profileFetch = $.Deferred().resolve();
+      profile = app.profile;
+    } else {
+      profile = new Profile({ id: guid });
+      profileFetch = profile.fetch();
+
+      onWillRoute = () => { profileFetch.abort(); };
+      this.once('will-route', onWillRoute);
+    }
+
+    profileFetch.done(() => {
       const displayArgs = args.filter((arg) => arg !== null).join('/');
       const handle = profile.get('handle');
 
@@ -100,8 +114,10 @@ export default class ObRouter extends Router {
           model: profile,
         }).render()
       );
-    }).fail(() => {
-      this.userNotFound();
+    }).fail((jqXhr) => {
+      if (jqXhr.statusText !== 'abort') this.userNotFound();
+    }).always(() => {
+      if (onWillRoute) this.off(null, onWillRoute);
     });
   }
 
