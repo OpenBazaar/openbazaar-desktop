@@ -31,9 +31,9 @@ export default class extends View {
     this.options = opts;
     $(document).on('click', this.onDocClick.bind(this));
 
-    this.listenTo(app.localSettings, 'change:mac_style_win_controls',
+    this.listenTo(app.localSettings, 'change:macStyleWinControls',
       this.onWinControlsStyleChange);
-    this.setWinControlsStyle(app.localSettings.get('mac_style_win_controls') ? 'mac' : 'win');
+    this.setWinControlsStyle(app.localSettings.get('macStyleWinControls') ? 'mac' : 'win');
   }
 
   get navigable() {

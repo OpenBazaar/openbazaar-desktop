@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import Backbone from 'backbone';
+import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import app from './app';
 import LocalSettings from './models/LocalSettings';
@@ -7,11 +8,52 @@ import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
+import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 
+let beyondOnboarding = false;
+
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
+
+// initialize language functionality
+function getValidLanguage(lang) {
+  if (getLangByCode(lang)) {
+    return lang;
+  }
+
+  return 'en-US';
+}
+
+const initialLang = getValidLanguage(app.localSettings.get('language'));
+app.localSettings.set('language', initialLang, { supressLangChangeWarning: true });
+app.polyglot = new Polyglot();
+app.polyglot.extend(require(`./languages/${initialLang}.json`));
+
+app.localSettings.on('change:language', () => {
+  app.polyglot.extend(
+    require(`./languages/${initialLang}.json`));  // eslint-disable-line global-require
+
+  if (beyondOnboarding) {
+    const restartLangChangeDialog = new Dialog({
+      title: app.polyglot.t('langChangeRestartTitle'),
+      message: app.polyglot.t('langChangeRestartMessage'),
+      buttons: [{
+        text: app.polyglot.t('restartNow'),
+        fragment: 'restartNow',
+      }, {
+        text: app.polyglot.t('restartLater'),
+        fragment: 'restartLater',
+      }],
+    }).on('click-restartNow', () => location.reload())
+    .on('click-restartLater', () => restartLangChangeDialog.close())
+    .render()
+    .open();
+  } else {
+    app.pageNav.render();
+  }
+});
 
 app.pageNav = new PageNav();
 $('#pageNavContainer').append(app.pageNav.render().el);
@@ -215,9 +257,20 @@ function onboardIfNeeded() {
 // let's start our flow
 fetchConfig().done((data) => {
   app.profile = new Profile({ id: data.guid });
+
   app.settings = new Settings();
 
+  // Beyond the start-up flow in this file, any language changes should ideally
+  // be done via a save on a clone of the app.settings model. When the save succeeds,
+  // update the app.settings model which will in turn update our local
+  // settings model. You shouldn't be directly updating the language in our local
+  // settings model.
+  app.settings.on('change:language', (settingsMd, lang) => {
+    app.localSettings.save('language', getValidLanguage(lang));
+  });
+
   onboardIfNeeded().done(() => {
+    beyondOnboarding = true;
     app.pageNav.navigable = true;
     app.loadingModal.close();
     location.hash = location.hash || app.profile.id;
