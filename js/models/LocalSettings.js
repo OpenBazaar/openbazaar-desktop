@@ -6,10 +6,6 @@ import is from 'is_js';
 const remote = electron.remote;
 
 export default class extends Model {
-  constructor(...args) {
-    super(args);
-  }
-
   localStorage() {
     return new LocalStorageSync('__localSettings');
   }
