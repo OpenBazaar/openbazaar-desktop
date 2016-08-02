@@ -10,14 +10,6 @@ import Dialog from './views/modals/Dialog';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 
-
-$.ajaxSetup({
-  // todo: for now busting cache on fetches pending
-  // issue where my server is not running the latest
-  // code which has removed cache headers.
-  cache: false,
-});
-
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
