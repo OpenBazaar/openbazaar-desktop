@@ -100,11 +100,14 @@ const languages = [
 let _indexedLangs;
 
 function getIndexedLangs() {
-  return _indexedLangs ||
-    languages.reduce((indexedObj, language) => {
-      indexedObj[language.code] = language.name;
-      return indexedObj;
-    }, {});
+  if (_indexedLangs) return _indexedLangs;
+
+  _indexedLangs = languages.reduce((indexedObj, language) => {
+    indexedObj[language.code] = language.name;
+    return indexedObj;
+  }, {});
+
+  return _indexedLangs;
 }
 
 export function getLangByCode(code) {
