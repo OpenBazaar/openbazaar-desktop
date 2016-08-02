@@ -41,10 +41,6 @@ export default class extends View {
     // save the form
   }
 
-  cancel() {
-    // cancel the form
-  }
-
   render() {
     loadTemplate('modals/settings/settingsPage.html', (t) => {
       this.$el.html(t({

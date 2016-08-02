@@ -26,7 +26,6 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-tab': 'tabClick',
-      'click .js-cancel': 'cancelClick',
       'click .js-save': 'saveClick',
       ...super.events(),
     };
@@ -53,14 +52,6 @@ export default class extends BaseModal {
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
-  }
-
-  cancelClick() {
-    this.cancel();
-  }
-
-  cancel() {
-    this.currentTabView.cancel();
   }
 
   saveClick() {
