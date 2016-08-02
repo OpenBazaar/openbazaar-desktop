@@ -28,18 +28,6 @@
   }
 }
 
-.pageContent {
-  padding: $pad;
-  width: calc(100% - #{$chatClosed});
-  background-color: pink; // temporary to see transition when chat opens
-  @include chatOpeningTransition(width);
-
-  .chatOpen & {
-    width: calc(100% - #{$chatOpen});
-  }
-}
-
-
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element
   @extend .box;

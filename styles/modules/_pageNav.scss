@@ -1,10 +1,15 @@
 .pageNav {
   -webkit-app-region: drag;
 
-  .navBar .btn,
-  .navBar .iconBtn {
-    height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
-    line-height: 1em;
+  .navBar {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    .btn,
+    .iconBtn {
+      height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
+      line-height: 1em;
+    }
   }
 
   a, input, .btn, .iconBtn {

@@ -58,17 +58,22 @@ p {
   font-size: 0.9rem;
 }
 
-.txtUnl {
+.txUnl {
   line-height: 1;
   margin-bottom: 0;
 }
 
-.txtCn {
+.txCtr {
   text-align: center;
 }
 
-.txtUnb {
+.txUnb {
   font-weight: 400;
+}
+
+.ic90r:before {
+  //rotate icon 90 degrees
+  transform: rotate(90deg);
 }
 
 .noOverflow {

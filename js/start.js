@@ -28,6 +28,7 @@ const usersCl = new Collection([
   {
     id: 'Qma06aa22a38f0e62221ab74464c311bd88305f88c',
     handle: 'openbazaar',
+    name: 'OB Store',
   },
 ]);
 

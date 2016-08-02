@@ -10,6 +10,7 @@
   @extend .ctrl;
   display: inline-block; //add height and width, collapse the width
   cursor: pointer;
+  font-weight: 700;
 
   &:hover {
     text-decoration: none;
@@ -24,7 +25,7 @@
     line-height: $bar;
     height: $bar;
     border: none;
-    font-size: $tx6;
+    font-size: $tx5;
   }
 
   //radio and checkbox inputs can be placed inside a button
@@ -72,9 +73,12 @@
 .iconBtn {
   //this button has only an icon in it
   @extend .btn;
-  font-weight: 700;
   font-size: 20px;
   padding: 0 12px;
+
+  .bar & {
+    font-size: 20px;
+  }
 }
 
 .btnStrip {

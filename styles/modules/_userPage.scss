@@ -5,12 +5,32 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
 
+    .pageTabs {
+      max-width: $pageWidth;
+      margin: 0 auto;
+    }
+
     .userIcon {
       border-width: 2px;
       border-style: solid;
       width: 46px;
       height: 46px;
       margin-right: $pad;
+    }
+
+    .pageContent {
+
+      .pageControls {
+        align-items: flex-end;
+        margin: 278px 0 40px 0;
+      }
+
+      .pageSearchWrapper {
+
+        .pageSearch {
+
+        }
+      }
     }
   }
 }

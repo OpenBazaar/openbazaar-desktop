@@ -130,14 +130,25 @@ ul, ol {
   overflow-y: scroll;
   height: calc(100% - #{$bar});
   box-sizing: border-box;
+
+  .pageContent {
+    padding: $pad;
+    width: $pageWidth;
+    box-sizing: border-box;
+    margin-left: calc((100% - #{$pageWidth}) / 2);
+    @include chatOpeningTransition(margin-left);
+
+    .chatOpen & {
+      margin-left: calc((100% - #{($pageWidth + $chatOpen - $padHg)}) / 2);
+    }
+  }
 }
 
 #pageTabBar.bar {
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: $bar;
   left: 0;
   width: 100%;
-  padding-left: $padHg;
 }
 
 #chatContainer {

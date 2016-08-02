@@ -1,31 +1,45 @@
 <nav id="pageTabBar" class="bar clrP clrBr">
 
-      <div class="flexVCent">
+      <div class="flexVCent pageTabs">
+        <!--consider turning tabs into a reusable view-->
         <div>
           <div class="userIcon disc clrBr2 clrSh1" style="background-image: url('../imgs/defaultUser.png')"></div>
         </div>
         <div>
-           <h1 class="h3 txtUnb">Name of the user</h1>
+           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
           <div>Stars(x) follows you</div>
         </div>
         <div class="flexExpand">
           <div class="flexHRight flexVCent gutterH">
-            <a class="btn">Home</a>
-            <a class="btn">Store</a>
-            <a class="btn">Following</a>
-            <a class="btn">Followers</a>
+            <a class="btn clrT2">Home</a>
+            <a class="btn clrT2">Store</a>
+            <a class="btn clrT2">Following</a>
+            <a class="btn clrT2">Followers</a>
           </div>
         </div>
       </div>
 
 </nav>
-<div class="pageContent">
+<section class="pageContent">
 
-  <h1>Welcome to the user page of <%= ob.handle || ob.id %>!</h1>
+  <div class="pageControls flex">
+    <h1 class="flexExpand txUnb">
+      <%= ob.handle || ob.id %>
+    </h1>
+    <div>
+      <div class="btnStrip">
+        <a class="btn">Message</a>
+        <a class="btn">Follow</a>
+        <a class="btn"><i class="ion-more ic90r"></i> </a>
+      </div>
+    </div>
+  </div>
+
+
 
   <ul>
     <li>Tab: <%= ob.tab %></li>
     <% if (ob.category) { %><li>Category: <%= ob.category %></li><% } %>
     <% if (ob.layer) { %><li>Layer: <%= ob.layer %></li><% } %>
   </ul>
-</div>
+</section>

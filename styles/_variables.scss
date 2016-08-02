@@ -14,7 +14,7 @@ $overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
 
 // typography
 $baseFontSize: 10px;
-$tx1: 3.6rem;
+$tx1: 3.8rem;
 $tx2: 2.2rem;
 $tx3: 1.8rem;
 $tx4: 1.6rem;
@@ -30,8 +30,9 @@ $padMd: $pad * 1.5;
 $padLg: $pad * 2;
 $padHg: $pad * 2.5;
 $marg: 10px;
-$chatClosed: 50px; //fake number
+$chatClosed: 70px; //fake number
 $chatOpen: 200px; //fake number
+$pageWidth: 950px;
 
 // controls
 $corner: 2px;
