@@ -12,8 +12,6 @@ import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 
-let beyondOnboarding = false;
-
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
@@ -35,24 +33,20 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
     require(`./languages/${lang}.json`));  // eslint-disable-line global-require
 
-  if (beyondOnboarding) {
-    const restartLangChangeDialog = new Dialog({
-      title: app.polyglot.t('langChangeRestartTitle'),
-      message: app.polyglot.t('langChangeRestartMessage'),
-      buttons: [{
-        text: app.polyglot.t('restartNow'),
-        fragment: 'restartNow',
-      }, {
-        text: app.polyglot.t('restartLater'),
-        fragment: 'restartLater',
-      }],
-    }).on('click-restartNow', () => location.reload())
-    .on('click-restartLater', () => restartLangChangeDialog.close())
-    .render()
-    .open();
-  } else {
-    app.pageNav.render();
-  }
+  const restartLangChangeDialog = new Dialog({
+    title: app.polyglot.t('langChangeRestartTitle'),
+    message: app.polyglot.t('langChangeRestartMessage'),
+    buttons: [{
+      text: app.polyglot.t('restartNow'),
+      fragment: 'restartNow',
+    }, {
+      text: app.polyglot.t('restartLater'),
+      fragment: 'restartLater',
+    }],
+  }).on('click-restartNow', () => location.reload())
+  .on('click-restartLater', () => restartLangChangeDialog.close())
+  .render()
+  .open();
 });
 
 app.pageNav = new PageNav();
@@ -270,7 +264,6 @@ fetchConfig().done((data) => {
   });
 
   onboardIfNeeded().done(() => {
-    beyondOnboarding = true;
     app.pageNav.navigable = true;
     app.loadingModal.close();
     location.hash = location.hash || app.profile.id;
