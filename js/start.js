@@ -1,36 +1,14 @@
 import $ from 'jquery';
-import Backbone, { Collection } from 'backbone';
+import Backbone from 'backbone';
+import './lib/whenAll.jquery';
 import app from './app';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
-import SimpleMessageModal from './views/modals/SimpleMessage';
+import Dialog from './views/modals/Dialog';
 import Profile from './models/Profile';
-
-// Until we have legitimate profile models interfacing with the server,
-// we'll create a dummy "users" collection with a dummy set of  "user" models
-const usersCl = new Collection([
-  {
-    id: 'Qm63bf1a74e69375b5b53e940a057e072b4c5fa0a0',
-    handle: 'sampatt',
-  },
-  {
-    id: 'Qm11111111iv1kgzh14sRkphaD3n5HraN2eRRNUGdeF6xY',
-  },
-  {
-    id: 'Qm222222222iv1kgzh14sRkphaD3n5HraN2eRRNUGdeF6xY',
-  },
-  {
-    id: 'Qmbbb75ac9028dd8aca7acb236b5dd7c4dfd9b5bc8',
-    handle: 'themes',
-  },
-  {
-    id: 'Qma06aa22a38f0e62221ab74464c311bd88305f88c',
-    handle: 'openbazaar',
-    name: 'OB Store',
-  },
-]);
+import Settings from './models/Settings';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -38,7 +16,7 @@ app.localSettings.fetch().fail(() => app.localSettings.save());
 app.pageNav = new PageNav();
 $('#pageNavContainer').append(app.pageNav.render().el);
 
-app.router = new ObRouter({ usersCl });
+app.router = new ObRouter();
 
 // create and launch loading modal
 app.loadingModal = new LoadingModal({
@@ -48,61 +26,203 @@ app.loadingModal = new LoadingModal({
   removeOnRoute: false,
 }).render().open();
 
-// get the server config
-$.get(app.getServerUrl('ob/config')).done((data) => {
-  app.profile = new Profile({ id: data.guid });
+const fetchConfigDeferred = $.Deferred();
 
-  // todo: for now busting cache on fetch pending
-  // issue where my server is not running the latest
-  // code which solves this.
-  app.profile.fetch({ cache: false })
-    .done(() => {
-      app.pageNav.navigable = true;
-      Backbone.history.start();
-      app.loadingModal.close();
-    }).fail((jqXhr) => {
-      if (jqXhr.status === 400) {
-        // for now we'll consider 400 - Bad Request to mean
-        // onboarding is needed. After some pending server changes
-        // 404 should mean onboarding is needed.
-        // todo: follow up with cpacia to ensure the server change is
-        // made.
+function fetchConfig() {
+  $.get(app.getServerUrl('ob/config')).done((...args) => {
+    fetchConfigDeferred.resolve(...args);
+  }).fail(() => {
+    const retryConfigDialog = new Dialog({
+      title: 'Unable to get your server config.',
+      buttons: [{
+        text: 'Retry',
+        fragment: 'retry',
+      }],
+      dismissOnOverlayClick: false,
+      dismissOnEscPress: false,
+      showCloseButton: false,
+    }).on('click-retry', () => {
+      retryConfigDialog.close();
 
-        // for now we'll just manually save the profile with
-        // some default / dummy values. Later, we'll make the
-        // onboarding modal.
+      // slight of hand to ensure the loading modal has a chance to at
+      // least briefly show before another potential failure
+      setTimeout(() => {
+        fetchConfig();
+      }, 300);
+    })
+    .render()
+    .open();
+  });
 
-        const profileSave = app.profile.save({}, {
-          type: 'POST',
-        });
+  return fetchConfigDeferred.promise();
+}
 
-        if (!profileSave) {
-          throw new Error('Client side validation failed on your new Profile model.' +
-            'Ensure your defaults are valid.');
-        } else {
-          profileSave.done(() => {
-            app.pageNav.navigable = true;
-            Backbone.history.start();
-            app.loadingModal.close();
-          }).fail((failData) => {
-            app.loadingModal.close();
-            new SimpleMessageModal()
-              .render()
-              .open('Unable To Save Profile', failData.reason || '');
-          });
+const onboardingNeededDeferred = $.Deferred();
+let profileFetch;
+let settingsFetch;
+let onboardProfile = false;
+let onboardSettings = false;
+let profileFailed;
+let settingsFailed;
+
+function isOnboardingNeeded() {
+  profileFetch = !profileFetch || profileFailed ?
+    app.profile.fetch() : profileFetch;
+  settingsFetch = !settingsFetch || settingsFailed ?
+    app.settings.fetch() : settingsFetch;
+
+  $.whenAll(profileFetch, settingsFetch)
+    .progress((...args) => {
+      const state = args[1];
+
+      if (state !== 'success') {
+        const jqXhr = args[0];
+
+        if (jqXhr === profileFetch) {
+          if (jqXhr.status === 404) {
+            onboardProfile = true;
+            profileFailed = false;
+          } else {
+            profileFailed = true;
+          }
+        } else if (jqXhr === settingsFetch) {
+          if (jqXhr.responseJSON && jqXhr.responseJSON.reason === 'sql: no rows in result set') {
+            onboardSettings = true;
+            settingsFailed = false;
+          } else {
+            settingsFailed = true;
+          }
         }
-      } else {
-        app.loadingModal.close();
-        new SimpleMessageModal()
-          .render()
-          .open('Unable To Get Profile');
+      }
+    })
+    .done(() => {
+      onboardingNeededDeferred.resolve(false);
+    })
+    .fail((jqXhr) => {
+      if (profileFailed || settingsFailed) {
+        const retryOnboardingModelsDialog = new Dialog({
+          title: 'Unable to get your profile and settings data.',
+          message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          buttons: [{
+            text: 'Retry',
+            fragment: 'retry',
+          }],
+          dismissOnOverlayClick: false,
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }).on('click-retry', () => {
+          retryOnboardingModelsDialog.close();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => {
+            isOnboardingNeeded();
+          }, 300);
+        })
+        .render()
+        .open();
+      } else if (onboardProfile || onboardSettings) {
+        onboardingNeededDeferred.resolve(true);
       }
     });
-}).fail(() => {
-  app.loadingModal.close();
-  new SimpleMessageModal()
+
+  return onboardingNeededDeferred.promise();
+}
+
+const onboardDeferred = $.Deferred();
+let profileSaveUsePut = false;
+
+function onboard() {
+  // for now we'll just manually save the profile and settings
+  // model with their defaults.
+  let profileSave;
+  let settingsSave;
+
+  if (!Object.keys(app.profile.lastSyncedAttrs).length) {
+    profileSave = app.profile.save({}, {
+      type: profileSaveUsePut ? 'PUT' : 'POST',
+    });
+
+    if (!profileSave) {
+      throw new Error('Client side validation failed on your new Profile model.' +
+        'Ensure your defaults are valid.');
+    }
+  }
+
+  if (!Object.keys(app.settings.lastSyncedAttrs).length) {
+    settingsSave = app.settings.save({}, {
+      type: 'POST',
+    });
+
+    if (!settingsSave) {
+      throw new Error('Client side validation failed on your new Settings model.' +
+        'Ensure your defaults are valid.');
+    }
+  }
+
+  $.when(profileSave, settingsSave).done(() => {
+    onboardDeferred.resolve(true);
+  }).fail((jqXhr) => {
+    if (jqXhr === profileSave && jqXhr.responseJSON &&
+      jqXhr.responseJSON.reason === 'Profile already exists. Use PUT.') {
+      // todo: when this server bug is fixed, we shouldn't have to do this
+      // extra request to use PUT.
+      // https://github.com/OpenBazaar/openbazaar-go/issues/53
+      profileSaveUsePut = true;
+    }
+
+    const retryOnboardingSaveDialog = new Dialog({
+      title: `Unable to save your ${jqXhr === profileSave ? 'profile' : 'settings'} data.`,
+      message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+      buttons: [{
+        text: 'Retry',
+        fragment: 'retry',
+      }],
+      dismissOnOverlayClick: false,
+      dismissOnEscPress: false,
+      showCloseButton: false,
+    }).on('click-retry', () => {
+      retryOnboardingSaveDialog.close();
+
+      // slight of hand to ensure the loading modal has a chance to at
+      // least briefly show before another potential failure
+      setTimeout(() => {
+        onboard();
+      }, 300);
+    })
     .render()
-    .open('Unable to obtain the server configuration.', 'Is your server running?');
+    .open();
+  });
+
+  return onboardDeferred.promise();
+}
+
+const onboardIfNeededDeferred = $.Deferred();
+
+function onboardIfNeeded() {
+  isOnboardingNeeded().done((onboardingNeeded) => {
+    if (onboardingNeeded) {
+      // let's go onboard
+      onboard().done(() => onboardIfNeededDeferred.resolve());
+    } else {
+      onboardIfNeededDeferred.resolve();
+    }
+  });
+
+  return onboardIfNeededDeferred.promise();
+}
+
+// let's start our flow
+fetchConfig().done((data) => {
+  app.profile = new Profile({ id: data.guid });
+  app.settings = new Settings();
+
+  onboardIfNeeded().done(() => {
+    app.pageNav.navigable = true;
+    app.loadingModal.close();
+    location.hash = location.hash || app.profile.id;
+    Backbone.history.start();
+  });
 });
 
 app.loadingModal.close();

@@ -8,16 +8,16 @@ export default class extends BaseModel {
     return {
       // todo: update the attrs once server removes
       // capitalization.
-      PaymentDataInQR: false,
-      ShowNotifications: true,
-      ShowNsfw: true,
-      LocalCurrency: 'USD',
-      Country: 'UNITED_STATES',
-      Language: 'en-US',
-      TermsAndConditions: '',
-      RefundPolicy: '',
-      BlockedNodes: [],
-      StoreModerators: [],
+      paymentDataInQR: false,
+      showNotifications: true,
+      showNsfw: true,
+      localCurrency: 'USD',
+      country: 'UNITED_STATES',
+      language: 'en-US',
+      termsAndConditions: '',
+      refundPolicy: '',
+      blockedNodes: [],
+      storeModerators: [],
     };
   }
 
