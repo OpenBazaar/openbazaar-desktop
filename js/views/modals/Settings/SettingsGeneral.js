@@ -1,6 +1,7 @@
 import app from '../../../app';
 import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
+import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import { View } from 'backbone';
 import 'select2';
@@ -18,12 +19,7 @@ export default class extends View {
     this.settings.on('sync', () => app.settings.set(this.settings.toJSON()));
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
-
-    this.currencyList = [
-      { code: 'BTC', name: 'Bitcoin' },
-      { code: 'USD', name: 'United States Dollar' },
-      { code: 'EUR', name: 'Euro' },
-    ];
+    this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
   }
 
   save() {

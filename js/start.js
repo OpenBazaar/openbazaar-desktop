@@ -15,9 +15,6 @@ import Settings from './models/Settings';
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
-console.log('app');
-window.app = app;
-
 // initialize language functionality
 function getValidLanguage(lang) {
   if (getLangByCode(lang)) {

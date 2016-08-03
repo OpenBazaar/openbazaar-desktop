@@ -33,8 +33,8 @@
       </div>
       <div class="col9">
         <select id="settingsCurrencySelect">
-          <% _.each(ob.currencyList, function(currency){ %>
-          <option value="<%= currency.code %>" <% if (currency.code == ob.LocalCurrency) print('selected') %>><%= currency.name %></option>
+          <% ob.currencyList.forEach((currency) => { %>
+          <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
           <% }); %>
         </select>
       </div>
