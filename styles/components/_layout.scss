@@ -104,6 +104,11 @@
   flex-grow: 1;
 }
 
+.flexNoShrink {
+  //stop a flex element from shrinking if it's content isn't big enough
+  flex-shrink: 0;
+}
+
 .flexItemCenter {
   //use on a flex child to set contents to vertically center if the parent doesn't
   align-self: center;

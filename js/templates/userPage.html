@@ -20,26 +20,31 @@
       </div>
 
 </nav>
-<section class="pageContent">
-
-  <div class="pageControls flex">
-    <h1 class="flexExpand txUnb">
-      <%= ob.handle || ob.id %>
-    </h1>
-    <div>
-      <div class="btnStrip">
-        <a class="btn">Message</a>
-        <a class="btn">Follow</a>
-        <a class="btn"><i class="ion-more ic90r"></i> </a>
+<section class="flexRow">
+  <div id="chatLeftSpacer"></div>
+  <div class="flexExpand">
+    <div class="pageContent">
+      <div class="pageControls flex">
+        <div class="col8">
+          <h1 class="txUnb txUnl">
+            <%= ob.handle || ob.id %>
+          </h1>
+        </div>
+        <div class="col4">
+          <div class="btnStrip floR">
+            <a class="btn clrP clrBr">Message</a>
+            <a class="btn clrP clrBr">Follow</a>
+            <a class="btn iconBtn clrP clrBr"><i class="ion-android-more-vertical"></i> </a>
+          </div>
+        </div>
       </div>
+
+      <ul>
+        <li>Tab: <%= ob.tab %></li>
+        <% if (ob.category) { %><li>Category: <%= ob.category %></li><% } %>
+        <% if (ob.layer) { %><li>Layer: <%= ob.layer %></li><% } %>
+      </ul>
     </div>
   </div>
-
-
-
-  <ul>
-    <li>Tab: <%= ob.tab %></li>
-    <% if (ob.category) { %><li>Category: <%= ob.category %></li><% } %>
-    <% if (ob.layer) { %><li>Layer: <%= ob.layer %></li><% } %>
-  </ul>
+  <div id="chatRightSpacer"></div>
 </section>

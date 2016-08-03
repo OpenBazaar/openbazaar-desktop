@@ -173,7 +173,9 @@ export default class extends View {
 
   render() {
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        //guid: app.profile.id,
+      }));
     });
 
     this.$addressBar = this.$('.js-addressBar');

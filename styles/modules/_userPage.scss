@@ -1,7 +1,7 @@
 .userPage {
 
   #pageTabBar.bar {
-    height: 55px;
+    height: $barBg;
     border-bottom-width: 1px;
     border-bottom-style: solid;
 
@@ -17,19 +17,19 @@
       height: 46px;
       margin-right: $pad;
     }
+  }
 
-    .pageContent {
+  .pageContent {
 
-      .pageControls {
-        align-items: flex-end;
-        margin: 278px 0 40px 0;
-      }
+    .pageControls {
+      align-items: flex-end;
+      margin: 278px 0 40px 0;
+    }
 
-      .pageSearchWrapper {
+    .pageSearchWrapper {
 
-        .pageSearch {
+      .pageSearch {
 
-        }
       }
     }
   }

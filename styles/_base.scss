@@ -112,55 +112,70 @@ ul, ol {
   position: absolute;
   height: 100%;
   width: 100%;
-}
 
-#contentFrame {
-  height: 100%;
-}
+  // index containers and sections
+  #pageNavContainer {
+    position: relative;
+    z-index: 2;
+  }
 
-// index containers and sections
-#pageNavContainer {
-  position: relative;
-  z-index: 2;
-}
+  #contentFrame {
+    height: 100%;
 
-#pageContainer {
-  padding: $bar + $padHg $padHg $padHg $padHg;
-  position: relative;
-  overflow-y: scroll;
-  height: calc(100% - #{$bar});
-  box-sizing: border-box;
+    #pageContainer {
+      padding-top: $barBg;
+      position: relative;
+      overflow-y: scroll;
+      height: calc(100% - #{$bar});
+      box-sizing: border-box;
 
-  .pageContent {
-    padding: $pad;
-    width: $pageWidth;
-    box-sizing: border-box;
-    margin-left: calc((100% - #{$pageWidth}) / 2);
-    @include chatOpeningTransition(margin-left);
+      #pageTabBar.bar {
+        position: fixed;
+        top: $bar;
+        left: 0;
+        width: 100%;
+      }
 
-    .chatOpen & {
-      margin-left: calc((100% - #{($pageWidth + $chatOpen - $padHg)}) / 2);
+      .pageContent {
+        padding: $padHg $padHg $padHg $padHg;
+        width: $pageWidth;
+        box-sizing: border-box;
+        margin: 0 auto;
+        @include chatOpeningTransition(margin-left);
+      }
+
+      #chatLeftSpacer {
+        width: $chatClosed; //this spacer can collapse if there isn't enough space
+
+        .chatOpen & {
+          width: $chatOpen;
+        }
+      }
+
+      #chatRightSpacer {
+        flex: 0 0;
+        min-width: $chatClosed; //this spacer will not collapse
+
+        .chatOpen & {
+          min-width: $chatOpen;
+        }
+      }
+    }
+
+    #chatContainer {
+      position: fixed;
+      top: 105px;
+      right: 0;
+      width: $chatClosed;
+      height: calc(100% - 100px);
+      z-index: 1; // chat needs to be on top of modals
+      @include chatOpeningTransition(width);
+
+      .chatOpen & {
+        width: $chatOpen;
+      }
     }
   }
 }
 
-#pageTabBar.bar {
-  position: fixed;
-  top: $bar;
-  left: 0;
-  width: 100%;
-}
 
-#chatContainer {
-  position: fixed;
-  top: 100px;
-  right: 0;
-  width: $chatClosed;
-  height: calc(100% - 100px);
-  z-index: 1; // chat needs to be on top of modals
-  @include chatOpeningTransition(width);
-
-  .chatOpen & {
-    width: $chatOpen;
-  }
-}

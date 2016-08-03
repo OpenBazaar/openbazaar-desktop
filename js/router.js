@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
@@ -18,6 +19,8 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
+      ['ownPage', 'ownPage'],
+      ['ownPage/:tab(/:action)', 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       ['test-modals', 'testModals'],
@@ -83,6 +86,8 @@ export default class ObRouter extends Router {
     if (tab === 'channel') {
       pageOpts.category = args[0];
       pageOpts.layer = args[1];
+    } else {
+      pageOpts.action = args[0];
     }
 
     let profile;
@@ -97,7 +102,9 @@ export default class ObRouter extends Router {
       profile = new Profile({ id: guid });
       profileFetch = profile.fetch();
 
-      onWillRoute = () => { profileFetch.abort(); };
+      onWillRoute = () => {
+        profileFetch.abort();
+      };
       this.once('will-route', onWillRoute);
     }
 
@@ -119,6 +126,12 @@ export default class ObRouter extends Router {
     }).always(() => {
       if (onWillRoute) this.off(null, onWillRoute);
     });
+  }
+
+  ownPage(tab, ...args) {
+    tab = [tab || 'store'];   // eslint-disable-line no-param-reassign
+    const path = _.compact(tab.concat(args)).join('/');
+    this.navigate(`${app.profile.id}${path ? `/${path}` : ''}`, { trigger: true });
   }
 
   transactions(tab) {

@@ -224,7 +224,3 @@ fetchConfig().done((data) => {
     Backbone.history.start();
   });
 });
-
-app.loadingModal.close();
-app.pageNav.navigable = true;
-Backbone.history.start();

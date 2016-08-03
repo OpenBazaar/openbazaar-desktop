@@ -7,6 +7,12 @@ h1,h2,h3,h4,h5,h6,
   font-weight: 700;
   -webkit-margin-before: 0;
   -webkit-margin-after: 0.5em;
+  overflow: hidden; //if the text inside a headline is too long, truncate it
+  text-overflow: ellipsis;
+
+  &.txUnb {
+    font-weight: 300;
+  }
 }
 
 // all font sizes are multiples of the base rem. This allows us to increase or decrease all the fonts by changing the
