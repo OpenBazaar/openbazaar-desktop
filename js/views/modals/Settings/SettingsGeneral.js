@@ -1,6 +1,8 @@
+import app from '../../../app';
+import languages from '../../../data/languages';
 import loadTemplate from '../../../utils/loadTemplate';
 import { View } from 'backbone';
-import select2 from 'select2'; // eslint-disable-line no-unused-vars
+import 'select2';
 
 export default class extends View {
   constructor(options = {}) {
@@ -11,37 +13,8 @@ export default class extends View {
       ...options,
     });
 
-    // temp data. This view will need the user model, the languages, the countries, and the
-    // currencies.
-
-    this.userModel = {
-      // test data, replace with a real model later
-      PaymentDataInQR: true,
-      ShowNotifications: true,
-      ShowNsfw: true,
-      ShippingAddresses: [],
-      LocalCurrency: 'USD',
-      Country: 'UNITED_STATES',
-      Language: 'en-US',
-      TermsAndConditions: 'Example terms and conditions.',
-      RefundPolicy: 'Example terms and conditions',
-      BlockedNodes: [],
-      StoreModerators: [],
-      SMTPSettings: {
-        Notifications: true,
-        ServerAddress: 'example server address',
-        Username: 'example name',
-        Password: 'example password',
-        SenderEmail: 'example sender email',
-        RecipientEmail: 'example recipient email',
-      },
-    };
-
-    this.languageList = [
-      { code: 'en-US', name: 'English - USA' },
-      { code: 'de-DE', name: 'German - Germany' },
-      { code: 'es', name: 'Spanish' },
-    ];
+    this.settings = app.settings.clone();
+    this.settings.on('sync', () => app.settings.set(this.settings.toJSON()));
 
     this.countryList = [
       { code: 'USA', dataName: 'UNITED_STATES', name: 'United States' },
@@ -62,10 +35,10 @@ export default class extends View {
   render() {
     loadTemplate('modals/settings/settingsGeneral.html', (t) => {
       this.$el.html(t({
-        languageList: this.languageList,
+        languageList: languages,
         countryList: this.countryList,
         currencyList: this.currencyList,
-        ...this.userModel,
+        ...this.settings.toJSON(),
       }));
 
       setTimeout(() => {

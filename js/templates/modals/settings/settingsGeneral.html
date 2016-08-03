@@ -9,8 +9,8 @@
       </div>
       <div class="col9">
         <select id="settingsLanguageSelect">
-          <% _.each(ob.languageList, function(lang){ %>
-            <option value="<%= lang.code %>" <% if (lang.code == ob.Language) print('selected') %>><%= lang.name %></option>
+          <% ob.languageList.forEach((lang) => { %>
+            <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
           <% }); %>
         </select>
       </div>
