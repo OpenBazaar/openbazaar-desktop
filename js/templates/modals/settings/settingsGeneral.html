@@ -21,8 +21,8 @@
       </div>
       <div class="col9">
         <select id="settingsCountrySelect">
-          <% _.each(ob.countryList, function(country){ %>
-          <option value="<%= country.dataName %>" <% if (country.dataName == ob.Country) print('selected') %>><%= country.name %></option>
+          <% ob.countryList.forEach((country) => { %>
+          <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
           <% }); %>
         </select>
       </div>
