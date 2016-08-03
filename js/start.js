@@ -27,13 +27,13 @@ function getValidLanguage(lang) {
 }
 
 const initialLang = getValidLanguage(app.localSettings.get('language'));
-app.localSettings.set('language', initialLang, { supressLangChangeWarning: true });
+app.localSettings.set('language', initialLang);
 app.polyglot = new Polyglot();
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
-app.localSettings.on('change:language', () => {
+app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
-    require(`./languages/${initialLang}.json`));  // eslint-disable-line global-require
+    require(`./languages/${lang}.json`));  // eslint-disable-line global-require
 
   if (beyondOnboarding) {
     const restartLangChangeDialog = new Dialog({
