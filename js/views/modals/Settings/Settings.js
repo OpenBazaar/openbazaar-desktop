@@ -33,6 +33,7 @@ export default class extends BaseModal {
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
+
     this.selectTab(targ);
   }
 
@@ -45,7 +46,7 @@ export default class extends BaseModal {
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = new this.tabViews[tabViewName]();
+        tabView = this.createChild(this.tabViews[tabViewName]);
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }
@@ -59,7 +60,11 @@ export default class extends BaseModal {
   }
 
   save() {
-    this.currentTabView.save();
+    this.$save.addClass('loading');
+
+    // tab views should implement save to return a promise
+    this.currentTabView.save()
+      .always(() => this.$save.removeClass('loading'));
   }
 
   render() {
@@ -69,6 +74,7 @@ export default class extends BaseModal {
       super.render();
 
       this.$tabContent = this.$('.js-tabContent');
+      this.$save = this.$('.js-save');
       this.selectTab(this.$('.js-tab[data-tab="SettingsGeneral"]'));
     });
 

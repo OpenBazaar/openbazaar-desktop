@@ -6,8 +6,6 @@ import SMTPSettings from '../models/SMTPSettings';
 export default class extends BaseModel {
   defaults() {
     return {
-      // todo: update the attrs once server removes
-      // capitalization.
       paymentDataInQR: false,
       showNotifications: true,
       showNsfw: true,
@@ -27,8 +25,8 @@ export default class extends BaseModel {
 
   nested() {
     return {
-      ShippingAddresses,
-      SMTPSettings,
+      shippingAddresses: ShippingAddresses,
+      smtpSettings: SMTPSettings,
     };
   }
 

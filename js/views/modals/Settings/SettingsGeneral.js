@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../../app';
 import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
@@ -10,8 +11,6 @@ export default class extends View {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',
-      events: {
-      },
       ...options,
     });
 
@@ -22,8 +21,53 @@ export default class extends View {
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
   }
 
+  getFormData() {
+    const data = {};
+
+    this.$formFields.each((index, field) => {
+      const $field = $(field);
+      const varType = $field.data('var-type');
+      let val = $field.val();
+
+      if (field.type === 'radio' && !field.checked) return;
+
+      if (varType) {
+        if (varType === 'number') {
+          val = Number(val);
+        } else if (varType === 'boolean') {
+          val = val === 'true';
+        }
+      }
+
+      data[$field.attr('name')] = val;
+    });
+
+    return data;
+  }
+
   save() {
-    // save the form
+    const formData = this.getFormData();
+    const deferred = $.Deferred();
+
+    this.settings.set(formData);
+
+    const save = this.settings.save(formData, {
+      attrs: formData,
+      type: 'PATCH',
+    });
+
+    if (!save) {
+      // client side validation failed
+      deferred.reject();
+    } else {
+      save.done(() => deferred.resolve())
+        .fail(() => deferred.reject());
+    }
+
+    // render so errrors are shown / cleared
+    this.render();
+
+    return deferred.promise();
   }
 
   render() {
@@ -32,14 +76,15 @@ export default class extends View {
         languageList: languages,
         countryList: this.countryList,
         currencyList: this.currencyList,
+        errors: this.settings.validationError || {},
         ...this.settings.toJSON(),
       }));
 
-      setTimeout(() => {
-        this.$('#settingsLanguageSelect').select2();
-        this.$('#settingsCountrySelect').select2();
-        this.$('#settingsCurrencySelect').select2();
-      }, 0);
+      this.$('#settingsLanguageSelect').select2();
+      this.$('#settingsCountrySelect').select2();
+      this.$('#settingsCurrencySelect').select2();
+
+      this.$formFields = this.$('select[name], input[name]');
     });
 
     return this;

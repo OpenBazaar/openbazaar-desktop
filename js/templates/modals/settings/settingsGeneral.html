@@ -8,7 +8,8 @@
         <label>Language</label>
       </div>
       <div class="col9">
-        <select id="settingsLanguageSelect">
+        <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>      
+        <select id="settingsLanguageSelect" name="language">
           <% ob.languageList.forEach((lang) => { %>
             <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
           <% }); %>
@@ -20,7 +21,8 @@
         <label>Country</label>
       </div>
       <div class="col9">
-        <select id="settingsCountrySelect">
+        <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>      
+        <select id="settingsCountrySelect" name="country">
           <% ob.countryList.forEach((country) => { %>
           <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
           <% }); %>
@@ -32,7 +34,8 @@
         <label>Currency</label>
       </div>
       <div class="col9">
-        <select id="settingsCurrencySelect">
+        <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
+        <select id="settingsCurrencySelect"  name="localCurrency">
           <% ob.currencyList.forEach((currency) => { %>
           <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
           <% }); %>
@@ -44,21 +47,24 @@
         <label>View NSFW Content</label>
       </div>
       <div class="col9">
+        <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
         <div class="btnStrip">
           <div class="btn clrBr">
             <input type="radio"
-                   name="ShowNsfw"
-                   value=true
+                   name="showNsfw"
+                   value="true"
                    id="settingsViewNSFWInputTrue"
-            <% if(ob.NSFW) { %>checked<% } %>>
+                   data-var-type="boolean"
+            <% if(ob.showNsfw) { %>checked<% } %>>
             <label for="settingsViewNSFWInputTrue">On</label>
           </div>
           <div class="btn clrBr">
             <input type="radio"
-                   name="ShowNsfw"
-                   value=false
+                   name="showNsfw"
+                   value="false"
                    id="settingsViewNSFWInputFalse"
-            <% if(!ob.NSFW) { %>checked<% } %>>
+                   data-var-type="boolean"
+            <% if(!ob.showNsfw) { %>checked<% } %>>
             <label for="settingsViewNSFWInputFalse">Off</label>
           </div>
         </div>

@@ -115,8 +115,8 @@ import { Model } from 'backbone';
 */
 
 export default class extends Model {
-  constructor(options) {
-    super(options);
+  constructor(attrs) {
+    super(attrs);
 
     this.lastSyncedAttrs = {};
 
@@ -181,5 +181,9 @@ export default class extends Model {
       this.clear();
       this.set(this.defaults || {});
     }
+  }
+
+  clone() {
+    return new this.constructor(this.toJSON());
   }
 }
