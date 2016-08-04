@@ -3,11 +3,11 @@
 h1,h2,h3,h4,h5,h6,
 .h1,.h2,.h3,.h4,.h5,.h6 {
   margin: 0;
-  line-height: 1;
   font-weight: 700;
   -webkit-margin-before: 0;
   -webkit-margin-after: 0.5em;
-  overflow: hidden; //if the text inside a headline is too long, truncate it
+  overflow-x: hidden; //if the text inside a headline is too long, truncate it
+  overflow-y: visible;
   text-overflow: ellipsis;
 
   &.txUnb {
@@ -65,7 +65,6 @@ p {
 }
 
 .txUnl {
-  line-height: 1;
   margin-bottom: 0;
 }
 
