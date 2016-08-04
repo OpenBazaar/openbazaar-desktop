@@ -1,8 +1,10 @@
+import $ from 'jquery';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import SimpleMessage from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import SettingsGeneral from './SettingsGeneral';
 import SettingsPage from './SettingsPage';
-import $ from 'jquery';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -62,9 +64,30 @@ export default class extends BaseModal {
   save() {
     this.$save.addClass('loading');
 
-    // tab views should implement save to return a promise
+    // Tab views should implement save to return a promise. On errors,
+    // if it's a server error, please return the args to the fail handler
+    // with the promise rejection.
     this.currentTabView.save()
-      .always(() => this.$save.removeClass('loading'));
+      .always(() => this.$save.removeClass('loading'))
+      .fail((...args) => {
+        // sroll to first error
+        const $firstErr = this.currentTabView.$('.errorList:first');
+        const isXhr = args[0].abort; // xhr's implement the abort method
+
+        if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+
+        // on server errors, we'll display a message
+        if (isXhr) {
+          const jqXhr = args[0];
+
+          new SimpleMessage({
+            title: app.polyglot.t('settings.errors.saveError'),
+            message: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          })
+          .render()
+          .open();
+        }
+      });
   }
 
   render() {

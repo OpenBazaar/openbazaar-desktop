@@ -4,10 +4,10 @@ import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
 import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
-import { View } from 'backbone';
+import baseVw from '../../baseVw';
 import 'select2';
 
-export default class extends View {
+export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',
@@ -22,27 +22,7 @@ export default class extends View {
   }
 
   getFormData() {
-    const data = {};
-
-    this.$formFields.each((index, field) => {
-      const $field = $(field);
-      const varType = $field.data('var-type');
-      let val = $field.val();
-
-      if (field.type === 'radio' && !field.checked) return;
-
-      if (varType) {
-        if (varType === 'number') {
-          val = Number(val);
-        } else if (varType === 'boolean') {
-          val = val === 'true';
-        }
-      }
-
-      data[$field.attr('name')] = val;
-    });
-
-    return data;
+    return super.getFormData(this.$formFields);
   }
 
   save() {
@@ -61,7 +41,7 @@ export default class extends View {
       deferred.reject();
     } else {
       save.done(() => deferred.resolve())
-        .fail(() => deferred.reject());
+        .fail((...args) => deferred.reject(...args));
     }
 
     // render so errrors are shown / cleared

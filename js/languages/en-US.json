@@ -2,7 +2,12 @@
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
-  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",    
+  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "settings": {
+    "errors": {
+      "saveError": "There was an error saving your settings."
+    }
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
