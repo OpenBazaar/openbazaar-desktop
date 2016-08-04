@@ -16,7 +16,8 @@ export default class extends Model {
 
   defaults() {
     return {
-      mac_style_win_controls: remote.process.platform === 'darwin',
+      macStyleWinControls: remote.process.platform === 'darwin',
+      language: 'en-US',
     };
   }
 
@@ -27,8 +28,8 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.mac_style_win_controls && is.not.boolean(attrs.mac_style_win_controls)) {
-      addError('mac_style_win_controls', 'Please provide a boolean value.');
+    if (attrs.macStyleWinControls && is.not.boolean(attrs.macStyleWinControls)) {
+      addError('macStyleWinControls', 'Please provide a boolean value.');
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;
