@@ -1,5 +1,10 @@
-// todo: add in some helpers!
+import app from '../app';
 
-export function dummyHelper(something) {
-  return something;
-}
+const polyT = function (...args) {
+  return app.polyglot.t(...args);
+};
+
+export {
+  polyT,
+};
+
