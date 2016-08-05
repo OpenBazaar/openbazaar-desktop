@@ -1,11 +1,11 @@
 <div class="bar padM clrBr borderBottom">
-  <h2><%= ob.plyT('settings.generalTab') %></h2>
+  <h2><%= ob.polyT('settings.generalTab') %></h2>
 </div>
 <div class="padM scrollBox settingsTabFormWrapper">
   <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.plyT('settings.language') %></label>
+        <label><%= ob.polyT('settings.language') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>      
@@ -18,7 +18,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.plyT('settings.country') %></label>
+        <label><%= ob.polyT('settings.country') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>      
@@ -31,7 +31,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.plyT('settings.currency') %></label>
+        <label><%= ob.polyT('settings.currency') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
@@ -44,7 +44,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.plyT('settings.viewNsfwContent') %></label>
+        <label><%= ob.polyT('settings.viewNsfwContent') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
@@ -56,7 +56,7 @@
                    id="settingsViewNSFWInputTrue"
                    data-var-type="boolean"
             <% if(ob.showNsfw) { %>checked<% } %>>
-            <label for="settingsViewNSFWInputTrue"><%= ob.plyT('settings.on') %></label>
+            <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
           </div>
           <div class="btn clrBr">
             <input type="radio"
@@ -65,7 +65,7 @@
                    id="settingsViewNSFWInputFalse"
                    data-var-type="boolean"
             <% if(!ob.showNsfw) { %>checked<% } %>>
-            <label for="settingsViewNSFWInputFalse"><%= ob.plyT('settings.off') %></label>
+            <label for="settingsViewNSFWInputFalse"><%= ob.polyT('settings.off') %></label>
           </div>
         </div>
       </div>
