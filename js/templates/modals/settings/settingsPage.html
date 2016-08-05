@@ -1,11 +1,11 @@
 <div class="bar padM clrBr borderBottom">
-  <h2>Page</h2>
+  <h2><%= ob.plyT('settings.pageTab') %></h2>
 </div>
 <div class="padM scrollBox settingsTabFormWrapper">
   <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsName">Name</label>
+        <label for="settingsName"><%= ob.plyT('settings.name') %></label>
       </div>
       <div class="col9">
       <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
@@ -14,7 +14,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsHandle">Handle</label>
+        <label for="settingsHandle"><%= ob.plyT('settings.handle') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.handle) print(ob.formErrorTmpl({ errors: ob.errors.handle })) %>
@@ -23,7 +23,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsShortDescription">Short Description</label>
+        <label for="settingsShortDescription"><%= ob.plyT('settings.shortDescription') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.shortDescription) print(ob.formErrorTmpl({ errors: ob.errors.shortDescription })) %>
@@ -33,7 +33,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsAbout">About</label>
+        <label for="settingsAbout"><%= ob.plyT('settings.about') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
@@ -50,7 +50,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>NSFW Content</label>
+        <label><%= ob.plyT('settings.nsfwContent') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.nsfw) print(ob.formErrorTmpl({ errors: ob.errors.nsfw })) %>
@@ -62,7 +62,7 @@
                    id="settingsNSFWInputTrue"
                    data-var-type="boolean"
             <% if(ob.NSFW) { %>checked<% } %>>
-            <label for="settingsNSFWInputTrue">On</label>
+            <label for="settingsNSFWInputTrue"><%= ob.plyT('settings.on') %></label>
           </div>
           <div class="btn clrBr">
             <input type="radio"
@@ -71,25 +71,25 @@
                    id="settingsNSFWInputFalse"
                    data-var-type="boolean"
             <% if(!ob.NSFW) { %>checked<% } %>>
-            <label for="settingsNSFWInputFalse">Off</label>
+            <label for="settingsNSFWInputFalse"><%= ob.plyT('settings.off') %></label>
           </div>
         </div>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Avatar</label>
+        <label><%= ob.plyT('settings.avatar') %></label>
       </div>
       <div class="col9">
         <label>Photo Upload</label>
       </div>
     </div>
     <div class="flexRow">
-      <h3>Social</h3>
+      <h3><%= ob.plyT('settings.socialSection') %></h3>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsWebsite">Website</label>
+        <label for="settingsWebsite"><%= ob.plyT('settings.website') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.website) print(ob.formErrorTmpl({ errors: ob.errors.website })) %>
@@ -99,7 +99,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsEmail">Email</label>
+        <label for="settingsEmail"><%= ob.plyT('settings.email') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
@@ -108,18 +108,18 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Social Media Accounts</label>
+        <label><%= ob.plyT('settings.socialMediaAccounts') %></label>
       </div>
       <div class="col9">
         Fancy input thing here
       </div>
     </div>
     <div class="flexRow">
-      <h3>Theme</h3>
+      <h3><%= ob.plyT('settings.themesSection') %></h3>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Standard Themes</label>
+        <label><%= ob.plyT('settings.standardThemes') %></label>
       </div>
       <div class="col9">
         thumbnails of themes
@@ -127,7 +127,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Cover Photo</label>
+        <label><%= ob.plyT('settings.coverPhoto') %></label>
       </div>
       <div class="col9">
         <label>Photo Upload</label>
@@ -135,7 +135,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsPrimaryColor">Primary Color</label>
+        <label for="settingsPrimaryColor"><%= ob.plyT('settings.primaryColor') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
@@ -145,7 +145,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsSecondaryColor">Secondary Color</label>
+        <label for="settingsSecondaryColor"><%= ob.plyT('settings.secondaryColor') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.secondaryColor) print(ob.formErrorTmpl({ errors: ob.errors.secondaryColor })) %>
@@ -155,7 +155,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsTextColor">Text Color</label>
+        <label for="settingsTextColor"><%= ob.plyT('settings.textColor') %></label>
       </div>
       <div class="col9">
         <% if (ob.errors.textColor) print(ob.formErrorTmpl({ errors: ob.errors.textColor })) %>

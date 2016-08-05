@@ -2,6 +2,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import SimpleMessage from '../SimpleMessage';
+import Dialog from '../Dialog';
 import BaseModal from '../BaseModal';
 import SettingsGeneral from './SettingsGeneral';
 import SettingsPage from './SettingsPage';
@@ -11,6 +12,7 @@ export default class extends BaseModal {
     const opts = {
       removeOnClose: true,
       modelContentClass: 'modalContent clrP border clrBr',
+      removeOnRoute: false,
       ...options,
     };
 
@@ -19,6 +21,11 @@ export default class extends BaseModal {
 
     this.tabViewCache = {};
     this.tabViews = { SettingsGeneral, SettingsPage };
+
+    this.listenTo(app.router, 'will-route', () => {
+      this.close(true);
+      this.remove();
+    });
   }
 
   className() {
@@ -63,17 +70,26 @@ export default class extends BaseModal {
 
   save() {
     this.$save.addClass('loading');
+    $('#statusBarContainer').text('');
+    this.saving = true;
+    this.$saveStatus.text('');
 
     // Tab views should implement save to return a promise. On errors,
-    // if it's a server error, please return the args to the fail handler
-    // with the promise rejection.
+    // if it's a server error, please return the args of the fail handler
+    // with the promise rejection. Please send a progress event when
+    // client validation succeeds (deferred.notify()).
     this.currentTabView.save()
-      .always(() => this.$save.removeClass('loading'))
+      .always(() => {
+        this.saving = false;
+        this.$save.removeClass('loading');
+      })
       .fail((...args) => {
-        // sroll to first error
         const $firstErr = this.currentTabView.$('.errorList:first');
         const isXhr = args[0].abort; // xhr's implement the abort method
 
+        $('#statusBarContainer').text(app.polyglot.t('settings.statusSaveFailed'));
+
+        // sroll to first error
         if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
 
         // on server errors, we'll display a message
@@ -87,7 +103,51 @@ export default class extends BaseModal {
           .render()
           .open();
         }
+      })
+      .done(() => {
+        if (this.confirmNavAwayDialog && this.confirmNavAwayDialog.isOpen()) {
+          this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
+        }
+
+        $('#statusBarContainer').text(app.polyglot.t('settings.statusSaveComplete'));
+      })
+      .progress(() => {
+        $('#statusBarContainer').text(app.polyglot.t('settings.statusSaving'));
       });
+  }
+
+  close(skipWarning) {
+    if (!skipWarning && this.saving) {
+      this.confirmNavAwayDialog = new Dialog({
+        title: app.polyglot.t('settings.confirmNavAwayWarning.title'),
+        message: app.polyglot.t('settings.confirmNavAwayWarning.message'),
+        buttons: [{
+          text: app.polyglot.t('settings.btnYes'),
+          fragment: 'yes',
+        }, {
+          text: app.polyglot.t('settings.btnYes'),
+          fragment: 'no',
+        }],
+        dismissOnOverlayClick: false,
+        dismissOnEscPress: false,
+        showCloseButton: false,
+      })
+      .on('click-yes', () => {
+        this.confirmNavAwayDialog.close();
+        this.close(true);
+      })
+      .on('click-no', () => {
+        this.confirmNavAwayDialog.close();
+      })
+      .render()
+      .open();
+    } else {
+      super.close();
+    }
+  }
+
+  get $saveStatus() {
+    return this._$saveStatus || this.$('.saveStatus');
   }
 
   render() {
@@ -98,6 +158,8 @@ export default class extends BaseModal {
 
       this.$tabContent = this.$('.js-tabContent');
       this.$save = this.$('.js-save');
+      this._$saveStatus = null;
+
       this.selectTab(this.$('.js-tab[data-tab="SettingsGeneral"]'));
     });
 

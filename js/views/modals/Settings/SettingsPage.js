@@ -44,6 +44,7 @@ export default class extends baseVw {
       // client side validation failed
       deferred.reject();
     } else {
+      deferred.notify();
       save.done(() => deferred.resolve())
         .fail((...args) => deferred.reject(...args));
     }

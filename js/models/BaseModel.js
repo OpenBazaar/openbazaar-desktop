@@ -71,36 +71,6 @@ import { Model } from 'backbone';
     }
   });
 
-  === validating nested attributes ===
-
-  It is recommended that you validate nested attributes in the parent:
-
-  class ParentModel extends BaseModel {
-    validate(attrs) {
-      const errObj = {};
-      const addError = (fieldName, error) => {
-        errObj[fieldName] = errObj[fieldName] || [];
-        errObj[fieldName].push(error);
-      };
-
-      const SMTPSettings = attrs.get('SMTPSettings');
-      if (SMTPSettings.notifications === false) {
-        addError('SMTPSettings.notifications', 'Now why would you turn off notifications?');
-      }
-
-      const addresses = attrs.get('Addresses');
-      addresses.forEach((address, index) => {
-        if (address.get('street') === '') {
-          addError(`addresses[${index}].street`, 'Im gonna need a street son');
-        }
-      });
-
-      if (Object.keys(errObj).length) return errObj;
-
-      return undefined;
-    }
-  }
-
   === events ===
 
   Events related to the nested attributes need to be directly bound to the nested

@@ -55,18 +55,18 @@ export default class extends BaseModel {
       const clr = attrs[colorField];
 
       if (is.not.hexColor(clr)) {
-        addError(colorField, 'Please provide a valid hex color.');
+        addError(colorField, app.polyglot.t('profileModelErrors.provideValidHexColor'));
       } else if (clr.charAt(0) !== '#') {
         addError(colorField, 'The color should start with a leading hash.');
       }
     });
 
     if (attrs.email && is.not.email(attrs.email)) {
-      addError('email', 'Please provide a valid email.');
+      addError('email', app.polyglot.t('profileModelErrors.provideValidEmail'));
     }
 
     if (attrs.website && is.not.url(attrs.website)) {
-      addError('website', 'Please provide a valid url.');
+      addError('website', app.polyglot.t('profileModelErrors.provideValidURL'));
     }
 
     if (attrs.handle && attrs.handle.charAt(0) === '@') {
@@ -81,7 +81,7 @@ export default class extends BaseModel {
       const socialAttrs = socialMd.attributes;
 
       if (is.not.string(socialAttrs.username) || !socialAttrs.username.length) {
-        addError(`social[${index}].username`, 'Please provide a username.');
+        addError(`social[${index}].username`, app.polyglot.t('profileModelErrors.provideUsername'));
       }
 
       if (is.not.string(socialAttrs.type)) {
@@ -94,7 +94,8 @@ export default class extends BaseModel {
       // dupes after the first one
       if (socialAttrs.type !== 'other' && groupedByType[socialAttrs.type].length > 1 &&
         groupedByType[socialAttrs.type].indexOf(socialMd) > 0) {
-        addError(`social[${index}].type`, 'You already have a social account of this type.');
+        addError(`social[${index}].type`,
+          app.polyglot.t('profileModelErrors.duplicateSocialAccount'));
       }
 
       // todo: dont allow multiple others with the same username.
