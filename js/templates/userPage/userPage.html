@@ -1,0 +1,59 @@
+<nav id="pageTabBar" class="barLg clrP clrBr">
+
+      <div class="flexVCent pageTabs">
+        <!--consider turning tabs into a reusable view-->
+        <div>
+          <div class="userIcon disc clrBr2 clrSh1" style="background-image: url('../imgs/defaultUser.png')"></div>
+        </div>
+        <div>
+          <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
+          <div>Stars(x) <%= ob.polyT('userPage.followsYou') %></div>
+        </div>
+        <div class="flexExpand">
+          <div class="flexHRight flexVCent gutterH clrT2">
+            <a class="btn tab clrBr js-tab" data-tab="Home">Home</a>
+            <a class="btn tab clrBr js-tab" data-tab="Store">Store</a>
+            <a class="btn tab clrBr js-tab" data-tab="Following">Following</a>
+            <a class="btn tab clrBr js-tab" data-tab="Followers">Followers</a>
+          </div>
+        </div>
+      </div>
+
+</nav>
+<section class="flexRow banner" <% if(ob.banner){ %>
+  style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+  <% } else { %>
+  style="background-image: url('../imgs/defaultBanner.png')"
+  <% } %>>
+  <div id="chatLeftSpacer"></div>
+  <div class="flexExpand">
+    <div class="pageContent">
+      <div class="pageControls flex">
+        <div class="col8">
+          <h1 class="txUnb txUnl js-tabTitle">
+          </h1>
+        </div>
+        <div class="col4">
+          <div class="btnStrip floR clrSh2">
+            <a class="btn clrP clrBr"><%= ob.polyT('userPage.message') %></a>
+            <a class="btn clrP clrBr">
+              <% if(ob.followed){ print(ob.polyT('userPage.unfollow')) } else { print(ob.polyT('userPage.follow')) } %>
+            </a>
+            <a class="iconBtn clrP clrBr"><i class="ion-android-more-vertical"></i> </a>
+          </div>
+        </div>
+      </div>
+      <div class="tabContent js-tabContent">
+        <!-- insert the tab subview here -->
+      </div>
+
+      <ul>
+        <li>Tab: <%= ob.tab %></li>
+        <% if (ob.category) { %><li>Category: <%= ob.category %></li><% } %>
+        <% if (ob.layer) { %><li>Layer: <%= ob.layer %></li><% } %>
+      </ul>
+      <a href="#test-profile">Test Profile</a>
+    </div>
+  </div>
+  <div id="chatRightSpacer"></div>
+</section>

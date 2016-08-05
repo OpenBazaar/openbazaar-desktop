@@ -1,20 +1,29 @@
 .userPage {
 
   #pageTabBar.bar {
-    height: $barBg;
+    height: $barLg;
     border-bottom-width: 1px;
     border-bottom-style: solid;
 
     .pageTabs {
       max-width: $pageWidth;
       margin: 0 auto;
+
+      .tab {
+        box-sizing: content-box;
+
+        &.active {
+          border-bottom-width: 1px;
+          border-bottom-style: solid;
+        }
+      }
     }
 
     .userIcon {
       border-width: 2px;
       border-style: solid;
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       margin-right: $pad;
     }
   }
@@ -24,6 +33,17 @@
     .pageControls {
       align-items: flex-end;
       margin: 268px 0 40px 0;
+    }
+
+    .userPageSearchBar {
+      margin: 39px 0 $padMd 0;
+      height: $barSm;
+
+      .ctrl,
+      .btn {
+        height: $barSm;
+        line-height: $barSm;
+      }
     }
 
     .pageSearchWrapper {

@@ -4,7 +4,7 @@ import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
 import app from './app';
-import UserPage from './views/UserPage';
+import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import TestModalsPage from './views/TestModalsPage';

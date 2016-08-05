@@ -2,7 +2,18 @@
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
-  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",    
+  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "userPage": {
+    "followsYou": "Follows You",
+    "message": "Message",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "searchStore": "Search %{storeName}",
+    "moderator": "Moderator",
+    "termsOfService": "Terms of Service",
+    "modFee": "%{modFee}% per dispute",
+    "addModerator": "Add as Moderator"
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
@@ -249,7 +260,7 @@
     "WESTERN_SAHARA": "Western Sahara",
     "YEMEN": "Yemen",
     "ZAMBIA": "Zambia",
-    "ZIMBABWE": "Zimbabwe"    
+    "ZIMBABWE": "Zimbabwe"
   },
   "currencies": {
     "AED": "UAE Dirham",

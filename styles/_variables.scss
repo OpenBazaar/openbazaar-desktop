@@ -2,6 +2,7 @@
 $text: hsl(0,0,14.8);
 $text2: adjust-color($text, $lightness: +43.2%);
 $text3: adjust-color($text, $lightness: +59%);
+$text4: adjust-color($text, $lightness: +65%);
 $primary: hsl(0,0%,100%);
 $secondary: adjust-color($primary, $lightness: -4%);
 $background: adjust-color($primary, $lightness: -10%);
@@ -15,7 +16,7 @@ $overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
 // typography
 $baseFontSize: 10px;
 $tx1: 5rem;
-$tx2: 2.2rem;
+$tx2: 2.6rem;
 $tx3: 1.8rem;
 $tx4: 1.6rem;
 $tx5: 1.4rem;
@@ -25,8 +26,10 @@ $formElementHeight: 4rem;
 
 // layout
 $pad: 10px;
+$padTn: $pad / 4;
 $padSm: $pad / 2;
 $padMd: $pad * 1.5;
+$padMd2: $pad * 1.2;
 $padLg: $pad * 2;
 $padHg: $pad * 2.5;
 $marg: 10px;
@@ -37,5 +40,7 @@ $pageWidth: 950px;
 // controls
 $corner: 2px;
 $bar: 50px;
-$barBg: 55px;
+$barSm: 40px;
+$barLg: 55px;
+$brdRad: 2px;
 

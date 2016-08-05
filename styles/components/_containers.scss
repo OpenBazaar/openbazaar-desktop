@@ -24,8 +24,17 @@
 
   input[type="text"] {
     height: 100%;
-    padding: $pad;
   }
+}
+
+.barSm {
+  @extend .bar;
+  height: $barSm;
+}
+
+.barLg {
+  @extend .bar;
+  height: $barLg;
 }
 
 .disc {
@@ -44,6 +53,11 @@
   @extend .disc;
   width: 38px;
   height: 38px;
+}
+
+.banner {
+  background-position: center;
+  background-size: cover;
 }
 
 .border {
@@ -71,15 +85,21 @@
   }
 }
 
+.contentBox {
+  //used to contain content, usually main sections of the page
+  @extend .box;
+  border-radius: $brdRad;
+  border-width: 1px;
+  border-style: solid;
+}
+
 .listBox {
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
-  @extend .box, .boxList;
+  @extend .contentBox, .boxList;
 
   .listGroup {
     padding: $pad;
     margin-bottom: $pad / 2;
-    border-width: 1px;
-    border-style: solid;
 
     &:last-child {
       margin-bottom: 0;

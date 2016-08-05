@@ -123,6 +123,9 @@
 
   .navList {
     box-sizing: border-box;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border: none;
     width: 260px;
     padding: $pad;
     z-index: 1;

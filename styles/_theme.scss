@@ -32,11 +32,10 @@
 
 $excludedLinks: ".btn, .iconBtn, .listLink";
 
-.clrT,
-.clrT a {
+.clrT {
   color: $text;
 
-  & a:not(#{$excludedLinks}) {
+  a:not(#{$excludedLinks}) {
     color: $text2;
   }
 
@@ -45,8 +44,7 @@ $excludedLinks: ".btn, .iconBtn, .listLink";
   }
 }
 
-.clrT2,
-.clrT2 a {
+.clrT2 {
   // for faded text
   color: $text2;
 
@@ -59,8 +57,7 @@ $excludedLinks: ".btn, .iconBtn, .listLink";
   }
 }
 
-.clrT3,
-.clrT3 a {
+.clrT3 {
   // use when text2 needs to be "activated"
   color: $text3;
 
@@ -68,6 +65,17 @@ $excludedLinks: ".btn, .iconBtn, .listLink";
 
   input[type="radio"]:checked + label:before {
     background: $text3;
+  }
+}
+
+.clrT4 {
+  // use when text2 needs to be "activated"
+  color: $text4;
+
+  // links in text color 4 are the same color, or they'd be too hard to see
+
+  input[type="radio"]:checked + label:before {
+    background: $text4;
   }
 }
 
@@ -112,9 +120,9 @@ $excludedLinks: ".btn, .iconBtn, .listLink";
 
 //shadows should be set by the theme too
 .clrSh1 {
-  box-shadow: 0 1px 2px adjust-color($primary, $lightness: -61%, $alpha: -0.5%);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-.clrSh2 {
-  box-shadow: 0 1px 0 adjust-color($primary, $lightness: -5%);
+.clrSh2  {
+  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
 }

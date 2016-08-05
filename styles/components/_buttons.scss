@@ -6,6 +6,7 @@
   border-style: solid;
   font-size: $tx5;
   font-weight: 500;
+  box-sizing: border-box;
 }
 
 .btn {
@@ -26,6 +27,18 @@
   .bar & {
     line-height: $bar;
     height: $bar;
+    border: none;
+  }
+
+  .barSm & {
+    line-height: $barSm;
+    height: $barSm;
+    border: none;
+  }
+
+  .barLg & {
+    line-height: $barLg;
+    height: $barLg;
     border: none;
   }
 
@@ -74,12 +87,12 @@
 .iconBtn {
   //this button has only an icon in it
   @extend .btn;
-  font-size: 20px;
+  font-size: 2rem;
   padding: 0 12px;
+}
 
-  .bar & {
-    font-size: 20px;
-  }
+.btnThin {
+  padding: 0 12px;
 }
 
 .btnStrip {
@@ -118,5 +131,27 @@
 
   &.open {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+.searchWrapper {
+  //div around a search input
+  position: relative;
+  width: 100%;
+
+  input {
+    text-indent: 1.5em; /* make room for icon */
+  }
+
+  &:before {
+    //insert a search icon before the text
+    font-family: Ionicons;
+    content: "\f4a5";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.75em;
+    left: 0.75em;
+    color: inherit;
   }
 }
