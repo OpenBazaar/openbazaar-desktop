@@ -1488,7 +1488,7 @@ function getIndexedCountries() {
   if (indexedCountries) return indexedCountries;
 
   indexedCountries = countries.reduce((indexedObj, country) => {
-    indexedObj[country.code] = country.name;
+    indexedObj[country.dataName] = _.omit(country, 'dataName');
     return indexedObj;
   }, {});
 
