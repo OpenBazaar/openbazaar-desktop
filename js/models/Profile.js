@@ -70,7 +70,7 @@ export default class extends BaseModel {
     }
 
     if (attrs.handle && attrs.handle.charAt(0) === '@') {
-      addError('handle', 'The handle should not start with a leading hash.');
+      addError('handle', 'The handle should not start with a leading @.');
     }
 
     const socialAccounts = attrs.social;

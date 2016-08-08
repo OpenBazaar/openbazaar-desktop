@@ -146,7 +146,7 @@ ul, ol {
   }
 }
 
-// temporary ghetto status bar implementation
+// temporary status bar implementation
 #statusBarContainer {
   color: black; // use color var when refactoring
   background-color: rgba(0,0,0,0.3); // use color var when refactoring
@@ -163,5 +163,6 @@ ul, ol {
     position: absolute;
     right: 5px;
     top: 5px;
+    border-radius: inherit;
   }  
 }

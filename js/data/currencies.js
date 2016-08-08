@@ -640,9 +640,7 @@ function getTranslatedCurrencies(lang, sort = true) {
       ' should be returned in.');
   }
 
-  let translated = [...currencies];
-
-  translated = currencies.map((currency) => ({
+  let translated = currencies.map((currency) => ({
     ...currency,
     name: app.polyglot.t(`currencies.${currency.code}`),
   }));

@@ -1509,9 +1509,7 @@ function getTranslatedCountries(lang, sort = true) {
       ' should be returned in.');
   }
 
-  let translated = [...countries];
-
-  translated = countries.map((country) => ({
+  let translated = countries.map((country) => ({
     ...country,
     name: app.polyglot.t(`countries.${country.dataName}`),
   }));
