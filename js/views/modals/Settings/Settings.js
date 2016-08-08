@@ -125,7 +125,7 @@ export default class extends BaseModal {
           text: app.polyglot.t('settings.btnYes'),
           fragment: 'yes',
         }, {
-          text: app.polyglot.t('settings.btnYes'),
+          text: app.polyglot.t('settings.btnNo'),
           fragment: 'no',
         }],
         dismissOnOverlayClick: false,
