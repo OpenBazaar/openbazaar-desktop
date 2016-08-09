@@ -1,8 +1,9 @@
+import $ from 'jquery';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import { View } from 'backbone';
-import select2 from 'select2'; // eslint-disable-line no-unused-vars
+import baseVw from '../../baseVw';
 
-export default class extends View {
+export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',
@@ -10,53 +11,70 @@ export default class extends View {
       },
       ...options,
     });
-  // temp data. This view will need the user model, the languages, the countries, and the
-    // currencies.
-    this.profileModel = {
-      handle: '@example',
-      name: 'exampleName',
-      location: 'UNITED_STATES',
-      about: 'example about',
-      shortDescription: 'example short description',
-      website: 'http://example.website.com',
-      email: 'example@email.com',
-      nsfw: false,
-      vendor: false,
-      moderator: false,
-      primaryColor: '#000000',
-      secondaryColor: '#000000',
-      textColor: '#000000',
-      backgroundColor: '#000000',
-      followerCount: 0,
-      followingCount: 0,
-      listingCount: 0,
-    };
-    this.countryList = [
-      { code: 'USA', dataName: 'UNITED_STATES', name: 'United States' },
-      { code: 'DZD', dataName: 'ALGERIA', name: 'Algeria' },
-    ];
+
+    this.profile = app.profile.clone();
+    this.profile.on('sync', () => app.profile.set(this.profile.toJSON()));
+  }
+
+  getFormData() {
+    const formData = super.getFormData(this.$formFields);
+
+    while (formData.handle.startsWith('@')) {
+      formData.handle = formData.handle.slice(1);
+    }
+
+    ['primaryColor', 'secondaryColor', 'textColor'].forEach((colorField) => {
+      if (!formData[colorField].startsWith('#')) {
+        formData[colorField] = `#${formData[colorField]}`;
+      }
+    });
+
+    return formData;
   }
 
   save() {
-    // save the form
+    const formData = this.getFormData();
+    const deferred = $.Deferred();
+
+    this.profile.set(formData);
+
+    const save = this.profile.save();
+
+    if (!save) {
+      // client side validation failed
+      deferred.reject();
+    } else {
+      deferred.notify();
+      save.done(() => deferred.resolve())
+        .fail((...args) => deferred.reject(...args));
+    }
+
+    // render so errrors are shown / cleared
+    this.render();
+
+    return deferred.promise();
   }
 
-  cancel() {
-    // cancel the form
-  }
+  render(restoreScrollPos = true) {
+    let prevScrollPos = 0;
+    const $scrollContainer = this.$('.settingsTabFormWrapper');
 
-  render() {
+    if (restoreScrollPos && $scrollContainer.length) {
+      prevScrollPos = $scrollContainer[0].scrollTop;
+    }
+
     loadTemplate('modals/settings/settingsPage.html', (t) => {
       this.$el.html(t({
-        countryList: this.countryList,
-        ...this.profileModel,
+        errors: this.profile.validationError || {},
+        ...this.profile.toJSON(),
       }));
+
+      this.$formFields = this.$('select[name], input[name], textarea[name]');
+
+      if (restoreScrollPos) {
+        this.$('.settingsTabFormWrapper')[0].scrollTop = prevScrollPos;
+      }
     });
-
-    setTimeout(() => {
-      this.$('#settingsLocationSelect').select2();
-    }, 0);
-
 
     return this;
   }

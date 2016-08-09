@@ -33,36 +33,6 @@ export default class extends BaseModel {
     ];
   }
 
-  // Ensure any colors are strings and have a leading hash.
-  standardizeColorFields(attrs = {}) {
-    const updatedAttrs = { ...attrs };
-
-    this.getColorFields().forEach((field) => {
-      if (typeof attrs[field] !== 'undefined') {
-        updatedAttrs[field] = updatedAttrs[field].toString();
-        updatedAttrs[field] = updatedAttrs[field].charAt(0) !== '#' ?
-          `#${updatedAttrs[field]}` : updatedAttrs[field];
-      }
-    });
-
-    return updatedAttrs;
-  }
-
-  set(key, val, options) {
-    // Handle both `"key", value` and `{key: value}` -style arguments.
-    let attrs;
-    let opts = options;
-
-    if (typeof key === 'object') {
-      attrs = key;
-      opts = val;
-    } else {
-      (attrs = {})[key] = val;
-    }
-
-    return super.set(this.standardizeColorFields(attrs), opts);
-  }
-
   get socialTypes() {
     return [
       'facebook',
@@ -84,17 +54,23 @@ export default class extends BaseModel {
     colorFields.forEach((colorField) => {
       const clr = attrs[colorField];
 
-      if (typeof clr !== 'undefined' && is.not.hexColor(clr)) {
-        addError(colorField, 'Please provide a valid hex color.');
+      if (is.not.hexColor(clr)) {
+        addError(colorField, app.polyglot.t('profileModelErrors.provideValidHexColor'));
+      } else if (clr.charAt(0) !== '#') {
+        addError(colorField, 'The color should start with a leading hash.');
       }
     });
 
     if (attrs.email && is.not.email(attrs.email)) {
-      addError('email', 'Please provide a valid email.');
+      addError('email', app.polyglot.t('profileModelErrors.provideValidEmail'));
     }
 
     if (attrs.website && is.not.url(attrs.website)) {
-      addError('website', 'Please provide a valid url.');
+      addError('website', app.polyglot.t('profileModelErrors.provideValidURL'));
+    }
+
+    if (attrs.handle && attrs.handle.charAt(0) === '@') {
+      addError('handle', 'The handle should not start with a leading @.');
     }
 
     const socialAccounts = attrs.social;
@@ -105,7 +81,7 @@ export default class extends BaseModel {
       const socialAttrs = socialMd.attributes;
 
       if (is.not.string(socialAttrs.username) || !socialAttrs.username.length) {
-        addError(`social[${index}].username`, 'Please provide a username.');
+        addError(`social[${index}].username`, app.polyglot.t('profileModelErrors.provideUsername'));
       }
 
       if (is.not.string(socialAttrs.type)) {
@@ -118,7 +94,8 @@ export default class extends BaseModel {
       // dupes after the first one
       if (socialAttrs.type !== 'other' && groupedByType[socialAttrs.type].length > 1 &&
         groupedByType[socialAttrs.type].indexOf(socialMd) > 0) {
-        addError(`social[${index}].type`, 'You already have a social account of this type.');
+        addError(`social[${index}].type`,
+          app.polyglot.t('profileModelErrors.duplicateSocialAccount'));
       }
 
       // todo: dont allow multiple others with the same username.
@@ -127,6 +104,25 @@ export default class extends BaseModel {
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;
+  }
+
+  // Ensure any colors are strings and have a leading hash.
+  standardizeColorFields(attrs = {}) {
+    const updatedAttrs = { ...attrs };
+
+    this.getColorFields().forEach((field) => {
+      if (typeof attrs[field] !== 'undefined') {
+        updatedAttrs[field] = updatedAttrs[field].toString();
+        updatedAttrs[field] = updatedAttrs[field].charAt(0) !== '#' ?
+          `#${updatedAttrs[field]}` : updatedAttrs[field];
+      }
+    });
+
+    return updatedAttrs;
+  }
+
+  parse(response) {
+    return this.standardizeColorFields(response);
   }
 
   sync(method, model, options) {

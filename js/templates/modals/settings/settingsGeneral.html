@@ -1,65 +1,71 @@
-<div class="bar padMd clrBr borderBottom">
-  <h2>General</h2>
+<div class="bar padM clrBr borderBottom">
+  <h2><%= ob.polyT('settings.generalTab') %></h2>
 </div>
 <div class="padMd scrollBox settingsTabFormWrapper">
   <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
-        <label>Language</label>
+        <label><%= ob.polyT('settings.language') %></label>
       </div>
       <div class="col9">
-        <select id="settingsLanguageSelect">
-          <% _.each(ob.languageList, function(lang){ %>
-            <option value="<%= lang.code %>" <% if (lang.code == ob.Language) print('selected') %>><%= lang.name %></option>
+        <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
+        <select id="settingsLanguageSelect" name="language">
+          <% ob.languageList.forEach((lang) => { %>
+            <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
           <% }); %>
         </select>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Country</label>
+        <label><%= ob.polyT('settings.country') %></label>
       </div>
       <div class="col9">
-        <select id="settingsCountrySelect">
-          <% _.each(ob.countryList, function(country){ %>
-          <option value="<%= country.dataName %>" <% if (country.dataName == ob.Country) print('selected') %>><%= country.name %></option>
+        <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
+        <select id="settingsCountrySelect" name="country">
+          <% ob.countryList.forEach((country) => { %>
+          <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
           <% }); %>
         </select>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Currency</label>
+        <label><%= ob.polyT('settings.currency') %></label>
       </div>
       <div class="col9">
-        <select id="settingsCurrencySelect">
-          <% _.each(ob.currencyList, function(currency){ %>
-          <option value="<%= currency.code %>" <% if (currency.code == ob.LocalCurrency) print('selected') %>><%= currency.name %></option>
+        <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
+        <select id="settingsCurrencySelect"  name="localCurrency">
+          <% ob.currencyList.forEach((currency) => { %>
+          <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
           <% }); %>
         </select>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>View NSFW Content</label>
+        <label><%= ob.polyT('settings.viewNsfwContent') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
         <div class="btnStrip">
           <div class="btn clrBr">
             <input type="radio"
-                   name="ShowNsfw"
-                   value=true
+                   name="showNsfw"
+                   value="true"
                    id="settingsViewNSFWInputTrue"
-            <% if(ob.NSFW) { %>checked<% } %>>
-            <label for="settingsViewNSFWInputTrue">On</label>
+                   data-var-type="boolean"
+            <% if(ob.showNsfw) { %>checked<% } %>>
+            <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
           </div>
           <div class="btn clrBr">
             <input type="radio"
-                   name="ShowNsfw"
-                   value=false
+                   name="showNsfw"
+                   value="false"
                    id="settingsViewNSFWInputFalse"
-            <% if(!ob.NSFW) { %>checked<% } %>>
-            <label for="settingsViewNSFWInputFalse">Off</label>
+                   data-var-type="boolean"
+            <% if(!ob.showNsfw) { %>checked<% } %>>
+            <label for="settingsViewNSFWInputFalse"><%= ob.polyT('settings.off') %></label>
           </div>
         </div>
       </div>

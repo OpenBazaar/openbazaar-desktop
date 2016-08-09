@@ -38,7 +38,11 @@
       border-top-width: 1px;
       align-items: center;
       justify-content: flex-end;
-      text-align: right;
+
+      .saveStatus {
+        width: 100%;
+        font-size: $tx5;
+      }
 
       & > .btn {
         margin-right: $padSm;

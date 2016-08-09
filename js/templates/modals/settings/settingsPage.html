@@ -1,38 +1,42 @@
-<div class="bar padMd clrBr borderBottom">
-  <h2>Page</h2>
+<div class="bar padM clrBr borderBottom">
+  <h2><%= ob.polyT('settings.pageTab') %></h2>
 </div>
 <div class="padMd scrollBox settingsTabFormWrapper">
   <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsName">Name</label>
+        <label for="settingsName"><%= ob.polyT('settings.name') %></label>
       </div>
       <div class="col9">
+      <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
         <input type="text" class="clrBr" name="name" id="settingsName" value="<%= ob.name %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsHandle">Handle</label>
+        <label for="settingsHandle"><%= ob.polyT('settings.handle') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.handle) print(ob.formErrorTmpl({ errors: ob.errors.handle })) %>
         <input type="text" class="clrBr" name="handle" id="settingsHandle" value="<%= ob.handle %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsShortDescription">Short Description</label>
+        <label for="settingsShortDescription"><%= ob.polyT('settings.shortDescription') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.shortDescription) print(ob.formErrorTmpl({ errors: ob.errors.shortDescription })) %>
         <textarea rows="3" maxlength="160" name="shortDescription" id="settingsShortDescription"
                   class="clrBr"><%= ob.shortDescription %></textarea>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsAbout">About</label>
+        <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
         <textarea rows="6" name="about" class="clrBr" id="settingsAbout"><%= ob.about %></textarea>
       </div>
     </div>
@@ -41,81 +45,81 @@
         <label for="settingsLocationSelect">Public Location</label>
       </div>
       <div class="col9">
-        <select id="settingsLocationSelect">
-          <% _.each(ob.countryList, function(country){ %>
-          <option value="<%= country.dataName %>" <% if (country.dataName == ob.location)
-          print('selected') %>><%= country.name %></option>
-          <% }); %>
-        </select>
+        Implementation to be determined.
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>NSFW Content</label>
+        <label><%= ob.polyT('settings.nsfwContent') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.nsfw) print(ob.formErrorTmpl({ errors: ob.errors.nsfw })) %>
         <div class="btnStrip">
           <div class="btn clrBr">
             <input type="radio"
                    name="nsfw"
-                   value=true
+                   value="true"
                    id="settingsNSFWInputTrue"
+                   data-var-type="boolean"
             <% if(ob.NSFW) { %>checked<% } %>>
-            <label for="settingsNSFWInputTrue">On</label>
+            <label for="settingsNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
           </div>
           <div class="btn clrBr">
             <input type="radio"
                    name="nsfw"
-                   value=false
+                   value="false"
                    id="settingsNSFWInputFalse"
+                   data-var-type="boolean"
             <% if(!ob.NSFW) { %>checked<% } %>>
-            <label for="settingsNSFWInputFalse">Off</label>
+            <label for="settingsNSFWInputFalse"><%= ob.polyT('settings.off') %></label>
           </div>
         </div>
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Avatar</label>
+        <label><%= ob.polyT('settings.avatar') %></label>
       </div>
       <div class="col9">
         <label>Photo Upload</label>
       </div>
     </div>
     <div class="flexRow">
-      <h3>Social</h3>
+      <h3><%= ob.polyT('settings.socialSection') %></h3>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsWebsite">Website</label>
+        <label for="settingsWebsite"><%= ob.polyT('settings.website') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.website) print(ob.formErrorTmpl({ errors: ob.errors.website })) %>
         <input type="text" class="clrBr" name="website" id="settingsWebsite"
                value="<%= ob.website %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsEmail">Email</label>
+        <label for="settingsEmail"><%= ob.polyT('settings.email') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
         <input type="text" class="clrBr" name="email" id="settingsEmail" value="<%= ob.email %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Social Media Accounts</label>
+        <label><%= ob.polyT('settings.socialMediaAccounts') %></label>
       </div>
       <div class="col9">
         Fancy input thing here
       </div>
     </div>
     <div class="flexRow">
-      <h3>Theme</h3>
+      <h3><%= ob.polyT('settings.themesSection') %></h3>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Standard Themes</label>
+        <label><%= ob.polyT('settings.standardThemes') %></label>
       </div>
       <div class="col9">
         thumbnails of themes
@@ -123,7 +127,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label>Cover Photo</label>
+        <label><%= ob.polyT('settings.coverPhoto') %></label>
       </div>
       <div class="col9">
         <label>Photo Upload</label>
@@ -131,39 +135,32 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsPrimaryColor">Primary Color</label>
+        <label for="settingsPrimaryColor"><%= ob.polyT('settings.primaryColor') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
         <input type="text" class="clrBr" name="primaryColor" id="settingsPrimaryColor"
                value="<%= ob.primaryColor %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsSecondaryColor">Secondary Color</label>
+        <label for="settingsSecondaryColor"><%= ob.polyT('settings.secondaryColor') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.secondaryColor) print(ob.formErrorTmpl({ errors: ob.errors.secondaryColor })) %>
         <input type="text" class="clrBr" name="secondaryColor" id="settingsSecondaryColor"
                value="<%= ob.secondaryColor %>">
       </div>
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="settingsTextColor">Text Color</label>
+        <label for="settingsTextColor"><%= ob.polyT('settings.textColor') %></label>
       </div>
       <div class="col9">
+        <% if (ob.errors.textColor) print(ob.formErrorTmpl({ errors: ob.errors.textColor })) %>
         <input type="text" class="clrBr" name="textColor" id="settingsTextColor"
                value="<%= ob.textColor %>">
-      </div>
-    </div>
-    <div class="flexRow">
-      <div class="col3">
-        <label for="settingsBackgroundColor">Background Color</label>
-      </div>
-      <div class="col9">
-        <input type="text" class="clrBr" name="backgroundColor" id="settingsBackgroundColor"
-               value="<%= ob.backgroundColor
-               %>">
       </div>
     </div>
   </form>

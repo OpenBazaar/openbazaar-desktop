@@ -1,10 +1,5 @@
 import app from '../app';
 
-const polyT = function (...args) {
+export function polyT(...args) {
   return app.polyglot.t(...args);
-};
-
-export {
-  polyT,
-};
-
+}

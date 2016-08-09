@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { View } from 'backbone';
 
 export default class BaseVw extends View {
@@ -6,6 +7,57 @@ export default class BaseVw extends View {
     this._childViews = [];
     this._unregisterFromParent = true;
     this._removed = false;
+  }
+
+  /**
+   * This is a way to handle most common scenarios of getting data
+   * from your form into a JS object. This function is very much a
+   * work in progress. If you have a change that would be appropriate
+   * for most forms, feel free to add it here.
+   *
+   * If you need some custom form parsing that's specific to your form,
+   * please override this method in your view.
+   * TODO: give example of overriding this function, while still using it
+   * for most of your form, but only customizing one field
+   *
+   * Since form values are pulled in as strings, if you want them to be
+   * pulled in as a different type, add a data-var-type attribute to the
+   * field, e.g. data-var-type="boolean". As of now, only 'boolean' and
+   * 'number' are supported, but feel free to add in more if it makes sense
+   * for them to be in such a common function.
+   *
+   * @param {string or jQuery object} selector - A css selector string used to
+   *   obtain the fields to extract data from. The selector will be scoped to
+   *   this view (i.e. this.$('<selector>')). The default is
+   *   'select[name], input[name], textarea[name]'. Alternatively, you can provide
+   *   a jQuery object, which gives you more control (and useful for caching).
+   *
+   * @return {object} An object created from the data in the form fields
+   */
+  getFormData(selector) {
+    const $formFields = selector instanceof $ ?
+      selector : this.$(selector || 'select[name], input[name], textarea[name]');
+    const data = {};
+
+    $formFields.each((index, field) => {
+      const $field = $(field);
+      const varType = $field.data('var-type');
+      let val = $field.val();
+
+      if (field.type === 'radio' && !field.checked) return;
+
+      if (varType) {
+        if (varType === 'number') {
+          val = Number(val);
+        } else if (varType === 'boolean') {
+          val = val === 'true';
+        }
+      }
+
+      data[$field.attr('name')] = val;
+    });
+
+    return data;
   }
 
   /**

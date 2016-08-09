@@ -77,6 +77,26 @@
 
     //checked state is set by the theme
   }
+
+  // temporary placeholder loading button style
+  &.loading {
+    position: relative;
+
+    &::after {
+      content: 'Loading...';
+      position: absolute;
+      background-color: rgba(0,0,0,0.6); // use variablized color when refactoring
+      color: white; // use variablized color when refactoring
+      text-align: center;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      font-size: 14px;
+      cursor: default;
+      border-radius: inherit;
+    }
+  }
 }
 
 .btnTxt {
