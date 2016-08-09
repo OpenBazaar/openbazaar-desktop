@@ -6,13 +6,13 @@ export default class extends BaseVw {
     return 'statusMessageWrap';
   }
 
-  constructor() {
-    this.super();
+  constructor(options) {
+    super(options);
     this.listenTo(this.model, 'change', this.render);
   }
 
   render() {
-    loadTemplate('./js/templates/statusMessage.html', (tmpl) => {
+    loadTemplate('./statusMessage.html', (tmpl) => {
       this.$el.html(
         tmpl(this.model.toJSON())
       );

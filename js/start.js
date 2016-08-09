@@ -8,6 +8,7 @@ import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
+import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
@@ -53,6 +54,10 @@ app.pageNav = new PageNav();
 $('#pageNavContainer').append(app.pageNav.render().el);
 
 app.router = new ObRouter();
+
+// create our status bar view
+app.statusBar = new StatusBar();
+$('#statusBar').html(app.statusBar.render().el);
 
 // create and launch loading modal
 app.loadingModal = new LoadingModal({

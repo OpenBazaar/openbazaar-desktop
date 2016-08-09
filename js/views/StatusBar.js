@@ -5,6 +5,7 @@ import StatusMessageVw from './StatusMessage';
 
 export default class extends BaseVw {
   constructor() {
+    super();
     this.collection = new StatusMessages();
     this.vwRemoveTimeouts = [];
     this.mdRemoveTimeouts = [];
@@ -28,6 +29,7 @@ export default class extends BaseVw {
   }
 
   onAddMessage(md, cl) {
+    console.log('message added yo!');
     const vw = new StatusMessageVw({ model: md });
     const duration = md.get('duration');
 
@@ -50,9 +52,9 @@ export default class extends BaseVw {
 
   /**
    * Add a new status message.
-   * @param {string|Object} msg - The message to be displayed. Defaults are driven by
-      the StatusMessage model.
-   * @param {string} msg.text - The text of the message to be displayed.
+   * @param {string|Object} msg - The status message to be displayed. Defaults are driven
+      by the StatusMessage model.
+   * @param {string} msg.msg - The text of the message to be displayed.
    * @param {string} [msg.type=msg] - Type of message. Available types are driven by the
       StatusMessage model.
    * @param {number} [msg.duration=2500] - The length of time before status msg is removed.
@@ -60,7 +62,7 @@ export default class extends BaseVw {
    * @return {object} An object with methods that control the the generated status msg.
    */
   pushMessage(msg) {
-    if (!msg || typeof msg !== 'string' || typeof msg !== 'object') {
+    if (!msg || (typeof msg !== 'string' && typeof msg !== 'object')) {
       throw new Error('Please provide a msg as a string or an object.');
     }
 
@@ -68,7 +70,7 @@ export default class extends BaseVw {
       typeof msg === 'string' ? { msg } : msg
     );
 
-    if (Object.keys(md.validationError).length) {
+    if (Object.keys(md.validationError || {}).length) {
       throw new Error(Object.keys(md.validationError)[0]);
     }
 
