@@ -76,7 +76,6 @@ textarea {
   border-width: 1px;
   //use the color class to set the border color
   width: 100%;
-  height: 100%;
   box-sizing: border-box;
   padding: $pad;
 }
@@ -145,4 +144,24 @@ ul, ol {
   .chatOpen & {
     width: $chatOpen;
   }
+}
+
+// temporary status bar implementation
+#statusBarContainer {
+  color: black; // use color var when refactoring
+  background-color: rgba(0,0,0,0.3); // use color var when refactoring
+  height: 20px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 16px;  // use rem when refactoring
+  padding: 5px;
+
+  &::after {
+    content: '(temporary Walmart of status bars)';
+    position: absolute;
+    right: 5px;
+    top: 5px;
+  }  
 }

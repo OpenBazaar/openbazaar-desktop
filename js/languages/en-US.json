@@ -2,7 +2,62 @@
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
-  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",    
+  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "settings": {
+    "settingsLabel": "Settings",
+    "generalTab": "General",
+    "pageTab": "Page",
+    "language": "Language",
+    "country": "Country",
+    "currency": "Currency",
+    "viewNsfwContent": "View NSFW Content",
+    "on": "On",
+    "off": "Off",
+    "name": "Name",
+    "handle": "Handle",
+    "shortDescription": "Short Description",
+    "about": "About",
+    "nsfwContent": "NSFW Content",
+    "avatar": "avatar",
+    "socialSection": "Social",
+    "website": "Website",
+    "email": "Email",
+    "socialMediaAccounts": "Social Media Accounts",
+    "themesSection": "Theme",
+    "standardThemes": "Standard Themes",
+    "coverPhoto": "Cover Photo",
+    "primaryColor": "Primary Color",
+    "secondaryColor": "Secondary Color",
+    "textColor": "Text Color",
+    "statusSaving": "Saving settings...",
+    "statusSaveFailed": "Settings failed to save.",
+    "statusSaveComplete": "Settings saved.",
+    "statusSafeToClose": "Save has completed. You may close the modal",
+    "btnYes": "Yes",
+    "btnNo": "No",
+    "btnSave": "Save",    
+    "errors": {
+      "saveError": "There was an error saving your settings."
+    },
+    "confirmNavAwayWarning": {
+      "title": "Save in progress",
+      "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
+    }
+  },
+  "profileModelErrors": {
+    "provideValidHexColor": "Please provide a valid hex color.",
+    "provideValidEmail": "Please provide a valid email.",
+    "provideValidURL": "Please provide a valid url.",
+    "provideUsername": "Please provide a username.",
+    "duplicateSocialAccount": "You already have a social account of this type."
+  },
+  "profileModelErrors": {
+    "provideValidHexColor": "Please provide a valid hex color.",
+    "provideValidEmail": "Please provide a valid email.",
+    "provideValidURL": "Please provide a valid url.",
+    "provideUsername": "Please provide a username.",
+    "duplicateSocialAccount": "You already have a social account of this type."
+  },  
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

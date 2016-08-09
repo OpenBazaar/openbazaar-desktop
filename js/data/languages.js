@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 const languages = [
   {
     name: 'English (English, America)',
@@ -103,7 +105,7 @@ function getIndexedLangs() {
   if (_indexedLangs) return _indexedLangs;
 
   _indexedLangs = languages.reduce((indexedObj, language) => {
-    indexedObj[language.code] = language.name;
+    indexedObj[language.code] = _.omit(language, 'code');
     return indexedObj;
   }, {});
 

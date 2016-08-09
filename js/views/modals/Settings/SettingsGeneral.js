@@ -1,82 +1,71 @@
+import $ from 'jquery';
+import app from '../../../app';
+import languages from '../../../data/languages';
+import { getTranslatedCountries } from '../../../data/countries';
+import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
-import { View } from 'backbone';
-import select2 from 'select2'; // eslint-disable-line no-unused-vars
+import baseVw from '../../baseVw';
+import 'select2';
 
-export default class extends View {
+export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',
-      events: {
-      },
       ...options,
     });
 
-    // temp data. This view will need the user model, the languages, the countries, and the
-    // currencies.
+    this.settings = app.settings.clone();
+    this.settings.on('sync', () => app.settings.set(this.settings.toJSON()));
 
-    this.userModel = {
-      // test data, replace with a real model later
-      PaymentDataInQR: true,
-      ShowNotifications: true,
-      ShowNsfw: true,
-      ShippingAddresses: [],
-      LocalCurrency: 'USD',
-      Country: 'UNITED_STATES',
-      Language: 'en-US',
-      TermsAndConditions: 'Example terms and conditions.',
-      RefundPolicy: 'Example terms and conditions',
-      BlockedNodes: [],
-      StoreModerators: [],
-      SMTPSettings: {
-        Notifications: true,
-        ServerAddress: 'example server address',
-        Username: 'example name',
-        Password: 'example password',
-        SenderEmail: 'example sender email',
-        RecipientEmail: 'example recipient email',
-      },
-    };
+    this.countryList = getTranslatedCountries(app.settings.get('language'));
+    this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
+  }
 
-    this.languageList = [
-      { code: 'en-US', name: 'English - USA' },
-      { code: 'de-DE', name: 'German - Germany' },
-      { code: 'es', name: 'Spanish' },
-    ];
-
-    this.countryList = [
-      { code: 'USA', dataName: 'UNITED_STATES', name: 'United States' },
-      { code: 'DZD', dataName: 'ALGERIA', name: 'Algeria' },
-    ];
-
-    this.currencyList = [
-      { code: 'BTC', name: 'Bitcoin' },
-      { code: 'USD', name: 'United States Dollar' },
-      { code: 'EUR', name: 'Euro' },
-    ];
+  getFormData() {
+    return super.getFormData(this.$formFields);
   }
 
   save() {
-    // save the form
-  }
+    const formData = this.getFormData();
+    const deferred = $.Deferred();
 
-  cancel() {
-    // cancel the form
+    this.settings.set(formData);
+
+    const save = this.settings.save(formData, {
+      attrs: formData,
+      type: 'PATCH',
+    });
+
+    if (!save) {
+      // client side validation failed
+      deferred.reject();
+    } else {
+      deferred.notify();
+      save.done(() => deferred.resolve())
+        .fail((...args) => deferred.reject(...args));
+    }
+
+    // render so errrors are shown / cleared
+    this.render();
+
+    return deferred.promise();
   }
 
   render() {
     loadTemplate('modals/settings/settingsGeneral.html', (t) => {
       this.$el.html(t({
-        languageList: this.languageList,
+        languageList: languages,
         countryList: this.countryList,
         currencyList: this.currencyList,
-        ...this.userModel,
+        errors: this.settings.validationError || {},
+        ...this.settings.toJSON(),
       }));
 
-      setTimeout(() => {
-        this.$('#settingsLanguageSelect').select2();
-        this.$('#settingsCountrySelect').select2();
-        this.$('#settingsCurrencySelect').select2();
-      }, 0);
+      this.$('#settingsLanguageSelect').select2();
+      this.$('#settingsCountrySelect').select2();
+      this.$('#settingsCurrencySelect').select2();
+
+      this.$formFields = this.$('select[name], input[name]');
     });
 
     return this;
