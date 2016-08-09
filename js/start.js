@@ -24,9 +24,6 @@ function getValidLanguage(lang) {
   return 'en-US';
 }
 
-console.log('app');
-window.app = app;
-
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
 app.polyglot = new Polyglot();
