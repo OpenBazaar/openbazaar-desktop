@@ -24,6 +24,9 @@ function getValidLanguage(lang) {
   return 'en-US';
 }
 
+console.log('app');
+window.app = app;
+
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
 app.polyglot = new Polyglot();
@@ -253,6 +256,8 @@ fetchConfig().done((data) => {
   app.profile = new Profile({ id: data.guid });
 
   app.settings = new Settings();
+  // We'll default our server languaged to whatever is stored locally.
+  app.settings.set('language', app.localSettings.get('language'));
 
   // Beyond the start-up flow in this file, any language changes should ideally
   // be done via a save on a clone of the app.settings model. When the save succeeds,
