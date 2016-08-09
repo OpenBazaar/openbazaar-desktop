@@ -69,8 +69,9 @@ export default class extends BaseModal {
   }
 
   save() {
+    let statusMsg;
+
     this.$save.addClass('loading');
-    $('#statusBarContainer').text('');
     this.saving = true;
     this.$saveStatus.text('');
 
@@ -79,15 +80,30 @@ export default class extends BaseModal {
     // with the promise rejection. Please send a progress event when
     // client validation succeeds (deferred.notify()).
     this.currentTabView.save()
+      .progress(() => {
+        statusMsg = app.statusBar.pushMessage({
+          msg: app.polyglot.t('settings.statusSaving'),
+          duration: 9999999999999999,
+        });
+      })
       .always(() => {
         this.saving = false;
         this.$save.removeClass('loading');
+
+        if (statusMsg) {
+          setTimeout(() => {
+            statusMsg.remove();
+          }, 3000);
+        }
       })
       .fail((...args) => {
         const $firstErr = this.currentTabView.$('.errorList:first');
         const isXhr = args[0].abort; // xhr's implement the abort method
 
-        $('#statusBarContainer').text(app.polyglot.t('settings.statusSaveFailed'));
+        statusMsg.updateMessage({
+          msg: app.polyglot.t('settings.statusSaveFailed'),
+          type: 'warning',
+        });
 
         // sroll to first error
         if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
@@ -109,10 +125,7 @@ export default class extends BaseModal {
           this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
         }
 
-        $('#statusBarContainer').text(app.polyglot.t('settings.statusSaveComplete'));
-      })
-      .progress(() => {
-        $('#statusBarContainer').text(app.polyglot.t('settings.statusSaving'));
+        statusMsg.updateMessage(app.polyglot.t('settings.statusSaveComplete'));
       });
   }
 
