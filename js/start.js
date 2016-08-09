@@ -253,7 +253,7 @@ fetchConfig().done((data) => {
   app.profile = new Profile({ id: data.guid });
 
   app.settings = new Settings();
-  // We'll default our server languaged to whatever is stored locally.
+  // We'll default our server language to whatever is stored locally.
   app.settings.set('language', app.localSettings.get('language'));
 
   // Beyond the start-up flow in this file, any language changes should ideally
