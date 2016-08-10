@@ -43,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
     "ionicons": "^2.0.1",
+    "jsdom": "9.4.1",
     "mocha": "^2.5.3",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",

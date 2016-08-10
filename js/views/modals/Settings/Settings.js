@@ -100,7 +100,7 @@ export default class extends BaseModal {
         const $firstErr = this.currentTabView.$('.errorList:first');
         const isXhr = args[0].abort; // xhr's implement the abort method
 
-        statusMsg.updateMessage({
+        statusMsg.update({
           msg: app.polyglot.t('settings.statusSaveFailed'),
           type: 'warning',
         });
@@ -125,7 +125,7 @@ export default class extends BaseModal {
           this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
         }
 
-        statusMsg.updateMessage(app.polyglot.t('settings.statusSaveComplete'));
+        statusMsg.update(app.polyglot.t('settings.statusSaveComplete'));
       });
   }
 

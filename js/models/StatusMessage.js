@@ -9,6 +9,15 @@ export default class extends Model {
     };
   }
 
+  getMessageTypes() {
+    return [
+      'msg',
+      'warning',
+      'confirmed',
+      'pending',
+    ];
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -16,8 +25,8 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (['msg', 'warning', 'confirmed', 'pending'].indexOf(attrs.type) === -1) {
-      addError('type', 'Type must be \'msg\', \'warning\', \'confirmed\', or \'pending\'');
+    if (this.getMessageTypes().indexOf(attrs.type) === -1) {
+      addError('type', `Type must be one of [${this.getMessageTypes().join(', ')}]`);
     }
 
     if (!_.isNumber(attrs.duration)) {

@@ -23,13 +23,12 @@ export default class extends BaseVw {
     const timeout = setTimeout(() => {
       vw.remove();
       this.vwRemoveTimeouts.splice(timeout, 1);
-    }, 5000);
+    }, 50000);
 
     this.vwRemoveTimeouts.push(timeout);
   }
 
   onAddMessage(md, cl) {
-    console.log('message added yo!');
     const vw = new StatusMessageVw({ model: md });
     const duration = md.get('duration');
 
@@ -66,17 +65,16 @@ export default class extends BaseVw {
       throw new Error('Please provide a msg as a string or an object.');
     }
 
-    const md = new StatusMessageMd(
-      typeof msg === 'string' ? { msg } : msg
-    );
+    const md = new StatusMessageMd();
+    md.set(typeof msg === 'string' ? { msg } : msg, { validate: true });
 
     if (Object.keys(md.validationError || {}).length) {
-      throw new Error(Object.keys(md.validationError)[0]);
+      throw new Error(md.validationError[Object.keys(md.validationError)[0]]);
     }
 
     this.collection.add(md);
 
-    const updateMessage = (message) => {
+    const update = (message) => {
       if (!message) {
         throw new Error('Please provide a msg.');
       }
@@ -94,7 +92,7 @@ export default class extends BaseVw {
 
     return {
       remove: () => this.collection.remove(md),
-      updateMessage,
+      update,
     };
   }
 
