@@ -20,7 +20,7 @@
       </div>
 
 </nav>
-<section class="flexRow bkgContain" <% if(ob.banner){ %>
+<section class="flexRow banner" <% if(ob.banner){ %>
   style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
   <% } else { %>
   style="background-image: url('../imgs/defaultBanner.png')"
@@ -30,7 +30,7 @@
     <div class="pageContent">
       <div class="pageControls flex">
         <div class="col8">
-          <h1 class="txUnb txUnl js-tabTitle">
+          <h1 class="txBg txUnb txUnl js-tabTitle">
           </h1>
         </div>
         <div class="col4">
@@ -46,13 +46,6 @@
       <div class="tabContent js-tabContent">
         <!-- insert the tab subview here -->
       </div>
-
-      <ul>
-        <li>Tab: <%= ob.tab %></li>
-        <% if (ob.category) { %><li>Category: <%= ob.category %></li><% } %>
-        <% if (ob.layer) { %><li>Layer: <%= ob.layer %></li><% } %>
-      </ul>
-      <a href="#test-profile">Test Profile</a>
     </div>
   </div>
   <div id="chatRightSpacer"></div>

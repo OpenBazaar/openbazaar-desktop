@@ -110,6 +110,24 @@ ul, ol {
   }
 }
 
+.bkgContain {
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-y: 0;
+}
+
+.bkgCover {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.banner {
+  background-size: 1153px auto;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
 #ov1 .hide {
   display: none;
 }

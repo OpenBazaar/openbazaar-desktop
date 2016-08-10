@@ -55,18 +55,6 @@
   height: 38px;
 }
 
-.bkgContain {
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position-y: 0;
-}
-
-.bkgCover {
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
 .border {
   //use on wrapping containers that should have a border. The element should also have a clrBr class.
   border-width: 1px;
