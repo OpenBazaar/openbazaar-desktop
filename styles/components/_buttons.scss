@@ -175,3 +175,13 @@
     color: inherit;
   }
 }
+
+.cornerTR {
+  //positions an element in the top right. It should usually be an icon button.
+  position: absolute;
+  z-index: 1; // don't unintentionally cover with other absolute elements
+  top: 10px;
+  right: $pad;
+  font-size: 1.6rem;
+  cursor: pointer;
+}

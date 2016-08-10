@@ -9,17 +9,18 @@ $background: adjust-color($primary, $lightness: -10%);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
 $emphasis1: rgb(253,166,57);
-$modalBackground: rgb(255,255,255);
 $error: red;
 $overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
 
 // typography
 $baseFontSize: 10px;
-$tx1: 5rem;
-$tx2: 2.6rem;
-$tx3: 1.8rem;
-$tx4: 1.6rem;
+$txBg: 5rem;
+$tx1: 2.6rem;
+$tx2: 2.3rem;
+$tx3: 1.7rem;
+$tx4: 1.5rem;
 $tx5: 1.4rem;
+$tx5b: 1.3rem;
 $tx6: 1.2rem;
 
 $formElementHeight: 4rem;

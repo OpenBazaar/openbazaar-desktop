@@ -3,6 +3,12 @@
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "properNames": {
+    "twitter": "Twitter",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "snapchat": "Snapchat"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
@@ -12,7 +18,10 @@
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
     "modFee": "%{modFee}% per dispute",
-    "addModerator": "Add as Moderator"
+    "addModerator": "Add as Moderator",
+    "information": "Information",
+    "website": "Website",
+    "email": "Email"
   },
   "settings": {
     "settingsLabel": "Settings",

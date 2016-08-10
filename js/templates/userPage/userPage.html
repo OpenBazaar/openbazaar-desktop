@@ -7,7 +7,7 @@
         </div>
         <div>
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
-          <div>Stars(x) <%= ob.polyT('userPage.followsYou') %></div>
+          <div class="txt5b">Stars(x) <%= ob.polyT('userPage.followsYou') %></div>
         </div>
         <div class="flexExpand">
           <div class="flexHRight flexVCent gutterH clrT2">
@@ -20,7 +20,7 @@
       </div>
 
 </nav>
-<section class="flexRow banner" <% if(ob.banner){ %>
+<section class="flexRow bkgContain" <% if(ob.banner){ %>
   style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
   <% } else { %>
   style="background-image: url('../imgs/defaultBanner.png')"

@@ -55,9 +55,16 @@
   height: 38px;
 }
 
-.banner {
+.bkgContain {
   background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position-y: 0;
+}
+
+.bkgCover {
   background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .border {
@@ -98,7 +105,8 @@
   @extend .contentBox, .boxList;
 
   .listGroup {
-    padding: $pad;
+    border-width: 1px;
+    border-style: solid;
     margin-bottom: $pad / 2;
 
     &:last-child {
@@ -106,34 +114,15 @@
     }
   }
 
-  .listLink {
-    padding: $padSm;
+  .listItem {
+    padding: $padMd2;
     font-size: 1.4rem;
-    display: flex;
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: $padSm;
+    //margin-bottom: $padSm;
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    & > * {
-      flex-shrink: 0;
-      box-sizing: border-box;
-      padding-right: $padSm;
-      word-break: break-all;
-
-      &:last-child {
-        padding-right: 0;
-      }
-
-      &:first-child {
-        // expand the first child to fill as much space as it can.
-        // The second child (shortcut text) will be pushed to the right.
-        flex-shrink: 1;
-        flex-grow: 1;
-      }
     }
   }
 }

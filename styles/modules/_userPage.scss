@@ -1,33 +1,5 @@
 .userPage {
 
-  #pageTabBar.bar {
-    height: $barLg;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-
-    .pageTabs {
-      max-width: $pageWidth;
-      margin: 0 auto;
-
-      .tab {
-        box-sizing: content-box;
-
-        &.active {
-          border-bottom-width: 1px;
-          border-bottom-style: solid;
-        }
-      }
-    }
-
-    .userIcon {
-      border-width: 2px;
-      border-style: solid;
-      width: 44px;
-      height: 44px;
-      margin-right: $pad;
-    }
-  }
-
   .pageContent {
 
     .pageControls {
@@ -50,6 +22,34 @@
 
       .pageSearch {
 
+      }
+    }
+
+    .informationList {
+
+      .informationHeader {
+        font-size: $tx5;
+        padding: $padMd2 $padMd2 0 $padMd2;
+      }
+
+      .listItem > * {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .termsDisplay {
+      position: absolute;
+      top: $pad;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 0; //don't overlap other absolute elements on the page
+
+      &.open {
+        display: block;
       }
     }
   }

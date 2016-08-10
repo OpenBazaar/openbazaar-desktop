@@ -28,6 +28,10 @@ a {
   &:focus {
     text-decoration: underline;
   }
+
+  &.link {
+    text-decoration: underline;
+  }
 }
 
 hr {
@@ -67,13 +71,6 @@ select {
   width: 100%;
 }
 
-textarea {
-  background: none;
-  outline: none;
-  -webkit-appearance: none;
-  resize: none;
-}
-
 input[type="text"],
 textarea {
   border-style: solid;
@@ -83,6 +80,15 @@ textarea {
   box-sizing: border-box;
   padding: 0 $pad;
   line-height: 40px;
+}
+
+textarea {
+  background: none;
+  outline: none;
+  -webkit-appearance: none;
+  resize: none;
+  line-height: 1.2em;
+  padding: $pad;
 }
 
 form {
@@ -133,19 +139,42 @@ ul, ol {
       height: calc(100% - #{$bar});
       box-sizing: border-box;
 
-      #pageTabBar.bar {
+      #pageTabBar {
         position: fixed;
         top: $bar;
         left: 0;
+        z-index: 1;
         width: 100%;
+        height: $barLg;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
 
-        .tab.active {
+        .pageTabs {
+          max-width: $pageWidth;
+          margin: 0 auto;
 
+          .userIcon {
+            border-width: 2px;
+            border-style: solid;
+            width: 44px;
+            height: 44px;
+            margin-right: $pad;
+          }
+
+          .tab {
+            box-sizing: content-box;
+            font-size: $tx4;
+
+            &.active {
+              border-bottom-width: 1px;
+              border-bottom-style: solid;
+            }
+          }
         }
       }
 
       .pageContent {
-        padding: $padHg $padHg $padHg $padHg;
+        padding: $padHg $padHg $padHg 0;
         width: $pageWidth;
         box-sizing: border-box;
         margin: 0 auto;
@@ -153,7 +182,8 @@ ul, ol {
 
       #chatLeftSpacer {
         width: $chatClosed; //this spacer can collapse if there isn't enough space
-        @include chatOpeningTransition(width);
+        min-width: $padHg;
+        //@include chatOpeningTransition(width);
 
         .chatOpen & {
           width: $chatOpen;

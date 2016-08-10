@@ -22,6 +22,8 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-tab': 'tabClick',
+      'click .js-termsLink': 'termsClick',
+      'click .js-termsClose': 'termsClose',
     };
   }
 
@@ -53,6 +55,14 @@ export default class extends BaseVw {
     }
   }
 
+  termsClick() {
+    this.$termsDisplay.toggleClass('open');
+  }
+
+  termsClose() {
+    this.$termsDisplay.removeClass('open');
+  }
+
   render() {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
@@ -65,6 +75,7 @@ export default class extends BaseVw {
       this.$tabContent = this.$('.js-tabContent');
       this.$tabTitle = this.$('.js-tabTitle');
       this.selectTab(this.$('.js-tab[data-tab="Home"]'));
+      this.$termsDisplay = this.$('.js-termsDisplay');
     });
 
     return this;

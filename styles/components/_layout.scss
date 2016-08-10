@@ -39,6 +39,7 @@
   align-items: stretch; //this stretches the items to 100% height
 }
 
+.snip,
 .snipKids > * {
   //truncate the text in the child elements
   white-space: nowrap;
