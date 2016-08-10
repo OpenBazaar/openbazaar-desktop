@@ -1,11 +1,12 @@
+import _ from 'underscore';
 import { Events } from 'backbone';
 
 /**
  * Class that wraps the standard WebSocket class allowing us to add in
- * some "sugar", which, as of now, consists mainly of extending from
+ * some "sugar", which, as of now, consists mainly of mixing in
  * Backbone.Events which gives us a more modern event framework.
  */
-export default class extends Events {
+export default class {
   /**
    * Construct a new socket instance.
    * @constructor
@@ -16,6 +17,7 @@ export default class extends Events {
       throw new Error('Please provide an url.');
     }
 
+    _.extend(this, Events);
     this.url = url;
     this.connect();
   }

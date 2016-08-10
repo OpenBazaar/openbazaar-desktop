@@ -3,6 +3,7 @@ import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import app from './app';
+import Socket from './utils/Socket';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
@@ -253,27 +254,42 @@ function onboardIfNeeded() {
   return onboardIfNeededDeferred.promise();
 }
 
-// let's start our flow
-fetchConfig().done((data) => {
-  app.profile = new Profile({ id: data.guid });
+ // let's start our flow - do we need onboarding?,
+ // fetching app wide models...
+function start() {
+  fetchConfig().done((data) => {
+    app.profile = new Profile({ id: data.guid });
 
-  app.settings = new Settings();
-  // We'll default our server language to whatever is stored locally.
-  app.settings.set('language', app.localSettings.get('language'));
+    app.settings = new Settings();
+    // We'll default our server language to whatever is stored locally.
+    app.settings.set('language', app.localSettings.get('language'));
 
-  // Beyond the start-up flow in this file, any language changes should ideally
-  // be done via a save on a clone of the app.settings model. When the save succeeds,
-  // update the app.settings model which will in turn update our local
-  // settings model. You shouldn't be directly updating the language in our local
-  // settings model.
-  app.settings.on('change:language', (settingsMd, lang) => {
-    app.localSettings.save('language', getValidLanguage(lang));
+    // Beyond the start-up flow in this file, any language changes should ideally
+    // be done via a save on a clone of the app.settings model. When the save succeeds,
+    // update the app.settings model which will in turn update our local
+    // settings model. You shouldn't be directly updating the language in our local
+    // settings model.
+    app.settings.on('change:language', (settingsMd, lang) => {
+      app.localSettings.save('language', getValidLanguage(lang));
+    });
+
+    onboardIfNeeded().done(() => {
+      app.pageNav.navigable = true;
+      app.loadingModal.close();
+      location.hash = location.hash || app.profile.id;
+      Backbone.history.start();
+    });
   });
+}
 
-  onboardIfNeeded().done(() => {
-    app.pageNav.navigable = true;
-    app.loadingModal.close();
-    location.hash = location.hash || app.profile.id;
-    Backbone.history.start();
-  });
+// connect to the API websocket
+// todo: this will be incorporated in the server
+// connection flow
+app.apiSocket = new Socket(app.getSocketUrl());
+app.apiSocket.on('open', () => {
+  start();
+});
+
+app.apiSocket.on('close', () => {
+  // alert('no soup for you');
 });
