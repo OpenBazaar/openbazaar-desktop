@@ -19,6 +19,7 @@
     "termsOfService": "Terms of Service",
     "modFee": "%{modFee}% per dispute",
     "addModerator": "Add as Moderator",
+    "removeModerator": "Remove as Moderator",
     "information": "Information",
     "website": "Website",
     "email": "Email",

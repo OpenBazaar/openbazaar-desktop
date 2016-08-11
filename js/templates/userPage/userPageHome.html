@@ -3,7 +3,8 @@
     <div class="js-userShort">
       <!-- the userShort template is injected here-->
     </div>
-    <div class="contentBox padMd2 clrBr clrP clrSh2">
+    <% if(ob.isModerator) { %>
+    <div class="contentBox padMd2 clrBr clrP clrSh2 js-moderatorInfo">
       <div class="flexVBot gutterH rowLg snipKids">
         <div class="tx4 flexExpand"><strong><%= ob.polyT('userPage.moderator') %></strong></div>
         <div class="clrT2 tx5">
@@ -14,9 +15,17 @@
       </div>
       <div class="tx2 clrT2 txCtr rowMd"><%= ob.polyT('userPage.modFee', {modFee: 1.3}) %></div>
       <div class="flexHCent">
-        <a class="btn clrP clrBr clrSh2 js-addModerator"><%= ob.polyT('userPage.addModerator') %></a>
+        <a class="btn clrP clrBr clrSh2 js-addModerator">
+          <span class="js-addModeratorLbl <% if(ob.currentModerator) print('hide') %>">
+            <%= ob.polyT('userPage.addModerator') %>
+          </span>
+          <span class="js-removeModeratorLbl <% if(!ob.currentModerator) print('hide') %>">
+            <%= ob.polyT('userPage.removeModerator') %>
+          </span>
+        </a>
       </div>
     </div>
+    <% } %>
     <div class="informationList listBox clrBr clrP clrSh2">
       <div class="informationHeader">
         <div><%= ob.polyT('userPage.information') %></div>
@@ -57,7 +66,14 @@
         <p>Terms and Service Go Here TODO: add data to template</p>
         <div class="flexHRight">
           <a class="btnTxt js-termsClose"><span class="txUnb">Cancel</span></a>
-          <div class="btn clrP clrBr js-addModerator"><%= ob.polyT('userPage.addModerator') %></div>
+          <a class="btn clrP clrBr js-addModerator">
+            <span class="js-addModeratorLbl <% if(ob.currentModerator) print('hide') %>">
+              <%= ob.polyT('userPage.addModerator') %>
+            </span>
+            <span class="js-removeModeratorLbl <% if(!ob.currentModerator) print('hide') %>">
+              <%= ob.polyT('userPage.removeModerator') %>
+            </span>
+          </a>
         </div>
       </div>
     </div>

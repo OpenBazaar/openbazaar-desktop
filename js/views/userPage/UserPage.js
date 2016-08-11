@@ -41,12 +41,12 @@ export default class extends BaseVw {
     if (this.followed) {
       // unfollow this user
       console.log('unfollow');
-      // do the following as the callback of the follow action
+      // do the following as the callback of the unfollow action
       this.followed = false;
       this.$followLbl.removeClass('hide');
       this.$unfollowLbl.addClass('hide');
     } else {
-      // follow this user
+      // do the following as the callback of the follow action
       console.log('follow');
       this.followed = true;
       this.$followLbl.addClass('hide');
@@ -77,7 +77,7 @@ export default class extends BaseVw {
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = new this.tabViews[tabViewName]({ tabViewType });
+        tabView = new this.tabViews[tabViewName]({ tabViewType, ownPage: this.ownPage });
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }
