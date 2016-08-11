@@ -1,0 +1,12 @@
+#chatContainer {
+  // use for chat styles that only apply inside the chat sidebar
+}
+
+.chat {
+  // use for chat styles that apply outside the chat sidebar
+
+  .chatIcon {
+    border-width: 2px;
+    border-style: solid;
+  }
+}

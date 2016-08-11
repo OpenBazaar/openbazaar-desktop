@@ -6,6 +6,10 @@ import SocialAccounts from '../collections/SocialAccounts';
 export default class extends BaseModel {
   defaults() {
     return {
+      name: `ob ${Math.random().toString(36).slice(2)}`,
+      nsfw: false,
+      vendor: false,
+      moderator: false,
       primaryColor: '#086A9E',
       secondaryColor: '#317DB8',
       textColor: '#ffffff',

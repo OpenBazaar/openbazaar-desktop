@@ -14,7 +14,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 760,
-    minWidth: 1024,
+    minWidth: 1170,
     minHeight: 700,
     center: true,
     title: 'OpenBazaar',

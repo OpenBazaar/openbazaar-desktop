@@ -1,15 +1,19 @@
 .ctrl {
   line-height: 33px;
-  padding: 0 21px;
+  padding: 0 24px;
   border-radius: $corner;
   border-width: 1px;
   border-style: solid;
+  font-size: $tx5;
+  font-weight: 500;
+  box-sizing: border-box;
 }
 
 .btn {
   @extend .ctrl;
   display: inline-block; //add height and width, collapse the width
   cursor: pointer;
+  font-weight: 700;
 
   &:hover {
     text-decoration: none;
@@ -23,6 +27,18 @@
   .bar & {
     line-height: $bar;
     height: $bar;
+    border: none;
+  }
+
+  .barSm & {
+    line-height: $barSm;
+    height: $barSm;
+    border: none;
+  }
+
+  .barLg & {
+    line-height: $barLg;
+    height: $barLg;
     border: none;
   }
 
@@ -91,8 +107,11 @@
 .iconBtn {
   //this button has only an icon in it
   @extend .btn;
-  font-weight: 700;
-  font-size: 20px;
+  font-size: 2rem;
+  padding: 0 12px;
+}
+
+.btnThin {
   padding: 0 12px;
 }
 
@@ -133,4 +152,36 @@
   &.open {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
+}
+
+.searchWrapper {
+  //div around a search input
+  position: relative;
+  width: 100%;
+
+  input {
+    text-indent: 1.5em; /* make room for icon */
+  }
+
+  &:before {
+    //insert a search icon before the text
+    font-family: Ionicons;
+    content: "\f4a5";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.75em;
+    left: 0.75em;
+    color: inherit;
+  }
+}
+
+.cornerTR {
+  //positions an element in the top right. It should usually be an icon button.
+  position: absolute;
+  z-index: 1; // don't unintentionally cover with other absolute elements
+  top: 10px;
+  right: $pad;
+  font-size: 1.6rem;
+  cursor: pointer;
 }

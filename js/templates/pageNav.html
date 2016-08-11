@@ -1,5 +1,5 @@
-<header class="border clrBr">
-  <nav class="bar clrP navBar">
+<header class="">
+  <nav class="bar clrBr clrP navBar">
     <div class="flexRow">
       <div class="windowControlsHolder">
         <div class="windowControls windowControlsMac">
@@ -18,19 +18,15 @@
         </div>
       </div>
       <div class="rowDivV clrBrBackground"></div>
-      <div>
-        <div class="flexVCent">
-          <span class="iconBtn">
-            <i class="ion-search"></i>
-          </span>
-        </div>
-      </div>
       <div class="flexExpand">
         <div class="flexVCent">
-          <input type="text" class="js-addressBar flexExpand addressBar" placeholder="Type a @handle, OpenBazaar ID or #tag" />
+          <div class="searchWrapper">
+            <input type="text" class="js-addressBar flexExpand addressBar"
+                   placeholder="Type a @handle, OpenBazaar ID or #tag" />
+          </div>
         </div>
       </div>
-      <div class="rowDivV clrBrBackground"></div>
+      <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box">
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
@@ -42,43 +38,45 @@
             style="background-image: url('../imgs/defaultUser.png')"
           <% } %>
           ></a>
-          <nav class="navList listBox clrBr clrP shad1 foldDown js-navList js-navPopMenu">
-            <div class="listGroup clrS clrBr">
-              <a class="listLink clrS clrBr">Current Node <i
-                class="ion-arrow-right-b floR"></i> </a>
+          <nav class="navList listBox clrS clrSh1 foldDown js-navList js-navPopMenu">
+            <div class="listGroup clrP clrBr clrSh2">
+              <a class="listItem">
+                <span>Current Node</span>
+                <span><i class="ion-arrow-right-b floR"></i></span>
+              </a>
             </div>
-            <div class="listGroup clrS clrBr">
-              <a class="listLink">
+            <div class="listGroup clrP clrBr clrSh2">
+              <a class="listItem" href="#ownPage">
                 <span>My Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a class="listLink">
+              <a class="listItem" href="#ownPage/about/customize">
                 <span>Customize Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a class="listLink">
+              <a class="listItem" href="#ownPage/store/newListing">
                 <span>Create Listing</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
-            <div class="listGroup clrS clrBr">
-              <a href="#transactions" class="listLink">
+            <div class="listGroup clrP clrBr clrSh2">
+              <a href="#transactions" class="listItem">
                 <span>Purchases</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a href="#transactions" class="listLink">
+              <a href="#transactions" class="listItem">
                 <span>Sales</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a href="#transactions" class="listLink">
+              <a href="#transactions" class="listItem">
                 <span>Cases</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
-            <div class="listGroup clrS clrBr">
-              <a class="listLink js-navSettings">
+            <div class="listGroup clrP clrBr clrSh2">
+              <a class="listItem js-navSettings">
                 <span>Settings</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
-            <div class="listGroup clrS clrBr">
-              <a href="#transactions" class="listLink">
+            <div class="listGroup clrP clrBr clrSh2">
+              <a href="#transactions" class="listItem">
                 <span>About OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a href="#transactions" class="listLink">
+              <a href="#transactions" class="listItem">
                 <span>Support OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
               </a>
             </div>
@@ -88,3 +86,4 @@
     </div>
   </nav>
 </header>
+<div class="navOverlay modal js-navOverlay"></div>

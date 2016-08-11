@@ -98,7 +98,7 @@ export default class extends View {
   }
 
   navListBtnClick() {
-    const $popMenu = this.$navList;
+    const $popMenu = this.$navList.hasClass('open') ? '' : this.$navList;
     this.togglePopMenu($popMenu);
   }
 
@@ -106,13 +106,15 @@ export default class extends View {
     if ($popMenu) {
       this.$popMenus.not($popMenu).removeClass('open');
       $popMenu.toggleClass('open');
+      this.$navOverlay.addClass('open');
     } else {
       this.$popMenus.removeClass('open');
+      this.$navOverlay.removeClass('open');
     }
   }
 
   onDocClick(e) {
-    if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn, .js-navPopMenu').length) {
+    if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn').length) {
       this.togglePopMenu();
     }
   }
@@ -171,12 +173,15 @@ export default class extends View {
 
   render() {
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        // guid: app.profile.id,
+      }));
     });
 
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');
     this.$popMenus = this.$('.js-navPopMenu');
+    this.$navOverlay = this.$('.js-navOverlay');
 
     return this;
   }
