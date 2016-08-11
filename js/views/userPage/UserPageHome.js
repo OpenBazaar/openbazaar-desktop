@@ -8,7 +8,7 @@ export default class extends View {
     this.options = options;
 
     this.ownPage = options.ownPage;
-    this.isModerator = true; //TODO set if this user is a moderator
+    this.isModerator = true; // TODO set if this user is a moderator
     this.currentModerator = false; // TODO set if this user is one of the viewer's moderators
   }
 

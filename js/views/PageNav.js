@@ -4,7 +4,7 @@ import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
-import SettingsModal from './modals/settings/Settings';
+import SettingsModal from './modals/Settings/Settings';
 
 const remote = electron.remote;
 

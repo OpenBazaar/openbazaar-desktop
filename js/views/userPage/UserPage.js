@@ -28,7 +28,7 @@ export default class extends BaseVw {
       'click .js-tab': 'tabClick',
       'click .js-followBtn': 'followClick',
       'click .js-messageBtn': 'messageClick',
-      'click .js-moreBtn': 'moreClick'
+      'click .js-moreBtn': 'moreClick',
     };
   }
 
