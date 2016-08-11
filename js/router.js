@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
