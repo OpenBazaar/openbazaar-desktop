@@ -14,8 +14,9 @@ export default class extends BaseVw {
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow };
 
-    this.followed = false; // TODO check to see if user is followed
-    this.ownPage = true; // TODO check to see if this is the user's page
+    this.followed = false; // TODO check to see if user is followed by the viewer
+    this.followsYou = true; // TODO check to see if this user follows the viewer
+    this.ownPage = true; // TODO check to see if this is the viewer's page
   }
 
   className() {
@@ -94,6 +95,7 @@ export default class extends BaseVw {
         category: this.options.category || '',
         layer: this.options.layer || '',
         followed: this.followed,
+        followsYou: this.followsYou,
         ownPage: this.ownPage,
       }));
 

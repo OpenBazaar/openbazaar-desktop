@@ -7,7 +7,14 @@
         </div>
         <div>
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
-          <div class="txt5b">Stars(x) <%= ob.polyT('userPage.followsYou') %></div>
+          <div class="txt5b">
+            <span>Stars(x)</span>
+            <span>
+              <% if (ob.followsYou) { %>
+                <%= ob.polyT('userPage.followsYou') %>
+              <% } %>
+            </span>
+          </div>
         </div>
         <div class="flexExpand">
           <div class="flexHRight flexVCent gutterH clrT2">
