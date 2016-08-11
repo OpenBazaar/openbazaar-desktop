@@ -10,6 +10,6 @@ export default {
 
   // temporary until we implement our full server connection flow
   getSocketUrl() {
-    return 'ws://localhost:18466';
-  }
+    return 'ws://localhost:8080/ws';
+  },
 };

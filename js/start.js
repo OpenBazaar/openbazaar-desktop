@@ -10,6 +10,7 @@ import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
+import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
@@ -285,11 +286,90 @@ function start() {
 // connect to the API websocket
 // todo: this will be incorporated in the server
 // connection flow
+let socketOpened = false;
+let lostSocketConnectionDialog;
+
 app.apiSocket = new Socket(app.getSocketUrl());
 app.apiSocket.on('open', () => {
-  start();
+  if (!socketOpened) {
+    socketOpened = true;
+    start();
+  } else {
+    location.reload();
+  }
+
+  // if (lostSocketConnectionDialog) {
+  //   lostSocketConnectionDialog.close();
+  //   lostSocketConnectionDialog = null;
+  // }
 });
 
 app.apiSocket.on('close', () => {
-  // alert('no soup for you');
+  if (lostSocketConnectionDialog) return;
+
+  lostSocketConnectionDialog = new Dialog({
+    title: 'Socket connection failure',
+    message: 'We are unable to connect to the API websocket.',
+    buttons: [{
+      text: 'Retry',
+      fragment: 'retry',
+    }],
+    dismissOnOverlayClick: false,
+    dismissOnEscPress: false,
+    showCloseButton: false,
+  }).on('click-retry', () => app.apiSocket.connect())
+  .render()
+  .open();
+});
+
+// manage publishing sockets
+let publishingStatusMsg;
+
+function setPublishingStatus(msg) {
+  if (!msg && typeof msg !== 'object') {
+    throw new Error('Please provide a msg as an object.');
+  }
+
+  msg.duration = 99999999999999;
+
+  if (!publishingStatusMsg) {
+    publishingStatusMsg = app.statusBar.pushMessage({
+      View: PublishingStatusMessage,
+      ...msg,
+    });
+    publishingStatusMsg.view
+      .on('click-retry', () => {
+        alert('Coming soon - need publish API');
+      });
+  } else {
+    publishingStatusMsg.update(msg);
+  }
+
+  return publishingStatusMsg;
+}
+
+app.apiSocket.on('message', (e) => {
+  if (e.jsonData) {
+    if (e.jsonData.status === 'publishing') {
+      setPublishingStatus({
+        msg: 'Publishing...',
+        type: 'message',
+      });
+    } else if (e.jsonData.status === 'error publishing') {
+      setPublishingStatus({
+        msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+        type: 'warning',
+      });
+    } else if (e.jsonData.status === 'publish complete') {
+      setPublishingStatus({
+        msg: 'Publishing complete.',
+        type: 'msg',
+      });
+
+      const completedStatusMsg = publishingStatusMsg;
+      publishingStatusMsg = null;
+
+      setTimeout(() => completedStatusMsg.remove(), 2000);
+    }
+  }
 });
