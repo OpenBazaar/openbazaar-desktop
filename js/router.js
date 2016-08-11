@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
@@ -19,8 +18,7 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
-      ['ownPage', 'ownPage'],
-      ['ownPage/:tab(/:action)', 'ownPage'],
+      [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       ['test-modals', 'testModals'],
@@ -128,10 +126,16 @@ export default class ObRouter extends Router {
     });
   }
 
-  ownPage(tab, ...args) {
-    tab = [tab || 'about'];   // eslint-disable-line no-param-reassign
-    const path = _.compact(tab.concat(args)).join('/');
-    this.navigate(`${app.profile.id}${path ? `/${path}` : ''}`, { trigger: true });
+  ownPage(...args) {
+    let subPath = '';
+
+    if (args.length && args[0] !== null) {
+      subPath = args[0];
+    }
+    this.navigate(`${app.profile.id}/${subPath}`, {
+      trigger: true,
+      replace: true,
+    });
   }
 
   transactions(tab) {
