@@ -78,7 +78,10 @@ export default class extends BaseVw {
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = new this.tabViews[tabViewName]({ tabViewType, ownPage: this.ownPage });
+        tabView = new this.tabViews[tabViewName]({
+          tabViewType,
+          ownPage: this.ownPage,
+        });
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }
