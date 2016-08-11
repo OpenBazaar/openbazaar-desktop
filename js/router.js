@@ -126,13 +126,8 @@ export default class ObRouter extends Router {
     });
   }
 
-  ownPage(...args) {
-    let subPath = '';
-
-    if (args.length && args[0] !== null) {
-      subPath = args[0];
-    }
-    this.navigate(`${app.profile.id}/${subPath}`, {
+  ownPage(subPath) {
+    this.navigate(`${app.profile.id}/${subPath === null ? '' : subPath}`, {
       trigger: true,
       replace: true,
     });
