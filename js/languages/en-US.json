@@ -21,7 +21,8 @@
     "addModerator": "Add as Moderator",
     "information": "Information",
     "website": "Website",
-    "email": "Email"
+    "email": "Email",
+    "noLocation": "No Location"
   },
   "settings": {
     "settingsLabel": "Settings",

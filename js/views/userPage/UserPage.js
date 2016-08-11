@@ -13,6 +13,9 @@ export default class extends BaseVw {
 
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow };
+
+    this.followed = false; // TODO check to see if user is followed
+    this.ownPage = true; // TODO check to see if this is the user's page
   }
 
   className() {
@@ -22,14 +25,42 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-tab': 'tabClick',
-      'click .js-termsLink': 'termsClick',
-      'click .js-termsClose': 'termsClose',
+      'click .js-followBtn': 'followClick',
+      'click .js-messageBtn': 'messageClick',
+      'click .js-moreBtn': 'moreClick'
     };
   }
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
     this.selectTab(targ);
+  }
+
+  followClick() {
+    // TODO add in follow functionality
+    if (this.followed) {
+      // unfollow this user
+      console.log('unfollow');
+      // do the following as the callback of the follow action
+      this.followed = false;
+      this.$followLbl.removeClass('hide');
+      this.$unfollowLbl.addClass('hide');
+    } else {
+      // follow this user
+      console.log('follow');
+      this.followed = true;
+      this.$followLbl.addClass('hide');
+      this.$unfollowLbl.removeClass('hide');
+    }
+  }
+
+  messageClick() {
+    // activate the chat message
+    console.log('message');
+  }
+
+  moreClick() {
+    this.$moreableBtns.toggleClass('hide');
   }
 
   selectTab(targ) {
@@ -55,14 +86,6 @@ export default class extends BaseVw {
     }
   }
 
-  termsClick() {
-    this.$termsDisplay.toggleClass('open');
-  }
-
-  termsClose() {
-    this.$termsDisplay.removeClass('open');
-  }
-
   render() {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
@@ -70,12 +93,17 @@ export default class extends BaseVw {
         tab: this.options.tab || '',
         category: this.options.category || '',
         layer: this.options.layer || '',
+        followed: this.followed,
+        ownPage: this.ownPage,
       }));
 
       this.$tabContent = this.$('.js-tabContent');
       this.$tabTitle = this.$('.js-tabTitle');
+      this.$followLbl = this.$('.js-followLbl');
+      this.$unfollowLbl = this.$('.js-unfollowLbl');
+      this.$moreableBtns = this.$('.js-moreableBtn');
+
       this.selectTab(this.$('.js-tab[data-tab="Home"]'));
-      this.$termsDisplay = this.$('.js-termsDisplay');
     });
 
     return this;

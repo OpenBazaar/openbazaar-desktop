@@ -18,15 +18,15 @@
       <div class="tx3 clrT"><strong><%= ob.name %></strong></div>
       <div class="clrT3"><%= ob.handle %></div>
     </div>
-    <p>
+    <p class="clamp2">
       <%= ob.shortDescription %>
     </p>
     <div class="flex gutterH">
       <div class="col8">
-        <span class="clrT4"><%= ob.location %></span>
+        <span class="clrT4"><%= ob.location || ob.polyT('userPage.noLocation') %></span>
       </div>
       <div class="col4 tx6">
-        stars go here (xx)
+        stars here (xx)
       </div>
     </div>
   </div>

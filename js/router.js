@@ -129,7 +129,7 @@ export default class ObRouter extends Router {
   }
 
   ownPage(tab, ...args) {
-    tab = [tab || 'store'];   // eslint-disable-line no-param-reassign
+    tab = [tab || 'about'];   // eslint-disable-line no-param-reassign
     const path = _.compact(tab.concat(args)).join('/');
     this.navigate(`${app.profile.id}${path ? `/${path}` : ''}`, { trigger: true });
   }

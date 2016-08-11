@@ -20,33 +20,32 @@
       </div>
 
 </nav>
-<section class="flexRow banner" <% if(ob.banner){ %>
+<div class="banner" <% if(ob.banner){ %>
   style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
   <% } else { %>
   style="background-image: url('../imgs/defaultBanner.png')"
   <% } %>>
-  <div id="chatLeftSpacer"></div>
-  <div class="flexExpand">
-    <div class="pageContent">
-      <div class="pageControls flex">
-        <div class="col8">
-          <h1 class="txBg txUnb txUnl js-tabTitle">
-          </h1>
-        </div>
-        <div class="col4">
-          <div class="btnStrip floR clrSh2">
-            <a class="btn clrP clrBr"><%= ob.polyT('userPage.message') %></a>
-            <a class="btn clrP clrBr">
-              <% if(ob.followed){ print(ob.polyT('userPage.unfollow')) } else { print(ob.polyT('userPage.follow')) } %>
-            </a>
-            <a class="iconBtn clrP clrBr"><i class="ion-android-more-vertical"></i> </a>
-          </div>
-        </div>
-      </div>
-      <div class="tabContent js-tabContent">
-        <!-- insert the tab subview here -->
+</div>
+<div class="pageContent">
+  <div class="pageControls flex">
+    <div class="flexExpand">
+      <h1 class="txBg txUnb txUnl js-tabTitle">
+      </h1>
+    </div>
+    <div>
+      <div class="btnStrip floR clrSh2">
+        <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.message') %></a>
+        <a class="btn clrP clrBr js-followBtn">
+          <span class="js-unfollowLbl <% if(!ob.followed) print('hide') %>"><%= ob.polyT('userPage.unfollow') %></span>
+          <span class="js-followLbl <% if(ob.followed) print('hide') %>"><%= ob.polyT('userPage.follow') %></span>
+        </a>
+        <a class="btn clrP clrBr hide js-moreableBtn">Example Btn</a>
+        <a class="btn clrP clrBr hide js-moreableBtn">Example Btn</a>
+        <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
       </div>
     </div>
   </div>
-  <div id="chatRightSpacer"></div>
-</section>
+  <div class="tabContent js-tabContent">
+    <!-- insert the tab subview here -->
+  </div>
+</div>

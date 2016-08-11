@@ -4,12 +4,11 @@
   .pageContent {
 
     .pageControls {
-      align-items: flex-end;
-      margin: 268px 0 40px 0;
+      padding: 268px 0 40px 0;
     }
 
     .userPageSearchBar {
-      margin: 39px 0 $padMd 0;
+      margin-bottom: $padMd;
       height: $barSm;
 
       .ctrl,

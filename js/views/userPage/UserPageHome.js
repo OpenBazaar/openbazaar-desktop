@@ -4,12 +4,28 @@ import app from '../../app';
 
 export default class extends View {
   constructor(options = {}) {
-    super({
-      className: 'userPageHome',
-      events: {
-      },
-      ...options,
-    });
+    super(options);
+    this.options = options;
+  }
+
+  className() {
+    return 'userPageHome';
+  }
+
+  events() {
+    return {
+      'click .js-termsLink': 'termsClick',
+      'click .js-termsClose': 'termsClose',
+    };
+  }
+
+  termsClick() {
+    this.$termsDisplay.toggleClass('open');
+    if (this.$termsDisplay.hasClass('open')) this.$termsDisplay[0].scrollIntoViewIfNeeded();
+  }
+
+  termsClose() {
+    this.$termsDisplay.removeClass('open');
   }
 
   render() {
@@ -24,6 +40,8 @@ export default class extends View {
           ...app.profile.toJSON(),
         }));
       });
+
+      this.$termsDisplay = this.$('.js-termsDisplay');
     });
 
     return this;
