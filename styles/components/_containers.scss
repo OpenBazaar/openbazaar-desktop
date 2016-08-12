@@ -24,21 +24,18 @@
 
   input[type="text"] {
     height: 100%;
-    padding: $pad;
   }
 }
 
-.pageContent {
-  padding: $pad;
-  width: calc(100% - #{$chatClosed});
-  background-color: pink; // temporary to see transition when chat opens
-  @include chatOpeningTransition(width);
-
-  .chatOpen & {
-    width: calc(100% - #{$chatOpen});
-  }
+.barSm {
+  @extend .bar;
+  height: $barSm;
 }
 
+.barLg {
+  @extend .bar;
+  height: $barLg;
+}
 
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element
@@ -83,49 +80,37 @@
   }
 }
 
+.contentBox {
+  //used to contain content, usually main sections of the page
+  @extend .box;
+  border-radius: $brdRad;
+  border-width: 1px;
+  border-style: solid;
+}
+
 .listBox {
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
-  @extend .box, .border, .boxList;
+  @extend .contentBox, .boxList;
 
   .listGroup {
-    padding: $pad;
-    margin-bottom: $pad / 2;
     border-width: 1px;
     border-style: solid;
+    margin-bottom: $pad / 2;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
-  .listLink {
-    padding: $padSm;
+  .listItem {
+    padding: $padMd2;
     font-size: 1.4rem;
-    display: flex;
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: $padSm;
+    //margin-bottom: $padSm;
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    & > * {
-      flex-shrink: 0;
-      box-sizing: border-box;
-      padding-right: $padSm;
-      word-break: break-all;
-
-      &:last-child {
-        padding-right: 0;
-      }
-
-      &:first-child {
-        // expand the first child to fill as much space as it can.
-        // The second child (shortcut text) will be pushed to the right.
-        flex-shrink: 1;
-        flex-grow: 1;
-      }
     }
   }
 }

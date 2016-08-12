@@ -30,10 +30,12 @@
   background-color: $background;
 }
 
+$excludedLinks: ".btn, .iconBtn, .listItem";
+
 .clrT {
   color: $text;
 
-  & a:not(.btn, .iconBtn) {
+  a:not(#{$excludedLinks}) {
     color: $text2;
   }
 
@@ -46,7 +48,7 @@
   // for faded text
   color: $text2;
 
-  & a:not(.btn, .iconBtn) {
+  & a:not(#{$excludedLinks}) {
     color: $text3;
   }
 
@@ -66,12 +68,26 @@
   }
 }
 
+.clrT4 {
+  color: $text4;
+
+  // links in text color 4 are the same color, or they'd be too hard to see
+
+  input[type="radio"]:checked + label:before {
+    background: $text4;
+  }
+}
+
 .clrBr {
   border-color: $border;
 
   hr {
     border-color: $border;
   }
+}
+
+.clrBr2 {
+  border-color: $border2;
 }
 
 // select2 dropdowns always use the theme border color.
@@ -99,4 +115,13 @@
 .clrO {
   // overlay color
   background-color: $overlay;
+}
+
+//shadows should be set by the theme too
+.clrSh1 {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.clrSh2  {
+  box-shadow: 0 1px 0 rgba(0,0,0,0.05);
 }

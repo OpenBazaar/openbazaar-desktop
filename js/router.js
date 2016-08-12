@@ -3,7 +3,7 @@ import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
 import app from './app';
-import UserPage from './views/UserPage';
+import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import TestModalsPage from './views/TestModalsPage';
@@ -18,6 +18,7 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
+      [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       ['test-modals', 'testModals'],
@@ -97,7 +98,9 @@ export default class ObRouter extends Router {
       profile = new Profile({ id: guid });
       profileFetch = profile.fetch();
 
-      onWillRoute = () => { profileFetch.abort(); };
+      onWillRoute = () => {
+        profileFetch.abort();
+      };
       this.once('will-route', onWillRoute);
     }
 
@@ -118,6 +121,13 @@ export default class ObRouter extends Router {
       if (jqXhr.statusText !== 'abort') this.userNotFound();
     }).always(() => {
       if (onWillRoute) this.off(null, onWillRoute);
+    });
+  }
+
+  ownPage(subPath) {
+    this.navigate(`${app.profile.id}/${subPath === null ? '' : subPath}`, {
+      trigger: true,
+      replace: true,
     });
   }
 

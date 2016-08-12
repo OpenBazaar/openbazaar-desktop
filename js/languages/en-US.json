@@ -3,6 +3,28 @@
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "properNames": {
+    "twitter": "Twitter",
+    "facebook": "Facebook",
+    "instagram": "Instagram",
+    "snapchat": "Snapchat"
+  },
+  "userPage": {
+    "followsYou": "Follows You",
+    "message": "Message",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "searchStore": "Search %{storeName}",
+    "moderator": "Moderator",
+    "termsOfService": "Terms of Service",
+    "modFee": "%{modFee}% per dispute",
+    "addModerator": "Add as Moderator",
+    "removeModerator": "Remove as Moderator",
+    "information": "Information",
+    "website": "Website",
+    "email": "Email",
+    "noLocation": "No Location"
+  },
   "settings": {
     "settingsLabel": "Settings",
     "generalTab": "General",
@@ -35,7 +57,7 @@
     "statusSafeToClose": "Save has completed. You may close the modal",
     "btnYes": "Yes",
     "btnNo": "No",
-    "btnSave": "Save",    
+    "btnSave": "Save",
     "errors": {
       "saveError": "There was an error saving your settings."
     },
@@ -51,13 +73,6 @@
     "provideUsername": "Please provide a username.",
     "duplicateSocialAccount": "You already have a social account of this type."
   },
-  "profileModelErrors": {
-    "provideValidHexColor": "Please provide a valid hex color.",
-    "provideValidEmail": "Please provide a valid email.",
-    "provideValidURL": "Please provide a valid url.",
-    "provideUsername": "Please provide a username.",
-    "duplicateSocialAccount": "You already have a social account of this type."
-  },  
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
@@ -304,7 +319,7 @@
     "WESTERN_SAHARA": "Western Sahara",
     "YEMEN": "Yemen",
     "ZAMBIA": "Zambia",
-    "ZIMBABWE": "Zimbabwe"    
+    "ZIMBABWE": "Zimbabwe"
   },
   "currencies": {
     "AED": "UAE Dirham",
