@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-const tmpFolderPath = path.join(__dirname, '../../.tmp');
+const tmpFolderPath = path.join(__dirname, '../.tmp');
 
 if (!fs.existsSync(tmpFolderPath)) {
   fs.mkdirSync(tmpFolderPath);
