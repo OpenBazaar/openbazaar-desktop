@@ -1,0 +1,30 @@
+#statusBar {
+  position: fixed;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+
+  .statusMessageWrap {
+    height: 0;
+    overflow: hidden;
+    transition: opacity 1.5s, height 1s;
+  }
+
+  .statusMessageWrap.slideUp {
+    height: 30px;
+  }
+
+  .statusMessage {
+    opacity: 0.4;
+    box-sizing: border-box;
+    padding: 0 10px;
+    line-height: 30px;
+    color: #fff;
+    font-size: $tx6;
+    font-style: italic;
+    background: #000;
+    border-bottom: 1px solid #222;
+    position: relative;
+    top: -1px;
+  }
+}

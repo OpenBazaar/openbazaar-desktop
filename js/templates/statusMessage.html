@@ -1,0 +1,10 @@
+<div class="statusMessage statusMessage-<%= ob.type %>">
+  <% if (ob.type === 'warning') { %>
+    <span class="icon ion-alert-circled"></span>
+  <% } else if (ob.type === 'confirmed') { %>
+    <span class="icon ion-android-checkbox"></span>
+  <% } else if (ob.type === 'pending') { %>
+  <span class="icon ion-more"></span>
+  <% } %>
+  <%= ob.msg %>
+</div>
