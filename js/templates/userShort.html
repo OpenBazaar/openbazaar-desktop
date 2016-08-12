@@ -1,0 +1,33 @@
+<div class="contentBox clrBr clrP clrSh2 userShort">
+  <div class="hero bkgCover"
+    <% if(ob.banner){ %>
+      style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+    <% } else { %>
+      style="background-image: url('../imgs/defaultBanner.png')"
+    <% } %>>
+    <div class="userIcon disc clrBr2 clrSh1"
+         <% if(ob.avatar){ %>
+           style="background-image: url('<%= ob.avatar %>, url('../imgs/defaultUser.png')"
+         <% } else { %>
+           style="background-image: url('../imgs/defaultUser.png')"
+         <% } %>>
+     </div>
+  </div>
+  <div class="content">
+    <div class="flexVBot snipKids gutterH rowTn">
+      <div class="tx3 clrT"><strong><%= ob.name %></strong></div>
+      <div class="clrT3"><%= ob.handle %></div>
+    </div>
+    <p class="clamp2">
+      <%= ob.shortDescription %>
+    </p>
+    <div class="flex gutterH">
+      <div class="col8">
+        <span class="clrT4"><%= ob.location || ob.polyT('userPage.noLocation') %></span>
+      </div>
+      <div class="col4 tx6">
+        stars here (xx)
+      </div>
+    </div>
+  </div>
+</div>

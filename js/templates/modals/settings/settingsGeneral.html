@@ -1,14 +1,14 @@
-<div class="bar padM clrBr borderBottom">
-  <h2><%= ob.polyT('settings.generalTab') %></h2>
+<div class="bar padMd clrBr borderBottom">
+  <h2 class="h3 txUnb"><%= ob.polyT('settings.generalTab') %></h2>
 </div>
-<div class="padM scrollBox settingsTabFormWrapper">
+<div class="padMd scrollBox settingsTabFormWrapper">
   <form class="box border clrS clrBr padKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
         <label><%= ob.polyT('settings.language') %></label>
       </div>
       <div class="col9">
-        <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>      
+        <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
         <select id="settingsLanguageSelect" name="language">
           <% ob.languageList.forEach((lang) => { %>
             <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
@@ -21,7 +21,7 @@
         <label><%= ob.polyT('settings.country') %></label>
       </div>
       <div class="col9">
-        <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>      
+        <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
         <select id="settingsCountrySelect" name="country">
           <% ob.countryList.forEach((country) => { %>
           <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>

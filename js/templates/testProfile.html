@@ -1,4 +1,12 @@
 <form>
+  <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
+  <label class="<% if (ob.errors.name) print('error') %>">
+    Name:
+    <input type="test" name="name" value="<%= ob.name %>" />
+  <% if (ob.errors.handle) print(ob.formErrorTmpl({ errors: ob.errors.handle })) %>
+  <label class="<% if (ob.errors.handle) print('error') %>">
+    Handle:
+    <input type="test" name="handle" value="<%= ob.handle %>" />
   <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
   <label class="<% if (ob.errors.email) print('error') %>">
     Email:
@@ -9,12 +17,22 @@
     Website:
     <input type="url" name="website" value="<%= ob.website %>" />
   </label>
+    <% if (ob.errors.location) print(ob.formErrorTmpl({ errors: ob.errors.location })) %>
+    <label class="<% if (ob.errors.location) print('error') %>">
+      Location:
+      <input type="url" name="location" value="<%= ob.location %>" />
+    </label>
+    <% if (ob.errors.shortDescription) print(ob.formErrorTmpl({ errors: ob.errors.shortDescription })) %>
+    <label  class="<% if (ob.errors.shortDescription) print('error') %>">
+      Shrot Description:
+      <textarea name="shortDescription"><%= ob.shortDescription %></textarea>
+    </label>
   <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
   <label  class="<% if (ob.errors.about) print('error') %>">
     About:
     <textarea name="about"><%= ob.about %></textarea>
-  </label>  
-  <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>  
+  </label>
+  <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
   <label class="<% if (ob.errors.primaryColor) print('error') %>">
     Primary Color (hex color):
     <span class="labelSubText">Left as plain text field to see validation in action.</span>
@@ -27,7 +45,7 @@
   <% if (ob.social && ob.social.length) { %>
      <% ob.social.forEach((socialAcct, index) => { %>
       <div class="socialAccount">
-        <% if (ob.errors[`social[${index}].type`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].type`] })) %>  
+        <% if (ob.errors[`social[${index}].type`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].type`] })) %>
        <label>
           Type:
          <select name="<%= `social[${index}].type` %>">
@@ -36,7 +54,7 @@
            <% }) %>
          </select>
        </label>
-       <% if (ob.errors[`social[${index}].username`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].username`] })) %>  
+       <% if (ob.errors[`social[${index}].username`]) print(ob.formErrorTmpl({ errors: ob.errors[`social[${index}].username`] })) %>
        <label>
           Username:
           <input name="<%= `social[${index}].username` %>" type="text" value="<%= socialAcct.username %>" />
@@ -44,12 +62,12 @@
        <button type="button" class="js-RemoveSocial">Remove</button>
       </div>
     <% }); %>
-   <% } %>  
+   <% } %>
   </div>
   <button type="button" class="js-AddSocial btnAddSocial">Add</button>
 
   <div class="buttonBar">
     <input type="reset" />
     <input type="submit" />
-  </div>  
+  </div>
 </form>

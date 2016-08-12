@@ -1,10 +1,19 @@
 .pageNav {
   -webkit-app-region: drag;
 
-  .navBar .btn,
-  .navBar .iconBtn {
-    height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
-    line-height: 1em;
+  .navBar {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+
+    .btn,
+    .iconBtn {
+      height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
+      line-height: 1em;
+    }
+
+    .addressBar {
+      line-height: 1em; //allow dragging on area above and below the text input in the address bar
+    }
   }
 
   a, input, .btn, .iconBtn {
@@ -118,7 +127,43 @@
 
   .navList {
     box-sizing: border-box;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border: none;
     width: 260px;
     padding: $pad;
+    z-index: 1;
+
+    .listItem {
+      display: flex;
+
+      & > * {
+        flex-shrink: 0;
+        box-sizing: border-box;
+        padding-right: $padSm;
+        word-break: break-all;
+
+        &:last-child {
+          padding-right: 0;
+        }
+
+        &:first-child {
+          // expand the first child to fill as much space as it can.
+          // The second child (shortcut text) will be pushed to the right.
+          flex-shrink: 1;
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+
+  .navOverlay {
+    display: none;
+    position: fixed;
+    z-index: 0;
+
+    &.open {
+      display: block;
+    }
   }
 }

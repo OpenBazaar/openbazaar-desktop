@@ -3,10 +3,16 @@
 h1,h2,h3,h4,h5,h6,
 .h1,.h2,.h3,.h4,.h5,.h6 {
   margin: 0;
-  line-height: 1;
   font-weight: 700;
   -webkit-margin-before: 0;
-  -webkit-margin-after: 0;
+  -webkit-margin-after: 0.5em;
+  overflow-x: hidden; //if the text inside a headline is too long, truncate it
+  overflow-y: visible;
+  text-overflow: ellipsis;
+
+  &.txUnb {
+    font-weight: 400;
+  }
 }
 
 // all font sizes are multiples of the base rem. This allows us to increase or decrease all the fonts by changing the
@@ -38,9 +44,13 @@ h6, .h6, .tx6 {
   font-size: $tx6;
 }
 
+.txBg {
+  font-size: $txBg;
+}
+
 p {
-  white-space: pre-line;
   margin: 0;
+  line-height: 1.3;
   -webkit-margin-before: 0;
   -webkit-margin-after: 1em;
 
@@ -58,17 +68,21 @@ p {
   font-size: 0.9rem;
 }
 
-.txt-unleaded {
-  line-height: 1;
+.txUnl {
   margin-bottom: 0;
 }
 
-.txt-centered {
+.txCtr {
   text-align: center;
 }
 
-.unbold {
+.txUnb {
   font-weight: 400;
+}
+
+.ic90r:before {
+  //rotate icon 90 degrees
+  transform: rotate(90deg);
 }
 
 .noOverflow {
