@@ -84,8 +84,6 @@ export default class ObRouter extends Router {
     if (tab === 'channel') {
       pageOpts.category = args[0];
       pageOpts.layer = args[1];
-    } else {
-      pageOpts.action = args[0];
     }
 
     let profile;

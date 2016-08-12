@@ -94,7 +94,7 @@ export default class extends BaseVw {
   render() {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
-        ...app.profile.toJSON(),
+        ...this.model.toJSON(),
         tab: this.options.tab || '',
         category: this.options.category || '',
         layer: this.options.layer || '',
