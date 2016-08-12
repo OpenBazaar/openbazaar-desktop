@@ -1,13 +1,9 @@
-import electron from 'electron';
-
-// Module to control application life.
-const { app } = electron;
-// Module to create native browser window.
-const { BrowserWindow } = electron;
+import { app, BrowserWindow, ipcMain } from 'electron';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let closeConfirmed = false;
 
 function createWindow() {
   // Create the browser window.
@@ -38,6 +34,15 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  mainWindow.on('close', (e) => {
+    // setTimeout(() => {
+    //   mainWindow.send('close-attempt');
+    // }, 0);
+
+    mainWindow.send('close-attempt');
+    if (!closeConfirmed) e.preventDefault();
+  });
 }
 
 // This method will be called when Electron has finished
@@ -56,6 +61,12 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow) mainWindow.show();
+});
+
+ipcMain.on('close-confirmed', () => {
+  closeConfirmed = true;
+
+  if (mainWindow) mainWindow.close();
 });
 
 // In this file you can include the rest of your app's specific main process

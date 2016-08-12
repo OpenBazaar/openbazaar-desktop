@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
@@ -293,15 +294,12 @@ app.apiSocket = new Socket(app.getSocketUrl());
 app.apiSocket.on('open', () => {
   if (!socketOpened) {
     socketOpened = true;
+    if (lostSocketConnectionDialog) lostSocketConnectionDialog.remove();
+    lostSocketConnectionDialog = null;
     start();
   } else {
     location.reload();
   }
-
-  // if (lostSocketConnectionDialog) {
-  //   lostSocketConnectionDialog.close();
-  //   lostSocketConnectionDialog = null;
-  // }
 });
 
 app.apiSocket.on('close', () => {
@@ -317,13 +315,25 @@ app.apiSocket.on('close', () => {
     dismissOnOverlayClick: false,
     dismissOnEscPress: false,
     showCloseButton: false,
-  }).on('click-retry', () => app.apiSocket.connect())
+  }).on('click-retry', () => {
+    lostSocketConnectionDialog.$('.js-retry').addClass('loading');
+    app.apiSocket.connect();
+
+    // timeout is slight of hand to make it look like its doing something
+    // in the case of instant failures
+    setTimeout(() => {
+      if (lostSocketConnectionDialog) {
+        lostSocketConnectionDialog.$('.js-retry').removeClass('loading');
+      }
+    }, 300);
+  })
   .render()
   .open();
 });
 
 // manage publishing sockets
 let publishingStatusMsg;
+let unpublishedContent = false;
 
 function setPublishingStatus(msg) {
   if (!msg && typeof msg !== 'object') {
@@ -355,21 +365,58 @@ app.apiSocket.on('message', (e) => {
         msg: 'Publishing...',
         type: 'message',
       });
+
+      unpublishedContent = true;
     } else if (e.jsonData.status === 'error publishing') {
       setPublishingStatus({
         msg: 'Publishing failed. <a class="js-retry">Retry</a>',
         type: 'warning',
       });
+
+      unpublishedContent = true;
     } else if (e.jsonData.status === 'publish complete') {
       setPublishingStatus({
         msg: 'Publishing complete.',
-        type: 'msg',
+        type: 'message',
       });
+
+      unpublishedContent = false;
 
       const completedStatusMsg = publishingStatusMsg;
       publishingStatusMsg = null;
 
       setTimeout(() => completedStatusMsg.remove(), 2000);
     }
+  }
+});
+
+let unpublishedConfirm;
+
+ipcRenderer.on('close-attempt', (e) => {
+  if (!unpublishedContent) {
+    e.sender.send('close-confirmed');
+  } else {
+    if (unpublishedConfirm) return;
+
+    unpublishedConfirm = new Dialog({
+      title: app.polyglot.t('unpublishedConfirmTitle'),
+      message: app.polyglot.t('unpublishedConfirmBody'),
+      buttons: [{
+        text: app.polyglot.t('unpublishedConfirmYes'),
+        fragment: 'yes',
+      }, {
+        text: app.polyglot.t('unpublishedConfirmNo'),
+        fragment: 'no',
+      }],
+      dismissOnOverlayClick: false,
+      dismissOnEscPress: false,
+      showCloseButton: false,
+    }).on('click-yes', () => e.sender.send('close-confirmed'))
+    .on('click-no', () => {
+      unpublishedConfirm.close();
+      unpublishedConfirm = null;
+    })
+    .render()
+    .open();
   }
 });
