@@ -28,7 +28,7 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.macStyleWinControls && is.not.boolean(attrs.macStyleWinControls)) {
+    if (is.not.boolean(attrs.macStyleWinControls)) {
       addError('macStyleWinControls', 'Please provide a boolean value.');
     }
 

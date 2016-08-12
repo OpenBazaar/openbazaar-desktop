@@ -244,23 +244,19 @@ ul, ol {
   }
 }
 
-// temporary status bar implementation
-#statusBarContainer {
-  color: black; // use color var when refactoring
-  background-color: rgba(0,0,0,0.3); // use color var when refactoring
-  height: 20px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  font-size: 16px;  // use rem when refactoring
-  padding: 5px;
+// turn off animations and transitions with this style
 
-  &::after {
-    content: '(temporary Walmart of status bars)';
-    position: absolute;
-    right: 5px;
-    top: 5px;
-  }
+#ov1.minEffects,
+#ov1.minEffects *,
+#ov1.minEffects #overlay,
+#ov1.minEffects #pageNav,
+#ov1.minEffects #statusBar {
+  transition: none !important;
+  -webkit-filter: none !important;
+  opacity: 1 !important;
+  transition-property: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
