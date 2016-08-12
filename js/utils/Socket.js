@@ -4,7 +4,8 @@ import { Events } from 'backbone';
 /**
  * Class that wraps the standard WebSocket class allowing us to add in
  * some "sugar", which, as of now, consists mainly of mixing in
- * Backbone.Events which gives us a more modern event framework.
+ * Backbone.Events which gives us a more robust events than the
+ * barebones setup natively on the WebSocket.
  */
 export default class {
   /**

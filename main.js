@@ -36,10 +36,6 @@ function createWindow() {
   });
 
   mainWindow.on('close', (e) => {
-    // setTimeout(() => {
-    //   mainWindow.send('close-attempt');
-    // }, 0);
-
     mainWindow.send('close-attempt');
     if (!closeConfirmed) e.preventDefault();
   });
