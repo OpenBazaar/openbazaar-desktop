@@ -1,6 +1,5 @@
 import loadTemplate from '../../utils/loadTemplate';
 import { View } from 'backbone';
-import app from '../../app';
 
 export default class extends View {
   constructor(options = {}) {
