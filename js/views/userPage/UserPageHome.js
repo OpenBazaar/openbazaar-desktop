@@ -52,7 +52,6 @@ export default class extends View {
     loadTemplate('userPage/userPageHome.html', (t) => {
       this.$el.html(t({
         ...app.profile.toJSON(),
-        isModerator: this.isModerator,
         currentModerator: this.currentModerator,
       }));
 
@@ -61,7 +60,7 @@ export default class extends View {
       // add the userShort sub-template
       loadTemplate('userShort.html', (u) => {
         this.userShort.html(u({
-          ...app.profile.toJSON(),
+          ...this.model.toJSON(),
         }));
       });
 

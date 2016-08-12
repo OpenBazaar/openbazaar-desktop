@@ -16,7 +16,7 @@ export default class extends BaseVw {
 
     this.followed = false; // TODO check to see if user is followed by the viewer
     this.followsYou = true; // TODO check to see if this user follows the viewer
-    this.ownPage = true; // TODO check to see if this is the viewer's page
+    this.ownPage = this.model.id === app.profile.id;
   }
 
   className() {
@@ -78,9 +78,10 @@ export default class extends BaseVw {
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = new this.tabViews[tabViewName]({
+        tabView = this.createChild(this.tabViews[tabViewName], {
           tabViewType,
           ownPage: this.ownPage,
+          model: this.model,
         });
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();

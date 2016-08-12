@@ -15,7 +15,7 @@ export default class extends View {
   render() {
     loadTemplate('userPage/userPageStore.html', (t) => {
       this.$el.html(t({
-        ...app.profile.toJSON(),
+        ...this.model.toJSON(),
       }));
     });
 
