@@ -1,7 +1,9 @@
 import $ from 'jquery';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
+import { View } from 'backbone';
 import StatusBar from '../../js/views/StatusBar';
+import StatusMessageVw from '../../js/views/StatusMessage';
 import StatusMessage from '../../js/models/StatusMessage';
 
 describe('the status bar', () => {
@@ -148,6 +150,43 @@ describe('the status bar', () => {
 
       expect(errorThrown).to.equal(false);
     });
+
+    it('throws an error if you pass in a View that is not a descendant of the StatusMessage view',
+      () => {
+        const statusBar = new StatusBar();
+        let errorThrown = false;
+
+        try {
+          statusBar.pushMessage({
+            msg: 'The status is moo',
+            View,
+          });
+        } catch (e) {
+          errorThrown = true;
+        }
+
+        expect(errorThrown).to.equal(true);
+      });
+
+    it('doesn\'t throw an error if you pass in a View that is a descendant of the StatusMessage' +
+      ' view',
+      () => {
+        const statusBar = new StatusBar();
+        let errorThrown = false;
+
+        class MyStatusMsg extends StatusMessageVw {}
+
+        try {
+          statusBar.pushMessage({
+            msg: 'The status is moo',
+            View: MyStatusMsg,
+          });
+        } catch (e) {
+          errorThrown = true;
+        }
+
+        expect(errorThrown).to.equal(false);
+      });
 
     it('which results in a new status message being added to the DOM', () => {
       const statusBar = new StatusBar();

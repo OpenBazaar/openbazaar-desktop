@@ -1,14 +1,17 @@
+import { ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import app from './app';
+import Socket from './utils/Socket';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
+import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
@@ -253,27 +256,167 @@ function onboardIfNeeded() {
   return onboardIfNeededDeferred.promise();
 }
 
-// let's start our flow
-fetchConfig().done((data) => {
-  app.profile = new Profile({ id: data.guid });
+ // let's start our flow - do we need onboarding?,
+ // fetching app wide models...
+function start() {
+  fetchConfig().done((data) => {
+    app.profile = new Profile({ id: data.guid });
 
-  app.settings = new Settings();
-  // We'll default our server language to whatever is stored locally.
-  app.settings.set('language', app.localSettings.get('language'));
+    app.settings = new Settings();
+    // We'll default our server language to whatever is stored locally.
+    app.settings.set('language', app.localSettings.get('language'));
 
-  // Beyond the start-up flow in this file, any language changes should ideally
-  // be done via a save on a clone of the app.settings model. When the save succeeds,
-  // update the app.settings model which will in turn update our local
-  // settings model. You shouldn't be directly updating the language in our local
-  // settings model.
-  app.settings.on('change:language', (settingsMd, lang) => {
-    app.localSettings.save('language', getValidLanguage(lang));
+    // Beyond the start-up flow in this file, any language changes should ideally
+    // be done via a save on a clone of the app.settings model. When the save succeeds,
+    // update the app.settings model which will in turn update our local
+    // settings model. You shouldn't be directly updating the language in our local
+    // settings model.
+    app.settings.on('change:language', (settingsMd, lang) => {
+      app.localSettings.save('language', getValidLanguage(lang));
+    });
+
+    onboardIfNeeded().done(() => {
+      app.pageNav.navigable = true;
+      app.loadingModal.close();
+      location.hash = location.hash || app.profile.id;
+      Backbone.history.start();
+    });
   });
+}
 
-  onboardIfNeeded().done(() => {
-    app.pageNav.navigable = true;
-    app.loadingModal.close();
-    location.hash = location.hash || app.profile.id;
-    Backbone.history.start();
-  });
+// connect to the API websocket
+// todo: this will be incorporated in the server
+// connection flow
+let socketOpened = false;
+let lostSocketConnectionDialog;
+
+app.apiSocket = new Socket(app.getSocketUrl());
+app.apiSocket.on('open', () => {
+  if (!socketOpened) {
+    socketOpened = true;
+    if (lostSocketConnectionDialog) lostSocketConnectionDialog.remove();
+    lostSocketConnectionDialog = null;
+    start();
+  } else {
+    location.reload();
+  }
+});
+
+app.apiSocket.on('close', () => {
+  if (lostSocketConnectionDialog) return;
+
+  lostSocketConnectionDialog = new Dialog({
+    title: 'Socket connection failure',
+    message: 'We are unable to connect to the API websocket.',
+    buttons: [{
+      text: 'Retry',
+      fragment: 'retry',
+    }],
+    dismissOnOverlayClick: false,
+    dismissOnEscPress: false,
+    showCloseButton: false,
+  }).on('click-retry', () => {
+    lostSocketConnectionDialog.$('.js-retry').addClass('loading');
+    app.apiSocket.connect();
+
+    // timeout is slight of hand to make it look like its doing something
+    // in the case of instant failures
+    setTimeout(() => {
+      if (lostSocketConnectionDialog) {
+        lostSocketConnectionDialog.$('.js-retry').removeClass('loading');
+      }
+    }, 300);
+  })
+  .render()
+  .open();
+});
+
+// manage publishing sockets
+let publishingStatusMsg;
+let unpublishedContent = false;
+
+function setPublishingStatus(msg) {
+  if (!msg && typeof msg !== 'object') {
+    throw new Error('Please provide a msg as an object.');
+  }
+
+  msg.duration = 99999999999999;
+
+  if (!publishingStatusMsg) {
+    publishingStatusMsg = app.statusBar.pushMessage({
+      View: PublishingStatusMessage,
+      ...msg,
+    });
+    publishingStatusMsg.view
+      .on('click-retry', () => {
+        alert('Coming soon - need publish API');
+      });
+  } else {
+    publishingStatusMsg.update(msg);
+  }
+
+  return publishingStatusMsg;
+}
+
+app.apiSocket.on('message', (e) => {
+  if (e.jsonData) {
+    if (e.jsonData.status === 'publishing') {
+      setPublishingStatus({
+        msg: 'Publishing...',
+        type: 'message',
+      });
+
+      unpublishedContent = true;
+    } else if (e.jsonData.status === 'error publishing') {
+      setPublishingStatus({
+        msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+        type: 'warning',
+      });
+
+      unpublishedContent = true;
+    } else if (e.jsonData.status === 'publish complete') {
+      setPublishingStatus({
+        msg: 'Publishing complete.',
+        type: 'message',
+      });
+
+      unpublishedContent = false;
+
+      const completedStatusMsg = publishingStatusMsg;
+      publishingStatusMsg = null;
+
+      setTimeout(() => completedStatusMsg.remove(), 2000);
+    }
+  }
+});
+
+let unpublishedConfirm;
+
+ipcRenderer.on('close-attempt', (e) => {
+  if (!unpublishedContent) {
+    e.sender.send('close-confirmed');
+  } else {
+    if (unpublishedConfirm) return;
+
+    unpublishedConfirm = new Dialog({
+      title: app.polyglot.t('unpublishedConfirmTitle'),
+      message: app.polyglot.t('unpublishedConfirmBody'),
+      buttons: [{
+        text: app.polyglot.t('unpublishedConfirmYes'),
+        fragment: 'yes',
+      }, {
+        text: app.polyglot.t('unpublishedConfirmNo'),
+        fragment: 'no',
+      }],
+      dismissOnOverlayClick: false,
+      dismissOnEscPress: false,
+      showCloseButton: false,
+    }).on('click-yes', () => e.sender.send('close-confirmed'))
+    .on('click-no', () => {
+      unpublishedConfirm.close();
+      unpublishedConfirm = null;
+    })
+    .render()
+    .open();
+  }
 });
