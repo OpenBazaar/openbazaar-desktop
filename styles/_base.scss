@@ -152,7 +152,7 @@ ul, ol {
   // index containers and sections
   #pageNavContainer {
     position: relative;
-    z-index: 2;
+    z-index: 3;
   }
 
   #contentFrame {
@@ -235,7 +235,7 @@ ul, ol {
     right: 0;
     width: $chatClosed;
     height: calc(100% - 100px);
-    z-index: 1; // chat needs to be on top of modals
+    z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width);
 
     .chatOpen & {
