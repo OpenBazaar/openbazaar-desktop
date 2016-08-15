@@ -4,14 +4,14 @@ import _ from 'underscore';
 export default class extends Model {
   defaults() {
     return {
-      type: 'msg',
+      type: 'message',
       duration: 2500,
     };
   }
 
   getMessageTypes() {
     return [
-      'msg',
+      'message',
       'warning',
       'confirmed',
       'pending',

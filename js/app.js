@@ -7,4 +7,9 @@ export default {
     // we'll just hard code default server values.
     return `http://localhost:8080/${urlFrag}`;
   },
+
+  // temporary until we implement our full server connection flow
+  getSocketUrl() {
+    return 'ws://localhost:8080/ws';
+  },
 };

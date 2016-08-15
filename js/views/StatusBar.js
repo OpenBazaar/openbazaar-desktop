@@ -9,8 +9,6 @@ export default class extends BaseVw {
     this.collection = new StatusMessages();
     this.vwRemoveTimeouts = [];
     this.mdRemoveTimeouts = [];
-
-    this.listenTo(this.collection, 'add', this.onAddMessage);
     this.listenTo(this.collection, 'remove', this.onRemoveMessage);
   }
 
@@ -28,10 +26,21 @@ export default class extends BaseVw {
     this.vwRemoveTimeouts.push(timeout);
   }
 
-  onAddMessage(md, cl) {
-    const vw = new StatusMessageVw({ model: md });
+  /* Internal method used by pushMessage to add a new status message. Use pushMessage publicly. */
+  addMessage(md, View = StatusMessageVw) {
+    if (!md) {
+      throw new Error('Please provide a model.');
+    }
+
+    const vw = new View({ model: md });
+
+    if (!(vw instanceof StatusMessageVw)) {
+      throw new Error('The view must be an instance of the StatusMessageVw.');
+    }
+
     const duration = md.get('duration');
 
+    this.collection.add(md);
     this.msgViews = this.msgViews || [];
     this.$el.prepend(vw.render().el);
     this.registerChild(vw);
@@ -42,11 +51,13 @@ export default class extends BaseVw {
     }, 100);
 
     const timeout = setTimeout(() => {
-      cl.remove(md);
+      this.collection.remove(md);
       this.mdRemoveTimeouts.splice(timeout, 1);
     }, duration);
 
     this.mdRemoveTimeouts.push(timeout);
+
+    return vw;
   }
 
   /**
@@ -65,14 +76,13 @@ export default class extends BaseVw {
       throw new Error('Please provide a msg as a string or an object.');
     }
 
+    const msgObj = typeof msg === 'string' ? { msg } : msg;
     const md = new StatusMessageMd();
-    md.set(typeof msg === 'string' ? { msg } : msg, { validate: true });
+    md.set(msgObj, { validate: true });
 
     if (Object.keys(md.validationError || {}).length) {
       throw new Error(md.validationError[Object.keys(md.validationError)[0]]);
     }
-
-    this.collection.add(md);
 
     const update = (message) => {
       if (!message) {
@@ -93,6 +103,9 @@ export default class extends BaseVw {
     return {
       remove: () => this.collection.remove(md),
       update,
+      // Reluctantly exposing this in case you need to bind to the event handlers of
+      // a custom view. Outside of that, use at your own risk.
+      view: this.addMessage(md, msgObj.View),
     };
   }
 
