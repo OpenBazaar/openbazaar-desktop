@@ -46,7 +46,8 @@ export default class extends baseVw {
     } else {
       deferred.notify();
       save.done(() => deferred.resolve())
-        .fail((...args) => deferred.reject(...args));
+        .fail((...args) =>
+          deferred.reject(args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
     }
 
     // render so errrors are shown / cleared

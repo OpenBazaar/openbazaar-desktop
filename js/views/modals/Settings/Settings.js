@@ -70,17 +70,19 @@ export default class extends BaseModal {
 
   save() {
     let statusMsg;
+    let clientValidationSuccess = false;
 
     this.$save.addClass('loading');
     this.saving = true;
     this.$saveStatus.text('');
 
-    // Tab views should implement save to return a promise. On errors,
-    // if it's a server error, please return the args of the fail handler
-    // with the promise rejection. Please send a progress event when
+    // Tab views should implement save to return a promise. On a server error, please
+    // include any error message when rejecting. Please send a progress event when
     // client validation succeeds (deferred.notify()).
     this.currentTabView.save()
       .progress(() => {
+        clientValidationSuccess = true;
+
         statusMsg = app.statusBar.pushMessage({
           msg: app.polyglot.t('settings.statusSaving'),
           duration: 9999999999999999,
@@ -96,25 +98,24 @@ export default class extends BaseModal {
           }, 3000);
         }
       })
-      .fail((...args) => {
+      .fail((errorMsg = '') => {
         const $firstErr = this.currentTabView.$('.errorList:first');
-        const isXhr = args[0].abort; // xhr's implement the abort method
 
-        statusMsg.update({
-          msg: app.polyglot.t('settings.statusSaveFailed'),
-          type: 'warning',
-        });
+        if (statusMsg) {
+          statusMsg.update({
+            msg: app.polyglot.t('settings.statusSaveFailed'),
+            type: 'warning',
+          });
+        }
 
         // sroll to first error
         if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
 
-        // on server errors, we'll display a message
-        if (isXhr) {
-          const jqXhr = args[0];
-
+        // on server errors, we'll display a modal message
+        if (clientValidationSuccess) {
           new SimpleMessage({
             title: app.polyglot.t('settings.errors.saveError'),
-            message: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+            message: errorMsg,
           })
           .render()
           .open();
