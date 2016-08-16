@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../app';
 import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
@@ -27,7 +26,6 @@ export default class extends baseVw {
 
   save() {
     const formData = this.getFormData();
-    const deferred = $.Deferred();
 
     this.settings.set(formData);
 
@@ -36,20 +34,26 @@ export default class extends baseVw {
       type: 'PATCH',
     });
 
+    this.trigger('saving');
+
     if (!save) {
       // client side validation failed
-      deferred.reject();
+      this.trigger('saveComplete', true);
     } else {
-      deferred.notify();
-      save.done(() => deferred.resolve())
+      this.trigger('savingToServer');
+
+      save.done(() => this.trigger('saveComplete'))
         .fail((...args) =>
-          deferred.reject(args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
+          this.trigger('saveComplete', false, true,
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
     }
 
     // render so errrors are shown / cleared
     this.render();
 
-    return deferred.promise();
+    const $firstErr = this.$('.errorList:first');
+
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   render() {

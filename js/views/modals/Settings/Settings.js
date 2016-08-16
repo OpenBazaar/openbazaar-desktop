@@ -27,6 +27,8 @@ export default class extends BaseModal {
       Addresses,
     };
 
+    this.savesInProgress = 0;
+
     this.listenTo(app.router, 'will-route', () => {
       this.close(true);
       this.remove();
@@ -63,6 +65,11 @@ export default class extends BaseModal {
       if (!tabView) {
         tabView = this.createChild(this.tabViews[tabViewName]);
         this.tabViewCache[tabViewName] = tabView;
+
+        tabView.on('saving', (...args) => { this.onTabSaving(tabView, ...args); });
+        tabView.on('savingToServer', (...args) => { this.onTabSavingToServer(tabView, ...args); });
+        tabView.on('saveComplete', (...args) => { this.onTabSaveComplete(tabView, ...args); });
+
         tabView.render();
       }
 
@@ -82,70 +89,71 @@ export default class extends BaseModal {
   }
 
   save() {
-    let statusMsg;
-    let clientValidationSuccess = false;
+    this.currentTabView.save();
+  }
 
+  onTabSaving() {
+    this.savesInProgress++;
     this.$save.addClass('loading');
     this.saving = true;
     this.$saveStatus.text('');
+  }
 
-    statusMsg = app.statusBar.pushMessage({
+  onTabSavingToServer() {
+    const msg = {
       msg: app.polyglot.t('settings.statusSaving'),
-      duration: 9999999999999999,
-    });
+      type: 'message',
+    };
 
-    // Tab views should implement save to return a promise. On a server error, please
-    // include any error message when rejecting. Please send a progress event when
-    // client validation succeeds (deferred.notify()).
-    this.currentTabView.save()
-      .progress(() => {
-        clientValidationSuccess = true;
-
-        // statusMsg = app.statusBar.pushMessage({
-        //   msg: app.polyglot.t('settings.statusSaving'),
-        //   duration: 9999999999999999,
-        // });
-      })
-      .always(() => {
-        this.saving = false;
-        this.$save.removeClass('loading');
-
-        if (statusMsg) {
-          setTimeout(() => {
-            statusMsg.remove();
-          }, 3000);
-        }
-      })
-      .fail((errorMsg = '') => {
-        const $firstErr = this.currentTabView.$('.errorList:first');
-
-        if (statusMsg || true) {
-          statusMsg.update({
-            msg: app.polyglot.t('settings.statusSaveFailed'),
-            type: 'warning',
-          });
-        }
-
-        // sroll to first error
-        if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-
-        // on server errors, we'll display a modal message
-        if (clientValidationSuccess) {
-          new SimpleMessage({
-            title: app.polyglot.t('settings.errors.saveError'),
-            message: errorMsg,
-          })
-          .render()
-          .open();
-        }
-      })
-      .done(() => {
-        if (this.confirmNavAwayDialog && this.confirmNavAwayDialog.isOpen()) {
-          this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
-        }
-
-        statusMsg.update(app.polyglot.t('settings.statusSaveComplete'));
+    if (this.statusMessage) {
+      clearTimeout(this.statusMessageRemoveTimer);
+      this.statusMessage.update(msg);
+    } else {
+      this.statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
       });
+    }
+  }
+
+  onTabSaveComplete(tabView, clientFailed = false, serverFailed = false, errorMsg = '') {
+    this.savesInProgress--;
+
+    if (!this.savesInProgress) {
+      this.saving = false;
+      this.$save.removeClass('loading');
+
+      if (this.statusMessage) {
+        this.statusMessageRemoveTimer = setTimeout(() => {
+          this.statusMessage.remove();
+          this.statusMessage = null;
+        }, 3000);
+      }
+    }
+
+    if (serverFailed) {
+      new SimpleMessage({
+        title: app.polyglot.t('settings.errors.saveError'),
+        message: errorMsg,
+      })
+      .render()
+      .open();
+
+      if (this.statusMessage) {
+        this.statusMessage.update({
+          msg: app.polyglot.t('settings.statusSaveFailed'),
+          type: 'warning',
+        });
+      }
+    } else if (!clientFailed) {
+      if (this.confirmNavAwayDialog && this.confirmNavAwayDialog.isOpen()) {
+        this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
+      }
+
+      if (this.statusMessage) {
+        this.statusMessage.update(app.polyglot.t('settings.statusSaveComplete'));
+      }
+    }
   }
 
   close(skipWarning) {
