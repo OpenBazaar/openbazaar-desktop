@@ -88,6 +88,19 @@ export default class extends BaseModal {
     this.save();
   }
 
+  /*
+   * Defers to the save of each tab view. Tab views should communicate they're saving
+   * state by triggering the following events:
+   * saving - trigger when the save process is initiated.
+   * savingToServer - trigger if and when client side validation has passed and
+   *   the data is being sent to the server for saving.
+   * saveComplete - triggered when the save process completes. Please send the following
+   *   arguments to indicate the result of the save:
+   *     {boolean} [clientFailed=true] - indicates whether any client side validation failed
+   *     {boolean} [serverFailed=false] - indicates whether any server side validation failed
+   *     {string} [errorMsg=''] - string describing the error (at this time, this is only
+   *       relevant for server side errors)
+   */
   save() {
     this.currentTabView.save();
   }
