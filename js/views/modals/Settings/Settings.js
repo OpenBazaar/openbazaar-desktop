@@ -6,6 +6,7 @@ import Dialog from '../Dialog';
 import BaseModal from '../BaseModal';
 import SettingsGeneral from './SettingsGeneral';
 import SettingsPage from './SettingsPage';
+import SettingsAddresses from './SettingsAddresses';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -20,7 +21,11 @@ export default class extends BaseModal {
     this.options = opts;
 
     this.tabViewCache = {};
-    this.tabViews = { SettingsGeneral, SettingsPage };
+    this.tabViews = {
+      SettingsGeneral,
+      SettingsPage,
+      SettingsAddresses,
+    };
 
     this.listenTo(app.router, 'will-route', () => {
       this.close(true);
@@ -54,11 +59,19 @@ export default class extends BaseModal {
       this.$('.js-tab').removeClass('clrT active');
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
+
       if (!tabView) {
         tabView = this.createChild(this.tabViews[tabViewName]);
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }
+
+      if (tabView instanceof SettingsAddresses) {
+        this.$save.text(app.polyglot.t('settings.btnAddAddress'));
+      } else {
+        this.$save.text(app.polyglot.t('settings.btnSave'));
+      }
+
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
