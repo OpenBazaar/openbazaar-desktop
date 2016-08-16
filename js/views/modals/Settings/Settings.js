@@ -4,9 +4,9 @@ import loadTemplate from '../../../utils/loadTemplate';
 import SimpleMessage from '../SimpleMessage';
 import Dialog from '../Dialog';
 import BaseModal from '../BaseModal';
-import SettingsGeneral from './SettingsGeneral';
-import SettingsPage from './SettingsPage';
-import SettingsAddresses from './SettingsAddresses';
+import General from './General';
+import Page from './Page';
+import Addresses from './Addresses';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -22,9 +22,9 @@ export default class extends BaseModal {
 
     this.tabViewCache = {};
     this.tabViews = {
-      SettingsGeneral,
-      SettingsPage,
-      SettingsAddresses,
+      General,
+      Page,
+      Addresses,
     };
 
     this.listenTo(app.router, 'will-route', () => {
@@ -66,7 +66,7 @@ export default class extends BaseModal {
         tabView.render();
       }
 
-      if (tabView instanceof SettingsAddresses) {
+      if (tabView instanceof Addresses) {
         this.$save.text(app.polyglot.t('settings.btnAddAddress'));
       } else {
         this.$save.text(app.polyglot.t('settings.btnSave'));
@@ -89,6 +89,11 @@ export default class extends BaseModal {
     this.saving = true;
     this.$saveStatus.text('');
 
+    statusMsg = app.statusBar.pushMessage({
+      msg: app.polyglot.t('settings.statusSaving'),
+      duration: 9999999999999999,
+    });
+
     // Tab views should implement save to return a promise. On a server error, please
     // include any error message when rejecting. Please send a progress event when
     // client validation succeeds (deferred.notify()).
@@ -96,10 +101,10 @@ export default class extends BaseModal {
       .progress(() => {
         clientValidationSuccess = true;
 
-        statusMsg = app.statusBar.pushMessage({
-          msg: app.polyglot.t('settings.statusSaving'),
-          duration: 9999999999999999,
-        });
+        // statusMsg = app.statusBar.pushMessage({
+        //   msg: app.polyglot.t('settings.statusSaving'),
+        //   duration: 9999999999999999,
+        // });
       })
       .always(() => {
         this.saving = false;
@@ -114,7 +119,7 @@ export default class extends BaseModal {
       .fail((errorMsg = '') => {
         const $firstErr = this.currentTabView.$('.errorList:first');
 
-        if (statusMsg) {
+        if (statusMsg || true) {
           statusMsg.update({
             msg: app.polyglot.t('settings.statusSaveFailed'),
             type: 'warning',
@@ -187,7 +192,7 @@ export default class extends BaseModal {
       this.$save = this.$('.js-save');
       this._$saveStatus = null;
 
-      this.selectTab(this.$('.js-tab[data-tab="SettingsGeneral"]'));
+      this.selectTab(this.$('.js-tab[data-tab="General"]'));
     });
 
     return this;

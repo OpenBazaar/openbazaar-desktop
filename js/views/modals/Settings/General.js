@@ -53,7 +53,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/settings/settingsGeneral.html', (t) => {
+    loadTemplate('modals/settings/general.html', (t) => {
       this.$el.html(t({
         languageList: languages,
         countryList: this.countryList,

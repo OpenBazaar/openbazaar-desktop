@@ -1,0 +1,83 @@
+<form class="box border padKids padStack clrS clrBr js-addAddressForm">
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressName"><%= ob.polyT('settings.addresses.name') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
+      <input type="text" class="clrBr" name="name" for="settingsAddressName" value="<%= ob.Name %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressCompany"><%= ob.polyT('settings.addresses.company') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.company) print(ob.formErrorTmpl({ errors: ob.errors.company })) %>
+      <input type="text" class="clrBr" name="company" for="settingsAddressCompany" value="<%= ob.company %>" />
+    </div>
+  </div>    
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressLineOne"><%= ob.polyT('settings.addresses.street') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.addressLineOne) print(ob.formErrorTmpl({ errors: ob.errors.addressLineOne })) %>
+      <input type="text" class="clrBr" name="addressLineOne" for="settingsAddressLineOne" value="<%= ob.addressLineOne %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressLineTwo"><%= ob.polyT('settings.addresses.apt') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.addressLineTwo) print(ob.formErrorTmpl({ errors: ob.errors.addressLineTwo })) %>
+      <input type="text" class="clrBr" name="addressLineTwo" for="settingsAddressLineTwo" value="<%= ob.addressLineTwo %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressCity"><%= ob.polyT('settings.addresses.city') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.city) print(ob.formErrorTmpl({ errors: ob.errors.city })) %>
+      <input type="text" class="clrBr" name="city" for="settingsAddressCity" value="<%= ob.city %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressState"><%= ob.polyT('settings.addresses.state') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.state) print(ob.formErrorTmpl({ errors: ob.errors.state })) %>
+      <input type="text" class="clrBr" name="state" for="settingsAddressState" value="<%= ob.state %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressCountry"><%= ob.polyT('settings.addresses.country') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
+      <input type="text" class="clrBr" name="country" for="settingsAddressCountry" value="<%= ob.country %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressPostalCode"><%= ob.polyT('settings.addresses.postalCode') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.postalCode) print(ob.formErrorTmpl({ errors: ob.errors.postalCode })) %>
+      <input type="text" class="clrBr" name="postalCode" for="settingsAddressPostalCode" value="<%= ob.postalCode %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressNotes"><%= ob.polyT('settings.addresses.notes') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.addressNotes) print(ob.formErrorTmpl({ errors: ob.errors.addressNotes })) %>
+      <textarea rows="6" name="addressNotes" class="clrBr" for="settingsAddressNotes"><%= ob.addressNotes %></textarea>
+    </div>
+  </div>
+</form>

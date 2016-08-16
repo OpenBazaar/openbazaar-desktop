@@ -64,7 +64,7 @@ export default class extends baseVw {
       prevScrollPos = $scrollContainer[0].scrollTop;
     }
 
-    loadTemplate('modals/settings/settingsPage.html', (t) => {
+    loadTemplate('modals/settings/page.html', (t) => {
       this.$el.html(t({
         errors: this.profile.validationError || {},
         ...this.profile.toJSON(),

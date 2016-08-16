@@ -29,3 +29,25 @@ export function getGuid(handle, resolver) {
 
   return deferred.promise();
 }
+
+
+// https://www.quora.com/How-do-I-split-a-JSON-array-on-different-rows-in-angularjs/answer/Steve-Schafer-2?srid=G5Pv
+/*
+ * Splits an array into rows (an array of arrays)
+ */
+export function splitIntoRows(items, itemsPerRow) {
+  const rslt = [];
+
+  items.forEach((item, index) => {
+    const rowIndex = Math.floor(index / itemsPerRow);
+    const colIndex = index % itemsPerRow;
+
+    if (!rslt[rowIndex]) {
+      rslt[rowIndex] = [];
+    }
+
+    rslt[rowIndex][colIndex] = item;
+  });
+
+  return rslt;
+}

@@ -1,0 +1,21 @@
+<div class="addresses tx5 gutterV">
+  <% ob.addresses.forEach((addressRow, index) => { %>
+    <div class="flexRow gutterH">
+    <%
+       addressRow.forEach((address, index) => {
+    %>
+        <div class="addressBox border clrS clrBr">
+          <%= `${address.name}${address.company ? '<br />' : ''}` %>
+          <%= `${address.company}${address.addressLineOne ? '<br />' : ''}` %>
+          <%= `${address.addressLineOne}${address.addressLineTwo ? '<br />' : ''}` %>
+          <%= `${address.addressLineTwo}${address.city ? '<br />' : ''}` %>
+          <%= `${address.city}${address.state ? '<br />' : ''}` %>
+          <%= `${address.country}${address.postalCode ? '<br />' : ''}` %>
+          <%= `${address.postalCode}${address.addressNotes ? '<br />' : ''}` %>
+          <% if (address.adressNotes) print(`<p>${address.addressNotes}</p>`) %>
+          <a class="btn clrP clrBr js-delete">Delete</a>
+        </div>
+     <% }); %>
+    </div>
+  <% }) %>
+</div>

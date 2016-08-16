@@ -1,21 +1,22 @@
-import app from '../../../app';
+// import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super({
-      className: 'settingsAddresses',
+      className: 'settingsAddressesForm',
       ...options,
     });
 
-    this.settings = app.settings.clone();
-    this.settings.on('sync', () => app.settings.set(this.settings.toJSON()));
+    if (!this.model) {
+      throw new Error('Please provide a model.');
+    }
   }
 
-  // getFormData() {
-  //   return super.getFormData(this.$formFields);
-  // }
+  getFormData() {
+    return super.getFormData(this.$formFields);
+  }
 
   // save() {
   //   const formData = this.getFormData();
@@ -44,14 +45,14 @@ export default class extends baseVw {
   //   return deferred.promise();
   // }
 
-  render() {
-    loadTemplate('modals/settings/settingsAddresses.html', (t) => {
+  render(errors = {}) {
+    loadTemplate('modals/settings/addressesForm.html', (t) => {
       this.$el.html(t({
-        errors: {},
-        ...this.settings.toJSON(),
+        errors,
+        ...this.model.toJSON(),
       }));
 
-      // this.$formFields = this.$('select[name], input[name]');
+      this.$formFields = this.$('select[name], input[name]');
     });
 
     return this;

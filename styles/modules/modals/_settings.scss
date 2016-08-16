@@ -61,6 +61,7 @@
   
       .addressBox {
         padding: $padMd;
+        padding-bottom: $padMd + 35 + $padMd; // give bottom aligned button space
         line-height: 1.3;
         flex-basis: 50%;
         width: 50%;
@@ -69,7 +70,14 @@
         flex: 0 0 auto;        
 
         .btn {
-          margin-top: $padMd;
+          position: absolute;
+          bottom: $padMd;
+          left: $padMd;
+        }
+
+        .notes {
+          margin-top: $pad;
+          margin-bottom: 0;
         }
       }
     }

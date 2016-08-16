@@ -58,6 +58,7 @@
     "textColor": "Text Color",
     "addresses": {
       "name": "Name",
+      "company": "Company",
       "street": "Street",
       "apt": "Apt/Unit/Suite",
       "city": "City",
@@ -89,6 +90,10 @@
     "provideUsername": "Please provide a username.",
     "duplicateSocialAccount": "You already have a social account of this type."
   },
+  "shippingAddressModelErrors": {
+    "provideName": "Please provide a name.",
+    "provideCountry": "Please provide a country."
+  },  
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
