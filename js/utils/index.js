@@ -35,6 +35,7 @@ export function getGuid(handle, resolver) {
 /*
  * Splits an array into rows (an array of arrays)
  */
+ // TODO: !!!!! put check so items and itemsPerRow are required.
 export function splitIntoRows(items, itemsPerRow) {
   const rslt = [];
 

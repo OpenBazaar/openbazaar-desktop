@@ -12,7 +12,7 @@ export default class extends baseVw {
     });
 
     this.profile = app.profile.clone();
-    this.profile.on('sync', () => app.profile.set(this.profile.toJSON()));
+    this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
   }
 
   getFormData() {

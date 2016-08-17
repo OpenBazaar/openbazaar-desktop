@@ -24,7 +24,7 @@ export default class extends baseVw {
         ...this.model.toJSON(),
       }));
 
-      this.$formFields = this.$('select[name], input[name]');
+      this.$formFields = this.$('select[name], input[name], textarea[name]');
     });
 
     return this;

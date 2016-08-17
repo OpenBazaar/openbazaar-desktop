@@ -14,7 +14,7 @@ export default class extends baseVw {
     });
 
     this.settings = app.settings.clone();
-    this.settings.on('sync', () => app.settings.set(this.settings.toJSON()));
+    this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));

@@ -316,14 +316,14 @@ app.apiSocket.on('close', () => {
     dismissOnEscPress: false,
     showCloseButton: false,
   }).on('click-retry', () => {
-    lostSocketConnectionDialog.$('.js-retry').addClass('loading');
+    lostSocketConnectionDialog.$('.js-retry').addClass('processing');
     app.apiSocket.connect();
 
     // timeout is slight of hand to make it look like its doing something
     // in the case of instant failures
     setTimeout(() => {
       if (lostSocketConnectionDialog) {
-        lostSocketConnectionDialog.$('.js-retry').removeClass('loading');
+        lostSocketConnectionDialog.$('.js-retry').removeClass('processing');
       }
     }, 300);
   })

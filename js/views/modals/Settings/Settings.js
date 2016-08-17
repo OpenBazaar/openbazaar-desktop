@@ -66,9 +66,11 @@ export default class extends BaseModal {
         tabView = this.createChild(this.tabViews[tabViewName]);
         this.tabViewCache[tabViewName] = tabView;
 
-        tabView.on('saving', (...args) => { this.onTabSaving(tabView, ...args); });
-        tabView.on('savingToServer', (...args) => { this.onTabSavingToServer(tabView, ...args); });
-        tabView.on('saveComplete', (...args) => { this.onTabSaveComplete(tabView, ...args); });
+        this.listenTo(tabView, 'saving', (...args) => { this.onTabSaving(tabView, ...args); });
+        this.listenTo(tabView, 'savingToServer',
+          (...args) => { this.onTabSavingToServer(tabView, ...args); });
+        this.listenTo(tabView, 'saveComplete',
+          (...args) => { this.onTabSaveComplete(tabView, ...args); });
 
         tabView.render();
       }
@@ -107,7 +109,7 @@ export default class extends BaseModal {
 
   onTabSaving() {
     this.savesInProgress++;
-    this.$save.addClass('loading');
+    this.$save.addClass('processing');
     this.saving = true;
     this.$saveStatus.text('');
   }
@@ -134,7 +136,7 @@ export default class extends BaseModal {
 
     if (!this.savesInProgress) {
       this.saving = false;
-      this.$save.removeClass('loading');
+      this.$save.removeClass('processing');
 
       if (this.statusMessage) {
         this.statusMessageRemoveTimer = setTimeout(() => {

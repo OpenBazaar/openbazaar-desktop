@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
 import { splitIntoRows } from '../../../utils';
 import baseVw from '../../baseVw';
@@ -13,7 +14,17 @@ export default class extends baseVw {
       throw new Error('Please provide a collection.');
     }
 
-    this.collection.on('update', this.render.bind(this));
+    this.listenTo(this.collection, 'update', this.render);
+  }
+
+  events() {
+    return {
+      'click .js-delete': 'onClickDelete',
+    };
+  }
+
+  onClickDelete(e) {
+    this.trigger('deleteAddress', this.collection.at($(e.target).data('address-index')));
   }
 
   render(errors = {}) {

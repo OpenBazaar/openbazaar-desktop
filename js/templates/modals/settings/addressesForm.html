@@ -55,20 +55,20 @@
   </div>
   <div class="flexRow">
     <div class="col3">
-      <label for="settingsAddressCountry"><%= ob.polyT('settings.addresses.country') %></label>
-    </div>
-    <div class="col9">
-      <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
-      <input type="text" class="clrBr" name="country" for="settingsAddressCountry" value="<%= ob.country %>" />
-    </div>
-  </div>
-  <div class="flexRow">
-    <div class="col3">
       <label for="settingsAddressPostalCode"><%= ob.polyT('settings.addresses.postalCode') %></label>
     </div>
     <div class="col9">
       <% if (ob.errors.postalCode) print(ob.formErrorTmpl({ errors: ob.errors.postalCode })) %>
       <input type="text" class="clrBr" name="postalCode" for="settingsAddressPostalCode" value="<%= ob.postalCode %>" />
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="settingsAddressCountry"><%= ob.polyT('settings.addresses.country') %></label>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
+      <input type="text" class="clrBr" name="country" for="settingsAddressCountry" value="<%= ob.country %>" />
     </div>
   </div>
   <div class="flexRow">
