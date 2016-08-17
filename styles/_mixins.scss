@@ -22,3 +22,9 @@
   pointer-events: none;
   opacity: 0.2;
 }
+
+@mixin alignToChat {
+  @media (max-width: #{$pageWidth + $padLg + $padLg + $chatOpen + $chatOpen}) {
+    @content;
+  }
+}
