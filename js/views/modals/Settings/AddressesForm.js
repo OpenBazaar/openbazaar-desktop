@@ -1,4 +1,3 @@
-// import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -18,37 +17,10 @@ export default class extends baseVw {
     return super.getFormData(this.$formFields);
   }
 
-  // save() {
-  //   const formData = this.getFormData();
-  //   const deferred = $.Deferred();
-
-  //   this.settings.set(formData);
-
-  //   const save = this.settings.save(formData, {
-  //     attrs: formData,
-  //     type: 'PATCH',
-  //   });
-
-  //   if (!save) {
-  //     // client side validation failed
-  //     deferred.reject();
-  //   } else {
-  //     deferred.notify();
-  //     save.done(() => deferred.resolve())
-  //       .fail((...args) =>
-  //         deferred.reject(args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
-  //   }
-
-  //   // render so errrors are shown / cleared
-  //   this.render();
-
-  //   return deferred.promise();
-  // }
-
-  render(errors = {}) {
+  render() {
     loadTemplate('modals/settings/addressesForm.html', (t) => {
       this.$el.html(t({
-        errors,
+        errors: this.model.validationError || {},
         ...this.model.toJSON(),
       }));
 

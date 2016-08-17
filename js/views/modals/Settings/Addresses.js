@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -21,56 +20,54 @@ export default class extends baseVw {
       { collection: this.settings.get('shippingAddresses') });
   }
 
-  // getFormData() {
-  //   return super.getFormData(this.$formFields);
-  // }
-
-  // save() {
-  //   const formData = this.getFormData();
-  //   const deferred = $.Deferred();
-
-  //   this.settings.set(formData);
-
-  //   const save = this.settings.save(formData, {
-  //     attrs: formData,
-  //     type: 'PATCH',
-  //   });
-
-  //   if (!save) {
-  //     // client side validation failed
-  //     deferred.reject();
-  //   } else {
-  //     deferred.notify();
-  //     save.done(() => deferred.resolve())
-  //       .fail((...args) =>
-  //         deferred.reject(args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
-  //   }
-
-  //   // render so errrors are shown / cleared
-  //   this.render();
-
-  //   return deferred.promise();
-  // }
-
   // in this tab, save will attempt to add a new address based
   // on the data in the address form
   save() {
     const model = this.addressForm.model;
+    const formData = this.addressForm.getFormData();
 
-    model.set(this.addressForm.getFormData());
-    model.set(this.addressForm.getFormData(), { validate: true });
+    model.set(formData);
+    model.set(formData, { validate: true });
 
-    console.log('boo');
-    window.boo = model;
+    this.trigger('saving');
 
-    this.addressForm.render({
-      ...model.validationError,
-    });
+    if (model.validationError) {
+      // client side validation failed
+      this.trigger('saveComplete', true);
+    } else {
+      this.settings.get('shippingAddresses')
+        .push(model);
+
+      const save = this.settings.save(formData, {
+        attrs: formData,
+        type: 'PATCH',
+      });
+
+      if (!save) {
+        // this shouldn't happen - must be a developer error
+        this.trigger('saveComplete', true);
+        throw new Error('Client side validation failed: ' +
+          `${JSON.stringify(this.settings.validationError)}`);
+      } else {
+        this.trigger('savingToServer');
+
+        save.done(() => {
+          this.trigger('saveComplete');
+          this.addressForm.model = new ShippingAddress();
+          this.addressForm.render();
+        }).fail((...args) => {
+          this.settings.get('shippingAddresses').remove(model);
+          this.trigger('saveComplete', false, true,
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
+        });
+      }
+    }
+
+    // render so errors are shown / cleared
+    this.render();
 
     const $firstFormErr = this.$('.js-formContainer .errorList:first');
     if ($firstFormErr.length) $firstFormErr[0].scrollIntoViewIfNeeded();
-
-    return $.Deferred();
   }
 
   render() {
