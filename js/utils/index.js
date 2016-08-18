@@ -2,6 +2,7 @@
 // else to put here.
 
 import $ from 'jquery';
+import _ from 'underscore';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -35,8 +36,15 @@ export function getGuid(handle, resolver) {
 /*
  * Splits an array into rows (an array of arrays)
  */
- // TODO: !!!!! put check so items and itemsPerRow are required.
 export function splitIntoRows(items, itemsPerRow) {
+  if (!_.isArray(items)) {
+    throw new Error('Please provide an array of items');
+  }
+
+  if (!_.isNumber(itemsPerRow)) {
+    throw new Error('Please provide a number representing the items per row.');
+  }
+
   const rslt = [];
 
   items.forEach((item, index) => {
