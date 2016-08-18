@@ -41,7 +41,7 @@ curl -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases | jq -r "
 cd ..
 
 # Install wine
-apt-get install wine
+sudo apt-get install wine
 
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
