@@ -16,6 +16,7 @@
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
+    "customize": "Customize",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "searchStore": "Search %{storeName}",
@@ -28,6 +29,10 @@
     "website": "Website",
     "email": "Email",
     "noLocation": "No Location"
+  },
+  "userShort": {
+    "userLoading": "Loading...",
+    "userNotFound": "Information for this node was not loaded"
   },
   "settings": {
     "settingsLabel": "Settings",
@@ -76,6 +81,10 @@
     "provideValidURL": "Please provide a valid url.",
     "provideUsername": "Please provide a username.",
     "duplicateSocialAccount": "You already have a social account of this type."
+  },
+  "errors": {
+    "saveError": "There was an error saving your data.",
+    "badResult": "The server returned an error."
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

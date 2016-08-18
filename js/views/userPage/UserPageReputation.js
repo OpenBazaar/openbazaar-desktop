@@ -8,7 +8,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'userPageFollow';
+    return 'userPageReputation';
   }
 
   events() {
@@ -18,7 +18,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('userPage/userPageFollow.html', (t) => {
+    loadTemplate('userPage/userPageReputation.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
       }));

@@ -5,6 +5,9 @@ import app from '../../app';
 import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
+import Reputation from './UserPageReputation';
+import Dialog from '../modals/Dialog';
+import Follows from '../../collections/Follows';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -12,7 +15,12 @@ export default class extends BaseVw {
     this.options = options;
 
     this.tabViewCache = {};
-    this.tabViews = { Home, Store, Follow };
+    this.tabViews = { Home, Store, Follow, Reputation };
+
+    this.followers = new Follows({ url: app.getServerUrl(`ipns/${this.model.id}/followers`) })
+      .fetch();
+    this.following = new Follows({ url: app.getServerUrl(`ipns/${this.model.id}/following`) })
+      .fetch();
 
     this.followed = false; // TODO check to see if user is followed by the viewer
     this.followsYou = true; // TODO check to see if this user follows the viewer
@@ -38,21 +46,31 @@ export default class extends BaseVw {
   }
 
   followClick() {
-    // TODO add in follow functionality
-    if (this.followed) {
-      // unfollow this user
-      console.log('unfollow');
-      // do the following as the callback of the unfollow action
-      this.followed = false;
-      this.$followLbl.removeClass('hide');
-      this.$unfollowLbl.addClass('hide');
-    } else {
-      // do the following as the callback of the follow action
-      console.log('follow');
-      this.followed = true;
-      this.$followLbl.addClass('hide');
-      this.$unfollowLbl.removeClass('hide');
-    }
+    const type = this.followed ? 'unfollow' : 'follow';
+
+    app.followUnfollow(this.model.id, type)
+      .done(() => {
+        if (this.followed) {
+          this.followed = false;
+          this.$followLbl.removeClass('hide');
+          this.$unfollowLbl.addClass('hide');
+        } else {
+          this.followed = true;
+          this.$followLbl.addClass('hide');
+          this.$unfollowLbl.removeClass('hide');
+        }
+      })
+      .fail((data) => {
+        const followFailedDialog = new Dialog({   // eslint-disable-line no-unused-vars
+          title: app.polyglot.t('errors.badResult'),
+          message: data.responseJSON.reason,
+          dismissOnOverlayClick: true,
+          dismissOnEscPress: true,
+          showCloseButton: true,
+        })
+          .render()
+          .open();
+      });
   }
 
   messageClick() {

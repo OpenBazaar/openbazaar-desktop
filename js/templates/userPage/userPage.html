@@ -8,12 +8,14 @@
         <div>
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
           <div class="txt5b">
-            <span>Stars(x)</span>
-            <span>
-              <% if (ob.followsYou) { %>
-                <%= ob.polyT('userPage.followsYou') %>
-              <% } %>
-            </span>
+            <a class="js-tab" data-tab="Reputation">
+              <span>Stars(x)</span>
+              <span>
+                <% if (ob.followsYou) { %>
+                  <%= ob.polyT('userPage.followsYou') %>
+                <% } %>
+              </span>
+            </a>
           </div>
         </div>
         <div class="flexExpand">
@@ -41,13 +43,18 @@
     </div>
     <div>
       <div class="btnStrip floR clrSh2">
+        <% if(ob.ownPage) { %>
+        <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.customize') %></a>
+        <a class="btn clrP clrBr js-messageBtn">Example Button</a>
+        <% } else { %>
         <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.message') %></a>
         <a class="btn clrP clrBr js-followBtn">
           <span class="js-unfollowLbl <% if(!ob.followed) print('hide') %>"><%= ob.polyT('userPage.unfollow') %></span>
           <span class="js-followLbl <% if(ob.followed) print('hide') %>"><%= ob.polyT('userPage.follow') %></span>
         </a>
-        <a class="btn clrP clrBr hide js-moreableBtn">Example Btn</a>
-        <a class="btn clrP clrBr hide js-moreableBtn">Example Btn</a>
+        <% } %>
+        <a class="btn clrP clrBr hide js-moreableBtn">Example Button</a>
+        <a class="btn clrP clrBr hide js-moreableBtn">Example Button</a>
         <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
       </div>
     </div>
