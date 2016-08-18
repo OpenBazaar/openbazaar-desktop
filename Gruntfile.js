@@ -1,4 +1,4 @@
-import path from 'path';
+const path = require('path');
 module.exports = function (grunt) {
   // Project configuration.
   grunt.initConfig({

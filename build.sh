@@ -41,10 +41,11 @@ curl -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases | jq -r "
 cd ..
 
 # Install wine
-sudo rm /etc/apt/sources.list.d/google-chrome.list
-sudo dpkg --add-architecture i386
+sudo add-apt-repository -y ppa:ubuntu-wine/ppa
 sudo apt-get update
-sudo apt-get install -y wine1.6
+sudo apt-cache search wine
+sudo apt-cache search mono
+sudo apt-get install -y wine mono
 
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
