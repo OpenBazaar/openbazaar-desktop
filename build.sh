@@ -35,17 +35,25 @@ rm -rf dist/*
 mkdir temp/
 rm -rf temp/*
 
+
 # Retrieve Latest Server Binaries
 cd temp/
 curl -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
 cd ..
 
 # Install wine
-sudo add-apt-repository -y ppa:ubuntu-wine/ppa
+# sudo add-apt-repository -y ppa:ubuntu-wine/ppa
+# sudo apt-get update
+# sudo apt-get install -y wine1.6
+
+sudo rm /etc/apt/sources.list.d/google-chrome.list
+sudo dpkg --add-architecture i386
 sudo apt-get update
-sudo apt-cache search wine
-sudo apt-cache search mono
-sudo apt-get install -y wine mono
+sudo apt-get install -y wine1.6
+
+sudo add-apt-repository -y ppa:keks9n/monodevelop-latest
+apt-get update
+apt-get install -y mono-complete
 
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
@@ -58,8 +66,8 @@ command_exists wine
 
 echo 'Preparing to build installers'
 
-echo 'Installing Node modules...'
-npm install -g electron-packager
+echo 'Installing npm modules'
+npm install rcedit@0.5.0 electron-packager@7.1.0
 npm install grunt
 npm install --save-dev grunt-electron-installer
 npm install
