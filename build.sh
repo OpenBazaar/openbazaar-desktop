@@ -53,10 +53,11 @@ sudo apt-get install -y wine1.6
 
 wget http://download.mono-project.com/sources/mono/mono-4.2.4.4.tar.bz2
 tar -xjf mono-4.2.4.4.tar.bz2
-cd mono-4.2.4.4
+cd mono-4.2.4
 ./configure --prefix=/usr/local
 make
 sudo make install
+cd ..
 
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
