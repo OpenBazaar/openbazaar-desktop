@@ -1,9 +1,9 @@
 // import $ from 'jquery';
 // import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
+import loadTemplate from '../../utils/loadTemplate';
 // import SimpleMessage from '../SimpleMessage';
 // import Dialog from '../Dialog';
-import BaseModal from '../BaseModal';
+import BaseModal from './BaseModal';
 // import General from './General';
 
 export default class extends BaseModal {
