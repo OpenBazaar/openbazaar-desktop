@@ -1,6 +1,14 @@
+import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Price from './Price';
-import is from 'is_js';
+import Image from './Image';
+// import is from 'is_js';
+
+class ListingImages extends Collection {
+  model(attrs, options) {
+    return new Image(attrs, options);
+  }
+}
 
 export default class extends BaseModel {
   defaults() {
@@ -10,11 +18,10 @@ export default class extends BaseModel {
     };
   }
 
-  // required: slug, title, type, visibility, price
-
   nested() {
     return {
       price: Price,
+      images: ListingImages,
     };
   }
 
@@ -25,8 +32,8 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.email && is.not.email(attrs.email)) {
-      addError('email', 'who do you think your are?');
+    if (!attrs.title) {
+      addError('title', 'Please provide a title.');
     }
 
     if (Object.keys(errObj).length) return errObj;

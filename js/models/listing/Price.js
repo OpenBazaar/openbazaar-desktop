@@ -10,6 +10,7 @@ export default class extends BaseModel {
   }
 
   // required: amount > 0
+  // currencyCode is one of the valid codes from currency module
 
   validate(attrs) {
     const errObj = {};

@@ -1,5 +1,5 @@
 import BaseModel from '../BaseModel';
-import is from 'is_js';
+// import is from 'is_js';
 
 export default class extends BaseModel {
   defaults() {
@@ -16,6 +16,16 @@ export default class extends BaseModel {
 
   // listing type between 1 and 2 -- use string vals
   // contract type between 1 and 4 -- use string vals
+  // expiry less than 2038
+
+  get contractTypes() {
+    return [
+      'PHYSICAL_GOOD',
+      'DIGITAL_GOOD',
+      'SERVICE',
+      'CROWD_FUND',
+    ];
+  }
 
   validate(attrs) {
     const errObj = {};
@@ -24,8 +34,8 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.email && is.not.email(attrs.email)) {
-      addError('email', 'who do you think your are?');
+    if (this.contractTypes.indexOf(attrs.contractType) === -1) {
+      addError('contractType', 'The contract type is not on of the available types.');
     }
 
     if (Object.keys(errObj).length) return errObj;
