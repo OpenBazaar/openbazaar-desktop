@@ -51,9 +51,12 @@ sudo dpkg --add-architecture i386
 sudo apt-get update
 sudo apt-get install -y wine1.6
 
-sudo add-apt-repository -y ppa:keks9n/monodevelop-latest
-sudo apt-get update
-sudo apt-get install -y mono-complete
+wget http://download.mono-project.com/sources/mono/mono-4.2.4.4.tar.bz2
+tar -xjvf mono-4.2.4.4.tar.bz2
+cd mono-4.2.4.4
+./configure --prefix=/usr/local
+make
+sudo make install
 
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
