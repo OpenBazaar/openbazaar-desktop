@@ -35,25 +35,17 @@ rm -rf dist/*
 mkdir temp/
 rm -rf temp/*
 
-
-# Retrieve Latest Server Binaries
-cd temp/
-curl -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
-cd ..
-
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
  	echo "$1 is not installed." >&2
     fi
 }
 
-command_exists npm
-command_exists wine
 
 echo 'Preparing to build installers'
 
 echo 'Installing npm modules'
-npm install rcedit@0.5.0 electron-packager@7.1.0
+npm install -g electron-packager
 npm install grunt
 npm install --save-dev grunt-electron-installer
 npm install
@@ -65,9 +57,26 @@ case "$TRAVIS_OS_NAME" in
 
     ;;
 
-  "osx")
+  "osx")    
 
-    brew install mono wine 
+    brew update
+    brew install jq
+  curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
+  chmod +x /tmp/7za
+curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
+ /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
+    brew link --overwrite fontconfig freetype gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg graphicsmagick 
+
+brew install wine
+  
+
+  # Retrieveu Latest Server Binaries
+    cd temp/
+    curl -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
+cat release.txt
+
+cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
+    cd ..
 
     # WINDOWS 32
     echo 'Building Windows 32-bit Installer...'
@@ -82,3 +91,5 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
+    ;;
+esac
