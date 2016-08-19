@@ -11,8 +11,6 @@ export default class extends BaseModel {
     };
   }
 
-  // required: slug, title, type, visibility, price
-
   url() {
     // url is handled by sync, but backbone bombs if I don't have
     // something explicitly set
