@@ -52,8 +52,8 @@ sudo apt-get update
 sudo apt-get install -y wine1.6
 
 sudo add-apt-repository -y ppa:keks9n/monodevelop-latest
-apt-get update
-apt-get install -y mono-complete
+sudo apt-get update
+sudo apt-get install -y mono-complete
 
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
