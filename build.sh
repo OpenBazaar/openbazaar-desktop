@@ -41,24 +41,6 @@ cd temp/
 curl -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
 cd ..
 
-# Install wine
-# sudo add-apt-repository -y ppa:ubuntu-wine/ppa
-# sudo apt-get update
-# sudo apt-get install -y wine1.6
-
-sudo rm /etc/apt/sources.list.d/google-chrome.list
-sudo dpkg --add-architecture i386
-sudo apt-get update
-sudo apt-get install -y wine1.6
-
-wget http://download.mono-project.com/sources/mono/mono-4.2.4.4.tar.bz2
-tar -xjf mono-4.2.4.4.tar.bz2
-cd mono-4.2.4
-./configure --prefix=/usr/local
-make
-sudo make install
-cd ..
-
 command_exists () {
     if ! [ -x "$(command -v $1)" ]; then
  	echo "$1 is not installed." >&2
@@ -76,16 +58,27 @@ npm install grunt
 npm install --save-dev grunt-electron-installer
 npm install
 
-# WINDOWS 32
-echo 'Building Windows 32-bit Installer...'
-mkdir dist/win32
+case "$TRAVIS_OS_NAME" in
+  "linux")
 
-echo 'Running Electron Packager...'
-electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=windows/icon.ico --version=${ELECTRONVER} --overwrite
+    echo 'Linux builds'
 
-echo 'Copying server binary into application folder...'
-cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/
-mv dist/OpenBazaar-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/openbazaard.exe
+    ;;
 
-echo 'Building Installer...'
-grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
+  "osx")
+
+    brew install mono wine 
+
+    # WINDOWS 32
+    echo 'Building Windows 32-bit Installer...'
+    mkdir dist/win32
+
+    echo 'Running Electron Packager...'
+    electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=windows/icon.ico --version=${ELECTRONVER} --overwrite
+
+    echo 'Copying server binary into application folder...'
+    cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/
+    mv dist/OpenBazaar-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/openbazaard.exe
+
+    echo 'Building Installer...'
+    grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
