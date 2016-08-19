@@ -16,6 +16,8 @@ import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 
+import Listing from './models/listing/Listing';
+
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
@@ -422,3 +424,6 @@ ipcRenderer.on('close-attempt', (e) => {
     .open();
   }
 });
+
+console.log('Listing');
+window.Listing = Listing;
