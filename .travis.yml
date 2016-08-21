@@ -9,7 +9,7 @@ cache:
 node_js:
 - '5'
 before_script:
-- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .travis/cert.p12.enc -d -a -out ./travis/cert.p12
+- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .travis/cert.p12.enc -d -a -out ./.travis/cert.p12
 - "./.travis/add-key.sh"
 script:
 - npm run lint
