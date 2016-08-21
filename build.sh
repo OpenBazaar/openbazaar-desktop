@@ -25,22 +25,11 @@ PACKAGE_VERSION=$(cat package.json \
   | tr -d '[[:space:]]')
 echo "OpenBazaar Version: $PACKAGE_VERSION"
 
-# Check if user specified repository to pull code from
-clone_url_server="https://github.com/OpenBazaar/openbazaar-go.git"
-clone_url_client="https://github.com/OpenBazaar/OpenBazaar-Client.git"
-
 # Create temp/build dirs
 mkdir dist/
 rm -rf dist/*
 mkdir temp/
 rm -rf temp/*
-
-command_exists () {
-    if ! [ -x "$(command -v $1)" ]; then
- 	echo "$1 is not installed." >&2
-    fi
-}
-
 
 echo 'Preparing to build installers'
 
@@ -67,11 +56,9 @@ case "$TRAVIS_OS_NAME" in
     /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
 
     brew link --overwrite fontconfig freetype gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg graphicsmagick
-
     brew install wine
     brew link xz
     brew install mono
-
 
     # Retrieveu Latest Server Binaries
     cd temp/
@@ -86,7 +73,7 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/win32
 
     echo 'Running Electron Packager...'
-    electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=windows/icon.ico --version=${ELECTRONVER} --overwrite
+    electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/
@@ -94,5 +81,59 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
+
+    echo 'Sign the installer'
+
+
+    # WINDOWS 64
+    echo 'Building Windows 64-bit Installer...'
+    mkdir dist/win64
+
+    echo 'Running Electron Packager...'
+    electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
+
+    echo 'Copying server binary into application folder...'
+    cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-ia32/resources/
+    mv dist/OpenBazaar-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/openbazaard.exe
+
+    echo 'Building Installer...'
+    grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-x64 --outdir=dist/win64
+
+    echo 'Sign the installer'
+
+
+    # OSX
+    echo 'Building OSX Installer'
+    mkdir dist/osx
+
+    # Install the DMG packager
+    echo 'Installing electron-installer-dmg'
+    npm install -g electron-installer-dmg
+
+    # Sign openbazaar-go binary
+    echo 'Signing Go binary'
+    mv temp/openbazaar-go-darwin-10.6-amd64 dist/osx/openbazaard
+    codesign --force --sign "$SIGNING_IDENTITY" dist/osx/openbazaard
+
+    echo 'Running Electron Packager...'
+    electron-packager . OpenBazaar --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --protocol=ob --platform=darwin --arch=x64 --icon=imgs/osx-tent.icns --version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
+
+    echo 'Creating openbazaar-go folder in the OS X .app'
+    mkdir dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
+
+    echo 'Moving binary to correct folder'
+    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
+
+    echo 'Codesign the .app'
+    codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar.app
+    electron-installer-dmg dist/OpenBazaar-darwin-x64/OpenBazaar.app OpenBazaar-$PACKAGE_VERSION --icon ./imgs/osx-tent.icns --out=dist/OpenBazaar-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
+
+    echo 'Codesign the DMG and zip'
+    codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar-$PACKAGE_VERSION.dmg
+    cd dist/OpenBazaar-darwin-x64/
+    zip -r OpenBazaar-mac-$PACKAGE_VERSION.zip OpenBazaar.app
+
+
+
     ;;
 esac
