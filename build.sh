@@ -37,6 +37,7 @@ echo 'Installing npm modules'
 npm install -g electron-packager
 npm install grunt-cli -g
 npm install --save-dev grunt-electron-installer
+npm install --save-dev electron-installer-debian
 npm install
 
 case "$TRAVIS_OS_NAME" in
@@ -83,6 +84,7 @@ case "$TRAVIS_OS_NAME" in
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
 
     echo 'Sign the installer'
+    signcode -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar.exe
 
 
     # WINDOWS 64
@@ -93,13 +95,14 @@ case "$TRAVIS_OS_NAME" in
     electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
 
     echo 'Copying server binary into application folder...'
-    cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-ia32/resources/
+    cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/
     mv dist/OpenBazaar-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/openbazaard.exe
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-x64 --outdir=dist/win64
 
     echo 'Sign the installer'
+    signcode -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar.exe
 
 
     # OSX
