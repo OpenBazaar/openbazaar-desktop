@@ -1,13 +1,19 @@
 // import $ from 'jquery';
 // import app from '../../../app';
+import mixin from 'mixin';
 import loadTemplate from '../../utils/loadTemplate';
 // import SimpleMessage from '../SimpleMessage';
 // import Dialog from '../Dialog';
+import ScrollLinks from '../ScrollLinks';
 import BaseModal from './BaseModal';
 // import General from './General';
 
-export default class extends BaseModal {
+export default class extends mixin(ScrollLinks, BaseModal) {
   constructor(options = {}) {
+    if (!options.model) {
+      throw new Error('Please provide a model.');
+    }
+
     const opts = {
       removeOnClose: true,
       modelContentClass: 'modalContent clrP border clrBr',
@@ -17,11 +23,7 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-
-    this.tabViewCache = {};
-    this.tabViews = {
-      // General,
-    };
+    this.mode = options.mode || 'create';
 
     // this.listenTo(app.router, 'will-route', () => {
     //   this.close(true);
@@ -30,7 +32,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} editListing`;
+    return `${super.className()} editListing tabbedModal`;
   }
 
   // events() {
@@ -41,11 +43,18 @@ export default class extends BaseModal {
   //   };
   // }
 
-  saveClick() {
-    console.log('save request yo');
+  get mode() {
+    return this._mode;
   }
 
-  close() {
+  set mode(mode) {
+    if (['create', 'edit'].indexOf(mode) === -1) {
+      throw new Error('Please specify either a \'create\' or \'edit\' mode.');
+    }
+  }
+
+  saveClick() {
+    console.log('save request yo');
   }
 
   get $saveStatus() {

@@ -1,4 +1,4 @@
-import BaseVw from './baseVw';
+import BaseVw from './BaseVw';
 import loadTemplate from '../utils/loadTemplate';
 
 export default class extends BaseVw {

@@ -1,0 +1,54 @@
+.tabbedModal {
+
+  .modalContent {
+    width: 906px;
+    min-height: 640px;
+    padding: 0;
+
+    .tabColumn {
+      width: 194px;
+
+      .tab {
+        padding: $pad/2 $pad/2 $pad/2 $pad;
+
+        &.active {
+          // use the clrBr class for the border color
+          border-right: none;
+          border-top: none;
+          border-bottom: none;
+          border-left: solid 1px;
+        }
+      }
+    }
+
+    .tabContent {
+      height: 560px;
+    }
+
+    .tabControls {
+      position: absolute;
+      bottom: 0;
+      height: 80px;
+      padding: $pad * 1.5;
+      border-top-style: solid;
+      border-top-width: 1px;
+      align-items: center;
+      justify-content: flex-end;
+
+      .saveStatus {
+        flex-grow: 1;
+        font-size: $tx5;
+      }
+
+      & > .btn {
+        margin-right: $padSm;
+        font-size: $tx4;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+}

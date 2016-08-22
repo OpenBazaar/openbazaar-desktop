@@ -5,6 +5,8 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
+import { launchEditListingModal } from '../utils/modals';
+import Listing from '../models/listing/Listing';
 
 const remote = electron.remote;
 
@@ -20,6 +22,7 @@ export default class extends View {
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navCreateListing': 'navCreateListingClick',
       },
       navigable: false,
       ...options,
@@ -169,6 +172,13 @@ export default class extends View {
       this.settingsModal = new SettingsModal().render().open();
     }
     this.togglePopMenu();
+  }
+
+  navCreateListingClick() {
+    launchEditListingModal({
+      mode: 'create',
+      model: new Listing(),
+    });
   }
 
   render() {

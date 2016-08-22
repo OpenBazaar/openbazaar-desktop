@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
-import BaseVw from '../baseVw';
+import BaseVw from '../BaseVw';
 import { getHtml, getAppFrame } from '../../utils/selectors';
 import app from '../../app';
 

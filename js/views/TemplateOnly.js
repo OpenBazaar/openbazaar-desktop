@@ -3,7 +3,7 @@
 // any context passed into render as context for the template.
 //
 // If you need something beyond that, this view is probably not for you.
-import BaseVw from './baseVw';
+import BaseVw from './BaseVw';
 import loadTemplate from '../utils/loadTemplate';
 
 export default class extends BaseVw {

@@ -1,8 +1,8 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import BaseVw from '../../BaseVw';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',

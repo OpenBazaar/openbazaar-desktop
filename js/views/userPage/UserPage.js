@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import BaseVw from '../baseVw';
+import BaseVw from '../BaseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Home from './UserPageHome';

@@ -58,6 +58,7 @@
     "backbone.localstorage": "^1.1.16",
     "is_js": "^0.8.0",
     "jquery": "^3.0.0",
+    "mixin": "^0.2.0",
     "multihashes": "^0.2.2",
     "node-polyglot": "^2.0.0",
     "select2": "^4.0.3",

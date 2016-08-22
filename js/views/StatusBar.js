@@ -1,4 +1,4 @@
-import BaseVw from './baseVw';
+import BaseVw from './BaseVw';
 import StatusMessageMd from '../models/StatusMessage';
 import StatusMessages from '../collections/StatusMessages';
 import StatusMessageVw from './StatusMessage';

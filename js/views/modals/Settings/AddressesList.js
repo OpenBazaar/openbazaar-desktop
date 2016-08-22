@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
 import { splitIntoRows } from '../../../utils';
-import baseVw from '../../baseVw';
+import BaseVw from '../../BaseVw';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super({
       className: 'settingsAddressesList',
