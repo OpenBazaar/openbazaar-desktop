@@ -10,10 +10,8 @@
           <div class="txt5b">
             <a class="js-tab" data-tab="Reputation">
               <span>Stars(x)</span>
-              <span>
-                <% if (ob.followsYou) { %>
-                  <%= ob.polyT('userPage.followsYou') %>
-                <% } %>
+              <span class="js-followsYou <% if (!ob.followsYou) { %>hide<% } %>">
+                <%= ob.polyT('userPage.followsYou') %>
               </span>
             </a>
           </div>

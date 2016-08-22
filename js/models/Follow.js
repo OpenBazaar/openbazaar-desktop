@@ -1,10 +1,14 @@
-import BaseModel from './BaseModel';
+import { Model } from 'backbone';
 
-export default class extends BaseModel {
+export default class extends Model {
   defaults() {
     return {
       guid: '',
-      hash: '',
     };
   }
+
+  get idAttribute() {
+    return 'guid';
+  }
 }
+

@@ -6,7 +6,6 @@ import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
 import Reputation from './UserPageReputation';
-import Dialog from '../modals/Dialog';
 import Follows from '../../collections/Follows';
 
 export default class extends BaseVw {
@@ -17,13 +16,44 @@ export default class extends BaseVw {
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
-    this.followers = new Follows({ url: app.getServerUrl(`ipns/${this.model.id}/followers`) })
-      .fetch();
-    this.following = new Follows({ url: app.getServerUrl(`ipns/${this.model.id}/following`) })
-      .fetch();
+    app.ownFollowers = app.ownFollowers ||
+      new Follows(null, { url: app.getServerUrl('ob/followers') });
+    app.ownFollowers.fetch();
 
-    this.followed = false; // TODO check to see if user is followed by the viewer
-    this.followsYou = true; // TODO check to see if this user follows the viewer
+    app.ownFollowing = app.ownFollowing ||
+      new Follows(null, { url: app.getServerUrl('ob/following') });
+    app.ownFollowing.fetch();
+
+    this.followers = new Follows(null, {
+      url: app.getServerUrl(`ipns/${this.model.id}/followers`),
+    });
+    this.followers.fetch();
+
+    this.following = new Follows(null, {
+      url: app.getServerUrl(`ipns/${this.model.id}/following`),
+    });
+    this.following.fetch();
+
+    this.listenTo(app.ownFollowing, 'sync, update', () => {
+      this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
+      if (this.followed) {
+        this.$followLbl.addClass('hide');
+        this.$unfollowLbl.removeClass('hide');
+      } else {
+        this.$followLbl.removeClass('hide');
+        this.$unfollowLbl.addClass('hide');
+      }
+    });
+
+    this.listenTo(app.ownFollowers, 'sync, update', () => {
+      this.followsYou = app.ownFollowers.where({ guid: app.profile.id }).length > 0;
+      if (this.followsYou) {
+        this.$followsYou.removeClass('hide');
+      } else {
+        this.$followsYou.addClass('hide');
+      }
+    });
+
     this.ownPage = this.model.id === app.profile.id;
   }
 
@@ -48,29 +78,7 @@ export default class extends BaseVw {
   followClick() {
     const type = this.followed ? 'unfollow' : 'follow';
 
-    app.followUnfollow(this.model.id, type)
-      .done(() => {
-        if (this.followed) {
-          this.followed = false;
-          this.$followLbl.removeClass('hide');
-          this.$unfollowLbl.addClass('hide');
-        } else {
-          this.followed = true;
-          this.$followLbl.addClass('hide');
-          this.$unfollowLbl.removeClass('hide');
-        }
-      })
-      .fail((data) => {
-        const followFailedDialog = new Dialog({   // eslint-disable-line no-unused-vars
-          title: app.polyglot.t('errors.badResult'),
-          message: data.responseJSON.reason,
-          dismissOnOverlayClick: true,
-          dismissOnEscPress: true,
-          showCloseButton: true,
-        })
-          .render()
-          .open();
-      });
+    app.followUnfollow(this.model.id, type);
   }
 
   messageClick() {
@@ -125,6 +133,7 @@ export default class extends BaseVw {
       this.$tabTitle = this.$('.js-tabTitle');
       this.$followLbl = this.$('.js-followLbl');
       this.$unfollowLbl = this.$('.js-unfollowLbl');
+      this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
 
       this.selectTab(this.$('.js-tab[data-tab="Home"]'));

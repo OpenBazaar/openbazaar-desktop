@@ -2,6 +2,8 @@
 // shared state (e.g. router)
 
 import $ from 'jquery';
+import Follows from './collections/Follows';
+import Dialog from './views/modals/Dialog';
 
 export default {
   getServerUrl(urlFrag = '') {
@@ -20,11 +22,38 @@ export default {
       throw new Error('You must provide a valid guid.');
     }
 
+    if (guid === this.profile.id) {
+      throw new Error('You can not follow or unfollow your own guid');
+    }
+
+    // if ownFollowing doesn't exist yet, create it
+    this.ownFollowing = this.ownFollowing ||
+      new Follows(null, { url: this.getServerUrl('ob/following') });
+
     const call = $.ajax({
       type: 'POST',
       url: this.getServerUrl(`ob/${type}`),
       data: JSON.stringify({ id: guid }),
       dataType: 'json',
+    })
+    .done(() => {
+      // if the call succeeds, add or remove the guid from the collection
+      if (type === 'follow') {
+        this.ownFollowing.add({ guid });
+      } else {
+        this.ownFollowing.remove(guid);
+      }
+    })
+    .fail((data) => {
+      const followFailedDialog = new Dialog({   // eslint-disable-line no-unused-vars
+        title: this.polyglot.t('errors.badResult'),
+        message: data.responseJSON.reason,
+        dismissOnOverlayClick: true,
+        dismissOnEscPress: true,
+        showCloseButton: true,
+      })
+        .render()
+        .open();
     });
 
     return call;
