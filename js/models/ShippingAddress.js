@@ -11,7 +11,7 @@ export default class extends BaseModel {
       addressLineTwo: '',
       city: '',
       state: '',
-      country: '',
+      country: app.settings && app.settings.get('country') || 'UNITED_STATES',
       postalCode: '',
       addressNotes: '',
     };
