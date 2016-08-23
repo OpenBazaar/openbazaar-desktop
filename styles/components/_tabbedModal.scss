@@ -22,7 +22,10 @@
     }
 
     .tabContent {
-      height: 560px;
+      .tabFormWrapper {
+        height: 560px;
+        overflow-y: scroll;
+      }      
     }
 
     .tabControls {

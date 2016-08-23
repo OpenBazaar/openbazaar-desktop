@@ -1,14 +1,9 @@
 .settings {
 
   .modalContent {
-    .settingsTabContent {
-      height: 560px;
-    }
-
-    .settingsTabFormWrapper {
+    .tabFormWrapper {
       height: 510px;
-      overflow-y: scroll;
-
+      
       .settingsTabFormWrapperInner {
         position: absolute;
         width: 100%;

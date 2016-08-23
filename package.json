@@ -61,6 +61,7 @@
     "multihashes": "^0.2.2",
     "node-polyglot": "^2.0.0",
     "select2": "^4.0.3",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "velocity-animate": "^1.2.3"
   }
 }

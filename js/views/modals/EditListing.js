@@ -1,5 +1,8 @@
-// import $ from 'jquery';
+import $ from 'jquery';
+import '../../utils/velocity';
+import _ from 'underscore';
 // import app from '../../../app';
+import { isScrolledIntoView } from '../../utils/dom';
 import loadTemplate from '../../utils/loadTemplate';
 // import SimpleMessage from '../SimpleMessage';
 // import Dialog from '../Dialog';
@@ -52,22 +55,63 @@ export default class extends BaseModal {
   }
 
   onScrollLinkClick(e) {
-    console.log('sugar in the hen, what what.');
+    this.$scrollLinks.removeClass('active');
+    $(e.target).addClass('active');
+    this.$scrollContainer.off('scroll', this.throttledOnScrollContainer);
+
+    this.$scrollToSections.eq($(e.target).index())
+      .velocity('scroll', {
+        container: this.$scrollContainer,
+        complete: () => this.$scrollContainer.on('scroll', this.throttledOnScrollContainer),
+      });
   }
 
   saveClick() {
     console.log('save request yo');
   }
 
-  get $saveStatus() {
-    return this._$saveStatus || this.$('.saveStatus');
+  // get $saveStatus() {
+  //   return this._$saveStatus || this.$('.saveStatus');
+  // }
+
+  get $scrollToSections() {
+    return this._$scrollToSections || this.$('.js-scrollToSection');
+  }
+
+  get $scrollLinks() {
+    return this._$scrollLinks || this.$('.js-scrollLink');
+  }
+
+  // get $scrollContainer() {
+  //   return this._$scrollContainer || this.$('.js-scrollContainer');
+  // }
+
+  onScrollContainer() {
+    let index = 0;
+    let keepLooping = true;
+
+    while (keepLooping) {
+      if (isScrolledIntoView(this.$scrollToSections[index])) {
+        this.$scrollLinks.removeClass('active');
+        this.$scrollLinks.eq(index).addClass('active');
+        keepLooping = false;
+      } else {
+        index += 1;
+      }
+    }
   }
 
   render() {
     loadTemplate('modals/editListing.html', (t) => {
       this.$el.html(t(this.options));
-
       super.render();
+
+      this._$scrollLinks = null;
+      this._$scrollToSections = null;
+
+      this.$scrollContainer = this.$('.js-scrollContainer');
+      this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
+      this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
     });
 
     return this;

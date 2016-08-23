@@ -1,7 +1,7 @@
 import $ from 'jquery';
-import BaseVw from './BaseVw';
+import baseVw from './baseVw';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     if (!options.scrollLinksSelector || !(typeof options.scrollLinksSelector === 'string')) {
       throw new Error('Please provide a css selector targetting the scroll anchors.');

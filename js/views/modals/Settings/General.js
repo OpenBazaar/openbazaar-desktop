@@ -3,10 +3,10 @@ import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
 import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseVw from '../../BaseVw';
+import baseVw from '../../baseVw';
 import 'select2';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',

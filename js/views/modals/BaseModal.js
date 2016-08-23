@@ -1,11 +1,11 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
-import BaseVw from '../BaseVw';
+import baseVw from '../baseVw';
 import { getHtml, getAppFrame } from '../../utils/selectors';
 import app from '../../app';
 
-export default class BaseModal extends BaseVw {
+export default class BaseModal extends baseVw {
   constructor(options = {}) {
     const opts = {
       dismissOnOverlayClick: true,

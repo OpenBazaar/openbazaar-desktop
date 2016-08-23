@@ -1,8 +1,8 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseVw from '../../BaseVw';
+import baseVw from '../../baseVw';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',
@@ -62,7 +62,7 @@ export default class extends BaseVw {
 
   render(restoreScrollPos = true) {
     let prevScrollPos = 0;
-    const $scrollContainer = this.$('.settingsTabFormWrapper');
+    const $scrollContainer = this.$('.tabFormWrapper');
 
     if (restoreScrollPos && $scrollContainer.length) {
       prevScrollPos = $scrollContainer[0].scrollTop;
@@ -77,7 +77,7 @@ export default class extends BaseVw {
       this.$formFields = this.$('select[name], input[name], textarea[name]');
 
       if (restoreScrollPos) {
-        this.$('.settingsTabFormWrapper')[0].scrollTop = prevScrollPos;
+        this.$('.tabFormWrapper')[0].scrollTop = prevScrollPos;
       }
     });
 

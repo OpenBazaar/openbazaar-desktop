@@ -1,7 +1,7 @@
 import loadTemplate from '../utils/loadTemplate';
-import BaseVw from './BaseVw';
+import baseVw from './baseVw';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   className() {
     return 'statusMessageWrap';
   }

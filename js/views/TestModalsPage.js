@@ -1,10 +1,10 @@
-import BaseVw from './BaseVw';
+import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import TestModal from './modals/Test';
 import Dialog from './modals/Dialog';
 import SimpleMessageModal from './modals/SimpleMessage';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;

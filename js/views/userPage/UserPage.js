@@ -1,12 +1,12 @@
 import $ from 'jquery';
-import BaseVw from '../BaseVw';
+import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;

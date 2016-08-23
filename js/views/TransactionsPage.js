@@ -1,7 +1,7 @@
-import BaseVw from './BaseVw';
+import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;

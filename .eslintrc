@@ -21,6 +21,7 @@
       { 
         "props": false
       }
-    ]    
+    ],
+    "react/jsx-no-bind": 0,
   }  
 }

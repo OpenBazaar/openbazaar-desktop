@@ -1,11 +1,11 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseVw from '../../BaseVw';
+import baseVw from '../../baseVw';
 import AddressesForm from './AddressesForm';
 import AddressesList from './AddressesList';
 import ShippingAddress from '../../../models/ShippingAddress';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsAddresses',

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { View } from 'backbone';
 
-export default class BaseVw extends View {
+export default class baseVw extends View {
   constructor(options) {
     super(options);
     this._childViews = [];

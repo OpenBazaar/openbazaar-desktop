@@ -1,11 +1,11 @@
 import $ from 'jquery';
-import BaseVw from './BaseVw';
+import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import SimpleMessageModal from './modals/SimpleMessage';
 import SocialAccount from '../models/SocialAccount';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
