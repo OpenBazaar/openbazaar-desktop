@@ -13,9 +13,9 @@
           <%= `${address.company}${address.addressLineOne ? '<br />' : ''}` %>
           <%= `${address.addressLineOne}${address.addressLineTwo ? ` ${address.addressLineTwo}` : ''}${address.city ? '<br />' : ''}` %>
           <%= `${address.city}${address.state ? `, ${address.state}` : ''}${address.postalCode ? ` ${address.postalCode}` : ''}${address.country ? '<br />' : ''}` %>
-          <%= `${address.country}${address.addressNotes ? '<br />' : ''}` %>
+          <%= `${ob.polyT(`countries.${address.country}`)}${address.addressNotes ? '<br />' : ''}` %>
           <% if (address.addressNotes) print(`<p class="notes">${address.addressNotes}</p>`) %>
-          <a class="btn clrP clrBr js-delete btnDelete" data-address-index="<%= addressIndex %>">Delete</a>
+          <a class="btn clrP clrBr js-delete" data-address-index="<%= addressIndex %>">Delete</a>
         </div>
      <% }); %>
     </div>

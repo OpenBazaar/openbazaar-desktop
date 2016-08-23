@@ -96,7 +96,10 @@
     &.processing {
       .settingsTabFormWrapper.mouseMovedDuringSave .settingsTabFormWrapperInner {
         @include processingOverlay;
-        background-color: rgba(0,0,0,0.3);
+        
+        &::after {
+          background-color: rgba(0,0,0,0.3);
+        }
       }
     }
   }
