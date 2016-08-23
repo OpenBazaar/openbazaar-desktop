@@ -2,7 +2,6 @@
 // shared state (e.g. router)
 
 import $ from 'jquery';
-import Follows from './collections/Follows';
 import Dialog from './views/modals/Dialog';
 
 export default {
@@ -26,11 +25,7 @@ export default {
       throw new Error('You can not follow or unfollow your own guid');
     }
 
-    // if ownFollowing doesn't exist yet, create it
-    this.ownFollowing = this.ownFollowing ||
-      new Follows(null, { url: this.getServerUrl('ob/following') });
-
-    const call = $.ajax({
+    return $.ajax({
       type: 'POST',
       url: this.getServerUrl(`ob/${type}`),
       data: JSON.stringify({ id: guid }),
@@ -55,7 +50,5 @@ export default {
         .render()
         .open();
     });
-
-    return call;
   },
 };

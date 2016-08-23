@@ -15,6 +15,7 @@ import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
+import Follows from './collections/Follows';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -104,18 +105,26 @@ function fetchConfig() {
 const onboardingNeededDeferred = $.Deferred();
 let profileFetch;
 let settingsFetch;
+let ownFollowersFetch;
+let ownFollowingFetch;
 let onboardProfile = false;
 let onboardSettings = false;
 let profileFailed;
 let settingsFailed;
+let ownFollowersFailed;
+let ownFollowingFailed;
 
 function isOnboardingNeeded() {
   profileFetch = !profileFetch || profileFailed ?
     app.profile.fetch() : profileFetch;
   settingsFetch = !settingsFetch || settingsFailed ?
     app.settings.fetch() : settingsFetch;
+  ownFollowersFetch = !ownFollowersFetch || ownFollowersFailed ?
+    app.ownFollowers.fetch() : ownFollowersFetch;
+  ownFollowingFetch = !ownFollowingFetch || ownFollowingFailed ?
+    app.ownFollowing.fetch() : ownFollowingFetch;
 
-  $.whenAll(profileFetch, settingsFetch)
+  $.whenAll(profileFetch, settingsFetch, ownFollowersFetch, ownFollowingFetch)
     .progress((...args) => {
       const state = args[1];
 
@@ -136,6 +145,10 @@ function isOnboardingNeeded() {
           } else {
             settingsFailed = true;
           }
+        } else if (jqXhr === ownFollowersFetch) {
+          ownFollowersFailed = true;
+        } else if (jqXhr === ownFollowingFetch) {
+          ownFollowingFailed = true;
         }
       }
     })
@@ -143,9 +156,9 @@ function isOnboardingNeeded() {
       onboardingNeededDeferred.resolve(false);
     })
     .fail((jqXhr) => {
-      if (profileFailed || settingsFailed) {
+      if (profileFailed || settingsFailed || ownFollowersFailed || ownFollowingFailed) {
         const retryOnboardingModelsDialog = new Dialog({
-          title: 'Unable to get your profile and settings data.',
+          title: 'Unable to load your data.',
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
           buttons: [{
             text: 'Retry',
@@ -274,6 +287,9 @@ function start() {
     app.settings.on('change:language', (settingsMd, lang) => {
       app.localSettings.save('language', getValidLanguage(lang));
     });
+
+    app.ownFollowing = new Follows(null, { type: 'following' });
+    app.ownFollowers = new Follows(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;

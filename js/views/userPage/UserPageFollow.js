@@ -5,6 +5,8 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
+    this.followType = options.followType;
+    this.followArray = options.followArray;
   }
 
   className() {

@@ -16,23 +16,24 @@ export default class extends BaseVw {
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
-    app.ownFollowers = app.ownFollowers ||
-      new Follows(null, { url: app.getServerUrl('ob/followers') });
-    app.ownFollowers.fetch();
+    this.ownPage = this.model.id === app.profile.id;
 
-    app.ownFollowing = app.ownFollowing ||
-      new Follows(null, { url: app.getServerUrl('ob/following') });
-    app.ownFollowing.fetch();
+    if (!this.ownPage) {
+      this.followers = new Follows(null, {
+        type: 'followers',
+        guid: this.model.id,
+      });
+      this.followers.fetch();
 
-    this.followers = new Follows(null, {
-      url: app.getServerUrl(`ipns/${this.model.id}/followers`),
-    });
-    this.followers.fetch();
-
-    this.following = new Follows(null, {
-      url: app.getServerUrl(`ipns/${this.model.id}/following`),
-    });
-    this.following.fetch();
+      this.following = new Follows(null, {
+        type: 'following',
+        guid: this.model.id,
+      });
+      this.following.fetch();
+    } else {
+      this.followers = app.ownFollowers;
+      this.following = app.ownFollowing;
+    }
 
     this.listenTo(app.ownFollowing, 'sync, update', () => {
       this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
@@ -53,8 +54,6 @@ export default class extends BaseVw {
         this.$followsYou.addClass('hide');
       }
     });
-
-    this.ownPage = this.model.id === app.profile.id;
   }
 
   className() {
@@ -93,22 +92,22 @@ export default class extends BaseVw {
   selectTab(targ) {
     let tabViewName = targ.data('tab');
     let tabView = this.tabViewCache[tabViewName];
-    const tabViewType = tabViewName; // the original view name is passed in for the Follow view
+    const tabOptions = { ownPage: this.ownPage, model: this.model };
 
     this.$tabTitle.text(tabViewName);
 
-    if (tabViewName === 'Followers' || tabViewName === 'Following') tabViewName = 'Follow';
+    if (tabViewName === 'Followers' || tabViewName === 'Following') {
+      tabViewName = 'Follow';
+      tabOptions.followType = tabViewName;
+      tabOptions.followArray = this[tabViewName.toLowerCase()];
+    }
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
       this.$('.js-tab').removeClass('clrT active');
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[tabViewName], {
-          tabViewType,
-          ownPage: this.ownPage,
-          model: this.model,
-        });
+        tabView = this.createChild(this.tabViews[tabViewName], tabOptions);
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }

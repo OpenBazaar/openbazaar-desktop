@@ -1,11 +1,7 @@
 import { Model } from 'backbone';
 
 export default class extends Model {
-  defaults() {
-    return {
-      guid: '',
-    };
-  }
+  // this model will only be { guid: exampleguid }
 
   get idAttribute() {
     return 'guid';
