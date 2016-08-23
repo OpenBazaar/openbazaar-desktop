@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -13,7 +12,7 @@ export default class extends baseVw {
     });
 
     this.profile = app.profile.clone();
-    this.profile.on('sync', () => app.profile.set(this.profile.toJSON()));
+    this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
   }
 
   getFormData() {
@@ -34,25 +33,31 @@ export default class extends baseVw {
 
   save() {
     const formData = this.getFormData();
-    const deferred = $.Deferred();
 
     this.profile.set(formData);
 
     const save = this.profile.save();
 
+    this.trigger('saving');
+
     if (!save) {
       // client side validation failed
-      deferred.reject();
+      this.trigger('saveComplete', true);
     } else {
-      deferred.notify();
-      save.done(() => deferred.resolve())
-        .fail((...args) => deferred.reject(...args));
+      this.trigger('savingToServer');
+
+      save.done(() => this.trigger('saveComplete'))
+        .fail((...args) =>
+          this.trigger('saveComplete', false, true,
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
     }
 
     // render so errrors are shown / cleared
     this.render();
 
-    return deferred.promise();
+    const $firstErr = this.$('.errorList:first');
+
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   render(restoreScrollPos = true) {
@@ -63,7 +68,7 @@ export default class extends baseVw {
       prevScrollPos = $scrollContainer[0].scrollTop;
     }
 
-    loadTemplate('modals/settings/settingsPage.html', (t) => {
+    loadTemplate('modals/settings/page.html', (t) => {
       this.$el.html(t({
         errors: this.profile.validationError || {},
         ...this.profile.toJSON(),

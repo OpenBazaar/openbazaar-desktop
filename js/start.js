@@ -316,14 +316,14 @@ app.apiSocket.on('close', () => {
     dismissOnEscPress: false,
     showCloseButton: false,
   }).on('click-retry', () => {
-    lostSocketConnectionDialog.$('.js-retry').addClass('loading');
+    lostSocketConnectionDialog.$('.js-retry').addClass('processing');
     app.apiSocket.connect();
 
     // timeout is slight of hand to make it look like its doing something
     // in the case of instant failures
     setTimeout(() => {
       if (lostSocketConnectionDialog) {
-        lostSocketConnectionDialog.$('.js-retry').removeClass('loading');
+        lostSocketConnectionDialog.$('.js-retry').removeClass('processing');
       }
     }, 300);
   })
@@ -333,6 +333,7 @@ app.apiSocket.on('close', () => {
 
 // manage publishing sockets
 let publishingStatusMsg;
+let publishingStatusMsgRemoveTimer;
 let unpublishedContent = false;
 
 function setPublishingStatus(msg) {
@@ -352,6 +353,7 @@ function setPublishingStatus(msg) {
         alert('Coming soon - need publish API');
       });
   } else {
+    clearTimeout(publishingStatusMsgRemoveTimer);
     publishingStatusMsg.update(msg);
   }
 
@@ -382,10 +384,10 @@ app.apiSocket.on('message', (e) => {
 
       unpublishedContent = false;
 
-      const completedStatusMsg = publishingStatusMsg;
-      publishingStatusMsg = null;
-
-      setTimeout(() => completedStatusMsg.remove(), 2000);
+      publishingStatusMsgRemoveTimer = setTimeout(() => {
+        publishingStatusMsg.remove();
+        publishingStatusMsg = null;
+      }, 2000);
     }
   }
 });
