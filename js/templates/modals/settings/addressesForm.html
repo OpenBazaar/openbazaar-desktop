@@ -70,7 +70,7 @@
       <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
       <select id="settingsAddressCountry" name="country">
         <% ob.countryList.forEach((country) => { %>
-        <option value="<%= country.name %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
+        <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
         <% }); %>
       </select>      
     </div>
