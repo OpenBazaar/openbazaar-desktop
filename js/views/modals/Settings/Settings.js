@@ -4,8 +4,9 @@ import loadTemplate from '../../../utils/loadTemplate';
 import SimpleMessage from '../SimpleMessage';
 import Dialog from '../Dialog';
 import BaseModal from '../BaseModal';
-import SettingsGeneral from './SettingsGeneral';
-import SettingsPage from './SettingsPage';
+import General from './General';
+import Page from './Page';
+import Addresses from './Addresses';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -20,7 +21,13 @@ export default class extends BaseModal {
     this.options = opts;
 
     this.tabViewCache = {};
-    this.tabViews = { SettingsGeneral, SettingsPage };
+    this.tabViews = {
+      General,
+      Page,
+      Addresses,
+    };
+
+    this.savesInProgress = 0;
 
     this.listenTo(app.router, 'will-route', () => {
       this.close(true);
@@ -54,11 +61,26 @@ export default class extends BaseModal {
       this.$('.js-tab').removeClass('clrT active');
       targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
+
       if (!tabView) {
         tabView = this.createChild(this.tabViews[tabViewName]);
         this.tabViewCache[tabViewName] = tabView;
+
+        this.listenTo(tabView, 'saving', (...args) => { this.onTabSaving(tabView, ...args); });
+        this.listenTo(tabView, 'savingToServer',
+          (...args) => { this.onTabSavingToServer(tabView, ...args); });
+        this.listenTo(tabView, 'saveComplete',
+          (...args) => { this.onTabSaveComplete(tabView, ...args); });
+
         tabView.render();
       }
+
+      if (tabView instanceof Addresses) {
+        this.$save.text(app.polyglot.t('settings.btnAddAddress'));
+      } else {
+        this.$save.text(app.polyglot.t('settings.btnSave'));
+      }
+
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
@@ -68,65 +90,85 @@ export default class extends BaseModal {
     this.save();
   }
 
+  /*
+   * Defers to the save of each tab view. Tab views should communicate they're saving
+   * state by triggering the following events:
+   * saving - trigger when the save process is initiated.
+   * savingToServer - trigger if and when client side validation has passed and
+   *   the data is being sent to the server for saving.
+   * saveComplete - triggered when the save process completes. Please send the following
+   *   arguments to indicate the result of the save:
+   *     {boolean} [clientFailed=true] - indicates whether any client side validation failed
+   *     {boolean} [serverFailed=false] - indicates whether any server side validation failed
+   *     {string} [errorMsg=''] - string describing the error (at this time, this is only
+   *       relevant for server side errors)
+   */
   save() {
-    let statusMsg;
+    this.currentTabView.save();
+  }
 
-    this.$save.addClass('loading');
+  onTabSaving() {
+    this.savesInProgress++;
+    this.$save.addClass('processing');
     this.saving = true;
     this.$saveStatus.text('');
+  }
 
-    // Tab views should implement save to return a promise. On errors,
-    // if it's a server error, please return the args of the fail handler
-    // with the promise rejection. Please send a progress event when
-    // client validation succeeds (deferred.notify()).
-    this.currentTabView.save()
-      .progress(() => {
-        statusMsg = app.statusBar.pushMessage({
-          msg: app.polyglot.t('settings.statusSaving'),
-          duration: 9999999999999999,
-        });
+  onTabSavingToServer() {
+    const msg = {
+      msg: app.polyglot.t('settings.statusSaving'),
+      type: 'message',
+    };
+
+    if (this.statusMessage) {
+      clearTimeout(this.statusMessageRemoveTimer);
+      this.statusMessage.update(msg);
+    } else {
+      this.statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
+      });
+    }
+  }
+
+  onTabSaveComplete(tabView, clientFailed = false, serverFailed = false, errorMsg = '') {
+    this.savesInProgress--;
+
+    if (!this.savesInProgress) {
+      this.saving = false;
+      this.$save.removeClass('processing');
+
+      if (this.statusMessage) {
+        this.statusMessageRemoveTimer = setTimeout(() => {
+          this.statusMessage.remove();
+          this.statusMessage = null;
+        }, 3000);
+      }
+    }
+
+    if (serverFailed) {
+      new SimpleMessage({
+        title: app.polyglot.t('settings.errors.saveError'),
+        message: errorMsg,
       })
-      .always(() => {
-        this.saving = false;
-        this.$save.removeClass('loading');
+      .render()
+      .open();
 
-        if (statusMsg) {
-          setTimeout(() => {
-            statusMsg.remove();
-          }, 3000);
-        }
-      })
-      .fail((...args) => {
-        const $firstErr = this.currentTabView.$('.errorList:first');
-        const isXhr = args[0].abort; // xhr's implement the abort method
-
-        statusMsg.update({
+      if (this.statusMessage) {
+        this.statusMessage.update({
           msg: app.polyglot.t('settings.statusSaveFailed'),
           type: 'warning',
         });
+      }
+    } else if (!clientFailed) {
+      if (this.confirmNavAwayDialog && this.confirmNavAwayDialog.isOpen()) {
+        this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
+      }
 
-        // sroll to first error
-        if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-
-        // on server errors, we'll display a message
-        if (isXhr) {
-          const jqXhr = args[0];
-
-          new SimpleMessage({
-            title: app.polyglot.t('settings.errors.saveError'),
-            message: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          })
-          .render()
-          .open();
-        }
-      })
-      .done(() => {
-        if (this.confirmNavAwayDialog && this.confirmNavAwayDialog.isOpen()) {
-          this.$saveStatus.text(app.polyglot.t('settings.statusSafeToClose'));
-        }
-
-        statusMsg.update(app.polyglot.t('settings.statusSaveComplete'));
-      });
+      if (this.statusMessage) {
+        this.statusMessage.update(app.polyglot.t('settings.statusSaveComplete'));
+      }
+    }
   }
 
   close(skipWarning) {
@@ -173,7 +215,7 @@ export default class extends BaseModal {
       this.$save = this.$('.js-save');
       this._$saveStatus = null;
 
-      this.selectTab(this.$('.js-tab[data-tab="SettingsGeneral"]'));
+      this.selectTab(this.$('.js-tab[data-tab="General"]'));
     });
 
     return this;

@@ -2,8 +2,9 @@
   <div class="tabColumn clrS clrT2">
     <h1 class="h3 txUnb padMd"><%= ob.polyT('settings.settingsLabel') %></h1>
     <div class="boxList tx4 clrTx1Br">
-      <a class="js-tab tab clrT active" data-tab="SettingsGeneral"><%= ob.polyT('settings.generalTab') %></a>
-      <a class="js-tab tab" data-tab="SettingsPage"><%= ob.polyT('settings.pageTab') %></a>
+      <a class="js-tab tab clrT active" data-tab="General"><%= ob.polyT('settings.generalTab') %></a>
+      <a class="js-tab tab" data-tab="Page"><%= ob.polyT('settings.pageTab') %></a>
+      <a class="js-tab tab" data-tab="Addresses"><%= ob.polyT('settings.addressesTab') %></a>
     </div>
 
   </div>
@@ -11,7 +12,7 @@
     <div class="js-tabContent settingsTabContent"></div>
     <div class="settingsControls flex clrBr">
       <div class="saveStatus"></div>
-      <a class="btn clrP clrBr js-save"><b><%= ob.polyT('settings.btnSave') %></b></a>
+      <a class="btn clrP clrBr js-save flexNoShrink"><%= ob.polyT('settings.btnSave') %></a>
     </div>
 
   </div>
