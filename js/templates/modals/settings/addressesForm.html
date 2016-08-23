@@ -1,4 +1,4 @@
-<form class="box border padKids padStack clrS clrBr js-addAddressForm">
+<form class="box border padKids padStack clrP clrBr js-addAddressForm">
   <div class="flexRow">
     <div class="col3">
       <label for="settingsAddressName"><%= ob.polyT('settings.addresses.name') %></label>
@@ -16,7 +16,7 @@
       <% if (ob.errors.company) print(ob.formErrorTmpl({ errors: ob.errors.company })) %>
       <input type="text" class="clrBr" name="company" for="settingsAddressCompany" value="<%= ob.company %>" />
     </div>
-  </div>    
+  </div>
   <div class="flexRow">
     <div class="col3">
       <label for="settingsAddressLineOne"><%= ob.polyT('settings.addresses.street') %></label>

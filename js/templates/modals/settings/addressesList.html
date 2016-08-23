@@ -8,7 +8,7 @@
        addressRow.forEach((address, index) => {
         addressIndex += 1;
     %>
-        <div class="addressBox border clrS clrBr">
+        <div class="addressBox border clrP clrBr">
           <%= `${address.name}${address.company ? '<br />' : ''}` %>
           <%= `${address.company}${address.addressLineOne ? '<br />' : ''}` %>
           <%= `${address.addressLineOne}${address.addressLineTwo ? ` ${address.addressLineTwo}` : ''}${address.city ? '<br />' : ''}` %>
