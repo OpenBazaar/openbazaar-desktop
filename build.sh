@@ -37,13 +37,55 @@ echo 'Installing npm modules'
 npm install -g electron-packager --silent
 npm install grunt-cli -g --silent
 npm install --save-dev grunt-electron-installer --silent
-npm install --save-dev electron-installer-debian --silent
 npm install --silent
 
 case "$TRAVIS_OS_NAME" in
   "linux")
 
     echo 'Linux builds'
+
+    echo 'Building Linux 32-bit Installer....'
+
+    echo 'Making dist directories'
+    mkdir dist/linux32
+    mkdir dist/linux64
+
+    echo 'Install npm packages for Linux'
+    npm install --save-dev electron-installer-debian --silent
+
+    # Retrieve Latest Server Binaries
+    sudo apt-get install jq
+    cd temp/
+    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
+    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
+    cd ..
+
+    echo "Packaging Electron application"
+    electron-packager . openbazaar --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
+
+    echo 'Move go server to electron app'
+    cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/
+    mv dist/openbazaar-linux-ia32/resources/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaard
+
+    echo 'Create debian archive'
+    electron-installer-debian --config .travis/config_ia32.json
+
+    echo 'Sign the installer'
+
+    echo 'Building Linux 64-bit Installer....'
+
+    echo "Packaging Electron application"
+    electron-packager . openbazaar --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
+
+    echo 'Move go server to electron app'
+    cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/
+    mv dist/openbazaar-linux-x64/resources/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaard
+
+    echo 'Create debian archive'
+    electron-installer-debian --config .travis/config_amd64.json
+
+    echo 'Sign the installer'
+
 
     ;;
 
@@ -61,11 +103,9 @@ case "$TRAVIS_OS_NAME" in
     brew link xz
     brew install mono
 
-    # Retrieveu Latest Server Binaries
+    # Retrieve Latest Server Binaries
     cd temp/
     curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt
-
     cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
     cd ..
 
