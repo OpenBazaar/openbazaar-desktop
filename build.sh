@@ -138,5 +138,8 @@ case "$TRAVIS_OS_NAME" in
     cd dist/OpenBazaar-darwin-x64/
     zip -q -r OpenBazaar-mac-$PACKAGE_VERSION.zip OpenBazaar.app
 
+    cp OpenBazaar.app ../osx/
+    cp OpenBazaar-mac-$PACKAGE_VERSION.zip ../osx/
+
     ;;
 esac
