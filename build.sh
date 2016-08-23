@@ -34,11 +34,11 @@ rm -rf temp/*
 echo 'Preparing to build installers'
 
 echo 'Installing npm modules'
-npm install -g electron-packager
-npm install grunt-cli -g
-npm install --save-dev grunt-electron-installer
-npm install --save-dev electron-installer-debian
-npm install
+npm install -g electron-packager --silent
+npm install grunt-cli -g --silent
+npm install --save-dev grunt-electron-installer --silent
+npm install --save-dev electron-installer-debian --silent
+npm install --silent
 
 case "$TRAVIS_OS_NAME" in
   "linux")
@@ -136,7 +136,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Codesign the DMG and zip'
     codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar-$PACKAGE_VERSION.dmg
     cd dist/OpenBazaar-darwin-x64/
-    zip -r OpenBazaar-mac-$PACKAGE_VERSION.zip OpenBazaar.app
+    zip -q -r OpenBazaar-mac-$PACKAGE_VERSION.zip OpenBazaar.app
 
     ;;
 esac
