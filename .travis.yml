@@ -26,6 +26,7 @@ deploy:
     - "dist/win64/*"
     - "dist/osx/*"
   skip_cleanup: true
+  all_branches: true
   # on:
   #   tags: true
 env:
