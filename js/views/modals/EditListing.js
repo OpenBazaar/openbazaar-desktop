@@ -1,14 +1,13 @@
 // import $ from 'jquery';
 // import app from '../../../app';
-import mixin from 'mixin';
 import loadTemplate from '../../utils/loadTemplate';
 // import SimpleMessage from '../SimpleMessage';
 // import Dialog from '../Dialog';
-import ScrollLinks from '../ScrollLinks';
+// import ScrollLinks from '../ScrollLinks';
 import BaseModal from './BaseModal';
 // import General from './General';
 
-export default class extends mixin(ScrollLinks, BaseModal) {
+export default class extends BaseModal {
   constructor(options = {}) {
     if (!options.model) {
       throw new Error('Please provide a model.');
@@ -35,13 +34,12 @@ export default class extends mixin(ScrollLinks, BaseModal) {
     return `${super.className()} editListing tabbedModal`;
   }
 
-  // events() {
-  //   return {
-  //     'click .js-tab': 'tabClick',
-  //     'click .js-save': 'saveClick',
-  //     ...super.events(),
-  //   };
-  // }
+  events() {
+    return {
+      'click .js-scrollLink': 'onScrollLinkClick',
+      ...super.events(),
+    };
+  }
 
   get mode() {
     return this._mode;
@@ -51,6 +49,10 @@ export default class extends mixin(ScrollLinks, BaseModal) {
     if (['create', 'edit'].indexOf(mode) === -1) {
       throw new Error('Please specify either a \'create\' or \'edit\' mode.');
     }
+  }
+
+  onScrollLinkClick(e) {
+    console.log('sugar in the hen, what what.');
   }
 
   saveClick() {

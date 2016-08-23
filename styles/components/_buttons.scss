@@ -166,6 +166,6 @@
   z-index: 1; // don't unintentionally cover with other absolute elements
   top: 10px;
   right: $pad;
-  font-size: 1.6rem;
+  font-size: $tx1;
   cursor: pointer;
 }

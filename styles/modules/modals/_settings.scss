@@ -7,22 +7,31 @@
 
     .settingsTabFormWrapper {
       height: 510px;
+      overflow-y: scroll;
+
+      .settingsTabFormWrapperInner {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        right: 0;
+        left: 0;
+        box-sizing: border-box;
+      }
     }
   }
 
   .settingsAddresses {
     .addresses {
       margin-bottom: $marg;
-  
+
       .addressBox {
         padding: $padMd;
         padding-bottom: $padMd + 35 + $padMd; // give bottom aligned button space
         line-height: 1.3;
-        flex-basis: 50%;
         width: 50%;
         box-sizing: border-box;
         position: relative;
-        flex: 0 0 auto;        
+        flex: 0 0 auto;
 
         .btn {
           position: absolute;
@@ -38,9 +47,12 @@
     }
 
     &.processing {
-      .settingsTabFormWrapper.mouseMovedDuringSave {
+      .settingsTabFormWrapper.mouseMovedDuringSave .settingsTabFormWrapperInner {
         @include processingOverlay;
-        background-color: rgba(0,0,0,0.3);
+        
+        &::after {
+          background-color: rgba(0,0,0,0.3);
+        }
       }
     }
   }
