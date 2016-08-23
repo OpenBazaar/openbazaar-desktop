@@ -7,6 +7,8 @@
 
     .tabColumn {
       width: 194px;
+      border-right-width: 1px;
+      border-right-style: solid;
 
       .tab {
         padding: $pad/2 $pad/2 $pad/2 $pad;
