@@ -31,6 +31,7 @@ export default class extends baseVw {
     this.on('saveComplete', () => {
       this.saving = false;
       this.$el.removeClass('processing');
+      this.$tabWrap.removeClass('mouseMovedDuringSave');
     });
   }
 
