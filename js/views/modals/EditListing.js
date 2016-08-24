@@ -40,6 +40,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
+      'click .js-save': 'onSaveClick',
       ...super.events(),
     };
   }
@@ -66,8 +67,10 @@ export default class extends BaseModal {
       });
   }
 
-  saveClick() {
-    console.log('save request yo');
+  onSaveClick() {
+    // temporary approach
+    this.model.set(this.model.toJSON(), { validate: true });
+    this.render();
   }
 
   // get $saveStatus() {
@@ -103,7 +106,11 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/editListing.html', (t) => {
-      this.$el.html(t(this.options));
+      this.$el.html(t({
+        mode: this.mode,
+        errors: this.model.validationError || {},
+        ...this.model.toJSON(),
+      }));
       super.render();
 
       this._$scrollLinks = null;

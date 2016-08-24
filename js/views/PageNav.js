@@ -175,9 +175,15 @@ export default class extends View {
   }
 
   navCreateListingClick() {
+    const listingModel = new Listing();
+
+    console.log('boo');
+    window.boo = listingModel;
+
     launchEditListingModal({
       mode: 'create',
-      model: new Listing(),
+      // model: new Listing(),
+      model: listingModel,
     });
   }
 

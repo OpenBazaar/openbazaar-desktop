@@ -1,4 +1,5 @@
 import app from '../../app';
+import { Model } from 'backbone';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -24,8 +25,38 @@ export default class extends BaseModel {
     };
   }
 
+  mergeInNestedModelErrors(errObj = {}) {
+    let mergedErrs = errObj;
+
+    Object.keys(this.nested() || {})
+      .forEach((key) => {
+        if (this.get(key) instanceof Model) {
+          const nestedMd = this.get(key);
+          const nestedErrs = nestedMd.validate(nestedMd.toJSON()) || {};
+          const prefixedErrs = {};
+
+          Object.keys(nestedErrs).forEach((nestedErrKey) => {
+            prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
+          });
+
+          // mergedErrs = Object.assign({
+          //   ...mergedErrs,
+          //   ...Object.keys(nestedErrs).map((nestedErrKey) =>
+          //     ({ [`${key}.${nestedErrKey}`]: nestedErrs[nestedErrKey] })),
+          // });
+
+          mergedErrs = {
+            ...mergedErrs,
+            ...prefixedErrs,
+          };
+        }
+      });
+
+    return mergedErrs;
+  }
+
   validate(attrs) {
-    const errObj = {};
+    let errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
@@ -34,6 +65,8 @@ export default class extends BaseModel {
     if (attrs.email && is.not.email(attrs.email)) {
       addError('email', 'who do you think your are?');
     }
+
+    errObj = this.mergeInNestedModelErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 
@@ -55,8 +88,6 @@ export default class extends BaseModel {
     // }
 
     if (method === 'read') {
-      console.log('charlie');
-      window.charlie = model;
       options.url = app.getServerUrl(`ipfs/listings/${model.get('slug')}/`);
     } else {
       options.url = app.getServerUrl('ob/listing/');

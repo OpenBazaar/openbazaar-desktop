@@ -1,0 +1,71 @@
+form {
+  margin: 0;
+  font-size: $tx5;
+
+  label {
+    line-height: $formElementHeight;
+  }
+}
+
+input::-webkit-input-placeholder,
+select::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.35;
+}
+
+
+input,
+select,
+textarea {
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+}
+
+select {
+  width: 100%;
+}
+
+input[type="text"],
+textarea {
+  border-style: solid;
+  border-width: 1px;
+  //use the color class to set the border color
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 $pad;
+  line-height: 40px;
+}
+
+textarea {
+  background: none;
+  outline: none;
+  -webkit-appearance: none;
+  resize: none;
+  line-height: 1.2em;
+  padding: $pad;
+}
+
+.errorList {
+  color: $error;
+  
+  li {
+    i {
+      margin-right: 5px;
+    }
+
+    margin-bottom: 5px;
+  }
+
+  margin-bottom: 10px;
+}
+
+label {
+  &.error {
+    input, textarea {
+      border: 1px solid red;
+    }
+  }
+}
