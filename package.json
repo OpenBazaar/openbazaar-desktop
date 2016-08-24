@@ -22,14 +22,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rmisio/ob-client-v2.git"
+    "url": "git+https://github.com/OpenBazaar/ob-desktop.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rmisio/ob-client-v2/issues"
+    "url": "https://github.com/OpenBazaar/ob-desktop/issues"
   },
-  "homepage": "https://github.com/rmisio/ob-client-v2#readme",
+  "homepage": "https://github.com/OpenBazaar/ob-desktop#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.5",
