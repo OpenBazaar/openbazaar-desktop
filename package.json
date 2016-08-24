@@ -52,7 +52,6 @@
     "mocha": "^2.5.3",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
-    "npm-build-tools": "^2.2.5",
     "npm-run-all": "^2.2.0"
   },
   "pre-commit": [
