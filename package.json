@@ -28,7 +28,10 @@
   "homepage": "https://github.com/OpenBazaar/ob-desktop#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
-    "babel-eslint": "^6.0.5",    
+    "babel-eslint": "^6.0.5",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "babel-register": "^6.9.0",
     "browser-sync": "^2.13.0",
     "chai": "^3.5.0",
     "cross-env": "^1.0.8",
@@ -52,6 +55,8 @@
     "test"
   ],
   "dependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-1": "^6.5.0",
     "babel-register": "^6.9.0",
     "backbone": "^1.3.3",
     "backbone.localstorage": "^1.1.16",
