@@ -21,7 +21,7 @@ script:
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
-  fileglob: true
+  file_glob: true
   file:
     - "dist/win32/*.exe"
     - "dist/win32/*.nupkg"
