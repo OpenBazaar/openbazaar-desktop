@@ -1,5 +1,5 @@
 {
-  "name": "openbazaar-desktop",
+  "name": "client-v2",
   "version": "1.0.0",
   "description": "",
   "main": "bootstrapper.js",
@@ -14,18 +14,22 @@
     "sass:watch": "nodemon -e scss -x \"npm run sass:build\"",
     "index:watch": "nodemon -w index.html -x \"npm run process-index\"",
     "browsersync": "browser-sync start --no-ui -f 'js, .tmp/**/*.css, .tmp/**/*.html, !.tmp/test/**/*'",
-    "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js"
+    "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js",
+    "process-index:build": "babel-node ./bin/processIndexForBuild.js",
+    "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' dist",
+    "babel": "babel js --out-dir dist",
+    "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenBazaar/ob-desktop.git"
+    "url": "git+https://github.com/rmisio/ob-client-v2.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OpenBazaar/ob-desktop/issues"
+    "url": "https://github.com/rmisio/ob-client-v2/issues"
   },
-  "homepage": "https://github.com/OpenBazaar/ob-desktop#readme",
+  "homepage": "https://github.com/rmisio/ob-client-v2#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.5",
@@ -34,6 +38,7 @@
     "babel-register": "^6.9.0",
     "browser-sync": "^2.13.0",
     "chai": "^3.5.0",
+    "copyfiles": "^1.0.0",
     "cross-env": "^1.0.8",
     "electron-prebuilt": "^1.2.5",
     "eslint": "^2.13.1",
@@ -42,12 +47,12 @@
     "eslint-plugin-import": "^1.10.0",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
-    "grunt-electron-installer": "^2.1.0",
     "ionicons": "^2.0.1",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
+    "npm-build-tools": "^2.2.5",
     "npm-run-all": "^2.2.0"
   },
   "pre-commit": [
@@ -62,6 +67,7 @@
     "multihashes": "^0.2.2",
     "node-polyglot": "^2.0.0",
     "select2": "^4.0.3",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "velocity-animate": "^1.2.3"
   }
 }
