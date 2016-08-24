@@ -10,7 +10,7 @@
   .modalContent {
     padding: $padHg;
     min-width: 300px;
-    max-height: 500px;
+    height: calc(100% - 100px);
     overflow: auto;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
