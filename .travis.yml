@@ -1,7 +1,7 @@
 language: node_js
 sudo: true
 os:
-- linux 
+- linux
 - osx
 cache:
   directories:
@@ -13,7 +13,7 @@ before_script:
 - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .travis/cert.p12.enc -d -a -out ./.travis/cert.p12
 - openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.cert.spc
 - openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.pvk
--  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh" ; fi 
+-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh" ; fi
 script:
 - npm run lint
 - npm run test
@@ -23,11 +23,14 @@ deploy:
   api_key: "$GITHUB_TOKEN"
   fileglob: true
   file:
-    - "dist/win32/*"
-    - "dist/win64/*"
-    - "dist/osx/*"
-    - "dist/linux32/*"
-    - "dist/linux64/*"
+    - "dist/win32/*.exe"
+    - "dist/win32/*.nupkg"
+    - "dist/win64/*.exe"
+    - "dist/win64/*.nupkg"
+    - "dist/osx/*.dmg"
+    - "dist/osx/*.zip"
+    - "dist/linux32/*.deb"
+    - "dist/linux64/*.deb"
   skip_cleanup: true
   all_branches: true
   on:
