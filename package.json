@@ -17,7 +17,7 @@
     "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js",
     "process-index:build": "babel-node ./bin/processIndexForBuild.js",
     "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' dist",
-    "babel": "babel js",
+    "babel": "babel js --out-dir .",
     "build": "npm-run-all sass:build --parallel babel process-index:build"
   },
   "repository": {
