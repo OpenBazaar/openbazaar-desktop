@@ -17,11 +17,14 @@ textarea::-webkit-input-placeholder {
 
 input,
 select,
-textarea {
+textarea,
+.select2-container--focus .select2-selection__rendered,
+.select2-container--focus .select2-selection {
   border: none;
   outline: none;
   background: none;
   color: inherit;
+  border-radius: 3px;
 }
 
 select {
@@ -29,7 +32,8 @@ select {
 }
 
 input[type="text"],
-textarea {
+textarea,
+.select2-container--focus .select2-selection__rendered {
   border-style: solid;
   border-width: 1px;
   //use the color class to set the border color
@@ -66,6 +70,33 @@ label {
   &.error {
     input, textarea {
       border: 1px solid red;
+    }
+  }
+
+  &.required::after {
+    content: '*';
+    position: absolute;
+    font-size: 130%;    
+  }
+}
+
+// By default, using width values appropriate for currency codes.
+// Overwrite in your own implementation if you need to deviate.
+.inputSelect {
+  position: relative;
+  
+  input {
+    padding-right: 75px;
+  }
+
+  .select2-container {
+    width: 70px !important;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+
+    .select2-selection {
+      border-width: 0;
     }
   }
 }

@@ -127,7 +127,17 @@ $excludedLinks: ".btn, .iconBtn, .listItem";
 }
 
 label.required::after {
-  content: '*';
-  display: inline;
   color: $emphasis2;
+}
+
+input,
+select,
+textarea {
+  &:focus {
+    border-color: rgb(0, 0, 0);
+  }
+}
+
+.select2-container--focus .select2-selection__rendered {
+  border-color: rgb(0, 0, 0);
 }

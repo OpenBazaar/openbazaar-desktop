@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { setDeepValue } from '../utils';
 import { View } from 'backbone';
 
 export default class baseVw extends View {
@@ -42,6 +43,7 @@ export default class baseVw extends View {
     $formFields.each((index, field) => {
       const $field = $(field);
       const varType = $field.data('var-type');
+
       let val = $field.val();
 
       if (field.type === 'radio' && !field.checked) return;
@@ -54,7 +56,19 @@ export default class baseVw extends View {
         }
       }
 
-      data[$field.attr('name')] = val;
+      const name = $field.attr('name');
+
+      if (name.indexOf('[') !== -1) {
+        // handle nested collection
+        // for now not handling nested collection, please
+        // manage manually
+        // handle nested model
+      } else if (name.indexOf('.') !== -1) {
+        // handle nested model
+        setDeepValue(data, name, val);
+      } else {
+        data[name] = val;
+      }
     });
 
     return data;

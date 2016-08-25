@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import '../../utils/velocity';
+import 'select2';
 import _ from 'underscore';
 // import app from '../../../app';
 import { isScrolledIntoView } from '../../utils/dom';
@@ -68,6 +69,11 @@ export default class extends BaseModal {
   }
 
   onSaveClick() {
+    const moo = this.getFormData(this.$formFields);
+
+    console.log('moo');
+    window.moo = moo;
+
     // temporary approach
     this.model.set(this.model.toJSON(), { validate: true });
     this.render();
@@ -89,6 +95,10 @@ export default class extends BaseModal {
   //   return this._$scrollContainer || this.$('.js-scrollContainer');
   // }
 
+  get $formFields() {
+    return this._$formFields || this.$('select[name], input[name], textarea[name]');
+  }
+
   onScrollContainer() {
     let index = 0;
     let keepLooping = true;
@@ -108,13 +118,22 @@ export default class extends BaseModal {
     loadTemplate('modals/editListing.html', (t) => {
       this.$el.html(t({
         mode: this.mode,
+        contractTypes: this.model.get('metadata').contractTypes,
         errors: this.model.validationError || {},
         ...this.model.toJSON(),
       }));
+
       super.render();
+
+      this.$('#editListingType, #editListingVisibility').select2({
+        minimumResultsForSearch: Infinity,
+      });
+
+      this.$('#editListingCurrency').select2();
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;
+      this._$formFields = null;
 
       this.$scrollContainer = this.$('.js-scrollContainer');
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);

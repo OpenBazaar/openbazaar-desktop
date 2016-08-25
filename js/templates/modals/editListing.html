@@ -1,7 +1,7 @@
 <div class="flexRow posA">
-  <div class="tabColumn clrS clrT2">
+  <div class="tabColumn clrB clrT2">
     <h1 class="h3 txUnb padMd">Create Listing</h1>
-    <div class="boxList tx4 clrTx1Br">
+    <div class="boxList tx3 clrTx1Br">
       <a class="js-scrollLink tab clrT active">General</a>
       <a class="js-scrollLink tab">Photos</a>
       <a class="js-scrollLink tab">Attachments</a>
@@ -18,18 +18,52 @@
   <div class="flexExpand posR" style="width: 685px">
     <div class="tabContent">
       <div class="scrollBox tabFormWrapper clrS js-scrollContainer">
-        <form class="box border clrP clrBr padKids padStack">
+        <form class="box padKids padStack tx3">
           <div class="flexRow">
-            <div class="col3">
+            <div class="col12">
               <label for="editListingTitle" class="required">Title</label>
-            </div>
-            <div class="col9">
-              <% console.log('sugar'); window.sugar = ob %>
               <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
-              <input type="text" class="clrBr" name="name" id="editListingTitle" value="<%= ob.item.title %>">
+              <input type="text" class="clrBr clrP" name="item.title" id="editListingTitle" value="<%= ob.item.title %>">
             </div>
           </div>
-        </form>
+          <div class="flexRow gutterH">
+            <div class="col6">
+              <label for="editListingType" class="required">Type</label>
+              <% if (ob.errors['metadata.type']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.type'] })) %>
+              <select id="editListingType" name="metadata.type" class="clrBr clrP">
+                <% ob.contractTypes.forEach((contractType) => { %>
+                <option value="<%= contractType.code %>" <% if (contractType.code == ob.metadata.type) print('selected') %>><%= contractType.name %></option>
+                <% }); %>
+              </select>              
+            </div>
+            <div class="col6">
+              <label for="editListingVisibility" class="required">Visibility</label>
+              <select id="editListingVisibility" name="metadata.visibility" class="clrBr clrP">
+                <option value="hidden">Hidden (doesn't display in store)</option>
+              </select>              
+            </div>            
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col6">
+              <label for="editListingPrice" class="required">Price</label>
+                <% if (ob.errors['metadata.type']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.type'] })) %>
+              <div class="inputSelect">
+                <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>">
+                <select id="editListingCurrency" class="clrBr clrP nestInputRight">
+                  <option value="USD">USD</option>
+                  <option value="BTC">BTC</option>
+                  <option value="ROB">ROB</option>
+                </select>                
+              </div>
+            </div>
+            <div class="col6">
+              <label for="editListingVisibility" class="required">Visibility</label>
+              <select id="editListingVisibility" name="metadata.visibility" class="clrBr clrP">
+                <option value="hidden">Hidden (doesn't display in store)</option>
+              </select>              
+            </div>            
+          </div>          
+        </form>        
       </div>
     </div>
     <div class="tabControls flex clrBr">

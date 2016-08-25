@@ -39,12 +39,6 @@ export default class extends BaseModel {
             prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
           });
 
-          // mergedErrs = Object.assign({
-          //   ...mergedErrs,
-          //   ...Object.keys(nestedErrs).map((nestedErrKey) =>
-          //     ({ [`${key}.${nestedErrKey}`]: nestedErrs[nestedErrKey] })),
-          // });
-
           mergedErrs = {
             ...mergedErrs,
             ...prefixedErrs,
