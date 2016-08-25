@@ -13,8 +13,7 @@ try {
   const content = String(indexHtml)
     .replace('<!-- BROWSER_SYNC_PLACEHOLDER (DO NOT REMOVE OR ALTER!) -->', '')
     .replace('// install babel hooks in the renderer process', '')
-    .replace('require(\'babel-register\');', '')
-    .replace('require(\'../js/start\')', 'require(\'../dist/start\')');
+    .replace('require(\'babel-register\');', '');
   fs.writeFileSync(indexOut, content);
 } catch (e) {
   throw new Error(`Unable to write to ${indexOut}. ${e}`);
