@@ -1,3 +1,5 @@
 node_modules/
 js/lib/
 dist
+prod
+mainBuilt.js
