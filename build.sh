@@ -38,6 +38,8 @@ npm install -g electron-packager --silent
 npm install grunt-cli -g --silent
 npm install --save-dev grunt-electron-installer --silent
 npm install --silent
+npm install --save-dev babel-preset-es2015
+npm i --save-dev babel-cli
 
 case "$TRAVIS_OS_NAME" in
   "linux")
