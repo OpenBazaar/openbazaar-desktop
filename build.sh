@@ -67,6 +67,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Move go server to electron app'
     cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/
     mv dist/openbazaar-linux-ia32/resources/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaard
+    chmod +x dist/openbazaar-linux-ia32/resources/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_ia32.json
@@ -81,6 +82,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Move go server to electron app'
     cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/
     mv dist/openbazaar-linux-x64/resources/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaard
+    chmod +x dist/openbazaar-linux-x64/resources/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_amd64.json
@@ -168,7 +170,8 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
 
     echo 'Moving binary to correct folder'
-    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
+    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
+    chmod dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
 
     echo 'Codesign the .app'
     codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar.app
