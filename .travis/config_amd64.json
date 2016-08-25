@@ -1,8 +1,9 @@
 {
   "productName": "OpenBazaar",
   "name": "openbazaar",
+  "description": "Decentralized Peer to Peer Marketplace for Bitcoin",
   "version": "2.0.0",
-  "bin": "openbazaar",
+  "bin": "openbazaar2",
   "maintainer": "OpenBazaar <project@openbazaar.org>",
   "arch": "amd64",
   "src": "dist/openbazaar-linux-x64/",
