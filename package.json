@@ -16,9 +16,9 @@
     "browsersync": "browser-sync start --no-ui -f 'js, .tmp/**/*.css, .tmp/**/*.html, !.tmp/test/**/*'",
     "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js",
     "process-index:build": "babel-node ./bin/processIndexForBuild.js",
-    "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' dist",
-    "babel": "babel js --out-dir js; babel *.js --out-dir .",
-    "build": "npm-run-all sass:build --parallel babel process-index:build"
+    "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' prod",
+    "babel": "babel js --out-dir prod; babel *.js --out-dir prod",
+    "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders"
   },
   "repository": {
     "type": "git",
