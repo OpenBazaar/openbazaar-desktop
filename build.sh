@@ -170,7 +170,7 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Moving binary to correct folder'
     mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
-    chmod dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
+    chmod +x dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
 
     echo 'Codesign the .app'
     codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar.app
