@@ -99,4 +99,14 @@ label {
       border-width: 0;
     }
   }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    right: 71px;
+    width: 1px;
+    background-color: #DDD;
+  }
 }

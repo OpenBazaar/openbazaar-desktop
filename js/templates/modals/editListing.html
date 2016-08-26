@@ -32,7 +32,7 @@
               <% if (ob.errors['metadata.type']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.type'] })) %>
               <select id="editListingType" name="metadata.type" class="clrBr clrP">
                 <% ob.contractTypes.forEach((contractType) => { %>
-                <option value="<%= contractType.code %>" <% if (contractType.code == ob.metadata.type) print('selected') %>><%= contractType.name %></option>
+                <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.type) print('selected') %>><%= contractType.name %></option>
                 <% }); %>
               </select>              
             </div>
@@ -50,9 +50,9 @@
               <div class="inputSelect">
                 <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>">
                 <select id="editListingCurrency" class="clrBr clrP nestInputRight">
-                  <option value="USD">USD</option>
-                  <option value="BTC">BTC</option>
-                  <option value="ROB">ROB</option>
+                  <% ob.currencies.forEach((currency) => {%>
+                  <option value="<%= currency.code %>" <% if (currency.code === ob.localCurrency) print('selected') %>><%= currency.code %></option>
+                  <% }); %>
                 </select>                
               </div>
             </div>
