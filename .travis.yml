@@ -33,6 +33,8 @@ deploy:
     - "dist/linux64/*.deb"
   skip_cleanup: true
   all_branches: true
+  on:
+    tags: true
 env:
   global:
   - secure: KGmmWJO60jaOeLIogqOH88oWTDWBZxXz1hLu3100Y4LeSruaoyV3GzRTIcUrmIdUiceKitFlTO4y1Xxc98fj7aajh2QkF1XpCQ4lz38RtJcjsnUfnDYN93G2hr+NZsCIR+oUYh5/2IfCeiCHoiN+DwCzI6Roao4NIdytTTnFY6REc8R5sxdvsHJqGiiEK5DFqsaG3d8Vx9pXRRwO/8GExOACJZ0h/FuDebvssTalAUK2NLTWFpxQqH8AVu7ofQHexunS24swX6IF+r/hSuExH/oYM8VFTDfCsjmIiQaFrKk+b31a6tuimBWED6ezFxeOL7TEyHfsY7kM4cP5/bUyU2kwDXT7YRPCgjgwMScTRUe2Zm0xWegq4C6m5uuuwEglYklhVBkq3lGAkXjDDQTmVdMXGHtKWg7DIxVjw5tTQNzkJUoauDoz+q3r2EV+rAaNuHWXPZ8uA2Ip4GAidDjjnqiuwxQcG9wy8zFj7V31/TDEfPjRXIoxEAevB2toyXZ2Vxa9/F56SdXCdCl0G7aC+5IT0nRQ3Lz4vjqwwseOGsQk2SVwAJ3QV5as1mBiXjT78rDrTYeTNOWXKeqrsYEyS7A9vmsUZUYOaKEIl4ugOi5tB1GC+qOkJ2FHHXKZaKW/on7CScFXAXeA8eT+DxicukGfauQaNINP6wSciJCpHSE=
