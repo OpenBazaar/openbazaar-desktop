@@ -420,16 +420,16 @@ app.on('activate', () => {
   if (mainWindow) mainWindow.show();
 });
 
-const checkServerChange = function (event, server) {
-  // if (launchedFromInstaller) {
-  if (server.default) {
-    startLocalServer();
-  } else {
-    // killLocalServer();
-  }
-  // }
-};
-ipcMain.on('activeServerChange', checkServerChange());
+// const checkServerChange = function (event, server) {
+//   // if (launchedFromInstaller) {
+//   if (server.default) {
+//     startLocalServer();
+//   } else {
+//     // killLocalServer();
+//   }
+//   // }
+// };
+// ipcMain.on('activeServerChange', checkServerChange());
 
 ipcMain.on('close-confirmed', () => {
   closeConfirmed = true;
