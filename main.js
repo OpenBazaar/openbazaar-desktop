@@ -1,10 +1,9 @@
-import { app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
+import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
 
-const os = require('os');
-const electron = require('electron');
-const path = require('path');
-const fs = require('fs');
-const childProcess = require('child_process');
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
+import childProcess from 'child_process';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
