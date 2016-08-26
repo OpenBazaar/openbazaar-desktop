@@ -110,7 +110,7 @@ case "$TRAVIS_OS_NAME" in
     # Retrieve Latest Server Binaries
     cd temp/
     curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
+    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
     # WINDOWS 32
