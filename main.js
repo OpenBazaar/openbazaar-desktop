@@ -1,66 +1,70 @@
-import { app, BrowserWindow, ipcMain, Menu, Tray, remote, ps } from 'electron';
-let os = require('os');
-let path = require('path');
-let fs = require('fs');
+import { app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
+
+const os = require('os');
+const electron = require('electron');
+const path = require('path');
+const fs = require('fs');
+const childProcess = require('child_process');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let closeConfirmed = false;
-let launched_from_installer = false;
-let platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
-let version = app.getVersion();
-let TrayMenu;
+// let launchedFromInstaller = false;
+const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
+// let version = app.getVersion();
+// let TrayMenu;
 
 
-
-var handleStartupEvent = function() {
+const handleStartupEvent = function () {
   if (process.platform !== 'win32') {
     return false;
   }
 
-  var squirrelCommand = process.argv[1];
+  const squirrelCommand = process.argv[1];
 
   function exeSquirrelCommand(args, cb) {
-    var updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
-    var child = require('child_process').spawn(updateDotExe, args, { detached: true });
-    child.on('close', function() {
-      cb();
-    });
+    const updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
+    const child = childProcess.spawn(updateDotExe, args, { detached: true });
+    child.on('close', cb());
   }
 
   function install(cb) {
-    var target = path.basename(process.execPath);
-    exeSquirrelCommand(["--createShortcut", target], cb);
+    const target = path.basename(process.execPath);
+    exeSquirrelCommand(['--createShortcut', target], cb);
   }
 
   function uninstall(cb) {
-    var target = path.basename(process.execPath);
-    exeSquirrelCommand(["--removeShortcut", target], cb);
+    const target = path.basename(process.execPath);
+    exeSquirrelCommand(['--removeShortcut', target], cb);
   }
 
   switch (squirrelCommand) {
-  case '--squirrel-install':
-    install(app.quit);
-    break;
+    case '--squirrel-install':
+      install(app.quit);
+      break;
 
-  case '--squirrel-updated':
-    // Always quit when done
-    app.quit();
-    return true;
+    case '--squirrel-updated':
+      // Always quit when done
+      app.quit();
+      return true;
 
-  case '--squirrel-uninstall':
-    // Always quit when done
-    uninstall(app.quit);
-    return true;
+    case '--squirrel-uninstall':
+      // Always quit when done
+      uninstall(app.quit);
+      return true;
 
-  case '--squirrel-obsolete':
-    // This is called on the outgoing version of your app before
-    // we update to the new version - it's the opposite of
-    // --squirrel-updated
-    app.quit();
-    return true;
+    case '--squirrel-obsolete':
+      // This is called on the outgoing version of your app before
+      // we update to the new version - it's the opposite of
+      // --squirrel-updated
+      app.quit();
+      return true;
+    default:
+      break;
   }
+
+  return true;
 };
 
 if (handleStartupEvent()) {
@@ -68,22 +72,17 @@ if (handleStartupEvent()) {
 }
 
 // Set daemon binary name
-let daemon = (platform == "darwin" || platform == "linux") ? "openbazaard" : "openbazaard.exe";
+const daemon = (platform === 'darwin' || platform === 'linux') ? 'openbazaard' : 'openbazaard.exe';
 
-let serverPath = __dirname + path.sep + '..' + path.sep + 'openbazaar-go' + path.sep,
-    serverOut = '',
-    serverRunning = false,
-    pendingKill,
-    startAfterClose;
+const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
+let serverRunning = false;
+let pendingKill;
+// let startAfterClose;
 
-let start_local_server = function() {
-  if(fs.existsSync(serverPath)) {
-
+const startLocalServer = function startLocalServer() {
+  if (fs.existsSync(serverPath)) {
     if (pendingKill) {
-      pendingKill.once('close', startAfterClose = () => {
-        start_local_server();
-      });
-
+      pendingKill.once('close', startLocalServer());
       return;
     }
 
@@ -91,268 +90,283 @@ let start_local_server = function() {
 
     console.log('Starting OpenBazaar Server');
 
-    var random_port = Math.floor((Math.random() * 10000) + 30000);
+    // const random_port = Math.floor((Math.random() * 10000) + 30000);
 
-    let sub = require('child_process').spawn(serverPath + daemon, ['start'], {
+    const sub = childProcess.spawn(serverPath + daemon, ['start'], {
       detach: false,
-      cwd: __dirname + path.sep + '..' + path.sep + 'openbazaar-go'
+      cwd: `${__dirname}${path.sep}..${path.sep}openbazaar-go`,
     });
 
     serverRunning = true;
 
-    var stdout = '';
-    var stderr = '';
+    let stdout = '';
+    let stderr = '';
+    let serverOut;
 
-    sub.stdout.on('data', function (buf) {
+    const stdoutcallback = function (buf) {
       console.log('[STR] stdout "%s"', String(buf));
       stdout += buf;
-      serverOut += buf;
-    });
-    sub.stderr.on('data', function (buf) {
+      serverOut = `${serverOut}${buf}`;
+    };
+    sub.stdout.on('data', stdoutcallback);
+    const stderrcallback = function stderrcallback(err) {
+      if (err) {
+        console.log(err);
+        return err;
+      }
+      return false;
+    };
+    const stderrcb = function (buf) {
       console.log('[STR] stderr "%s"', String(buf));
-      fs.appendFile(__dirname + path.sep + "error.log", String(buf), function(err) {
-          if(err) {
-              return console.log(err);
-          }
-      });
+      fs.appendFile(`${__dirname}${path.sep}error.log`, String(buf), stderrcallback);
       stderr += buf;
-    });
-    sub.on('close', function (code) {
-      console.log('exited with ' + code);
+    };
+    sub.stderr.on('data', stderrcb);
+    const closecallback = function (code) {
+      console.log(`exited with ${code}`);
       console.log('[END] stdout "%s"', stdout);
       console.log('[END] stderr "%s"', stderr);
       serverRunning = false;
-    });
+    };
+    sub.on('close', closecallback);
     sub.unref();
   } else {
-    mainWindow && mainWindow.webContents.executeJavaScript("console.log('Unable to find openbazaard')");
+    mainWindow.webContents.executeJavaScript("console.log('Unable " +
+      "to find openbazaard')");
   }
 };
-start_local_server();
+startLocalServer();
 
-let kill_local_server = function() {
-  if (sub) {
-    if (pendingKill) {
-      startAfterClose && pendingKill.removeListener('close', startAfterClose);
-      return;
-    } else if (!serverRunning) {
-      return;
-    }
-    pendingKill = sub;
-    pendingKill.once('close', () => {
-      pendingKill = null;
-    });
-
-    console.log('Shutting down server daemon');
-
-    if (platform == "mac" || platform == "linux") {
-      subpy.kill('SIGINT');
-    } else {
-      require('child_process').spawn("taskkill", ["/pid", sub.pid, '/f', '/t']);
-    }
-  } else {
-    mainWindow && mainWindow.webContents.executeJavaScript("console.log('Server is not running locally')");
-  }
-};
+// let killLocalServer = function () {
+//   if (sub) {
+//     if (pendingKill) {
+//       startAfterClose && pendingKill.removeListener('close', startAfterClose);
+//       return;
+//     } else if (!serverRunning) {
+//       return;
+//     }
+//     pendingKill = sub;
+//     pendingKill.once('close', () => {
+//       pendingKill = null;
+//     });
+//
+//     console.log('Shutting down server daemon');
+//
+//     if (platform == "mac" || platform == "linux") {
+//       subpy.kill('SIGINT');
+//     } else {
+//       require('childProcess').spawn("taskkill", ["/pid", sub.pid, '/f', '/t']);
+//     }
+//   } else {
+//     mainWindow && mainWindow.webContents.executeJavaScript("console.log('Server
+// is not running locally')");
+//   }
+// };
 
 function createWindow() {
-
   const template = [
-  {
-    label: 'Edit',
-    submenu: [
-      {
-        role: 'undo'
-      },
-      {
-        role: 'redo'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'cut'
-      },
-      {
-        role: 'copy'
-      },
-      {
-        role: 'paste'
-      },
-      {
-        role: 'pasteandmatchstyle'
-      },
-      {
-        role: 'delete'
-      },
-      {
-        role: 'selectall'
-      }
-    ]
-  },
-  {
-    label: 'View',
-    submenu: [
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload()
-        }
-      },
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.webContents.toggleDevTools()
-        }
-      },
-      {
-        role: 'togglefullscreen'
-      }
-    ]
-  },
-  {
-    role: 'window',
-    submenu: [
-      {
-        role: 'minimize'
-      },
-      {
-        role: 'close'
-      }
-    ]
-  },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Learn More',
-        click () { require('electron').shell.openExternal('https://openbazaar.org') }
-      }
-    ]
-  }
-]
-
-if (process.platform === 'darwin') {
-  const name = app.getName()
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'services',
-        submenu: []
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'quit'
-      }
-    ]
-  })
-  // Edit menu.
-  template[1].submenu.push(
     {
-      type: 'separator'
-    },
-    {
-      label: 'Speech',
+      label: 'Edit',
       submenu: [
         {
-          role: 'startspeaking'
+          role: 'undo',
         },
         {
-          role: 'stopspeaking'
-        }
-      ]
-    }
-  )
-  // Window menu.
-  template[3].submenu = [
-    {
-      label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
-      role: 'close'
+          role: 'redo',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          role: 'cut',
+        },
+        {
+          role: 'copy',
+        },
+        {
+          role: 'paste',
+        },
+        {
+          role: 'pasteandmatchstyle',
+        },
+        {
+          role: 'delete',
+        },
+        {
+          role: 'selectall',
+        },
+      ],
     },
     {
-      label: 'Minimize',
-      accelerator: 'CmdOrCtrl+M',
-      role: 'minimize'
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.reload();
+          },
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click(item, focusedWindow) {
+            if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+          },
+        },
+        {
+          role: 'togglefullscreen',
+        },
+      ],
     },
     {
-      label: 'Zoom',
-      role: 'zoom'
+      role: 'window',
+      submenu: [
+        {
+          role: 'minimize',
+        },
+        {
+          role: 'close',
+        },
+      ],
     },
     {
-      type: 'separator'
+      role: 'help',
+      submenu: [
+        {
+          label: 'Learn More',
+          click() { electron.shell.openExternal('https://openbazaar.org'); },
+        },
+      ],
     },
-    {
-      label: 'Bring All to Front',
-      role: 'front'
-    }
-  ]
-}
+  ];
 
-const menu = Menu.buildFromTemplate(template)
-Menu.setApplicationMenu(menu)
-
-// put logic here to set tray icon based on OS
-var osTrayIcon = 'openbazaar-mac-system-tray.png';
-
-let trayMenu = new Tray(__dirname + '/imgs/' + osTrayIcon);
-var tray_template = [
-  {
-    label: 'Start Local Server', type: 'normal', click: function () {
-    start_local_server();
-  }
-  },
-  {
-    label: 'Shutdown Local Server', type: 'normal', click: function () {
-      if(fs.existsSync(serverPath)) {
-        let subkill = require('child_process').spawn(serverPath + daemon, ['stop'], {
-          detach: false,
-          cwd: __dirname + path.sep + '..' + path.sep + 'openbazaar-go'
-        });
-      } else {
-        mainWindow && mainWindow.webContents.executeJavaScript("console.log('Server is not running locally')");
+  if (process.platform === 'darwin') {
+    const name = app.getName();
+    template.unshift({
+      label: name,
+      submenu: [
+        {
+          role: 'about',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          role: 'services',
+          submenu: [],
+        },
+        {
+          type: 'separator',
+        },
+        {
+          role: 'hide',
+        },
+        {
+          role: 'hideothers',
+        },
+        {
+          role: 'unhide',
+        },
+        {
+          type: 'separator',
+        },
+        {
+          role: 'quit',
+        },
+      ],
+    });
+    // Edit menu.
+    template[1].submenu.push(
+      {
+        type: 'separator',
+      },
+      {
+        label: 'Speech',
+        submenu: [
+          {
+            role: 'startspeaking',
+          },
+          {
+            role: 'stopspeaking',
+          },
+        ],
       }
-    }
+    );
+    // Window menu.
+    template[3].submenu = [
+      {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close',
+      },
+      {
+        label: 'Minimize',
+        accelerator: 'CmdOrCtrl+M',
+        role: 'minimize',
+      },
+      {
+        label: 'Zoom',
+        role: 'zoom',
+      },
+      {
+        type: 'separator',
+      },
+      {
+        label: 'Bring All to Front',
+        role: 'front',
+      },
+    ];
   }
-];
 
-tray_template.push(
-  {
-    type: 'separator'
-  },
-  {
-    label: 'Quit', type: 'normal', accelerator: 'Command+Q', click: function () {
-      app.quit();
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+
+  // put logic here to set tray icon based on OS
+  const osTrayIcon = 'openbazaar-mac-system-tray.png';
+
+  const trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
+  const trayTemplate = [
+    {
+      label: 'Start Local Server',
+      type: 'normal',
+      click() { startLocalServer(); },
+    },
+    {
+      label: 'Shutdown Local Server',
+      type: 'normal',
+      click() {
+        if (fs.existsSync(serverPath)) {
+          const workingDir = `${__dirname}${path.sep}..${path.sep}openbazaar-go`;
+          childProcess.spawn(serverPath + daemon, ['stop'], {
+            detach: false,
+            cwd: workingDir,
+          });
+        } else {
+          mainWindow.webContents.executeJavaScript("console.log('Server is not " +
+            "running locally')");
+        }
+      },
+    },
+  ];
+
+  trayTemplate.push(
+    {
+      type: 'separator',
+    },
+    {
+      label: 'Quit',
+      type: 'normal',
+      accelerator: 'Command+Q',
+      click() {
+        app.quit();
+      },
     }
-  }
-);
+  );
 
-var contextMenu = Menu.buildFromTemplate(tray_template);
+  const contextMenu = Menu.buildFromTemplate(trayTemplate);
 
-trayMenu.setContextMenu(contextMenu);
+  trayMenu.setContextMenu(contextMenu);
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -374,8 +388,6 @@ trayMenu.setContextMenu(contextMenu);
   if (process.env.NODE_ENV === 'development') {
     mainWindow.webContents.openDevTools();
   }
-
-
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
@@ -409,15 +421,16 @@ app.on('activate', () => {
   if (mainWindow) mainWindow.show();
 });
 
-ipcMain.on('activeServerChange', function(event, server) {
-  if (launched_from_installer) {
-    if (server.default) {
-      start_local_server();
-    } else {
-      kill_local_server();
-    }
+const checkServerChange = function (event, server) {
+  // if (launchedFromInstaller) {
+  if (server.default) {
+    startLocalServer();
+  } else {
+    // killLocalServer();
   }
-});
+  // }
+};
+ipcMain.on('activeServerChange', checkServerChange());
 
 ipcMain.on('close-confirmed', () => {
   closeConfirmed = true;
