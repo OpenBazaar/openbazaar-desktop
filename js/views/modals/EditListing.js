@@ -8,9 +8,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 // import SimpleMessage from '../SimpleMessage';
 // import Dialog from '../Dialog';
-// import ScrollLinks from '../ScrollLinks';
 import BaseModal from './BaseModal';
-// import General from './General';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -103,11 +101,8 @@ export default class extends BaseModal {
   onSaveClick() {
     const moo = this.getFormData(this.$formFields);
 
-    console.log('moo');
-    window.moo = moo;
-
     // temporary approach
-    this.model.set(this.model.toJSON(), { validate: true });
+    this.model.set(moo, { validate: true });
     this.render();
   }
 

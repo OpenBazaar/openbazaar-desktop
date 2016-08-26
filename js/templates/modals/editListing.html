@@ -38,7 +38,7 @@
             </div>
             <div class="col6">
               <label for="editListingVisibility" class="required">Visibility</label>
-              <select id="editListingVisibility" name="metadata.visibility" class="clrBr clrP">
+              <select id="editListingVisibility" class="clrBr clrP">
                 <option value="hidden">Hidden (doesn't display in store)</option>
               </select>              
             </div>            
@@ -48,8 +48,8 @@
               <label for="editListingPrice" class="required">Price</label>
                 <% if (ob.errors['metadata.type']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.type'] })) %>
               <div class="inputSelect">
-                <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>">
-                <select id="editListingCurrency" class="clrBr clrP nestInputRight">
+                <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>" data-var-type="number-from-localized-currency">
+                <select id="editListingCurrency" name="item.price.currencyCode" class="clrBr clrP nestInputRight">
                   <% ob.currencies.forEach((currency) => {%>
                   <option value="<%= currency.code %>" <% if (currency.code === ob.localCurrency) print('selected') %>><%= currency.code %></option>
                   <% }); %>
