@@ -81,7 +81,8 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Move go server to electron app'
     cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/
-    mv dist/openbazaar-linux-x64/resources/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaard
+    mkdir dist/openbazaar-linux-x64/resources/openbazzar-go/
+    mv dist/openbazaar-linux-x64/resources/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazzar-go/openbazaard
     chmod +x dist/openbazaar-linux-x64/resources/openbazaard
 
     echo 'Create debian archive'
@@ -121,7 +122,8 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/
-    mv dist/OpenBazaar-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/openbazaard.exe
+    mkdir dist/OpenBazaar-win32-ia32/resources/openbazaar-go
+    mv dist/OpenBazaar-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/openbazaar-go/openbazaard.exe
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
@@ -140,7 +142,8 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/
-    mv dist/OpenBazaar-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/openbazaard.exe
+    mkdir dist/OpenBazaar-win32-x64/resources/openbazaar-go
+    mv dist/OpenBazaar-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/openbazaar-go/openbazaard.exe
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-x64 --outdir=dist/win64
@@ -171,7 +174,7 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Moving binary to correct folder'
     mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
-    chmod +x dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
+    chmod +x dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go/openbazaard
 
     echo 'Codesign the .app'
     codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar.app
@@ -184,6 +187,7 @@ case "$TRAVIS_OS_NAME" in
 
     cp -r OpenBazaar.app ../osx/
     cp OpenBazaar-mac-$PACKAGE_VERSION.zip ../osx/
+    cp dist/OpenBazaar-darwin-x64/OpenBazaar-$PACKAGE_VERSION.dmg ../osx/
 
     ;;
 esac
