@@ -36,6 +36,7 @@ echo 'Installing npm modules'
 npm run build
 npm install -g electron-packager --silent
 npm install grunt-cli -g --silent
+npm install grunt --save-dev
 npm install --save-dev grunt-electron-installer --silent
 npm install --silent
 
@@ -181,7 +182,7 @@ case "$TRAVIS_OS_NAME" in
     cd dist/OpenBazaar-darwin-x64/
     zip -q -r OpenBazaar-mac-$PACKAGE_VERSION.zip OpenBazaar.app
 
-    cp OpenBazaar.app ../osx/
+    cp -r OpenBazaar.app ../osx/
     cp OpenBazaar-mac-$PACKAGE_VERSION.zip ../osx/
 
     ;;
