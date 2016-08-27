@@ -173,7 +173,7 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
 
     echo 'Moving binary to correct folder'
-    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
+    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go/openbazaard
     chmod +x dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go/openbazaard
 
     echo 'Codesign the .app'
@@ -187,7 +187,7 @@ case "$TRAVIS_OS_NAME" in
 
     cp -r OpenBazaar.app ../osx/
     cp OpenBazaar-mac-$PACKAGE_VERSION.zip ../osx/
-    cp dist/OpenBazaar-darwin-x64/OpenBazaar-$PACKAGE_VERSION.dmg ../osx/
+    cp OpenBazaar-$PACKAGE_VERSION.dmg ../osx/
 
     ;;
 esac
