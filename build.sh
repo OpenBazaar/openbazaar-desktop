@@ -130,7 +130,7 @@ case "$TRAVIS_OS_NAME" in
     mv dist/win32/OpenBazaarSetup.exe dist/win32/OpenBazaar-$PACKAGE_VERSION-Setup-32.exe
 
     echo 'Sign the installer'
-    signcode -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar-$PACKAGE_VERSION-Setup-32.exe
+    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar-$PACKAGE_VERSION-Setup-32.exe
 
 
     # WINDOWS 64
@@ -150,7 +150,7 @@ case "$TRAVIS_OS_NAME" in
     mv dist/win64/OpenBazaarSetup.exe dist/win64/OpenBazaar-$PACKAGE_VERSION-Setup-64.exe
 
     echo 'Sign the installer'
-    signcode -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar-$PACKAGE_VERSION-Setup-64.exe
+    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar-$PACKAGE_VERSION-Setup-64.exe
 
 
     # OSX
