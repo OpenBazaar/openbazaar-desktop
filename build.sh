@@ -118,19 +118,19 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/win32
 
     echo 'Running Electron Packager...'
-    electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
+    electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
 
     echo 'Copying server binary into application folder...'
-    cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/
-    mkdir dist/OpenBazaar-win32-ia32/resources/openbazaar-go
-    mv dist/OpenBazaar-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar-win32-ia32/resources/openbazaar-go/openbazaard.exe
+    cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/
+    mkdir dist/OpenBazaar2-win32-ia32/resources/openbazaar-go
+    mv dist/OpenBazaar2-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/openbazaard.exe
 
     echo 'Building Installer...'
-    grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-ia32 --outdir=dist/win32
-    mv dist/win32/OpenBazaarSetup.exe dist/win32/OpenBazaar-$PACKAGE_VERSION-Setup-32.exe
+    grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-ia32 --outdir=dist/win32
+    mv dist/win32/OpenBazaar2Setup.exe dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
 
     echo 'Sign the installer'
-    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar-$PACKAGE_VERSION-Setup-32.exe
+    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
 
 
     # WINDOWS 64
@@ -138,19 +138,19 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/win64
 
     echo 'Running Electron Packager...'
-    electron-packager . OpenBazaar --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
+    electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
 
     echo 'Copying server binary into application folder...'
-    cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/
-    mkdir dist/OpenBazaar-win32-x64/resources/openbazaar-go
-    mv dist/OpenBazaar-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar-win32-x64/resources/openbazaar-go/openbazaard.exe
+    cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/
+    mkdir dist/OpenBazaar2-win32-x64/resources/openbazaar-go
+    mv dist/OpenBazaar2-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/openbazaar-go/openbazaard.exe
 
     echo 'Building Installer...'
-    grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar-win32-x64 --outdir=dist/win64
-    mv dist/win64/OpenBazaarSetup.exe dist/win64/OpenBazaar-$PACKAGE_VERSION-Setup-64.exe
+    grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
+    mv dist/win64/OpenBazaar2Setup.exe dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
 
     echo 'Sign the installer'
-    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar-$PACKAGE_VERSION-Setup-64.exe
+    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
 
 
     # OSX
@@ -167,27 +167,28 @@ case "$TRAVIS_OS_NAME" in
     codesign --force --sign "$SIGNING_IDENTITY" dist/osx/openbazaard
 
     echo 'Running Electron Packager...'
-    electron-packager . OpenBazaar --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --protocol=ob --platform=darwin --arch=x64 --icon=imgs/osx-tent.icns --version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
+    electron-packager . OpenBazaar2 --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --protocol=ob --platform=darwin --arch=x64 --icon=imgs/osx-tent.icns --version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
 
     echo 'Creating openbazaar-go folder in the OS X .app'
-    mkdir dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
+    mkdir dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go
 
     echo 'Moving binary to correct folder'
-    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go/openbazaard
-    chmod +x dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go/openbazaard
+    mv dist/osx/openbazaard dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go/openbazaard
+    chmod +x dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go/openbazaard
 
     echo 'Codesign the .app'
-    codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar.app
-    electron-installer-dmg dist/OpenBazaar-darwin-x64/OpenBazaar.app OpenBazaar-$PACKAGE_VERSION --icon ./imgs/osx-tent.icns --out=dist/OpenBazaar-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
+    codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
+    electron-installer-dmg dist/OpenBazaar2-darwin-x64/OpenBazaar2.app OpenBazaar2-$PACKAGE_VERSION --icon ./imgs/osx-tent.icns --out=dist/OpenBazaar2-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
     echo 'Codesign the DMG and zip'
-    codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar-$PACKAGE_VERSION.dmg
-    cd dist/OpenBazaar-darwin-x64/
-    zip -q -r OpenBazaar-mac-$PACKAGE_VERSION.zip OpenBazaar.app
+    codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
+    cd dist/OpenBazaar2-darwin-x64/
+    zip -q -r OpenBazaar2-mac-$PACKAGE_VERSION.zip OpenBazaar2.app
 
-    cp -r OpenBazaar.app ../osx/
-    cp OpenBazaar-mac-$PACKAGE_VERSION.zip ../osx/
-    cp OpenBazaar-$PACKAGE_VERSION.dmg ../osx/
+    cp -r OpenBazaar2.app ../osx/
+    cp OpenBazaar2-mac-$PACKAGE_VERSION.zip ../osx/
+    cp OpenBazaar2-$PACKAGE_VERSION.dmg ../osx/
+
 
     ;;
 esac
