@@ -11,4 +11,5 @@ const indexPage = fs.readFileSync(`${__dirname}/../index.html`);
 
 global.document = require('jsdom').jsdom(indexPage);
 global.window = document.defaultView;
+global.navigator = window.navigator = {};
 global.$ = require('jquery')(window);

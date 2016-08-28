@@ -38,6 +38,7 @@
     "settingsLabel": "Settings",
     "generalTab": "General",
     "pageTab": "Page",
+    "addressesTab": "Addresses",
     "language": "Language",
     "country": "Country",
     "currency": "Currency",
@@ -60,6 +61,17 @@
     "primaryColor": "Primary Color",
     "secondaryColor": "Secondary Color",
     "textColor": "Text Color",
+    "addresses": {
+      "name": "Name",
+      "company": "Company",
+      "street": "Street",
+      "apt": "Apt/Unit/Suite",
+      "city": "City",
+      "state": "State/Province/Region",
+      "country": "Country",
+      "postalCode": "Postal Code",
+      "notes": "Address Notes"
+    },
     "statusSaving": "Saving settings...",
     "statusSaveFailed": "Settings failed to save.",
     "statusSaveComplete": "Settings saved.",
@@ -67,6 +79,7 @@
     "btnYes": "Yes",
     "btnNo": "No",
     "btnSave": "Save",
+    "btnAddAddress": "Add Address",
     "errors": {
       "saveError": "There was an error saving your settings."
     },
@@ -85,6 +98,10 @@
   "errors": {
     "saveError": "There was an error saving your data.",
     "badResult": "The server returned an error."
+  },
+  "shippingAddressModelErrors": {
+    "provideName": "Please provide a name.",
+    "provideCountry": "Please provide a country."
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

@@ -1,5 +1,5 @@
 {
-  "name": "client-v2",
+  "name": "openbazaar-desktop",
   "version": "1.0.0",
   "description": "",
   "main": "bootstrapper.js",
@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rmisio/ob-client-v2.git"
+    "url": "git+https://github.com/OpenBazaar/ob-desktop.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rmisio/ob-client-v2/issues"
+    "url": "https://github.com/OpenBazaar/ob-desktop/issues"
   },
-  "homepage": "https://github.com/rmisio/ob-client-v2#readme",
+  "homepage": "https://github.com/OpenBazaar/ob-desktop#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.5",
@@ -42,6 +42,7 @@
     "eslint-plugin-import": "^1.10.0",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
+    "grunt-electron-installer": "^2.1.0",
     "ionicons": "^2.0.1",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
