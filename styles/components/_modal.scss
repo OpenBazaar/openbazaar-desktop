@@ -10,7 +10,7 @@
   .modalContent {
     padding: $padHg;
     min-width: 300px;
-    height: calc(100% - 100px);
+    max-height: calc(100% - 100px);
     overflow: auto;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
@@ -19,6 +19,11 @@
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
     }
+  }
+
+  &.modalRspHgt .modalContent {
+    //responsive height modal
+    height: calc(100% - 100px);
   }
 }
 
