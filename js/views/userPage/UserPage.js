@@ -97,9 +97,9 @@ export default class extends BaseVw {
     this.$tabTitle.text(tabViewName);
 
     if (tabViewName === 'Followers' || tabViewName === 'Following') {
-      tabViewName = 'Follow';
       tabOptions.followType = tabViewName;
       tabOptions.followArray = this[tabViewName.toLowerCase()];
+      tabViewName = 'Follow';
     }
 
     if (!this.currentTabView || this.currentTabView !== tabView) {

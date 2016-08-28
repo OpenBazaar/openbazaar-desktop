@@ -8,7 +8,7 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
-    this.guid = options.guid;
+    this.guid = options.guid || this.model.get('guid');
 
     this.loadUser();
     /* the view should be rendered when it is created and before it has data, so it can occupy

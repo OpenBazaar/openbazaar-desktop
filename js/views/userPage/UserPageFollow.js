@@ -1,5 +1,5 @@
 import BaseVw from '../baseVw';
-import loadTemplate from '../../utils/loadTemplate';
+import userShort from '../userShort';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -20,12 +20,19 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('userPage/userPageFollow.html', (t) => {
-      this.$el.html(t({
-        ...this.model.toJSON(),
-      }));
-    });
-
+    this.$el.empty();
+    if (this.followArray.length) {
+      this.followArray.forEach((follow) => {
+        console.log(follow);
+        const user = this.createChild(userShort, {
+          model: follow,
+        });
+        this.$el.append(user.render().$el);
+      });
+    } else {
+      console.log('none found');
+    }
+    this.$el.append('foo test');
     return this;
   }
 }
