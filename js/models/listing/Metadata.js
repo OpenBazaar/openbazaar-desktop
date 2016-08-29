@@ -20,19 +20,10 @@ export default class extends BaseModel {
 
   get contractTypes() {
     return [
-      {
-        code: 'PHYSICAL_GOOD',
-        name: 'Physical Listing',
-      }, {
-        code: 'DIGITAL_GOOD',
-        name: 'Digital Listing',
-      }, {
-        code: 'SERVICE',
-        name: 'Service',
-      }, {
-        code: 'CROWD_FUND',
-        name: 'Crowd Funded',
-      },
+      'PHYSICAL_GOOD',
+      'DIGITAL_GOOD',
+      'SERVICE',
+      'CROWD_FUND',
     ];
   }
 
@@ -43,9 +34,7 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    const contractTypeCodes = this.contractTypes.map((contractType) => contractType.code);
-
-    if (contractTypeCodes.indexOf(attrs.contractType) === -1) {
+    if (this.contractTypes.indexOf(attrs.contractType) === -1) {
       addError('contractType', 'The contract type is not one of the available types.');
     }
 

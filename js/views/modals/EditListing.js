@@ -41,39 +41,8 @@ export default class extends BaseModal {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
       'click .js-save': 'onSaveClick',
-      'change #editListingCurrency': 'onChangeCurrency',
-      'change #editListingPrice': 'onChangePrice',
       ...super.events(),
     };
-  }
-
-  onChangeCurrency() {
-    this.localizePrice();
-  }
-
-  onChangePrice() {
-    this.localizePrice();
-  }
-
-  localizePrice() {
-    const price = parseFloat(this.$priceInput.val().replace(/[^\d.-]/g, ''));
-
-    if (isNaN(price)) return;
-
-    const currency = this.$currencySelect.val();
-
-    let localizedPrice = price.toLocaleString(app.settings.get('language'),
-        { style: 'currency', currency });
-
-    localizedPrice = localizedPrice.replace(currency, getCurrencyByCode(currency).symbol);
-
-    /* eslint no-irregular-whitespace: ["error", { "skipComments": true }] */
-    // Please note, the price number format will be localized based on the users
-    // language setting. For example, 123.45 with a currency code of PLN, will show
-    // up as zł123.45 if your language is en-US, whereas if your language is
-    // pl, it will show up as 12 345,00 zł. // eslint-disable-line no-irregular-whitespace
-
-    this.$priceInput.val(localizedPrice);
   }
 
   get mode() {
@@ -153,14 +122,21 @@ export default class extends BaseModal {
         localCurrency: app.settings.get('localCurrency'),
         currencies: this.currencies,
         mode: this.mode,
-        contractTypes: this.model.get('metadata').contractTypes,
+        contractTypes: this.model.get('metadata')
+          .contractTypes
+          .map((contractType) => ({ code: contractType,
+            name: app.polyglot.t(`editListing.listingTypes.${contractType}`) })),
+        conditionTypes: this.model.get('item')
+          .conditionTypes
+          .map((conditionType) => ({ code: conditionType,
+            name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
         ...this.model.toJSON(),
       }));
 
       super.render();
 
-      this.$('#editListingType, #editListingVisibility').select2({
+      this.$('#editListingType, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
       });
 

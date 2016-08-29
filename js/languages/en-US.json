@@ -83,6 +83,21 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "editListing": {
+    "listingTypes": {
+      "PHYSICAL_GOOD": "Physical Good",
+      "DIGITAL_GOOD": "Digital Good",
+      "SERVICE": "Service",
+      "CROWD_FUND": "Crowd fund"
+    },
+    "conditionTypes": {
+      "NEW": "New",
+      "USED_EXCELLENT": "Used - Excellent",
+      "USED_GOOD": "Used - Good",
+      "USED_POOR": "Used - Poor",
+      "REFURBISHED": "Refurbished"
+    }
+  },
   "profileModelErrors": {
     "provideValidHexColor": "Please provide a valid hex color.",
     "provideValidEmail": "Please provide a valid email.",

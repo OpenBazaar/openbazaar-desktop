@@ -25,6 +25,16 @@ export default class extends BaseModel {
     };
   }
 
+  get conditionTypes() {
+    return [
+      'NEW',
+      'USED_EXCELLENT',
+      'USED_GOOD',
+      'USED_POOR',
+      'REFURBISHED',
+    ];
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -35,6 +45,10 @@ export default class extends BaseModel {
     if (!attrs.title) {
       addError('title', 'Please provide a title.');
     }
+
+    if (this.conditionTypes.indexOf(attrs.condition) === -1) {
+      addError('condition', 'The condition type is not one of the available types.');
+    }    
 
     if (Object.keys(errObj).length) return errObj;
 

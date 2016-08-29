@@ -48,7 +48,7 @@
               <label for="editListingPrice" class="required">Price</label>
                 <% if (ob.errors['metadata.type']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.type'] })) %>
               <div class="inputSelect">
-                <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>" data-var-type="number-from-localized-currency">
+                <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>" data-var-type="number">
                 <select id="editListingCurrency" name="item.price.currencyCode" class="clrBr clrP nestInputRight">
                   <% ob.currencies.forEach((currency) => {%>
                   <option value="<%= currency.code %>" <% if (currency.code === ob.localCurrency) print('selected') %>><%= currency.code %></option>
@@ -57,9 +57,11 @@
               </div>
             </div>
             <div class="col6">
-              <label for="editListingVisibility" class="required">Visibility</label>
-              <select id="editListingVisibility" name="metadata.visibility" class="clrBr clrP">
-                <option value="hidden">Hidden (doesn't display in store)</option>
+              <label for="editListingCondition" class="required">Condition</label>
+              <select id="editListingCondition" name="item.condition" class="clrBr clrP">
+                <% ob.conditionTypes.forEach((conditionType) => { %>
+                <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
+                <% }); %>
               </select>              
             </div>            
           </div>          
