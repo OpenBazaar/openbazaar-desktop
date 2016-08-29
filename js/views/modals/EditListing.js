@@ -3,7 +3,7 @@ import '../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
 import { isScrolledIntoView } from '../../utils/dom';
-import { getCurrenciesSortedByCode, getCurrencyByCode } from '../../data/currencies';
+import { getCurrenciesSortedByCode } from '../../data/currencies';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 // import SimpleMessage from '../SimpleMessage';

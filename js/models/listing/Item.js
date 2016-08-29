@@ -48,7 +48,7 @@ export default class extends BaseModel {
 
     if (this.conditionTypes.indexOf(attrs.condition) === -1) {
       addError('condition', 'The condition type is not one of the available types.');
-    }    
+    }
 
     if (Object.keys(errObj).length) return errObj;
 
