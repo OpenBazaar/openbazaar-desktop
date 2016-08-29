@@ -96,7 +96,9 @@
       "USED_GOOD": "Used - Good",
       "USED_POOR": "Used - Poor",
       "REFURBISHED": "Refurbished"
-    }
+    },
+    "nsfwYes": "Yes",
+    "nsfwNo": "No"
   },
   "profileModelErrors": {
     "provideValidHexColor": "Please provide a valid hex color.",

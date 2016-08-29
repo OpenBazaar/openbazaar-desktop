@@ -2,6 +2,7 @@ import $ from 'jquery';
 import '../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
+import { MediumEditor } from 'medium-editor';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../data/currencies';
 import loadTemplate from '../../utils/loadTemplate';
@@ -41,6 +42,7 @@ export default class extends BaseModal {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
       'click .js-save': 'onSaveClick',
+      'change #editListingType': 'onChangeListingType',
       ...super.events(),
     };
   }
@@ -52,6 +54,14 @@ export default class extends BaseModal {
   set mode(mode) {
     if (['create', 'edit'].indexOf(mode) === -1) {
       throw new Error('Please specify either a \'create\' or \'edit\' mode.');
+    }
+  }
+
+  onChangeListingType(e) {
+    if (e.target.value !== 'PHYSICAL_GOOD') {
+      this.$conditionWrap.addClass('disabled');
+    } else {
+      this.$conditionWrap.removeClass('disabled');
     }
   }
 
@@ -90,10 +100,6 @@ export default class extends BaseModal {
     }
   }
 
-  // get $saveStatus() {
-  //   return this._$saveStatus || this.$('.saveStatus');
-  // }
-
   get $scrollToSections() {
     return this._$scrollToSections || this.$('.js-scrollToSection');
   }
@@ -112,6 +118,16 @@ export default class extends BaseModal {
 
   get $priceInput() {
     return this._$priceInput || this.$('#editListingPrice');
+  }
+
+  get $conditionWrap() {
+    return this._$conditionWrap || this.$('.js-conditionWrap');
+  }
+
+  remove() {
+    if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
+
+    super.remove();
   }
 
   render() {
@@ -142,11 +158,39 @@ export default class extends BaseModal {
 
       this.$('#editListingCurrency').select2();
 
+      setTimeout(() => {
+        if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
+        this.descriptionMediumEditor = new MediumEditor('#editListingDescription', {
+          placeholder: {
+            text: '',
+          },
+          toolbar: {
+            buttons: ['bold', 'italic', 'underline', 'anchor', 'unorderedlist', 'orderedlist'],
+            static: true,
+            align: 'left',
+            updateOnEmptySelection: true,
+          },
+        });
+
+        // hack to position editor toolbar properly on render
+        this.descriptionMediumEditor.elements.forEach((el) => {
+          el.focus();
+          el.blur();
+        });
+
+        if (!this.rendered) {
+          this.rendered = true;
+          this.$titleInput.focus();
+        }
+      });
+
       this._$scrollLinks = null;
       this._$scrollToSections = null;
       this._$formFields = null;
       this._$currencySelect = null;
       this._$priceInput = null;
+      this._$conditionWrap = null;
+      this.$titleInput = this.$('#editListingTitle');
 
       this.$scrollContainer = this.$('.js-scrollContainer');
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);

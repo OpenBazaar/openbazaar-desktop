@@ -35,6 +35,8 @@ export default class extends BaseModel {
     ];
   }
 
+  // description no more than 50k chars
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {

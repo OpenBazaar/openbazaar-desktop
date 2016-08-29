@@ -4,6 +4,7 @@ form {
 
   label {
     line-height: $formElementHeight;
+    font-weight: 500;
   }
 }
 
@@ -19,12 +20,17 @@ input,
 select,
 textarea,
 .select2-container--focus .select2-selection__rendered,
-.select2-container--focus .select2-selection {
+.select2-container--focus .select2-selection,
+.medium-editor-element {
   border: none;
   outline: none;
   background: none;
   color: inherit;
   border-radius: 3px;
+  font: {
+    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    size: $tx5;
+  }
 }
 
 select {
@@ -33,7 +39,8 @@ select {
 
 input[type="text"],
 textarea,
-.select2-container--focus .select2-selection__rendered {
+.select2-container--focus .select2-selection__rendered,
+.medium-editor-element {
   border-style: solid;
   border-width: 1px;
   //use the color class to set the border color
@@ -41,6 +48,10 @@ textarea,
   box-sizing: border-box;
   padding: 0 $pad;
   line-height: 40px;
+}
+
+.medium-editor-element {
+  padding-top: $padSm;
 }
 
 textarea {
