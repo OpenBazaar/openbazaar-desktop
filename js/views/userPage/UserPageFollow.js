@@ -1,38 +1,44 @@
 import BaseVw from '../baseVw';
 import userShort from '../userShort';
+import app from '../../app';
+import Follows from '../../collections/Follows';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
     this.followType = options.followType;
-    this.followArray = options.followArray;
+
+    this.followCol = new Follows(null, {
+      type: this.followType.toLowerCase(),
+      guid: this.model.id,
+    });
+    this.followCol.fetch().done(() => { this.folRender(); });
   }
 
   className() {
-    return 'userPageFollow';
+    return 'userPageFollow flexRow';
   }
 
-  events() {
-    return {
-      // 'click .js-tab': 'tabClick',
-    };
-  }
-
-  render() {
+  folRender() {
     this.$el.empty();
-    if (this.followArray.length) {
-      this.followArray.forEach((follow) => {
-        console.log(follow);
+    if (this.followCol.length) {
+      this.followCol.forEach((follow) => {
         const user = this.createChild(userShort, {
           model: follow,
         });
         this.$el.append(user.render().$el);
       });
     } else {
-      console.log('none found');
+      const noneString = app.polyglot.t(
+        `userPage.no${this.options.ownPage ? 'Own' : ''}${this.followType}`,
+        { name: this.model.get('name') });
+      this.$el.append(`<h3 class="flexExpand txCtr">${noneString}</h3>`);
     }
-    this.$el.append('foo test');
+    return this;
+  }
+
+  render() {
     return this;
   }
 }

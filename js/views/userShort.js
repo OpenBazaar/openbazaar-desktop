@@ -9,6 +9,7 @@ export default class extends BaseVw {
     super(options);
     this.options = options;
     this.guid = options.guid || this.model.get('guid');
+    this.profileArgs = {}; // create blank for placeholder render
 
     this.loadUser();
     /* the view should be rendered when it is created and before it has data, so it can occupy
@@ -33,6 +34,7 @@ export default class extends BaseVw {
     profileFetch.done(() => {
       this.loading = false;
       this.notFound = false;
+      this.profileArgs = profile.toJSON();
       this.render();
     }).fail(() => {
       this.loading = false;
@@ -47,20 +49,22 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-tab': 'tabClick',
+      'click .js-userName': 'nameClick',
     };
   }
 
-  tabClick(e) {
-    const targ = $(e.target).closest('.js-tab');
-    this.selectTab(targ);
+  nameClick() {
+    app.router.navigate(`${this.guid}`, {
+      trigger: true,
+    });
   }
 
   render() {
-    loadTemplate('userPage/userPage.html', (t) => {
+    loadTemplate('userShort.html', (t) => {
       this.$el.html(t({
         loading: this.loading,
         notFound: this.notFound,
+        ...this.profileArgs,
       }));
     });
 

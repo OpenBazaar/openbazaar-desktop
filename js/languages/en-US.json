@@ -28,7 +28,11 @@
     "information": "Information",
     "website": "Website",
     "email": "Email",
-    "noLocation": "No Location"
+    "noLocation": "No Location",
+    "noFollowers": "No One is Following %{name} Yet",
+    "noFollowing": "%{name} is Not Following Anyone Yet",
+    "noOwnFollowers": "You Don't Have Any Followers Yet",
+    "noOwnFollowing": "You Aren't Following Anyone Yet"
   },
   "userShort": {
     "userLoading": "Loading...",

@@ -6,54 +6,39 @@ import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
 import Reputation from './UserPageReputation';
-import Follows from '../../collections/Follows';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
 
+    this.tab = options.tab || 'Home';
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
     this.ownPage = this.model.id === app.profile.id;
 
     if (!this.ownPage) {
-      this.followers = new Follows(null, {
-        type: 'followers',
-        guid: this.model.id,
+      this.listenTo(app.ownFollowing, 'sync, update', () => {
+        this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
+        if (this.followed) {
+          this.$followLbl.addClass('hide');
+          this.$unfollowLbl.removeClass('hide');
+        } else {
+          this.$followLbl.removeClass('hide');
+          this.$unfollowLbl.addClass('hide');
+        }
       });
-      this.followers.fetch();
 
-      this.following = new Follows(null, {
-        type: 'following',
-        guid: this.model.id,
+      this.listenTo(app.ownFollowers, 'sync, update', () => {
+        this.followsYou = app.ownFollowers.where({ guid: app.profile.id }).length > 0;
+        if (this.followsYou) {
+          this.$followsYou.removeClass('hide');
+        } else {
+          this.$followsYou.addClass('hide');
+        }
       });
-      this.following.fetch();
-    } else {
-      this.followers = app.ownFollowers;
-      this.following = app.ownFollowing;
     }
-
-    this.listenTo(app.ownFollowing, 'sync, update', () => {
-      this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
-      if (this.followed) {
-        this.$followLbl.addClass('hide');
-        this.$unfollowLbl.removeClass('hide');
-      } else {
-        this.$followLbl.removeClass('hide');
-        this.$unfollowLbl.addClass('hide');
-      }
-    });
-
-    this.listenTo(app.ownFollowers, 'sync, update', () => {
-      this.followsYou = app.ownFollowers.where({ guid: app.profile.id }).length > 0;
-      if (this.followsYou) {
-        this.$followsYou.removeClass('hide');
-      } else {
-        this.$followsYou.addClass('hide');
-      }
-    });
   }
 
   className() {
@@ -71,7 +56,7 @@ export default class extends BaseVw {
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
-    this.selectTab(targ);
+    this.selectTab(targ.attr('data-tab'));
   }
 
   followClick() {
@@ -90,25 +75,29 @@ export default class extends BaseVw {
   }
 
   selectTab(targ) {
-    let tabViewName = targ.data('tab');
-    let tabView = this.tabViewCache[tabViewName];
+    let tabView = this.tabViewCache[targ];
     const tabOptions = { ownPage: this.ownPage, model: this.model };
 
-    this.$tabTitle.text(tabViewName);
-
-    if (tabViewName === 'Followers' || tabViewName === 'Following') {
-      tabOptions.followType = tabViewName;
-      tabOptions.followArray = this[tabViewName.toLowerCase()];
-      tabViewName = 'Follow';
-    }
-
     if (!this.currentTabView || this.currentTabView !== tabView) {
+      this.$tabTitle.text(targ);
+      // add tab to history
+      app.router.navigate(`${this.model.id}/${targ}`, {
+        trigger: false,
+        replace: false,
+      });
+
       this.$('.js-tab').removeClass('clrT active');
-      targ.addClass('clrT active');
+      this.$(`.js-tab[data-tab="${targ}"]`).addClass('clrT active');
+
+      if (targ === 'Followers' || targ === 'Following') {
+        tabOptions.followType = targ;
+        targ = 'Follow'; // eslint-disable-line no-param-reassign
+      }
+
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[tabViewName], tabOptions);
-        this.tabViewCache[tabViewName] = tabView;
+        tabView = this.createChild(this.tabViews[targ], tabOptions);
+        this.tabViewCache[tabOptions.followType || targ] = tabView;
         tabView.render();
       }
       this.$tabContent.append(tabView.$el);
@@ -135,7 +124,7 @@ export default class extends BaseVw {
       this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
 
-      this.selectTab(this.$('.js-tab[data-tab="Home"]'));
+      this.selectTab(this.tab);
     });
 
     return this;
