@@ -6,46 +6,10 @@
     padding: 0;
 
     .tabColumn {
-      width: 194px;
-      border-right-width: 1px;
-      border-right-style: solid;
-
-      .tab {
-        padding: $pad/2 $pad/2 $pad/2 $pad;
-
-        &.active {
-          // use the clrBr class for the border color
-          border-right: none;
-          border-top: none;
-          border-bottom: none;
-          border-left: solid 1px;
-        }
-      }
-    }
-
-    .settingsTabContent {
-      height: 100%;
-      & > div { //always apply to the view div
-        height: 100%;
-      }
-    }
-
-    .settingsTabFormWrapper {
-      height: calc(100% - #{$bar} - 80px);
-
-      .settingsTabFormWrapperInner {
-        position: absolute;
-        width: 100%;
-        top: 0;
-        right: 0;
-        left: 0;
-        box-sizing: border-box;
-      }
+      min-height: 640px;
     }
 
     .settingsControls {
-      position: absolute;
-      bottom: 0;
       height: 80px;
       padding: $pad * 1.5;
       border-top-style: solid;

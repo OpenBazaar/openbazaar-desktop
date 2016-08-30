@@ -36,7 +36,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} settings modalRspHgt`;
+    return `${super.className()} settings modalTop`;
   }
 
   events() {
