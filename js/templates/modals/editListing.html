@@ -15,7 +15,7 @@
     </div>
 
   </div>
-  <div class="flexExpand posR" style="width: 685px">
+  <div class="flexExpand posR">
     <div class="tabContent">
       <div class="scrollBox tabFormWrapper clrS js-scrollContainer">
         <section class="js-scrollToSection">
@@ -27,6 +27,13 @@
                 <input type="text" class="clrBr clrP" name="item.title" id="editListingTitle" value="<%= ob.item.title %>">
               </div>
             </div>
+            <div class="flexRow">
+              <div class="col12">
+                <label for="editListingSlug" class="required">Slug</label>
+                <% if (ob.errors['slug']) print(ob.formErrorTmpl({ errors: ob.errors['slug'] })) %>
+                <input type="text" class="clrBr clrP" name="slug" id="editListingSlug" value="<%= ob.slug %>" placeholder="Enter a url fragment representing the listing, for example my-big-brown-shoe">
+              </div>
+            </div>            
             <div class="flexRow gutterH">
               <div class="col6">
                 <label for="editListingType" class="required">Type</label>
@@ -49,7 +56,7 @@
                 <label for="editListingPrice" class="required">Price</label>
                   <% if (ob.errors['item.price.amount']) print(ob.formErrorTmpl({ errors: ob.errors['item.price.amount'] })) %>
                 <div class="inputSelect">
-                  <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount || '' %>" data-var-type="number">
+                  <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount %>" data-var-type="number">
                   <select id="editListingCurrency" name="item.price.currencyCode" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
                     <option value="<%= currency.code %>" <% if (currency.code === ob.localCurrency) print('selected') %>><%= currency.code %></option>
@@ -69,7 +76,7 @@
             </div>
             <div class="flexRow gutterH">
               <div class="col6">
-                <label for="editListingSku" class="required">SKU</label>
+                <label for="editListingSku">SKU</label>
                 <% if (ob.errors['item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['item.sku'] })) %>
                 <input type="text" class="clrBr clrP" name="item.sku" id="editListingSku" value="<%= ob.item.sku %>">
               </div>

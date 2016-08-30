@@ -50,7 +50,17 @@ export default class baseVw extends View {
 
       if (varType) {
         if (varType === 'number') {
-          val = Number(val);
+          // If an empty string is provided or if the
+          // number evaluates to NaN, we'll leave the value
+          // as is, so client side validation can catch it
+          // and the user can updated it.
+          if (val.trim() !== '') {
+            const numberFromVal = Number(val);
+
+            if (!isNaN(numberFromVal)) {
+              val = numberFromVal;
+            }
+          }
         } else if (varType === 'boolean') {
           val = val === 'true';
         }

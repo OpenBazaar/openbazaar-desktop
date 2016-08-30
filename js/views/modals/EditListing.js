@@ -43,6 +43,7 @@ export default class extends BaseModal {
       'click .js-scrollLink': 'onScrollLinkClick',
       'click .js-save': 'onSaveClick',
       'change #editListingType': 'onChangeListingType',
+      'change #editListingSlug': 'onChangeSlug',
       ...super.events(),
     };
   }
@@ -55,6 +56,12 @@ export default class extends BaseModal {
     if (['create', 'edit'].indexOf(mode) === -1) {
       throw new Error('Please specify either a \'create\' or \'edit\' mode.');
     }
+  }
+
+  onChangeSlug(e) {
+    const val = $(e.target).val();
+
+    $(e.target).val(val.toLowerCase().replace(/\s/g, '-'));
   }
 
   onChangeListingType(e) {
@@ -81,6 +88,7 @@ export default class extends BaseModal {
     const moo = this.getFormData(this.$formFields);
 
     // temporary approach
+    this.model.set(moo);
     this.model.set(moo, { validate: true });
     this.render();
   }
@@ -135,9 +143,9 @@ export default class extends BaseModal {
 
     loadTemplate('modals/editListing.html', (t) => {
       this.$el.html(t({
+        mode: this.mode,
         localCurrency: app.settings.get('localCurrency'),
         currencies: this.currencies,
-        mode: this.mode,
         contractTypes: this.model.get('metadata')
           .contractTypes
           .map((contractType) => ({ code: contractType,

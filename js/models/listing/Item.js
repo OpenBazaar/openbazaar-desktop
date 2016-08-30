@@ -2,7 +2,7 @@ import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Price from './Price';
 import Image from './Image';
-// import is from 'is_js';
+import is from 'is_js';
 
 class ListingImages extends Collection {
   model(attrs, options) {
@@ -13,12 +13,11 @@ class ListingImages extends Collection {
 export default class extends BaseModel {
   defaults() {
     return {
-      // slug: 'foo-bar-baz',
       title: '',
     };
   }
 
-  nested() {
+  get nested() {
     return {
       price: Price,
       images: ListingImages,
@@ -35,10 +34,12 @@ export default class extends BaseModel {
     ];
   }
 
-  // description no more than 50k chars
+  get descriptionMaxLength() {
+    return 50000;
+  }
 
   validate(attrs) {
-    const errObj = {};
+    let errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
@@ -51,6 +52,14 @@ export default class extends BaseModel {
     if (this.conditionTypes.indexOf(attrs.condition) === -1) {
       addError('condition', 'The condition type is not one of the available types.');
     }
+
+    if (is.not.string(attrs.description)) {
+      addError('description', 'The description must be of type string.');
+    } else if (attrs.description.length > this.descriptionMaxLength) {
+      addError('description', 'The description exceeds the length limit.');
+    }
+
+    errObj = this.mergeInNestedModelErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 

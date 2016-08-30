@@ -21,7 +21,7 @@ import { Model } from 'backbone';
   import CustomCollection from './collections';
 
   class ParentModel extends BaseModel {
-    nested() {
+    get nested() {
       return {
         SMTPSettings: Model,
         serverConfig: CustomModel,
@@ -124,6 +124,30 @@ export default class extends Model {
     }
 
     return super.set(attrs, opts);
+  }
+
+  mergeInNestedModelErrors(errObj = {}) {
+    let mergedErrs = errObj;
+
+    Object.keys(this.nested || {})
+      .forEach((key) => {
+        if (this.get(key) instanceof Model) {
+          const nestedMd = this.get(key);
+          const nestedErrs = nestedMd.validate(nestedMd.toJSON()) || {};
+          const prefixedErrs = {};
+
+          Object.keys(nestedErrs).forEach((nestedErrKey) => {
+            prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
+          });
+
+          mergedErrs = {
+            ...mergedErrs,
+            ...prefixedErrs,
+          };
+        }
+      });
+
+    return mergedErrs;
   }
 
   toJSON() {
