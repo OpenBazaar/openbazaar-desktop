@@ -23,24 +23,24 @@
             <div class="flexRow">
               <div class="col12">
                 <label for="editListingTitle" class="required">Title</label>
-                <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
-                <input type="text" class="clrBr clrP" name="item.title" id="editListingTitle" value="<%= ob.item.title %>">
+                <% if (ob.errors['listing.item.title']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.title'] })) %>
+                <input type="text" class="clrBr clrP" name="listing.item.title" id="editListingTitle" value="<%= ob.listing.item.title %>">
               </div>
             </div>
             <div class="flexRow">
               <div class="col12">
                 <label for="editListingSlug" class="required">Slug</label>
-                <% if (ob.errors['slug']) print(ob.formErrorTmpl({ errors: ob.errors['slug'] })) %>
-                <input type="text" class="clrBr clrP" name="slug" id="editListingSlug" value="<%= ob.slug %>" placeholder="Enter a url fragment representing the listing, for example my-big-brown-shoe">
+                <% if (ob.errors['listing.slug']) print(ob.formErrorTmpl({ errors: ob.errors['listing.slug'] })) %>
+                <input type="text" class="clrBr clrP" name="listing.slug" id="editListingSlug" value="<%= ob.listing.slug %>" placeholder="Enter a url fragment representing the listing, for example my-big-brown-shoe">
               </div>
             </div>            
             <div class="flexRow gutterH">
               <div class="col6">
                 <label for="editListingType" class="required">Type</label>
-                <% if (ob.errors['metadata.type']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.type'] })) %>
-                <select id="editListingType" name="metadata.type" class="clrBr clrP">
+                <% if (ob.errors['listing.metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['listing.metadata.contractType'] })) %>
+                <select icontractTd="editListingType" name="listing.metadata.contractType" class="clrBr clrP">
                   <% ob.contractTypes.forEach((contractType) => { %>
-                  <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
+                  <option value="<%= contractType.code %>" <% if (contractType.code === ob.listing.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                   <% }); %>
                 </select>              
               </div>
@@ -54,22 +54,22 @@
             <div class="flexRow gutterH">
               <div class="col6">
                 <label for="editListingPrice" class="required">Price</label>
-                  <% if (ob.errors['item.price.amount']) print(ob.formErrorTmpl({ errors: ob.errors['item.price.amount'] })) %>
+                  <% if (ob.errors['listing.item.price.amount']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price.amount'] })) %>
                 <div class="inputSelect">
-                  <input type="text" class="clrBr clrP" name="item.price.amount" id="editListingPrice" value="<%= ob.item.price.amount %>" data-var-type="number">
-                  <select id="editListingCurrency" name="item.price.currencyCode" class="clrBr clrP nestInputRight">
+                  <input type="text" class="clrBr clrP" name="listing.item.price.amount" id="editListingPrice" value="<%= ob.listing.item.price.amount %>" data-var-type="number">
+                  <select id="editListingCurrency" name="listing.item.price.currencyCode" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
                     <option value="<%= currency.code %>" <% if (currency.code === ob.localCurrency) print('selected') %>><%= currency.code %></option>
                     <% }); %>
                   </select>                
                 </div>
               </div>
-              <div class="col6 js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
+              <div class="col6 js-conditionWrap <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
                 <label for="editListingCondition" class="required">Condition</label>
-                <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
-                <select id="editListingCondition" name="item.condition" class="clrBr clrP">
+                <% if (ob.errors['listing.item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.condition'] })) %>
+                <select id="editListingCondition" name="listing.item.condition" class="clrBr clrP">
                   <% ob.conditionTypes.forEach((conditionType) => { %>
-                  <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
+                  <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.listing.item.condition) print('selected') %>><%= conditionType.name %></option>
                   <% }); %>
                 </select>              
               </div>            
@@ -77,29 +77,29 @@
             <div class="flexRow gutterH">
               <div class="col6">
                 <label for="editListingSku">SKU</label>
-                <% if (ob.errors['item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['item.sku'] })) %>
-                <input type="text" class="clrBr clrP" name="item.sku" id="editListingSku" value="<%= ob.item.sku %>">
+                <% if (ob.errors['listing.item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.sku'] })) %>
+                <input type="text" class="clrBr clrP" name="listing.item.sku" id="editListingSku" value="<%= ob.listing.item.sku %>">
               </div>
               <div class="col6">
                 <label>Mature Content (nsfw, adult, 18+, etc)</label>
-                <% if (ob.errors['item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['item.nsfw'] })) %>
+                <% if (ob.errors['listing.item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.nsfw'] })) %>
                 <div class="btnStrip">
                   <div class="btn clrBr">
                     <input type="radio"
-                           name="item.nsfw"
+                           name="listing.item.nsfw"
                            value="true"
                            id="editListingNSFWInputTrue"
                            data-var-type="boolean"
-                    <% if(ob.item.nsfw) { %>checked<% } %>>
+                    <% if(ob.listing.item.nsfw) { %>checked<% } %>>
                     <label for="editListingNSFWInputTrue"><%= ob.polyT('editListing.nsfwYes') %></label>
                   </div>
                   <div class="btn clrBr">
                     <input type="radio"
-                           name="item.nsfw"
+                           name="listing.item.nsfw"
                            value="false"
                            id="editListingNSFWInputFalse"
                            data-var-type="boolean"
-                    <% if(!ob.item.nsfw) { %>checked<% } %>>
+                    <% if(!ob.listing.item.nsfw) { %>checked<% } %>>
                     <label for="editListingNSFWInputFalse"><%= ob.polyT('editListing.nsfwNo') %></label>
                   </div>
                 </div>
@@ -108,8 +108,8 @@
             <div class="flexRow gutterH">
               <div class="col12">
                 <label for="editListingDescription">Description</label>
-                <% if (ob.errors['item.description']) print(ob.formErrorTmpl({ errors: ob.errors['item.description'] })) %>
-                <textarea rows="6" name="item.description" class="clrBr clrP" id="editListingDescription"><%= ob.item.description %></textarea>
+                <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
+                <textarea rows="6" name="listing.item.description" class="clrBr clrP" id="editListingDescription"><%= ob.listing.item.description %></textarea>
               </div>
             </div>          
           </form>

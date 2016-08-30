@@ -5,6 +5,7 @@ import _ from 'underscore';
 import { MediumEditor } from 'medium-editor';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../data/currencies';
+import SimpleMessage from './SimpleMessage';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 // import SimpleMessage from '../SimpleMessage';
@@ -27,6 +28,7 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this.mode = options.mode || 'create';
+    this.innerListing = this.model.get('listing');
 
     // this.listenTo(app.router, 'will-route', () => {
     //   this.close(true);
@@ -61,7 +63,17 @@ export default class extends BaseModal {
   onChangeSlug(e) {
     const val = $(e.target).val();
 
-    $(e.target).val(val.toLowerCase().replace(/\s/g, '-'));
+    // we'll make the slug all lowercase,
+    // replace spaces with dashes and remove
+    // url unfreindly chars.
+    // todo: this could be made into a slugify utility
+    $(e.target).val(
+      val.toLowerCase()
+        .replace(/\s/g, '-')
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        // replace consecutive dashes with one
+        .replace(/-{2,}/g, '-')
+    );
   }
 
   onChangeListingType(e) {
@@ -85,12 +97,54 @@ export default class extends BaseModal {
   }
 
   onSaveClick() {
-    const moo = this.getFormData(this.$formFields);
+    const formData = this.getFormData(this.$formFields);
 
-    // temporary approach
-    this.model.set(moo);
-    this.model.set(moo, { validate: true });
+    // todo: show status bar
+    this.$saveButton.addClass('disabled');
+    this.model.set(formData);
+
+    const images = this.innerListing.get('item').get('images');
+
+    // for now putting in dummy image
+    if (!images.length) {
+      images.add({
+        hash: 'QmecpJrN9RJ7smyYByQdZUy5mF6aapgCfKLKRmDtycv9aG',
+        fileName: 'image.jpg',
+      });
+    }
+
+    const save = this.model.save();
+
+    if (save) {
+      console.log('saving to the server');
+      save.always(() => this.$saveButton.removeClass('disabled'))
+        .fail((...args) => {
+          new SimpleMessage({
+            // title: app.polyglot.t('settings.errors.saveError'),
+            title: 'Error saving listing.',
+            // message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
+            // temporarily outputing the whole "JSON" string pending the fix of:
+            // https://github.com/OpenBazaar/openbazaar-go/issues/102
+            message: args[0] && args[0].responseText || '',
+          })
+          .render()
+          .open();
+        });
+    } else {
+      // client side validation failed
+      this.$saveButton.removeClass('disabled');
+
+      // temporary for debugging purposes
+      console.error('client side validation failed');
+      console.error(this.model.validationError);
+    }
+
+    // render so errrors are shown / cleared
     this.render();
+
+    const $firstErr = this.$('.errorList:first');
+
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   onScrollContainer() {
@@ -132,6 +186,10 @@ export default class extends BaseModal {
     return this._$conditionWrap || this.$('.js-conditionWrap');
   }
 
+  get $saveButton() {
+    return this.$_saveButton || this.$('.js-save');
+  }
+
   remove() {
     if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
 
@@ -146,11 +204,11 @@ export default class extends BaseModal {
         mode: this.mode,
         localCurrency: app.settings.get('localCurrency'),
         currencies: this.currencies,
-        contractTypes: this.model.get('metadata')
+        contractTypes: this.innerListing.get('metadata')
           .contractTypes
           .map((contractType) => ({ code: contractType,
             name: app.polyglot.t(`editListing.listingTypes.${contractType}`) })),
-        conditionTypes: this.model.get('item')
+        conditionTypes: this.innerListing.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
             name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
@@ -189,6 +247,7 @@ export default class extends BaseModal {
       this._$currencySelect = null;
       this._$priceInput = null;
       this._$conditionWrap = null;
+      this.$_saveButton = null;
       this.$titleInput = this.$('#editListingTitle');
 
       this.$scrollContainer = this.$('.js-scrollContainer');

@@ -424,6 +424,3 @@ ipcRenderer.on('close-attempt', (e) => {
     .open();
   }
 });
-
-console.log('Listing');
-window.Listing = Listing;

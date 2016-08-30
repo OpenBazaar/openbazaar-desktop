@@ -7,7 +7,7 @@ export default class extends BaseModel {
       contractType: 'PHYSICAL_GOOD',
       listingType: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
-      expiry: (new Date(2037, 12, 31, 0, 0, 0, 0)).toISOString(),
+      expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
     };
   }
 
@@ -32,11 +32,11 @@ export default class extends BaseModel {
       addError('contractType', 'The contract type is not one of the available types.');
     }
 
-    const lastDayOf2037 = new Date(2037, 12, 31, 0, 0, 0, 0);
+    const firstDayOf2038 = new Date(2038, 0, 1, 0, 0, 0, 0);
 
-    if (is.not.number(attrs.expiry)) {
-      addError('expiry', 'The expiration date must be provided as a unix timestamp.');
-    } else if (is.not.inDateRange(new Date(attrs.expiry), Date.now(), lastDayOf2037)) {
+    // please provide data as ISO string (or possibly unix timestamp)
+    // todo: validate date is provided in the the right format
+    if (is.not.inDateRange(new Date(attrs.expiry), new Date(Date.now()), firstDayOf2038)) {
       addError('expiry', 'The expiration date must be between now and the year 2038.');
     }
 

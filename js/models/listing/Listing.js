@@ -1,8 +1,6 @@
 import app from '../../app';
 import BaseModel from '../BaseModel';
-import Item from './Item';
-import Metadata from './Metadata';
-import is from 'is_js';
+import ListingInner from './ListingInner';
 
 export default class extends BaseModel {
   url() {
@@ -13,23 +11,16 @@ export default class extends BaseModel {
 
   get nested() {
     return {
-      item: Item,
-      metadata: Metadata,
+      listing: ListingInner,
     };
   }
 
-  validate(attrs) {
+  validate() {
     let errObj = {};
-    const addError = (fieldName, error) => {
-      errObj[fieldName] = errObj[fieldName] || [];
-      errObj[fieldName].push(error);
-    };
-
-    if (is.not.string(attrs.slug)) {
-      addError('slug', 'Please provide a slug as a string.');
-    } else if (!attrs.slug) {
-      addError('slug', 'Please provide a slug.');
-    }
+    // const addError = (fieldName, error) => {
+    //   errObj[fieldName] = errObj[fieldName] || [];
+    //   errObj[fieldName].push(error);
+    // };
 
     errObj = this.mergeInNestedModelErrors(errObj);
 
