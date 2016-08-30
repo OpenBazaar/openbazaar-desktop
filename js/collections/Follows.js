@@ -5,7 +5,7 @@ import app from '../app';
 
 module.exports = Collection.extend({
   /* we have to use the older style for this collection, the ES6 style creates a bug where models
-  cannot be removed using thier ids */
+  cannot be removed using their ids */
 
   initialize: function (models, options) {  // eslint-disable-line object-shorthand
     this.url = app.getServerUrl(options.guid === app.profile.id || !options.guid ?
