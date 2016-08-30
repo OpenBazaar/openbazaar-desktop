@@ -166,16 +166,7 @@ export default class extends BaseModal {
           },
           toolbar: {
             buttons: ['bold', 'italic', 'underline', 'anchor', 'unorderedlist', 'orderedlist'],
-            static: true,
-            align: 'left',
-            updateOnEmptySelection: true,
           },
-        });
-
-        // hack to position editor toolbar properly on render
-        this.descriptionMediumEditor.elements.forEach((el) => {
-          el.focus();
-          el.blur();
         });
 
         if (!this.rendered) {
