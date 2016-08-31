@@ -5,7 +5,7 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
-import { launchEditListingModal } from '../utils/modals';
+import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 
 const remote = electron.remote;

@@ -40,7 +40,7 @@ export default class extends BaseModel {
         throw new Error('In order to fetch a listing, a guid must be set on the model instance.');
       }
 
-      const slug = this.get('slug');
+      const slug = this.get('listing').get('slug');
 
       if (!slug) {
         throw new Error('In order to fetch a listing, a slug must be set as a model attribute.');
@@ -52,5 +52,15 @@ export default class extends BaseModel {
     }
 
     return super.sync(method, model, options);
+  }
+
+  parse(response) {
+    if (response.vendorListings && response.vendorListings.length) {
+      return {
+        listing: response.vendorListings[0],
+      };
+    }
+
+    return {};
   }
 }

@@ -136,7 +136,9 @@ export default class ObRouter extends Router {
   }
 
   listing(guid, slug) {
-    const listing = new Listing({ slug }, { guid });
+    const listing = new Listing({
+      listing: { slug },
+    }, { guid });
 
     let profile;
     let profileFetch;

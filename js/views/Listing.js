@@ -1,7 +1,6 @@
-// import $ from 'jquery';
 import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
-// import app from '../app';
+import { launchEditListingModal } from '../utils/modalManager';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -10,6 +9,16 @@ export default class extends baseVw {
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
+  }
+
+  events() {
+    return {
+      'click .js-edit': 'onClickEdit',
+    };
+  }
+
+  onClickEdit() {
+    launchEditListingModal({ model: this.model });
   }
 
   render() {

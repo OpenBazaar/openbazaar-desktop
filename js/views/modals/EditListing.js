@@ -8,8 +8,6 @@ import { getCurrenciesSortedByCode } from '../../data/currencies';
 import SimpleMessage from './SimpleMessage';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-// import SimpleMessage from '../SimpleMessage';
-// import Dialog from '../Dialog';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -21,7 +19,6 @@ export default class extends BaseModal {
     const opts = {
       removeOnClose: true,
       modelContentClass: 'modalContent clrP border clrBr',
-      // removeOnRoute: false,
       ...options,
     };
 
@@ -29,11 +26,6 @@ export default class extends BaseModal {
     this.options = opts;
     this.mode = options.mode || 'create';
     this.innerListing = this.model.get('listing');
-
-    // this.listenTo(app.router, 'will-route', () => {
-    //   this.close(true);
-    //   this.remove();
-    // });
   }
 
   className() {
