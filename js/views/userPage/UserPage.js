@@ -75,6 +75,11 @@ export default class extends BaseVw {
   }
 
   selectTab(targ) {
+    // if an invalid targ is passed in, set it to Store
+    if (!this.tabViews[targ] && targ !== 'Following' && targ !== 'Followers') {
+      targ = 'Store'; // eslint-disable-line no-param-reassign
+    }
+
     let tabView = this.tabViewCache[targ];
     const tabOptions = { ownPage: this.ownPage, model: this.model };
 

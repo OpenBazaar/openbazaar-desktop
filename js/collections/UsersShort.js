@@ -1,5 +1,7 @@
+/* use this collection for any list of users that can be fetched as an array of guids */
+
 import { Collection } from 'backbone';
-import Follow from '../models/Follow';
+import UserShort from '../models/UserShort';
 import app from '../app';
 
 
@@ -12,7 +14,7 @@ module.exports = Collection.extend({
       `ob/${options.type}` : `ipns/${options.guid}/${options.type}`);
   },
 
-  model: Follow,
+  model: UserShort,
 
   parse: function (response) {   // eslint-disable-line object-shorthand
     response = response.map((guid) => {   // eslint-disable-line no-param-reassign

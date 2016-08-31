@@ -15,7 +15,7 @@ import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
-import Follows from './collections/Follows';
+import UsersShort from './collections/UsersShort';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -288,8 +288,8 @@ function start() {
       app.localSettings.save('language', getValidLanguage(lang));
     });
 
-    app.ownFollowing = new Follows(null, { type: 'following' });
-    app.ownFollowers = new Follows(null, { type: 'followers' });
+    app.ownFollowing = new UsersShort(null, { type: 'following' });
+    app.ownFollowers = new UsersShort(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;

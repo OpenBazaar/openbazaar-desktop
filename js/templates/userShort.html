@@ -11,15 +11,33 @@
       <% } else { %>
        style="background-image: url('../imgs/defaultUser.png')"
       <% } %>>
-     </div>
+    </div>
+    <div class="userControls">
+      <% if(!ob.ownGuid) { %>
+        <a class="iconBtn clrP clrBr js-follow <% if(ob.followedByYou){ %>active<% } %>">
+          <i class="ion-person-stalker"></i>
+        </a>
+        <% if(ob.moderator) { %>
+          <a class="iconBtn clrP clrBr js-mod <% if(ob.ownMod){ %>active<% } %>">
+            <i class="ion-briefcase"></i>
+          </a>
+        <% } %>
+      <% } %>
+    </div>
   </div>
   <div class="content">
     <% if(!ob.loading && !ob.notFound){ %>
       <div class="contentTop">
         <div>
           <a class="flex snipKids gutterH rowTn js-userName">
-            <div class="tx3 clrT"><strong><%= ob.name %></strong></div>
-            <div class="clrT3"><%= ob.handle %></div>
+            <div class="tx3 clrT name"><strong><%= ob.name %></strong></div>
+            <div class="clrT3">
+              <% if(ob.handle) { %>
+                <%= ob.handle %>
+              <% } else { %>
+                <%= ob.id %>
+              <% } %>
+            </div>
           </a>
         </div>
         <p class="clamp2">
@@ -37,7 +55,7 @@
     <% } else if(ob.loading) { %>
       <div class="h3 clrT"><%= ob.polyT('userShort.userLoading') %></div>
     <% } else if(ob.notFound) { %>
-    <div class="h3 clrT"><%= ob.polyT('userShort.userNotFound') %></div>
+    <div class="h5 txUnb clrT"><%= ob.polyT('userShort.userNotFound', { guid: ob.guid }) %></div>
     <% } %>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import BaseVw from '../baseVw';
 import userShort from '../userShort';
 import app from '../../app';
-import Follows from '../../collections/Follows';
+import Follows from '../../collections/UsersShort';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -9,11 +9,22 @@ export default class extends BaseVw {
     this.options = options;
     this.followType = options.followType;
 
-    this.followCol = new Follows(null, {
-      type: this.followType.toLowerCase(),
-      guid: this.model.id,
+    if (!options.ownPage) {
+      this.followCol = new Follows(null, {
+        type: this.followType.toLowerCase(),
+        guid: this.model.id,
+      });
+      this.followCol.fetch().done(() => {
+        this.folRender();
+      });
+    } else {
+      this.followCol = app[`own${this.followType}`];
+      this.folRender();
+    }
+
+    this.listenTo(this.followCol, 'sync, update', () => {
+      this.folRender();
     });
-    this.followCol.fetch().done(() => { this.folRender(); });
   }
 
   className() {

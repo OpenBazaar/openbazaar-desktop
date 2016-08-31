@@ -9,7 +9,12 @@ export default class extends BaseVw {
     super(options);
     this.options = options;
     this.guid = options.guid || this.model.get('guid');
+    this.ownGuid = this.guid === app.profile.id;
     this.profileArgs = {}; // create blank for placeholder render
+    this.followsYou = app.ownFollowers.get(this.guid) !== undefined;
+    this.followedByYou = app.ownFollowing.get(this.guid) !== undefined;
+    // TODO: add in code to determine if this user is in the viewer's moderator list
+    this.ownMod = false;
 
     this.loadUser();
     /* the view should be rendered when it is created and before it has data, so it can occupy
@@ -50,6 +55,8 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-userName': 'nameClick',
+      'click .js-follow': 'followClick',
+      'click .js-mod': 'modClick',
     };
   }
 
@@ -59,11 +66,27 @@ export default class extends BaseVw {
     });
   }
 
+  followClick() {
+    const type = this.followedByYou ? 'unfollow' : 'follow';
+
+    app.followUnfollow(this.guid, type);
+  }
+
+  modClick() {
+    console.log('the mod button was clicked');
+    // TODO: add code for adding and removing this user as a moderator
+  }
+
   render() {
     loadTemplate('userShort.html', (t) => {
       this.$el.html(t({
         loading: this.loading,
         notFound: this.notFound,
+        guid: this.guid,
+        ownGuid: this.ownGuid,
+        followsYou: this.followsYou,
+        followedByYou: this.followedByYou,
+        ownMod: this.ownMod,
         ...this.profileArgs,
       }));
     });
