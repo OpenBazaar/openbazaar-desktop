@@ -8,7 +8,9 @@ import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import TestModalsPage from './views/TestModalsPage';
 import TestProfilePage from './views/TestProfilePage';
+import ListingPage from './views/Listing';
 import Profile from './models/Profile';
+import Listing from './models/listing/Listing';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -23,6 +25,8 @@ export default class ObRouter extends Router {
       ['transactions/:tab', 'transactions'],
       ['test-modals', 'testModals'],
       ['test-profile', 'testProfile'],
+      // temporary route
+      ['listing/:guid/:slug', 'listing'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -131,6 +135,56 @@ export default class ObRouter extends Router {
     });
   }
 
+  listing(guid, slug) {
+    const listing = new Listing({ slug }, { guid });
+
+    let profile;
+    let profileFetch;
+    let listingFetch;
+    let onWillRoute = () => {};
+
+    if (guid === app.profile.id) {
+      // don't fetch our own profile, since we have it already
+      profileFetch = $.Deferred().resolve();
+      profile = app.profile;
+    } else {
+      profile = new Profile({ id: guid });
+      profileFetch = profile.fetch();
+    }
+
+    onWillRoute = () => {
+      profileFetch.abort();
+      if (listingFetch) listingFetch.abort();
+    };
+
+    this.once('will-route', onWillRoute);
+
+    profileFetch.done((jqXhr) => {
+      if (jqXhr && jqXhr.statusText === 'abort') return;
+
+      listingFetch = listing.fetch();
+
+      listingFetch.done((jXhr) => {
+        if (jqXhr && jXhr.statusText === 'abort') return;
+
+        this.loadPage(
+          new ListingPage({
+            model: listing,
+          }).render()
+        );
+      }).fail((jXhr) => {
+        if (jXhr.statusText !== 'abort') this.listingNotFound();
+      }).always(() => {
+        if (onWillRoute) this.off(null, onWillRoute);
+      });
+    }).fail((jqXhr) => {
+      if (jqXhr.statusText === 'abort') return;
+
+      if (onWillRoute) this.off(null, onWillRoute);
+      this.userNotFound();
+    });
+  }
+
   transactions(tab) {
     tab = tab || 'inbound'; // eslint-disable-line no-param-reassign
 
@@ -160,6 +214,12 @@ export default class ObRouter extends Router {
   pageNotFound() {
     this.loadPage(
       new TemplateOnly({ template: 'error-pages/pageNotFound.html' }).render()
+    );
+  }
+
+  listingNotFound() {
+    this.loadPage(
+      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render()
     );
   }
 }

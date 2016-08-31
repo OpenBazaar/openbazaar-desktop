@@ -119,7 +119,7 @@ export default class baseVw extends View {
    */
   createChild(ChildView, ...args) {
     if (typeof ChildView !== 'function') {
-      throw new Error('Please provide a ChildView class (not an instance).');
+      throw new Error('Please provide a ChildView class.');
     }
 
     const childView = new ChildView(...args);
