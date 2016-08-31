@@ -10,9 +10,8 @@
 ##
 
 
-ELECTRONVER=1.0.2
+ELECTRONVER=1.3.4
 NODEJSVER=5.1.1
-UPXVER=391
 
 OS="${1}"
 
@@ -34,6 +33,7 @@ rm -rf temp/*
 echo 'Preparing to build installers'
 
 echo 'Installing npm modules'
+npm run build
 npm install -g electron-packager --silent
 npm install grunt-cli -g --silent
 npm install --save-dev grunt-electron-installer --silent
@@ -57,7 +57,7 @@ case "$TRAVIS_OS_NAME" in
     sudo apt-get install jq
     cd temp/
     curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -O
+    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
     echo "Packaging Electron application"
@@ -66,6 +66,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Move go server to electron app'
     cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/
     mv dist/openbazaar-linux-ia32/resources/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaard
+    chmod +x dist/openbazaar-linux-ia32/resources/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_ia32.json
@@ -80,6 +81,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Move go server to electron app'
     cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/
     mv dist/openbazaar-linux-x64/resources/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaard
+    chmod +x dist/openbazaar-linux-x64/resources/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_amd64.json
@@ -167,7 +169,8 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
 
     echo 'Moving binary to correct folder'
-    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaar-go
+    mv dist/osx/openbazaard dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
+    chmod dist/OpenBazaar-darwin-x64/OpenBazaar.app/Contents/Resources/openbazaard
 
     echo 'Codesign the .app'
     codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar-darwin-x64/OpenBazaar.app

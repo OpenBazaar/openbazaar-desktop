@@ -1,7 +1,7 @@
 language: node_js
 sudo: true
 os:
-- linux 
+- linux
 - osx
 cache:
   directories:
@@ -13,7 +13,7 @@ before_script:
 - openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .travis/cert.p12.enc -d -a -out ./.travis/cert.p12
 - openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.cert.spc
 - openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.pvk
--  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh" ; fi 
+-  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh" ; fi
 script:
 - npm run lint
 - npm run test
@@ -21,13 +21,16 @@ script:
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
-  fileglob: true
+  file_glob: true
   file:
-    - "dist/win32/*"
-    - "dist/win64/*"
-    - "dist/osx/*"
-    - "dist/linux32/*"
-    - "dist/linux64/*"
+    - "dist/win32/*.exe"
+    - "dist/win32/*.nupkg"
+    - "dist/win64/*.exe"
+    - "dist/win64/*.nupkg"
+    - "dist/osx/*.dmg"
+    - "dist/osx/*.zip"
+    - "dist/linux32/*.deb"
+    - "dist/linux64/*.deb"
   skip_cleanup: true
   all_branches: true
   on:
@@ -39,3 +42,4 @@ env:
   - secure: fQ4K2OvSakz0Fk+9X/WWFpPOFoK7IjpI7vAqhEhbH7X2q0iXQUZv1476e3wVQWYlwzks8NlLP4oPXzJm6xooh+1ftxh3q1qlyQlowZKvyqDx/IjOVlZXZoaivqCEwXSmkxH2MG5OL3hjhZr2MG8cai2nbcXPXiUDktGVZm4rJRtbvknPK5TZUMjs9YttvDKy35fa28gdFcXWzKOFerqHIibNzE4CtmAbBhJLgSxopJp3yUrhKhnwEnOA4A3xwFZTARmT02Kfu8y4hOwwylbmysDNT1zWZ9+aNRaB2jvw9DEIevtzcyrmYfTZdbY18nj3O+9Wg8qYPo7YrrSA0pK5NwO9qf5ldxKU4ThfNSMONHgAzZDibXKg9q+axr49PBgNze0YO6T3/ktMIqpP9UPuchrsDMBk54msyqH02drJhQ3FyNLX63Ljt5w20kUks2mQdd/az/NSNGcjH26hDiKUROd7SXTr+cPOOXd0vi/VN1F3AouGVeoaaLm62N0UIv/w+npxn/XDKJE9InHfiGc77KUpysEaA9ydOJ7+WnNSzdGv45pIo87z+/zm6m9yeI/G8IPgo54IHSyLEshLD4azo/egzBkihYPkztX0z2SnMgL9+ph6908R0oy9GV1HgfFzMvwFfR8a4iY/mSkQtaSb5xoAUz1MxxwFel3cQGKXOgU=
   - secure: i9WollMSh2QLEneqifPXPEvOX8Ec6Fb2l1zd+QJwEn0PlHgbDAlY5a0WECPyBYhK6ldRCYZU73MC3goH2bzK4W2i8+jaWXEIIfEh+gx5Hp1V8TmLzkegSWl4A4/+Z5OHw5zbowwYRIKtTvxoT4zpPfuiwfS8GJyn1VIxJ7tD4RyBf/ruM6p0hLeiml4tVt+JCx0hvR5qhZDOEz/Dysa/e/3PzotYmUtofxHBQg4ItzMVtiQSBDdxN6GGXVYYvTHJ/+WqeKepziojajhleHL6Yufp+iIrT5+moAU1CKCir1uI3kVIyqMT27q/14Qh9EikBEarnhM+dv9z9XZQ2hs7eHZhKVBx0rAIoR0VReiU+bPqXQBc6to8b7xaW3WpTRD5l6kSE9nhO8c1/u27nHqH9REFh2wqzQPRgTMkaNe7TX+MV0VxDkqLLKS5LNzxzW8jjI+m6RXs+OIg4NesKOAqLCS6vD8Z6gRmvQqEMBe7wCUH1W71E3U2CuGOuqdnxPvOabc48ojX0fGtmaKmINIgOBcru9V7SXeDabrmFbVLlbSSUePnGoC32LO2MgiroiiIlzr9TRkDauCZB4fWfS7YGS6IMYdgPUWvEViLCDlNIDudJLfEGZgaBELMHUJSGO7A6Zi4JHWEhwZ12WsZnwEfUUBspQzkh3Nt6OofQYn7Bbw=
   - secure: JvB92ziCZhA5o1nrw/DxmFWnCcdVnpR+7UcAAMuV7+UdLk5cUFryuEo2BJ7YN1BWXpDgQ7iPULPAWAZRO7vKny7LVJYlo9vFIcsSdbnS+rl5Z1OTtuto8KPNIEPISzBEL8iTH25hXvT1jgbyovf4q1Xl+nUW/3BjBAttktZrP7jnpQZBfWnLxPrZ+lRfBeoIp7cxzB/BEg1hG6/YkRfvBu7Ov/erA3L0IOXehcjgXZvg10raOGUSxgSvHS4Va4lX5E1N6k4qtD79LhS6SV7e4QOi1Dhd4aeeUZtYBrSo/AqsXsrULGtbePeFJMH+Y1M3zjIRBOWQcWMjgxlNh5H/StVJSzsODU6++ubZ6zqB3sQTaT1jQYXJUmoSgnykp6H+ikufSlasWZWvTm5gyJ5nd3Kn1CsP2iB2SCV+w6l7eUnjsyb2R9CPG8j/5m1wYx5iGC/9Ot2lAVCwrPRYuw6gLUOO6BVCV3Kz+tBPFtdAP7jpfl6jhlKCtmkovRY+As3zKU+uEHGqB26J5kIp/apiU6czHvHTa4pRbaXgULhegpDE2ccT62Q8Z8O1U3bmZG5cVEGQHhjMrYW1Y3HchfdJ/jhIRSQopFK4WE+BJV0YP1qiMh3WqCFdhCyQrRGGGWBqrfkNuTyNjMCBmThLTIE+kd3XZyXeokFbfxcDSf7Wu90=
+
