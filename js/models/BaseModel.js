@@ -91,6 +91,7 @@ export default class extends Model {
     this.lastSyncedAttrs = {};
 
     this.on('sync', () => {
+      console.log('kitchen sync yo');
       this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toJSON()));
     });
   }

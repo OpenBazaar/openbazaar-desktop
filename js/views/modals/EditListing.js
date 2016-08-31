@@ -24,7 +24,25 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-    this.mode = options.mode || 'create';
+
+    // So the passed in modal does not get any un-saved data,
+    // we'll clone and update it on sync
+    this._origModel = this.model;
+    this.model = this._origModel.clone();
+    this.listenTo(this.model, 'sync', () => {
+      if (!_.isEqual(this.model.toJSON(), this._origModel.toJSON())) {
+        this._origModel.set(this.model.toJSON(), { silent: true });
+
+        // A change events won't fire on a parent model if a nested model change.
+        // The nested models would need to have change events manually bound to them
+        // which is cumbersome with a model like this with so many levels of nesting.
+        // So, for now, we'll manually fire a change event if anything has changed.
+        // TODO: Find a reasonable way to manage something like this and
+        // put it in the baseModel.
+        this._origModel.trigger('change', this._origModel);
+      }
+    });
+
     this.innerListing = this.model.get('listing');
   }
 
@@ -193,7 +211,6 @@ export default class extends BaseModal {
 
     loadTemplate('modals/editListing.html', (t) => {
       this.$el.html(t({
-        mode: this.mode,
         localCurrency: app.settings.get('localCurrency'),
         currencies: this.currencies,
         contractTypes: this.innerListing.get('metadata')

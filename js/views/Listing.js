@@ -9,6 +9,8 @@ export default class extends baseVw {
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
+
+    this.listenTo(this.model, 'change', this.render);
   }
 
   events() {
