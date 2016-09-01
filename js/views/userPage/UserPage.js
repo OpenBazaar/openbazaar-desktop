@@ -12,7 +12,7 @@ export default class extends BaseVw {
     super(options);
     this.options = options;
 
-    this.tab = options.tab || 'Home';
+    this.tab = options.tab || 'Store';
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
