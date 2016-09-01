@@ -56,10 +56,16 @@
                 <label for="editListingPrice" class="required">Price</label>
                   <% if (ob.errors['listing.item.price.amount']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price.amount'] })) %>
                 <div class="inputSelect">
-                  <input type="text" class="clrBr clrP" name="listing.item.price.amount" id="editListingPrice" value="<%= ob.listing.item.price.amount %>" data-var-type="number">
+                  <input type="text" class="clrBr clrP js-price" name="listing.item.price.amount" id="editListingPrice" value="<%= ob.listing.item.price.amount %>" data-var-type="number">
                   <select id="editListingCurrency" name="listing.item.price.currencyCode" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
-                    <option value="<%= currency.code %>" <% if (currency.code === ob.localCurrency) print('selected') %>><%= currency.code %></option>
+                    <option value="<%= currency.code %>"
+                    <% if (!ob.listing.item.price.currencyCode) {
+                         if (currency.code === ob.localCurrency) print('selected');
+                       } else {
+                         if (currency.code === ob.listing.item.price.currencyCode) print('selected');
+                       }
+                    %>><%= currency.code %></option>
                     <% }); %>
                   </select>                
                 </div>

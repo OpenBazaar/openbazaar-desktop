@@ -35,4 +35,44 @@ export default class extends BaseModel {
 
     return undefined;
   }
+
+  /**
+   * Converts the price amount from a decimal to an integer. If the
+   * currency code is BTC, it will also convert to Satoshi.
+   */
+  static convertPriceOut(price) {
+    if (is.not.object(price)) {
+      throw new Error('Please provide a price object.');
+    }
+
+    if (typeof price.amount === 'number') {
+      if (price.currencyCode === 'BTC') {
+        price.amount = Math.round(price.amount * 1000000000);
+      } else {
+        price.amount = Math.round(price.amount * 100);
+      }
+    }
+
+    return price;
+  }
+
+  /**
+   * Converts the price amount from an integer to a decimal. If the
+   * currency code is BTC, it will also convert from Satoshi to BTC.
+   */
+  static convertPriceIn(price) {
+    if (is.not.object(price)) {
+      throw new Error('Please provide a price object.');
+    }
+
+    if (typeof price.amount === 'number') {
+      if (price.currencyCode === 'BTC') {
+        price.amount = price.amount / 1000000000;
+      } else {
+        price.amount = price.amount / 100;
+      }
+    }
+
+    return price;
+  }
 }

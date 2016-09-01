@@ -56,6 +56,7 @@ export default class extends BaseModal {
       'click .js-save': 'onSaveClick',
       'change #editListingType': 'onChangeListingType',
       'change #editListingSlug': 'onChangeSlug',
+      'change .js-price': 'onChangePrice',
       ...super.events(),
     };
   }
@@ -68,6 +69,17 @@ export default class extends BaseModal {
     if (['create', 'edit'].indexOf(mode) === -1) {
       throw new Error('Please specify either a \'create\' or \'edit\' mode.');
     }
+  }
+
+  onChangePrice(e) {
+    let updatedVal = $(e.target).val().trim();
+    const valAsNumber = Number(updatedVal);
+
+    if (!isNaN(valAsNumber)) {
+      updatedVal = valAsNumber.toFixed(2);
+    }
+
+    $(e.target).val(updatedVal);
   }
 
   onChangeSlug(e) {

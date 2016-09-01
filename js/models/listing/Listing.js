@@ -1,6 +1,7 @@
 import app from '../../app';
 import BaseModel from '../BaseModel';
 import ListingInner from './ListingInner';
+import Price from './Price';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
@@ -48,25 +49,49 @@ export default class extends BaseModel {
 
       options.url = app.getServerUrl(`ipns/${this.guid}/listings/${slug}/listing.json`);
     } else {
-      if (this.lastSyncedAttrs.listing && this.lastSyncedAttrs.listing.slug) {
-        options.type = 'PUT';
-        options.attrs = options.attrs || this.toJSON();
-        options.attrs.currentSlug = this.lastSyncedAttrs.listing.slug;
+      options.url = app.getServerUrl('ob/listing/');
+      options.attrs = options.attrs || this.toJSON();
+
+      // convert price fields
+      // todo: give same treatment to all other nested prices (e.g. shipping)
+      // once we implement those sections of the modal.
+      if (options.attrs.listing.item) {
+        const price = options.attrs.listing.item.price;
+
+        if (price) {
+          options.attrs.listing.item.price = Price.convertPriceOut(price);
+        }
       }
 
-      options.url = app.getServerUrl('ob/listing/');
+      if (this.lastSyncedAttrs.listing && this.lastSyncedAttrs.listing.slug) {
+        options.type = 'PUT';
+        options.attrs.currentSlug = this.lastSyncedAttrs.listing.slug;
+      }
     }
 
     return super.sync(method, model, options);
   }
 
   parse(response) {
+    let parsedResponse = {};
+
     if (response.vendorListings && response.vendorListings.length) {
-      return {
+      parsedResponse = {
         listing: response.vendorListings[0],
       };
+
+      // convert price fields
+      // todo: give same treatment to all other nested prices (e.g. shipping)
+      // once we implement those sections of the modal.
+      if (parsedResponse.listing.item) {
+        const price = parsedResponse.listing.item.price;
+
+        if (price) {
+          parsedResponse.listing.item.price = Price.convertPriceIn(price);
+        }
+      }
     }
 
-    return {};
+    return parsedResponse;
   }
 }
