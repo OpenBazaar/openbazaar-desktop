@@ -63,9 +63,7 @@ export default class extends BaseModal {
       if (this.currentTabView) this.currentTabView.$el.detach();
 
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[tabViewName], {
-          get$ScrollContainer: this.get$ScrollContainer,
-        });
+        tabView = this.createChild(this.tabViews[tabViewName]);
 
         this.tabViewCache[tabViewName] = tabView;
 
