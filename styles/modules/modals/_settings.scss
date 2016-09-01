@@ -1,16 +1,18 @@
 .settings {
 
   .modalContent {
-    .tabFormWrapper {
-      height: 510px;
-      
-      .settingsTabFormWrapperInner {
-        position: absolute;
-        width: 100%;
-        top: 0;
-        right: 0;
-        left: 0;
-        box-sizing: border-box;
+    .tabContent {
+      .tabFormWrapper {
+        height: 510px;
+        
+        .settingsTabFormWrapperInner {
+          position: absolute;
+          width: 100%;
+          top: 0;
+          right: 0;
+          left: 0;
+          box-sizing: border-box;
+        }
       }
     }
   }

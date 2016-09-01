@@ -20,8 +20,6 @@ export default class extends baseVw {
   }
 
   onClickEdit() {
-    console.log('boom');
-    window.boom = this.model;
     launchEditListingModal({ model: this.model });
   }
 

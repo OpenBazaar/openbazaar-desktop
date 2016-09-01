@@ -18,7 +18,7 @@ export default class extends BaseModal {
 
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP border clrBr',
+      modelContentClass: 'modalContent clrP',
       ...options,
     };
 
@@ -44,6 +44,7 @@ export default class extends BaseModal {
     });
 
     this.innerListing = this.model.get('listing');
+    this.selectedNavTabIndex = 0;
   }
 
   className() {
@@ -107,15 +108,33 @@ export default class extends BaseModal {
   }
 
   onScrollLinkClick(e) {
+    const index = $(e.target).index();
+    this.selectedNavTabIndex = index;
     this.$scrollLinks.removeClass('active');
     $(e.target).addClass('active');
     this.$scrollContainer.off('scroll', this.throttledOnScrollContainer);
 
-    this.$scrollToSections.eq($(e.target).index())
+    this.$scrollToSections.eq(index)
       .velocity('scroll', {
         container: this.$scrollContainer,
         complete: () => this.$scrollContainer.on('scroll', this.throttledOnScrollContainer),
       });
+  }
+
+  onScrollContainer() {
+    let index = 0;
+    let keepLooping = true;
+
+    while (keepLooping) {
+      if (isScrolledIntoView(this.$scrollToSections[index])) {
+        this.$scrollLinks.removeClass('active');
+        this.$scrollLinks.eq(index).addClass('active');
+        this.selectedNavTabIndex = index;
+        keepLooping = false;
+      } else {
+        index += 1;
+      }
+    }
   }
 
   onSaveClick() {
@@ -169,21 +188,6 @@ export default class extends BaseModal {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
-  onScrollContainer() {
-    let index = 0;
-    let keepLooping = true;
-
-    while (keepLooping) {
-      if (isScrolledIntoView(this.$scrollToSections[index])) {
-        this.$scrollLinks.removeClass('active');
-        this.$scrollLinks.eq(index).addClass('active');
-        keepLooping = false;
-      } else {
-        index += 1;
-      }
-    }
-  }
-
   get $scrollToSections() {
     return this._$scrollToSections || this.$('.js-scrollToSection');
   }
@@ -218,11 +222,21 @@ export default class extends BaseModal {
     super.remove();
   }
 
-  render() {
+  render(restoreScrollPos = true) {
+    let prevScrollPos = 0;
+    const $scrollContainer = this.$('.tabFormWrapper');
+
+    if (restoreScrollPos && $scrollContainer.length) {
+      prevScrollPos = $scrollContainer[0].scrollTop;
+    }
+
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
     loadTemplate('modals/editListing.html', (t) => {
       this.$el.html(t({
+        createMode: !(this.model.lastSyncedAttrs.listing &&
+          this.model.lastSyncedAttrs.listing.slug),
+        selectedNavTabIndex: this.selectedNavTabIndex,
         localCurrency: app.settings.get('localCurrency'),
         currencies: this.currencies,
         contractTypes: this.innerListing.get('metadata')
@@ -238,6 +252,13 @@ export default class extends BaseModal {
       }));
 
       super.render();
+
+      this.$scrollContainer = this.$('.js-scrollContainer');
+
+      // restore the scroll position
+      if (restoreScrollPos) {
+        this.$scrollContainer[0].scrollTop = prevScrollPos;
+      }
 
       this.$('#editListingType, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
@@ -271,7 +292,6 @@ export default class extends BaseModal {
       this.$_saveButton = null;
       this.$titleInput = this.$('#editListingTitle');
 
-      this.$scrollContainer = this.$('.js-scrollContainer');
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
       this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
     });

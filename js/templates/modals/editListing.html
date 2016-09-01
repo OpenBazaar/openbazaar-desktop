@@ -1,17 +1,23 @@
 <div class="flexRow posA">
   <div class="tabColumn clrB clrT2">
-    <h1 class="h3 txUnb padMd">Create Listing</h1>
-    <div class="boxList tx3 clrTx1Br">
-      <a class="js-scrollLink tab clrT active">General</a>
-      <a class="js-scrollLink tab">Photos</a>
-      <a class="js-scrollLink tab">Attachments</a>
-      <a class="js-scrollLink tab">Shipping</a>
-      <a class="js-scrollLink tab">Tags</a>
-      <a class="js-scrollLink tab">Inventory</a>
-      <a class="js-scrollLink tab">Variants</a>
-      <a class="js-scrollLink tab">Return Policy</a>
-      <a class="js-scrollLink tab">Terms and Conditions</a>
-      <a class="js-scrollLink tab">Expiration</a>
+    <h1 class="h3 txUnb padMd"><% print(ob.createMode ? 'Create Listing' : 'Edit Listing') %></h1>
+    <div class="boxList tx4 clrTx1Br">
+      <%
+        [
+          'General',
+          'Photos',
+          'Attachments',
+          'Shipping',
+          'Tags',
+          'Inventory',
+          'Variants',
+          'Return Policy',
+          'Terms and Conditions',
+          'Expiration',
+        ].forEach((tabName, index) => {
+          print(`<a class="js-scrollLink tab ${ob.selectedNavTabIndex === index ? 'clrP active' : ''}">${tabName}</a>`)
+        });
+      %>
     </div>
 
   </div>

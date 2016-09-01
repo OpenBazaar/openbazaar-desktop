@@ -11,12 +11,18 @@
       .tab {
         padding: $pad/2 $pad/2 $pad/2 $pad;
 
+        // Setting the border here as transparent, so there's no flicker
+        // when the colored border is added.
+        border-right: none;
+        border-top: none;
+        border-bottom: none;
+        border-left: solid 2px;
+        border-color: transparent;
+
         &.active {
-          // use the clrBr class for the border color
-          border-right: none;
-          border-top: none;
-          border-bottom: none;
-          border-left: solid 1px;
+          // Use the clrBr class on the .tab.active for the border color.          
+          border-color: black; // todo: temporary pending css specifity fix.
+          font-weight: 500;
         }
       }
     }
