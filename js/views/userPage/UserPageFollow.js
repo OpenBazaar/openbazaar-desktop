@@ -22,7 +22,11 @@ export default class extends BaseVw {
       this.folRender();
     }
 
-    this.listenTo(this.followCol, 'sync, update', () => {
+    this.listenTo(app.ownFollowing, 'sync, update', () => {
+      this.folRender();
+    });
+
+    this.listenTo(app.ownFollowers, 'sync, update', () => {
       this.folRender();
     });
   }

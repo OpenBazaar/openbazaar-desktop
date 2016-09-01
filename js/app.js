@@ -36,7 +36,7 @@ export default {
       if (type === 'follow') {
         this.ownFollowing.add({ guid });
       } else {
-        this.ownFollowing.remove(guid);
+        this.ownFollowing.remove({ guid });
       }
     })
     .fail((data) => {

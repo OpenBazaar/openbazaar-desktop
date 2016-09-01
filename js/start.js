@@ -291,6 +291,10 @@ function start() {
     app.ownFollowing = new UsersShort(null, { type: 'following' });
     app.ownFollowers = new UsersShort(null, { type: 'followers' });
 
+    app.ownFollowing.on('all', (event) => {
+      console.log(event)
+    });
+
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;
       app.loadingModal.close();
@@ -378,32 +382,40 @@ function setPublishingStatus(msg) {
 
 app.apiSocket.on('message', (e) => {
   if (e.jsonData) {
-    if (e.jsonData.status === 'publishing') {
-      setPublishingStatus({
-        msg: 'Publishing...',
-        type: 'message',
-      });
+    if (e.jsonData.status) {
+      if (e.jsonData.status === 'publishing') {
+        setPublishingStatus({
+          msg: 'Publishing...',
+          type: 'message',
+        });
 
-      unpublishedContent = true;
-    } else if (e.jsonData.status === 'error publishing') {
-      setPublishingStatus({
-        msg: 'Publishing failed. <a class="js-retry">Retry</a>',
-        type: 'warning',
-      });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'error publishing') {
+        setPublishingStatus({
+          msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+          type: 'warning',
+        });
 
-      unpublishedContent = true;
-    } else if (e.jsonData.status === 'publish complete') {
-      setPublishingStatus({
-        msg: 'Publishing complete.',
-        type: 'message',
-      });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'publish complete') {
+        setPublishingStatus({
+          msg: 'Publishing complete.',
+          type: 'message',
+        });
 
-      unpublishedContent = false;
+        unpublishedContent = false;
 
-      publishingStatusMsgRemoveTimer = setTimeout(() => {
-        publishingStatusMsg.remove();
-        publishingStatusMsg = null;
-      }, 2000);
+        publishingStatusMsgRemoveTimer = setTimeout(() => {
+          publishingStatusMsg.remove();
+          publishingStatusMsg = null;
+        }, 2000);
+      }
+    } else if (e.jsonData.notification) {
+      if (e.jsonData.notification.follow) {
+        app.followUnfollow(e.jsonData.notification.follow, 'follow');
+      } else if (e.jsonData.notification.unfollow) {
+        app.followUnfollow(e.jsonData.notification.unfollow, 'unfollow');
+      }
     }
   }
 });
