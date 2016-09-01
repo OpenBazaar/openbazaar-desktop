@@ -64,7 +64,6 @@ export default class extends BaseModal {
 
       if (!tabView) {
         tabView = this.createChild(this.tabViews[tabViewName]);
-
         this.tabViewCache[tabViewName] = tabView;
 
         this.listenTo(tabView, 'saving', (...args) => { this.onTabSaving(tabView, ...args); });
