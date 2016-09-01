@@ -46,6 +46,18 @@ export default class extends BaseVw {
       this.notFound = true;
       this.render();
     });
+
+    // update the follow button when this user is followed or unfollowed by another view
+    // this will be used by channels and other views that don't remove the view when it's follow
+    // status changes.
+    this.listenTo(app.ownFollowing, 'sync, update', () => {
+      this.followedByYou = app.ownFollowing.get(this.guid) !== undefined;
+      if (this.followedByYou) {
+        this.$followBtn.addClass('active');
+      } else {
+        this.$followBtn.removeClass('active');
+      }
+    });
   }
 
   className() {
@@ -89,6 +101,8 @@ export default class extends BaseVw {
         ownMod: this.ownMod,
         ...this.profileArgs,
       }));
+
+      this.$followBtn = this.$('.js-follow');
     });
 
     return this;
