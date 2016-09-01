@@ -20,7 +20,7 @@ export default class extends BaseVw {
 
     if (!this.ownPage) {
       this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
-      this.followsYou = app.ownFollowers.where({ guid: app.profile.id }).length > 0;
+      this.followsYou = app.ownFollowers.where({ guid: this.model.id }).length > 0;
 
       this.listenTo(app.ownFollowing, 'sync, update', () => {
         this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
@@ -34,7 +34,7 @@ export default class extends BaseVw {
       });
 
       this.listenTo(app.ownFollowers, 'sync, update', () => {
-        this.followsYou = app.ownFollowers.where({ guid: app.profile.id }).length > 0;
+        this.followsYou = app.ownFollowers.where({ guid: this.model.id }).length > 0;
         if (this.followsYou) {
           this.$followsYou.removeClass('hide');
         } else {

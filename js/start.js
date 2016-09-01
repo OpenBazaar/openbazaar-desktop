@@ -408,9 +408,9 @@ app.apiSocket.on('message', (e) => {
       }
     } else if (e.jsonData.notification) {
       if (e.jsonData.notification.follow) {
-        app.followUnfollow(e.jsonData.notification.follow, 'follow');
+        app.ownFollowers.add({ guid: e.jsonData.notification.follow });
       } else if (e.jsonData.notification.unfollow) {
-        app.followUnfollow(e.jsonData.notification.unfollow, 'unfollow');
+        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
       }
     }
   }

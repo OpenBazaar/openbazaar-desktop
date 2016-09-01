@@ -10,6 +10,10 @@ module.exports = Collection.extend({
   cannot be removed using their ids */
 
   initialize: function (models, options) {  // eslint-disable-line object-shorthand
+    if (!options.type) {
+      throw new Error('You must provide a type to the collection');
+    }
+
     this.url = app.getServerUrl(options.guid === app.profile.id || !options.guid ?
       `ob/${options.type}` : `ipns/${options.guid}/${options.type}`);
   },
