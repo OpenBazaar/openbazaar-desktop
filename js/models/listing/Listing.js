@@ -48,12 +48,10 @@ export default class extends BaseModel {
 
       options.url = app.getServerUrl(`ipns/${this.guid}/listings/${slug}/listing.json`);
     } else {
-      console.log('yup');
-      window.yup = this.lastSyncedAttrs;
-
-      if (this.lastSyncedAttrs.slug) {
+      if (this.lastSyncedAttrs.listing && this.lastSyncedAttrs.listing.slug) {
         options.type = 'PUT';
-        options.attrs.currentSlug = this.lastSyncedAttrs.slug;
+        options.attrs = options.attrs || this.toJSON();
+        options.attrs.currentSlug = this.lastSyncedAttrs.listing.slug;
       }
 
       options.url = app.getServerUrl('ob/listing/');

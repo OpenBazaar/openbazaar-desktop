@@ -124,7 +124,9 @@ export default class extends View {
 
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.$addressBar.val();
+      let text = this.$addressBar.val().trim();
+      this.$addressBar.val(text);
+
       let isGuid = true;
 
       if (text.startsWith('ob://')) text = text.slice(5);
@@ -148,6 +150,9 @@ export default class extends View {
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
+      } else if (text.startsWith('listing/')) {
+        // temporary to handle temporary listing route
+        app.router.navigate(text, { trigger: true });
       } else {
         // tag(s)
         const tags = text.trim()
@@ -176,9 +181,6 @@ export default class extends View {
 
   navCreateListingClick() {
     const listingModel = new Listing();
-
-    console.log('boo');
-    window.boo = listingModel;
 
     launchEditListingModal({
       mode: 'create',

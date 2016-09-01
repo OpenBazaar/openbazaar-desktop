@@ -85,13 +85,12 @@ import { Model } from 'backbone';
 */
 
 export default class extends Model {
-  constructor(attrs) {
-    super(attrs);
+  constructor(...args) {
+    super(...args);
 
     this.lastSyncedAttrs = {};
 
     this.on('sync', () => {
-      console.log('kitchen sync yo');
       this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toJSON()));
     });
   }
@@ -179,6 +178,10 @@ export default class extends Model {
   }
 
   clone() {
-    return new this.constructor(this.toJSON());
+    const clone = new this.constructor(this.toJSON());
+
+    clone.lastSyncedAttrs = this.lastSyncedAttrs;
+
+    return clone;
   }
 }
