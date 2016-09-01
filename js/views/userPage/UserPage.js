@@ -19,9 +19,9 @@ export default class extends BaseVw {
     this.ownPage = this.model.id === app.profile.id;
 
     if (!this.ownPage) {
-      this.listenTo(app.ownFollowing, 'all', (event) => {
-        console.log(event)
-      });
+      this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
+      this.followsYou = app.ownFollowers.where({ guid: app.profile.id }).length > 0;
+
       this.listenTo(app.ownFollowing, 'sync, update', () => {
         this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
         if (this.followed) {

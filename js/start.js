@@ -291,10 +291,6 @@ function start() {
     app.ownFollowing = new UsersShort(null, { type: 'following' });
     app.ownFollowers = new UsersShort(null, { type: 'followers' });
 
-    app.ownFollowing.on('all', (event) => {
-      console.log(event)
-    });
-
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;
       app.loadingModal.close();
