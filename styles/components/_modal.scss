@@ -10,11 +10,38 @@
   .modalContent {
     padding: $padHg;
     min-width: 300px;
-    max-height: 500px;
+    max-height: calc(100% - 50px);
     overflow: auto;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
     @include chatOpeningTransition(left);
+
+    .chatOpen & {
+      left: calc(50% - #{$chatOpen / 2});
+    }
+
+    .tabColumn {
+      width: 194px;
+      border-right-width: 1px;
+      border-right-style: solid;
+
+      .tab {
+        padding: $pad/2 $pad/2 $pad/2 $pad;
+
+        &.active {
+          // use the clrBr class for the border color
+          border-right: none;
+          border-top: none;
+          border-bottom: none;
+          border-left: solid 1px;
+        }
+      }
+    }
+  }
+
+  &.modalTop .modalContent {
+    top: $padLg;
+    @include center(true, false);
 
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
