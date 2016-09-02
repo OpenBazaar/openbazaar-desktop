@@ -1,3 +1,4 @@
+import app from '../../app';
 import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Price from './Price';
@@ -46,17 +47,17 @@ export default class extends BaseModel {
     };
 
     if (!attrs.title) {
-      addError('title', 'Please provide a title.');
+      addError('title', app.polyglot.t('itemModelErrors.provideTitle'));
     }
 
     if (this.conditionTypes.indexOf(attrs.condition) === -1) {
-      addError('condition', 'The condition type is not one of the available types.');
+      addError('condition', app.polyglot.t('itemModelErrors.badConditionType'));
     }
 
     if (is.not.string(attrs.description)) {
       addError('description', 'The description must be of type string.');
     } else if (attrs.description.length > this.descriptionMaxLength) {
-      addError('description', 'The description exceeds the length limit.');
+      addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
     }
 
     errObj = this.mergeInNestedModelErrors(errObj);

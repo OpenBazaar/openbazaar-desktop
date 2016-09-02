@@ -1,8 +1,18 @@
+import app from '../../../js/app';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, before } from 'mocha';
 import Metadata from '../../../js/models/listing/Metadata';
 
 describe('the Metadata model', () => {
+  before(function () {
+    // creating a dummy polyglot t function, so our
+    // model doesn't bomb. It's not critical to these
+    // tests that it return an actual translation.
+    app.polyglot = {
+      t: (str) => str,
+    };
+  });
+
   it('fails validation if the contract type is not one of the available types', () => {
     const metadata = new Metadata();
     metadata.set({

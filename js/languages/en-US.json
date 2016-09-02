@@ -98,7 +98,29 @@
       "REFURBISHED": "Refurbished"
     },
     "nsfwYes": "Yes",
-    "nsfwNo": "No"
+    "nsfwNo": "No",
+    "sectionNames": {
+      "general": "General",
+      "photos": "Photos",
+      "attachments": "Attachments",
+      "shipping": "Shipping",
+      "tags": "Tags",
+      "inventory": "Inventory",
+      "variants": "Variants",
+      "returnPolicy": "Return Policy",
+      "termsAndConditions": "Terms and Conditions",
+      "expiration": "Expiration"
+    },
+    "createListingLabel": "Create Listing",
+    "editListingLabel": "Edit Listing",
+    "title": "Title",
+    "slug": "Slug",
+    "type": "Type",
+    "visibility": "Visibility",
+    "price": "Price",
+    "condition": "Condition",
+    "sku": "SKU",
+    "description": "Description"
   },
   "profileModelErrors": {
     "provideValidHexColor": "Please provide a valid hex color.",
@@ -110,7 +132,20 @@
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
-  },  
+  },
+  "listingInnerModelErrors": {
+    "provideSlug": "Please provide a slug."
+  },
+  "itemModelErrors": {
+    "provideTitle": "Please provide a title.",
+    "badConditionType": "Please provide the price amount as a number.",
+    "descriptionTooLong": "The price must be greater than 0."
+  },
+  "priceModelErrors": {
+    "provideAmount": "Please provide a price.",
+    "provideNumericAmount": "Please provide the price as a number.",
+    "provideAmountGreaterThanZero": "The price must be greater than 0."
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

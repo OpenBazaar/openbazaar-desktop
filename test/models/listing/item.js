@@ -1,8 +1,18 @@
+import app from '../../../js/app';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, before } from 'mocha';
 import Item from '../../../js/models/listing/Item';
 
 describe('the Item model', () => {
+  before(function () {
+    // creating a dummy polyglot t function, so our
+    // model doesn't bomb. It's not critical to these
+    // tests that it return an actual translation.
+    app.polyglot = {
+      t: (str) => str,
+    };
+  });
+
   it('fails validation if a title is not provided', () => {
     const item = new Item();
     item.set({}, { validate: true });

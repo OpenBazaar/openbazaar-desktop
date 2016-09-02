@@ -1,3 +1,4 @@
+import app from '../../app';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -27,7 +28,7 @@ export default class extends BaseModel {
     if (is.not.string(attrs.slug)) {
       addError('slug', 'Please provide a slug as a string.');
     } else if (!attrs.slug) {
-      addError('slug', 'Please provide a slug.');
+      addError('slug', app.polyglot.t('listingInnerModelErrors.provideSlug'));
     }
 
     errObj = this.mergeInNestedModelErrors(errObj);

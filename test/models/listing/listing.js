@@ -1,8 +1,18 @@
+import app from '../../../js/app';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, before } from 'mocha';
 import Listing from '../../../js/models/listing/Listing';
 
 describe('the Listing model', () => {
+  before(function () {
+    // creating a dummy polyglot t function, so our
+    // model doesn't bomb. It's not critical to these
+    // tests that it return an actual translation.
+    app.polyglot = {
+      t: (str) => str,
+    };
+  });
+
   it('throws an error if you attempt to fetch without a guid being set', () => {
     const listing = new Listing({
       listing: { slug: 'a-happy-slug' },

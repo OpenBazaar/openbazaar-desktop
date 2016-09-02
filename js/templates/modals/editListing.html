@@ -1,19 +1,19 @@
 <div class="flexRow posA">
   <div class="tabColumn clrB">
-    <h1 class="h3 txUnb padMd"><% print(ob.createMode ? 'Create Listing' : 'Edit Listing') %></h1>
+    <h1 class="h3 txUnb padMd"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h1>
     <div class="boxList tx4 clrTx1Br">
       <%
         [
-          'General',
-          'Photos',
-          'Attachments',
-          'Shipping',
-          'Tags',
-          'Inventory',
-          'Variants',
-          'Return Policy',
-          'Terms and Conditions',
-          'Expiration',
+          ob.polyT('editListing.sectionNames.general'),
+          ob.polyT('editListing.sectionNames.photos'),
+          ob.polyT('editListing.sectionNames.attachments'),
+          ob.polyT('editListing.sectionNames.shipping'),
+          ob.polyT('editListing.sectionNames.tags'),
+          ob.polyT('editListing.sectionNames.inventory'),
+          ob.polyT('editListing.sectionNames.variants'),
+          ob.polyT('editListing.sectionNames.returnPolicy'),
+          ob.polyT('editListing.sectionNames.termsAndConditions'),
+          ob.polyT('editListing.sectionNames.expiration'),
         ].forEach((tabName, index) => {
           print(`<a class="js-scrollLink tab ${ob.selectedNavTabIndex === index ? 'clrP active' : ''}">${tabName}</a>`)
         });
@@ -28,21 +28,21 @@
           <form class="box padKids padStack tx3">
             <div class="flexRow">
               <div class="col12">
-                <label for="editListingTitle" class="required">Title</label>
+                <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
                 <% if (ob.errors['listing.item.title']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.title'] })) %>
                 <input type="text" class="clrBr clrP" name="listing.item.title" id="editListingTitle" value="<%= ob.listing.item.title %>">
               </div>
             </div>
             <div class="flexRow">
               <div class="col12">
-                <label for="editListingSlug" class="required">Slug</label>
+                <label for="editListingSlug" class="required"><%= ob.polyT('editListing.slug') %></label>
                 <% if (ob.errors['listing.slug']) print(ob.formErrorTmpl({ errors: ob.errors['listing.slug'] })) %>
                 <input type="text" class="clrBr clrP" name="listing.slug" id="editListingSlug" value="<%= ob.listing.slug %>" placeholder="Enter a url fragment representing the listing, for example my-big-brown-shoe">
               </div>
             </div>            
             <div class="flexRow gutterH">
               <div class="col6">
-                <label for="editListingType" class="required">Type</label>
+                <label for="editListingType" class="required"><%= ob.polyT('editListing.type') %></label>
                 <% if (ob.errors['listing.metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['listing.metadata.contractType'] })) %>
                 <select id="editListingType" name="listing.metadata.contractType" class="clrBr clrP">
                   <% ob.contractTypes.forEach((contractType) => { %>
@@ -51,15 +51,18 @@
                 </select>              
               </div>
               <div class="col6">
-                <label for="editListingVisibility" class="required">Visibility</label>
+                <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
                 <select id="editListingVisibility" class="clrBr clrP">
+                  <%
+                    // todo: will translate and implement fully when this field is implemented into the API.
+                  %>
                   <option value="hidden">Hidden (doesn't display in store)</option>
                 </select>              
               </div>            
             </div>
             <div class="flexRow gutterH">
               <div class="col6">
-                <label for="editListingPrice" class="required">Price</label>
+                <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
                   <% if (ob.errors['listing.item.price.amount']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price.amount'] })) %>
                 <div class="inputSelect">
                   <%
@@ -81,7 +84,7 @@
                 </div>
               </div>
               <div class="col6 js-conditionWrap <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
-                <label for="editListingCondition" class="required">Condition</label>
+                <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
                 <% if (ob.errors['listing.item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.condition'] })) %>
                 <select id="editListingCondition" name="listing.item.condition" class="clrBr clrP">
                   <% ob.conditionTypes.forEach((conditionType) => { %>
@@ -92,7 +95,7 @@
             </div>
             <div class="flexRow gutterH">
               <div class="col6">
-                <label for="editListingSku">SKU</label>
+                <label for="editListingSku"><%= ob.polyT('editListing.sku') %></label>
                 <% if (ob.errors['listing.item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.sku'] })) %>
                 <input type="text" class="clrBr clrP" name="listing.item.sku" id="editListingSku" value="<%= ob.listing.item.sku %>">
               </div>
@@ -123,7 +126,7 @@
             </div>
             <div class="flexRow gutterH">
               <div class="col12">
-                <label for="editListingDescription">Description</label>
+                <label for="editListingDescription"><%= ob.polyT('editListing.description') %></label>
                 <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
                 <textarea rows="6" name="listing.item.description" class="clrBr clrP" id="editListingDescription"><%= ob.listing.item.description %></textarea>
               </div>

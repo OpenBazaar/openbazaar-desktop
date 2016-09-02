@@ -18,11 +18,11 @@ export default class extends BaseModel {
     };
 
     if (attrs.amount === '') {
-      addError('amount', 'Please provide a price.');
+      addError('amount', app.polyglot.t('priceModelErrors.provideAmount'));
     } else if (is.not.number(attrs.amount)) {
-      addError('amount', 'Please provide the price amount as a number.');
+      addError('amount', app.polyglot.t('priceModelErrors.provideNumericAmount'));
     } else if (attrs.amount <= 0) {
-      addError('amount', 'The price must be greater than 0.');
+      addError('amount', app.polyglot.t('priceModelErrors.provideAmountGreaterThanZero'));
     }
 
     if (!attrs.currencyCode) {

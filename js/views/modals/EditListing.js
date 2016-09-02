@@ -45,6 +45,8 @@ export default class extends BaseModal {
 
     this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
+
+    // todo: update create / edit listing header label on sync (if save).
   }
 
   className() {
