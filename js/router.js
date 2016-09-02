@@ -140,50 +140,27 @@ export default class ObRouter extends Router {
       listing: { slug },
     }, { guid });
 
-    let profile;
-    let profileFetch;
-    let listingFetch;
     let onWillRoute = () => {};
-
-    if (guid === app.profile.id) {
-      // don't fetch our own profile, since we have it already
-      profileFetch = $.Deferred().resolve();
-      profile = app.profile;
-    } else {
-      profile = new Profile({ id: guid });
-      profileFetch = profile.fetch();
-    }
-
-    onWillRoute = () => {
-      profileFetch.abort();
-      if (listingFetch) listingFetch.abort();
-    };
-
     this.once('will-route', onWillRoute);
 
-    profileFetch.done((jqXhr) => {
+    const listingFetch = listing.fetch();
+
+    onWillRoute = () => {
+      listingFetch.abort();
+    };
+
+    listingFetch.done((jqXhr) => {
       if (jqXhr && jqXhr.statusText === 'abort') return;
 
-      listingFetch = listing.fetch();
-
-      listingFetch.done((jXhr) => {
-        if (jqXhr && jXhr.statusText === 'abort') return;
-
-        this.loadPage(
-          new ListingPage({
-            model: listing,
-          }).render()
-        );
-      }).fail((jXhr) => {
-        if (jXhr.statusText !== 'abort') this.listingNotFound();
-      }).always(() => {
-        if (onWillRoute) this.off(null, onWillRoute);
-      });
+      this.loadPage(
+        new ListingPage({
+          model: listing,
+        }).render()
+      );
     }).fail((jqXhr) => {
-      if (jqXhr.statusText === 'abort') return;
-
+      if (jqXhr.statusText !== 'abort') this.listingNotFound();
+    }).always(() => {
       if (onWillRoute) this.off(null, onWillRoute);
-      this.userNotFound();
     });
   }
 
