@@ -44,12 +44,14 @@ export default class extends BaseModel {
       const slug = this.get('listing').get('slug');
 
       if (!slug) {
-        throw new Error('In order to fetch a listing, a slug must be set as a model attribute.');
+        throw new Error('In order to fetch a listing, a slug must be set as a model attribute' +
+          ' on the nested listing model.');
       }
 
-      options.url = app.getServerUrl(`ipns/${this.guid}/listings/${slug}/listing.json`);
+      options.url = options.url ||
+        app.getServerUrl(`ipns/${this.guid}/listings/${slug}/listing.json`);
     } else {
-      options.url = app.getServerUrl('ob/listing/');
+      options.url = options.url || app.getServerUrl('ob/listing/');
       options.attrs = options.attrs || this.toJSON();
 
       // convert price fields
