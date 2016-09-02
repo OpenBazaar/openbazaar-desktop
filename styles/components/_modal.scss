@@ -19,24 +19,6 @@
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
     }
-
-    .tabColumn {
-      width: 194px;
-      border-right-width: 1px;
-      border-right-style: solid;
-
-      .tab {
-        padding: $pad/2 $pad/2 $pad/2 $pad;
-
-        &.active {
-          // use the clrBr class for the border color
-          border-right: none;
-          border-top: none;
-          border-bottom: none;
-          border-left: solid 1px;
-        }
-      }
-    }
   }
 
   &.modalTop .modalContent {

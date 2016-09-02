@@ -226,10 +226,9 @@ export default class extends BaseModal {
 
   render(restoreScrollPos = true) {
     let prevScrollPos = 0;
-    const $scrollContainer = this.$('.tabFormWrapper');
 
-    if (restoreScrollPos && $scrollContainer.length) {
-      prevScrollPos = $scrollContainer[0].scrollTop;
+    if (restoreScrollPos && this.$scrollContainer && this.$scrollContainer.length) {
+      prevScrollPos = this.$scrollContainer[0].scrollTop;
     }
 
     this.currencies = this.currencies || getCurrenciesSortedByCode();
