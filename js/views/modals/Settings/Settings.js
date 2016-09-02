@@ -36,7 +36,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} settings tabbedModal`;
+    return `${super.className()} settings tabbedModal modalTop`;
   }
 
   events() {

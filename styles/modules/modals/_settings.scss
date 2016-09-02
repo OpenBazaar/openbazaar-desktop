@@ -2,6 +2,8 @@
 
   .modalContent {
     .tabContent {
+      min-height: 640px;
+      
       .tabFormWrapper {
         height: 510px;
         
@@ -44,11 +46,19 @@
     }
 
     &.processing {
-      .settingsTabFormWrapper.mouseMovedDuringSave .settingsTabFormWrapperInner {
+      @include processingOverlay;
+
+      &::after {
+        background: none;
+        pointer-events: none;
+      }
+
+      & .settingsTabFormWrapper.mouseMovedDuringSave .settingsTabFormWrapperInner {
         @include processingOverlay;
-        
+
         &::after {
-          background-color: rgba(0,0,0,0.3);
+          background-color: rgba(0, 0, 0, 0.3);
+          content: '';
         }
       }
     }

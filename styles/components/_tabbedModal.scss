@@ -7,6 +7,8 @@
 
     .tabColumn {
       width: 194px;
+      border-right-width: 1px;
+      border-right-style: solid;
 
       .tab {
         padding: $pad/2 $pad/2 $pad/2 $pad;
@@ -35,8 +37,6 @@
     }
 
     .tabControls {
-      position: absolute;
-      bottom: 0;
       height: 80px;
       padding: $pad * 1.5;
       border-top-style: solid;
