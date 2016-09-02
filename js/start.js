@@ -15,7 +15,7 @@ import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
-import UsersShort from './collections/UsersShort';
+import Followers from './collections/Followers';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -105,26 +105,18 @@ function fetchConfig() {
 const onboardingNeededDeferred = $.Deferred();
 let profileFetch;
 let settingsFetch;
-let ownFollowersFetch;
-let ownFollowingFetch;
 let onboardProfile = false;
 let onboardSettings = false;
 let profileFailed;
 let settingsFailed;
-let ownFollowersFailed;
-let ownFollowingFailed;
 
 function isOnboardingNeeded() {
   profileFetch = !profileFetch || profileFailed ?
     app.profile.fetch() : profileFetch;
   settingsFetch = !settingsFetch || settingsFailed ?
     app.settings.fetch() : settingsFetch;
-  ownFollowersFetch = !ownFollowersFetch || ownFollowersFailed ?
-    app.ownFollowers.fetch() : ownFollowersFetch;
-  ownFollowingFetch = !ownFollowingFetch || ownFollowingFailed ?
-    app.ownFollowing.fetch() : ownFollowingFetch;
 
-  $.whenAll(profileFetch, settingsFetch, ownFollowersFetch, ownFollowingFetch)
+  $.whenAll(profileFetch, settingsFetch)
     .progress((...args) => {
       const state = args[1];
 
@@ -145,10 +137,6 @@ function isOnboardingNeeded() {
           } else {
             settingsFailed = true;
           }
-        } else if (jqXhr === ownFollowersFetch) {
-          ownFollowersFailed = true;
-        } else if (jqXhr === ownFollowingFetch) {
-          ownFollowingFailed = true;
         }
       }
     })
@@ -156,9 +144,9 @@ function isOnboardingNeeded() {
       onboardingNeededDeferred.resolve(false);
     })
     .fail((jqXhr) => {
-      if (profileFailed || settingsFailed || ownFollowersFailed || ownFollowingFailed) {
+      if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
-          title: 'Unable to load your data.',
+          title: 'Unable to get your profile and settings data.',
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
           buttons: [{
             text: 'Retry',
@@ -254,6 +242,33 @@ function onboard() {
   return onboardDeferred.promise();
 }
 
+const fetchStartupDataDeferred = $.Deferred();
+
+function fetchStartupData() {
+  app.ownFollowing.fetch()
+    .done(() => fetchStartupDataDeferred.resolve())
+    .fail((jqXhr) => {
+      const retryFetchStarupDataDialog = new Dialog({
+        title: 'Unable to get your startup data.',
+        message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+        buttons: [{
+          text: 'Retry',
+          fragment: 'retry',
+        }],
+        dismissOnOverlayClick: false,
+        dismissOnEscPress: false,
+        showCloseButton: false,
+      }).on('click-retry', () => {
+        retryFetchStarupDataDialog.close();
+        fetchStartupData();
+      })
+        .render()
+        .open();
+    });
+
+  return fetchStartupDataDeferred.promise();
+}
+
 const onboardIfNeededDeferred = $.Deferred();
 
 function onboardIfNeeded() {
@@ -262,7 +277,7 @@ function onboardIfNeeded() {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
-      onboardIfNeededDeferred.resolve();
+      fetchStartupData().done(() => onboardIfNeededDeferred.resolve());
     }
   });
 
@@ -288,8 +303,8 @@ function start() {
       app.localSettings.save('language', getValidLanguage(lang));
     });
 
-    app.ownFollowing = new UsersShort(null, { type: 'following' });
-    app.ownFollowers = new UsersShort(null, { type: 'followers' });
+    app.ownFollowing = new Followers(null, { type: 'following' });
+    app.ownFollowers = new Followers(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;
@@ -378,35 +393,41 @@ function setPublishingStatus(msg) {
 
 app.apiSocket.on('message', (e) => {
   if (e.jsonData) {
-    if (e.jsonData.status) {
-      if (e.jsonData.status === 'publishing') {
-        setPublishingStatus({
-          msg: 'Publishing...',
-          type: 'message',
-        });
+    if (e.jsonData.status === 'publishing') {
+      setPublishingStatus({
+        msg: 'Publishing...',
+        type: 'message',
+      });
 
-        unpublishedContent = true;
-      } else if (e.jsonData.status === 'error publishing') {
-        setPublishingStatus({
-          msg: 'Publishing failed. <a class="js-retry">Retry</a>',
-          type: 'warning',
-        });
+      unpublishedContent = true;
+    } else if (e.jsonData.status === 'error publishing') {
+      setPublishingStatus({
+        msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+        type: 'warning',
+      });
 
-        unpublishedContent = true;
-      } else if (e.jsonData.status === 'publish complete') {
-        setPublishingStatus({
-          msg: 'Publishing complete.',
-          type: 'message',
-        });
+      unpublishedContent = true;
+    } else if (e.jsonData.status === 'publish complete') {
+      setPublishingStatus({
+        msg: 'Publishing complete.',
+        type: 'message',
+      });
 
-        unpublishedContent = false;
+      unpublishedContent = false;
 
-        publishingStatusMsgRemoveTimer = setTimeout(() => {
-          publishingStatusMsg.remove();
-          publishingStatusMsg = null;
-        }, 2000);
-      }
-    } else if (e.jsonData.notification) {
+      publishingStatusMsgRemoveTimer = setTimeout(() => {
+        publishingStatusMsg.remove();
+        publishingStatusMsg = null;
+      }, 2000);
+    }
+  }
+});
+
+let unpublishedConfirm;
+
+app.apiSocket.on('message', (e) => {
+  if (e.jsonData) {
+    if (e.jsonData.notification) {
       if (e.jsonData.notification.follow) {
         app.ownFollowers.add({ guid: e.jsonData.notification.follow });
       } else if (e.jsonData.notification.unfollow) {
@@ -415,8 +436,6 @@ app.apiSocket.on('message', (e) => {
     }
   }
 });
-
-let unpublishedConfirm;
 
 ipcRenderer.on('close-attempt', (e) => {
   if (!unpublishedContent) {

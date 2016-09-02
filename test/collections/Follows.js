@@ -1,7 +1,7 @@
 import app from '../../js/app';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
-import Follows from '../../js/collections/UsersShort';
+import Follows from '../../js/collections/Followers';
 
 describe('the Follows collection', () => {
   before(function () {

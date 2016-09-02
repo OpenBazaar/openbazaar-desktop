@@ -2,6 +2,7 @@ import $ from 'jquery';
 import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
+import followUtils from '../../utils/follow';
 import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
@@ -12,19 +13,22 @@ export default class extends BaseVw {
     super(options);
     this.options = options;
 
-    this.tab = options.tab || 'Store';
+    // the route will send a lower case tab value, convert it to upper case or Store if not sent
+    this.tab = `${options.tab.charAt(0).toUpperCase()}${options.tab.slice(1)}` || 'Store';
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
     this.ownPage = this.model.id === app.profile.id;
 
     if (!this.ownPage) {
-      this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
-      this.followsYou = app.ownFollowers.where({ guid: this.model.id }).length > 0;
+      this.followedByYou = followUtils.followedByYou(this.model.id);
+
+      // followsYou requires a new api call
+      this.followsYou = false; // temp until api is available
 
       this.listenTo(app.ownFollowing, 'sync, update', () => {
-        this.followed = app.ownFollowing.where({ guid: this.model.id }).length > 0;
-        if (this.followed) {
+        this.followedByYou = followUtils.followedByYou(this.model.id);
+        if (this.followedByYou) {
           this.$followLbl.addClass('hide');
           this.$unfollowLbl.removeClass('hide');
         } else {
@@ -33,8 +37,9 @@ export default class extends BaseVw {
         }
       });
 
-      this.listenTo(app.ownFollowers, 'sync, update', () => {
-        this.followsYou = app.ownFollowers.where({ guid: this.model.id }).length > 0;
+      this.listenTo(app.ownFollowers, 'update', () => {
+        // if the page being viewed stops following the user change the followsYou message
+        this.followsYou = app.ownFollowers.get(this.model.id) !== undefined;
         if (this.followsYou) {
           this.$followsYou.removeClass('hide');
         } else {
@@ -63,9 +68,9 @@ export default class extends BaseVw {
   }
 
   followClick() {
-    const type = this.followed ? 'unfollow' : 'follow';
+    const type = this.followedByYou ? 'unfollow' : 'follow';
 
-    app.followUnfollow(this.model.id, type);
+    followUtils.followUnfollow(this.model.id, type);
   }
 
   messageClick() {
@@ -78,34 +83,32 @@ export default class extends BaseVw {
   }
 
   selectTab(targ) {
+    let tabTarg = targ;
     // if an invalid targ is passed in, set it to Store
-    if (!this.tabViews[targ] && targ !== 'Following' && targ !== 'Followers') {
-      targ = 'Store'; // eslint-disable-line no-param-reassign
+    if (!this.tabViews[tabTarg] && tabTarg !== 'Following' && tabTarg !== 'Followers') {
+      tabTarg = 'Store';
     }
 
-    let tabView = this.tabViewCache[targ];
+    let tabView = this.tabViewCache[tabTarg];
     const tabOptions = { ownPage: this.ownPage, model: this.model };
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      this.$tabTitle.text(targ);
+      this.$tabTitle.text(tabTarg);
       // add tab to history
-      app.router.navigate(`${this.model.id}/${targ}`, {
-        trigger: false,
-        replace: false,
-      });
+      app.router.navigate(`${this.model.id}/${tabTarg}`);
 
       this.$('.js-tab').removeClass('clrT active');
-      this.$(`.js-tab[data-tab="${targ}"]`).addClass('clrT active');
+      this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
 
-      if (targ === 'Followers' || targ === 'Following') {
-        tabOptions.followType = targ;
-        targ = 'Follow'; // eslint-disable-line no-param-reassign
+      if (tabTarg === 'Followers' || tabTarg === 'Following') {
+        tabOptions.followType = tabTarg;
+        tabTarg = 'Follow';
       }
 
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[targ], tabOptions);
-        this.tabViewCache[tabOptions.followType || targ] = tabView;
+        tabView = this.createChild(this.tabViews[tabTarg], tabOptions);
+        this.tabViewCache[tabOptions.followType || tabTarg] = tabView;
         tabView.render();
       }
       this.$tabContent.append(tabView.$el);
@@ -120,7 +123,7 @@ export default class extends BaseVw {
         tab: this.options.tab || '',
         category: this.options.category || '',
         layer: this.options.layer || '',
-        followed: this.followed,
+        followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
       }));

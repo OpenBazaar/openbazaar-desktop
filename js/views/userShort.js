@@ -2,6 +2,7 @@ import $ from 'jquery';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
+import followUtils from '../utils/follow';
 import Profile from '../models/Profile';
 
 export default class extends BaseVw {
@@ -11,7 +12,6 @@ export default class extends BaseVw {
     this.guid = options.guid || this.model.get('guid');
     this.ownGuid = this.guid === app.profile.id;
     this.profileArgs = {}; // create blank for placeholder render
-    this.followsYou = app.ownFollowers.get(this.guid) !== undefined;
     this.followedByYou = app.ownFollowing.get(this.guid) !== undefined;
     // TODO: add in code to determine if this user is in the viewer's moderator list
     this.ownMod = false;
@@ -81,7 +81,7 @@ export default class extends BaseVw {
   followClick() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
 
-    app.followUnfollow(this.guid, type);
+    followUtils.followUnfollow(this.guid, type);
   }
 
   modClick() {
@@ -96,7 +96,6 @@ export default class extends BaseVw {
         notFound: this.notFound,
         guid: this.guid,
         ownGuid: this.ownGuid,
-        followsYou: this.followsYou,
         followedByYou: this.followedByYou,
         ownMod: this.ownMod,
         ...this.profileArgs,
