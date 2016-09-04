@@ -14,7 +14,7 @@ describe('the Follows collection', () => {
       guid: app.profile.id,
     });
 
-    expect(folCol.url).to.equal(app.getServerUrl('ob/followers'));
+    expect(folCol.url()).to.equal(app.getServerUrl('ob/followers'));
   });
 
   it('uses a local url if given no guid and the type followers', () => {
@@ -22,7 +22,7 @@ describe('the Follows collection', () => {
       type: 'followers',
     });
 
-    expect(folCol.url).to.equal(app.getServerUrl('ob/followers'));
+    expect(folCol.url()).to.equal(app.getServerUrl('ob/followers'));
   });
 
   it('uses a ipns url if given a non-user guid and the type followers', () => {
@@ -31,7 +31,7 @@ describe('the Follows collection', () => {
       guid: 'testguid',
     });
 
-    expect(folCol.url).to.equal(app.getServerUrl('ipns/testguid/followers'));
+    expect(folCol.url()).to.equal(app.getServerUrl('ipns/testguid/followers'));
   });
 
   it('turns a plain guid into a model', () => {
