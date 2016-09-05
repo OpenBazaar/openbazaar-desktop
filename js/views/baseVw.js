@@ -53,7 +53,7 @@ export default class baseVw extends View {
           // If an empty string is provided or if the
           // number evaluates to NaN, we'll leave the value
           // as is, so client side validation can catch it
-          // and the user can updated it.
+          // and the user can update it.
           if (val.trim() !== '') {
             const numberFromVal = Number(val);
 
@@ -72,7 +72,6 @@ export default class baseVw extends View {
         // handle nested collection
         // for now not handling nested collection, please
         // manage manually
-        // handle nested model
       } else if (name.indexOf('.') !== -1) {
         // handle nested model
         setDeepValue(data, name, val);
