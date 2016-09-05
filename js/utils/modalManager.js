@@ -13,5 +13,3 @@ export function launchEditListingModal(modalOptions = {}) {
 }
 
 // todo: give opening of the settings modal the same treatment
-
-// todo: close any open modals when opening a new one

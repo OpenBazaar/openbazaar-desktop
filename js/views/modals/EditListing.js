@@ -50,7 +50,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} editListing tabbedModal`;
+    return `${super.className()} editListing tabbedModal modalTop`;
   }
 
   events() {
@@ -159,7 +159,6 @@ export default class extends BaseModal {
     const save = this.model.save();
 
     if (save) {
-      console.log('saving to the server');
       save.always(() => this.$saveButton.removeClass('disabled'))
         .fail((...args) => {
           new SimpleMessage({
