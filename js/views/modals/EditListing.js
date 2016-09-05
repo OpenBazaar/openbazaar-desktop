@@ -30,6 +30,12 @@ export default class extends BaseModal {
     this._origModel = this.model;
     this.model = this._origModel.clone();
     this.listenTo(this.model, 'sync', () => {
+      if (this.createMode && this.model.lastSyncedAttrs.listing &&
+        this.model.lastSyncedAttrs.listing.slug) {
+        this.createMode = false;
+        this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
+      }
+
       if (!_.isEqual(this.model.toJSON(), this._origModel.toJSON())) {
         this._origModel.set(this.model.toJSON(), { silent: true });
 
@@ -46,7 +52,8 @@ export default class extends BaseModal {
     this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
 
-    // todo: update create / edit listing header label on sync (if save).
+    this.createMode = !(this.model.lastSyncedAttrs.listing &&
+      this.model.lastSyncedAttrs.listing.slug);
   }
 
   className() {
@@ -162,8 +169,7 @@ export default class extends BaseModal {
       save.always(() => this.$saveButton.removeClass('disabled'))
         .fail((...args) => {
           new SimpleMessage({
-            // title: app.polyglot.t('settings.errors.saveError'),
-            title: 'Error saving listing.',
+            title: app.polyglot.t('editListing.saveErrorTitle'),
             // message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
             // temporarily outputing the whole "JSON" string pending the fix of:
             // https://github.com/OpenBazaar/openbazaar-go/issues/102
@@ -234,8 +240,7 @@ export default class extends BaseModal {
 
     loadTemplate('modals/editListing.html', (t) => {
       this.$el.html(t({
-        createMode: !(this.model.lastSyncedAttrs.listing &&
-          this.model.lastSyncedAttrs.listing.slug),
+        createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
         localCurrency: app.settings.get('localCurrency'),
         currencies: this.currencies,

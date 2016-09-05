@@ -120,7 +120,8 @@
     "price": "Price",
     "condition": "Condition",
     "sku": "SKU",
-    "description": "Description"
+    "description": "Description",
+    "saveErrorTitle": "There was an error saving your listing."
   },
   "profileModelErrors": {
     "provideValidHexColor": "Please provide a valid hex color.",
