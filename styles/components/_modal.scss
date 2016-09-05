@@ -24,6 +24,7 @@
   &.modalTop .modalContent {
     top: $padLg;
     @include center(true, false);
+    left: calc(50% - #{$chatClosed / 2});
 
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
