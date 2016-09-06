@@ -65,17 +65,17 @@ describe('the Listing model', () => {
     const parsed = listing.parse({
       vendorListings: [
         {
+          metadata: {
+            pricingCurrency: 'USD',
+          },
           item: {
-            price: {
-              currencyCode: 'USD',
-              amount: 123,
-            },
+            price: 123,
           },
         },
       ],
     });
 
-    expect(parsed.listing.item.price.amount).to.equal(1.23);
+    expect(parsed.listing.item.price).to.equal(1.23);
   });
 
   it('converts a BTC price from Satoshi to BTC format in parse', () => {
@@ -83,17 +83,17 @@ describe('the Listing model', () => {
     const parsed = listing.parse({
       vendorListings: [
         {
+          metadata: {
+            pricingCurrency: 'BTC',
+          },
           item: {
-            price: {
-              currencyCode: 'BTC',
-              amount: 271453590,
-            },
+            price: 271453590,
           },
         },
       ],
     });
 
-    expect(parsed.listing.item.price.amount).to.equal(0.27);
+    expect(parsed.listing.item.price).to.equal(2.71);
   });
 
   it('saves with a POST if the model\'s lastSyncedAttrs do not contain a slug', (done) => {

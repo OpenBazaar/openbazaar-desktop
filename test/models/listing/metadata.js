@@ -43,5 +43,16 @@ describe('the Metadata model', () => {
     expect(valErr && valErr.expiry && !!valErr.expiry.length || false).to.equal(true);
   });
 
+  it('fails validation if a pricing currency is not one of the available ones', () => {
+    const metadata = new Metadata();
+    metadata.set({
+      pricingCurrency: 'FOOLS-GOLD_YALL',
+    }, { validate: true });
+    const valErr = metadata.validationError;
+
+    expect(valErr && valErr.pricingCurrency && !!valErr.pricingCurrency.length || false).to
+      .equal(true);
+  });
+
   // todo: spot check nested val errors
 });

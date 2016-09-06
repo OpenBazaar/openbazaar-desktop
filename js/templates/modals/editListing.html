@@ -63,20 +63,20 @@
             <div class="flexRow gutterH">
               <div class="col6">
                 <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
-                  <% if (ob.errors['listing.item.price.amount']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price.amount'] })) %>
+                  <% if (ob.errors['listing.item.price']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price'] })) %>
                 <div class="inputSelect">
                   <%
-                    let listingPrice = ob.listing.item.price.amount;
+                    let listingPrice = ob.listing.item.price;
                     listingPrice = typeof listingPrice === 'number' ? listingPrice.toFixed(2) : listingPrice;
                   %>
-                  <input type="text" class="clrBr clrP js-price" name="listing.item.price.amount" id="editListingPrice" value="<%= listingPrice%>" data-var-type="number">
-                  <select id="editListingCurrency" name="listing.item.price.currencyCode" class="clrBr clrP nestInputRight">
+                  <input type="text" class="clrBr clrP js-price" name="listing.item.price" id="editListingPrice" value="<%= listingPrice%>" data-var-type="number">
+                  <select id="editListingCurrency" name="listing.metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
                     <option value="<%= currency.code %>"
-                    <% if (!ob.listing.item.price.currencyCode) {
+                    <% if (!ob.listing.metadata.pricingCurrency) {
                          if (currency.code === ob.localCurrency) print('selected');
                        } else {
-                         if (currency.code === ob.listing.item.price.currencyCode) print('selected');
+                         if (currency.code === ob.listing.metadata.pricingCurrency) print('selected');
                        }
                     %>><%= currency.code %></option>
                     <% }); %>

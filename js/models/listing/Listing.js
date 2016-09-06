@@ -1,7 +1,7 @@
 import app from '../../app';
 import BaseModel from '../BaseModel';
 import ListingInner from './ListingInner';
-import Price from './Price';
+import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
@@ -55,7 +55,8 @@ export default class extends BaseModel {
         const price = options.attrs.listing.item.price;
 
         if (price) {
-          options.attrs.listing.item.price = Price.convertPriceOut(price);
+          options.attrs.listing.item.price = decimalToInteger(price,
+            options.attrs.listing.metadata.pricingCurrency === 'BTC');
         }
       }
 
@@ -79,13 +80,19 @@ export default class extends BaseModel {
       // convert price fields
       // todo: give same treatment to all other nested prices (e.g. shipping)
       // once we implement those sections of the modal.
-      if (parsedResponse.listing.item) {
+      if (parsedResponse.listing && parsedResponse.listing.item) {
         const price = parsedResponse.listing.item.price;
+        const isBtc = parsedResponse.listing.metadata &&
+          parsedResponse.listing.metadata.pricingCurrency === 'BTC';
 
         if (price) {
-          parsedResponse.listing.item.price = Price.convertPriceIn(price);
+          parsedResponse.listing.item.price = integerToDecimal(price, isBtc);
         }
       }
+
+      // todo: acceptedCurrency (which is a field we don't use now, but might
+      // if we implement cryptocurrency) is comming in with a lower-cased
+      // currency code. Capitalize it.
     }
 
     return parsedResponse;

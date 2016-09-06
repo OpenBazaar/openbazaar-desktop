@@ -1,5 +1,6 @@
 import BaseModel from '../BaseModel';
 import is from 'is_js';
+import { getCurrencyByCode } from '../../data/currencies';
 
 export default class extends BaseModel {
   defaults() {
@@ -38,6 +39,10 @@ export default class extends BaseModel {
     // todo: validate date is provided in the the right format
     if (is.not.inDateRange(new Date(attrs.expiry), new Date(Date.now()), firstDayOf2038)) {
       addError('expiry', 'The expiration date must be between now and the year 2038.');
+    }
+
+    if (!attrs.pricingCurrency || !getCurrencyByCode(attrs.pricingCurrency)) {
+      addError('pricingCurrency', 'The currency is not one of the available ones.');
     }
 
     if (Object.keys(errObj).length) return errObj;

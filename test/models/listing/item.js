@@ -33,6 +33,7 @@ describe('the Item model', () => {
 
   it('fails validation if the description is not provided', () => {
     const item = new Item();
+    item.unset('description');
     item.set({}, { validate: true });
     const valErr = item.validationError;
 
