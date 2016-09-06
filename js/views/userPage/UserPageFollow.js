@@ -2,13 +2,14 @@ import BaseVw from '../baseVw';
 import userShort from '../userShort';
 import app from '../../app';
 import Follows from '../../collections/Followers';
-import followUtils from '../../utils/follow';
+import { followedByYou, followsYou } from '../../utils/follow';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
     this.followType = options.followType;
+    this.userCache = [];
 
     if (!options.ownPage) {
       this.followCol = new Follows(null, {
@@ -20,7 +21,7 @@ export default class extends BaseVw {
         this.render();
       });
 
-      this.listenTo(app.ownFollowing, 'sync, update', () => {
+      this.listenTo(app.ownFollowing, 'update', () => {
         this.updateViewerFollowers();
         this.render();
       });
@@ -32,14 +33,10 @@ export default class extends BaseVw {
     } else {
       this.followCol = app[`own${this.followType}`];
       if (this.followType === 'Followers') {
-        this.followCol.fetch().done(() => {
-          this.render();
-        }); // TODO: pagination
-      } else {
-        this.render();
+        this.followCol.fetch(); // TODO: pagination
       }
 
-      this.listenTo(app[`own${this.followType}`], 'sync, update', () => {
+      this.listenTo(app[`own${this.followType}`], 'update', () => {
         this.render();
       });
     }
@@ -49,10 +46,10 @@ export default class extends BaseVw {
     /* if the viewer follows/unfollows this user, add them to the followers list without a fetch */
     if (this.followType === 'Followers' && !this.options.ownPage) {
       // if the viewer has followed add them
-      if (followUtils.followedByYou(this.model.id)) {
-        this.followCol.add({ guid: app.profile.id });
+      if (followedByYou(this.model.id)) {
+        this.followCol.unshift({ guid: app.profile.id });
         // if the viewer has unfollowed remove them
-      } else if (!followUtils.followedByYou(this.model.id)) {
+      } else if (!followedByYou(this.model.id)) {
         this.followCol.remove(app.profile.id); // remove by id
       }
     }
@@ -61,18 +58,18 @@ export default class extends BaseVw {
   updateViewerFollowing(viaAPI = false) {
     /* if the viewer is unfollowed or followed, update the following list */
     if (this.followType === 'Following' && !this.options.ownPage) {
-      let followsYou;
+      let isFollowingYou;
       if (viaAPI) {
         // get via isFollowingMe API when it is ready
         console.log('update via API');
       } else {
-        followsYou = followUtils.followsYou(this.model.id);
+        isFollowingYou = followsYou(this.model.id);
       }
       // if this page has followed the viewer add them
-      if (followsYou) {
-        this.followCol.add({ guid: app.profile.id });
+      if (isFollowingYou) {
+        this.followCol.unshift({ guid: app.profile.id });
         // if this page has unfollowed the viewer remove them
-      } else if (!followsYou) {
+      } else if (!isFollowingYou) {
         this.followCol.remove(app.profile.id); // remove by id
       }
     }
@@ -84,12 +81,17 @@ export default class extends BaseVw {
 
   render() {
     this.$el.empty();
+    this.userCache.forEach((user) => {
+      user.remove();
+    });
+    this.userCache = [];
     // TODO: add pagination if the collection is Followers
     if (this.followCol.length) {
       this.followCol.forEach((follow) => {
         const user = this.createChild(userShort, {
           model: follow,
         });
+        this.userCache.push(user);
         this.$el.append(user.render().$el);
       });
     } else {

@@ -429,7 +429,7 @@ app.apiSocket.on('message', (e) => {
   if (e.jsonData) {
     if (e.jsonData.notification) {
       if (e.jsonData.notification.follow) {
-        app.ownFollowers.add({ guid: e.jsonData.notification.follow });
+        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
       } else if (e.jsonData.notification.unfollow) {
         app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
       }

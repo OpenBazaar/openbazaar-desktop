@@ -2,7 +2,7 @@ import $ from 'jquery';
 import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import followUtils from '../../utils/follow';
+import { followedByYou, followUnfollow } from '../../utils/follow';
 import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
@@ -21,13 +21,13 @@ export default class extends BaseVw {
     this.ownPage = this.model.id === app.profile.id;
 
     if (!this.ownPage) {
-      this.followedByYou = followUtils.followedByYou(this.model.id);
+      this.followedByYou = followedByYou(this.model.id);
 
       // followsYou requires a new api call
       this.followsYou = false; // temp until api is available
 
       this.listenTo(app.ownFollowing, 'sync, update', () => {
-        this.followedByYou = followUtils.followedByYou(this.model.id);
+        this.followedByYou = followedByYou(this.model.id);
         if (this.followedByYou) {
           this.$followLbl.addClass('hide');
           this.$unfollowLbl.removeClass('hide');
@@ -70,7 +70,7 @@ export default class extends BaseVw {
   followClick() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
 
-    followUtils.followUnfollow(this.model.id, type);
+    followUnfollow(this.model.id, type);
   }
 
   messageClick() {

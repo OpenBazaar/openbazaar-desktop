@@ -2,7 +2,7 @@ import $ from 'jquery';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
-import followUtils from '../utils/follow';
+import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile from '../models/Profile';
 
 export default class extends BaseVw {
@@ -12,31 +12,29 @@ export default class extends BaseVw {
     this.guid = options.guid || this.model.get('guid');
     this.ownGuid = this.guid === app.profile.id;
     this.profileArgs = {}; // create blank for placeholder render
-    this.followedByYou = app.ownFollowing.get(this.guid) !== undefined;
+    this.followedByYou = followedByYou(this.guid);
     // TODO: add in code to determine if this user is in the viewer's moderator list
     this.ownMod = false;
-
-    this.loadUser();
-    /* the view should be rendered when it is created and before it has data, so it can occupy
-       space in the DOM while the data is being fetched. */
+    this.fetched = false;
+    this.loading = true;
   }
 
   loadUser(guid = this.guid) {
     let profile;
-    let profileFetch;
+    this.fetched = true;
 
-    this.loading = true;
+    if (this.isRemoved()) return;
 
     if (guid === app.profile.id) {
       // don't fetch our this user's own profile, since we have it already
-      profileFetch = $.Deferred().resolve();
+      this.profileFetch = $.Deferred().resolve();
       profile = app.profile;
     } else {
       profile = new Profile({ id: guid });
-      profileFetch = profile.fetch();
+      this.profileFetch = profile.fetch();
     }
 
-    profileFetch.done(() => {
+    this.profileFetch.done(() => {
       this.loading = false;
       this.notFound = false;
       this.profileArgs = profile.toJSON();
@@ -51,7 +49,7 @@ export default class extends BaseVw {
     // this will be used by channels and other views that don't remove the view when it's follow
     // status changes.
     this.listenTo(app.ownFollowing, 'sync, update', () => {
-      this.followedByYou = app.ownFollowing.get(this.guid) !== undefined;
+      this.followedByYou = followedByYou(this.guid);
       if (this.followedByYou) {
         this.$followBtn.addClass('active');
       } else {
@@ -81,7 +79,7 @@ export default class extends BaseVw {
   followClick() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
 
-    followUtils.followUnfollow(this.guid, type);
+    followUnfollow(this.guid, type);
   }
 
   modClick() {
@@ -102,8 +100,16 @@ export default class extends BaseVw {
       }));
 
       this.$followBtn = this.$('.js-follow');
+
+      if (!this.fetched) this.loadUser();
+      /* the view should be rendered when it is created and before it has data, so it can occupy
+       space in the DOM while the data is being fetched. */
     });
 
     return this;
+  }
+
+  remove() {
+    if (this.profileFetch && this.profileFetch.abort) this.profileFetch.abort();
   }
 }
