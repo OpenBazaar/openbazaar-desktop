@@ -44,6 +44,10 @@ hr {
     -webkit-margin-before: 0;
     -webkit-margin-after: 0;
   }
+
+  &.dashed {
+    border-bottom: 1px dashed;
+  }
 }
 
 ul {
