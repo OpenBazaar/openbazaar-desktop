@@ -67,7 +67,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Move go server to electron app'
     mkdir dist/openbazaar-linux-ia32/resources/openbazaar-go/
     cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go
-    mv dist/openbazaar-linux-ia32/resources/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
+    mv dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
     chmod +x dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
@@ -83,7 +83,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Move go server to electron app'
     mkdir dist/openbazaar-linux-x64/resources/openbazaar-go/
     cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaar-go
-    mv dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaar-go-linux-x64 dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
+    mv dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
     chmod +x dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
