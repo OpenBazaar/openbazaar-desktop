@@ -10,6 +10,7 @@
       border-right-width: 1px;
       border-right-style: solid;
       min-height: 640px;
+      flex-shrink: 0;
 
       .tab {
         padding: $pad/2 $pad/2 $pad/2 $pad;
