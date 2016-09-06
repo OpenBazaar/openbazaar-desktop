@@ -23,8 +23,6 @@ export default class extends BaseVw {
     let profile;
     this.fetched = true;
 
-    if (this.isRemoved()) return;
-
     if (guid === app.profile.id) {
       // don't fetch our this user's own profile, since we have it already
       this.profileFetch = $.Deferred().resolve();
@@ -35,11 +33,13 @@ export default class extends BaseVw {
     }
 
     this.profileFetch.done(() => {
+      if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = false;
       this.profileArgs = profile.toJSON();
       this.render();
     }).fail(() => {
+      if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = true;
       this.render();
