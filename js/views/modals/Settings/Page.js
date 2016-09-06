@@ -60,14 +60,7 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
-  render(restoreScrollPos = true) {
-    let prevScrollPos = 0;
-    const $scrollContainer = this.$('.tabFormWrapper');
-
-    if (restoreScrollPos && $scrollContainer.length) {
-      prevScrollPos = $scrollContainer[0].scrollTop;
-    }
-
+  render() {
     loadTemplate('modals/settings/page.html', (t) => {
       this.$el.html(t({
         errors: this.profile.validationError || {},
@@ -75,10 +68,6 @@ export default class extends baseVw {
       }));
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
-
-      if (restoreScrollPos) {
-        this.$('.tabFormWrapper')[0].scrollTop = prevScrollPos;
-      }
     });
 
     return this;
