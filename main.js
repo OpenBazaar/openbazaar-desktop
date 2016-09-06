@@ -130,8 +130,10 @@ const startLocalServer = function startLocalServer() {
     sub.on('close', closecallback);
     sub.unref();
   } else {
-    mainWindow.webContents.executeJavaScript("console.log('Unable " +
+    if (mainWindow) {
+      mainWindow.webContents.executeJavaScript("console.log('Unable " +
       "to find openbazaard')");
+    }
   }
 };
 startLocalServer();
@@ -342,8 +344,10 @@ function createWindow() {
             cwd: workingDir,
           });
         } else {
-          mainWindow.webContents.executeJavaScript("console.log('Server is not " +
+          if (mainWindow) {
+            mainWindow.webContents.executeJavaScript("console.log('Server is not " +
             "running locally')");
+          }
         }
       },
     },
