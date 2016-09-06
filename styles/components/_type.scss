@@ -13,6 +13,10 @@ h1,h2,h3,h4,h5,h6,
   &.txUnb {
     font-weight: 400;
   }
+
+  &.tx500 {
+   font-weight: 500; 
+  }
 }
 
 // all font sizes are multiples of the base rem. This allows us to increase or decrease all the fonts by changing the

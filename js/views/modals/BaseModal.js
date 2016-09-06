@@ -126,6 +126,9 @@ export default class BaseModal extends baseVw {
 
   render() {
     loadTemplate('modals/baseModal.html', (t) => {
+      console.log('moo');
+      window.moo = t;
+      
       this.$el.html(t(
         _.extend({}, this.__options, { innerContent: this.el.innerHTML }))
       );

@@ -11,6 +11,55 @@
       .scrollBox {
         max-height: 700px
       }
+
+      .uploadItems {
+        display: table; // clear the floats
+
+        li {
+          width: 100px;
+          height: 100px;
+          border: 1px solid;
+          border-color: inherit;
+          float: left;
+          margin-right: $pad;
+          margin-bottom: $pad;
+          position: relative;
+
+          &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
+          &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
+            margin-bottom: 0;
+          }
+
+          .closeIcon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30px;
+            height: 30px;
+
+            span {
+              position: absolute;
+              top: 0;
+              left: 0;
+              color: black;
+              font-size: 50px;
+              transform: translate(-50%, -50%);
+              border-radius: 50%;
+              border: 1px solid;
+              width: 100%;
+              height: 100%;
+              // text-align: center;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+
+              border-color: blue;
+              background-color: white;
+            }
+          }
+        }
+      }
     }
   }
 }
