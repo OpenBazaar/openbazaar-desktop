@@ -60,7 +60,7 @@
     color: $col2;
   }
 
-  &.btn, &.listItem {
+  .btn, .listItem, &.btn, &.listItem {
     /* btnTxt and iconBtn are included because they extend .btn */
     color: $col1;
   }

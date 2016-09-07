@@ -56,7 +56,7 @@
     .userPageFollow {
       flex-wrap: wrap;
       width: auto;
-      margin: 0 -$padMd / 2;
+      margin: 0 #{-$padMd / 2};
 
       .userShort {
         width: 33.33333333333333%;
