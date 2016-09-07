@@ -95,7 +95,7 @@ export default class extends BaseVw {
     if (!this.currentTabView || this.currentTabView !== tabView) {
       this.$tabTitle.text(tabTarg);
       // add tab to history
-      app.router.navigate(`${this.model.id}/${tabTarg}`);
+      app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}`);
 
       this.$('.js-tab').removeClass('clrT active');
       this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
