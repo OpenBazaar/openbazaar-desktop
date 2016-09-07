@@ -238,8 +238,11 @@ export default class extends BaseModal {
 
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    loadTemplate('modals/editListing.html', (t) => {
-      this.$el.html(t({
+    loadTemplate([
+      'modals/editListing.html',
+      'util/closeIcon.html',
+    ], (editListingT, closeIconT) => {
+      this.$el.html(editListingT({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
         localCurrency: app.settings.get('localCurrency'),
@@ -253,6 +256,7 @@ export default class extends BaseModal {
           .map((conditionType) => ({ code: conditionType,
             name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
+        closeIconT,
         ...this.model.toJSON(),
       }));
 
