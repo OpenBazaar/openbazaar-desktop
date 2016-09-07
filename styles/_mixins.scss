@@ -23,6 +23,12 @@
   opacity: 0.2;
 }
 
+@mixin alignToChat {
+  @media (max-width: #{$pageWidth + $padLg + $padLg + $chatOpen + $chatOpen}) {
+    @content;
+  }
+}
+
 // todo: refactor this style once we have designs
 @mixin processingOverlay {
   position: relative;
