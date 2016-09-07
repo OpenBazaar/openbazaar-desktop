@@ -1,6 +1,5 @@
 import loadTemplate from '../../utils/loadTemplate';
 import { View } from 'backbone';
-import app from '../../app';
 
 export default class extends View {
   constructor(options = {}) {
@@ -34,13 +33,11 @@ export default class extends View {
 
   addModeratorClick() {
     if (this.currentModerator) {
-      console.log('remove moderator');
       // do the following as the callback of the remove moderator action
       this.currentModerator = false;
       this.$addModeratorLbl.removeClass('hide');
       this.$removeModeratorLbl.addClass('hide');
     } else {
-      console.log('add moderator');
       // do the following as the callback of the add moderator action
       this.currentModerator = true;
       this.$addModeratorLbl.addClass('hide');
@@ -50,18 +47,13 @@ export default class extends View {
 
   render() {
     loadTemplate('userPage/userPageHome.html', (t) => {
-      this.$el.html(t({
-        ...app.profile.toJSON(),
-        currentModerator: this.currentModerator,
-      }));
-
-      this.userShort = this.$('.js-userShort');
-
-      // add the userShort sub-template
       loadTemplate('userShort.html', (u) => {
-        this.userShort.html(u({
-          ...this.model.toJSON(),
-        }));
+        this.$el.html(
+          t({
+            currentModerator: this.currentModerator,
+            userShortTmp: u,
+            ...this.model.toJSON(),
+          }));
       });
 
       this.$termsDisplay = this.$('.js-termsDisplay');

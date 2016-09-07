@@ -52,5 +52,18 @@
         display: block;
       }
     }
+
+    .userPageFollow {
+      flex-wrap: wrap;
+      width: auto;
+      margin: 0 -$padMd / 2;
+
+      .userShort {
+        width: 33.33333333333333%;
+        flex: 0 0 auto;
+        padding: 0 $padMd / 2 $padMd $padMd / 2;
+        box-sizing: border-box;
+      }
+    }
   }
 }

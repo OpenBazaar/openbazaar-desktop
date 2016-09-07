@@ -4,7 +4,7 @@
   .hero {
     height: 101px;
     position: relative;
-    margin-bottom: 8px;
+    margin-bottom: 9px;
 
     .userIcon {
       position: absolute;
@@ -15,9 +15,30 @@
       width: 50px;
       height: 50px;
     }
+
+    .userControls {
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+
+      .iconBtn:not(.active) i {
+        opacity: 0.5;
+      }
+    }
   }
 
   .content {
     padding: 0 $padMd2 $padMd2 $padMd2;
+    height: 112px;
+    box-sizing: border-box;
+
+    .contentTop {
+      height: 86px;
+
+      .name {
+        flex: 1 0 auto;
+        max-width: 50%;
+      }
+    }
   }
 }

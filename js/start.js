@@ -15,6 +15,7 @@ import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
+import Followers from './collections/Followers';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -241,6 +242,33 @@ function onboard() {
   return onboardDeferred.promise();
 }
 
+const fetchStartupDataDeferred = $.Deferred();
+
+function fetchStartupData() {
+  app.ownFollowing.fetch()
+    .done(() => fetchStartupDataDeferred.resolve())
+    .fail((jqXhr) => {
+      const retryFetchStarupDataDialog = new Dialog({
+        title: 'Unable to get your startup data.',
+        message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+        buttons: [{
+          text: 'Retry',
+          fragment: 'retry',
+        }],
+        dismissOnOverlayClick: false,
+        dismissOnEscPress: false,
+        showCloseButton: false,
+      }).on('click-retry', () => {
+        retryFetchStarupDataDialog.close();
+        fetchStartupData();
+      })
+        .render()
+        .open();
+    });
+
+  return fetchStartupDataDeferred.promise();
+}
+
 const onboardIfNeededDeferred = $.Deferred();
 
 function onboardIfNeeded() {
@@ -249,7 +277,7 @@ function onboardIfNeeded() {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
-      onboardIfNeededDeferred.resolve();
+      fetchStartupData().done(() => onboardIfNeededDeferred.resolve());
     }
   });
 
@@ -274,6 +302,9 @@ function start() {
     app.settings.on('change:language', (settingsMd, lang) => {
       app.localSettings.save('language', getValidLanguage(lang));
     });
+
+    app.ownFollowing = new Followers(null, { type: 'following' });
+    app.ownFollowers = new Followers(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;
@@ -393,6 +424,18 @@ app.apiSocket.on('message', (e) => {
 });
 
 let unpublishedConfirm;
+
+app.apiSocket.on('message', (e) => {
+  if (e.jsonData) {
+    if (e.jsonData.notification) {
+      if (e.jsonData.notification.follow) {
+        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
+      } else if (e.jsonData.notification.unfollow) {
+        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+      }
+    }
+  }
+});
 
 ipcRenderer.on('close-attempt', (e) => {
   if (!unpublishedContent) {
