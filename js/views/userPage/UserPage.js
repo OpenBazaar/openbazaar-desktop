@@ -2,21 +2,51 @@ import $ from 'jquery';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
+import { followedByYou, followUnfollow } from '../../utils/follow';
 import Home from './UserPageHome';
 import Store from './UserPageStore';
 import Follow from './UserPageFollow';
+import Reputation from './UserPageReputation';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
 
+    // the route will send a lower case tab value, convert it to upper case or Store if not sent
+    this.tab = `${options.tab.charAt(0).toUpperCase()}${options.tab.slice(1)}` || 'Store';
     this.tabViewCache = {};
-    this.tabViews = { Home, Store, Follow };
+    this.tabViews = { Home, Store, Follow, Reputation };
 
-    this.followed = false; // TODO check to see if user is followed by the viewer
-    this.followsYou = true; // TODO check to see if this user follows the viewer
     this.ownPage = this.model.id === app.profile.id;
+
+    if (!this.ownPage) {
+      this.followedByYou = followedByYou(this.model.id);
+
+      // followsYou requires a new api call
+      this.followsYou = false; // temp until api is available
+
+      this.listenTo(app.ownFollowing, 'sync, update', () => {
+        this.followedByYou = followedByYou(this.model.id);
+        if (this.followedByYou) {
+          this.$followLbl.addClass('hide');
+          this.$unfollowLbl.removeClass('hide');
+        } else {
+          this.$followLbl.removeClass('hide');
+          this.$unfollowLbl.addClass('hide');
+        }
+      });
+
+      this.listenTo(app.ownFollowers, 'update', () => {
+        // if the page being viewed stops following the user change the followsYou message
+        this.followsYou = app.ownFollowers.get(this.model.id) !== undefined;
+        if (this.followsYou) {
+          this.$followsYou.removeClass('hide');
+        } else {
+          this.$followsYou.addClass('hide');
+        }
+      });
+    }
   }
 
   className() {
@@ -34,25 +64,13 @@ export default class extends baseVw {
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
-    this.selectTab(targ);
+    this.selectTab(targ.attr('data-tab'));
   }
 
   followClick() {
-    // TODO add in follow functionality
-    if (this.followed) {
-      // unfollow this user
-      console.log('unfollow');
-      // do the following as the callback of the unfollow action
-      this.followed = false;
-      this.$followLbl.removeClass('hide');
-      this.$unfollowLbl.addClass('hide');
-    } else {
-      // do the following as the callback of the follow action
-      console.log('follow');
-      this.followed = true;
-      this.$followLbl.addClass('hide');
-      this.$unfollowLbl.removeClass('hide');
-    }
+    const type = this.followedByYou ? 'unfollow' : 'follow';
+
+    followUnfollow(this.model.id, type);
   }
 
   messageClick() {
@@ -65,25 +83,32 @@ export default class extends baseVw {
   }
 
   selectTab(targ) {
-    let tabViewName = targ.data('tab');
-    let tabView = this.tabViewCache[tabViewName];
-    const tabViewType = tabViewName; // the original view name is passed in for the Follow view
+    let tabTarg = targ;
+    // if an invalid targ is passed in, set it to Store
+    if (!this.tabViews[tabTarg] && tabTarg !== 'Following' && tabTarg !== 'Followers') {
+      tabTarg = 'Store';
+    }
 
-    this.$tabTitle.text(tabViewName);
-
-    if (tabViewName === 'Followers' || tabViewName === 'Following') tabViewName = 'Follow';
+    let tabView = this.tabViewCache[tabTarg];
+    const tabOptions = { ownPage: this.ownPage, model: this.model };
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
+      this.$tabTitle.text(tabTarg);
+      // add tab to history
+      app.router.navigate(`${this.model.id}/${tabTarg}`);
+
       this.$('.js-tab').removeClass('clrT active');
-      targ.addClass('clrT active');
+      this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
+
+      if (tabTarg === 'Followers' || tabTarg === 'Following') {
+        tabOptions.followType = tabTarg;
+        tabTarg = 'Follow';
+      }
+
       if (this.currentTabView) this.currentTabView.$el.detach();
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[tabViewName], {
-          tabViewType,
-          ownPage: this.ownPage,
-          model: this.model,
-        });
-        this.tabViewCache[tabViewName] = tabView;
+        tabView = this.createChild(this.tabViews[tabTarg], tabOptions);
+        this.tabViewCache[tabOptions.followType || tabTarg] = tabView;
         tabView.render();
       }
       this.$tabContent.append(tabView.$el);
@@ -98,7 +123,7 @@ export default class extends baseVw {
         tab: this.options.tab || '',
         category: this.options.category || '',
         layer: this.options.layer || '',
-        followed: this.followed,
+        followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
       }));
@@ -107,9 +132,10 @@ export default class extends baseVw {
       this.$tabTitle = this.$('.js-tabTitle');
       this.$followLbl = this.$('.js-followLbl');
       this.$unfollowLbl = this.$('.js-unfollowLbl');
+      this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
 
-      this.selectTab(this.$('.js-tab[data-tab="Home"]'));
+      this.selectTab(this.tab);
     });
 
     return this;

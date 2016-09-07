@@ -115,7 +115,6 @@ ul, ol {
     overflow-y: scroll;
     height: calc(100% - #{$bar} - #{$barLg});
     box-sizing: border-box;
-    display: flex;
 
     #pageTabBar {
       position: fixed;
@@ -152,33 +151,21 @@ ul, ol {
     }
 
     #pageContainer {
-      flex-grow: 1;
 
       .pageContent {
-        width: $pageWidth;
+        width: $pageWidth + $padLg + $padLg;
         box-sizing: border-box;
-        margin: 0 auto;
-        padding-bottom: $bar;
+        margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
+        padding: 0 $padLg $bar $padLg;
         position: relative;
-      }
-    }
+        @include chatOpeningTransition(margin);
 
-    #chatLeftSpacer {
-      width: $chatClosed; //this spacer can collapse if there isn't enough space
-      min-width: $padHg;
-      //@include chatOpeningTransition(width);
+        @include alignToChat {
 
-      .chatOpen & {
-        width: $chatOpen;
-      }
-    }
-
-    #chatRightSpacer {
-      flex: 0 0;
-      min-width: $chatClosed; //this spacer will not collapse
-
-      .chatOpen & {
-        min-width: $chatOpen;
+          .chatOpen & {
+            margin-right: $chatOpen;
+          }
+        }
       }
     }
   }
