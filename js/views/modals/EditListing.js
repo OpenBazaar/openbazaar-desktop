@@ -67,6 +67,8 @@ export default class extends BaseModal {
       'change #editListingType': 'onChangeListingType',
       'change #editListingSlug': 'onChangeSlug',
       'change .js-price': 'onChangePrice',
+      'change #inputPhotoUpload': 'onChangePhotoUploadInput',
+      'click .js-addPhoto': 'onClickAddPhoto',
       ...super.events(),
     };
   }
@@ -114,6 +116,14 @@ export default class extends BaseModal {
     } else {
       this.$conditionWrap.removeClass('disabled');
     }
+  }
+
+  onChangePhotoUploadInput() {
+    alert('the goods be good');
+  }
+
+  onClickAddPhoto() {
+    this.$inputPhotoUpload.trigger('click');
   }
 
   onScrollLinkClick(e) {
@@ -220,8 +230,16 @@ export default class extends BaseModal {
   }
 
   get $saveButton() {
-    return this.$_saveButton || this.$('.js-save');
+    return this._$buttonSave || this.$('.js-save');
   }
+
+  // get $buttonAddPhoto() {
+  //   return this._$buttonAddPhoto || this.$('.js-addPhoto');
+  // }
+
+  get $inputPhotoUpload() {
+    return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
+  }  
 
   remove() {
     if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
@@ -298,7 +316,9 @@ export default class extends BaseModal {
       this._$currencySelect = null;
       this._$priceInput = null;
       this._$conditionWrap = null;
-      this.$_saveButton = null;
+      this._$buttonSave = null;
+      // this._$buttonAddPhoto = null;
+      this._$inputPhotoUpload = null;
       this.$titleInput = this.$('#editListingTitle');
 
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);

@@ -136,7 +136,12 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad">
           <h1 class="tx3 tx500">Photos</h1>
+          <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
           <ul class="unstyled uploadItems clrBr">
+            <li class="addElement">
+              <span class="imagesIcon ion-images clrT4"></span>
+              <button class="btn clrP clrBr clrT tx6 js-addPhoto">Add</button>
+            </li>
             <% [1,2,3,4,5,6,7,8,9,0].forEach((photo) => { %>
               <li>
                 <%

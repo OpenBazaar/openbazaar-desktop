@@ -9,7 +9,7 @@
     // temporary styling to get some type of scrollbar on the right pane
     .tabContent {
       .scrollBox {
-        max-height: 700px
+        max-height: 550px
       }
 
       .uploadItems {
@@ -31,25 +31,25 @@
           }
 
           .closeIcon {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 24px;
             height: 24px;
+          }
 
-            span {
+          &.addElement {
+            .imagesIcon {
+              font-size: 50px;
+              @include center;
+              top: 35%;
+            }
+
+            button {
+              width: 61px;
+              height: 28px;
               position: absolute;
-              top: 0;
-              left: 0;
-              transform: translate(-50%, -50%);
-              border-radius: 50%;
-              border-style: solid;
-              border-width: 1px;              
-              width: 100%;
-              height: 100%;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+              bottom: 10px;
+              padding: 0;
+              line-height: 1;
+              @include center(true, false)
             }
           }
         }

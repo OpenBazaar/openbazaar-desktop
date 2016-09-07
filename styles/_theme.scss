@@ -132,7 +132,8 @@ label.required::after {
 
 input,
 select,
-textarea {
+textarea,
+button {
   &:focus {
     border-color: rgb(0, 0, 0);
   }
