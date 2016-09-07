@@ -6,10 +6,10 @@ module.exports = function (grunt) {
     'electron-installer-debian': {
       options: {
         productName: 'OpenBazaar',
-        name: 'openbazaar',
+        name: 'openbazaar2',
         arch: 'amd64',
         version: '1.0.4',
-        bin: 'openbazaar',
+        bin: 'openbazaar2',
         maintainer: 'OpenBazaar <project@openbazaar.org>',
         rename(dest) {
           return `${dest}<%= name %>_<%= version %>_<%= arch %>.deb`;
@@ -36,12 +36,12 @@ module.exports = function (grunt) {
       x32: {
         appDirectory: grunt.option('appdir'),
         outputDirectory: grunt.option('outdir'),
-        name: 'OpenBazaar',
-        productName: 'OpenBazaar',
+        name: 'OpenBazaar2',
+        productName: 'OpenBazaar2',
         authors: 'OpenBazaar',
         owners: 'OpenBazaar',
-        exe: 'OpenBazaar.exe',
-        description: 'OpenBazaar',
+        exe: 'OpenBazaar2.exe',
+        description: 'OpenBazaar 2',
         version: grunt.option('obversion') || '',
         title: 'OpenBazaar',
         iconUrl: 'https://openbazaar.org/downloads/icon.ico',
