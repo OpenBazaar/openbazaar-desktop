@@ -30,52 +30,22 @@
   background-color: $background;
 }
 
-$excludedLinks: ".btn, .iconBtn, .listItem";
-
 .clrT {
-  color: $text;
-
-  a:not(#{$excludedLinks}) {
-    color: $text2;
-  }
-
-  input[type="radio"]:checked + label:before {
-    background: $text;
-  }
+  @include textColor($text, $text2);
 }
 
 .clrT2 {
-  // for faded text
-  color: $text2;
-
-  & a:not(#{$excludedLinks}) {
-    color: $text3;
-  }
-
-  input[type="radio"]:checked + label:before {
-    background: $text2;
-  }
+  @include textColor($text2, $text3);
 }
 
 .clrT3 {
-  // use when text2 needs to be "activated"
-  color: $text3;
-
   // links in text color 3 are the same color, or they'd be too hard to see
-
-  input[type="radio"]:checked + label:before {
-    background: $text3;
-  }
+  @include textColor($text3);
 }
 
 .clrT4 {
-  color: $text4;
-
   // links in text color 4 are the same color, or they'd be too hard to see
-
-  input[type="radio"]:checked + label:before {
-    background: $text4;
-  }
+  @include textColor($text4);
 }
 
 .clrBr {

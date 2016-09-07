@@ -50,3 +50,28 @@
     border-radius: inherit;
   }
 }
+
+@mixin textColor($col1, $col2: $col1) {
+  /* generates the text color rules */
+  /* if no second color is passed, set everything to the first color */
+  color: $col1;
+
+  a {
+    color: $col2;
+  }
+
+  &.btn, &.listItem {
+    /* btnTxt and iconBtn are included because they extend .btn */
+    color: $col1;
+  }
+
+  @at-root {
+    a#{&} {
+      color: $col1;
+    }
+  }
+
+  input[type="radio"]:checked + label:before {
+    background: $col1;
+  }
+}
