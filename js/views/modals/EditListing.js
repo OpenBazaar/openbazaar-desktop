@@ -8,6 +8,7 @@ import { getCurrenciesSortedByCode } from '../../data/currencies';
 import SimpleMessage from './SimpleMessage';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
+import { Collection } from 'backbone';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -51,7 +52,7 @@ export default class extends BaseModal {
 
     this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
-
+    this.photoUploads = new Collection();
     this.createMode = !(this.model.lastSyncedAttrs.listing &&
       this.model.lastSyncedAttrs.listing.slug);
   }
@@ -119,7 +120,7 @@ export default class extends BaseModal {
   }
 
   onChangePhotoUploadInput() {
-    alert('the goods be good');
+    
   }
 
   onClickAddPhoto() {
