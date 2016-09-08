@@ -93,7 +93,7 @@ describe('the Listing model', () => {
       ],
     });
 
-    expect(parsed.listing.item.price).to.equal(2.7145);
+    expect(parsed.listing.item.price).to.equal(2.71453590);
   });
 
   it('saves with a POST if the model\'s lastSyncedAttrs do not contain a slug', (done) => {

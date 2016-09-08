@@ -65,7 +65,7 @@
                   <% if (ob.errors['listing.item.price']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price'] })) %>
                 <div class="inputSelect">
                   <%
-                    const decimalPlaces = ob.listing.metadata.pricingCurrency === 'BTC' ? 4 : 2;
+                    const decimalPlaces = ob.listing.metadata.pricingCurrency === 'BTC' ? 8 : 2;
                     let listingPrice = ob.listing.item.price;
                     listingPrice = typeof listingPrice === 'number' ? listingPrice.toFixed(decimalPlaces) : listingPrice;
                   %>

@@ -9,7 +9,7 @@ describe('the currency utility module', () => {
   });
 
   it('correctly converts a BTC price from an integer to a decimal', () => {
-    expect(integerToDecimal(271453590, true)).to.equal(2.7145);
+    expect(integerToDecimal(271453590, true)).to.equal(2.71453590);
   });
 
   it('correctly converts a fiat amount from a decimal to an integer', () => {

@@ -31,7 +31,7 @@ export function integerToDecimal(amount, isBtc = false) {
   let updatedAmount = amount;
 
   if (isBtc) {
-    updatedAmount = Number((amount / 100000000).toFixed(4));
+    updatedAmount = Number((amount / 100000000).toFixed(8));
   } else {
     updatedAmount = Number((amount / 100).toFixed(2));
   }

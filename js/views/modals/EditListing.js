@@ -120,7 +120,7 @@ export default class extends BaseModal {
     const valAsNumber = Number(updatedVal);
 
     if (!isNaN(valAsNumber)) {
-      const decimalPlaces = this.$currencySelect.val() === 'BTC' ? 4 : 2;
+      const decimalPlaces = this.$currencySelect.val() === 'BTC' ? 8 : 2;
       updatedVal = valAsNumber.toFixed(decimalPlaces);
     }
 
