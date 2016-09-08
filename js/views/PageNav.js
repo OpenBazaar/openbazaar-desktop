@@ -5,6 +5,8 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
+import { launchEditListingModal } from '../utils/modalManager';
+import Listing from '../models/listing/Listing';
 
 const remote = electron.remote;
 
@@ -20,6 +22,7 @@ export default class extends View {
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navCreateListing': 'navCreateListingClick',
       },
       navigable: false,
       ...options,
@@ -121,7 +124,9 @@ export default class extends View {
 
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.$addressBar.val();
+      let text = this.$addressBar.val().trim();
+      this.$addressBar.val(text);
+
       let isGuid = true;
 
       if (text.startsWith('ob://')) text = text.slice(5);
@@ -145,6 +150,9 @@ export default class extends View {
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
+      } else if (text.startsWith('listing/')) {
+        // temporary to handle temporary listing route
+        app.router.navigate(text, { trigger: true });
       } else {
         // tag(s)
         const tags = text.trim()
@@ -169,6 +177,16 @@ export default class extends View {
       this.settingsModal = new SettingsModal().render().open();
     }
     this.togglePopMenu();
+  }
+
+  navCreateListingClick() {
+    const listingModel = new Listing();
+
+    launchEditListingModal({
+      mode: 'create',
+      // model: new Listing(),
+      model: listingModel,
+    });
   }
 
   render() {

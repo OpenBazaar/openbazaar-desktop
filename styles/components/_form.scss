@@ -1,0 +1,123 @@
+form {
+  margin: 0;
+  font-size: $tx5;
+
+  label {
+    line-height: $formElementHeight;
+    font-weight: 500;
+  }
+}
+
+input::-webkit-input-placeholder,
+select::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: inherit;
+  opacity: 0.35;
+}
+
+
+input,
+select,
+textarea,
+.select2-container--focus .select2-selection__rendered,
+.select2-container--focus .select2-selection,
+.medium-editor-element {
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+  border-radius: 3px;
+  font: {
+    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    size: $tx5;
+  }
+}
+
+select {
+  width: 100%;
+}
+
+input[type="text"],
+textarea,
+.select2-container--focus .select2-selection__rendered,
+.medium-editor-element {
+  border-style: solid;
+  border-width: 1px;
+  //use the color class to set the border color
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 $pad;
+  line-height: 40px;
+}
+
+.medium-editor-element {
+  padding-top: $padSm;
+}
+
+textarea {
+  background: none;
+  outline: none;
+  -webkit-appearance: none;
+  resize: none;
+  line-height: 1.2em;
+  padding: $pad;
+}
+
+.errorList {
+  color: $error;
+  
+  li {
+    i {
+      margin-right: 5px;
+    }
+
+    margin-bottom: 5px;
+  }
+
+  margin-bottom: 10px;
+}
+
+label {
+  &.error {
+    input, textarea {
+      border: 1px solid red;
+    }
+  }
+
+  &.required::after {
+    content: '*';
+    position: absolute;
+    font-size: 130%;    
+  }
+}
+
+// By default, using width values appropriate for currency codes.
+// Overwrite in your own implementation if you need to deviate.
+.inputSelect {
+  position: relative;
+  
+  input {
+    padding-right: 75px;
+  }
+
+  .select2-container {
+    width: 70px !important;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+
+    .select2-selection {
+      border-width: 0;
+    }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    right: 71px;
+    width: 1px;
+    background-color: #DDD;
+  }
+}

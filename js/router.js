@@ -6,9 +6,9 @@ import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
-import TestModalsPage from './views/TestModalsPage';
-import TestProfilePage from './views/TestProfilePage';
+import ListingPage from './views/Listing';
 import Profile from './models/Profile';
+import Listing from './models/listing/Listing';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -21,8 +21,8 @@ export default class ObRouter extends Router {
       [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
-      ['test-modals', 'testModals'],
-      ['test-profile', 'testProfile'],
+      // temporary route
+      ['listing/:guid/:slug', 'listing'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -131,23 +131,40 @@ export default class ObRouter extends Router {
     });
   }
 
+  listing(guid, slug) {
+    const listing = new Listing({
+      listing: { slug },
+    }, { guid });
+
+    let onWillRoute = () => {};
+    this.once('will-route', onWillRoute);
+
+    const listingFetch = listing.fetch();
+
+    onWillRoute = () => {
+      listingFetch.abort();
+    };
+
+    listingFetch.done((jqXhr) => {
+      if (jqXhr && jqXhr.statusText === 'abort') return;
+
+      this.loadPage(
+        new ListingPage({
+          model: listing,
+        }).render()
+      );
+    }).fail((jqXhr) => {
+      if (jqXhr.statusText !== 'abort') this.listingNotFound();
+    }).always(() => {
+      if (onWillRoute) this.off(null, onWillRoute);
+    });
+  }
+
   transactions(tab) {
     tab = tab || 'inbound'; // eslint-disable-line no-param-reassign
 
     this.loadPage(
       new TransactionsPage({ tab }).render()
-    );
-  }
-
-  testModals() {
-    this.loadPage(
-      new TestModalsPage().render()
-    );
-  }
-
-  testProfile() {
-    this.loadPage(
-      new TestProfilePage().render()
     );
   }
 
@@ -160,6 +177,12 @@ export default class ObRouter extends Router {
   pageNotFound() {
     this.loadPage(
       new TemplateOnly({ template: 'error-pages/pageNotFound.html' }).render()
+    );
+  }
+
+  listingNotFound() {
+    this.loadPage(
+      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render()
     );
   }
 }

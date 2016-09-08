@@ -21,7 +21,7 @@ import { Model } from 'backbone';
   import CustomCollection from './collections';
 
   class ParentModel extends BaseModel {
-    nested() {
+    get nested() {
       return {
         SMTPSettings: Model,
         serverConfig: CustomModel,
@@ -85,8 +85,8 @@ import { Model } from 'backbone';
 */
 
 export default class extends Model {
-  constructor(attrs) {
-    super(attrs);
+  constructor(...args) {
+    super(...args);
 
     this.lastSyncedAttrs = {};
 
@@ -126,6 +126,30 @@ export default class extends Model {
     return super.set(attrs, opts);
   }
 
+  mergeInNestedModelErrors(errObj = {}) {
+    let mergedErrs = errObj;
+
+    Object.keys(this.nested || {})
+      .forEach((key) => {
+        if (this.get(key) instanceof Model) {
+          const nestedMd = this.get(key);
+          const nestedErrs = nestedMd.validate(nestedMd.toJSON()) || {};
+          const prefixedErrs = {};
+
+          Object.keys(nestedErrs).forEach((nestedErrKey) => {
+            prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
+          });
+
+          mergedErrs = {
+            ...mergedErrs,
+            ...prefixedErrs,
+          };
+        }
+      });
+
+    return mergedErrs;
+  }
+
   toJSON() {
     const attrs = super.toJSON();
 
@@ -154,6 +178,10 @@ export default class extends Model {
   }
 
   clone() {
-    return new this.constructor(this.toJSON());
+    const clone = new this.constructor(this.toJSON());
+
+    clone.lastSyncedAttrs = this.lastSyncedAttrs;
+
+    return clone;
   }
 }

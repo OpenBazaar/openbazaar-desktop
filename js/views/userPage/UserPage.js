@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import BaseVw from '../baseVw';
+import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
@@ -8,7 +8,7 @@ import Store from './UserPageStore';
 import Follow from './UserPageFollow';
 import Reputation from './UserPageReputation';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;

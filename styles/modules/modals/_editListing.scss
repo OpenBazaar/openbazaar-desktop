@@ -1,0 +1,16 @@
+.editListing {
+  .modalContent {
+    overflow: hidden;
+
+    .medium-editor-element {
+      min-height: 150px;
+    }
+
+    // temporary styling to get some type of scrollbar on the right pane
+    .tabContent {
+      .scrollBox {
+        max-height: 700px
+      }
+    }
+  }
+}

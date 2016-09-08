@@ -95,3 +95,19 @@
 .clrSh2  {
   box-shadow: 0 1px 0 rgba(0,0,0,0.05);
 }
+
+label.required::after {
+  color: $emphasis2;
+}
+
+input,
+select,
+textarea {
+  &:focus {
+    border-color: rgb(0, 0, 0);
+  }
+}
+
+.select2-container--focus .select2-selection__rendered {
+  border-color: rgb(0, 0, 0);
+}
