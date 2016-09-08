@@ -56,9 +56,13 @@ export default class extends BaseModal {
     this.createMode = !(this.model.lastSyncedAttrs.listing &&
       this.model.lastSyncedAttrs.listing.slug);
     this.photoUploads = [];
+    this.images = this.innerListing.get('item').get('images');
 
-    this.listenTo(this.innerListing.get('item').get('images'), 'add', this.onAddImage);
-    this.listenTo(this.innerListing.get('item').get('images'), 'remove', this.onRemoveImage);
+    loadTemplate('modals/editListing/uploadPhoto.html',
+      uploadT => (this.uploadPhotoT = uploadT));
+
+    this.listenTo(this.images, 'add', this.onAddImage);
+    this.listenTo(this.images, 'remove', this.onRemoveImage);
   }
 
   className() {
@@ -74,6 +78,7 @@ export default class extends BaseModal {
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
+      'click .js-removeImage': 'onClickRemoveImage',
       ...super.events(),
     };
   }
@@ -88,8 +93,27 @@ export default class extends BaseModal {
     }
   }
 
-  onAddImage(images) {
-    // pass
+  onAddImage(image) {
+    const imageHtml = this.uploadPhotoT({
+      closeIconClass: 'js-removeImage',
+      ...image.toJSON(),
+    });
+
+    this.$photoUploadItems.append(imageHtml);
+  }
+
+  onRemoveImage(image, images, options) {
+    // 1 is added to the index to account for the .addElement
+    this.$photoUploadItems.find('li')
+      .eq(options.index + 1)
+      .remove();
+  }
+
+  onClickRemoveImage(e) {
+    // since the first li is the .addElement, we need to subtract 1 from the index
+    const removeIndex = $(e.target).parents('li').index() - 1;
+
+    this.images.remove(this.images.at(removeIndex));
   }
 
   onChangePrice(e) {
@@ -129,7 +153,7 @@ export default class extends BaseModal {
 
   // todo: move to top of file and get value from the model
   get MAX_PHOTOS() {
-    return 3;
+    return 10;
   }
 
   onChangePhotoUploadInput() {
@@ -240,19 +264,13 @@ export default class extends BaseModal {
       dataType: 'json',
       contentType: 'application/json',
     }).always(() => {
-      if (!this.anyInProgressPhotoUploads) this.$uploadingLabel.addClass('hide');
-    }).done((...args) => {
-      console.log('moo');
-      window.moo = args;
-    }).fail((...args) => {
-      console.log('poo');
-      window.poo = args;
-    });
+      if (!this.areInProgressPhotoUploads) this.$uploadingLabel.addClass('hide');
+    }).done(uploadedImage => this.images.add(uploadedImage));
 
     this.photoUploads.push(upload);
   }
 
-  get anyInProgressPhotoUploads() {
+  get areInProgressPhotoUploads() {
     return !!this.photoUploads
       .filter(upload => upload.state() === 'pending')
       .length;
@@ -378,7 +396,11 @@ export default class extends BaseModal {
   // }
 
   get $uploadingLabel() {
-    return this._$$uploadingLabel || this.$('.js-uploadingLabel');
+    return this._$uploadingLabel || this.$('.js-uploadingLabel');
+  }
+
+  get $photoUploadItems() {
+    return this._$photoUploadItems || this.$('.js-photoUploadItems');
   }
 
   remove() {
@@ -398,7 +420,7 @@ export default class extends BaseModal {
 
     // todo: add model validation to include at least one image
 
-    loadTemplate('modals/editListing.html', t => {
+    loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
@@ -413,7 +435,8 @@ export default class extends BaseModal {
           .map((conditionType) => ({ code: conditionType,
             name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
-        photoUploadInprogress: this.anyInProgressPhotoUploads,
+        photoUploadInprogress: this.areInProgressPhotoUploads,
+        uploadPhotoT: this.uploadPhotoT,
         ...this.model.toJSON(),
       }));
 
@@ -459,6 +482,7 @@ export default class extends BaseModal {
       this._$inputPhotoUpload = null;
       // this._$photoUploadErrorWrap = null;
       this._$uploadingLabel = null;
+      this._$photoUploadItems = null;
       this.$titleInput = this.$('#editListingTitle');
 
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);

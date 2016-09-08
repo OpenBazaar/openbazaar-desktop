@@ -29,6 +29,9 @@
             margin-right: $pad;
             margin-bottom: $pad;
             position: relative;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
 
             &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
             &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
