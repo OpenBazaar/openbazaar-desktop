@@ -6,8 +6,6 @@ import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
-import TestModalsPage from './views/TestModalsPage';
-import TestProfilePage from './views/TestProfilePage';
 import ListingPage from './views/Listing';
 import Profile from './models/Profile';
 import Listing from './models/listing/Listing';
@@ -23,8 +21,6 @@ export default class ObRouter extends Router {
       [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
-      ['test-modals', 'testModals'],
-      ['test-profile', 'testProfile'],
       // temporary route
       ['listing/:guid/:slug', 'listing'],
       ['*path', 'pageNotFound'],
@@ -169,18 +165,6 @@ export default class ObRouter extends Router {
 
     this.loadPage(
       new TransactionsPage({ tab }).render()
-    );
-  }
-
-  testModals() {
-    this.loadPage(
-      new TestModalsPage().render()
-    );
-  }
-
-  testProfile() {
-    this.loadPage(
-      new TestProfilePage().render()
     );
   }
 

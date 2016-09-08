@@ -13,6 +13,10 @@ export default class extends baseVw {
     this.listenTo(this.model, 'change', this.render);
   }
 
+  className() {
+    return 'pad';
+  }
+
   events() {
     return {
       'click .js-edit': 'onClickEdit',
