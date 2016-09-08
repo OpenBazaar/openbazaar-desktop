@@ -161,7 +161,7 @@
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
     "badConditionType": "Please provide the price amount as a number.",
-    "descriptionTooLong": "The price must be greater than 0.",
+    "descriptionTooLong": "The description exceeds the maximum allowable length.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
