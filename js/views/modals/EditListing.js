@@ -57,7 +57,8 @@ export default class extends BaseModal {
       this.model.lastSyncedAttrs.listing.slug);
     this.photoUploads = [];
 
-    loadTemplate('formError.html', t => (this.formErrorT = t));
+    this.listenTo(this.innerListing.get('item').get('images'), 'add', this.onAddImage);
+    this.listenTo(this.innerListing.get('item').get('images'), 'remove', this.onRemoveImage);
   }
 
   className() {
@@ -85,6 +86,10 @@ export default class extends BaseModal {
     if (['create', 'edit'].indexOf(mode) === -1) {
       throw new Error('Please specify either a \'create\' or \'edit\' mode.');
     }
+  }
+
+  onAddImage(images) {
+    // pass
   }
 
   onChangePrice(e) {
@@ -142,16 +147,12 @@ export default class extends BaseModal {
     if (currPhotoLength + photoFiles.length > this.MAX_PHOTOS) {
       photoFiles = photoFiles.slice(0, this.MAX_PHOTOS - currPhotoLength);
 
-      this.$photoUploadErrorWrap.html(
-        this.formErrorT({
-          errors: [
-            app.polyglot.t('editListing.errors.tooManyPhotos'),
-            ...((this.model.validationError || {})['listing.item.images'] || []),
-          ],
-        })
-      );
-    } else {
-      this.$photoUploadErrorWrap.empty();
+      new SimpleMessage({
+        title: app.polyglot.t('editListing.errors.tooManyPhotosTitle'),
+        message: app.polyglot.t('editListing.errors.tooManyPhotosBody'),
+      })
+      .render()
+      .open();
     }
 
     if (!photoFiles.length) return;
@@ -208,15 +209,12 @@ export default class extends BaseModal {
         if (errored === photoFiles.length) {
           this.$uploadingLabel.addClass('hide');
 
-          // unableToLoadImages
-          this.$photoUploadErrorWrap.html(
-            this.formErrorT({
-              errors: [
-                app.polyglot.t('editListing.errors.unableToLoadImages', { smart_count: errored }),
-                ...((this.model.validationError || {})['listing.item.images'] || []),
-              ],
-            })
-          );
+          new SimpleMessage({
+            title: app.polyglot.t('editListing.errors.unableToLoadImagesBody',
+              { smart_count: errored }),
+          })
+          .render()
+          .open();
         } else if (loaded + errored === photoFiles.length) {
           this.uploadImages(toUpload);
         }
@@ -375,9 +373,9 @@ export default class extends BaseModal {
     return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
   }
 
-  get $photoUploadErrorWrap() {
-    return this._$photoUploadErrorWrap || this.$('.js-photoUploadErrorWrap');
-  }
+  // get $photoUploadErrorWrap() {
+  //   return this._$photoUploadErrorWrap || this.$('.js-photoUploadErrorWrap');
+  // }
 
   get $uploadingLabel() {
     return this._$$uploadingLabel || this.$('.js-uploadingLabel');
@@ -398,20 +396,10 @@ export default class extends BaseModal {
 
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    let errors = this.model.validationError || {};
-
-    if (this.anyInProgressPhotoUploads) {
-      errors['listing.item.images'] = errors['listing.item.images'] || [];
-      errors['listing.item.images'].push('')
-    }
-
     // todo: add model validation to include at least one image
 
-    loadTemplate([
-      'modals/editListing.html',
-      'util/closeIcon.html',
-    ], (editListingT, closeIconT) => {
-      this.$el.html(editListingT({
+    loadTemplate('modals/editListing.html', t => {
+      this.$el.html(t({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
         localCurrency: app.settings.get('localCurrency'),
@@ -425,7 +413,6 @@ export default class extends BaseModal {
           .map((conditionType) => ({ code: conditionType,
             name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
-        closeIconT,
         photoUploadInprogress: this.anyInProgressPhotoUploads,
         ...this.model.toJSON(),
       }));
@@ -470,7 +457,7 @@ export default class extends BaseModal {
       this._$conditionWrap = null;
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
-      this._$photoUploadErrorWrap = null;
+      // this._$photoUploadErrorWrap = null;
       this._$uploadingLabel = null;
       this.$titleInput = this.$('#editListingTitle');
 

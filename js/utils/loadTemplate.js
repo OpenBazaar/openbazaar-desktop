@@ -5,47 +5,24 @@ import * as templateHelpers from './templateHelpers';
 
 const templateCache = {};
 
-// todo: write test to test passing in an array of template files.
-export default function loadTemplate(templates, callback, root = `${__dirname}/../templates/`) {
-  let templatePaths = templates;
-
-  if (!templatePaths) {
+export default function loadTemplate(templateFile, callback, root = `${__dirname}/../templates/`) {
+  if (!templateFile) {
     throw new Error('Please provide a path to the template.');
-  }
-
-  if (_.isArray(templatePaths)) {
-    if (!templatePaths.length) {
-      throw new Error('If passing in a list of template files, please provide a non-empty list.');
-    }
-  } else {
-    templatePaths = [templatePaths];
   }
 
   _.templateSettings.variable = 'ob';
 
-  const compiledTmpls = [];
+  let template = templateCache[templateFile];
 
-  templatePaths.forEach((templatePath) => {
-    let template = templateCache[templatePath];
+  if (!template) {
+    const file = fs.readFileSync(path.join(root, templateFile), 'utf8');
+    template = _.template(file);
+    templateCache[templateFile] = template;
+  }
 
-    if (!template) {
-      const file = fs.readFileSync(path.join(root, templatePath), 'utf8');
-      template = _.template(file);
-      templateCache[templatePath] = template;
-    }
-
-    compiledTmpls.push(template);
-  });
-
-  const sendBackTmpls = () => {
-    const wrappedTmpls = [];
-
-    compiledTmpls.forEach((compiledTmpl) => {
-      const wrappedTmpl = (context) => compiledTmpl({ ...templateHelpers, ...(context || {}) });
-      wrappedTmpls.push(wrappedTmpl);
-    });
-
-    callback(...wrappedTmpls);
+  const sendBackTmpl = () => {
+    const wrappedTmpl = (context) => template({ ...templateHelpers, ...(context || {}) });
+    callback(wrappedTmpl);
   };
 
   // todo: if we need more template that we want to provide as template
@@ -54,10 +31,9 @@ export default function loadTemplate(templates, callback, root = `${__dirname}/.
     templateHelpers.formErrorTmpl = 'its coming'; // hack to avoid infinite recursion
     loadTemplate('formError.html', (t) => {
       templateHelpers.formErrorTmpl = t;
-      sendBackTmpls();
+      sendBackTmpl();
     });
   } else {
-    sendBackTmpls();
+    sendBackTmpl();
   }
 }
-

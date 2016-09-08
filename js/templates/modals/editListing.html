@@ -139,7 +139,6 @@
             <div class="js-uploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>">Uploading files... <a>cancel</a></div>
           </div>
           <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
-          <div class="js-photoUploadErrorWrap"></div>
           <ul class="unstyled uploadItems clrBr">
             <li class="addElement">
               <span class="imagesIcon ion-images clrT4"></span>
@@ -147,12 +146,9 @@
             </li>
             <% [1,2,3,4,5,6,7,8,9,0].forEach((photo) => { %>
               <li>
-                <%
-                  print(ob.closeIconT({
-                    class: 'tx2',
-                    xIconClass: 'clrBr clrP clrT',
-                  }));
-                %>
+                <a class="closeIcon tx2">
+                  <span class="ion-ios-close-empty clrBr clrP clrT"></span>
+                </a>                
               </li>
             <% }); %>
             <li>
