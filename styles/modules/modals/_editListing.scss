@@ -12,44 +12,50 @@
         max-height: 550px
       }
 
-      .uploadItems {
-        display: table; // clear the floats
+      .photoUploadSection {
+        .uploadingLabel {
+          float: right;
+        }
 
-        li {
-          width: 100px;
-          height: 100px;
-          border: 1px solid;
-          border-color: inherit;
-          float: left;
-          margin-right: $pad;
-          margin-bottom: $pad;
-          position: relative;
+        .uploadItems {
+          display: table; // clear the floats
 
-          &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
-          &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
-            margin-bottom: 0;
-          }
+          li {
+            width: 100px;
+            height: 100px;
+            border: 1px solid;
+            border-color: inherit;
+            float: left;
+            margin-right: $pad;
+            margin-bottom: $pad;
+            position: relative;
 
-          .closeIcon {
-            width: 24px;
-            height: 24px;
-          }
-
-          &.addElement {
-            .imagesIcon {
-              font-size: 50px;
-              @include center;
-              top: 35%;
+            &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
+            &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
+              margin-bottom: 0;
             }
 
-            button {
-              width: 61px;
-              height: 28px;
-              position: absolute;
-              bottom: 10px;
-              padding: 0;
-              line-height: 1;
-              @include center(true, false)
+            .closeIcon {
+              width: 24px;
+              height: 24px;
+            }
+
+            &.addElement {
+              .imagesIcon {
+                font-size: 50px;
+                @include center;
+                top: 35%;
+              }
+
+              button {
+                width: 61px;
+                height: 28px;
+                position: absolute;
+                bottom: 10px;
+                padding: 0;
+                line-height: 1;
+                @include center(true, false)
+              }
             }
           }
         }

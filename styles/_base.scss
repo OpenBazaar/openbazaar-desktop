@@ -90,14 +90,6 @@ ul, ol {
   pointer-events: none; // requires or it prevents scroll events over it
 }
 
-#ov1 .hide {
-  display: none;
-}
-
-#ov1 .disabled {
-  @include disabled;
-}
-
 #appFrame {
   position: absolute;
   height: 100%;
@@ -201,3 +193,24 @@ ul, ol {
   text-shadow: none !important;
 }
 
+// utility classes
+
+#ov1 .hide {
+  display: none;
+}
+
+#ov1 .disabled {
+  @include disabled;
+}
+
+.overflowAuto {
+  overflow: auto;
+}
+
+.floL {
+  float: left;
+}
+
+.floR {
+  float: right;
+}

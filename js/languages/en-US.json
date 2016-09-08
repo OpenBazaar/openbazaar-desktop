@@ -130,7 +130,11 @@
     "condition": "Condition",
     "sku": "SKU",
     "description": "Description",
-    "saveErrorTitle": "There was an error saving your listing."
+    "errors": {
+      "saveErrorTitle": "There was an error saving your listing.",
+      "tooManyPhotos": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
+      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
+    }
   },
   "profileModelErrors": {
     "provideValidHexColor": "Please provide a valid hex color.",

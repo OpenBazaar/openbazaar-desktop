@@ -55,6 +55,9 @@ export default class extends BaseModal {
     this.photoUploads = new Collection();
     this.createMode = !(this.model.lastSyncedAttrs.listing &&
       this.model.lastSyncedAttrs.listing.slug);
+    this.photoUploads = [];
+
+    loadTemplate('formError.html', t => (this.formErrorT = t));
   }
 
   className() {
@@ -119,8 +122,142 @@ export default class extends BaseModal {
     }
   }
 
+  // todo: move to top of file and get value from the model
+  get MAX_PHOTOS() {
+    return 3;
+  }
+
   onChangePhotoUploadInput() {
-    
+    let photoFiles = Array.prototype.slice.call(this.$inputPhotoUpload[0].files, 0);
+
+    // prune out any non-image files
+    photoFiles = photoFiles.filter(file => file.type.startsWith('image'));
+
+    this.$inputPhotoUpload.val('');
+
+    const currPhotoLength = this.innerListing.get('item')
+      .get('images')
+      .length;
+
+    if (currPhotoLength + photoFiles.length > this.MAX_PHOTOS) {
+      photoFiles = photoFiles.slice(0, this.MAX_PHOTOS - currPhotoLength);
+
+      this.$photoUploadErrorWrap.html(
+        this.formErrorT({
+          errors: [
+            app.polyglot.t('editListing.errors.tooManyPhotos'),
+            ...((this.model.validationError || {})['listing.item.images'] || []),
+          ],
+        })
+      );
+    } else {
+      this.$photoUploadErrorWrap.empty();
+    }
+
+    if (!photoFiles.length) return;
+
+    this.$uploadingLabel.removeClass('hide');
+
+    // Temporarily limiting the size. If we add in support for the server
+    // to offer multiple sizes, we could probably remove or greatly loosen
+    // the size restriction here.
+    const maxH = 944;
+    const maxW = 1028;
+    const toUpload = [];
+    let loaded = 0;
+    let errored = 0;
+
+    photoFiles.forEach(photoFile => {
+      const newImage = document.createElement('img');
+
+      newImage.src = photoFile.path;
+
+      newImage.onload = () => {
+        let imgW = newImage.width;
+        let imgH = newImage.height;
+        const canvas = document.createElement('canvas');
+
+        loaded += 1;
+
+        if (imgW < imgH) {
+          // if image width is smaller than height, set width to max
+          imgH *= maxW / imgW;
+          imgW = maxW;
+        } else {
+          imgW *= maxH / imgH;
+          imgH = maxH;
+        }
+
+        canvas.width = imgW;
+        canvas.height = imgH;
+        canvas.getContext('2d').drawImage(newImage, 0, 0, imgW, imgH);
+        toUpload.push({
+          filename: photoFile.name,
+          image: canvas.toDataURL('image/jpeg', 0.85)
+            .replace(/^data:image\/(png|jpeg|webp);base64,/, ''),
+        });
+
+        if (loaded + errored === photoFiles.length) {
+          this.uploadImages(toUpload);
+        }
+      };
+
+      newImage.onerror = () => {
+        errored += 1;
+
+        if (errored === photoFiles.length) {
+          this.$uploadingLabel.addClass('hide');
+
+          // unableToLoadImages
+          this.$photoUploadErrorWrap.html(
+            this.formErrorT({
+              errors: [
+                app.polyglot.t('editListing.errors.unableToLoadImages', { smart_count: errored }),
+                ...((this.model.validationError || {})['listing.item.images'] || []),
+              ],
+            })
+          );
+        } else if (loaded + errored === photoFiles.length) {
+          this.uploadImages(toUpload);
+        }
+      };
+    });
+  }
+
+  uploadImages(images) {
+    let imagesToUpload = images;
+
+    if (!images) {
+      throw new Error('Please provide a list of images to upload.');
+    }
+
+    if (typeof images === 'string') {
+      imagesToUpload = [images];
+    }
+
+    const upload = $.ajax({
+      url: app.getServerUrl('ob/images'),
+      type: 'POST',
+      data: JSON.stringify(imagesToUpload),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).always(() => {
+      if (!this.anyInProgressPhotoUploads) this.$uploadingLabel.addClass('hide');
+    }).done((...args) => {
+      console.log('moo');
+      window.moo = args;
+    }).fail((...args) => {
+      console.log('poo');
+      window.poo = args;
+    });
+
+    this.photoUploads.push(upload);
+  }
+
+  get anyInProgressPhotoUploads() {
+    return !!this.photoUploads
+      .filter(upload => upload.state() === 'pending')
+      .length;
   }
 
   onClickAddPhoto() {
@@ -180,7 +317,7 @@ export default class extends BaseModal {
       save.always(() => this.$saveButton.removeClass('disabled'))
         .fail((...args) => {
           new SimpleMessage({
-            title: app.polyglot.t('editListing.saveErrorTitle'),
+            title: app.polyglot.t('editListing.errors.saveErrorTitle'),
             // message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
             // temporarily outputing the whole "JSON" string pending the fix of:
             // https://github.com/OpenBazaar/openbazaar-go/issues/102
@@ -234,13 +371,17 @@ export default class extends BaseModal {
     return this._$buttonSave || this.$('.js-save');
   }
 
-  // get $buttonAddPhoto() {
-  //   return this._$buttonAddPhoto || this.$('.js-addPhoto');
-  // }
-
   get $inputPhotoUpload() {
     return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
-  }  
+  }
+
+  get $photoUploadErrorWrap() {
+    return this._$photoUploadErrorWrap || this.$('.js-photoUploadErrorWrap');
+  }
+
+  get $uploadingLabel() {
+    return this._$$uploadingLabel || this.$('.js-uploadingLabel');
+  }
 
   remove() {
     if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
@@ -256,6 +397,15 @@ export default class extends BaseModal {
     }
 
     this.currencies = this.currencies || getCurrenciesSortedByCode();
+
+    let errors = this.model.validationError || {};
+
+    if (this.anyInProgressPhotoUploads) {
+      errors['listing.item.images'] = errors['listing.item.images'] || [];
+      errors['listing.item.images'].push('')
+    }
+
+    // todo: add model validation to include at least one image
 
     loadTemplate([
       'modals/editListing.html',
@@ -276,6 +426,7 @@ export default class extends BaseModal {
             name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
         closeIconT,
+        photoUploadInprogress: this.anyInProgressPhotoUploads,
         ...this.model.toJSON(),
       }));
 
@@ -318,8 +469,9 @@ export default class extends BaseModal {
       this._$priceInput = null;
       this._$conditionWrap = null;
       this._$buttonSave = null;
-      // this._$buttonAddPhoto = null;
       this._$inputPhotoUpload = null;
+      this._$photoUploadErrorWrap = null;
+      this._$uploadingLabel = null;
       this.$titleInput = this.$('#editListingTitle');
 
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);

@@ -19,7 +19,6 @@
         });
       %>
     </div>
-
   </div>
   <div class="flexExpand posR">
     <div class="tabContent">
@@ -134,9 +133,13 @@
           </form>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection pad">
-          <h1 class="tx3 tx500">Photos</h1>
+        <section class="js-scrollToSection pad tx3 photoUploadSection">
+          <div class="overflowAuto">
+            <h1 class="tx3 tx500 floL">Photos</h1>
+            <div class="js-uploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>">Uploading files... <a>cancel</a></div>
+          </div>
           <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
+          <div class="js-photoUploadErrorWrap"></div>
           <ul class="unstyled uploadItems clrBr">
             <li class="addElement">
               <span class="imagesIcon ion-images clrT4"></span>
