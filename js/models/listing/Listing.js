@@ -43,7 +43,7 @@ export default class extends BaseModel {
       }
 
       options.url = options.url ||
-        app.getServerUrl(`ipns/${this.guid}/listings/${slug}/listing.json`);
+        app.getServerUrl(`ipns/${this.guid}/listings/${slug}.json`);
     } else {
       options.url = options.url || app.getServerUrl('ob/listing/');
       options.attrs = options.attrs || this.toJSON();
