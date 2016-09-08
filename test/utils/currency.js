@@ -24,6 +24,4 @@ describe('the currency utility module', () => {
   it('correctly converts a BTC price from a decimal to an integer', () => {
     expect(decimalToInteger(2.71, true)).to.equal(271000000);
   });
-
-  // todo: test rounding of decimal to integer BTC price.
 });
