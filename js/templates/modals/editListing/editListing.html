@@ -65,8 +65,9 @@
                   <% if (ob.errors['listing.item.price']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price'] })) %>
                 <div class="inputSelect">
                   <%
+                    const decimalPlaces = ob.listing.metadata.pricingCurrency === 'BTC' ? 4 : 2;
                     let listingPrice = ob.listing.item.price;
-                    listingPrice = typeof listingPrice === 'number' ? listingPrice.toFixed(2) : listingPrice;
+                    listingPrice = typeof listingPrice === 'number' ? listingPrice.toFixed(decimalPlaces) : listingPrice;
                   %>
                   <input type="text" class="clrBr clrP js-price" name="listing.item.price" id="editListingPrice" value="<%= listingPrice%>" data-var-type="number">
                   <select id="editListingCurrency" name="listing.metadata.pricingCurrency" class="clrBr clrP nestInputRight">

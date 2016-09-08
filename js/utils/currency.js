@@ -23,8 +23,6 @@ export function decimalToInteger(amount, isBtc = false) {
  * to 2 decimal places. If the currency code is BTC, it will
  * convert from Satoshi to BTC.
  */
-
- // convertPriceIn
 export function integerToDecimal(amount, isBtc = false) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number.');
@@ -33,7 +31,7 @@ export function integerToDecimal(amount, isBtc = false) {
   let updatedAmount = amount;
 
   if (isBtc) {
-    updatedAmount = Number((amount / 100000000).toFixed(2));
+    updatedAmount = Number((amount / 100000000).toFixed(4));
   } else {
     updatedAmount = Number((amount / 100).toFixed(2));
   }

@@ -120,7 +120,8 @@ export default class extends BaseModal {
     const valAsNumber = Number(updatedVal);
 
     if (!isNaN(valAsNumber)) {
-      updatedVal = valAsNumber.toFixed(2);
+      const decimalPlaces = this.$currencySelect.val() === 'BTC' ? 4 : 2;
+      updatedVal = valAsNumber.toFixed(decimalPlaces);
     }
 
     $(e.target).val(updatedVal);
@@ -321,10 +322,7 @@ export default class extends BaseModal {
         .fail((...args) => {
           new SimpleMessage({
             title: app.polyglot.t('editListing.errors.saveErrorTitle'),
-            // message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
-            // temporarily outputing the whole "JSON" string pending the fix of:
-            // https://github.com/OpenBazaar/openbazaar-go/issues/102
-            message: args[0] && args[0].responseText || '',
+            message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
           })
           .render()
           .open();
@@ -386,9 +384,18 @@ export default class extends BaseModal {
     return this._$photoUploadItems || this.$('.js-photoUploadItems');
   }
 
+  setScrollContainerHeight() {
+    this.$scrollContainer.css('height', '');
+    const height = this.$modalContent.outerHeight() -
+      this.$tabControls.outerHeight();
+
+    this.$scrollContainer.height(height);
+  }
+
   remove() {
     if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
+    $(window).off('resize', this.throttledResizeWin);
 
     super.remove();
   }
@@ -466,10 +473,32 @@ export default class extends BaseModal {
       this._$inputPhotoUpload = null;
       this._$uploadingLabel = null;
       this._$photoUploadItems = null;
+      this.$modalContent = this.$('.modalContent');
+      this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
 
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
       this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
+
+      if (!this.jsHeightSet) {
+        this.jsHeightSet = true;
+      }
+
+      // we'll hide our modal until the height is adjusted, otherwise
+      // there's a noticable glitch
+      this.$modalContent.css('opacity', 0);
+
+      setTimeout(() => {
+        this.setScrollContainerHeight();
+
+        window.requestAnimationFrame(() => {
+          this.$modalContent.css('opacity', '');
+        });
+      });
+
+      this.throttledResizeWin =
+        _.bind(_.throttle(this.setScrollContainerHeight, 100), this);
+      $(window).on('resize', this.throttledResizeWin);
     });
 
     return this;
