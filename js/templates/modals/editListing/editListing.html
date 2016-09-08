@@ -136,8 +136,9 @@
         <section class="js-scrollToSection pad tx3 photoUploadSection">
           <div class="overflowAuto">
             <h1 class="tx3 tx500 floL">Photos</h1>
-            <div class="js-uploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>">Uploading files... <a>cancel</a></div>
+            <div class="js-uploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>">Uploading files... <a class="js-cancelPhotoUploads">cancel</a></div>
           </div>
+          <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
           <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
           <ul class="unstyled uploadItems clrBr js-photoUploadItems">
             <li class="addElement">
@@ -145,7 +146,7 @@
               <button class="btn clrP clrBr clrT tx6 js-addPhoto">Add</button>
             </li>
             <% ob.listing.item.images.forEach(image => {
-                print(uploadPhotoT(Object.assign(image, { closeIconClass: 'js-removeImage' })))
+                print(ob.uploadPhotoT(Object.assign(image, { closeIconClass: 'js-removeImage' })))
               });
             %>
           </ul>

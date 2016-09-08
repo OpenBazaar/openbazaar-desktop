@@ -38,6 +38,10 @@ export default class extends BaseModel {
     return 50000;
   }
 
+  get maxImages() {
+    return 10;
+  }
+
   validate(attrs) {
     let errObj = {};
     const addError = (fieldName, error) => {
@@ -65,6 +69,12 @@ export default class extends BaseModel {
       addError('price', app.polyglot.t('itemModelErrors.provideNumericAmount'));
     } else if (attrs.price <= 0) {
       addError('price', app.polyglot.t('itemModelErrors.provideAmountGreaterThanZero'));
+    }
+
+    if (!attrs.images.length) {
+      addError('images', app.polyglot.t('itemModelErrors.imageRequired'));
+    } else if (attrs.images.length > this.maxImages) {
+      addError('images', `The number of images cannot exceed ${this.maxImages}`);
     }
 
     errObj = this.mergeInNestedModelErrors(errObj);

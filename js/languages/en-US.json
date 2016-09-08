@@ -161,7 +161,8 @@
     "descriptionTooLong": "The price must be greater than 0.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
-    "provideAmountGreaterThanZero": "The price must be greater than 0."    
+    "provideAmountGreaterThanZero": "The price must be greater than 0.",
+    "imageRequired": "Please provide at least one image"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

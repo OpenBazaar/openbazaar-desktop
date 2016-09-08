@@ -79,18 +79,13 @@ export default class extends BaseModal {
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
       'click .js-removeImage': 'onClickRemoveImage',
+      'click .js-cancelPhotoUploads': 'onClickCancelPhotoUploads',
       ...super.events(),
     };
   }
 
-  get mode() {
-    return this._mode;
-  }
-
-  set mode(mode) {
-    if (['create', 'edit'].indexOf(mode) === -1) {
-      throw new Error('Please specify either a \'create\' or \'edit\' mode.');
-    }
+  get MAX_PHOTOS() {
+    return this.model.get('listing').get('item').maxImages;
   }
 
   onAddImage(image) {
@@ -114,6 +109,10 @@ export default class extends BaseModal {
     const removeIndex = $(e.target).parents('li').index() - 1;
 
     this.images.remove(this.images.at(removeIndex));
+  }
+
+  onClickCancelPhotoUploads() {
+    this.inProgressPhotoUploads.forEach(photoUpload => photoUpload.abort());
   }
 
   onChangePrice(e) {
@@ -149,11 +148,6 @@ export default class extends BaseModal {
     } else {
       this.$conditionWrap.removeClass('disabled');
     }
-  }
-
-  // todo: move to top of file and get value from the model
-  get MAX_PHOTOS() {
-    return 10;
   }
 
   onChangePhotoUploadInput() {
@@ -264,16 +258,19 @@ export default class extends BaseModal {
       dataType: 'json',
       contentType: 'application/json',
     }).always(() => {
-      if (!this.areInProgressPhotoUploads) this.$uploadingLabel.addClass('hide');
-    }).done(uploadedImage => this.images.add(uploadedImage));
+      if (this.isRemoved()) return;
+      if (!this.inProgressPhotoUploads.length) this.$uploadingLabel.addClass('hide');
+    }).done(uploadedImage => {
+      if (this.isRemoved()) return;
+      this.images.add(uploadedImage);
+    });
 
     this.photoUploads.push(upload);
   }
 
-  get areInProgressPhotoUploads() {
-    return !!this.photoUploads
-      .filter(upload => upload.state() === 'pending')
-      .length;
+  get inProgressPhotoUploads() {
+    return this.photoUploads
+      .filter(upload => upload.state() === 'pending');
   }
 
   onClickAddPhoto() {
@@ -316,16 +313,6 @@ export default class extends BaseModal {
     // todo: show status bar
     this.$saveButton.addClass('disabled');
     this.model.set(formData);
-
-    const images = this.innerListing.get('item').get('images');
-
-    // for now putting in dummy image
-    if (!images.length) {
-      images.add({
-        hash: 'QmecpJrN9RJ7smyYByQdZUy5mF6aapgCfKLKRmDtycv9aG',
-        fileName: 'image.jpg',
-      });
-    }
 
     const save = this.model.save();
 
@@ -391,10 +378,6 @@ export default class extends BaseModal {
     return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
   }
 
-  // get $photoUploadErrorWrap() {
-  //   return this._$photoUploadErrorWrap || this.$('.js-photoUploadErrorWrap');
-  // }
-
   get $uploadingLabel() {
     return this._$uploadingLabel || this.$('.js-uploadingLabel');
   }
@@ -405,6 +388,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
+    this.inProgressPhotoUploads.forEach(upload => upload.abort());
 
     super.remove();
   }
@@ -435,7 +419,7 @@ export default class extends BaseModal {
           .map((conditionType) => ({ code: conditionType,
             name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
-        photoUploadInprogress: this.areInProgressPhotoUploads,
+        photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,
         ...this.model.toJSON(),
       }));
@@ -480,7 +464,6 @@ export default class extends BaseModal {
       this._$conditionWrap = null;
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
-      // this._$photoUploadErrorWrap = null;
       this._$uploadingLabel = null;
       this._$photoUploadItems = null;
       this.$titleInput = this.$('#editListingTitle');
