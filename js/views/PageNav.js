@@ -183,8 +183,6 @@ export default class extends View {
     const listingModel = new Listing();
 
     launchEditListingModal({
-      mode: 'create',
-      // model: new Listing(),
       model: listingModel,
     });
   }

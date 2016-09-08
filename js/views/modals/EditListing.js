@@ -356,11 +356,10 @@ export default class extends BaseModal {
     }
 
     // render so errrors are shown / cleared
-    this.render();
-
-    const $firstErr = this.$('.errorList:first');
-
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+    this.render(() => {
+      const $firstErr = this.$('.errorList:first');
+      if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+    });
   }
 
   get $scrollToSections() {
@@ -419,7 +418,7 @@ export default class extends BaseModal {
     super.remove();
   }
 
-  render(restoreScrollPos = true) {
+  render(onScrollUpdateComplete, restoreScrollPos = true) {
     let prevScrollPos = 0;
 
     if (restoreScrollPos && this.$scrollContainer && this.$scrollContainer.length) {
@@ -453,11 +452,6 @@ export default class extends BaseModal {
       super.render();
 
       this.$scrollContainer = this.$('.js-scrollContainer');
-
-      // restore the scroll position
-      if (restoreScrollPos) {
-        this.$scrollContainer[0].scrollTop = prevScrollPos;
-      }
 
       this.$('#editListingType, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
@@ -499,10 +493,6 @@ export default class extends BaseModal {
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
       this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
 
-      if (!this.jsHeightSet) {
-        this.jsHeightSet = true;
-      }
-
       // we'll hide our modal until the height is adjusted, otherwise
       // there's a noticable glitch
       this.$modalContent.css('opacity', 0);
@@ -510,14 +500,27 @@ export default class extends BaseModal {
       setTimeout(() => {
         this.setScrollContainerHeight();
 
+        // restore the scroll position
+        if (restoreScrollPos) {
+          this.$scrollContainer[0].scrollTop = prevScrollPos;
+        }
+
+        if (typeof onScrollUpdateComplete === 'function') {
+          onScrollUpdateComplete.call(this);
+        }
+
         window.requestAnimationFrame(() => {
           this.$modalContent.css('opacity', '');
         });
       });
 
-      this.throttledResizeWin =
-        _.bind(_.throttle(this.setScrollContainerHeight, 100), this);
-      $(window).on('resize', this.throttledResizeWin);
+      if (!this.jsHeightSet) {
+        this.jsHeightSet = true;
+
+        this.throttledResizeWin =
+          _.bind(_.throttle(this.setScrollContainerHeight, 100), this);
+        $(window).on('resize', this.throttledResizeWin);
+      }
     });
 
     return this;
