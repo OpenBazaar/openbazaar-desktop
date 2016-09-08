@@ -318,14 +318,33 @@ export default class extends BaseModal {
     const save = this.model.save();
 
     if (save) {
+      const savingStatusMsg = app.statusBar.pushMessage({
+        msg: 'Saving listing...',
+        type: 'message',
+        duration: 99999999999999,
+      });
+
       save.always(() => this.$saveButton.removeClass('disabled'))
         .fail((...args) => {
+          savingStatusMsg.update({
+            msg: `Listing <em>${this.model.toJSON().listing.item.title}</em> failed to save.`,
+            type: 'warning',
+          });
+
+          setTimeout(() => savingStatusMsg.remove(), 3000);
+
           new SimpleMessage({
             title: app.polyglot.t('editListing.errors.saveErrorTitle'),
             message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
           })
           .render()
           .open();
+        }).done(() => {
+          const listingUrl = `#listing/${app.profile.id}/${this.model.get('listing').get('slug')}`;
+          savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
+            ` saved. <a href="${listingUrl}">view</a>`);
+
+          setTimeout(() => savingStatusMsg.remove(), 6000);
         });
     } else {
       // client side validation failed
