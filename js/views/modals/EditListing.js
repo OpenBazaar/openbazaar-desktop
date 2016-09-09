@@ -8,7 +8,6 @@ import { getCurrenciesSortedByCode } from '../../data/currencies';
 import SimpleMessage from './SimpleMessage';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import { Collection } from 'backbone';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -52,7 +51,6 @@ export default class extends BaseModal {
 
     this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
-    this.photoUploads = new Collection();
     this.createMode = !(this.model.lastSyncedAttrs.listing &&
       this.model.lastSyncedAttrs.listing.slug);
     this.photoUploads = [];
@@ -495,7 +493,9 @@ export default class extends BaseModal {
 
       // we'll hide our modal until the height is adjusted, otherwise
       // there's a noticable glitch
-      this.$modalContent.css('opacity', 0);
+      if (!this.jsHeightSet) {
+        this.$modalContent.css('opacity', 0);
+      }
 
       setTimeout(() => {
         this.setScrollContainerHeight();
@@ -517,8 +517,14 @@ export default class extends BaseModal {
       if (!this.jsHeightSet) {
         this.jsHeightSet = true;
 
+        const onWinResize = () => {
+          const prevScroll = this.$scrollContainer[0].scrollTop;
+          this.setScrollContainerHeight();
+          this.$scrollContainer[0].scrollTop = prevScroll;
+        };
+
         this.throttledResizeWin =
-          _.bind(_.throttle(this.setScrollContainerHeight, 100), this);
+          _.bind(_.throttle(onWinResize, 100), this);
         $(window).on('resize', this.throttledResizeWin);
       }
     });
