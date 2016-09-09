@@ -92,6 +92,54 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "editListing": {
+    "listingTypes": {
+      "PHYSICAL_GOOD": "Physical Good",
+      "DIGITAL_GOOD": "Digital Good",
+      "SERVICE": "Service",
+      "CROWD_FUND": "Crowd fund"
+    },
+    "conditionTypes": {
+      "NEW": "New",
+      "USED_EXCELLENT": "Used - Excellent",
+      "USED_GOOD": "Used - Good",
+      "USED_POOR": "Used - Poor",
+      "REFURBISHED": "Refurbished"
+    },
+    "nsfwYes": "Yes",
+    "nsfwNo": "No",
+    "sectionNames": {
+      "general": "General",
+      "photos": "Photos",
+      "attachments": "Attachments",
+      "shipping": "Shipping",
+      "tags": "Tags",
+      "inventory": "Inventory",
+      "variants": "Variants",
+      "returnPolicy": "Return Policy",
+      "termsAndConditions": "Terms and Conditions",
+      "expiration": "Expiration"
+    },
+    "createListingLabel": "Create Listing",
+    "editListingLabel": "Edit Listing",
+    "title": "Title",
+    "slug": "Slug",
+    "type": "Type",
+    "visibility": "Visibility",
+    "price": "Price",
+    "condition": "Condition",
+    "sku": "SKU",
+    "description": "Description",
+    "uploadingPhotos": "Uploading photos...",
+    "btnCancelPhotoUpload": "cancel",
+    "btnAddPhoto": "Add",
+    "errors": {
+      "saveErrorTitle": "There was an error saving your listing.",
+      "tooManyPhotosTitle": "Too many photos",
+      "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
+      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
+    }
+  },
   "profileModelErrors": {
     "provideValidHexColor": "Please provide a valid hex color.",
     "provideValidEmail": "Please provide a valid email.",
@@ -106,6 +154,18 @@
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
+  },
+  "listingInnerModelErrors": {
+    "provideSlug": "Please provide a slug."
+  },
+  "itemModelErrors": {
+    "provideTitle": "Please provide a title.",
+    "badConditionType": "Please provide the price amount as a number.",
+    "descriptionTooLong": "The description exceeds the maximum allowable length.",
+    "provideAmount": "Please provide a price.",
+    "provideNumericAmount": "Please provide the price as a number.",
+    "provideAmountGreaterThanZero": "The price must be greater than 0.",
+    "imageRequired": "Please provide at least one image"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

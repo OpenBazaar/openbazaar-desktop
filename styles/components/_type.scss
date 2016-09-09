@@ -13,6 +13,10 @@ h1,h2,h3,h4,h5,h6,
   &.txUnb {
     font-weight: 400;
   }
+
+  &.tx500 {
+   font-weight: 500; 
+  }
 }
 
 // all font sizes are multiples of the base rem. This allows us to increase or decrease all the fonts by changing the
@@ -20,27 +24,27 @@ h1,h2,h3,h4,h5,h6,
 
 // us h classes for headlines, tx classes for body text
 
-h1, .h1, .tx1 {
+h1, .h1, .tx1, .btn.tx1 {
   font-size: $tx1;
 }
 
-h2, .h2, .tx2 {
+h2, .h2, .tx2, .btn.tx2 {
   font-size: $tx2;
 }
 
-h3, .h3, .tx3 {
+h3, .h3, .tx3, .btn.tx3 {
   font-size: $tx3;
 }
 
-h4, .h4, .tx4 {
+h4, .h4, .tx4, .btn.tx4 {
   font-size: $tx4;
 }
 
-h5, .h5, .tx5 {
+h5, .h5, .tx5, .btn.tx5 {
   font-size: $tx5;
 }
 
-h6, .h6, .tx6 {
+h6, .h6, .tx6, .btn.tx6 {
   font-size: $tx6;
 }
 

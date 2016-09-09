@@ -7,6 +7,10 @@ const currencies = [
     code: 'AFN',
   },
   {
+    name: 'Bitcoin',
+    code: 'BTC',
+  },
+  {
     name: 'Euro',
     code: 'EUR',
   },
@@ -634,6 +638,27 @@ const currencies = [
 
 export default currencies;
 
+let _indexedCurrencies;
+
+function getIndexedCurrencies() {
+  if (_indexedCurrencies) return _indexedCurrencies;
+
+  _indexedCurrencies = currencies.reduce((indexedObj, currency) => {
+    indexedObj[currency.code] = _.omit(currency, 'code');
+    return indexedObj;
+  }, {});
+
+  return _indexedCurrencies;
+}
+
+export function getCurrencyByCode(code) {
+  if (!code) {
+    throw new Error('Please provide a currency code.');
+  }
+
+  return getIndexedCurrencies()[code];
+}
+
 function getTranslatedCurrencies(lang, sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated currencies' +
@@ -656,3 +681,19 @@ const memoizedGetTranslatedCurrencies =
   _.memoize(getTranslatedCurrencies, (lang, sort) => `${lang}-${!!sort}`);
 
 export { memoizedGetTranslatedCurrencies as getTranslatedCurrencies };
+
+let currenciesSortedByCode;
+
+export function getCurrenciesSortedByCode() {
+  if (currenciesSortedByCode) {
+    return currenciesSortedByCode;
+  }
+
+  currenciesSortedByCode = currencies.sort((a, b) => {
+    if (a.code < b.code) return -1;
+    if (a.code > b.code) return 1;
+    return 0;
+  });
+
+  return currenciesSortedByCode;
+}

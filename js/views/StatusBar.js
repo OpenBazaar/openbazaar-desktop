@@ -1,9 +1,9 @@
-import BaseVw from './baseVw';
+import baseVw from './baseVw';
 import StatusMessageMd from '../models/StatusMessage';
 import StatusMessages from '../collections/StatusMessages';
 import StatusMessageVw from './StatusMessage';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor() {
     super();
     this.collection = new StatusMessages();
