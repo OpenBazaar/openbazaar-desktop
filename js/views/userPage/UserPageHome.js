@@ -1,5 +1,7 @@
+import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import { View } from 'backbone';
+import { clipboard } from 'electron';
 
 export default class extends View {
   constructor(options = {}) {
@@ -19,6 +21,8 @@ export default class extends View {
       'click .js-termsLink': 'termsClick',
       'click .js-termsClose': 'termsClose',
       'click .js-addModerator': 'addModeratorClick',
+      'click .js-guid': 'guidClick',
+      'mouseleave .js-guid': 'guidLeave',
     };
   }
 
@@ -43,6 +47,16 @@ export default class extends View {
       this.$addModeratorLbl.addClass('hide');
       this.$removeModeratorLbl.removeClass('hide');
     }
+  }
+
+  guidClick(e) {
+    const guid = $(e.target).data('guid');
+    clipboard.writeText(guid);
+    this.$('.js-guidCopied').fadeIn(600);
+  }
+
+  guidLeave() {
+    this.$('.js-guidCopied').fadeOut(600);
   }
 
   render() {
