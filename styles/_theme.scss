@@ -6,7 +6,7 @@
   background-color: $primary;
 
   input[type="radio"] + label:before {
-    background: $secondary;
+    background-color: $secondary;
   }
 
   input[type="radio"]:checked + label:before {
@@ -18,11 +18,37 @@
   background-color: $secondary;
 
   input[type="radio"] + label:before {
-    background: $primary;
+    background-color: $primary;
   }
 
   input[type="radio"]:checked + label:before {
     box-shadow: inset 0 0 0 3px $primary;
+  }
+}
+
+input[type=range][class~="clrP"] {
+  &::-webkit-slider-runnable-track {
+    background-color: $secondary;
+    border-color: $border;
+  }
+  &:focus::-webkit-slider-runnable-track {
+    background-color: $secondary;
+  }
+  &::-webkit-slider-thumb {
+    background-color: $primary;
+  }
+}
+
+input[type=range][class~="clrS"] {
+  &::-webkit-slider-runnable-track {
+    background-color: $primary;
+    border-color: $border;
+  }
+  &:focus::-webkit-slider-runnable-track {
+    background-color: $primary;
+  }
+  &::-webkit-slider-thumb {
+    background-color: $secondary;
   }
 }
 

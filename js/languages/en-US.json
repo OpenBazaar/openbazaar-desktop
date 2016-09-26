@@ -54,7 +54,8 @@
     "shortDescription": "Short Description",
     "about": "About",
     "nsfwContent": "NSFW Content",
-    "avatar": "avatar",
+    "avatar": "Avatar",
+    "uploadAvatar": "Load Image",
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
@@ -93,7 +94,7 @@
     }
   },
   "editListing": {
-    "listingTypes": {
+    "formats": {
       "PHYSICAL_GOOD": "Physical Good",
       "DIGITAL_GOOD": "Digital Good",
       "SERVICE": "Service",

@@ -14,6 +14,15 @@
     }
   }
 
+  .avatarPreview {
+    width: 120px;
+    height: 120px;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: $corner;
+    position: relative;
+  }
+
   .settingsAddresses {
     .addresses {
       margin-bottom: $marg;

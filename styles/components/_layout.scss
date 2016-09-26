@@ -86,6 +86,15 @@
   }
 }
 
+.flexColRows {
+  @extend .flexCol;
+  justify-content: space-between;
+
+  & > * {
+    width: 100%;
+  }
+}
+
 .flexVCent {
   //creates a container with vertically centered children
   @extend .flex;
@@ -112,8 +121,8 @@
   text-align: right;
 }
 
-.flexExpand {
-  //make a child of a flex element expand to fill the remaining space
+.flexExpand,           //make a flex element expand to fill the remaining space
+.flexKidsExpand > * {  //make all child elements expand
   flex-grow: 1;
 }
 

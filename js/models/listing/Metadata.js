@@ -6,7 +6,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       contractType: 'PHYSICAL_GOOD',
-      listingType: 'FIXED_PRICE', // this is not in the design at this time
+      format: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
     };
