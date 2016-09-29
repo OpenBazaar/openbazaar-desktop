@@ -56,6 +56,8 @@
     "nsfwContent": "NSFW Content",
     "avatar": "Avatar",
     "uploadAvatar": "Load Image",
+    "header": "Cover Photo",
+    "uploadHeader": "Load Image",
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
@@ -142,6 +144,7 @@
     }
   },
   "profileModelErrors": {
+    "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",

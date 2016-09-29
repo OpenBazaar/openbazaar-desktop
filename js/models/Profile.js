@@ -65,6 +65,10 @@ export default class extends BaseModel {
       }
     });
 
+    if (!attrs.name) {
+      addError('name', app.polyglot.t('profileModelErrors.provideName'));
+    }
+
     if (attrs.email && is.not.email(attrs.email)) {
       addError('email', app.polyglot.t('profileModelErrors.provideValidEmail'));
     }

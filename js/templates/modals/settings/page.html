@@ -81,34 +81,14 @@
         <label><%= ob.polyT('settings.avatar') %></label>
       </div>
       <div class="col9">
-        <!--
-        <div id="avatarCropper" class="positionWrapper flexRow">
-          <div style="width: 120px; height: 120px;" class="cropit-image-preview cropit-avatar js-avatarPreview"></div>
-          <div class="pull-left marginLeft12 flexCol-3">
-            <div>
-              <input type="range" class="cropit-image-zoom-input rowTop20 row20 hide" />
-            </div>
-            <div class="flexRow">
-              <a class="btn flexExpand marginRight5 color-secondary custCol-secondary ion-reply js-avatarRotateLeft"></a>
-              <a class="btn flexExpand marginLeft5 color-secondary custCol-secondary ion-forward js-avatarRotateRight"></a>
-            </div>
-            <div>
-              <input type="file" id="avatarInput" class="cropit-image-input hide" />
-              <label for="avatarInput" class="btn btn-txt rowTop20 row20 width100 color-secondary custCol-secondary">
-                <%= ob.polyT('settings.uploadAvatar') %>
-              </label>
-            </div>
-          </div>
-        </div>
-        -->
         <div class="flexRow gutterH" id="avatarCropper">
-          <div style="width: 120px; height: 120px;" class="avatarPreview clrP clrBr js-avatarPreview"></div>
+          <div class="contentBox avatarPreview clrP clrBr js-avatarPreview"></div>
           <div>
             <div class="flexColRows gutterV">
               <div>
                 <div class="flex gutterH">
-                  <button class="iconBtn ion-reply flexExpand clrP clrBr js-avatarLeft"></button>
-                  <button class="iconBtn ion-forward flexExpand clrP clrBr js-avatarRight"></button>
+                  <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-avatarLeft"></a>
+                  <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-avatarRight"></a>
                 </div>
               </div>
               <div>
@@ -168,10 +148,31 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.polyT('settings.coverPhoto') %></label>
+        <label><%= ob.polyT('settings.header') %></label>
       </div>
       <div class="col9">
-        <label>Photo Upload</label>
+        <div class="flexCol gutterV" id="headerCropper">
+          <div class="contentBox headerPreview clrP clrBr js-headerPreview"></div>
+          <div>
+            <div class="flexRow gutterH">
+              <div>
+                <div class="flex gutterH">
+                  <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-headerLeft"></a>
+                  <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-headerRight"></a>
+                </div>
+              </div>
+              <div>
+                <input type="range" class="cropit-image-zoom-input clrP" />
+              </div>
+              <div>
+                <input type="file" id="headerInput" class="cropit-image-input hide" />
+                <label for="headerInput" class="btn clrP clrBr">
+                  <%= ob.polyT('settings.uploadHeader') %>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="flexRow">

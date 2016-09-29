@@ -87,6 +87,7 @@
 }
 
 .flexColRows {
+  //vertical colums that have 100% width and are spaced across the height
   @extend .flexCol;
   justify-content: space-between;
 
