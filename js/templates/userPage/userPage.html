@@ -3,7 +3,12 @@
       <div class="flexVCent pageTabs">
         <!--consider turning tabs into a reusable view-->
         <div>
-          <div class="userIcon disc clrBr2 clrSh1" style="background-image: url('../imgs/defaultUser.png')"></div>
+          <div class="userIcon disc clrBr2 clrSh1"
+            <% if(ob.avatarHash){ %>
+               styel="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultBanner.png')"
+            <% } else { %>
+               style="background-image: url('../imgs/defaultUser.png')"
+            <% } %>></div>
         </div>
         <div>
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
@@ -27,10 +32,11 @@
       </div>
 
 </nav>
-<div class="banner" <% if(ob.banner){ %>
-  style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+<div class="banner"
+  <% if(ob.headerHash){ %>
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultBanner.png')"
   <% } else { %>
-  style="background-image: url('../imgs/defaultBanner.png')"
+    style="background-image: url('../imgs/defaultBanner.png')"
   <% } %>>
 </div>
 <div class="pageContent">

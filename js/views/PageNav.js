@@ -189,7 +189,9 @@ export default class extends View {
 
   render() {
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        avatarHash: app.profile ? app.profile.get('avatarHash') : '',
+      }));
     });
 
     this.$addressBar = this.$('.js-addressBar');

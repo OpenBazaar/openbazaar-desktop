@@ -1,13 +1,13 @@
 <div class="contentBox clrBr clrP clrSh2">
   <div class="hero bkgCover"
-    <% if(ob.banner){ %>
-      style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+    <% if(ob.headerHash){ %>
+      style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultBanner.png')"
     <% } else { %>
       style="background-image: url('../imgs/defaultBanner.png')"
     <% } %>>
     <div class="userIcon disc clrBr2 clrSh1"
-      <% if(ob.avatar){ %>
-       style="background-image: url('<%= ob.avatar %>, url('../imgs/defaultUser.png')"
+      <% if(ob.avatarHash){ %>
+        style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultBanner.png')"
       <% } else { %>
        style="background-image: url('../imgs/defaultUser.png')"
       <% } %>>
