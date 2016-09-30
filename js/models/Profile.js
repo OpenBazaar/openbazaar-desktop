@@ -78,10 +78,6 @@ export default class extends BaseModel {
       }
     });
 
-    if (!attrs.avatarHash) {
-      addError('avatarHash', 'avatar.');
-    }
-
     if (!attrs.name) {
       addError('name', app.polyglot.t('profileModelErrors.provideName'));
     }

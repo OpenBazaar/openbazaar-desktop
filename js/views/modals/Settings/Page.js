@@ -219,7 +219,7 @@ export default class extends baseVw {
           this.avatarZoomedOnRender = false;
           this.avatarOffsetOnRender = false;
           this.avatarCropper.cropit('imageSrc',
-            app.getServerUrl(`/ipfs/${this.profile.get('avatarHash')}`));
+            app.getServerUrl(`ipfs/${this.profile.get('avatarHash')}`));
         } else {
           // if no existing avatar was loaded, set cropit flags to true
           this.avatarLoadedOnRender = true;
@@ -232,7 +232,7 @@ export default class extends baseVw {
           this.headerZoomedOnRender = false;
           this.headerOffsetOnRender = false;
           this.headerCropper.cropit('imageSrc',
-            app.getServerUrl(`/ipfs/${this.profile.get('headerHash')}`));
+            app.getServerUrl(`ipfs/${this.profile.get('headerHash')}`));
         } else {
           this.headerLoadedOnRender = true;
           this.headerZoomedOnRender = true;

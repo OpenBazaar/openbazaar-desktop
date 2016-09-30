@@ -48,7 +48,7 @@ export default class extends BaseVw {
     // update the follow button when this user is followed or unfollowed by another view
     // this will be used by channels and other views that don't remove the view when it's follow
     // status changes.
-    this.listenTo(app.ownFollowing, 'sync, update', () => {
+    this.listenTo(app.ownFollowing, 'sync update', () => {
       this.followedByYou = followedByYou(this.guid);
       if (this.followedByYou) {
         this.$followBtn.addClass('active');
@@ -78,7 +78,6 @@ export default class extends BaseVw {
 
   followClick() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
-
     followUnfollow(this.guid, type);
   }
 

@@ -12,18 +12,20 @@
        style="background-image: url('../imgs/defaultUser.png')"
       <% } %>>
     </div>
-    <div class="userControls">
-      <% if(!ob.ownGuid) { %>
-        <a class="iconBtn clrP clrBr js-follow <% if(ob.followedByYou){ %>active<% } %>">
-          <i class="ion-person-stalker"></i>
-        </a>
-        <% if(ob.moderator) { %>
-          <a class="iconBtn clrP clrBr js-mod <% if(ob.ownMod){ %>active<% } %>">
-            <i class="ion-briefcase"></i>
+    <% if(!ob.hideControls){ %>
+      <div class="userControls">
+        <% if(!ob.ownGuid) { %>
+          <a class="iconBtn clrP clrBr js-follow <% if(ob.followedByYou){ %>active<% } %>">
+            <i class="ion-person-stalker"></i>
           </a>
+          <% if(ob.moderator) { %>
+            <a class="iconBtn clrP clrBr js-mod <% if(ob.ownMod){ %>active<% } %>">
+              <i class="ion-briefcase"></i>
+            </a>
+          <% } %>
         <% } %>
-      <% } %>
-    </div>
+      </div>
+    <% } %>
   </div>
   <div class="content">
     <% if(!ob.loading && !ob.notFound){ %>
