@@ -5,7 +5,6 @@
   display: flex;
   align-items: flex-start;
   width: 100%; //if the element has absolute or fixed positioning, expand it
-  height: 100%; //if the container has a height, fill it. If the parent is absolute, the row must be too.
   box-sizing: border-box;
   flex-direction: row; //align children left to right horizontally
 
@@ -89,12 +88,14 @@
 .flexVCent {
   //creates a container with vertically centered children
   @extend .flex;
+  height: 100%;
   align-items: center;
 }
 
 .flexVBot {
   //creates a container with children aligned to the bottom of the parent
   @extend .flex;
+  height: 100%;
   align-items: flex-end;
 }
 

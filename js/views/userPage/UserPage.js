@@ -47,6 +47,8 @@ export default class extends baseVw {
         }
       });
     }
+
+    this.listenTo(this.model, 'change', () => this.render());
   }
 
   className() {
@@ -120,9 +122,6 @@ export default class extends baseVw {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        tab: this.options.tab || '',
-        category: this.options.category || '',
-        layer: this.options.layer || '',
         followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
@@ -135,6 +134,7 @@ export default class extends baseVw {
       this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
 
+      this.tabViewCache = {}; // clear for re-renders
       this.selectTab(this.tab);
     });
 
