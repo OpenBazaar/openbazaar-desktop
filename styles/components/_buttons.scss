@@ -9,6 +9,7 @@
   box-sizing: border-box;
   display: flex;
   align-items: center; // centers icons if they are a child element
+  justify-content: center;
 }
 
 .btn {
