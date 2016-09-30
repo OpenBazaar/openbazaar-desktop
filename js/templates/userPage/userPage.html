@@ -32,11 +32,11 @@
       </div>
 
 </nav>
-<div class="banner"
+<div class="header"
   <% if(ob.headerHash){ %>
-    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultBanner.png')"
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultHeader.png')"
   <% } else { %>
-    style="background-image: url('../imgs/defaultBanner.png')"
+    style="background-image: url('../imgs/defaultHeader.png')"
   <% } %>>
 </div>
 <div class="pageContent">

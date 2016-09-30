@@ -1,9 +1,9 @@
 <div class="contentBox clrBr clrP clrSh2">
   <div class="hero bkgCover"
     <% if(ob.headerHash){ %>
-      style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultBanner.png')"
+      style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultHeader.png')"
     <% } else { %>
-      style="background-image: url('../imgs/defaultBanner.png')"
+      style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
     <div class="userIcon disc clrBr2 clrSh1"
       <% if(ob.avatarHash){ %>
