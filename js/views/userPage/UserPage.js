@@ -26,7 +26,7 @@ export default class extends baseVw {
       // followsYou requires a new api call
       this.followsYou = false; // temp until api is available
 
-      this.listenTo(app.ownFollowing, 'sync, update', () => {
+      this.listenTo(app.ownFollowing, 'sync update', () => {
         this.followedByYou = followedByYou(this.model.id);
         if (this.followedByYou) {
           this.$followLbl.addClass('hide');
