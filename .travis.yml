@@ -17,7 +17,6 @@ before_script:
 script:
 - npm run lint
 - npm run test
-- ./build.sh
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
@@ -31,6 +30,8 @@ deploy:
     - "dist/osx/*.zip"
     - "dist/linux32/*.deb"
     - "dist/linux64/*.deb"
+  script:
+    - ./build.sh
   skip_cleanup: true
   all_branches: true
   on:
