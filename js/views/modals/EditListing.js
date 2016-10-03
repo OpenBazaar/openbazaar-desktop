@@ -226,7 +226,6 @@ export default class extends BaseModal {
       let orientation = 1;
 
       this.getOrientation(photoFile, (val) => {
-        if (val === -2) throw new Error('The image is not a jpeg.');
         if (val === -1) throw new Error('The image is undefined.');
         orientation = val;
       });
