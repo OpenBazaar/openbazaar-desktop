@@ -137,7 +137,7 @@
         <section class="js-scrollToSection pad tx3 photoUploadSection">
           <div class="overflowAuto">
             <h1 class="tx3 tx500 floL"><%= ob.polyT('editListing.sectionNames.photos') %></h1>
-            <div class="js-uploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploadingPhotos') %> <a class="js-cancelPhotoUploads"><%= ob.polyT('editListing.btnCancelPhotoUpload') %></a></div>
+            <div class="js-photoUploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploading') %> <a class="js-cancelPhotoUploads"><%= ob.polyT('editListing.btnCancelUpload') %></a></div>
           </div>
           <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
           <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
@@ -153,7 +153,12 @@
           </ul>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: orange">
+        <section class="js-scrollToSection pad tx3">
+          <div class="overflowAuto">
+            <h1 class="tx3 tx500 floL"><%= ob.polyT('editListing.sectionNames.attachments') %></h1>
+            <div class="js-attachmentsUploadingLabel floR <% if (!ob.attachmentUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploading') %> <a class="js-cancelAttachmentUploads"><%= ob.polyT('editListing.btnCancelUpload') %></a></div>
+          </div>
+          <% // waiting on back-end to provide field for this %>          
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: purple">

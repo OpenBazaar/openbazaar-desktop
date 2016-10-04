@@ -131,8 +131,8 @@
     "condition": "Condition",
     "sku": "SKU",
     "description": "Description",
-    "uploadingPhotos": "Uploading photos...",
-    "btnCancelPhotoUpload": "cancel",
+    "uploading": "Uploading...",
+    "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",

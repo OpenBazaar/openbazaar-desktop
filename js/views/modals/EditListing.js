@@ -174,7 +174,7 @@ export default class extends BaseModal {
 
     if (!photoFiles.length) return;
 
-    this.$uploadingLabel.removeClass('hide');
+    this.$photoUploadingLabel.removeClass('hide');
 
     // Temporarily limiting the size. If we add in support for the server
     // to offer multiple sizes, we could probably remove or greatly loosen
@@ -224,7 +224,7 @@ export default class extends BaseModal {
         errored += 1;
 
         if (errored === photoFiles.length) {
-          this.$uploadingLabel.addClass('hide');
+          this.$photoUploadingLabel.addClass('hide');
 
           new SimpleMessage({
             title: app.polyglot.t('editListing.errors.unableToLoadImagesBody',
@@ -258,7 +258,7 @@ export default class extends BaseModal {
       contentType: 'application/json',
     }).always(() => {
       if (this.isRemoved()) return;
-      if (!this.inProgressPhotoUploads.length) this.$uploadingLabel.addClass('hide');
+      if (!this.inProgressPhotoUploads.length) this.$photoUploadingLabel.addClass('hide');
     }).done(uploadedImage => {
       if (this.isRemoved()) return;
       this.images.add(uploadedImage);
@@ -392,8 +392,8 @@ export default class extends BaseModal {
     return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
   }
 
-  get $uploadingLabel() {
-    return this._$uploadingLabel || this.$('.js-uploadingLabel');
+  get $photoUploadingLabel() {
+    return this._$photoUploadingLabel || this.$('.js-photoUploadingLabel');
   }
 
   get $photoUploadItems() {
@@ -482,7 +482,7 @@ export default class extends BaseModal {
       this._$conditionWrap = null;
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
-      this._$uploadingLabel = null;
+      this._$photoUploadingLabel = null;
       this._$photoUploadItems = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
