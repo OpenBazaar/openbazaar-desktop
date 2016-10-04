@@ -112,3 +112,20 @@ button {
 .select2-container--focus .select2-selection__rendered {
   border-color: rgb(0, 0, 0);
 }
+
+// select2 with tags
+.select2Tags + .select2-container {
+  &.select2-container--default {
+    .select2-selection--multiple {
+      border: 1px solid transparent;
+
+      .select2-selection__rendered {
+        border: 1px solid $border;
+      }
+    }
+
+    &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
+      border-color: rgb(0, 0, 0);
+    }
+  }
+}

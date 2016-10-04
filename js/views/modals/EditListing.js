@@ -425,8 +425,6 @@ export default class extends BaseModal {
 
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    // todo: add model validation to include at least one image
-
     loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
         createMode: this.createMode,
@@ -456,6 +454,16 @@ export default class extends BaseModal {
       });
 
       this.$('#editListingCurrency').select2();
+      this.$('#editListingTags').select2({
+        multiple: true,
+        tags: true,
+        createTag: (params) => {
+          return {
+            id: params.term,
+            text: params.term + '-on-the-ball-son',
+          };
+        },
+      });
 
       setTimeout(() => {
         if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();

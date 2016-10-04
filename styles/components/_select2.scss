@@ -22,3 +22,32 @@
     }
   }
 }
+
+// Tags (the element that select2 is generated off of must have a class of 'select2Tags').
+// Focus styling is with other form focus styling in form.scss.
+.select2Tags + .select2-container {
+  &.select2-container--default {
+    .select2-selection--multiple .select2-selection__rendered {
+      padding-bottom: $padSm;
+      border-radius: 3px;
+    }
+  }
+
+  &.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    padding-left: $pad;
+    font-weight: 500;
+
+    .select2-selection__choice__remove {
+      float: right;
+      font-size: 2rem;
+      font-weight: 100;
+      position: relative;
+      top: -2px;
+      margin-left: 5px;
+    }
+  }
+
+  &.select2-container--focus .select2-selection {
+    border: 1px solid transparent;
+  }
+}

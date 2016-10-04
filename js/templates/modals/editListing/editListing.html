@@ -90,7 +90,7 @@
                   <% ob.conditionTypes.forEach((conditionType) => { %>
                   <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.listing.item.condition) print('selected') %>><%= conditionType.name %></option>
                   <% }); %>
-                </select>              
+                </select>
               </div>            
             </div>
             <div class="flexRow gutterH">
@@ -164,7 +164,9 @@
         <section class="js-scrollToSection" style="height: 350px;background-color: purple">
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: blue">
+        <section class="js-scrollToSection pad tx3 tagsSection">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
+            <select id="editListingTags" name="listing.item.tags" class="clrBr clrP select2Tags"></select>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: magenta">

@@ -115,6 +115,7 @@
       "attachments": "Attachments",
       "shipping": "Shipping",
       "tags": "Tags",
+      "tagsDetailed": "Tags (for getting your listing discovered)",
       "inventory": "Inventory",
       "variants": "Variants",
       "returnPolicy": "Return Policy",

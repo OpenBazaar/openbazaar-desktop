@@ -20,6 +20,7 @@ input,
 select,
 textarea,
 .select2-container--focus .select2-selection__rendered,
+.select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
 .select2-container--focus .select2-selection,
 .medium-editor-element {
   border: none;
@@ -40,6 +41,7 @@ select {
 input[type="text"],
 textarea,
 .select2-container--focus .select2-selection__rendered,
+.select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
 .medium-editor-element {
   border-style: solid;
   border-width: 1px;
@@ -52,6 +54,10 @@ textarea,
 
 .medium-editor-element {
   padding-top: $padSm;
+}
+
+.select2-container--default.select2-container--focus .select2-selection {
+  border: none;
 }
 
 textarea {
