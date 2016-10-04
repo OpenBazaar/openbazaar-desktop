@@ -55,6 +55,7 @@ app.localSettings.on('change:language', (localSettings, lang) => {
 });
 
 app.pageNav = new PageNav();
+$('#pageNavContainer').append(app.pageNav.render().el);
 
 app.router = new ObRouter();
 
@@ -306,13 +307,8 @@ function start() {
     app.ownFollowers = new Followers(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
-      // add listener to pageNav after the profile is available
-      app.pageNav.listenTo(app.profile, 'change', () => {
-        app.pageNav.render();
-      });
-      // render the pageNav after the profile is available
-      $('#pageNavContainer').append(app.pageNav.render().el);
       app.pageNav.navigable = true;
+      app.pageNav.setAppProfile();
       app.loadingModal.close();
       location.hash = location.hash || app.profile.id;
       Backbone.history.start();

@@ -3,7 +3,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
-import cropit from 'cropit';  // eslint-disable-line no-unused-vars
+import 'cropit';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -19,9 +19,7 @@ export default class extends baseVw {
     });
 
     this.profile = app.profile.clone();
-    this.listenTo(this.profile, 'sync change', () => {
-      app.profile.set(this.profile.toJSON());
-    });
+    this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
   }
 
   avatarLeftClick() {
@@ -112,6 +110,7 @@ export default class extends baseVw {
       saveAvatar.done((avatarData) => {
         // set hash in profile to mirror the server copy
         this.profile.set('avatarHash', avatarData.hash);
+        app.profile.set('avatarHash', avatarData.hash);
       });
     }
 
@@ -120,6 +119,7 @@ export default class extends baseVw {
       saveHeader.done((headerData) => {
         // set hash in profile to mirror the server copy
         this.profile.set('headerHash', headerData.hash);
+        app.profile.set('headerHash', headerData.hash);
       });
     }
 
@@ -163,6 +163,7 @@ export default class extends baseVw {
             this.avatarLoadedOnRender = true;
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
+            this.$('.js-avatarZoom').removeClass('disabled');
           },
           onZoomChange: () => {
             this.avatarChanged = this.avatarZoomedOnRender;
@@ -194,6 +195,7 @@ export default class extends baseVw {
             this.headerLoadedOnRender = true;
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
+            this.$('.js-headerZoom').removeClass('disabled');
           },
           onZoomChange: () => {
             this.headerChanged = this.headerZoomedOnRender;
