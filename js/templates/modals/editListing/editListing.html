@@ -166,7 +166,15 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 tagsSection">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
-            <select id="editListingTags" name="listing.item.tags" class="clrBr clrP select2Tags"></select>
+            <!-- Styling is dependant on the following elements being in this order. If you change the
+              order, you will need to update the styles -->
+            <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">
+              <% ob.listing.item.tags.forEach(tag =>
+                  print(`<option value="${tag}" selected="selected">${tag}</option>`)) %>
+            </select>
+            <div id="editListingTagsPlaceholder" class="placeholder">Enter tags... (and translate me)</div>
+            <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
+            <div id="editListingTagsDropdown"></div>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: magenta">

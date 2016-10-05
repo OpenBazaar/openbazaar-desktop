@@ -59,10 +59,41 @@
           }
         }
       }
+
+      .tagsSection {
+        position: relative;
+
+        .select2 {
+          margin-bottom: $padSm;
+
+          &.select2-container--focus + #editListingTagsPlaceholder {
+            display: none;
+          }
+        }
+
+        #editListingTagsPlaceholder {
+          display: none;
+          position: absolute;
+          top: 55px;
+          margin-left: 10px;
+          pointer-events: none;
+
+          // For now, since we're not styling placeholders anywhere, I'll
+          // manually style here. If we ever do style ::placeholder elements,
+          // we should make sure to add .placeholder to that selector and then
+          // these styles could go away
+          font-size: 1.4rem;
+          color: #aaa;
+
+          &.emptyOfTags {
+            display: block;
+          }
+        }
+
+        #editListingTagsDropdown {
+          display: none;
+        }
+      }
     }
   }
-}
-
-#select2-editListingTags-results {
-  display: none;
 }

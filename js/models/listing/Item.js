@@ -15,6 +15,7 @@ export default class extends BaseModel {
     return {
       title: '',
       description: '',
+      tags: [],
     };
   }
 

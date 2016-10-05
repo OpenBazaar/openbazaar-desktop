@@ -130,7 +130,7 @@ export default class extends BaseModal {
 
     // we'll make the slug all lowercase,
     // replace spaces with dashes and remove
-    // url unfreindly chars.
+    // url unfriendly chars.
     // todo: this could be made into a slugify utility
     $(e.target).val(
       val.toLowerCase()
@@ -448,22 +448,55 @@ export default class extends BaseModal {
       super.render();
 
       this.$scrollContainer = this.$('.js-scrollContainer');
+      this.$editListingTags = this.$('#editListingTags');
+      this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
 
       this.$('#editListingType, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
       });
 
       this.$('#editListingCurrency').select2();
-      this.$('#editListingTags').select2({
+
+      this.$editListingTags.select2({
         multiple: true,
         tags: true,
+        // ***
+        // placeholder has issue where it won't show initially, will use
+        // own element for this instead
+        // placeholder: 'Enter tags... (and translate me)',
+        // ***
+        // dropdownParent needed to fully hide dropdown
+        dropdownParent: this.$('#editListingTagsDropdown'),
         createTag: (params) => {
+          let term = params.term;
+
+          // we'll make the tag all lowercase and
+          // replace spaces with dashes.
+          term = term.toLowerCase()
+              .replace(/\s/g, '-')
+              // .replace(/[^a-zA-Z0-9-]/g, '')
+              // replace consecutive dashes with one
+              .replace(/-{2,}/g, '-');
+
           return {
-            id: params.term,
-            text: params.term + '-on-the-ball-son',
+            id: term,
+            text: term,
           };
         },
+        // This is necessary, otherwise partial matches of existing tags are
+        // prevented. E,G. If you have a tag of hello-world, hello would be prevented
+        // as a tag because select2 would match hellow-world in the hidden dropdown
+        // and think you are selecting that.
+        matcher: () => false,
+      }).on('change', () => {
+        const tags = this.$editListingTags.val();
+        this.innerListing.get('item').set('tags', tags);
+        this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
       });
+
+      this.$editListingTagsPlaceholder[
+        this.$editListingTags.val().length ? 'removeClass' : 'addClass'
+      ]('emptyOfTags');
 
       setTimeout(() => {
         if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();

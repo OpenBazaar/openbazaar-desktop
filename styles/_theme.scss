@@ -128,4 +128,14 @@ button {
       border-color: rgb(0, 0, 0);
     }
   }
+
+  .select2-selection__choice {
+    background-color: $primary;
+    border-color: $border;
+    color: $text;
+  }
+
+  .select2-selection__choice__remove {
+    color: $text;
+  }
 }
