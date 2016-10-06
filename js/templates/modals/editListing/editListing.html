@@ -9,6 +9,7 @@
           ob.polyT('editListing.sectionNames.attachments'),
           ob.polyT('editListing.sectionNames.shipping'),
           ob.polyT('editListing.sectionNames.tags'),
+          ob.polyT('editListing.sectionNames.category'),
           ob.polyT('editListing.sectionNames.inventory'),
           ob.polyT('editListing.sectionNames.variants'),
           ob.polyT('editListing.sectionNames.returnPolicy'),
@@ -166,18 +167,30 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 tagsSection">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
-            <!-- Styling is dependant on the following elements being in this order. If you change the
-              order, you will need to update the styles -->
-            <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">
-              <% ob.listing.item.tags.forEach(tag =>
-                  print(`<option value="${tag}" selected="selected">${tag}</option>`)) %>
-            </select>
-            <div id="editListingTagsPlaceholder" class="placeholder">Enter tags... (and translate me)</div>
-            <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
-            <div id="editListingTagsDropdown"></div>
+            <div class="select2TagsWrap hashPrefacedTags">
+              <!-- WARNING! Styling is dependant on the following elements being in this order. -->
+              <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">
+                <% ob.listing.item.tags.forEach(tag =>
+                    print(`<option value="${tag}" selected="selected">${tag}</option>`)) %>
+              </select>
+              <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder">Enter tags... (and translate me)</div>
+              <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
+              <div id="editListingTagsDropdown" class="tagsDropdown"></div>
+            </div>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: magenta">
+        <section class="js-scrollToSection pad tx3 categorySection">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.categoryDetailed') %></h1>
+            <div class="select2TagsWrap">
+              <!-- WARNING! Styling is dependant on the following elements being in this order. -->
+              <select id="editListingCategories" multiple name="listing.item.categories" class="clrBr clrP select2Tags">
+                <% ob.listing.item.categories.forEach(cat =>
+                    print(`<option value="${cat}" selected="selected">${cat}</option>`)) %>
+              </select>
+              <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder">Enter category... (and translate me)</div>
+              <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
+              <div id="editListingCategoriesDropdown" class="tagsDropdown"></div>
+            </div>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: yellow">
@@ -191,6 +204,9 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: maroon">
         </section>
+        <hr class="dashed margR margL" />
+        <section class="js-scrollToSection" style="height: 350px;background-color: aquamarine">
+        </section>        
       </div>
     </div>
     <div class="tabControls flex clrBr">

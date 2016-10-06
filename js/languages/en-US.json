@@ -116,6 +116,8 @@
       "shipping": "Shipping",
       "tags": "Tags",
       "tagsDetailed": "Tags (for getting your listing discovered)",
+      "category": "Category",
+      "categoryDetailed": "Category (for organizing your store)",
       "inventory": "Inventory",
       "variants": "Variants",
       "returnPolicy": "Return Policy",

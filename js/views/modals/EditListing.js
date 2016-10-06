@@ -450,6 +450,8 @@ export default class extends BaseModal {
       this.$scrollContainer = this.$('.js-scrollContainer');
       this.$editListingTags = this.$('#editListingTags');
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
+      this.$editListingCategories = this.$('#editListingCategories');
+      this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
 
       this.$('#editListingType, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
@@ -474,6 +476,7 @@ export default class extends BaseModal {
           // replace spaces with dashes.
           term = term.toLowerCase()
               .replace(/\s/g, '-')
+              .replace('#', '')
               // .replace(/[^a-zA-Z0-9-]/g, '')
               // replace consecutive dashes with one
               .replace(/-{2,}/g, '-');
@@ -496,6 +499,42 @@ export default class extends BaseModal {
 
       this.$editListingTagsPlaceholder[
         this.$editListingTags.val().length ? 'removeClass' : 'addClass'
+      ]('emptyOfTags');
+
+      this.$editListingCategories.select2({
+        multiple: true,
+        tags: true,
+        // dropdownParent needed to fully hide dropdown
+        dropdownParent: this.$('#editListingCategoriesDropdown'),
+        // createTag: (params) => {
+        //   let term = params.term;
+
+        //   // we'll make the tag all lowercase and
+        //   // replace spaces with dashes.
+        //   term = term.toLowerCase()
+        //       .replace(/\s/g, '-')
+        //       .replace('#', '')
+        //       // .replace(/[^a-zA-Z0-9-]/g, '')
+        //       // replace consecutive dashes with one
+        //       .replace(/-{2,}/g, '-');
+
+        //   return {
+        //     id: term,
+        //     text: term,
+        //   };
+        // },
+        // This is necessary, see comment in select2 for tags above.
+        matcher: () => false,
+      }).on('change', () => {
+        const categories = this.$editListingCategories.val();
+        this.innerListing.get('item').set('categories', categories);
+        this.$editListingCategoriesPlaceholder[
+          categories.length ? 'removeClass' : 'addClass'
+        ]('emptyOfTags');
+      });
+
+      this.$editListingCategoriesPlaceholder[
+        this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
       setTimeout(() => {
