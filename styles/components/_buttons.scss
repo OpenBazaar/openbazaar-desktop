@@ -7,7 +7,7 @@
   font-size: $tx5;
   font-weight: 500;
   box-sizing: border-box;
-  display: flex;
+  display: inline-flex;
   align-items: center; // centers icons if they are a child element
   justify-content: center;
 }
