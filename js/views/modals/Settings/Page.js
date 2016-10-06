@@ -63,7 +63,13 @@ export default class extends baseVw {
       originalSize: false,
     });
     const headerData = { header: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') };
-    return $.post(app.getServerUrl('ob/header/'), JSON.stringify(headerData));
+    return $.ajax({
+      type: 'POST',
+      url: app.getServerUrl('ob/header/'),
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(headerData),
+      dataType: 'json',
+    });
   }
 
   saveAvatar() {
@@ -73,7 +79,14 @@ export default class extends baseVw {
       originalSize: false,
     });
     const avatarData = { avatar: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') };
-    return $.post(app.getServerUrl('ob/avatar/'), JSON.stringify(avatarData));
+    // return $.post(app.getServerUrl('ob/avatar/'), JSON.stringify(avatarData));
+    return $.ajax({
+      type: 'POST',
+      url: app.getServerUrl('ob/avatar/'),
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(avatarData),
+      dataType: 'json',
+    });
   }
 
   getFormData() {
