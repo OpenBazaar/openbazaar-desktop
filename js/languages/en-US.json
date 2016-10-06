@@ -135,8 +135,10 @@
     "sku": "SKU",
     "description": "Description",
     "uploading": "Uploading...",
+    "returnPolicy": "Return Policy",
     "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
+    "btnAddReturnPolicy": "Add Return Policy",
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",

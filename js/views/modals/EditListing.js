@@ -400,6 +400,10 @@ export default class extends BaseModal {
     return this._$photoUploadItems || this.$('.js-photoUploadItems');
   }
 
+  get $editListingReturnPolicy() {
+    return this._$editListingReturnPolicy || this.$('#editListingReturnPolicy');
+  }
+
   setScrollContainerHeight() {
     this.$scrollContainer.css('height', '');
     const height = this.$modalContent.outerHeight() -
@@ -506,23 +510,6 @@ export default class extends BaseModal {
         tags: true,
         // dropdownParent needed to fully hide dropdown
         dropdownParent: this.$('#editListingCategoriesDropdown'),
-        // createTag: (params) => {
-        //   let term = params.term;
-
-        //   // we'll make the tag all lowercase and
-        //   // replace spaces with dashes.
-        //   term = term.toLowerCase()
-        //       .replace(/\s/g, '-')
-        //       .replace('#', '')
-        //       // .replace(/[^a-zA-Z0-9-]/g, '')
-        //       // replace consecutive dashes with one
-        //       .replace(/-{2,}/g, '-');
-
-        //   return {
-        //     id: term,
-        //     text: term,
-        //   };
-        // },
         // This is necessary, see comment in select2 for tags above.
         matcher: () => false,
       }).on('change', () => {
@@ -564,6 +551,7 @@ export default class extends BaseModal {
       this._$inputPhotoUpload = null;
       this._$photoUploadingLabel = null;
       this._$photoUploadItems = null;
+      this._$editListingReturnPolicy = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
