@@ -36,6 +36,7 @@
   @extend .flex;
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
+  justify-content: space-between;
 }
 
 .snip,
@@ -89,6 +90,7 @@
   //vertical colums that have 100% width and are spaced across the height
   @extend .flexCol;
   justify-content: space-between;
+  height: 100%;
 
   & > * {
     width: 100%;

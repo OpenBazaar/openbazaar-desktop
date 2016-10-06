@@ -57,8 +57,18 @@
     "nsfwContent": "NSFW Content",
     "avatar": "Avatar",
     "uploadAvatar": "Load Image",
+    "uploadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
+    "uploadAvatarSizeError": {
+      "title": "Your avatar image is too small.",
+      "body": "The image you uploaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+    },
     "header": "Cover Photo",
     "uploadHeader": "Load Image",
+    "uploadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
+    "uploadHeaderSizeError": {
+      "title": "Your header image is too small",
+      "body": "The image you uploaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+    },
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",

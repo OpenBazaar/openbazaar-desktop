@@ -3,6 +3,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
+import SimpleMessage from '../SimpleMessage';
 import 'cropit';
 
 export default class extends baseVw {
@@ -17,6 +18,11 @@ export default class extends baseVw {
       },
       ...options,
     });
+
+    this.avatarMinWidth = 280;
+    this.avatarMinHeight = 280;
+    this.headerMinWidth = 2450;
+    this.headerMinHeight = 700;
 
     this.profile = app.profile.clone();
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
@@ -105,6 +111,16 @@ export default class extends baseVw {
       this.trigger('savingToServer');
     }
 
+    if (this.avatarOffsetOnLoad !== this.avatarCropper.cropit('offset') ||
+      this.avatarZoomOnLoad !== this.avatarCropper.cropit('zoom')) {
+      this.avatarChanged = true;
+    }
+
+    if (this.headerOffsetOnLoad !== this.headerCropper.cropit('offset') ||
+      this.headerZoomOnLoad !== this.headerCropper.cropit('zoom')) {
+      this.headerChanged = true;
+    }
+
     if (this.avatarChanged && this.avatarCropper.cropit('imageSrc')) {
       saveAvatar = this.saveAvatar();
       saveAvatar.done((avatarData) => {
@@ -139,6 +155,10 @@ export default class extends baseVw {
       this.$el.html(t({
         errors: this.profile.validationError || {},
         ...this.profile.toJSON(),
+        avatarMinHeight: this.avatarMinHeight,
+        avatarMinWidth: this.avatarMinWidth,
+        headerMinHeight: this.headerMinHeight,
+        headerMinWidth: this.headerMinWidth,
       }));
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
@@ -150,6 +170,9 @@ export default class extends baseVw {
       const headerInpt = this.$('#headerInput');
       this.headerCropper = this.$('#headerCropper');
 
+      this.avatarLoadedOnRender = false;
+      this.headerLoadedOnRender = false;
+
       setTimeout(() => {
         this.avatarCropper.cropit({
           $preview: avatarPrev,
@@ -159,19 +182,25 @@ export default class extends baseVw {
           maxZoom: 2,
           allowDragNDrop: false,
           onImageLoaded: () => {
+            const loadedSize = this.avatarCropper.cropit('imageSize');
             this.avatarChanged = this.avatarLoadedOnRender;
             this.avatarLoadedOnRender = true;
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
-          },
-          onZoomChange: () => {
-            this.avatarChanged = this.avatarZoomedOnRender;
-            this.avatarZoomedOnRender = true;
-          },
-          onOffsetChange: () => {
-            this.avatarChanged = this.avatarOffsetOnRender;
-            this.avatarOffsetOnRender = true;
+            this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
+            this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
+
+            if (loadedSize.width < this.avatarMinWidth ||
+              loadedSize.height < this.avatarMinHeight) {
+              new SimpleMessage({
+                title: app.polyglot.t('settings.uploadAvatarSizeError.title'),
+                message: app.polyglot.t('settings.uploadAvatarSizeError.body',
+                  { minWidth: this.avatarMinWidth, minHeight: this.avatarMinHeight }),
+              })
+                .render()
+                .open();
+            }
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -191,19 +220,25 @@ export default class extends baseVw {
           maxZoom: 2,
           allowDragNDrop: false,
           onImageLoaded: () => {
+            const loadedSize = this.headerCropper.cropit('imageSize');
             this.headerChanged = this.headerLoadedOnRender;
             this.headerLoadedOnRender = true;
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
-          },
-          onZoomChange: () => {
-            this.headerChanged = this.headerZoomedOnRender;
-            this.headerZoomedOnRender = true;
-          },
-          onOffsetChange: () => {
-            this.headerChanged = this.headerOffsetOnRender;
-            this.headerOffsetOnRender = true;
+            this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
+            this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
+
+            if (loadedSize.width < this.headerMinWidth ||
+              loadedSize.height < this.headerMinHeight) {
+              new SimpleMessage({
+                title: app.polyglot.t('settings.uploadHeaderSizeError.title'),
+                message: app.polyglot.t('settings.uploadHeaderSizeError.body',
+                  { minWidth: this.headerMinWidth, minHeight: this.headerMinHeight }),
+              })
+                .render()
+                .open();
+            }
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -216,29 +251,13 @@ export default class extends baseVw {
         });
 
         if (this.profile.get('avatarHash')) {
-          // if an image is loaded, set the cropit flags to false
-          this.avatarLoadedOnRender = false;
-          this.avatarZoomedOnRender = false;
-          this.avatarOffsetOnRender = false;
           this.avatarCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('avatarHash')}`));
-        } else {
-          // if no existing avatar was loaded, set cropit flags to true
-          this.avatarLoadedOnRender = true;
-          this.avatarZoomedOnRender = true;
-          this.avatarOffsetOnRender = true;
         }
 
         if (this.profile.get('headerHash')) {
-          this.headerLoadedOnRender = false;
-          this.headerZoomedOnRender = false;
-          this.headerOffsetOnRender = false;
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHash')}`));
-        } else {
-          this.headerLoadedOnRender = true;
-          this.headerZoomedOnRender = true;
-          this.headerOffsetOnRender = true;
         }
       }, 0);
 

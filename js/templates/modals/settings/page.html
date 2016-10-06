@@ -82,8 +82,8 @@
       </div>
       <div class="col9">
         <div class="flexRow gutterH" id="avatarCropper">
-          <div class="contentBox avatarPreview clrP clrBr js-avatarPreview"></div>
-          <div>
+          <div class="contentBox avatarPreview clrP clrBr flexNoShrink js-avatarPreview"></div>
+          <div class="flexNoShrink">
             <div class="flexColRows gutterV">
               <div>
                 <div class="flex gutterH">
@@ -102,6 +102,7 @@
               </div>
             </div>
           </div>
+          <div class="clrT2"><%= ob.polyT('settings.uploadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
         </div>
       </div>
     </div>
@@ -150,8 +151,8 @@
       <div class="col3">
         <label><%= ob.polyT('settings.header') %></label>
       </div>
-      <div class="col9">
-        <div class="flexCol gutterV" id="headerCropper">
+      <div class="col9 row">
+        <div class="flexColRows gutterV" id="headerCropper">
           <div class="contentBox headerPreview clrP clrBr js-headerPreview"></div>
           <div>
             <div class="flexRow gutterH">
@@ -172,6 +173,7 @@
               </div>
             </div>
           </div>
+          <div class="clrT2 txCtr"><%= ob.polyT('settings.uploadHeaderHelp', {minWidth: ob.headerMinWidth, minHeight: ob.headerMinHeight}) %></div>
         </div>
       </div>
     </div>
