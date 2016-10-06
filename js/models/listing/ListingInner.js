@@ -18,6 +18,10 @@ export default class extends BaseModel {
     };
   }
 
+  get refundPolicyMaxLength() {
+    return 10000;
+  }
+
   validate(attrs) {
     let errObj = {};
     const addError = (fieldName, error) => {
@@ -29,6 +33,15 @@ export default class extends BaseModel {
       addError('slug', 'Please provide a slug as a string.');
     } else if (!attrs.slug) {
       addError('slug', app.polyglot.t('listingInnerModelErrors.provideSlug'));
+    }
+
+    if (attrs.refundPolicy) {
+      if (is.not.string(attrs.refundPolicy)) {
+        addError('refundPolicy', 'The return policy must be of type string.');
+      } else if (attrs.refundPolicy.length > this.refundPolicyMaxLength) {
+        // addError('refundPolicy', app.polyglot.t('itemModelErrors.descriptionTooLong'));
+        addError('refundPolicy', 'Return policy too long (translate me) slick willy!');
+      }
     }
 
     errObj = this.mergeInNestedModelErrors(errObj);

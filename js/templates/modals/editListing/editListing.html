@@ -201,9 +201,9 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.returnPolicy') %></h1>
-          <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>        
-          <a class="btn clrP clrBr" class="js-addReturnPolicy"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
-          <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP" id="editListingReturnPolicy"><%= ob.listing.refundPolicy %></textarea>          
+          <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
+          <a class="btn clrP clrBr js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
+          <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy"><%= ob.listing.refundPolicy %></textarea>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: maroon">

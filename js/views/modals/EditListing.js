@@ -78,6 +78,7 @@ export default class extends BaseModal {
       'click .js-addPhoto': 'onClickAddPhoto',
       'click .js-removeImage': 'onClickRemoveImage',
       'click .js-cancelPhotoUploads': 'onClickCancelPhotoUploads',
+      'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
       ...super.events(),
     };
   }
@@ -237,6 +238,13 @@ export default class extends BaseModal {
         }
       };
     });
+  }
+
+  onClickAddReturnPolicy(e) {
+    $(e.target).addClass('hide');
+    this.$editListingReturnPolicy.removeClass('hide')
+      .focus();
+    this.expandedReturnPolicy = true;
   }
 
   uploadImages(images) {
@@ -446,6 +454,7 @@ export default class extends BaseModal {
         errors: this.model.validationError || {},
         photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,
+        expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
         ...this.model.toJSON(),
       }));
 
