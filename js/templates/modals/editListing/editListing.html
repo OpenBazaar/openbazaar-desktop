@@ -173,7 +173,7 @@
                 <% ob.listing.item.tags.forEach(tag =>
                     print(`<option value="${tag}" selected="selected">${tag}</option>`)) %>
               </select>
-              <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder">Enter tags... (and translate me)</div>
+              <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.tagsPlaceholder') %></div>
               <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
               <div id="editListingTagsDropdown" class="tagsDropdown"></div>
             </div>
@@ -187,7 +187,7 @@
                 <% ob.listing.item.categories.forEach(cat =>
                     print(`<option value="${cat}" selected="selected">${cat}</option>`)) %>
               </select>
-              <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder">Enter category... (and translate me)</div>
+              <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.categoryPlaceholder') %></div>
               <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
               <div id="editListingCategoriesDropdown" class="tagsDropdown"></div>
             </div>
@@ -200,13 +200,17 @@
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3">
-          <h1 class="tx3 tx500"><%= ob.polyT('editListing.returnPolicy') %></h1>
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h1>
           <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
           <a class="btn clrP clrBr js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
           <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy"><%= ob.listing.refundPolicy %></textarea>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: maroon">
+        <section class="js-scrollToSection pad tx3">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.termsAndConditions') %></h1>
+          <% if (ob.errors['listing.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.termsAndConditions'] })) %>
+          <a class="btn clrP clrBr js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
+          <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions"><%= ob.listing.termsAndConditions %></textarea>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: aquamarine">

@@ -135,10 +135,12 @@
     "sku": "SKU",
     "description": "Description",
     "uploading": "Uploading...",
-    "returnPolicy": "Return Policy",
+    "categoryPlaceholder": "Enter category...",
+    "tagsPlaceholder": "Enter #tags...",
     "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
+    "btnTermsAndConditions": "Add Terms and Conditions",
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",
@@ -162,7 +164,9 @@
     "provideCountry": "Please provide a country."
   },
   "listingInnerModelErrors": {
-    "provideSlug": "Please provide a slug."
+    "provideSlug": "Please provide a slug.",
+    "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
+    "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",

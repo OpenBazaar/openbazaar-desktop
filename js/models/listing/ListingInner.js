@@ -22,6 +22,10 @@ export default class extends BaseModel {
     return 10000;
   }
 
+  get termsAndConditionsMaxLength() {
+    return 10000;
+  }
+
   validate(attrs) {
     let errObj = {};
     const addError = (fieldName, error) => {
@@ -39,8 +43,16 @@ export default class extends BaseModel {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
       } else if (attrs.refundPolicy.length > this.refundPolicyMaxLength) {
-        // addError('refundPolicy', app.polyglot.t('itemModelErrors.descriptionTooLong'));
-        addError('refundPolicy', 'Return policy too long (translate me) slick willy!');
+        addError('refundPolicy', app.polyglot.t('listingInnerModelErrors.returnPolicyTooLong'));
+      }
+    }
+
+    if (attrs.termsAndConditions) {
+      if (is.not.string(attrs.termsAndConditions)) {
+        addError('termsAndConditions', 'The terms and conditions must be of type string.');
+      } else if (attrs.termsAndConditions.length > this.termsAndConditionsMaxLength) {
+        addError('termsAndConditions',
+          app.polyglot.t('listingInnerModelErrors.termsAndConditionsTooLong'));
       }
     }
 

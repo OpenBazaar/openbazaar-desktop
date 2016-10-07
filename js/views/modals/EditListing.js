@@ -79,6 +79,7 @@ export default class extends BaseModal {
       'click .js-removeImage': 'onClickRemoveImage',
       'click .js-cancelPhotoUploads': 'onClickCancelPhotoUploads',
       'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
+      'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
       ...super.events(),
     };
   }
@@ -247,6 +248,13 @@ export default class extends BaseModal {
     this.expandedReturnPolicy = true;
   }
 
+  onClickAddTermsAndConditions(e) {
+    $(e.target).addClass('hide');
+    this.$editListingTermsAndConditions.removeClass('hide')
+      .focus();
+    this.expandedTermsAndConditions = true;
+  }
+
   uploadImages(images) {
     let imagesToUpload = images;
 
@@ -412,6 +420,10 @@ export default class extends BaseModal {
     return this._$editListingReturnPolicy || this.$('#editListingReturnPolicy');
   }
 
+  get $editListingTermsAndConditions() {
+    return this._$editListingTermsAndConditions || this.$('#editListingTermsAndConditions');
+  }
+
   setScrollContainerHeight() {
     this.$scrollContainer.css('height', '');
     const height = this.$modalContent.outerHeight() -
@@ -455,6 +467,8 @@ export default class extends BaseModal {
         photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,
         expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
+        expandedTermsAndConditions: this.expandedTermsAndConditions ||
+          !!this.innerListing.get('termsAndConditions'),
         ...this.model.toJSON(),
       }));
 
@@ -561,6 +575,7 @@ export default class extends BaseModal {
       this._$photoUploadingLabel = null;
       this._$photoUploadItems = null;
       this._$editListingReturnPolicy = null;
+      this._$editListingTermsAndConditions = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
