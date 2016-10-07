@@ -504,7 +504,6 @@ export default class extends BaseModal {
           term = term.toLowerCase()
               .replace(/\s/g, '-')
               .replace('#', '')
-              // .replace(/[^a-zA-Z0-9-]/g, '')
               // replace consecutive dashes with one
               .replace(/-{2,}/g, '-');
 
