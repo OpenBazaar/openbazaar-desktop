@@ -48,5 +48,19 @@ describe('the Item model', () => {
     expect(valErr && valErr.description && !!valErr.description.length || false).to.equal(true);
   });
 
+  it('fails validation if the number of tags exceeds the maximum allowable amount', () => {
+    const item = new Item();
+    const tags = [];
+
+    for (let i = 0; i < (item.maxTags + 1); i++) {
+      tags.push('moo');
+    }
+
+    item.set({ tags }, { validate: true });
+    const valErr = item.validationError;
+
+    expect(valErr && valErr.tags && !!valErr.tags.length || false).to.equal(true);
+  });
+
   // todo: spot check nested val errors
 });
