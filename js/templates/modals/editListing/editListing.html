@@ -167,6 +167,7 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 tagsSection">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
+            <% if (ob.errors['listing.item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.tags'] })) %>
             <div class="select2TagsWrap hashPrefacedTags">
               <!-- WARNING! Styling is dependant on the following elements being in this order. -->
               <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">

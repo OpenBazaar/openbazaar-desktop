@@ -44,6 +44,10 @@ export default class extends BaseModel {
     return 10;
   }
 
+  get maxTags() {
+    return 3;
+  }
+
   validate(attrs) {
     let errObj = {};
     const addError = (fieldName, error) => {
@@ -77,6 +81,11 @@ export default class extends BaseModel {
       addError('images', app.polyglot.t('itemModelErrors.imageRequired'));
     } else if (attrs.images.length > this.maxImages) {
       addError('images', `The number of images cannot exceed ${this.maxImages}`);
+    }
+
+    if (attrs.tags && attrs.tags.length > this.maxTags) {
+      addError('tags',
+        app.polyglot.t('itemModelErrors.tooManyTags', { maxTags: this.maxTags }));
     }
 
     errObj = this.mergeInNestedModelErrors(errObj);
