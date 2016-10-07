@@ -202,6 +202,8 @@ export default class extends baseVw {
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
+            this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
+            this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
 
             if (loadedSize.width < this.avatarMinWidth ||
               loadedSize.height < this.avatarMinHeight) {
@@ -238,6 +240,8 @@ export default class extends baseVw {
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
+            this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
+            this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
 
             if (loadedSize.width < this.headerMinWidth ||
               loadedSize.height < this.headerMinHeight) {
@@ -262,24 +266,16 @@ export default class extends baseVw {
 
         if (this.avatarURI) {
           this.avatarCropper.cropit('imageSrc', this.avatarURI);
-          this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
-          this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
         } else if (this.profile.get('avatarHash')) {
           this.avatarCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('avatarHash')}`));
-          this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
-          this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
         }
 
         if (this.headerURI) {
           this.headerCropper.cropit('imageSrc', this.headerURI);
-          this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
-          this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
         } else if (this.profile.get('headerHash')) {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHash')}`));
-          this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
-          this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
         }
       }, 0);
 
