@@ -78,8 +78,8 @@ ul, ol {
 
 .header {
   //create a fixed header in the background
-  background-position: center top;
   background-repeat: no-repeat;
+  background-size: contain;
   position: fixed;
   width: 100%;
   height: 100%;

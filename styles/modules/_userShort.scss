@@ -1,10 +1,12 @@
 .userShort {
   font-size: $tx5;
 
-  .hero {
+  .shortHeader {
     height: 101px;
     position: relative;
     margin-bottom: 9px;
+    background-repeat: no-repeat;
+    background-size: cover;
 
     .userIcon {
       position: absolute;

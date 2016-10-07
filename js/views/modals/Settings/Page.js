@@ -57,34 +57,35 @@ export default class extends baseVw {
   }
 
   saveHeader() {
-    const imageURI = this.headerCropper.cropit('export', {
+    this.headerURI = this.headerCropper.cropit('export', {
       type: 'image/jpeg',
       quality: 0.75,
       originalSize: false,
     });
-    const headerData = { header: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') };
+    const headerData = JSON.stringify(
+      { header: this.headerURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
     return $.ajax({
       type: 'POST',
       url: app.getServerUrl('ob/header/'),
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(headerData),
+      data: headerData,
       dataType: 'json',
     });
   }
 
   saveAvatar() {
-    const imageURI = this.avatarCropper.cropit('export', {
+    this.avatarURI = this.avatarCropper.cropit('export', {
       type: 'image/jpeg',
       quality: 0.75,
       originalSize: false,
     });
-    const avatarData = { avatar: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') };
-    // return $.post(app.getServerUrl('ob/avatar/'), JSON.stringify(avatarData));
+    const avatarData = JSON.stringify(
+      { avatar: this.avatarURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
     return $.ajax({
       type: 'POST',
       url: app.getServerUrl('ob/avatar/'),
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(avatarData),
+      data: avatarData,
       dataType: 'json',
     });
   }
@@ -119,48 +120,48 @@ export default class extends baseVw {
     if (!save) {
       // client side validation failed
       this.trigger('saveComplete', true);
-      this.render();
     } else {
       this.trigger('savingToServer');
+
+      if (this.avatarOffsetOnLoad !== this.avatarCropper.cropit('offset') ||
+        this.avatarZoomOnLoad !== this.avatarCropper.cropit('zoom')) {
+        this.avatarChanged = true;
+      }
+
+      if (this.headerOffsetOnLoad !== this.headerCropper.cropit('offset') ||
+        this.headerZoomOnLoad !== this.headerCropper.cropit('zoom')) {
+        this.headerChanged = true;
+      }
+
+      if (this.avatarChanged && this.avatarCropper.cropit('imageSrc')) {
+        saveAvatar = this.saveAvatar();
+        saveAvatar.done((avatarData) => {
+          // set hash in profile to mirror the server copy
+          this.profile.set('avatarHash', avatarData.hash);
+          app.profile.set('avatarHash', avatarData.hash);
+        });
+      }
+
+      if (this.headerChanged && this.headerCropper.cropit('imageSrc')) {
+        saveHeader = this.saveHeader();
+        saveHeader.done((headerData) => {
+          // set hash in profile to mirror the server copy
+          this.profile.set('headerHash', headerData.hash);
+          app.profile.set('headerHash', headerData.hash);
+        });
+      }
+
+      $.whenAll(save, saveAvatar, saveHeader)
+        .done(() => {
+          this.trigger('saveComplete');
+        })
+        .fail((...args) => {
+          this.trigger('saveComplete', false, true,
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
+        });
     }
 
-    if (this.avatarOffsetOnLoad !== this.avatarCropper.cropit('offset') ||
-      this.avatarZoomOnLoad !== this.avatarCropper.cropit('zoom')) {
-      this.avatarChanged = true;
-    }
-
-    if (this.headerOffsetOnLoad !== this.headerCropper.cropit('offset') ||
-      this.headerZoomOnLoad !== this.headerCropper.cropit('zoom')) {
-      this.headerChanged = true;
-    }
-
-    if (this.avatarChanged && this.avatarCropper.cropit('imageSrc')) {
-      saveAvatar = this.saveAvatar();
-      saveAvatar.done((avatarData) => {
-        // set hash in profile to mirror the server copy
-        this.profile.set('avatarHash', avatarData.hash);
-        app.profile.set('avatarHash', avatarData.hash);
-      });
-    }
-
-    if (this.headerChanged && this.headerCropper.cropit('imageSrc')) {
-      saveHeader = this.saveHeader();
-      saveHeader.done((headerData) => {
-        // set hash in profile to mirror the server copy
-        this.profile.set('headerHash', headerData.hash);
-        app.profile.set('headerHash', headerData.hash);
-      });
-    }
-
-    $.whenAll(save, saveAvatar, saveHeader)
-      .done(() => {
-        this.trigger('saveComplete');
-        this.render();
-      })
-      .fail((...args) => {
-        this.trigger('saveComplete', false, true,
-          args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
-      });
+    this.render();
   }
 
   render() {
@@ -201,8 +202,6 @@ export default class extends baseVw {
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
-            this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
-            this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
 
             if (loadedSize.width < this.avatarMinWidth ||
               loadedSize.height < this.avatarMinHeight) {
@@ -228,7 +227,7 @@ export default class extends baseVw {
         this.headerCropper.cropit({
           $preview: headerPrev,
           $fileInput: headerInpt,
-          exportZoom: 4.7,
+          exportZoom: 10.34,
           smallImage: 'stretch',
           maxZoom: 2,
           allowDragNDrop: false,
@@ -239,8 +238,6 @@ export default class extends baseVw {
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
-            this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
-            this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
 
             if (loadedSize.width < this.headerMinWidth ||
               loadedSize.height < this.headerMinHeight) {
@@ -263,14 +260,26 @@ export default class extends baseVw {
           },
         });
 
-        if (this.profile.get('avatarHash')) {
+        if (this.avatarURI) {
+          this.avatarCropper.cropit('imageSrc', this.avatarURI);
+          this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
+          this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
+        } else if (this.profile.get('avatarHash')) {
           this.avatarCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('avatarHash')}`));
+          this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
+          this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
         }
 
-        if (this.profile.get('headerHash')) {
+        if (this.headerURI) {
+          this.headerCropper.cropit('imageSrc', this.headerURI);
+          this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
+          this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
+        } else if (this.profile.get('headerHash')) {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHash')}`));
+          this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
+          this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
         }
       }, 0);
 
