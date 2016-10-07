@@ -56,18 +56,18 @@
     "about": "About",
     "nsfwContent": "NSFW Content",
     "avatar": "Avatar",
-    "uploadAvatar": "Load Image",
-    "uploadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
-    "uploadAvatarSizeError": {
+    "loadAvatar": "Load Image",
+    "loadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
+    "loadAvatarSizeError": {
       "title": "Your avatar image is too small.",
-      "body": "The image you uploaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+      "body": "The image you loaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
     },
     "header": "Cover Photo",
-    "uploadHeader": "Load Image",
-    "uploadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
-    "uploadHeaderSizeError": {
+    "loadHeader": "Load Image",
+    "loadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
+    "loadHeaderSizeError": {
       "title": "Your header image is too small",
-      "body": "The image you uploaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+      "body": "The image you loaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
     },
     "socialSection": "Social",
     "website": "Website",

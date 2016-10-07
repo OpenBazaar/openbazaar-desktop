@@ -57,13 +57,13 @@ export default class extends baseVw {
   }
 
   saveHeader() {
-    this.headerURI = this.headerCropper.cropit('export', {
+    const imageURI = this.headerCropper.cropit('export', {
       type: 'image/jpeg',
-      quality: 0.75,
+      quality: 1,
       originalSize: false,
     });
     const headerData = JSON.stringify(
-      { header: this.headerURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
+      { header: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
     return $.ajax({
       type: 'POST',
       url: app.getServerUrl('ob/header/'),
@@ -74,13 +74,13 @@ export default class extends baseVw {
   }
 
   saveAvatar() {
-    this.avatarURI = this.avatarCropper.cropit('export', {
+    const imageURI = this.avatarCropper.cropit('export', {
       type: 'image/jpeg',
-      quality: 0.75,
+      quality: 1,
       originalSize: false,
     });
     const avatarData = JSON.stringify(
-      { avatar: this.avatarURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
+      { avatar: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
     return $.ajax({
       type: 'POST',
       url: app.getServerUrl('ob/avatar/'),
@@ -162,9 +162,31 @@ export default class extends baseVw {
     }
 
     this.render();
+    const $firstErr = this.$('.errorList:first');
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   render() {
+    let avatarURI = false;
+    let headerURI = false;
+
+    // if this is a re-render, get the contents of the cropits
+    if (this.avatarCropper) {
+      avatarURI = this.avatarCropper.cropit('export', {
+        type: 'image/jpeg',
+        quality: 1,
+        originalSize: false,
+      });
+    }
+
+    if (this.headerCropper) {
+      headerURI = this.headerCropper.cropit('export', {
+        type: 'image/jpeg',
+        quality: 1,
+        originalSize: false,
+      });
+    }
+
     loadTemplate('modals/settings/page.html', (t) => {
       this.$el.html(t({
         errors: this.profile.validationError || {},
@@ -208,8 +230,8 @@ export default class extends baseVw {
             if (loadedSize.width < this.avatarMinWidth ||
               loadedSize.height < this.avatarMinHeight) {
               new SimpleMessage({
-                title: app.polyglot.t('settings.uploadAvatarSizeError.title'),
-                message: app.polyglot.t('settings.uploadAvatarSizeError.body',
+                title: app.polyglot.t('settings.loadAvatarSizeError.title'),
+                message: app.polyglot.t('settings.loadAvatarSizeError.body',
                   { minWidth: this.avatarMinWidth, minHeight: this.avatarMinHeight }),
               })
                 .render()
@@ -246,8 +268,8 @@ export default class extends baseVw {
             if (loadedSize.width < this.headerMinWidth ||
               loadedSize.height < this.headerMinHeight) {
               new SimpleMessage({
-                title: app.polyglot.t('settings.uploadHeaderSizeError.title'),
-                message: app.polyglot.t('settings.uploadHeaderSizeError.body',
+                title: app.polyglot.t('settings.loadHeaderSizeError.title'),
+                message: app.polyglot.t('settings.loadHeaderSizeError.body',
                   { minWidth: this.headerMinWidth, minHeight: this.headerMinHeight }),
               })
                 .render()
@@ -264,23 +286,20 @@ export default class extends baseVw {
           },
         });
 
-        if (this.avatarURI) {
-          this.avatarCropper.cropit('imageSrc', this.avatarURI);
+        if (avatarURI) {
+          this.avatarCropper.cropit('imageSrc', avatarURI);
         } else if (this.profile.get('avatarHash')) {
           this.avatarCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('avatarHash')}`));
         }
 
-        if (this.headerURI) {
-          this.headerCropper.cropit('imageSrc', this.headerURI);
+        if (headerURI) {
+          this.headerCropper.cropit('imageSrc', headerURI);
         } else if (this.profile.get('headerHash')) {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHash')}`));
         }
       }, 0);
-
-      const $firstErr = this.$('.errorList:first');
-      if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
     });
 
     return this;
