@@ -14,6 +14,24 @@
     }
   }
 
+  .avatarPreview,
+  .headerPreview {
+    width: 120px;
+    height: 120px;
+    box-sizing: border-box;
+
+    .cropit-preview-image-container {
+      border-radius: inherit;
+      overflow: hidden;
+      z-index: 1; //fixes bug in Chrome where the image inside would not be hidden by border radius.
+    }
+  }
+
+  .headerPreview {
+    width: 474px;
+    height: 136px;
+  }
+
   .settingsAddresses {
     .addresses {
       margin-bottom: $marg;

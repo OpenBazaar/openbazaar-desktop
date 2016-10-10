@@ -39,16 +39,16 @@
                 <% if (ob.errors['listing.slug']) print(ob.formErrorTmpl({ errors: ob.errors['listing.slug'] })) %>
                 <input type="text" class="clrBr clrP" name="listing.slug" id="editListingSlug" value="<%= ob.listing.slug %>" placeholder="Enter a url fragment representing the listing, for example my-big-brown-shoe">
               </div>
-            </div>            
+            </div>
             <div class="flexRow gutterH">
               <div class="col6">
-                <label for="editListingType" class="required"><%= ob.polyT('editListing.type') %></label>
+                <label for="editformat" class="required"><%= ob.polyT('editListing.type') %></label>
                 <% if (ob.errors['listing.metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['listing.metadata.contractType'] })) %>
-                <select id="editListingType" name="listing.metadata.contractType" class="clrBr clrP">
+                <select id="editformat" name="listing.metadata.contractType" class="clrBr clrP">
                   <% ob.contractTypes.forEach((contractType) => { %>
                   <option value="<%= contractType.code %>" <% if (contractType.code === ob.listing.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                   <% }); %>
-                </select>              
+                </select>
               </div>
               <div class="col6">
                 <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
@@ -57,8 +57,8 @@
                     // todo: will translate and implement fully when this field is implemented into the API.
                   %>
                   <option value="hidden">Hidden (doesn't display in store)</option>
-                </select>              
-              </div>            
+                </select>
+              </div>
             </div>
             <div class="flexRow gutterH">
               <div class="col6">
@@ -81,7 +81,7 @@
                        }
                     %>><%= currency.code %></option>
                     <% }); %>
-                  </select>                
+                  </select>
                 </div>
               </div>
               <div class="col6 js-conditionWrap <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
@@ -92,7 +92,7 @@
                   <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.listing.item.condition) print('selected') %>><%= conditionType.name %></option>
                   <% }); %>
                 </select>
-              </div>            
+              </div>
             </div>
             <div class="flexRow gutterH">
               <div class="col6">
@@ -131,7 +131,7 @@
                 <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
                 <textarea rows="6" name="listing.item.description" class="clrBr clrP" id="editListingDescription"><%= ob.listing.item.description %></textarea>
               </div>
-            </div>          
+            </div>
           </form>
         </section>
         <hr class="dashed margR margL" />

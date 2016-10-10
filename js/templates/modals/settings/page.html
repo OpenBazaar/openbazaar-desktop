@@ -2,7 +2,7 @@
   <h2 class="h3 txUnb"><%= ob.polyT('settings.pageTab') %></h2>
 </div>
 <div class="padMd tabFormWrapper clrS">
-  <form class="box border clrP clrBr padKids padStack settingsGeneralForm">
+  <form class="box border clrP clrBr padMdKids padStack settingsGeneralForm">
     <div class="flexRow">
       <div class="col3">
         <label for="settingsName"><%= ob.polyT('settings.name') %></label>
@@ -81,7 +81,29 @@
         <label><%= ob.polyT('settings.avatar') %></label>
       </div>
       <div class="col9">
-        <label>Photo Upload</label>
+        <div class="flexRow gutterH" id="avatarCropper">
+          <div class="contentBox avatarPreview clrP clrBr flexNoShrink js-avatarPreview"></div>
+          <div class="flexNoShrink">
+            <div class="flexColRows gutterV">
+              <div>
+                <div class="flex gutterH">
+                  <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-avatarLeft"></a>
+                  <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-avatarRight"></a>
+                </div>
+              </div>
+              <div>
+                <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" />
+              </div>
+              <div>
+                <input type="file" id="avatarInput" class="cropit-image-input hide" />
+                <label for="avatarInput" class="btn clrP clrBr">
+                  <%= ob.polyT('settings.loadAvatar') %>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="clrT2"><%= ob.polyT('settings.loadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
+        </div>
       </div>
     </div>
     <div class="flexRow">
@@ -108,7 +130,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.polyT('settings.socialMediaAccounts') %></label>
+        <label><%= ob.polyT('settings.socialAccounts') %></label>
       </div>
       <div class="col9">
         Fancy input thing here
@@ -127,10 +149,32 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label><%= ob.polyT('settings.coverPhoto') %></label>
+        <label><%= ob.polyT('settings.header') %></label>
       </div>
-      <div class="col9">
-        <label>Photo Upload</label>
+      <div class="col9 row">
+        <div class="flexColRows gutterV" id="headerCropper">
+          <div class="contentBox headerPreview clrP clrBr js-headerPreview"></div>
+          <div>
+            <div class="flexRow gutterH">
+              <div>
+                <div class="flex gutterH">
+                  <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-headerLeft"></a>
+                  <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-headerRight"></a>
+                </div>
+              </div>
+              <div>
+                <input type="range" class="cropit-image-zoom-input disabled js-headerZoom clrP" />
+              </div>
+              <div>
+                <input type="file" id="headerInput" class="cropit-image-input hide" />
+                <label for="headerInput" class="btn clrP clrBr">
+                  <%= ob.polyT('settings.loadHeader') %>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="clrT2 txCtr"><%= ob.polyT('settings.loadHeaderHelp', {minWidth: ob.headerMinWidth, minHeight: ob.headerMinHeight}) %></div>
+        </div>
       </div>
     </div>
     <div class="flexRow">

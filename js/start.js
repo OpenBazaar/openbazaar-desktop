@@ -308,6 +308,7 @@ function start() {
 
     onboardIfNeeded().done(() => {
       app.pageNav.navigable = true;
+      app.pageNav.setAppProfile();
       app.loadingModal.close();
       location.hash = location.hash || app.profile.id;
       Backbone.history.start();
