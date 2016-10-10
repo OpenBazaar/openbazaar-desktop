@@ -55,7 +55,20 @@
     "shortDescription": "Short Description",
     "about": "About",
     "nsfwContent": "NSFW Content",
-    "avatar": "avatar",
+    "avatar": "Avatar",
+    "loadAvatar": "Load Image",
+    "loadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
+    "loadAvatarSizeError": {
+      "title": "Your avatar image is too small.",
+      "body": "The image you loaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+    },
+    "header": "Cover Photo",
+    "loadHeader": "Load Image",
+    "loadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
+    "loadHeaderSizeError": {
+      "title": "Your header image is too small",
+      "body": "The image you loaded is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+    },
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
@@ -94,7 +107,7 @@
     }
   },
   "editListing": {
-    "listingTypes": {
+    "formats": {
       "PHYSICAL_GOOD": "Physical Good",
       "DIGITAL_GOOD": "Digital Good",
       "SERVICE": "Service",
@@ -142,6 +155,7 @@
     }
   },
   "profileModelErrors": {
+    "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",

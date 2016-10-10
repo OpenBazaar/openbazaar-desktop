@@ -1,14 +1,7 @@
 <div class="flexRow gutterH">
   <div class="col4 gutterVMd">
     <div class="userShort js-userShort">
-      <% print(ob.userShortTmp({
-      header: ob.header,
-      avatar: ob.avatar,
-      name: ob.name,
-      handle: ob.handle,
-      shortDescription: ob.shortDescription,
-      location: ob.location
-      })) %>
+      <% print(ob.userShortTmp(ob)) %>
     </div>
     <% if(ob.moderator) { %>
     <div class="contentBox padMd2 clrBr clrP clrSh2 js-moderatorInfo">

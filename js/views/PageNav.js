@@ -78,6 +78,18 @@ export default class extends View {
     this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
   }
 
+  setAppProfile() {
+    // when this view is created, the app.profile doesn't exist
+    this.listenTo(app.profile, 'change:avatarHash', this.updateAvatar);
+    this.updateAvatar();
+  }
+
+  updateAvatar() {
+    this.$('#AvatarBtn').attr('style',
+      `background-image: url(${app.getServerUrl(`ipfs/${app.profile.get('avatarHash')}`)}), 
+      url('../imgs/defaultAvatar.png')`);
+  }
+
   navCloseClick() {
     if (remote.process.platform !== 'darwin') {
       remote.getCurrentWindow().close();
@@ -189,7 +201,9 @@ export default class extends View {
 
   render() {
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        avatarHash: app.profile ? app.profile.get('avatarHash') : '',
+      }));
     });
 
     this.$addressBar = this.$('.js-addressBar');

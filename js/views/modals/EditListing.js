@@ -71,7 +71,7 @@ export default class extends BaseModal {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
       'click .js-save': 'onSaveClick',
-      'change #editListingType': 'onChangeListingType',
+      'change #editformat': 'onChangeformat',
       'change #editListingSlug': 'onChangeSlug',
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
@@ -141,12 +141,48 @@ export default class extends BaseModal {
     );
   }
 
-  onChangeListingType(e) {
+  onChangeformat(e) {
     if (e.target.value !== 'PHYSICAL_GOOD') {
       this.$conditionWrap.addClass('disabled');
     } else {
       this.$conditionWrap.removeClass('disabled');
     }
+  }
+
+  getOrientation(file, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataView = new DataView(e.target.result);  // eslint-disable-line no-undef
+      let offset = 2;
+
+      if (dataView.getUint16(0, false) !== 0xFFD8) return callback(-2);
+
+      while (offset < dataView.byteLength) {
+        const marker = dataView.getUint16(offset, false);
+        offset += 2;
+        if (marker === 0xFFE1) {
+          offset += 2;
+          if (dataView.getUint32(offset, false) !== 0x45786966) {
+            return callback(-1);
+          }
+          const little = dataView.getUint16(offset += 6, false) === 0x4949;
+          offset += dataView.getUint32(offset + 4, little);
+          const tags = dataView.getUint16(offset, little);
+          offset += 2;
+          for (let i = 0; i < tags; i++) {
+            if (dataView.getUint16(offset + (i * 12), little) === 0x0112) {
+              return callback(dataView.getUint16(offset + (i * 12) + 8, little));
+            }
+          }
+        } else if ((marker & 0xFF00) !== 0xFF00) {
+          break;
+        } else {
+          offset += dataView.getUint16(offset, false);
+        }
+      }
+      return callback(-1);
+    };
+    reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
   }
 
   onChangePhotoUploadInput() {
@@ -187,6 +223,12 @@ export default class extends BaseModal {
 
     photoFiles.forEach(photoFile => {
       const newImage = document.createElement('img');
+      let orientation = 1;
+
+      this.getOrientation(photoFile, (val) => {
+        if (val === -1) throw new Error('The image is undefined.');
+        orientation = val;
+      });
 
       newImage.src = photoFile.path;
 
@@ -194,6 +236,7 @@ export default class extends BaseModal {
         let imgW = newImage.width;
         let imgH = newImage.height;
         const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
         loaded += 1;
 
@@ -208,7 +251,34 @@ export default class extends BaseModal {
 
         canvas.width = imgW;
         canvas.height = imgH;
-        canvas.getContext('2d').drawImage(newImage, 0, 0, imgW, imgH);
+
+        switch (orientation) {
+          case 2:
+            ctx.translate(imgW, 0);
+            ctx.scale(-1, 1); break;
+          case 3:
+            ctx.translate(imgW, imgH);
+            ctx.rotate(Math.PI); break;
+          case 4:
+            ctx.translate(0, imgH);
+            ctx.scale(1, -1); break;
+          case 5:
+            ctx.rotate(0.5 * Math.PI);
+            ctx.scale(1, -1); break;
+          case 6:
+            ctx.rotate(0.5 * Math.PI);
+            ctx.translate(0, -imgH); break;
+          case 7:
+            ctx.rotate(0.5 * Math.PI);
+            ctx.translate(imgW, -imgH);
+            ctx.scale(-1, 1); break;
+          case 8:
+            ctx.rotate(-0.5 * Math.PI);
+            ctx.translate(-imgW, 0); break;
+          default: // do nothing
+        }
+
+        ctx.drawImage(newImage, 0, 0, imgW, imgH);
         toUpload.push({
           filename: photoFile.name,
           image: canvas.toDataURL('image/jpeg', 0.85)
@@ -436,7 +506,7 @@ export default class extends BaseModal {
         contractTypes: this.innerListing.get('metadata')
           .contractTypes
           .map((contractType) => ({ code: contractType,
-            name: app.polyglot.t(`editListing.listingTypes.${contractType}`) })),
+            name: app.polyglot.t(`editListing.formats.${contractType}`) })),
         conditionTypes: this.innerListing.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
@@ -451,7 +521,7 @@ export default class extends BaseModal {
 
       this.$scrollContainer = this.$('.js-scrollContainer');
 
-      this.$('#editListingType, #editListingVisibility, #editListingCondition').select2({
+      this.$('#editformat, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
       });
 

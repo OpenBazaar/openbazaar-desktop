@@ -3,7 +3,12 @@
       <div class="flexVCent pageTabs">
         <!--consider turning tabs into a reusable view-->
         <div>
-          <div class="userIcon disc clrBr2 clrSh1" style="background-image: url('../imgs/defaultUser.png')"></div>
+          <div class="userIcon disc clrBr2 clrSh1"
+            <% if(ob.avatarHash){ %>
+               styel="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+            <% } else { %>
+               style="background-image: url('../imgs/defaultAvatar.png')"
+            <% } %>></div>
         </div>
         <div>
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
@@ -27,16 +32,17 @@
       </div>
 
 </nav>
-<div class="banner" <% if(ob.header){ %>
-  style="background-image: url('<%= ob.header %>, url('../imgs/defaultHeader.png')"
+<div class="header"
+  <% if(ob.headerHash){ %>
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultHeader.png')"
   <% } else { %>
-  style="background-image: url('../imgs/defaultHeader.png')"
+    style="background-image: url('../imgs/defaultHeader.png')"
   <% } %>>
 </div>
 <div class="pageContent">
   <div class="pageControls flex">
     <div class="flexExpand">
-      <h1 class="txBg txUnb txUnl js-tabTitle">
+      <h1 class="txBg txUnb txUnl clrTGlow js-tabTitle">
       </h1>
     </div>
     <div>

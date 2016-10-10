@@ -36,6 +36,7 @@
   @extend .flex;
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
+  justify-content: space-between;
 }
 
 .snip,
@@ -85,6 +86,17 @@
   }
 }
 
+.flexColRows {
+  //vertical colums that have 100% width and are spaced across the height
+  @extend .flexCol;
+  justify-content: space-between;
+  height: 100%;
+
+  & > * {
+    width: 100%;
+  }
+}
+
 .flexVCent {
   //creates a container with vertically centered children
   @extend .flex;
@@ -113,8 +125,8 @@
   text-align: right;
 }
 
-.flexExpand {
-  //make a child of a flex element expand to fill the remaining space
+.flexExpand,           //make a flex element expand to fill the remaining space
+.flexKidsExpand > * {  //make all child elements expand
   flex-grow: 1;
 }
 
