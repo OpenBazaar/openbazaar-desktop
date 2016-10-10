@@ -42,9 +42,9 @@
             </div>
             <div class="flexRow gutterH">
               <div class="col6">
-                <label for="editformat" class="required"><%= ob.polyT('editListing.type') %></label>
+                <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
                 <% if (ob.errors['listing.metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['listing.metadata.contractType'] })) %>
-                <select id="editformat" name="listing.metadata.contractType" class="clrBr clrP">
+                <select id="editContractType" name="listing.metadata.contractType" class="clrBr clrP">
                   <% ob.contractTypes.forEach((contractType) => { %>
                   <option value="<%= contractType.code %>" <% if (contractType.code === ob.listing.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                   <% }); %>
@@ -143,7 +143,7 @@
           <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
           <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
           <ul class="unstyled uploadItems clrBr js-photoUploadItems">
-            <li class="addElement">
+            <li class="addElement tile">
               <span class="imagesIcon ion-images clrT4"></span>
               <button class="btn clrP clrBr clrT tx6 js-addPhoto"><%= ob.polyT('editListing.btnAddPhoto') %></button>
             </li>
@@ -162,7 +162,17 @@
           <% // waiting on back-end to provide field for this %>          
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: purple">
+        <section class="js-scrollToSection js-sectionShipping tx3 shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('notEmptyShippingOptions') %>">
+          <div class="pad">
+            <h1 class="tx3 tx500 required sectionShippingHeading"><%= ob.polyT('editListing.sectionNames.shipping') %></h1>
+            <div class="clrBr addShippingOptionTileWrap">
+              <div class="tile">
+                <span class="locationIcon ion-ios-location clrT4"></span>
+                <button class="btn clrP clrBr clrT tx6 js-addShippingOptionMain"><%= ob.polyT('editListing.btnAddShippingOptionShort') %></button>
+              </div>
+            </div>
+            <div class="js-shippingOptionsWrap"></div>
+          </div>        
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 tagsSection">

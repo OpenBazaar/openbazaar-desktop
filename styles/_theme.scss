@@ -129,7 +129,7 @@ input[type=range][class~="clrS"] {
   box-shadow: 0 1px 0 rgba(0,0,0,0.05);
 }
 
-label.required::after {
+.required::after {
   color: $emphasis2;
 }
 

@@ -1,4 +1,4 @@
-import EditListing from '../views/modals/EditListing';
+import EditListing from '../views/modals/editListing/EditListing';
 
 let editListindModal;
 

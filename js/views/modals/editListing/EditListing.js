@@ -1,14 +1,15 @@
 import $ from 'jquery';
-import '../../utils/velocity';
+import '../../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
 import { MediumEditor } from 'medium-editor';
-import { isScrolledIntoView } from '../../utils/dom';
-import { getCurrenciesSortedByCode } from '../../data/currencies';
-import SimpleMessage from './SimpleMessage';
-import loadTemplate from '../../utils/loadTemplate';
-import app from '../../app';
-import BaseModal from './BaseModal';
+import { isScrolledIntoView } from '../../../utils/dom';
+import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import SimpleMessage from '../SimpleMessage';
+import loadTemplate from '../../../utils/loadTemplate';
+import app from '../../../app';
+import BaseModal from '../BaseModal';
+import ShippingOption from './ShippingOption';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -55,6 +56,7 @@ export default class extends BaseModal {
       this.model.lastSyncedAttrs.listing.slug);
     this.photoUploads = [];
     this.images = this.innerListing.get('item').get('images');
+    this.shippingOptionViews = [];
 
     loadTemplate('modals/editListing/uploadPhoto.html',
       uploadT => (this.uploadPhotoT = uploadT));
@@ -399,7 +401,21 @@ export default class extends BaseModal {
   onSaveClick() {
     const formData = this.getFormData(this.$formFields);
 
-    // todo: show status bar
+    // formData.listing.shippingOptions = [
+    //   {
+    //     name: 'USA Domestic Shipping',
+    //     type: 'FIXED_PRICE',
+    //     regions: ['UNITED_STATES', 'UKRAINE'],
+    //     services: [
+    //       {
+    //         name: 'Ground Shipping',
+    //         price: 1000,
+    //         estimatedDelivery: '3-7 days',
+    //       },
+    //     ],
+    //   },
+    // ];
+
     this.$saveButton.addClass('disabled');
     this.model.set(formData);
 
@@ -459,7 +475,9 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
-    return this._$formFields || this.$('select[name], input[name], textarea[name]');
+    return this._$formFields ||
+      this.$('select[name], input[name], textarea[name]')
+        .filter(':parents(.js-sectionShipping)');
   }
 
   get $currencySelect() {
@@ -623,6 +641,18 @@ export default class extends BaseModal {
       this.$editListingCategoriesPlaceholder[
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
+
+      this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
+      this.shippingOptionViews = [];
+      this.innerListing.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
+        const shipOptVw = this.createChild(ShippingOption, {
+          listPosition: shipOptIndex + 1,
+          model: shipOpt,
+        });
+
+        this.shippingOptionViews.push(shipOptVw);
+        this.$('.js-shippingOptionsWrap').append(shipOptVw.render().el);
+      });
 
       setTimeout(() => {
         if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
