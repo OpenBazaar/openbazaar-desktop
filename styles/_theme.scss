@@ -148,12 +148,15 @@ button {
 
 // select2 with tags
 .select2Tags + .select2-container {
+
   &.select2-container--default {
     .select2-selection--multiple {
       border: 1px solid transparent;
+      background: none;
 
       .select2-selection__rendered {
         border: 1px solid $border;
+        background: #fff;
       }
     }
 
