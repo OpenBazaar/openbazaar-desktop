@@ -133,7 +133,7 @@ export default class extends Model {
       .forEach((key) => {
         if (this.get(key) instanceof Model) {
           const nestedMd = this.get(key);
-          const nestedErrs = nestedMd.validate(nestedMd.toJSON()) || {};
+          const nestedErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
 
           Object.keys(nestedErrs).forEach((nestedErrKey) => {
             prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
@@ -157,7 +157,7 @@ export default class extends Model {
 
           nestedCl.forEach((nestedMd) => {
             const prefixedErrs = {};
-            const nestedMdErrs = nestedMd.validate(nestedMd.toJSON()) || {};
+            const nestedMdErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
 
             Object.keys(nestedMdErrs).forEach((nestedMdErrKey) => {
               // since indexes can change, we'll index using the model's client id (cid)

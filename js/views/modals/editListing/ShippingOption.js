@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
-import { getTranslatedCountries } from '../../../data/countries';
+import { getTranslatedCountries, getCountryByDataName } from '../../../data/countries';
 import app from '../../../app';
 import BaseView from '../../baseVw';
 
@@ -68,17 +68,20 @@ export default class extends BaseView {
   }
 
   render() {
-    this.model.unset('regions');
-    console.log('moo');
-    window.moo = this.model;
-
     loadTemplate('modals/editListing/shippingOption.html', t => {
       this.$el.html(t({
         viewId: this.viewId,
         listPosition: this.options.listPosition,
-        countryList: getTranslatedCountries(app.settings.get('language')),
         errors: this.model.validationError || {},
         ...this.model.toJSON(),
+        regions: this.model.get('regions').map(region => {
+          const countryData = getCountryByDataName(region);
+
+          return {
+            text: countryData.name,
+            value: region,
+          };
+        }),
       }));
 
       this.$shipDestinationSelect = this.$(`#shipDestinationsSelect_${this.viewId}`);

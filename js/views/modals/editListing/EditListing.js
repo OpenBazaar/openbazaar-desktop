@@ -64,6 +64,9 @@ export default class extends BaseModal {
 
     this.listenTo(this.images, 'add', this.onAddImage);
     this.listenTo(this.images, 'remove', this.onRemoveImage);
+
+    console.log('hero');
+    window.hero = this.model;
   }
 
   className() {
@@ -419,12 +422,6 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
     this.model.set(formData);
-
-    console.log('moo');
-    window.moo = this.model.validationError;
-
-    console.log('foo');
-    window.foo = this.model.toJSON();
 
     const save = this.model.save();
 

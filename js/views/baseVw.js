@@ -66,8 +66,6 @@ export default class baseVw extends View {
         }
       }
 
-      const name = $field.attr('name');
-
       if (name.indexOf('[') !== -1) {
         // handle nested collection
         // for now not handling nested collection, please

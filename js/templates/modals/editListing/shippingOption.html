@@ -5,7 +5,10 @@
       <label for="<%= `shipDestinationsSelect_${ob.viewId}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
       <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
       <div class="select2TagsWrap showDropdown">
-        <select id="<%= `shipDestinationsSelect_${ob.viewId}` %>" multiple name="regions" class="clrBr clrP select2Tags"></select>
+        <select id="<%= `shipDestinationsSelect_${ob.viewId}` %>" multiple name="regions" class="clrBr clrP select2Tags">
+          <% ob.regions.forEach(region =>
+              print(`<option value="${region.value}" selected="selected">${region.text}</option>`)) %>          
+        </select>
         <div id="<%= `shipDestinationsPlaceholder_${ob.viewId}` %>" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.shippingOptions.regionsPlaceholder') %></div>
         <div id="<%= `shipDestinationsDropdown_${ob.viewId}` %>" class="tagsDropdown"></div>      
       </div>
