@@ -138,12 +138,12 @@ select,
 textarea,
 button {
   &:focus {
-    border-color: rgb(0, 0, 0);
+    border-color: $focusedBorder;
   }
 }
 
 .select2-container--focus .select2-selection__rendered {
-  border-color: rgb(0, 0, 0);
+  border-color: $focusedBorder;
 }
 
 // select2 with tags
@@ -158,7 +158,7 @@ button {
     }
 
     &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
-      border-color: rgb(0, 0, 0);
+      border-color: $focusedBorder;
     }
   }
 
@@ -170,5 +170,11 @@ button {
 
   .select2-selection__choice__remove {
     color: $text;
+  }
+}
+
+.tagsDropdown {
+  .select2-container--open .select2-dropdown {
+    border-color: $focusedBorder;
   }
 }

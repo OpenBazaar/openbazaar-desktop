@@ -24,9 +24,11 @@
 }
 
 // Tags (the element that select2 is generated off of must have a class of 'select2Tags').
-// Focus styling is with other form focus styling in form.scss.
+// Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {
   position: relative;
+  // this is needed so if the drop down shows, the right side lines up with the tagging field
+  // margin-right: -2px;
 
   .select2Tags + .select2-container {
     &.select2-container--default {
@@ -61,6 +63,12 @@
     }
   }
 
+  .select2-selection {
+    // This is needed so as the tagging field grows to multiple lines it doesn't
+    // overlap other elements.
+    height: 100%;
+  }
+
   &.hashPrefacedTags .select2Tags + .select2-container .select2-selection__choice {
     &::before {
       content: '#';
@@ -87,7 +95,21 @@
     }    
   }
 
+  &:not(.showDropdown) {
+    .tagsDropdown {
+      display: none;
+    }
+  }
+
+  &.showDropdown {
+    .tagsDropdown .select2-container--open {
+      margin-top: -7px;
+    }
+  }
+
   .tagsDropdown {
-    display: none;
+    .select2-container--open {
+      border: 1px solid;
+    }
   }
 }

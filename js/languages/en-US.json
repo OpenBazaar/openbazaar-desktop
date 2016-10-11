@@ -157,7 +157,8 @@
     "btnTermsAndConditions": "Add Terms and Conditions",
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
-        "shippingDestinations": "Shipping Destinations"
+        "shippingDestinations": "Shipping Destinations",
+        "regionsPlaceholder": "Enter countries..."
     },
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",

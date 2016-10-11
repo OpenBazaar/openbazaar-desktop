@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
+import { getTranslatedCountries } from '../../../data/countries';
 import app from '../../../app';
 import BaseView from '../../baseVw';
 
@@ -20,6 +21,9 @@ export default class extends BaseView {
     // Since multiple instances of this view will be rendered, the 'viewId' is a unique id that
     // will prefaced to any id's in the template so they'll be unique.
     this.viewId = _.uniqueId();
+
+    console.log('hello');
+    window.hello = getTranslatedCountries(app.settings.get('language'));
   }
 
   set listPosition(position) {
@@ -65,6 +69,7 @@ export default class extends BaseView {
       this.$el.html(t({
         viewId: this.viewId,
         listPosition: this.options.listPosition,
+        countryList: getTranslatedCountries(app.settings.get('language')),
         ...this.model.toJSON(),
       }));
 
@@ -73,11 +78,12 @@ export default class extends BaseView {
 
       this.$selectShipDestination.select2({
         multiple: true,
-        tags: true,
-        // dropdownParent needed to fully hide dropdown
+        // even though this is a tagging field, since we are limiting the possible selections
+        // to a list of countries, don't use tag: true, because then it will allows you to
+        // add tags not in the list
+        // tags: true,
         dropdownParent: this.$(`#shipDestinationsDropdown_${this.viewId}`),
-        // This is necessary, see comment in select2 for tags above.
-        matcher: () => false,
+        data: getTranslatedCountries(app.settings.get('language')).map(countryObj => ({ id: countryObj.dataName, text: countryObj.name })),
       }).on('change', () => {
         const regions = this.$selectShipDestination.val();
         this.model.set('regions', regions);

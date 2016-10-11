@@ -4,13 +4,11 @@
     <div class="col12">
       <label for="<%= `shipDestinationsSelect_${ob.viewId}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
       <% // if (ob.errors['listing.item.title']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.title'] })) %>
-      <select id="<%= `shipDestinationsSelect_${ob.viewId}` %>" multiple name="regions" class="clrBr clrP select2Tags">
-        <% ob.regions.forEach(region =>
-            print(`<option value="${region}" selected="selected">${region}</option>`)) %>
-      </select>
-      <div id="<%= `shipDestinationsPlaceholder_${ob.viewId}` %>" class="placeholder shipDestinationsPlaceholder"><%= ob.polyT('editListing.tagsPlaceholder') %></div>
-      <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
-      <div id="<%= `shipDestinationsDropdown_${ob.viewId}` %>" class="shipDestinationsDropdown"></div>      
+      <div class="select2TagsWrap showDropdown">
+        <select id="<%= `shipDestinationsSelect_${ob.viewId}` %>" multiple name="regions" class="clrBr clrP select2Tags"></select>
+        <div id="<%= `shipDestinationsPlaceholder_${ob.viewId}` %>" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.shippingOptions.regionsPlaceholder') %></div>
+        <div id="<%= `shipDestinationsDropdown_${ob.viewId}` %>" class="tagsDropdown"></div>      
+      </div>
     </div>
   </div>
 </form>

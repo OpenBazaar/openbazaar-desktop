@@ -162,17 +162,17 @@
           <% // waiting on back-end to provide field for this %>          
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection js-sectionShipping tx3 shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('notEmptyShippingOptions') %>">
-          <div class="pad">
-            <h1 class="tx3 tx500 required sectionShippingHeading"><%= ob.polyT('editListing.sectionNames.shipping') %></h1>
-            <div class="clrBr addShippingOptionTileWrap">
+        <section class="js-scrollToSection js-sectionShipping tx3 shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('hasShippingOptions') %>">
+          <div class="pad overflowAuto emptyShippingOptionsSection">
+            <h1 class="tx3 tx500 required"><%= ob.polyT('editListing.sectionNames.shipping') %></h1>
+            <div class="clrBr">
               <div class="tile">
                 <span class="locationIcon ion-ios-location clrT4"></span>
                 <button class="btn clrP clrBr clrT tx6 js-addShippingOptionMain"><%= ob.polyT('editListing.btnAddShippingOptionShort') %></button>
               </div>
             </div>
-            <div class="js-shippingOptionsWrap"></div>
-          </div>        
+          </div>
+          <div class="js-shippingOptionsWrap"></div>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 tagsSection">
