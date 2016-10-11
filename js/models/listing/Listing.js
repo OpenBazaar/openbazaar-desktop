@@ -22,7 +22,7 @@ export default class extends BaseModel {
   }
 
   validate() {
-    const errObj = this.mergeInNestedModelErrors({});
+    const errObj = this.mergeInNestedErrors({});
 
     if (Object.keys(errObj).length) return errObj;
 

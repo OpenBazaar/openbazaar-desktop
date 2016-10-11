@@ -25,13 +25,13 @@ export default class extends BaseModel {
   }
 
   validate(attrs) {
-    const errObj = {};
+    let errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
 
-    if (this.shippingTypes.indexOf(attrs.shippingTypes) === -1) {
+    if (this.shippingTypes.indexOf(attrs.type) === -1) {
       addError('type', 'The shipping type is not one of the available types.');
     }
 
@@ -48,6 +48,8 @@ export default class extends BaseModel {
     if (!attrs.services || !attrs.services.length) {
       addError('services', app.polyglot.t('shippingOptionModelErrors.provideService'));
     }
+
+    errObj = this.mergeInNestedErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 

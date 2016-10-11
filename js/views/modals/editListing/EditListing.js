@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import 'select2';
+import '../../../utils/jqueryParentsSelector';
 import _ from 'underscore';
 import { MediumEditor } from 'medium-editor';
 import { isScrolledIntoView } from '../../../utils/dom';
@@ -418,6 +419,12 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
     this.model.set(formData);
+
+    console.log('moo');
+    window.moo = this.model.validationError;
+
+    console.log('foo');
+    window.foo = this.model.toJSON();
 
     const save = this.model.save();
 

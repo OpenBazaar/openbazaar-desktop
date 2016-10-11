@@ -11,13 +11,13 @@ export default class extends BaseModel {
 
     if (!attrs.hash) {
       addError('hash', 'Please provide an image hash.');
-    } else if (!is.not.string(attrs.hash)) {
+    } else if (is.not.string(attrs.hash)) {
       addError('hash', 'Please provide the image hash as a string.');
     }
 
     if (!attrs.filename) {
       addError('filename', 'Please provide an image filename.');
-    } else if (!is.not.string(attrs.hash)) {
+    } else if (is.not.string(attrs.hash)) {
       addError('filename', 'Please provide an image filename as a string.');
     }
 

@@ -3,7 +3,7 @@
   <div class="flexRow">
     <div class="col12">
       <label for="<%= `shipDestinationsSelect_${ob.viewId}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
-      <% // if (ob.errors['listing.item.title']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.title'] })) %>
+      <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
       <div class="select2TagsWrap showDropdown">
         <select id="<%= `shipDestinationsSelect_${ob.viewId}` %>" multiple name="regions" class="clrBr clrP select2Tags"></select>
         <div id="<%= `shipDestinationsPlaceholder_${ob.viewId}` %>" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.shippingOptions.regionsPlaceholder') %></div>

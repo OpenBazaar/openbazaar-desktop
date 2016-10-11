@@ -58,7 +58,7 @@ export default class extends BaseModel {
       }
     }
 
-    errObj = this.mergeInNestedModelErrors(errObj);
+    errObj = this.mergeInNestedErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 
