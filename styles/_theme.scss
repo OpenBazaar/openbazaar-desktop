@@ -156,12 +156,15 @@ button {
 
       .select2-selection__rendered {
         border: 1px solid $border;
-        background: #fff;
+        background: $primary;
+
+
+
       }
     }
 
     &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
-      border-color: rgb(0, 0, 0);
+      border-color: $border;
     }
   }
 
