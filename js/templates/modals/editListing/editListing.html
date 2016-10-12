@@ -9,6 +9,7 @@
           ob.polyT('editListing.sectionNames.attachments'),
           ob.polyT('editListing.sectionNames.shipping'),
           ob.polyT('editListing.sectionNames.tags'),
+          ob.polyT('editListing.sectionNames.category'),
           ob.polyT('editListing.sectionNames.inventory'),
           ob.polyT('editListing.sectionNames.variants'),
           ob.polyT('editListing.sectionNames.returnPolicy'),
@@ -137,7 +138,7 @@
         <section class="js-scrollToSection pad tx3 photoUploadSection">
           <div class="overflowAuto">
             <h1 class="tx3 tx500 floL"><%= ob.polyT('editListing.sectionNames.photos') %></h1>
-            <div class="js-uploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploadingPhotos') %> <a class="js-cancelPhotoUploads"><%= ob.polyT('editListing.btnCancelPhotoUpload') %></a></div>
+            <div class="js-photoUploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploading') %> <a class="js-cancelPhotoUploads"><%= ob.polyT('editListing.btnCancelUpload') %></a></div>
           </div>
           <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
           <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
@@ -153,16 +154,44 @@
           </ul>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: orange">
+        <section class="js-scrollToSection pad tx3">
+          <div class="overflowAuto">
+            <h1 class="tx3 tx500 floL"><%= ob.polyT('editListing.sectionNames.attachments') %></h1>
+            <div class="js-attachmentsUploadingLabel floR <% if (!ob.attachmentUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploading') %> <a class="js-cancelAttachmentUploads"><%= ob.polyT('editListing.btnCancelUpload') %></a></div>
+          </div>
+          <% // waiting on back-end to provide field for this %>          
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: purple">
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: blue">
+        <section class="js-scrollToSection pad tx3 tagsSection">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
+            <% if (ob.errors['listing.item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.tags'] })) %>
+            <div class="select2TagsWrap hashPrefacedTags">
+              <!-- WARNING! Styling is dependant on the following elements being in this order. -->
+              <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">
+                <% ob.listing.item.tags.forEach(tag =>
+                    print(`<option value="${tag}" selected="selected">${tag}</option>`)) %>
+              </select>
+              <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.tagsPlaceholder') %></div>
+              <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
+              <div id="editListingTagsDropdown" class="tagsDropdown"></div>
+            </div>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: magenta">
+        <section class="js-scrollToSection pad tx3 categorySection">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.categoryDetailed') %></h1>
+            <div class="select2TagsWrap">
+              <!-- WARNING! Styling is dependant on the following elements being in this order. -->
+              <select id="editListingCategories" multiple name="listing.item.categories" class="clrBr clrP select2Tags">
+                <% ob.listing.item.categories.forEach(cat =>
+                    print(`<option value="${cat}" selected="selected">${cat}</option>`)) %>
+              </select>
+              <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.categoryPlaceholder') %></div>
+              <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
+              <div id="editListingCategoriesDropdown" class="tagsDropdown"></div>
+            </div>
         </section>
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection" style="height: 350px;background-color: yellow">
@@ -171,11 +200,22 @@
         <section class="js-scrollToSection" style="height: 350px;background-color: green">
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: violet">
+        <section class="js-scrollToSection pad tx3">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h1>
+          <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
+          <a class="btn clrP clrBr js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
+          <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy"><%= ob.listing.refundPolicy %></textarea>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: maroon">
+        <section class="js-scrollToSection pad tx3">
+          <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.termsAndConditions') %></h1>
+          <% if (ob.errors['listing.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.termsAndConditions'] })) %>
+          <a class="btn clrP clrBr js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
+          <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions"><%= ob.listing.termsAndConditions %></textarea>
         </section>
+        <hr class="dashed margR margL" />
+        <section class="js-scrollToSection" style="height: 350px;background-color: aquamarine">
+        </section>        
       </div>
     </div>
     <div class="tabControls flex clrBr">

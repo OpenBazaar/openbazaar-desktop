@@ -128,6 +128,9 @@
       "attachments": "Attachments",
       "shipping": "Shipping",
       "tags": "Tags",
+      "tagsDetailed": "Tags (for getting your listing discovered)",
+      "category": "Category",
+      "categoryDetailed": "Category (for organizing your store)",
       "inventory": "Inventory",
       "variants": "Variants",
       "returnPolicy": "Return Policy",
@@ -144,9 +147,13 @@
     "condition": "Condition",
     "sku": "SKU",
     "description": "Description",
-    "uploadingPhotos": "Uploading photos...",
-    "btnCancelPhotoUpload": "cancel",
+    "uploading": "Uploading...",
+    "categoryPlaceholder": "Enter category...",
+    "tagsPlaceholder": "Enter #tags...",
+    "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
+    "btnAddReturnPolicy": "Add Return Policy",
+    "btnTermsAndConditions": "Add Terms and Conditions",
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",
@@ -171,7 +178,9 @@
     "provideCountry": "Please provide a country."
   },
   "listingInnerModelErrors": {
-    "provideSlug": "Please provide a slug."
+    "provideSlug": "Please provide a slug.",
+    "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
+    "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -180,7 +189,8 @@
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
-    "imageRequired": "Please provide at least one image"
+    "imageRequired": "Please provide at least one image",
+    "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags."
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

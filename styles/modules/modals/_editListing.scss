@@ -60,6 +60,18 @@
           }
         }
       }
+
+      .tagsSection {
+        .select2 {
+          margin-bottom: $padSm;
+        }
+      }
+
+      .categoriesSection {
+        .select2 {
+          margin-bottom: $padSm;
+        }
+      }
     }
   }
 }

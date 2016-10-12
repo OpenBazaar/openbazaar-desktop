@@ -78,6 +78,8 @@ export default class extends BaseModal {
       'click .js-addPhoto': 'onClickAddPhoto',
       'click .js-removeImage': 'onClickRemoveImage',
       'click .js-cancelPhotoUploads': 'onClickCancelPhotoUploads',
+      'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
+      'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
       ...super.events(),
     };
   }
@@ -130,7 +132,7 @@ export default class extends BaseModal {
 
     // we'll make the slug all lowercase,
     // replace spaces with dashes and remove
-    // url unfreindly chars.
+    // url unfriendly chars.
     // todo: this could be made into a slugify utility
     $(e.target).val(
       val.toLowerCase()
@@ -210,7 +212,7 @@ export default class extends BaseModal {
 
     if (!photoFiles.length) return;
 
-    this.$uploadingLabel.removeClass('hide');
+    this.$photoUploadingLabel.removeClass('hide');
 
     // Temporarily limiting the size. If we add in support for the server
     // to offer multiple sizes, we could probably remove or greatly loosen
@@ -294,7 +296,7 @@ export default class extends BaseModal {
         errored += 1;
 
         if (errored === photoFiles.length) {
-          this.$uploadingLabel.addClass('hide');
+          this.$photoUploadingLabel.addClass('hide');
 
           new SimpleMessage({
             title: app.polyglot.t('editListing.errors.unableToLoadImagesBody',
@@ -307,6 +309,20 @@ export default class extends BaseModal {
         }
       };
     });
+  }
+
+  onClickAddReturnPolicy(e) {
+    $(e.target).addClass('hide');
+    this.$editListingReturnPolicy.removeClass('hide')
+      .focus();
+    this.expandedReturnPolicy = true;
+  }
+
+  onClickAddTermsAndConditions(e) {
+    $(e.target).addClass('hide');
+    this.$editListingTermsAndConditions.removeClass('hide')
+      .focus();
+    this.expandedTermsAndConditions = true;
   }
 
   uploadImages(images) {
@@ -328,7 +344,7 @@ export default class extends BaseModal {
       contentType: 'application/json',
     }).always(() => {
       if (this.isRemoved()) return;
-      if (!this.inProgressPhotoUploads.length) this.$uploadingLabel.addClass('hide');
+      if (!this.inProgressPhotoUploads.length) this.$photoUploadingLabel.addClass('hide');
     }).done(uploadedImage => {
       if (this.isRemoved()) return;
       this.images.add(uploadedImage);
@@ -462,12 +478,20 @@ export default class extends BaseModal {
     return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
   }
 
-  get $uploadingLabel() {
-    return this._$uploadingLabel || this.$('.js-uploadingLabel');
+  get $photoUploadingLabel() {
+    return this._$photoUploadingLabel || this.$('.js-photoUploadingLabel');
   }
 
   get $photoUploadItems() {
     return this._$photoUploadItems || this.$('.js-photoUploadItems');
+  }
+
+  get $editListingReturnPolicy() {
+    return this._$editListingReturnPolicy || this.$('#editListingReturnPolicy');
+  }
+
+  get $editListingTermsAndConditions() {
+    return this._$editListingTermsAndConditions || this.$('#editListingTermsAndConditions');
   }
 
   setScrollContainerHeight() {
@@ -495,8 +519,6 @@ export default class extends BaseModal {
 
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    // todo: add model validation to include at least one image
-
     loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
         createMode: this.createMode,
@@ -514,18 +536,85 @@ export default class extends BaseModal {
         errors: this.model.validationError || {},
         photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,
+        expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
+        expandedTermsAndConditions: this.expandedTermsAndConditions ||
+          !!this.innerListing.get('termsAndConditions'),
         ...this.model.toJSON(),
       }));
 
       super.render();
 
       this.$scrollContainer = this.$('.js-scrollContainer');
+      this.$editListingTags = this.$('#editListingTags');
+      this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
+      this.$editListingCategories = this.$('#editListingCategories');
+      this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
 
       this.$('#editformat, #editListingVisibility, #editListingCondition').select2({
         minimumResultsForSearch: Infinity,
       });
 
       this.$('#editListingCurrency').select2();
+
+      this.$editListingTags.select2({
+        multiple: true,
+        tags: true,
+        // ***
+        // placeholder has issue where it won't show initially, will use
+        // own element for this instead
+        // placeholder: 'Enter tags... (and translate me)',
+        // ***
+        // dropdownParent needed to fully hide dropdown
+        dropdownParent: this.$('#editListingTagsDropdown'),
+        createTag: (params) => {
+          let term = params.term;
+
+          // we'll make the tag all lowercase and
+          // replace spaces with dashes.
+          term = term.toLowerCase()
+              .replace(/\s/g, '-')
+              .replace('#', '')
+              // replace consecutive dashes with one
+              .replace(/-{2,}/g, '-');
+
+          return {
+            id: term,
+            text: term,
+          };
+        },
+        // This is necessary, otherwise partial matches of existing tags are
+        // prevented. E,G. If you have a tag of hello-world, hello would be prevented
+        // as a tag because select2 would match hellow-world in the hidden dropdown
+        // and think you are selecting that.
+        matcher: () => false,
+      }).on('change', () => {
+        const tags = this.$editListingTags.val();
+        this.innerListing.get('item').set('tags', tags);
+        this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
+      });
+
+      this.$editListingTagsPlaceholder[
+        this.$editListingTags.val().length ? 'removeClass' : 'addClass'
+      ]('emptyOfTags');
+
+      this.$editListingCategories.select2({
+        multiple: true,
+        tags: true,
+        // dropdownParent needed to fully hide dropdown
+        dropdownParent: this.$('#editListingCategoriesDropdown'),
+        // This is necessary, see comment in select2 for tags above.
+        matcher: () => false,
+      }).on('change', () => {
+        const categories = this.$editListingCategories.val();
+        this.innerListing.get('item').set('categories', categories);
+        this.$editListingCategoriesPlaceholder[
+          categories.length ? 'removeClass' : 'addClass'
+        ]('emptyOfTags');
+      });
+
+      this.$editListingCategoriesPlaceholder[
+        this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
+      ]('emptyOfTags');
 
       setTimeout(() => {
         if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
@@ -552,8 +641,10 @@ export default class extends BaseModal {
       this._$conditionWrap = null;
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
-      this._$uploadingLabel = null;
+      this._$photoUploadingLabel = null;
       this._$photoUploadItems = null;
+      this._$editListingReturnPolicy = null;
+      this._$editListingTermsAndConditions = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');

@@ -31,5 +31,55 @@ describe('the ListingInner model', () => {
     expect(valErr && valErr.slug && !!valErr.slug.length || false).to.equal(true);
   });
 
+  it('fails validation if the refund policy is not provided as a string', () => {
+    const listingInner = new ListingInner();
+    listingInner.set({
+      refundPolicy: 12345,
+    }, { validate: true });
+    const valErr = listingInner.validationError;
+
+    expect(valErr && valErr.refundPolicy && !!valErr.refundPolicy.length || false).to.equal(true);
+  });
+
+  it('fails validation if the refund policy exceeds the maximum length', () => {
+    let refundPolicy = '';
+    const listingInner = new ListingInner();
+
+    for (let i = 0; i < (listingInner.refundPolicyMaxLength + 1); i++) {
+      refundPolicy += 'a';
+    }
+
+    listingInner.set({ refundPolicy }, { validate: true });
+    const valErr = listingInner.validationError;
+
+    expect(valErr && valErr.refundPolicy && !!valErr.refundPolicy.length || false).to.equal(true);
+  });
+
+  it('fails validation if the terms and conditions are not provided as a string', () => {
+    const listingInner = new ListingInner();
+    listingInner.set({
+      termsAndConditions: 12345,
+    }, { validate: true });
+    const valErr = listingInner.validationError;
+
+    expect(valErr && valErr.termsAndConditions &&
+      !!valErr.termsAndConditions.length || false).to.equal(true);
+  });
+
+  it('fails validation if the terms and conditions exceed the maximum length', () => {
+    let termsAndConditions = '';
+    const listingInner = new ListingInner();
+
+    for (let i = 0; i < (listingInner.termsAndConditionsMaxLength + 1); i++) {
+      termsAndConditions += 'a';
+    }
+
+    listingInner.set({ termsAndConditions }, { validate: true });
+    const valErr = listingInner.validationError;
+
+    expect(valErr && valErr.termsAndConditions &&
+      !!valErr.termsAndConditions.length || false).to.equal(true);
+  });
+
   // todo: spot check nested val errors
 });
