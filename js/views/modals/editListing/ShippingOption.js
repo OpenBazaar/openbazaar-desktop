@@ -17,10 +17,6 @@ export default class extends BaseView {
 
     super(opts);
     this.options = opts;
-
-    // Since multiple instances of this view will be rendered, the 'viewId' is a unique id that
-    // will prefaced to any id's in the template so they'll be unique.
-    this.viewId = _.uniqueId();
     this.select2CountryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
   }
@@ -64,14 +60,17 @@ export default class extends BaseView {
   }
 
   get $shipDestinationDropdown() {
-    return this._$shipDestinationDropdown || this.$(`#shipDestinationsDropdown_${this.viewId}`);
+    return this._$shipDestinationDropdown || this.$(`#shipDestinationsDropdown_${this.model.cid}`);
   }
 
   render() {
     loadTemplate('modals/editListing/shippingOption.html', t => {
       this.$el.html(t({
-        viewId: this.viewId,
+        // Since multiple instances of this view will be rendered, any id's should
+        // include the cid, so they're unique.
+        cid: this.model.cid,
         listPosition: this.options.listPosition,
+        shippingTypes: this.model.shippingTypes,
         errors: this.model.validationError || {},
         ...this.model.toJSON(),
         regions: this.model.get('regions').map(region => {
@@ -84,8 +83,8 @@ export default class extends BaseView {
         }),
       }));
 
-      this.$shipDestinationSelect = this.$(`#shipDestinationsSelect_${this.viewId}`);
-      this.$shipDestinationsPlaceholder = this.$(`#shipDestinationsPlaceholder_${this.viewId}`);
+      this.$shipDestinationSelect = this.$(`#shipDestinationsSelect_${this.model.cid}`);
+      this.$shipDestinationsPlaceholder = this.$(`#shipDestinationsPlaceholder_${this.model.cid}`);
 
       this.$shipDestinationSelect.select2({
         multiple: true,
@@ -93,13 +92,11 @@ export default class extends BaseView {
         // to a list of countries, don't use tag: true, because then it will allows you to
         // add tags not in the list
         // tags: true,
-        dropdownParent: this.$(`#shipDestinationsDropdown_${this.viewId}`),
+        dropdownParent: this.$(`#shipDestinationsDropdown_${this.model.cid}`),
         data: this.select2CountryData,
       }).on('change', () => {
-        const regions = this.$shipDestinationSelect.val();
-        this.model.set('regions', regions);
         this.$shipDestinationsPlaceholder[
-          regions.length ? 'removeClass' : 'addClass'
+          this.$shipDestinationSelect.val().length ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
       });
 

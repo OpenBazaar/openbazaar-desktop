@@ -45,7 +45,7 @@ export default class extends BaseModel {
   }
 
   get maxTags() {
-    return 3;
+    return 10;
   }
 
   validate(attrs) {

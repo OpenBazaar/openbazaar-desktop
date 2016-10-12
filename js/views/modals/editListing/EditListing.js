@@ -64,9 +64,6 @@ export default class extends BaseModal {
 
     this.listenTo(this.images, 'add', this.onAddImage);
     this.listenTo(this.images, 'remove', this.onRemoveImage);
-
-    console.log('hero');
-    window.hero = this.model;
   }
 
   className() {
@@ -635,10 +632,8 @@ export default class extends BaseModal {
         // This is necessary, see comment in select2 for tags above.
         matcher: () => false,
       }).on('change', () => {
-        const categories = this.$editListingCategories.val();
-        this.innerListing.get('item').set('categories', categories);
         this.$editListingCategoriesPlaceholder[
-          categories.length ? 'removeClass' : 'addClass'
+          this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
       });
 
