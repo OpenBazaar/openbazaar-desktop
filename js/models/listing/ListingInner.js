@@ -58,6 +58,11 @@ export default class extends BaseModel {
       }
     }
 
+    if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
+      ! attrs.shippingOptions.length) {
+      addError('shippingOptions', 'For a physical good, at least one shipping option is required.');
+    }
+
     errObj = this.mergeInNestedErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;

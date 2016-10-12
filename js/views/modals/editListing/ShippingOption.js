@@ -1,7 +1,7 @@
-import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries, getCountryByDataName } from '../../../data/countries';
 import app from '../../../app';
+import Service from './Service';
 import BaseView from '../../baseVw';
 
 export default class extends BaseView {
@@ -19,6 +19,7 @@ export default class extends BaseView {
     this.options = opts;
     this.select2CountryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
+    this.servicesViews = [];
   }
 
   set listPosition(position) {
@@ -55,12 +56,21 @@ export default class extends BaseView {
   //   };
   // }
 
+  getFormData() {
+    return super.getFormData(this.$formFields);
+  }
+
   get $headline() {
     return this._$headline || this.$('h1');
   }
 
   get $shipDestinationDropdown() {
     return this._$shipDestinationDropdown || this.$(`#shipDestinationsDropdown_${this.model.cid}`);
+  }
+
+  get $formFields() {
+    return this._$formFields ||
+      this.$('select[name], input[name], textarea[name]');
   }
 
   render() {
@@ -83,8 +93,14 @@ export default class extends BaseView {
         }),
       }));
 
+      this.$(`#shipOptionType_${this.model.cid}`).select2({
+        // disables the search box
+        minimumResultsForSearch: Infinity,
+      });
+
       this.$shipDestinationSelect = this.$(`#shipDestinationsSelect_${this.model.cid}`);
       this.$shipDestinationsPlaceholder = this.$(`#shipDestinationsPlaceholder_${this.model.cid}`);
+      this.$servicesWrap = this.$('.js-servicesWrap');
 
       this.$shipDestinationSelect.select2({
         multiple: true,
@@ -104,8 +120,18 @@ export default class extends BaseView {
         this.$shipDestinationSelect.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
+      this.servicesViews.forEach((serviceVw) => serviceVw.remove());
+      this.serviceViews = [];
+      this.model.get('services').forEach((serviceMd) => {
+        const serviceVw = this.createChild(Service, { model: serviceMd });
+
+        this.serviceViews.push(serviceVw);
+        this.$servicesWrap.html(serviceVw.render().el);
+      });
+
       this._$headline = null;
       this._$shipDestinationDropdown = null;
+      this._$formFields = null;
     });
 
     return this;

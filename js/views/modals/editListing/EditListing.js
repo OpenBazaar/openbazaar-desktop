@@ -405,7 +405,7 @@ export default class extends BaseModal {
     // formData.listing.shippingOptions = [
     //   {
     //     name: 'USA Domestic Shipping',
-    //     type: 'FIXED_PRICE',
+    //     // type: 'FIXED_PRICE',
     //     regions: ['UNITED_STATES', 'UKRAINE'],
     //     services: [
     //       {
@@ -416,6 +416,13 @@ export default class extends BaseModal {
     //     ],
     //   },
     // ];
+
+    // set the data for our nested Shipping Option views
+    this.shippingOptionViews.forEach((shipOptVw) => {
+      const shippingOptionFormData = shipOptVw.getFormData();
+      console.log(shippingOptionFormData);
+      shipOptVw.model.set(shippingOptionFormData);
+    });
 
     this.$saveButton.addClass('disabled');
     this.model.set(formData);
@@ -576,8 +583,10 @@ export default class extends BaseModal {
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
+      this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
 
       this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
+        // disables the search box
         minimumResultsForSearch: Infinity,
       });
 
@@ -643,6 +652,7 @@ export default class extends BaseModal {
 
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
       this.shippingOptionViews = [];
+      this.$shippingOptionsWrap.empty();
       this.innerListing.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
         const shipOptVw = this.createChild(ShippingOption, {
           listPosition: shipOptIndex + 1,
@@ -650,7 +660,7 @@ export default class extends BaseModal {
         });
 
         this.shippingOptionViews.push(shipOptVw);
-        this.$('.js-shippingOptionsWrap').append(shipOptVw.render().el);
+        this.$shippingOptionsWrap.append(shipOptVw.render().el);
       });
 
       setTimeout(() => {

@@ -159,12 +159,14 @@
         "optionHeading": "Shipping Option #%{listPosition}",
         "shippingDestinations": "Shipping Destinations",
         "regionsPlaceholder": "Enter countries...",
-        "titleLabel": "Shipping Option Title",
+        "nameLabel": "Shipping Option Title",
+        "namePlaceholder": "e.g. USA Shipping, International, etc",
         "typeLabel": "Shipping Type",
         "shippingTypes": {
           "FIXED_PRICE": "Fixed Price",
           "LOCAL_PICKUP": "Local Pickup"
-        }        
+        },
+        "btnAddShippingOption": "Add Shipping Option"
     },
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",
