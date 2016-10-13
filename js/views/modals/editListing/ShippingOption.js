@@ -1,5 +1,6 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries, getCountryByDataName } from '../../../data/countries';
+import ServiceMd from '../../../models/listing/Service';
 import app from '../../../app';
 import Service from './Service';
 import BaseView from '../../baseVw';
@@ -8,6 +9,10 @@ export default class extends BaseView {
   constructor(options = {}) {
     if (!options.model) {
       throw new Error('Please provide a model.');
+    }
+
+    if (typeof options.getCurrency !== 'function') {
+      throw new Error('Please provide a function for me to obtain the current currency.');
     }
 
     const opts = {
@@ -19,7 +24,42 @@ export default class extends BaseView {
     this.options = opts;
     this.select2CountryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
-    this.servicesViews = [];
+    this.services = this.model.get('services');
+    this.serviceViews = [];
+
+    this.listenTo(this.services, 'add', (serviceMd) => {
+      const serviceVw = this.createServiceView({
+        model: serviceMd,
+      });
+
+      this.serviceViews.push(serviceVw);
+      this.$servicesWrap.append(serviceVw.render().el);
+    });
+
+    this.listenTo(this.services, 'remove', (serviceMd, servicesCl, removeOpts) => {
+      const [splicedVw] = this.serviceViews.splice(removeOpts.index, 1);
+      splicedVw.remove();
+    });
+  }
+
+  events() {
+    return {
+      'click .js-removeShippingOption': 'onClickRemoveShippingOption',
+      'click .js-btnAddService': 'onClickAddService',
+    };
+  }
+
+  tagName() {
+    return 'section';
+  }
+
+  onClickRemoveShippingOption() {
+    this.trigger('click-remove', { view: this });
+  }
+
+  onClickAddService() {
+    this.services
+      .push(new ServiceMd());
   }
 
   set listPosition(position) {
@@ -41,23 +81,27 @@ export default class extends BaseView {
     return this.options.listPosition;
   }
 
-  tagName() {
-    return 'section';
+  // Sets the model based on the current data in the UI.
+  setModelData() {
+    // set the data for our nested Services views
+    this.serviceViews.forEach((serviceVw) => serviceVw.setModelData());
+    this.model.set(this.getFormData(this.$formFields));
   }
 
-  // className() {
-  //   return `${super.className()} editListing tabbedModal modalTop`;
-  // }
+  createServiceView(opts) {
+    const options = {
+      getCurrency: this.options.getCurrency,
+      ...opts || {},
+    };
 
-  // events() {
-  //   return {
-  //     'click .js-scrollLink': 'onScrollLinkClick',
-  //     ...super.events(),
-  //   };
-  // }
+    const view = this.createChild(Service, options);
 
-  getFormData() {
-    return super.getFormData(this.$formFields);
+    this.listenTo(view, 'click-remove', e => {
+      this.services.remove(
+        this.services.at(this.serviceViews.indexOf(e.view)));
+    });
+
+    return view;
   }
 
   get $headline() {
@@ -69,8 +113,11 @@ export default class extends BaseView {
   }
 
   get $formFields() {
+    // todo: the parent selector is not a very efficient selector here.
+    // instead alter the initial selector to select only the fields you want.
     return this._$formFields ||
-      this.$('select[name], input[name], textarea[name]');
+      this.$('select[name], input[name], textarea[name]')
+        .filter(':parents(.js-servicesWrap)');
   }
 
   render() {
@@ -120,14 +167,18 @@ export default class extends BaseView {
         this.$shipDestinationSelect.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
-      this.servicesViews.forEach((serviceVw) => serviceVw.remove());
+      this.serviceViews.forEach((serviceVw) => serviceVw.remove());
       this.serviceViews = [];
+      const servicesFrag = document.createDocumentFragment();
+
       this.model.get('services').forEach((serviceMd) => {
-        const serviceVw = this.createChild(Service, { model: serviceMd });
+        const serviceVw = this.createServiceView({ model: serviceMd });
 
         this.serviceViews.push(serviceVw);
-        this.$servicesWrap.html(serviceVw.render().el);
+        serviceVw.render().$el.appendTo(servicesFrag);
       });
+
+      this.$servicesWrap.append(servicesFrag);
 
       this._$headline = null;
       this._$shipDestinationDropdown = null;

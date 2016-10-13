@@ -6,8 +6,11 @@ import _ from 'underscore';
 import { MediumEditor } from 'medium-editor';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
+import ShippingOptionMd from '../../../models/listing/ShippingOption';
+import Service from '../../../models/listing/Service';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
@@ -57,6 +60,7 @@ export default class extends BaseModal {
       this.model.lastSyncedAttrs.listing.slug);
     this.photoUploads = [];
     this.images = this.innerListing.get('item').get('images');
+    this.shippingOptions = this.innerListing.get('shippingOptions');
     this.shippingOptionViews = [];
 
     loadTemplate('modals/editListing/uploadPhoto.html',
@@ -64,6 +68,31 @@ export default class extends BaseModal {
 
     this.listenTo(this.images, 'add', this.onAddImage);
     this.listenTo(this.images, 'remove', this.onRemoveImage);
+
+    this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
+      if (this.shippingOptions.length) {
+        this.$('.js-sectionShipping').addClass('hasShippingOptions');
+      }
+
+      const shipOptVw = this.createShippingOptionView({
+        listPosition: this.shippingOptions.length,
+        model: shipOptMd,
+      });
+
+      this.shippingOptionViews.push(shipOptVw);
+      this.$shippingOptionsWrap.append(shipOptVw.render().el);
+    });
+
+    this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
+      if (!this.shippingOptions.length) {
+        this.$('.js-sectionShipping').removeClass('hasShippingOptions');
+      }
+
+      const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
+      splicedVw.remove();
+      this.shippingOptionViews.slice(removeOpts.index)
+        .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
+    });
   }
 
   className() {
@@ -83,6 +112,7 @@ export default class extends BaseModal {
       'click .js-cancelPhotoUploads': 'onClickCancelPhotoUploads',
       'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
       'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
+      'click .js-addShippingOption': 'onClickAddShippingOption',
       ...super.events(),
     };
   }
@@ -120,11 +150,10 @@ export default class extends BaseModal {
 
   onChangePrice(e) {
     let updatedVal = $(e.target).val().trim();
-    const valAsNumber = Number(updatedVal);
+    updatedVal = Number(updatedVal);
 
-    if (!isNaN(valAsNumber)) {
-      const decimalPlaces = this.$currencySelect.val() === 'BTC' ? 8 : 2;
-      updatedVal = valAsNumber.toFixed(decimalPlaces);
+    if (!isNaN(updatedVal)) {
+      updatedVal = formatPrice(updatedVal, this.$currencySelect.val() === 'BTC');
     }
 
     $(e.target).val(updatedVal);
@@ -332,6 +361,15 @@ export default class extends BaseModal {
     this.expandedTermsAndConditions = true;
   }
 
+  onClickAddShippingOption() {
+    this.shippingOptions
+      .push(new ShippingOptionMd({
+        services: [
+          new Service(),
+        ],
+      }));
+  }
+
   uploadImages(images) {
     let imagesToUpload = images;
 
@@ -417,15 +455,14 @@ export default class extends BaseModal {
     //   },
     // ];
 
-    // set the data for our nested Shipping Option views
-    this.shippingOptionViews.forEach((shipOptVw) => {
-      const shippingOptionFormData = shipOptVw.getFormData();
-      console.log(shippingOptionFormData);
-      shipOptVw.model.set(shippingOptionFormData);
-    });
-
     this.$saveButton.addClass('disabled');
+
+    // set the data for our nested Shipping Option views
+    this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
+
     this.model.set(formData);
+
+    console.log(this.model.toJSON());
 
     const save = this.model.save();
 
@@ -483,6 +520,8 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
+    // todo: the parent selector is not a very efficient selector here.
+    // instead alter the initial selector to select only the fields you want.
     return this._$formFields ||
       this.$('select[name], input[name], textarea[name]')
         .filter(':parents(.js-sectionShipping)');
@@ -528,6 +567,29 @@ export default class extends BaseModal {
     return this._$sectionShipping || this.$('.js-sectionShipping');
   }
 
+  // return the currency associated with this listing
+  get currency() {
+    return (this.$currencySelect.length ?
+        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency) ||
+        app.settings.get('localCurrency');
+  }
+
+  createShippingOptionView(opts) {
+    const options = {
+      getCurrency: () => (this.$currencySelect.length ?
+        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency),
+      ...opts || {},
+    };
+    const view = this.createChild(ShippingOption, options);
+
+    this.listenTo(view, 'click-remove', e => {
+      this.shippingOptions.remove(
+        this.shippingOptions.at(this.shippingOptionViews.indexOf(e.view)));
+    });
+
+    return view;
+  }
+
   setScrollContainerHeight() {
     this.$scrollContainer.css('height', '');
     const height = this.$modalContent.outerHeight() -
@@ -557,7 +619,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
-        localCurrency: app.settings.get('localCurrency'),
+        currency: this.currency,
         currencies: this.currencies,
         contractTypes: this.innerListing.get('metadata')
           .contractTypes
@@ -573,6 +635,7 @@ export default class extends BaseModal {
         expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
         expandedTermsAndConditions: this.expandedTermsAndConditions ||
           !!this.innerListing.get('termsAndConditions'),
+        formatPrice,
         ...this.model.toJSON(),
       }));
 
@@ -652,16 +715,19 @@ export default class extends BaseModal {
 
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
       this.shippingOptionViews = [];
-      this.$shippingOptionsWrap.empty();
+      const shipOptsFrag = document.createDocumentFragment();
+
       this.innerListing.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
-        const shipOptVw = this.createChild(ShippingOption, {
-          listPosition: shipOptIndex + 1,
+        const shipOptVw = this.createShippingOptionView({
           model: shipOpt,
+          listPosition: shipOptIndex + 1,
         });
 
         this.shippingOptionViews.push(shipOptVw);
-        this.$shippingOptionsWrap.append(shipOptVw.render().el);
+        shipOptVw.render().$el.appendTo(shipOptsFrag);
       });
+
+      this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
         if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();

@@ -38,3 +38,18 @@ export function integerToDecimal(amount, isBtc = false) {
 
   return updatedAmount;
 }
+
+// todo: doc me yo!
+export function formatPrice(price, isBtc = false) {
+  if (typeof price !== 'number') {
+    throw new Error('Please provide a price as a number');
+  }
+
+  if (isNaN(price)) {
+    throw new Error('Please provide a price that is not NaN');
+  }
+
+  const decimalPlaces = isBtc ? 8 : 2;
+
+  return price.toFixed(decimalPlaces);
+}

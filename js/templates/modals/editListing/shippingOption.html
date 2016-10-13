@@ -44,11 +44,12 @@
   <div class="js-servicesWrap servicesWrap padKids padStack padTop0"></div>
   <div class="flexRow padTop0">
     <div class="col6">
-      <a class="btn clrBr clrP tx500">Add Service</a>
+      <a class="btn clrBr clrP tx500 js-btnAddService">Add Service</a>
     </div>
   </div>
   <div class="shippingOptionButtonBar">
-    <a class="iconBtn ion-trash-b clrBr clrP margRSm"></a>
-    <a class="btn clrBr clrP tx500 margLSm"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
+    <a class="iconBtn ion-trash-b clrBr clrP margRSm js-removeShippingOption"></a>
+    <a class="btn clrBr clrP tx500 margLSm js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
   </div>
 </form>
+<hr class="dashed margR margL" />

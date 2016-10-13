@@ -1,9 +1,15 @@
 <div class="col6">
-  <input type="text" class="clrBr clrP" name="name" value="" placeholder="<%= ob.polyT('editListing.shippingOptions.services.namePlaceholder') %>">
+  <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
+  <input type="text" class="clrBr clrP" name="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.namePlaceholder') %>">
 </div>
 <div class="col3">
-  <input type="text" class="clrBr clrP" name="name" value="" placeholder="<%= ob.polyT('editListing.shippingOptions.services.estimatedDeliveryPlaceholder') %>">
+  <% if (ob.errors['estimatedDelivery']) print(ob.formErrorTmpl({ errors: ob.errors['estimatedDelivery'] })) %>
+  <input type="text" class="clrBr clrP" name="estimatedDelivery" value="<%= ob.estimatedDelivery %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.estimatedDeliveryPlaceholder') %>">
 </div>
 <div class="col3">
-<input type="text" class="clrBr clrP" name="name" value="" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>">
+  <% if (ob.errors['price']) print(ob.formErrorTmpl({ errors: ob.errors['price'] })) %>
+  <div class="flexRow">
+    <input type="text" class="clrBr clrP js-price" name="price" value="<% if (typeof ob.price === 'number') print(ob.formatPrice(ob.price, ob.getCurrency() === 'BTC')) %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="number">
+    <a class="iconBtn ion-trash-b clrBr clrP margLSm js-btnRemoveService btnRemoveService"></a>
+  </div>
 </div>

@@ -65,21 +65,10 @@
                 <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
                   <% if (ob.errors['listing.item.price']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price'] })) %>
                 <div class="inputSelect">
-                  <%
-                    const decimalPlaces = ob.listing.metadata.pricingCurrency === 'BTC' ? 8 : 2;
-                    let listingPrice = ob.listing.item.price;
-                    listingPrice = typeof listingPrice === 'number' ? listingPrice.toFixed(decimalPlaces) : listingPrice;
-                  %>
-                  <input type="text" class="clrBr clrP js-price" name="listing.item.price" id="editListingPrice" value="<%= listingPrice%>" data-var-type="number">
+                  <input type="text" class="clrBr clrP js-price" name="listing.item.price" id="editListingPrice" value="<% if (typeof ob.listing.item.price === 'number') print(ob.formatPrice(ob.listing.item.price, ob.listing.metadata.pricingCurrency === 'BTC')) %>" data-var-type="number">
                   <select id="editListingCurrency" name="listing.metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
-                    <option value="<%= currency.code %>"
-                    <% if (!ob.listing.metadata.pricingCurrency) {
-                         if (currency.code === ob.localCurrency) print('selected');
-                       } else {
-                         if (currency.code === ob.listing.metadata.pricingCurrency) print('selected');
-                       }
-                    %>><%= currency.code %></option>
+                    <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
                     <% }); %>
                   </select>
                 </div>
@@ -169,13 +158,12 @@
             <div class="clrBr">
               <div class="tile">
                 <span class="locationIcon ion-ios-location clrT4"></span>
-                <button class="btn clrP clrBr clrT tx6 js-addShippingOptionMain"><%= ob.polyT('editListing.btnAddShippingOptionShort') %></button>
+                <button class="btn clrP clrBr clrT tx6 js-addShippingOption"><%= ob.polyT('editListing.btnAddShippingOptionShort') %></button>
               </div>
             </div>
           </div>
           <div class="js-shippingOptionsWrap"></div>
         </section>
-        <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 tagsSection">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
             <% if (ob.errors['listing.item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.tags'] })) %>
