@@ -1,6 +1,6 @@
 <form class="box padKids padStack tx4">
   <h1 class="tx3"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listPosition }) %></h1>
-  <div class="flexRow">
+  <div class="flexRow padTop0">
     <div class="col12">
       <label for="<%= `shipDestinationsSelect_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
       <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
@@ -32,17 +32,22 @@
   </div>
   <div class="flexRow gutterH">
     <div class="col6">
-      <label class="required"><%= ob.polyT('editListing.shippingOptions.nameLabel') %></label>
+      <label class="required"><%= ob.polyT('editListing.shippingOptions.services.nameLabel') %></label>
     </div>
     <div class="col3">
-      <label class="required"><%= ob.polyT('editListing.shippingOptions.typeLabel') %></label>
+      <label class="required"><%= ob.polyT('editListing.shippingOptions.services.estimatedDeliveryLabel') %></label>      
     </div>
     <div class="col3">
-      <label class="required"><%= ob.polyT('editListing.shippingOptions.typeLabel') %></label>
+      <label class="required"><%= ob.polyT('editListing.shippingOptions.services.priceLabel') %></label>
     </div>
   </div>
-  <div class="js-servicesWrap"></div>  
-  <div class="flex shippingOptionButtonBar">
+  <div class="js-servicesWrap servicesWrap padKids padStack padTop0"></div>
+  <div class="flexRow padTop0">
+    <div class="col6">
+      <a class="btn clrBr clrP tx500">Add Service</a>
+    </div>
+  </div>
+  <div class="shippingOptionButtonBar">
     <a class="iconBtn ion-trash-b clrBr clrP margRSm"></a>
     <a class="btn clrBr clrP tx500 margLSm"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
   </div>

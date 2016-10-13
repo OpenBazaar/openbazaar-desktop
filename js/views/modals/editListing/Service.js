@@ -10,6 +10,10 @@ export default class extends BaseView {
     super(options);
   }
 
+  get className() {
+    return 'flexRow gutterH';
+  }
+
   getFormData() {
     return super.getFormData(this.$formFields);
   }

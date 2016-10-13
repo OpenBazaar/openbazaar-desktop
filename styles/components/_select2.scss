@@ -72,12 +72,6 @@
     }
   }
 
-  .select2-selection {
-    // This is needed so as the tagging field grows to multiple lines it doesn't
-    // overlap other elements.
-    height: 100%;
-  }
-
   &.hashPrefacedTags .select2Tags + .select2-container .select2-selection__choice {
     &::before {
       content: '#';

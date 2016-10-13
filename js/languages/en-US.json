@@ -166,7 +166,15 @@
           "FIXED_PRICE": "Fixed Price",
           "LOCAL_PICKUP": "Local Pickup"
         },
-        "btnAddShippingOption": "Add Shipping Option"
+        "btnAddShippingOption": "Add Shipping Option",
+        "services": {
+          "nameLabel": "Service",
+          "namePlaceholder": "e.g. Standard, Express, Overnight",
+          "estimatedDeliveryLabel": "Est. Delivery Time",
+          "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
+          "priceLabel": "Price",
+          "pricePlaceholder": "0.00"
+        }
     },
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",
