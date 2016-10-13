@@ -32,9 +32,18 @@
 
   .select2Tags + .select2-container {
     &.select2-container--default {
+      .select2-selection--multiple {
+        height: auto;
+      }
+
       .select2-selection--multiple .select2-selection__rendered {
         padding-bottom: $padSm;
         border-radius: 3px;
+      }
+
+      .select2-search--inline {
+        padding: 1px; // match the border on the tags
+        margin-top: 5px;
       }
     }
 
@@ -72,7 +81,7 @@
   &.hashPrefacedTags .select2Tags + .select2-container .select2-selection__choice {
     &::before {
       content: '#';
-    }      
+    }
   }
 
   .tagsPlaceholder {
@@ -92,7 +101,10 @@
     // This class must be set via JS
     &.emptyOfTags {
       display: block;
-    }    
+      top: 0;
+      line-height: 4rem;
+      margin-top: 6px;
+    }
   }
 
   &:not(.showDropdown) {
