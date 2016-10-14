@@ -60,7 +60,7 @@ describe('the Listing model', () => {
     expect(errorThrown).to.equal(false);
   });
 
-  it('converts a fiat price from an integer to decimal format in parse', () => {
+  it('converts fiat prices from integer to decimal format in parse', () => {
     const listing = new Listing();
     const parsed = listing.parse({
       vendorListings: [
@@ -71,14 +71,36 @@ describe('the Listing model', () => {
           item: {
             price: 123,
           },
+          shippingOptions: [
+            {
+              services: [
+                {
+                  price: 123,
+                },
+                {
+                  price: 234,
+                },
+              ],
+            },
+            {
+              services: [
+                {
+                  price: 456,
+                },
+              ],
+            },
+          ],
         },
       ],
     });
 
     expect(parsed.listing.item.price).to.equal(1.23);
+    expect(parsed.listing.shippingOptions[0].services[0].price).to.equal(1.23);
+    expect(parsed.listing.shippingOptions[0].services[1].price).to.equal(2.34);
+    expect(parsed.listing.shippingOptions[1].services[0].price).to.equal(4.56);
   });
 
-  it('converts a BTC price from Satoshi to BTC format in parse', () => {
+  it('converts BTC prices from Satoshi to BTC format in parse', () => {
     const listing = new Listing();
     const parsed = listing.parse({
       vendorListings: [
@@ -89,12 +111,37 @@ describe('the Listing model', () => {
           item: {
             price: 271453590,
           },
+          shippingOptions: [
+            {
+              services: [
+                {
+                  price: 271453590,
+                },
+                {
+                  price: 873927651,
+                },
+              ],
+            },
+            {
+              services: [
+                {
+                  price: 281649276,
+                },
+              ],
+            },
+          ],
         },
       ],
     });
 
     expect(parsed.listing.item.price).to.equal(2.71453590);
+    expect(parsed.listing.shippingOptions[0].services[0].price).to.equal(2.71453590);
+    expect(parsed.listing.shippingOptions[0].services[1].price).to.equal(8.73927651);
+    expect(parsed.listing.shippingOptions[1].services[0].price).to.equal(2.81649276);
   });
+
+  // todo: figure out how to stub BaseModel.sync so we could test conversion
+  // of prices from integers to decimals in sync
 
   it('saves with a POST if the model\'s lastSyncedAttrs do not contain a slug', (done) => {
     const listing = new Listing({
