@@ -1,4 +1,3 @@
-// import app from '../../js/app';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { decimalToInteger, integerToDecimal, formatPrice } from '../../js/utils/currency';

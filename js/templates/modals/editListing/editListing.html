@@ -199,6 +199,9 @@
         <section class="js-scrollToSection" style="height: 350px;background-color: green">
         </section>
         <hr class="dashed margR margL" />
+        <% // TODO: probably going to want to turn Terms and Conditions & Return Policy into, at least very basic, WYSIWYG fields
+           // so we have p's. As of now, it's including line breaks between paragraphs as \n's, which display perfectly in a text
+           // area but display literally as \n's outside of text areas. %>
         <section class="js-scrollToSection pad tx3">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h1>
           <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
