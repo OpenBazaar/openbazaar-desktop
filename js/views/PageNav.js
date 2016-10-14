@@ -80,23 +80,19 @@ export default class extends View {
 
   setAppProfile() {
     // when this view is created, the app.profile doesn't exist
-    this.listenTo(app.profile, 'change:avatarHash', this.updateAvatar);
+    this.listenTo(app.profile, 'change:avatarHashes', this.updateAvatar);
     this.updateAvatar();
   }
 
   updateAvatar() {
-    let avatarHash = '';
     const avatarHashes = app.profile.get('avatarHashes');
+    const avatarHash = app.hiRez ? avatarHashes.small : avatarHashes.tiny;
 
-    if (app.hiRez && avatarHashes.small) {
-      avatarHash = avatarHashes.small;
-    } else if (avatarHashes.tiny) {
-      avatarHash = avatarHashes.tiny;
-    }
-
-    this.$('#AvatarBtn').attr('style',
-      `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
+    if (avatarHash) {
+      this.$('#AvatarBtn').attr('style',
+        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
       url('../imgs/defaultAvatar.png')`);
+    }
   }
 
   navCloseClick() {
