@@ -137,8 +137,8 @@ export default class extends baseVw {
         saveAvatar = this.saveAvatar();
         saveAvatar.done((avatarData) => {
           // set hash in profile to mirror the server copy
-          this.profile.set('avatarHash', avatarData.hash);
-          app.profile.set('avatarHash', avatarData.hash);
+          this.profile.set('avatarHashes', avatarData);
+          app.profile.set('avatarHashes', avatarData);
         });
       }
 
@@ -146,8 +146,8 @@ export default class extends baseVw {
         saveHeader = this.saveHeader();
         saveHeader.done((headerData) => {
           // set hash in profile to mirror the server copy
-          this.profile.set('headerHash', headerData.hash);
-          app.profile.set('headerHash', headerData.hash);
+          this.profile.set('headerHashes', headerData);
+          app.profile.set('headerHashes', headerData);
         });
       }
 
@@ -289,16 +289,16 @@ export default class extends baseVw {
 
         if (avatarURI) {
           this.avatarCropper.cropit('imageSrc', avatarURI);
-        } else if (this.profile.get('avatarHash')) {
+        } else if (this.profile.get('avatarHashes').original) {
           this.avatarCropper.cropit('imageSrc',
-            app.getServerUrl(`ipfs/${this.profile.get('avatarHash')}`));
+            app.getServerUrl(`ipfs/${this.profile.get('avatarHashes').original}`));
         }
 
         if (headerURI) {
           this.headerCropper.cropit('imageSrc', headerURI);
-        } else if (this.profile.get('headerHash')) {
+        } else if (this.profile.get('headerHashes').original) {
           this.headerCropper.cropit('imageSrc',
-            app.getServerUrl(`ipfs/${this.profile.get('headerHash')}`));
+            app.getServerUrl(`ipfs/${this.profile.get('headerHashes').original}`));
         }
       }, 0);
     });
