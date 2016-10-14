@@ -85,8 +85,17 @@ export default class extends View {
   }
 
   updateAvatar() {
+    let avatarHash = '';
+    const avatarHashes = app.profile.get('avatarHashes');
+
+    if (app.hiRez && avatarHashes.small) {
+      avatarHash = avatarHashes.small;
+    } else if (avatarHashes.tiny) {
+      avatarHash = avatarHashes.tiny;
+    }
+
     this.$('#AvatarBtn').attr('style',
-      `background-image: url(${app.getServerUrl(`ipfs/${app.profile.get('avatarHash')}`)}), 
+      `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
       url('../imgs/defaultAvatar.png')`);
   }
 
@@ -200,9 +209,15 @@ export default class extends View {
   }
 
   render() {
+    let avatarHash = '';
+    if (app.hiRez && app.profile && app.profile.avatarHashes.small) {
+      avatarHash = app.profile.avatarHashes.small;
+    } else if (app.profile && app.profile.avatarHashes.tiny) {
+      avatarHash = app.profile.avatarHashes.tiny;
+    }
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t({
-        avatarHash: app.profile ? app.profile.get('avatarHash') : '',
+        avatarHash,
       }));
     });
 

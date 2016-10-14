@@ -125,6 +125,7 @@ export default class extends baseVw {
         followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
+        hiRez: app.hiRez,
       }));
 
       this.$tabContent = this.$('.js-tabContent');

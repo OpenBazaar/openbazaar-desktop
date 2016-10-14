@@ -4,8 +4,9 @@
         <!--consider turning tabs into a reusable view-->
         <div>
           <div class="userIcon disc clrBr2 clrSh1"
-            <% if(ob.avatarHash){ %>
-               styel="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+            <% var avatarHash = ob.hiRez ? ob.avatarHashes.small : ob.avatarHashes.tiny; %>
+            <% if (avatarHash) { %>
+               style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
             <% } else { %>
                style="background-image: url('../imgs/defaultAvatar.png')"
             <% } %>></div>
@@ -33,8 +34,9 @@
 
 </nav>
 <div class="header"
-  <% if(ob.headerHash){ %>
-    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultHeader.png')"
+  <% var headerHash = ob.hiRez ? ob.headerHashes.large : ob.headerHashes.medium; %>
+  <% if (headerHash) { %>
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
   <% } else { %>
     style="background-image: url('../imgs/defaultHeader.png')"
   <% } %>>
