@@ -60,7 +60,7 @@ export default class extends baseVw {
     const imageURI = this.headerCropper.cropit('export', {
       type: 'image/jpeg',
       quality: 1,
-      originalSize: false,
+      originalSize: true,
     });
     const headerData = JSON.stringify(
       { header: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
@@ -77,7 +77,7 @@ export default class extends baseVw {
     const imageURI = this.avatarCropper.cropit('export', {
       type: 'image/jpeg',
       quality: 1,
-      originalSize: false,
+      originalSize: true,
     });
     const avatarData = JSON.stringify(
       { avatar: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
@@ -175,7 +175,7 @@ export default class extends baseVw {
       avatarURI = this.avatarCropper.cropit('export', {
         type: 'image/jpeg',
         quality: 1,
-        originalSize: false,
+        originalSize: true,
       });
     }
 
@@ -183,7 +183,7 @@ export default class extends baseVw {
       headerURI = this.headerCropper.cropit('export', {
         type: 'image/jpeg',
         quality: 1,
-        originalSize: false,
+        originalSize: true,
       });
     }
 
@@ -214,7 +214,7 @@ export default class extends baseVw {
         this.avatarCropper.cropit({
           $preview: avatarPrev,
           $fileInput: avatarInpt,
-          exportZoom: 4.7,
+          // exportZoom: 4.7,
           smallImage: 'stretch',
           maxZoom: 2,
           allowDragNDrop: false,
@@ -252,7 +252,7 @@ export default class extends baseVw {
         this.headerCropper.cropit({
           $preview: headerPrev,
           $fileInput: headerInpt,
-          exportZoom: 10.34,
+          // exportZoom: 10.34,
           smallImage: 'stretch',
           maxZoom: 2,
           allowDragNDrop: false,
