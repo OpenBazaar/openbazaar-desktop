@@ -95,6 +95,7 @@ export default class extends BaseVw {
         ownGuid: this.ownGuid,
         followedByYou: this.followedByYou,
         ownMod: this.ownMod,
+        hiRez: app.hiRez,
         ...this.profileArgs,
       }));
 
