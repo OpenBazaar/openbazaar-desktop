@@ -206,8 +206,9 @@ export default class extends baseVw {
       const headerInpt = this.$('#headerInput');
       this.headerCropper = this.$('#headerCropper');
 
-      this.avatarLoadedOnRender = false;
-      this.headerLoadedOnRender = false;
+      // if the avatar or header exist, don't count the first load as a change
+      this.avatarLoadedOnRender = Boolean(this.profile.get('avatarHashes').original);
+      this.headerLoadedOnRender = Boolean(this.profile.get('headerHashes').original);
 
       setTimeout(() => {
         this.avatarCropper.cropit({
@@ -219,7 +220,7 @@ export default class extends baseVw {
           allowDragNDrop: false,
           onImageLoaded: () => {
             const loadedSize = this.avatarCropper.cropit('imageSize');
-            this.avatarChanged = this.avatarLoadedOnRender;
+            this.avatarChanged = !this.avatarLoadedOnRender;
             this.avatarLoadedOnRender = true;
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
@@ -257,7 +258,7 @@ export default class extends baseVw {
           allowDragNDrop: false,
           onImageLoaded: () => {
             const loadedSize = this.headerCropper.cropit('imageSize');
-            this.headerChanged = this.headerLoadedOnRender;
+            this.headerChanged = !this.headerLoadedOnRender;
             this.headerLoadedOnRender = true;
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');

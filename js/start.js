@@ -54,6 +54,12 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   .open();
 });
 
+app.hiRez = (
+  window.devicePixelRatio > 1 ||
+  (window.matchMedia &&
+  window.matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches)
+);
+
 app.pageNav = new PageNav();
 $('#pageNavContainer').append(app.pageNav.render().el);
 

@@ -7,10 +7,10 @@ export default class extends BaseModel {
   defaults() {
     return {
       about: '',
-      avatarHash: '',
+      avatarHashes: {},
       email: '',
       handle: '',
-      headerHash: '',
+      headerHashes: {},
       location: '',
       moderator: false,
       name: `ob ${Math.random().toString(36).slice(2)}`,
