@@ -30,7 +30,7 @@
       </select>
     </div>
   </div>
-  <div class="flexRow gutterH">
+  <div class="flexRow gutterH js-serviceSection <% if (ob.type === 'LOCAL_PICKUP') print('hide') %>">
     <div class="col6">
       <label class="required"><%= ob.polyT('editListing.shippingOptions.services.nameLabel') %></label>
     </div>
@@ -41,8 +41,8 @@
       <label class="required"><%= ob.polyT('editListing.shippingOptions.services.priceLabel') %></label>
     </div>
   </div>
-  <div class="js-servicesWrap servicesWrap padKids padStack padTop0"></div>
-  <div class="flexRow padTop0">
+  <div class="js-servicesWrap js-serviceSection servicesWrap padKids padStack padTop0 <% if (ob.type === 'LOCAL_PICKUP') print('hide') %>"></div>
+  <div class="flexRow padTop0 js-serviceSection <% if (ob.type === 'LOCAL_PICKUP') print('hide') %>">
     <div class="col6">
       <a class="btn clrBr clrP tx500 js-btnAddService">Add Service</a>
     </div>

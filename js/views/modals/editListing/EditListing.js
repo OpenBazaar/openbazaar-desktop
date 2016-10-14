@@ -440,29 +440,20 @@ export default class extends BaseModal {
   onSaveClick() {
     const formData = this.getFormData(this.$formFields);
 
-    // formData.listing.shippingOptions = [
-    //   {
-    //     name: 'USA Domestic Shipping',
-    //     // type: 'FIXED_PRICE',
-    //     regions: ['UNITED_STATES', 'UKRAINE'],
-    //     services: [
-    //       {
-    //         name: 'Ground Shipping',
-    //         price: 1000,
-    //         estimatedDelivery: '3-7 days',
-    //       },
-    //     ],
-    //   },
-    // ];
-
     this.$saveButton.addClass('disabled');
 
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
-    this.model.set(formData);
+    // if any shipping options have a type of 'LOCAL_PICKUP', we'll
+    // clear out any services that may be there
+    this.innerListing.get('shippingOptions').forEach(shipOpt => {
+      if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+        shipOpt.set('services', []);
+      }
+    });
 
-    console.log(this.model.toJSON());
+    this.model.set(formData);
 
     const save = this.model.save();
 

@@ -202,7 +202,8 @@
   "listingInnerModelErrors": {
     "provideSlug": "Please provide a slug.",
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
-    "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length."
+    "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
+    "provideShippingOption": "For a physical good, at least one shipping option is required."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",

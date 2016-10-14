@@ -59,8 +59,8 @@ export default class extends BaseModel {
     }
 
     if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
-      ! attrs.shippingOptions.length) {
-      addError('shippingOptions', 'For a physical good, at least one shipping option is required.');
+      !attrs.shippingOptions.length) {
+      addError('shippingOptions', app.polyglot.t('listingInnerModelErrors.provideShippingOption'));
     }
 
     errObj = this.mergeInNestedErrors(errObj);

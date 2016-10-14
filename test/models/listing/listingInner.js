@@ -81,5 +81,21 @@ describe('the ListingInner model', () => {
       !!valErr.termsAndConditions.length || false).to.equal(true);
   });
 
+  it('fails validation if, for a physical good, at least one shipping options is not provided',
+    () => {
+      const listingInner = new ListingInner();
+
+      listingInner.get('metadata').set('contractType', 'PHYSICAL_GOOD');
+
+      listingInner.set({
+        shippingOptions: [],
+      }, { validate: true });
+
+      const valErr = listingInner.validationError;
+
+      expect(valErr && valErr.shippingOptions &&
+        !!valErr.shippingOptions.length || false).to.equal(true);
+    });
+
   // todo: spot check nested val errors
 });

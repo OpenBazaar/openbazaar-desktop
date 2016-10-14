@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries, getCountryByDataName } from '../../../data/countries';
 import ServiceMd from '../../../models/listing/Service';
@@ -43,10 +44,14 @@ export default class extends BaseView {
   }
 
   events() {
-    return {
+    const events = {
       'click .js-removeShippingOption': 'onClickRemoveShippingOption',
       'click .js-btnAddService': 'onClickAddService',
     };
+
+    events[`change #shipOptionType_${this.model.cid}`] = 'onChangeShippingType';
+
+    return events;
   }
 
   tagName() {
@@ -60,6 +65,22 @@ export default class extends BaseView {
   onClickAddService() {
     this.services
       .push(new ServiceMd());
+  }
+
+  onChangeShippingType(e) {
+    let method;
+
+    if ($(e.target).val() === 'LOCAL_PICKUP') {
+      method = 'addClass';
+    } else {
+      method = 'removeClass';
+
+      const services = this.model.get('services');
+
+      if (!services.length) services.push(new ServiceMd());
+    }
+
+    this.$serviceSection[method]('hide');
   }
 
   set listPosition(position) {
@@ -110,6 +131,10 @@ export default class extends BaseView {
 
   get $shipDestinationDropdown() {
     return this._$shipDestinationDropdown || this.$(`#shipDestinationsDropdown_${this.model.cid}`);
+  }
+
+  get $serviceSection() {
+    return this._$serviceSection || this.$('.js-serviceSection');
   }
 
   get $formFields() {
@@ -183,6 +208,7 @@ export default class extends BaseView {
       this._$headline = null;
       this._$shipDestinationDropdown = null;
       this._$formFields = null;
+      this._$serviceSection = null;
     });
 
     return this;

@@ -42,11 +42,13 @@ export default class extends BaseModel {
       addError('name', app.polyglot.t('shippingOptionModelErrors.provideName'));
     }
 
+    // todo: check that the regions provided contain valid country codes
+    // from our countries module
     if (!attrs.regions || !attrs.regions.length) {
       addError('regions', app.polyglot.t('shippingOptionModelErrors.provideRegion'));
     }
 
-    if (!attrs.services || !attrs.services.length) {
+    if (attrs.type !== 'LOCAL_PICKUP' && (!attrs.services || !attrs.services.length)) {
       addError('services', app.polyglot.t('shippingOptionModelErrors.provideService'));
     }
 
