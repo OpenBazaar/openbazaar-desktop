@@ -220,7 +220,7 @@ export default class extends baseVw {
           onImageLoaded: () => {
             const loadedSize = this.avatarCropper.cropit('imageSize');
             this.avatarChanged = !this.avatarLoadedOnRender;
-            this.avatarLoadedOnRender = true;
+            this.avatarLoadedOnRender = false;
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
@@ -232,7 +232,10 @@ export default class extends baseVw {
               new SimpleMessage({
                 title: app.polyglot.t('settings.loadAvatarSizeError.title'),
                 message: app.polyglot.t('settings.loadAvatarSizeError.body',
-                  { minWidth: this.avatarMinWidth, minHeight: this.avatarMinHeight }),
+                  { minWidth: this.avatarMinWidth,
+                    minHeight: this.avatarMinHeight,
+                    curWidth: loadedSize.width,
+                    curHeight: loadedSize.height }),
               })
                 .render()
                 .open();
@@ -257,7 +260,7 @@ export default class extends baseVw {
           onImageLoaded: () => {
             const loadedSize = this.headerCropper.cropit('imageSize');
             this.headerChanged = !this.headerLoadedOnRender;
-            this.headerLoadedOnRender = true;
+            this.headerLoadedOnRender = false;
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
@@ -269,7 +272,10 @@ export default class extends baseVw {
               new SimpleMessage({
                 title: app.polyglot.t('settings.loadHeaderSizeError.title'),
                 message: app.polyglot.t('settings.loadHeaderSizeError.body',
-                  { minWidth: this.headerMinWidth, minHeight: this.headerMinHeight }),
+                  { minWidth: this.headerMinWidth,
+                    minHeight: this.headerMinHeight,
+                    curWidth: loadedSize.width,
+                    curHeight: loadedSize.height }),
               })
                 .render()
                 .open();
