@@ -4,7 +4,7 @@
         <!--consider turning tabs into a reusable view-->
         <div>
           <div class="userIcon disc clrBr2 clrSh1"
-            <% var avatarHash = ob.hiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny; %>
+            <% var avatarHash = ob.getHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny; %>
             <% if (avatarHash) { %>
                style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
             <% } else { %>
@@ -34,7 +34,7 @@
 
 </nav>
 <div class="header"
-  <% var headerHash = ob.hiRez() ? ob.headerHashes.large : ob.headerHashes.medium; %>
+  <% var headerHash = ob.getHiRez() ? ob.headerHashes.large : ob.headerHashes.medium; %>
   <% if (headerHash) { %>
     style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
   <% } else { %>

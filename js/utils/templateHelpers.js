@@ -1,7 +1,5 @@
 import app from '../app';
-import { getHiRez } from './responsive';
-import { getLargeWidth } from './responsive';
-import { getSmallHeight } from './responsive';
+import { getHiRez, getLargeWidth, getSmallHeight } from './responsive';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -9,14 +7,8 @@ export function polyT(...args) {
 
 export const getServerUrl = app.getServerUrl;
 
-export function hiRez() {
-  return getHiRez();
-}
+export { getHiRez };
 
-export function largeWidth() {
-  return getLargeWidth();
-}
+export { getLargeWidth };
 
-export function smallHeight() {
-  return getSmallHeight();
-}
+export { getSmallHeight };
