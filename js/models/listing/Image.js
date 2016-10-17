@@ -19,7 +19,7 @@ export default class extends BaseModel {
       addError('filename', 'Please provide an image filename.');
     } else if (is.not.string(attrs.filename)) {
       addError('filename', 'Please provide an image filename as a string.');
-    } else if (attrs.filename.length > this.maxFilenameLength) {
+    } else if (attrs.filename.length > this.constructor.maxFilenameLength) {
       addError('filename', `The filename exceeds the max length of ${this.maxFilenameLength}`);
     }
 

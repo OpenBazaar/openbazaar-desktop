@@ -228,6 +228,7 @@ export default class extends BaseModal {
     reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
   }
 
+  // todo: write a unit test for this
   truncateImageFilename(filename) {
     if (!filename || typeof filename !== 'string') {
       throw new Error('Please provide a filename as a string.');
@@ -237,7 +238,12 @@ export default class extends BaseModal {
 
     if (filename.length > Image.maxFilenameLength) {
       const parsed = path.parse(filename);
-      return parsed.name.slice(0, Image.maxFilenameLength - parsed.ext.length) + parsed.ext;
+      const nameParseLen = Image.maxFilenameLength - parsed.ext.length;
+
+      // acounting for rare edge case of the extension in and of itself
+      // exceeding the max length
+      return parsed.name.slice(0, nameParseLen < 0 ? 0 : nameParseLen) +
+        parsed.ext.slice(0, Image.maxFilenameLength);
     }
 
     return truncated;
