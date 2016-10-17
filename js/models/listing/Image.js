@@ -2,6 +2,12 @@ import BaseModel from '../BaseModel';
 import is from 'is_js';
 
 export default class extends BaseModel {
+  static get maxFilenameLength() {
+    // todo: update if this bug is fixed:
+    // https://github.com/OpenBazaar/openbazaar-go/issues/145
+    return 70;
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -9,16 +15,12 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (!attrs.hash) {
-      addError('hash', 'Please provide an image hash.');
-    } else if (is.not.string(attrs.hash)) {
-      addError('hash', 'Please provide the image hash as a string.');
-    }
-
     if (!attrs.filename) {
       addError('filename', 'Please provide an image filename.');
-    } else if (is.not.string(attrs.hash)) {
+    } else if (is.not.string(attrs.filename)) {
       addError('filename', 'Please provide an image filename as a string.');
+    } else if (attrs.filename.length > this.maxFilenameLength) {
+      addError('filename', `The filename exceeds the max length of ${this.maxFilenameLength}`);
     }
 
     if (Object.keys(errObj).length) return errObj;

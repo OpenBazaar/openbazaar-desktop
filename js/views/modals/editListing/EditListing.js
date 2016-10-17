@@ -3,6 +3,7 @@ import '../../../utils/velocity';
 import 'select2';
 import '../../../utils/jqueryParentsSelector';
 import _ from 'underscore';
+import path from 'path';
 import { MediumEditor } from 'medium-editor';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
@@ -11,6 +12,7 @@ import SimpleMessage from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
+import Image from '../../../models/listing/Image';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
@@ -189,6 +191,7 @@ export default class extends BaseModal {
 
   getOrientation(file, callback) {
     const reader = new FileReader();
+
     reader.onload = (e) => {
       const dataView = new DataView(e.target.result);  // eslint-disable-line no-undef
       let offset = 2;
@@ -218,9 +221,26 @@ export default class extends BaseModal {
           offset += dataView.getUint16(offset, false);
         }
       }
+
       return callback(-1);
     };
+
     reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+  }
+
+  truncateImageFilename(filename) {
+    if (!filename || typeof filename !== 'string') {
+      throw new Error('Please provide a filename as a string.');
+    }
+
+    const truncated = filename;
+
+    if (filename.length > Image.maxFilenameLength) {
+      const parsed = path.parse(filename);
+      return parsed.name.slice(0, Image.maxFilenameLength - parsed.ext.length) + parsed.ext;
+    }
+
+    return truncated;
   }
 
   onChangePhotoUploadInput() {
@@ -250,82 +270,64 @@ export default class extends BaseModal {
 
     this.$photoUploadingLabel.removeClass('hide');
 
-    // Temporarily limiting the size. If we add in support for the server
-    // to offer multiple sizes, we could probably remove or greatly loosen
-    // the size restriction here.
-    const maxH = 944;
-    const maxW = 1028;
     const toUpload = [];
     let loaded = 0;
     let errored = 0;
 
     photoFiles.forEach(photoFile => {
       const newImage = document.createElement('img');
-      let orientation = 1;
-
-      this.getOrientation(photoFile, (val) => {
-        if (val === -1) throw new Error('The image is undefined.');
-        orientation = val;
-      });
 
       newImage.src = photoFile.path;
 
       newImage.onload = () => {
-        let imgW = newImage.width;
-        let imgH = newImage.height;
+        const imgW = newImage.width;
+        const imgH = newImage.height;
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-
-        loaded += 1;
-
-        if (imgW < imgH) {
-          // if image width is smaller than height, set width to max
-          imgH *= maxW / imgW;
-          imgW = maxW;
-        } else {
-          imgW *= maxH / imgH;
-          imgH = maxH;
-        }
 
         canvas.width = imgW;
         canvas.height = imgH;
 
-        switch (orientation) {
-          case 2:
-            ctx.translate(imgW, 0);
-            ctx.scale(-1, 1); break;
-          case 3:
-            ctx.translate(imgW, imgH);
-            ctx.rotate(Math.PI); break;
-          case 4:
-            ctx.translate(0, imgH);
-            ctx.scale(1, -1); break;
-          case 5:
-            ctx.rotate(0.5 * Math.PI);
-            ctx.scale(1, -1); break;
-          case 6:
-            ctx.rotate(0.5 * Math.PI);
-            ctx.translate(0, -imgH); break;
-          case 7:
-            ctx.rotate(0.5 * Math.PI);
-            ctx.translate(imgW, -imgH);
-            ctx.scale(-1, 1); break;
-          case 8:
-            ctx.rotate(-0.5 * Math.PI);
-            ctx.translate(-imgW, 0); break;
-          default: // do nothing
-        }
+        this.getOrientation(photoFile, (orientation) => {
+          switch (orientation) {
+            case 2:
+              ctx.translate(imgW, 0);
+              ctx.scale(-1, 1); break;
+            case 3:
+              ctx.translate(imgW, imgH);
+              ctx.rotate(Math.PI); break;
+            case 4:
+              ctx.translate(0, imgH);
+              ctx.scale(1, -1); break;
+            case 5:
+              ctx.rotate(0.5 * Math.PI);
+              ctx.scale(1, -1); break;
+            case 6:
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(0, -imgH); break;
+            case 7:
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(imgW, -imgH);
+              ctx.scale(-1, 1); break;
+            case 8:
+              ctx.rotate(-0.5 * Math.PI);
+              ctx.translate(-imgW, 0); break;
+            default: // do nothing
+          }
 
-        ctx.drawImage(newImage, 0, 0, imgW, imgH);
-        toUpload.push({
-          filename: photoFile.name,
-          image: canvas.toDataURL('image/jpeg', 0.85)
-            .replace(/^data:image\/(png|jpeg|webp);base64,/, ''),
+          ctx.drawImage(newImage, 0, 0, imgW, imgH);
+          toUpload.push({
+            filename: this.truncateImageFilename(photoFile.name),
+            image: canvas.toDataURL('image/jpeg', 0.9)
+              .replace(/^data:image\/(png|jpeg|webp);base64,/, ''),
+          });
+
+          loaded += 1;
+
+          if (loaded + errored === photoFiles.length) {
+            this.uploadImages(toUpload);
+          }
         });
-
-        if (loaded + errored === photoFiles.length) {
-          this.uploadImages(toUpload);
-        }
       };
 
       newImage.onerror = () => {
@@ -390,9 +392,17 @@ export default class extends BaseModal {
     }).always(() => {
       if (this.isRemoved()) return;
       if (!this.inProgressPhotoUploads.length) this.$photoUploadingLabel.addClass('hide');
-    }).done(uploadedImage => {
+    }).done(uploadedImages => {
       if (this.isRemoved()) return;
-      this.images.add(uploadedImage);
+
+      this.images.add(uploadedImages.map(image => ({
+        filename: image.filename,
+        original: image.hashes.original,
+        large: image.hashes.large,
+        medium: image.hashes.medium,
+        small: image.hashes.small,
+        tiny: image.hashes.tiny,
+      })));
     });
 
     this.photoUploads.push(upload);
