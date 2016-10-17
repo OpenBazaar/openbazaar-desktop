@@ -49,6 +49,8 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.model, 'change', () => this.render());
+    this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
+    this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
   }
 
   className() {
@@ -125,7 +127,6 @@ export default class extends baseVw {
         followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
-        hiRez: app.hiRez,
       }));
 
       this.$tabContent = this.$('.js-tabContent');

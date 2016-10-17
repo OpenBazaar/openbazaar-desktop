@@ -7,6 +7,7 @@ import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
+import { getHiRez } from '../utils/responsive';
 
 const remote = electron.remote;
 
@@ -80,13 +81,13 @@ export default class extends View {
 
   setAppProfile() {
     // when this view is created, the app.profile doesn't exist
-    this.listenTo(app.profile, 'change:avatarHashes', this.updateAvatar);
+    this.listenTo(app.profile.get('avatarHashes'), 'change', this.updateAvatar);
     this.updateAvatar();
   }
 
   updateAvatar() {
-    const avatarHashes = app.profile.get('avatarHashes');
-    const avatarHash = app.hiRez ? avatarHashes.small : avatarHashes.tiny;
+    const avatarHashes = app.profile.get('avatarHashes').toJSON();
+    const avatarHash = getHiRez() ? avatarHashes.small : avatarHashes.tiny;
 
     if (avatarHash) {
       this.$('#AvatarBtn').attr('style',
@@ -206,7 +207,7 @@ export default class extends View {
 
   render() {
     let avatarHash = '';
-    if (app.hiRez && app.profile && app.profile.avatarHashes.small) {
+    if (getHiRez() && app.profile && app.profile.avatarHashes.small) {
       avatarHash = app.profile.avatarHashes.small;
     } else if (app.profile && app.profile.avatarHashes.tiny) {
       avatarHash = app.profile.avatarHashes.tiny;

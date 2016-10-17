@@ -207,14 +207,13 @@ export default class extends baseVw {
       this.headerCropper = this.$('#headerCropper');
 
       // if the avatar or header exist, don't count the first load as a change
-      this.avatarLoadedOnRender = Boolean(this.profile.get('avatarHashes').original);
-      this.headerLoadedOnRender = Boolean(this.profile.get('headerHashes').original);
+      this.avatarLoadedOnRender = Boolean(this.profile.get('avatarHashes').get('original'));
+      this.headerLoadedOnRender = Boolean(this.profile.get('headerHashes').get('original'));
 
       setTimeout(() => {
         this.avatarCropper.cropit({
           $preview: avatarPrev,
           $fileInput: avatarInpt,
-          // exportZoom: 4.7,
           smallImage: 'stretch',
           maxZoom: 2,
           allowDragNDrop: false,
@@ -252,7 +251,6 @@ export default class extends baseVw {
         this.headerCropper.cropit({
           $preview: headerPrev,
           $fileInput: headerInpt,
-          // exportZoom: 10.34,
           smallImage: 'stretch',
           maxZoom: 2,
           allowDragNDrop: false,
@@ -289,16 +287,16 @@ export default class extends baseVw {
 
         if (avatarURI) {
           this.avatarCropper.cropit('imageSrc', avatarURI);
-        } else if (this.profile.get('avatarHashes').original) {
+        } else if (this.profile.get('avatarHashes').get('original')) {
           this.avatarCropper.cropit('imageSrc',
-            app.getServerUrl(`ipfs/${this.profile.get('avatarHashes').original}`));
+            app.getServerUrl(`ipfs/${this.profile.get('avatarHashes').get('original')}`));
         }
 
         if (headerURI) {
           this.headerCropper.cropit('imageSrc', headerURI);
-        } else if (this.profile.get('headerHashes').original) {
+        } else if (this.profile.get('headerHashes').get('original')) {
           this.headerCropper.cropit('imageSrc',
-            app.getServerUrl(`ipfs/${this.profile.get('headerHashes').original}`));
+            app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
         }
       }, 0);
     });
