@@ -463,9 +463,21 @@ export default class extends BaseModal {
 
     // if any shipping options have a type of 'LOCAL_PICKUP', we'll
     // clear out any services that may be there
+    // this.innerListing.get('shippingOptions').forEach(shipOpt => {
+    //   if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+    //     shipOpt.set('services', []);
+    //   }
+    // });
+    // the above block should be uncommented when this bug is fully fixed:
+    // https://github.com/OpenBazaar/openbazaar-go/issues/151
+    // and the below block could go away:
     this.innerListing.get('shippingOptions').forEach(shipOpt => {
       if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-        shipOpt.set('services', []);
+        shipOpt.set('services', [{
+          name: 'need server bug #151 fixed!',
+          price: 12300,
+          estimatedDelivery: '5 - 8 days',
+        }]);
       }
     });
 
