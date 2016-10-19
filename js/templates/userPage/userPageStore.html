@@ -2,13 +2,28 @@
   <div class="flexExpand">
     <div class="searchWrapper">
       <input type="text" class="ctrl searchInput clrP clrBr clrSh2"
-             placeholder="<%= ob.polyT('userPage.searchStore', {storeName: ob.handle || ob.id}) %>">
+             placeholder="<%= ob.polyT('userPage.searchStore') %>">
     </div>
   </div>
   <div>
     <div class="btnStrip clrT2 clrSh2">
       <a class="iconBtn clrP clrBr"><i class="ion-android-apps"></i></a>
-      <a class="btn btnThin clrP clrBr"><span class="txUnb tx6">950px</span></a>
+      <a class="btn btnThin clrP clrBr">
+        <span class="txUnb tx6 btnLayoutConstrained"><%= ob.polyT('userPage.btnLayoutConstrained') %></span>
+        <span class="txUnb tx6 btnLayoutFullWidth"><%= ob.polyT('userPage.btnLayoutFullWidth') %></span>
+      </a>
     </div>
   </div>
+</div>
+<div class="js-listingsWrap listingsWrap flex">
+  <div class="col" style="background-color: orange; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: red; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: blue; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: green; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: purple; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: yellow; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: pink; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: green; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: maroon; width: 227px; height: 284px"></div>
+  <div class="col" style="background-color: #F4D03F; width: 227px; height: 284px"></div>
 </div>

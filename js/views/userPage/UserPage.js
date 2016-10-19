@@ -3,10 +3,10 @@ import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
-import Home from './UserPageHome';
-import Store from './UserPageStore';
-import Follow from './UserPageFollow';
-import Reputation from './UserPageReputation';
+import Home from './Home';
+import Store from './Store';
+import Follow from './Follow';
+import Reputation from './Reputation';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -61,7 +61,19 @@ export default class extends baseVw {
       'click .js-followBtn': 'followClick',
       'click .js-messageBtn': 'messageClick',
       'click .js-moreBtn': 'moreClick',
+      'click .userPageSearchBar .btnLayoutConstrained': 'onClickLayoutConstrained',
+      'click .userPageSearchBar .btnLayoutFullWidth': 'onClickLayoutFullWidth',
     };
+  }
+
+  onClickLayoutConstrained() {
+    console.log('hello');
+    this.setFullWidthLayout(true);
+  }
+
+  onClickLayoutFullWidth() {
+    console.log('MOTO');
+    this.setFullWidthLayout(false);
   }
 
   tabClick(e) {
@@ -108,14 +120,26 @@ export default class extends baseVw {
       }
 
       if (this.currentTabView) this.currentTabView.$el.detach();
+
       if (!tabView) {
         tabView = this.createChild(this.tabViews[tabTarg], tabOptions);
         this.tabViewCache[tabOptions.followType || tabTarg] = tabView;
         tabView.render();
       }
+
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
+  }
+
+  setFullWidthLayout(on = true) {
+    console.log('YO: ' + !!on);
+    this.$pageContent['addClass']('yo-mamma');
+    this.$pageContent[on ? 'addClass' : 'removeClass']('fullWidth');
+  }
+
+  get $pageContent() {
+    return this._$pageContent || this.$('.js-pageContent');
   }
 
   render() {
@@ -133,6 +157,7 @@ export default class extends baseVw {
       this.$unfollowLbl = this.$('.js-unfollowLbl');
       this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
+      this._$pageContent = null;
 
       this.tabViewCache = {}; // clear for re-renders
       this.selectTab(this.tab);

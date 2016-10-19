@@ -19,7 +19,7 @@
     "customize": "Customize",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "searchStore": "Search %{storeName}",
+    "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
     "modFee": "%{modFee}% per dispute",
@@ -33,7 +33,9 @@
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
-    "guidCopied": "Copied to Clipboard"
+    "guidCopied": "Copied to Clipboard",
+    "btnLayoutConstrained": "950px",
+    "btnLayoutFullWidth": "100%"
   },
   "userShort": {
     "userLoading": "Loading...",

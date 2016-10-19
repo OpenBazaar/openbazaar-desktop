@@ -78,10 +78,10 @@ export default class ObRouter extends Router {
   }
 
   user(guid, tab, ...args) {
-    tab = tab || 'store'; // eslint-disable-line no-param-reassign
-    const pageOpts = { tab };
+    const userTab = tab || 'store';
+    const pageOpts = { tab: userTab };
 
-    if (tab === 'channel') {
+    if (userTab === 'channel') {
       pageOpts.category = args[0];
       pageOpts.layer = args[1];
     }

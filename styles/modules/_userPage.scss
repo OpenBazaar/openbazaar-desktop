@@ -7,24 +7,6 @@
       padding: 268px 0 40px 0;
     }
 
-    .userPageSearchBar {
-      margin-bottom: $padMd;
-      height: $barSm;
-
-      .ctrl,
-      .btn {
-        height: $barSm;
-        line-height: $barSm;
-      }
-    }
-
-    .pageSearchWrapper {
-
-      .pageSearch {
-
-      }
-    }
-
     .informationList {
 
       .informationHeader {
@@ -63,6 +45,45 @@
         flex: 0 0 auto;
         padding: 0 $padMd / 2 $padMd $padMd / 2;
         box-sizing: border-box;
+      }
+    }
+
+    .userPageStore {
+      .userPageSearchBar {
+        margin-bottom: $padMd;
+        height: $barSm;
+
+        .ctrl,
+        .btn {
+          height: $barSm;
+          line-height: $barSm;
+        }
+
+        .btnLayoutFullWidth {
+          display: none;
+        }
+      }      
+
+      .listingsWrap {
+        flex-wrap: wrap;
+
+        .col {
+          margin: 0 $padMd $padMd 0;
+        }
+      }
+    }
+
+    &.fullWidth {
+      width: 100% !important;
+
+      .userPageStore {
+        .btnLayoutConstrained {
+          display: none;
+        }
+
+        .btnLayoutFullWidth {
+          display: block;
+        }        
       }
     }
   }
