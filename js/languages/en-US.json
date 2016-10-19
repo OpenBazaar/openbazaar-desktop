@@ -34,7 +34,7 @@
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
-    "btnLayoutConstrained": "950px",
+    "btnLayoutStandard": "950px",
     "btnLayoutFullWidth": "100%"
   },
   "userShort": {

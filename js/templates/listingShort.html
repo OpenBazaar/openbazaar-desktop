@@ -1,0 +1,7 @@
+<img class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')" />
+<div class="pad">
+  <a class="clrT"><%= ob.title %></a>
+  <div class="overflowAuto">
+    <span class="txB floR"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
+  </div>
+</div>
