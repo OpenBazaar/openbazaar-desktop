@@ -61,19 +61,7 @@ export default class extends baseVw {
       'click .js-followBtn': 'followClick',
       'click .js-messageBtn': 'messageClick',
       'click .js-moreBtn': 'moreClick',
-      'click .userPageSearchBar .btnLayoutConstrained': 'onClickLayoutConstrained',
-      'click .userPageSearchBar .btnLayoutFullWidth': 'onClickLayoutFullWidth',
     };
-  }
-
-  onClickLayoutConstrained() {
-    console.log('hello');
-    this.setFullWidthLayout(true);
-  }
-
-  onClickLayoutFullWidth() {
-    console.log('MOTO');
-    this.setFullWidthLayout(false);
   }
 
   tabClick(e) {
@@ -130,12 +118,6 @@ export default class extends baseVw {
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
-  }
-
-  setFullWidthLayout(on = true) {
-    console.log('YO: ' + !!on);
-    this.$pageContent['addClass']('yo-mamma');
-    this.$pageContent[on ? 'addClass' : 'removeClass']('fullWidth');
   }
 
   get $pageContent() {

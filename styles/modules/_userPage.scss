@@ -72,19 +72,5 @@
         }
       }
     }
-
-    &.fullWidth {
-      width: 100% !important;
-
-      .userPageStore {
-        .btnLayoutConstrained {
-          display: none;
-        }
-
-        .btnLayoutFullWidth {
-          display: block;
-        }        
-      }
-    }
   }
 }
