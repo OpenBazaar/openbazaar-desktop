@@ -86,6 +86,7 @@ export default class extends BaseVw {
     this.collection.forEach(listingShort => {
       const listingShortVw = this.createListingShortView({
         model: listingShort,
+        listingOwnerGuid: this.model.id,
       });
 
       this.listingShortViews.push(listingShortVw);

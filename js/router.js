@@ -105,12 +105,6 @@ export default class ObRouter extends Router {
     }
 
     profileFetch.done(() => {
-      const displayArgs = args.filter((arg) => arg !== null).join('/');
-      const handle = profile.get('handle');
-
-      this.navigate(`${handle ? `@${handle}` : profile.id}/${tab}` +
-        `${displayArgs ? `/${displayArgs}` : ''}`, { replace: true });
-
       this.loadPage(
         new UserPage({
           ...pageOpts,

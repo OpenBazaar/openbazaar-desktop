@@ -96,8 +96,20 @@ export default class extends baseVw {
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
       this.$tabTitle.text(tabTarg);
+
+      // subRoute is anything after the tab in the route, which is something
+      // we want to maintain, e.g:
+      // <guid>/<tab>/<slug>/<blah>
+      // the subRoute is '/<slug>/<blah>'
+      const subRoute = location.hash
+        .slice(1)
+        .split('/')
+        .slice(2)
+        .join('/');
+
       // add tab to history
-      app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}`);
+      app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}` +
+        `${subRoute ? `/${subRoute}` : ''}`);
 
       this.$('.js-tab').removeClass('clrT active');
       this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
