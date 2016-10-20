@@ -28,32 +28,43 @@ export default class extends baseVw {
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
   }
 
-  avatarLeftClick() {
+  avatarRotate(direction) {
     if (this.avatarCropper.cropit('imageSrc')) {
-      this.avatarCropper.cropit('rotateCCW');
+      // we don't have to check the rotated size of the avatar, because it is square
+      this.avatarCropper.cropit(direction > 0 ? 'rotateCW' : 'rotateCCW');
       this.avatarChanged = true;
     }
   }
 
+  avatarLeftClick() {
+    this.avatarRotate(-1);
+  }
+
   avatarRightClick() {
-    if (this.avatarCropper.cropit('imageSrc')) {
-      this.avatarCropper.cropit('rotateCW');
-      this.avatarChanged = true;
+    this.avatarRotate(1);
+  }
+
+  headerRotate(direction) {
+    if (this.headerCropper.cropit('imageSrc')) {
+      const loadedSize = this.headerCropper.cropit('imageSize');
+
+      // check to see if rotating the image will make it too small
+      if (loadedSize.height < this.headerMinWidth ||
+        loadedSize.width < this.headerMinHeight) {
+        this.showHeaderSizeWarning(loadedSize, 'settings.loadAvatarSizeError.bodyRotated');
+      }
+
+      this.headerCropper.cropit(direction > 0 ? 'rotateCW' : 'rotateCCW');
+      this.headerChanged = true;
     }
   }
 
   headerLeftClick() {
-    if (this.headerCropper.cropit('imageSrc')) {
-      this.headerCropper.cropit('rotateCCW');
-      this.headerChanged = true;
-    }
+    this.headerRotate(-1);
   }
 
   headerRightClick() {
-    if (this.headerCropper.cropit('imageSrc')) {
-      this.headerCropper.cropit('rotateCW');
-      this.headerChanged = true;
-    }
+    this.headerRotate(1);
   }
 
   saveHeader() {
@@ -166,6 +177,32 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  showAvatarSizeWarning(loadedSize, bodyText = 'settings.loadAvatarSizeError.body') {
+    new SimpleMessage({
+      title: app.polyglot.t('settings.loadAvatarSizeError.title'),
+      message: app.polyglot.t(bodyText,
+        { minWidth: this.avatarMinWidth,
+          minHeight: this.avatarMinHeight,
+          curWidth: loadedSize.width,
+          curHeight: loadedSize.height }),
+    })
+      .render()
+      .open();
+  }
+
+  showHeaderSizeWarning(loadedSize, bodyText = 'settings.loadHeaderSizeError.body') {
+    new SimpleMessage({
+      title: app.polyglot.t('settings.loadHeaderSizeError.title'),
+      message: app.polyglot.t(bodyText,
+        { minWidth: this.headerMinWidth,
+          minHeight: this.headerMinHeight,
+          curWidth: loadedSize.width,
+          curHeight: loadedSize.height }),
+    })
+      .render()
+      .open();
+  }
+
   render() {
     let avatarURI = false;
     let headerURI = false;
@@ -215,31 +252,21 @@ export default class extends baseVw {
           $preview: avatarPrev,
           $fileInput: avatarInpt,
           smallImage: 'stretch',
-          maxZoom: 2,
           allowDragNDrop: false,
           onImageLoaded: () => {
             const loadedSize = this.avatarCropper.cropit('imageSize');
-            this.avatarChanged = !this.avatarLoadedOnRender;
-            this.avatarLoadedOnRender = false;
+            this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
+            this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
-            this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
-            this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
 
-            if (loadedSize.width < this.avatarMinWidth ||
-              loadedSize.height < this.avatarMinHeight) {
-              new SimpleMessage({
-                title: app.polyglot.t('settings.loadAvatarSizeError.title'),
-                message: app.polyglot.t('settings.loadAvatarSizeError.body',
-                  { minWidth: this.avatarMinWidth,
-                    minHeight: this.avatarMinHeight,
-                    curWidth: loadedSize.width,
-                    curHeight: loadedSize.height }),
-              })
-                .render()
-                .open();
+            if (!this.avatarLoadedOnRender && (loadedSize.width < this.avatarMinWidth ||
+              loadedSize.height < this.avatarMinHeight)) {
+              this.showAvatarSizeWarning(loadedSize);
             }
+            this.avatarChanged = !this.avatarLoadedOnRender;
+            this.avatarLoadedOnRender = false;
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -255,31 +282,21 @@ export default class extends baseVw {
           $preview: headerPrev,
           $fileInput: headerInpt,
           smallImage: 'stretch',
-          maxZoom: 2,
           allowDragNDrop: false,
           onImageLoaded: () => {
             const loadedSize = this.headerCropper.cropit('imageSize');
-            this.headerChanged = !this.headerLoadedOnRender;
-            this.headerLoadedOnRender = false;
+            this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
+            this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
-            this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
-            this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
 
-            if (loadedSize.width < this.headerMinWidth ||
-              loadedSize.height < this.headerMinHeight) {
-              new SimpleMessage({
-                title: app.polyglot.t('settings.loadHeaderSizeError.title'),
-                message: app.polyglot.t('settings.loadHeaderSizeError.body',
-                  { minWidth: this.headerMinWidth,
-                    minHeight: this.headerMinHeight,
-                    curWidth: loadedSize.width,
-                    curHeight: loadedSize.height }),
-              })
-                .render()
-                .open();
+            if (!this.headerLoadedOnRender && (loadedSize.width < this.headerMinWidth ||
+              loadedSize.height < this.headerMinHeight)) {
+              this.showHeaderSizeWarning(loadedSize);
             }
+            this.headerChanged = !this.headerLoadedOnRender;
+            this.headerLoadedOnRender = false;
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -304,6 +321,18 @@ export default class extends baseVw {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
         }
+
+        // after the preview is set, set the max zoom so the cropped size can't be less than the min
+        // calculated here in case the preview sizes are changed in the future.
+        const avatarPrevInner = avatarPrev.find('.cropit-preview-image-container');
+        const maxAWZoom = avatarPrevInner.width() / this.avatarMinWidth;
+        const maxAHZoom = avatarPrevInner.height() / this.avatarMinHeight;
+        this.avatarCropper.cropit('maxZoom', Math.min(maxAWZoom, maxAHZoom));
+
+        const headerPrevInner = headerPrev.find('.cropit-preview-image-container');
+        const maxHWZoom = headerPrevInner.width() / this.headerMinWidth;
+        const maxHHZoom = headerPrevInner.height() / this.headerMinHeight;
+        this.headerCropper.cropit('maxZoom', Math.min(maxHWZoom, maxHHZoom));
       }, 0);
     });
 
