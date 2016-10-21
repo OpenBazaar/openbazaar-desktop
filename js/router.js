@@ -129,7 +129,7 @@ export default class ObRouter extends Router {
       return;
     }
 
-    let tab = state || 'store';
+    const pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
 
     if (!state) {
@@ -138,21 +138,8 @@ export default class ObRouter extends Router {
       });
     }
 
-    if (state === 'listing') {
-      tab = 'store';
-    }
-
     if (!this.isValidUserRoute(guid, state, ...deepRouteParts)) {
       this.pageNotFound();
-      return;
-    }
-
-    // If out current page is the user page of the given guid,
-    // we'll just update the state of the existing page,
-    // rather than fetching data and loading a new one.
-    if (this.currentPage instanceof UserPage && this.currentPage.model.id === guid) {
-      this.currentPage.setState(state || 'store');
-      app.loadingModal.close();
       return;
     }
 
@@ -177,7 +164,7 @@ export default class ObRouter extends Router {
     profileFetch.done(() => {
       this.loadPage(
         new UserPage({
-          tab,
+          state: pageState,
           model: profile,
         }).render()
       );

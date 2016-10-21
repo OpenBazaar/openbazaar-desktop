@@ -14,7 +14,7 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    this.tab = options.tab || 'store';
+    this.state = options.state || 'store';
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
@@ -66,7 +66,7 @@ export default class extends baseVw {
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
-    this.selectTab(targ.attr('data-tab'));
+    this.setState(targ.attr('data-tab'));
   }
 
   followClick() {
@@ -84,14 +84,20 @@ export default class extends baseVw {
     this.$moreableBtns.toggleClass('hide');
   }
 
-  setState(state) {
+  setState(state, options = {}) {
     if (!state) {
       throw new Error('Please provide a state.');
     }
 
+    const opts = {
+      updateHistory: true,
+      ...options,
+    };
+
     let tab = state;
     if (state === 'listing') tab = 'store';
-    this.selectTab(tab, { addTabToHistory: false });
+    this.state = state;
+    this.selectTab(tab, { addTabToHistory: opts.updateHistory || false });
   }
 
   selectTab(targ, options = {}) {
@@ -172,7 +178,7 @@ export default class extends baseVw {
       this._$pageContent = null;
 
       this.tabViewCache = {}; // clear for re-renders
-      this.selectTab(this.tab, { addTabToHistory: false });
+      this.setState(this.state, { updateHistory: false });
     });
 
     return this;
