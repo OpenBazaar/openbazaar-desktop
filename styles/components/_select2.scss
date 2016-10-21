@@ -27,8 +27,6 @@
 // Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {
   position: relative;
-  // this is needed so if the drop down shows, the right side lines up with the tagging field
-  // margin-right: -2px;
 
   .select2Tags + .select2-container {
     &.select2-container--default {
@@ -63,7 +61,7 @@
 
     &.select2-container--focus {
       .select2-selection {
-        border: 1px solid transparent;
+        border: none;
       }
 
       & + .tagsPlaceholder {
@@ -110,6 +108,7 @@
   &.showDropdown {
     .tagsDropdown .select2-container--open {
       margin-top: -7px;
+      border: none;
     }
   }
 
