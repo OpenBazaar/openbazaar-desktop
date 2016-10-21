@@ -72,9 +72,7 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      if (this.shippingOptions.length) {
-        this.$('.js-sectionShipping').addClass('hasShippingOptions');
-      }
+      this.$('.js-sectionShipping').addClass('hasShippingOptions');
 
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
@@ -95,6 +93,9 @@ export default class extends BaseModal {
       this.shippingOptionViews.slice(removeOpts.index)
         .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
     });
+
+    console.log('hello');
+    window.hello = this.model;
   }
 
   className() {
@@ -151,14 +152,15 @@ export default class extends BaseModal {
   }
 
   onChangePrice(e) {
-    let updatedVal = $(e.target).val().trim();
-    updatedVal = Number(updatedVal);
+    const trimmedVal = $(e.target).val().trim();
+    let updatedVal = Number(trimmedVal);
 
     if (!isNaN(updatedVal)) {
       updatedVal = formatPrice(updatedVal, this.$currencySelect.val() === 'BTC');
+      $(e.target).val(updatedVal);
+    } else {
+      $(e.target).val(trimmedVal);
     }
-
-    $(e.target).val(updatedVal);
   }
 
   onChangeSlug(e) {
