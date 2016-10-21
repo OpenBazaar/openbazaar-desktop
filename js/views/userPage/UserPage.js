@@ -3,6 +3,7 @@ import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
+import { capitalize } from '../../utils/string';
 import Home from './Home';
 import Store from './Store';
 import Follow from './Follow';
@@ -13,8 +14,7 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    // the route will send a lower case tab value, convert it to upper case or Store if not sent
-    this.tab = `${options.tab.charAt(0).toUpperCase()}${options.tab.slice(1)}` || 'Store';
+    this.tab = options.tab || 'store';
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
@@ -84,45 +84,63 @@ export default class extends baseVw {
     this.$moreableBtns.toggleClass('hide');
   }
 
-  selectTab(targ) {
+  setState(state) {
+    if (!state) {
+      throw new Error('Please provide a state.');
+    }
+
+    let tab = state;
+    if (state === 'listing') tab = 'store';
+    this.selectTab(tab, { addTabToHistory: false });
+  }
+
+  selectTab(targ, options = {}) {
     let tabTarg = targ;
+
+    const opts = {
+      addTabToHistory: true,
+      ...options,
+    };
+
     // if an invalid targ is passed in, set it to Store
-    if (!this.tabViews[tabTarg] && tabTarg !== 'Following' && tabTarg !== 'Followers') {
-      tabTarg = 'Store';
+    if (!this.tabViews[capitalize(tabTarg)] && tabTarg !== 'following' && tabTarg !== 'followers') {
+      tabTarg = 'store';
     }
 
     let tabView = this.tabViewCache[tabTarg];
     const tabOptions = { ownPage: this.ownPage, model: this.model };
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      this.$tabTitle.text(tabTarg);
+      this.$tabTitle.text(capitalize(tabTarg));
 
-      // subRoute is anything after the tab in the route, which is something
-      // we want to maintain, e.g:
-      // <guid>/<tab>/<slug>/<blah>
-      // the subRoute is '/<slug>/<blah>'
-      const subRoute = location.hash
-        .slice(1)
-        .split('/')
-        .slice(2)
-        .join('/');
+      if (opts.addTabToHistory) {
+        // subRoute is anything after the tab in the route, which is something
+        // we want to maintain, e.g:
+        // <guid>/<tab>/<slug>/<blah>
+        // the subRoute is '/<slug>/<blah>'
+        const subRoute = location.hash
+          .slice(1)
+          .split('/')
+          .slice(2)
+          .join('/');
 
-      // add tab to history
-      app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}` +
-        `${subRoute ? `/${subRoute}` : ''}`);
+        // add tab to history
+        app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}` +
+          `${subRoute ? `/${subRoute}` : ''}`);
+      }
 
       this.$('.js-tab').removeClass('clrT active');
       this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
 
-      if (tabTarg === 'Followers' || tabTarg === 'Following') {
-        tabOptions.followType = tabTarg;
-        tabTarg = 'Follow';
+      if (tabTarg === 'followers' || tabTarg === 'following') {
+        tabOptions.followType = capitalize(tabTarg);
+        tabTarg = 'follow';
       }
 
       if (this.currentTabView) this.currentTabView.$el.detach();
 
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[tabTarg], tabOptions);
+        tabView = this.createChild(this.tabViews[capitalize(tabTarg)], tabOptions);
         this.tabViewCache[tabOptions.followType || tabTarg] = tabView;
         tabView.render();
       }
@@ -154,7 +172,7 @@ export default class extends baseVw {
       this._$pageContent = null;
 
       this.tabViewCache = {}; // clear for re-renders
-      this.selectTab(this.tab);
+      this.selectTab(this.tab, { addTabToHistory: false });
     });
 
     return this;

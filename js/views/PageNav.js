@@ -30,8 +30,9 @@ export default class extends View {
 
     opts.className = `pageNav ${opts.navigable ? '' : 'notNavigable'}`;
     super(opts);
-
     this.options = opts;
+    this.addressBarText = '';
+
     $(document).on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:macStyleWinControls',
@@ -81,7 +82,7 @@ export default class extends View {
   setAppProfile() {
     // when this view is created, the app.profile doesn't exist
     this.listenTo(app.profile, 'change:avatarHash', this.updateAvatar);
-    this.updateAvatar();
+    this.render();
   }
 
   updateAvatar() {
@@ -180,6 +181,7 @@ export default class extends View {
 
   setAddressBar(text = '') {
     if (this.$addressBar) {
+      this.addressBarText = text;
       this.$addressBar.val(text);
     }
   }
@@ -202,7 +204,8 @@ export default class extends View {
   render() {
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t({
-        avatarHash: app.profile ? app.profile.get('avatarHash') : '',
+        addressBarText: this.addressBarText,
+        ...(app.profile && app.profile.toJSON() || {}),
       }));
     });
 

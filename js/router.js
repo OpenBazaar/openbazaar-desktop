@@ -18,7 +18,19 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
-      [/^ownPage[\/]?(.*?)$/, 'ownPage'],
+      // [/^@([^\/]+)[\/]?$/, 'userViaHandle'],
+      // [/^(Qm[a-zA-Z0-9]+)[\/]?$/, 'user'],
+      // [/^@([^\/]+)[\/]?home[\/]?$/, 'userViaHandle'],
+      // [/^(Qm[a-zA-Z0-9]+)[\/]?home[\/]?$/, 'user'],
+      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
+      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
+      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
+      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
+      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
+      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
+      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
+      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
+      // [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       // temporary route
@@ -77,13 +89,71 @@ export default class ObRouter extends Router {
     });
   }
 
-  user(guid, tab, ...args) {
-    const userTab = tab || 'store';
-    const pageOpts = { tab: userTab };
+  get userStates() {
+    return [
+      'home',
+      'store',
+      'following',
+      'followers',
+      'listing',
+    ];
+  }
 
-    if (userTab === 'channel') {
-      pageOpts.category = args[0];
-      pageOpts.layer = args[1];
+  isValidUserRoute(guid, state, ...deepRouteParts) {
+    if (deepRouteParts.length) {
+      // Args currently serves as a placeholder for potential
+      // future route parts beyond <guid/handle>/<state>. Right
+      // now we have no such routes, thus the blanket false.
+      return false;
+
+      // Once some routes have those deeper parts, the code here should
+      // selectively not go to pageNotFound if those parts are met. E.g.
+      // <guid/handle>/store/new-listings becomes a route, then the
+      // code could be:
+      // if (state ==='store') {
+      //   if (deepRouteParts.length > 1 || (deepRouteParts.length === 1) &&
+      //     deepRouteParts[0] !== 'new-listings') {
+      //     return false;
+      //   } else if (deepRouteParts.length) {
+      //     return false;
+      //   }
+      // }
+    }
+
+    return true;
+  }
+
+  user(guid, state, ...args) {
+    if (state && this.userStates.indexOf(state) === -1) {
+      this.pageNotFound();
+      return;
+    }
+
+    let tab = state || 'store';
+    const deepRouteParts = args.filter(arg => arg !== null);
+
+    if (!state) {
+      this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+        replace: true,
+      });
+    }
+
+    if (state === 'listing') {
+      tab = 'store';
+    }
+
+    if (!this.isValidUserRoute(guid, state, ...deepRouteParts)) {
+      this.pageNotFound();
+      return;
+    }
+
+    // If out current page is the user page of the given guid,
+    // we'll just update the state of the existing page,
+    // rather than fetching data and loading a new one.
+    if (this.currentPage instanceof UserPage && this.currentPage.model.id === guid) {
+      this.currentPage.setState(state || 'store');
+      app.loadingModal.close();
+      return;
     }
 
     let profile;
@@ -107,7 +177,7 @@ export default class ObRouter extends Router {
     profileFetch.done(() => {
       this.loadPage(
         new UserPage({
-          ...pageOpts,
+          tab,
           model: profile,
         }).render()
       );
@@ -118,12 +188,12 @@ export default class ObRouter extends Router {
     });
   }
 
-  ownPage(subPath) {
-    this.navigate(`${app.profile.id}/${subPath === null ? '' : subPath}`, {
-      trigger: true,
-      replace: true,
-    });
-  }
+  // ownPage(subPath) {
+  //   this.navigate(`${app.profile.id}/${subPath === null ? '' : subPath}`, {
+  //     trigger: true,
+  //     replace: true,
+  //   });
+  // }
 
   listing(guid, slug) {
     const listing = new Listing({
