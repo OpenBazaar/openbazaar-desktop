@@ -93,9 +93,6 @@ export default class extends BaseModal {
       this.shippingOptionViews.slice(removeOpts.index)
         .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
     });
-
-    console.log('hello');
-    window.hello = this.model;
   }
 
   className() {
@@ -153,11 +150,12 @@ export default class extends BaseModal {
 
   onChangePrice(e) {
     const trimmedVal = $(e.target).val().trim();
-    let updatedVal = Number(trimmedVal);
+    const numericVal = Number(trimmedVal);
 
-    if (!isNaN(updatedVal)) {
-      updatedVal = formatPrice(updatedVal, this.$currencySelect.val() === 'BTC');
-      $(e.target).val(updatedVal);
+    if (!isNaN(numericVal) && trimmedVal) {
+      $(e.target).val(
+        formatPrice(numericVal, this.$currencySelect.val() === 'BTC')
+      );
     } else {
       $(e.target).val(trimmedVal);
     }
@@ -465,21 +463,9 @@ export default class extends BaseModal {
 
     // if any shipping options have a type of 'LOCAL_PICKUP', we'll
     // clear out any services that may be there
-    // this.innerListing.get('shippingOptions').forEach(shipOpt => {
-    //   if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-    //     shipOpt.set('services', []);
-    //   }
-    // });
-    // the above block should be uncommented when this bug is fully fixed:
-    // https://github.com/OpenBazaar/openbazaar-go/issues/151
-    // and the below block could go away:
     this.innerListing.get('shippingOptions').forEach(shipOpt => {
       if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-        shipOpt.set('services', [{
-          name: 'need server bug #151 fixed!',
-          price: 12300,
-          estimatedDelivery: '5 - 8 days',
-        }]);
+        shipOpt.set('services', []);
       }
     });
 
@@ -532,62 +518,6 @@ export default class extends BaseModal {
     });
   }
 
-  get $scrollToSections() {
-    return this._$scrollToSections || this.$('.js-scrollToSection');
-  }
-
-  get $scrollLinks() {
-    return this._$scrollLinks || this.$('.js-scrollLink');
-  }
-
-  get $formFields() {
-    // todo: the parent selector is not a very efficient selector here.
-    // instead alter the initial selector to select only the fields you want.
-    return this._$formFields ||
-      this.$('select[name], input[name], textarea[name]')
-        .filter(':parents(.js-sectionShipping)');
-  }
-
-  get $currencySelect() {
-    return this._$currencySelect || this.$('#editListingCurrency');
-  }
-
-  get $priceInput() {
-    return this._$priceInput || this.$('#editListingPrice');
-  }
-
-  get $conditionWrap() {
-    return this._$conditionWrap || this.$('.js-conditionWrap');
-  }
-
-  get $saveButton() {
-    return this._$buttonSave || this.$('.js-save');
-  }
-
-  get $inputPhotoUpload() {
-    return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
-  }
-
-  get $photoUploadingLabel() {
-    return this._$photoUploadingLabel || this.$('.js-photoUploadingLabel');
-  }
-
-  get $photoUploadItems() {
-    return this._$photoUploadItems || this.$('.js-photoUploadItems');
-  }
-
-  get $editListingReturnPolicy() {
-    return this._$editListingReturnPolicy || this.$('#editListingReturnPolicy');
-  }
-
-  get $editListingTermsAndConditions() {
-    return this._$editListingTermsAndConditions || this.$('#editListingTermsAndConditions');
-  }
-
-  get $sectionShipping() {
-    return this._$sectionShipping || this.$('.js-sectionShipping');
-  }
-
   // return the currency associated with this listing
   get currency() {
     return (this.$currencySelect.length ?
@@ -627,6 +557,36 @@ export default class extends BaseModal {
     super.remove();
   }
 
+  get selectorCache() {
+    return {
+      $scrollToSections: '.js-scrollToSection',
+      $scrollLinks: '.js-scrollLink',
+      $formFields:
+        '.js-scrollToSection:not(.js-sectionShipping) select[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]',
+      $currencySelect: '#editListingCurrency',
+      $priceInput: '#editListingPrice',
+      $conditionWrap: '.js-conditionWrap',
+      $saveButton: '.js-save',
+      $inputPhotoUpload: '#inputPhotoUpload',
+      $photoUploadItems: '.js-photoUploadItems',
+      $editListingReturnPolicy: '#editListingReturnPolicy',
+      $editListingTermsAndConditions: '#editListingTermsAndConditions',
+      $sectionShipping: '.js-sectionShipping',
+      $photoUploadingLabel: '.js-photoUploadingLabel',
+      $modalContent: '.modalContent',
+      $tabControls: '.tabControls',
+      $titleInput: '#editListingTitle',
+      $scrollContainer: '.js-scrollContainer',
+      $editListingTags: '#editListingTags',
+      $editListingTagsPlaceholder: '#editListingTagsPlaceholder',
+      $editListingCategories: '#editListingCategories',
+      $editListingCategoriesPlaceholder: '#editListingCategoriesPlaceholder',
+      $shippingOptionsWrap: '.js-shippingOptionsWrap',
+    };
+  }
+
   render(onScrollUpdateComplete, restoreScrollPos = true) {
     let prevScrollPos = 0;
 
@@ -661,13 +621,6 @@ export default class extends BaseModal {
       }));
 
       super.render();
-
-      this.$scrollContainer = this.$('.js-scrollContainer');
-      this.$editListingTags = this.$('#editListingTags');
-      this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
-      this.$editListingCategories = this.$('#editListingCategories');
-      this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
-      this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
 
       this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
         // disables the search box
@@ -766,23 +719,6 @@ export default class extends BaseModal {
           this.$titleInput.focus();
         }
       });
-
-      this._$scrollLinks = null;
-      this._$scrollToSections = null;
-      this._$formFields = null;
-      this._$currencySelect = null;
-      this._$priceInput = null;
-      this._$conditionWrap = null;
-      this._$buttonSave = null;
-      this._$inputPhotoUpload = null;
-      this._$photoUploadingLabel = null;
-      this._$photoUploadItems = null;
-      this._$editListingReturnPolicy = null;
-      this._$editListingTermsAndConditions = null;
-      this._$sectionShipping = null;
-      this.$modalContent = this.$('.modalContent');
-      this.$tabControls = this.$('.tabControls');
-      this.$titleInput = this.$('#editListingTitle');
 
       this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
       this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);

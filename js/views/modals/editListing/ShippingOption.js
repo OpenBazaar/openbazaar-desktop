@@ -125,24 +125,19 @@ export default class extends BaseView {
     return view;
   }
 
-  get $headline() {
-    return this._$headline || this.$('h1');
-  }
-
-  get $shipDestinationDropdown() {
-    return this._$shipDestinationDropdown || this.$(`#shipDestinationsDropdown_${this.model.cid}`);
-  }
-
-  get $serviceSection() {
-    return this._$serviceSection || this.$('.js-serviceSection');
-  }
-
-  get $formFields() {
-    // todo: the parent selector is not a very efficient selector here.
-    // instead alter the initial selector to select only the fields you want.
-    return this._$formFields ||
-      this.$('select[name], input[name], textarea[name]')
-        .filter(':parents(.js-servicesWrap)');
+  get selectorCache() {
+    return {
+      $shipDestinationSelect: `#shipDestinationsSelect_${this.model.cid}`,
+      $shipDestinationsPlaceholder: `#shipDestinationsPlaceholder_${this.model.cid}`,
+      $servicesWrap: '.js-servicesWrap',
+      $headline: 'h1',
+      $shipDestinationDropdown: `#shipDestinationsDropdown_${this.model.cid}`,
+      $serviceSection: '.js-serviceSection',
+      $formFields: () => (
+        this.$('select[name], input[name], textarea[name]').filter((index, el) => (
+          !$(el).parents('.js-serviceSection').length)
+      )),
+    };
   }
 
   render() {
@@ -169,10 +164,6 @@ export default class extends BaseView {
         // disables the search box
         minimumResultsForSearch: Infinity,
       });
-
-      this.$shipDestinationSelect = this.$(`#shipDestinationsSelect_${this.model.cid}`);
-      this.$shipDestinationsPlaceholder = this.$(`#shipDestinationsPlaceholder_${this.model.cid}`);
-      this.$servicesWrap = this.$('.js-servicesWrap');
 
       this.$shipDestinationSelect.select2({
         multiple: true,
@@ -205,10 +196,8 @@ export default class extends BaseView {
 
       this.$servicesWrap.append(servicesFrag);
 
-      this._$headline = null;
-      this._$shipDestinationDropdown = null;
-      this._$formFields = null;
-      this._$serviceSection = null;
+      console.log('foo');
+      window.foo = this.$formFields;
     });
 
     return this;

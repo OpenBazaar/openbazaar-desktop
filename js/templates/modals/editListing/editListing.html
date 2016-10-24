@@ -65,7 +65,7 @@
                 <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
                   <% if (ob.errors['listing.item.price']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.price'] })) %>
                 <div class="inputSelect">
-                  <input type="text" class="clrBr clrP js-price" name="listing.item.price" id="editListingPrice" value="<% if (typeof ob.listing.item.price === 'number') print(ob.formatPrice(ob.listing.item.price, ob.listing.metadata.pricingCurrency === 'BTC')) %>" data-var-type="number">
+                  <input type="text" class="clrBr clrP js-price" name="listing.item.price" id="editListingPrice" value="<% print(typeof ob.listing.item.price === 'number' ? ob.formatPrice(ob.listing.item.price, ob.listing.metadata.pricingCurrency === 'BTC') : ob.listing.item.price || '') %>" data-var-type="number">
                   <select id="editListingCurrency" name="listing.metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
                     <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
