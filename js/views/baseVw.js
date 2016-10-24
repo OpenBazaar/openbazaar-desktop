@@ -8,66 +8,6 @@ export default class baseVw extends View {
     this._childViews = [];
     this._unregisterFromParent = true;
     this._removed = false;
-    this._initSelectorCache();
-  }
-
-   /**
-   * This is not a function you would call directly. It initiates
-   * the functionality which caches your selectors based off of
-   * the selectorCache property, which is set as follows:
-   *
-   * get selectorCache() {
-   *   return {
-   *     $photoUploadingLabel: '.photoUploadingLabel',
-   *     $alertBox: '.alertBox',
-   *     $alertBoxUrgent: () => {
-   *       return this.$alertBox.find('.urgent');
-   *     },
-   *   }
-   * }
-   *
-   * In its simplest form, you are providing a name to selector
-   * mapping. In a more advanced form, you can provide a name
-   * to function mapping with the function returning the jQuery
-   * element(s) you want cached.
-   *
-   * The cached jQuery elements will be available to your view via
-   * this.<name>, e.g. this.$photoUploadingLabel, this.$alertBoxUrgent,
-   * etc...
-   *
-   * The baseVw will handle clearing the cache on re-render, so
-   * the elements will only be fetched from the DOM once per render.
-   */
-  _initSelectorCache() {
-    Object.keys(this.selectorCache || {}).forEach(name => {
-      Object.defineProperty(this, name, {
-        get: () => {
-          const selector = this.selectorCache[name];
-          let returnVal;
-
-          if (this[`__${name}`] && this[`__${name}`].length) {
-            returnVal = this[`__${name}`];
-          } else if (typeof selector === 'function') {
-            returnVal = this[`__${name}`] = selector();
-          } else {
-            returnVal = this[`__${name}`] = this.$(selector);
-          }
-
-          return returnVal;
-        },
-      });
-    });
-
-    const observer = new MutationObserver(mutations => {
-      const firstMutation = mutations[0];
-
-      if (firstMutation.removedNodes.length && !firstMutation.previousSibling) {
-        // we've re-rendered, let's clear the selector cache
-        Object.keys(this.selectorCache || {}).forEach(name => (this[`__${name}`] = null));
-      }
-    });
-
-    observer.observe(this.el, { childList: true });
   }
 
   /**

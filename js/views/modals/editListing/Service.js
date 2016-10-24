@@ -35,10 +35,9 @@ export default class extends BaseView {
     this.model.set(this.getFormData(this.$formFields));
   }
 
-  get selectorCache() {
-    return {
-      $formFields: 'select[name], input[name], textarea[name]',
-    };
+  get $formFields() {
+    return this._$formFields ||
+      this.$('select[name], input[name], textarea[name]');
   }
 
   render() {
