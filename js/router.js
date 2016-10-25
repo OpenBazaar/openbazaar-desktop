@@ -18,19 +18,6 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
-      // [/^@([^\/]+)[\/]?$/, 'userViaHandle'],
-      // [/^(Qm[a-zA-Z0-9]+)[\/]?$/, 'user'],
-      // [/^@([^\/]+)[\/]?home[\/]?$/, 'userViaHandle'],
-      // [/^(Qm[a-zA-Z0-9]+)[\/]?home[\/]?$/, 'user'],
-      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
-      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
-      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
-      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
-      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
-      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
-      // [/^@([^\/]+)[\/]?store[\/]?$/, 'userViaHandle'],
-      // [/^(Qm[a-zA-Z0-9]+)[\/]?store[\/]?$/, 'user'],
-      // [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
       // temporary route
@@ -95,40 +82,33 @@ export default class ObRouter extends Router {
       'store',
       'following',
       'followers',
-      'listing',
     ];
   }
 
-  isValidUserRoute(guid, state, ...deepRouteParts) {
-    if (deepRouteParts.length) {
-      // Args currently serves as a placeholder for potential
-      // future route parts beyond <guid/handle>/<state>. Right
-      // now we have no such routes, thus the blanket false.
-      return false;
 
-      // Once some routes have those deeper parts, the code here should
-      // selectively not go to pageNotFound if those parts are met. E.g.
-      // <guid/handle>/store/new-listings becomes a route, then the
-      // code could be:
-      // if (state ==='store') {
-      //   if (deepRouteParts.length > 1 || (deepRouteParts.length === 1) &&
-      //     deepRouteParts[0] !== 'new-listings') {
-      //     return false;
-      //   } else if (deepRouteParts.length) {
-      //     return false;
-      //   }
-      // }
+  /**
+   * Based on the route arguments, determine whether we
+   * have a valid user route.
+   */
+  isValidUserRoute(guid, state, ...deepRouteParts) {
+    if (!guid || this.userStates.indexOf(state) === -1) {
+      return false;
+    }
+
+    if (state === 'store') {
+      // so far store is the only state that could have
+      // route parts beyond the state, e.g @themes/store/<slug>
+      if (deepRouteParts.length > 1) {
+        return false;
+      }
+    } else if (deepRouteParts.length) {
+      return false;
     }
 
     return true;
   }
 
   user(guid, state, ...args) {
-    if (state && this.userStates.indexOf(state) === -1) {
-      this.pageNotFound();
-      return;
-    }
-
     const pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
 
@@ -138,7 +118,7 @@ export default class ObRouter extends Router {
       });
     }
 
-    if (!this.isValidUserRoute(guid, state, ...deepRouteParts)) {
+    if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
       this.pageNotFound();
       return;
     }
@@ -146,6 +126,14 @@ export default class ObRouter extends Router {
     let profile;
     let profileFetch;
     let onWillRoute;
+
+    const pageOpts = {
+      state: pageState,
+    };
+
+    if (state === 'store' && deepRouteParts[0]) {
+      pageOpts.listing = deepRouteParts[0];
+    }
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -164,8 +152,8 @@ export default class ObRouter extends Router {
     profileFetch.done(() => {
       this.loadPage(
         new UserPage({
-          state: pageState,
           model: profile,
+          ...pageOpts,
         }).render()
       );
     }).fail((jqXhr) => {
@@ -174,13 +162,6 @@ export default class ObRouter extends Router {
       if (onWillRoute) this.off(null, onWillRoute);
     });
   }
-
-  // ownPage(subPath) {
-  //   this.navigate(`${app.profile.id}/${subPath === null ? '' : subPath}`, {
-  //     trigger: true,
-  //     replace: true,
-  //   });
-  // }
 
   listing(guid, slug) {
     const listing = new Listing({

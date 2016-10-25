@@ -1,0 +1,18 @@
+<% if (ob.isFetching) { %>
+  <% // todo: translate %>
+  <h1 class="txCtr">Loading...</h1>
+<% } else if (ob.fetchFailed) { %>
+  <div class="txCtr padBg">
+    <% // todo: translate %>
+    <h1>Unable to fetch listing.</h1>
+    <p><%= ob.fetchFailReason %></p>
+    <a class='btn clrP clrBr js-retryFetch'>Retry</a>
+  </div>
+<% } else { %>
+  <div>
+    <a class="btn">Edit</a>
+    <a class="btn">Delete</a>
+  </div>
+  <% console.log('juggy');window.juggy = ob %>
+  <h1><%= ob.item.title %></h1>
+<% } %>

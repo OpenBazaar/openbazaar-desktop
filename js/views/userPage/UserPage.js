@@ -4,6 +4,8 @@ import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
 import { capitalize } from '../../utils/string';
+import Listing from '../../models/listing/Listing';
+import Listings from '../../collections/Listings';
 import Home from './Home';
 import Store from './Store';
 import Follow from './Follow';
@@ -94,30 +96,79 @@ export default class extends baseVw {
       ...options,
     };
 
-    let tab = state;
-    if (state === 'listing') tab = 'store';
+    const tabOpts = {
+      ...opts,
+      addTabToHistory: opts.updateHistory || false,
+    };
+
+    delete tabOpts.updateHistory;
+
     this.state = state;
-    this.selectTab(tab, { addTabToHistory: opts.updateHistory || false });
+    this.selectTab(state, tabOpts);
+  }
+
+  createFollowersTabView(opts = {}) {
+    return this.createChild(this.tabViews.Follow, {
+      ...opts,
+      followType: 'Followers',
+    });
+  }
+
+  createFollowingTabView(opts = {}) {
+    return this.createChild(this.tabViews.Follow, {
+      ...opts,
+      followType: 'Following',
+    });
+  }
+
+  createStoreTabView(opts = {}) {
+    let listingFetch;
+    let listing;
+
+    if (opts.listing) {
+      listing = new Listing({
+        listing: { slug: opts.listing },
+      }, {
+        guid: this.model.id,
+      });
+
+      listingFetch = listing.fetch();
+    }
+
+    this.listings = new Listings();
+    const listingsFetch = this.listings.fetch();
+
+    return this.createChild(this.tabViews.Store, {
+      ...opts,
+      initialFetch: listingsFetch,
+      collection: this.listings,
+      initialListingFetch: listingFetch,
+      listing,
+    });
   }
 
   selectTab(targ, options = {}) {
-    let tabTarg = targ;
-
     const opts = {
       addTabToHistory: true,
       ...options,
     };
 
-    // if an invalid targ is passed in, set it to Store
-    if (!this.tabViews[capitalize(tabTarg)] && tabTarg !== 'following' && tabTarg !== 'followers') {
-      tabTarg = 'store';
+    if (!this.tabViews[capitalize(targ)] && targ !== 'following' && targ !== 'followers') {
+      throw new Error(`${targ} is not a valid tab.`);
     }
 
-    let tabView = this.tabViewCache[tabTarg];
-    const tabOptions = { ownPage: this.ownPage, model: this.model };
+    let tabView = this.tabViewCache[targ];
+    const tabOptions = {
+      ownPage: this.ownPage,
+      model: this.model,
+      ...opts,
+    };
+
+    // delete any opts that the tab view(s) wouldn't need
+    delete tabOptions.addTabToHistory;
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      this.$tabTitle.text(capitalize(tabTarg));
+      this.$tabTitle.text(capitalize(targ));
 
       if (opts.addTabToHistory) {
         // subRoute is anything after the tab in the route, which is something
@@ -131,23 +182,23 @@ export default class extends baseVw {
           .join('/');
 
         // add tab to history
-        app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}` +
+        app.router.navigate(`${this.model.id}/${targ.toLowerCase()}` +
           `${subRoute ? `/${subRoute}` : ''}`);
       }
 
       this.$('.js-tab').removeClass('clrT active');
-      this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
-
-      if (tabTarg === 'followers' || tabTarg === 'following') {
-        tabOptions.followType = capitalize(tabTarg);
-        tabTarg = 'follow';
-      }
+      this.$(`.js-tab[data-tab="${targ}"]`).addClass('clrT active');
 
       if (this.currentTabView) this.currentTabView.$el.detach();
 
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[capitalize(tabTarg)], tabOptions);
-        this.tabViewCache[tabOptions.followType || tabTarg] = tabView;
+        if (this[`create${capitalize(targ)}TabView`]) {
+          tabView = this[`create${capitalize(targ)}TabView`](tabOptions);
+        } else {
+          tabView = this.createChild(this.tabViews[capitalize(targ)], tabOptions);
+        }
+
+        this.tabViewCache[targ] = tabView;
         tabView.render();
       }
 
@@ -161,6 +212,9 @@ export default class extends baseVw {
   }
 
   render() {
+    // This view is not designed to be re-rendered as
+    // it will kick off server requests. The following
+    // code assumes we will not re-render.
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -178,7 +232,10 @@ export default class extends baseVw {
       this._$pageContent = null;
 
       this.tabViewCache = {}; // clear for re-renders
-      this.setState(this.state, { updateHistory: false });
+      this.setState(this.state, {
+        updateHistory: false,
+        listing: this.options.listing,
+      });
     });
 
     return this;

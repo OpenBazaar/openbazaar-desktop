@@ -1,0 +1,87 @@
+// import $ from 'jquery';
+// import app from '../../../app';
+import loadTemplate from '../../../utils/loadTemplate';
+import BaseModal from '../BaseModal';
+
+export default class extends BaseModal {
+  constructor(options = {}) {
+    if (!options.model) {
+      throw new Error('Please provide a model.');
+    }
+
+    super(options);
+    this.options = options;
+
+    if (options.initialFetch) {
+      this.fetch = options.initialFetch;
+      this.onRequest(this.model, this.fetch);
+    }
+
+    this.listenTo(this.model, 'request', this.onRequest);
+  }
+
+  className() {
+    return `${super.className()} listingDetail modalTop`;
+  }
+
+  events() {
+    return {
+      'click .js-retryFetch': 'onClickRetryFetch',
+      ...super.events(),
+    };
+  }
+
+  onRequest(md, xhr) {
+    this.fetch = xhr;
+    if (!this.retryPressed) this.render();
+
+    const startTime = Date.now();
+
+    xhr.always(() => {
+      if (xhr.state() === 'rejected') {
+        // if fetch is triggered by retry button and
+        // it immediately fails, it looks like nothing happend,
+        // so, we'll make sure it takes a minimum time.
+        const callTime = Date.now() - startTime;
+
+        if (callTime < 250) {
+          setTimeout(() => {
+            this.retryPressed = false;
+            this.render();
+          }, 250 - callTime);
+        }
+      } else {
+        this.retryPressed = false;
+        this.render();
+      }
+    });
+  }
+
+  onClickRetryFetch() {
+    this.retryPressed = true;
+    this.model.fetch();
+    this.$btnRetry.addClass('processing');
+  }
+
+  get $btnRetry() {
+    return this._$btnRetry || this.$('.js-retryFetch');
+  }
+
+  render() {
+    loadTemplate('modals/listingDetail/listing.html', t => {
+      this.$el.html(t({
+        ...this.model.get('listing').toJSON(),
+        isFetching: this.fetch && this.fetch.state() === 'pending',
+        fetchFailed: this.fetch && this.fetch.state() === 'rejected',
+        fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&
+          this.fetch.responseText || '',
+      }));
+
+      super.render();
+
+      this._$btnRetry = null;
+    });
+
+    return this;
+  }
+}
