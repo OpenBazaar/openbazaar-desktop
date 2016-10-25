@@ -572,8 +572,8 @@ export default class extends BaseModal {
   // return the currency associated with this listing
   get currency() {
     return (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency) ||
-        app.settings.get('localCurrency');
+        this.$currencySelect.val() : this.innerListing.get('metadata').get('pricingCurrency') ||
+          app.settings.get('localCurrency'));
   }
 
   createShippingOptionView(opts) {

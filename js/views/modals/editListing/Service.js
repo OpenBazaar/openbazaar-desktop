@@ -37,7 +37,8 @@ export default class extends BaseView {
 
   get $formFields() {
     return this._$formFields ||
-      this.$('select[name], input[name], textarea[name]');
+      (this._$formFields =
+        this.$('select[name], input[name], textarea[name]'));
   }
 
   render() {

@@ -126,20 +126,26 @@ export default class extends BaseView {
   }
 
   get $headline() {
-    return this._$headline || this.$('h1');
+    return this._$headline ||
+      (this._$headline = this.$('h1'));
   }
 
   get $shipDestinationDropdown() {
-    return this._$shipDestinationDropdown || this.$(`#shipDestinationsDropdown_${this.model.cid}`);
+    return this._$shipDestinationDropdown ||
+      (this._$shipDestinationDropdown =
+        this.$(`#shipDestinationsDropdown_${this.model.cid}`));
   }
 
   get $serviceSection() {
-    return this._$serviceSection || this.$('.js-serviceSection');
+    return this._$serviceSection ||
+      (this._$serviceSection = this.$('.js-serviceSection'));
   }
 
   get $formFields() {
-    return this.$('select[name], input[name], textarea[name]').filter((index, el) => (
-      !$(el).parents('.js-serviceSection').length));
+    return this._$formFields ||
+      (this._$formFields =
+        this.$('select[name], input[name], textarea[name]').filter((index, el) => (
+          !$(el).parents('.js-serviceSection').length)));
   }
 
   render() {
