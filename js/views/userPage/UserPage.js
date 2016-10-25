@@ -143,6 +143,7 @@ export default class extends baseVw {
       initialFetch: listingsFetch,
       collection: this.listings,
       initialListingFetch: listingFetch,
+      model: this.model,
       listing,
     });
   }

@@ -1,3 +1,4 @@
+import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import Listing from '../../models/listing/Listing';
 import BaseVw from '../baseVw';
@@ -11,6 +12,10 @@ export default class extends BaseVw {
 
     if (!this.collection) {
       throw new Error('Please provide a collection.');
+    }
+
+    if (!this.model) {
+      throw new Error('Please provide a model.');
     }
 
     this.listingShortViews = [];
@@ -85,6 +90,17 @@ export default class extends BaseVw {
       initialFetch: initialListingFetch,
     }).render()
       .open();
+
+    this.listingDetail.on('close', () => {
+      // The timeout is to ensure the modal wasn't closed because of
+      // being routeed to a different page. In that case this view
+      // will be removed and we shouldn't update our route.
+      setTimeout(() => {
+        if (!this.isRemoved()) {
+          app.router.navigate(`${this.model.id}/store`);
+        }
+      });
+    });
   }
 
   createListingShortView(opts = {}) {

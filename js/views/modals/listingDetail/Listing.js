@@ -1,6 +1,7 @@
 // import $ from 'jquery';
-// import app from '../../../app';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+// import { launchEditListingModal } from '../../../utils/modalManager';
 import BaseModal from '../BaseModal';
 
 export default class extends BaseModal {
@@ -11,6 +12,9 @@ export default class extends BaseModal {
 
     super(options);
     this.options = options;
+
+    console.log('hippo');
+    window.hippo = this.model;
 
     if (options.initialFetch) {
       this.fetch = options.initialFetch;
@@ -27,6 +31,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-retryFetch': 'onClickRetryFetch',
+      'click .js-editListing': 'onClickEditListing',
       ...super.events(),
     };
   }
@@ -57,6 +62,10 @@ export default class extends BaseModal {
     });
   }
 
+  onClickEditListing() {
+    // open edit listing modal
+  }
+
   onClickRetryFetch() {
     this.retryPressed = true;
     this.model.fetch();
@@ -69,8 +78,13 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/listingDetail/listing.html', t => {
+      const listing = this.model.get('listing');
+
       this.$el.html(t({
-        ...this.model.get('listing').toJSON(),
+        ...listing.toJSON(),
+        // ownListing won't be accurate until the fetch successfully completes
+        ownListing: this.fetch && this.fetch.state() === 'resolved' &&
+          listing.get('vendorID').guid === app.profile.id,
         isFetching: this.fetch && this.fetch.state() === 'pending',
         fetchFailed: this.fetch && this.fetch.state() === 'rejected',
         fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&

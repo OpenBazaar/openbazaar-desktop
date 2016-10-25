@@ -9,10 +9,11 @@
     <a class='btn clrP clrBr js-retryFetch'>Retry</a>
   </div>
 <% } else { %>
+  <% if (ob.ownListing) { %>
   <div>
-    <a class="btn">Edit</a>
+    <a class="btn js-editListing">Edit</a>
     <a class="btn">Delete</a>
   </div>
-  <% console.log('juggy');window.juggy = ob %>
+  <% } %>
   <h1><%= ob.item.title %></h1>
 <% } %>
