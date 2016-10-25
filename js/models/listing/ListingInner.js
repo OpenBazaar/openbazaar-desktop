@@ -35,12 +35,6 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.string(attrs.slug)) {
-      addError('slug', 'Please provide a slug as a string.');
-    } else if (!attrs.slug) {
-      addError('slug', app.polyglot.t('listingInnerModelErrors.provideSlug'));
-    }
-
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');

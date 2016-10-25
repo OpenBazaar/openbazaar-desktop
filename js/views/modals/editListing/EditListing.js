@@ -103,7 +103,6 @@ export default class extends BaseModal {
       'click .js-scrollLink': 'onScrollLinkClick',
       'click .js-save': 'onSaveClick',
       'change #editContractType': 'onChangeContractType',
-      'change #editListingSlug': 'onChangeSlug',
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
@@ -158,22 +157,6 @@ export default class extends BaseModal {
     } else {
       $(e.target).val(trimmedVal);
     }
-  }
-
-  onChangeSlug(e) {
-    const val = $(e.target).val();
-
-    // we'll make the slug all lowercase,
-    // replace spaces with dashes and remove
-    // url unfriendly chars.
-    // todo: this could be made into a slugify utility
-    $(e.target).val(
-      val.toLowerCase()
-        .replace(/\s/g, '-')
-        .replace(/[^a-zA-Z0-9-]/g, '')
-        // replace consecutive dashes with one
-        .replace(/-{2,}/g, '-')
-    );
   }
 
   onChangeContractType(e) {

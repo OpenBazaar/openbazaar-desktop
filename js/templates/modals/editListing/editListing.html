@@ -33,13 +33,6 @@
                 <input type="text" class="clrBr clrP" name="listing.item.title" id="editListingTitle" value="<%= ob.listing.item.title %>">
               </div>
             </div>
-            <div class="flexRow">
-              <div class="col12">
-                <label for="editListingSlug" class="required"><%= ob.polyT('editListing.slug') %></label>
-                <% if (ob.errors['listing.slug']) print(ob.formErrorTmpl({ errors: ob.errors['listing.slug'] })) %>
-                <input type="text" class="clrBr clrP" name="listing.slug" id="editListingSlug" value="<%= ob.listing.slug %>" placeholder="Enter a url fragment representing the listing, for example my-big-brown-shoe">
-              </div>
-            </div>
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol">
                 <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>

@@ -143,10 +143,8 @@ describe('the Listing model', () => {
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync
 
-  it('saves with a POST if the model\'s lastSyncedAttrs do not contain a slug', (done) => {
-    const listing = new Listing({
-      listing: { slug: 'a-happy-slug' },
-    }, { guid: '12345' });
+  it('saves with a POST if the nested listing model does not contain a slug', (done) => {
+    const listing = new Listing({}, { guid: '12345' });
 
     const sync = listing.sync('create', listing, { url: 'no-server' });
     let type;
@@ -161,7 +159,7 @@ describe('the Listing model', () => {
     });
   });
 
-  it('saves with a PUT if the model\'s lastSyncedAttrs do contain a slug', (done) => {
+  it('saves with a PUT if the nested listing model does contain a slug', (done) => {
     const listing = new Listing({
       listing: { slug: 'a-happy-slug' },
     }, { guid: '12345' });

@@ -64,9 +64,8 @@ export default class extends BaseModel {
         });
       });
 
-      if (this.lastSyncedAttrs.listing && this.lastSyncedAttrs.listing.slug) {
+      if (options.attrs.listing.slug) {
         options.type = 'PUT';
-        options.attrs.currentSlug = this.lastSyncedAttrs.listing.slug;
       }
     }
 
