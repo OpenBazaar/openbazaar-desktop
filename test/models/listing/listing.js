@@ -183,5 +183,9 @@ describe('the Listing model', () => {
     });
   });
 
+  // todo: on a successful create, check that the returned slug is properly
+  // stored on the nested listing model. Need to figure out a way to
+  // stub sync.
+
   // todo: spot check nested val errors
 });
