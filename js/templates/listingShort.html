@@ -1,5 +1,5 @@
-<img class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')" />
-<div class="pad overflowAuto">
+<div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')"></div>
+<div class="pad overflowAuto clrBr borderTop">
   <a class="clrT" href="#<%= `${ob.ownerGuid}/store/${ob.slug}`%>"><%= ob.title %></a>
   <div>
     <span class="txB floR"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
