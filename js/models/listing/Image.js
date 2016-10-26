@@ -3,9 +3,7 @@ import is from 'is_js';
 
 export default class extends BaseModel {
   static get maxFilenameLength() {
-    // todo: update if this bug is fixed:
-    // https://github.com/OpenBazaar/openbazaar-go/issues/145
-    return 70;
+    return 255;
   }
 
   validate(attrs) {
