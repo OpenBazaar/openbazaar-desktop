@@ -98,7 +98,7 @@ export default class extends BaseModal {
   }
 
   remove() {
-    this.editModal.remove();
+    if (this.editModal) this.editModal.remove();
     super.remove();
   }
 

@@ -6,9 +6,7 @@ import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
-import ListingPage from './views/Listing';
 import Profile from './models/Profile';
-import Listing from './models/listing/Listing';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -20,8 +18,6 @@ export default class ObRouter extends Router {
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
-      // temporary route
-      ['listing/:guid/:slug', 'listing'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -158,35 +154,6 @@ export default class ObRouter extends Router {
       );
     }).fail((jqXhr) => {
       if (jqXhr.statusText !== 'abort') this.userNotFound();
-    }).always(() => {
-      if (onWillRoute) this.off(null, onWillRoute);
-    });
-  }
-
-  listing(guid, slug) {
-    const listing = new Listing({
-      listing: { slug },
-    }, { guid });
-
-    let onWillRoute = () => {};
-    this.once('will-route', onWillRoute);
-
-    const listingFetch = listing.fetch();
-
-    onWillRoute = () => {
-      listingFetch.abort();
-    };
-
-    listingFetch.done((jqXhr) => {
-      if (jqXhr && jqXhr.statusText === 'abort') return;
-
-      this.loadPage(
-        new ListingPage({
-          model: listing,
-        }).render()
-      );
-    }).fail((jqXhr) => {
-      if (jqXhr.statusText !== 'abort') this.listingNotFound();
     }).always(() => {
       if (onWillRoute) this.off(null, onWillRoute);
     });
