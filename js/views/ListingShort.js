@@ -19,7 +19,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'col clrBr clrT';
+    return 'col clrBr clrT clrP';
   }
 
   events() {

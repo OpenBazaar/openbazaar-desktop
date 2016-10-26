@@ -88,6 +88,7 @@ export default class extends BaseVw {
     this.listingDetail = new ListingDetail({
       model: listing,
       initialFetch: initialListingFetch,
+      removeOnClose: false,
     }).render()
       .open();
 

@@ -9,14 +9,13 @@
     <div class="btnStrip clrT2 clrSh2">
       <a class="iconBtn clrP clrBr"><i class="ion-android-apps"></i></a>
       <a class="btn btnThin clrP clrBr">
-        <span class="txUnb tx6 btnLayoutStandard"><%= ob.polyT('userPage.btnLayoutStandard') %></span>
-        <span class="txUnb tx6 btnLayoutFullWidth"><%= ob.polyT('userPage.btnLayoutFullWidth') %></span>
+        <span class="txUnb tx6 btnLayoutStandard"><%= ob.polyT('userPage.store.btnLayoutStandard') %></span>
+        <span class="txUnb tx6 btnLayoutFullWidth"><%= ob.polyT('userPage.store.btnLayoutFullWidth') %></span>
       </a>
     </div>
   </div>
 </div>
 <% if (ob.isFetching) { %>
-  <% // todo: translate %>
   <h1 class="txCtr">Loading...</h1>
 <% } else if (ob.fetchFailed) { %>
   <div class="txCtr padBg">

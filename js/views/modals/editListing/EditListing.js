@@ -26,6 +26,7 @@ export default class extends BaseModal {
     const opts = {
       removeOnClose: true,
       modelContentClass: 'modalContent clrP',
+      returnText: app.polyglot.t('editListing.btnReturn'),
       ...options,
     };
 
@@ -104,6 +105,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
+      'click .js-return': 'onClickReturn',
       'click .js-save': 'onSaveClick',
       'change #editContractType': 'onChangeContractType',
       'change #editListingSlug': 'onChangeSlug',
@@ -121,6 +123,10 @@ export default class extends BaseModal {
 
   get MAX_PHOTOS() {
     return this.model.get('listing').get('item').maxImages;
+  }
+
+  onClickReturn() {
+    this.trigger('click-return', { view: this });
   }
 
   onAddImage(image) {
@@ -612,7 +618,10 @@ export default class extends BaseModal {
   setScrollContainerHeight() {
     this.$scrollContainer.css('height', '');
     const height = this.$modalContent.outerHeight() -
-      this.$tabControls.outerHeight();
+      this.$tabControls.outerHeight() - this.$('.topBar').outerHeight();
+
+    // todo: if .topBar ends up staying after the design refactor,
+    // cache that guy.
 
     this.$scrollContainer.height(height);
   }
@@ -638,6 +647,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
+        returnText: this.options.returnText,
         currency: this.currency,
         currencies: this.currencies,
         contractTypes: this.innerListing.get('metadata')

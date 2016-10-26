@@ -34,8 +34,11 @@
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
-    "btnLayoutStandard": "950px",
-    "btnLayoutFullWidth": "100%"
+    "store": {
+        "btnLayoutStandard": "950px",
+        "btnLayoutFullWidth": "100%",
+        "unableToFetchListings": "Unable to fetch your listings."
+    }
   },
   "userShort": {
     "userLoading": "Loading...",
@@ -108,6 +111,9 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "listingDetail": {
+    "editListingReturnText": "Return to listing"
+  },
   "editListing": {
     "formats": {
       "PHYSICAL_GOOD": "Physical Good",
@@ -157,6 +163,7 @@
     "btnAddShippingOptionShort": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
+    "btnReturn": "Return",
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
         "shippingDestinations": "Shipping Destinations",

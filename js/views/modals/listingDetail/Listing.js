@@ -1,7 +1,7 @@
 // import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-// import { launchEditListingModal } from '../../../utils/modalManager';
+import { launchEditListingModal } from '../../../utils/modalManager';
 import BaseModal from '../BaseModal';
 
 export default class extends BaseModal {
@@ -12,9 +12,6 @@ export default class extends BaseModal {
 
     super(options);
     this.options = options;
-
-    console.log('hippo');
-    window.hippo = this.model;
 
     if (options.initialFetch) {
       this.fetch = options.initialFetch;
@@ -64,6 +61,30 @@ export default class extends BaseModal {
 
   onClickEditListing() {
     // open edit listing modal
+    this.editModal = launchEditListingModal({
+      model: this.model,
+      returnText: app.polyglot.t('listingDetail.editListingReturnText'),
+    });
+
+    this.$el.addClass('hide');
+
+    let removedViaReturnClick = false;
+
+    this.listenTo(this.editModal, 'close', () => {
+      if (!removedViaReturnClick) {
+        this.close();
+
+        if (!this.isRemoved()) {
+          this.$el.removeClass('hide');
+        }
+      }
+    });
+
+    this.listenTo(this.editModal, 'click-return', () => {
+      removedViaReturnClick = true;
+      this.editModal.remove();
+      this.$el.removeClass('hide');
+    });
   }
 
   onClickRetryFetch() {
@@ -74,6 +95,11 @@ export default class extends BaseModal {
 
   get $btnRetry() {
     return this._$btnRetry || this.$('.js-retryFetch');
+  }
+
+  remove() {
+    this.editModal.remove();
+    super.remove();
   }
 
   render() {
