@@ -148,7 +148,6 @@
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
-    "slug": "Slug",
     "type": "Type",
     "visibility": "Visibility",
     "price": "Price",
@@ -209,7 +208,6 @@
     "provideCountry": "Please provide a country."
   },
   "listingInnerModelErrors": {
-    "provideSlug": "Please provide a slug.",
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required."

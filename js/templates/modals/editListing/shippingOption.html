@@ -15,15 +15,15 @@
     </div>
   </div>
   <div class="flexRow gutterH">
-    <div class="col6">
+    <div class="col6 simpleFlexCol">
       <label for="<%= `shipOptionTitle_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.nameLabel') %></label>
       <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
-      <input type="text" class="clrBr clrP" name="name" id="<%= `shipOptionTitle_${ob.cid}` %>" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.shippingOptions.namePlaceholder') %>">
+      <input type="text" class="clrBr clrP marginTopAuto" name="name" id="<%= `shipOptionTitle_${ob.cid}` %>" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.shippingOptions.namePlaceholder') %>">
     </div>
-    <div class="col6">
+    <div class="col6 simpleFlexCol">
       <label for="<%= `shipOptionType_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.typeLabel') %></label>
       <% if (ob.errors['type']) print(ob.formErrorTmpl({ errors: ob.errors['type'] })) %>
-      <select id="<%= `shipOptionType_${ob.cid}` %>" name="type" class="clrBr clrP">
+      <select id="<%= `shipOptionType_${ob.cid}` %>" name="type" class="clrBr clrP marginTopAuto">
         <% ob.shippingTypes.forEach(shippingType => { %>
           <option value="<%= shippingType %>" <% if (ob.type === shippingType) print('selected="selected"') %>><%= ob.polyT(`editListing.shippingOptions.shippingTypes.${shippingType}`) %></option>
         <% }); %>

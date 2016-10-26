@@ -30,6 +30,8 @@ export default class extends BaseModel {
   }
 
   sync(method, model, options) {
+    let returnSync = 'will-set-later';
+
     if (method === 'read') {
       if (!this.guid) {
         throw new Error('In order to fetch a listing, a guid must be set on the model instance.');
@@ -64,13 +66,26 @@ export default class extends BaseModel {
         });
       });
 
-      if (this.lastSyncedAttrs.listing && this.lastSyncedAttrs.listing.slug) {
+      if (options.attrs.listing.slug) {
+        // it's an update
         options.type = 'PUT';
-        options.attrs.currentSlug = this.lastSyncedAttrs.listing.slug;
       }
     }
 
-    return super.sync(method, model, options);
+    returnSync = super.sync(method, model, options);
+
+    if (method === 'create') {
+      // On a successful create the slug will be returned. Here we'll move
+      // it so it's stored correcly on the nested listing model.
+      returnSync.done((data) => {
+        if (data && data.slug) {
+          this.unset('slug');
+          this.get('listing').set('slug', data.slug);
+        }
+      });
+    }
+
+    return returnSync;
   }
 
   parse(response) {

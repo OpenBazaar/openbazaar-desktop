@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import 'select2';
-import '../../../utils/jqueryParentsSelector';
 import _ from 'underscore';
 import path from 'path';
 import { MediumEditor } from 'medium-editor';
@@ -73,9 +72,7 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      if (this.shippingOptions.length) {
-        this.$('.js-sectionShipping').addClass('hasShippingOptions');
-      }
+      this.$('.js-sectionShipping').addClass('hasShippingOptions');
 
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
@@ -108,7 +105,6 @@ export default class extends BaseModal {
       'click .js-return': 'onClickReturn',
       'click .js-save': 'onSaveClick',
       'change #editContractType': 'onChangeContractType',
-      'change #editListingSlug': 'onChangeSlug',
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
@@ -157,30 +153,16 @@ export default class extends BaseModal {
   }
 
   onChangePrice(e) {
-    let updatedVal = $(e.target).val().trim();
-    updatedVal = Number(updatedVal);
+    const trimmedVal = $(e.target).val().trim();
+    const numericVal = Number(trimmedVal);
 
-    if (!isNaN(updatedVal)) {
-      updatedVal = formatPrice(updatedVal, this.$currencySelect.val() === 'BTC');
+    if (!isNaN(numericVal) && trimmedVal) {
+      $(e.target).val(
+        formatPrice(numericVal, this.$currencySelect.val() === 'BTC')
+      );
+    } else {
+      $(e.target).val(trimmedVal);
     }
-
-    $(e.target).val(updatedVal);
-  }
-
-  onChangeSlug(e) {
-    const val = $(e.target).val();
-
-    // we'll make the slug all lowercase,
-    // replace spaces with dashes and remove
-    // url unfriendly chars.
-    // todo: this could be made into a slugify utility
-    $(e.target).val(
-      val.toLowerCase()
-        .replace(/\s/g, '-')
-        .replace(/[^a-zA-Z0-9-]/g, '')
-        // replace consecutive dashes with one
-        .replace(/-{2,}/g, '-')
-    );
   }
 
   onChangeContractType(e) {
@@ -469,21 +451,9 @@ export default class extends BaseModal {
 
     // if any shipping options have a type of 'LOCAL_PICKUP', we'll
     // clear out any services that may be there
-    // this.innerListing.get('shippingOptions').forEach(shipOpt => {
-    //   if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-    //     shipOpt.set('services', []);
-    //   }
-    // });
-    // the above block should be uncommented when this bug is fully fixed:
-    // https://github.com/OpenBazaar/openbazaar-go/issues/151
-    // and the below block could go away:
     this.innerListing.get('shippingOptions').forEach(shipOpt => {
       if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-        shipOpt.set('services', [{
-          name: 'need server bug #151 fixed!',
-          price: 12300,
-          estimatedDelivery: '5 - 8 days',
-        }]);
+        shipOpt.set('services', []);
       }
     });
 
@@ -537,66 +507,79 @@ export default class extends BaseModal {
   }
 
   get $scrollToSections() {
-    return this._$scrollToSections || this.$('.js-scrollToSection');
+    return this._$scrollToSections ||
+      (this._$scrollToSections = this.$('.js-scrollToSection'));
   }
 
   get $scrollLinks() {
-    return this._$scrollLinks || this.$('.js-scrollLink');
+    return this._$scrollLinks ||
+      (this._$scrollLinks = this.$('.js-scrollLink'));
   }
 
   get $formFields() {
     // todo: the parent selector is not a very efficient selector here.
     // instead alter the initial selector to select only the fields you want.
     return this._$formFields ||
-      this.$('select[name], input[name], textarea[name]')
-        .filter(':parents(.js-sectionShipping)');
+      (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]'));
   }
 
   get $currencySelect() {
-    return this._$currencySelect || this.$('#editListingCurrency');
+    return this._$currencySelect ||
+      (this._$currencySelect = this.$('#editListingCurrency'));
   }
 
   get $priceInput() {
-    return this._$priceInput || this.$('#editListingPrice');
+    return this._$priceInput ||
+      (this._$priceInput = this.$('#editListingPrice'));
   }
 
   get $conditionWrap() {
-    return this._$conditionWrap || this.$('.js-conditionWrap');
+    return this._$conditionWrap ||
+      (this._$conditionWrap = this.$('.js-conditionWrap'));
   }
 
   get $saveButton() {
-    return this._$buttonSave || this.$('.js-save');
+    return this._$buttonSave ||
+      (this._$buttonSave = this.$('.js-save'));
   }
 
   get $inputPhotoUpload() {
-    return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
+    return this._$inputPhotoUpload ||
+      (this._$inputPhotoUpload = this.$('#inputPhotoUpload'));
   }
 
   get $photoUploadingLabel() {
-    return this._$photoUploadingLabel || this.$('.js-photoUploadingLabel');
+    return this._$photoUploadingLabel ||
+      (this._$photoUploadingLabel = this.$('.js-photoUploadingLabel'));
   }
 
   get $photoUploadItems() {
-    return this._$photoUploadItems || this.$('.js-photoUploadItems');
+    return this._$photoUploadItems ||
+      (this._$photoUploadItems = this.$('.js-photoUploadItems'));
   }
 
   get $editListingReturnPolicy() {
-    return this._$editListingReturnPolicy || this.$('#editListingReturnPolicy');
+    return this._$editListingReturnPolicy ||
+      (this._$editListingReturnPolicy = this.$('#editListingReturnPolicy'));
   }
 
   get $editListingTermsAndConditions() {
-    return this._$editListingTermsAndConditions || this.$('#editListingTermsAndConditions');
+    return this._$editListingTermsAndConditions ||
+      (this._$editListingTermsAndConditions = this.$('#editListingTermsAndConditions'));
   }
 
   get $sectionShipping() {
-    return this._$sectionShipping || this.$('.js-sectionShipping');
+    return this._$sectionShipping ||
+      (this._$sectionShipping = this.$('.js-sectionShipping'));
   }
 
   // return the currency associated with this listing
   get currency() {
     return (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency) ||
-        app.settings.get('localCurrency');
+        this.$currencySelect.val() : this.innerListing.get('metadata').get('pricingCurrency') ||
+          app.settings.get('localCurrency'));
   }
 
   createShippingOptionView(opts) {
