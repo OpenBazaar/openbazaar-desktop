@@ -73,7 +73,6 @@ export function formatPrice(price, isBtc = false) {
   return price.toFixed(decimalPlaces);
 }
 
-// todo: unit test me!!!
 export function formatCurrency(amount, currency, locale = app.settings.get('language')) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
