@@ -45,7 +45,7 @@ describe('the Service model', () => {
       .to.equal(true);
   });
 
-  it('fails validation if a price is not provided as a number greater than 0', () => {
+  it('fails validation if a price is not provided as a number', () => {
     const service = new Service();
 
     service.unset('price');
@@ -56,12 +56,6 @@ describe('the Service model', () => {
       .to.equal(true);
 
     service.set({ price: '99' }, { validate: true });
-
-    valErr = service.validationError;
-    expect(valErr && valErr.price && !!valErr.price.length || false)
-      .to.equal(true);
-
-    service.set({ price: -99 }, { validate: true });
 
     valErr = service.validationError;
     expect(valErr && valErr.price && !!valErr.price.length || false)

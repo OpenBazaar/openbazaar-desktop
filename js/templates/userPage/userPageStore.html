@@ -19,8 +19,7 @@
   <h1 class="txCtr">Loading...</h1>
 <% } else if (ob.fetchFailed) { %>
   <div class="txCtr padBg">
-    <% // todo: translate %>
-    <h1>Unable to fetch your listings.</h1>
+    <h1><%= ob.polyT('userPage.store.unableToFetchListings') %></h1>
     <p><%= ob.fetchFailReason %></p>
     <a class='btn clrP clrBr js-retryFetch'>Retry</a>
   </div>
