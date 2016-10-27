@@ -32,6 +32,19 @@
     height: 136px;
   }
 
+  .zoomWarning {
+    display: flex;
+    position: absolute;
+    top: 0;
+    font-size: 1rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .cropit-image-zoom-input:disabled {
+    opacity: 0; // make unseen but keep it in place for layout
+  }
+
   .settingsAddresses {
     .addresses {
       margin-bottom: $marg;

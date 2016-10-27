@@ -28,6 +28,12 @@ export default class extends baseVw {
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
   }
 
+  imageTooSmall(imageType) {
+    const size = this[`${imageType}Cropper`].cropit('imageSize');
+
+    return size.width < this[`${imageType}MinWidth`] || size.height < this[`${imageType}MinHeight`];
+  }
+
   avatarRotate(direction) {
     if (this.avatarCropper.cropit('imageSrc')) {
       // we don't have to check the rotated size of the avatar, because it is square
@@ -238,10 +244,12 @@ export default class extends baseVw {
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');
+      this.avatarZoomMsg = this.$('.js-avatarZoomWarning');
 
       const headerPrev = this.$('.js-headerPreview');
       const headerInpt = this.$('#headerInput');
       this.headerCropper = this.$('#headerCropper');
+      this.headerZoomMsg = this.$('.js-headerZoomWarning');
 
       // if the avatar or header exist, don't count the first load as a change
       this.avatarLoadedOnRender = Boolean(this.profile.get('avatarHashes').get('original'));
@@ -255,18 +263,25 @@ export default class extends baseVw {
           allowDragNDrop: false,
           onImageLoaded: () => {
             const loadedSize = this.avatarCropper.cropit('imageSize');
+            const imgTooSmall = this.imageTooSmall('avatar');
             this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
             this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
 
-            if (!this.avatarLoadedOnRender && (loadedSize.width < this.avatarMinWidth ||
-              loadedSize.height < this.avatarMinHeight)) {
+            if (!this.avatarLoadedOnRender && imgTooSmall) {
               this.showAvatarSizeWarning(loadedSize);
             }
+
             this.avatarChanged = !this.avatarLoadedOnRender;
             this.avatarLoadedOnRender = false;
+          },
+          onZoomEnabled: () => {
+            this.avatarZoomMsg.addClass('hide');
+          },
+          onZoomDisabled: () => {
+            this.avatarZoomMsg.removeClass('hide');
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -285,18 +300,25 @@ export default class extends baseVw {
           allowDragNDrop: false,
           onImageLoaded: () => {
             const loadedSize = this.headerCropper.cropit('imageSize');
+            const imgTooSmall = this.imageTooSmall('header');
             this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
             this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
 
-            if (!this.headerLoadedOnRender && (loadedSize.width < this.headerMinWidth ||
-              loadedSize.height < this.headerMinHeight)) {
+            if (!this.headerLoadedOnRender && imgTooSmall) {
               this.showHeaderSizeWarning(loadedSize);
             }
+
             this.headerChanged = !this.headerLoadedOnRender;
             this.headerLoadedOnRender = false;
+          },
+          onZoomEnabled: () => {
+            this.headerZoomMsg.addClass('hide');
+          },
+          onZoomDisabled: () => {
+            this.headerZoomMsg.removeClass('hide');
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
