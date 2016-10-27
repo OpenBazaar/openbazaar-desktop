@@ -484,7 +484,7 @@ export default class extends BaseModal {
           .render()
           .open();
         }).done(() => {
-          const listingUrl = `#listing/${app.profile.id}/${this.model.get('listing').get('slug')}`;
+          const listingUrl = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
           savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
             ` saved. <a href="${listingUrl}">view</a>`);
 
