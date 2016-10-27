@@ -1,6 +1,6 @@
-import app from '../../../app';
+// import app from '../../../app';
 import loadTemplate from '../utils/loadTemplate';
-import { launchEditListingModal } from '../utils/modalManager';
+// import { launchEditListingModal } from '../utils/modalManager';
 import ListingShort from '../models/ListingShort';
 import baseVw from './baseVw';
 
