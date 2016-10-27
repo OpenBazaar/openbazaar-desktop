@@ -4,7 +4,6 @@ import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
 import { capitalize } from '../../utils/string';
-import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import Home from './Home';
 import Store from './Store';
@@ -122,18 +121,18 @@ export default class extends baseVw {
   }
 
   createStoreTabView(opts = {}) {
-    let listingFetch;
-    let listing;
+    // let listingFetch;
+    // let listing;
 
-    if (opts.listing) {
-      listing = new Listing({
-        listing: { slug: opts.listing },
-      }, {
-        guid: this.model.id,
-      });
+    // if (opts.listing) {
+    //   listing = new Listing({
+    //     listing: { slug: opts.listing },
+    //   }, {
+    //     guid: this.model.id,
+    //   });
 
-      listingFetch = listing.fetch();
-    }
+    //   listingFetch = listing.fetch();
+    // }
 
     this.listings = new Listings();
     const listingsFetch = this.listings.fetch();
@@ -142,9 +141,7 @@ export default class extends baseVw {
       ...opts,
       initialFetch: listingsFetch,
       collection: this.listings,
-      initialListingFetch: listingFetch,
       model: this.model,
-      listing,
     });
   }
 

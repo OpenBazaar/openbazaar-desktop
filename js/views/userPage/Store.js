@@ -70,7 +70,7 @@ export default class extends BaseVw {
     this.$btnRetry.addClass('processing');
   }
 
-  showListing(listing, listingFetch = false) {
+  showListing(listing) {
     if (!listing instanceof Listing) {
       throw new Error('Please provide a listing model.');
     }
@@ -79,28 +79,20 @@ export default class extends BaseVw {
       this.listing.remove();
     }
 
-    let initialListingFetch = listingFetch;
-
-    if (!listingFetch) {
-      initialListingFetch = listing.fetch();
-    }
-
     this.listingDetail = new ListingDetail({
       model: listing,
-      initialFetch: initialListingFetch,
-      removeOnClose: false,
     }).render()
       .open();
 
-    this.listingDetail.on('close', () => {
-      // The timeout is to ensure the modal wasn't closed because of
-      // being routeed to a different page. In that case this view
-      // will be removed and we shouldn't update our route.
-      setTimeout(() => {
-        if (!this.isRemoved()) {
-          app.router.navigate(`${this.model.id}/store`);
-        }
-      });
+    const onCloseListingDetail = () => {
+      console.log('close the hose: ' + (this.isRemoved()));
+      app.router.navigate(`${this.model.id}/store`);
+    };
+
+    this.listenTo(this.listingDetail, 'close', onCloseListingDetail);
+    this.listenTo(app.router, 'will-route', () => {
+      console.log('flee fly flicka yall');
+      this.stopListening(null, null, onCloseListingDetail);
     });
   }
 
@@ -134,9 +126,9 @@ export default class extends BaseVw {
     this._$btnRetry = null;
 
     if (!this.rendered && this.options.listing) {
-      // if first render, show any listing that was
+      // if first render, show a listing if it was
       // passed in as a view option
-      this.showListing(this.options.listing, this.options.initialListingFetch);
+      this.showListing(this.options.listing);
       this.rendered = true;
     }
 

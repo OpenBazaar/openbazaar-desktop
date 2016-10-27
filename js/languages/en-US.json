@@ -112,8 +112,7 @@
     }
   },
   "listingDetail": {
-    "editListingReturnText": "Return to listing",
-    "unableToFetchListing": "Unable to retrieve your listing."
+    "editListingReturnText": "Return to listing"
   },
   "listingShort": {
     "btnEdit": "Edit",

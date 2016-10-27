@@ -2,11 +2,13 @@ import $ from 'jquery';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
+import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/Profile';
+import Listing from './models/listing/Listing';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -46,6 +48,7 @@ export default class ObRouter extends Router {
   }
 
   execute(callback, args) {
+    console.log('execute');
     app.loadingModal.open();
 
     if (callback) {
@@ -55,6 +58,7 @@ export default class ObRouter extends Router {
   }
 
   loadPage(vw) {
+    console.log('load page');
     if (this.currentPage) {
       this.currentPage.remove();
     }
@@ -80,7 +84,6 @@ export default class ObRouter extends Router {
       'followers',
     ];
   }
-
 
   /**
    * Based on the route arguments, determine whether we
@@ -121,15 +124,8 @@ export default class ObRouter extends Router {
 
     let profile;
     let profileFetch;
-    let onWillRoute;
-
-    const pageOpts = {
-      state: pageState,
-    };
-
-    if (state === 'store' && deepRouteParts[0]) {
-      pageOpts.listing = deepRouteParts[0];
-    }
+    let listing;
+    let listingFetch;
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -138,25 +134,53 @@ export default class ObRouter extends Router {
     } else {
       profile = new Profile({ id: guid });
       profileFetch = profile.fetch();
-
-      onWillRoute = () => {
-        profileFetch.abort();
-      };
-      this.once('will-route', onWillRoute);
     }
 
-    profileFetch.done(() => {
+    if (state === 'store') {
+      if (deepRouteParts[0]) {
+        listing = new Listing({
+          listing: { slug: deepRouteParts[0] },
+        }, {
+          guid,
+        });
+
+        listingFetch = listing.fetch();
+      }
+    }
+
+    const onWillRoute = () => {
+      // The app has been routed to a new route, let's
+      // clean up by aborting all fetches
+      profileFetch.abort();
+      if (listingFetch) listingFetch.abort();
+    };
+
+    this.once('will-route', onWillRoute);
+
+    $.whenAll(profileFetch, listingFetch).done(() => {
       this.loadPage(
         new UserPage({
           model: profile,
-          ...pageOpts,
+          state: pageState,
+          listing,
         }).render()
       );
-    }).fail((jqXhr) => {
-      if (jqXhr.statusText !== 'abort') this.userNotFound();
-    }).always(() => {
-      if (onWillRoute) this.off(null, onWillRoute);
-    });
+    }).fail(() => {
+      if (profileFetch.statusText === 'abort' ||
+        profileFetch.statusText === 'abort') return;
+
+      // todo: Need more fine grained checking of the failure
+      // reason here. Maybe 404 means 'not found',
+      // whereas a different error means something else? The
+      // ...NotFound views should more accurately reflect
+      // the failure state.
+      if (profileFetch.state() === 'rejected') {
+        this.userNotFound();
+      } else if (listingFetch.state() === 'rejected') {
+        this.listingNotFound();
+      }
+    })
+      .always(() => (this.off(null, onWillRoute)));
   }
 
   transactions(tab) {

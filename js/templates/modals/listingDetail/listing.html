@@ -1,18 +1,7 @@
-<% if (ob.isFetching) { %>
-  <% // todo: translate %>
-  <h1 class="txCtr">Loading...</h1>
-<% } else if (ob.fetchFailed) { %>
-  <div class="txCtr padBg">
-    <h1><%= ob.polyT('listingDetail.unableToFetchListing') %></h1>
-    <p><%= ob.fetchFailReason %></p>
-    <a class='btn clrP clrBr js-retryFetch'>Retry</a>
-  </div>
-<% } else { %>
-  <% if (ob.ownListing) { %>
-  <div>
-    <a class="btn js-editListing">Edit</a>
-    <a class="btn">Delete</a>
-  </div>
-  <% } %>
-  <h1><%= ob.item.title %></h1>
+<% if (ob.ownListing) { %>
+<div>
+  <a class="btn js-editListing">Edit</a>
+  <a class="btn">Delete</a>
+</div>
 <% } %>
+<h1><%= ob.item.title %></h1>

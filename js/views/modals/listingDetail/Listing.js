@@ -10,15 +10,13 @@ export default class extends BaseModal {
       throw new Error('Please provide a model.');
     }
 
-    super(options);
-    this.options = options;
+    const opts = {
+      removeOnClose: false,
+      ...options,
+    };
 
-    if (options.initialFetch) {
-      this.fetch = options.initialFetch;
-      this.onRequest(this.model, this.fetch);
-    }
-
-    this.listenTo(this.model, 'request', this.onRequest);
+    super(opts);
+    this.options = opts;
   }
 
   className() {
@@ -27,36 +25,9 @@ export default class extends BaseModal {
 
   events() {
     return {
-      'click .js-retryFetch': 'onClickRetryFetch',
       'click .js-editListing': 'onClickEditListing',
       ...super.events(),
     };
-  }
-
-  onRequest(md, xhr) {
-    this.fetch = xhr;
-    if (!this.retryPressed) this.render();
-
-    const startTime = Date.now();
-
-    xhr.always(() => {
-      if (xhr.state() === 'rejected') {
-        // if fetch is triggered by retry button and
-        // it immediately fails, it looks like nothing happend,
-        // so, we'll make sure it takes a minimum time.
-        const callTime = Date.now() - startTime;
-
-        if (callTime < 250) {
-          setTimeout(() => {
-            this.retryPressed = false;
-            this.render();
-          }, 250 - callTime);
-        }
-      } else {
-        this.retryPressed = false;
-        this.render();
-      }
-    });
   }
 
   onClickEditListing() {
@@ -68,29 +39,23 @@ export default class extends BaseModal {
 
     this.$el.addClass('hide');
 
-    let removedViaReturnClick = false;
+    const onCloseEditModal = () => {
+      this.close();
 
-    this.listenTo(this.editModal, 'close', () => {
-      if (!removedViaReturnClick) {
-        this.close();
-
-        if (!this.isRemoved()) {
-          this.$el.removeClass('hide');
-        }
+      if (!this.isRemoved()) {
+        this.$el.removeClass('hide');
       }
-    });
+    };
 
-    this.listenTo(this.editModal, 'click-return', () => {
-      removedViaReturnClick = true;
+    this.listenTo(this.editModal, 'close', onCloseEditModal);
+
+    const onEditModalClickReturn = () => {
+      this.stopListening(null, null, onCloseEditModal);
       this.editModal.remove();
       this.$el.removeClass('hide');
-    });
-  }
+    };
 
-  onClickRetryFetch() {
-    this.retryPressed = true;
-    this.model.fetch();
-    this.$btnRetry.addClass('processing');
+    this.listenTo(this.editModal, 'click-return', onEditModalClickReturn);
   }
 
   get $btnRetry() {
@@ -108,18 +73,12 @@ export default class extends BaseModal {
 
       this.$el.html(t({
         ...listing.toJSON(),
-        // ownListing won't be accurate until the fetch successfully completes
-        ownListing: this.fetch && this.fetch.state() === 'resolved' &&
-          listing.get('vendorID').guid === app.profile.id,
-        isFetching: this.fetch && this.fetch.state() === 'pending',
-        fetchFailed: this.fetch && this.fetch.state() === 'rejected',
-        fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&
-          this.fetch.responseText || '',
+        // todo: Will the api to return our own listing return vendorID. Perhaps
+        // we centralize the ownListing determination in the listing model?
+        ownListing: listing.get('vendorID').guid === app.profile.id,
       }));
 
       super.render();
-
-      this._$btnRetry = null;
     });
 
     return this;
