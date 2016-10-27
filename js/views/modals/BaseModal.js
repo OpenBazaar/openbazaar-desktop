@@ -118,7 +118,6 @@ export default class BaseModal extends baseVw {
 
   remove() {
     if (this.isOpen()) this.close();
-    app.router.off(null, this.onRoute);
     super.remove();
 
     return this;

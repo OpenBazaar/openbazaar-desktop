@@ -75,8 +75,18 @@ export default class extends BaseVw {
       throw new Error('Please provide a listing model.');
     }
 
-    if (this.listing) {
-      this.listing.remove();
+    const onListingDetailClose = () => {
+      // make sure the user hasn't navigated away to a new page
+      if (
+        location.hash.startsWith(`#${this.model.id}/store/${listing.get('listing').get('slug')}`)
+      ) {
+        app.router.navigate(`${this.model.id}/store`);
+      }
+    };
+
+    if (this.listingDetail) {
+      this.stopListening(null, null, onListingDetailClose);
+      this.listingDetail.remove();
     }
 
     this.listingDetail = new ListingDetail({
@@ -84,16 +94,7 @@ export default class extends BaseVw {
     }).render()
       .open();
 
-    const onCloseListingDetail = () => {
-      console.log('close the hose: ' + (this.isRemoved()));
-      app.router.navigate(`${this.model.id}/store`);
-    };
-
-    this.listenTo(this.listingDetail, 'close', onCloseListingDetail);
-    this.listenTo(app.router, 'will-route', () => {
-      console.log('flee fly flicka yall');
-      this.stopListening(null, null, onCloseListingDetail);
-    });
+    this.listenTo(this.listingDetail, 'close', onListingDetailClose);
   }
 
   createListingShortView(opts = {}) {

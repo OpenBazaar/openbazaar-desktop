@@ -48,7 +48,6 @@ export default class ObRouter extends Router {
   }
 
   execute(callback, args) {
-    console.log('execute');
     app.loadingModal.open();
 
     if (callback) {
@@ -58,7 +57,6 @@ export default class ObRouter extends Router {
   }
 
   loadPage(vw) {
-    console.log('load page');
     if (this.currentPage) {
       this.currentPage.remove();
     }
@@ -66,6 +64,7 @@ export default class ObRouter extends Router {
     this.currentPage = vw;
     getPageContainer().append(vw.el);
     app.loadingModal.close();
+    // this.trigger('routed');
   }
 
   userViaHandle(handle, ...args) {
