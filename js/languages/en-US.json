@@ -37,7 +37,7 @@
     "store": {
         "btnLayoutStandard": "950px",
         "btnLayoutFullWidth": "100%",
-        "unableToFetchListings": "Unable to fetch your listings."
+        "unableToFetchListings": "Unable to retrieve your listings."
     }
   },
   "userShort": {
@@ -112,7 +112,12 @@
     }
   },
   "listingDetail": {
-    "editListingReturnText": "Return to listing"
+    "editListingReturnText": "Return to listing",
+    "unableToFetchListing": "Unable to retrieve your listing."
+  },
+  "listingShort": {
+    "btnEdit": "Edit",
+    "btnDelete": "Delete"
   },
   "editListing": {
     "formats": {

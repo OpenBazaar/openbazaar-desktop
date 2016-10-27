@@ -1,4 +1,11 @@
 <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
+  <% if (ob.ownListing) { %>
+  <div class="editOverlay">
+    <div class="overlayPanel clrS"></div>
+    <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingShort.btnEdit') %></a>
+    <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingShort.btnDelete') %></a>
+  </div>
+  <% } %>
 </div>
 <div class="pad overflowAuto clrBr borderTop">
   <a class="clrT" href="#<%= `${ob.ownerGuid}/store/${ob.slug}`%>"><%= ob.title %></a>

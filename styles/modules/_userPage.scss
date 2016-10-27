@@ -90,6 +90,45 @@
             .listingImage {
               width: 223px;
               height: 225px;
+              position: relative;
+
+              .editOverlay {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                align-items: center;
+                justify-content: center;                
+
+                .overlayPanel {
+                  // Using seperate element just for the overlay so that
+                  // the opacity doesn't affect the buttons, but we could 
+                  // still use the clrS class (instead of RGBA).
+                  opacity: 0.9;
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                }
+
+                .btn {
+                  z-index: 1;
+                }
+              }
+            }
+
+            &:hover {
+              .editOverlay {
+                display: flex;
+              }
+
+              &.ownListing {
+                // todo: change to focused color variable
+                border-color: black;
+              }
             }
           }
         }
