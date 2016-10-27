@@ -116,6 +116,11 @@
 
                 .btn {
                   z-index: 1;
+                  border-left-width: 0;
+
+                  &:first-of-type {
+                    border-left-width: 1px;
+                  }
                 }
               }
             }

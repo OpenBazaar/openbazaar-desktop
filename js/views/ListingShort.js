@@ -1,6 +1,8 @@
+import app from '../../../app';
+import loadTemplate from '../utils/loadTemplate';
+import { launchEditListingModal } from '../utils/modalManager';
 import ListingShort from '../models/ListingShort';
 import baseVw from './baseVw';
-import loadTemplate from '../utils/loadTemplate';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -30,8 +32,11 @@ export default class extends baseVw {
 
   events() {
     return {
-      // 'click .js-edit': 'onClickEdit',
+      'click .js-edit': 'onClickEdit',
     };
+  }
+
+  onClickEdit() {
   }
 
   render() {
