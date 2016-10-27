@@ -1,9 +1,7 @@
 // This file is a place for component styles that are too few for their own file
 // and don't make sense in any of the existing files
 .closeIcon {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
 
   span {
     position: absolute;

@@ -24,7 +24,7 @@
 }
 
 // Tags (the element that select2 is generated off of must have a class of 'select2Tags').
-// Focus styling is with other form focus styling in form.scss.
+// Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {
   position: relative;
 
@@ -61,7 +61,7 @@
 
     &.select2-container--focus {
       .select2-selection {
-        border: 1px solid transparent;
+        border: none;
       }
 
       & + .tagsPlaceholder {
@@ -99,7 +99,22 @@
     }
   }
 
+  &:not(.showDropdown) {
+    .tagsDropdown {
+      display: none;
+    }
+  }
+
+  &.showDropdown {
+    .tagsDropdown .select2-container--open {
+      margin-top: -7px;
+      border: none;
+    }
+  }
+
   .tagsDropdown {
-    display: none;
+    .select2-container--open {
+      border: 1px solid;
+    }
   }
 }

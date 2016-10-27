@@ -1,14 +1,20 @@
 import $ from 'jquery';
-import '../../utils/velocity';
+import '../../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
+import path from 'path';
 import { MediumEditor } from 'medium-editor';
-import { isScrolledIntoView } from '../../utils/dom';
-import { getCurrenciesSortedByCode } from '../../data/currencies';
-import SimpleMessage from './SimpleMessage';
-import loadTemplate from '../../utils/loadTemplate';
-import app from '../../app';
-import BaseModal from './BaseModal';
+import { isScrolledIntoView } from '../../../utils/dom';
+import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import { formatPrice } from '../../../utils/currency';
+import SimpleMessage from '../SimpleMessage';
+import loadTemplate from '../../../utils/loadTemplate';
+import ShippingOptionMd from '../../../models/listing/ShippingOption';
+import Service from '../../../models/listing/Service';
+import Image from '../../../models/listing/Image';
+import app from '../../../app';
+import BaseModal from '../BaseModal';
+import ShippingOption from './ShippingOption';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -55,12 +61,37 @@ export default class extends BaseModal {
       this.model.lastSyncedAttrs.listing.slug);
     this.photoUploads = [];
     this.images = this.innerListing.get('item').get('images');
+    this.shippingOptions = this.innerListing.get('shippingOptions');
+    this.shippingOptionViews = [];
 
     loadTemplate('modals/editListing/uploadPhoto.html',
       uploadT => (this.uploadPhotoT = uploadT));
 
     this.listenTo(this.images, 'add', this.onAddImage);
     this.listenTo(this.images, 'remove', this.onRemoveImage);
+
+    this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
+      this.$('.js-sectionShipping').addClass('hasShippingOptions');
+
+      const shipOptVw = this.createShippingOptionView({
+        listPosition: this.shippingOptions.length,
+        model: shipOptMd,
+      });
+
+      this.shippingOptionViews.push(shipOptVw);
+      this.$shippingOptionsWrap.append(shipOptVw.render().el);
+    });
+
+    this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
+      if (!this.shippingOptions.length) {
+        this.$('.js-sectionShipping').removeClass('hasShippingOptions');
+      }
+
+      const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
+      splicedVw.remove();
+      this.shippingOptionViews.slice(removeOpts.index)
+        .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
+    });
   }
 
   className() {
@@ -71,8 +102,7 @@ export default class extends BaseModal {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
       'click .js-save': 'onSaveClick',
-      'change #editformat': 'onChangeformat',
-      'change #editListingSlug': 'onChangeSlug',
+      'change #editContractType': 'onChangeContractType',
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
@@ -80,6 +110,7 @@ export default class extends BaseModal {
       'click .js-cancelPhotoUploads': 'onClickCancelPhotoUploads',
       'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
       'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
+      'click .js-addShippingOption': 'onClickAddShippingOption',
       ...super.events(),
     };
   }
@@ -116,43 +147,33 @@ export default class extends BaseModal {
   }
 
   onChangePrice(e) {
-    let updatedVal = $(e.target).val().trim();
-    const valAsNumber = Number(updatedVal);
+    const trimmedVal = $(e.target).val().trim();
+    const numericVal = Number(trimmedVal);
 
-    if (!isNaN(valAsNumber)) {
-      const decimalPlaces = this.$currencySelect.val() === 'BTC' ? 8 : 2;
-      updatedVal = valAsNumber.toFixed(decimalPlaces);
-    }
-
-    $(e.target).val(updatedVal);
-  }
-
-  onChangeSlug(e) {
-    const val = $(e.target).val();
-
-    // we'll make the slug all lowercase,
-    // replace spaces with dashes and remove
-    // url unfriendly chars.
-    // todo: this could be made into a slugify utility
-    $(e.target).val(
-      val.toLowerCase()
-        .replace(/\s/g, '-')
-        .replace(/[^a-zA-Z0-9-]/g, '')
-        // replace consecutive dashes with one
-        .replace(/-{2,}/g, '-')
-    );
-  }
-
-  onChangeformat(e) {
-    if (e.target.value !== 'PHYSICAL_GOOD') {
-      this.$conditionWrap.addClass('disabled');
+    if (!isNaN(numericVal) && trimmedVal) {
+      $(e.target).val(
+        formatPrice(numericVal, this.$currencySelect.val() === 'BTC')
+      );
     } else {
-      this.$conditionWrap.removeClass('disabled');
+      $(e.target).val(trimmedVal);
+    }
+  }
+
+  onChangeContractType(e) {
+    if (e.target.value !== 'PHYSICAL_GOOD') {
+      this.$conditionWrap
+        .add(this.$sectionShipping)
+        .addClass('disabled');
+    } else {
+      this.$conditionWrap
+        .add(this.$sectionShipping)
+        .removeClass('disabled');
     }
   }
 
   getOrientation(file, callback) {
     const reader = new FileReader();
+
     reader.onload = (e) => {
       const dataView = new DataView(e.target.result);  // eslint-disable-line no-undef
       let offset = 2;
@@ -182,9 +203,32 @@ export default class extends BaseModal {
           offset += dataView.getUint16(offset, false);
         }
       }
+
       return callback(-1);
     };
+
     reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+  }
+
+  // todo: write a unit test for this
+  truncateImageFilename(filename) {
+    if (!filename || typeof filename !== 'string') {
+      throw new Error('Please provide a filename as a string.');
+    }
+
+    const truncated = filename;
+
+    if (filename.length > Image.maxFilenameLength) {
+      const parsed = path.parse(filename);
+      const nameParseLen = Image.maxFilenameLength - parsed.ext.length;
+
+      // acounting for rare edge case of the extension in and of itself
+      // exceeding the max length
+      return parsed.name.slice(0, nameParseLen < 0 ? 0 : nameParseLen) +
+        parsed.ext.slice(0, Image.maxFilenameLength);
+    }
+
+    return truncated;
   }
 
   onChangePhotoUploadInput() {
@@ -214,82 +258,64 @@ export default class extends BaseModal {
 
     this.$photoUploadingLabel.removeClass('hide');
 
-    // Temporarily limiting the size. If we add in support for the server
-    // to offer multiple sizes, we could probably remove or greatly loosen
-    // the size restriction here.
-    const maxH = 944;
-    const maxW = 1028;
     const toUpload = [];
     let loaded = 0;
     let errored = 0;
 
     photoFiles.forEach(photoFile => {
       const newImage = document.createElement('img');
-      let orientation = 1;
-
-      this.getOrientation(photoFile, (val) => {
-        if (val === -1) throw new Error('The image is undefined.');
-        orientation = val;
-      });
 
       newImage.src = photoFile.path;
 
       newImage.onload = () => {
-        let imgW = newImage.width;
-        let imgH = newImage.height;
+        const imgW = newImage.width;
+        const imgH = newImage.height;
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-
-        loaded += 1;
-
-        if (imgW < imgH) {
-          // if image width is smaller than height, set width to max
-          imgH *= maxW / imgW;
-          imgW = maxW;
-        } else {
-          imgW *= maxH / imgH;
-          imgH = maxH;
-        }
 
         canvas.width = imgW;
         canvas.height = imgH;
 
-        switch (orientation) {
-          case 2:
-            ctx.translate(imgW, 0);
-            ctx.scale(-1, 1); break;
-          case 3:
-            ctx.translate(imgW, imgH);
-            ctx.rotate(Math.PI); break;
-          case 4:
-            ctx.translate(0, imgH);
-            ctx.scale(1, -1); break;
-          case 5:
-            ctx.rotate(0.5 * Math.PI);
-            ctx.scale(1, -1); break;
-          case 6:
-            ctx.rotate(0.5 * Math.PI);
-            ctx.translate(0, -imgH); break;
-          case 7:
-            ctx.rotate(0.5 * Math.PI);
-            ctx.translate(imgW, -imgH);
-            ctx.scale(-1, 1); break;
-          case 8:
-            ctx.rotate(-0.5 * Math.PI);
-            ctx.translate(-imgW, 0); break;
-          default: // do nothing
-        }
+        this.getOrientation(photoFile, (orientation) => {
+          switch (orientation) {
+            case 2:
+              ctx.translate(imgW, 0);
+              ctx.scale(-1, 1); break;
+            case 3:
+              ctx.translate(imgW, imgH);
+              ctx.rotate(Math.PI); break;
+            case 4:
+              ctx.translate(0, imgH);
+              ctx.scale(1, -1); break;
+            case 5:
+              ctx.rotate(0.5 * Math.PI);
+              ctx.scale(1, -1); break;
+            case 6:
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(0, -imgH); break;
+            case 7:
+              ctx.rotate(0.5 * Math.PI);
+              ctx.translate(imgW, -imgH);
+              ctx.scale(-1, 1); break;
+            case 8:
+              ctx.rotate(-0.5 * Math.PI);
+              ctx.translate(-imgW, 0); break;
+            default: // do nothing
+          }
 
-        ctx.drawImage(newImage, 0, 0, imgW, imgH);
-        toUpload.push({
-          filename: photoFile.name,
-          image: canvas.toDataURL('image/jpeg', 0.85)
-            .replace(/^data:image\/(png|jpeg|webp);base64,/, ''),
+          ctx.drawImage(newImage, 0, 0, imgW, imgH);
+          toUpload.push({
+            filename: this.truncateImageFilename(photoFile.name),
+            image: canvas.toDataURL('image/jpeg', 0.9)
+              .replace(/^data:image\/(png|jpeg|webp);base64,/, ''),
+          });
+
+          loaded += 1;
+
+          if (loaded + errored === photoFiles.length) {
+            this.uploadImages(toUpload);
+          }
         });
-
-        if (loaded + errored === photoFiles.length) {
-          this.uploadImages(toUpload);
-        }
       };
 
       newImage.onerror = () => {
@@ -325,6 +351,15 @@ export default class extends BaseModal {
     this.expandedTermsAndConditions = true;
   }
 
+  onClickAddShippingOption() {
+    this.shippingOptions
+      .push(new ShippingOptionMd({
+        services: [
+          new Service(),
+        ],
+      }));
+  }
+
   uploadImages(images) {
     let imagesToUpload = images;
 
@@ -345,9 +380,17 @@ export default class extends BaseModal {
     }).always(() => {
       if (this.isRemoved()) return;
       if (!this.inProgressPhotoUploads.length) this.$photoUploadingLabel.addClass('hide');
-    }).done(uploadedImage => {
+    }).done(uploadedImages => {
       if (this.isRemoved()) return;
-      this.images.add(uploadedImage);
+
+      this.images.add(uploadedImages.map(image => ({
+        filename: image.filename,
+        original: image.hashes.original,
+        large: image.hashes.large,
+        medium: image.hashes.medium,
+        small: image.hashes.small,
+        tiny: image.hashes.tiny,
+      })));
     });
 
     this.photoUploads.push(upload);
@@ -395,8 +438,19 @@ export default class extends BaseModal {
   onSaveClick() {
     const formData = this.getFormData(this.$formFields);
 
-    // todo: show status bar
     this.$saveButton.addClass('disabled');
+
+    // set the data for our nested Shipping Option views
+    this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
+
+    // if any shipping options have a type of 'LOCAL_PICKUP', we'll
+    // clear out any services that may be there
+    this.innerListing.get('shippingOptions').forEach(shipOpt => {
+      if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+        shipOpt.set('services', []);
+      }
+    });
+
     this.model.set(formData);
 
     const save = this.model.save();
@@ -447,51 +501,95 @@ export default class extends BaseModal {
   }
 
   get $scrollToSections() {
-    return this._$scrollToSections || this.$('.js-scrollToSection');
+    return this._$scrollToSections ||
+      (this._$scrollToSections = this.$('.js-scrollToSection'));
   }
 
   get $scrollLinks() {
-    return this._$scrollLinks || this.$('.js-scrollLink');
+    return this._$scrollLinks ||
+      (this._$scrollLinks = this.$('.js-scrollLink'));
   }
 
   get $formFields() {
-    return this._$formFields || this.$('select[name], input[name], textarea[name]');
+    // todo: the parent selector is not a very efficient selector here.
+    // instead alter the initial selector to select only the fields you want.
+    return this._$formFields ||
+      (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]'));
   }
 
   get $currencySelect() {
-    return this._$currencySelect || this.$('#editListingCurrency');
+    return this._$currencySelect ||
+      (this._$currencySelect = this.$('#editListingCurrency'));
   }
 
   get $priceInput() {
-    return this._$priceInput || this.$('#editListingPrice');
+    return this._$priceInput ||
+      (this._$priceInput = this.$('#editListingPrice'));
   }
 
   get $conditionWrap() {
-    return this._$conditionWrap || this.$('.js-conditionWrap');
+    return this._$conditionWrap ||
+      (this._$conditionWrap = this.$('.js-conditionWrap'));
   }
 
   get $saveButton() {
-    return this._$buttonSave || this.$('.js-save');
+    return this._$buttonSave ||
+      (this._$buttonSave = this.$('.js-save'));
   }
 
   get $inputPhotoUpload() {
-    return this._$inputPhotoUpload || this.$('#inputPhotoUpload');
+    return this._$inputPhotoUpload ||
+      (this._$inputPhotoUpload = this.$('#inputPhotoUpload'));
   }
 
   get $photoUploadingLabel() {
-    return this._$photoUploadingLabel || this.$('.js-photoUploadingLabel');
+    return this._$photoUploadingLabel ||
+      (this._$photoUploadingLabel = this.$('.js-photoUploadingLabel'));
   }
 
   get $photoUploadItems() {
-    return this._$photoUploadItems || this.$('.js-photoUploadItems');
+    return this._$photoUploadItems ||
+      (this._$photoUploadItems = this.$('.js-photoUploadItems'));
   }
 
   get $editListingReturnPolicy() {
-    return this._$editListingReturnPolicy || this.$('#editListingReturnPolicy');
+    return this._$editListingReturnPolicy ||
+      (this._$editListingReturnPolicy = this.$('#editListingReturnPolicy'));
   }
 
   get $editListingTermsAndConditions() {
-    return this._$editListingTermsAndConditions || this.$('#editListingTermsAndConditions');
+    return this._$editListingTermsAndConditions ||
+      (this._$editListingTermsAndConditions = this.$('#editListingTermsAndConditions'));
+  }
+
+  get $sectionShipping() {
+    return this._$sectionShipping ||
+      (this._$sectionShipping = this.$('.js-sectionShipping'));
+  }
+
+  // return the currency associated with this listing
+  get currency() {
+    return (this.$currencySelect.length ?
+        this.$currencySelect.val() : this.innerListing.get('metadata').get('pricingCurrency') ||
+          app.settings.get('localCurrency'));
+  }
+
+  createShippingOptionView(opts) {
+    const options = {
+      getCurrency: () => (this.$currencySelect.length ?
+        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency),
+      ...opts || {},
+    };
+    const view = this.createChild(ShippingOption, options);
+
+    this.listenTo(view, 'click-remove', e => {
+      this.shippingOptions.remove(
+        this.shippingOptions.at(this.shippingOptionViews.indexOf(e.view)));
+    });
+
+    return view;
   }
 
   setScrollContainerHeight() {
@@ -523,7 +621,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
-        localCurrency: app.settings.get('localCurrency'),
+        currency: this.currency,
         currencies: this.currencies,
         contractTypes: this.innerListing.get('metadata')
           .contractTypes
@@ -539,6 +637,7 @@ export default class extends BaseModal {
         expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
         expandedTermsAndConditions: this.expandedTermsAndConditions ||
           !!this.innerListing.get('termsAndConditions'),
+        formatPrice,
         ...this.model.toJSON(),
       }));
 
@@ -549,8 +648,10 @@ export default class extends BaseModal {
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
+      this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
 
-      this.$('#editformat, #editListingVisibility, #editListingCondition').select2({
+      this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
+        // disables the search box
         minimumResultsForSearch: Infinity,
       });
 
@@ -605,16 +706,30 @@ export default class extends BaseModal {
         // This is necessary, see comment in select2 for tags above.
         matcher: () => false,
       }).on('change', () => {
-        const categories = this.$editListingCategories.val();
-        this.innerListing.get('item').set('categories', categories);
         this.$editListingCategoriesPlaceholder[
-          categories.length ? 'removeClass' : 'addClass'
+          this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
       });
 
       this.$editListingCategoriesPlaceholder[
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
+
+      this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
+      this.shippingOptionViews = [];
+      const shipOptsFrag = document.createDocumentFragment();
+
+      this.innerListing.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
+        const shipOptVw = this.createShippingOptionView({
+          model: shipOpt,
+          listPosition: shipOptIndex + 1,
+        });
+
+        this.shippingOptionViews.push(shipOptVw);
+        shipOptVw.render().$el.appendTo(shipOptsFrag);
+      });
+
+      this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
         if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
@@ -645,6 +760,7 @@ export default class extends BaseModal {
       this._$photoUploadItems = null;
       this._$editListingReturnPolicy = null;
       this._$editListingTermsAndConditions = null;
+      this._$sectionShipping = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');

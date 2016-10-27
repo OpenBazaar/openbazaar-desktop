@@ -13,24 +13,6 @@ describe('the ListingInner model', () => {
     };
   });
 
-  it('fails validation if a slug is not provided', () => {
-    const listingInner = new ListingInner();
-    listingInner.set({}, { validate: true });
-    const valErr = listingInner.validationError;
-
-    expect(valErr && valErr.slug && !!valErr.slug.length || false).to.equal(true);
-  });
-
-  it('fails validation if a slug is not provided as a string', () => {
-    const listingInner = new ListingInner();
-    listingInner.set({
-      slug: 12345,
-    }, { validate: true });
-    const valErr = listingInner.validationError;
-
-    expect(valErr && valErr.slug && !!valErr.slug.length || false).to.equal(true);
-  });
-
   it('fails validation if the refund policy is not provided as a string', () => {
     const listingInner = new ListingInner();
     listingInner.set({
@@ -80,6 +62,22 @@ describe('the ListingInner model', () => {
     expect(valErr && valErr.termsAndConditions &&
       !!valErr.termsAndConditions.length || false).to.equal(true);
   });
+
+  it('fails validation if, for a physical good, at least one shipping options is not provided',
+    () => {
+      const listingInner = new ListingInner();
+
+      listingInner.get('metadata').set('contractType', 'PHYSICAL_GOOD');
+
+      listingInner.set({
+        shippingOptions: [],
+      }, { validate: true });
+
+      const valErr = listingInner.validationError;
+
+      expect(valErr && valErr.shippingOptions &&
+        !!valErr.shippingOptions.length || false).to.equal(true);
+    });
 
   // todo: spot check nested val errors
 });

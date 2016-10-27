@@ -101,6 +101,16 @@ input[type=range][class~="clrS"] {
   .select2-selection {
     border-color: $border;
   }
+
+  &.select2-container--focus,
+  &.select2-container--open {
+    border-color: $focusedBorder;
+
+    .select2-dropdown,
+    .select2-selection {
+      border-color: $focusedBorder;
+    }
+  }
 }
 
 .clrBrBk {
@@ -129,7 +139,7 @@ input[type=range][class~="clrS"] {
   box-shadow: 0 1px 0 rgba(0,0,0,0.05);
 }
 
-label.required::after {
+.required::after {
   color: $emphasis2;
 }
 
@@ -138,12 +148,12 @@ select,
 textarea,
 button {
   &:focus {
-    border-color: rgb(0, 0, 0);
+    border-color: $focusedBorder;
   }
 }
 
 .select2-container--focus .select2-selection__rendered {
-  border-color: rgb(0, 0, 0);
+  border-color: $focusedBorder;
 }
 
 // select2 with tags
@@ -151,20 +161,17 @@ button {
 
   &.select2-container--default {
     .select2-selection--multiple {
-      border: 1px solid transparent;
+      border: none;
       background: none;
 
       .select2-selection__rendered {
         border: 1px solid $border;
         background: $primary;
-
-
-
       }
     }
 
     &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
-      border-color: $border;
+      border-color: $focusedBorder;
     }
   }
 
@@ -176,5 +183,11 @@ button {
 
   .select2-selection__choice__remove {
     color: $text;
+  }
+}
+
+.tagsDropdown {
+  .select2-container--open .select2-dropdown {
+    border-color: $focusedBorder;
   }
 }

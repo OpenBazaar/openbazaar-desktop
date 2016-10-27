@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { Model } from 'backbone';
+import { Model, Collection } from 'backbone';
 
 /*
 
@@ -127,27 +127,61 @@ export default class extends Model {
   }
 
   mergeInNestedModelErrors(errObj = {}) {
-    let mergedErrs = errObj;
+    const prefixedErrs = {};
 
     Object.keys(this.nested || {})
       .forEach((key) => {
         if (this.get(key) instanceof Model) {
           const nestedMd = this.get(key);
-          const nestedErrs = nestedMd.validate(nestedMd.toJSON()) || {};
-          const prefixedErrs = {};
+          const nestedErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
 
           Object.keys(nestedErrs).forEach((nestedErrKey) => {
             prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
           });
+        }
+      });
 
-          mergedErrs = {
-            ...mergedErrs,
-            ...prefixedErrs,
-          };
+    return {
+      ...errObj,
+      ...prefixedErrs,
+    };
+  }
+
+  mergeInNestedCollectionErrors(errObj = {}) {
+    let mergedErrs = errObj;
+
+    Object.keys(this.nested || {})
+      .forEach((key) => {
+        if (this.get(key) instanceof Collection) {
+          const nestedCl = this.get(key);
+
+          nestedCl.forEach((nestedMd) => {
+            const prefixedErrs = {};
+            const nestedMdErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
+
+            Object.keys(nestedMdErrs).forEach((nestedMdErrKey) => {
+              // since indexes can change, we'll index using the model's client id (cid)
+              prefixedErrs[`${key}[${nestedMd.cid}].${nestedMdErrKey}`]
+                = nestedMdErrs[nestedMdErrKey];
+            });
+
+            mergedErrs = {
+              ...mergedErrs,
+              ...prefixedErrs,
+            };
+          });
         }
       });
 
     return mergedErrs;
+  }
+
+  mergeInNestedErrors(errObj = {}) {
+    return {
+      ...errObj,
+      ...this.mergeInNestedModelErrors(errObj),
+      ...this.mergeInNestedCollectionErrors(errObj),
+    };
   }
 
   toJSON() {

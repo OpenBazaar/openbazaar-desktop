@@ -22,7 +22,7 @@ export default class extends BaseModel {
   }
 
   validate() {
-    const errObj = this.mergeInNestedModelErrors({});
+    const errObj = this.mergeInNestedErrors({});
 
     if (Object.keys(errObj).length) return errObj;
 
@@ -30,6 +30,8 @@ export default class extends BaseModel {
   }
 
   sync(method, model, options) {
+    let returnSync = 'will-set-later';
+
     if (method === 'read') {
       if (!this.guid) {
         throw new Error('In order to fetch a listing, a guid must be set on the model instance.');
@@ -49,24 +51,41 @@ export default class extends BaseModel {
       options.attrs = options.attrs || this.toJSON();
 
       // convert price fields
-      // todo: give same treatment to all other nested prices (e.g. shipping)
-      // once we implement those sections of the modal.
-      if (options.attrs.listing.item) {
+      if (options.attrs.listing.item.price) {
         const price = options.attrs.listing.item.price;
-
-        if (price) {
-          options.attrs.listing.item.price = decimalToInteger(price,
-            options.attrs.listing.metadata.pricingCurrency === 'BTC');
-        }
+        options.attrs.listing.item.price = decimalToInteger(price,
+          options.attrs.listing.metadata.pricingCurrency === 'BTC');
       }
 
-      if (this.lastSyncedAttrs.listing && this.lastSyncedAttrs.listing.slug) {
+      options.attrs.listing.shippingOptions.forEach(shipOpt => {
+        shipOpt.services.forEach(service => {
+          if (typeof service.price === 'number') {
+            service.price = decimalToInteger(service.price,
+              options.attrs.listing.metadata.pricingCurrency === 'BTC');
+          }
+        });
+      });
+
+      if (options.attrs.listing.slug) {
+        // it's an update
         options.type = 'PUT';
-        options.attrs.currentSlug = this.lastSyncedAttrs.listing.slug;
       }
     }
 
-    return super.sync(method, model, options);
+    returnSync = super.sync(method, model, options);
+
+    if (method === 'create') {
+      // On a successful create the slug will be returned. Here we'll move
+      // it so it's stored correcly on the nested listing model.
+      returnSync.done((data) => {
+        if (data && data.slug) {
+          this.unset('slug');
+          this.get('listing').set('slug', data.slug);
+        }
+      });
+    }
+
+    return returnSync;
   }
 
   parse(response) {
@@ -78,8 +97,6 @@ export default class extends BaseModel {
       };
 
       // convert price fields
-      // todo: give same treatment to all other nested prices (e.g. shipping)
-      // once we implement those sections of the modal.
       if (parsedResponse.listing && parsedResponse.listing.item) {
         const price = parsedResponse.listing.item.price;
         const isBtc = parsedResponse.listing.metadata &&
@@ -88,6 +105,24 @@ export default class extends BaseModel {
         if (price) {
           parsedResponse.listing.item.price = integerToDecimal(price, isBtc);
         }
+      }
+
+      if (parsedResponse.listing && parsedResponse.listing.shippingOptions
+        && parsedResponse.listing.shippingOptions.length) {
+        parsedResponse.listing.shippingOptions.forEach((shipOpt, shipOptIndex) => {
+          if (shipOpt.services && shipOpt.services.length) {
+            shipOpt.services.forEach((service, serviceIndex) => {
+              const price = service.price;
+              const isBtc = parsedResponse.listing.metadata &&
+                parsedResponse.listing.metadata.pricingCurrency === 'BTC';
+
+              if (typeof price === 'number') {
+                parsedResponse.listing.shippingOptions[shipOptIndex].services[serviceIndex].price =
+                  integerToDecimal(price, isBtc);
+              }
+            });
+          }
+        });
       }
 
       // todo: acceptedCurrency (which is a field we don't use now, but might

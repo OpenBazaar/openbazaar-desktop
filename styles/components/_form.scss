@@ -89,12 +89,12 @@ label {
       border: 1px solid red;
     }
   }
+}
 
-  &.required::after {
-    content: '*';
-    position: absolute;
-    font-size: 130%;    
-  }
+.required::after {
+  content: '*';
+  position: absolute;
+  font-size: 130%;    
 }
 
 // By default, using width values appropriate for currency codes.

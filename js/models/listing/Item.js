@@ -45,7 +45,7 @@ export default class extends BaseModel {
   }
 
   get maxTags() {
-    return 3;
+    return 10;
   }
 
   validate(attrs) {
@@ -88,7 +88,7 @@ export default class extends BaseModel {
         app.polyglot.t('itemModelErrors.tooManyTags', { maxTags: this.maxTags }));
     }
 
-    errObj = this.mergeInNestedModelErrors(errObj);
+    errObj = this.mergeInNestedErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 

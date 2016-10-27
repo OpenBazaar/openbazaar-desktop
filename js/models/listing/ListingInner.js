@@ -2,6 +2,7 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
+import ShippingOptions from '../../collections/ShippingOptions.js';
 import is from 'is_js';
 
 export default class extends BaseModel {
@@ -15,6 +16,7 @@ export default class extends BaseModel {
     return {
       item: Item,
       metadata: Metadata,
+      shippingOptions: ShippingOptions,
     };
   }
 
@@ -33,12 +35,6 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.string(attrs.slug)) {
-      addError('slug', 'Please provide a slug as a string.');
-    } else if (!attrs.slug) {
-      addError('slug', app.polyglot.t('listingInnerModelErrors.provideSlug'));
-    }
-
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
@@ -56,7 +52,12 @@ export default class extends BaseModel {
       }
     }
 
-    errObj = this.mergeInNestedModelErrors(errObj);
+    if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
+      !attrs.shippingOptions.length) {
+      addError('shippingOptions', app.polyglot.t('listingInnerModelErrors.provideShippingOption'));
+    }
+
+    errObj = this.mergeInNestedErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 

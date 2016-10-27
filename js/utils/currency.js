@@ -38,3 +38,22 @@ export function integerToDecimal(amount, isBtc = false) {
 
   return updatedAmount;
 }
+
+/**
+ * Will take a number and return a string version of the number
+ * with the appropriate number of decimal places based on whether
+ * the number represents a BTC or fiat price.
+ */
+export function formatPrice(price, isBtc = false) {
+  if (typeof price !== 'number') {
+    throw new Error('Please provide a price as a number');
+  }
+
+  if (isNaN(price)) {
+    throw new Error('Please provide a price that is not NaN');
+  }
+
+  const decimalPlaces = isBtc ? 8 : 2;
+
+  return price.toFixed(decimalPlaces);
+}
