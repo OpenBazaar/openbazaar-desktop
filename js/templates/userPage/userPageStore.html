@@ -1,14 +1,37 @@
-<div class="userPageSearchBar flex gutterHSm">
+<div class="userPageSearchBar flex gutterHSm <% if (ob.isFetching || ob.fetchFailed) print('disabled') %>">
   <div class="flexExpand">
     <div class="searchWrapper">
       <input type="text" class="ctrl searchInput clrP clrBr clrSh2"
-             placeholder="<%= ob.polyT('userPage.searchStore', {storeName: ob.handle || ob.id}) %>">
+             placeholder="<%= ob.polyT('userPage.searchStore') %>">
     </div>
   </div>
   <div>
     <div class="btnStrip clrT2 clrSh2">
       <a class="iconBtn clrP clrBr"><i class="ion-android-apps"></i></a>
-      <a class="btn btnThin clrP clrBr"><span class="txUnb tx6">950px</span></a>
+      <a class="btn btnThin clrP clrBr">
+        <span class="txUnb tx6 btnLayoutStandard"><%= ob.polyT('userPage.store.btnLayoutStandard') %></span>
+        <span class="txUnb tx6 btnLayoutFullWidth"><%= ob.polyT('userPage.store.btnLayoutFullWidth') %></span>
+      </a>
     </div>
   </div>
 </div>
+<% if (ob.isFetching) { %>
+  <h1 class="txCtr">Loading...</h1>
+<% } else if (ob.fetchFailed) { %>
+  <div class="txCtr padBg">
+    <h1><%= ob.polyT('userPage.store.unableToFetchListings') %></h1>
+    <p><%= ob.fetchFailReason %></p>
+    <a class='btn clrP clrBr js-retryFetch'>Retry</a>
+  </div>
+<% } else if (!ob.isFetching) { %>
+  <div class="flex">
+    <div class="col storeFilters" style="background-color: #ddd; height: 500px; padding: 15px;">
+      Filters coming soon...
+    </div>
+    <div class="col storeListings">
+      <div class="js-listingsWrap listingsWrap flex"></div>
+      <% // .noResults must be a sibling to .listingsWrap and come after it %>
+      <div class="noResults txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div>
+    </div>
+  </div>
+<% } %>

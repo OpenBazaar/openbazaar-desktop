@@ -1,6 +1,6 @@
-import { Model } from 'backbone';
+import BaseModel from './BaseModel';
 
-export default class extends Model {
+export default class extends BaseModel {
   // this model will only be { guid: exampleguid }
 
   get idAttribute() {

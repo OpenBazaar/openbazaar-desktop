@@ -68,7 +68,14 @@
     style: solid;
     color: inherit;
   }
+}
 
+.borderTop {
+  border-top: {
+    width: 1px;
+    style: solid;
+    color: inherit;
+  }  
 }
 
 .borderStacked > * {

@@ -117,8 +117,13 @@ export default class extends BaseModel {
                 parsedResponse.listing.metadata.pricingCurrency === 'BTC';
 
               if (typeof price === 'number') {
-                parsedResponse.listing.shippingOptions[shipOptIndex].services[serviceIndex].price =
-                  integerToDecimal(price, isBtc);
+                parsedResponse.listing.shippingOptions[shipOptIndex]
+                  .services[serviceIndex].price = integerToDecimal(price, isBtc);
+              } else {
+                // This is necessary because of this bug:
+                // https://github.com/OpenBazaar/openbazaar-go/issues/178
+                parsedResponse.listing.shippingOptions[shipOptIndex]
+                  .services[serviceIndex].price = 0;
               }
             });
           }

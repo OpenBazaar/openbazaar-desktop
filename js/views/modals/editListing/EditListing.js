@@ -101,6 +101,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-scrollLink': 'onScrollLinkClick',
+      'click .js-return': 'onClickReturn',
       'click .js-save': 'onSaveClick',
       'change #editContractType': 'onChangeContractType',
       'change .js-price': 'onChangePrice',
@@ -117,6 +118,10 @@ export default class extends BaseModal {
 
   get MAX_PHOTOS() {
     return this.model.get('listing').get('item').maxImages;
+  }
+
+  onClickReturn() {
+    this.trigger('click-return', { view: this });
   }
 
   onAddImage(image) {
@@ -478,7 +483,7 @@ export default class extends BaseModal {
           .render()
           .open();
         }).done(() => {
-          const listingUrl = `#listing/${app.profile.id}/${this.model.get('listing').get('slug')}`;
+          const listingUrl = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
           savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
             ` saved. <a href="${listingUrl}">view</a>`);
 
@@ -595,7 +600,10 @@ export default class extends BaseModal {
   setScrollContainerHeight() {
     this.$scrollContainer.css('height', '');
     const height = this.$modalContent.outerHeight() -
-      this.$tabControls.outerHeight();
+      this.$tabControls.outerHeight() - this.$('.topBar').outerHeight();
+
+    // todo: if .topBar ends up staying after the design refactor,
+    // cache that guy.
 
     this.$scrollContainer.height(height);
   }
@@ -621,6 +629,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
+        returnText: this.options.returnText,
         currency: this.currency,
         currencies: this.currencies,
         contractTypes: this.innerListing.get('metadata')

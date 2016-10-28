@@ -117,8 +117,8 @@ export default class BaseModal extends baseVw {
   }
 
   remove() {
+    this.trigger('modal-will-remove');
     if (this.isOpen()) this.close();
-    app.router.off(null, this.onRoute);
     super.remove();
 
     return this;

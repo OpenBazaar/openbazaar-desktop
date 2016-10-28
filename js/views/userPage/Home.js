@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
-import { View } from 'backbone';
 import { clipboard } from 'electron';
+import BaseVw from '../baseVw';
 
-export default class extends View {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
