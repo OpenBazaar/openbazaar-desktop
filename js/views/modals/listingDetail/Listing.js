@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -31,7 +30,6 @@ export default class extends BaseModal {
   }
 
   onClickEditListing() {
-    // open edit listing modal
     this.editModal = launchEditListingModal({
       model: this.model,
       returnText: app.polyglot.t('listingDetail.editListingReturnText'),

@@ -25,7 +25,6 @@ export default class extends BaseModal {
     const opts = {
       removeOnClose: true,
       modelContentClass: 'modalContent clrP',
-      returnText: app.polyglot.t('editListing.btnReturn'),
       ...options,
     };
 

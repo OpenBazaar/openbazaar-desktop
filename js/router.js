@@ -139,9 +139,7 @@ export default class ObRouter extends Router {
       if (deepRouteParts[0]) {
         listing = new Listing({
           listing: { slug: deepRouteParts[0] },
-        }, {
-          guid,
-        });
+        }, { guid });
 
         listingFetch = listing.fetch();
       }

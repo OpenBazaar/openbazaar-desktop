@@ -98,10 +98,6 @@ export default class extends BaseVw {
   }
 
   createListingShortView(opts = {}) {
-    // Channel and search will need the guid of the listing owner
-    // provided with the listing short data in order to make
-    // the ownListing determination.
-    opts.ownListing = app.profile.id === this.model.id;
     return this.createChild(ListingShort, opts);
   }
 

@@ -1,5 +1,8 @@
-<div class="flexRow clrBr clrS topBar padSm">
+<div class="clrBr clrS topBar padSm">
+  <% if (ob.returnText) { %>
   <a class="btn clrP clrBr clrT js-return"><%= ob.returnText %></a>
+  <% } %>
+  <a class="btn clrP clrBr js-save"><%= ob.polyT('settings.btnSave') %></a>
 </div>
 <div class="flexRow">
   <div class="tabColumn clrBr">
