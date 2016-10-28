@@ -3,6 +3,7 @@ import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
+import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import Listings from '../../collections/Listings';
 import Home from './Home';
@@ -121,20 +122,17 @@ export default class extends baseVw {
   }
 
   createStoreTabView(opts = {}) {
-    // let listingFetch;
-    // let listing;
-
-    // if (opts.listing) {
-    //   listing = new Listing({
-    //     listing: { slug: opts.listing },
-    //   }, {
-    //     guid: this.model.id,
-    //   });
-
-    //   listingFetch = listing.fetch();
-    // }
-
     this.listings = new Listings();
+
+    let listingsCount = this.model.get('listingCount');
+
+    this.listings.on('update', () => {
+      if (this.listings.length !== listingsCount) {
+        listingsCount = this.listings.length;
+        this.$listingsCount.html(abbrNum(listingsCount));
+      }
+    });
+
     const listingsFetch = this.listings.fetch();
 
     return this.createChild(this.tabViews.Store, {
@@ -206,7 +204,13 @@ export default class extends baseVw {
   }
 
   get $pageContent() {
-    return this._$pageContent || this.$('.js-pageContent');
+    return this._$pageContent ||
+      (this._$pageContent = this.$('.js-pageContent'));
+  }
+
+  get $listingsCount() {
+    return this._$listingsCount ||
+      (this._$listingsCount = this.$('.js-listingsCount'));
   }
 
   render() {
@@ -228,6 +232,7 @@ export default class extends baseVw {
       this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
       this._$pageContent = null;
+      this._$listingsCount = null;
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {
