@@ -117,6 +117,7 @@ export default class BaseModal extends baseVw {
   }
 
   remove() {
+    this.trigger('modal-will-remove');
     if (this.isOpen()) this.close();
     super.remove();
 

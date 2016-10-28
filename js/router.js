@@ -166,11 +166,8 @@ export default class ObRouter extends Router {
       if (profileFetch.statusText === 'abort' ||
         profileFetch.statusText === 'abort') return;
 
-      // todo: Need more fine grained checking of the failure
-      // reason here. Maybe 404 means 'not found',
-      // whereas a different error means something else? The
-      // ...NotFound views should more accurately reflect
-      // the failure state.
+      // todo: If really not found (404), route to
+      // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
         this.userNotFound();
       } else if (listingFetch.state() === 'rejected') {

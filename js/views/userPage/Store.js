@@ -70,24 +70,20 @@ export default class extends BaseVw {
     this.$btnRetry.addClass('processing');
   }
 
+  /**
+   * When a listing card is clicked, the listingShort view will manage showing the
+   * listing detail modal. This method is used when this view initially loads and a
+   * listing was part of the url. Since we don't want to wait until the entire
+   * (unpaginated) store is fetched before showing the listing, we are expecting the
+   * the listing model to be passed in as an arg (currently the router is fetching it).
+   * The store will continue to load in the background.
+   */
   showListing(listing) {
     if (!listing instanceof Listing) {
       throw new Error('Please provide a listing model.');
     }
 
-    const onListingDetailClose = () => {
-      // make sure the user hasn't navigated away to a new page
-      if (
-        location.hash.startsWith(`#${this.model.id}/store/${listing.get('listing').get('slug')}`)
-      ) {
-        app.router.navigate(`${this.model.id}/store`);
-      }
-    };
-
-    if (this.listingDetail) {
-      this.stopListening(null, null, onListingDetailClose);
-      this.listingDetail.remove();
-    }
+    const onListingDetailClose = () => app.router.navigate(`${this.model.id}/store`);
 
     this.listingDetail = new ListingDetail({
       model: listing,
@@ -95,10 +91,18 @@ export default class extends BaseVw {
       .open();
 
     this.listenTo(this.listingDetail, 'close', onListingDetailClose);
+    this.listenTo(this.listingDetail, 'modal-will-remove',
+      () => this.stopListening(null, null, onListingDetailClose));
   }
 
   createListingShortView(opts = {}) {
-    return this.createChild(ListingShort, opts);
+    const options = {
+      ownListing: this.model.id === app.profile.id,
+      listingBaseUrl: `${this.model.id}/store/`,
+      ...opts,
+    };
+
+    return this.createChild(ListingShort, options);
   }
 
   get tabClass() {
@@ -136,7 +140,6 @@ export default class extends BaseVw {
     this.collection.forEach(listingShort => {
       const listingShortVw = this.createListingShortView({
         model: listingShort,
-        listingOwnerGuid: this.model.id,
       });
 
       this.listingShortViews.push(listingShortVw);
