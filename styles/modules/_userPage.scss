@@ -71,9 +71,16 @@
 
       .storeListings {
         flex-shrink: 1;
+        width: 100%;
 
         .listingsWrap {
           flex-wrap: wrap;
+
+          &:empty {
+            & ~ .noResults {
+              display: block;
+            }
+          }
 
           .col {
             margin: 0 $padMd $padMd 0;
@@ -138,6 +145,10 @@
             }
           }
         }
+
+        .noResults {
+          display: none;
+        }        
       }
     }
   }

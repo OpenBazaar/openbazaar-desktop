@@ -37,7 +37,8 @@
     "store": {
         "btnLayoutStandard": "950px",
         "btnLayoutFullWidth": "100%",
-        "unableToFetchListings": "Unable to retrieve your listings."
+        "unableToFetchListings": "Unable to retrieve your listings.",
+        "noListings": "No listings."
     }
   },
   "userShort": {

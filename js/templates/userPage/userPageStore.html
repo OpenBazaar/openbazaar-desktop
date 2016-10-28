@@ -30,6 +30,8 @@
     </div>
     <div class="col storeListings">
       <div class="js-listingsWrap listingsWrap flex"></div>
+      <% // .noResults must be a sibling to .listingsWrap and come after it %>
+      <div class="noResults txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div>
     </div>
   </div>
 <% } %>
