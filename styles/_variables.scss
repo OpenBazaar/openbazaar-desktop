@@ -3,6 +3,7 @@ $text: hsl(0,0,14.8);
 $text2: adjust-color($text, $lightness: +43.2%);
 $text3: adjust-color($text, $lightness: +59%);
 $text4: adjust-color($text, $lightness: +65%);
+$textOnEmph: rgb(255, 255, 255);
 $primary: hsl(0,0%,100%);
 $secondary: adjust-color($primary, $lightness: -4%);
 $background: adjust-color($primary, $lightness: -10%);

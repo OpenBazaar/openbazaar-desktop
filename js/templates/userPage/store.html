@@ -29,9 +29,23 @@
       Filters coming soon...
     </div>
     <div class="col storeListings">
-      <div class="js-listingsWrap listingsWrap flex"></div>
+      <div class="rowMd clrT tx5 flexVBot listingsHeaderRow">
+        <span class="listingsCount"><%= ob.listingCountText %></span>
+        <div class="floR tx6 flexVCent">
+          <span class="clrT2 marginLAuto margRSm">Sort by (translate me!)</span>
+          <select class="js-sortBy selectSortBy">
+            <option value="PRICE_ASC">Price low to high</option>
+            <option value="PRICE_DESC">Price high to low</option>
+            <option value="NAME_ASC">Title A-Z</option>
+            <option value="NAME_DESC">Title Z-A</option>
+            <option value="RATING">Rating</option>
+          </select>
+        </div>
+      </div>
+      <div class="js-listingsContainer"></div>
+      <!-- <div class="js-listingsWrap listingsWrap flex"></div> -->
       <% // .noResults must be a sibling to .listingsWrap and come after it %>
-      <div class="noResults txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div>
+      <!-- <div class="noResults txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div> -->
     </div>
   </div>
 <% } %>

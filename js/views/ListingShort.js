@@ -30,8 +30,6 @@ export default class extends baseVw {
       throw new Error('Please provide a listingBaseUrl.');
     }
 
-    this.listenTo(this.model, 'change', this.render);
-
     if (this.options.ownListing) {
       this.$el.addClass('ownListing');
     }
@@ -158,6 +156,7 @@ export default class extends baseVw {
       this.$el.html(t({
         ...this.model.toJSON(),
         ownListing: this.options.ownListing,
+        shipsFreeToMe: this.model.shipsFreeToMe,
       }));
     });
 

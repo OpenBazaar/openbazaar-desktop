@@ -90,6 +90,7 @@
             border-width: 1px;
             font-size: $tx5b;
             cursor: pointer;
+            position: relative;
 
             &:nth-child(3n) {
               margin-right: 0;
@@ -143,12 +144,32 @@
                 border-color: black;
               }
             }
+
+            .listingIcons {
+              position: absolute;
+              top: 8px;
+              right: 8px;
+            }
           }
         }
 
         .noResults {
           display: none;
-        }        
+        }
+
+        .listingsHeaderRow {
+          .listingsCount {
+            flex-basis: 100%;
+          }
+
+          .selectSortBy {
+            width: 150px;
+          }
+
+          .select2-container {
+            font-size: $tx6;
+          }
+        }
       }
     }
   }

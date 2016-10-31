@@ -79,6 +79,10 @@ input[type=range][class~="clrS"] {
   text-shadow: transparentize(invert($text), 0.6) 0 0 20px ;
 }
 
+.clrTOnEmph {
+  @include textColor($textOnEmph);
+}
+
 .clrTEmph1 {
   @include textColor($emphasis1);  
 }
