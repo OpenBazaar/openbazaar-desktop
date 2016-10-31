@@ -25,15 +25,25 @@
   </div>
 <% } else if (!ob.isFetching) { %>
   <div class="flex">
-    <div class="col storeFilters" style="background-color: #ddd; height: 500px; padding: 15px;">
-      Filters coming soon...
+    <div class="col storeFilters">
+      <div class="clrP clrBr border padMd clrT">
+        <div class="txB tx4 row">Shipping</div>
+        <div class="flexVCent">
+          <input type="checkbox" name="filterShippingShipsTo" class="margRSm" />
+          <span class="margRSm">Ships to:</span>
+          <select name="filterShippingShipsToCountry" class="tx6" style="width: 128px">
+            <option value="moo">United Sizzle</option>
+            <option value="poo">Longer Country Will Be Wrapped</option>
+          </select>
+        </div>
+      </div>
     </div>
     <div class="col storeListings">
       <div class="rowMd clrT tx5 flexVBot listingsHeaderRow">
         <span class="listingsCount"><%= ob.listingCountText %></span>
         <div class="floR tx6 flexVCent">
           <span class="clrT2 marginLAuto margRSm">Sort by (translate me!)</span>
-          <select class="js-sortBy selectSortBy">
+          <select class="js-sortBy selectSortBy tx6" style="width: 150px">
             <option value="PRICE_ASC">Price low to high</option>
             <option value="PRICE_DESC">Price high to low</option>
             <option value="NAME_ASC">Title A-Z</option>

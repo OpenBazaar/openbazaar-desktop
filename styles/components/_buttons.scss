@@ -82,6 +82,10 @@
     //checked state is set by the theme
   }
 
+  input[type="checkbox"] {
+    // todo: style this to match the designs
+  }
+
   &.processing {
     @include processingOverlay;
   }

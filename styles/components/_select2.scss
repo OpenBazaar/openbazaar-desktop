@@ -23,6 +23,15 @@
   }
 }
 
+.tx1 + .select2-container,
+.tx2 + .select2-container,
+.tx3 + .select2-container,
+.tx4 + .select2-container,
+.tx5 + .select2-container,
+.tx6 + .select2-container {
+  font-size: inherit;
+}
+
 // Tags (the element that select2 is generated off of must have a class of 'select2Tags').
 // Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {

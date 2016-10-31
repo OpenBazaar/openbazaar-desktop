@@ -156,8 +156,10 @@ export default class extends BaseVw {
     this._$btnRetry = null;
     this._$listingsContainer = null;
 
-    this.$sortBy.select2({
+    this.$('select').select2({
       minimumResultsForSearch: -1,
+      // containerCssClass: "error",
+      // dropdownCssClass: "test",
     });
 
     if (!this.rendered && this.options.listing) {

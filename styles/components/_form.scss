@@ -19,9 +19,6 @@ textarea::-webkit-input-placeholder {
 input,
 select,
 textarea,
-.select2-container--focus .select2-selection__rendered,
-.select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
-.select2-container--focus .select2-selection,
 .medium-editor-element {
   border: none;
   outline: none;
@@ -32,6 +29,12 @@ textarea,
     family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     size: $tx5;
   }
+}
+
+.select2-container--focus .select2-selection__rendered,
+.select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
+.select2-container--focus .select2-selection {
+  outline: none;
 }
 
 select {
