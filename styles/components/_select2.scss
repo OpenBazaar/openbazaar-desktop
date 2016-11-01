@@ -23,13 +23,34 @@
   }
 }
 
-.tx1 + .select2-container,
-.tx2 + .select2-container,
-.tx3 + .select2-container,
-.tx4 + .select2-container,
-.tx5 + .select2-container,
-.tx6 + .select2-container {
-  font-size: inherit;
+// In order for these styles also work on the drop down part of the component, when
+// initializing the plugin, you will need to specify a dropdownParent targetting an
+// element with the .select2Small class.
+.select2Small .select2-container,
+.select2Small + .select2-container {
+  font-size: $tx6;
+
+  .select2-selection {
+    height: 3rem;
+
+    .select2-selection__rendered {
+      padding-left: 6px;
+      line-height: 3rem;
+    }
+
+    .select2-selection__arrow {
+      height: 3rem;
+    }
+  }
+
+  .select2-selection--single {
+    border-bottom: 0;
+  }
+
+  .select2-results__option {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
 }
 
 // Tags (the element that select2 is generated off of must have a class of 'select2Tags').

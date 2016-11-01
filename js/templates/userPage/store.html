@@ -28,13 +28,14 @@
     <div class="col storeFilters">
       <div class="clrP clrBr border padMd clrT">
         <div class="txB tx4 row">Shipping</div>
-        <div class="flexVCent">
+        <div class="flexVCent tx5">
           <input type="checkbox" name="filterShippingShipsTo" class="margRSm" />
-          <span class="margRSm">Ships to:</span>
-          <select name="filterShippingShipsToCountry" class="tx6" style="width: 128px">
+          <label class="margRSm" for="shipsToSelect">Ships to:</label>
+          <select name="filterShippingShipsToCountry" class="tx6 select2Small" id="shipsToSelect" style="width: 112px">
             <option value="moo">United Sizzle</option>
             <option value="poo">Longer Country Will Be Wrapped</option>
           </select>
+          <div class="select2Small" id="shipsToSelectDropdownContainer"></div>
         </div>
       </div>
     </div>

@@ -153,13 +153,17 @@ export default class extends BaseVw {
     });
 
     this.$sortBy = this.$('.js-sortBy');
+    this.$shipsToSelect = this.$('#shipsToSelect');
     this._$btnRetry = null;
     this._$listingsContainer = null;
 
-    this.$('select').select2({
+    // js-shipsToSelectContainer
+    this.$sortBy.select2({
       minimumResultsForSearch: -1,
-      // containerCssClass: "error",
-      // dropdownCssClass: "test",
+    });
+
+    this.$shipsToSelect.select2({
+      dropdownParent: this.$('#shipsToSelectDropdownContainer'),
     });
 
     if (!this.rendered && this.options.listing) {
