@@ -12,6 +12,22 @@ export default class extends Collection {
     return app.getServerUrl(`ipns/${app.profile.id}/listings/index.json`);
   }
 
+  // todo: unit testify. Can I get a witness?
+  // todo: sort, inluding by utf8 chars
+  get categories() {
+    const cats = [];
+
+    this.models.forEach(listing => {
+      listing.get('category')
+        .forEach(cat => {
+          // console.log(`${cat} ==> ${cats.indexOf(cat)}`);
+          if (cats.indexOf(cat) === -1) cats.push(cat);
+        });
+    });
+
+    return cats;
+  }
+
   parse(response) {
     const parsedResponse = [];
 

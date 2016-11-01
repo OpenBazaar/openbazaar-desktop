@@ -8,13 +8,13 @@
   <% } %>
 </div>
 <div class="pad overflowAuto clrBr borderTop">
-  <a class="clrT underline"><%= ob.title %></a>
+  <a class="clrT txU"><%= ob.title %></a>
   <div>
     <span class="txB floR"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
   </div>
 </div>
 <div class="listingIcons">
   <% if (ob.shipsFreeToMe) { %>
-  <span class="clrE1 clrTOnEmph txTiny txCtr upper flexVCent padTn">Free Shipping</span>
+  <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn">Free Shipping</span>
   <% } %>
 </div>

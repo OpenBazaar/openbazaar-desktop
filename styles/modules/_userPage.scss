@@ -67,6 +67,32 @@
       .storeFilters {
         flex-basis: 228px;
         margin-right: $padMd;
+
+        & > * {
+          margin-bottom: $pad;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .categoryFilter {
+          .moreCatsWrap {
+            .moreCats, .showLess {
+              display: none;
+            }
+
+            &.expanded {
+              .moreCats, .showLess {
+                display: block;
+              }
+
+              .showMore {
+                display: none;
+              }
+            }
+          }
+        }
       }
 
       .storeListings {

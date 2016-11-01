@@ -7,6 +7,7 @@ import BaseVw from '../baseVw';
 // import ListingShort from '../ListingShort';
 import ListingDetail from '../modals/listingDetail/Listing';
 import StoreListings from './StoreListings';
+import CategoryFilter from './CategoryFilter';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -20,8 +21,6 @@ export default class extends BaseVw {
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
-
-    // this.listingShortViews = [];
 
     if (options.initialFetch) {
       this.fetch = options.initialFetch;
@@ -112,6 +111,11 @@ export default class extends BaseVw {
       (this._$listingsContainer = this.$('.js-listingsContainer'));
   }
 
+  get $catFilterContainer() {
+    return this._$catFilterContainer ||
+      (this._$catFilterContainer = this.$('.js-catFilterContainer'));
+  }
+
   renderListings(col) {
     if (!col) {
       throw new Error('Please provide a collection.');
@@ -134,6 +138,23 @@ export default class extends BaseVw {
     this.storeListings.render();
   }
 
+  renderCategories(cats = this.collection.categories) {
+    if (!this.categoryFilter) {
+      this.categoryFilter = new CategoryFilter({
+        categories: cats,
+      });
+    } else {
+      this.categoryFilter.categories = cats;
+    }
+
+    if (!$.contains(this.$catFilterContainer[0], this.categoryFilter.el)) {
+      this.$catFilterContainer.empty()
+        .append(this.categoryFilter.el);
+    }
+
+    this.categoryFilter.render();
+  }
+
   render() {
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
@@ -152,14 +173,15 @@ export default class extends BaseVw {
       }));
     });
 
-    this.$sortBy = this.$('.js-sortBy');
+    this.$sortBy = this.$('#sortBySelect');
     this.$shipsToSelect = this.$('#shipsToSelect');
     this._$btnRetry = null;
     this._$listingsContainer = null;
+    this._$catFilterContainer = null;
 
-    // js-shipsToSelectContainer
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
+      dropdownParent: this.$('#sortBySelectDropdownContainer'),
     });
 
     this.$shipsToSelect.select2({
@@ -174,7 +196,14 @@ export default class extends BaseVw {
     }
 
     if (!isFetching && !fetchFailed) {
-      this.renderListings(this.collection);
+      if (this.collection.length) {
+        this.renderListings(this.collection);
+      }
+
+      const cats = this.collection.categories;
+      if (cats.length) {
+        this.renderCategories(cats);
+      }
     }
 
     return this;

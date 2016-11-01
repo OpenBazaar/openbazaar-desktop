@@ -92,16 +92,16 @@
                 <label>Mature Content (nsfw, adult, 18+, etc)</label>
                 <% if (ob.errors['listing.item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.nsfw'] })) %>
                 <div class="btnStrip marginTopAuto">
-                  <div class="btn clrBr">
+                  <div class="btnRadio clrBr">
                     <input type="radio"
                            name="listing.item.nsfw"
                            value="true"
-                           id="editListingNSFWInputTrue"
+                           id="moo"
                            data-var-type="boolean"
                     <% if(ob.listing.item.nsfw) { %>checked<% } %>>
-                    <label for="editListingNSFWInputTrue"><%= ob.polyT('editListing.nsfwYes') %></label>
+                    <label for="moo"><%= ob.polyT('editListing.nsfwYes') %></label>
                   </div>
-                  <div class="btn clrBr">
+                  <div class="btnRadio clrBr">
                     <input type="radio"
                            name="listing.item.nsfw"
                            value="false"

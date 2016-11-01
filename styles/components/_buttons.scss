@@ -46,7 +46,17 @@
     border: none;
   }
 
-  //radio and checkbox inputs can be placed inside a button
+  &.processing {
+    @include processingOverlay;
+  }
+}
+
+.btnRadio {
+  @extend .btn;
+  border: 0;
+  padding: 0 6px;
+  font-weight: normal;
+  height: auto;
 
   input[type="radio"] {
     display: none;
@@ -84,11 +94,7 @@
 
   input[type="checkbox"] {
     // todo: style this to match the designs
-  }
-
-  &.processing {
-    @include processingOverlay;
-  }
+  }  
 }
 
 .btnTxt {
@@ -123,7 +129,14 @@
     border-bottom-right-radius: $corner;
     border-right-width: 1px;
   }
+}
 
+.btnStrip .btnRadio {
+  margin-right: 7px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 *[class *= "ion-"]:before {
