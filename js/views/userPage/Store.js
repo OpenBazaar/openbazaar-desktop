@@ -3,6 +3,7 @@ import 'select2';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import Listing from '../../models/listing/Listing';
+import Listings from '../../collections/Listings';
 import BaseVw from '../baseVw';
 // import ListingShort from '../ListingShort';
 import ListingDetail from '../modals/listingDetail/Listing';
@@ -28,6 +29,10 @@ export default class extends BaseVw {
     }
 
     this.listenTo(this.collection, 'request', this.onRequest);
+
+    this.filter = {
+      category: 'all',
+    };
   }
 
   className() {
@@ -37,7 +42,13 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-retryFetch': 'onClickRetryFetch',
+      'change .js-filterFreeShipping': 'onFilterFreeShippingChange',
     };
+  }
+
+  onFilterFreeShippingChange(e) {
+    this.filter.freeShipping = $(e.target).is(':checked');
+    this.renderListings(this.filteredCollection());
   }
 
   onRequest(cl, xhr) {
@@ -116,6 +127,25 @@ export default class extends BaseVw {
       (this._$catFilterContainer = this.$('.js-catFilterContainer'));
   }
 
+  filteredCollection(filter = this.filter, collection = this.collection) {
+    const models = collection.models.filter((md) => {
+      let passesFilter = true;
+
+      if (this.filter.freeShipping && !md.shipsFreeToMe) {
+        passesFilter = false;
+      }
+
+      if (this.filter.category !== 'all' &&
+        md.get('category').indexOf(this.filter.category) === -1) {
+        passesFilter = false;
+      }
+
+      return passesFilter;
+    });
+
+    return new Listings(models);
+  }
+
   renderListings(col) {
     if (!col) {
       throw new Error('Please provide a collection.');
@@ -127,7 +157,7 @@ export default class extends BaseVw {
         storeOwner: this.model.id,
       });
     } else {
-      this.storeListings.col = col;
+      this.storeListings.collection = col;
     }
 
     if (!$.contains(this.$listingsContainer[0], this.storeListings.el)) {
@@ -142,6 +172,12 @@ export default class extends BaseVw {
     if (!this.categoryFilter) {
       this.categoryFilter = new CategoryFilter({
         categories: cats,
+        selected: this.filter.category,
+      });
+
+      this.listenTo(this.categoryFilter, 'category-change', (e) => {
+        this.filter.category = e.value;
+        this.renderListings(this.filteredCollection());
       });
     } else {
       this.categoryFilter.categories = cats;
@@ -162,7 +198,6 @@ export default class extends BaseVw {
 
     loadTemplate('userPage/store.html', (t) => {
       this.$el.html(t({
-        // listings: this.collection.toJSON(),
         listingCountText:
           `<span class="txB"><span>${filteredLen}</span> listing` +
           `${filteredLen === 1 ? '' : 's'}</span> found`,
@@ -170,22 +205,23 @@ export default class extends BaseVw {
         fetchFailed,
         fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&
           this.fetch.responseText || '',
+        filter: this.filter,
       }));
     });
 
-    this.$sortBy = this.$('#sortBySelect');
-    this.$shipsToSelect = this.$('#shipsToSelect');
+    this.$sortBy = this.$('.js-sortBySelect');
+    this.$shipsToSelect = this.$('.js-shipsToSelect');
     this._$btnRetry = null;
     this._$listingsContainer = null;
     this._$catFilterContainer = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
-      dropdownParent: this.$('#sortBySelectDropdownContainer'),
+      dropdownParent: this.$('.js-sortBySelectDropdownContainer'),
     });
 
     this.$shipsToSelect.select2({
-      dropdownParent: this.$('#shipsToSelectDropdownContainer'),
+      dropdownParent: this.$('.js-shipsToSelectDropdownContainer'),
     });
 
     if (!this.rendered && this.options.listing) {
@@ -197,13 +233,10 @@ export default class extends BaseVw {
 
     if (!isFetching && !fetchFailed) {
       if (this.collection.length) {
-        this.renderListings(this.collection);
+        this.renderListings(this.filteredCollection());
       }
 
-      const cats = this.collection.categories;
-      if (cats.length) {
-        this.renderCategories(cats);
-      }
+      this.renderCategories(this.collection.categories);
     }
 
     return this;

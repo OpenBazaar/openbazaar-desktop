@@ -1,4 +1,4 @@
-import app from '../../app';
+import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
@@ -12,7 +12,7 @@ export default class extends BaseVw {
     }
 
     this.categories = this.options.categories;
-    this._selected = 'all';
+    this._selected = this.options.selected || 'all';
     this.expanded = false;
   }
 
@@ -23,6 +23,7 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-showMoreLess': 'onClickShowMoreLess',
+      'change input[type="radio"]': 'onChangeCategory',
     };
   }
 
@@ -37,6 +38,10 @@ export default class extends BaseVw {
       this.$moreCatsWrap.addClass('expanded');
       // this.$moreCats.removeClass('hide');
     }
+  }
+
+  onChangeCategory(e) {
+    this.trigger('category-change', { value: $(e.target).val() });
   }
 
   get selectedCat() {
@@ -63,7 +68,7 @@ export default class extends BaseVw {
       this.$el.html(t({
         categories: this.categories,
         selected: this.selectedCat,
-        maxInitiallyVisibleCats: 2,
+        maxInitiallyVisibleCats: 6,
         expanded: this.expanded,
       }));
     });

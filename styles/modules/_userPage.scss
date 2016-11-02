@@ -77,6 +77,9 @@
         }
 
         .categoryFilter {
+          max-height: 250px;
+          overflow: auto;
+
           .moreCatsWrap {
             .moreCats, .showLess {
               display: none;
@@ -135,7 +138,8 @@
                 right: 0;
                 bottom: 0;
                 align-items: center;
-                justify-content: center;                
+                justify-content: center;
+                z-index: 1; // so it's above the overlay icons                
 
                 .overlayPanel {
                   // Using seperate element just for the overlay so that

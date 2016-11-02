@@ -29,16 +29,16 @@
       <div class="clrP clrBr border padMd clrT">
         <div class="txB tx4 row">Shipping</div>
         <div class="flexVCent tx5 rowSm">
-          <input type="checkbox" name="filterShippingShipsTo" class="margRSm" />
+          <input type="checkbox" class="margRSm" />
           <label class="margRSm" for="shipsToSelect">Ships to:</label>
-          <select name="filterShippingShipsToCountry" class="tx6 select2Small" id="shipsToSelect" style="width: 112px">
+          <select class="tx6 select2Small js-shipsToSelect" style="width: 112px">
             <option value="moo">United Sizzle</option>
             <option value="poo">Longer Country Will Be Wrapped</option>
           </select>
-          <div class="select2Small" id="shipsToSelectDropdownContainer"></div>
+          <div class="select2Small js-shipsToSelectDropdownContainer"></div>
         </div>
         <div class="flexVCent rowSm">
-          <input type="checkbox" name="filterShippingFreeShipping" class="margRSm" />
+          <input type="checkbox" class="margRSm js-filterFreeShipping" <% if (ob.filter.freeShipping) print('checked') %> />
           <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn">Free Shipping</span>
         </div>
       </div>
@@ -49,14 +49,14 @@
         <span class="listingsCount"><%= ob.listingCountText %></span>
         <div class="floR tx6 flexVCent">
           <label class="clrT2 marginLAuto margRSm">Sort by (translate me!)</label>
-          <select class="tx6 select2Small" id="sortBySelect" style="width: 150px">
+          <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
             <option value="PRICE_ASC">Price low to high</option>
             <option value="PRICE_DESC">Price high to low</option>
             <option value="NAME_ASC">Title A-Z</option>
             <option value="NAME_DESC">Title Z-A</option>
             <option value="RATING">Rating</option>
           </select>
-          <div class="select2Small" id="sortBySelectDropdownContainer"></div>
+          <div class="select2Small js-sortBySelectDropdownContainer"></div>
         </div>
       </div>
       <div class="js-listingsContainer"></div>
