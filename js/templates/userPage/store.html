@@ -51,11 +51,11 @@
         <div class="floR tx6 flexVCent">
           <label class="clrT2 marginLAuto margRSm">Sort by (translate me!)</label>
           <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
-            <option value="PRICE_ASC">Price low to high</option>
-            <option value="PRICE_DESC">Price high to low</option>
-            <option value="NAME_ASC">Title A-Z</option>
-            <option value="NAME_DESC">Title Z-A</option>
-            <option value="RATING">Rating</option>
+            <option value="PRICE_ASC" <% if (ob.filter.sortBy === 'PRICE_ASC') print('selected') %>>Price low to high</option>
+            <option value="PRICE_DESC" <% if (ob.filter.sortBy === 'PRICE_DESC') print('selected') %>>Price high to low</option>
+            <option value="NAME_ASC" <% if (ob.filter.sortBy === 'NAME_ASC') print('selected') %>>Title A-Z</option>
+            <option value="NAME_DESC" <% if (ob.filter.sortBy === 'NAME_DESC') print('selected') %>>Title Z-A</option>
+            <!-- <option value="RATING">Rating</option> -->
           </select>
           <div class="select2Small js-sortBySelectDropdownContainer"></div>
         </div>

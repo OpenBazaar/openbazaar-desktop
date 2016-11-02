@@ -28,6 +28,8 @@ export default class extends BaseVw {
     this.filter = {
       category: 'all',
       searchTerm: '',
+      sortBy: 'PRICE_ASC',
+      freeShipping: false,
     };
 
     this.listenTo(this.collection, 'request', this.onRequest);
@@ -50,6 +52,7 @@ export default class extends BaseVw {
       'change .js-shipsToSelect': 'onShipsToSelectChange',
       'change .js-filterShipsTo': 'onShipsToCheckBoxChange',
       'keyup .js-searchInput': 'onKeyupSearchInput',
+      'change .js-sortBySelect': 'onChangeSortBy',
     };
   }
 
@@ -82,6 +85,11 @@ export default class extends BaseVw {
     }
 
     this.renderListings(this.filteredCollection());
+  }
+
+  onChangeSortBy(e) {
+    this.filter.sortBy = $(e.target).val();
+    this.renderListings(this.storeListings.collection);
   }
 
   onUpdateCollection(cl, opts) {
@@ -235,6 +243,60 @@ export default class extends BaseVw {
     return new Listings(models);
   }
 
+  /**
+   * Based on the sortBy filter, will appropriatally set the
+   * comparator value on the given collection.
+   */
+  setSortFunction(col) {
+    if (!col) {
+      throw new Error('Please provide a collection.');
+    }
+
+    if (this.filter.sortBy) {
+      if (this.filter.sortBy === 'PRICE_ASC') {
+        col.comparator = (a, b) => {
+          if (a.get('price').amount > b.get('price').amount) {
+            return 1;
+          } else if (a.get('price').amount < b.get('price').amount) {
+            return -1;
+          }
+
+          return 0;
+        };
+      } else if (this.filter.sortBy === 'PRICE_DESC') {
+        col.comparator = (a, b) => {
+          if (a.get('price').amount < b.get('price').amount) {
+            return 1;
+          } else if (a.get('price').amount > b.get('price').amount) {
+            return -1;
+          }
+
+          return 0;
+        };
+      } else if (this.filter.sortBy === 'NAME_ASC') {
+        col.comparator = (a, b) => {
+          if (a.get('title').toLocaleLowerCase() > b.get('title').toLocaleLowerCase()) {
+            return 1;
+          } else if (a.get('title').toLocaleLowerCase() < b.get('title').toLocaleLowerCase()) {
+            return -1;
+          }
+
+          return 0;
+        };
+      } else if (this.filter.sortBy === 'NAME_DESC') {
+        col.comparator = (a, b) => {
+          if (a.get('title').toLocaleLowerCase() < b.get('title').toLocaleLowerCase()) {
+            return 1;
+          } else if (a.get('title').toLocaleLowerCase() > b.get('title').toLocaleLowerCase()) {
+            return -1;
+          }
+
+          return 0;
+        };
+      }
+    }
+  }
+
   renderListings(col) {
     if (!col) {
       throw new Error('Please provide a collection.');
@@ -248,6 +310,9 @@ export default class extends BaseVw {
     } else {
       this.storeListings.collection = col;
     }
+
+    this.setSortFunction(col);
+    col.sort();
 
     if (!$.contains(this.$listingsContainer[0], this.storeListings.el)) {
       this.$listingsContainer.empty()
