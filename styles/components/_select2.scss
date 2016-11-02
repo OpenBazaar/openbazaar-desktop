@@ -21,6 +21,14 @@
       }
     }
   }
+
+  &.select2-container--open {
+    &.select2-container--below {
+      .select2-selection--single {
+        border-bottom: 0;
+      }
+    }
+  }  
 }
 
 // In order for these styles also work on the drop down part of the component, when
@@ -46,12 +54,6 @@
   .select2-results__option {
     padding-top: 4px;
     padding-bottom: 4px;
-  }
-
-  &.select2-container--open {
-    .select2-selection--single {
-      border-bottom: 0;
-    }
   }
 }
 

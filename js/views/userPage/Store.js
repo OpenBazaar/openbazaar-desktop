@@ -1,11 +1,11 @@
 import $ from 'jquery';
 import 'select2';
+import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import BaseVw from '../baseVw';
-// import ListingShort from '../ListingShort';
 import ListingDetail from '../modals/listingDetail/Listing';
 import StoreListings from './StoreListings';
 import CategoryFilter from './CategoryFilter';
@@ -23,16 +23,20 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
+    this.countryList = getTranslatedCountries(app.settings.get('language'));
+
+    this.filter = {
+      category: 'all',
+      searchTerm: '',
+    };
+
+    this.listenTo(this.collection, 'request', this.onRequest);
+    this.listenTo(this.collection, 'update', this.onUpdateCollection);
+
     if (options.initialFetch) {
       this.fetch = options.initialFetch;
       this.onRequest(this.collection, this.fetch);
     }
-
-    this.listenTo(this.collection, 'request', this.onRequest);
-
-    this.filter = {
-      category: 'all',
-    };
   }
 
   className() {
@@ -43,12 +47,65 @@ export default class extends BaseVw {
     return {
       'click .js-retryFetch': 'onClickRetryFetch',
       'change .js-filterFreeShipping': 'onFilterFreeShippingChange',
+      'change .js-shipsToSelect': 'onShipsToSelectChange',
+      'change .js-filterShipsTo': 'onShipsToCheckBoxChange',
+      'keyup .js-searchInput': 'onKeyupSearchInput',
     };
   }
 
   onFilterFreeShippingChange(e) {
     this.filter.freeShipping = $(e.target).is(':checked');
     this.renderListings(this.filteredCollection());
+  }
+
+  onShipsToSelectChange(e) {
+    if (this.$shipsToCheckbox.is(':checked')) {
+      this.setShipsToFilter($(e.target).val());
+    } else {
+      this.setShipsToFilter();
+    }
+  }
+
+  onShipsToCheckBoxChange(e) {
+    if ($(e.target).is(':checked')) {
+      this.setShipsToFilter(this.$shipsToSelect.val());
+    } else {
+      this.setShipsToFilter();
+    }
+  }
+
+  setShipsToFilter(val) {
+    if (val) {
+      this.filter.shipsTo = val;
+    } else {
+      delete this.filter.shipsTo;
+    }
+
+    this.renderListings(this.filteredCollection());
+  }
+
+  onUpdateCollection(cl, opts) {
+    if (opts.changes.added) {
+      opts.changes.added.forEach((md) => {
+        md.searchDescription = $('<div />').html(md.get('description'))
+          .text()
+          .toLocaleLowerCase();
+
+        md.searchTitle = $('<div />').html(md.get('title'))
+          .text()
+          .toLocaleLowerCase();
+      });
+    }
+  }
+
+  onKeyupSearchInput(e) {
+    // make sure they're not still typing
+    if (this.searchKeyUpTimer) {
+      clearTimeout(this.searchKeyUpTimer);
+    }
+
+    this.searchKeyUpTimer = setTimeout(() =>
+      (this.search($(e.target).val())), 150);
   }
 
   onRequest(cl, xhr) {
@@ -81,6 +138,15 @@ export default class extends BaseVw {
     this.retryPressed = true;
     this.collection.fetch();
     this.$btnRetry.addClass('processing');
+  }
+
+  search(term) {
+    const searchTerm = term.toLocaleLowerCase();
+
+    if (searchTerm === this.filter.searchTerm) return;
+
+    this.filter.searchTerm = searchTerm;
+    this.renderListings(this.filteredCollection());
   }
 
   /**
@@ -127,6 +193,16 @@ export default class extends BaseVw {
       (this._$catFilterContainer = this.$('.js-catFilterContainer'));
   }
 
+  get $listingCount() {
+    return this._$listingCount ||
+      (this._$listingCount = this.$('.js-listingCount'));
+  }
+
+  get $shipsToCheckbox() {
+    return this._$shipsToCheckbox ||
+      (this._$shipsToCheckbox = this.$('.js-filterShipsTo'));
+  }
+
   filteredCollection(filter = this.filter, collection = this.collection) {
     const models = collection.models.filter((md) => {
       let passesFilter = true;
@@ -137,6 +213,19 @@ export default class extends BaseVw {
 
       if (this.filter.category !== 'all' &&
         md.get('category').indexOf(this.filter.category) === -1) {
+        passesFilter = false;
+      }
+
+      const searchTerm = this.filter.searchTerm;
+
+      if (searchTerm &&
+        md.searchTitle.indexOf(searchTerm) === -1 &&
+        md.searchDescription.indexOf(searchTerm) === -1) {
+        passesFilter = false;
+      }
+
+      if (this.filter.shipsTo &&
+        !md.shipsTo(this.filter.shipsTo)) {
         passesFilter = false;
       }
 
@@ -164,6 +253,11 @@ export default class extends BaseVw {
       this.$listingsContainer.empty()
         .append(this.storeListings.el);
     }
+
+    const listingCountContent =
+      `<span class="txB"><span>${col.length}</span> listing` +
+      `${col.length === 1 ? '' : 's'}</span> found`;
+    this.$listingCount.html(listingCountContent);
 
     this.storeListings.render();
   }
@@ -194,18 +288,16 @@ export default class extends BaseVw {
   render() {
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
-    const filteredLen = this.collection.length;
 
     loadTemplate('userPage/store.html', (t) => {
       this.$el.html(t({
-        listingCountText:
-          `<span class="txB"><span>${filteredLen}</span> listing` +
-          `${filteredLen === 1 ? '' : 's'}</span> found`,
         isFetching,
         fetchFailed,
         fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&
           this.fetch.responseText || '',
         filter: this.filter,
+        countryList: this.countryList,
+        country: this.filter.shipsTo || app.settings.get('country'),
       }));
     });
 
@@ -214,6 +306,8 @@ export default class extends BaseVw {
     this._$btnRetry = null;
     this._$listingsContainer = null;
     this._$catFilterContainer = null;
+    this._$listingCount = null;
+    this._$shipsToCheckbox = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
@@ -222,6 +316,7 @@ export default class extends BaseVw {
 
     this.$shipsToSelect.select2({
       dropdownParent: this.$('.js-shipsToSelectDropdownContainer'),
+      // dropdownPosition : 'below',
     });
 
     if (!this.rendered && this.options.listing) {

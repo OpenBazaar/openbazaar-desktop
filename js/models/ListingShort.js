@@ -19,4 +19,13 @@ export default class extends BaseModel {
     // countries may have dupes, but it's no bother for this purpose
     return !!_.intersection(this.get('freeShipping'), countries).length;
   }
+
+  // todo: unit testify me
+  shipsTo(country) {
+    if (!country) {
+      throw new Error('Please provide a country.');
+    }
+
+    return this.get('shipsTo').indexOf(country) !== -1;
+  }
 }

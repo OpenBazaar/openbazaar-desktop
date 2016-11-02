@@ -14,13 +14,13 @@ export default class extends Collection {
 
   // todo: unit testify. Can I get a witness?
   // todo: sort, inluding by utf8 chars
+  // todo: document function
   get categories() {
     const cats = [];
 
     this.models.forEach(listing => {
       listing.get('category')
         .forEach(cat => {
-          // console.log(`${cat} ==> ${cats.indexOf(cat)}`);
           if (cats.indexOf(cat) === -1) cats.push(cat);
         });
     });
