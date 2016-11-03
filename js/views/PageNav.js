@@ -210,10 +210,14 @@ export default class extends View {
   render() {
     let avatarHash = '';
 
-    if (getHiRez() && app.profile && app.profile.avatarHashes.small) {
-      avatarHash = app.profile.avatarHashes.small;
-    } else if (app.profile && app.profile.avatarHashes.tiny) {
-      avatarHash = app.profile.avatarHashes.tiny;
+    if (app.profile && getHiRez()) {
+      const avatarHashes = app.profile.get('avatarHashes');
+
+      if (avatarHashes.small) {
+        avatarHash = avatarHashes.small;
+      } else if (avatarHashes.tiny) {
+        avatarHash = avatarHashes.tiny;
+      }
     }
 
     loadTemplate('pageNav.html', (t) => {
