@@ -8,7 +8,7 @@ module.exports = function (grunt) {
         productName: 'OpenBazaar',
         name: 'openbazaar2',
         arch: 'amd64',
-        version: '1.0.4',
+        version: '2.0.0',
         bin: 'openbazaar2',
         maintainer: 'OpenBazaar <project@openbazaar.org>',
         rename(dest) {
@@ -46,6 +46,7 @@ module.exports = function (grunt) {
         title: 'OpenBazaar',
         iconUrl: 'https://openbazaar.org/downloads/icon.ico',
         setupIcon: 'imgs/windows-icon.ico',
+        skipUpdateIcon: true,
         loadingGif: 'imgs/windows-loading.gif',
         noMsi: true,
       },
