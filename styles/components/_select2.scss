@@ -22,3 +22,99 @@
     }
   }
 }
+
+// Tags (the element that select2 is generated off of must have a class of 'select2Tags').
+// Some focus styling is with other form focus styling in form.scss.
+.select2TagsWrap {
+  position: relative;
+
+  .select2Tags + .select2-container {
+    &.select2-container--default {
+      .select2-selection--multiple {
+        height: auto;
+      }
+
+      .select2-selection--multiple .select2-selection__rendered {
+        padding-bottom: $padSm;
+        border-radius: 3px;
+      }
+
+      .select2-search--inline {
+        padding: 1px; // match the border on the tags
+        margin-top: 5px;
+      }
+    }
+
+    &.select2-container--default .select2-selection--multiple .select2-selection__choice {
+      padding-left: $pad;
+      font-weight: 500;
+
+      .select2-selection__choice__remove {
+        float: right;
+        font-size: 2rem;
+        font-weight: 100;
+        position: relative;
+        top: -2px;
+        margin-left: 5px;
+      }
+    }
+
+    &.select2-container--focus {
+      .select2-selection {
+        border: none;
+      }
+
+      & + .tagsPlaceholder {
+        display: none;
+      }
+    }
+  }
+
+  &.hashPrefacedTags .select2Tags + .select2-container .select2-selection__choice {
+    &::before {
+      content: '#';
+    }
+  }
+
+  .tagsPlaceholder {
+    display: none;
+    position: absolute;
+    top: 15px;
+    margin-left: 10px;
+    pointer-events: none;
+
+    // For now, since we're not styling placeholders anywhere, I'll
+    // manually style here. If we ever do style ::placeholder elements,
+    // we should make sure to add .placeholder to that selector and then
+    // these styles could go away
+    font-size: 1.4rem;
+    color: #aaa;
+
+    // This class must be set via JS
+    &.emptyOfTags {
+      display: block;
+      top: 0;
+      line-height: 4rem;
+      margin-top: 6px;
+    }
+  }
+
+  &:not(.showDropdown) {
+    .tagsDropdown {
+      display: none;
+    }
+  }
+
+  &.showDropdown {
+    .tagsDropdown .select2-container--open {
+      margin-top: -7px;
+      border: none;
+    }
+  }
+
+  .tagsDropdown {
+    .select2-container--open {
+      border: 1px solid;
+    }
+  }
+}

@@ -5,7 +5,6 @@
   display: flex;
   align-items: flex-start;
   width: 100%; //if the element has absolute or fixed positioning, expand it
-  height: 100%; //if the container has a height, fill it. If the parent is absolute, the row must be too.
   box-sizing: border-box;
   flex-direction: row; //align children left to right horizontally
 
@@ -37,6 +36,7 @@
   @extend .flex;
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
+  justify-content: space-between;
 }
 
 .snip,
@@ -86,15 +86,33 @@
   }
 }
 
+.simpleFlexCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexColRows {
+  //vertical colums that have 100% width and are spaced across the height
+  @extend .flexCol;
+  justify-content: space-between;
+  height: 100%;
+
+  & > * {
+    width: 100%;
+  }
+}
+
 .flexVCent {
   //creates a container with vertically centered children
   @extend .flex;
+  height: 100%;
   align-items: center;
 }
 
 .flexVBot {
   //creates a container with children aligned to the bottom of the parent
   @extend .flex;
+  height: 100%;
   align-items: flex-end;
 }
 
@@ -112,8 +130,8 @@
   text-align: right;
 }
 
-.flexExpand {
-  //make a child of a flex element expand to fill the remaining space
+.flexExpand,           //make a flex element expand to fill the remaining space
+.flexKidsExpand > * {  //make all child elements expand
   flex-grow: 1;
 }
 
@@ -244,7 +262,11 @@
   //use if the children should collapse the padding between them
   padding-bottom: 0;
 }
-//elements should hae standard spacing between them vertically. There shouldn't be more than a few row classes.
+//elements should have standard spacing between them vertically. There shouldn't be more than a few row classes.
+
+#ov1 .padTop0 {
+  padding-top: 0;
+}
 
 .rowTn {
   margin-bottom: $padTn;
@@ -279,6 +301,14 @@
 
 .margL {
   margin-left: $pad;
+}
+
+#ov1 .marginTopAuto {
+  margin-top: auto;
+
+  & + .select2-container {
+    margin-top: auto;    
+  }
 }
 
 @mixin colHGutter($colPad) {

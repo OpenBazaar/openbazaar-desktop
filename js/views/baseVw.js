@@ -1,7 +1,8 @@
 import $ from 'jquery';
+import { setDeepValue } from '../utils';
 import { View } from 'backbone';
 
-export default class BaseVw extends View {
+export default class baseVw extends View {
   constructor(options) {
     super(options);
     this._childViews = [];
@@ -42,19 +43,41 @@ export default class BaseVw extends View {
     $formFields.each((index, field) => {
       const $field = $(field);
       const varType = $field.data('var-type');
+
       let val = $field.val();
 
       if (field.type === 'radio' && !field.checked) return;
 
       if (varType) {
         if (varType === 'number') {
-          val = Number(val);
+          // If an empty string is provided or if the
+          // number evaluates to NaN, we'll leave the value
+          // as is, so client side validation can catch it
+          // and the user can update it.
+          if (val.trim() !== '') {
+            const numberFromVal = Number(val);
+
+            if (!isNaN(numberFromVal)) {
+              val = numberFromVal;
+            }
+          }
         } else if (varType === 'boolean') {
           val = val === 'true';
         }
       }
 
-      data[$field.attr('name')] = val;
+      const name = $field.attr('name');
+
+      if (name.indexOf('[') !== -1) {
+        // handle nested collection
+        // for now not handling nested collection, please
+        // manage manually
+      } else if (name.indexOf('.') !== -1) {
+        // handle nested model
+        setDeepValue(data, name, val);
+      } else {
+        data[name] = val;
+      }
     });
 
     return data;
@@ -95,7 +118,7 @@ export default class BaseVw extends View {
    */
   createChild(ChildView, ...args) {
     if (typeof ChildView !== 'function') {
-      throw new Error('Please provide a ChildView class (not an instance).');
+      throw new Error('Please provide a ChildView class.');
     }
 
     const childView = new ChildView(...args);

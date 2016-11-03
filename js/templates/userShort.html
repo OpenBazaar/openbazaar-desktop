@@ -1,32 +1,36 @@
 <div class="contentBox clrBr clrP clrSh2">
-  <div class="hero bkgCover"
-    <% if(ob.banner){ %>
-      style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+  <div class="shortHeader"
+    <% var headerHash = ob.getHiRez() ? ob.headerHashes.small : ob.headerHashes.tiny; %>
+    <% if (headerHash) { %>
+      style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
     <% } else { %>
-      style="background-image: url('../imgs/defaultBanner.png')"
+      style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
     <div class="userIcon disc clrBr2 clrSh1"
-      <% if(ob.avatar){ %>
-       style="background-image: url('<%= ob.avatar %>, url('../imgs/defaultUser.png')"
+      <% var avatarHash = ob.getHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny; %>
+      <% if (avatarHash) { %>
+        style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
       <% } else { %>
-       style="background-image: url('../imgs/defaultUser.png')"
+       style="background-image: url('../imgs/defaultAvatar.png')"
       <% } %>>
     </div>
-    <div class="userControls">
-      <% if(!ob.ownGuid) { %>
-        <a class="iconBtn clrP clrBr js-follow <% if(ob.followedByYou){ %>active<% } %>">
-          <i class="ion-person-stalker"></i>
-        </a>
-        <% if(ob.moderator) { %>
-          <a class="iconBtn clrP clrBr js-mod <% if(ob.ownMod){ %>active<% } %>">
-            <i class="ion-briefcase"></i>
+    <% if (!ob.hideControls) { %>
+      <div class="userControls">
+        <% if (!ob.ownGuid) { %>
+          <a class="iconBtn clrP clrBr js-follow <% if (ob.followedByYou) { %>active<% } %>">
+            <i class="ion-person-stalker"></i>
           </a>
+          <% if (ob.moderator) { %>
+            <a class="iconBtn clrP clrBr js-mod <% if (ob.ownMod) { %>active<% } %>">
+              <i class="ion-briefcase"></i>
+            </a>
+          <% } %>
         <% } %>
-      <% } %>
-    </div>
+      </div>
+    <% } %>
   </div>
   <div class="content">
-    <% if(!ob.loading && !ob.notFound){ %>
+    <% if (!ob.loading && !ob.notFound) { %>
       <div class="contentTop">
         <div>
           <a class="flex snipKids gutterH rowTn js-userName">
@@ -48,9 +52,9 @@
           stars here (xx)
         </div>
       </div>
-    <% } else if(ob.loading) { %>
+    <% } else if (ob.loading) { %>
       <div class="h3 clrT"><%= ob.polyT('userShort.userLoading') %></div>
-    <% } else if(ob.notFound) { %>
+    <% } else if (ob.notFound) { %>
     <div class="h5 txUnb clrT"><%= ob.polyT('userShort.userNotFound', { guid: ob.guid }) %></div>
     <% } %>
   </div>

@@ -1,0 +1,131 @@
+.editListing {
+  .modalContent {
+    overflow: hidden;
+    min-height: 0;
+
+    .medium-editor-element {
+      min-height: 150px;
+    }
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      border: 1px solid;
+      border-color: inherit;
+      border-radius: $corner;
+      float: left;
+      margin-right: $pad;
+      margin-bottom: $pad;
+      position: relative;
+
+      .closeIcon {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }      
+
+      .btn {
+        width: 61px;
+        height: 28px;
+        position: absolute;
+        bottom: 10px;
+        padding: 0;
+        line-height: 1;
+        @include center(true, false)
+      }
+    }
+
+    .tabContent {
+      .photoUploadSection {
+        .uploadingLabel {
+          float: right;
+        }
+
+        .uploadItems {
+          display: table; // clear the floats
+
+          li {
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+
+            &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
+            &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
+              margin-bottom: 0;
+            }
+
+            &.addElement {
+              .imagesIcon {
+                font-size: 50px;
+                @include center;
+                top: 35%;
+              }
+            }
+          }
+        }
+      }
+
+      .shippingSection {
+        .tile {
+          .locationIcon {
+            font-size: 38px;
+            @include center;
+            top: 34%;
+          }
+        }
+
+        &.hasShippingOptions {
+          .emptyShippingOptionsSection {
+            display: none;
+          }
+        }
+
+        form {
+          label {
+            font-weight: 400;          
+          }
+
+          .shippingOptionButtonBar {
+            margin-top: 25px;
+          }
+
+          .servicesWrap {
+            .flexRow {
+              padding-left: 0;
+              padding-right: 0;
+
+              .btnRemoveService {
+                height: auto;
+                width: 50px;                
+              }
+
+              &:first-child {
+                padding-top: 0;
+              }
+            }
+
+            & > .flexRow:first-child {
+              .btnRemoveService {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+
+      .tagsSection {
+        .select2 {
+          margin-bottom: $padSm;
+        }
+      }
+
+      .categoriesSection {
+        .select2 {
+          margin-bottom: $padSm;
+        }
+      }
+    }
+  }
+}

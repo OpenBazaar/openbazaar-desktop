@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { Model } from 'backbone';
+import { Model, Collection } from 'backbone';
 
 /*
 
@@ -21,7 +21,7 @@ import { Model } from 'backbone';
   import CustomCollection from './collections';
 
   class ParentModel extends BaseModel {
-    nested() {
+    get nested() {
       return {
         SMTPSettings: Model,
         serverConfig: CustomModel,
@@ -85,8 +85,8 @@ import { Model } from 'backbone';
 */
 
 export default class extends Model {
-  constructor(attrs) {
-    super(attrs);
+  constructor(...args) {
+    super(...args);
 
     this.lastSyncedAttrs = {};
 
@@ -126,6 +126,64 @@ export default class extends Model {
     return super.set(attrs, opts);
   }
 
+  mergeInNestedModelErrors(errObj = {}) {
+    const prefixedErrs = {};
+
+    Object.keys(this.nested || {})
+      .forEach((key) => {
+        if (this.get(key) instanceof Model) {
+          const nestedMd = this.get(key);
+          const nestedErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
+
+          Object.keys(nestedErrs).forEach((nestedErrKey) => {
+            prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
+          });
+        }
+      });
+
+    return {
+      ...errObj,
+      ...prefixedErrs,
+    };
+  }
+
+  mergeInNestedCollectionErrors(errObj = {}) {
+    let mergedErrs = errObj;
+
+    Object.keys(this.nested || {})
+      .forEach((key) => {
+        if (this.get(key) instanceof Collection) {
+          const nestedCl = this.get(key);
+
+          nestedCl.forEach((nestedMd) => {
+            const prefixedErrs = {};
+            const nestedMdErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
+
+            Object.keys(nestedMdErrs).forEach((nestedMdErrKey) => {
+              // since indexes can change, we'll index using the model's client id (cid)
+              prefixedErrs[`${key}[${nestedMd.cid}].${nestedMdErrKey}`]
+                = nestedMdErrs[nestedMdErrKey];
+            });
+
+            mergedErrs = {
+              ...mergedErrs,
+              ...prefixedErrs,
+            };
+          });
+        }
+      });
+
+    return mergedErrs;
+  }
+
+  mergeInNestedErrors(errObj = {}) {
+    return {
+      ...errObj,
+      ...this.mergeInNestedModelErrors(errObj),
+      ...this.mergeInNestedCollectionErrors(errObj),
+    };
+  }
+
   toJSON() {
     const attrs = super.toJSON();
 
@@ -154,6 +212,10 @@ export default class extends Model {
   }
 
   clone() {
-    return new this.constructor(this.toJSON());
+    const clone = new this.constructor(this.toJSON());
+
+    clone.lastSyncedAttrs = this.lastSyncedAttrs;
+
+    return clone;
   }
 }

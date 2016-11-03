@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import BaseVw from '../baseVw';
+import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
@@ -8,7 +8,7 @@ import Store from './UserPageStore';
 import Follow from './UserPageFollow';
 import Reputation from './UserPageReputation';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
@@ -26,7 +26,7 @@ export default class extends BaseVw {
       // followsYou requires a new api call
       this.followsYou = false; // temp until api is available
 
-      this.listenTo(app.ownFollowing, 'sync, update', () => {
+      this.listenTo(app.ownFollowing, 'sync update', () => {
         this.followedByYou = followedByYou(this.model.id);
         if (this.followedByYou) {
           this.$followLbl.addClass('hide');
@@ -47,6 +47,10 @@ export default class extends BaseVw {
         }
       });
     }
+
+    this.listenTo(this.model, 'change', () => this.render());
+    this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
+    this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
   }
 
   className() {
@@ -95,7 +99,7 @@ export default class extends BaseVw {
     if (!this.currentTabView || this.currentTabView !== tabView) {
       this.$tabTitle.text(tabTarg);
       // add tab to history
-      app.router.navigate(`${this.model.id}/${tabTarg}`);
+      app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}`);
 
       this.$('.js-tab').removeClass('clrT active');
       this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
@@ -120,9 +124,6 @@ export default class extends BaseVw {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        tab: this.options.tab || '',
-        category: this.options.category || '',
-        layer: this.options.layer || '',
         followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
@@ -135,6 +136,7 @@ export default class extends BaseVw {
       this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
 
+      this.tabViewCache = {}; // clear for re-renders
       this.selectTab(this.tab);
     });
 

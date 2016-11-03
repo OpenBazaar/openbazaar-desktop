@@ -1,8 +1,36 @@
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-Regular-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-Bold-webfont.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-Italic-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-BoldItalic-webfont.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
 html {
   // fonts
   color: $text;
   font: {
-    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    family: "noto_sans";
     size: $baseFontSize;
     weight: 400;
   }
@@ -44,60 +72,14 @@ hr {
     -webkit-margin-before: 0;
     -webkit-margin-after: 0;
   }
+
+  &.dashed {
+    border-bottom: 1px dashed;
+  }
 }
 
 ul {
   margin: 0;
-}
-
-input::-webkit-input-placeholder,
-select::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
-  color: inherit;
-  opacity: 0.35;
-}
-
-
-input,
-select,
-textarea {
-  border: none;
-  outline: none;
-  background: none;
-  color: inherit;
-}
-
-select {
-  width: 100%;
-}
-
-input[type="text"],
-textarea {
-  border-style: solid;
-  border-width: 1px;
-  //use the color class to set the border color
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 $pad;
-  line-height: 40px;
-}
-
-textarea {
-  background: none;
-  outline: none;
-  -webkit-appearance: none;
-  resize: none;
-  line-height: 1.2em;
-  padding: $pad;
-}
-
-form {
-  margin: 0;
-  font-size: $tx5;
-
-  label {
-    line-height: $formElementHeight;
-  }
 }
 
 ul, ol {
@@ -120,28 +102,6 @@ ul, ol {
 .bkgCover {
   background-size: cover;
   background-repeat: no-repeat;
-}
-
-.banner {
-  //create a fixed banner in the background
-  background-position: center top;
-  background-repeat: no-repeat;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: $bar + $barLg;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  pointer-events: none; // requires or it prevents scroll events over it
-}
-
-#ov1 .hide {
-  display: none;
-}
-
-#ov1 .disabled {
-  @include disabled;
 }
 
 #appFrame {
@@ -247,3 +207,24 @@ ul, ol {
   text-shadow: none !important;
 }
 
+// utility classes
+
+#ov1 .hide {
+  display: none;
+}
+
+#ov1 .disabled {
+  @include disabled;
+}
+
+.overflowAuto {
+  overflow: auto;
+}
+
+.floL {
+  float: left;
+}
+
+.floR {
+  float: right;
+}

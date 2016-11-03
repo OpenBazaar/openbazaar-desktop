@@ -3,10 +3,10 @@
 // any context passed into render as context for the template.
 //
 // If you need something beyond that, this view is probably not for you.
-import BaseVw from './baseVw';
+import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
-export default class extends BaseVw {
+export default class extends baseVw {
   constructor(options = {}) {
     super(options);
 

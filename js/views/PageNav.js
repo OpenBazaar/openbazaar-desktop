@@ -5,6 +5,9 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
+import { launchEditListingModal } from '../utils/modalManager';
+import Listing from '../models/listing/Listing';
+import { getHiRez } from '../utils/responsive';
 
 const remote = electron.remote;
 
@@ -20,6 +23,7 @@ export default class extends View {
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navCreateListing': 'navCreateListingClick',
       },
       navigable: false,
       ...options,
@@ -75,6 +79,23 @@ export default class extends View {
     this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
   }
 
+  setAppProfile() {
+    // when this view is created, the app.profile doesn't exist
+    this.listenTo(app.profile.get('avatarHashes'), 'change', this.updateAvatar);
+    this.updateAvatar();
+  }
+
+  updateAvatar() {
+    const avatarHashes = app.profile.get('avatarHashes').toJSON();
+    const avatarHash = getHiRez() ? avatarHashes.small : avatarHashes.tiny;
+
+    if (avatarHash) {
+      this.$('#AvatarBtn').attr('style',
+        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
+      url('../imgs/defaultAvatar.png')`);
+    }
+  }
+
   navCloseClick() {
     if (remote.process.platform !== 'darwin') {
       remote.getCurrentWindow().close();
@@ -121,7 +142,9 @@ export default class extends View {
 
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.$addressBar.val();
+      let text = this.$addressBar.val().trim();
+      this.$addressBar.val(text);
+
       let isGuid = true;
 
       if (text.startsWith('ob://')) text = text.slice(5);
@@ -145,6 +168,9 @@ export default class extends View {
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
+      } else if (text.startsWith('listing/')) {
+        // temporary to handle temporary listing route
+        app.router.navigate(text, { trigger: true });
       } else {
         // tag(s)
         const tags = text.trim()
@@ -171,9 +197,25 @@ export default class extends View {
     this.togglePopMenu();
   }
 
+  navCreateListingClick() {
+    const listingModel = new Listing();
+
+    launchEditListingModal({
+      model: listingModel,
+    });
+  }
+
   render() {
+    let avatarHash = '';
+    if (getHiRez() && app.profile && app.profile.avatarHashes.small) {
+      avatarHash = app.profile.avatarHashes.small;
+    } else if (app.profile && app.profile.avatarHashes.tiny) {
+      avatarHash = app.profile.avatarHashes.tiny;
+    }
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        avatarHash,
+      }));
     });
 
     this.$addressBar = this.$('.js-addressBar');

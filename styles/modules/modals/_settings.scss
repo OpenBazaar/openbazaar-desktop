@@ -1,36 +1,48 @@
 .settings {
 
   .modalContent {
-    width: 906px;
-    min-height: 640px;
-    padding: 0;
-
-    .tabColumn {
-      min-height: 640px;
-    }
-
-    .settingsControls {
-      height: 80px;
-      padding: $pad * 1.5;
-      border-top-style: solid;
-      border-top-width: 1px;
-      align-items: center;
-      justify-content: flex-end;
-
-      .saveStatus {
-        flex-grow: 1;
-        font-size: $tx5;
-      }
-
-      & > .btn {
-        margin-right: $padSm;
-        font-size: $tx4;
-
-        &:last-child {
-          margin-right: 0;
+    .tabContent {
+      .tabFormWrapper {
+        .settingsTabFormWrapperInner {
+          width: 100%;
+          top: 0;
+          right: 0;
+          left: 0;
+          box-sizing: border-box;
         }
       }
     }
+  }
+
+  .avatarPreview,
+  .headerPreview {
+    width: 120px;
+    height: 120px;
+   // box-sizing: border-box;
+
+    .cropit-preview-image-container {
+      border-radius: inherit;
+      overflow: hidden;
+      z-index: 1; // fixes bug in Chrome where the image inside would not be hidden by border radius.
+    }
+  }
+
+  .headerPreview {
+    width: 474px;
+    height: 136px;
+  }
+
+  .zoomWarning {
+    display: flex;
+    position: absolute;
+    top: 0;
+    font-size: 1rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .cropit-image-zoom-input:disabled {
+    opacity: 0; // make unseen but keep it in place for layout
   }
 
   .settingsAddresses {

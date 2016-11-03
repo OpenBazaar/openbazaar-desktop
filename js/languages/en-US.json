@@ -32,7 +32,8 @@
     "noFollowers": "No One is Following %{name} Yet",
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
-    "noOwnFollowing": "You Aren't Following Anyone Yet"
+    "noOwnFollowing": "You Aren't Following Anyone Yet",
+    "guidCopied": "Copied to Clipboard"
   },
   "userShort": {
     "userLoading": "Loading...",
@@ -54,11 +55,28 @@
     "shortDescription": "Short Description",
     "about": "About",
     "nsfwContent": "NSFW Content",
-    "avatar": "avatar",
+    "avatar": "Avatar",
+    "loadAvatar": "Load Image",
+    "loadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
+    "loadAvatarSizeError": {
+      "title": "Your avatar image is too small.",
+      "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
+      "bodyRotated": "When rotated this image is %{curHeight}px wide by %{curWidth}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+    },
+    "loadAvatarZoomTooSmall": "This image is too small to zoom.",
+    "header": "Cover Photo",
+    "loadHeader": "Load Image",
+    "loadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
+    "loadHeaderSizeError": {
+      "title": "Your header image is too small",
+      "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
+      "bodyRotated": "When rotated this image is %{curHeight}px wide by %{curWidth}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
+    },
+    "loadHeaderZoomTooSmall": "This image is too small to zoom.",
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
-    "socialMediaAccounts": "Social Media Accounts",
+    "socialAccounts": "Social Accounts",
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
     "coverPhoto": "Cover Photo",
@@ -92,7 +110,84 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "editListing": {
+    "formats": {
+      "PHYSICAL_GOOD": "Physical Good",
+      "DIGITAL_GOOD": "Digital Good",
+      "SERVICE": "Service",
+      "CROWD_FUND": "Crowd fund"
+    },
+    "conditionTypes": {
+      "NEW": "New",
+      "USED_EXCELLENT": "Used - Excellent",
+      "USED_GOOD": "Used - Good",
+      "USED_POOR": "Used - Poor",
+      "REFURBISHED": "Refurbished"
+    },
+    "nsfwYes": "Yes",
+    "nsfwNo": "No",
+    "sectionNames": {
+      "general": "General",
+      "photos": "Photos",
+      "attachments": "Attachments",
+      "shipping": "Shipping",
+      "tags": "Tags",
+      "tagsDetailed": "Tags (for getting your listing discovered)",
+      "category": "Category",
+      "categoryDetailed": "Category (for organizing your store)",
+      "inventory": "Inventory",
+      "variants": "Variants",
+      "returnPolicy": "Return Policy",
+      "termsAndConditions": "Terms and Conditions",
+      "expiration": "Expiration"
+    },
+    "createListingLabel": "Create Listing",
+    "editListingLabel": "Edit Listing",
+    "title": "Title",
+    "type": "Type",
+    "visibility": "Visibility",
+    "price": "Price",
+    "condition": "Condition",
+    "sku": "SKU",
+    "description": "Description",
+    "uploading": "Uploading...",
+    "categoryPlaceholder": "Enter category...",
+    "tagsPlaceholder": "Enter #tags...",
+    "btnCancelUpload": "cancel",
+    "btnAddPhoto": "Add",
+    "btnAddShippingOptionShort": "Add",
+    "btnAddReturnPolicy": "Add Return Policy",
+    "btnTermsAndConditions": "Add Terms and Conditions",
+    "shippingOptions": {
+        "optionHeading": "Shipping Option #%{listPosition}",
+        "shippingDestinations": "Shipping Destinations",
+        "regionsPlaceholder": "Enter countries...",
+        "nameLabel": "Shipping Option Title",
+        "namePlaceholder": "e.g. USA Shipping, International, etc",
+        "typeLabel": "Shipping Type",
+        "shippingTypes": {
+          "FIXED_PRICE": "Fixed Price",
+          "LOCAL_PICKUP": "Local Pickup"
+        },
+        "btnAddShippingOption": "Add Shipping Option",
+        "services": {
+          "nameLabel": "Service",
+          "namePlaceholder": "e.g. Standard, Express, Overnight",
+          "estimatedDeliveryLabel": "Est. Delivery Time",
+          "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
+          "priceLabel": "Price",
+          "pricePlaceholder": "0.00"
+        }
+    },
+    "errors": {
+      "saveErrorTitle": "There was an error saving your listing.",
+      "tooManyPhotosTitle": "Too many photos",
+      "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
+      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
+    }
+  },
   "profileModelErrors": {
+    "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
@@ -107,6 +202,34 @@
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
   },
+  "listingInnerModelErrors": {
+    "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
+    "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
+    "provideShippingOption": "For a physical good, at least one shipping option is required."
+  },
+  "itemModelErrors": {
+    "provideTitle": "Please provide a title.",
+    "badConditionType": "Please provide the price amount as a number.",
+    "descriptionTooLong": "The description exceeds the maximum allowable length.",
+    "provideAmount": "Please provide a price.",
+    "provideNumericAmount": "Please provide the price as a number.",
+    "provideAmountGreaterThanZero": "The price must be greater than 0.",
+    "imageRequired": "Please provide at least one image",
+    "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags."
+  },
+  "shippingOptionModelErrors": {
+    "provideName": "Please provide a title.",
+    "provideRegion": "Please provide at least one shipping destination.",
+    "provideService": "Please provide at least one shipping service."
+  },
+  "serviceModelErrors": {
+    "provideName": "Please provide a service name.",
+    "provideEstDeliveryTime": "Please provide an estimated delivery time.",
+    "provideService": "Please provide at least on shipping service.",
+    "provideAmount": "Please provide a price.",
+    "provideNumericAmount": "Please provide the price as a number.",
+    "provideAmountGreaterThanZero": "The price must be greater than 0."    
+  },  
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

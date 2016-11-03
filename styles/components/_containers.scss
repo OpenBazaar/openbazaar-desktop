@@ -83,7 +83,7 @@
 .contentBox {
   //used to contain content, usually main sections of the page
   @extend .box;
-  border-radius: $brdRad;
+  border-radius: $corner;
   border-width: 1px;
   border-style: solid;
   font-size: $tx4;

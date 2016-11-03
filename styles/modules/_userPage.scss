@@ -1,6 +1,19 @@
 .userPage {
   height: 100%;
 
+  .header {
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: contain;
+    position: absolute;
+    width: 100%;
+    height: 341px;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none; // requires or it prevents scroll events over it
+  }
+
   .pageContent {
 
     .pageControls {
@@ -56,7 +69,7 @@
     .userPageFollow {
       flex-wrap: wrap;
       width: auto;
-      margin: 0 -$padMd / 2;
+      margin: 0 #{-$padMd / 2};
 
       .userShort {
         width: 33.33333333333333%;
