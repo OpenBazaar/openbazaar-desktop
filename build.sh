@@ -65,9 +65,10 @@ case "$TRAVIS_OS_NAME" in
     electron-packager . openbazaar --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/
-    mv dist/openbazaar-linux-ia32/resources/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaard
-    chmod +x dist/openbazaar-linux-ia32/resources/openbazaard
+    mkdir dist/openbazaar-linux-ia32/resources/openbazaar-go/
+    cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go
+    mv dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
+    chmod +x dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_ia32.json
@@ -80,10 +81,10 @@ case "$TRAVIS_OS_NAME" in
     electron-packager . openbazaar --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/
-    mkdir dist/openbazaar-linux-x64/resources/openbazzar-go/
-    mv dist/openbazaar-linux-x64/resources/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazzar-go/openbazaard
-    chmod +x dist/openbazaar-linux-x64/resources/openbazaard
+    mkdir dist/openbazaar-linux-x64/resources/openbazaar-go/
+    cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaar-go
+    mv dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
+    chmod +x dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_amd64.json
