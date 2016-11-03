@@ -196,6 +196,10 @@ input[type=range]{
   -webkit-appearance: none;
   height: 22px;
   width: 100%;
+
+  &:disabled {
+    @include disabled;
+  }
 }
 
 input[type=range]::-webkit-slider-runnable-track {

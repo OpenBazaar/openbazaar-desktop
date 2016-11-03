@@ -1,13 +1,15 @@
 <div class="contentBox clrBr clrP clrSh2">
   <div class="shortHeader"
-    <% if (ob.headerHash) { %>
-      style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.headerHash}`) %>), url('../imgs/defaultHeader.png')"
+    <% var headerHash = ob.getHiRez() ? ob.headerHashes.small : ob.headerHashes.tiny; %>
+    <% if (headerHash) { %>
+      style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
     <% } else { %>
       style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
     <div class="userIcon disc clrBr2 clrSh1"
-      <% if (ob.avatarHash) { %>
-        style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+      <% var avatarHash = ob.getHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny; %>
+      <% if (avatarHash) { %>
+        style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
       <% } else { %>
        style="background-image: url('../imgs/defaultAvatar.png')"
       <% } %>>

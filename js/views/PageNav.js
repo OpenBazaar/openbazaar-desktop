@@ -7,6 +7,7 @@ import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
+import { getHiRez } from '../utils/responsive';
 
 const remote = electron.remote;
 
@@ -81,14 +82,19 @@ export default class extends View {
 
   setAppProfile() {
     // when this view is created, the app.profile doesn't exist
-    this.listenTo(app.profile, 'change:avatarHash', this.updateAvatar);
+    this.listenTo(app.profile.get('avatarHashes'), 'change', this.updateAvatar);
     this.render();
   }
 
   updateAvatar() {
-    this.$('#AvatarBtn').attr('style',
-      `background-image: url(${app.getServerUrl(`ipfs/${app.profile.get('avatarHash')}`)}), 
+    const avatarHashes = app.profile.get('avatarHashes').toJSON();
+    const avatarHash = getHiRez() ? avatarHashes.small : avatarHashes.tiny;
+
+    if (avatarHash) {
+      this.$('#AvatarBtn').attr('style',
+        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
       url('../imgs/defaultAvatar.png')`);
+    }
   }
 
   navCloseClick() {
@@ -202,10 +208,19 @@ export default class extends View {
   }
 
   render() {
+    let avatarHash = '';
+
+    if (getHiRez() && app.profile && app.profile.avatarHashes.small) {
+      avatarHash = app.profile.avatarHashes.small;
+    } else if (app.profile && app.profile.avatarHashes.tiny) {
+      avatarHash = app.profile.avatarHashes.tiny;
+    }
+
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t({
         addressBarText: this.addressBarText,
         ...(app.profile && app.profile.toJSON() || {}),
+        avatarHash,
       }));
     });
 

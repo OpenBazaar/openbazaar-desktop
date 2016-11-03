@@ -91,8 +91,11 @@
                   <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-avatarRight"></a>
                 </div>
               </div>
-              <div>
+              <div class="posR">
                 <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" />
+                <div class="clrTEm zoomWarning hide js-avatarZoomWarning">
+                  <%= ob.polyT('settings.loadAvatarZoomTooSmall') %>
+                </div>
               </div>
               <div>
                 <input type="file" id="avatarInput" class="cropit-image-input hide" />
@@ -162,8 +165,11 @@
                   <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-headerRight"></a>
                 </div>
               </div>
-              <div>
+              <div class="posR">
                 <input type="range" class="cropit-image-zoom-input disabled js-headerZoom clrP" />
+                <div class="clrTEm zoomWarning hide js-headerZoomWarning">
+                  <%= ob.polyT('settings.loadHeaderZoomTooSmall') %>
+                </div>
               </div>
               <div>
                 <input type="file" id="headerInput" class="cropit-image-input hide" />
@@ -174,6 +180,7 @@
             </div>
           </div>
           <div class="clrT2 txCtr"><%= ob.polyT('settings.loadHeaderHelp', {minWidth: ob.headerMinWidth, minHeight: ob.headerMinHeight}) %></div>
+
         </div>
       </div>
     </div>
