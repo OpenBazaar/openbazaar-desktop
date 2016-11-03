@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 import app from '../app';
 import is from 'is_js';
 import SocialAccounts from '../collections/SocialAccounts';
+import Image from './Image';
 
 export default class extends BaseModel {
   defaults() {
@@ -33,6 +34,8 @@ export default class extends BaseModel {
   nested() {
     return {
       social: SocialAccounts,
+      avatarHashes: Image,
+      headerHashes: Image,
     };
   }
 

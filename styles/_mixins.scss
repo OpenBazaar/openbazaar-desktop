@@ -29,6 +29,24 @@
   }
 }
 
+@mixin hiRez {
+  @media (-webkit-min-device-pixel-ratio: 1.5) {
+    @content;
+  }
+}
+
+@mixin largeWidth {
+  @media (min-width: #{$largeWidth}) {
+    @content;
+  }
+}
+
+@mixin smallHeight {
+  @media (max-height: #{$smallHeight}) {
+    @content;
+  }
+}
+
 // todo: refactor this style once we have designs
 @mixin processingOverlay {
   position: relative;
