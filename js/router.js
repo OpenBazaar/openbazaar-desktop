@@ -64,7 +64,6 @@ export default class ObRouter extends Router {
     this.currentPage = vw;
     getPageContainer().append(vw.el);
     app.loadingModal.close();
-    // this.trigger('routed');
   }
 
   userViaHandle(handle, ...args) {

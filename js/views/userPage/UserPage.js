@@ -50,9 +50,11 @@ export default class extends baseVw {
       });
     }
 
-    this.listenTo(this.model, 'change', () => this.render());
-    this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
-    this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
+    // todo: can't re-render when things happen async because user may be interacting with
+    // the page and certain page state will be lost. For the images, I think we should
+    // update with jQuery.
+    // this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
+    // this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
   }
 
   className() {

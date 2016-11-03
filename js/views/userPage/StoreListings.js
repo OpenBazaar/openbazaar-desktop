@@ -43,12 +43,6 @@ export default class extends BaseVw {
   }
 
   render() {
-    // loadTemplate('userPage/storeListings.html', (t) => {
-    //   this.$el.html(t({
-    //     ...this.collection.toJSON(),
-    //   }));
-    // });
-
     this.listingShortViews.forEach(vw => vw.remove());
     this.listingShortViews = [];
     const listingsFrag = document.createDocumentFragment();

@@ -31,12 +31,9 @@ export default class extends BaseVw {
     if (this.expanded) {
       this.expanded = false;
       this.$moreCatsWrap.removeClass('expanded');
-      // this.$moreCats.addClass('hide');
-      // this.$showMore.addClass('hide');
     } else {
       this.expanded = true;
       this.$moreCatsWrap.addClass('expanded');
-      // this.$moreCats.removeClass('hide');
     }
   }
 
@@ -47,16 +44,6 @@ export default class extends BaseVw {
   get selectedCat() {
     return this._selected;
   }
-
-  // get $moreCats() {
-  //   return this._$moreCats ||
-  //     (this._$moreCats = this.$('.js-moreCats'));
-  // }
-
-  // get $showMore() {
-  //   return this._$showMore ||
-  //     (this._$showMore = this.$('.js-showMore'));
-  // }
 
   get $moreCatsWrap() {
     return this._$moreCatsWrap ||
@@ -73,8 +60,6 @@ export default class extends BaseVw {
       }));
     });
 
-    // this._$moreCats = null;
-    // this._$showMore = null;
     this._$moreCatsWrap = null;
 
     return this;
