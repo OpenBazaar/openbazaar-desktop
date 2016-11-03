@@ -73,14 +73,10 @@ export default class extends baseVw {
 
   onClick(e) {
     // todo: Think about how we are fetching listings and how fresh they need to
-    // be. We could fetch by hash here, which would be much mroe beneficial from
-    // a caching perspective, but it means there's a chance the user may load a
-    // non out of date version of a listing and then go through the buy process
+    // be. We could fetch by hash here, which would be much more beneficial from
+    // a caching perspective, but it means there's a chance the user may load an
+    // out of date version of a listing and then go through the buy process
     // only to be rejected.
-    //
-    // Similarly, we are now fetching the listing each time the card (or edit)
-    // button is clicked. It would be much more efficient to only fetch it once
-    // and then re-use the same model.
     //
     // Boils down to, in the few minutes the user may be on the page the card is on,
     // how likely is it that the listing will change (probably not very likely) and

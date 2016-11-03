@@ -7,7 +7,7 @@ import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
-import { getHiRez } from '../utils/responsive';
+import { isHiRez } from '../utils/responsive';
 
 const remote = electron.remote;
 
@@ -88,7 +88,7 @@ export default class extends View {
 
   updateAvatar() {
     const avatarHashes = app.profile.get('avatarHashes').toJSON();
-    const avatarHash = getHiRez() ? avatarHashes.small : avatarHashes.tiny;
+    const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
 
     if (avatarHash) {
       this.$('#AvatarBtn').attr('style',
@@ -210,7 +210,7 @@ export default class extends View {
   render() {
     let avatarHash = '';
 
-    if (app.profile && getHiRez()) {
+    if (app.profile && isHiRez()) {
       const avatarHashes = app.profile.get('avatarHashes');
 
       if (avatarHashes.small) {
