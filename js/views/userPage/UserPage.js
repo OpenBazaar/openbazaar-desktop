@@ -50,9 +50,10 @@ export default class extends baseVw {
       });
     }
 
-    // todo: can't re-render when things happen async because user may be interacting with
-    // the page and certain page state will be lost. For the images, I think we should
-    // update with jQuery.
+    // todo: This is way too elaborate of a view to re-render (at least at an unexpected / random
+    // time). When we need to update UI based off of async changes, we need to either display
+    // some indicator and let the user refresh -or- if the changes are simple enough, make them
+    // with jQuery. In this case, I think jQuery would be simple enough.
     // this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
     // this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
   }
