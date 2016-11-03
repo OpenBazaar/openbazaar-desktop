@@ -252,8 +252,10 @@ export default class extends baseVw {
       this.headerZoomMsg = this.$('.js-headerZoomWarning');
 
       // if the avatar or header exist, don't count the first load as a change
-      this.avatarLoadedOnRender = Boolean(this.profile.get('avatarHashes').get('original'));
-      this.headerLoadedOnRender = Boolean(this.profile.get('headerHashes').get('original'));
+      this.avatarLoadedOnRender =
+        Boolean(avatarURI || this.profile.get('avatarHashes').get('original'));
+      this.headerLoadedOnRender =
+        Boolean(headerURI || this.profile.get('headerHashes').get('original'));
 
       setTimeout(() => {
         this.avatarCropper.cropit({
@@ -281,7 +283,11 @@ export default class extends baseVw {
             this.avatarZoomMsg.addClass('hide');
           },
           onZoomDisabled: () => {
-            this.avatarZoomMsg.removeClass('hide');
+            // when the zoome is disabled, show the warning
+            // the zoom is disabled if no image is loaded, check for that condition
+            if (this.avatarCropper.cropit('imageSrc')) {
+              this.avatarZoomMsg.removeClass('hide');
+            }
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -318,7 +324,11 @@ export default class extends baseVw {
             this.headerZoomMsg.addClass('hide');
           },
           onZoomDisabled: () => {
-            this.headerZoomMsg.removeClass('hide');
+            // when the zoome is disabled, show the warning
+            // the zoom is disabled if no image is loaded, check for that condition
+            if (this.headerCropper.cropit('imageSrc')) {
+              this.headerZoomMsg.removeClass('hide');
+            }
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
