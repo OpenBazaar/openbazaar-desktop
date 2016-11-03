@@ -12,9 +12,10 @@ export default class extends Collection {
     return app.getServerUrl(`ipns/${app.profile.id}/listings/index.json`);
   }
 
-  // todo: unit testify. Can I get a witness?
-  // todo: sort, inluding by utf8 chars
-  // todo: document function
+  /**
+   * Returns a list of the aggregate categories from all
+   * the listing in the collection.
+   */
   get categories() {
     const cats = [];
 
@@ -25,7 +26,12 @@ export default class extends Collection {
         });
     });
 
-    return cats;
+    // todo: For now sort will only be accurate for standard ascii
+    // characters. In order to properly sort categories with
+    // foreign characters, we will need to know what language
+    // the listing is in and pass that into localeCompare().
+    // https://github.com/OpenBazaar/openbazaar-go/issues/143
+    return cats.sort();
   }
 
   parse(response) {
