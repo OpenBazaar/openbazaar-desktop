@@ -17,6 +17,7 @@ export default class extends BaseModel {
       description: '',
       tags: [],
       categories: [],
+      sku: '',
     };
   }
 

@@ -25,6 +25,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-editListing': 'onClickEditListing',
+      'click .js-deleteListing': 'onClickDeleteListing',
       ...super.events(),
     };
   }
@@ -56,12 +57,34 @@ export default class extends BaseModal {
     this.listenTo(this.editModal, 'click-return', onEditModalClickReturn);
   }
 
-  get $btnRetry() {
-    return this._$btnRetry || this.$('.js-retryFetch');
+  onClickDeleteListing() {
+    if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
+
+    this.destroyRequest = this.model.destroy();
+
+    if (this.destroyRequest) {
+      this.$deleteListing.addClass('processing');
+
+      this.destroyRequest.done(() => {
+        if (this.destroyRequest.statusText === 'abort' ||
+          this.isRemoved()) return;
+
+        this.close();
+      }).always(() => {
+        if (!this.isRemoved()) {
+          this.$deleteListing.removeClass('processing');
+        }
+      });
+    }
+  }
+
+  get $deleteListing() {
+    return this._$deleteListing || this.$('.js-deleteListing');
   }
 
   remove() {
     if (this.editModal) this.editModal.remove();
+    if (this.destroyRequest) this.destroyRequest.abort();
     super.remove();
   }
 
@@ -77,6 +100,8 @@ export default class extends BaseModal {
       }));
 
       super.render();
+
+      this._$deleteListing = null;
     });
 
     return this;

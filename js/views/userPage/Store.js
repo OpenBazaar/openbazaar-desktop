@@ -117,6 +117,8 @@ export default class extends BaseVw {
   }
 
   onRequest(cl, xhr) {
+    // check cl is instance of collection
+    console.log('i request yo');
     this.fetch = xhr;
     if (!this.retryPressed) this.render();
 
@@ -351,6 +353,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    console.log('we re-render yo');
+
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
 

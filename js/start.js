@@ -16,6 +16,7 @@ import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 import Followers from './collections/Followers';
+import listingDeleteHandler from './startup/listingDelete';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -426,18 +427,6 @@ app.apiSocket.on('message', (e) => {
 
 let unpublishedConfirm;
 
-app.apiSocket.on('message', (e) => {
-  if (e.jsonData) {
-    if (e.jsonData.notification) {
-      if (e.jsonData.notification.follow) {
-        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
-      } else if (e.jsonData.notification.unfollow) {
-        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
-      }
-    }
-  }
-});
-
 ipcRenderer.on('close-attempt', (e) => {
   if (!unpublishedContent) {
     e.sender.send('close-confirmed');
@@ -466,3 +455,18 @@ ipcRenderer.on('close-attempt', (e) => {
     .open();
   }
 });
+
+app.apiSocket.on('message', (e) => {
+  if (e.jsonData) {
+    if (e.jsonData.notification) {
+      if (e.jsonData.notification.follow) {
+        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
+      } else if (e.jsonData.notification.unfollow) {
+        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+      }
+    }
+  }
+});
+
+// initialize our listing delete handler
+listingDeleteHandler();

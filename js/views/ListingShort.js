@@ -3,7 +3,7 @@ import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
-import ListingShort from '../models/ListingShort';
+import ListingShort from '../models/listing/ListingShort';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
 
@@ -44,6 +44,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-edit': 'onClickEdit',
+      'click .js-delete': 'onClickDelete',
       click: 'onClick',
     };
   }
@@ -69,6 +70,27 @@ export default class extends baseVw {
       .fail(() => {
         // todo: show errors;
       });
+  }
+
+  onClickDelete() {
+    if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
+
+    this.destroyRequest = this.model.destroy();
+
+    if (this.destroyRequest) {
+      this.$btnDelete.addClass('processing');
+
+      this.destroyRequest.done(() => {
+        if (this.destroyRequest.statusText === 'abort' ||
+          this.isRemoved()) return;
+
+        this.$el.addClass('disabled');
+      }).always(() => {
+        if (!this.isRemoved()) {
+          this.$btnDelete.removeClass('processing');
+        }
+      });
+    }
   }
 
   onClick(e) {
@@ -125,16 +147,9 @@ export default class extends baseVw {
       }, {
         guid: app.profile.id,
       });
-
-      this.fullListing.on('request', (md, xhr) => this.fullListingFetches.push(xhr));
     }
 
     return this._fullListing;
-  }
-
-  remove() {
-    this.fullListingFetches.forEach(fetch => fetch.abort());
-    super.remove();
   }
 
   get $btnEdit() {
@@ -145,6 +160,12 @@ export default class extends baseVw {
   get $btnDelete() {
     return this._$btnDelete ||
       (this._$btnDelete = this.$('.js-delete'));
+  }
+
+  remove() {
+    this.fullListingFetches.forEach(fetch => fetch.abort());
+    if (this.destroyRequest) this.destroyRequest.abort();
+    super.remove();
   }
 
   render() {
