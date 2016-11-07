@@ -33,10 +33,6 @@ export default class extends baseVw {
 
     if (this.options.ownListing) {
       this.$el.addClass('ownListing');
-
-      // if (isDeleting(this.model.get('slug'))) {
-      //   this.$el.addClass('listing-deleting');
-      // }
     }
 
     this.fullListingFetches = [];

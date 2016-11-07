@@ -10,6 +10,7 @@ import { Events } from 'backbone';
 // triggered the event as well as an options object.
 //
 // Available events:
+// (as of now these only make sense for your own listings)
 // - saved: Triggered when a listing is saved. A created flag will
 //   be passed into the callback options to indicate whether this was
 //   a newly created listing or an update to an existing one.
