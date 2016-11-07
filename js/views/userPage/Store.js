@@ -117,8 +117,10 @@ export default class extends BaseVw {
   }
 
   onRequest(cl, xhr) {
-    // check cl is instance of collection
-    console.log('i request yo');
+    // Ignore a request on the ListingShort model, which happens
+    // if we delete it.
+    if (!(cl instanceof Listings)) return;
+
     this.fetch = xhr;
     if (!this.retryPressed) this.render();
 
@@ -353,8 +355,6 @@ export default class extends BaseVw {
   }
 
   render() {
-    console.log('we re-render yo');
-
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
 

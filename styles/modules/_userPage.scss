@@ -142,50 +142,6 @@
               width: 223px;
               height: 225px;
               position: relative;
-
-              .editOverlay {
-                display: none;
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                align-items: center;
-                justify-content: center;
-                z-index: 1; // so it's above the overlay icons                
-
-                .overlayPanel {
-                  // Using seperate element just for the overlay so that
-                  // the opacity doesn't affect the buttons, but we could 
-                  // still use the clrS class (instead of RGBA).
-                  opacity: 0.9;
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-                }
-
-                .btn {
-                  z-index: 1;
-                  border-left-width: 0;
-
-                  &:first-of-type {
-                    border-left-width: 1px;
-                  }
-                }
-              }
-            }
-
-            &:hover {
-              .editOverlay {
-                display: flex;
-              }
-
-              &.ownListing {
-                // todo: change to focused color variable
-                border-color: black;
-              }
             }
 
             .listingIcons {
@@ -193,6 +149,95 @@
               top: 8px;
               right: 8px;
             }
+
+            .overlayPanel {
+              display: none;
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              align-items: center;
+              justify-content: center;
+              z-index: 1; // so it's above the overlay icons                
+
+              .overlayPanelInner {
+                // Using seperate element just for the overlay so that
+                // the opacity doesn't affect the buttons, but we could 
+                // still use the clrS class (instead of RGBA).
+                opacity: 0.9;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+              }
+            }
+
+            .editOverlay {
+              .btn {
+                z-index: 1;
+                border-left-width: 0;
+
+                &:first-of-type {
+                  border-left-width: 1px;
+                }
+              }
+            }
+
+            &:hover:not(.listingDeleting):not(.listingDeleted) {
+              .editOverlay {
+                display: flex;
+              }
+
+              &.ownListing {
+                border-color: $focusedBorder;
+              }
+            }
+
+            .deleteOverlay {
+              .deletingText, .deletedText {
+                display: none;
+              }
+            }
+
+            &.listingDeleting,
+            &.listingDeleted {
+              cursor: default;
+              pointer-events: none;
+
+              .deleteOverlay {
+                display: flex;
+
+                .deletingText, .deletedText {
+                  z-index: 1;
+                }
+              }
+            }
+
+            &.listingDeleting {
+              .deleteOverlay {
+                .deletingText {
+                  display: block;
+                }
+
+                .deletedText {
+                  display: none;
+                }
+              }
+            }
+
+            &.listingDeleted {
+              .deleteOverlay {
+                .deletingText {
+                  display: none;
+                }
+
+                .deletedText {
+                  display: block;                  
+                }
+              }
+            }                        
           }
         }
 

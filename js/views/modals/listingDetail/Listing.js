@@ -60,7 +60,7 @@ export default class extends BaseModal {
   onClickDeleteListing() {
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
 
-    this.destroyRequest = this.model.destroy();
+    this.destroyRequest = this.model.destroy({ wait: true });
 
     if (this.destroyRequest) {
       this.$deleteListing.addClass('processing');

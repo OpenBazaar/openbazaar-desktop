@@ -4,6 +4,7 @@ import loadTemplate from '../utils/loadTemplate';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
+import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
 
@@ -32,9 +33,33 @@ export default class extends baseVw {
 
     if (this.options.ownListing) {
       this.$el.addClass('ownListing');
+
+      // if (isDeleting(this.model.get('slug'))) {
+      //   this.$el.addClass('listing-deleting');
+      // }
     }
 
     this.fullListingFetches = [];
+
+    if (this.options.ownListing) {
+      this.listenTo(listingEvents, 'destroying', (md, opts) => {
+        if (this.isRemoved()) return;
+
+        if (opts.slug === this.model.get('slug')) {
+          this.$el.addClass('listingDeleting');
+        }
+
+        opts.xhr.fail(() => (this.$el.removeClass('listingDeleting')));
+      });
+
+      this.listenTo(listingEvents, 'destroy', (md, opts) => {
+        if (this.isRemoved()) return;
+
+        if (opts.slug === this.model.get('slug')) {
+          this.$el.addClass('listingDeleted');
+        }
+      });
+    }
   }
 
   className() {
@@ -75,22 +100,7 @@ export default class extends baseVw {
   onClickDelete() {
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
 
-    this.destroyRequest = this.model.destroy();
-
-    if (this.destroyRequest) {
-      this.$btnDelete.addClass('processing');
-
-      this.destroyRequest.done(() => {
-        if (this.destroyRequest.statusText === 'abort' ||
-          this.isRemoved()) return;
-
-        this.$el.addClass('disabled');
-      }).always(() => {
-        if (!this.isRemoved()) {
-          this.$btnDelete.removeClass('processing');
-        }
-      });
-    }
+    this.destroyRequest = this.model.destroy({ wait: true });
   }
 
   onClick(e) {
