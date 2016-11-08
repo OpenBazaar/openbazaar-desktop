@@ -12,6 +12,13 @@ export default class extends BaseModel {
     return 'use-sync';
   }
 
+  defaults() {
+    return {
+      termsAndConditions: '',
+      refundPolicy: '',
+    };
+  }
+
   get nested() {
     return {
       item: Item,

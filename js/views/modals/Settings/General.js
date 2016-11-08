@@ -27,8 +27,6 @@ export default class extends baseVw {
   save() {
     const formData = this.getFormData();
 
-    this.settings.set(formData);
-
     const save = this.settings.save(formData, {
       attrs: formData,
       type: 'PATCH',

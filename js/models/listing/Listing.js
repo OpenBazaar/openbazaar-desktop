@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 import ListingInner from './ListingInner';
@@ -88,6 +89,8 @@ export default class extends BaseModel {
     };
 
     if (method === 'create' || method === 'update') {
+      const attrsBeforeSync = this.lastSyncedAttrs;
+
       returnSync.done((data) => {
         if (method === 'create') {
           // On a successful create the slug will be returned. Here we'll move
@@ -98,10 +101,19 @@ export default class extends BaseModel {
           }
         }
 
+        const hasChanged = () => (!_.isEqual(attrsBeforeSync, this.toJSON()));
+
+        // todo: Put in a changedAttrs function that includes
+        // which attrs have changed. (a bit challenging
+        // to handle the nested ones, but recursion is
+        // our friend folks).
+        // maybe this: https://github.com/flitbit/diff
+
         listingEvents.trigger('saved', this, {
           ...eventOpts,
           created: method === 'create',
           slug: this.get('listing').get('slug'),
+          hasChanged,
         });
       });
     } else if (method === 'delete') {

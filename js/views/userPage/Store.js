@@ -1,14 +1,17 @@
 import $ from 'jquery';
 import 'select2';
+import '../../utils/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
+import { events as listingEvents } from '../../models/listing/';
 import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
 import StoreListings from './StoreListings';
 import CategoryFilter from './CategoryFilter';
+import PopInMessage from '../PopInMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -35,9 +38,63 @@ export default class extends BaseVw {
     this.listenTo(this.collection, 'request', this.onRequest);
     this.listenTo(this.collection, 'update', this.onUpdateCollection);
 
+    if (this.model.id === app.profile.id) {
+      this.listenTo(listingEvents, 'saved', (md, opts) => {
+        // For now, we only know if the listing model has
+        // changed in some way since the last save. We don't
+        // know what specifically changed. So, this message
+        // will show if some listing attribute changed, even
+        // though it may not be one represented in the store.
+
+        if (opts.hasChanged()) {
+          this.showDataChangedMessage();
+        }
+      });
+
+      this.listenTo(listingEvents, 'destroy', () => (this.showDataChangedMessage()));
+    }
+
+    this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
+
+    // todo: Update event is overfiring because of the way we are cloning and updating the
+    // global settings model. Find a cleaner way to sync nested cols (e.g. using cid as a
+    // mapping).
+    // this.listenTo(app.settings.get('shippingAddresses'), 'update',
+    //   () => (this.showShippingChangedMessage()));
+
+    // this block should be last
     if (options.initialFetch) {
       this.fetch = options.initialFetch;
       this.onRequest(this.collection, this.fetch);
+    }
+  }
+
+  showDataChangedMessage() {
+    if (this.dataChangePopIn) {
+      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.dataChangePopIn = new PopInMessage({
+        messageText: 'Listing data has changed (translate me). ' +
+          '<a class="js-refresh">refresh</a>',
+      });
+
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+      this.$popInMessages.append(this.dataChangePopIn.render().el);
+    }
+  }
+
+  showShippingChangedMessage() {
+    if (this.shippingChangePopIn) {
+      this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.shippingChangePopIn = new PopInMessage({
+        messageText: 'Your country and/or shipping address information has changed. This may' +
+          ' affect which listings ship free to you. It is recommended you' +
+          ' <a class="js-refresh">refresh</a> to see the latest data.',
+      });
+
+      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+      this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
   }
 
@@ -354,6 +411,11 @@ export default class extends BaseVw {
     this.categoryFilter.render();
   }
 
+  get $popInMessages() {
+    return this._$popInMessages ||
+      (this._$popInMessages = this.$('.js-popInMessages'));
+  }
+
   render() {
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
@@ -377,6 +439,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$shipsToCheckbox = null;
+    this._$popInMessages = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,

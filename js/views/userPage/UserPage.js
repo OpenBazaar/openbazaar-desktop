@@ -223,9 +223,6 @@ export default class extends baseVw {
   }
 
   render() {
-    // This view is not designed to be re-rendered as
-    // it will kick off server requests. The following
-    // code assumes we will not re-render.
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
