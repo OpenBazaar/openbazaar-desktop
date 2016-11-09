@@ -56,11 +56,25 @@ export default class extends BaseVw {
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
 
-    // todo: Update event is overfiring because of the way we are cloning and updating the
-    // global settings model. Find a cleaner way to sync nested cols (e.g. using cid as a
-    // mapping).
-    // this.listenTo(app.settings.get('shippingAddresses'), 'update',
-    //   () => (this.showShippingChangedMessage()));
+    this.listenTo(app.settings.get('shippingAddresses'), 'update',
+      (cl, opts) => {
+        if (opts.changes.merged.length) {
+          // ensure any merged ones have actually changed
+          const models = opts.changes.merged;
+
+          for (let i = 0; i < models.length; i++) {
+            if (models[i].hasChanged()) {
+              this.showShippingChangedMessage();
+              return;
+            }
+          }
+        }
+
+        if (opts.changes.added.length ||
+          opts.changes.removed.length) {
+          this.showShippingChangedMessage();
+        }
+      });
 
     // this block should be last
     if (options.initialFetch) {
@@ -70,7 +84,7 @@ export default class extends BaseVw {
   }
 
   showDataChangedMessage() {
-    if (this.dataChangePopIn) {
+    if (this.dataChangePopIn && $.contains(this.el, this.dataChangePopIn.el)) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       this.dataChangePopIn = new PopInMessage({
@@ -79,12 +93,18 @@ export default class extends BaseVw {
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
+        this.dataChangePopIn.remove();
+        this.dataChangePopIn = null;
+      });
+
       this.$popInMessages.append(this.dataChangePopIn.render().el);
     }
   }
 
   showShippingChangedMessage() {
-    if (this.shippingChangePopIn) {
+    if (this.shippingChangePopIn && $.contains(this.el, this.shippingChangePopIn.el)) {
       this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       this.shippingChangePopIn = new PopInMessage({
@@ -94,6 +114,12 @@ export default class extends BaseVw {
       });
 
       this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
+        this.shippingChangePopIn.remove();
+        this.shippingChangePopIn = null;
+      });
+
       this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
   }

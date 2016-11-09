@@ -104,10 +104,7 @@ export default class extends BaseModel {
         const hasChanged = () => (!_.isEqual(attrsBeforeSync, this.toJSON()));
 
         // todo: Put in a changedAttrs function that includes
-        // which attrs have changed. (a bit challenging
-        // to handle the nested ones, but recursion is
-        // our friend folks).
-        // maybe this: https://github.com/flitbit/diff
+        // which attrs have changed.
 
         listingEvents.trigger('saved', this, {
           ...eventOpts,

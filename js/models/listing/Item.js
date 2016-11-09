@@ -1,12 +1,20 @@
+import { guid } from '../../utils';
+import is from 'is_js';
 import app from '../../app';
 import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Image from './Image';
-import is from 'is_js';
 
 class ListingImages extends Collection {
   model(attrs, options) {
-    return new Image(attrs, options);
+    return new Image({
+      _clientID: attrs._clientID || guid(),
+      ...attrs,
+    }, options);
+  }
+
+  modelId(attrs) {
+    return attrs._clientID;
   }
 }
 

@@ -97,7 +97,6 @@ export default class extends baseVw {
     } else {
       const shippingAddresses = this.settings.get('shippingAddresses');
 
-      console.log('pushing new ship address');
       shippingAddresses.push(model);
 
       const save = this.settings.save({ shippingAddresses: shippingAddresses.toJSON() }, {

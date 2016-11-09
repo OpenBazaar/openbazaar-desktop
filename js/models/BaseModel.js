@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { removeProp } from '../utils/object';
 import { Model, Collection } from 'backbone';
 
 /*
@@ -217,5 +218,13 @@ export default class extends Model {
     clone.lastSyncedAttrs = this.lastSyncedAttrs;
 
     return clone;
+  }
+
+  sync(method, model, options) {
+    if (method === 'create' || method === 'update' && options.attrs) {
+      options.attrs = removeProp(options.attrs, '_clientID');
+    }
+
+    return super.sync(method, model, options);
   }
 }

@@ -34,27 +34,18 @@ export default class extends baseVw {
 
   events() {
     return {
-      click: 'onClick',
+      'click [class^="js-"], [class*=" js-"]': 'onClick',
     };
   }
 
   onClick(e) {
-    // If any elements or their ancestors have a '.js-<class>' class,
-    // we'll trigger a 'click<Class>' event from this view.
+    // If the the el has a '.js-<class>' class, we'll trigger a
+    // 'click<Class>' event from this view.
     const events = [];
 
-    e.target.classList.forEach((className) => {
+    e.currentTarget.classList.forEach((className) => {
       if (className.startsWith('js-')) events.push(className.slice(3));
     });
-
-    if (!events.length) {
-      $(e.target).parents('div[class^="js-"], div[class*=" js-"]')
-        .forEach(el => {
-          el.classList.forEach((className) => {
-            if (className.startsWith('js-')) events.push(className.slice(3));
-          });
-        });
-    }
 
     if (events.length) {
       events.forEach(event => {

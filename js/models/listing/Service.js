@@ -11,6 +11,10 @@ export default class extends BaseModel {
     };
   }
 
+  get idAttribute() {
+    return '_clientID';
+  }  
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {

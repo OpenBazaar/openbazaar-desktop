@@ -61,22 +61,6 @@ export function splitIntoRows(items, itemsPerRow) {
   return rslt;
 }
 
-// http://stackoverflow.com/a/18937118/632806
-// todo: unit test
-export function setDeepValue(obj, path, value) {
-  let schema = obj;  // a moving reference to internal objects within obj
-  const pList = path.split('.');
-  const len = pList.length;
-
-  for (let i = 0; i < len - 1; i++) {
-    const elem = pList[i];
-    if (!schema[elem]) schema[elem] = {};
-    schema = schema[elem];
-  }
-
-  schema[pList[len - 1]] = value;
-}
-
 // http://stackoverflow.com/a/2686098/632806
 // todo: unit test
 export function abbrNum(_number, _decPlaces = 1) {
@@ -113,4 +97,16 @@ export function abbrNum(_number, _decPlaces = 1) {
   }
 
   return number;
+}
+
+// https://github.com/jeromegn/Backbone.localStorage
+// Generate four random hex digits.
+function s4() {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+}
+
+// https://github.com/jeromegn/Backbone.localStorage
+// Generate a pseudo-GUID by concatenating random hexadecimal.
+export function guid(prefix = '') {
+  return `${prefix}${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 }

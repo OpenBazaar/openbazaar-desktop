@@ -2,6 +2,10 @@ import BaseModel from '../BaseModel';
 import is from 'is_js';
 
 export default class extends BaseModel {
+  get idAttribute() {
+    return '_clientID';
+  }
+
   static get maxFilenameLength() {
     return 255;
   }
