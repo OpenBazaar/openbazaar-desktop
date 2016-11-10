@@ -16,7 +16,18 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-    this._shipsFreeToMe = this.model.shipsFreeToMe();
+    this._shipsFreeToMe = this.model.shipsFreeToMe;
+
+    this.listenTo(app.settings, 'change:country', () =>
+      (this.shipsFreeToMe = this.model.shipsFreeToMe));
+
+    this.listenTo(app.settings.get('shippingAddresses'), 'update',
+      (cl, updateOpts) => {
+        if (updateOpts.changes.added.length ||
+          updateOpts.changes.removed.length) {
+          this.shipsFreeToMe = this.model.shipsFreeToMe;
+        }
+      });
   }
 
   className() {
@@ -79,8 +90,8 @@ export default class extends BaseModal {
     }
   }
 
-  get $deleteListing() {
-    return this._$deleteListing || this.$('.js-deleteListing');
+  get shipsFreeToMe() {
+    return this._shipsFreeToMe;
   }
 
   set shipsFreeToMe(shipsFree) {
@@ -88,8 +99,16 @@ export default class extends BaseModal {
     this._shipsFreeToMe = !!shipsFree;
 
     if (prevVal !== this._shipsFreeToMe) {
-      // toggle with jQuery
+      this.$shipsFreeBanner[this._shipsFreeToMe ? 'removeClass' : 'addClass']('hide');
     }
+  }
+
+  get $deleteListing() {
+    return this._$deleteListing || this.$('.js-deleteListing');
+  }
+
+  get $shipsFreeBanner() {
+    return this._$shipsFreeBanner || this.$('.js-shipsFreeBanner');
   }
 
   remove() {
@@ -104,6 +123,7 @@ export default class extends BaseModal {
 
       this.$el.html(t({
         ...listing.toJSON(),
+        shipsFreeToMe: this.shipsFreeToMe,
         // todo: Will the api to return our own listing return vendorID. Perhaps
         // we centralize the ownListing determination in the listing model?
         ownListing: listing.get('vendorID').guid === app.profile.id,
@@ -112,6 +132,7 @@ export default class extends BaseModal {
       super.render();
 
       this._$deleteListing = null;
+      this._$shipsFreeBanner = null;
     });
 
     return this;

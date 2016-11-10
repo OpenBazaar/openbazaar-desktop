@@ -54,11 +54,14 @@ export function shipsFreeToMe(md) {
   } else {
     freeShipping = [];
 
-    md.get('shippingOptions')
+    md.get('listing')
+      .get('shippingOptions')
       .forEach(shipOpt => {
-        shipOpt.get('service')
+        shipOpt.get('services')
           .forEach(service => {
-            if (service.price === 0) freeShipping.concat(shipOpt.get('regions'));
+            if (service.get('price') === 0) {
+              freeShipping = freeShipping.concat(shipOpt.get('regions'));
+            }
           });
       });
   }
