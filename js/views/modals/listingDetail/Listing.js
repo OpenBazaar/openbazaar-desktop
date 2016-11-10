@@ -16,6 +16,7 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
+    this._shipsFreeToMe = this.model.shipsFreeToMe();
   }
 
   className() {
@@ -80,6 +81,15 @@ export default class extends BaseModal {
 
   get $deleteListing() {
     return this._$deleteListing || this.$('.js-deleteListing');
+  }
+
+  set shipsFreeToMe(shipsFree) {
+    const prevVal = this._shipsFreeToMe;
+    this._shipsFreeToMe = !!shipsFree;
+
+    if (prevVal !== this._shipsFreeToMe) {
+      // toggle with jQuery
+    }
   }
 
   remove() {

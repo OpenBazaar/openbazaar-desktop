@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import $ from 'jquery';
 import { capitalize } from '../utils/string';
 import loadTemplate from '../utils/loadTemplate';
 import baseVw from './baseVw';

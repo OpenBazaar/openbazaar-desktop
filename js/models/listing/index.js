@@ -1,4 +1,8 @@
+import _ from 'underscore';
+import app from '../../app';
 import { Events } from 'backbone';
+import Listing from './Listing';
+import ListingShort from './ListingShort';
 
 // This is an event emitter that we will trigger listing events through.
 // In many cases it is preferable to binding directly to a Listing model
@@ -24,3 +28,41 @@ const events = {
 };
 
 export { events };
+
+// todo: unit test me
+export function shipsFreeToMe(md) {
+  if (!(md instanceof Listing || md instanceof ListingShort)) {
+    throw new Error('Please provide a model as an instance of a Listing' +
+      ' or ListingShort model.');
+  }
+
+  const countries = [];
+
+  app.settings.get('shippingAddresses')
+    .forEach(shipAddr => {
+      const country = shipAddr.get('country');
+      if (country) countries.push(country);
+    });
+
+  const country = app.settings.get('country');
+  if (country) countries.push(country);
+
+  let freeShipping;
+
+  if (md instanceof ListingShort) {
+    freeShipping = md.get('freeShipping');
+  } else {
+    freeShipping = [];
+
+    md.get('shippingOptions')
+      .forEach(shipOpt => {
+        shipOpt.get('service')
+          .forEach(service => {
+            if (service.price === 0) freeShipping.concat(shipOpt.get('regions'));
+          });
+      });
+  }
+
+  // countries may have dupes, but it's no bother for this purpose
+  return !!_.intersection(freeShipping, countries).length;
+}

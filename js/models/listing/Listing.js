@@ -2,7 +2,7 @@ import _ from 'underscore';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 import ListingInner from './ListingInner';
-import { events as listingEvents } from './';
+import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
@@ -21,6 +21,10 @@ export default class extends BaseModel {
     return {
       listing: ListingInner,
     };
+  }
+
+  get shipsFreeToMe() {
+    return shipsFreeToMe(this);
   }
 
   validate() {
