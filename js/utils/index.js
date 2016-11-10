@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import app from '../app';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -80,12 +81,17 @@ export function setDeepValue(obj, path, value) {
 // http://stackoverflow.com/a/2686098/632806
 // todo: unit test
 export function abbrNum(_number, _decPlaces = 1) {
+  if (!app || !app.polyglot) {
+    throw new Error('Polyglot not found on the app instance. It is needed to' +
+      ' properly localize the abreviated number.');
+  }
+
   // 2 decimal places => 100, 3 => 1000, etc
   const decPlaces = Math.pow(10, _decPlaces);
   let number = _number;
 
   // Enumerate number abbreviations
-  const abbrev = ['k', 'm', 'b', 't'];
+  const abbrev = ['thousand', 'million', 'billion', 'trillion'];
 
   // Go through the array backwards, so we do the largest first
   for (let i = abbrev.length - 1; i >= 0; i--) {
@@ -104,8 +110,7 @@ export function abbrNum(_number, _decPlaces = 1) {
         i++;
       }
 
-      // Add the letter for the abbreviation
-      number += abbrev[i];
+      number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
 
       // We are done... stop
       break;
