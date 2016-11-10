@@ -81,11 +81,6 @@ export function setDeepValue(obj, path, value) {
 // http://stackoverflow.com/a/2686098/632806
 // todo: unit test
 export function abbrNum(_number, _decPlaces = 1) {
-  if (!app || !app.polyglot) {
-    throw new Error('Polyglot not found on the app instance. It is needed to' +
-      ' properly localize the abreviated number.');
-  }
-
   // 2 decimal places => 100, 3 => 1000, etc
   const decPlaces = Math.pow(10, _decPlaces);
   let number = _number;
@@ -110,6 +105,14 @@ export function abbrNum(_number, _decPlaces = 1) {
         i++;
       }
 
+      let lang = app && app.settings && app.settings.get('language');
+
+      if (!lang) {
+        console.warn('Unable to get the languages from the settings. Using en-US.');
+        lang = 'en-US';
+      }
+
+      number = new Intl.NumberFormat(lang).format(number);
       number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
 
       // We are done... stop
