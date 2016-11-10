@@ -320,8 +320,8 @@ export default class extends BaseVw {
     }
 
     const listingCountContent =
-      `<span class="txB"><span>${col.length}</span> listing` +
-      `${col.length === 1 ? '' : 's'}</span> found`;
+      `<span class="txB">${col.length} listing` +
+      `${col.length === 1 ? '' : 's'}</span> found (translate pluralized)`;
     this.$listingCount.html(listingCountContent);
 
     this.storeListings.render();
@@ -384,10 +384,13 @@ export default class extends BaseVw {
       // dropdownPosition : 'below',
     });
 
-    if (!this.rendered && this.options.listing) {
-      // if first render, show a listing if it was
-      // passed in as a view option
-      this.showListing(this.options.listing);
+    if (!this.rendered) {
+      if (this.options.listing) {
+        // if first render, show a listing if it was
+        // passed in as a view option
+        this.showListing(this.options.listing);
+      }
+
       this.rendered = true;
     }
 
