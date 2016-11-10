@@ -28,7 +28,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'popInMessage clrS border clrBr padSm tx5';
+    return 'popInMessage clrS border clrBr padSm tx5 clrSh1';
   }
 
   events() {

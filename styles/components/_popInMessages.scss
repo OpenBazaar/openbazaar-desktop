@@ -1,10 +1,9 @@
 .popInMessageHolder {
   position: fixed;
   margin: 0 auto;
-  left: 0;
-  right: 0;
-  z-index: 1;
+  left: 50%;
   top: 140px;
+  transform: translateX(-50%);
 
   .popInMessage {
     margin-bottom: 25px;

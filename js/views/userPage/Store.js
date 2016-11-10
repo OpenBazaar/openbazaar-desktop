@@ -45,7 +45,6 @@ export default class extends BaseVw {
         // know what specifically changed. So, this message
         // will show if some listing attribute changed, even
         // though it may not be one represented in the store.
-
         if (opts.hasChanged()) {
           this.showDataChangedMessage();
         }
@@ -58,18 +57,6 @@ export default class extends BaseVw {
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
       (cl, opts) => {
-        if (opts.changes.merged.length) {
-          // ensure any merged ones have actually changed
-          const models = opts.changes.merged;
-
-          for (let i = 0; i < models.length; i++) {
-            if (models[i].hasChanged()) {
-              this.showShippingChangedMessage();
-              return;
-            }
-          }
-        }
-
         if (opts.changes.added.length ||
           opts.changes.removed.length) {
           this.showShippingChangedMessage();
@@ -84,10 +71,11 @@ export default class extends BaseVw {
   }
 
   showDataChangedMessage() {
-    if (this.dataChangePopIn && $.contains(this.el, this.dataChangePopIn.el)) {
+    if (this.dataChangePopIn ||
+      (this.dataChangePopIn && this.dataChangePopIn.isRemoved())) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      this.dataChangePopIn = new PopInMessage({
+      this.dataChangePopIn = this.createChild(PopInMessage, {
         messageText: 'Listing data has changed (translate me). ' +
           '<a class="js-refresh">refresh</a>',
       });
@@ -104,10 +92,11 @@ export default class extends BaseVw {
   }
 
   showShippingChangedMessage() {
-    if (this.shippingChangePopIn && $.contains(this.el, this.shippingChangePopIn.el)) {
+    if (this.shippingChangePopIn ||
+      (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
       this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      this.shippingChangePopIn = new PopInMessage({
+      this.shippingChangePopIn = this.createChild(PopInMessage, {
         messageText: 'Your country and/or shipping address information has changed. This may' +
           ' affect which listings ship free to you. It is recommended you' +
           ' <a class="js-refresh">refresh</a> to see the latest data.',
@@ -443,6 +432,9 @@ export default class extends BaseVw {
   }
 
   render() {
+    if (this.dataChangePopIn) this.dataChangePopIn.remove();
+    if (this.shippingChangePopIn) this.shippingChangePopIn.remove();
+
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
 

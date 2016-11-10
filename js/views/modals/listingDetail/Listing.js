@@ -1,7 +1,9 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
+import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
+import PopInMessage from '../../PopInMessage';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -28,6 +30,17 @@ export default class extends BaseModal {
           this.shipsFreeToMe = this.model.shipsFreeToMe;
         }
       });
+
+    if (this.isOwnListing()) {
+      this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
+        const slug = this.model.get('listing')
+          .get('slug');
+
+        if (savedOpts.slug === slug && savedOpts.hasChanged()) {
+          this.showDataChangedMessage();
+        }
+      });
+    }
   }
 
   className() {
@@ -90,6 +103,32 @@ export default class extends BaseModal {
     }
   }
 
+  showDataChangedMessage() {
+    if (this.dataChangePopIn || (this.dataChangePopIn && this.dataChangePopIn.isRemoved())) {
+      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.dataChangePopIn = this.createChild(PopInMessage, {
+        messageText: 'Listing data has changed (translate me). ' +
+          '<a class="js-refresh">refresh</a>',
+      });
+
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
+
+      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
+        this.dataChangePopIn.remove();
+        this.dataChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.dataChangePopIn.render().el);
+    }
+  }
+
+  isOwnListing() {
+    // todo: Will the api to return our own listing return vendorID. Perhaps
+    // we centralize the ownListing determination in the listing model?
+    return this.model.get('listing').get('vendorID').guid === app.profile.id;
+  }
+
   get shipsFreeToMe() {
     return this._shipsFreeToMe;
   }
@@ -111,6 +150,11 @@ export default class extends BaseModal {
     return this._$shipsFreeBanner || this.$('.js-shipsFreeBanner');
   }
 
+  get $popInMessages() {
+    return this._$popInMessages ||
+      (this._$popInMessages = this.$('.js-popInMessages'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -118,21 +162,20 @@ export default class extends BaseModal {
   }
 
   render() {
-    loadTemplate('modals/listingDetail/listing.html', t => {
-      const listing = this.model.get('listing');
+    if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
+    loadTemplate('modals/listingDetail/listing.html', t => {
       this.$el.html(t({
-        ...listing.toJSON(),
+        ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
-        // todo: Will the api to return our own listing return vendorID. Perhaps
-        // we centralize the ownListing determination in the listing model?
-        ownListing: listing.get('vendorID').guid === app.profile.id,
+        ownListing: this.isOwnListing(),
       }));
 
       super.render();
 
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
+      this._$popInMessages = null;
     });
 
     return this;
