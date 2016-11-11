@@ -1,7 +1,6 @@
 import app from '../../app';
-// import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
-import ListingShort from '../ListingShort';
+import ListingCard from '../ListingCard';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -19,41 +18,35 @@ export default class extends BaseVw {
       throw new Error('Please provide the guid of the storeOwner.');
     }
 
-    this.listingShortViews = [];
+    this.listingCardViews = [];
   }
 
   className() {
-    return 'listingsWrap flex';
+    return 'listingsGrid flex';
   }
 
-  events() {
-    return {
-      // 'click .js-retryFetch': 'onClickRetryFetch',
-    };
-  }
-
-  createListingShortView(opts = {}) {
+  createListingCardView(opts = {}) {
     const options = {
       ownListing: this.options.storeOwner === app.profile.id,
       listingBaseUrl: `${this.options.storeOwner}/store/`,
       ...opts,
     };
 
-    return this.createChild(ListingShort, options);
+    return this.createChild(ListingCard, options);
   }
 
   render() {
-    this.listingShortViews.forEach(vw => vw.remove());
-    this.listingShortViews = [];
+    this.listingCardViews.forEach(vw => vw.remove());
+    this.listingCardViews = [];
     const listingsFrag = document.createDocumentFragment();
 
     this.collection.forEach(listingShort => {
-      const listingShortVw = this.createListingShortView({
+      const listingCardVw = this.createListingCardView({
         model: listingShort,
       });
 
-      this.listingShortViews.push(listingShortVw);
-      listingShortVw.render().$el.appendTo(listingsFrag);
+      this.listingCardViews.push(listingCardVw);
+      listingCardVw.render().$el.appendTo(listingsFrag);
     });
 
     this.$el.append(listingsFrag);

@@ -1,0 +1,12 @@
+.listingsGrid {
+  flex-wrap: wrap;
+
+  .listingCard {
+    margin: 0 $padMd $padMd 0;
+    font-size: $tx5b;
+  }
+
+  & .listingsGridListView {
+    margin: 0;
+  }
+}

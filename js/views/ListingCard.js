@@ -59,7 +59,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'col clrBr clrT clrP';
+    return 'listingCard col clrBr clrT clrP';
   }
 
   events() {

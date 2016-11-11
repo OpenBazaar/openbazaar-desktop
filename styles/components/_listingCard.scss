@@ -1,0 +1,132 @@
+.listingCard {
+  width: 225px;
+  height: 283px;
+  border-style: solid;
+  border-width: 1px;
+  font-size: $tx5b;
+  cursor: pointer;
+
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
+
+  .listingImage {
+    width: 223px;
+    height: 225px;
+    position: relative;
+  }
+
+  .listingIcons {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }  
+
+  .overlayPanel {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; // so it's above the overlay icons                
+
+    .overlayPanelInner {
+      // Using seperate element just for the overlay so that
+      // the opacity doesn't affect the buttons, but we could 
+      // still use the clrS class (instead of RGBA).
+      opacity: 0.9;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  .editOverlay {
+    .btn {
+      z-index: 1;
+      border-left-width: 0;
+
+      &:first-of-type {
+        border-left-width: 1px;
+      }
+    }
+  }
+
+  &:hover:not(.listingDeleting):not(.listingDeleted) {
+    .editOverlay {
+      display: flex;
+    }
+
+    &.ownListing {
+      border-color: $focusedBorder;
+    }
+  }
+
+  .deleteOverlay {
+    .deletingText, .deletedText {
+      display: none;
+    }
+  }
+
+  &.listingDeleting,
+  &.listingDeleted {
+    cursor: default;
+    pointer-events: none;
+
+    .deleteOverlay {
+      display: flex;
+
+      .deletingText, .deletedText {
+        z-index: 1;
+      }
+    }
+  }
+
+  &.listingDeleting {
+    .deleteOverlay {
+      .deletingText {
+        display: block;
+      }
+
+      .deletedText {
+        display: none;
+      }
+    }
+  }
+
+  &.listingDeleted {
+    .deleteOverlay {
+      .deletingText {
+        display: none;
+      }
+
+      .deletedText {
+        display: block;                  
+      }
+    }
+  }
+
+  // Couple assumptions here:
+  // a.) We will only potentially have a "list view" style card
+  //     when the listingCard is inside a .listingsGrid.
+  // b.) The .listingsGridListView class will be applied to the
+  //     .listingsGrid element as opposed to each individual card.
+  //     This is so as you toggle to/from grid/list view, you only
+  //     change one class on a parent element and consequently have
+  //     only one DOM reflow/repaint.
+  .listingsGridListView & {
+    padding: $pad;
+
+    // todo: have the view swap in a tiny image rather than sizing down
+    // the slightly larger ones.
+    .listingImage {
+      width: 45px;
+      height: 45px;
+    }
+  }
+}
