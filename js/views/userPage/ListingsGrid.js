@@ -18,11 +18,33 @@ export default class extends BaseVw {
       throw new Error('Please provide the guid of the storeOwner.');
     }
 
+    this.viewType = 'grid';
     this.listingCardViews = [];
   }
 
   className() {
     return 'listingsGrid flex';
+  }
+
+  get viewType() {
+    return this._viewType;
+  }
+
+  set viewType(type) {
+    if (['list', 'grid'].indexOf(type) === '-1') {
+      throw new Error('The type provided is not one of the available types.');
+    }
+
+    const prevType = this._viewType;
+    this._viewType = type;
+
+    if (prevType) {
+      if (prevType !== this._viewType) {
+        this.$el.toggleClass('listingsGridListView');
+      }
+    } else if (type === 'list') {
+      this.$el.addClass('listingsGridListView');
+    }
   }
 
   createListingCardView(opts = {}) {

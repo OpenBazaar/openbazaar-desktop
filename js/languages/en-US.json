@@ -121,7 +121,8 @@
   },
   "listingShort": {
     "btnEdit": "Edit",
-    "btnDelete": "Delete"
+    "btnDelete": "Delete",
+    "btnDetails": "Details"
   },
   "editListing": {
     "formats": {

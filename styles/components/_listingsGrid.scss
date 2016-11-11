@@ -11,7 +11,16 @@
     }
   }
 
-  & .listingsGridListView {
+  &.listingsGridListView {
     margin: 0;
+
+    .listingCard {
+      margin: 0;
+      border-bottom-width: 0;
+
+      &:last-child {
+        border-bottom-width: 1px;
+      }
+    }
   }
 }

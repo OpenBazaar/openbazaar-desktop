@@ -6,21 +6,19 @@
   font-size: $tx5b;
   cursor: pointer;
 
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
+  .gridViewContent {
+    .listingImage {
+      width: 223px;
+      height: 225px;
+      position: relative;
+    }
 
-  .listingImage {
-    width: 223px;
-    height: 225px;
-    position: relative;
+    .listingIcons {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }  
   }
-
-  .listingIcons {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-  }  
 
   .overlayPanel {
     display: none;
@@ -44,7 +42,7 @@
       right: 0;
       bottom: 0;
     }
-  }
+  }  
 
   .editOverlay {
     .btn {
@@ -64,6 +62,7 @@
 
     &.ownListing {
       border-color: $focusedBorder;
+      border-bottom-width: 1px;
     }
   }
 
@@ -111,7 +110,17 @@
     }
   }
 
-  // Couple assumptions here:
+  .listViewContent {
+    display: none;
+
+    .listingImage {
+      width: 45px;
+      height: 45px;
+      background-size: cover;
+    }
+  }
+
+  // Some assumptions here:
   // a.) We will only potentially have a "list view" style card
   //     when the listingCard is inside a .listingsGrid.
   // b.) The .listingsGridListView class will be applied to the
@@ -121,12 +130,30 @@
   //     only one DOM reflow/repaint.
   .listingsGridListView & {
     padding: $pad;
+    display: block;
+    width: 100%;
+    height: auto;
 
-    // todo: have the view swap in a tiny image rather than sizing down
-    // the slightly larger ones.
-    .listingImage {
-      width: 45px;
-      height: 45px;
+    .listViewContent {
+      display: block;
+
+      .col.flexExpand {
+        flex-grow: 1;
+      }
+    }
+
+    .gridViewContent {
+      display: none;
+    }
+
+    // This isn't ideal, but there's inconistent spacing / widths of cols, plus there's variable
+    // content width on the price (e.g. some currencies may have quite large numbers)
+    .priceCol {
+      padding-right: 20px;
+    }
+
+    .freeShipCol {
+      padding-right: 20px;
     }
   }
 }

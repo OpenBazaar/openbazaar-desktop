@@ -173,9 +173,7 @@ export default class extends BaseVw {
           .text()
           .toLocaleLowerCase();
 
-        md.searchTitle = $('<div />').html(md.get('title'))
-          .text()
-          .toLocaleLowerCase();
+        md.searchTitle = md.get('title').toLocaleLowerCase();
       });
     }
   }
@@ -245,9 +243,13 @@ export default class extends BaseVw {
     if (prevType) {
       if (prevType !== this._listingsViewType) {
         this.$el.toggleClass('listView');
-      } else {
-        this.$el.addClass(type);
+
+        if (this.storeListings) {
+          this.storeListings.viewType = type;
+        }
       }
+    } else if (type === 'list') {
+      this.$el.addClass('listView');
     }
   }
 
