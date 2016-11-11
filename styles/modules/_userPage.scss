@@ -62,6 +62,11 @@
     }
 
     .userPageStore {
+      // Setting this to establish a z-index stacking context so
+      // that the pop-in messages are properly stacked.
+      // http://stackoverflow.com/a/16148341/632806
+      isolation: isolate;
+
       .userPageSearchBar {
         margin-bottom: $padMd;
         height: $barSm;
@@ -151,6 +156,10 @@
         .btnLayoutFullWidth {
           @include disabled;
         }
+      }
+
+      .popInMessageHolder {
+        z-index: 2; // so it's above the listing card overlays
       }
     }
   }
