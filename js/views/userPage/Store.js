@@ -35,7 +35,7 @@ export default class extends BaseVw {
       freeShipping: false,
     };
 
-    this.viewType = 'grid';
+    this.listingsViewType = 'grid';
 
     this.listenTo(this.collection, 'request', this.onRequest);
     this.listenTo(this.collection, 'update', this.onUpdateCollection);
@@ -73,8 +73,7 @@ export default class extends BaseVw {
   }
 
   showDataChangedMessage() {
-    if (this.dataChangePopIn ||
-      (this.dataChangePopIn && this.dataChangePopIn.isRemoved())) {
+    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       this.dataChangePopIn = this.createChild(PopInMessage, {
@@ -164,7 +163,7 @@ export default class extends BaseVw {
 
   onChangeSortBy(e) {
     this.filter.sortBy = $(e.target).val();
-    this.renderListings(this.ListingsGrid.collection);
+    this.renderListings(this.storeListings.collection);
   }
 
   onUpdateCollection(cl, opts) {
@@ -228,23 +227,23 @@ export default class extends BaseVw {
   }
 
   onClickToggleListGridView() {
-    this.viewType = this.viewType === 'list' ? 'grid' : 'list';
+    this.listingsViewType = this.listingsViewType === 'list' ? 'grid' : 'list';
   }
 
-  get viewType() {
-    return this._viewType;
+  get listingsViewType() {
+    return this._listingsViewType;
   }
 
-  set viewType(type) {
+  set listingsViewType(type) {
     if (['list', 'grid'].indexOf(type) === '-1') {
       throw new Error('The type provided is not one of the available types.');
     }
 
-    const prevType = this._viewType;
-    this._viewType = type;
+    const prevType = this._listingsViewType;
+    this._listingsViewType = type;
 
     if (prevType) {
-      if (prevType !== this._viewType) {
+      if (prevType !== this._listingsViewType) {
         this.$el.toggleClass('listView');
       } else {
         this.$el.addClass(type);

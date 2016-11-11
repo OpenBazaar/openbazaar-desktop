@@ -4,6 +4,11 @@
   .listingCard {
     margin: 0 $padMd $padMd 0;
     font-size: $tx5b;
+
+    // todo: adjust this when full width listings is implemented
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
   }
 
   & .listingsGridListView {

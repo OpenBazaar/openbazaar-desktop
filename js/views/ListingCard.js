@@ -175,7 +175,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('listingShort.html', (t) => {
+    loadTemplate('listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ownListing: this.options.ownListing,
