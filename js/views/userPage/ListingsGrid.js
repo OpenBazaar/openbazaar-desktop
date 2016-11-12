@@ -4,8 +4,13 @@ import ListingCard from '../ListingCard';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      viewType: 'grid',
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
 
     if (!this.collection) {
       throw new Error('Please provide a collection.');
@@ -18,7 +23,7 @@ export default class extends BaseVw {
       throw new Error('Please provide the guid of the storeOwner.');
     }
 
-    this.viewType = 'grid';
+    this.viewType = app.localSettings.get('listingsGridViewType');
     this.listingCardViews = [];
   }
 
@@ -37,6 +42,7 @@ export default class extends BaseVw {
 
     const prevType = this._viewType;
     this._viewType = type;
+    app.localSettings.save('listingsGridViewType', type);
 
     if (prevType) {
       if (prevType !== this._viewType) {

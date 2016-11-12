@@ -35,7 +35,7 @@ export default class extends BaseVw {
       freeShipping: false,
     };
 
-    this.listingsViewType = 'grid';
+    this.listingsViewType = app.localSettings.get('listingsGridViewType');
 
     this.listenTo(this.collection, 'request', this.onRequest);
     this.listenTo(this.collection, 'update', this.onUpdateCollection);
@@ -254,7 +254,8 @@ export default class extends BaseVw {
   }
 
   search(term) {
-    const searchTerm = term.toLocaleLowerCase();
+    const searchTerm = term.toLocaleLowerCase()
+      .trim();
 
     if (searchTerm === this.filter.searchTerm) return;
 
@@ -411,6 +412,7 @@ export default class extends BaseVw {
       this.storeListings = new ListingsGrid({
         collection: col,
         storeOwner: this.model.id,
+        viewType: this.listingsViewType,
       });
     } else {
       this.storeListings.collection = col;
