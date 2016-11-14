@@ -27,7 +27,8 @@
 </div>
 <% }) %>
 
-<% if (ob.categories.length > ob.maxInitiallyVisibleCats) { %>
+<% // adding 1 to the length to account for the All category we hard-code %>
+<% if ((ob.categories.length + 1) > ob.maxInitiallyVisibleCats) { %>
 <div class="js-moreCatsWrap moreCatsWrap <% if (ob.expanded) print('expanded') %>">
   <div class="moreCats">
     <%
@@ -45,7 +46,7 @@
     </div>
     <% }) %>  
   </div>
-  <a class="js-showMoreLess clrT tx6 txU showMore"><%= `${ob.categories.length - ob.maxInitiallyVisibleCats} more...` %></a>
+  <a class="js-showMoreLess clrT tx6 txU showMore"><%= `${(ob.categories.length + 1) - ob.maxInitiallyVisibleCats} more...` %></a>
   <a class="js-showMoreLess clrT tx6 txU showLess">Less</a>
 </div>
 <% } %>

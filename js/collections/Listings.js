@@ -46,10 +46,6 @@ export default class extends Collection {
         integerToDecimal(priceObj.amount, priceObj.currencyCode === 'BTC');
 
       parsedResponse.push(updatedListing);
-
-      // for (let i = 0; i < 500; i++) {
-      //   parsedResponse.push(updatedListing);
-      // }
     });
 
     return parsedResponse;

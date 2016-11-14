@@ -450,6 +450,7 @@ export default class extends BaseVw {
     }
 
     if (!$.contains(this.$catFilterContainer[0], this.categoryFilter.el)) {
+      this.categoryFilter.delegateEvents();
       this.$catFilterContainer.empty()
         .append(this.categoryFilter.el);
     }

@@ -27,6 +27,7 @@ export default class extends BaseModel {
       categories: [],
       sku: '',
       nsfw: false,
+      condition: 'NEW',
     };
   }
 
