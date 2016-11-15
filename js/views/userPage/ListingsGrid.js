@@ -25,11 +25,6 @@ export default class extends BaseVw {
 
     this.viewType = app.localSettings.get('listingsGridViewType');
     this.listingCardViews = [];
-
-    this.listenTo(this.collection, 'update', (...args) => {
-      console.log('update nation what what');
-      window.update = args;
-    });
   }
 
   className() {
