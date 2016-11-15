@@ -1,5 +1,15 @@
 // Temporary module to create some dummy listings data.
 // This is a quirky jerky work in progress, use at own risk.
+//
+// The main function is:
+// createDummyListings(count = 300)
+//
+// Which is used to bulk create listings. However, the server is
+// kicking off a publish on each listing created and if you send
+// too many, your computer might explode (my cpu somehow reached
+// 600% + when I called it with 150). So, I recommend you call
+// it with 5 listings and then not call again until publishing
+// has completed.
 
 import $ from 'jquery';
 import app from '../app';

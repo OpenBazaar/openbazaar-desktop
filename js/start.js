@@ -17,7 +17,7 @@ import Profile from './models/Profile';
 import Settings from './models/Settings';
 import Followers from './collections/Followers';
 import listingDeleteHandler from './startup/listingDelete';
-import { createDummyListings } from './startup/listingData';
+import './startup/listingData';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
