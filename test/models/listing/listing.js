@@ -143,7 +143,7 @@ describe('the Listing model', () => {
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync
 
-  // todo: test that isNew is based off of the nexted slug being set
+  // todo: test that isNew is based off of the new slug being set
 
   // todo: on a successful create, check that the returned slug is properly
   // stored on the nested listing model. Need to figure out a way to
