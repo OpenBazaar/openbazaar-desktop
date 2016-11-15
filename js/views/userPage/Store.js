@@ -1,15 +1,17 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import 'select2';
 import '../../utils/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
+import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import { events as listingEvents } from '../../models/listing/';
 import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
-import ListingsGrid from './ListingsGrid';
+import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import PopInMessage from '../PopInMessage';
 
@@ -163,7 +165,7 @@ export default class extends BaseVw {
 
   onChangeSortBy(e) {
     this.filter.sortBy = $(e.target).val();
-    this.renderListings(this.storeListings.collection);
+    this.renderListings(this.fullRenderedCollection);
   }
 
   onUpdateCollection(cl, opts) {
@@ -403,25 +405,51 @@ export default class extends BaseVw {
     }
   }
 
+  storeListingsScroll(paginatedCol, e) {
+    // Make sure we're in the DOM (i.e. the store tab is active).
+    if (!this.el.parentElement) return;
+
+    // if we've scrolled within a 150px of the bottom
+    if (e.target.scrollTop + $(e.target).innerHeight() >= e.target.scrollHeight - 150) {
+      paginatedCol.add(
+        this.fullRenderedCollection.slice(this.storeListings.listingCount,
+          this.storeListings.listingCount + LISTINGS_PER_PAGE)
+      );
+    }
+  }
+
   renderListings(col) {
     if (!col) {
       throw new Error('Please provide a collection.');
     }
 
+    // This collection will be loaded in batches as the
+    // user scrolls.
+    this.fullRenderedCollection = col;
+    this.setSortFunction(col);
+    col.sort();
+
+    // todo: exceptionally tall screens may fit an entire page
+    // with room to spare. Which means no scrollbar, which means subsequent
+    // pages will not load. Handle that case.
+    const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE));
+
     if (!this.storeListings) {
       this.storeListings = new ListingsGrid({
-        collection: col,
+        collection: storeListingsCol,
         storeOwner: this.model.id,
         viewType: this.listingsViewType,
       });
     } else {
-      this.storeListings.collection = col;
+      this.storeListings.setCollection(storeListingsCol);
     }
 
-    this.setSortFunction(col);
-    col.sort();
+    getContentFrame().on('scroll', this.storeListingsScrollHandler);
+    const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
+    this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
+    getContentFrame().on('scroll', this.storeListingsScrollHandler);
 
-    if (!$.contains(this.$listingsContainer[0], this.storeListings.el)) {
+    if (!this.$listingsContainer[0].contains(this.storeListings.el)) {
       this.$listingsContainer.empty()
         .append(this.storeListings.el);
     }
@@ -460,7 +488,7 @@ export default class extends BaseVw {
       });
     }
 
-    if (!$.contains(this.$catFilterContainer[0], this.categoryFilter.el)) {
+    if (!this.$catFilterContainer[0].contains(this.categoryFilter.el)) {
       this.categoryFilter.delegateEvents();
       this.$catFilterContainer.empty()
         .append(this.categoryFilter.el);
@@ -470,6 +498,11 @@ export default class extends BaseVw {
   get $popInMessages() {
     return this._$popInMessages ||
       (this._$popInMessages = this.$('.js-popInMessages'));
+  }
+
+  remove() {
+    getContentFrame().off('scroll', this.storeListingsScrollHandler);
+    super.remove();
   }
 
   render() {
