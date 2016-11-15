@@ -437,16 +437,27 @@ export default class extends BaseVw {
   renderCategories(cats = this.collection.categories) {
     if (!this.categoryFilter) {
       this.categoryFilter = new CategoryFilter({
-        categories: cats,
-        selected: this.filter.category,
+        initialState: {
+          categories: cats,
+          selected: this.filter.category,
+        },
       });
+
+      this.categoryFilter.render();
 
       this.listenTo(this.categoryFilter, 'category-change', (e) => {
         this.filter.category = e.value;
         this.renderListings(this.filteredCollection());
       });
     } else {
-      this.categoryFilter.categories = cats;
+      if (cats.indexOf(this.filter.category) === -1) {
+        this.filter.category = 'all';
+      }
+
+      this.categoryFilter.setState({
+        categories: cats,
+        selected: this.filter.category,
+      });
     }
 
     if (!$.contains(this.$catFilterContainer[0], this.categoryFilter.el)) {
@@ -454,8 +465,6 @@ export default class extends BaseVw {
       this.$catFilterContainer.empty()
         .append(this.categoryFilter.el);
     }
-
-    this.categoryFilter.render();
   }
 
   get $popInMessages() {
@@ -512,11 +521,11 @@ export default class extends BaseVw {
     }
 
     if (!isFetching && !fetchFailed) {
+      this.renderCategories(this.collection.categories);
+
       if (this.collection.length) {
         this.renderListings(this.filteredCollection());
       }
-
-      this.renderCategories(this.collection.categories);
     }
 
     return this;

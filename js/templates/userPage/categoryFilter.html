@@ -40,7 +40,8 @@
         <input type="radio"
                name="filterShippingCategory"
                value="<%= cat %>"
-               id="<%= `filterShippingCategory${flatCat}` %>">
+               id="<%= `filterShippingCategory${flatCat}` %>"
+               <% if (ob.selected === cat) print('checked') %>>
         <label for="<%= `filterShippingCategory${flatCat}` %>"><%= cat %></label>
       </div>
     </div>

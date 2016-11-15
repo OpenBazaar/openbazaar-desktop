@@ -454,7 +454,6 @@ export default class extends BaseModal {
     });
 
     this.model.set(formData);
-
     const save = this.model.save();
 
     if (save) {
