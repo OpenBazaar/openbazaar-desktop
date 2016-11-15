@@ -1,0 +1,69 @@
+<div class="userPageSearchBar flex gutterHSm <% if (ob.isFetching || ob.fetchFailed) print('disabled') %>">
+  <div class="flexExpand">
+    <div class="searchWrapper">
+      <input type="text" class="ctrl searchInput clrP clrBr clrSh2 js-searchInput"
+             placeholder="<%= ob.polyT('userPage.searchStore') %>">
+    </div>
+  </div>
+  <div>
+    <div class="btnStrip clrT2 clrSh2">
+      <a class="iconBtn clrP clrBr"><i class="ion-android-apps"></i></a>
+      <a class="btn btnThin clrP clrBr">
+        <span class="txUnb tx6 btnLayoutStandard"><%= ob.polyT('userPage.store.btnLayoutStandard') %></span>
+        <span class="txUnb tx6 btnLayoutFullWidth"><%= ob.polyT('userPage.store.btnLayoutFullWidth') %></span>
+      </a>
+    </div>
+  </div>
+</div>
+<% if (ob.isFetching) { %>
+  <h1 class="txCtr">Loading...</h1>
+<% } else if (ob.fetchFailed) { %>
+  <div class="txCtr padBg">
+    <h1><%= ob.polyT('userPage.store.unableToFetchListings') %></h1>
+    <p><%= ob.fetchFailReason %></p>
+    <a class='btn clrP clrBr js-retryFetch'>Retry</a>
+  </div>
+<% } else if (!ob.isFetching) { %>
+  <div class="flex">
+    <div class="col storeFilters">
+      <div class="clrP clrBr border padMd clrT">
+        <div class="txB tx4 row">Shipping</div>
+        <div class="flexVCent tx5 rowSm">
+          <input type="checkbox" class="margRSm js-filterShipsTo" />
+          <label class="margRSm" for="shipsToSelect">Ships to:</label>
+          <select class="tx6 select2Small js-shipsToSelect" style="width: 112px">
+            <% ob.countryList.forEach((country) => { %>
+            <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
+            <% }); %>
+          </select>
+          <div class="select2Small js-shipsToSelectDropdownContainer"></div>
+        </div>
+        <div class="flexVCent rowSm">
+          <input type="checkbox" class="margRSm js-filterFreeShipping" <% if (ob.filter.freeShipping) print('checked') %> />
+          <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping</span>
+        </div>
+      </div>
+      <div class="js-catFilterContainer"></div>
+    </div>
+    <div class="col storeListings">
+      <div class="rowMd clrT tx5 flexVBot listingsHeaderRow">
+        <span class="listingsCount js-listingCount"></span>
+        <div class="floR tx6 flexVCent">
+          <label class="clrT2 marginLAuto margRSm">Sort by (translate me!)</label>
+          <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
+            <option value="PRICE_ASC" <% if (ob.filter.sortBy === 'PRICE_ASC') print('selected') %>>Price low to high</option>
+            <option value="PRICE_DESC" <% if (ob.filter.sortBy === 'PRICE_DESC') print('selected') %>>Price high to low</option>
+            <option value="NAME_ASC" <% if (ob.filter.sortBy === 'NAME_ASC') print('selected') %>>Title A-Z</option>
+            <option value="NAME_DESC" <% if (ob.filter.sortBy === 'NAME_DESC') print('selected') %>>Title Z-A</option>
+            <!-- <option value="RATING">Rating</option> -->
+          </select>
+          <div class="select2Small js-sortBySelectDropdownContainer"></div>
+        </div>
+      </div>
+      <div class="js-listingsContainer"></div>
+      <!-- <div class="js-listingsWrap listingsWrap flex"></div> -->
+      <% // .noResults must be a sibling to .listingsWrap and come after it %>
+      <!-- <div class="noResults txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div> -->
+    </div>
+  </div>
+<% } %>

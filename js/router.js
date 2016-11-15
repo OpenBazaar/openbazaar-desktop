@@ -2,11 +2,11 @@ import $ from 'jquery';
 import { Router } from 'backbone';
 import { getGuid } from './utils';
 import { getPageContainer } from './utils/selectors';
+import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import TemplateOnly from './views/TemplateOnly';
-import ListingPage from './views/Listing';
 import Profile from './models/Profile';
 import Listing from './models/listing/Listing';
 
@@ -18,11 +18,8 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
-      [/^ownPage[\/]?(.*?)$/, 'ownPage'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
-      // temporary route
-      ['listing/:guid/:slug', 'listing'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -77,18 +74,56 @@ export default class ObRouter extends Router {
     });
   }
 
-  user(guid, tab, ...args) {
-    tab = tab || 'store'; // eslint-disable-line no-param-reassign
-    const pageOpts = { tab };
+  get userStates() {
+    return [
+      'home',
+      'store',
+      'following',
+      'followers',
+    ];
+  }
 
-    if (tab === 'channel') {
-      pageOpts.category = args[0];
-      pageOpts.layer = args[1];
+  /**
+   * Based on the route arguments, determine whether we
+   * have a valid user route.
+   */
+  isValidUserRoute(guid, state, ...deepRouteParts) {
+    if (!guid || this.userStates.indexOf(state) === -1) {
+      return false;
+    }
+
+    if (state === 'store') {
+      // so far store is the only state that could have
+      // route parts beyond the state, e.g @themes/store/<slug>
+      if (deepRouteParts.length > 1) {
+        return false;
+      }
+    } else if (deepRouteParts.length) {
+      return false;
+    }
+
+    return true;
+  }
+
+  user(guid, state, ...args) {
+    const pageState = state || 'store';
+    const deepRouteParts = args.filter(arg => arg !== null);
+
+    if (!state) {
+      this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+        replace: true,
+      });
+    }
+
+    if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
+      this.pageNotFound();
+      return;
     }
 
     let profile;
     let profileFetch;
-    let onWillRoute;
+    let listing;
+    let listingFetch;
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -97,67 +132,48 @@ export default class ObRouter extends Router {
     } else {
       profile = new Profile({ id: guid });
       profileFetch = profile.fetch();
-
-      onWillRoute = () => {
-        profileFetch.abort();
-      };
-      this.once('will-route', onWillRoute);
     }
 
-    profileFetch.done(() => {
-      const displayArgs = args.filter((arg) => arg !== null).join('/');
-      const handle = profile.get('handle');
+    if (state === 'store') {
+      if (deepRouteParts[0]) {
+        listing = new Listing({
+          listing: { slug: deepRouteParts[0] },
+        }, { guid });
 
-      this.navigate(`${handle ? `@${handle}` : profile.id}/${tab}` +
-        `${displayArgs ? `/${displayArgs}` : ''}`, { replace: true });
+        listingFetch = listing.fetch();
+      }
+    }
 
-      this.loadPage(
-        new UserPage({
-          ...pageOpts,
-          model: profile,
-        }).render()
-      );
-    }).fail((jqXhr) => {
-      if (jqXhr.statusText !== 'abort') this.userNotFound();
-    }).always(() => {
-      if (onWillRoute) this.off(null, onWillRoute);
-    });
-  }
-
-  ownPage(subPath) {
-    this.navigate(`${app.profile.id}/${subPath === null ? '' : subPath}`, {
-      trigger: true,
-      replace: true,
-    });
-  }
-
-  listing(guid, slug) {
-    const listing = new Listing({
-      listing: { slug },
-    }, { guid });
-
-    let onWillRoute = () => {};
-    this.once('will-route', onWillRoute);
-
-    const listingFetch = listing.fetch();
-
-    onWillRoute = () => {
-      listingFetch.abort();
+    const onWillRoute = () => {
+      // The app has been routed to a new route, let's
+      // clean up by aborting all fetches
+      profileFetch.abort();
+      if (listingFetch) listingFetch.abort();
     };
 
-    listingFetch.done((jqXhr) => {
-      if (jqXhr && jqXhr.statusText === 'abort') return;
+    this.once('will-route', onWillRoute);
 
+    $.whenAll(profileFetch, listingFetch).done(() => {
       this.loadPage(
-        new ListingPage({
-          model: listing,
+        new UserPage({
+          model: profile,
+          state: pageState,
+          listing,
         }).render()
       );
-    }).fail((jqXhr) => {
-      if (jqXhr.statusText !== 'abort') this.listingNotFound();
-    }).always(() => {
-      if (onWillRoute) this.off(null, onWillRoute);
-    });
+    }).fail(() => {
+      if (profileFetch.statusText === 'abort' ||
+        profileFetch.statusText === 'abort') return;
+
+      // todo: If really not found (404), route to
+      // not found page, otherwise display error.
+      if (profileFetch.state() === 'rejected') {
+        this.userNotFound();
+      } else if (listingFetch.state() === 'rejected') {
+        this.listingNotFound();
+      }
+    })
+      .always(() => (this.off(null, onWillRoute)));
   }
 
   transactions(tab) {

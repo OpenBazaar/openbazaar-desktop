@@ -1,4 +1,4 @@
-<header class="">
+<header>
   <nav class="bar clrBr clrP navBar">
     <div class="flexVCent">
       <div class="windowControlsHolder">
@@ -22,7 +22,7 @@
         <div class="flexVCent">
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar"
-                   placeholder="Type a @handle, OpenBazaar ID or #tag" />
+                   placeholder="Type a @handle, OpenBazaar ID or #tag" value="<%= ob.addressBarText %>" />
           </div>
         </div>
       </div>
@@ -46,10 +46,10 @@
               </a>
             </div>
             <div class="listGroup clrP clrBr clrSh2">
-              <a class="listItem" href="#ownPage">
+              <a class="listItem" href="#<%= ob.id ? `${ob.id}` : ''%>">
                 <span>My Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a class="listItem"><!--TODO add js action for Page Customization-->
+              <a class="listItem"><!--TODO add route for Page Customization-->
                 <span>Customize Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
               <a class="listItem js-navCreateListing">

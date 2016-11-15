@@ -41,6 +41,10 @@ h6, .h6, .tx6, .btn.tx6 {
   font-size: $txBg;
 }
 
+.txTn {
+  font-size: 0.9rem;
+}
+
 .txBase {
   font-size: 1rem;
 }
@@ -77,8 +81,16 @@ p {
   font-weight: 400;
 }
 
+#ov1 .txB {
+  font-weight: bold;
+}
+
 #ov1 .tx500 {
   font-weight: 500;
+}
+
+.upper {
+  text-transform: uppercase;
 }
 
 .ic90r:before {

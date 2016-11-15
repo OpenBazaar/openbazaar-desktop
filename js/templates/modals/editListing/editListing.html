@@ -1,3 +1,9 @@
+<div class="clrBr clrS topBar padSm">
+  <% if (ob.returnText) { %>
+  <a class="btn clrP clrBr clrT js-return"><%= ob.returnText %></a>
+  <% } %>
+  <a class="btn clrP clrBr js-save"><%= ob.polyT('settings.btnSave') %></a>
+</div>
 <div class="flexRow">
   <div class="tabColumn clrBr">
     <h1 class="h3 txUnb padMd js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h1>
@@ -86,7 +92,7 @@
                 <label>Mature Content (nsfw, adult, 18+, etc)</label>
                 <% if (ob.errors['listing.item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.nsfw'] })) %>
                 <div class="btnStrip marginTopAuto">
-                  <div class="btn clrBr">
+                  <div class="btnRadio clrBr">
                     <input type="radio"
                            name="listing.item.nsfw"
                            value="true"
@@ -95,7 +101,7 @@
                     <% if(ob.listing.item.nsfw) { %>checked<% } %>>
                     <label for="editListingNSFWInputTrue"><%= ob.polyT('editListing.nsfwYes') %></label>
                   </div>
-                  <div class="btn clrBr">
+                  <div class="btnRadio clrBr">
                     <input type="radio"
                            name="listing.item.nsfw"
                            value="false"

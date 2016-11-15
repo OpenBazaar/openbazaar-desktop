@@ -1,4 +1,5 @@
 import app from '../app';
+import { formatCurrency } from './currency';
 import { isHiRez, isLargeWidth, isSmallHeight } from './responsive';
 
 export function polyT(...args) {
@@ -6,6 +7,8 @@ export function polyT(...args) {
 }
 
 export const getServerUrl = app.getServerUrl;
+
+export { formatCurrency };
 
 export { isHiRez };
 

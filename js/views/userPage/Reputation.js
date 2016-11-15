@@ -18,7 +18,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('userPage/userPageReputation.html', (t) => {
+    loadTemplate('userPage/reputation.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
       }));

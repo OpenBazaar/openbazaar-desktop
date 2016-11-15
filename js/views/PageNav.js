@@ -31,8 +31,9 @@ export default class extends View {
 
     opts.className = `pageNav ${opts.navigable ? '' : 'notNavigable'}`;
     super(opts);
-
     this.options = opts;
+    this.addressBarText = '';
+
     $(document).on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:macStyleWinControls',
@@ -82,7 +83,7 @@ export default class extends View {
   setAppProfile() {
     // when this view is created, the app.profile doesn't exist
     this.listenTo(app.profile.get('avatarHashes'), 'change', this.updateAvatar);
-    this.updateAvatar();
+    this.render();
   }
 
   updateAvatar() {
@@ -186,6 +187,7 @@ export default class extends View {
 
   setAddressBar(text = '') {
     if (this.$addressBar) {
+      this.addressBarText = text;
       this.$addressBar.val(text);
     }
   }
@@ -207,13 +209,21 @@ export default class extends View {
 
   render() {
     let avatarHash = '';
-    if (isHiRez() && app.profile && app.profile.avatarHashes.small) {
-      avatarHash = app.profile.avatarHashes.small;
-    } else if (app.profile && app.profile.avatarHashes.tiny) {
-      avatarHash = app.profile.avatarHashes.tiny;
+
+    if (app.profile && isHiRez()) {
+      const avatarHashes = app.profile.get('avatarHashes');
+
+      if (avatarHashes.small) {
+        avatarHash = avatarHashes.small;
+      } else if (avatarHashes.tiny) {
+        avatarHash = avatarHashes.tiny;
+      }
     }
+
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t({
+        addressBarText: this.addressBarText,
+        ...(app.profile && app.profile.toJSON() || {}),
         avatarHash,
       }));
     });

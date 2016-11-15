@@ -49,7 +49,7 @@
       <div class="col9">
         <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
         <div class="btnStrip">
-          <div class="btn clrBr">
+          <div class="btnRadio clrBr">
             <input type="radio"
                    name="showNsfw"
                    value="true"
@@ -58,7 +58,7 @@
             <% if(ob.showNsfw) { %>checked<% } %>>
             <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
           </div>
-          <div class="btn clrBr">
+          <div class="btnRadio clrBr">
             <input type="radio"
                    name="showNsfw"
                    value="false"

@@ -3,18 +3,20 @@ import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
-import Home from './UserPageHome';
-import Store from './UserPageStore';
-import Follow from './UserPageFollow';
-import Reputation from './UserPageReputation';
+import { abbrNum } from '../../utils';
+import { capitalize } from '../../utils/string';
+import Listings from '../../collections/Listings';
+import Home from './Home';
+import Store from './Store';
+import Follow from './Follow';
+import Reputation from './Reputation';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
 
-    // the route will send a lower case tab value, convert it to upper case or Store if not sent
-    this.tab = `${options.tab.charAt(0).toUpperCase()}${options.tab.slice(1)}` || 'Store';
+    this.state = options.state || 'store';
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
@@ -48,9 +50,12 @@ export default class extends baseVw {
       });
     }
 
-    this.listenTo(this.model, 'change', () => this.render());
-    this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
-    this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
+    // todo: This is way too elaborate of a view to re-render (at least at an unexpected / random
+    // time). When we need to update UI based off of async changes, we need to either display
+    // some indicator and let the user refresh -or- if the changes are simple enough, make them
+    // with jQuery. In this case, I think jQuery would be simple enough.
+    // this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
+    // this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
   }
 
   className() {
@@ -68,7 +73,7 @@ export default class extends baseVw {
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
-    this.selectTab(targ.attr('data-tab'));
+    this.setState(targ.attr('data-tab'));
   }
 
   followClick() {
@@ -86,41 +91,141 @@ export default class extends baseVw {
     this.$moreableBtns.toggleClass('hide');
   }
 
-  selectTab(targ) {
-    let tabTarg = targ;
-    // if an invalid targ is passed in, set it to Store
-    if (!this.tabViews[tabTarg] && tabTarg !== 'Following' && tabTarg !== 'Followers') {
-      tabTarg = 'Store';
+  setState(state, options = {}) {
+    if (!state) {
+      throw new Error('Please provide a state.');
     }
 
-    let tabView = this.tabViewCache[tabTarg];
-    const tabOptions = { ownPage: this.ownPage, model: this.model };
+    const opts = {
+      updateHistory: true,
+      ...options,
+    };
+
+    const tabOpts = {
+      ...opts,
+      addTabToHistory: opts.updateHistory || false,
+    };
+
+    delete tabOpts.updateHistory;
+
+    this.state = state;
+    this.selectTab(state, tabOpts);
+  }
+
+  createFollowersTabView(opts = {}) {
+    return this.createChild(this.tabViews.Follow, {
+      ...opts,
+      followType: 'Followers',
+    });
+  }
+
+  createFollowingTabView(opts = {}) {
+    return this.createChild(this.tabViews.Follow, {
+      ...opts,
+      followType: 'Following',
+    });
+  }
+
+  createStoreTabView(opts = {}) {
+    this.listings = new Listings();
+
+    let listingsCount = this.model.get('listingCount');
+
+    this.listings.on('update', () => {
+      if (this.listings.length !== listingsCount) {
+        listingsCount = this.listings.length;
+        this.$listingsCount.html(abbrNum(listingsCount));
+      }
+    });
+
+    let listingsFetch;
+
+    if (listingsCount) {
+      listingsFetch = this.listings.fetch();
+    }
+
+    return this.createChild(this.tabViews.Store, {
+      ...opts,
+      initialFetch: listingsFetch,
+      collection: this.listings,
+      model: this.model,
+    });
+  }
+
+  selectTab(targ, options = {}) {
+    const opts = {
+      addTabToHistory: true,
+      ...options,
+    };
+
+    if (!this.tabViews[capitalize(targ)] && targ !== 'following' && targ !== 'followers') {
+      throw new Error(`${targ} is not a valid tab.`);
+    }
+
+    let tabView = this.tabViewCache[targ];
+    const tabOptions = {
+      ownPage: this.ownPage,
+      model: this.model,
+      ...opts,
+    };
+
+    // delete any opts that the tab view(s) wouldn't need
+    delete tabOptions.addTabToHistory;
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      this.$tabTitle.text(tabTarg);
-      // add tab to history
-      app.router.navigate(`${this.model.id}/${tabTarg.toLowerCase()}`);
+      this.$tabTitle.text(capitalize(targ));
+
+      if (opts.addTabToHistory) {
+        // subRoute is anything after the tab in the route, which is something
+        // we want to maintain, e.g:
+        // <guid>/<tab>/<slug>/<blah>
+        // the subRoute is '/<slug>/<blah>'
+        const subRoute = location.hash
+          .slice(1)
+          .split('/')
+          .slice(2)
+          .join('/');
+
+        // add tab to history
+        app.router.navigate(`${this.model.id}/${targ.toLowerCase()}` +
+          `${subRoute ? `/${subRoute}` : ''}`);
+      }
 
       this.$('.js-tab').removeClass('clrT active');
-      this.$(`.js-tab[data-tab="${tabTarg}"]`).addClass('clrT active');
-
-      if (tabTarg === 'Followers' || tabTarg === 'Following') {
-        tabOptions.followType = tabTarg;
-        tabTarg = 'Follow';
-      }
+      this.$(`.js-tab[data-tab="${targ}"]`).addClass('clrT active');
 
       if (this.currentTabView) this.currentTabView.$el.detach();
+
       if (!tabView) {
-        tabView = this.createChild(this.tabViews[tabTarg], tabOptions);
-        this.tabViewCache[tabOptions.followType || tabTarg] = tabView;
+        if (this[`create${capitalize(targ)}TabView`]) {
+          tabView = this[`create${capitalize(targ)}TabView`](tabOptions);
+        } else {
+          tabView = this.createChild(this.tabViews[capitalize(targ)], tabOptions);
+        }
+
+        this.tabViewCache[targ] = tabView;
         tabView.render();
       }
+
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
   }
 
+  get $pageContent() {
+    return this._$pageContent ||
+      (this._$pageContent = this.$('.js-pageContent'));
+  }
+
+  get $listingsCount() {
+    return this._$listingsCount ||
+      (this._$listingsCount = this.$('.js-listingsCount'));
+  }
+
   render() {
+    // This view is not designed to be re-rendered as
+    // it will kick off server requests. The following
+    // code assumes we will not re-render.
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -135,9 +240,14 @@ export default class extends baseVw {
       this.$unfollowLbl = this.$('.js-unfollowLbl');
       this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
+      this._$pageContent = null;
+      this._$listingsCount = null;
 
       this.tabViewCache = {}; // clear for re-renders
-      this.selectTab(this.tab);
+      this.setState(this.state, {
+        updateHistory: false,
+        listing: this.options.listing,
+      });
     });
 
     return this;

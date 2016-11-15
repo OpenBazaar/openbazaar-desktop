@@ -13,16 +13,22 @@
     "instagram": "Instagram",
     "snapchat": "Snapchat"
   },
+  "abbreviatedNumbers": {
+    "thousand": "%{number} k",
+    "million": "%{number} m",
+    "billion": "%{number} b",
+    "trillion": "%{number} t"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
     "follow": "Follow",
     "unfollow": "Unfollow",
-    "searchStore": "Search %{storeName}",
+    "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
-    "modFee": "%{modFee}% per dispute",
+    "modFee": "%{modFee} per dispute",
     "addModerator": "Add as Moderator",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
@@ -33,7 +39,13 @@
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
-    "guidCopied": "Copied to Clipboard"
+    "guidCopied": "Copied to Clipboard",
+    "store": {
+        "btnLayoutStandard": "950px",
+        "btnLayoutFullWidth": "100%",
+        "unableToFetchListings": "Unable to retrieve your listings.",
+        "noListings": "No listings."
+    }
   },
   "userShort": {
     "userLoading": "Loading...",
@@ -109,6 +121,13 @@
       "title": "Save in progress",
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
+  },
+  "listingDetail": {
+    "editListingReturnText": "Return to listing"
+  },
+  "listingShort": {
+    "btnEdit": "Edit",
+    "btnDelete": "Delete"
   },
   "editListing": {
     "formats": {

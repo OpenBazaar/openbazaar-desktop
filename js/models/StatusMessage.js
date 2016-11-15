@@ -1,7 +1,7 @@
-import { Model } from 'backbone';
+import BaseModel from './BaseModel';
 import _ from 'underscore';
 
-export default class extends Model {
+export default class extends BaseModel {
   defaults() {
     return {
       type: 'message',

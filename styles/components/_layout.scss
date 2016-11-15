@@ -271,6 +271,7 @@
 .rowTn {
   margin-bottom: $padTn;
 }
+
 .rowSm {
   margin-bottom: $padSm;
 
@@ -308,6 +309,14 @@
 
   & + .select2-container {
     margin-top: auto;    
+  }
+}
+
+#ov1 .marginLAuto {
+  margin-left: auto;
+
+  & + .select2-container {
+    margin-left: auto;    
   }
 }
 

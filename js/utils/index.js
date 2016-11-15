@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import app from '../app';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -62,6 +63,7 @@ export function splitIntoRows(items, itemsPerRow) {
 }
 
 // http://stackoverflow.com/a/18937118/632806
+// todo: unit test
 export function setDeepValue(obj, path, value) {
   let schema = obj;  // a moving reference to internal objects within obj
   const pList = path.split('.');
@@ -74,4 +76,49 @@ export function setDeepValue(obj, path, value) {
   }
 
   schema[pList[len - 1]] = value;
+}
+
+// http://stackoverflow.com/a/2686098/632806
+// todo: unit test
+export function abbrNum(_number, _decPlaces = 1) {
+  // 2 decimal places => 100, 3 => 1000, etc
+  const decPlaces = Math.pow(10, _decPlaces);
+  let number = _number;
+
+  // Enumerate number abbreviations
+  const abbrev = ['thousand', 'million', 'billion', 'trillion'];
+
+  // Go through the array backwards, so we do the largest first
+  for (let i = abbrev.length - 1; i >= 0; i--) {
+    // Convert array index to "1000", "1000000", etc
+    const size = Math.pow(10, (i + 1) * 3);
+
+    // If the number is bigger or equal do the abbreviation
+    if (size <= number) {
+      // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+      // This gives us nice rounding to a particular decimal place.
+      number = Math.round(number * decPlaces / size) / decPlaces;
+
+      // Handle special case where we round up to the next abbreviation
+      if ((number === 1000) && (i < abbrev.length - 1)) {
+        number = 1;
+        i++;
+      }
+
+      let lang = app && app.settings && app.settings.get('language');
+
+      if (!lang) {
+        console.warn('Unable to get the languages from the settings. Using en-US.');
+        lang = 'en-US';
+      }
+
+      number = new Intl.NumberFormat(lang).format(number);
+      number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
+
+      // We are done... stop
+      break;
+    }
+  }
+
+  return number;
 }
