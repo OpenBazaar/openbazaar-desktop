@@ -8,7 +8,7 @@
   </div>
   <div class="listingIcons">
     <% if (ob.shipsFreeToMe) { %>
-    <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn">Free Shipping (translate me yo)</span>
+    <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping (translate me yo)</span>
     <% } %>
   </div>
 </div>
@@ -28,7 +28,7 @@
     </div>
     <% if (ob.shipsFreeToMe) { %>
     <div class="freeShipCol flexNoShrink txCtr">
-      <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn">Free Shipping</span>
+      <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping</span>
     </div>
     <% } %>
     <div class="priceCol flexNoShrink">
@@ -38,17 +38,6 @@
       <a class='btn clrP clrBr'><%= ob.polyT('listingShort.btnDetails') %></a>
     </div>
   </div>
-<!--   <div class="pad">
-    <a class="clrT txU"><%= ob.title %></a>
-    <div>
-      <span class="txB floR"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
-    </div>
-  </div>
-  <div class="listingIcons">
-    <% if (ob.shipsFreeToMe) { %>
-    <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn">Free Shipping (translate me yo)</span>
-    <% } %>
-  </div> -->
 </div>
 <% if (ob.ownListing) { %>
 <div class="editOverlay overlayPanel">

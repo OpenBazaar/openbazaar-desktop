@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import app from '../app';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -69,7 +70,7 @@ export function abbrNum(_number, _decPlaces = 1) {
   let number = _number;
 
   // Enumerate number abbreviations
-  const abbrev = ['k', 'm', 'b', 't'];
+  const abbrev = ['thousand', 'million', 'billion', 'trillion'];
 
   // Go through the array backwards, so we do the largest first
   for (let i = abbrev.length - 1; i >= 0; i--) {
@@ -88,8 +89,15 @@ export function abbrNum(_number, _decPlaces = 1) {
         i++;
       }
 
-      // Add the letter for the abbreviation
-      number += abbrev[i];
+      let lang = app && app.settings && app.settings.get('language');
+
+      if (!lang) {
+        console.warn('Unable to get the languages from the settings. Using en-US.');
+        lang = 'en-US';
+      }
+
+      number = new Intl.NumberFormat(lang).format(number);
+      number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
 
       // We are done... stop
       break;

@@ -13,6 +13,12 @@
     "instagram": "Instagram",
     "snapchat": "Snapchat"
   },
+  "abbreviatedNumbers": {
+    "thousand": "%{number} k",
+    "million": "%{number} m",
+    "billion": "%{number} b",
+    "trillion": "%{number} t"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
@@ -22,7 +28,7 @@
     "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
-    "modFee": "%{modFee}% per dispute",
+    "modFee": "%{modFee} per dispute",
     "addModerator": "Add as Moderator",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
