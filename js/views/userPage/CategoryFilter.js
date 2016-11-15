@@ -38,6 +38,7 @@ export default class extends BaseVw {
   }
 
   onChangeCategory(e) {
+    this._selected = e.target.value;
     this.trigger('category-change', { value: $(e.target).val() });
   }
 
