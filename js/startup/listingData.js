@@ -1,8 +1,9 @@
 // Temporary module to create some dummy listings data.
 // This is a quirky jerky work in progress, use at own risk.
 //
-// The main function is:
-// createDummyListings(count = 300)
+// The main function is, which is temporailty exposed on the
+// window is:
+// window.createDummyListings(count = 300)
 //
 // Which is used to bulk create listings. However, the server is
 // kicking off a publish on each listing created and if you send
