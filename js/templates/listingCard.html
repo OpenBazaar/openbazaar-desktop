@@ -1,3 +1,4 @@
+<% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent">
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')"></div>
   <div class="pad overflowAuto clrBr borderTop">
@@ -12,11 +13,12 @@
     <% } %>
   </div>
 </div>
+<% } else { %>
 <div class="listViewContent">
   <div class="flexVCent gutterHSm">
   <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
     <div>
-      <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')"></div>
+      <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
     </div>
     <div class="flexExpand">
       <div>
@@ -39,6 +41,7 @@
     </div>
   </div>
 </div>
+<% } %>
 <% if (ob.ownListing) { %>
 <div class="editOverlay overlayPanel">
   <div class="overlayPanelInner clrS"></div>

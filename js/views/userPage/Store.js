@@ -74,48 +74,6 @@ export default class extends BaseVw {
     }
   }
 
-  showDataChangedMessage() {
-    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
-      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
-    } else {
-      this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Listing data has changed (translate me). ' +
-          '<a class="js-refresh">refresh</a>',
-      });
-
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
-
-      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
-        this.dataChangePopIn.remove();
-        this.dataChangePopIn = null;
-      });
-
-      this.$popInMessages.append(this.dataChangePopIn.render().el);
-    }
-  }
-
-  showShippingChangedMessage() {
-    if (this.shippingChangePopIn ||
-      (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
-      this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
-    } else {
-      this.shippingChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Your country and/or shipping address information has changed. This may' +
-          ' affect which listings ship free to you. It is recommended you' +
-          ' <a class="js-refresh">refresh</a> to see the latest data.',
-      });
-
-      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
-
-      this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
-        this.shippingChangePopIn.remove();
-        this.shippingChangePopIn = null;
-      });
-
-      this.$popInMessages.append(this.shippingChangePopIn.render().el);
-    }
-  }
-
   className() {
     return 'userPageStore';
   }
@@ -165,7 +123,7 @@ export default class extends BaseVw {
 
   onChangeSortBy(e) {
     this.filter.sortBy = $(e.target).val();
-    this.renderListings(this.fullRenderedCollection);
+    this.renderListings();
   }
 
   onUpdateCollection(cl, opts) {
@@ -247,11 +205,54 @@ export default class extends BaseVw {
         this.$el.toggleClass('listView');
 
         if (this.storeListings) {
-          this.storeListings.viewType = type;
+          // this.storeListings.viewType = type;
+          this.renderListings(this.fullRenderedCollection);
         }
       }
     } else if (type === 'list') {
       this.$el.addClass('listView');
+    }
+  }
+
+  showDataChangedMessage() {
+    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
+      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.dataChangePopIn = this.createChild(PopInMessage, {
+        messageText: 'Listing data has changed (translate me). ' +
+          '<a class="js-refresh">refresh</a>',
+      });
+
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
+        this.dataChangePopIn.remove();
+        this.dataChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.dataChangePopIn.render().el);
+    }
+  }
+
+  showShippingChangedMessage() {
+    if (this.shippingChangePopIn ||
+      (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
+      this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.shippingChangePopIn = this.createChild(PopInMessage, {
+        messageText: 'Your country and/or shipping address information has changed. This may' +
+          ' affect which listings ship free to you. It is recommended you' +
+          ' <a class="js-refresh">refresh</a> to see the latest data.',
+      });
+
+      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
+        this.shippingChangePopIn.remove();
+        this.shippingChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
   }
 
@@ -418,7 +419,7 @@ export default class extends BaseVw {
     }
   }
 
-  renderListings(col) {
+  renderListings(col = this.fullRenderedCollection || undefined) {
     if (!col) {
       throw new Error('Please provide a collection.');
     }
@@ -434,18 +435,17 @@ export default class extends BaseVw {
     // pages will not load. Handle that case.
     const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE));
 
-    if (!this.storeListings) {
-      this.storeListings = new ListingsGrid({
-        collection: storeListingsCol,
-        storeOwner: this.model.id,
-        viewType: this.listingsViewType,
-      });
-    } else {
-      this.storeListings.setCollection(storeListingsCol);
-    }
+    if (this.storeListings) this.storeListings.remove();
+
+    this.storeListings = new ListingsGrid({
+      collection: storeListingsCol,
+      storeOwner: this.model.id,
+      viewType: this.listingsViewType,
+    });
 
     getContentFrame().on('scroll', this.storeListingsScrollHandler);
     const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
+    // todo: !!!debounce is probably not needed here.
     this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
     getContentFrame().on('scroll', this.storeListingsScrollHandler);
 

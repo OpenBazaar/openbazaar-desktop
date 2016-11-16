@@ -5,7 +5,7 @@ import ListingCard from '../ListingCard';
 export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
-      viewType: 'grid',
+      viewType: app.localSettings.get('listingsGridViewType'),
       ...options,
     };
 
@@ -23,22 +23,9 @@ export default class extends BaseVw {
       throw new Error('Please provide the guid of the storeOwner.');
     }
 
-    this.setCollection(this.collection);
-    this.viewType = app.localSettings.get('listingsGridViewType');
+    // this.setCollection(this.collection);
+    this.viewType = opts.viewType;
     this.listingCardViews = [];
-  }
-
-  className() {
-    return 'listingsGrid flex';
-  }
-
-  setCollection(cl) {
-    if (!cl) {
-      throw new Error('Please provide a collection.');
-    }
-
-    this.stopListening(this.collection);
-    this.collection = cl;
 
     this.listenTo(this.collection, 'update', (updatedCl, updateOpts) => {
       // The only updates we're expecting are a new "page" of
@@ -49,6 +36,27 @@ export default class extends BaseVw {
     });
   }
 
+  className() {
+    return 'listingsGrid flex';
+  }
+
+  // setCollection(cl) {
+  //   if (!cl) {
+  //     throw new Error('Please provide a collection.');
+  //   }
+
+  //   this.stopListening(this.collection);
+  //   this.collection = cl;
+
+  //   this.listenTo(this.collection, 'update', (updatedCl, updateOpts) => {
+  //     // The only updates we're expecting are a new "page" of
+  //     // listings being added to the end of the collection.
+  //     if (updateOpts.add) {
+  //       this.renderListingCards(updateOpts.changes.added);
+  //     }
+  //   });
+  // }
+
   get viewType() {
     return this._viewType;
   }
@@ -58,17 +66,18 @@ export default class extends BaseVw {
       throw new Error('The type provided is not one of the available types.');
     }
 
-    const prevType = this._viewType;
+    // const prevType = this._viewType;
+    // This just sets the flag. It's up to you to re-render to update the UI.
     this._viewType = type;
     app.localSettings.save('listingsGridViewType', type);
 
-    if (prevType) {
-      if (prevType !== this._viewType) {
-        this.$el.toggleClass('listingsGridListView');
-      }
-    } else if (type === 'list') {
-      this.$el.addClass('listingsGridListView');
-    }
+    // if (prevType) {
+    //   if (prevType !== this._viewType) {
+    //     this.$el.toggleClass('listingsGridListView');
+    //   }
+    // } else if (type === 'list') {
+    //   this.$el.addClass('listingsGridListView');
+    // }
   }
 
   get listingCount() {
@@ -80,6 +89,7 @@ export default class extends BaseVw {
     const options = {
       ownListing: this.options.storeOwner === app.profile.id,
       listingBaseUrl: `${this.options.storeOwner}/store/`,
+      viewType: this.viewType,
       ...opts,
     };
 
@@ -99,6 +109,7 @@ export default class extends BaseVw {
   }
 
   render() {
+    this.$el[this.viewType === 'list' ? 'addClass' : 'removeClass']('listingsGridListView');
     this.listingCardViews.forEach(vw => vw.remove());
     this.listingCardViews = [];
     this.$el.empty();
@@ -108,4 +119,6 @@ export default class extends BaseVw {
   }
 }
 
-export const LISTINGS_PER_PAGE = 25;
+// Standard width grid has 3 columns, so best to leave this
+// as a multiple of 3.
+export const LISTINGS_PER_PAGE = 24;
