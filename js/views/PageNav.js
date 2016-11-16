@@ -200,7 +200,7 @@ export default class extends View {
   }
 
   navCreateListingClick() {
-    const listingModel = new Listing();
+    const listingModel = new Listing({}, { guid: app.profile.id });
 
     launchEditListingModal({
       model: listingModel,

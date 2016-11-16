@@ -31,7 +31,7 @@ export default class extends BaseModal {
         }
       });
 
-    if (this.isOwnListing()) {
+    if (this.model.isOwnListing()) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
         const slug = this.model.get('listing')
           .get('slug');
@@ -123,12 +123,6 @@ export default class extends BaseModal {
     }
   }
 
-  isOwnListing() {
-    // todo: Will the api to return our own listing return vendorID. Perhaps
-    // we centralize the ownListing determination in the listing model?
-    return this.model.get('listing').get('vendorID').guid === app.profile.id;
-  }
-
   get shipsFreeToMe() {
     return this._shipsFreeToMe;
   }
@@ -168,7 +162,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
-        ownListing: this.isOwnListing(),
+        ownListing: this.model.isOwnListing(),
       }));
 
       super.render();

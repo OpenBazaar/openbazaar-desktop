@@ -213,7 +213,7 @@ export default class extends Model {
   }
 
   clone() {
-    const clone = new this.constructor(this.toJSON());
+    const clone = new this.constructor(this.toJSON(), { guid: this.guid });
 
     clone.lastSyncedAttrs = this.lastSyncedAttrs;
 
