@@ -32,6 +32,7 @@ export default class extends BaseVw {
 
     this.filter = {
       category: 'all',
+      shipsTo: 'any',
       searchTerm: '',
       sortBy: 'PRICE_ASC',
       freeShipping: false,
@@ -83,7 +84,6 @@ export default class extends BaseVw {
       'click .js-retryFetch': 'onClickRetryFetch',
       'change .js-filterFreeShipping': 'onFilterFreeShippingChange',
       'change .js-shipsToSelect': 'onShipsToSelectChange',
-      'change .js-filterShipsTo': 'onShipsToCheckBoxChange',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'change .js-sortBySelect': 'onChangeSortBy',
       'click .js-toggleListGridView': 'onClickToggleListGridView',
@@ -96,28 +96,7 @@ export default class extends BaseVw {
   }
 
   onShipsToSelectChange(e) {
-    if (this.$shipsToCheckbox.is(':checked')) {
-      this.setShipsToFilter($(e.target).val());
-    } else {
-      this.setShipsToFilter();
-    }
-  }
-
-  onShipsToCheckBoxChange(e) {
-    if ($(e.target).is(':checked')) {
-      this.setShipsToFilter(this.$shipsToSelect.val());
-    } else {
-      this.setShipsToFilter();
-    }
-  }
-
-  setShipsToFilter(val) {
-    if (val) {
-      this.filter.shipsTo = val;
-    } else {
-      delete this.filter.shipsTo;
-    }
-
+    this.filter.shipsTo = e.target.value;
     this.renderListings(this.filteredCollection());
   }
 
@@ -315,11 +294,6 @@ export default class extends BaseVw {
       (this._$listingCount = this.$('.js-listingCount'));
   }
 
-  get $shipsToCheckbox() {
-    return this._$shipsToCheckbox ||
-      (this._$shipsToCheckbox = this.$('.js-filterShipsTo'));
-  }
-
   filteredCollection(filter = this.filter, collection = this.collection) {
     const models = collection.models.filter((md) => {
       let passesFilter = true;
@@ -341,7 +315,7 @@ export default class extends BaseVw {
         passesFilter = false;
       }
 
-      if (this.filter.shipsTo &&
+      if (this.filter.shipsTo !== 'any' &&
         !md.shipsTo(this.filter.shipsTo)) {
         passesFilter = false;
       }
@@ -520,7 +494,7 @@ export default class extends BaseVw {
           this.fetch.responseText || '',
         filter: this.filter,
         countryList: this.countryList,
-        country: this.filter.shipsTo || app.settings.get('country'),
+        shipsToSelected: this.filter.shipsTo || 'any',
         listingCount: this.collection.length,
       }));
     });
@@ -531,7 +505,6 @@ export default class extends BaseVw {
     this._$listingsContainer = null;
     this._$catFilterContainer = null;
     this._$listingCount = null;
-    this._$shipsToCheckbox = null;
     this._$popInMessages = null;
 
     this.$sortBy.select2({

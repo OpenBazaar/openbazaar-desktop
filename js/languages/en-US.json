@@ -44,7 +44,8 @@
         "btnLayoutStandard": "950px",
         "btnLayoutFullWidth": "100%",
         "unableToFetchListings": "Unable to retrieve your listings.",
-        "noListings": "This store has no listings."
+        "noListings": "This store has no listings.",
+        "shipsToFilterAny": "(Any Country)"
     }
   },
   "userShort": {
