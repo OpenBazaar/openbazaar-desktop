@@ -44,7 +44,7 @@
         "btnLayoutStandard": "950px",
         "btnLayoutFullWidth": "100%",
         "unableToFetchListings": "Unable to retrieve your listings.",
-        "noListings": "No listings."
+        "noListings": "This store has no listings."
     }
   },
   "userShort": {

@@ -521,6 +521,7 @@ export default class extends BaseVw {
         filter: this.filter,
         countryList: this.countryList,
         country: this.filter.shipsTo || app.settings.get('country'),
+        listingCount: this.collection.length,
       }));
     });
 

@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../app';
 import BaseVw from '../baseVw';
 import ListingCard from '../ListingCard';
@@ -23,7 +24,6 @@ export default class extends BaseVw {
       throw new Error('Please provide the guid of the storeOwner.');
     }
 
-    // this.setCollection(this.collection);
     this.viewType = opts.viewType;
     this.listingCardViews = [];
 
@@ -40,23 +40,6 @@ export default class extends BaseVw {
     return 'listingsGrid flex';
   }
 
-  // setCollection(cl) {
-  //   if (!cl) {
-  //     throw new Error('Please provide a collection.');
-  //   }
-
-  //   this.stopListening(this.collection);
-  //   this.collection = cl;
-
-  //   this.listenTo(this.collection, 'update', (updatedCl, updateOpts) => {
-  //     // The only updates we're expecting are a new "page" of
-  //     // listings being added to the end of the collection.
-  //     if (updateOpts.add) {
-  //       this.renderListingCards(updateOpts.changes.added);
-  //     }
-  //   });
-  // }
-
   get viewType() {
     return this._viewType;
   }
@@ -66,18 +49,9 @@ export default class extends BaseVw {
       throw new Error('The type provided is not one of the available types.');
     }
 
-    // const prevType = this._viewType;
     // This just sets the flag. It's up to you to re-render to update the UI.
     this._viewType = type;
     app.localSettings.save('listingsGridViewType', type);
-
-    // if (prevType) {
-    //   if (prevType !== this._viewType) {
-    //     this.$el.toggleClass('listingsGridListView');
-    //   }
-    // } else if (type === 'list') {
-    //   this.$el.addClass('listingsGridListView');
-    // }
   }
 
   get listingCount() {
