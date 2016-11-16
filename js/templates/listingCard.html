@@ -1,7 +1,7 @@
 <div class="gridViewContent">
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')"></div>
-  <div class="pad overflowAuto clrBr borderTop contentArea">
-    <a class="clrT txU"><%= ob.title %></a>
+  <div class="pad overflowAuto clrBr borderTop">
+    <a class="clrT txU clamp"><%= ob.title %></a>
     <div>
       <span class="txB floR"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
     </div>
@@ -20,7 +20,7 @@
     </div>
     <div class="flexExpand">
       <div>
-        <a class="clrT txU"><%= ob.title %></a>
+        <a class="clrT txU clamp3"><%= ob.title %></a>
       </div>
       <div>
         <% // rating icon + number of reviews, coming soon... %>
