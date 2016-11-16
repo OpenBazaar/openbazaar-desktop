@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../app';
 import BaseVw from '../baseVw';
 import ListingCard from '../ListingCard';
