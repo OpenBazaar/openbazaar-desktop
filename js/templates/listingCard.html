@@ -1,6 +1,14 @@
 <% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent">
-  <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')"></div>
+  <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
+      <% if (ob.ownListing) { %>
+        <div class="editOverlay overlayPanel">
+          <div class="overlayPanelInner clrS"></div>
+          <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingShort.btnEdit') %></a>
+          <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingShort.btnDelete') %></a>
+        </div>
+      <% } %>
+  </div>
   <div class="pad overflowAuto clrBr borderTop">
     <a class="clrT txU clamp"><%= ob.title %></a>
     <div>
@@ -14,40 +22,41 @@
   </div>
 </div>
 <% } else { %>
-<div class="listViewContent">
-  <div class="flexVCent gutterHSm">
-  <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
-    <div>
-      <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
-    </div>
-    <div class="flexExpand">
+  <div class="listViewContent">
+    <div class="flexVCent gutterHSm">
+    <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
       <div>
-        <a class="clrT txU clamp3"><%= ob.title %></a>
+        <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
+      </div>
+      <div class="flexExpand">
+        <div>
+          <a class="clrT txU clamp3"><%= ob.title %></a>
+        </div>
+        <div>
+          <% // rating icon + number of reviews, coming soon... %>
+        </div>
+      </div>
+      <% if (ob.shipsFreeToMe) { %>
+      <div class="freeShipCol flexNoShrink txCtr">
+        <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping</span>
+      </div>
+      <% } %>
+      <div class="priceCol flexNoShrink">
+        <span class="txB"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
       </div>
       <div>
-        <% // rating icon + number of reviews, coming soon... %>
+        <a class='btn clrP clrBr'><%= ob.polyT('listingShort.btnDetails') %></a>
       </div>
-    </div>
-    <% if (ob.shipsFreeToMe) { %>
-    <div class="freeShipCol flexNoShrink txCtr">
-      <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping</span>
-    </div>
-    <% } %>
-    <div class="priceCol flexNoShrink">
-      <span class="txB"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
-    </div>
-    <div>
-      <a class='btn clrP clrBr'><%= ob.polyT('listingShort.btnDetails') %></a>
     </div>
   </div>
-</div>
-<% } %>
-<% if (ob.ownListing) { %>
-<div class="editOverlay overlayPanel">
-  <div class="overlayPanelInner clrS"></div>
-  <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingShort.btnEdit') %></a>
-  <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingShort.btnDelete') %></a>
-</div>
+
+  <% if (ob.ownListing) { %>
+    <div class="editOverlay overlayPanel">
+      <div class="overlayPanelInner clrS"></div>
+      <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingShort.btnEdit') %></a>
+      <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingShort.btnDelete') %></a>
+    </div>
+  <% } %>
 <% } %>
 <div class="deleteOverlay overlayPanel">
   <div class="overlayPanelInner clrS"></div>
