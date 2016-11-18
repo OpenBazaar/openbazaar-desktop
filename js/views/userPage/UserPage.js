@@ -93,7 +93,7 @@ export default class extends baseVw {
     const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
 
     if (avatarHash) {
-      this.$('js-avatar').attr('style',
+      this.$('.js-avatar').attr('style',
         `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
       url('../imgs/defaultAvatar.png')`);
     }
