@@ -11,12 +11,13 @@ import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
-import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 import Followers from './collections/Followers';
 import listingDeleteHandler from './startup/listingDelete';
+import { fetchExchangeRates } from './utils/currency';
+import './utils/exchangeRateSyncer';
 import './utils/listingData';
 
 app.localSettings = new LocalSettings({ id: 1 });
@@ -245,27 +246,54 @@ function onboard() {
 }
 
 const fetchStartupDataDeferred = $.Deferred();
+let ownFollowingFetch;
+let exchangeRatesFetch;
+let ownFollowingFailed;
 
 function fetchStartupData() {
-  app.ownFollowing.fetch()
-    .done(() => fetchStartupDataDeferred.resolve())
+  ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
+    app.ownFollowing.fetch() : ownFollowingFetch;
+  exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
+
+  $.whenAll(ownFollowingFetch, exchangeRatesFetch)
+    .progress((...args) => {
+      const state = args[1];
+
+      if (state !== 'success') {
+        const jqXhr = args[0];
+
+        if (jqXhr === ownFollowingFetch) {
+          ownFollowingFailed = true;
+        }
+      }
+    })
+    .done(() => {
+      fetchStartupDataDeferred.resolve();
+    })
     .fail((jqXhr) => {
-      const retryFetchStarupDataDialog = new Dialog({
-        title: 'Unable to get your startup data.',
-        message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-        buttons: [{
-          text: 'Retry',
-          fragment: 'retry',
-        }],
-        dismissOnOverlayClick: false,
-        dismissOnEscPress: false,
-        showCloseButton: false,
-      }).on('click-retry', () => {
-        retryFetchStarupDataDialog.close();
-        fetchStartupData();
-      })
-        .render()
-        .open();
+      if (ownFollowingFailed) {
+        const retryFetchStarupDataDialog = new Dialog({
+          title: 'Unable to get data about who you\'re following.',
+          message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          buttons: [{
+            text: 'Retry',
+            fragment: 'retry',
+          }],
+          dismissOnOverlayClick: false,
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }).on('click-retry', () => {
+          retryFetchStarupDataDialog.close();
+          fetchStartupData();
+        })
+          .render()
+          .open();
+      } else {
+        // We don't care if the exchange rate fetch failed, because
+        // the exchangeRateSyncer will display a status message about it
+        // and the app will gracefully handle not having exchange rates.
+        fetchStartupDataDeferred.resolve();
+      }
     });
 
   return fetchStartupDataDeferred.promise();
@@ -309,11 +337,13 @@ function start() {
     app.ownFollowers = new Followers(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
-      app.pageNav.navigable = true;
-      app.pageNav.setAppProfile();
-      app.loadingModal.close();
-      location.hash = location.hash || app.profile.id;
-      Backbone.history.start();
+      fetchStartupData().done(() => {
+        app.pageNav.navigable = true;
+        app.pageNav.setAppProfile();
+        app.loadingModal.close();
+        location.hash = location.hash || app.profile.id;
+        Backbone.history.start();
+      });
     });
   });
 }
@@ -379,13 +409,11 @@ function setPublishingStatus(msg) {
 
   if (!publishingStatusMsg) {
     publishingStatusMsg = app.statusBar.pushMessage({
-      View: PublishingStatusMessage,
       ...msg,
     });
-    publishingStatusMsg.view
-      .on('click-retry', () => {
-        alert('Coming soon - need publish API');
-      });
+    publishingStatusMsg.on('clickRetry', () => {
+      alert('Coming soon - need publish API');
+    });
   } else {
     clearTimeout(publishingStatusMsgRemoveTimer);
     publishingStatusMsg.update(msg);

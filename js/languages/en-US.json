@@ -207,6 +207,11 @@
       "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
     }
   },
+  "exchangeRatesSyncer": {
+    "fetchingRatesStatusMsg": "Fetching exchange rates...",
+    "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
+    "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}"
+  },
   "profileModelErrors": {
     "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",

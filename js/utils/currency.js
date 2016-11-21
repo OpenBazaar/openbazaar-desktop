@@ -1,4 +1,12 @@
 import app from '../app';
+import $ from 'jquery';
+import { Events } from 'backbone';
+
+const events = {
+  ...Events,
+};
+
+export { events };
 
 /**
  * Converts the amount from a decimal to an integer. If the
@@ -114,4 +122,23 @@ export function formatCurrency(amount, currency, locale = app.settings.get('lang
   }
 
   return formattedCurrency;
+}
+
+let exchangeRates = {};
+
+export function fetchExchangeRates(options = {}) {
+  const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
+    .done((data) => (exchangeRates = data));
+
+  events.trigger('fetching-exchange-rates', { xhr });
+
+  return xhr;
+}
+
+export function getExchangeRate(currency) {
+  if (!currency) {
+    throw new Error('Please provide a currency.');
+  }
+
+  return exchangeRates[currency];
 }
