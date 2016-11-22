@@ -80,7 +80,7 @@
         .btnLayoutFullWidth {
           display: none;
         }
-      }      
+      }
 
       .storeFilters {
         flex-basis: 228px;
@@ -130,7 +130,7 @@
 
         .listingsHeaderRow {
           .listingsCount {
-            flex-basis: 100%;
+            flex-grow: 1;
           }
         }
       }
