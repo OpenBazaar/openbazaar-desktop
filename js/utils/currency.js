@@ -154,6 +154,7 @@ NoExchangeRateDataError.prototype = Object.create(Error.prototype);
 NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
 
 // todo: unit test me
+// probably need sinon to stub / mock fetchExchangeRates
 export function convertCurrency(amount, fromCur, toCur) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
@@ -171,6 +172,10 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new Error('Please provide a toCur as a string');
   }
 
+  if (fromCur === toCur) {
+    return amount;
+  }
+
   if (!exchangeRates[fromCur]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCur}.`);
   }
@@ -179,10 +184,11 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCur}.`);
   }
 
-  return amount / (exchangeRates[fromCur] / exchangeRates[toCur]);
+  return amount / (getExchangeRate(fromCur) / getExchangeRate(toCur));
 }
 
 // todo: unit test me
+// probably need sinon to stub / mock fetchExchangeRates
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
     locale: app.settings.get('language'),
