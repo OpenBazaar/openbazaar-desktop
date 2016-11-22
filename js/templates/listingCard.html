@@ -4,8 +4,8 @@
       <% if (ob.ownListing) { %>
         <div class="editOverlay overlayPanel">
           <div class="overlayPanelInner clrS"></div>
-          <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingShort.btnEdit') %></a>
-          <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingShort.btnDelete') %></a>
+          <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingCard.btnEdit') %></a>
+          <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingCard.btnDelete') %></a>
         </div>
       <% } %>
   </div>
@@ -17,7 +17,7 @@
   </div>
   <div class="listingIcons">
     <% if (ob.shipsFreeToMe) { %>
-    <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping (translate me yo)</span>
+    <span class="clrE1 clrTOnEmph txTn txCtr upper padTn"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
     <% } %>
   </div>
 </div>
@@ -45,7 +45,7 @@
         <span class="txB"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
       </div>
       <div>
-        <a class='btn clrP clrBr'><%= ob.polyT('listingShort.btnDetails') %></a>
+        <a class='btn clrP clrBr'><%= ob.polyT('listingCard.btnDetails') %></a>
       </div>
     </div>
   </div>
@@ -53,13 +53,13 @@
   <% if (ob.ownListing) { %>
     <div class="editOverlay overlayPanel">
       <div class="overlayPanelInner clrS"></div>
-      <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingShort.btnEdit') %></a>
-      <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingShort.btnDelete') %></a>
+      <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingCard.btnEdit') %></a>
+      <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingCard.btnDelete') %></a>
     </div>
   <% } %>
 <% } %>
 <div class="deleteOverlay overlayPanel">
   <div class="overlayPanelInner clrS"></div>
-  <div class="deletingText clrT tx5">Deleting... (translate me)</div>
-  <div class="deletedText clrT tx5">Deleted... (translate me)</div>
+  <div class="deletingText clrT tx5"><%= ob.polyT('listingCard.deleting') %></div>
+  <div class="deletedText clrT tx5"><%= ob.polyT('listingCard.deleted') %></div>
 </div>

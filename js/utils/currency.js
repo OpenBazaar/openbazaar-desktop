@@ -144,18 +144,14 @@ export function getExchangeRate(currency) {
   return exchangeRates[currency];
 }
 
-export class NoExchangeRateDataError extends Error {
-  constructor(message) {
-    const msg = {
-      message: 'Missing exchange rate data',
-      ...message,
-      name: 'NoExchangeRateDataError',
-      stack: (new Error()).stack,
-    };
-
-    super(msg);
-  }
+export function NoExchangeRateDataError(message) {
+  this.message = message || 'Missing exchange rate data';
+  this.name = 'NoExchangeRateDataError';
+  this.stack = (new Error()).stack;
 }
+
+NoExchangeRateDataError.prototype = Object.create(Error.prototype);
+NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
 
 // todo: unit test me
 export function convertCurrency(amount, fromCur, toCur) {
@@ -195,6 +191,7 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   };
 
   let convertedAmt;
+  let outputFormat = toCur;
 
   try {
     convertedAmt = convertCurrency(amount, fromCur, toCur);
@@ -202,10 +199,11 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     if (e instanceof NoExchangeRateDataError && opts.skipConvertIfNoExchangeRateData) {
       // We'll use an unconverted amount
       convertedAmt = amount;
+      outputFormat = fromCur;
     } else {
       throw e;
     }
   }
 
-  return formatCurrency(convertedAmt, toCur, opts.locale);
+  return formatCurrency(convertedAmt, outputFormat, opts.locale);
 }

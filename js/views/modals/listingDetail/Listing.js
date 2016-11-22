@@ -107,9 +107,13 @@ export default class extends BaseModal {
     if (this.dataChangePopIn || (this.dataChangePopIn && this.dataChangePopIn.isRemoved())) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
+      const refreshLink =
+        `<a class="js-refresh">${app.polyglot.t('listingDetail.listingDataChangedPopinRefresh')}` +
+        '</a>';
+
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Listing data has changed (translate me). ' +
-          '<a class="js-refresh">refresh</a>',
+        messageText: app.polyglot.t('listingDetail.listingDataChangedPopin',
+          { refreshLink }),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));

@@ -63,6 +63,11 @@ currencyEvents.on('fetching-exchange-rates', (e) => {
       fetchExchangeRates();
     }, fetchInterval);
   }).fail(() => {
+    const retryLink =
+      '<a class="js-retry">' +
+      `${app.polyglot.t('exchangeRatesSyncer.fetchingRatesFailStatusMsgRetryLink')}</a>`;
+
+    // const failMessage =
     if (statusBarMsg) {
       // If the status bar already exists, we'll delay before updating it with a failure
       // state, because if the fail happens really fast, it looks like nothing happend.
@@ -70,14 +75,14 @@ currencyEvents.on('fetching-exchange-rates', (e) => {
         setRetryStatus({
           type: 'warning',
           msg: app.polyglot.t('exchangeRatesSyncer.fetchingRatesFailStatusMsg',
-            { retryLink: '<a class="js-retry">Retry</a>' }),
+            { retryLink }),
         });
       }, 300);
     } else {
       setRetryStatus({
         type: 'warning',
         msg: app.polyglot.t('exchangeRatesSyncer.fetchingRatesFailStatusMsg',
-          { retryLink: '<a class="js-retry">Retry</a>' }),
+          { retryLink }),
       });
     }
   });

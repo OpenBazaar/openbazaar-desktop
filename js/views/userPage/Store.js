@@ -6,7 +6,7 @@ import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
 import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
-import { convertCurrency } from '../../utils/currency';
+import { convertCurrency, NoExchangeRateDataError } from '../../utils/currency';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import { events as listingEvents } from '../../models/listing/';
@@ -119,8 +119,17 @@ export default class extends BaseVw {
 
         const price = md.get('price');
 
-        md.convertedPrice = convertCurrency(price.amount, price.currencyCode,
-          app.settings.get('localCurrency'));
+        try {
+          md.convertedPrice = convertCurrency(price.amount, price.currencyCode,
+            app.settings.get('localCurrency'));
+        } catch (e) {
+          if (e instanceof NoExchangeRateDataError) {
+            // If no exchange rate data is available, we'll just use the unconverted price
+            md.convertedPrice = price.amount;
+          } else {
+            throw e;
+          }
+        }
       });
     }
   }
@@ -205,9 +214,13 @@ export default class extends BaseVw {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
+      const refreshLink =
+        `<a class="js-refresh">${app.polyglot.t('userPage.store.popinRefreshLink')}` +
+        '</a>';
+
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Listing data has changed (translate me). ' +
-          '<a class="js-refresh">refresh</a>',
+        messageText: app.polyglot.t('userPage.store.listingDataChangedPopin',
+          { refreshLink }),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
@@ -226,10 +239,13 @@ export default class extends BaseVw {
       (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
       this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
+      const refreshLink =
+        `<a class="js-refresh">${app.polyglot.t('userPage.store.popinRefreshLink')}` +
+        '</a>';
+
       this.shippingChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Your country and/or shipping address information has changed. This may' +
-          ' affect which listings ship free to you. It is recommended you' +
-          ' <a class="js-refresh">refresh</a> to see the latest data.',
+        messageText: app.polyglot.t('userPage.store.shippingDataChangedPopin',
+          { refreshLink }),
       });
 
       this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
@@ -436,10 +452,12 @@ export default class extends BaseVw {
         .append(this.storeListings.el);
     }
 
-    const listingCountContent =
-      `<span class="txB">${col.length} listing` +
-      `${col.length === 1 ? '' : 's'}</span> found (translate pluralized)`;
-    this.$listingCount.html(listingCountContent);
+    const listingCount =
+      `<span class="txB">${app.polyglot.t('userPage.store.countListings', col.length)}</span>`;
+    const fullListingCount =
+        app.polyglot.t('userPage.store.countListingsFound',
+          { countListings: listingCount });
+    this.$listingCount.html(fullListingCount);
 
     this.storeListings.render();
   }

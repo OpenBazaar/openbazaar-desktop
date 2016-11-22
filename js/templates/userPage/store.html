@@ -22,15 +22,15 @@
   <div class="txCtr padBg">
     <h1><%= ob.polyT('userPage.store.unableToFetchListings') %></h1>
     <p><%= ob.fetchFailReason %></p>
-    <a class='btn clrP clrBr js-retryFetch'>Retry</a>
+    <a class='btn clrP clrBr js-retryFetch'><%= ob.polyT('userPage.store.retryStoreFetch') %></a>
   </div>
 <% } else if (!ob.isFetching) { %>
   <div class="flex">
     <div class="col storeFilters <% if (!ob.listingCount) print('disabled') %>">
       <div class="clrP clrBr border padMd clrT">
-        <div class="txB tx4 row">Shipping</div>
+        <div class="txB tx4 row"><%= ob.polyT('userPage.store.shippingFilter.heading') %></div>
         <div class="flexVCent tx5 rowSm">
-          <label class="margRSm" for="shipsToSelect">Ships to:</label>
+          <label class="margRSm" for="shipsToSelect"><%= ob.polyT('userPage.store.shippingFilter.shipsTo') %>:</label>
           <select class="tx6 select2Small js-shipsToSelect" style="width: 133px">
             <option value="any" <% if (ob.shipsToSelected === 'any') print('selected') %>><%= ob.polyT('userPage.store.shipsToFilterAny') %></option>
             <% ob.countryList.forEach((country) => { %>
@@ -41,7 +41,7 @@
         </div>
         <div class="flexVCent rowSm">
           <input type="checkbox" class="margRSm js-filterFreeShipping" <% if (ob.filter.freeShipping) print('checked') %> />
-          <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping</span>
+          <span class="clrE1 clrTOnEmph txTn txCtr upper padTn"><%= ob.polyT('userPage.store.freeShippingBanner') %></span>
         </div>
       </div>
       <div class="js-catFilterContainer"></div>
@@ -51,12 +51,12 @@
         <div class="rowMd clrT tx5 flexVBot listingsHeaderRow">
           <span class="listingsCount js-listingCount"></span>
           <div class="floR tx6 flexVCent">
-            <label class="clrT2 marginLAuto margRSm">Sort by (translate me!)</label>
+            <label class="clrT2 marginLAuto margRSm"><%= ob.polyT('userPage.store.sortBy') %></label>
             <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
-              <option value="PRICE_ASC" <% if (ob.filter.sortBy === 'PRICE_ASC') print('selected') %>>Price low to high</option>
-              <option value="PRICE_DESC" <% if (ob.filter.sortBy === 'PRICE_DESC') print('selected') %>>Price high to low</option>
-              <option value="NAME_ASC" <% if (ob.filter.sortBy === 'NAME_ASC') print('selected') %>>Title A-Z</option>
-              <option value="NAME_DESC" <% if (ob.filter.sortBy === 'NAME_DESC') print('selected') %>>Title Z-A</option>
+              <option value="PRICE_ASC" <% if (ob.filter.sortBy === 'PRICE_ASC') print('selected') %>><%= ob.polyT('userPage.store.sortOpts.priceAsc') %></option>
+              <option value="PRICE_DESC" <% if (ob.filter.sortBy === 'PRICE_DESC') print('selected') %>><%= ob.polyT('userPage.store.sortOpts.priceDesc') %></option>
+              <option value="NAME_ASC" <% if (ob.filter.sortBy === 'NAME_ASC') print('selected') %>><%= ob.polyT('userPage.store.sortOpts.nameAsc') %></option>
+              <option value="NAME_DESC" <% if (ob.filter.sortBy === 'NAME_DESC') print('selected') %>><%= ob.polyT('userPage.store.sortOpts.nameDesc') %></option>
               <!-- <option value="RATING">Rating</option> -->
             </select>
             <div class="select2Small js-sortBySelectDropdownContainer"></div>
