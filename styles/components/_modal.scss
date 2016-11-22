@@ -30,6 +30,15 @@
       left: calc(50% - #{$chatOpen / 2});
     }
   }
+
+  &.modalScrollPage {
+    overflow-y: scroll;
+
+    .modalContent {
+      max-height: none;
+      margin-bottom: $padLg;
+    }
+  }
 }
 
 // temporary test code

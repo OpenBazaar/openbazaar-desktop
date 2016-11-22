@@ -253,8 +253,8 @@
 }
 
 
-.padBg,
-.padBgKids > * {
+.padLg,
+.padLgKids > * {
   padding: $padLg;
 }
 
@@ -308,7 +308,7 @@
   margin-top: auto;
 
   & + .select2-container {
-    margin-top: auto;    
+    margin-top: auto;
   }
 }
 
@@ -316,7 +316,7 @@
   margin-left: auto;
 
   & + .select2-container {
-    margin-left: auto;    
+    margin-left: auto;
   }
 }
 

@@ -92,7 +92,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrTEmph1 {
-  @include textColor($emphasis1);  
+  @include textColor($emphasis1);
 }
 
 .clrBr {
@@ -106,6 +106,27 @@ input[type=range][class~="clrS"] {
 .clrBr2 {
   border-color: $border2;
 }
+
+::-webkit-scrollbar {
+  width: $scrollbar;
+}
+
+::-webkit-scrollbar-track {
+  background: $secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $text3;
+
+  &:hover {
+    background: $text4;
+  }
+
+  &:active {
+    background: $text4;
+  }
+}
+
 
 // select2 dropdowns always use the theme border color.
 // Override them in the view stylesheet if necessary.

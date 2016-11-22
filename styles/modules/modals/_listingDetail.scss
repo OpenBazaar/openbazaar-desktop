@@ -1,11 +1,35 @@
 .listingDetail {
   .modalContent {
-    // probably temporary min width and height
-    min-height: 300px;
-    min-width: 450px;
+    width: 947px;
+    padding: 0;
+
+    & > .cornerTR {
+      top: 0;
+      right: 0;
+    }
 
     .popInMessageHolder {
       top: 20px;
+    }
+
+    .modalCloseBtn {
+
+    }
+
+    .listingControls {
+       margin-bottom: $padSm;
+    }
+
+    .listingContent {
+
+      .mainImage {
+        width: 500px;
+        height: 500px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
     }
   }
 }

@@ -1,9 +1,74 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 <% if (ob.ownListing) { %>
-<div>
-  <a class="btn js-editListing">Edit</a>
-  <a class="btn js-deleteListing">Delete</a>
+<div class="listingControls btnStrip">
+  <a class="btn js-editListing clrP clrBr">Edit</a>
+  <a class="btn js-deleteListing clrP clrBr">Delete</a>
 </div>
 <% } %>
-<h1><%= ob.item.title %></h1>
-<span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
+<div class="listingContent clrP clrBr padLg">
+  <div class="flex">
+    <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
+    <h2 class="txUnb"><%= ob.formatCurrency(ob.item.price, ob.metadata.pricingCurrency) %></h2>
+  </div>
+  <div class="flex gutterH">
+    <div class="mainImage"
+    <% if (ob.item.images.length) { %>
+    <% console.log(ob.item.images) %>
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
+    <% } else { %>
+    style="background-image: url('../imgs/defaultListing.png')"
+    <% } %>
+    ></div>
+  <div class="box border clrP clrBr padLg">
+    <div class="flexCol flexHCent gutterV">
+      <div>Size</div>
+      <div>Buy Now</div>
+      <div>Ratings</div>
+    </div>
+  </div>
+  </div>
+  <div>
+    <div>
+    <% ob.item.categories.forEach(function(category){
+    print(`category: ${category}`);
+    }); %>
+    </div>
+    <div>
+    condition: <%= ob.item.condition %>
+    </div>
+    <div>
+      <%= ob.item.description %>
+    </div>
+    <div>
+      nsfw: <%= ob.item.nsfw %>
+    </div>
+    <div>
+    sku: <%= ob.item.condition %>
+    </div>
+    <div>
+      <% ob.item.tags.forEach(function(tag){
+      print(`tag: ${tag}`);
+      }); %>
+    </div>
+    <div>
+    <% ob.item.images.forEach(function(image){
+      print(`<img src="${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}">`);
+    }); %>
+    </div>
+    <div>
+    contract type: <%= ob.metadata.contractType %>
+    </div>
+    <div>
+      format: <%= ob.metadata.format %>
+    </div>
+    <div>
+    <% ob.shippingOptions.forEach(function(option){
+      print(`shipping option: ${option}`);
+    }); %>
+    </div>
+  </div>
+
+  <% console.log(ob) %>
+  <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
+</div>
+

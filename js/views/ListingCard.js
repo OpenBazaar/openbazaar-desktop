@@ -123,6 +123,8 @@ export default class extends baseVw {
 
           const listingDetail = new ListingDetail({
             model: this.fullListing,
+            closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr',
+            modelContentClass: 'modalContent',
           }).render()
             .open();
 

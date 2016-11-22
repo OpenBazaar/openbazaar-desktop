@@ -94,7 +94,7 @@
 
   input[type="checkbox"] {
     // todo: style this to match the designs
-  }  
+  }
 }
 
 .btnTxt {
@@ -115,6 +115,8 @@
 
 .btnStrip {
   //creates a set of buttons with no gaps between them
+  overflow: hidden; // clear the floats to avoid layout issues.
+
   & > .btn {
     border-radius: 0;
     border-right-width: 0;

@@ -19,7 +19,7 @@
 <% if (ob.isFetching) { %>
   <h1 class="txCtr">Loading...</h1>
 <% } else if (ob.fetchFailed) { %>
-  <div class="txCtr padBg">
+  <div class="txCtr padLg">
     <h1><%= ob.polyT('userPage.store.unableToFetchListings') %></h1>
     <p><%= ob.fetchFailReason %></p>
     <a class='btn clrP clrBr js-retryFetch'>Retry</a>
@@ -64,7 +64,7 @@
       <div class="js-listingsContainer"></div>
       <!-- <div class="js-listingsWrap listingsWrap flex"></div> -->
       <% // .noResults must be a sibling to .listingsWrap and come after it %>
-      <!-- <div class="noResults txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div> -->
+      <!-- <div class="noResults txCtr padLg tx5"><%= ob.polyT('userPage.store.noListings') %></div> -->
     </div>
   </div>
 <% } %>
