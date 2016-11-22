@@ -81,6 +81,7 @@ export function formatPrice(price, isBtc = false) {
   return price.toFixed(decimalPlaces);
 }
 
+// todo: check currency is one of our currencies
 export function formatCurrency(amount, currency, locale = app.settings.get('language')) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
@@ -141,4 +142,70 @@ export function getExchangeRate(currency) {
   }
 
   return exchangeRates[currency];
+}
+
+export class NoExchangeRateDataError extends Error {
+  constructor(message) {
+    const msg = {
+      message: 'Missing exchange rate data',
+      ...message,
+      name: 'NoExchangeRateDataError',
+      stack: (new Error()).stack,
+    };
+
+    super(msg);
+  }
+}
+
+// todo: unit test me
+export function convertCurrency(amount, fromCur, toCur) {
+  if (typeof amount !== 'number') {
+    throw new Error('Please provide an amount as a number');
+  }
+
+  if (isNaN(amount)) {
+    throw new Error('Please provide an amount that is not NaN');
+  }
+
+  if (typeof fromCur !== 'string') {
+    throw new Error('Please provide a fromCur as a string');
+  }
+
+  if (typeof toCur !== 'string') {
+    throw new Error('Please provide a toCur as a string');
+  }
+
+  if (!exchangeRates[fromCur]) {
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCur}.`);
+  }
+
+  if (!exchangeRates[toCur]) {
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCur}.`);
+  }
+
+  return amount / (exchangeRates[fromCur] / exchangeRates[toCur]);
+}
+
+// todo: unit test me
+export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
+  const opts = {
+    locale: app.settings.get('language'),
+    skipConvertIfNoExchangeRateData: true,
+    ...options,
+  };
+
+  let convertedAmt;
+
+  try {
+    convertedAmt = convertCurrency(amount, fromCur, toCur);
+  } catch (e) {
+    if (e instanceof NoExchangeRateDataError && opts.skipConvertIfNoExchangeRateData) {
+      // We'll use an unconverted amount
+      convertedAmt = amount;
+    } else {
+      throw e;
+    }
+  }
+
+  return formatCurrency(convertedAmt, toCur, opts.locale);
 }

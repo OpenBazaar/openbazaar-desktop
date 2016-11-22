@@ -6,6 +6,7 @@ import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
 import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
+import { convertCurrency } from '../../utils/currency';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import { events as listingEvents } from '../../models/listing/';
@@ -60,6 +61,8 @@ export default class extends BaseVw {
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
 
+    this.listenTo(app.settings, 'change:localCurrency', () => (this.showDataChangedMessage()));
+
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
       (cl, opts) => {
         if (opts.changes.added.length ||
@@ -113,6 +116,11 @@ export default class extends BaseVw {
           .toLocaleLowerCase();
 
         md.searchTitle = md.get('title').toLocaleLowerCase();
+
+        const price = md.get('price');
+
+        md.convertedPrice = convertCurrency(price.amount, price.currencyCode,
+          app.settings.get('localCurrency'));
       });
     }
   }
@@ -338,9 +346,9 @@ export default class extends BaseVw {
     if (this.filter.sortBy) {
       if (this.filter.sortBy === 'PRICE_ASC') {
         col.comparator = (a, b) => {
-          if (a.get('price').amount > b.get('price').amount) {
+          if (a.convertedPrice > b.convertedPrice) {
             return 1;
-          } else if (a.get('price').amount < b.get('price').amount) {
+          } else if (a.convertedPrice < b.convertedPrice) {
             return -1;
           }
 
@@ -348,9 +356,9 @@ export default class extends BaseVw {
         };
       } else if (this.filter.sortBy === 'PRICE_DESC') {
         col.comparator = (a, b) => {
-          if (a.get('price').amount < b.get('price').amount) {
+          if (a.convertedPrice < b.convertedPrice) {
             return 1;
-          } else if (a.get('price').amount > b.get('price').amount) {
+          } else if (a.convertedPrice > b.convertedPrice) {
             return -1;
           }
 

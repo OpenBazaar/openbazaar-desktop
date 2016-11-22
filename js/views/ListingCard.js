@@ -201,6 +201,7 @@ export default class extends baseVw {
         ownListing: this.options.ownListing,
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
+        displayCurrency: app.settings.get('localCurrency'),
       }));
     });
 

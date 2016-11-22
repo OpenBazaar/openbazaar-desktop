@@ -163,6 +163,7 @@ export default class extends BaseModal {
         ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing(),
+        displayCurrency: app.settings.get('localCurrency'),
       }));
 
       super.render();

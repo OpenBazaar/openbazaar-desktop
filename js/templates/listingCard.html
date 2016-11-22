@@ -12,7 +12,7 @@
   <div class="pad overflowAuto clrBr borderTop">
     <a class="clrT txU clamp"><%= ob.title %></a>
     <div>
-      <span class="txB floR"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
+      <span class="txB floR"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
     </div>
   </div>
   <div class="listingIcons">
@@ -42,7 +42,7 @@
       </div>
       <% } %>
       <div class="priceCol flexNoShrink">
-        <span class="txB"><%= ob.formatCurrency(ob.price.amount, ob.price.currencyCode) %></span>
+        <span class="txB"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
       </div>
       <div>
         <a class='btn clrP clrBr'><%= ob.polyT('listingShort.btnDetails') %></a>
