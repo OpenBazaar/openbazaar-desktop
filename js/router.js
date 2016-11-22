@@ -50,6 +50,11 @@ export default class ObRouter extends Router {
   execute(callback, args) {
     app.loadingModal.open();
 
+    if (this.currentPage) {
+      this.currentPage.remove();
+      this.currentPage = null;
+    }
+
     if (callback) {
       this.trigger('will-route');
       callback.apply(this, args);
@@ -57,10 +62,6 @@ export default class ObRouter extends Router {
   }
 
   loadPage(vw) {
-    if (this.currentPage) {
-      this.currentPage.remove();
-    }
-
     this.currentPage = vw;
     getPageContainer().append(vw.el);
     app.loadingModal.close();
