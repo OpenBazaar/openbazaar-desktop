@@ -1,3 +1,4 @@
+<div class="popInMessageHolder js-popInMessages"></div>
 <div class="userPageSearchBar flex gutterHSm <% if (ob.isFetching || ob.fetchFailed) print('disabled') %>">
   <div class="flexExpand">
     <div class="searchWrapper">
@@ -7,10 +8,10 @@
   </div>
   <div>
     <div class="btnStrip clrT2 clrSh2">
-      <a class="iconBtn clrP clrBr"><i class="ion-android-apps"></i></a>
+      <a class="iconBtn clrP clrBr js-toggleListGridView"><i class="ion-android-apps gridViewIcon"></i><i class="ion-navicon listViewIcon"></i></i></a>
       <a class="btn btnThin clrP clrBr">
-        <span class="txUnb tx6 btnLayoutStandard"><%= ob.polyT('userPage.store.btnLayoutStandard') %></span>
-        <span class="txUnb tx6 btnLayoutFullWidth"><%= ob.polyT('userPage.store.btnLayoutFullWidth') %></span>
+        <span class="txUnb tx6 btnLayoutStandard js-btnLayoutStandard"><%= ob.polyT('userPage.store.btnLayoutStandard') %></span>
+        <span class="txUnb tx6 btnLayoutFullWidth js-btnLayoutFullWidth"><%= ob.polyT('userPage.store.btnLayoutFullWidth') %></span>
       </a>
     </div>
   </div>
@@ -48,16 +49,18 @@
     <div class="col storeListings">
       <div class="rowMd clrT tx5 flexVBot listingsHeaderRow">
         <span class="listingsCount js-listingCount"></span>
-        <div class="floR tx6 flexVCent">
-          <label class="clrT2 marginLAuto margRSm">Sort by (translate me!)</label>
-          <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
-            <option value="PRICE_ASC" <% if (ob.filter.sortBy === 'PRICE_ASC') print('selected') %>>Price low to high</option>
-            <option value="PRICE_DESC" <% if (ob.filter.sortBy === 'PRICE_DESC') print('selected') %>>Price high to low</option>
-            <option value="NAME_ASC" <% if (ob.filter.sortBy === 'NAME_ASC') print('selected') %>>Title A-Z</option>
-            <option value="NAME_DESC" <% if (ob.filter.sortBy === 'NAME_DESC') print('selected') %>>Title Z-A</option>
-            <!-- <option value="RATING">Rating</option> -->
-          </select>
-          <div class="select2Small js-sortBySelectDropdownContainer"></div>
+        <div>
+          <div class="tx6 flexVCent">
+            <label class="clrT2 marginLAuto margRSm">Sort by (translate me!)</label>
+            <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
+              <option value="PRICE_ASC" <% if (ob.filter.sortBy === 'PRICE_ASC') print('selected') %>>Price low to high</option>
+              <option value="PRICE_DESC" <% if (ob.filter.sortBy === 'PRICE_DESC') print('selected') %>>Price high to low</option>
+              <option value="NAME_ASC" <% if (ob.filter.sortBy === 'NAME_ASC') print('selected') %>>Title A-Z</option>
+              <option value="NAME_DESC" <% if (ob.filter.sortBy === 'NAME_DESC') print('selected') %>>Title Z-A</option>
+              <!-- <option value="RATING">Rating</option> -->
+            </select>
+            <div class="select2Small js-sortBySelectDropdownContainer"></div>
+          </div>
         </div>
       </div>
       <div class="js-listingsContainer"></div>

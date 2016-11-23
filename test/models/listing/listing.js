@@ -143,45 +143,7 @@ describe('the Listing model', () => {
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync
 
-  it('saves with a POST if the nested listing model does not contain a slug', (done) => {
-    const listing = new Listing({}, { guid: '12345' });
-
-    const sync = listing.sync('create', listing, { url: 'no-server' });
-    let type;
-
-    // since we have no server, we'll pass in a bogus url to ensure
-    // an expediant failure, which will still gives us the data we need
-    sync.fail(function () {
-      type = this.type;
-
-      expect(type).to.equal('POST');
-      done();
-    });
-  });
-
-  it('saves with a PUT if the nested listing model does contain a slug', (done) => {
-    const listing = new Listing({
-      listing: { slug: 'a-happy-slug' },
-    }, { guid: '12345' });
-
-    listing.lastSyncedAttrs = {
-      listing: {
-        slug: 'i-am-thor-hear-me-roar',
-      },
-    };
-
-    const sync = listing.sync('create', listing, { url: 'no-server' });
-    let type;
-
-    // since we have no server, we'll pass in a bogus url to ensure
-    // an expediant failure, which will still gives us the data we need
-    sync.fail(function () {
-      type = this.type;
-
-      expect(type).to.equal('PUT');
-      done();
-    });
-  });
+  // todo: test that isNew is based off of the new slug being set
 
   // todo: on a successful create, check that the returned slug is properly
   // stored on the nested listing model. Need to figure out a way to

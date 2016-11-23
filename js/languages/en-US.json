@@ -127,7 +127,8 @@
   },
   "listingShort": {
     "btnEdit": "Edit",
-    "btnDelete": "Delete"
+    "btnDelete": "Delete",
+    "btnDetails": "Details"
   },
   "editListing": {
     "formats": {
@@ -228,7 +229,7 @@
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
-    "badConditionType": "Please provide the price amount as a number.",
+    "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "The description exceeds the maximum allowable length.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",

@@ -1,19 +1,25 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      ...options,
+    };
 
-    if (!this.options.categories) {
-      throw new Error('Please provide a list of categories.');
-    }
+    opts.initialState = {
+      categories: [],
+      selected: 'all',
+      expanded: false,
+      maxInitiallyVisibleCats: 6,
+      ...(options.initialState || {}),
+    };
 
-    this.categories = this.options.categories;
-    this._selected = this.options.selected || 'all';
-    this.expanded = false;
+    super(opts);
+    this.options = opts;
+    this._state = opts.initialState;
   }
 
   className() {
@@ -28,16 +34,11 @@ export default class extends BaseVw {
   }
 
   onClickShowMoreLess() {
-    if (this.expanded) {
-      this.expanded = false;
-      this.$moreCatsWrap.removeClass('expanded');
-    } else {
-      this.expanded = true;
-      this.$moreCatsWrap.addClass('expanded');
-    }
+    this.setState({ expanded: !this.getState().expanded });
   }
 
   onChangeCategory(e) {
+    this._state.selected = e.target.value;
     this.trigger('category-change', { value: $(e.target).val() });
   }
 
@@ -45,22 +46,37 @@ export default class extends BaseVw {
     return this._selected;
   }
 
-  get $moreCatsWrap() {
-    return this._$moreCatsWrap ||
-      (this._$moreCatsWrap = this.$('.js-moreCatsWrap'));
+  getState() {
+    return this._state;
+  }
+
+  setState(state = {}) {
+    const newState = {
+      ...this._state,
+      ...state,
+    };
+
+    if (!_.isEqual(this._state, newState)) {
+      this._state = newState;
+      if (this.rendered) this.render();
+    }
+  }
+
+  replaceState(state = {}) {
+    if (!_.isEqual(this._state, state)) {
+      this._state = state;
+      if (this.rendered) this.render();
+    }
   }
 
   render() {
     loadTemplate('userPage/categoryFilter.html', (t) => {
       this.$el.html(t({
-        categories: this.categories,
-        selected: this.selectedCat,
-        maxInitiallyVisibleCats: 6,
-        expanded: this.expanded,
+        ...this._state,
       }));
     });
 
-    this._$moreCatsWrap = null;
+    this.rendered = true;
 
     return this;
   }

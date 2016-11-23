@@ -42,17 +42,14 @@ export default class extends BaseModal {
         this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
       }
 
-      if (!_.isEqual(this.model.toJSON(), this._origModel.toJSON())) {
-        this._origModel.set(this.model.toJSON(), { silent: true });
+      this._origModel.set(this.model.toJSON());
 
-        // A change events won't fire on a parent model if a nested model change.
-        // The nested models would need to have change events manually bound to them
-        // which is cumbersome with a model like this with so many levels of nesting.
-        // So, for now, we'll manually fire a change event if anything has changed.
-        // TODO: Find a reasonable way to manage something like this and
-        // put it in the baseModel.
-        this._origModel.trigger('change', this._origModel);
-      }
+      // A change event won't fire on a parent model if only nested attributes change.
+      // The nested models would need to have change events manually bound to them
+      // which is cumbersome with a model like this with so many levels of nesting.
+      // If you are interested in any change on the model (as opposed to a sepcific
+      // attribute), the simplest thing to do is use the 'saved' event from the
+      // event emitter in models/listing/index.js.
     });
 
     this.innerListing = this.model.get('listing');
@@ -457,7 +454,6 @@ export default class extends BaseModal {
     });
 
     this.model.set(formData);
-
     const save = this.model.save();
 
     if (save) {

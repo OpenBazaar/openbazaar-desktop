@@ -1,14 +1,17 @@
 import $ from 'jquery';
 import 'select2';
+import '../../utils/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
+import { events as listingEvents } from '../../models/listing/';
 import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
-import StoreListings from './StoreListings';
+import ListingsGrid from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
+import PopInMessage from '../PopInMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -32,12 +35,81 @@ export default class extends BaseVw {
       freeShipping: false,
     };
 
+    this.listingsViewType = app.localSettings.get('listingsGridViewType');
+
     this.listenTo(this.collection, 'request', this.onRequest);
     this.listenTo(this.collection, 'update', this.onUpdateCollection);
 
+    if (this.model.id === app.profile.id) {
+      this.listenTo(listingEvents, 'saved', (md, opts) => {
+        // For now, we only know if the listing model has
+        // changed in some way since the last save. We don't
+        // know what specifically changed. So, this message
+        // will show if some listing attribute changed, even
+        // though it may not be one represented in the store.
+        if (opts.hasChanged()) {
+          this.showDataChangedMessage();
+        }
+      });
+
+      this.listenTo(listingEvents, 'destroy', () => (this.showDataChangedMessage()));
+    }
+
+    this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
+
+    this.listenTo(app.settings.get('shippingAddresses'), 'update',
+      (cl, opts) => {
+        if (opts.changes.added.length ||
+          opts.changes.removed.length) {
+          this.showShippingChangedMessage();
+        }
+      });
+
+    // this block should be last
     if (options.initialFetch) {
       this.fetch = options.initialFetch;
       this.onRequest(this.collection, this.fetch);
+    }
+  }
+
+  showDataChangedMessage() {
+    if (this.dataChangePopIn && (!this.dataChangePopIn.isRemoved())) {
+      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.dataChangePopIn = this.createChild(PopInMessage, {
+        messageText: 'Listing data has changed (translate me). ' +
+          '<a class="js-refresh">refresh</a>',
+      });
+
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
+        this.dataChangePopIn.remove();
+        this.dataChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.dataChangePopIn.render().el);
+    }
+  }
+
+  showShippingChangedMessage() {
+    if (this.shippingChangePopIn && (!this.shippingChangePopIn.isRemoved())) {
+      this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      this.shippingChangePopIn = this.createChild(PopInMessage, {
+        messageText: 'Your country and/or shipping address information has changed. This may' +
+          ' affect which listings ship free to you. It is recommended you' +
+          ' <a class="js-refresh">refresh</a> to see the latest data.',
+      });
+
+      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
+        this.shippingChangePopIn.remove();
+        this.shippingChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
   }
 
@@ -53,6 +125,7 @@ export default class extends BaseVw {
       'change .js-filterShipsTo': 'onShipsToCheckBoxChange',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'change .js-sortBySelect': 'onChangeSortBy',
+      'click .js-toggleListGridView': 'onClickToggleListGridView',
     };
   }
 
@@ -99,9 +172,7 @@ export default class extends BaseVw {
           .text()
           .toLocaleLowerCase();
 
-        md.searchTitle = $('<div />').html(md.get('title'))
-          .text()
-          .toLocaleLowerCase();
+        md.searchTitle = md.get('title').toLocaleLowerCase();
       });
     }
   }
@@ -117,6 +188,10 @@ export default class extends BaseVw {
   }
 
   onRequest(cl, xhr) {
+    // Ignore a request on the ListingShort model, which happens
+    // if we delete it.
+    if (!(cl instanceof Listings)) return;
+
     this.fetch = xhr;
     if (!this.retryPressed) this.render();
 
@@ -148,8 +223,38 @@ export default class extends BaseVw {
     this.$btnRetry.addClass('processing');
   }
 
+  onClickToggleListGridView() {
+    this.listingsViewType = this.listingsViewType === 'list' ? 'grid' : 'list';
+  }
+
+  get listingsViewType() {
+    return this._listingsViewType;
+  }
+
+  set listingsViewType(type) {
+    if (['list', 'grid'].indexOf(type) === '-1') {
+      throw new Error('The type provided is not one of the available types.');
+    }
+
+    const prevType = this._listingsViewType;
+    this._listingsViewType = type;
+
+    if (prevType) {
+      if (prevType !== this._listingsViewType) {
+        this.$el.toggleClass('listView');
+
+        if (this.storeListings) {
+          this.storeListings.viewType = type;
+        }
+      }
+    } else if (type === 'list') {
+      this.$el.addClass('listView');
+    }
+  }
+
   search(term) {
-    const searchTerm = term.toLocaleLowerCase();
+    const searchTerm = term.toLocaleLowerCase()
+      .trim();
 
     if (searchTerm === this.filter.searchTerm) return;
 
@@ -303,9 +408,10 @@ export default class extends BaseVw {
     }
 
     if (!this.storeListings) {
-      this.storeListings = new StoreListings({
+      this.storeListings = new ListingsGrid({
         collection: col,
         storeOwner: this.model.id,
+        viewType: this.listingsViewType,
       });
     } else {
       this.storeListings.collection = col;
@@ -330,27 +436,45 @@ export default class extends BaseVw {
   renderCategories(cats = this.collection.categories) {
     if (!this.categoryFilter) {
       this.categoryFilter = new CategoryFilter({
-        categories: cats,
-        selected: this.filter.category,
+        initialState: {
+          categories: cats,
+          selected: this.filter.category,
+        },
       });
+
+      this.categoryFilter.render();
 
       this.listenTo(this.categoryFilter, 'category-change', (e) => {
         this.filter.category = e.value;
         this.renderListings(this.filteredCollection());
       });
     } else {
-      this.categoryFilter.categories = cats;
+      if (cats.indexOf(this.filter.category) === -1) {
+        this.filter.category = 'all';
+      }
+
+      this.categoryFilter.setState({
+        categories: cats,
+        selected: this.filter.category,
+      });
     }
 
     if (!$.contains(this.$catFilterContainer[0], this.categoryFilter.el)) {
+      this.categoryFilter.delegateEvents();
       this.$catFilterContainer.empty()
         .append(this.categoryFilter.el);
     }
+  }
 
-    this.categoryFilter.render();
+  get $popInMessages() {
+    return this._$popInMessages ||
+      (this._$popInMessages = this.$('.js-popInMessages'));
   }
 
   render() {
+    if (this.dataChangePopIn) this.dataChangePopIn.remove();
+    if (this.shippingChangePopIn) this.shippingChangePopIn.remove();
+
     const isFetching = this.fetch && this.fetch.state() === 'pending';
     const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
 
@@ -373,6 +497,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$shipsToCheckbox = null;
+    this._$popInMessages = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
@@ -395,11 +520,11 @@ export default class extends BaseVw {
     }
 
     if (!isFetching && !fetchFailed) {
+      this.renderCategories(this.collection.categories);
+
       if (this.collection.length) {
         this.renderListings(this.filteredCollection());
       }
-
-      this.renderCategories(this.collection.categories);
     }
 
     return this;

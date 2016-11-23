@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { setDeepValue } from '../utils';
+import { setDeepValue } from '../utils/object';
 import { View } from 'backbone';
 
 export default class baseVw extends View {

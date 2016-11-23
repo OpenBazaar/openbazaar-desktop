@@ -1,7 +1,7 @@
 import app from '../app';
 import { integerToDecimal } from '../utils/currency';
 import { Collection } from 'backbone';
-import ListingShort from '../models/ListingShort';
+import ListingShort from '../models/listing/ListingShort';
 
 export default class extends Collection {
   model(attrs, options) {

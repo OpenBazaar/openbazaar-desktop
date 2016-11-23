@@ -1,6 +1,8 @@
+import _ from 'underscore';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 import ListingInner from './ListingInner';
+import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
@@ -21,12 +23,20 @@ export default class extends BaseModel {
     };
   }
 
+  get shipsFreeToMe() {
+    return shipsFreeToMe(this);
+  }
+
   validate() {
     const errObj = this.mergeInNestedErrors({});
 
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;
+  }
+
+  isNew() {
+    return !this.get('listing').get('slug');
   }
 
   sync(method, model, options) {
@@ -48,40 +58,76 @@ export default class extends BaseModel {
         app.getServerUrl(`ipns/${this.guid}/listings/${slug}.json`);
     } else {
       options.url = options.url || app.getServerUrl('ob/listing/');
-      options.attrs = options.attrs || this.toJSON();
 
-      // convert price fields
-      if (options.attrs.listing.item.price) {
-        const price = options.attrs.listing.item.price;
-        options.attrs.listing.item.price = decimalToInteger(price,
-          options.attrs.listing.metadata.pricingCurrency === 'BTC');
-      }
+      if (method !== 'delete') {
+        // it's a create or update
+        options.attrs = options.attrs || this.toJSON();
 
-      options.attrs.listing.shippingOptions.forEach(shipOpt => {
-        shipOpt.services.forEach(service => {
-          if (typeof service.price === 'number') {
-            service.price = decimalToInteger(service.price,
-              options.attrs.listing.metadata.pricingCurrency === 'BTC');
-          }
+        // convert price fields
+        if (options.attrs.listing.item.price) {
+          const price = options.attrs.listing.item.price;
+          options.attrs.listing.item.price = decimalToInteger(price,
+            options.attrs.listing.metadata.pricingCurrency === 'BTC');
+        }
+
+        options.attrs.listing.shippingOptions.forEach(shipOpt => {
+          shipOpt.services.forEach(service => {
+            if (typeof service.price === 'number') {
+              service.price = decimalToInteger(service.price,
+                options.attrs.listing.metadata.pricingCurrency === 'BTC');
+            }
+          });
         });
-      });
-
-      if (options.attrs.listing.slug) {
-        // it's an update
-        options.type = 'PUT';
+      } else {
+        options.data = JSON.stringify({
+          slug: this.get('listing').get('slug'),
+        });
       }
     }
 
     returnSync = super.sync(method, model, options);
 
-    if (method === 'create') {
-      // On a successful create the slug will be returned. Here we'll move
-      // it so it's stored correcly on the nested listing model.
+    const eventOpts = {
+      xhr: returnSync,
+      url: options.url,
+    };
+
+    if (method === 'create' || method === 'update') {
+      const attrsBeforeSync = this.lastSyncedAttrs;
+
       returnSync.done((data) => {
-        if (data && data.slug) {
-          this.unset('slug');
-          this.get('listing').set('slug', data.slug);
+        if (method === 'create') {
+          // On a successful create the slug will be returned. Here we'll move
+          // it so it's stored correcly on the nested listing model.
+          if (data && data.slug) {
+            this.unset('slug');
+            this.get('listing').set('slug', data.slug);
+          }
         }
+
+        const hasChanged = () => (!_.isEqual(attrsBeforeSync, this.toJSON()));
+
+        // todo: Put in a changedAttrs function that includes
+        // which attrs have changed.
+
+        listingEvents.trigger('saved', this, {
+          ...eventOpts,
+          created: method === 'create',
+          slug: this.get('listing').get('slug'),
+          hasChanged,
+        });
+      });
+    } else if (method === 'delete') {
+      listingEvents.trigger('destroying', this, {
+        ...eventOpts,
+        slug: this.get('listing').get('slug'),
+      });
+
+      returnSync.done(() => {
+        listingEvents.trigger('destroy', this, {
+          ...eventOpts,
+          slug: this.get('listing').get('slug'),
+        });
       });
     }
 
