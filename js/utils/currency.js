@@ -167,8 +167,6 @@ NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
  * Converts an amount from one currency to another based on exchange
  * rate data.
  */
-// todo: unit test me
-// probably need sinon to stub / mock fetchExchangeRates
 export function convertCurrency(amount, fromCur, toCur) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
@@ -198,18 +196,19 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCur}.`);
   }
 
-  return amount / (getExchangeRate(fromCur) / getExchangeRate(toCur));
+  const fromRate = fromCur === 'BTC' ? 1 : getExchangeRate(fromCur);
+  const toRate = toCur === 'BTC' ? 1 : getExchangeRate(toCur);
+
+  return (amount / fromRate) * toRate;
 }
 
 /**
  * Convenience function to both convert and format a currency amount using
  * convertCurrency() and formatCurrency().
  */
-// todo: unit test me
-// probably need sinon to stub / mock fetchExchangeRates
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
-    locale: app.settings.get('language'),
+    locale: app && app.settings && app.settings.get('language') || 'en-US',
     skipConvertIfNoExchangeRateData: true,
     ...options,
   };

@@ -1,5 +1,7 @@
+import $ from 'jquery';
+import sinon from 'sinon';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, before, after } from 'mocha';
 import * as cur from '../../js/utils/currency';
 
 describe('the currency utility module', () => {
@@ -146,6 +148,91 @@ describe('the currency utility module', () => {
       expect(cur.formatCurrency(523.12, 'BTC', 'en-US'))
         .to
         .equal('฿523.12000000');
+    });
+  });
+
+  describe('has functions that involve converting between currencies', () => {
+    let ajax;
+
+    before(function () {
+      ajax = sinon.stub($, 'ajax', () => {
+        const deferred = $.Deferred();
+
+        deferred.resolve({
+          // The api is actually returning a non 1 for the bitcoin value, which seems
+          // like a bug, but it will allow us to test that if we call our conversion
+          // functions to convert from or to BTC, it will ignore that BTC exchange rate
+          // and use an implied 1.
+          BTC: 1.02,
+          PLN: 3148.48,
+          USD: 750.6,
+        });
+
+        return deferred.promise();
+      });
+
+      cur.fetchExchangeRates();
+    });
+
+    describe('like convertCurrency', () => {
+      it('which will convert between two fiat currencies', () => {
+        expect(cur.convertCurrency(500, 'USD', 'PLN'))
+          .to
+          .equal(2097.308819610978);
+      });
+
+      it('which will convert from a fiat currency to BTC', () => {
+        expect(cur.convertCurrency(500, 'USD', 'BTC'))
+          .to
+          .equal(0.6661337596589395);
+      });
+
+      it('which will convert from BTC to a fiat currency', () => {
+        expect(cur.convertCurrency(500, 'BTC', 'USD'))
+          .to
+          .equal(375300);
+      });
+
+      it('which correctly handles being called with the same' +
+       'fiat currency for both the from and to currency', () => {
+        expect(cur.convertCurrency(500, 'USD', 'USD'))
+          .to
+          .equal(500);
+      });
+
+      it('which correctly handles being called with BTC as both' +
+        'the from and to currency', () => {
+        expect(cur.convertCurrency(500, 'BTC', 'BTC'))
+          .to
+          .equal(500);
+      });
+    });
+
+    describe('like convertAndFormatCurrency', () => {
+      it('which will convert between two fiat currencies properly localize' +
+        'the resulting value', () => {
+        expect(cur.convertAndFormatCurrency(500, 'USD', 'PLN', { locale: 'en-US' }))
+          .to
+          .equal('PLN2,097.31');
+      });
+
+      it('which will convert between a fiat currency and BTC and properly localize' +
+        'the resulting value', () => {
+        expect(cur.convertAndFormatCurrency(500, 'USD', 'BTC', { locale: 'en-US' }))
+          .to
+          .equal('฿0.66613376');
+      });
+
+      it('which will convert between BTC and a fiat currency properly localize' +
+        'the resulting value', () => {
+        expect(cur.convertAndFormatCurrency(500, 'BTC', 'USD', { locale: 'en-US' }))
+          .to
+          .equal('$375,300.00');
+      });
+    });
+
+    after(function () {
+      ajax.restore();
     });
   });
 });
