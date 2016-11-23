@@ -73,7 +73,7 @@ export default class extends BaseVw {
   }
 
   showDataChangedMessage() {
-    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
+    if (this.dataChangePopIn && (!this.dataChangePopIn.isRemoved())) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       this.dataChangePopIn = this.createChild(PopInMessage, {
@@ -93,8 +93,7 @@ export default class extends BaseVw {
   }
 
   showShippingChangedMessage() {
-    if (this.shippingChangePopIn ||
-      (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
+    if (this.shippingChangePopIn && (!this.shippingChangePopIn.isRemoved())) {
       this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       this.shippingChangePopIn = this.createChild(PopInMessage, {

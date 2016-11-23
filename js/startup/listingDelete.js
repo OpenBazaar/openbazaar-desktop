@@ -16,14 +16,14 @@ export default function () {
   const statusMessages = {};
 
   listingEvents.on('destroying', (model, opts) => {
-    let statusMessage = statusMessages[opts.slug];
+    if (statusMessages[opts.slug]) return;
 
-    if (statusMessage) return;
-
-    statusMessage = app.statusBar.pushMessage({
+    const statusMessage = app.statusBar.pushMessage({
       msg: `Deleting listing <em>${getTitle(model)}</em>... (translate me)`,
       duration: 99999999999,
     });
+
+    statusMessages[opts.slug] = statusMessage;
 
     opts.xhr.done(() => {
       statusMessage.update(`Listing <em>${getTitle(model)}</em> deleted. (translate me)`);
