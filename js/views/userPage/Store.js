@@ -443,7 +443,6 @@ export default class extends BaseVw {
 
     getContentFrame().on('scroll', this.storeListingsScrollHandler);
     const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
-    // todo: !!!debounce is probably not needed here.
     this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
     getContentFrame().on('scroll', this.storeListingsScrollHandler);
 
