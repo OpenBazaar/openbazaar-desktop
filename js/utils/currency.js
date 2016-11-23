@@ -81,6 +81,10 @@ export function formatPrice(price, isBtc = false) {
   return price.toFixed(decimalPlaces);
 }
 
+/**
+ * Will format an amount in the given currency into the format
+ * appropriate for the given locale.
+ */
 // todo: check currency is one of our currencies
 export function formatCurrency(amount, currency, locale = app.settings.get('language')) {
   if (typeof amount !== 'number') {
@@ -127,6 +131,12 @@ export function formatCurrency(amount, currency, locale = app.settings.get('lang
 
 let exchangeRates = {};
 
+/**
+ * Will fetch exchange rate data from the server. This is already called
+ * on an interval via exchangeRateSyncer.js, so it's unlikely you would
+ * need to call this method. Instead access cached values via getExchangeRate()
+ * or more commonly convertCurrency().
+ */
 export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
     .done((data) => (exchangeRates = data));
@@ -153,6 +163,10 @@ export function NoExchangeRateDataError(message) {
 NoExchangeRateDataError.prototype = Object.create(Error.prototype);
 NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
 
+/**
+ * Converts an amount from one currency to another based on exchange
+ * rate data.
+ */
 // todo: unit test me
 // probably need sinon to stub / mock fetchExchangeRates
 export function convertCurrency(amount, fromCur, toCur) {
@@ -187,6 +201,10 @@ export function convertCurrency(amount, fromCur, toCur) {
   return amount / (getExchangeRate(fromCur) / getExchangeRate(toCur));
 }
 
+/**
+ * Convenience function to both convert and format a currency amount using
+ * convertCurrency() and formatCurrency().
+ */
 // todo: unit test me
 // probably need sinon to stub / mock fetchExchangeRates
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
