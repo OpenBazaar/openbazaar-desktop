@@ -104,7 +104,7 @@ export default class extends BaseModal {
   }
 
   showDataChangedMessage() {
-    if (this.dataChangePopIn || (this.dataChangePopIn && this.dataChangePopIn.isRemoved())) {
+    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       const refreshLink =

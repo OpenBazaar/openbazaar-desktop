@@ -16,15 +16,15 @@ export default function () {
   const statusMessages = {};
 
   listingEvents.on('destroying', (model, opts) => {
-    let statusMessage = statusMessages[opts.slug];
+    if (statusMessages[opts.slug]) return;
 
-    if (statusMessage) return;
-
-    statusMessage = app.statusBar.pushMessage({
+    const statusMessage = app.statusBar.pushMessage({
       msg: app.polyglot.t('listingDelete.deletingListing',
         { listing: `<em>${getTitle(model)}</em>` }),
       duration: 99999999999,
     });
+
+    statusMessages[opts.slug] = statusMessage;
 
     opts.xhr.done(() => {
       statusMessage.update(app.polyglot.t('listingDelete.deletedListing',

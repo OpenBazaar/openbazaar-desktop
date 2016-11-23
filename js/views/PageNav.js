@@ -210,10 +210,10 @@ export default class extends View {
   render() {
     let avatarHash = '';
 
-    if (app.profile && isHiRez()) {
-      const avatarHashes = app.profile.get('avatarHashes');
+    if (app.profile) {
+      const avatarHashes = app.profile.get('avatarHashes').toJSON();
 
-      if (avatarHashes.small) {
+      if (isHiRez() && avatarHashes.small) {
         avatarHash = avatarHashes.small;
       } else if (avatarHashes.tiny) {
         avatarHash = avatarHashes.tiny;
