@@ -12,6 +12,10 @@ export default class Advanced extends baseVw {
     });
 
     this.options = options;
+
+    this.appearanceSettings = this.createChild( Appearance, { } );
+    this.serverSettings = this.createChild( Server, { } );
+    this.smtpIntegationSettings = this.createChild( SMTPIntegration, { } );
     
     // FIXME : implement
   }
@@ -31,6 +35,18 @@ export default class Advanced extends baseVw {
         errors : {},
         ...this.options
       }));
+
+      this.$('.js-appearanceContainer').html(
+        this.appearanceSettings.render().el
+      );
+
+      this.$('.js-serverContainer').html(
+        this.serverSettings.render().el
+      );
+
+      this.$('.js-smtpIntegationContainer').html(
+        this.smtpIntegationSettings.render().el
+      );
 
       super.render();
       // FIXME : implement
