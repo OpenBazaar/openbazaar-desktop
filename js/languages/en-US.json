@@ -54,6 +54,7 @@
   "settings": {
     "settingsLabel": "Settings",
     "generalTab": "General",
+    "advancedTab": "Advanced",
     "pageTab": "Page",
     "addressesTab": "Addresses",
     "language": "Language",
