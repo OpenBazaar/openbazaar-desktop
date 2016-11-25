@@ -19,6 +19,7 @@ export default class extends BaseModal {
     };
 
     super(opts);
+
     this.options = opts;
 
     this.tabViewCache = {};
@@ -26,6 +27,7 @@ export default class extends BaseModal {
       General,
       Page,
       Addresses,
+      Advanced
     };
 
     this.savesInProgress = 0;

@@ -4,14 +4,16 @@ import Appearance from './Appearance';
 import Server from './Server';
 import SMTPIntegration from './SMTPIntegration';
 
-export default class extends baseVw {
+export default class Advanced extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsAdvanced',
       ...options
     });
+
+    this.options = options;
     
-    // FIXME : expand 
+    // FIXME : implement
   }
 
   getFormData() {
@@ -26,7 +28,11 @@ export default class extends baseVw {
     loadTemplate('modals/settings/advanced/settings.html', (t) => {
       this.$el.html(t({
         // FIXME : implement
+        errors : {},
+        ...this.options
       }));
+
+      super.render();
       // FIXME : implement
     });
     
