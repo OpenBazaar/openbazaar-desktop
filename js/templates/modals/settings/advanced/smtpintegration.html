@@ -1,5 +1,120 @@
-<form class="box border padKids padStack clrP clrBr js-smtpintegration">
+<form class="box padKids padStack clrP clrBr js-smtpintegration">
   <div class="flexRow">
     <h3><%= ob.polyT('settings.smtpIntegration') %></h3>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label><%= ob.polyT('settings.smtpNotifications') %></label>
+    </div>
+    <div class="col9">
+      <div class="btnStrip">
+        <div class="btnRadio clrBr">
+          <input type="radio"
+                 name="smtpNotifications"
+                 value="true"
+                 id="smtpNotificationsOn"
+                 data-var-type="boolean"
+          <% if(ob.smtpNotifications) { %>checked<% } %>>
+          <label for="smtpNotifications"><%= ob.polyT('settings.on') %></label>
+        </div>
+        <div class="btnRadio clrBr">
+          <input type="radio"
+                 name="smtpNotifications"
+                 value="false"
+                 id="smtpNotificationsOff"
+                 data-var-type="boolean"
+          <% if(!ob.smtpNotifications) { %>checked<% } %>>
+          <label for="smtpNotifications"><%= ob.polyT('settings.off') %></label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="smtpServerAddress">
+        <%= ob.polyT('settings.smtpServerAddress') %>
+      </label>
+    </div>
+    <div class="col9">
+      <input class="clrBr" 
+        required
+        pattern=".*"
+        type="text"
+        name="smtpServerAddress" 
+        id="smtpServerAddress" 
+        value="<%= ob.smtpServerAddress %>">
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="smtpUserName">
+        <%= ob.polyT('settings.smtpUserName') %>
+      </label>
+    </div>
+    <div class="col9">
+      <input class="clrBr" 
+        required        
+        type="text"
+        name="smtpUserName" 
+        id="smtpUserName" 
+        value="<%= ob.smtpUserName %>">
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="smtpPassword">
+        <%= ob.polyT('settings.smtpPassword') %>
+      </label>
+    </div>
+    <div class="col9">
+      <input class="clrBr" 
+        required 
+        type="password"
+        name="smtpPassword" 
+        id="smtpPassword" 
+        value="<%= ob.smtpPassword %>">
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="smtpFromEmail">
+        <%= ob.polyT('settings.smtpFromEmail') %>
+      </label>
+    </div>
+    <div class="col9">
+      <input class="clrBr" 
+        required
+        type="email"
+        name="smtpFromEmail" 
+        id="smtpFromEmail" 
+        value="<%= ob.smtpFromEmail %>">
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label for="smtpToEmail">
+        <%= ob.polyT('settings.smtpToEmail') %>
+      </label>
+    </div>
+    <div class="col9">
+      <input class="clrBr" 
+        required
+        type="email"
+        name="smtpToEmail" 
+        id="smtpToEmail" 
+        value="<%= ob.smtpToEmail %>">
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label>
+        <%= ob.polyT('settings.test') %>
+      </label>
+    </div>
+    <div class="col9">
+      <div class="btnStrip flex clrP clrBr">
+        <a class="btn clrP clrBr js-testSMTPSettings flexNoShrink"><%= ob.polyT('settings.testSMTPSettings') %></a>
+      </div>
+    </div>
   </div>
 </form>
