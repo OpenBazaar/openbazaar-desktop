@@ -30,6 +30,14 @@
         background-size: cover;
       }
 
+      .buyBox {
+         flex-grow: 1;
+        border-width: 1px;
+        border-style: solid;
+        box-sizing: border-box;
+        padding: $padLg $pad * 4;
+      }
+
     }
   }
 }

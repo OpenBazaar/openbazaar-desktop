@@ -78,6 +78,10 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1, $emphasis2);
 }
 
+.clrTAtt {
+  @include textColor($attention1, $attention2);
+}
+
 .clrTErr {
   @include textColor($error);
 }
@@ -105,6 +109,31 @@ input[type=range][class~="clrS"] {
 
 .clrBr2 {
   border-color: $border2;
+
+  hr {
+    border-color: $border2;
+  }
+}
+
+.clrBr3 {
+  // decorative border with a shadow to create a faint outline
+  border-color: $textOnEmph;
+  border-width: 2px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+
+.clrBAtt1 {
+  background-color: $attention1;
+}
+
+.clrBAtt2 {
+  background-color: $attention2;
+}
+
+.clrBAttGrad {
+  background: $attentionGradient;
+
+
 }
 
 ::-webkit-scrollbar {

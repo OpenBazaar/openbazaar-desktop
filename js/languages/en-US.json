@@ -45,6 +45,9 @@
         "btnLayoutFullWidth": "100%",
         "unableToFetchListings": "Unable to retrieve your listings.",
         "noListings": "No listings."
+    },
+    "listing": {
+        "viewPhotos": "View &{count} Photos"
     }
   },
   "userShort": {
@@ -248,8 +251,8 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
-    "provideAmountGreaterThanZero": "The price must be greater than 0."    
-  },  
+    "provideAmountGreaterThanZero": "The price must be greater than 0."
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

@@ -4,6 +4,7 @@ import { launchEditListingModal } from '../../../utils/modalManager';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
+import 'select2';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -176,6 +177,8 @@ export default class extends BaseModal {
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
+
+      this.$('.js-variantSelect').select2();
     });
 
     return this;

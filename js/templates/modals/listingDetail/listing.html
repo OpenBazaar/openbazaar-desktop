@@ -10,22 +10,37 @@
     <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
     <h2 class="txUnb"><%= ob.formatCurrency(ob.item.price, ob.metadata.pricingCurrency) %></h2>
   </div>
-  <div class="flex gutterH">
-    <div class="mainImage"
-    <% if (ob.item.images.length) { %>
-    <% console.log(ob.item.images) %>
-    style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
-    <% } else { %>
-    style="background-image: url('../imgs/defaultListing.png')"
+  <div class="flex gutterHLg">
+    <div>
+      <div class="mainImage"
+      <% if (ob.item.images.length) { %>
+        <% console.log(ob.item.images) %>
+        style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
+      <% } else { %>
+        style="background-image: url('../imgs/defaultListing.png')"
+      <% } %>
+      ></div>
+    <% if(ob.item.images.length > 1) { %>
+      <div><%= ob.polyT("userPage.listing.viewPhotos", {count: ob.item.images.length}) %></div>
     <% } %>
-    ></div>
-  <div class="box border clrP clrBr padLg">
-    <div class="flexCol flexHCent gutterV">
-      <div>Size</div>
-      <div>Buy Now</div>
-      <div>Ratings</div>
     </div>
-  </div>
+    <div class="buyBox clrP clrBr">
+      <div class="flexColRows flexHCent gutterV">
+        <!-- this will loop through each variant-->
+        <div class="flexVCent gutterHLg">
+          <div class="h5 txUnl">Size</div>
+          <div class="flexExpand">
+            <select class="js-variantSelect" name="">
+              <option>some option 1</option>
+              <option>some option 2</option>
+              <option>some option 3</option>
+            </select>
+          </div>
+        </div>
+        <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
+        <div>Ratings</div>
+      </div>
+    </div>
   </div>
   <div>
     <div>

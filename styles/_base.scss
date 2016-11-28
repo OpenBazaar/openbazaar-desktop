@@ -182,29 +182,25 @@ ul, ol {
     right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
     height: calc(100% - 100px);
-    //box-sizing: border-box;
     z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width);
-    overflow-y: scroll;
+    overflow-y: auto;
 
     &::-webkit-scrollbar {
-      display: none;
+      width: 0;
     }
 
     &:hover {
       right: 0;
       padding-right: $scrollbar;
-      //width: $chatClosed + $scrollbar;
 
       &::-webkit-scrollbar {
-        display: block;
+        width: $scrollbar;
       }
     }
 
     .chatOpen & {
       width: $chatOpen;
-      right: 0;
-      padding-right: $scrollbar;
     }
   }
 }

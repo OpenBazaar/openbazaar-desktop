@@ -113,6 +113,12 @@
   padding: 0 12px;
 }
 
+.btnHg {
+  @extend .btn;
+  font-size: $tx2b;
+  height: 56px;
+}
+
 .btnStrip {
   //creates a set of buttons with no gaps between them
   overflow: hidden; // clear the floats to avoid layout issues.
