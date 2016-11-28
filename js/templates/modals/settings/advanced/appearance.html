@@ -1,5 +1,59 @@
 <form class="box border padKids padStack clrP clrBr js-appearance">
   <div class="flexRow">
-    Appearance
+    <h3><%= ob.polyT('settings.appearance') %></h3>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label><%= ob.polyT('settings.windowControlStyle') %></label>
+    </div>
+    <div class="col9">
+      <div class="btnStrip">
+        <div class="btnRadio clrBr">
+          <input type="radio"
+                 name="windowControlStyle"
+                 value="mac"
+                 id="windowControlStyleMac"
+                 data-var-type="string"
+          <% if(ob.windowControlStyle == "mac") { %>checked<% } %>>
+          <label for="windowControlStyleMac"><%= ob.polyT('settings.macOS') %></label>
+        </div>
+        <div class="btnRadio clrBr">
+          <input type="radio"
+                 name="windowControlStyle"
+                 value="windows"
+                 id="windowControlStyleWindows"
+                 data-var-type="string"
+          <% if(ob.windowControlStyle == "windows") { %>checked<% } %>>
+          <label for="windowControlStyleWindows"><%= ob.polyT('settings.windowsOS') %></label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+      <label><%= ob.polyT('settings.advancedVisualEffects') %></label>
+    </div>
+    <div class="col9">
+      <div class="btnStrip">
+        <div class="btnRadio clrBr">
+          <input type="radio"
+                 name="showAdvancedVisualEffects"
+                 value="true"
+                 id="advancedVisualEffectsOn"
+                 data-var-type="boolean"
+          <% if(ob.showAdvancedVisualEffects) { %>checked<% } %>>
+          <label for="advancedVisualEffectsOn"><%= ob.polyT('settings.on') %></label>
+        </div>
+        <div class="btnRadio clrBr">
+          <input type="radio"
+                 name="showAdvancedVisualEffects"
+                 value="false"
+                 id="advancedVisualEffectsOff"
+                 data-var-type="boolean"
+          <% if(!ob.showAdvancedVisualEffects) { %>checked<% } %>>
+          <label for="advancedVisualEffectsOff"><%= ob.polyT('settings.off') %></label>
+        </div>
+      </div>
+    </div>
   </div>
 </form>
