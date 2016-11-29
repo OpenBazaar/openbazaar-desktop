@@ -235,8 +235,7 @@ export default class extends BaseVw {
   }
 
   showShippingChangedMessage() {
-    if (this.shippingChangePopIn ||
-      (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
+    if (this.shippingChangePopIn && !this.shippingChangePopIn.isRemoved()) {
       this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
       const refreshLink =
