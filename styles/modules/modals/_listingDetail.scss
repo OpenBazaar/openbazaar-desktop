@@ -28,12 +28,16 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: $corner;
       }
 
       .buyBox {
          flex-grow: 1;
         border-width: 1px;
         border-style: solid;
+        border-radius: $corner;
         box-sizing: border-box;
         padding: $padLg $pad * 4;
       }

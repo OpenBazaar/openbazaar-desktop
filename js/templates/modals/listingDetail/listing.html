@@ -13,7 +13,7 @@
   </div>
   <div class="flex gutterHLg">
     <div>
-      <div class="mainImage"
+      <div class="mainImage clrBr"
       <% if (ob.item.images.length) { %>
         <% console.log(ob.item.images) %>
         style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
