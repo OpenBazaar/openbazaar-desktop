@@ -94,7 +94,7 @@
 
   input[type="checkbox"] {
     // todo: style this to match the designs
-  }  
+  }
 }
 
 .btnTxt {
@@ -152,6 +152,7 @@
   right: 0;
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
   transition: 0.2s ease;
+  overflow: hidden;
 
   &.open {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
