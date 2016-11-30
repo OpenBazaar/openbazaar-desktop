@@ -348,7 +348,7 @@ export default class extends BaseVw {
       return passesFilter;
     });
 
-    return new Listings(models);
+    return new Listings(models, { guid: this.model.id });
   }
 
   /**
@@ -432,7 +432,7 @@ export default class extends BaseVw {
     // todo: exceptionally tall screens may fit an entire page
     // with room to spare. Which means no scrollbar, which means subsequent
     // pages will not load. Handle that case.
-    const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE));
+    const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE), { guid: this.model.id });
 
     if (this.storeListings) this.storeListings.remove();
 

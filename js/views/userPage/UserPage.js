@@ -101,7 +101,7 @@ export default class extends baseVw {
 
   updateHeader() {
     const headerHashes = this.model.get('headerHashes').toJSON();
-    const headerHash = isHiRez() ? headerHashes.small : headerHashes.tiny;
+    const headerHash = isHiRez() ? headerHashes.large : headerHashes.medium;
 
     if (headerHash) {
       this.$('.js-header').attr('style',
@@ -146,7 +146,7 @@ export default class extends baseVw {
   }
 
   createStoreTabView(opts = {}) {
-    this.listings = new Listings();
+    this.listings = new Listings([], { guid: this.model.id });
 
     let listingsCount = this.model.get('listingCount');
 
