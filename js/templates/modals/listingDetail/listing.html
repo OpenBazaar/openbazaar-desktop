@@ -85,12 +85,12 @@
   </div>
 
   <% console.log(ob) %>
-  <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
+  <span class="clrE1 clrTOnEmph txTiny txCtr txUp padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
 </div>
 
 
 <h1><%= ob.item.title %></h1>
 <div><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></div>
 <br />
-<span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>
+<span class="clrE1 clrTOnEmph txTiny txCtr txUp padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>
 

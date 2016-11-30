@@ -79,7 +79,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrTAtt {
-  @include textColor($attention1, $attention2);
+  @include textColor($emphasis1, $emphasis2);
 }
 
 .clrTErr {
@@ -123,15 +123,15 @@ input[type=range][class~="clrS"] {
 }
 
 .clrBAtt1 {
-  background-color: $attention1;
+  background-color: $emphasis1;
 }
 
 .clrBAtt2 {
-  background-color: $attention2;
+  background-color: $emphasis2;
 }
 
 .clrBAttGrad {
-  background: $attentionGradient;
+  background: $emphasisGradient;
 
 
 }

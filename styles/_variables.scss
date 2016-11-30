@@ -10,11 +10,9 @@ $background: adjust-color($primary, $lightness: -10%);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
 $focusedBorder: adjust-color($primary, $lightness: 0%);
-$emphasis1: hsl(33.4, 98, 60.8);
-$emphasis2: adjust-color($emphasis1, $saturation: -33%, $lightness: -25.8%);
-$attention1: hsl(116.5, 66.3, 41);
-$attention2: adjust-color($attention1, $lightness: +20%);
-$attentionGradient: linear-gradient(180deg, $attention2, $attention1);
+$emphasis1: hsl(116.5, 66.3, 41);
+$emphasis2: adjust-color($emphasis1, $lightness: +20%);
+$emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
 $error: red;
 $overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
 
