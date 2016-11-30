@@ -6,6 +6,7 @@ import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
+import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/Profile';
 import Listing from './models/listing/Listing';
@@ -187,8 +188,15 @@ export default class ObRouter extends Router {
   }
 
   connectedPeers() {
-    const peerFetch = $.get(app.getServerUrl('ob/peers')).done(() => {
-      // check it yo
+    const peerFetch = $.get(app.getServerUrl('ob/peers')).done((peersData) => {
+      // console.log('silly');
+      // window.silly = peersData;
+
+      const peers = peersData.map(peer => (peer.slice(peer.lastIndexOf('/') + 1)));
+
+      this.loadPage(
+        new ConnectedPeersPage({ peers }).render()
+      );
     }).fail((xhr) => {
       let content = '<p>There was an error retreiving the connected peers.</p>';
 
