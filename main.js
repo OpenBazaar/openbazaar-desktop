@@ -2,7 +2,8 @@ import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
-import * as localServer from './js/utils/localServer';
+import _ from 'underscore';
+import LocalServer from './js/utils/LocalServer';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -65,9 +66,22 @@ if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
 
-const isBundledApp = () => fs.existsSync(localServer.serverPath);
+// const serverPath = `${__dirname}${path.sep}..${path.sep}OpenBazaar-Server${path.sep}`;
+const serverPath = `${__dirname}${path.sep}..${path.sep}` +
+  `test-server${path.sep}`;
+const isBundledApp = _.once(() => fs.existsSync(serverPath));
+let localServer;
 
-if (isBundledApp) localServer.startLocalServer();
+if (isBundledApp) {
+  global.localServer = localServer = new LocalServer({
+    serverPath,
+    serverFilename: process.platform === 'darwin' || process.platform === 'linux' ?
+      'openbazaard' : 'openbazaard.exe',
+    errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
+  });
+
+  localServer.start();
+}
 
 function createWindow() {
   const template = [
@@ -233,49 +247,56 @@ function createWindow() {
 
   trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
 
-  const trayTemplate = [
-    {
-      label: 'Start Local Server',
-      type: 'normal',
-      click() { localServer.startLocalServer(); },
-    },
-    {
-      label: 'Shutdown Local Server',
-      type: 'normal',
-      click() { localServer.stopLocalServer(); },
-    },
-    {
-      type: 'separator',
-    },
-    {
-      label: 'Quit',
-      type: 'normal',
-      accelerator: 'Command+Q',
-      click() {
-        app.quit();
+  let trayTemplate;
+
+  if (localServer) {
+    trayTemplate = [
+      {
+        label: 'Start Local Server',
+        type: 'normal',
+        click() { localServer.start(); },
       },
+      {
+        label: 'Shutdown Local Server',
+        type: 'normal',
+        click() { localServer.stop(); },
+      },
+      {
+        type: 'separator',
+      },
+    ];
+  }
+
+  trayTemplate.push({
+    label: 'Quit',
+    type: 'normal',
+    accelerator: 'Command+Q',
+    click() {
+      app.quit();
     },
-  ];
+  });
 
   const contextMenu = Menu.buildFromTemplate(trayTemplate);
 
   trayMenu.setContextMenu(contextMenu);
 
-  if (localServer.isRunning()) {
-    contextMenu.items[0].enabled = false;
-  } else {
-    contextMenu.items[1].enabled = false;
+  if (localServer) {
+    if (localServer.isRunning) {
+      contextMenu.items[0].enabled = false;
+    } else {
+      contextMenu.items[1].enabled = false;
+    }
+
+    localServer.on('start', () => {
+      contextMenu.items[0].enabled = false;
+      contextMenu.items[1].enabled = true;
+    });
+
+    localServer.on('stop', () => {
+      contextMenu.items[0].enabled = true;
+      contextMenu.items[1].enabled = false;
+    });
   }
-
-  localServer.events.on('start', () => {
-    contextMenu.items[0].enabled = false;
-    contextMenu.items[1].enabled = true;
-  });
-
-  localServer.events.on('stop', () => {
-    contextMenu.items[0].enabled = true;
-    contextMenu.items[1].enabled = false;
-  });
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -345,5 +366,5 @@ ipcMain.on('close-confirmed', () => {
 process.on('exit', () => {
   closeConfirmed = true;
   app.quit();
-  localServer.stopLocalServer();
+  if (localServer) localServer.stop();
 });
