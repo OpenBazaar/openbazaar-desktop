@@ -1,4 +1,12 @@
 import app from '../app';
+import $ from 'jquery';
+import { Events } from 'backbone';
+
+const events = {
+  ...Events,
+};
+
+export { events };
 
 /**
  * Converts the amount from a decimal to an integer. If the
@@ -73,6 +81,11 @@ export function formatPrice(price, isBtc = false) {
   return price.toFixed(decimalPlaces);
 }
 
+/**
+ * Will format an amount in the given currency into the format
+ * appropriate for the given locale.
+ */
+// todo: check currency is one of our currencies
 export function formatCurrency(amount, currency, locale = app.settings.get('language')) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
@@ -114,4 +127,106 @@ export function formatCurrency(amount, currency, locale = app.settings.get('lang
   }
 
   return formattedCurrency;
+}
+
+let exchangeRates = {};
+
+/**
+ * Will fetch exchange rate data from the server. This is already called
+ * on an interval via exchangeRateSyncer.js, so it's unlikely you would
+ * need to call this method. Instead access cached values via getExchangeRate()
+ * or more commonly convertCurrency().
+ */
+export function fetchExchangeRates(options = {}) {
+  const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
+    .done((data) => (exchangeRates = data));
+
+  events.trigger('fetching-exchange-rates', { xhr });
+
+  return xhr;
+}
+
+export function getExchangeRate(currency) {
+  if (!currency) {
+    throw new Error('Please provide a currency.');
+  }
+
+  return exchangeRates[currency];
+}
+
+export function NoExchangeRateDataError(message) {
+  this.message = message || 'Missing exchange rate data';
+  this.name = 'NoExchangeRateDataError';
+  this.stack = (new Error()).stack;
+}
+
+NoExchangeRateDataError.prototype = Object.create(Error.prototype);
+NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
+
+/**
+ * Converts an amount from one currency to another based on exchange
+ * rate data.
+ */
+export function convertCurrency(amount, fromCur, toCur) {
+  if (typeof amount !== 'number') {
+    throw new Error('Please provide an amount as a number');
+  }
+
+  if (isNaN(amount)) {
+    throw new Error('Please provide an amount that is not NaN');
+  }
+
+  if (typeof fromCur !== 'string') {
+    throw new Error('Please provide a fromCur as a string');
+  }
+
+  if (typeof toCur !== 'string') {
+    throw new Error('Please provide a toCur as a string');
+  }
+
+  if (fromCur === toCur) {
+    return amount;
+  }
+
+  if (!exchangeRates[fromCur]) {
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCur}.`);
+  }
+
+  if (!exchangeRates[toCur]) {
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCur}.`);
+  }
+
+  const fromRate = fromCur === 'BTC' ? 1 : getExchangeRate(fromCur);
+  const toRate = toCur === 'BTC' ? 1 : getExchangeRate(toCur);
+
+  return (amount / fromRate) * toRate;
+}
+
+/**
+ * Convenience function to both convert and format a currency amount using
+ * convertCurrency() and formatCurrency().
+ */
+export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
+  const opts = {
+    locale: app && app.settings && app.settings.get('language') || 'en-US',
+    skipConvertIfNoExchangeRateData: true,
+    ...options,
+  };
+
+  let convertedAmt;
+  let outputFormat = toCur;
+
+  try {
+    convertedAmt = convertCurrency(amount, fromCur, toCur);
+  } catch (e) {
+    if (e instanceof NoExchangeRateDataError && opts.skipConvertIfNoExchangeRateData) {
+      // We'll use an unconverted amount
+      convertedAmt = amount;
+      outputFormat = fromCur;
+    } else {
+      throw e;
+    }
+  }
+
+  return formatCurrency(convertedAmt, outputFormat, opts.locale);
 }

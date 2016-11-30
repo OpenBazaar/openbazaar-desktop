@@ -10,21 +10,26 @@ import ListingDetail from './modals/listingDetail/Listing';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      viewType: 'grid',
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
 
     if (!this.model || !(this.model instanceof ListingShort)) {
       throw new Error('Please provide a ListingShort model.');
     }
 
-    if (!options.ownListing) {
+    if (!opts.ownListing) {
       // For search and channels this will need to be included in the API, in
       // which case, we could get the value from the model and this could
       // be completely optional.
       throw new Error('Please provide an ownListing indicator.');
     }
 
-    if (!options.listingBaseUrl) {
+    if (!opts.listingBaseUrl) {
       // When the listing card is clicked and the listing detail modal is
       // opened, the slug of the listing is concatenated with the listingBaseUrl
       // and the route is updated (both history & address bar).
@@ -38,24 +43,26 @@ export default class extends baseVw {
     this.fullListingFetches = [];
 
     if (this.options.ownListing) {
-      this.listenTo(listingEvents, 'destroying', (md, opts) => {
+      this.listenTo(listingEvents, 'destroying', (md, destroyingOpts) => {
         if (this.isRemoved()) return;
 
-        if (opts.slug === this.model.get('slug')) {
+        if (destroyingOpts.slug === this.model.get('slug')) {
           this.$el.addClass('listingDeleting');
         }
 
-        opts.xhr.fail(() => (this.$el.removeClass('listingDeleting')));
+        destroyingOpts.xhr.fail(() => (this.$el.removeClass('listingDeleting')));
       });
 
-      this.listenTo(listingEvents, 'destroy', (md, opts) => {
+      this.listenTo(listingEvents, 'destroy', (md, destroyOpts) => {
         if (this.isRemoved()) return;
 
-        if (opts.slug === this.model.get('slug')) {
+        if (destroyOpts.slug === this.model.get('slug')) {
           this.$el.addClass('listingDeleted');
         }
       });
     }
+
+    this.viewType = opts.viewType;
   }
 
   className() {
@@ -158,6 +165,19 @@ export default class extends baseVw {
     return this._fullListing;
   }
 
+  get viewType() {
+    return this._viewType;
+  }
+
+  set viewType(type) {
+    if (['list', 'grid'].indexOf(type) === -1) {
+      throw new Error('The provided view type is not one of the available types.');
+    }
+
+    // This just sets the flag. It's up to you to re-render.
+    this._viewType = type;
+  }
+
   get $btnEdit() {
     return this._$btnEdit ||
       (this._$btnEdit = this.$('.js-edit'));
@@ -180,6 +200,8 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         ownListing: this.options.ownListing,
         shipsFreeToMe: this.model.shipsFreeToMe,
+        viewType: this.viewType,
+        displayCurrency: app.settings.get('localCurrency'),
       }));
     });
 

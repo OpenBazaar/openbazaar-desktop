@@ -31,7 +31,7 @@ export default class extends BaseModal {
         }
       });
 
-    if (this.isOwnListing()) {
+    if (this.model.isOwnListing()) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
         const slug = this.model.get('listing')
           .get('slug');
@@ -107,9 +107,13 @@ export default class extends BaseModal {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
+      const refreshLink =
+        `<a class="js-refresh">${app.polyglot.t('listingDetail.listingDataChangedPopinRefresh')}` +
+        '</a>';
+
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Listing data has changed (translate me). ' +
-          '<a class="js-refresh">refresh</a>',
+        messageText: app.polyglot.t('listingDetail.listingDataChangedPopin',
+          { refreshLink }),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
@@ -121,12 +125,6 @@ export default class extends BaseModal {
 
       this.$popInMessages.append(this.dataChangePopIn.render().el);
     }
-  }
-
-  isOwnListing() {
-    // todo: Will the api to return our own listing return vendorID. Perhaps
-    // we centralize the ownListing determination in the listing model?
-    return this.model.get('listing').get('vendorID').guid === app.profile.id;
   }
 
   get shipsFreeToMe() {
@@ -168,7 +166,8 @@ export default class extends BaseModal {
       this.$el.html(t({
         ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
-        ownListing: this.isOwnListing(),
+        ownListing: this.model.isOwnListing(),
+        displayCurrency: app.settings.get('localCurrency'),
       }));
 
       super.render();

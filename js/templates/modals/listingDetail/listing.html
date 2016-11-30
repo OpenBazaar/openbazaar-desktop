@@ -6,4 +6,6 @@
 </div>
 <% } %>
 <h1><%= ob.item.title %></h1>
-<span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
+<div><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></div>
+<br />
+<span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>

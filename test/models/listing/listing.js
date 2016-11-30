@@ -13,15 +13,13 @@ describe('the Listing model', () => {
     };
   });
 
-  it('throws an error if you attempt to fetch without a guid being set', () => {
-    const listing = new Listing({
-      listing: { slug: 'a-happy-slug' },
-    });
-
+  it('throws an error if you attempt to instantiate without providing a guid', () => {
     let errorThrown = false;
 
     try {
-      listing.fetch();
+      const listing = new Listing({ // eslint-disable-line no-unused-vars
+        listing: { slug: 'a-happy-slug' },
+      });
     } catch (e) {
       errorThrown = true;
     }
@@ -61,7 +59,7 @@ describe('the Listing model', () => {
   });
 
   it('converts fiat prices from integer to decimal format in parse', () => {
-    const listing = new Listing();
+    const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
       vendorListings: [
         {
@@ -101,7 +99,7 @@ describe('the Listing model', () => {
   });
 
   it('converts BTC prices from Satoshi to BTC format in parse', () => {
-    const listing = new Listing();
+    const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
       vendorListings: [
         {

@@ -1,4 +1,4 @@
-<div class="txB tx4 row">Category</div>
+<div class="txB tx4 row"><%= ob.polyT('userPage.store.categoryFilter.heading') %></div>
 <div class="rowSm">
   <div class="btnRadio">
     <input type="radio"
@@ -47,7 +47,7 @@
     </div>
     <% }) %>  
   </div>
-  <a class="js-showMoreLess clrT tx6 txU showMore"><%= `${(ob.categories.length + 1) - ob.maxInitiallyVisibleCats} more...` %></a>
-  <a class="js-showMoreLess clrT tx6 txU showLess">Less</a>
+  <a class="js-showMoreLess clrT tx6 txU showMore"><%= ob.polyT('userPage.store.categoryFilter.showMore', (ob.categories.length + 1) - ob.maxInitiallyVisibleCats) %></a>
+  <a class="js-showMoreLess clrT tx6 txU showLess"><%= ob.polyT('userPage.store.categoryFilter.showLess') %></a>
 </div>
 <% } %>

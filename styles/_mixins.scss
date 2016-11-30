@@ -20,7 +20,9 @@
 
 @mixin disabled {
   pointer-events: none;
-  opacity: 0.2;
+  // Bumbing this up until we have a more context specific
+  // disable style. 0.2 is too low for most things.
+  opacity: 0.4;
 }
 
 @mixin alignToChat {

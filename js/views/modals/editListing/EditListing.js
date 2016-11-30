@@ -36,13 +36,14 @@ export default class extends BaseModal {
     this._origModel = this.model;
     this.model = this._origModel.clone();
     this.listenTo(this.model, 'sync', () => {
-      if (this.createMode && this.model.lastSyncedAttrs.listing &&
-        this.model.lastSyncedAttrs.listing.slug) {
-        this.createMode = false;
-        this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
-      }
+      setTimeout(() => {
+        if (this.createMode && !this.model.isNew()) {
+          this.createMode = false;
+          this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
+        }
 
-      this._origModel.set(this.model.toJSON());
+        this._origModel.set(this.model.toJSON());
+      });
 
       // A change event won't fire on a parent model if only nested attributes change.
       // The nested models would need to have change events manually bound to them
