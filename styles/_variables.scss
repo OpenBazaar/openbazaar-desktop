@@ -9,7 +9,7 @@ $secondary: adjust-color($primary, $lightness: -4%);
 $background: adjust-color($primary, $lightness: -10%);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
-$focusedBorder: adjust-color($primary, $lightness: 0%);
+$focusedBorder: rgb(0, 0, 0);
 $emphasis1: hsl(116.5, 66.3, 41);
 $emphasis2: adjust-color($emphasis1, $lightness: +20%);
 $emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
