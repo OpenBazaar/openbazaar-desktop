@@ -18,7 +18,15 @@ export default class extends Collection {
   }
 
   url() {
-    return app.getServerUrl(`ipns/${this.guid}/listings/index.json`);
+    let url;
+
+    if (this.guid === app.profile.guid) {
+      url = app.getServerUrl('ob/listings');
+    } else {
+      url = app.getServerUrl(`ipns/${this.guid}/listings/index.json`);
+    }
+
+    return url;
   }
 
   /**

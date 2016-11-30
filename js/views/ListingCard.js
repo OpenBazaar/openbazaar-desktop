@@ -22,7 +22,7 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
-    if (!opts.ownListing) {
+    if (opts.ownListing === undefined) {
       // For search and channels this will need to be included in the API, in
       // which case, we could get the value from the model and this could
       // be completely optional.
