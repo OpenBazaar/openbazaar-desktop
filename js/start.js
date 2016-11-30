@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, screen } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
@@ -22,6 +22,8 @@ import './utils/listingData';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
+
+const platform = process.platform;
 
 // initialize language functionality
 function getValidLanguage(lang) {
@@ -73,6 +75,15 @@ app.loadingModal = new LoadingModal({
   showCloseButton: false,
   removeOnRoute: false,
 }).render().open();
+
+// fix zoom issue on Linux hiDPI
+if (platform === 'linux') {
+  let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+  if (scaleFactor === 0) {
+    scaleFactor = 1;
+  }
+  $('body').css('zoom', 1 / scaleFactor);
+}
 
 const fetchConfigDeferred = $.Deferred();
 
