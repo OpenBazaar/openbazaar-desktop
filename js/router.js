@@ -189,9 +189,6 @@ export default class ObRouter extends Router {
 
   connectedPeers() {
     const peerFetch = $.get(app.getServerUrl('ob/peers')).done((peersData) => {
-      // console.log('silly');
-      // window.silly = peersData;
-
       const peers = peersData.map(peer => (peer.slice(peer.lastIndexOf('/') + 1)));
 
       this.loadPage(
