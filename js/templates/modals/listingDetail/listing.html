@@ -46,6 +46,12 @@
             <span class="clrE1 clrTOnEmph txTn txCtr txUp phraseBox">Free Shipping</span>
           </div>
         </div>
+        <div class="flexHCent gutterH tx5">
+          <div>Type: <strong><%= ob.polyT(`editListing.formats.${ob.metadata.contractType}`) %></strong></div>
+          <% if (ob.item.condition) { %>
+          <div>Condition: <strong><%= ob.polyT(ob.item.condition) %></strong></div>
+          <% } %>
+        </div>
       </div>
     </div>
   </div>
@@ -55,9 +61,7 @@
     print(`category: ${category}`);
     }); %>
     </div>
-    <div>
-    condition: <%= ob.item.condition %>
-    </div>
+
     <div>
       <%= ob.item.description %>
     </div>
@@ -77,9 +81,7 @@
       print(`<img src="${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}">`);
     }); %>
     </div>
-    <div>
-    contract type: <%= ob.metadata.contractType %>
-    </div>
+
     <div>
       format: <%= ob.metadata.format %>
     </div>
