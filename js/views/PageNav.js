@@ -158,22 +158,13 @@ export default class extends View {
         isGuid = false;
       }
 
-      // temporary way to check for GUIDs, since our dummy guids from
-      // start.js aren't valid v2 guids, but are registered with the
-      // one-name api.
-      if (firstTerm.startsWith('Qm')) isGuid = true;
-      // end - temporary guid check
-
       if (isGuid) {
         app.router.navigate(firstTerm, { trigger: true });
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
-      } else if (text.startsWith('listing/')) {
-        // temporary to handle temporary listing route
-        app.router.navigate(text, { trigger: true });
-      } else {
-        // tag(s)
+      } else if (text.indexOf('#') !== -1 || text.indexOf(' ') !== -1) {
+        // If the term has a hash and/or space in it, we'll consider it to be tag(s)
         const tags = text.trim()
           .replace(',', ' ')
           .replace(/\s+/g, ' ') // collapse multiple spaces into single spaces
@@ -181,6 +172,9 @@ export default class extends View {
           .map((frag) => (frag.charAt(0) === '#' ? frag.slice(1) : frag));
 
         alert(`boom - Searching for tags: ${tags.join(', ')}`);
+      } else {
+        // it's probably a page route
+        app.router.navigate(text, { trigger: true });
       }
     }
   }
