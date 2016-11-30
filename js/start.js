@@ -19,6 +19,7 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
+import { init as localServerStatusMsgsInit } from './startup/localServerStatusMsgs';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -73,6 +74,10 @@ app.loadingModal = new LoadingModal({
   showCloseButton: false,
   removeOnRoute: false,
 }).render().open();
+
+// Initialize the functionality to show status message as local server
+// is started and stopped.
+localServerStatusMsgsInit();
 
 const fetchConfigDeferred = $.Deferred();
 
@@ -449,7 +454,7 @@ app.apiSocket.on('message', (e) => {
       publishingStatusMsgRemoveTimer = setTimeout(() => {
         publishingStatusMsg.remove();
         publishingStatusMsg = null;
-      }, 2000);
+      }, 3000);
     }
   }
 });

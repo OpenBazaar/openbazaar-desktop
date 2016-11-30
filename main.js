@@ -1,19 +1,14 @@
 import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
-
-import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
+import * as localServer from './js/utils/localServer';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let trayMenu;
 let closeConfirmed = false;
-// let launchedFromInstaller = false;
-const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
-// let version = app.getVersion();
-// let TrayMenu;
-
 
 const handleStartupEvent = function () {
   if (process.platform !== 'win32') {
@@ -70,99 +65,9 @@ if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
 
-// Set daemon binary name
-const daemon = (platform === 'darwin' || platform === 'linux') ? 'openbazaard' : 'openbazaard.exe';
+const isBundledApp = () => fs.existsSync(localServer.serverPath);
 
-const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
-let serverRunning = false;
-let pendingKill;
-// let startAfterClose;
-
-const startLocalServer = function startLocalServer() {
-  if (fs.existsSync(serverPath)) {
-    if (pendingKill) {
-      pendingKill.once('close', startLocalServer());
-      return;
-    }
-
-    if (serverRunning) return;
-
-    console.log('Starting OpenBazaar Server');
-
-    // const random_port = Math.floor((Math.random() * 10000) + 30000);
-
-    const sub = childProcess.spawn(serverPath + daemon, ['start'], {
-      detach: false,
-      cwd: `${__dirname}${path.sep}..${path.sep}openbazaar-go`,
-    });
-
-    serverRunning = true;
-
-    let stdout = '';
-    let stderr = '';
-    let serverOut;
-
-    const stdoutcallback = function (buf) {
-      console.log('[STR] stdout "%s"', String(buf));
-      stdout += buf;
-      serverOut = `${serverOut}${buf}`;
-    };
-    sub.stdout.on('data', stdoutcallback);
-    const stderrcallback = function stderrcallback(err) {
-      if (err) {
-        console.log(err);
-        return err;
-      }
-      return false;
-    };
-    const stderrcb = function (buf) {
-      console.log('[STR] stderr "%s"', String(buf));
-      fs.appendFile(`${__dirname}${path.sep}error.log`, String(buf), stderrcallback);
-      stderr += buf;
-    };
-    sub.stderr.on('data', stderrcb);
-    const closecallback = function (code) {
-      console.log(`exited with ${code}`);
-      console.log('[END] stdout "%s"', stdout);
-      console.log('[END] stderr "%s"', stderr);
-      serverRunning = false;
-    };
-    sub.on('close', closecallback);
-    sub.unref();
-  } else {
-    if (mainWindow) {
-      mainWindow.webContents.executeJavaScript("console.log('Unable " +
-      "to find openbazaard')");
-    }
-  }
-};
-startLocalServer();
-
-// let killLocalServer = function () {
-//   if (sub) {
-//     if (pendingKill) {
-//       startAfterClose && pendingKill.removeListener('close', startAfterClose);
-//       return;
-//     } else if (!serverRunning) {
-//       return;
-//     }
-//     pendingKill = sub;
-//     pendingKill.once('close', () => {
-//       pendingKill = null;
-//     });
-//
-//     console.log('Shutting down server daemon');
-//
-//     if (platform == "mac" || platform == "linux") {
-//       subpy.kill('SIGINT');
-//     } else {
-//       require('childProcess').spawn("taskkill", ["/pid", sub.pid, '/f', '/t']);
-//     }
-//   } else {
-//     mainWindow && mainWindow.webContents.executeJavaScript("console.log('Server
-// is not running locally')");
-//   }
-// };
+if (isBundledApp) localServer.startLocalServer();
 
 function createWindow() {
   const template = [
@@ -326,34 +231,19 @@ function createWindow() {
   // put logic here to set tray icon based on OS
   const osTrayIcon = 'openbazaar-mac-system-tray.png';
 
-  const trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
+  trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
+
   const trayTemplate = [
     {
       label: 'Start Local Server',
       type: 'normal',
-      click() { startLocalServer(); },
+      click() { localServer.startLocalServer(); },
     },
     {
       label: 'Shutdown Local Server',
       type: 'normal',
-      click() {
-        if (fs.existsSync(serverPath)) {
-          const workingDir = `${__dirname}${path.sep}..${path.sep}openbazaar-go`;
-          childProcess.spawn(serverPath + daemon, ['stop'], {
-            detach: false,
-            cwd: workingDir,
-          });
-        } else {
-          if (mainWindow) {
-            mainWindow.webContents.executeJavaScript("console.log('Server is not " +
-            "running locally')");
-          }
-        }
-      },
+      click() { localServer.stopLocalServer(); },
     },
-  ];
-
-  trayTemplate.push(
     {
       type: 'separator',
     },
@@ -364,12 +254,28 @@ function createWindow() {
       click() {
         app.quit();
       },
-    }
-  );
+    },
+  ];
 
   const contextMenu = Menu.buildFromTemplate(trayTemplate);
 
   trayMenu.setContextMenu(contextMenu);
+
+  if (localServer.isRunning()) {
+    contextMenu.items[0].enabled = false;
+  } else {
+    contextMenu.items[1].enabled = false;
+  }
+
+  localServer.events.on('start', () => {
+    contextMenu.items[0].enabled = false;
+    contextMenu.items[1].enabled = true;
+  });
+
+  localServer.events.on('stop', () => {
+    contextMenu.items[0].enabled = true;
+    contextMenu.items[1].enabled = false;
+  });
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -404,7 +310,10 @@ function createWindow() {
 
   mainWindow.on('close', (e) => {
     mainWindow.send('close-attempt');
-    if (!closeConfirmed) e.preventDefault();
+
+    if (mainWindow && !closeConfirmed) {
+      e.preventDefault();
+    }
   });
 }
 
@@ -426,22 +335,15 @@ app.on('activate', () => {
   if (mainWindow) mainWindow.show();
 });
 
-// const checkServerChange = function (event, server) {
-//   // if (launchedFromInstaller) {
-//   if (server.default) {
-//     startLocalServer();
-//   } else {
-//     // killLocalServer();
-//   }
-//   // }
-// };
-// ipcMain.on('activeServerChange', checkServerChange());
-
 ipcMain.on('close-confirmed', () => {
   closeConfirmed = true;
 
   if (mainWindow) mainWindow.close();
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// some cleanup when our app is exiting
+process.on('exit', () => {
+  closeConfirmed = true;
+  app.quit();
+  localServer.stopLocalServer();
+});
