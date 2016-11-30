@@ -51,7 +51,8 @@
     "mocha": "^2.5.3",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
-    "npm-run-all": "^2.2.0"
+    "npm-run-all": "^2.2.0",
+    "sinon": "^1.17.6"
   },
   "pre-commit": [
     "lint",

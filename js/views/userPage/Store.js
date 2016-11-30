@@ -1,15 +1,18 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import 'select2';
 import '../../utils/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
+import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
+import { convertCurrency, NoExchangeRateDataError } from '../../utils/currency';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import { events as listingEvents } from '../../models/listing/';
 import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
-import ListingsGrid from './ListingsGrid';
+import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import PopInMessage from '../PopInMessage';
 
@@ -30,6 +33,7 @@ export default class extends BaseVw {
 
     this.filter = {
       category: 'all',
+      shipsTo: 'any',
       searchTerm: '',
       sortBy: 'PRICE_ASC',
       freeShipping: false,
@@ -57,6 +61,8 @@ export default class extends BaseVw {
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
 
+    this.listenTo(app.settings, 'change:localCurrency', () => (this.showDataChangedMessage()));
+
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
       (cl, opts) => {
         if (opts.changes.added.length ||
@@ -72,48 +78,6 @@ export default class extends BaseVw {
     }
   }
 
-  showDataChangedMessage() {
-    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
-      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
-    } else {
-      this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Listing data has changed (translate me). ' +
-          '<a class="js-refresh">refresh</a>',
-      });
-
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
-
-      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
-        this.dataChangePopIn.remove();
-        this.dataChangePopIn = null;
-      });
-
-      this.$popInMessages.append(this.dataChangePopIn.render().el);
-    }
-  }
-
-  showShippingChangedMessage() {
-    if (this.shippingChangePopIn ||
-      (this.shippingChangePopIn && this.shippingChangePopIn.isRemoved())) {
-      this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
-    } else {
-      this.shippingChangePopIn = this.createChild(PopInMessage, {
-        messageText: 'Your country and/or shipping address information has changed. This may' +
-          ' affect which listings ship free to you. It is recommended you' +
-          ' <a class="js-refresh">refresh</a> to see the latest data.',
-      });
-
-      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
-
-      this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
-        this.shippingChangePopIn.remove();
-        this.shippingChangePopIn = null;
-      });
-
-      this.$popInMessages.append(this.shippingChangePopIn.render().el);
-    }
-  }
-
   className() {
     return 'userPageStore';
   }
@@ -123,7 +87,6 @@ export default class extends BaseVw {
       'click .js-retryFetch': 'onClickRetryFetch',
       'change .js-filterFreeShipping': 'onFilterFreeShippingChange',
       'change .js-shipsToSelect': 'onShipsToSelectChange',
-      'change .js-filterShipsTo': 'onShipsToCheckBoxChange',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'change .js-sortBySelect': 'onChangeSortBy',
       'click .js-toggleListGridView': 'onClickToggleListGridView',
@@ -136,34 +99,13 @@ export default class extends BaseVw {
   }
 
   onShipsToSelectChange(e) {
-    if (this.$shipsToCheckbox.is(':checked')) {
-      this.setShipsToFilter($(e.target).val());
-    } else {
-      this.setShipsToFilter();
-    }
-  }
-
-  onShipsToCheckBoxChange(e) {
-    if ($(e.target).is(':checked')) {
-      this.setShipsToFilter(this.$shipsToSelect.val());
-    } else {
-      this.setShipsToFilter();
-    }
-  }
-
-  setShipsToFilter(val) {
-    if (val) {
-      this.filter.shipsTo = val;
-    } else {
-      delete this.filter.shipsTo;
-    }
-
+    this.filter.shipsTo = e.target.value;
     this.renderListings(this.filteredCollection());
   }
 
   onChangeSortBy(e) {
     this.filter.sortBy = $(e.target).val();
-    this.renderListings(this.storeListings.collection);
+    this.renderListings();
   }
 
   onUpdateCollection(cl, opts) {
@@ -174,6 +116,20 @@ export default class extends BaseVw {
           .toLocaleLowerCase();
 
         md.searchTitle = md.get('title').toLocaleLowerCase();
+
+        const price = md.get('price');
+
+        try {
+          md.convertedPrice = convertCurrency(price.amount, price.currencyCode,
+            app.settings.get('localCurrency'));
+        } catch (e) {
+          if (e instanceof NoExchangeRateDataError) {
+            // If no exchange rate data is available, we'll just use the unconverted price
+            md.convertedPrice = price.amount;
+          } else {
+            throw e;
+          }
+        }
       });
     }
   }
@@ -245,11 +201,60 @@ export default class extends BaseVw {
         this.$el.toggleClass('listView');
 
         if (this.storeListings) {
-          this.storeListings.viewType = type;
+          // this.storeListings.viewType = type;
+          this.renderListings(this.fullRenderedCollection);
         }
       }
     } else if (type === 'list') {
       this.$el.addClass('listView');
+    }
+  }
+
+  showDataChangedMessage() {
+    if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
+      this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      const refreshLink =
+        `<a class="js-refresh">${app.polyglot.t('userPage.store.popinRefreshLink')}` +
+        '</a>';
+
+      this.dataChangePopIn = this.createChild(PopInMessage, {
+        messageText: app.polyglot.t('userPage.store.listingDataChangedPopin',
+          { refreshLink }),
+      });
+
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
+        this.dataChangePopIn.remove();
+        this.dataChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.dataChangePopIn.render().el);
+    }
+  }
+
+  showShippingChangedMessage() {
+    if (this.shippingChangePopIn && !this.shippingChangePopIn.isRemoved()) {
+      this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
+    } else {
+      const refreshLink =
+        `<a class="js-refresh">${app.polyglot.t('userPage.store.popinRefreshLink')}` +
+        '</a>';
+
+      this.shippingChangePopIn = this.createChild(PopInMessage, {
+        messageText: app.polyglot.t('userPage.store.shippingDataChangedPopin',
+          { refreshLink }),
+      });
+
+      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+
+      this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
+        this.shippingChangePopIn.remove();
+        this.shippingChangePopIn = null;
+      });
+
+      this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
   }
 
@@ -314,11 +319,6 @@ export default class extends BaseVw {
       (this._$listingCount = this.$('.js-listingCount'));
   }
 
-  get $shipsToCheckbox() {
-    return this._$shipsToCheckbox ||
-      (this._$shipsToCheckbox = this.$('.js-filterShipsTo'));
-  }
-
   filteredCollection(filter = this.filter, collection = this.collection) {
     const models = collection.models.filter((md) => {
       let passesFilter = true;
@@ -340,7 +340,7 @@ export default class extends BaseVw {
         passesFilter = false;
       }
 
-      if (this.filter.shipsTo &&
+      if (this.filter.shipsTo !== 'any' &&
         !md.shipsTo(this.filter.shipsTo)) {
         passesFilter = false;
       }
@@ -363,9 +363,9 @@ export default class extends BaseVw {
     if (this.filter.sortBy) {
       if (this.filter.sortBy === 'PRICE_ASC') {
         col.comparator = (a, b) => {
-          if (a.get('price').amount > b.get('price').amount) {
+          if (a.convertedPrice > b.convertedPrice) {
             return 1;
-          } else if (a.get('price').amount < b.get('price').amount) {
+          } else if (a.convertedPrice < b.convertedPrice) {
             return -1;
           }
 
@@ -373,9 +373,9 @@ export default class extends BaseVw {
         };
       } else if (this.filter.sortBy === 'PRICE_DESC') {
         col.comparator = (a, b) => {
-          if (a.get('price').amount < b.get('price').amount) {
+          if (a.convertedPrice < b.convertedPrice) {
             return 1;
-          } else if (a.get('price').amount > b.get('price').amount) {
+          } else if (a.convertedPrice > b.convertedPrice) {
             return -1;
           }
 
@@ -405,33 +405,59 @@ export default class extends BaseVw {
     }
   }
 
-  renderListings(col) {
+  storeListingsScroll(paginatedCol, e) {
+    // Make sure we're in the DOM (i.e. the store tab is active).
+    if (!this.el.parentElement) return;
+
+    // if we've scrolled within a 150px of the bottom
+    if (e.target.scrollTop + $(e.target).innerHeight() >= e.target.scrollHeight - 150) {
+      paginatedCol.add(
+        this.fullRenderedCollection.slice(this.storeListings.listingCount,
+          this.storeListings.listingCount + LISTINGS_PER_PAGE)
+      );
+    }
+  }
+
+  renderListings(col = this.fullRenderedCollection || undefined) {
     if (!col) {
       throw new Error('Please provide a collection.');
     }
 
-    if (!this.storeListings) {
-      this.storeListings = new ListingsGrid({
-        collection: col,
-        storeOwner: this.model.id,
-        viewType: this.listingsViewType,
-      });
-    } else {
-      this.storeListings.collection = col;
-    }
-
+    // This collection will be loaded in batches as the
+    // user scrolls.
+    this.fullRenderedCollection = col;
     this.setSortFunction(col);
     col.sort();
 
-    if (!$.contains(this.$listingsContainer[0], this.storeListings.el)) {
+    // todo: exceptionally tall screens may fit an entire page
+    // with room to spare. Which means no scrollbar, which means subsequent
+    // pages will not load. Handle that case.
+    const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE));
+
+    if (this.storeListings) this.storeListings.remove();
+
+    this.storeListings = new ListingsGrid({
+      collection: storeListingsCol,
+      storeOwner: this.model.id,
+      viewType: this.listingsViewType,
+    });
+
+    getContentFrame().on('scroll', this.storeListingsScrollHandler);
+    const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
+    this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
+    getContentFrame().on('scroll', this.storeListingsScrollHandler);
+
+    if (!this.$listingsContainer[0].contains(this.storeListings.el)) {
       this.$listingsContainer.empty()
         .append(this.storeListings.el);
     }
 
-    const listingCountContent =
-      `<span class="txB">${col.length} listing` +
-      `${col.length === 1 ? '' : 's'}</span> found (translate pluralized)`;
-    this.$listingCount.html(listingCountContent);
+    const listingCount =
+      `<span class="txB">${app.polyglot.t('userPage.store.countListings', col.length)}</span>`;
+    const fullListingCount =
+        app.polyglot.t('userPage.store.countListingsFound',
+          { countListings: listingCount });
+    this.$listingCount.html(fullListingCount);
 
     this.storeListings.render();
   }
@@ -462,7 +488,7 @@ export default class extends BaseVw {
       });
     }
 
-    if (!$.contains(this.$catFilterContainer[0], this.categoryFilter.el)) {
+    if (!this.$catFilterContainer[0].contains(this.categoryFilter.el)) {
       this.categoryFilter.delegateEvents();
       this.$catFilterContainer.empty()
         .append(this.categoryFilter.el);
@@ -472,6 +498,11 @@ export default class extends BaseVw {
   get $popInMessages() {
     return this._$popInMessages ||
       (this._$popInMessages = this.$('.js-popInMessages'));
+  }
+
+  remove() {
+    getContentFrame().off('scroll', this.storeListingsScrollHandler);
+    super.remove();
   }
 
   render() {
@@ -489,7 +520,8 @@ export default class extends BaseVw {
           this.fetch.responseText || '',
         filter: this.filter,
         countryList: this.countryList,
-        country: this.filter.shipsTo || app.settings.get('country'),
+        shipsToSelected: this.filter.shipsTo || 'any',
+        listingCount: this.collection.length,
       }));
     });
 
@@ -499,7 +531,6 @@ export default class extends BaseVw {
     this._$listingsContainer = null;
     this._$catFilterContainer = null;
     this._$listingCount = null;
-    this._$shipsToCheckbox = null;
     this._$popInMessages = null;
 
     this.$sortBy.select2({

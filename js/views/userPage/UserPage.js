@@ -5,6 +5,7 @@ import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
 import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
+import { isHiRez } from '../../utils/responsive';
 import Listings from '../../collections/Listings';
 import Home from './Home';
 import Store from './Store';
@@ -50,12 +51,8 @@ export default class extends baseVw {
       });
     }
 
-    // todo: This is way too elaborate of a view to re-render (at least at an unexpected / random
-    // time). When we need to update UI based off of async changes, we need to either display
-    // some indicator and let the user refresh -or- if the changes are simple enough, make them
-    // with jQuery. In this case, I think jQuery would be simple enough.
-    // this.listenTo(this.model.get('avatarHashes'), 'change', () => this.render());
-    // this.listenTo(this.model.get('headerHashes'), 'change', () => this.render());
+    this.listenTo(this.model.get('avatarHashes'), 'change', () => this.updateAvatar());
+    this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
   }
 
   className() {
@@ -89,6 +86,28 @@ export default class extends baseVw {
 
   moreClick() {
     this.$moreableBtns.toggleClass('hide');
+  }
+
+  updateAvatar() {
+    const avatarHashes = this.model.get('avatarHashes').toJSON();
+    const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
+
+    if (avatarHash) {
+      this.$('.js-avatar').attr('style',
+        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
+      url('../imgs/defaultAvatar.png')`);
+    }
+  }
+
+  updateHeader() {
+    const headerHashes = this.model.get('headerHashes').toJSON();
+    const headerHash = isHiRez() ? headerHashes.small : headerHashes.tiny;
+
+    if (headerHash) {
+      this.$('.js-header').attr('style',
+        `background-image: url(${app.getServerUrl(`ipfs/${headerHash}`)}), 
+      url('../imgs/defaultHeader.png')`);
+    }
   }
 
   setState(state, options = {}) {

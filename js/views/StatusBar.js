@@ -1,3 +1,4 @@
+import { Events } from 'backbone';
 import baseVw from './baseVw';
 import StatusMessageMd from '../models/StatusMessage';
 import StatusMessages from '../collections/StatusMessages';
@@ -100,13 +101,19 @@ export default class extends baseVw {
       }
     };
 
-    return {
+    const vw = this.addMessage(md, msgObj.View);
+
+    const returnObj = {
       remove: () => this.collection.remove(md),
       update,
-      // Reluctantly exposing this in case you need to bind to the event handlers of
-      // a custom view. Outside of that, use at your own risk.
-      view: this.addMessage(md, msgObj.View),
+      ...Events,
     };
+
+    // Proxy through events so our returned object passes through
+    // any click events.
+    vw.on('all', (event, ...args) => (returnObj.trigger(event, ...args)));
+
+    return returnObj;
   }
 
   remove() {

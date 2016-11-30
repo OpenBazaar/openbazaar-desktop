@@ -16,34 +16,48 @@ export default function () {
   const statusMessages = {};
 
   listingEvents.on('destroying', (model, opts) => {
-    let statusMessage = statusMessages[opts.slug];
+    if (statusMessages[opts.slug]) return;
 
-    if (statusMessage) return;
-
-    statusMessage = app.statusBar.pushMessage({
-      msg: `Deleting listing <em>${getTitle(model)}</em>... (translate me)`,
+    const statusMessage = app.statusBar.pushMessage({
+      msg: app.polyglot.t('listingDelete.deletingListing',
+        { listing: `<em>${getTitle(model)}</em>` }),
       duration: 99999999999,
     });
 
+    statusMessages[opts.slug] = statusMessage;
+
     opts.xhr.done(() => {
-      statusMessage.update(`Listing <em>${getTitle(model)}</em> deleted. (translate me)`);
+      statusMessage.update(app.polyglot.t('listingDelete.deletedListing',
+        { listing: `<em>${getTitle(model)}</em>` }));
 
       setTimeout(() => (statusMessage.remove()), 3000);
     }).fail((xhr) => {
       const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
 
+      let dialogBody;
+
+      if (!failReason) {
+        dialogBody = app.polyglot.t('listingDelete.deletedFailedDialogBody',
+          { listing: `<em>${getTitle(model)}</em>` });
+      } else {
+        dialogBody = app.polyglot.t('listingDelete.deletedFailedDialogBodyWithReason',
+          {
+            listing: `<em>${getTitle(model)}</em>`,
+            reason: `<br /><br />${failReason}`,
+          });
+      }
+
       statusMessage.update({
-        msg: `Failed to delete listing <em>${getTitle(model)}</em>. (translate me)`,
+        msg: app.polyglot.t('listingDelete.deletedFailedStatusMsg',
+          { listing: `<em>${getTitle(model)}</em>` }),
         type: 'warning',
       });
 
       setTimeout(() => (statusMessage.remove()), 3000);
 
       const failedListingDeleteDialog = new Dialog({
-        // title: app.polyglot.t('langChangeRestartTitle'),
-        title: 'Unable to delete listing.',
-        message: `There was an error deleting listing <em>${getTitle(model)}</em>`
-          + `${failReason ? `: ${failReason}</p>` : '</p>'}`,
+        title: app.polyglot.t('listingDelete.deletedFailedDialogTitle'),
+        message: dialogBody,
         buttons: [{
           text: 'ok (translate)',
           fragment: 'ok',

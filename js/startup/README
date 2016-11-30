@@ -1,0 +1,3 @@
+This folder is for startup functionality very likely kicked off in start.js. It's basically
+a way to organize startup functionality into manageable pieces and not turn main.js into
+a massive file of loosly related stuff.

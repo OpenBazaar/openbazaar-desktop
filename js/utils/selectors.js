@@ -4,6 +4,7 @@ let $html;
 let $body;
 let $pageContainer;
 let $appFrame;
+let $contentFrame;
 
 export function getHtml() {
   return $html || ($html = $('html'));
@@ -19,4 +20,8 @@ export function getPageContainer() {
 
 export function getAppFrame() {
   return $appFrame || ($appFrame = $('#appFrame'));
+}
+
+export function getContentFrame() {
+  return $contentFrame || ($contentFrame = $('#contentFrame'));
 }

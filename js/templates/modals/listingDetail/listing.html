@@ -5,6 +5,7 @@
   <a class="btn js-deleteListing clrP clrBr">Delete</a>
 </div>
 <% } %>
+
 <div class="listingContent clrP clrBr padLg">
   <div class="flex">
     <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
@@ -21,7 +22,7 @@
       <% } %>
       ></div>
     <% if(ob.item.images.length > 1) { %>
-      <div><%= ob.polyT("userPage.listing.viewPhotos", {count: ob.item.images.length}) %></div>
+      <div><%= ob.polyT("listingDetail.viewPhotos", {count: ob.item.images.length}) %></div>
     <% } %>
     </div>
     <div class="buyBox clrP clrBr">
@@ -86,4 +87,10 @@
   <% console.log(ob) %>
   <span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
 </div>
+
+
+<h1><%= ob.item.title %></h1>
+<div><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></div>
+<br />
+<span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>
 
