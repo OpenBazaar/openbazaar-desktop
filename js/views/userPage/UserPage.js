@@ -101,7 +101,7 @@ export default class extends baseVw {
 
   updateHeader() {
     const headerHashes = this.model.get('headerHashes').toJSON();
-    const headerHash = isHiRez() ? headerHashes.small : headerHashes.tiny;
+    const headerHash = isHiRez() ? headerHashes.large : headerHashes.medium;
 
     if (headerHash) {
       this.$('.js-header').attr('style',
