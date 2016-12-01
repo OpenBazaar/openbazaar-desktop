@@ -21,6 +21,7 @@ export default class Advanced extends baseVw {
     this.settings = app.settings.clone( );
 
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toModelFormatJSON()));
+    this.listenTo(this.settings, 'save', () => app.settings.set(this.settings.toModelFormatJSON()));
 
     this.appearanceSettings = this.createChild( Appearance, { 
       model : new AppearanceSettings( ) 
@@ -34,7 +35,6 @@ export default class Advanced extends baseVw {
     this.smtpIntegrationSettings = this.createChild( SMTPIntegration, { 
       model : new SMTPIntegrationSettings( ) 
     } );
-    
   }
 
   getFormData() {
@@ -52,11 +52,10 @@ export default class Advanced extends baseVw {
     const formData = this.getFormData();
 
     this.settings.set(formData);
+    app.settings.set( this.settings.toJSON( ) );
 
     const save = this.settings.save( );
-
     this.trigger('saving');
-
     if (!save) {
       // client side validation failed
       this.trigger('saveComplete', true);
