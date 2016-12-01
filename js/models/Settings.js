@@ -37,17 +37,25 @@ export default class extends BaseModel {
     };
   }
 
-  toModelJSON( ) {
+  parse( response ) {
+    return this.fromAPIFormatJSON( response );
+  }
+
+  toModelFormatJSON( ) {
     return super.toJSON( );
   }
 
-  toAPIJSON( ) {
+  toAPIFormatJSON( ) {
     const raw = super.toJSON( );
     return SettingsAPIAdaptor.convertModelToAPIFormat( raw );
   }
 
   toJSON( ) {
-    return this.toAPIJSON( );
+    return this.toAPIFormatJSON( );
+  }
+
+  fromAPIFormatJSON( response ) {
+    return SettingsAPIAdaptor.convertAPIToModelFormat( response );
   }
 
   sync(method, model, options) {
