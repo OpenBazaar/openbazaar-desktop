@@ -35,18 +35,6 @@
     align-items: center;
     justify-content: center;
     z-index: 1; // so it's above the overlay icons                
-
-    .overlayPanelInner {
-      // Using seperate element just for the overlay so that
-      // the opacity doesn't affect the buttons, but we could 
-      // still use the clrS class (instead of RGBA).
-      opacity: 0.9;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
   }  
 
   .editOverlay {
