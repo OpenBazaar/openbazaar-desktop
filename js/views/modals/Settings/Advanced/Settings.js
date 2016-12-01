@@ -49,23 +49,17 @@ export default class Advanced extends baseVw {
       smtpIntegrationSettings : this.smtpIntegrationSettings.getFormData( ),
     };
 
-    console.log( data );
     return data;
   }
 
   save() {
     const formData = this.getFormData();
-    // a second copy is necessary because BaseModal.set
-    // deletes the keys corresponding to nested attributes
-    const formDataForSave = this.getFormData( ); 
 
     this.settings.set(formData);
-    console.log(formData);
-    
-    const save = this.settings.save(formDataForSave, {
-      attrs: formDataForSave,
-      type: 'PATCH',
-    });
+
+    console.log( this.settings.toJSON( ) );
+
+    const save = this.settings.save( );
 
     this.trigger('saving');
 
