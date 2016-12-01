@@ -21,7 +21,7 @@
   &:hover {
     text-decoration: none;
     cursor: pointer;
-    border: solid 1px $border3;
+    border: solid 1px $focusedBorder;
   }
 
   &:focus {
