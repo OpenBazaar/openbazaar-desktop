@@ -304,6 +304,10 @@
   margin-left: $pad;
 }
 
+.margL0 {
+  margin-left: 0;
+}
+
 #ov1 .marginTopAuto {
   margin-top: auto;
 
@@ -410,4 +414,12 @@
 
 .posR {
   position: relative;
+}
+
+.borderRSm {
+  border-radius: 1px;
+}
+
+.borderRMd {
+  border-radius: 2px;
 }
