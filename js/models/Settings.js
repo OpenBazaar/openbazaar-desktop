@@ -45,7 +45,7 @@ export default class extends BaseModel {
   }
 
   toModelFormatJSON( ) {
-    return super.toJSON( );
+    return SettingsAPIAdaptor.convertAPIToModelFormat( super.toJSON( ) );
   }
 
   toAPIFormatJSON( ) {

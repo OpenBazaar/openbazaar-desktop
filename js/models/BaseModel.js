@@ -92,7 +92,13 @@ export default class extends Model {
     this.lastSyncedAttrs = {};
 
     this.on('sync', () => {
-      this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toJSON()));
+      //FIXME : this is a hackish solution
+      //since the superclass has knowledge of a derived class's
+      //more specific methods
+      if ( this.toModelFormatJSON instanceof Function )
+        this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toModelFormatJSON()));
+      else
+        this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toJSON()));
     });
   }
 
@@ -221,7 +227,7 @@ export default class extends Model {
   }
 
   clone() {
-    const clone = new this.constructor(this.toJSON(), { guid: this.guid });
+    const clone = new this.constructor(this.toModelFormatJSON(), { guid: this.guid });
 
     clone.lastSyncedAttrs = this.lastSyncedAttrs;
 
