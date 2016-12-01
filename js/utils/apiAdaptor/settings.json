@@ -1,0 +1,22 @@
+
+    {
+      "paymentDataInQR": false,
+      "showNotificatons": null,
+      "showNsfw": true,
+      "shippingAddresses": [],
+      "localCurrency": "USD",
+      "country": "UNITED_STATES",
+      "language": "en-US",
+      "termsAndConditions": "",
+      "refundPolicy": "",
+      "blockedNodes": [],
+      "storeModerators": [],
+      "smtpSettings": {
+        "notifications": true,
+        "serverAddress": "",
+        "username": "",
+        "password": "",
+        "senderEmail": "",
+        "recipientEmail": ""
+      }
+    }
