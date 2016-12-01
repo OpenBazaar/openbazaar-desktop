@@ -146,7 +146,7 @@ export default class extends baseVw {
   }
 
   createStoreTabView(opts = {}) {
-    this.listings = new Listings();
+    this.listings = new Listings([], { guid: this.model.id });
 
     let listingsCount = this.model.get('listingCount');
 

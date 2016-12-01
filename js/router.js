@@ -6,6 +6,7 @@ import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
+import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/Profile';
 import Listing from './models/listing/Listing';
@@ -20,6 +21,7 @@ export default class ObRouter extends Router {
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
       ['transactions', 'transactions'],
       ['transactions/:tab', 'transactions'],
+      ['connected-peers', 'connectedPeers'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -185,6 +187,26 @@ export default class ObRouter extends Router {
     );
   }
 
+  connectedPeers() {
+    const peerFetch = $.get(app.getServerUrl('ob/peers')).done((peersData) => {
+      const peers = peersData.map(peer => (peer.slice(peer.lastIndexOf('/') + 1)));
+
+      this.loadPage(
+        new ConnectedPeersPage({ peers }).render()
+      );
+    }).fail((xhr) => {
+      let content = '<p>There was an error retreiving the connected peers.</p>';
+
+      if (xhr.responseText) {
+        content += `<p>${xhr.responseJSON && xhr.responseJSON.reason || xhr.responseText}</p>`;
+      }
+
+      this.genericError({ content });
+    });
+
+    this.once('will-route', () => (peerFetch.abort()));
+  }
+
   userNotFound() {
     this.loadPage(
       new TemplateOnly({ template: 'error-pages/userNotFound.html' }).render()
@@ -200,6 +222,12 @@ export default class ObRouter extends Router {
   listingNotFound() {
     this.loadPage(
       new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render()
+    );
+  }
+
+  genericError(context = {}) {
+    this.loadPage(
+      new TemplateOnly({ template: 'error-pages/genericError.html' }).render(context)
     );
   }
 }
