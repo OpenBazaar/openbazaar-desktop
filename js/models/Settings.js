@@ -5,6 +5,7 @@ import AppearanceSettings from '../models/AppearanceSettings';
 import TransactionSettings from '../models/TransactionSettings';
 import ServerSettings from '../models/ServerSettings';
 import SMTPIntegrationSettings from '../models/SMTPIntegrationSettings';
+import SettingsAPIAdaptor from '../utils/settingsAPIAdaptor';
 
 export default class extends BaseModel {
   defaults() {
@@ -34,6 +35,19 @@ export default class extends BaseModel {
       serverSettings: ServerSettings,
       smtpIntegrationSettings: SMTPIntegrationSettings
     };
+  }
+
+  toModelJSON( ) {
+    return super.toJSON( );
+  }
+
+  toAPIJSON( ) {
+    const raw = super.toJSON( );
+    return SettingsAPIAdaptor.convertModelToAPIFormat( raw );
+  }
+
+  toJSON( ) {
+    return this.toAPIJSON( );
   }
 
   sync(method, model, options) {

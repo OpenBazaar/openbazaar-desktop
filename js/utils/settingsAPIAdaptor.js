@@ -1,5 +1,3 @@
-
-
 /*
 
   This is an adaptor between the settings model and the settings API.
@@ -118,45 +116,53 @@
 */
 
 
-function convertModelToAPIFormat( toJSONOutput ) {
-  const apiFormat = Object.create( null );
-  const keyConversions = Object.assign( Object.create( null ), {
-    showNotifications : reproduceSpellingError,
-    smtpIntegrationSettings : convertToAPIFormatForSMTPSettings
-  } );
+class Adaptor {
+  static make( source, conversions ) {
+    return function converter( destination, key ) { 
+      console.log( destination, key );
+      const value = source[ key ];
 
-  Object.keys( toJSONOutput ).reduce( makeConverter( keyConversions ) );
-
-  return apiFormat;
+      if ( conversions[ key ] instanceof Function ) {
+        const converted = conversions[ key ]( key, value );
+        destination[ converted.key ] = converted.value;
+      } else
+        destination[ key ] = value;
+        
+      return destination;
+    };
+  }
 }
 
-function reproduceSpellingError( key, value ) {
-  return { key : 'showNotificatons', value };
+export default class SettingsAPIAdaptor extends Adaptor { 
+  static convertModelToAPIFormat( toJSONOutput ) {
+    const apiFormat = Object.create( null );
+    const keyConversions = Object.assign( Object.create( null ), {
+      showNotifications : reproduceSpellingError,
+      smtpIntegrationSettings : convertToAPIFormatForSMTPSettings
+    } );
+
+    Object.keys( toJSONOutput ).reduce( this.make( toJSONOutput, keyConversions ), apiFormat );
+
+    return apiFormat;
+  }
 }
 
-function convertToAPIFormatForSMTPSettings( key, value ) {
-  return {
-    key : 'smtpSettings', 
-    value : {
-      notifications : value.smtpNotifications,
-      username : value.smtpUserName,
-      password : value.smtpPassword,
-      senderEmail : value.smtpFromEmail,
-      recipientEmail : value.smtpToEmail
-    }
-  };
-}
+// helpers
 
-function makeConverter( source, conversions ) {
-  return function converter( destination, key ) { 
-    const value = source[ key ];
+  function reproduceSpellingError( key, value ) {
+    return { key : 'showNotificatons', value };
+  }
 
-    if ( conversions[ key ] instanceof Function ) {
-      const converted = conversions[ key ]( key, value );
-      destination[ converted.key ] = converted.value;
-    } else
-      destination[ key ] = value;
-      
-    return destination;
-  };
-}
+  function convertToAPIFormatForSMTPSettings( key, value ) {
+    return {
+      key : 'smtpSettings', 
+      value : {
+        notifications : value.smtpNotifications,
+        username : value.smtpUserName,
+        password : value.smtpPassword,
+        senderEmail : value.smtpFromEmail,
+        recipientEmail : value.smtpToEmail
+      }
+    };
+  }
+
