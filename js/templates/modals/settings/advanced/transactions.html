@@ -15,13 +15,13 @@
                  id="saveTransactionMetadataOn"
                  data-var-type="boolean"
           <% if(ob.saveTransactionMetadata) { %>checked<% } %>>
-          <label for="saveTransactionsMetadataOn"><%= ob.polyT('settings.on') %></label>
+          <label for="saveTransactionMetadataOn"><%= ob.polyT('settings.on') %></label>
         </div>
         <div class="btnRadio clrBr">
           <input type="radio"
                  name="saveTransactionMetadata"
                  value="false"
-                 id="saveTransactionMetadataOff"
+                 id="saveTransactionsMetadataOff"
                  data-var-type="boolean"
           <% if(!ob.saveTransactionMetadata) { %>checked<% } %>>
           <label for="saveTransactionsMetadataOff"><%= ob.polyT('settings.off') %></label>

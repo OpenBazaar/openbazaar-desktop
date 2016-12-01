@@ -1,7 +1,10 @@
-import BaseModel from './BaseModel';
 import app from '../app';
+import BaseModel from './BaseModel';
 import ShippingAddresses from '../collections/ShippingAddresses';
-import SMTPSettings from '../models/SMTPSettings';
+import AppearanceSettings from '../models/AppearanceSettings';
+import TransactionSettings from '../models/TransactionSettings';
+import ServerSettings from '../models/ServerSettings';
+import SMTPIntegrationSettings from '../models/SMTPIntegrationSettings';
 
 export default class extends BaseModel {
   defaults() {
@@ -26,7 +29,10 @@ export default class extends BaseModel {
   nested() {
     return {
       shippingAddresses: ShippingAddresses,
-      smtpSettings: SMTPSettings,
+      appearanceSettings: AppearanceSettings,
+      transactionSettings: TransactionSettings,
+      serverSettings: ServerSettings,
+      smtpIntegrationSettings: SMTPIntegrationSettings
     };
   }
 
