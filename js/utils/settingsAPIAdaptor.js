@@ -172,6 +172,7 @@ export default class SettingsAPIAdaptor extends Adaptor {
       key : 'smtpSettings', 
       value : {
         notifications : value.smtpNotifications,
+        serverAddress : value.smtpServerAddress,
         username : value.smtpUserName,
         password : value.smtpPassword,
         senderEmail : value.smtpFromEmail,
@@ -186,6 +187,7 @@ export default class SettingsAPIAdaptor extends Adaptor {
       key : 'smtpIntegrationSettings',
       value : {
         smtpNotifications : value.notifications,
+        smtpServerAddress : value.serverAddress,
         smtpUserName : value.username,
         smtpPassword : value.password,
         smtpFromEmail : value.senderEmail,

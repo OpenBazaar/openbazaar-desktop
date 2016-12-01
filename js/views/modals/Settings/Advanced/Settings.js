@@ -20,6 +20,9 @@ export default class Advanced extends baseVw {
     this.options = options;
     this.settings = app.settings.clone( );
 
+
+    self.app = app;
+
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toModelFormatJSON()));
     this.listenTo(this.settings, 'save', () => app.settings.set(this.settings.toModelFormatJSON()));
 
