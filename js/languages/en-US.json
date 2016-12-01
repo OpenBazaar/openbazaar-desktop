@@ -19,6 +19,11 @@
     "billion": "%{number} b",
     "trillion": "%{number} t"
   },
+  "connectedPeersPage": {
+    "heading": "Connected Peers",
+    "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
+    "noResults": "No connected peers"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
@@ -41,10 +46,34 @@
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
     "store": {
+        "retryStoreFetch": "retry",
         "btnLayoutStandard": "950px",
         "btnLayoutFullWidth": "100%",
         "unableToFetchListings": "Unable to retrieve your listings.",
-        "noListings": "No listings."
+        "noListings": "This store has no listings.",
+        "shipsToFilterAny": "(Any Country)",
+        "sortBy": "Sort By",
+        "countListings": "%{smart_count} listing |||| %{smart_count} listings",
+        "countListingsFound": "%{countListings} found",
+        "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
+        "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
+        "popinRefreshLink": "refresh",
+        "freeShippingBanner": "Free Shipping",
+        "sortOpts": {
+          "priceAsc": "Price low to high",
+          "priceDesc": "Price high to low",
+          "nameAsc": "Title A-Z",
+          "nameDesc": "Title Z-A"
+        },
+        "shippingFilter": {
+          "heading": "Shipping",
+          "shipsTo": "Ships to"
+        },
+        "categoryFilter": {
+          "heading": "Category",
+          "showMore": "%{smart_count} more... |||| %{smart_count} more...",
+          "showLess": "less"
+        }        
     }
   },
   "userShort": {
@@ -152,12 +181,26 @@
     }
   },
   "listingDetail": {
-    "editListingReturnText": "Return to listing"
+    "editListingReturnText": "Return to listing",
+    "freeShippingBanner": "Free Shipping",
+    "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
+    "listingDataChangedPopinRefresh": "refresh"
   },
-  "listingShort": {
+  "listingCard": {
     "btnEdit": "Edit",
     "btnDelete": "Delete",
-    "btnDetails": "Details"
+    "btnDetails": "Details",
+    "freeShippingBanner": "Free Shipping",
+    "deleting": "Deleting...",
+    "deleted": "Deleted"
+  },
+  "listingDelete": {
+    "deletingListing": "Deleting listing %{listing}...",
+    "deletedListing": "Listing %{listing} deleted.",
+    "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
+    "deletedFailedDialogTitle": "Unable to delete listing",
+    "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
+    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
   },
   "editListing": {
     "formats": {
@@ -234,6 +277,12 @@
       "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
       "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
     }
+  },
+  "exchangeRatesSyncer": {
+    "fetchingRatesStatusMsg": "Fetching exchange rates...",
+    "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
+    "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
+    "fetchingRatesFailStatusMsgRetryLink": "retry"
   },
   "profileModelErrors": {
     "provideName": "You must provide a name.",

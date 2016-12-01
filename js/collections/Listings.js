@@ -4,12 +4,29 @@ import { Collection } from 'backbone';
 import ListingShort from '../models/listing/ListingShort';
 
 export default class extends Collection {
+  constructor(models = [], options = {}) {
+    if (!options.guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    super(models, options);
+    this.guid = options.guid;
+  }
+
   model(attrs, options) {
     return new ListingShort(attrs, options);
   }
 
   url() {
-    return app.getServerUrl(`ipns/${app.profile.id}/listings/index.json`);
+    let url;
+
+    if (this.guid === app.profile.guid) {
+      url = app.getServerUrl('ob/listings');
+    } else {
+      url = app.getServerUrl(`ipns/${this.guid}/listings/index.json`);
+    }
+
+    return url;
   }
 
   /**

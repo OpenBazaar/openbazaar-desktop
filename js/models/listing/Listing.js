@@ -7,6 +7,10 @@ import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
+    if (!options.guid) {
+      throw new Error('Please provide a guid.');
+    }
+
     super(attrs, options);
     this.guid = options.guid;
   }
@@ -39,6 +43,10 @@ export default class extends BaseModel {
     return !this.get('listing').get('slug');
   }
 
+  isOwnListing() {
+    return app.profile.id === this.guid;
+  }
+
   sync(method, model, options) {
     let returnSync = 'will-set-later';
 
@@ -54,8 +62,13 @@ export default class extends BaseModel {
           ' on the nested listing model.');
       }
 
-      options.url = options.url ||
-        app.getServerUrl(`ipns/${this.guid}/listings/${slug}.json`);
+      if (this.isOwnListing) {
+        options.url = options.url ||
+          app.getServerUrl(`ob/listing/${slug}`);
+      } else {
+        options.url = options.url ||
+          app.getServerUrl(`ipns/${this.guid}/listings/${slug}.json`);
+      }
     } else {
       options.url = options.url || app.getServerUrl('ob/listing/');
 
@@ -135,13 +148,20 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    let parsedResponse = {};
+    let parsedResponse;
 
-    if (response.vendorListings && response.vendorListings.length) {
+    if (this.isOwnListing && response.contract &&
+      response.contract.vendorListings && response.contract.vendorListings.length) {
+      parsedResponse = {
+        listing: response.contract.vendorListings[0],
+      };
+    } else if (response.vendorListings && response.vendorListings.length) {
       parsedResponse = {
         listing: response.vendorListings[0],
       };
+    }
 
+    if (parsedResponse) {
       // convert price fields
       if (parsedResponse.listing && parsedResponse.listing.item) {
         const price = parsedResponse.listing.item.price;
@@ -175,11 +195,11 @@ export default class extends BaseModel {
           }
         });
       }
-
-      // todo: acceptedCurrency (which is a field we don't use now, but might
-      // if we implement cryptocurrency) is comming in with a lower-cased
-      // currency code. Capitalize it.
     }
+
+    // todo: acceptedCurrency (which is a field we don't use now, but might
+    // if we implement cryptocurrency) is comming in with a lower-cased
+    // currency code. Capitalize it.
 
     return parsedResponse;
   }

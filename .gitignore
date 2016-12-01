@@ -5,3 +5,4 @@ npm-debug.log*
 dist
 prod
 mainBuilt.js
+error.log
