@@ -18,7 +18,8 @@ import Followers from './collections/Followers';
 import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
-import { getBody } from './utils/listingData';
+import './utils/listingData';
+import { getBody } from './utils/selectors';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
