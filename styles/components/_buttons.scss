@@ -5,7 +5,7 @@
   border-width: 1px;
   border-style: solid;
   font-size: $tx5;
-  font-weight: 500;
+  font-weight: 400;
   box-sizing: border-box;
   display: inline-flex;
   vertical-align: middle;
@@ -21,6 +21,7 @@
   &:hover {
     text-decoration: none;
     cursor: pointer;
+    border: solid 1px $border3;
   }
 
   &:focus {
@@ -105,8 +106,11 @@
 .iconBtn {
   //this button has only an icon in it
   @extend .btn;
-  font-size: 2rem;
-  padding: 0 12px;
+  font-size: $tx5;
+  padding: 0;
+  margin: 0;
+  width: 34px;
+  height: 34px;
 }
 
 .btnThin {

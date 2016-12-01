@@ -35,7 +35,6 @@ html {
     weight: 400;
   }
   -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.2px;
   line-height: 1.2;
 }
 
@@ -232,4 +231,12 @@ ul, ol {
 
 .txU {
   text-decoration: underline;
+}
+
+.txWR {
+  font-weight: 400;
+}
+
+.txWB {
+  font-weight: 700;
 }

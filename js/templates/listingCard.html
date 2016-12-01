@@ -3,9 +3,11 @@
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
       <% if (ob.ownListing) { %>
         <div class="editOverlay overlayPanel">
-          <div class="overlayPanelInner clrS"></div>
-          <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingCard.btnEdit') %></a>
-          <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingCard.btnDelete') %></a>
+          <div class="overlayPanelInner"></div>
+          <div class="listingCont">
+            <a class='iconBtn clrP clrBr js-edit'><span class="ion-edit"></span></a>
+            <a class='iconBtn clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
+          </div>
         </div>
       <% } %>
   </div>
@@ -17,7 +19,7 @@
   </div>
   <div class="listingIcons">
     <% if (ob.shipsFreeToMe) { %>
-    <span class="clrE1 clrTOnEmph txTn txCtr upper padTn"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
+    <span class="clrE1 clrTOnEmph txTn txCtr upper padTn borderRSm txWB"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
     <% } %>
   </div>
 </div>
@@ -38,7 +40,7 @@
       </div>
       <% if (ob.shipsFreeToMe) { %>
       <div class="freeShipCol flexNoShrink txCtr">
-        <span class="clrE1 clrTOnEmph txTn txCtr upper padTn">Free Shipping</span>
+        <span class="clrE1 clrTOnEmph txTn txCtr upper padTn borderRSm txWB"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
       </div>
       <% } %>
       <div class="priceCol flexNoShrink">
@@ -52,14 +54,14 @@
 
   <% if (ob.ownListing) { %>
     <div class="editOverlay overlayPanel">
-      <div class="overlayPanelInner clrS"></div>
-      <a class='btn clrP clrBr js-edit'><%= ob.polyT('listingCard.btnEdit') %></a>
-      <a class='btn clrP clrBr js-delete'><%= ob.polyT('listingCard.btnDelete') %></a>
+      <div class="overlayPanelInner"></div>
+      <a class='iconBtn clrP clrBr js-edit'><span class="ion-edit"></span></a>
+      <a class='iconBtn clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
     </div>
   <% } %>
 <% } %>
 <div class="deleteOverlay overlayPanel">
-  <div class="overlayPanelInner clrS"></div>
+  <div class="overlayPanelInner"></div>
   <div class="deletingText clrT tx5"><%= ob.polyT('listingCard.deleting') %></div>
   <div class="deletedText clrT tx5"><%= ob.polyT('listingCard.deleted') %></div>
 </div>
