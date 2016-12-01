@@ -2,7 +2,6 @@
     {
       "paymentDataInQR": false,
       "showNotificatons": null,
-      "showNotifications": true,
       "showNsfw": true,
       "shippingAddresses": [],
       "localCurrency": "USD",
@@ -19,24 +18,5 @@
         "password": "",
         "senderEmail": "",
         "recipientEmail": ""
-      },
-      "appearanceSettings": {
-        "showAdvancedVisualEffects": true,
-        "windowControlStyle": "mac"
-      },
-      "transactionSettings": {
-        "saveTransactionMetadata": true,
-        "defaultFee": "high"
-      },
-      "serverSettings": {
-        "currentFirewallType": "none"
-      },
-      "smtpIntegrationSettings": {
-        "smtpNotifications": false,
-        "smtpServerAddress": "",
-        "smtpUserName": "",
-        "smtpPassword": "",
-        "smtpFromEmail": "",
-        "smtpToEmail": ""
       }
     }
