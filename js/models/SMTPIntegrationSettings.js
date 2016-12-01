@@ -4,7 +4,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       smtpNotifications: false,
-      smtpServerAddress: '',
+      smtpServerAddress: 'defaultservername',
       smtpUserName: '',
       smtpPassword: '',
       smtpFromEmail: '',

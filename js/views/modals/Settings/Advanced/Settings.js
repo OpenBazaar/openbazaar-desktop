@@ -20,9 +20,6 @@ export default class Advanced extends baseVw {
     this.options = options;
     this.settings = app.settings.clone( );
 
-    console.log( this.settings );
-    self.sts = this.settings;
-
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
 
     this.appearanceSettings = this.createChild( Appearance, { 
@@ -56,8 +53,6 @@ export default class Advanced extends baseVw {
     const formData = this.getFormData();
 
     this.settings.set(formData);
-
-    console.log( this.settings.toJSON( ) );
 
     const save = this.settings.save( );
 

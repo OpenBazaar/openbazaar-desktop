@@ -38,7 +38,10 @@ export default class extends BaseModel {
   }
 
   parse( response ) {
-    return this.fromAPIFormatJSON( response );
+    const data = this.fromAPIFormatJSON( response );
+    // make it immutable to highlight unintended modification errors
+    Object.freeze( data );
+    return data;
   }
 
   toModelFormatJSON( ) {
@@ -51,7 +54,10 @@ export default class extends BaseModel {
   }
 
   toJSON( ) {
-    return this.toAPIFormatJSON( );
+    const apiFormat = this.toAPIFormatJSON( );
+    // make it immutable to highlight unintended modification errors
+    Object.freeze( apiFormat );
+    return apiFormat;
   }
 
   fromAPIFormatJSON( response ) {

@@ -117,16 +117,15 @@
 
 
 class Adaptor {
-  static make( source, conversions ) {
+  static makeConverter( source, conversions ) {
     return function converter( destination, key ) { 
-      console.log( destination, key );
       const value = source[ key ];
-
       if ( conversions[ key ] instanceof Function ) {
         const converted = conversions[ key ]( key, value );
         destination[ converted.key ] = converted.value;
       } else
         destination[ key ] = value;
+
         
       return destination;
     };
@@ -139,11 +138,22 @@ export default class SettingsAPIAdaptor extends Adaptor {
     const keyConversions = Object.assign( Object.create( null ), {
       showNotifications : reproduceSpellingError,
       smtpIntegrationSettings : convertToAPIFormatForSMTPSettings
-    } );
+    });
 
-    Object.keys( toJSONOutput ).reduce( this.make( toJSONOutput, keyConversions ), apiFormat );
+    Object.keys( toJSONOutput ).reduce( this.makeConverter( toJSONOutput, keyConversions ), apiFormat );
 
     return apiFormat;
+  }
+
+  static convertAPIToModelFormat( apiResponse ) {
+    const modelFormat = Object.create( null );
+    const keyConversions = Object.assign( Object.create( null ), {
+      showNotificatons : correctSpellingError,
+      smtpSettings : convertFromAPIFormatForSMTPSettings
+    });
+    Object.keys( apiResponse ).reduce( this.makeConverter( apiResponse, keyConversions ), modelFormat );
+
+    return modelFormat;
   }
 }
 
@@ -151,6 +161,10 @@ export default class SettingsAPIAdaptor extends Adaptor {
 
   function reproduceSpellingError( key, value ) {
     return { key : 'showNotificatons', value };
+  }
+
+  function correctSpellingError( key, value ) {
+    return { key : 'showNotifications', value };
   }
 
   function convertToAPIFormatForSMTPSettings( key, value ) {
@@ -162,6 +176,19 @@ export default class SettingsAPIAdaptor extends Adaptor {
         password : value.smtpPassword,
         senderEmail : value.smtpFromEmail,
         recipientEmail : value.smtpToEmail
+      }
+    };
+  }
+
+  function convertFromAPIFormatForSMTPSettings( key, value ) {
+    return {
+      key : 'smtpIntegrationSettings',
+      value : {
+        smtpNotifications : value.notifications,
+        smtpUserName : value.username,
+        smtpPassword : value.password,
+        smtpFromEmail : value.senderEmail,
+        smtpToEmail : value.recipientEmail
       }
     };
   }
