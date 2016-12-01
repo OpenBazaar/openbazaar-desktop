@@ -181,7 +181,8 @@ export default class SettingsAPIAdaptor extends Adaptor {
   }
 
   function convertFromAPIFormatForSMTPSettings( key, value ) {
-    return {
+    console.log( value );
+    const converted = {
       key : 'smtpIntegrationSettings',
       value : {
         smtpNotifications : value.notifications,
@@ -191,5 +192,8 @@ export default class SettingsAPIAdaptor extends Adaptor {
         smtpToEmail : value.recipientEmail
       }
     };
+    Object.freeze( converted );
+    console.log( converted );
+    return converted;
   }
 

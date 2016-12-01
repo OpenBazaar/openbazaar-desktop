@@ -17,6 +17,8 @@ export default class extends baseVw {
   render( ) {
     loadTemplate('modals/settings/advanced/smtpintegration.html', (t) => {
       const mySettings = this.settings.toModelFormatJSON().smtpIntegrationSettings;
+      console.log( "SMTP Integration settings passed to template ", mySettings );
+      self.sts = app.settings;
       this.$el.html(t({
         errors : {},
         ...mySettings
