@@ -135,7 +135,9 @@
     box-sizing: border-box;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border: none;
+    border-width: 0;
+    border-top-width: 1px;
+    border-style: solid;
     width: 260px;
     padding: $pad;
     z-index: 1;
