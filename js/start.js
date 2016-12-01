@@ -18,7 +18,7 @@ import Followers from './collections/Followers';
 import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
-import './utils/listingData';
+import { getBody } from './utils/listingData';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -82,7 +82,7 @@ if (platform === 'linux') {
   if (scaleFactor === 0) {
     scaleFactor = 1;
   }
-  $('body').css('zoom', 1 / scaleFactor);
+  getBody().css('zoom', 1 / scaleFactor);
 }
 
 const fetchConfigDeferred = $.Deferred();
