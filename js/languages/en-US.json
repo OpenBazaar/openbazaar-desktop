@@ -156,7 +156,7 @@
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
     "listingDataChangedPopinRefresh": "refresh",
-    "viewPhotos": "View &{count} Photos"
+    "viewPhotos": "View %{count} Photos"
   },
   "listingCard": {
     "btnEdit": "Edit",

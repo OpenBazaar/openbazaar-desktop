@@ -34,14 +34,13 @@
       }
 
       .buyBox {
-         flex-grow: 1;
         border-width: 1px;
         border-style: solid;
         border-radius: $corner;
         box-sizing: border-box;
         padding: $padLg $pad * 4;
+        margin-bottom: $padLg;
       }
-
     }
   }
 }

@@ -6,44 +6,48 @@
 </div>
 <% } %>
 
-<div class="listingContent clrP clrBr padLg">
-  <div class="flex">
-    <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
-    <h2 class="txUnb"><%= ob.formatCurrency(ob.item.price, ob.metadata.pricingCurrency) %></h2>
-  </div>
-  <div class="flex gutterHLg">
-    <div>
-      <div class="mainImage clrBr"
-      <% if (ob.item.images.length) { %>
-        <% console.log(ob.item.images) %>
-        style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
-      <% } else { %>
-        style="background-image: url('../imgs/defaultListing.png')"
-      <% } %>
-      ></div>
-    <% if(ob.item.images.length > 1) { %>
-      <div><%= ob.polyT("listingDetail.viewPhotos", {count: ob.item.images.length}) %></div>
-    <% } %>
+<div class="listingContent flexColRow gutterVLg">
+  <div class="box clrP clrBr padLg">
+    <div class="flex">
+      <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
+      <h2 class="txUnb"><%= ob.formatCurrency(ob.item.price, ob.metadata.pricingCurrency) %></h2>
     </div>
-    <div class="buyBox clrP clrBr">
-      <div class="flexColRows flexHCent gutterV">
-        <!-- this will loop through each variant-->
-        <div class="flexVCent gutterHLg">
-          <div class="h5 txUnl">Size</div>
-          <div class="flexExpand">
-            <select class="js-variantSelect" name="">
-              <option>some option 1</option>
-              <option>some option 2</option>
-              <option>some option 3</option>
-            </select>
-          </div>
-        </div>
-        <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
-        <div class="flexHCent gutterH">
-          <div class="ion-star"> X.X</div>
-          <div class="ion-chatbubble"> X.X</div>
-          <div class="txCtr">
-            <span class="clrE1 clrTOnEmph txTn txCtr txUp phraseBox">Free Shipping</span>
+    <div class="flex gutterHLg">
+      <div>
+        <div class="mainImage clrBr"
+        <% if (ob.item.images.length) { %>
+          <% console.log(ob.item.images) %>
+          style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
+        <% } else { %>
+          style="background-image: url('../imgs/defaultListing.png')"
+        <% } %>
+        ></div>
+      <% if(ob.item.images.length > 1) { %>
+        <div><%= ob.polyT('listingDetail.viewPhotos', { count: ob.item.images.length }) %></div>
+      <% } %>
+      </div>
+      <div class="flexExpand">
+        <div class="buyBox clrP clrBr">
+          <div class="flexColRows flexHCent gutterV">
+            <!-- this will loop through each variant-->
+            <div class="flexVCent gutterHLg">
+              <div class="h5 txUnl">Size</div>
+              <div class="flexExpand">
+                <select class="js-variantSelect" name="">
+                  <option>some option 1</option>
+                  <option>some option 2</option>
+                  <option>some option 3</option>
+                </select>
+              </div>
+            </div>
+            <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
+            <div class="flexHCent gutterH">
+              <div class="ion-star"> X.X</div>
+              <div class="ion-chatbubble"> X.X</div>
+              <div class="txCtr">
+                <span class="clrE1 clrTOnEmph txTn txCtr txUp phraseBox">Free Shipping</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="flexHCent gutterH tx5">
@@ -52,48 +56,53 @@
           <div>Condition: <strong><%= ob.polyT(ob.item.condition) %></strong></div>
           <% } %>
         </div>
+        <% if(ob.item.tags.length) { %>
+          <hr>
+          <h2>Tags</h2>
+          <% ob.item.tags.forEach(function(tag){
+          print(`tag: ${tag}`);
+          }); %>
+        <% } %>
       </div>
     </div>
   </div>
-  <div>
+  <div class="box clrP clrBr padLg">
     <div>
-    <% ob.item.categories.forEach(function(category){
-    print(`category: ${category}`);
-    }); %>
-    </div>
-
-    <div>
-      <%= ob.item.description %>
-    </div>
-    <div>
-      nsfw: <%= ob.item.nsfw %>
-    </div>
-    <div>
-    sku: <%= ob.item.condition %>
-    </div>
-    <div>
-      <% ob.item.tags.forEach(function(tag){
-      print(`tag: ${tag}`);
+      <div>
+      <% ob.item.categories.forEach(function(category){
+      print(`category: ${category}`);
       }); %>
-    </div>
-    <div>
-    <% ob.item.images.forEach(function(image){
-      print(`<img src="${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}">`);
-    }); %>
-    </div>
+      </div>
 
-    <div>
-      format: <%= ob.metadata.format %>
-    </div>
-    <div>
-    <% ob.shippingOptions.forEach(function(option){
-      print(`shipping option: ${option}`);
-    }); %>
+      <div>
+        <%= ob.item.description %>
+      </div>
+      <div>
+        nsfw: <%= ob.item.nsfw %>
+      </div>
+      <div>
+      sku: <%= ob.item.condition %>
+      </div>
+
+      <div>
+      <% ob.item.images.forEach(function(image){
+        print(`<img src="${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}">`);
+      }); %>
+      </div>
+
+      <div>
+        format: <%= ob.metadata.format %>
+      </div>
+      <div>
+      <% ob.shippingOptions.forEach(function(option){
+        print(`shipping option: ${option}`);
+      }); %>
+      </div>
     </div>
   </div>
 
-  <% console.log(ob) %>
-  <span class="clrE1 clrTOnEmph txTiny txCtr txUp padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
+    <% console.log(ob) %>
+    <span class="clrE1 clrTOnEmph txTiny txCtr txUp padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
 </div>
 
 
