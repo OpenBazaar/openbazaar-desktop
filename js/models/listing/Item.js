@@ -56,7 +56,15 @@ export default class extends BaseModel {
   }
 
   get maxTags() {
-    return 10;
+    return 2;
+  }
+
+  get maxCategories() {
+    return 3;
+  }
+
+  get titleMaxLength() {
+    return 140;
   }
 
   validate(attrs) {
@@ -68,6 +76,8 @@ export default class extends BaseModel {
 
     if (!attrs.title) {
       addError('title', app.polyglot.t('itemModelErrors.provideTitle'));
+    } else if (attrs.title.length > this.titleMaxLength) {
+      addError('title', app.polyglot.t('itemModelErrors.titleTooLong'));
     }
 
     if (this.conditionTypes.indexOf(attrs.condition) === -1) {
@@ -97,6 +107,11 @@ export default class extends BaseModel {
     if (attrs.tags && attrs.tags.length > this.maxTags) {
       addError('tags',
         app.polyglot.t('itemModelErrors.tooManyTags', { maxTags: this.maxTags }));
+    }
+
+    if (attrs.categories && attrs.categories.length > this.maxCategories) {
+      addError('categories',
+        app.polyglot.t('itemModelErrors.tooManyCats', { maxCats: this.maxCategories }));
     }
 
     errObj = this.mergeInNestedErrors(errObj);

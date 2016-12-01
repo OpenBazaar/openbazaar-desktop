@@ -4,6 +4,7 @@ import 'select2';
 import _ from 'underscore';
 import path from 'path';
 import { MediumEditor } from 'medium-editor';
+import '../../../utils/velocityUiPack.js';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
@@ -571,6 +572,42 @@ export default class extends BaseModal {
       (this._$sectionShipping = this.$('.js-sectionShipping'));
   }
 
+  get $maxCatsWarning() {
+    return this._$maxCatsWarning ||
+      (this._$maxCatsWarning = this.$('.js-maxCatsWarning'));
+  }
+
+  get $maxTagsWarning() {
+    return this._$maxTagsWarning ||
+      (this._$maxTagsWarning = this.$('.js-maxTagsWarning'));
+  }
+
+  get maxTagsWarning() {
+    return `<div class="clrT2 tx5 row">${app.polyglot.t('editListing.maxTagsWarning')}</div>`;
+  }
+
+  showMaxTagsWarning() {
+    this.$maxTagsWarning.empty()
+      .append(this.maxTagsWarning);
+  }
+
+  hideMaxTagsWarning() {
+    this.$maxTagsWarning.empty();
+  }
+
+  get maxCatsWarning() {
+    return `<div class="clrT2 tx5 row">${app.polyglot.t('editListing.maxCatsWarning')}</div>`;
+  }
+
+  showMaxCatsWarning() {
+    this.$maxCatsWarning.empty()
+      .append(this.maxCatsWarning);
+  }
+
+  hideMaxCatsWarning() {
+    this.$maxCatsWarning.empty();
+  }
+
   // return the currency associated with this listing
   get currency() {
     return (this.$currencySelect.length ?
@@ -615,6 +652,7 @@ export default class extends BaseModal {
 
   render(onScrollUpdateComplete, restoreScrollPos = true) {
     let prevScrollPos = 0;
+    const item = this.innerListing.get('item');
 
     if (restoreScrollPos && this.$scrollContainer && this.$scrollContainer.length) {
       prevScrollPos = this.$scrollContainer[0].scrollTop;
@@ -644,6 +682,13 @@ export default class extends BaseModal {
         expandedTermsAndConditions: this.expandedTermsAndConditions ||
           !!this.innerListing.get('termsAndConditions'),
         formatPrice,
+        maxCatsWarning: this.maxCatsWarning,
+        maxTagsWarning: this.maxTagsWarning,
+        max: {
+          title: item.titleMaxLength,
+          cats: item.maxCategories,
+          tags: item.maxTags,
+        },
         ...this.model.toJSON(),
       }));
 
@@ -695,9 +740,23 @@ export default class extends BaseModal {
         // and think you are selecting that.
         matcher: () => false,
       }).on('change', () => {
+        console.log('you changed yo');
         const tags = this.$editListingTags.val();
         this.innerListing.get('item').set('tags', tags);
         this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
+
+        if (tags.length >= item.maxTags) {
+          console.log('1');
+          this.showMaxTagsWarning();
+        } else {
+          console.log('2');
+          this.hideMaxTagsWarning();
+        }
+      }).on('select2:selecting', (e) => {
+        if (this.$editListingTags.val().length >= item.maxTags) {
+          this.$maxTagsWarning.velocity('callout.flash', { duration: 500 });
+          e.preventDefault();
+        }
       });
 
       this.$editListingTagsPlaceholder[
@@ -712,9 +771,22 @@ export default class extends BaseModal {
         // This is necessary, see comment in select2 for tags above.
         matcher: () => false,
       }).on('change', () => {
+        const count = this.$editListingCategories.val().length;
+
         this.$editListingCategoriesPlaceholder[
-          this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
+          count ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
+
+        if (count >= item.maxCategories) {
+          this.showMaxCatsWarning();
+        } else {
+          this.hideMaxCatsWarning();
+        }
+      }).on('select2:selecting', (e) => {
+        if (this.$editListingCategories.val().length >= item.maxCategories) {
+          this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
+          e.preventDefault();
+        }
       });
 
       this.$editListingCategoriesPlaceholder[
@@ -767,6 +839,8 @@ export default class extends BaseModal {
       this._$editListingReturnPolicy = null;
       this._$editListingTermsAndConditions = null;
       this._$sectionShipping = null;
+      this._$maxCatsWarning = null;
+      this._$maxTagsWarning = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
