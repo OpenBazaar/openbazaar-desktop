@@ -96,6 +96,10 @@
   input[type="checkbox"] {
     // todo: style this to match the designs
   }  
+
+  &:hover {
+    border: 0;
+  }
 }
 
 .btnTxt {
@@ -104,6 +108,13 @@
 }
 
 .iconBtn {
+  //this button has only an icon in it
+  @extend .btn;
+  font-size: 2rem;
+  padding: 0 12px;
+}
+
+.iconBtnSm {
   //this button has only an icon in it
   @extend .btn;
   font-size: $tx5;
