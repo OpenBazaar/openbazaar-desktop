@@ -80,5 +80,83 @@
       }
     }
 
+  === What's the difference? ===
+
+  The current settings API produces an object which has a spelling error in 1 key:
+
+  'showNotificatons' works to be 'showNotifications'
+
+  Apart from that the only difference between the 
+  settings model format and the
+  settings API format is that the
+  settings model format contains 4 new keys, namely:
+
+  smtpIntegrationSettings,
+  appearanceSettings,
+  transactionSettings,
+  serverSettings
+
+  Of these 1 key, 'smtpIntegrationSettings', is substantially similar
+  to an existing key, 'smtpSettings'. 
+
+  So the proposal for the adaptor is:
+
+  - convert smtpIntegrationSettings to smtpSettings format.
+  - convert showNotifications to showNotificaton
+
+  And the proposal for the requests API changes are:
+
+  request spelling correction to showNotifications
+  request 3 new keys be added, namely:
+
+  appearanceSettings,
+  transactionSettings,
+  serverSettings
+
+  That is all.
 
 */
+
+
+function convertModelToAPIFormat( toJSONOutput ) {
+  const apiFormat = Object.create( null );
+  const keyConversions = Object.assign( Object.create( null ), {
+    showNotifications : reproduceSpellingError,
+    smtpIntegrationSettings : convertToAPIFormatForSMTPSettings
+  } );
+
+  Object.keys( toJSONOutput ).reduce( makeConverter( keyConversions ) );
+
+  return apiFormat;
+}
+
+function reproduceSpellingError( key, value ) {
+  return { key : 'showNotificatons', value };
+}
+
+function convertToAPIFormatForSMTPSettings( key, value ) {
+  return {
+    key : 'smtpSettings', 
+    value : {
+      notifications : value.smtpNotifications,
+      username : value.smtpUserName,
+      password : value.smtpPassword,
+      senderEmail : value.smtpFromEmail,
+      recipientEmail : value.smtpToEmail
+    }
+  };
+}
+
+function makeConverter( source, conversions ) {
+  return function converter( destination, key ) { 
+    const value = source[ key ];
+
+    if ( conversions[ key ] instanceof Function ) {
+      const converted = conversions[ key ]( key, value );
+      destination[ converted.key ] = converted.value;
+    } else
+      destination[ key ] = value;
+      
+    return destination;
+  };
+}
