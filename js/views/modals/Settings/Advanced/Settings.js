@@ -20,7 +20,7 @@ export default class Advanced extends baseVw {
     this.options = options;
     this.settings = app.settings.clone( );
 
-    this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
+    this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toModelFormatJSON()));
 
     this.appearanceSettings = this.createChild( Appearance, { 
       model : new AppearanceSettings( ) 
@@ -35,7 +35,6 @@ export default class Advanced extends baseVw {
       model : new SMTPIntegrationSettings( ) 
     } );
     
-    // FIXME : implement
   }
 
   getFormData() {
