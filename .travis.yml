@@ -17,6 +17,7 @@ before_script:
 script:
 - npm run lint
 - npm run test
+- if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
@@ -30,8 +31,6 @@ deploy:
     - "dist/osx/*.zip"
     - "dist/linux32/*.deb"
     - "dist/linux64/*.deb"
-  script:
-    - ./build.sh
   skip_cleanup: true
   all_branches: true
   on:
