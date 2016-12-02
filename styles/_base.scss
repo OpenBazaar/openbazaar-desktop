@@ -120,6 +120,7 @@ ul, ol {
     overflow-y: scroll;
     height: calc(100% - #{$bar} - #{$barLg});
     box-sizing: border-box;
+    z-index: 0;
 
     #pageTabBar {
       position: fixed;
