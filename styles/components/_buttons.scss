@@ -136,8 +136,8 @@
     border-radius: 0;
     float: left; //float left will collapse the button and position it correctly
   }
-  & > .btn:not(:hover) {  // on hover use the normal border width
-    border-right-width: 0;
+  & > .btn:not(:last-child):not(:hover) {   // on hover use the normal border width
+    border-right-color: transparent;
   }
   & > .btn:first-child {
     border-top-left-radius: $corner;
@@ -146,7 +146,6 @@
   & > .btn:last-child {
     border-top-right-radius: $corner;
     border-bottom-right-radius: $corner;
-    border-right-width: 1px;
   }
 }
 
