@@ -1,0 +1,299 @@
+<div class="bar padMd clrBr borderBottom">
+  <h2 class="h3 txUnb"><%= ob.polyT('settings.advancedTab') %></h2>
+</div>
+<div class="padMd tabFormWrapper clrS">
+  <div class="rowMd border clrBr js-appearanceContainer">
+    <form class="box padKids padStack clrP clrBr js-appearance">
+      <div class="flexRow">
+        <h3><%= ob.polyT('settings.appearance') %></h3>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('settings.advancedVisualEffects') %></label>
+        </div>
+        <div class="col9">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="showAdvancedVisualEffects"
+                   value="true"
+                   id="advancedVisualEffectsOn"
+                   data-var-type="boolean"
+            <% if(ob.showAdvancedVisualEffects) { %>checked<% } %>>
+            <label for="advancedVisualEffectsOn"><%= ob.polyT('settings.on') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="showAdvancedVisualEffects"
+                   value="false"
+                   id="advancedVisualEffectsOff"
+                   data-var-type="boolean"
+            <% if(!ob.showAdvancedVisualEffects) { %>checked<% } %>>
+            <label for="advancedVisualEffectsOff"><%= ob.polyT('settings.off') %></label>
+          </div>
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('settings.windowControlStyle') %></label>
+        </div>
+        <div class="col9">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="windowControlStyle"
+                   value="mac"
+                   id="windowControlStyleMac"
+                   data-var-type="string"
+            <% if(ob.windowControlStyle == "mac") { %>checked<% } %>>
+            <label for="windowControlStyleMac"><%= ob.polyT('settings.macOS') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="windowControlStyle"
+                   value="windows"
+                   id="windowControlStyleWindows"
+                   data-var-type="string"
+            <% if(ob.windowControlStyle == "windows") { %>checked<% } %>>
+            <label for="windowControlStyleWindows"><%= ob.polyT('settings.windowsOS') %></label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="rowMd border clrBr js-transactionsContainer">
+    <form class="box padKids padStack clrP clrBr js-transactions">
+      <div class="flexRow">
+        <h3><%= ob.polyT('settings.transactions') %></h3>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('settings.saveMetadata') %></label>
+        </div>
+        <div class="col9">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="saveTransactionMetadata"
+                   value="true"
+                   id="saveTransactionMetadataOn"
+                   data-var-type="boolean"
+            <% if(ob.saveTransactionMetadata) { %>checked<% } %>>
+            <label for="saveTransactionMetadataOn"><%= ob.polyT('settings.on') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="saveTransactionMetadata"
+                   value="false"
+                   id="saveTransactionsMetadataOff"
+                   data-var-type="boolean"
+            <% if(!ob.saveTransactionMetadata) { %>checked<% } %>>
+            <label for="saveTransactionsMetadataOff"><%= ob.polyT('settings.off') %></label>
+          </div>
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('settings.defaultFee') %></label>
+        </div>
+        <div class="col9">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="defaultFee"
+                   value="low"
+                   id="defaultFeeLow"
+                   data-var-type="string"
+            <% if(ob.defaultFee == "low") { %>checked<% } %>>
+            <label for="defaultFeeLow"><%= ob.polyT('settings.low') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="defaultFee"
+                   value="medium"
+                   id="defaultFeeMedium"
+                   data-var-type="string"
+            <% if(ob.defaultFee == "medium") { %>checked<% } %>>
+            <label for="defaultFeeMedium"><%= ob.polyT('settings.medium') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="defaultFee"
+                   value="high"
+                   id="defaultFeeHigh"
+                   data-var-type="string"
+            <% if(ob.defaultFee == "high") { %>checked<% } %>>
+            <label for="defaultFeeHigh"><%= ob.polyT('settings.high') %></label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="rowMd border clrBr js-serverContainer">
+    <form class="box padKids padStack clrP clrBr js-server">
+      <div class="flexRow">
+        <h3><%= ob.polyT('settings.server') %></h3>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label for="currentFirewallType">
+            <%= ob.polyT('settings.currentFirewallType') %>
+          </label>
+        </div>
+        <div class="col9">
+          <input class="clrBr" readonly
+            type="text"
+            name="currentFirewallType" 
+            id="currentFirewallType" 
+            value="<%= ob.currentFirewallType %>">
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label>
+            <%= ob.polyT('settings.connections') %>
+          </label>
+        </div>
+        <div class="col9">
+          <a class="btn clrP clrBr js-showConnectionManagement flexNoShrink"><%= ob.polyT('settings.btnShowConnectionManagement') %></a>
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label>
+            <%= ob.polyT('settings.connections') %>
+          </label>
+        </div>
+        <div class="col9">
+          <a class="btn clrP clrBr js-showConnectedPeers flexNoShrink"><%= ob.polyT('settings.btnShowConnectedPeers') %></a>
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label>
+            <%= ob.polyT('settings.onOff') %>
+          </label>
+        </div>
+        <div class="col9">
+          <a class="btn clrP clrBr js-turnOffServer flexNoShrink"><%= ob.polyT('settings.btnTurnOffServer') %></a>
+          <a class="btn clrP clrBr js-turnOnServer flexNoShrink"><%= ob.polyT('settings.btnTurnOnServer') %></a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="rowMd border clrBr js-smtpIntegationContainer">
+    <form class="box padKids padStack clrP clrBr js-smtpintegration">
+      <div class="flexRow">
+        <h3><%= ob.polyT('settings.smtpIntegration') %></h3>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('settings.smtpNotifications') %></label>
+        </div>
+        <div class="col9">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="smtpNotifications"
+                   value="true"
+                   id="smtpNotificationsOn"
+                   data-var-type="boolean"
+            <% if(ob.smtpNotifications) { %>checked<% } %>>
+            <label for="smtpNotificationsOn"><%= ob.polyT('settings.on') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="smtpNotifications"
+                   value="false"
+                   id="smtpNotificationsOff"
+                   data-var-type="boolean"
+            <% if(!ob.smtpNotifications) { %>checked<% } %>>
+            <label for="smtpNotificationsOff"><%= ob.polyT('settings.off') %></label>
+          </div>
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label for="smtpServerAddress">
+            <%= ob.polyT('settings.smtpServerAddress') %>
+          </label>
+        </div>
+        <div class="col9">
+          <input class="clrBr" 
+            required
+            pattern=".*"
+            type="text"
+            name="smtpServerAddress" 
+            id="smtpServerAddress" 
+            value="<%= ob.smtpServerAddress %>">
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label for="smtpUserName">
+            <%= ob.polyT('settings.smtpUserName') %>
+          </label>
+        </div>
+        <div class="col9">
+          <input class="clrBr" 
+            required        
+            type="text"
+            name="smtpUserName" 
+            id="smtpUserName" 
+            value="<%= ob.smtpUserName %>">
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label for="smtpPassword">
+            <%= ob.polyT('settings.smtpPassword') %>
+          </label>
+        </div>
+        <div class="col9">
+          <input class="clrBr" 
+            required 
+            type="password"
+            name="smtpPassword" 
+            id="smtpPassword" 
+            value="<%= ob.smtpPassword %>">
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label for="smtpFromEmail">
+            <%= ob.polyT('settings.smtpFromEmail') %>
+          </label>
+        </div>
+        <div class="col9">
+          <input class="clrBr" 
+            required
+            type="email"
+            name="smtpFromEmail" 
+            id="smtpFromEmail" 
+            value="<%= ob.smtpFromEmail %>">
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label for="smtpToEmail">
+            <%= ob.polyT('settings.smtpToEmail') %>
+          </label>
+        </div>
+        <div class="col9">
+          <input class="clrBr" 
+            required
+            type="email"
+            name="smtpToEmail" 
+            id="smtpToEmail" 
+            value="<%= ob.smtpToEmail %>">
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3">
+          <label>
+            <%= ob.polyT('settings.test') %>
+          </label>
+        </div>
+        <div class="col9">
+          <a class="btn clrP clrBr js-testSMTPSettings flexNoShrink"><%= ob.polyT('settings.testSMTPSettings') %></a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
