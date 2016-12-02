@@ -12,12 +12,13 @@
     }
 
     .addressBar {
-      font-size: $tx5b;
+      font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
     }
 
     #AvatarBtn {
       margin: 5px 0;
+      border: solid 2px #fff;
     }
   }
 
@@ -66,19 +67,22 @@
 
       a {
         border-radius: 50%;
-        margin-right: 5px;
+        margin-right: 8px;
         box-sizing: border-box;
 
         &.navClose {
-          background-color: #E45A5A;
+          background-color: #FF6059;
+          border: solid 1px #EF5851;
         }
 
         &.navMin {
-          background-color: #F8E71C;
+          background-color: #FFBD2E;
+          border: solid 1px #F0B128;
         }
 
         &.navMax {
-          background-color: #B8E986;
+          background-color: #29C941;
+          border: solid 1px #27BB3D;
         }
 
         i {
@@ -134,7 +138,8 @@
     box-sizing: border-box;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border: none;
+    border-width: 1px;
+    border-style: solid;
     width: 260px;
     padding: $pad;
     z-index: 1;

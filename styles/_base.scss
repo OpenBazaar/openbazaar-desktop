@@ -35,7 +35,6 @@ html {
     weight: 400;
   }
   -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.2px;
   line-height: 1.2;
 }
 
@@ -165,6 +164,7 @@ ul, ol {
         margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
         padding: 0 $padLg $bar $padLg;
         position: relative;
+        min-height: 1000px;
         @include chatOpeningTransition(margin);
 
         @include alignToChat {
