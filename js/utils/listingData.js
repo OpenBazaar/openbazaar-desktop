@@ -70,7 +70,6 @@ const categories = [
   'left-eyed',
   'bearded',
   'morose',
-  'charming cha-chas',
   'straight edge',
   'you name it',
 ];
@@ -145,7 +144,6 @@ const titleNouns = [
   'hippo',
   'trooper',
   'salamander',
-  'nipple',
   'pimple',
   'marsupial',
   'governor',
