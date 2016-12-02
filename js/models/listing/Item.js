@@ -54,8 +54,7 @@ export default class extends BaseModel {
       tags: 10,
       cats: 10,
       titleLength: 140,
-      // tagLength: 40,
-      tagLength: 4,
+      tagLength: 40,
     };
   }
 
