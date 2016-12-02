@@ -12,7 +12,7 @@
     }
 
     .addressBar {
-      font-size: $tx5b;
+      font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
     }
 
@@ -138,8 +138,7 @@
     box-sizing: border-box;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-width: 0;
-    border-top-width: 1px;
+    border-width: 1px;
     border-style: solid;
     width: 260px;
     padding: $pad;
