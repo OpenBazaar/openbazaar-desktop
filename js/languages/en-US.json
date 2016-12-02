@@ -19,6 +19,11 @@
     "billion": "%{number} b",
     "trillion": "%{number} t"
   },
+  "connectedPeersPage": {
+    "heading": "Connected Peers",
+    "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
+    "noResults": "No connected peers"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",

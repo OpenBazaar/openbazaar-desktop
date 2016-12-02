@@ -14,7 +14,7 @@ describe('the Listings collection', () => {
         category: ['one', 'two', 'three'],
       }, {
         category: ['raz', 'dwa', 'trzy'],
-      }]);
+      }], { guid: 'QmZY1kx6VrNjgDB4SJDByxvSVuiBfsisRLdUMJRDppTTsS' });
 
       const expectedCats = ['dos', 'dwa', 'one', 'raz', 'three', 'tres', 'trzy', 'two', 'uno'];
       expect(listing.categories).to.deep.equal(expectedCats);
@@ -27,7 +27,7 @@ describe('the Listings collection', () => {
         category: ['uno', 'two', 'three'],
       }, {
         category: ['raz', 'dos', 'trzy'],
-      }]);
+      }], { guid: 'QmZY1kx6VrNjgDB4SJDByxvSVuiBfsisRLdUMJRDppTTsS' });
 
       const expectedCats = ['dos', 'raz', 'three', 'tres', 'trzy', 'two', 'uno'];
       expect(listing.categories).to.deep.equal(expectedCats);

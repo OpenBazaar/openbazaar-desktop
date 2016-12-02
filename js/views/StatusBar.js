@@ -109,7 +109,7 @@ export default class extends baseVw {
       ...Events,
     };
 
-    // Proxy through events so out returned object passes through
+    // Proxy through events so our returned object passes through
     // any click events.
     vw.on('all', (event, ...args) => (returnObj.trigger(event, ...args)));
 

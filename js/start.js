@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, screen } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
@@ -20,9 +20,12 @@ import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
 import { init as localServerStatusMsgsInit } from './startup/localServerStatusMsgs';
+import { getBody } from './utils/selectors';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
+
+const platform = process.platform;
 
 // initialize language functionality
 function getValidLanguage(lang) {
@@ -78,6 +81,15 @@ app.loadingModal = new LoadingModal({
 // Initialize the functionality to show status message as local server
 // is started and stopped.
 localServerStatusMsgsInit();
+
+// fix zoom issue on Linux hiDPI
+if (platform === 'linux') {
+  let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+  if (scaleFactor === 0) {
+    scaleFactor = 1;
+  }
+  getBody().css('zoom', 1 / scaleFactor);
+}
 
 const fetchConfigDeferred = $.Deferred();
 
