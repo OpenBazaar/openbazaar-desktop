@@ -23,7 +23,7 @@ export default class extends baseVw {
     }
 
     if (!options.ownerGuid) {
-      throw new Error('Please provide a a guid representing the owner of the listing.');
+      throw new Error('Please provide a guid representing the owner of the listing.');
     } else {
       this.ownerGuid = this.options.ownerGuid;
     }
