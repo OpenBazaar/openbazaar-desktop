@@ -130,3 +130,7 @@ label {
     background-color: #DDD;
   }
 }
+
+input[type="radio"]:checked + label {
+  font-weight: 700;
+}
