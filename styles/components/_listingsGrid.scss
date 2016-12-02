@@ -15,6 +15,9 @@
     }
 
     &:hover {
+      border-width: 1px;
+      border-style: solid;
+      border-color: $focusedBorder;
       bottom: 4px;
     }
   }
