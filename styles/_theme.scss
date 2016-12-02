@@ -24,7 +24,7 @@
   input[type="radio"] + label:before {
     background-color: $primary;
   }
-  
+
   input[type="radio"]:checked + label {
     font-weight: 700;
   }
@@ -100,7 +100,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrTEmph1 {
-  @include textColor($emphasis1);  
+  @include textColor($emphasis1);
 }
 
 .clrBr {
@@ -109,10 +109,38 @@ input[type=range][class~="clrS"] {
   hr {
     border-color: $border;
   }
+
+  .btn:hover,
+  .btn:focus,
+  &.btn:hover,
+  &.btn:focus {
+    border-color: $focusedBorder;
+
+    .disabled &,
+    &.disabled {
+      border-color: $border;
+    }
+  }
 }
 
 .clrBr2 {
   border-color: $border2;
+
+  hr {
+    border-color: $border2;
+  }
+
+  .btn:hover,
+  .btn:focus,
+  &.btn:hover,
+  &.btn:focus {
+    border-color: $focusedBorder;
+
+    .disabled &,
+    &.disabled {
+      border-color: $border2;
+    }
+  }
 }
 
 // select2 dropdowns always use the theme border color.
