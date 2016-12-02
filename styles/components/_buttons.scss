@@ -21,13 +21,11 @@
   &:hover {
     text-decoration: none;
     cursor: pointer;
-    border-color: $focusedBorder;
   }
 
   &:focus {
     text-decoration: none;
     outline: 0;
-    border-color: $focusedBorder;
   }
 
   .bar & {
