@@ -56,11 +56,11 @@ export default class extends BaseModel {
   }
 
   get maxTags() {
-    return 2;
+    return 10;
   }
 
   get maxCategories() {
-    return 3;
+    return 10;
   }
 
   get titleMaxLength() {
