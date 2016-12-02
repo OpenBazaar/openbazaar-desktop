@@ -116,7 +116,7 @@ export default class extends BaseModal {
   }
 
   get MAX_PHOTOS() {
-    return this.model.get('listing').get('item').maxImages;
+    return this.model.get('listing').get('item').max.images;
   }
 
   onClickReturn() {
@@ -685,9 +685,9 @@ export default class extends BaseModal {
         maxCatsWarning: this.maxCatsWarning,
         maxTagsWarning: this.maxTagsWarning,
         max: {
-          title: item.titleMaxLength,
-          cats: item.maxCategories,
-          tags: item.maxTags,
+          title: item.max.titleLength,
+          cats: item.max.cats,
+          tags: item.max.tags,
         },
         ...this.model.toJSON(),
       }));
@@ -740,16 +740,13 @@ export default class extends BaseModal {
         // and think you are selecting that.
         matcher: () => false,
       }).on('change', () => {
-        console.log('you changed yo');
         const tags = this.$editListingTags.val();
         this.innerListing.get('item').set('tags', tags);
         this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
 
         if (tags.length >= item.maxTags) {
-          console.log('1');
           this.showMaxTagsWarning();
         } else {
-          console.log('2');
           this.hideMaxTagsWarning();
         }
       }).on('select2:selecting', (e) => {
@@ -757,7 +754,10 @@ export default class extends BaseModal {
           this.$maxTagsWarning.velocity('callout.flash', { duration: 500 });
           e.preventDefault();
         }
-      });
+      })
+      .next()
+      .find('.select2-search__field')
+      .attr('maxLength', item.max.tagLength);
 
       this.$editListingTagsPlaceholder[
         this.$editListingTags.val().length ? 'removeClass' : 'addClass'
