@@ -204,7 +204,7 @@ function createListing(callback, images) {
     listingTags.push(tags[index]);
   }
 
-  const price = Math.random() * 40000;
+  const price = Math.random() * 1000;
   const offersFreeShipping = Math.floor(Math.random() * 2);
 
   const shippingOptions = [
