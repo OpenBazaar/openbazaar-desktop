@@ -13,13 +13,14 @@ describe('the Listing model', () => {
     };
   });
 
-  it('throws an error if you attempt to instantiate without providing a guid', () => {
+  it('throws an error if you attempt to fetch without a guid set.', () => {
+    const listing = new Listing({
+      listing: { slug: 'a-happy-slug' },
+    });
     let errorThrown = false;
 
     try {
-      const listing = new Listing({ // eslint-disable-line no-unused-vars
-        listing: { slug: 'a-happy-slug' },
-      });
+      listing.fetch();
     } catch (e) {
       errorThrown = true;
     }

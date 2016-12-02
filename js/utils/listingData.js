@@ -67,6 +67,12 @@ const categories = [
   'billy goats',
   'filberts',
   'hippos',
+  'left-eyed',
+  'bearded',
+  'morose',
+  'charming cha-chas',
+  'straight edge',
+  'you name it',
 ];
 
 const tags = [
@@ -92,6 +98,17 @@ const titleAdverbs = [
   'quite',
   'slightly',
   'hardly',
+  'willfully',
+  'wearily',
+  'delicately',
+  'firmly',
+  'financially',
+  'beautifully',
+  'uneasily',
+  'weirdly',
+  'cheerfully',
+  'lightly',
+  'delightfully',
 ];
 
 const titleAdjectives = [
@@ -105,6 +122,22 @@ const titleAdjectives = [
   'obnoxious',
   'smitten',
   'driven',
+  'bland',
+  'fruity',
+  'pickled',
+  'tangy',
+  'fuzzy',
+  'slimy',
+  'azure',
+  'shrill',
+  'muffled',
+  'melodic',
+  'cylindrical',
+  'globular',
+  'rotund',
+  'futuristic',
+  'plentiful',
+  'abrasive',
 ];
 
 const titleNouns = [
@@ -122,6 +155,17 @@ const titleNouns = [
   'vagabond',
   'kitten',
   'pupster',
+  'army',
+  'regiment',
+  'jellyfish',
+  'troupe',
+  'bodyguard',
+  'father-in-law',
+  'choir',
+  'suitcase',
+  'xylophone',
+  'panther',
+  'bird',
 ];
 
 function generateTitle() {

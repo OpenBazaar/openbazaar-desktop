@@ -116,8 +116,9 @@ export default class extends baseVw {
     // how likely is it that the listing will change (probably not very likely) and
     // how graceful is the experience if the user goes through the buy flow on
     // an old listing.
-    if (!this.options.ownListing ||
-        (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0])) {
+    if (!this.ownListing ||
+        (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
+         !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
       const routeOnOpen = location.hash.slice(1);
       app.router.navigate(`${this.options.listingBaseUrl}${this.model.get('slug')}`);
 

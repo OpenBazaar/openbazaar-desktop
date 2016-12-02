@@ -151,7 +151,7 @@ export default class extends BaseModel {
   parse(response) {
     let parsedResponse;
 
-    if (this.isOwnListing && response.contract &&
+    if (response.contract &&
       response.contract.vendorListings && response.contract.vendorListings.length) {
       parsedResponse = {
         listing: response.contract.vendorListings[0],

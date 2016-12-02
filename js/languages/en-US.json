@@ -158,8 +158,6 @@
     "listingDataChangedPopinRefresh": "refresh"
   },
   "listingCard": {
-    "btnEdit": "Edit",
-    "btnDelete": "Delete",
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting...",
