@@ -6,6 +6,7 @@ import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
 import 'select2';
 
+
 export default class extends BaseModal {
   constructor(options = {}) {
     if (!options.model) {
@@ -52,6 +53,7 @@ export default class extends BaseModal {
     return {
       'click .js-editListing': 'onClickEditListing',
       'click .js-deleteListing': 'onClickDeleteListing',
+      'click .js-gotoPhotos': 'onClickGotoPhotos',
       ...super.events(),
     };
   }
@@ -104,6 +106,16 @@ export default class extends BaseModal {
     }
   }
 
+  onClickGotoPhotos() {
+    this.gotoPhotos();
+  }
+
+  gotoPhotos() {
+    this.$el.animate({
+      scrollTop: this.$photoSection.offset().top,
+    }, 500);
+  }
+
   showDataChangedMessage() {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
@@ -154,6 +166,11 @@ export default class extends BaseModal {
       (this._$popInMessages = this.$('.js-popInMessages'));
   }
 
+  get $photoSection() {
+    return this._$photoSection ||
+      (this._$photoSection = this.$('#photoSection'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -163,12 +180,15 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
+    console.log(...this.model.get('listing').toJSON());
+
     loadTemplate('modals/listingDetail/listing.html', t => {
       this.$el.html(t({
         ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing(),
         displayCurrency: app.settings.get('localCurrency'),
+        shipsFromCountry: app.settings.get('country'),
       }));
 
       super.render();
@@ -176,8 +196,10 @@ export default class extends BaseModal {
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
+      this._$photoSection = null;
 
-      this.$('.js-variantSelect').select2();
+      // commented out until variants are available
+      // this.$('.js-variantSelect').select2();
     });
 
     return this;

@@ -1,0 +1,13 @@
+<div class="box clrP clrBr padLg">
+  <h2 class="txUnb"><%= ob.polyT('listingDetail.shipping') %></h2>
+  <div class="flexVCent gutterHLg tx5">
+    <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>${ob.polyT(`countries.${ob.shipsFromCountry}`)}</b>` }) %></div>
+    <div><%= ob.polyT('listingDetail.shipTo') %></div>
+    <div class="col4"><select id="shippingDestinations"></select></div>
+  </div>
+  <hr>
+  <% ob.shippingOptions.forEach(function(sOption){
+
+
+  }); %>
+</div>

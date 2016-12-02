@@ -156,7 +156,19 @@
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
     "listingDataChangedPopinRefresh": "refresh",
-    "viewPhotos": "View %{count} Photos"
+    "viewPhotos": "View %{count} Photos",
+    "type": "Type: %{type}",
+    "condition": "Condition: %{condition}",
+    "tags": "Tags",
+    "buyNow": "BuyNow",
+    "description": "Description",
+    "reviews": "Reviews",
+    "refundPolicy": "Refund Policy",
+    "termsAndConditions": "Terms Of Service",
+    "shipping": "Shipping",
+    "shipsFrom": "Ships from %{country}",
+    "shipTo": "Ship to",
+    "shipToPlaceholder": "Select a Country"
   },
   "listingCard": {
     "btnEdit": "Edit",
