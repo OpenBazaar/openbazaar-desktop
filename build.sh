@@ -103,9 +103,8 @@ case "$TRAVIS_OS_NAME" in
     curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
     /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
 
-    brew cask install xquartz
-    brew link libusb libusb-compat fontconfig webp gd little-cms2 sane-backends libtasn1
-    brew install wine
+    brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
+    brew install freetype graphicsmagick
     brew link xz
     brew install mono
 
