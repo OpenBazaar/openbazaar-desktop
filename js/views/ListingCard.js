@@ -22,11 +22,10 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
-    if (opts.ownListing === undefined) {
-      // For search and channels this will need to be included in the API, in
-      // which case, we could get the value from the model and this could
-      // be completely optional.
-      throw new Error('Please provide an ownListing indicator.');
+    if (!options.ownerGuid) {
+      throw new Error('Please provide a a guid representing the owner of the listing.');
+    } else {
+      this.ownerGuid = this.options.ownerGuid;
     }
 
     if (!opts.listingBaseUrl) {
@@ -36,7 +35,7 @@ export default class extends baseVw {
       throw new Error('Please provide a listingBaseUrl.');
     }
 
-    if (this.options.ownListing) {
+    if (this.ownListing) {
       this.$el.addClass('ownListing');
     }
 
@@ -119,9 +118,13 @@ export default class extends baseVw {
     // an old listing.
     if (!this.options.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0])) {
-      // TODO: Change the loading modal from a singleton to where different
-      // modules are using there own instance. With the current set-up of
-      // sharing an instance, there's bound to be toe stepping.
+      const routeOnOpen = location.hash.slice(1);
+      app.router.navigate(`${this.options.listingBaseUrl}${this.model.get('slug')}`);
+
+      // todo: show a cancel button on the loading modal so the user could
+      // cancel the loading. As of now, the user can still cancel by hitting
+      // back, but that will go through the router and reload the whole
+      // page (e.g. the store) the user had been on.
       app.loadingModal.open();
 
       const fullListingFetch = this.fullListing.fetch()
@@ -133,23 +136,24 @@ export default class extends baseVw {
           }).render()
             .open();
 
-          const routeOnOpen = location.hash.slice(1);
           const onListingDetailClose = () => app.router.navigate(routeOnOpen);
 
           this.listenTo(listingDetail, 'close', onListingDetailClose);
           this.listenTo(listingDetail, 'modal-will-remove',
             () => this.stopListening(null, null, onListingDetailClose));
-
-          app.router.navigate(`${this.options.listingBaseUrl}${this.model.get('slug')}`);
         })
         .always(() => {
           if (this.isRemoved()) return;
           app.loadingModal.close();
         })
-        .fail(() => {
-          // todo: show errors;
+        .fail((xhr) => {
+          app.router.listingError(xhr);
         });
     }
+  }
+
+  get ownListing() {
+    return app.profile.id === this.ownerGuid;
   }
 
   get fullListing() {
@@ -158,7 +162,7 @@ export default class extends baseVw {
       this._fullListing = new Listing({
         listing: { slug: this.model.get('slug') },
       }, {
-        guid: app.profile.id,
+        guid: this.ownerGuid,
       });
     }
 
@@ -198,7 +202,7 @@ export default class extends baseVw {
     loadTemplate('listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        ownListing: this.options.ownListing,
+        ownListing: this.ownListing,
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
         displayCurrency: app.settings.get('localCurrency'),

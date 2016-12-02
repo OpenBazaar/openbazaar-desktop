@@ -7,10 +7,6 @@ import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
-    if (!options.guid) {
-      throw new Error('Please provide a guid.');
-    }
-
     super(attrs, options);
     this.guid = options.guid;
   }
@@ -43,7 +39,12 @@ export default class extends BaseModel {
     return !this.get('listing').get('slug');
   }
 
-  isOwnListing() {
+  get isOwnListing() {
+    if (this.guid === undefined) {
+      throw new Error('Unable to determine ownListing ' +
+        'because a guid has not been set on this model.');
+    }
+
     return app.profile.id === this.guid;
   }
 

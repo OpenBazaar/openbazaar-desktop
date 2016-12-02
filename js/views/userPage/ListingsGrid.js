@@ -60,7 +60,7 @@ export default class extends BaseVw {
 
   createListingCardView(opts = {}) {
     const options = {
-      ownListing: this.options.storeOwner === app.profile.id,
+      ownerGuid: this.options.storeOwner,
       listingBaseUrl: `${this.options.storeOwner}/store/`,
       viewType: this.viewType,
       ...opts,
