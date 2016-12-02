@@ -21,12 +21,13 @@
   &:hover {
     text-decoration: none;
     cursor: pointer;
-    border: solid 1px $focusedBorder;
+    border-color: $focusedBorder;
   }
 
   &:focus {
     text-decoration: none;
     outline: 0;
+    border-color: $focusedBorder;
   }
 
   .bar & {
@@ -95,7 +96,7 @@
 
   input[type="checkbox"] {
     // todo: style this to match the designs
-  }  
+  }
 
   &:hover {
     border: 0;
@@ -133,8 +134,10 @@
   //creates a set of buttons with no gaps between them
   & > .btn {
     border-radius: 0;
-    border-right-width: 0;
     float: left; //float left will collapse the button and position it correctly
+  }
+  & > .btn:not(:hover) {  // on hover use the normal border width
+    border-right-width: 0;
   }
   & > .btn:first-child {
     border-top-left-radius: $corner;
