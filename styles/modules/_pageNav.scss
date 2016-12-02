@@ -71,15 +71,18 @@
         box-sizing: border-box;
 
         &.navClose {
-          background-color: #E45A5A;
+          background-color: #FF6059;
+          border: solid 1px #EF5851;
         }
 
         &.navMin {
-          background-color: #F8E71C;
+          background-color: #FFBD2E;
+          border: solid 1px #F0B128;
         }
 
         &.navMax {
-          background-color: #B8E986;
+          background-color: #29C941;
+          border: solid 1px #27BB3D;
         }
 
         i {
