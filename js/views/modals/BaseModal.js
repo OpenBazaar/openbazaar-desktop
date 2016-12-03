@@ -12,7 +12,7 @@ export default class BaseModal extends baseVw {
       dismissOnEscPress: true,
       showCloseButton: true,
       closeButtonClass: 'cornerTR ion-ios-close-empty',
-      modelContentClass: 'modalContent clrP',
+      modelContentClass: 'modalContent clrP clrBr border clrSh2',
       removeOnClose: false,
       removeOnRoute: true,
       ...options,

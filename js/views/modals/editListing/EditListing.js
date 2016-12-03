@@ -24,7 +24,7 @@ export default class extends BaseModal {
 
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP',
+      modelContentClass: 'modalContent clrP clrBr border',
       ...options,
     };
 
