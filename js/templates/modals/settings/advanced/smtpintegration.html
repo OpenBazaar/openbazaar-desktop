@@ -52,6 +52,7 @@
       </label>
     </div>
     <div class="col9">
+      <% if (ob.errors.smtpUserName) print(ob.formErrorTmpl({ errors : ob.errors.smtUserName })) %>
       <input class="clrBr" 
         required        
         type="text"

@@ -36,7 +36,7 @@ export default class Advanced extends baseVw {
       model : new ServerSettings( ) 
     } );
     this.smtpIntegrationSettings = this.createChild( SMTPIntegration, { 
-      model : new SMTPIntegrationSettings( ) 
+      model : this.settings.get('smtpIntegrationSettings')
     } );
   }
 
