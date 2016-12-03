@@ -66,27 +66,33 @@
 
       a {
         border-radius: 50%;
-        margin-right: 5px;
+        color: #000;
+        text-align: center;
+        margin-right: 8px;
         box-sizing: border-box;
 
         &.navClose {
-          background-color: #E45A5A;
+          background-color: #FF6059;
+          border: solid 1px #EF5851;
         }
 
         &.navMin {
-          background-color: #F8E71C;
+          background-color: #FFBD2E;
+          border: solid 1px #F0B128;
         }
 
         &.navMax {
-          background-color: #B8E986;
+          background-color: #29C941;
+          border: solid 1px #27BB3D;
+          margin-right: 0;
         }
 
-        i {
+        span {
           visibility: hidden;
-          font-size: 16px;
+          font-size: 10px;
         }
 
-        &:hover i {
+        &:hover span {
          visibility: visible;
         }
       }
