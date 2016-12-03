@@ -130,3 +130,7 @@ p {
   @extend .clamp;
   -webkit-line-clamp: 4;
 }
+
+.wrapWd {
+  word-wrap: break-word;
+}
