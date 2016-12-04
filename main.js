@@ -274,6 +274,8 @@ function createWindow() {
         },
         {
           role: 'quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click: function() { closeConfirmed=true; app.quit(); },
         },
       ],
     });
@@ -400,6 +402,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+    app.quit();
   });
 
   mainWindow.on('close', (e) => {
