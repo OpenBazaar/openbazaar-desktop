@@ -1,4 +1,4 @@
-import electron from 'electron';
+import { electron, remote } from 'electron';
 import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
@@ -9,14 +9,13 @@ import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { isHiRez } from '../utils/responsive';
 
-const remote = electron.remote;
-
 export default class extends View {
   constructor(options) {
     const opts = {
       events: {
         'click .js-navBack': 'navBackClick',
         'click .js-navFwd': 'navFwdClick',
+        'click .js-navReload': 'navReload',
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
@@ -65,6 +64,10 @@ export default class extends View {
 
   navFwdClick() {
     window.history.forward();
+  }
+
+  navReload() {
+    remote.getCurrentWindow().reload();
   }
 
   setWinControlsStyle(style) {
