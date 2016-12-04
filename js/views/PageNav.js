@@ -1,4 +1,4 @@
-import { electron, remote } from 'electron';
+import remote from 'electron';
 import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
