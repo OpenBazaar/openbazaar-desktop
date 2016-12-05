@@ -68,6 +68,8 @@ export default class extends View {
 
   navReload() {
     location.reload();
+    // TODO: Only refresh the content not the whole BrowserWindow
+    // Backbone.history.loadUrl();
   }
 
   setWinControlsStyle(style) {
