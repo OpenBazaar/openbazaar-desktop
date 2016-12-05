@@ -52,7 +52,7 @@ describe('the Item model', () => {
     const item = new Item();
     const tags = [];
 
-    for (let i = 0; i < (item.maxTags + 1); i++) {
+    for (let i = 0; i < (item.max.tags + 1); i++) {
       tags.push('moo');
     }
 
