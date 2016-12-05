@@ -4,7 +4,6 @@
   .listingCard {
     margin: 0 $padMd $padMd 0;
     font-size: $tx5b;
-    border-radius: $corner;
 
     // todo: adjust this when full width listings is implemented
     &:nth-child(3n) {

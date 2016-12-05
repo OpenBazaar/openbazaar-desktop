@@ -90,14 +90,9 @@
           }
         }
 
-        .searchFilter {
-          border-radius: $corner;
-        }
-
         .categoryFilter {
           max-height: 250px;
           overflow: auto;
-          border-radius: $corner;
 
           .moreCatsWrap {
             .moreCats, .showLess {
