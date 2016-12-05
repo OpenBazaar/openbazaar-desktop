@@ -30,7 +30,7 @@
       <div>
         <div class="flexVCent box">
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
-          <a id="AvatarBtn" class="discSm border clrBr2 clrSh1 js-navListBtn navListBtn"
+          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn"
           <% if (ob.avatarHash) { %>
           //this will be updated to the real image parameter
           style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
