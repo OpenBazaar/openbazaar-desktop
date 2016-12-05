@@ -1,0 +1,27 @@
+.popInMessageHolder {
+  position: fixed;
+  margin: 0 auto;
+  left: 50%;
+  top: 140px;
+  transform: translateX(-50%);
+  z-index: 1;
+
+  .popInMessage {
+    margin-bottom: 25px;
+  }
+}
+
+.popInMessage {
+  max-width: 300px;
+  border-radius: $corner;
+  position: relative;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+
+  .closeIcon {
+    position: absolute;
+    right: -17px;
+    top: -8px;
+  }
+}

@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, screen } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
@@ -11,13 +11,20 @@ import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
-import PublishingStatusMessage from './views/PublishingStatusMessage';
 import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
+import Followers from './collections/Followers';
+import listingDeleteHandler from './startup/listingDelete';
+import { fetchExchangeRates } from './utils/currency';
+import './utils/exchangeRateSyncer';
+import './utils/listingData';
+import { getBody } from './utils/selectors';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
+
+const platform = process.platform;
 
 // initialize language functionality
 function getValidLanguage(lang) {
@@ -69,6 +76,15 @@ app.loadingModal = new LoadingModal({
   showCloseButton: false,
   removeOnRoute: false,
 }).render().open();
+
+// fix zoom issue on Linux hiDPI
+if (platform === 'linux') {
+  let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+  if (scaleFactor === 0) {
+    scaleFactor = 1;
+  }
+  getBody().css('zoom', 1 / scaleFactor);
+}
 
 const fetchConfigDeferred = $.Deferred();
 
@@ -241,6 +257,60 @@ function onboard() {
   return onboardDeferred.promise();
 }
 
+const fetchStartupDataDeferred = $.Deferred();
+let ownFollowingFetch;
+let exchangeRatesFetch;
+let ownFollowingFailed;
+
+function fetchStartupData() {
+  ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
+    app.ownFollowing.fetch() : ownFollowingFetch;
+  exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
+
+  $.whenAll(ownFollowingFetch, exchangeRatesFetch)
+    .progress((...args) => {
+      const state = args[1];
+
+      if (state !== 'success') {
+        const jqXhr = args[0];
+
+        if (jqXhr === ownFollowingFetch) {
+          ownFollowingFailed = true;
+        }
+      }
+    })
+    .done(() => {
+      fetchStartupDataDeferred.resolve();
+    })
+    .fail((jqXhr) => {
+      if (ownFollowingFailed) {
+        const retryFetchStarupDataDialog = new Dialog({
+          title: 'Unable to get data about who you\'re following.',
+          message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          buttons: [{
+            text: 'Retry',
+            fragment: 'retry',
+          }],
+          dismissOnOverlayClick: false,
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }).on('click-retry', () => {
+          retryFetchStarupDataDialog.close();
+          fetchStartupData();
+        })
+          .render()
+          .open();
+      } else {
+        // We don't care if the exchange rate fetch failed, because
+        // the exchangeRateSyncer will display a status message about it
+        // and the app will gracefully handle not having exchange rates.
+        fetchStartupDataDeferred.resolve();
+      }
+    });
+
+  return fetchStartupDataDeferred.promise();
+}
+
 const onboardIfNeededDeferred = $.Deferred();
 
 function onboardIfNeeded() {
@@ -249,7 +319,7 @@ function onboardIfNeeded() {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
-      onboardIfNeededDeferred.resolve();
+      fetchStartupData().done(() => onboardIfNeededDeferred.resolve());
     }
   });
 
@@ -275,11 +345,17 @@ function start() {
       app.localSettings.save('language', getValidLanguage(lang));
     });
 
+    app.ownFollowing = new Followers(null, { type: 'following' });
+    app.ownFollowers = new Followers(null, { type: 'followers' });
+
     onboardIfNeeded().done(() => {
-      app.pageNav.navigable = true;
-      app.loadingModal.close();
-      location.hash = location.hash || app.profile.id;
-      Backbone.history.start();
+      fetchStartupData().done(() => {
+        app.pageNav.navigable = true;
+        app.pageNav.setAppProfile();
+        app.loadingModal.close();
+        location.hash = location.hash || app.profile.id;
+        Backbone.history.start();
+      });
     });
   });
 }
@@ -345,13 +421,11 @@ function setPublishingStatus(msg) {
 
   if (!publishingStatusMsg) {
     publishingStatusMsg = app.statusBar.pushMessage({
-      View: PublishingStatusMessage,
       ...msg,
     });
-    publishingStatusMsg.view
-      .on('click-retry', () => {
-        alert('Coming soon - need publish API');
-      });
+    publishingStatusMsg.on('clickRetry', () => {
+      alert('Coming soon - need publish API');
+    });
   } else {
     clearTimeout(publishingStatusMsgRemoveTimer);
     publishingStatusMsg.update(msg);
@@ -422,3 +496,18 @@ ipcRenderer.on('close-attempt', (e) => {
     .open();
   }
 });
+
+app.apiSocket.on('message', (e) => {
+  if (e.jsonData) {
+    if (e.jsonData.notification) {
+      if (e.jsonData.notification.follow) {
+        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
+      } else if (e.jsonData.notification.unfollow) {
+        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+      }
+    }
+  }
+});
+
+// initialize our listing delete handler
+listingDeleteHandler();

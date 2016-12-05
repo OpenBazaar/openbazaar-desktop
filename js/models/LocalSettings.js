@@ -18,6 +18,7 @@ export default class extends Model {
     return {
       macStyleWinControls: remote.process.platform === 'darwin',
       language: 'en-US',
+      listingsGridViewType: 'grid',
     };
   }
 
@@ -30,6 +31,10 @@ export default class extends Model {
 
     if (is.not.boolean(attrs.macStyleWinControls)) {
       addError('macStyleWinControls', 'Please provide a boolean value.');
+    }
+
+    if (['list', 'grid'].indexOf(attrs.listingsGridViewType) === '-1') {
+      addError('The listingsGridViewType provided is not one of the available types.');
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;

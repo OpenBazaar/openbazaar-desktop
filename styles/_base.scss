@@ -1,13 +1,41 @@
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-Regular-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-Bold-webfont.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-Italic-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'noto_sans';
+  src: url('../../fonts/NotoSans-BoldItalic-webfont.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
 html {
   // fonts
   color: $text;
   font: {
-    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    family: "noto_sans";
     size: $baseFontSize;
     weight: 400;
   }
   -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.4px;
+  letter-spacing: 0;
   line-height: 1.2;
 }
 
@@ -44,60 +72,14 @@ hr {
     -webkit-margin-before: 0;
     -webkit-margin-after: 0;
   }
+
+  &.dashed {
+    border-bottom: 1px dashed;
+  }
 }
 
 ul {
   margin: 0;
-}
-
-input::-webkit-input-placeholder,
-select::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
-  color: inherit;
-  opacity: 0.35;
-}
-
-
-input,
-select,
-textarea {
-  border: none;
-  outline: none;
-  background: none;
-  color: inherit;
-}
-
-select {
-  width: 100%;
-}
-
-input[type="text"],
-textarea {
-  border-style: solid;
-  border-width: 1px;
-  //use the color class to set the border color
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0 $pad;
-  line-height: 40px;
-}
-
-textarea {
-  background: none;
-  outline: none;
-  -webkit-appearance: none;
-  resize: none;
-  line-height: 1.2em;
-  padding: $pad;
-}
-
-form {
-  margin: 0;
-  font-size: $tx5;
-
-  label {
-    line-height: $formElementHeight;
-  }
 }
 
 ul, ol {
@@ -122,28 +104,6 @@ ul, ol {
   background-repeat: no-repeat;
 }
 
-.banner {
-  //create a fixed banner in the background
-  background-position: center top;
-  background-repeat: no-repeat;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: $bar + $barLg;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  pointer-events: none; // requires or it prevents scroll events over it
-}
-
-#ov1 .hide {
-  display: none;
-}
-
-#ov1 .disabled {
-  @include disabled;
-}
-
 #appFrame {
   position: absolute;
   height: 100%;
@@ -161,7 +121,7 @@ ul, ol {
     overflow-y: scroll;
     height: calc(100% - #{$bar} - #{$barLg});
     box-sizing: border-box;
-    display: flex;
+    z-index: 0;
 
     #pageTabBar {
       position: fixed;
@@ -198,33 +158,21 @@ ul, ol {
     }
 
     #pageContainer {
-      flex-grow: 1;
 
       .pageContent {
-        width: $pageWidth;
+        width: $pageWidth + $padLg + $padLg;
         box-sizing: border-box;
-        margin: 0 auto;
-        padding-bottom: $bar;
+        margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
+        padding: 0 $padLg $bar $padLg;
         position: relative;
-      }
-    }
+        @include chatOpeningTransition(margin);
 
-    #chatLeftSpacer {
-      width: $chatClosed; //this spacer can collapse if there isn't enough space
-      min-width: $padHg;
-      //@include chatOpeningTransition(width);
+        @include alignToChat {
 
-      .chatOpen & {
-        width: $chatOpen;
-      }
-    }
-
-    #chatRightSpacer {
-      flex: 0 0;
-      min-width: $chatClosed; //this spacer will not collapse
-
-      .chatOpen & {
-        min-width: $chatOpen;
+          .chatOpen & {
+            margin-right: $chatOpen;
+          }
+        }
       }
     }
   }
@@ -260,3 +208,28 @@ ul, ol {
   text-shadow: none !important;
 }
 
+// utility classes
+
+#ov1 .hide {
+  display: none;
+}
+
+#ov1 .disabled {
+  @include disabled;
+}
+
+.overflowAuto {
+  overflow: auto;
+}
+
+.floL {
+  float: left;
+}
+
+.floR {
+  float: right;
+}
+
+.txU {
+  text-decoration: underline;
+}

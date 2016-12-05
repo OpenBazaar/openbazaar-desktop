@@ -7,4 +7,8 @@ export default class extends BaseModel {
       username: '',
     };
   }
+
+  get idAttribute() {
+    return '_clientID';
+  }
 }

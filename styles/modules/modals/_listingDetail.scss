@@ -1,0 +1,11 @@
+.listingDetail {
+  .modalContent {
+    // probably temporary min width and height
+    min-height: 300px;
+    min-width: 450px;
+
+    .popInMessageHolder {
+      top: 20px;
+    }
+  }
+}

@@ -3,12 +3,15 @@ $text: hsl(0,0,14.8);
 $text2: adjust-color($text, $lightness: +43.2%);
 $text3: adjust-color($text, $lightness: +59%);
 $text4: adjust-color($text, $lightness: +65%);
+$textOnEmph: rgb(255, 255, 255);
 $primary: hsl(0,0%,100%);
 $secondary: adjust-color($primary, $lightness: -4%);
 $background: adjust-color($primary, $lightness: -10%);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
+$focusedBorder: rgb(0, 0, 0);
 $emphasis1: rgb(253,166,57);
+$emphasis2: rgb(174, 138, 88);
 $error: red;
 $overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
 
@@ -43,5 +46,9 @@ $corner: 2px;
 $bar: 50px;
 $barSm: 40px;
 $barLg: 55px;
-$brdRad: 2px;
+
+//responsive
+$largeWidth: 1500px;
+$smallHeight: 700px;
+
 

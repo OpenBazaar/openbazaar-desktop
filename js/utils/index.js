@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import app from '../app';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -59,4 +60,61 @@ export function splitIntoRows(items, itemsPerRow) {
   });
 
   return rslt;
+}
+
+// http://stackoverflow.com/a/2686098/632806
+// todo: unit test
+export function abbrNum(_number, _decPlaces = 1) {
+  // 2 decimal places => 100, 3 => 1000, etc
+  const decPlaces = Math.pow(10, _decPlaces);
+  let number = _number;
+
+  // Enumerate number abbreviations
+  const abbrev = ['thousand', 'million', 'billion', 'trillion'];
+
+  // Go through the array backwards, so we do the largest first
+  for (let i = abbrev.length - 1; i >= 0; i--) {
+    // Convert array index to "1000", "1000000", etc
+    const size = Math.pow(10, (i + 1) * 3);
+
+    // If the number is bigger or equal do the abbreviation
+    if (size <= number) {
+      // Here, we multiply by decPlaces, round, and then divide by decPlaces.
+      // This gives us nice rounding to a particular decimal place.
+      number = Math.round(number * decPlaces / size) / decPlaces;
+
+      // Handle special case where we round up to the next abbreviation
+      if ((number === 1000) && (i < abbrev.length - 1)) {
+        number = 1;
+        i++;
+      }
+
+      let lang = app && app.settings && app.settings.get('language');
+
+      if (!lang) {
+        console.warn('Unable to get the languages from the settings. Using en-US.');
+        lang = 'en-US';
+      }
+
+      number = new Intl.NumberFormat(lang).format(number);
+      number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
+
+      // We are done... stop
+      break;
+    }
+  }
+
+  return number;
+}
+
+// https://github.com/jeromegn/Backbone.localStorage
+// Generate four random hex digits.
+function s4() {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+}
+
+// https://github.com/jeromegn/Backbone.localStorage
+// Generate a pseudo-GUID by concatenating random hexadecimal.
+export function guid(prefix = '') {
+  return `${prefix}${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 }

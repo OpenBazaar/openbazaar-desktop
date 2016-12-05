@@ -1,6 +1,6 @@
-<header class="">
+<header>
   <nav class="bar clrBr clrP navBar">
-    <div class="flexRow">
+    <div class="flexVCent">
       <div class="windowControlsHolder">
         <div class="windowControls windowControlsMac">
           <a class="navClose js-navClose">
@@ -22,7 +22,7 @@
         <div class="flexVCent">
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar"
-                   placeholder="Type a @handle, OpenBazaar ID or #tag" />
+                   placeholder="Type a @handle, OpenBazaar ID or keyword" value="<%= ob.addressBarText %>" />
           </div>
         </div>
       </div>
@@ -30,12 +30,12 @@
       <div>
         <div class="flexVCent box">
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
-          <a class="discSm border clrBr js-navListBtn navListBtn"
-          <% if (ob.navimage) { %>
+          <a id="AvatarBtn" class="discSm border clrBr js-navListBtn navListBtn"
+          <% if (ob.avatarHash) { %>
           //this will be updated to the real image parameter
-          style="background-image: url(ob.navImage), url('../imgs/defaultUser.png')"
+          style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
           <% } else { %>
-            style="background-image: url('../imgs/defaultUser.png')"
+            style="background-image: url('../imgs/defaultAvatar.png')"
           <% } %>
           ></a>
           <nav class="navList listBox clrS clrSh1 foldDown js-navList js-navPopMenu">
@@ -46,15 +46,18 @@
               </a>
             </div>
             <div class="listGroup clrP clrBr clrSh2">
-              <a class="listItem" href="#ownPage">
+              <a class="listItem" href="#<%= ob.id ? `${ob.id}` : ''%>">
                 <span>My Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a class="listItem"><!--TODO add js action for Page Customization-->
+              <a class="listItem"><!--TODO add route for Page Customization-->
                 <span>Customize Page</span><span class="clrT2">Cltrl + ?</span>
               </a>
-              <a class="listItem"><!--TODO add js action for Create Listing-->
+              <a class="listItem js-navCreateListing">
                 <span>Create Listing</span><span class="clrT2">Cltrl + ?</span>
               </a>
+              <a class="listItem" href="#connected-peers">
+                <span>Connected Peers</span><span class="clrT2">Cltrl + ?</span>
+              </a>              
             </div>
             <div class="listGroup clrP clrBr clrSh2">
               <a href="#transactions/purchases" class="listItem">

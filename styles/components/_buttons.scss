@@ -1,5 +1,5 @@
 .ctrl {
-  line-height: 33px;
+  height: 35px;
   padding: 0 24px;
   border-radius: $corner;
   border-width: 1px;
@@ -7,11 +7,14 @@
   font-size: $tx5;
   font-weight: 500;
   box-sizing: border-box;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center; // centers icons if they are a child element
+  justify-content: center;
 }
 
 .btn {
   @extend .ctrl;
-  display: inline-block; //add height and width, collapse the width
   cursor: pointer;
   font-weight: 700;
 
@@ -22,6 +25,7 @@
 
   &:focus {
     text-decoration: none;
+    outline: 0;
   }
 
   .bar & {
@@ -42,7 +46,17 @@
     border: none;
   }
 
-  //radio and checkbox inputs can be placed inside a button
+  &.processing {
+    @include processingOverlay;
+  }
+}
+
+.btnRadio {
+  @extend .btn;
+  border: 0;
+  padding: 0 6px;
+  font-weight: normal;
+  height: auto;
 
   input[type="radio"] {
     display: none;
@@ -78,8 +92,8 @@
     //checked state is set by the theme
   }
 
-  &.processing {
-    @include processingOverlay;
+  input[type="checkbox"] {
+    // todo: style this to match the designs
   }
 }
 
@@ -104,7 +118,6 @@
   & > .btn {
     border-radius: 0;
     border-right-width: 0;
-    display: block; //block-inline elements have a space after them
     float: left; //float left will collapse the button and position it correctly
   }
   & > .btn:first-child {
@@ -116,7 +129,14 @@
     border-bottom-right-radius: $corner;
     border-right-width: 1px;
   }
+}
 
+.btnStrip .btnRadio {
+  margin-right: 7px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 *[class *= "ion-"]:before {
@@ -132,6 +152,7 @@
   right: 0;
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
   transition: 0.2s ease;
+  overflow: hidden;
 
   &.open {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
@@ -166,6 +187,42 @@
   z-index: 1; // don't unintentionally cover with other absolute elements
   top: 10px;
   right: $pad;
-  font-size: 1.6rem;
+  font-size: $tx1;
   cursor: pointer;
+}
+
+// range slider
+
+input[type=range]{
+  -webkit-appearance: none;
+  height: 22px;
+  width: 100%;
+
+  &:disabled {
+    @include disabled;
+  }
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  background: #ccc; //default, use color classes
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 22px;
+  width: 22px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 50%;
+  margin-top: -9px;
+}
+
+input[type=range]:focus {
+  outline: none;
 }

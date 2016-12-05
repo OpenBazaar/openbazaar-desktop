@@ -1,4 +1,6 @@
-<ul class="unstyled errorList">
+<!-- TODO: move into the util folder -->
+
+<ul class="unstyled errorList <%= ob.class || ''%>" <% if (ob.id) print(`id="${ob.id}"`)%>>
   <% ob.errors.forEach(function(err) {
        print('<li><i class="ion-alert-circled"></i>' + err + '</li>');
      }); %>

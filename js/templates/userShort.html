@@ -1,33 +1,61 @@
-<div class="contentBox clrBr clrP clrSh2 userShort">
-  <div class="hero bkgCover"
-    <% if(ob.banner){ %>
-      style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+<div class="contentBox clrBr clrP clrSh2">
+  <div class="shortHeader"
+    <% var headerHash = ob.headerHashes ? ob.isHiRez() ? ob.headerHashes.small : ob.headerHashes.tiny : ''; %>
+    <% if (headerHash) { %>
+      style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
     <% } else { %>
-      style="background-image: url('../imgs/defaultBanner.png')"
+      style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
     <div class="userIcon disc clrBr2 clrSh1"
-         <% if(ob.avatar){ %>
-           style="background-image: url('<%= ob.avatar %>, url('../imgs/defaultUser.png')"
-         <% } else { %>
-           style="background-image: url('../imgs/defaultUser.png')"
-         <% } %>>
-     </div>
+      <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+      <% if (avatarHash) { %>
+        style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+      <% } else { %>
+       style="background-image: url('../imgs/defaultAvatar.png')"
+      <% } %>>
+    </div>
+    <% if (!ob.hideControls) { %>
+      <div class="userControls">
+        <% if (!ob.ownGuid) { %>
+          <a class="iconBtn clrP clrBr js-follow <% if (ob.followedByYou) { %>active<% } %>">
+            <i class="ion-person-stalker"></i>
+          </a>
+          <% if (ob.moderator) { %>
+            <a class="iconBtn clrP clrBr js-mod <% if (ob.ownMod) { %>active<% } %>">
+              <i class="ion-briefcase"></i>
+            </a>
+          <% } %>
+        <% } %>
+      </div>
+    <% } %>
   </div>
   <div class="content">
-    <div class="flexVBot snipKids gutterH rowTn">
-      <div class="tx3 clrT"><strong><%= ob.name %></strong></div>
-      <div class="clrT3"><%= ob.handle %></div>
-    </div>
-    <p class="clamp2">
-      <%= ob.shortDescription %>
-    </p>
-    <div class="flex gutterH">
-      <div class="col8">
-        <span class="clrT4"><%= ob.location || ob.polyT('userPage.noLocation') %></span>
+    <% if (!ob.loading && !ob.notFound) { %>
+      <div class="contentTop">
+        <div>
+          <a class="flex snipKids gutterH rowTn js-userName">
+            <div class="tx3 clrT name"><strong><%= ob.name %></strong></div>
+            <div class="clrT3">
+              <%= ob.handle %>
+            </div>
+          </a>
+        </div>
+        <p class="clamp2">
+          <%= ob.shortDescription %>
+        </p>
       </div>
-      <div class="col4 tx6">
-        stars here (xx)
+      <div class="flex gutterH">
+        <div class="col8">
+          <span class="clrT4 txCtr"><%= ob.location || ob.polyT('userPage.noLocation') %></span>
+        </div>
+        <div class="col4 tx6">
+          stars here (xx)
+        </div>
       </div>
-    </div>
+    <% } else if (ob.loading) { %>
+      <div class="h3 clrT"><%= ob.polyT('userShort.userLoading') %></div>
+    <% } else if (ob.notFound) { %>
+    <div class="h5 txUnb clrT"><%= ob.polyT('userShort.userNotFound', { guid: ob.guid }) %></div>
+    <% } %>
   </div>
 </div>

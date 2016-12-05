@@ -1,28 +1,23 @@
 .userPage {
   height: 100%;
 
+  .header {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    width: 100%;
+    height: 341px;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none; // requires or it prevents scroll events over it
+  }
+
   .pageContent {
 
     .pageControls {
       padding: 268px 0 40px 0;
-    }
-
-    .userPageSearchBar {
-      margin-bottom: $padMd;
-      height: $barSm;
-
-      .ctrl,
-      .btn {
-        height: $barSm;
-        line-height: $barSm;
-      }
-    }
-
-    .pageSearchWrapper {
-
-      .pageSearch {
-
-      }
     }
 
     .informationList {
@@ -50,6 +45,113 @@
 
       &.open {
         display: block;
+      }
+    }
+
+    .userPageFollow {
+      flex-wrap: wrap;
+      width: auto;
+      margin: 0 #{-$padMd / 2};
+
+      .userShort {
+        width: 33.33333333333333%;
+        flex: 0 0 auto;
+        padding: 0 $padMd / 2 $padMd $padMd / 2;
+        box-sizing: border-box;
+      }
+    }
+
+    .userPageStore {
+
+      .userPageSearchBar {
+        margin-bottom: $padMd;
+        height: $barSm;
+
+        .ctrl,
+        .btn {
+          height: $barSm;
+          line-height: $barSm;
+        }
+
+        .btnLayoutFullWidth {
+          display: none;
+        }
+      }
+
+      .storeFilters {
+        flex-basis: 228px;
+        margin-right: $padMd;
+
+        & > * {
+          margin-bottom: $pad;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .categoryFilter {
+          max-height: 250px;
+          overflow: auto;
+
+          .moreCatsWrap {
+            .moreCats, .showLess {
+              display: none;
+            }
+
+            &.expanded {
+              .moreCats, .showLess {
+                display: block;
+              }
+
+              .showMore {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+
+      .storeListings {
+        flex-shrink: 1;
+        width: 100%;
+
+        .listingsGrid {
+          // &:empty {
+          //   & ~ .noResults {
+          //     display: block;
+          //   }
+          // }
+        }
+
+        .listingsHeaderRow {
+          .listingsCount {
+            flex-grow: 1;
+          }
+        }
+      }
+
+      .listViewIcon {
+        display: none;
+      }
+
+      &.listView {
+        .listViewIcon {
+          display: block;
+        }
+
+        .gridViewIcon {
+          display: none;
+        }
+
+        .btnLayoutStandard,
+        .btnLayoutFullWidth {
+          @include disabled;
+        }
+      }
+
+      .popInMessageHolder {
+        z-index: 2; // so it's above the listing card overlays
       }
     }
   }

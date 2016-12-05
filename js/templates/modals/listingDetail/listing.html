@@ -1,0 +1,11 @@
+<div class="popInMessageHolder js-popInMessages"></div>
+<% if (ob.ownListing) { %>
+<div>
+  <a class="btn js-editListing">Edit</a>
+  <a class="btn js-deleteListing">Delete</a>
+</div>
+<% } %>
+<h1><%= ob.item.title %></h1>
+<div><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></div>
+<br />
+<span class="clrE1 clrTOnEmph txTiny txCtr upper padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>

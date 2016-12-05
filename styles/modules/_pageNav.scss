@@ -12,7 +12,12 @@
     }
 
     .addressBar {
+      font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
+    }
+
+    #AvatarBtn {
+      margin: 5px 0;
     }
   }
 

@@ -6,7 +6,7 @@
   background-color: $primary;
 
   input[type="radio"] + label:before {
-    background: $secondary;
+    background-color: $secondary;
   }
 
   input[type="radio"]:checked + label:before {
@@ -18,7 +18,7 @@
   background-color: $secondary;
 
   input[type="radio"] + label:before {
-    background: $primary;
+    background-color: $primary;
   }
 
   input[type="radio"]:checked + label:before {
@@ -26,56 +26,73 @@
   }
 }
 
+input[type=range][class~="clrP"] {
+  &::-webkit-slider-runnable-track {
+    background-color: $secondary;
+    border-color: $border;
+  }
+  &:focus::-webkit-slider-runnable-track {
+    background-color: $secondary;
+  }
+  &::-webkit-slider-thumb {
+    background-color: $primary;
+  }
+}
+
+input[type=range][class~="clrS"] {
+  &::-webkit-slider-runnable-track {
+    background-color: $primary;
+    border-color: $border;
+  }
+  &:focus::-webkit-slider-runnable-track {
+    background-color: $primary;
+  }
+  &::-webkit-slider-thumb {
+    background-color: $secondary;
+  }
+}
+
 .clrBk {
   background-color: $background;
 }
 
-$excludedLinks: ".btn, .iconBtn, .listItem";
-
 .clrT {
-  color: $text;
-
-  a:not(#{$excludedLinks}) {
-    color: $text2;
-  }
-
-  input[type="radio"]:checked + label:before {
-    background: $text;
-  }
+  @include textColor($text, $text2);
 }
 
 .clrT2 {
-  // for faded text
-  color: $text2;
-
-  & a:not(#{$excludedLinks}) {
-    color: $text3;
-  }
-
-  input[type="radio"]:checked + label:before {
-    background: $text2;
-  }
+  @include textColor($text2, $text3);
 }
 
 .clrT3 {
-  // use when text2 needs to be "activated"
-  color: $text3;
-
   // links in text color 3 are the same color, or they'd be too hard to see
-
-  input[type="radio"]:checked + label:before {
-    background: $text3;
-  }
+  @include textColor($text3);
 }
 
 .clrT4 {
-  color: $text4;
-
   // links in text color 4 are the same color, or they'd be too hard to see
+  @include textColor($text4);
+}
 
-  input[type="radio"]:checked + label:before {
-    background: $text4;
-  }
+.clrTEm {
+  @include textColor($emphasis1, $emphasis2);
+}
+
+.clrTErr {
+  @include textColor($error);
+}
+
+.clrTGlow {
+  // glow around text so it is visible on low-contrast backgrounds
+  text-shadow: transparentize(invert($text), 0.6) 0 0 20px ;
+}
+
+.clrTOnEmph {
+  @include textColor($textOnEmph);
+}
+
+.clrTEmph1 {
+  @include textColor($emphasis1);  
 }
 
 .clrBr {
@@ -97,6 +114,16 @@ $excludedLinks: ".btn, .iconBtn, .listItem";
   .select2-dropdown,
   .select2-selection {
     border-color: $border;
+  }
+
+  &.select2-container--focus,
+  &.select2-container--open {
+    border-color: $focusedBorder;
+
+    .select2-dropdown,
+    .select2-selection {
+      border-color: $focusedBorder;
+    }
   }
 }
 
@@ -124,4 +151,57 @@ $excludedLinks: ".btn, .iconBtn, .listItem";
 
 .clrSh2  {
   box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+}
+
+.required::after {
+  color: $emphasis2;
+}
+
+input,
+select,
+textarea,
+button {
+  &:focus {
+    border-color: $focusedBorder;
+  }
+}
+
+.select2-container--focus .select2-selection__rendered {
+  border-color: $focusedBorder;
+}
+
+// select2 with tags
+.select2Tags + .select2-container {
+
+  &.select2-container--default {
+    .select2-selection--multiple {
+      border: none;
+      background: none;
+
+      .select2-selection__rendered {
+        border: 1px solid $border;
+        background: $primary;
+      }
+    }
+
+    &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
+      border-color: $focusedBorder;
+    }
+  }
+
+  .select2-selection__choice {
+    background-color: $primary;
+    border-color: $border;
+    color: $text;
+  }
+
+  .select2-selection__choice__remove {
+    color: $text;
+  }
+}
+
+.tagsDropdown {
+  .select2-container--open .select2-dropdown {
+    border-color: $focusedBorder;
+  }
 }

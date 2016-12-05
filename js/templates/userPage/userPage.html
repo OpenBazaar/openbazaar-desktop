@@ -3,51 +3,64 @@
       <div class="flexVCent pageTabs">
         <!--consider turning tabs into a reusable view-->
         <div>
-          <div class="userIcon disc clrBr2 clrSh1" style="background-image: url('../imgs/defaultUser.png')"></div>
+          <div class="userIcon disc clrBr2 clrSh1 js-avatar"
+            <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+            <% if (avatarHash) { %>
+               style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+            <% } else { %>
+               style="background-image: url('../imgs/defaultAvatar.png')"
+            <% } %>></div>
         </div>
-        <div>
+        <div class="flexExpand">
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
           <div class="txt5b">
-            <span>Stars(x)</span>
-            <span>
-              <% if (ob.followsYou) { %>
+            <a class="js-tab" data-tab="Reputation">
+              <span>Stars(x)</span>
+              <span class="js-followsYou <% if (!ob.followsYou) { %>hide<% } %>">
                 <%= ob.polyT('userPage.followsYou') %>
-              <% } %>
-            </span>
+              </span>
+            </a>
           </div>
         </div>
         <div class="flexExpand">
           <div class="flexHRight flexVCent gutterH clrT2">
-            <a class="btn tab clrBr js-tab" data-tab="Home">Home</a>
-            <a class="btn tab clrBr js-tab" data-tab="Store">Store</a>
-            <a class="btn tab clrBr js-tab" data-tab="Following">Following</a>
-            <a class="btn tab clrBr js-tab" data-tab="Followers">Followers</a>
+            <a class="btn tab clrBr js-tab" data-tab="home">Home</a>
+            <a class="btn tab clrBr js-tab" data-tab="store">Store<span class="clrTEmph1 margLSm js-listingsCount"><%= ob.listingCount %></span></a>
+            <a class="btn tab clrBr js-tab" data-tab="following">Following<span class="clrTEmph1 margLSm js-followingCount"><%= ob.followingCount %></span></a>
+            <a class="btn tab clrBr js-tab" data-tab="followers">Followers<span class="clrTEmph1 margLSm js-followerCount"><%= ob.followerCount %></span></a>
           </div>
         </div>
       </div>
 
 </nav>
-<div class="banner" <% if(ob.banner){ %>
-  style="background-image: url('<%= ob.header %>, url('../imgs/defaultBanner.png')"
+<div class="header js-header"
+  <% var headerHash = ob.headerHashes ? ob.isHiRez() ? ob.headerHashes.large : ob.headerHashes.medium : ''; %>
+  <% if (headerHash) { %>
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
   <% } else { %>
-  style="background-image: url('../imgs/defaultBanner.png')"
+    style="background-image: url('../imgs/defaultHeader.png')"
   <% } %>>
 </div>
-<div class="pageContent">
+<div class="pageContent js-pageContent">
   <div class="pageControls flex">
     <div class="flexExpand">
-      <h1 class="txBg txUnb txUnl js-tabTitle">
+      <h1 class="txBg txUnb txUnl clrTGlow js-tabTitle">
       </h1>
     </div>
     <div>
       <div class="btnStrip floR clrSh2">
+        <% if(ob.ownPage) { %>
+        <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.customize') %></a>
+        <a class="btn clrP clrBr js-messageBtn">Example Button</a>
+        <% } else { %>
         <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.message') %></a>
         <a class="btn clrP clrBr js-followBtn">
           <span class="js-unfollowLbl <% if(!ob.followed) print('hide') %>"><%= ob.polyT('userPage.unfollow') %></span>
           <span class="js-followLbl <% if(ob.followed) print('hide') %>"><%= ob.polyT('userPage.follow') %></span>
         </a>
-        <a class="btn clrP clrBr hide js-moreableBtn">Example Btn</a>
-        <a class="btn clrP clrBr hide js-moreableBtn">Example Btn</a>
+        <% } %>
+        <a class="btn clrP clrBr hide js-moreableBtn">Example Button</a>
+        <a class="btn clrP clrBr hide js-moreableBtn">Example Button</a>
         <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
       </div>
     </div>

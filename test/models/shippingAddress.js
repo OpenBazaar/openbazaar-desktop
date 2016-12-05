@@ -65,6 +65,7 @@ describe('the Shipping Address model', () => {
 
   it('fails validation if a country is not provided', () => {
     const address = new ShippingAddress();
+    address.unset('country');
     address.set({}, { validate: true });
     const valErr = address.validationError;
 

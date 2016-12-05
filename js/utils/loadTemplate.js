@@ -37,4 +37,3 @@ export default function loadTemplate(templateFile, callback, root = `${__dirname
     sendBackTmpl();
   }
 }
-

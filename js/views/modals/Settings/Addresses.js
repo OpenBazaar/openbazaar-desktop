@@ -31,6 +31,7 @@ export default class extends baseVw {
     this.on('saveComplete', () => {
       this.saving = false;
       this.$el.removeClass('processing');
+      this.$tabWrap.removeClass('mouseMovedDuringSave');
     });
   }
 
@@ -124,11 +125,8 @@ export default class extends baseVw {
       }
     }
 
-    const scrollPos = this.$tabWrap[0].scrollTop;
-
     // render so errors are shown / cleared
     this.addressForm.render();
-    this.$tabWrap[0].scrollTop = scrollPos;
 
     const $firstFormErr = this.$('.js-formContainer .errorList:first');
     if ($firstFormErr.length) $firstFormErr[0].scrollIntoViewIfNeeded();

@@ -2,18 +2,26 @@ import BaseModel from './BaseModel';
 import app from '../app';
 import is from 'is_js';
 import SocialAccounts from '../collections/SocialAccounts';
+import Image from './Image';
 
 export default class extends BaseModel {
   defaults() {
     return {
+      about: '',
+      email: '',
+      handle: '',
+      location: '',
+      moderator: false,
       name: `ob ${Math.random().toString(36).slice(2)}`,
       nsfw: false,
-      vendor: false,
-      moderator: false,
+      phoneNumber: '',
       primaryColor: '#086A9E',
       secondaryColor: '#317DB8',
       textColor: '#ffffff',
+      shortDescription: '',
       social: [],
+      vendor: false,
+      website: '',
     };
   }
 
@@ -26,6 +34,8 @@ export default class extends BaseModel {
   nested() {
     return {
       social: SocialAccounts,
+      avatarHashes: Image,
+      headerHashes: Image,
     };
   }
 
@@ -65,16 +75,20 @@ export default class extends BaseModel {
       }
     });
 
+    if (!attrs.name) {
+      addError('name', app.polyglot.t('profileModelErrors.provideName'));
+    }
+
     if (attrs.email && is.not.email(attrs.email)) {
       addError('email', app.polyglot.t('profileModelErrors.provideValidEmail'));
     }
 
-    if (attrs.website && is.not.url(attrs.website)) {
-      addError('website', app.polyglot.t('profileModelErrors.provideValidURL'));
-    }
-
     if (attrs.handle && attrs.handle.charAt(0) === '@') {
       addError('handle', 'The handle should not start with a leading @.');
+    }
+
+    if (attrs.website && is.not.url(attrs.website)) {
+      addError('website', app.polyglot.t('profileModelErrors.provideValidURL'));
     }
 
     const socialAccounts = attrs.social;

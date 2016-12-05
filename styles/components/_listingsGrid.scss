@@ -1,0 +1,32 @@
+.listingsGrid {
+  flex-wrap: wrap;
+
+  .listingCard {
+    margin: 0 $padMd $padMd 0;
+    font-size: $tx5b;
+
+    // todo: adjust this when full width listings is implemented
+    &:nth-child(3n) {
+      margin-right: 0;
+    }
+  }
+
+  &.listingsGridListView {
+    margin: 0;
+
+    .listingCard {
+      margin: 0;
+      border-bottom-width: 0;
+
+      &:last-child {
+        border-bottom-width: 1px;
+      }
+    }
+  }
+
+  &:empty {
+    &::after {
+      content: attr(data-no-results-text);
+    }
+  }
+}

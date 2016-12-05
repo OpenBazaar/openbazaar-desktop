@@ -20,7 +20,33 @@
 
 @mixin disabled {
   pointer-events: none;
-  opacity: 0.2;
+  // Bumbing this up until we have a more context specific
+  // disable style. 0.2 is too low for most things.
+  opacity: 0.4;
+}
+
+@mixin alignToChat {
+  @media (max-width: #{$pageWidth + $padLg + $padLg + $chatOpen + $chatOpen}) {
+    @content;
+  }
+}
+
+@mixin hiRez {
+  @media (-webkit-min-device-pixel-ratio: 1.5) {
+    @content;
+  }
+}
+
+@mixin largeWidth {
+  @media (min-width: #{$largeWidth}) {
+    @content;
+  }
+}
+
+@mixin smallHeight {
+  @media (max-height: #{$smallHeight}) {
+    @content;
+  }
 }
 
 // todo: refactor this style once we have designs
@@ -34,7 +60,7 @@
     color: white;
     display: flex;
     align-items: center;
-    justify-content: center;    
+    justify-content: center;
     top: 0;
     left: 0;
     right: 0;
@@ -42,5 +68,30 @@
     font-size: 14px;
     cursor: default;
     border-radius: inherit;
+  }
+}
+
+@mixin textColor($col1, $col2: $col1) {
+  /* generates the text color rules */
+  /* if no second color is passed, set everything to the first color */
+  color: $col1;
+
+  a {
+    color: $col2;
+  }
+
+  .btn, .listItem, &.btn, &.listItem {
+    /* btnTxt and iconBtn are included because they extend .btn */
+    color: $col1;
+  }
+
+  @at-root {
+    a#{&} {
+      color: $col1;
+    }
+  }
+
+  input[type="radio"]:checked + label:before {
+    background: $col1;
   }
 }

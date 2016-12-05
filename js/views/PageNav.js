@@ -5,6 +5,9 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
+import { launchEditListingModal } from '../utils/modalManager';
+import Listing from '../models/listing/Listing';
+import { isHiRez } from '../utils/responsive';
 
 const remote = electron.remote;
 
@@ -20,6 +23,7 @@ export default class extends View {
         'keyup .js-addressBar': 'onKeyupAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navCreateListing': 'navCreateListingClick',
       },
       navigable: false,
       ...options,
@@ -27,8 +31,9 @@ export default class extends View {
 
     opts.className = `pageNav ${opts.navigable ? '' : 'notNavigable'}`;
     super(opts);
-
     this.options = opts;
+    this.addressBarText = '';
+
     $(document).on('click', this.onDocClick.bind(this));
 
     this.listenTo(app.localSettings, 'change:macStyleWinControls',
@@ -73,6 +78,23 @@ export default class extends View {
 
   onWinControlsStyleChange(model, useMacStyle) {
     this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
+  }
+
+  setAppProfile() {
+    // when this view is created, the app.profile doesn't exist
+    this.listenTo(app.profile.get('avatarHashes'), 'change', this.updateAvatar);
+    this.render();
+  }
+
+  updateAvatar() {
+    const avatarHashes = app.profile.get('avatarHashes').toJSON();
+    const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
+
+    if (avatarHash) {
+      this.$('#AvatarBtn').attr('style',
+        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
+      url('../imgs/defaultAvatar.png')`);
+    }
   }
 
   navCloseClick() {
@@ -121,7 +143,9 @@ export default class extends View {
 
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.$addressBar.val();
+      let text = this.$addressBar.val().trim();
+      this.$addressBar.val(text);
+
       let isGuid = true;
 
       if (text.startsWith('ob://')) text = text.slice(5);
@@ -134,19 +158,13 @@ export default class extends View {
         isGuid = false;
       }
 
-      // temporary way to check for GUIDs, since our dummy guids from
-      // start.js aren't valid v2 guids, but are registered with the
-      // one-name api.
-      if (firstTerm.startsWith('Qm')) isGuid = true;
-      // end - temporary guid check
-
       if (isGuid) {
         app.router.navigate(firstTerm, { trigger: true });
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
-      } else {
-        // tag(s)
+      } else if (text.indexOf('#') !== -1 || text.indexOf(' ') !== -1) {
+        // If the term has a hash and/or space in it, we'll consider it to be tag(s)
         const tags = text.trim()
           .replace(',', ' ')
           .replace(/\s+/g, ' ') // collapse multiple spaces into single spaces
@@ -154,12 +172,16 @@ export default class extends View {
           .map((frag) => (frag.charAt(0) === '#' ? frag.slice(1) : frag));
 
         alert(`boom - Searching for tags: ${tags.join(', ')}`);
+      } else {
+        // it's probably a page route
+        app.router.navigate(text, { trigger: true });
       }
     }
   }
 
   setAddressBar(text = '') {
     if (this.$addressBar) {
+      this.addressBarText = text;
       this.$addressBar.val(text);
     }
   }
@@ -171,9 +193,33 @@ export default class extends View {
     this.togglePopMenu();
   }
 
+  navCreateListingClick() {
+    const listingModel = new Listing({}, { guid: app.profile.id });
+
+    launchEditListingModal({
+      model: listingModel,
+    });
+  }
+
   render() {
+    let avatarHash = '';
+
+    if (app.profile) {
+      const avatarHashes = app.profile.get('avatarHashes').toJSON();
+
+      if (isHiRez() && avatarHashes.small) {
+        avatarHash = avatarHashes.small;
+      } else if (avatarHashes.tiny) {
+        avatarHash = avatarHashes.tiny;
+      }
+    }
+
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        addressBarText: this.addressBarText,
+        ...(app.profile && app.profile.toJSON() || {}),
+        avatarHash,
+      }));
     });
 
     this.$addressBar = this.$('.js-addressBar');

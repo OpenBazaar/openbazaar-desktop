@@ -2,3 +2,7 @@ node_modules
 npm-debug.log
 .DS_Store
 .tmp
+dist
+prod
+mainBuilt.js
+error.log
