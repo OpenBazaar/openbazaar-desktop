@@ -2,14 +2,20 @@
 // shared state (e.g. router)
 
 export default {
+  // Short-hand convenience method to get the HTTP url of the active server configuration
   getServerUrl(urlFrag = '') {
-    // until we implement our server connect flow,
-    // we'll just hard code default server values.
-    return `http://localhost:8080/${urlFrag}`;
+    if (!this.serverConfigs) {
+      throw new Error('I\'m expecting a ServerConfigs collection instance to have' +
+        ' been attached to this instance.');
+    }
+
+    return this.serverConfigs.activeServer ?
+      '' : this.serverConfigs.activeServer.getHttpUrl(urlFrag);
   },
 
-  // temporary until we implement our full server connection flow
+  // Short-hand convenience method to get the socket url of the active server configuration
   getSocketUrl() {
-    return 'ws://localhost:8080/ws';
+    return this.serverConfigs.activeServer ?
+      '' : this.serverConfigs.activeServer.getSocketUrl();
   },
 };

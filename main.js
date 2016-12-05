@@ -80,7 +80,7 @@ if (isBundledApp) {
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
   });
 
-  localServer.start();
+  // localServer.start();
 }
 
 function createWindow() {
