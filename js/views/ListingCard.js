@@ -41,7 +41,7 @@ export default class extends baseVw {
 
     this.fullListingFetches = [];
 
-    if (this.options.ownListing) {
+    if (this.ownListing) {
       this.listenTo(listingEvents, 'destroying', (md, destroyingOpts) => {
         if (this.isRemoved()) return;
 
