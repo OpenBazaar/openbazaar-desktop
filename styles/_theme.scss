@@ -62,6 +62,10 @@ input[type=range][class~="clrS"] {
 
 .clrT2 {
   @include textColor($text2, $text3);
+
+  .tab.active {
+    color: $text;
+  }
 }
 
 .clrT3 {
