@@ -1,4 +1,4 @@
-import remote from 'electron';
+import { remote } from 'electron';
 import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
@@ -67,7 +67,7 @@ export default class extends View {
   }
 
   navReload() {
-    remote.getCurrentWindow().reload();
+    location.reload();
   }
 
   setWinControlsStyle(style) {
