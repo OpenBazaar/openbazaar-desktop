@@ -266,15 +266,11 @@ export default class extends baseVw {
   }
 
   updateFollowerCount(count) {
-    if (count !== this.model.get('followerCount')) {
-      this.$followerCount.html(abbrNum(count));
-    }
+    this.$followerCount.html(abbrNum(count));
   }
 
   updateFollowingCount(count) {
-    if (count !== this.model.get('followingCount')) {
-      this.$followingCount.html(abbrNum(count));
-    }
+    this.$followingCount.html(abbrNum(count));
   }
 
   render() {
