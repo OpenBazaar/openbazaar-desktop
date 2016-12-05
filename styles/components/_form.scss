@@ -26,7 +26,7 @@ textarea,
   color: inherit;
   border-radius: 3px;
   font: {
-    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    family: "Noto Sans", sans-serif;
     size: $tx5;
   }
 }
@@ -131,4 +131,8 @@ label {
     width: 1px;
     background-color: #DDD;
   }
+}
+
+input[type="radio"]:checked + label {
+  font-weight: 700;
 }
