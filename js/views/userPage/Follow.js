@@ -40,6 +40,10 @@ export default class extends BaseVw {
         this.render();
       });
     }
+
+    this.listenTo(this.followCol, 'update', (col) => {
+      this.trigger('updateCount', col.length);
+    });
   }
 
   updateViewerFollowers() {

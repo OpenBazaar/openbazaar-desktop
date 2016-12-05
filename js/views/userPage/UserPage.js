@@ -53,6 +53,10 @@ export default class extends baseVw {
 
     this.listenTo(this.model.get('avatarHashes'), 'change', () => this.updateAvatar());
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
+    this.listenTo(this.model.get('followerCount'), 'change', () =>
+      this.updateFollowerCount(this.model.get('followerCount')));
+    this.listenTo(this.model.get('followingCount'), 'change', () =>
+      this.updateFollowingCount(this.model.get('followingCount')));
   }
 
   className() {
@@ -132,17 +136,29 @@ export default class extends baseVw {
   }
 
   createFollowersTabView(opts = {}) {
-    return this.createChild(this.tabViews.Follow, {
+    const newView = this.createChild(this.tabViews.Follow, {
       ...opts,
       followType: 'Followers',
     });
+
+    newView.on('updateCount', (count) => {
+      this.updateFollowerCount(count);
+    });
+
+    return newView;
   }
 
   createFollowingTabView(opts = {}) {
-    return this.createChild(this.tabViews.Follow, {
+    const newView = this.createChild(this.tabViews.Follow, {
       ...opts,
       followType: 'Following',
     });
+
+    newView.on('updateCount', (count) => {
+      this.updateFollowingCount(count);
+    });
+
+    return newView;
   }
 
   createStoreTabView(opts = {}) {
@@ -241,6 +257,26 @@ export default class extends baseVw {
       (this._$listingsCount = this.$('.js-listingsCount'));
   }
 
+  get $followerCount() {
+    return this._$followerCount || (this._$followerCount = this.$('.js-followerCount'));
+  }
+
+  get $followingCount() {
+    return this._$followingCount || (this._$followingCount = this.$('.js-followingCount'));
+  }
+
+  updateFollowerCount(count) {
+    if (count !== this.model.get('followerCount')) {
+      this.$followerCount.html(abbrNum(count));
+    }
+  }
+
+  updateFollowingCount(count) {
+    if (count !== this.model.get('followingCount')) {
+      this.$followingCount.html(abbrNum(count));
+    }
+  }
+
   render() {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
@@ -258,6 +294,8 @@ export default class extends baseVw {
       this.$moreableBtns = this.$('.js-moreableBtn');
       this._$pageContent = null;
       this._$listingsCount = null;
+      this._$followerCount = null;
+      this._$followingCount = null;
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {
