@@ -240,6 +240,8 @@
           "pricePlaceholder": "0.00"
         }
     },
+    "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
+    "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
     "errors": {
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",
@@ -276,13 +278,15 @@
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
+    "titleTooLong": "The title exceeds the maximum allowable length.",
     "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "The description exceeds the maximum allowable length.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
-    "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags."
+    "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
+    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
   },
   "shippingOptionModelErrors": {
     "provideName": "Please provide a title.",
