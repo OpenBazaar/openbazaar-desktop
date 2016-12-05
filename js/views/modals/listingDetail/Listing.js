@@ -31,7 +31,7 @@ export default class extends BaseModal {
         }
       });
 
-    if (this.model.isOwnListing()) {
+    if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
         const slug = this.model.get('listing')
           .get('slug');
@@ -166,7 +166,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
-        ownListing: this.model.isOwnListing(),
+        ownListing: this.model.isOwnListing,
         displayCurrency: app.settings.get('localCurrency'),
       }));
 
