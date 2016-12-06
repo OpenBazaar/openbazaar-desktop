@@ -24,6 +24,8 @@ import { getBody } from './utils/selectors';
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
+self.app = app;
+
 const platform = process.platform;
 
 // initialize language functionality

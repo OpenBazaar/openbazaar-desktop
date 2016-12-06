@@ -15,21 +15,21 @@
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="appearanceSettings.showAdvancedVisualEffects"
+                   name="showAdvancedVisualEffects"
                    value="true"
                    id="advancedTabVisualEffectsOn"
                    data-var-type="boolean"
-            <% if(ob.appearanceSettings.showAdvancedVisualEffects) { %>checked<% } %>>
+            <% if(ob.showAdvancedVisualEffects) { %>checked<% } %>>
             <label for="advancedTabVisualEffectsOn"><%= ob.polyT('settings.on') %></label>
           </div>
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="appearanceSettings.showAdvancedVisualEffects"
+                   name="showAdvancedVisualEffects"
                    value="false"
                    id="advancedTabVisualEffectsOff"
                    data-var-type="boolean"
-            <% if(!ob.appearanceSettings.showAdvancedVisualEffects) { %>checked<% } %>>
+            <% if(!ob.showAdvancedVisualEffects) { %>checked<% } %>>
             <label for="advancedTabVisualEffectsOff"><%= ob.polyT('settings.off') %></label>
           </div>
         </div>
@@ -42,21 +42,21 @@
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="appearanceSettings.windowControlStyle"
+                   name="windowControlStyle"
                    value="mac"
                    id="windowControlStyleMac"
                    data-var-type="string"
-            <% if(ob.appearanceSettings.windowControlStyle == "mac") { %>checked<% } %>>
+            <% if(ob.windowControlStyle == "mac") { %>checked<% } %>>
             <label for="windowControlStyleMac"><%= ob.polyT('settings.advancedTab.appearance.macOS') %></label>
           </div>
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="appearanceSettings.windowControlStyle"
-                   value="windows"
+                   name="windowControlStyle"
+                   value="win"
                    id="windowControlStyleWindows"
                    data-var-type="string"
-            <% if(ob.appearanceSettings.windowControlStyle == "windows") { %>checked<% } %>>
+            <% if(ob.windowControlStyle == "win") { %>checked<% } %>>
             <label for="windowControlStyleWindows"><%= ob.polyT('settings.advancedTab.appearance.windowsOS') %></label>
           </div>
         </div>
@@ -76,21 +76,21 @@
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="transactionSettings.saveTransactionMetadata"
+                   name="saveTransactionMetadata"
                    value="true"
                    id="saveTransactionMetadataOn"
                    data-var-type="boolean"
-            <% if(ob.transactionSettings.saveTransactionMetadata) { %>checked<% } %>>
+            <% if(ob.saveTransactionMetadata) { %>checked<% } %>>
             <label for="saveTransactionMetadataOn"><%= ob.polyT('settings.on') %></label>
           </div>
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="transactionSettings.saveTransactionMetadata"
+                   name="saveTransactionMetadata"
                    value="false"
                    id="saveTransactionsMetadataOff"
                    data-var-type="boolean"
-            <% if(!ob.transactionSettings.saveTransactionMetadata) { %>checked<% } %>>
+            <% if(!ob.saveTransactionMetadata) { %>checked<% } %>>
             <label for="saveTransactionsMetadataOff"><%= ob.polyT('settings.off') %></label>
           </div>
         </div>
@@ -103,32 +103,32 @@
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="transactionSettings.defaultFee"
+                   name="defaultTransactionFee"
                    value="low"
-                   id="defaultFeeLow"
+                   id="defaultTransactionFeeLow"
                    data-var-type="string"
-            <% if(ob.transactionSettings.defaultFee == "low") { %>checked<% } %>>
-            <label for="defaultFeeLow"><%= ob.polyT('settings.advancedTab.transaction.low') %></label>
+            <% if(ob.defaultTransactionFee == "low") { %>checked<% } %>>
+            <label for="defaultTransactionFeeLow"><%= ob.polyT('settings.advancedTab.transaction.low') %></label>
           </div>
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="transactionSettings.defaultFee"
+                   name="defaultTransactionFee"
                    value="medium"
-                   id="defaultFeeMedium"
+                   id="defaultTransactionFeeMedium"
                    data-var-type="string"
-            <% if(ob.transactionSettings.defaultFee == "medium") { %>checked<% } %>>
-            <label for="defaultFeeMedium"><%= ob.polyT('settings.advancedTab.transaction.medium') %></label>
+            <% if(ob.defaultTransactionFee == "medium") { %>checked<% } %>>
+            <label for="defaultTransactionFeeMedium"><%= ob.polyT('settings.advancedTab.transaction.medium') %></label>
           </div>
           <div class="btnRadio clrBr">
             <input type="radio"
                    persist="local"
-                   name="transactionSettings.defaultFee"
+                   name="defaultTransactionFee"
                    value="high"
-                   id="defaultFeeHigh"
+                   id="defaultTransactionFeeHigh"
                    data-var-type="string"
-            <% if(ob.transactionSettings.defaultFee == "high") { %>checked<% } %>>
-            <label for="defaultFeeHigh"><%= ob.polyT('settings.advancedTab.transaction.high') %></label>
+            <% if(ob.defaultTransactionFee == "high") { %>checked<% } %>>
+            <label for="defaultTransactionFeeHigh"><%= ob.polyT('settings.advancedTab.transaction.high') %></label>
           </div>
         </div>
       </div>

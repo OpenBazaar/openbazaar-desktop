@@ -3,10 +3,9 @@ import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
 import is from 'is_js';
 
-import AppearanceDefaults from './AppearanceDefaults';
-import TransactionDefaults from './TransactionDefaults';
-
 const remote = electron.remote;
+const controlStyles = [ "mac", "win" ];
+const viewStyles = [ "list", "grid" ];
 
 export default class extends Model {
   localStorage() {
@@ -19,9 +18,10 @@ export default class extends Model {
 
   defaults() {
     return {
-      macStyleWinControls: remote.process.platform === 'darwin',
-      appearanceSettings : new AppearanceDefaults( ),
-      transactionSettings : new TransactionDefaults( ),
+      windowControlStyle: remote.process.platform === "darwin" ? "mac" : "win",
+      showAdvancedVisualEffects : true,
+      saveTransactionMetadata : true,
+      defaultTransactionFee : 'high',
       language: 'en-US',
       listingsGridViewType: 'grid',
     };
@@ -34,11 +34,11 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.boolean(attrs.macStyleWinControls)) {
-      addError('macStyleWinControls', 'Please provide a boolean value.');
+    if (!controlStyles.includes( attrs.windowControlyStyle ) ) {
+      addError('windowControlStyle', 'Please provide a boolean value.');
     }
 
-    if (['list', 'grid'].indexOf(attrs.listingsGridViewType) === '-1') {
+    if (!viewStyles.includes(attrs.listingsGridViewType)) {
       addError('The listingsGridViewType provided is not one of the available types.');
     }
 

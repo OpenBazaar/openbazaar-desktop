@@ -17,15 +17,15 @@ export default class extends baseVw {
 
   get events() {
     return {
-      'change input[name="appearanceSettings.windowControlStyle"]': 'changedWindowStyle'
+      'change input[name="windowControlStyle"]': 'changedWindowStyle'
     };
   }
 
   changedWindowStyle( event ) {
     if ( event.target.id == 'windowControlStyleMac' ) 
-      app.localSettings.set('macStyleWinControls', true ); 
+      app.localSettings.set('windowControlStyle', "mac" ); 
     else
-      app.localSettings.set('macStyleWinControls', false ); 
+      app.localSettings.set('windowControlStyle', "win" ); 
   }
 
   getFormData( subset = this.$formFields ) {
@@ -64,7 +64,6 @@ export default class extends baseVw {
 
   saveLocal() {
     const localData = this.getFormData(this.$localFields);
-    console.log( localData, this.$localFields );
     app.localSettings.set( localData );
   }
 
