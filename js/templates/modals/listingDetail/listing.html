@@ -10,7 +10,7 @@
   <div class="box clrP clrBr padLg">
     <div class="flex">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
-      <h2 class="txUnb"><%= ob.formatCurrency(ob.item.price, ob.metadata.pricingCurrency) %></h2>
+      <h2 class="txUnb"><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></h2>
     </div>
     <div class="flex gutterHLg">
       <div>
@@ -24,7 +24,9 @@
         ></div>
       <% if(ob.item.images.length > 1) { %>
         <div class="pad txCtr">
-          <a class="tx5 js-gotoPhotos"><%= ob.polyT('listingDetail.viewPhotos', { count: ob.item.images.length }) %></a>
+          <a class="tx5 js-gotoPhotos">
+            <u><%= ob.polyT('listingDetail.viewPhotos', { count: ob.item.images.length }) %></u>
+          </a>
         </div>
       <% } %>
       </div>
@@ -61,15 +63,15 @@
             <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`editListing.formats.${ob.metadata.contractType}`)}</b>` }) %>
           </div>
           <% if (ob.item.condition) { %>
-            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(ob.item.condition)}</b>` }) %></div>
+            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`listingDetail.conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
           <% } %>
         </div>
         <% if(ob.item.tags.length) { %>
           <hr class="rowLg">
           <h5><%= ob.polyT('listingDetail.tags') %></h5>
-          <div class="flex gutterH">
+          <div class="tagWrapper">
             <% ob.item.tags.forEach(function(tag){
-            print(`<div class="btn clrBr">${tag}</div>`);
+            print(`<div class="btn tag clrBr">${tag}</div>`);
             }); %>
           </div>
         <% } %>
@@ -89,8 +91,21 @@
     <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
     Placeholder for Reviews
   </div>
+
   <!-- attachments here -->
 
+  <% if (ob.shippingOptions.length) { %>
+    <div class="box clrP clrBr padLg">
+      <h2 class="txUnb"><%= ob.polyT('listingDetail.shipping') %></h2>
+      <div class="flexVCent gutterHLg tx5">
+        <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>${ob.polyT(`countries.${ob.shipsFromCountry}`)}</b>` }) %></div>
+        <div><%= ob.polyT('listingDetail.shipTo') %></div>
+        <div class="col4"><select id="shippingDestinations"></select></div>
+      </div>
+      <hr>
+      <div class="js-shippingOptions"></div>
+    </div>
+  <% } %>
   <% if (ob.refundPolicy) { %>
     <div class="box clrP clrBr padLg">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>

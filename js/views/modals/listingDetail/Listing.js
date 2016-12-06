@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -5,6 +6,7 @@ import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
 import 'select2';
+import { getTranslatedCountries } from '../../../data/countries';
 
 
 export default class extends BaseModal {
@@ -21,6 +23,9 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
+
+    this.select2CountryData = getTranslatedCountries(app.settings.get('language'))
+      .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
 
     this.listenTo(app.settings, 'change:country', () =>
       (this.shipsFreeToMe = this.model.shipsFreeToMe));
@@ -54,6 +59,7 @@ export default class extends BaseModal {
       'click .js-editListing': 'onClickEditListing',
       'click .js-deleteListing': 'onClickDeleteListing',
       'click .js-gotoPhotos': 'onClickGotoPhotos',
+      'change #shippingDestinations': 'setShippingDestination',
       ...super.events(),
     };
   }
@@ -140,6 +146,23 @@ export default class extends BaseModal {
     }
   }
 
+  setShippingDestination(e) {
+    console.log(this.model.get('listing'));
+
+    const shippingOptions = this.model.get('listing').get('shippingOptions').toJSON();
+    const matchedOptions = shippingOptions.filter((option) =>
+      option.regions.includes($(e.target).val())
+    );
+    const templateData = matchedOptions;
+    loadTemplate('modals/listingDetail/shippingOptions.html', t => {
+      this.$shippingOptions.html(t({
+        templateData,
+        displayCurrency: app.settings.get('localCurrency'),
+        pricingCurrency: this.model.get('listing').get('metadata').get('pricingCurrency'),
+      }));
+    });
+  }
+
   get shipsFreeToMe() {
     return this._shipsFreeToMe;
   }
@@ -171,6 +194,11 @@ export default class extends BaseModal {
       (this._$photoSection = this.$('#photoSection'));
   }
 
+  get $shippingOptions() {
+    return this._$shippingOptions ||
+      (this._$shippingOptions = this.$('.js-shippingOptions'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -200,6 +228,15 @@ export default class extends BaseModal {
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
+
+      const shippingDest = this.$('#shippingDestinations');
+
+      shippingDest.select2({
+        data: this.select2CountryData,
+        placeholder: app.polyglot.t('listingDetail.shipToPlaceholder'),
+      });
+
+      shippingDest.val(app.settings.get('country')).trigger('change');
     });
 
     return this;

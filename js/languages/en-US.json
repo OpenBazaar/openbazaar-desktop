@@ -168,7 +168,20 @@
     "shipping": "Shipping",
     "shipsFrom": "Ships from %{country}",
     "shipTo": "Ship to",
-    "shipToPlaceholder": "Select a Country"
+    "shipToPlaceholder": "Select a Country",
+    "formats": {
+      "PHYSICAL_GOOD": "Physical Good",
+      "DIGITAL_GOOD": "Digital Good",
+      "SERVICE": "Service",
+      "CROWD_FUND": "Crowd fund"
+    },
+    "conditionTypes": {
+      "NEW": "New",
+      "USED_EXCELLENT": "Used - Excellent",
+      "USED_GOOD": "Used - Good",
+      "USED_POOR": "Used - Poor",
+      "REFURBISHED": "Refurbished"
+    }
   },
   "listingCard": {
     "btnDetails": "Details",

@@ -1,0 +1,21 @@
+<% console.log(ob) %>
+
+<% if (ob.templateData.length) { %>
+<% ob.templateData.forEach((option) => { %>
+<div class="rowLg tx4">
+  <h3 class="row"><%= option.name %></h3>
+  <% option.services.forEach((service) => { %>
+    <div class="flexRow row">
+      <div class="col4"><%= service.name %></div>
+      <div class="col4"><%= service.estimatedDelivery %></div>
+      <div class="col4">
+        <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<% }); %>
+<% } else { %>
+None found
+<% } %>
