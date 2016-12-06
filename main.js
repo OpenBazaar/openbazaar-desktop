@@ -254,7 +254,7 @@ function createWindow() {
         },
         {
           label: 'Documentation',
-          click() { electron.shell.openExternal('https://docs.openbazaar.org'); },
+          click() { shell.openExternal('https://docs.openbazaar.org'); },
         },
       ],
     },
