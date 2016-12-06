@@ -1,4 +1,5 @@
-import { electron, app, BrowserWindow, ipcMain, Menu, Tray, autoUpdater, ipcRenderer } from 'electron';
+import { electron, app, BrowserWindow, ipcMain, Menu, Tray, autoUpdater,
+  ipcRenderer } from 'electron';
 
 import os from 'os';
 import path from 'path';
@@ -12,12 +13,12 @@ let closeConfirmed = false;
 // let launchedFromInstaller = false;
 const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
 const version = app.getVersion();
-const feedURL = 'https://updates2.openbazaar.org:5001/update/' + platform + '/' + version;
+const feedURL = 'https://updates2.openbazaar.org:5001/update/' + platform + '/' + version; // eslint-disable-line
 // let TrayMenu;
 
 
 const handleStartupEvent = function () {
-  //noinspection ES6ModulesDependencies
+  // noinspection ES6ModulesDependencies
   if (process.platform !== 'win32') {
     return false;
   }
@@ -104,26 +105,26 @@ const startLocalServer = function startLocalServer() {
     let stderr = '';
     let serverOut;
 
-    const stdoutcallback = function (buf) {
+    const stdoutcallback = (buf) => {
       console.log('[STR] stdout "%s"', String(buf));
       stdout += buf;
       serverOut = `${serverOut}${buf}`;
     };
     sub.stdout.on('data', stdoutcallback);
-    const stderrcallback = function stderrcallback(err) {
+    const stderrcallback = (err) => {
       if (err) {
         console.log(err);
         return err;
       }
       return false;
     };
-    const stderrcb = function (buf) {
+    const stderrcb = (buf) => {
       console.log('[STR] stderr "%s"', String(buf));
       fs.appendFile(`${__dirname}${path.sep}error.log`, String(buf), stderrcallback);
       stderr += buf;
     };
     sub.stderr.on('data', stderrcb);
-    const closecallback = function (code) {
+    const closecallback = (code) => {
       console.log(`exited with ${code}`);
       console.log('[END] stdout "%s"', stdout);
       console.log('[END] stderr "%s"', stderr);
@@ -426,27 +427,31 @@ function createWindow() {
 
   /**
    * For OS X users Squirrel manages the auto-updating code.
-   * If there is an update available then we will send an IPC message to the render process to notify the user. If
-   * the user wants to update the software then they will send an IPC message back to the main process and we will
+   * If there is an update available then we will send an IPC message to the
+   * render process to notify the user. If the user wants to update
+   * the software then they will send an IPC message back to the main process and we will
    * begin to download the file and update the software.
    */
-  if(platform === "darwin") {
-
-    autoUpdater.on("error", (err, msg) => {
+  if (platform === 'darwin') {
+    autoUpdater.on('error', (err, msg) => {
       console.log(msg);
     });
 
-    autoUpdater.on("update-not-available", (msg) => {
+    autoUpdater.on('update-not-available', (msg) => {
+      console.log(msg);
       ipcRenderer.send('updateNotAvailable');
     });
 
-    autoUpdater.on("update-available", () => {
+    autoUpdater.on('update-available', () => {
       ipcRenderer.send('updateAvailable');
     });
 
-    autoUpdater.on("update-downloaded", (e, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) => {
+    autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
+      releaseDate, updateUrl, quitAndUpdate) => {
       // Old way of doing things
-      // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate").removeClass("softwareUpdateHidden");');
+      // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
+      // .removeClass("softwareUpdateHidden");');
+      console.log(quitAndUpdate);
       ipcRenderer.send('updateReadyForInstall');
     });
 
@@ -468,7 +473,6 @@ function createWindow() {
       autoUpdater.checkForUpdates();
     }, 60 * 60 * 1000);
   }
-
 }
 
 // This method will be called when Electron has finished
@@ -505,4 +509,3 @@ ipcMain.on('close-confirmed', () => {
 
   if (mainWindow) mainWindow.close();
 });
-
