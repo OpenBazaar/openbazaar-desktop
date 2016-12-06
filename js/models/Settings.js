@@ -1,11 +1,9 @@
 import app from '../app';
 import BaseModel from './BaseModel';
 import ShippingAddresses from '../collections/ShippingAddresses';
-import AppearanceSettings from '../models/AppearanceSettings';
-import TransactionSettings from '../models/TransactionSettings';
-import ServerSettings from '../models/ServerSettings';
-import SMTPIntegrationSettings from '../models/SMTPIntegrationSettings';
-import SettingsAPIAdaptor from '../utils/settingsAPIAdaptor';
+import AppearanceSettings from './AppearanceSettings';
+import TransactionSettings from './TransactionSettings';
+import SMTPSettings from './SMTPSettings';
 
 export default class extends BaseModel {
   defaults() {
@@ -27,13 +25,12 @@ export default class extends BaseModel {
     return app.getServerUrl('ob/settings/');
   }
 
-  nested() {
+  get nested() {
     return {
       shippingAddresses: ShippingAddresses,
       appearanceSettings: AppearanceSettings,
       transactionSettings: TransactionSettings,
-      serverSettings: ServerSettings,
-      smtpIntegrationSettings: SMTPIntegrationSettings
+      smtpSettings: SMTPSettings
     };
   }
 
