@@ -15,6 +15,19 @@ export default class extends baseVw {
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
   }
 
+  get events() {
+    return {
+      'change input[name="appearanceSettings.windowControlStyle"]': 'changedWindowStyle'
+    };
+  }
+
+  changedWindowStyle( event ) {
+    if ( event.target.id == 'windowControlStyleMac' ) 
+      app.localSettings.set('macStyleWinControls', true ); 
+    else
+      app.localSettings.set('macStyleWinControls', false ); 
+  }
+
   getFormData() {
     return super.getFormData(this.$formFields);
   }

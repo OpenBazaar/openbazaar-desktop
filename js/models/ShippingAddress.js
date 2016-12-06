@@ -2,7 +2,7 @@ import BaseModel from './BaseModel';
 import app from '../app';
 import is from 'is_js';
 
-export default class ShippingAddress extends BaseModel {
+export default class extends BaseModel {
   defaults() {
     return {
       name: '',
