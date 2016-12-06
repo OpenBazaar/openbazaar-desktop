@@ -92,7 +92,13 @@ export default class extends Model {
     this.lastSyncedAttrs = {};
 
     this.on('sync', () => {
-      this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toJSON()));
+      //FIXME : this is a hackish solution
+      //since the superclass has knowledge of a derived class's
+      //more specific methods
+      if ( this.toModelFormatJSON instanceof Function )
+        this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toModelFormatJSON()));
+      else
+        this.lastSyncedAttrs = JSON.parse(JSON.stringify(this.toJSON()));
     });
   }
 
@@ -116,8 +122,16 @@ export default class extends Model {
         const nestedInstance = this.attributes[nestedKey];
 
         if (nestedInstance) {
-          if (nestedData) nestedInstance.set(nestedData);
-          delete attrs[nestedKey];
+          try {
+            if (nestedData) nestedInstance.set(nestedData);
+          } catch( e ) {
+            console.warn( `BaseModel expected ${ nestedKey } slot to be an instance of ${ NestedClass.name }. It wasn't.` );
+          }
+          try {
+            delete attrs[nestedKey];
+          } catch( e ) {
+            console.warn( `BaseModel tried to delete ${ nestedKey } from a frozen object.` );
+          }
         } else {
           attrs[nestedKey] = new NestedClass(nestedData);
         }
