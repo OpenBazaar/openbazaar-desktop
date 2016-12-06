@@ -31,7 +31,7 @@ export default class extends BaseModel {
     return 'use-sync';
   }
 
-  get nested() {
+  nested() {
     return {
       social: SocialAccounts,
       avatarHashes: Image,

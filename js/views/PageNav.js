@@ -36,8 +36,9 @@ export default class extends View {
 
     $(document).on('click', this.onDocClick.bind(this));
 
-    app.localSettings.on( 'change:windowControlStyle', (_,style) => this.setWinControlsStyle(style));
-    this.setWinControlsStyle(app.localSettings.get('windowControlStyle'));
+    this.listenTo(app.localSettings, 'change:macStyleWinControls',
+      this.onWinControlsStyleChange);
+    this.setWinControlsStyle(app.localSettings.get('macStyleWinControls') ? 'mac' : 'win');
   }
 
   get navigable() {
@@ -73,6 +74,10 @@ export default class extends View {
 
     this.$el.removeClass('winStyleWindowControls macStyleWindowControls');
     this.$el.addClass(style === 'mac' ? 'macStyleWindowControls' : 'winStyleWindowControls');
+  }
+
+  onWinControlsStyleChange(model, useMacStyle) {
+    this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
   }
 
   setAppProfile() {

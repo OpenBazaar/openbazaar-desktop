@@ -7,7 +7,6 @@ import BaseModal from '../BaseModal';
 import General from './General';
 import Page from './Page';
 import Addresses from './Addresses';
-import Advanced from './Advanced';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -26,7 +25,6 @@ export default class extends BaseModal {
       General,
       Page,
       Addresses,
-      Advanced
     };
 
     this.savesInProgress = 0;
