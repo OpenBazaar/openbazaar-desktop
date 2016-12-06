@@ -116,8 +116,8 @@ export default class extends Model {
         const nestedInstance = this.attributes[nestedKey];
 
         if (nestedInstance) {
-            if (nestedData) nestedInstance.set(nestedData);
-            delete attrs[nestedKey];
+          if (nestedData) nestedInstance.set(nestedData);
+          delete attrs[nestedKey];
         } else {
           attrs[nestedKey] = new NestedClass(nestedData);
         }
