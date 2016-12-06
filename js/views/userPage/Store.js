@@ -15,6 +15,7 @@ import ListingDetail from '../modals/listingDetail/Listing';
 import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import PopInMessage from '../PopInMessage';
+import TemplateOnly from '../TemplateOnly';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -31,13 +32,15 @@ export default class extends BaseVw {
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
 
-    this.filter = {
+    this.defaultFilter = {
       category: 'all',
       shipsTo: 'any',
       searchTerm: '',
       sortBy: 'PRICE_ASC',
       freeShipping: false,
     };
+
+    this.filter = { ...this.defaultFilter };
 
     this.listingsViewType = app.localSettings.get('listingsGridViewType');
 
@@ -317,6 +320,11 @@ export default class extends BaseVw {
       (this._$listingCount = this.$('.js-listingCount'));
   }
 
+  get $noResultsContainer() {
+    return this._$noResultsContainer ||
+      (this._$noResultsContainer = this.$('.js-noResultsContainer'));
+  }
+
   filteredCollection(filter = this.filter, collection = this.collection) {
     const models = collection.models.filter((md) => {
       let passesFilter = true;
@@ -421,34 +429,8 @@ export default class extends BaseVw {
       throw new Error('Please provide a collection.');
     }
 
-    // This collection will be loaded in batches as the
-    // user scrolls.
-    this.fullRenderedCollection = col;
-    this.setSortFunction(col);
-    col.sort();
-
-    // todo: exceptionally tall screens may fit an entire page
-    // with room to spare. Which means no scrollbar, which means subsequent
-    // pages will not load. Handle that case.
-    const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE), { guid: this.model.id });
-
-    if (this.storeListings) this.storeListings.remove();
-
-    this.storeListings = new ListingsGrid({
-      collection: storeListingsCol,
-      storeOwner: this.model.id,
-      viewType: this.listingsViewType,
-    });
-
-    getContentFrame().on('scroll', this.storeListingsScrollHandler);
-    const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
-    this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
-    getContentFrame().on('scroll', this.storeListingsScrollHandler);
-
-    if (!this.$listingsContainer[0].contains(this.storeListings.el)) {
-      this.$listingsContainer.empty()
-        .append(this.storeListings.el);
-    }
+    if (this.$listingsContainer[0].innerHTML) this.$listingsContainer.empty();
+    if (this.$noResultsContainer[0].innerHTML) this.$noResultsContainer.empty();
 
     const listingCount =
       `<span class="txB">${app.polyglot.t('userPage.store.countListings', col.length)}</span>`;
@@ -457,7 +439,54 @@ export default class extends BaseVw {
           { countListings: listingCount });
     this.$listingCount.html(fullListingCount);
 
-    this.storeListings.render();
+    // This collection will be loaded in batches as the
+    // user scrolls.
+    this.fullRenderedCollection = col;
+    this.setSortFunction(col);
+    col.sort();
+
+    if (col.length) {
+      // todo: exceptionally tall screens may fit an entire page
+      // with room to spare. Which means no scrollbar, which means subsequent
+      // pages will not load. Handle that case.
+      const storeListingsCol =
+        new Listings(col.slice(0, LISTINGS_PER_PAGE), { guid: this.model.id });
+
+      if (this.storeListings) this.storeListings.remove();
+
+      this.storeListings = new ListingsGrid({
+        collection: storeListingsCol,
+        storeOwner: this.model.id,
+        viewType: this.listingsViewType,
+      });
+
+      getContentFrame().on('scroll', this.storeListingsScrollHandler);
+      const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
+      this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
+      getContentFrame().on('scroll', this.storeListingsScrollHandler);
+
+      this.$listingsContainer.append(this.storeListings.el);
+      this.storeListings.render();
+    } else {
+      // pass
+      if (!this.noSearchResultsVw) {
+        this.noSearchResultsVw = new TemplateOnly({ template: 'userPage/noSearchResults.html' });
+      }
+
+      const listingsFiltered = _.isEqual(
+        {
+          ...this.defaultFilter,
+          sort: 'same-same-same', // don't care if sorts are different
+        },
+        {
+          ...this.filter,
+          sort: 'same-same-same', // don't care if sorts are different
+        }
+      );
+
+      console.log(listingsFiltered);
+      this.$noResultsContainer.append(this.noSearchResultsVw.render({ listingsFiltered }).el);
+    }
   }
 
   renderCategories(cats = this.collection.categories) {
@@ -530,6 +559,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$popInMessages = null;
+    this._$noResultsContainer = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
