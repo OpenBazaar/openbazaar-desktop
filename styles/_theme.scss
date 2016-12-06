@@ -52,10 +52,6 @@ input[type=range][class~="clrS"] {
   }
 }
 
-.clrBk {
-  background-color: $background;
-}
-
 .clrT {
   @include textColor($text, $text2);
 }
@@ -92,7 +88,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrTEmph1 {
-  @include textColor($emphasis1);  
+  @include textColor($emphasis1);
 }
 
 .clrBr {
@@ -101,10 +97,40 @@ input[type=range][class~="clrS"] {
   hr {
     border-color: $border;
   }
+
+  .btn:hover,
+  .btn:focus,
+  &.btn:hover,
+  &.btn:focus {
+    border-color: $border3;
+
+    .disabled &,
+    &.disabled,
+    &:disabled {
+      border-color: $border;
+    }
+  }
 }
 
 .clrBr2 {
   border-color: $border2;
+
+  hr {
+    border-color: $border2;
+  }
+
+  .btn:hover,
+  .btn:focus,
+  &.btn:hover,
+  &.btn:focus {
+    border-color: $border3;
+
+    .disabled &,
+    &.disabled,
+    &:disabled {
+      border-color: $border2;
+    }
+  }
 }
 
 // select2 dropdowns always use the theme border color.
@@ -118,11 +144,11 @@ input[type=range][class~="clrS"] {
 
   &.select2-container--focus,
   &.select2-container--open {
-    border-color: $focusedBorder;
+    border-color: $border3;
 
     .select2-dropdown,
     .select2-selection {
-      border-color: $focusedBorder;
+      border-color: $border3;
     }
   }
 }
@@ -162,12 +188,12 @@ select,
 textarea,
 button {
   &:focus {
-    border-color: $focusedBorder;
+    border-color: $border3;
   }
 }
 
 .select2-container--focus .select2-selection__rendered {
-  border-color: $focusedBorder;
+  border-color: $border3;
 }
 
 // select2 with tags
@@ -185,7 +211,7 @@ button {
     }
 
     &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
-      border-color: $focusedBorder;
+      border-color: $border3;
     }
   }
 
@@ -202,6 +228,6 @@ button {
 
 .tagsDropdown {
   .select2-container--open .select2-dropdown {
-    border-color: $focusedBorder;
+    border-color: $border3;
   }
 }
