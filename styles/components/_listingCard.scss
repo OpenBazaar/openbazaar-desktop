@@ -3,6 +3,9 @@
   height: 283px;
   font-size: $tx5b;
   cursor: pointer;
+  position: relative;
+  bottom: 0;
+  transition: all .2s ease;
 
   .gridViewContent {
     .listingImage {
@@ -54,14 +57,15 @@
     }
   }
 
+  &:hover {
+    border-color: $focusedBorder;
+    border-bottom-width: 1px;
+    bottom: 4px; 
+  }
+
   &:hover:not(.listingDeleting):not(.listingDeleted) {
     .editOverlay {
       display: flex;
-    }
-
-    &.ownListing {
-      border-color: $focusedBorder;
-      border-bottom-width: 1px;
     }
   }
 

@@ -109,6 +109,16 @@
   padding: 0 12px;
 }
 
+.iconBtnSm {
+  //this button has only an icon in it and it's smaller than iconBtn
+  @extend .btn;
+  font-size: $tx5;
+  padding: 0;
+  margin: 0;
+  width: 30px;
+  height: 30px;
+}
+
 .btnThin {
   padding: 0 12px;
 }
