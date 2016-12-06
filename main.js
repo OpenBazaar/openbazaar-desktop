@@ -1,7 +1,11 @@
-import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
+import {
+  electron, app, BrowserWindow, ipcMain,
+  Menu, Tray, dialog,
+} from 'electron';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
+import open from 'open';
 import _ from 'underscore';
 import LocalServer from './js/utils/localServer';
 
@@ -80,7 +84,27 @@ if (isBundledApp) {
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
   });
 
-  // localServer.start();
+  localServer.start();
+}
+
+function showDebugLog() {
+  if (!localServer) {
+    throw new Error('The debug log is only available on the bundled app' +
+      'once we\'ve created a local server.');
+  }
+
+  const debugPath = `${serverPath}debug.txt`;
+
+  fs.writeFile(debugPath, localServer.debugLog, (err) => {
+    if (err) {
+      dialog.showErrorBox('Unable To Open Debug Log',
+        'There was an error and we are unable to open the server debug' +
+        ` log at this time.\n\n${err}`);
+      return;
+    }
+
+    open(debugPath);
+  });
 }
 
 function createWindow() {
@@ -260,6 +284,11 @@ function createWindow() {
         label: 'Shutdown Local Server',
         type: 'normal',
         click() { localServer.stop(); },
+      },
+      {
+        label: 'View Server Debug Log',
+        type: 'normal',
+        click() { showDebugLog(); },
       },
       {
         type: 'separator',
