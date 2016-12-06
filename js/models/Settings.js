@@ -1,8 +1,6 @@
 import app from '../app';
 import BaseModel from './BaseModel';
 import ShippingAddresses from '../collections/ShippingAddresses';
-import AppearanceSettings from './AppearanceSettings';
-import TransactionSettings from './TransactionSettings';
 import SMTPSettings from './SMTPSettings';
 
 export default class extends BaseModel {
@@ -28,8 +26,6 @@ export default class extends BaseModel {
   get nested() {
     return {
       shippingAddresses: ShippingAddresses,
-      appearanceSettings: AppearanceSettings,
-      transactionSettings: TransactionSettings,
       smtpSettings: SMTPSettings
     };
   }

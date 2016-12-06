@@ -28,11 +28,11 @@ export default class extends baseVw {
       app.localSettings.set('macStyleWinControls', false ); 
   }
 
-  getFormData() {
-    return super.getFormData(this.$formFields);
+  getFormData( subset = this.$formFields ) {
+    return super.getFormData( subset );
   }
 
-  save() {
+  saveServer() {
     const formData = this.getFormData();
 
     this.settings.set(formData);
@@ -62,14 +62,27 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  saveLocal() {
+    const localData = this.getFormData(this.$localFields);
+    console.log( localData, this.$localFields );
+    app.localSettings.set( localData );
+  }
+
+  save() {
+    this.saveLocal();
+    this.saveServer();
+  }
+
   render() {
     loadTemplate('modals/settings/advanced.html', (t) => {
       this.$el.html(t({
         errors: this.settings.validationError || {},
         ...this.settings.toJSON(),
+        ...app.localSettings.toJSON()
       }));
 
-      this.$formFields = this.$('select[name], input[name], textarea[name]');
+      this.$formFields = this.$('select[name], input[name], textarea[name]').not('[persist="local"]');
+      this.$localFields = this.$('[persist="local"]');
     });
 
     return this;

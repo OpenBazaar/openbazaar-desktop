@@ -3,6 +3,9 @@ import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
 import is from 'is_js';
 
+import AppearanceDefaults from './AppearanceDefaults';
+import TransactionDefaults from './TransactionDefaults';
+
 const remote = electron.remote;
 
 export default class extends Model {
@@ -17,6 +20,8 @@ export default class extends Model {
   defaults() {
     return {
       macStyleWinControls: remote.process.platform === 'darwin',
+      appearanceSettings : new AppearanceDefaults( ),
+      transactionSettings : new TransactionDefaults( ),
       language: 'en-US',
       listingsGridViewType: 'grid',
     };
