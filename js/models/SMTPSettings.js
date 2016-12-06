@@ -22,18 +22,17 @@ export default class extends BaseModel {
     };
 
     if ( is.not.url( attrs.serverAddress.trim() ) )
-      addError( 'ServerAddress', app.polyglot.t( 'SMTPModelErrors.ServerAddress' ) );
-    if ( is.not.alphanumeric( attrs.username.trim() ) || is.empty( attrs.username.trim() ) )
-      addError( 'Username', app.polyglot.t( 'SMTPModelErrors.Username' ) );
+      addError( 'serverAddress', app.polyglot.t( 'smtpModelErrors.serverAddress' ) );
+    if ( is.not.alphaNumeric( attrs.username.trim() ) || is.empty( attrs.username.trim() ) )
+      addError( 'username', app.polyglot.t( 'smtpModelErrors.username' ) );
     if ( is.empty( attrs.password.trim() ) )
-      addError( 'Password', app.polyglot.t( 'SMTPModelErrors.Password' ) );
+      addError( 'password', app.polyglot.t( 'smtpModelErrors.password' ) );
     if ( is.not.email( attrs.senderEmail.trim() ) )
-      addError( 'SenderEmail', app.polyglot.t( 'SMTPModelErrors.SenderEmail' ) );
+      addError( 'senderEmail', app.polyglot.t( 'smtpModelErrors.senderEmail' ) );
     if ( is.not.email( attrs.recipientEmail.trim() ) )
-      addError( 'RecipientEmail', app.polyglot.t( 'SMTPModelErrors.RecipientEmail' ) );
+      addError( 'recipientEmail', app.polyglot.t( 'smtpModelErrors.recipientEmail' ) );
 
     if (Object.keys(errObj).length) {
-      console.warn( errObj );
       return errObj;
     }
 

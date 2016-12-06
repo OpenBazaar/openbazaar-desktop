@@ -200,7 +200,7 @@
           </label>
         </div>
         <div class="col9">
-          <% if (ob.errors.serverAddress) print(ob.formErrorTmpl({ errors: ob.errors.serverAddress })) %>
+          <% if (ob.errors['smtpSettings.serverAddress']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.serverAddress'] })) %>
           <input class="clrBr" 
             required
             type="text"
@@ -216,7 +216,7 @@
           </label>
         </div>
         <div class="col9">
-          <% if (ob.errors.username) print(ob.formErrorTmpl({ errors: ob.errors.username })) %>
+          <% if (ob.errors['smtpSettings.username']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.username'] })) %>
           <input class="clrBr" 
             required        
             type="text"
@@ -232,7 +232,7 @@
           </label>
         </div>
         <div class="col9">
-          <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
+          <% if (ob.errors['smtpSettings.password']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.password'] })) %>
           <input class="clrBr" 
             required 
             type="password"
@@ -248,7 +248,7 @@
           </label>
         </div>
         <div class="col9">
-          <% if (ob.errors.senderEmail) print(ob.formErrorTmpl({ errors: ob.errors.senderEmail })) %>
+          <% if (ob.errors['smtpSettings.senderEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.senderEmail'] })) %>
           <input class="clrBr" 
             required
             type="email"
@@ -264,7 +264,7 @@
           </label>
         </div>
         <div class="col9">
-          <% if (ob.errors.recipientEmail) print(ob.formErrorTmpl({ errors: ob.errors.recipientEmail })) %>
+          <% if (ob.errors['smtpSettings.recipientEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.recipientEmail'] })) %>
           <input class="clrBr" 
             required
             type="email"

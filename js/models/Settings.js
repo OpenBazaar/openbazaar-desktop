@@ -34,6 +34,14 @@ export default class extends BaseModel {
     };
   }
 
+  validate() {
+    const errObj = this.mergeInNestedErrors({});
+
+    if (Object.keys(errObj).length) return errObj;
+
+    return undefined;
+  }
+
   sync(method, model, options) {
     if (method === 'create' && typeof options.type === 'undefined') {
       // we will use PUT unless you explicitly save with POST,
