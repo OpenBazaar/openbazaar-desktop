@@ -122,16 +122,8 @@ export default class extends Model {
         const nestedInstance = this.attributes[nestedKey];
 
         if (nestedInstance) {
-          try {
             if (nestedData) nestedInstance.set(nestedData);
-          } catch( e ) {
-            console.warn( `BaseModel expected ${ nestedKey } slot to be an instance of ${ NestedClass.name }. It wasn't.` );
-          }
-          try {
             delete attrs[nestedKey];
-          } catch( e ) {
-            console.warn( `BaseModel tried to delete ${ nestedKey } from a frozen object.` );
-          }
         } else {
           attrs[nestedKey] = new NestedClass(nestedData);
         }
