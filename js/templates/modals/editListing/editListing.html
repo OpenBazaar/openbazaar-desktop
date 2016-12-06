@@ -1,4 +1,4 @@
-<div class="clrBr clrS topBar padSm">
+<div class="clrBr clrP topBar padSm">
   <% if (ob.returnText) { %>
   <a class="btn clrP clrBr clrT js-return"><%= ob.returnText %></a>
   <% } %>
@@ -29,14 +29,14 @@
   </div>
   <div class="flexExpand posR">
     <div class="tabContent">
-      <div class="tabFormWrapper scrollBox clrS clrBr js-scrollContainer">
+      <div class="tabFormWrapper scrollBox clrP clrBr js-scrollContainer">
         <section class="js-scrollToSection">
           <form class="box padKids padStack tx3">
             <div class="flexRow">
               <div class="col12">
                 <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
                 <% if (ob.errors['listing.item.title']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.title'] })) %>
-                <input type="text" class="clrBr clrP" name="listing.item.title" id="editListingTitle" value="<%= ob.listing.item.title %>">
+                <input type="text" class="clrBr clrP" name="listing.item.title" id="editListingTitle" value="<%= ob.listing.item.title %>" maxLength="<%= ob.max.title %>">
               </div>
             </div>
             <div class="flexRow gutterH">
@@ -166,6 +166,7 @@
         <section class="js-scrollToSection pad tx3 tagsSection">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h1>
             <% if (ob.errors['listing.item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.tags'] })) %>
+            <div class="js-maxTagsWarning"><% if (ob.listing.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
             <div class="select2TagsWrap hashPrefacedTags">
               <!-- WARNING! Styling is dependant on the following elements being in this order. -->
               <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">
@@ -180,6 +181,8 @@
         <hr class="dashed margR margL" />
         <section class="js-scrollToSection pad tx3 categorySection">
           <h1 class="tx3 tx500"><%= ob.polyT('editListing.sectionNames.categoryDetailed') %></h1>
+            <% if (ob.errors['listing.item.categories']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.categories'] })) %>
+            <div class="js-maxCatsWarning"><% if (ob.listing.item.categories.length >= ob.max.cats) print(ob.maxCatsWarning) %></div>
             <div class="select2TagsWrap">
               <!-- WARNING! Styling is dependant on the following elements being in this order. -->
               <select id="editListingCategories" multiple name="listing.item.categories" class="clrBr clrP select2Tags">

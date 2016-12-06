@@ -13,7 +13,7 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP clrBr',
+      modelContentClass: 'modalContent clrP clrBr border clrSh2',
       removeOnRoute: false,
       ...options,
     };

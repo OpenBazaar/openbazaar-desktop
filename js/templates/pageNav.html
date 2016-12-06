@@ -4,10 +4,14 @@
       <div class="windowControlsHolder">
         <div class="windowControls windowControlsMac">
           <a class="navClose js-navClose">
-            <i class="ion-ios-close-empty"></i>
+            <span class="ion-ios-close-empty"></span>
           </a>
-          <a class="navMin js-navMin"></a>
-          <a class="navMax js-navMax"></a>
+          <a class="navMin js-navMin">
+            <span class="ion-ios-minus-empty"></span>
+          </a>
+          <a class="navMax js-navMax">
+            <span class="ion-ios-plus-empty"></span>
+          </a>
         </div>
       </div>
       <div>
@@ -22,7 +26,7 @@
         <div class="flexVCent">
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar"
-                   placeholder="Type a @handle, OpenBazaar ID or keyword" value="<%= ob.addressBarText %>" />
+                   placeholder="Type a @handle, OpenBazaar ID or #tag" value="<%= ob.addressBarText %>" />
           </div>
         </div>
       </div>
@@ -57,7 +61,7 @@
               </a>
               <a class="listItem" href="#connected-peers">
                 <span>Connected Peers</span><span class="clrT2">Cltrl + ?</span>
-              </a>              
+              </a>
             </div>
             <div class="listGroup clrP clrBr clrSh2">
               <a href="#transactions/purchases" class="listItem">
