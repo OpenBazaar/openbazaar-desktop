@@ -15,7 +15,6 @@ import ListingDetail from '../modals/listingDetail/Listing';
 import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import PopInMessage from '../PopInMessage';
-import TemplateOnly from '../TemplateOnly';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -93,6 +92,7 @@ export default class extends BaseVw {
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'change .js-sortBySelect': 'onChangeSortBy',
       'click .js-toggleListGridView': 'onClickToggleListGridView',
+      'click .js-clearSearch': 'onClickClearSearch',
     };
   }
 
@@ -181,6 +181,18 @@ export default class extends BaseVw {
     this.retryPressed = true;
     this.collection.fetch();
     this.$btnRetry.addClass('processing');
+  }
+
+  onClickClearSearch() {
+    console.log('hey there liver lips.');
+    
+    // will reset filters / search text, but maintain sort
+    this.filter = {
+      ...this.defaultFilter,
+      sortBy: this.filter.sortBy,
+    };
+
+    this.render();
   }
 
   onClickToggleListGridView() {
@@ -320,9 +332,9 @@ export default class extends BaseVw {
       (this._$listingCount = this.$('.js-listingCount'));
   }
 
-  get $noResultsContainer() {
-    return this._$noResultsContainer ||
-      (this._$noResultsContainer = this.$('.js-noResultsContainer'));
+  get $noResults() {
+    return this._$noResults ||
+      (this._$noResults = this.$('.js-noResults'));
   }
 
   filteredCollection(filter = this.filter, collection = this.collection) {
@@ -429,21 +441,19 @@ export default class extends BaseVw {
       throw new Error('Please provide a collection.');
     }
 
-    if (this.$listingsContainer[0].innerHTML) this.$listingsContainer.empty();
-    if (this.$noResultsContainer[0].innerHTML) this.$noResultsContainer.empty();
+    // This collection will be loaded in batches as the
+    // user scrolls.
+    this.fullRenderedCollection = col;
+    this.setSortFunction(col);
+    col.sort();
 
+    this.$listingsContainer.empty();
     const listingCount =
       `<span class="txB">${app.polyglot.t('userPage.store.countListings', col.length)}</span>`;
     const fullListingCount =
         app.polyglot.t('userPage.store.countListingsFound',
           { countListings: listingCount });
     this.$listingCount.html(fullListingCount);
-
-    // This collection will be loaded in batches as the
-    // user scrolls.
-    this.fullRenderedCollection = col;
-    this.setSortFunction(col);
-    col.sort();
 
     if (col.length) {
       // todo: exceptionally tall screens may fit an entire page
@@ -465,27 +475,10 @@ export default class extends BaseVw {
       this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
       getContentFrame().on('scroll', this.storeListingsScrollHandler);
 
-      this.$listingsContainer.append(this.storeListings.el);
-      this.storeListings.render();
+      this.$noResults.addClass('hide');
+      this.$listingsContainer.append(this.storeListings.render().el);
     } else {
-      // pass
-      if (!this.noSearchResultsVw) {
-        this.noSearchResultsVw = new TemplateOnly({ template: 'userPage/noSearchResults.html' });
-      }
-
-      const listingsFiltered = _.isEqual(
-        {
-          ...this.defaultFilter,
-          sort: 'same-same-same', // don't care if sorts are different
-        },
-        {
-          ...this.filter,
-          sort: 'same-same-same', // don't care if sorts are different
-        }
-      );
-
-      console.log(listingsFiltered);
-      this.$noResultsContainer.append(this.noSearchResultsVw.render({ listingsFiltered }).el);
+      this.$noResults.removeClass('hide');
     }
   }
 
@@ -559,7 +552,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$popInMessages = null;
-    this._$noResultsContainer = null;
+    this._$noResults = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
