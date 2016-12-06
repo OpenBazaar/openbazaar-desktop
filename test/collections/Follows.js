@@ -2,10 +2,21 @@ import app from '../../js/app';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
 import Follows from '../../js/collections/Followers';
+import ServerConfigs from '../../js/collections/ServerConfigs';
+// import ServerConfig from './models/ServerConfig';
 
 describe('the Follows collection', () => {
   before(function () {
+    Object.defineProperty(window, 'localStorage', {
+
+    });
+
     app.profile = { id: '1' };
+    app.ServerConfigs = new ServerConfigs([
+      {
+        name: 'Test server',
+      },
+    ]);
   });
 
   it('uses a local url if given the user guid and the type followers', () => {

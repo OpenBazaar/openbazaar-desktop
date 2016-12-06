@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
 import _ from 'underscore';
-import LocalServer from './js/utils/LocalServer';
+import LocalServer from './js/utils/localServer';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

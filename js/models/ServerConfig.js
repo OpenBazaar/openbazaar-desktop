@@ -41,10 +41,10 @@ export default class extends BaseModel {
       }
     }
 
-    if (!is.existy(attrs.server_ip) || is.empty(attrs.server_ip)) {
+    if (!is.existy(attrs.serverIp) || is.empty(attrs.serverIp)) {
       addError('serverIp', 'Please provide a value.');
     } else {
-      if (!is.ip(attrs.server_ip)) {
+      if (!is.ip(attrs.serverIp)) {
         addError('serverIp', 'This does not appear to be a valid IP address.');
       }
     }
@@ -66,29 +66,29 @@ export default class extends BaseModel {
         addError('password', 'Please provide a value.');
       }
     } else {
-      if (is.existy(attrs.port)) {
+      if (is.existy(attrs.port) && attrs.port !== this.defaults().port) {
         // For now, not allowing the port to be changed on the default server,
         // since there is currently no way to set the port as an option
         // on the command line, the local bundled server will always be started
         // with the default port.
-        addError('port', 'You cannot set the port on the default server.');
+        addError('port', `On the default server, the port can only be ${this.defaults().port}.`);
       }
     }
 
-    if (Object.keys(errObj).length && errObj) return errObj;
+    if (Object.keys(errObj).length) return errObj;
 
     return undefined;
   }
 
   getHttpUrl() {
     const prefix = this.get('SSL') ? 'https' : 'http';
-    return `${prefix}://${this.get('serverIp')}:${this.get('port')}/api/v1`;
+    return `${prefix}://${this.get('serverIp')}:${this.get('port')}/`;
   }
 
 
   get socketUrl() {
     const prefix = this.get('SSL') ? 'wss' : 'ws';
-    return `${prefix}://${this.get('serverIp')}:${this.get('port')}`;
+    return `${prefix}://${this.get('serverIp')}:${this.get('port')}/`;
   }
 
   isLocalServer() {

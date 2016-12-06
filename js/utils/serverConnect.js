@@ -1,3 +1,3 @@
 export function connect(id) {
-  // pass
+  console.log(id);
 }

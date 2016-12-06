@@ -4,7 +4,7 @@ import ServerConfig from '../models/ServerConfig';
 
 export default class extends Collection {
   localStorage() {
-    return new LocalStorageSync('__localSettings');
+    return new LocalStorageSync('__serverConfigs');
   }
 
   sync(...args) {

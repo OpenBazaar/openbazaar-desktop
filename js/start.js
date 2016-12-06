@@ -7,6 +7,7 @@ import './lib/whenAll.jquery';
 import app from './app';
 // import Socket from './utils/Socket';
 import ServerConfigs from './collections/ServerConfigs';
+import ServerConfig from './models/ServerConfig';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
@@ -21,7 +22,7 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
-import { init as localServerStatusMsgsInit } from './startup/localServerStatusMsgs';
+// import { init as localServerStatusMsgsInit } from './startup/localServerStatusMsgs';
 import { getBody } from './utils/selectors';
 
 app.localSettings = new LocalSettings({ id: 1 });
@@ -372,13 +373,28 @@ app.serverConfigs = new ServerConfigs();
 app.serverConfigs.fetch().done(() => {
   if (!app.serverConfigs.length) {
     // no saved server configurations
-    if (remote.getGlobal('localServer')) {
+    // todo: Bye bye true true.
+    if (true || remote.getGlobal('localServer')) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
-      app.serverConfigs.add({
-        name: 'Defaul (translate)',
+      const defaultConfig = new ServerConfig({
+        name: 'Default (translate)',
         default: true,
       });
+
+      const save = defaultConfig.save();
+
+      if (save) {
+        save.done(() => {
+          app.serverConfigs.add(defaultConfig);
+          start();
+        });
+      } else {
+        const validationErr = defaultConfig.validationError;
+
+        throw new Error('There were one or more errors saving the default server configuration' +
+          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
+      }
     } else {
       // show connection modal with a state that
       // at least one connection must be created
