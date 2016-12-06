@@ -52,7 +52,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/settings/advanced.html', (t) => {
       this.$el.html(t({
-        errors: this.profile.validationError || {},
+        errors: this.settings.validationError || {},
         ...this.settings.toJSON(),
       }));
 

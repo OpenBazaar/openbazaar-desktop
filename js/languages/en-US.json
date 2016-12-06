@@ -99,22 +99,27 @@
       },
       "server" : {
         "_sectionName" : "Server Settings",
-        "connections" : "Connections",
-        "btnShowManagementAction" : "Connection Management Settings",
+        "management" : "Management",
+        "peers" : "Peers",
+        "btnShowManagementAction" : "Connection Management",
         "btnShowPeersAction" : "Show Connected Peers",
         "btnTurnOffServerAction" : "Turn Server Off",
         "btnTurnOnServerAction" : "Turn Server On"
       },
       "transaction" : {
         "_sectionName" : "Transactions",
-        "saveMetadata" : "Save Transaction Metadata",
+        "saveMetadata" : "Save Metadata",
         "defaultFee" : "Default Fee",
         "low" : "Low",
         "medium" : "Medium",
         "high" : "High"
       },
       "appearance" : {
-        "_sectionName" : "Appearance"
+        "_sectionName" : "Appearance",
+        "visualEffects" : "Visual Effects",
+        "windowControlStyle" : "Window Style",
+        "macOS" : "Mac",
+        "windowsOS" : "Windows"
       }
     },
     "language": "Language",
