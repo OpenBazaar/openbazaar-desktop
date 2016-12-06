@@ -22,10 +22,7 @@ export default class extends baseVw {
   }
 
   changedWindowStyle( event ) {
-    if ( event.target.id == 'windowControlStyleMac' ) 
-      app.localSettings.set('windowControlStyle', "mac" ); 
-    else
-      app.localSettings.set('windowControlStyle', "win" ); 
+    app.localSettings.set('windowControlStyle', $(event.target).val()); 
   }
 
   getFormData( subset = this.$formFields ) {

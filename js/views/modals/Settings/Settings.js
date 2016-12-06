@@ -19,7 +19,6 @@ export default class extends BaseModal {
     };
 
     super(opts);
-
     this.options = opts;
 
     this.tabViewCache = {};

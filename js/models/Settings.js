@@ -23,7 +23,7 @@ export default class extends BaseModel {
     return app.getServerUrl('ob/settings/');
   }
 
-  get nested() {
+  nested() {
     return {
       shippingAddresses: ShippingAddresses,
       smtpSettings: SMTPSettings
