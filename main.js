@@ -237,8 +237,23 @@ function createWindow() {
       role: 'help',
       submenu: [
         {
-          label: 'Learn More',
-          click() { electron.shell.openExternal('https://openbazaar.org'); },
+          label: 'Report Issue...',
+          click() {
+            // TODO: Open an issue tracking window
+          },
+        },
+        {
+          label: 'Check for Updates...',
+          click() {
+            autoUpdater.checkForUpdates();
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Documentation',
+          click() { electron.shell.openExternal('https://docs.openbazaar.org'); },
         },
       ],
     },
