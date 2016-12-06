@@ -65,12 +65,12 @@
         </div>
       </div>
       <div class="js-listingsContainer"></div>
-      <div class="txCtr padBg2 clrP clrSh2 clrBr tx4 contentBox hide js-noListingsFound">
+      <div class="txCtr padBg2 clrP clrSh2 clrBr tx4 contentBox js-noResults hide">
         <p><%= ob.polyT('userPage.store.noListingsFound') %></p>
-        <div class="btn clrP clrBr"><%= ob.polyT('userPage.store.btnClearSearch') %></div>
+        <div class="btn clrP clrBr js-clearSearch"><%= ob.polyT('userPage.store.btnClearSearch') %></div>
       </div>
       <% } else { %>
-      <div class="txCtr padBg tx5"><%= ob.polyT('userPage.store.noListings') %></div>
+      <div class="txCtr padBg2 tx4"><%= ob.polyT('userPage.store.noListings') %></div>
       <% } %>
     </div>
   </div>
