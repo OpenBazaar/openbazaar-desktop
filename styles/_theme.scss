@@ -61,21 +61,17 @@ input[type=range][class~="clrS"] {
 }
 
 .clrT2 {
-  @include textColor($text2, $text3);
-
-  .tab.active {
-    color: $text;
-  }
+  @include textColor($text2, $text3, $text);
 }
 
 .clrT3 {
   // links in text color 3 are the same color, or they'd be too hard to see
-  @include textColor($text3);
+  @include textColor($text3, $text3, $text2);
 }
 
 .clrT4 {
   // links in text color 4 are the same color, or they'd be too hard to see
-  @include textColor($text4);
+  @include textColor($text4, $text4, $text3);
 }
 
 .clrTEm {
@@ -96,7 +92,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrTEmph1 {
-  @include textColor($emphasis1);  
+  @include textColor($emphasis1);
 }
 
 .clrBr {
