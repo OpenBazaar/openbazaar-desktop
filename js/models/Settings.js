@@ -1,7 +1,7 @@
-import BaseModel from './BaseModel';
 import app from '../app';
+import BaseModel from './BaseModel';
 import ShippingAddresses from '../collections/ShippingAddresses';
-import SMTPSettings from '../models/SMTPSettings';
+import SMTPSettings from './SMTPSettings';
 
 export default class extends BaseModel {
   defaults() {
@@ -26,8 +26,16 @@ export default class extends BaseModel {
   nested() {
     return {
       shippingAddresses: ShippingAddresses,
-      smtpSettings: SMTPSettings,
+      smtpSettings: SMTPSettings
     };
+  }
+
+  validate() {
+    const errObj = this.mergeInNestedErrors({});
+
+    if (Object.keys(errObj).length) return errObj;
+
+    return undefined;
   }
 
   sync(method, model, options) {
