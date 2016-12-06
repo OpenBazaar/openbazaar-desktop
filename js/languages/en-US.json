@@ -101,7 +101,7 @@
         "_sectionName" : "Server Settings",
         "connections" : "Connections",
         "btnShowManagementAction" : "Connection Management Settings",
-        "btnShowPeersAction" : "Show Connected Peers"
+        "btnShowPeersAction" : "Show Connected Peers",
         "btnTurnOffServerAction" : "Turn Server Off",
         "btnTurnOnServerAction" : "Turn Server On"
       },
@@ -114,7 +114,7 @@
         "high" : "High"
       },
       "appearance" : {
-        "_sectionName" : "Appearance",
+        "_sectionName" : "Appearance"
       }
     },
     "language": "Language",
