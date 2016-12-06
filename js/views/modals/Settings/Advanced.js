@@ -10,23 +10,23 @@ export default class extends baseVw {
       ...options,
     });
 
-    this.settings = app.settings.clone( );
+    this.settings = app.settings.clone();
 
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
   }
 
   get events() {
     return {
-      'change input[name="windowControlStyle"]': 'changedWindowStyle'
+      'change input[name='windowControlStyle']': 'changedWindowStyle'
     };
   }
 
-  changedWindowStyle( event ) {
+  changedWindowStyle(event) {
     app.localSettings.set('windowControlStyle', $(event.target).val()); 
   }
 
-  getFormData( subset = this.$formFields ) {
-    return super.getFormData( subset );
+  getFormData(subset = this.$formFields) {
+    return super.getFormData(subset);
   }
 
   saveServer() {
@@ -61,7 +61,7 @@ export default class extends baseVw {
 
   saveLocal() {
     const localData = this.getFormData(this.$localFields);
-    app.localSettings.set( localData );
+    app.localSettings.set(localData);
   }
 
   save() {
