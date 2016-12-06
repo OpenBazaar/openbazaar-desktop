@@ -5,7 +5,6 @@ import AppearanceSettings from '../models/AppearanceSettings';
 import TransactionSettings from '../models/TransactionSettings';
 import ServerSettings from '../models/ServerSettings';
 import SMTPSettings from '../models/SMTPSettings';
-import SettingsAPIAdaptor from '../utils/settingsAPIAdaptor';
 
 export default class extends BaseModel {
   defaults() {
@@ -39,29 +38,25 @@ export default class extends BaseModel {
 
   parse( response ) {
     const data = this.fromAPIFormatJSON( response );
-    // make it immutable to highlight unintended modification errors
-    Object.freeze( data );
     return data;
   }
 
   toModelFormatJSON( ) {
-    return SettingsAPIAdaptor.convertAPIToModelFormat( super.toJSON( ) );
+    return super.toJSON( );
   }
 
   toAPIFormatJSON( ) {
     const raw = super.toJSON( );
-    return SettingsAPIAdaptor.convertModelToAPIFormat( raw );
+    return raw;
   }
 
   toJSON( ) {
     const apiFormat = this.toAPIFormatJSON( );
-    // make it immutable to highlight unintended modification errors
-    Object.freeze( apiFormat );
     return apiFormat;
   }
 
   fromAPIFormatJSON( response ) {
-    return SettingsAPIAdaptor.convertAPIToModelFormat( response );
+    return response;
   }
 
   sync(method, model, options) {
