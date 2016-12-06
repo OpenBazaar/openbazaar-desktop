@@ -1,5 +1,5 @@
 import { electron, app, BrowserWindow, ipcMain, Menu, Tray, autoUpdater,
-  ipcRenderer } from 'electron';
+  ipcRenderer, shell } from 'electron';
 
 import os from 'os';
 import path from 'path';
