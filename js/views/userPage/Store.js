@@ -184,8 +184,6 @@ export default class extends BaseVw {
   }
 
   onClickClearSearch() {
-    console.log('hey there liver lips.');
-    
     // will reset filters / search text, but maintain sort
     this.filter = {
       ...this.defaultFilter,
