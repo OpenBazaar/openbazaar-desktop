@@ -12,6 +12,7 @@
     min-width: 300px;
     max-height: calc(100% - 50px);
     overflow: auto;
+    border-radius: $corner;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
     @include chatOpeningTransition(left);

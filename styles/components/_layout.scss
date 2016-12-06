@@ -36,7 +36,6 @@
   @extend .flex;
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
-  justify-content: space-between;
 }
 
 .snip,
@@ -331,69 +330,68 @@
       padding-left: 0;
     }
 
-    &:last-child {
+    &:last-child:not(:only-child) {
       padding-right: 0;
     }
   }
 }
 
-.gutterHSm > * {
-  margin-right: $padSm;
+.gutterHFlush {
+  &:first-child {
+    margin-left: 0;
+  }
 
   &:last-child {
     margin-right: 0;
   }
+}
+
+.gutterHSm > * {
+  @extend .gutterHFlush;
+  margin-right: $padSm;
   @include colHGutter($padSm);
 }
 
 .gutterH > * {
+  @extend .gutterHFlush;
   margin-right: $pad;
-
-  &:last-child {
-    margin-right: 0;
-  }
   @include colHGutter($pad);
 }
 
 .gutterHLg > * {
+  @extend .gutterHFlush;
   margin-right: $padLg;
-
-  &:last-child {
-    margin-right: 0;
-  }
   @include colHGutter($padLg);
 }
 
-.gutterVSm > * {
-  margin-bottom: $padSm;
+.gutterVFlush {
+  &:first-child {
+    margin-top: 0;
+  }
 
   &:last-child {
     margin-bottom: 0;
   }
+}
+
+.gutterVSm > * {
+  @extend .gutterVFlush;
+  margin-bottom: $padSm;
 }
 
 .gutterV > * {
+  @extend .gutterVFlush;
   margin-bottom: $pad;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 
 .gutterVMd > * {
+  @extend .gutterVFlush;
   margin-bottom: $padMd;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 
 .gutterVLg > * {
+  @extend .gutterVFlush;
   margin-bottom: $padLg;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 
 .floR {

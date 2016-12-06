@@ -12,7 +12,7 @@
     }
 
     .addressBar {
-      font-size: $tx5b;
+      font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
     }
 
@@ -66,29 +66,35 @@
 
       a {
         border-radius: 50%;
-        margin-right: 5px;
+        color: #000;
+        text-align: center;
+        margin-right: 8px;
         box-sizing: border-box;
 
         &.navClose {
-          background-color: #E45A5A;
+          background-color: #FF6058;
+          border: solid 1px #E1473F;
         }
 
         &.navMin {
-          background-color: #F8E71C;
+          background-color: #FFBD2E;
+          border: solid 1px #E0A117;
         }
 
         &.navMax {
-          background-color: #B8E986;
+          background-color: #29CB41;
+          border: solid 1px #13AD29;
+          margin-right: 0;
         }
 
-        i {
+        span {
           visibility: hidden;
-          font-size: 16px;
+          font-size: 10px;
         }
+      }
 
-        &:hover i {
-         visibility: visible;
-        }
+      &:hover span {
+        visibility: visible;
       }
     }
   }

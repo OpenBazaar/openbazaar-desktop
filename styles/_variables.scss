@@ -14,7 +14,7 @@ $emphasis1: hsl(116.5, 66.3, 41);
 $emphasis2: adjust-color($emphasis1, $lightness: +20%);
 $emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
 $error: red;
-$overlay: adjust-color($primary, $lightness: -56%, $alpha: -0.35);
+$overlay: adjust-color($secondary, $alpha: -0.1);
 
 // typography
 $baseFontSize: 10px;

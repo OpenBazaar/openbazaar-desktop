@@ -26,7 +26,7 @@ textarea,
   color: inherit;
   border-radius: 3px;
   font: {
-    family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    family: "Noto Sans", sans-serif;
     size: $tx5;
   }
 }
@@ -74,7 +74,7 @@ textarea {
 
 .errorList {
   color: $error;
-  
+
   li {
     i {
       margin-right: 5px;
@@ -97,14 +97,14 @@ label {
 .required::after {
   content: '*';
   position: absolute;
-  font-size: 130%;    
+  font-size: 130%;
 }
 
 // By default, using width values appropriate for currency codes.
 // Overwrite in your own implementation if you need to deviate.
 .inputSelect {
   position: relative;
-  
+
   input {
     padding-right: 75px;
   }
@@ -129,4 +129,8 @@ label {
     width: 1px;
     background-color: #DDD;
   }
+}
+
+input[type="radio"]:checked + label {
+  font-weight: 700;
 }
