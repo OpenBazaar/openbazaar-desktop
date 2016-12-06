@@ -17,7 +17,7 @@ export default class extends baseVw {
 
   get events() {
     return {
-      'change input[name='windowControlStyle']': 'changedWindowStyle'
+      'change input[name="windowControlStyle"]': 'changedWindowStyle'
     };
   }
 
