@@ -36,7 +36,6 @@
   @extend .flex;
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
-  justify-content: space-between;
 }
 
 .snip,
@@ -331,7 +330,7 @@
       padding-left: 0;
     }
 
-    &:last-child {
+    &:last-child:not(:only-child) {
       padding-right: 0;
     }
   }

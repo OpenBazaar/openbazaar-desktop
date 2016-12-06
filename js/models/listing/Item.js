@@ -47,27 +47,31 @@ export default class extends BaseModel {
     ];
   }
 
-  get descriptionMaxLength() {
-    return 50000;
-  }
-
-  get maxImages() {
-    return 10;
-  }
-
-  get maxTags() {
-    return 10;
+  get max() {
+    return {
+      descriptionLength: 50000,
+      images: 30,
+      tags: 10,
+      cats: 10,
+      titleLength: 140,
+      tagLength: 40,
+    };
   }
 
   validate(attrs) {
     let errObj = {};
+
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
 
+    const max = this.max;
+
     if (!attrs.title) {
       addError('title', app.polyglot.t('itemModelErrors.provideTitle'));
+    } else if (attrs.title.length > max.titleLength) {
+      addError('title', app.polyglot.t('itemModelErrors.titleTooLong'));
     }
 
     if (this.conditionTypes.indexOf(attrs.condition) === -1) {
@@ -76,7 +80,7 @@ export default class extends BaseModel {
 
     if (is.not.string(attrs.description)) {
       addError('description', 'The description must be of type string.');
-    } else if (attrs.description.length > this.descriptionMaxLength) {
+    } else if (attrs.description.length > max.descriptionLength) {
       addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
     }
 
@@ -90,13 +94,32 @@ export default class extends BaseModel {
 
     if (!attrs.images.length) {
       addError('images', app.polyglot.t('itemModelErrors.imageRequired'));
-    } else if (attrs.images.length > this.maxImages) {
-      addError('images', `The number of images cannot exceed ${this.maxImages}`);
+    } else if (attrs.images.length > max.images) {
+      addError('images', `The number of images cannot exceed ${max.images}`);
     }
 
-    if (attrs.tags && attrs.tags.length > this.maxTags) {
-      addError('tags',
-        app.polyglot.t('itemModelErrors.tooManyTags', { maxTags: this.maxTags }));
+    if (attrs.tags) {
+      if (is.array(attrs.tags)) {
+        if (attrs.tags.length > max.tags) {
+          addError('tags',
+            app.polyglot.t('itemModelErrors.tooManyTags', { maxTags: max.tags }));
+        }
+
+        attrs.tags.forEach((tag, index) => {
+          if (is.not.string(tag)) {
+            addError('tags', `Tag at index ${index} is not a string and should be.`);
+          } else if (tag.length > this.max.tagLength) {
+            addError('tags', `Tag ${tag} exceeds the maximum tag length of ${this.max.tagLength}.`);
+          }
+        });
+      } else {
+        addError('tags', 'Tags must be provided as an array.');
+      }
+    }
+
+    if (attrs.categories && attrs.categories.length > max.cats) {
+      addError('categories',
+        app.polyglot.t('itemModelErrors.tooManyCats', { maxCats: max.cats }));
     }
 
     errObj = this.mergeInNestedErrors(errObj);
