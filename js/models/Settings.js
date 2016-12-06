@@ -3,7 +3,6 @@ import BaseModel from './BaseModel';
 import ShippingAddresses from '../collections/ShippingAddresses';
 import AppearanceSettings from '../models/AppearanceSettings';
 import TransactionSettings from '../models/TransactionSettings';
-import ServerSettings from '../models/ServerSettings';
 import SMTPSettings from '../models/SMTPSettings';
 
 export default class extends BaseModel {
@@ -31,32 +30,8 @@ export default class extends BaseModel {
       shippingAddresses: ShippingAddresses,
       appearanceSettings: AppearanceSettings,
       transactionSettings: TransactionSettings,
-      serverSettings: ServerSettings,
       smtpSettings: SMTPSettings
     };
-  }
-
-  parse( response ) {
-    const data = this.fromAPIFormatJSON( response );
-    return data;
-  }
-
-  toModelFormatJSON( ) {
-    return super.toJSON( );
-  }
-
-  toAPIFormatJSON( ) {
-    const raw = super.toJSON( );
-    return raw;
-  }
-
-  toJSON( ) {
-    const apiFormat = this.toAPIFormatJSON( );
-    return apiFormat;
-  }
-
-  fromAPIFormatJSON( response ) {
-    return response;
   }
 
   sync(method, model, options) {

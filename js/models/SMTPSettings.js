@@ -1,15 +1,16 @@
 import BaseModel from './BaseModel';
 import app from '../app';
+import is from 'is_js';
 
 export default class extends BaseModel {
   defaults() {
     return {
-      smtpNotifications: false,
-      smtpServerAddress: 'defaultservername',
-      smtpUserName: '',
-      smtpPassword: '',
-      smtpFromEmail: '',
-      smtpToEmail: ''
+      notifications: false,
+      serverAddress: 'defaultserveraddress',
+      username: '',
+      password: '',
+      senderEmail: '',
+      recipientEmail: ''
     };
   }
 
@@ -20,18 +21,16 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.smtpNotifications) {
-      if ( attrs.smtpServerAddress.trim().length == 0 )
-        addError( 'smtpServerAddress', app.polyT( 'smtpIntegrationModelErrors.smtpServerAddress' ) );
-      if ( attrs.smtpUserName.trim().length == 0 )
-        addError( 'smtpUserName', app.polyT( 'smtpIntegrationModelErrors.smtpUserName' ) );
-      if ( attrs.smtpPassword.trim().length == 0 )
-        addError( 'smtpPassword', app.polyT( 'smtpIntegrationModelErrors.smtpPassword' ) );
-      if ( attrs.smtpFromEmail.trim().length == 0 )
-        addError( 'smtpFromEmail', app.polyT( 'smtpIntegrationModelErrors.smtpFromEmail' ) );
-      if ( attrs.smtpToEmail.trim().length == 0 )
-        addError( 'smtpToEmail', app.polyT( 'smtpIntegrationModelErrors.smtpToEmail' ) );
-    }
+    if ( is.not.url( attrs.serverAddress.trim() ) )
+      addError( 'ServerAddress', app.polyglot.t( 'SMTPModelErrors.ServerAddress' ) );
+    if ( is.not.alphanumeric( attrs.username.trim() ) || is.empty( attrs.username.trim() ) )
+      addError( 'Username', app.polyglot.t( 'SMTPModelErrors.Username' ) );
+    if ( is.empty( attrs.password.trim() ) )
+      addError( 'Password', app.polyglot.t( 'SMTPModelErrors.Password' ) );
+    if ( is.not.email( attrs.senderEmail.trim() ) )
+      addError( 'SenderEmail', app.polyglot.t( 'SMTPModelErrors.SenderEmail' ) );
+    if ( is.not.email( attrs.recipientEmail.trim() ) )
+      addError( 'RecipientEmail', app.polyglot.t( 'SMTPModelErrors.RecipientEmail' ) );
 
     if (Object.keys(errObj).length) {
       console.warn( errObj );
