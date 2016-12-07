@@ -93,7 +93,6 @@
     "high": "high",
     "server": "Server",
     "currentFirewallType": "Firewall Type",
-    "onOff" : "On Off",
     "connections" : "Connections",
     "btnShowConnectionManagement": "Connection Management",
     "btnShowConnectedPeers" : "Connected Peers",
@@ -331,11 +330,11 @@
     "duplicateSocialAccount": "You already have a social account of this type."
   },
   "smtpModelErrors": {
-    "username" : "Your SMTP server username cannot be empty and must be only alphanumerics.",
-    "password" : "Your SMTP server password cannot be empty.",
-    "serverAddress" : "Your SMTP server address must be a valid URL.",
-    "senderEmail" : "The sender email is the email you send SMTP notifications from. It must be a valid email.",
-    "recipientEmail" : "The recipient email is the email you send SMTP notifications to. It must be a valid email."
+    "username" : "Please provide a username.",
+    "password" : "Please provide a valid password.",
+    "serverAddress" : "Please provide a valid URL.",
+    "senderEmail" : "Please provide a valid email.",
+    "recipientEmail" : "Please provide a valid email."
   },
   "errors": {
     "saveError": "There was an error saving your data.",

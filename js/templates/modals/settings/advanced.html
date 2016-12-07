@@ -156,18 +156,10 @@
           </label>
         </div>
         <div class="col9">
-          <a class="btn clrP clrBr js-showConnectedPeers flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnShowPeersAction') %></a>
-        </div>
-      </div>
-      <div class="flexRow">
-        <div class="col3">
-          <label>
-            <%= ob.polyT('settings.onOff') %>
-          </label>
-        </div>
-        <div class="col9">
-          <a class="btn clrP clrBr js-turnOffServer flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnTurnOffServerAction') %></a>
-          <a class="btn clrP clrBr js-turnOnServer flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnTurnOnServerAction') %></a>
+          <a  href="connected-peers"
+              class="btn clrP clrBr js-showConnectedPeers flexNoShrink">
+                <%= ob.polyT('settings.advancedTab.server.btnShowPeersAction') %>
+          </a>
         </div>
       </div>
     </form>
