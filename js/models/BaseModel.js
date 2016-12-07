@@ -110,6 +110,7 @@ export default class extends Model {
 
     if (this.nested) {
       const nested = _.result(this, 'nested', []);
+
       Object.keys(nested).forEach((nestedKey) => {
         const NestedClass = nested[nestedKey];
         const nestedData = attrs[nestedKey];
@@ -128,9 +129,10 @@ export default class extends Model {
   }
 
   mergeInNestedModelErrors(errObj = {}) {
+    const nested = _.result(this, 'nested', []);
     const prefixedErrs = {};
 
-    Object.keys(this.nested || {})
+    Object.keys(nested || {})
       .forEach((key) => {
         if (this.get(key) instanceof Model) {
           const nestedMd = this.get(key);
@@ -149,9 +151,10 @@ export default class extends Model {
   }
 
   mergeInNestedCollectionErrors(errObj = {}) {
+    const nested = _.result(this, 'nested', []);
     let mergedErrs = errObj;
 
-    Object.keys(this.nested || {})
+    Object.keys(nested || {})
       .forEach((key) => {
         if (this.get(key) instanceof Collection) {
           const nestedCl = this.get(key);
