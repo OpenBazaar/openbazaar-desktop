@@ -102,7 +102,7 @@
         "management" : "Management",
         "peers" : "Peers",
         "btnShowManagementAction" : "Connection Management",
-        "btnShowPeersAction" : "Show Connected Peers",
+        "btnShowPeersAction" : "Show Connected Peers"
       },
       "transaction" : {
         "_sectionName" : "Transactions",

@@ -1,7 +1,6 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import $ from 'jquery';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -21,11 +20,17 @@ export default class extends baseVw {
 
   saveServer() {
     const formData = this.getFormData();
-
     this.settings.set(formData);
+    return this.settings.save();
+  }
 
-    const save = this.settings.save();
+  saveLocal() {
+    const localData = this.getFormData(this.$localFields);
+    app.localSettings.set(localData);
+    return app.localSettings.save();
+  }
 
+  reportSave(save) {
     this.trigger('saving');
 
     if (!save) {
@@ -49,14 +54,8 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
-  saveLocal() {
-    const localData = this.getFormData(this.$localFields);
-    app.localSettings.set(localData);
-  }
-
   save() {
-    this.saveLocal();
-    this.saveServer();
+    this.reportSave(this.saveLocal() && this.saveServer());
   }
 
   render() {
