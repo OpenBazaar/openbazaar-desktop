@@ -42,6 +42,11 @@
       right: 0;
       bottom: 0;
     }
+
+    .overlayPanelButtons {
+      // The edit and delete buttons need to display above overlayPanelInner
+      z-index: 1;
+    }
   }
 
   .editOverlay {    
@@ -68,8 +73,12 @@
   }
 
   .deleteOverlay {
+    align-items: center;
+    justify-content: center;
+    
     .deletingText, .deletedText {
       display: none;
+      text-align: center;
     }
   }
 

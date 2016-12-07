@@ -17,7 +17,7 @@
   @extend .ctrl;
   cursor: pointer;
   font-weight: 700;
-  transition: border 0.2s ease;
+  transition: border 0.15s ease;
 
   &:hover {
     text-decoration: none;
@@ -61,6 +61,10 @@
   padding: 0 6px;
   font-weight: normal;
   height: auto;
+
+  &:hover {
+    border: 0;
+  }
 
   input[type="radio"] {
     display: none;

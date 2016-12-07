@@ -155,7 +155,7 @@
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "refresh"
+    "listingDataChangedPopinRefresh": "Refresh"
   },
   "listingCard": {
     "btnDetails": "Details",

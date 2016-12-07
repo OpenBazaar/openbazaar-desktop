@@ -4,7 +4,7 @@
       <% if (ob.ownListing) { %>
         <div class="editOverlay overlayPanel pad">
           <div class="overlayPanelInner"></div>
-          <div class="btnStrip clrSh2">
+          <div class="overlayPanelButtons">
             <a class='iconBtnSm clrP clrBr js-edit'><span class="ion-edit"></span></a>
             <a class='iconBtnSm clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
           </div>
@@ -63,5 +63,8 @@
 <div class="deleteOverlay overlayPanel">
   <div class="overlayPanelInner clrS"></div>
   <div class="deletingText clrT tx5"><%= ob.polyT('listingCard.deleting') %></div>
-  <div class="deletedText clrT tx5"><%= ob.polyT('listingCard.deleted') %></div>
+  <div class="deletedText clrT tx5">
+    <div class="ion-trash-b tx3"></div>
+    <%= ob.polyT('listingCard.deleted') %>
+  </div>
 </div>
