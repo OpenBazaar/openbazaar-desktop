@@ -68,8 +68,8 @@ export default class extends baseVw {
       }));
 
       this.$formFields = this.$('select[name], input[name], textarea[name]').
-        not('[persist="local"]');
-      this.$localFields = this.$('[persist="local"]');
+        not('[data-persistence-location="local"]');
+      this.$localFields = this.$('[data-persistence-location="local"]');
     });
 
     return this;
