@@ -31,11 +31,7 @@ export default class LocalServer {
     return this._isRunning;
   }
 
-  start(port = 8080) {
-    if (typeof port !== 'number') {
-      throw new Error('Please provide a port as a number.');
-    }
-
+  start() {
     if (this.pendingStop) {
       this.pendingStop.once('close', this.startAfterStop);
       const debugInfo = '[SERVER-INFO] Attempt to start server while an existing one' +
@@ -56,8 +52,11 @@ export default class LocalServer {
     });
 
     this.serverSubProcess.stdout.on('data', buf => {
-      this._isRunning = true;
-      this.trigger('start');
+      if (!this.isRunning) {
+        this._isRunning = true;
+        this.trigger('start');
+      }
+
       console.log('[SERVER-OUT] "%s"', String(buf));
       this._debugLog += `[SERVER-OUT] ${buf}${EOL}`;
     });

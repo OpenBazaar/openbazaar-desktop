@@ -10,7 +10,7 @@ export default {
     }
 
     return this.serverConfigs.activeServer ?
-      `${this.serverConfigs.activeServer.getHttpUrl()}${urlFrag}` : '';
+      `${this.serverConfigs.activeServer.httpUrl}${urlFrag}` : '';
   },
 
   // Short-hand convenience method to get the socket url of the active server configuration
@@ -21,6 +21,6 @@ export default {
     }
 
     return this.serverConfigs.activeServer ?
-      this.serverConfigs.activeServer.getSocketUrl() : '';
+      this.serverConfigs.activeServer.socketUrl() : '';
   },
 };

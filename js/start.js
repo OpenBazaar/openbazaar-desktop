@@ -8,6 +8,7 @@ import app from './app';
 // import Socket from './utils/Socket';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
+import { connect as serverConnect } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
@@ -22,7 +23,6 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
-// import { init as localServerStatusMsgsInit } from './startup/localServerStatusMsgs';
 import { getBody } from './utils/selectors';
 
 app.localSettings = new LocalSettings({ id: 1 });
@@ -80,10 +80,6 @@ app.loadingModal = new LoadingModal({
   showCloseButton: false,
   removeOnRoute: false,
 }).render().open();
-
-// Initialize the functionality to show status message as local server
-// is started and stopped.
-// localServerStatusMsgsInit();
 
 // fix zoom issue on Linux hiDPI
 if (platform === 'linux') {
@@ -368,6 +364,21 @@ function start() {
   });
 }
 
+function connectToServer() {
+  serverConnect(app.serverConfigs.activeServer)
+    .progress(e => {
+      console.log(`got me some progress: ${e.status}`);
+    }).done((...args) => {
+      console.log('im done');
+      window.done = args;
+      start();
+    }).fail((...args) => {
+      console.log('ive failed');
+      window.failed = args;
+      // alert(`unable to connect to server ${app.serverConfigs.activeServer.get('name')}`)
+    });
+}
+
 // get the saved server configurations
 app.serverConfigs = new ServerConfigs();
 app.serverConfigs.fetch().done(() => {
@@ -387,7 +398,7 @@ app.serverConfigs.fetch().done(() => {
         save.done(() => {
           app.serverConfigs.add(defaultConfig);
           app.serverConfigs.activeServer = defaultConfig;
-          start();
+          connectToServer();
         });
       } else {
         const validationErr = defaultConfig.validationError;
@@ -401,7 +412,7 @@ app.serverConfigs.fetch().done(() => {
     }
   } else {
     console.log('connect to server yo');
-    start();
+    connectToServer();
   }
 });
 

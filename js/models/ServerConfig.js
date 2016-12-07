@@ -80,7 +80,7 @@ export default class extends BaseModel {
     return undefined;
   }
 
-  getHttpUrl() {
+  get httpUrl() {
     const prefix = this.get('SSL') ? 'https' : 'http';
     return `${prefix}://${this.get('serverIp')}:${this.get('port')}/`;
   }
@@ -88,7 +88,7 @@ export default class extends BaseModel {
 
   get socketUrl() {
     const prefix = this.get('SSL') ? 'wss' : 'ws';
-    return `${prefix}://${this.get('serverIp')}:${this.get('port')}/`;
+    return `${prefix}://${this.get('serverIp')}:${this.get('port')}/ws`;
   }
 
   isLocalServer() {
