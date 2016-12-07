@@ -373,8 +373,7 @@ app.serverConfigs = new ServerConfigs();
 app.serverConfigs.fetch().done(() => {
   if (!app.serverConfigs.length) {
     // no saved server configurations
-    // todo: Bye bye true true.
-    if (true || remote.getGlobal('localServer')) {
+    if (remote.getGlobal('isBundledApp')()) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
@@ -399,6 +398,9 @@ app.serverConfigs.fetch().done(() => {
       // show connection modal with a state that
       // at least one connection must be created
     }
+  } else {
+    console.log('connect to server yo');
+    start();
   }
 });
 

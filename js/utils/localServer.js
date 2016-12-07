@@ -11,7 +11,7 @@ export default class LocalServer {
     }
 
     if (!options.serverFilename) {
-      throw new Error('Please provide a server path.');
+      throw new Error('Please provide a server filename.');
     }
 
     if (!options.errorLogPath) {
@@ -31,7 +31,11 @@ export default class LocalServer {
     return this._isRunning;
   }
 
-  start() {
+  start(port = 8080) {
+    if (typeof port !== 'number') {
+      throw new Error('Please provide a port as a number.');
+    }
+
     if (this.pendingStop) {
       this.pendingStop.once('close', this.startAfterStop);
       const debugInfo = '[SERVER-INFO] Attempt to start server while an existing one' +

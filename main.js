@@ -74,6 +74,7 @@ if (handleStartupEvent()) {
 const serverPath = `${__dirname}${path.sep}..${path.sep}` +
   `test-server${path.sep}`;
 const isBundledApp = _.once(() => fs.existsSync(serverPath));
+global.isBundledApp = isBundledApp;
 let localServer;
 
 if (isBundledApp) {
@@ -84,7 +85,7 @@ if (isBundledApp) {
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
   });
 
-  localServer.start();
+  // localServer.start();
 }
 
 function showDebugLog() {

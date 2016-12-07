@@ -4,7 +4,7 @@ import is from 'is_js';
 
 export default class extends BaseModel {
   localStorage() {
-    return new LocalStorageSync('__localSettings');
+    return new LocalStorageSync('__serverConfigs');
   }
 
   sync(...args) {
@@ -36,7 +36,7 @@ export default class extends BaseModel {
       if (this.collection) {
         const models = this.collection.where({ name: attrs.name });
         if (models && models.length && (models.length > 1 || models[0].id !== attrs.id)) {
-          addError('name', 'Configuration name is already in use.');
+          addError('name', 'There is already a configuration with that name.');
         }
       }
     }
