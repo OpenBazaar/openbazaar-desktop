@@ -17,12 +17,12 @@ export default class extends baseVw {
 
   get events() {
     return {
-      'change input[name="windowControlStyle"]': 'changedWindowStyle'
+      'change input[name="windowControlStyle"]': 'changedWindowStyle',
     };
   }
 
   changedWindowStyle(event) {
-    app.localSettings.set('windowControlStyle', $(event.target).val()); 
+    app.localSettings.set('windowControlStyle', $(event.target).val());
   }
 
   getFormData(subset = this.$formFields) {
@@ -74,10 +74,11 @@ export default class extends baseVw {
       this.$el.html(t({
         errors: this.settings.validationError || {},
         ...this.settings.toJSON(),
-        ...app.localSettings.toJSON()
+        ...app.localSettings.toJSON(),
       }));
 
-      this.$formFields = this.$('select[name], input[name], textarea[name]').not('[persist="local"]');
+      this.$formFields = this.$('select[name], input[name], textarea[name]').
+        not('[persist="local"]');
       this.$localFields = this.$('[persist="local"]');
     });
 

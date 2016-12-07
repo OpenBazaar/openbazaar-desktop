@@ -26,7 +26,7 @@ export default class extends BaseModel {
   nested() {
     return {
       shippingAddresses: ShippingAddresses,
-      smtpSettings: SMTPSettings
+      smtpSettings: SMTPSettings,
     };
   }
 

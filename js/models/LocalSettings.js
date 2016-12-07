@@ -1,11 +1,10 @@
 import electron from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
-import is from 'is_js';
 
 const remote = electron.remote;
-const controlStyles = [ 'mac', 'win' ];
-const viewStyles = [ 'list', 'grid' ];
+const controlStyles = ['mac', 'win'];
+const viewStyles = ['list', 'grid'];
 
 export default class extends Model {
   localStorage() {
@@ -18,7 +17,7 @@ export default class extends Model {
 
   defaults() {
     return {
-      windowControlStyle: remote.process.platform === 'darwin' ? 'mac': 'win',
+      windowControlStyle: remote.process.platform === 'darwin' ? 'mac' : 'win',
       showAdvancedVisualEffects: true,
       saveTransactionMetadata: true,
       defaultTransactionFee: 'high',
@@ -35,11 +34,11 @@ export default class extends Model {
     };
 
     if (!controlStyles.includes(attrs.windowControlStyle)) {
-      addError('windowControlStyle', `Please provide one of ${ controlStyles }.`);
+      addError('windowControlStyle', `Please provide one of ${controlStyles}.`);
     }
 
     if (!viewStyles.includes(attrs.listingsGridViewType)) {
-      addError(`ListingGrideViewType needs to be one of ${ viewStyles }.`);
+      addError(`ListingGrideViewType needs to be one of ${viewStyles}.`);
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;

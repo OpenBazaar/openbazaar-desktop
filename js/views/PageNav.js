@@ -36,7 +36,8 @@ export default class extends View {
 
     $(document).on('click', this.onDocClick.bind(this));
 
-    app.localSettings.on( 'change:windowControlStyle', (_,style) => this.setWinControlsStyle(style));
+    app.localSettings.on('change:windowControlStyle',
+      (_, style) => this.setWinControlsStyle(style));
     this.setWinControlsStyle(app.localSettings.get('windowControlStyle'));
   }
 
