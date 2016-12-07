@@ -17,28 +17,7 @@ export default class extends Collection {
 
   constructor(models, options) {
     super(models, options);
-
     this._activeId = localStorage.activeServerConfig;
-
-    this.on('update reset', (cl, opts = {}) => {
-      if (opts.previousModels) {
-        // its a reset
-        if (this.length) {
-          this.activeServer = this.at(0);
-        } else {
-          delete localStorage.activeServerConfig;
-        }
-      } else {
-        // its an update
-        if (!this.get(this.activeServer)) {
-          if (this.length) {
-            this.activeServer = this.at(0);
-          } else {
-            delete localStorage.activeServerConfig;
-          }
-        }
-      }
-    });
   }
 
   get activeServer() {

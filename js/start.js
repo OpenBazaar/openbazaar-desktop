@@ -386,6 +386,7 @@ app.serverConfigs.fetch().done(() => {
       if (save) {
         save.done(() => {
           app.serverConfigs.add(defaultConfig);
+          app.serverConfigs.activeServer = defaultConfig;
           start();
         });
       } else {
