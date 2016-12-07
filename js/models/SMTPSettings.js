@@ -25,8 +25,10 @@ export default class extends BaseModel {
       if (is.not.url(attrs.serverAddress.trim())) {
         addError('serverAddress', app.polyglot.t('smtpModelErrors.serverAddress'));
       }
-      if (is.not.alphaNumeric(attrs.username.trim()) || is.empty(attrs.username.trim())) {
-        addError('username', app.polyglot.t('smtpModelErrors.username'));
+      if (is.empty(attrs.username.trim())) {
+        addError('username', app.polyglot.t('smtpModelErrors.username.caseEmpty'));
+      } else if (is.not.alphaNumeric(attrs.username.trim())) {
+        addError('username', app.polyglot.t('smtpModelErrors.username.caseInvalid'));
       }
       if (is.empty(attrs.password.trim())) {
         addError('password', app.polyglot.t('smtpModelErrors.password'));

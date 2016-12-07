@@ -330,7 +330,10 @@
     "duplicateSocialAccount": "You already have a social account of this type."
   },
   "smtpModelErrors": {
-    "username" : "Please provide a username.",
+    "username" : {
+      "caseEmpty" : "Please provide a username.",
+      "caseInvalid" : "Usernames can only contain characters A to Z a to z and 0 to 9."
+    },
     "password" : "Please provide a valid password.",
     "serverAddress" : "Please provide a valid URL.",
     "senderEmail" : "Please provide a valid email.",
