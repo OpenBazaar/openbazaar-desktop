@@ -1,6 +1,10 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
+import $ from 'jquery';
+
+const siblingsToggle = '[data-next-siblings-toggle]';
+const siblingsToggleInputs = `${siblingsToggle} input[type="radio"]`;
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -12,6 +16,26 @@ export default class extends baseVw {
     this.settings = app.settings.clone();
 
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
+  }
+
+  get events() {
+    return {
+      [`change ${siblingsToggleInputs}`]: 'handleNextSiblingsToggle',
+    };
+  }
+
+  handleNextSiblingsToggle(event) {
+    const t = event.target;
+    this.applyNextSiblingsToggle(t, t.value);
+  }
+
+  applyNextSiblingsToggle(t, val) {
+    const p = $(t).parents(siblingsToggle);
+    if (val === 'true') {
+      p.addClass('showNextSiblings');
+    } else {
+      p.removeClass('showNextSiblings');
+    }
   }
 
   getFormData(subset = this.$formFields) {
@@ -69,6 +93,8 @@ export default class extends baseVw {
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
+      this.$el.find(`${siblingsToggleInputs}:checked`).
+        each((_, inp) => this.applyNextSiblingsToggle(inp, inp.value));
     });
 
     return this;

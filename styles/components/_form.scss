@@ -136,3 +136,7 @@ label {
 input[type="radio"]:checked + label {
   font-weight: 700;
 }
+
+[data-next-siblings-toggle]:not(.showNextSiblings) ~ * {
+  display: none; 
+}
