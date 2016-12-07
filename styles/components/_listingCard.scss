@@ -29,8 +29,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    align-items: center;
-    justify-content: center;
     z-index: 1; // so it's above the overlay icons
 
     .overlayPanelInner {
@@ -46,7 +44,7 @@
     }
   }
 
-  .editOverlay {
+  .editOverlay {    
     .btn {
       z-index: 1;
       border-left-width: 0;

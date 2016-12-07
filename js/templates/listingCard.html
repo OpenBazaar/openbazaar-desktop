@@ -2,10 +2,12 @@
 <div class="gridViewContent">
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
       <% if (ob.ownListing) { %>
-        <div class="editOverlay overlayPanel">
+        <div class="editOverlay overlayPanel pad">
           <div class="overlayPanelInner"></div>
-          <a class='iconBtnSm clrP clrBr js-edit'><span class="ion-edit"></span></a>
-          <a class='iconBtnSm clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
+          <div class="btnStrip clrSh2">
+            <a class='iconBtnSm clrP clrBr js-edit'><span class="ion-edit"></span></a>
+            <a class='iconBtnSm clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
+          </div>
         </div>
       <% } %>
   </div>
