@@ -85,39 +85,39 @@
     "generalTab": "General",
     "pageTab": "Page",
     "addressesTab": "Addresses",
-    "advancedTab" : {
-      "_sectionName" : "Advanced",
-      "smtp" : {
-        "_sectionName" : "SMTP Integration",
-        "_testAction" : "Test Integration",
-        "notifications" : "Notifications",
-        "username" : "Username",
-        "password" : "Password",
-        "serverAddress" : "Server Address",
-        "senderEmail" : "Send from",
-        "recipientEmail" : "Send to"
+    "advancedTab": {
+      "_sectionName": "Advanced",
+      "smtp": {
+        "_sectionName": "SMTP Integration",
+        "_testAction": "Test Integration",
+        "notifications": "Notifications",
+        "username": "Username",
+        "password": "Password",
+        "serverAddress": "Server Address",
+        "senderEmail": "Send from",
+        "recipientEmail": "Send to"
       },
-      "server" : {
-        "_sectionName" : "Server Settings",
-        "management" : "Management",
-        "peers" : "Peers",
-        "btnShowManagementAction" : "Connection Management",
-        "btnShowPeersAction" : "Show Connected Peers"
+      "server": {
+        "_sectionName": "Server Settings",
+        "management": "Management",
+        "peers": "Peers",
+        "btnShowManagementAction": "Connection Management",
+        "btnShowPeersAction": "Show Connected Peers"
       },
-      "transaction" : {
-        "_sectionName" : "Transactions",
-        "saveMetadata" : "Save Metadata",
-        "defaultFee" : "Default Fee",
-        "low" : "Low",
-        "medium" : "Medium",
-        "high" : "High"
+      "transaction": {
+        "_sectionName": "Transactions",
+        "saveMetadata": "Save Metadata",
+        "defaultFee": "Default Fee",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
       },
-      "appearance" : {
-        "_sectionName" : "Appearance",
-        "visualEffects" : "Visual Effects",
-        "windowControlStyle" : "Window Style",
-        "macOS" : "Mac",
-        "windowsOS" : "Windows"
+      "appearance": {
+        "_sectionName": "Appearance",
+        "visualEffects": "Visual Effects",
+        "windowControlStyle": "Window Style",
+        "macOS": "Mac",
+        "windowsOS": "Windows"
       }
     },
     "language": "Language",
@@ -299,14 +299,14 @@
     "duplicateSocialAccount": "You already have a social account of this type."
   },
   "smtpModelErrors": {
-    "username" : {
-      "caseEmpty" : "Please provide a username.",
-      "caseInvalid" : "Usernames can only contain characters A to Z a to z and 0 to 9."
+    "username": {
+      "caseEmpty": "Please provide a username.",
+      "caseInvalid": "Usernames can only contain characters A to Z a to z and 0 to 9."
     },
-    "password" : "Please provide a valid password.",
-    "serverAddress" : "Please provide a valid URL.",
-    "senderEmail" : "Please provide a valid email.",
-    "recipientEmail" : "Please provide a valid email."
+    "password": "Please provide a valid password.",
+    "serverAddress": "Please provide a valid URL.",
+    "senderEmail": "Please provide a valid email.",
+    "recipientEmail": "Please provide a valid email."
   },
   "errors": {
     "saveError": "There was an error saving your data.",
