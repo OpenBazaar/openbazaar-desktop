@@ -6,6 +6,16 @@ import $ from 'jquery';
 const siblingsToggle = '[data-next-siblings-toggle]';
 const siblingsToggleInputs = `${siblingsToggle} input[type="radio"]`;
 
+function getResponseReason(resp) {
+  let reason;
+  try {
+    reason = resp.responseJSON.reason || '';
+  } catch (e) {
+    reason = '';
+  }
+  return reason;
+}
+
 export default class extends baseVw {
   constructor(options = {}) {
     super({
@@ -17,7 +27,8 @@ export default class extends baseVw {
     this.localSettings = app.localSettings.clone();
 
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
-    this.listenTo(this.localSettings, 'sync', () => app.localSettings.set(this.localSettings.toJSON()));
+    this.listenTo(this.localSettings, 'sync',
+      () => app.localSettings.set(this.localSettings.toJSON()));
   }
 
   get events() {
@@ -48,6 +59,52 @@ export default class extends baseVw {
     const formData = this.getFormData();
     this.settings.set(formData);
     return this.settings.save();
+  }
+
+  setAndValidate() {
+    this.localSettings.set(this.getFormData(this.$localFields), { validate: true });
+    this.settings.set(this.getFormData(), { validate: true });
+  }
+
+  startSaving() {
+    return {
+      local: this.localSetting.save(),
+      cloud: this.settings.save(),
+    };
+  }
+
+  attemptSave({ cloudFail, localFail }) {
+    if (this.localSettings.validationError || this.settings.validationError) {
+      this.trigger('saveComplete', true);
+    } else {
+      this.trigger('savingToServer');
+      const saving = this.startSaving();
+      saving.local.done(() =>
+      saving.cloud.done(() => this.trigger('saveComplete'))   // both succeeded
+        .fail(r => this.reportFail(r, cloudFail)))            // cloud failed
+        .fail(r => this.reportFail(r, localFail));            // local failed
+    }
+  }
+
+  showErrors() {
+    const $firstErr = this.$('.errorList:first');
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+  }
+
+  saveLocalAndServer() {
+    const backupLocalSettings = this.localSettings.toJSON();
+    const rollbackLocal = () => this.localSettings.set(backupLocalSettings);
+
+    this.setAndValidate();
+    this.attemptSave({ localFail: rollbackLocal });
+    this.render();
+    this.showErrors();
+  }
+
+  reportFail(resp, then) {
+    const reason = getResponseReason(resp);
+    this.trigger('saveComplete', false, true, reason);
+    if (then instanceof Function) then();
   }
 
   saveLocal() {
@@ -102,4 +159,3 @@ export default class extends baseVw {
     return this;
   }
 }
-
