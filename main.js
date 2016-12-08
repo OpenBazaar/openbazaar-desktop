@@ -1,6 +1,6 @@
 import {
   electron, app, BrowserWindow, ipcMain,
-  Menu, Tray, dialog,
+  Menu, Tray, dialog, session,
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -390,6 +390,25 @@ ipcMain.on('close-confirmed', () => {
   closeConfirmed = true;
 
   if (mainWindow) mainWindow.close();
+});
+
+// If appropriate, add in Basic Auth headers to each request.
+ipcMain.on('active-server-set', (e, server) => {
+  const filter = {
+    urls: [`${server.httpUrl}*`, `${server.socketUrl}*`],
+  };
+
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    if (!server.default && (server.username || server.password)) {
+      const un = server.username;
+      const pw = server.password;
+
+      details.requestHeaders.Authorization =
+        `Basic ${new Buffer(`${un}:${pw}`).toString('base64')}`;
+    }
+
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
 });
 
 // some cleanup when our app is exiting

@@ -42,6 +42,7 @@ export default class LocalServer {
     }
 
     if (this.isRunning) return;
+    this._isRunning = true;
 
     console.log('[SERVER-INFO] Starting OpenBazaar Server');
     this._debugLog += `[SERVER-INFO] Starting Server${EOL}`;
@@ -53,7 +54,6 @@ export default class LocalServer {
 
     this.serverSubProcess.stdout.on('data', buf => {
       if (!this.isRunning) {
-        this._isRunning = true;
         this.trigger('start');
       }
 

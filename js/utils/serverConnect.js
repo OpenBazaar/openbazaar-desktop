@@ -30,68 +30,28 @@ export function getCurrentConnection() {
   return currentConnection;
 }
 
-// function startLocalServer() {
-//   const deferred = $.Deferred();
-
-//   if (getLocalServer().isRunning) {
-//     throw new Error('Local server is already running.');
-//   }
-
-//   getLocalServer().on('start', )
-//   getLocalServer().start();
-
-//   return deferred.promise();
-// }
-
-function socketConnect(server, socket, deferred, localServer) {
+function socketConnect(socket) {
   // todo: validate args
 
-  const eventData = {
-    server,
-    socket,
-  };
+  const deferred = $.Deferred();
 
-  if (localServer) eventData.localServer = localServer;
-
-  const onOpen = () => {
-    deferred.resolve({
-      status: 'connected',
-      ...eventData,
-    });
-  };
-
-  const onClose = (e) => {
-    console.log('closed moo check that yo');
-    window.moo = e;
-
-    deferred.reject({
-      status: 'connection-failed',
-      socketCloseEvent: e,
-      ...eventData,
-    });
-  };
+  const onOpen = () => deferred.resolve();
+  const onClose = (e) => deferred.reject(e);
 
   const cancel = () => {
     socket.off(null, onOpen);
     socket.off(null, onClose);
+    deferred.reject(null, true);
   };
-
-  deferred.notify({
-    status: 'connecting',
-    ...eventData,
-  });
 
   socket.on('open', onOpen);
   socket.on('close', onClose);
-  socket.connect(server.socketUrl);
+  socket.connect();
 
-  return {
-    cancel,
-  };
-}
+  const promise = deferred.promise();
+  promise.cancel = cancel;
 
-function innerConnect(server, deferred, options) {
-  // todo: validate args
+  return promise;
 }
 
 export function connect(server, options = {}) {
@@ -109,51 +69,155 @@ export function connect(server, options = {}) {
     attempts: 3,
     timeoutBetweenAttempts: 3000,
     maxAttemptTime: 5000,
+    // todo: work this one in
+    restartDefaultServerOnFirstAttempt: true,
     ...options,
   };
 
   const deferred = $.Deferred();
   const localServer = getLocalServer();
+  let attempt = 1;
+  let socket = null;
+  let connectAttempt = null;
+
+  const getPromiseData = (status, data = {}) => {
+    const aggregateData = {
+      status,
+      localServer,
+      server,
+      socket,
+      connectAttempt: attempt,
+      totalConnectAttempts: opts.attempts,
+      ...data,
+    };
+
+    if (localServer) aggregateData.localServer = localServer;
+
+    return aggregateData;
+  };
+
+  const notify = (...args) => deferred.notify(getPromiseData(...args));
+  const reject = (...args) => deferred.reject(getPromiseData(...args));
+  const resolve = (...args) => deferred.resolve(getPromiseData(...args));
+
+  const cancel = () => {
+    if (socket) {
+      socket.off();
+      socket.close();
+    }
+
+    if (connectAttempt) connectAttempt.cancel();
+    reject('cancelled');
+  };
 
   if (curCon) {
-    curCon.close();
+    curCon.cancel();
 
-    if (curCon.server.get('default')) {
-      deferred.notify({
-        status: 'stopping-local-server',
-        localServer,
-      });
+    // if (curCon.server.get('default')) {
+    //   deferred.notify({
+    //     status: 'stopping-local-server',
+    //     localServer,
+    //   });
 
-      localServer.stop();
-    }
+    //   localServer.stop();
+    // }
   }
 
-  const socket = new Socket(server.socketUrl);
+  currentConnection = { cancel };
 
-  if (server.get('default')) {
-    if (!localServer.isRunning) {
-      deferred.notify({
-        status: 'starting-local-server',
-        localServer,
-      });
+  socket = new Socket(server.socketUrl);
+
+  const innerConnect = () => {
+    const innerConnectDeferred = $.Deferred();
+    let socketConnectAttempt = null;
+    const connectCancel = () => {
+      if (socketConnectAttempt) socketConnectAttempt.cancel();
+      innerConnectDeferred.reject('canceled');
+    };
+
+    if (server.get('default') && !localServer.isRunning) {
+      innerConnectDeferred.notify('starting-local-server');
 
       localServer.on('start', () => {
-        socketConnect(server, socket, deferred, {
-          server,
-          localServer,
-          socket,
-        });
+        innerConnectDeferred.notify('connecting');
+
+        socketConnectAttempt = socketConnect(socket)
+          .done(() => {
+            innerConnectDeferred.resolve('connected');
+          }).fail((e, cancelled) => {
+            if (cancelled) {
+              innerConnectDeferred.reject('cancelled');
+            } else {
+              innerConnectDeferred.reject('connection-failed', { socketCloseEvent: e });
+            }
+          });
       });
 
       localServer.start();
     } else {
-      socketConnect(server, socket, deferred, {
-        server,
-        localServer,
-        socket,
-      });
-    }
-  }
+      // connect to stand-alone server
+      innerConnectDeferred.notify('connecting');
 
-  return deferred.promise();
+      socketConnectAttempt = socketConnect(socket)
+        .done(() => {
+          innerConnectDeferred.resolve('connected');
+        }).fail((e, cancelled) => {
+          if (cancelled) {
+            innerConnectDeferred.reject('cancelled');
+          } else {
+            innerConnectDeferred.reject('connection-failed', { socketCloseEvent: e });
+          }
+        });
+    }
+
+    const promise = innerConnectDeferred.promise();
+    promise.cancel = connectCancel;
+
+    return promise;
+  };
+
+  let connectAttemptStartTime = null;
+  const attemptConnection = () => {
+    let maxTimeTimeout = null;
+    let nextAttemptTimeout = null;
+    connectAttemptStartTime = Date.now();
+
+    const innerConnectAttempt = innerConnect()
+      .progress((status, data = {}) => notify(status, data))
+      .done((status, data = {}) => resolve(status, data))
+      .fail((status, data = {}) => {
+        clearTimeout(maxTimeTimeout);
+
+        if (attempt === opts.attempts) {
+          reject(status, data);
+        } else {
+          const delay = opts.timeoutBetweenAttempts - (Date.now() - connectAttemptStartTime);
+
+          nextAttemptTimeout = setTimeout(() => {
+            attempt += 1;
+            connectAttempt = attemptConnection();
+          }, delay < 0 ? 0 : delay);
+        }
+      });
+
+    const attemptConnectionCancel = () => {
+      reject('cancelled');
+      clearTimeout(maxTimeTimeout);
+      clearTimeout(nextAttemptTimeout);
+      innerConnectAttempt.cancel();
+    };
+
+    maxTimeTimeout = setTimeout(() => {
+      if (innerConnectAttempt.state === 'pending') innerConnectAttempt.cancel();
+    }, opts.maxAttemptTime);
+
+    return { cancel: attemptConnectionCancel };
+  };
+
+  if (attempt <= opts.attempts) connectAttempt = attemptConnection();
+
+  const promise = deferred.promise();
+  promise.cancel = cancel;
+
+  return promise;
 }

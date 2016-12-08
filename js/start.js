@@ -1,4 +1,4 @@
-import { screen, remote } from 'electron';
+import { screen, remote, ipcRenderer } from 'electron';
 // import { ipcRenderer, screen, remote } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
@@ -365,22 +365,33 @@ function start() {
 }
 
 function connectToServer() {
+  console.log(`Will attempt to connect to server [${app.serverConfigs.activeServer.get('name')}].`)
   serverConnect(app.serverConfigs.activeServer)
     .progress(e => {
-      console.log(`got me some progress: ${e.status}`);
-    }).done((...args) => {
-      console.log('im done');
-      window.done = args;
+      console.log(`Status is [${e.status}] for connect attempt` +
+        ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
+    }).done((e) => {
+      console.log(`Connected to [${e.server.get('name')}]`);
       start();
-    }).fail((...args) => {
-      console.log('ive failed');
-      window.failed = args;
-      // alert(`unable to connect to server ${app.serverConfigs.activeServer.get('name')}`)
+    }).fail((e) => {
+      console.log(`Failed to connect to [${e.server.get('name')}]`);
     });
 }
 
-// get the saved server configurations
+const sendMainActiveServer = (activeServer) => {
+  ipcRenderer.send('active-server-set', {
+    ...activeServer.toJSON(),
+    httpUrl: activeServer.httpUrl,
+    socketUrl: activeServer.socketUrl,
+  });
+};
+
 app.serverConfigs = new ServerConfigs();
+
+app.serverConfigs.on('activeServerChange', (activeServer) =>
+  sendMainActiveServer(activeServer));
+
+// get the saved server configurations
 app.serverConfigs.fetch().done(() => {
   if (!app.serverConfigs.length) {
     // no saved server configurations
@@ -411,7 +422,14 @@ app.serverConfigs.fetch().done(() => {
       // at least one connection must be created
     }
   } else {
-    console.log('connect to server yo');
+    const activeServer = app.serverConfigs.activeServer;
+
+    if (activeServer) {
+      sendMainActiveServer(activeServer);
+    } else {
+      app.serverConfigs.activeServer = app.serverConfigs.at(0);
+    }
+
     connectToServer();
   }
 });

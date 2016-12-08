@@ -53,18 +53,19 @@ export default class extends BaseModel {
       if (!is.number(attrs.port)) {
         addError('port', 'Please provide a number.');
       } else {
-        if (!is.within(attrs.rest_api_port, -1, 65536)) {
+        if (!is.within(attrs.port, -1, 65536)) {
           addError('port', 'Please provide a number between 0 and 65535.');
         }
       }
 
-      if (!is.existy(attrs.username) || is.empty(attrs.username)) {
-        addError('username', 'Please provide a value.');
-      }
+      // TODO: remotes must provide credentials
+      // if (!is.existy(attrs.username) || is.empty(attrs.username)) {
+      //   addError('username', 'Please provide a value.');
+      // }
 
-      if (!is.existy(attrs.password) || is.empty(attrs.password)) {
-        addError('password', 'Please provide a value.');
-      }
+      // if (!is.existy(attrs.password) || is.empty(attrs.password)) {
+      //   addError('password', 'Please provide a value.');
+      // }
     } else {
       if (is.existy(attrs.port) && attrs.port !== this.defaults().port) {
         // For now, not allowing the port to be changed on the default server,
