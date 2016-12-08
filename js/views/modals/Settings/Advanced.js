@@ -14,8 +14,10 @@ export default class extends baseVw {
     });
 
     this.settings = app.settings.clone();
+    this.localSettings = app.localSettings.clone();
 
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
+    this.listenTo(this.localSettings, 'sync', () => app.localSettings.set(this.localSettings.toJSON()));
   }
 
   get events() {
@@ -50,8 +52,8 @@ export default class extends baseVw {
 
   saveLocal() {
     const localData = this.getFormData(this.$localFields);
-    app.localSettings.set(localData);
-    return app.localSettings.save();
+    this.localSettings.set(localData);
+    return this.localSettings.save();
   }
 
   reportSave(save) {
@@ -87,7 +89,7 @@ export default class extends baseVw {
       this.$el.html(t({
         errors: this.settings.validationError || {},
         ...this.settings.toJSON(),
-        ...app.localSettings.toJSON(),
+        ...this.localSettings.toJSON(),
       }));
 
       this.$formFields = this.$('select[name], input[name], textarea[name]').

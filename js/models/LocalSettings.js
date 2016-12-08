@@ -5,6 +5,7 @@ import { Model } from 'backbone';
 const remote = electron.remote;
 const controlStyles = ['mac', 'win'];
 const viewStyles = ['list', 'grid'];
+const feeLevels = ['low', 'medium', 'high'];
 
 export default class extends Model {
   localStorage() {
@@ -39,6 +40,10 @@ export default class extends Model {
 
     if (!viewStyles.includes(attrs.listingsGridViewType)) {
       addError(`ListingGrideViewType needs to be one of ${viewStyles}.`);
+    }
+
+    if (!feeLevels.includes(attrs.defaultTransactionFee)) {
+      addError('defaultTransactionFee', `Default transaction fee needs to be one of ${feeLevels}.`);
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;
