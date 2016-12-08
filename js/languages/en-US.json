@@ -167,8 +167,9 @@
     "termsAndConditions": "Terms Of Service",
     "shipping": "Shipping",
     "shipsFrom": "Ships from %{country}",
-    "shipTo": "Ship to",
+    "shipTo": "Ship to:",
     "shipToPlaceholder": "Select a Country",
+    "noShippingFound": "This listing does not ship to the selected country.",
     "formats": {
       "PHYSICAL_GOOD": "Physical Good",
       "DIGITAL_GOOD": "Digital Good",

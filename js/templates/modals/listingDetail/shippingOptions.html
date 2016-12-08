@@ -1,21 +1,33 @@
-<% console.log(ob) %>
-
 <% if (ob.templateData.length) { %>
-<% ob.templateData.forEach((option) => { %>
-<div class="rowLg tx4">
-  <h3 class="row"><%= option.name %></h3>
-  <% option.services.forEach((service) => { %>
-    <div class="flexRow row">
-      <div class="col4"><%= service.name %></div>
-      <div class="col4"><%= service.estimatedDelivery %></div>
-      <div class="col4">
-        <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
-      </div>
+  <% ob.templateData.forEach((option, tdi) => { %>
+    <% if (tdi > 0) { %>
+      <hr class="clrBr">
+    <% } %>
+    <div class="rowLg tx4">
+      <h3 class="row"><%= option.name %></h3>
+      <% option.services.sort((a,b) => parseFloat(a.price) - parseFloat(b.price)).forEach((service) => { %>
+        <% if (service.price === 0) var fShp = true; %>
+        <div class="flexRow row <% if (fShp) { %>txB<% } %>">
+          <div class="col4">
+            <div class="flex gutterH">
+              <div class="floL"><%= service.name %></div>
+              <% if (fShp) { %>
+                <div class="clrE1 clrTOnEmph phraseBox floL">
+                  <%= ob.polyT('listingDetail.freeShippingBanner') %>
+                </div>
+              <% } %>
+            </div>
+          </div>
+          <div class="col4"><%= service.estimatedDelivery %></div>
+          <div class="col4">
+            <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
+          </div>
+        </div>
+      <% }) %>
     </div>
-  <% }) %>
-</div>
-
-<% }); %>
+  <% }); %>
 <% } else { %>
-None found
+  <div class="rowLg tx4 txCtr">
+    <%= ob.polyT('listingDetail.noShippingFound') %>
+  </div>
 <% } %>

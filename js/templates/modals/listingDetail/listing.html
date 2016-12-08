@@ -1,13 +1,15 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 <% if (ob.ownListing) { %>
-<div class="listingControls btnStrip">
-  <a class="btn js-editListing clrP clrBr">Edit</a>
-  <a class="btn js-deleteListing clrP clrBr">Delete</a>
+<div class="listingControls flex">
+  <div class="btnStrip clrSh3">
+    <a class="btn js-editListing clrP clrBr">Edit</a>
+    <a class="btn js-deleteListing clrP clrBr">Delete</a>
+  </div>
 </div>
 <% } %>
 
 <div class="listingContent flexColRow gutterVLg">
-  <div class="box clrP clrBr padLg">
+  <div class="contentBox padLg clrP clrBr clrSh3">
     <div class="flex">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
       <h2 class="txUnb"><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></h2>
@@ -16,7 +18,6 @@
       <div>
         <div class="mainImage clrBr"
         <% if (ob.item.images.length) { %>
-          <% console.log(ob.item.images) %>
           style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
         <% } else { %>
           style="background-image: url('../imgs/defaultListing.png')"
@@ -52,7 +53,7 @@
               <div class="ion-chatbubble"> X.X</div><!-- placeholder until reviews exist -->
               <% if(ob.shipsFreeToMe) { %>
               <div class="txCtr">
-                <span class="clrE1 clrTOnEmph txTn txCtr txUp phraseBox"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>
+                <a class="clrE1 clrTOnEmph phraseBox js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
               </div>
               <% } %>
             </div>
@@ -78,16 +79,23 @@
       </div>
     </div>
   </div>
-  <div class="box clrP clrBr padLg">
+  <div class="contentBox padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
     <%= ob.item.description %>
   </div>
-  <div class="box clrP clrBr padLg" id="photoSection">
-    <% ob.item.images.forEach(function(image){
-    print(`<img src="${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}">`);
-    }); %>
-  </div>
-  <div class="box clrP clrBr padLg">
+  <% if (ob.item.images.length) { %>
+    <div class="contentBox padLg clrP clrBr clrSh3" id="photoSection">
+      <div class="photoSelected js-photoSelected" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.item.images[0].original}`) %>);">
+      </div>
+      <div class="photoStrip flex gutterH">
+        <% ob.item.images.forEach(function(image, index){
+        print(`<input type="radio" name="photoStripThumbnails" id="photoStrip${index}">`);
+        print(`<label class="clrBrEmph2" style="background-image: url(${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}" for="photoStrip${index}"></label>`);
+        }); %>
+      </div>
+    </div>
+  <% } %>
+  <div class="contentBox padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
     Placeholder for Reviews
   </div>
@@ -95,30 +103,32 @@
   <!-- attachments here -->
 
   <% if (ob.shippingOptions.length) { %>
-    <div class="box clrP clrBr padLg">
+    <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.shipping') %></h2>
       <div class="flexVCent gutterHLg tx5">
         <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>${ob.polyT(`countries.${ob.shipsFromCountry}`)}</b>` }) %></div>
         <div><%= ob.polyT('listingDetail.shipTo') %></div>
-        <div class="col4"><select id="shippingDestinations"></select></div>
+        <div class="col4">
+          <select id="shippingDestinations"></select>
+        </div>
       </div>
       <hr>
       <div class="js-shippingOptions"></div>
     </div>
   <% } %>
   <% if (ob.refundPolicy) { %>
-    <div class="box clrP clrBr padLg">
+    <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
       <%= ob.refundPolicy %>
     </div>
   <% } %>
   <% if (ob.termsAndConditions) { %>
-    <div class="box clrP clrBr padLg">
+    <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
       <%= ob.termsAndConditions %>
     </div>
   <% } %>
-  <div class="box clrP clrBr padLg">
+  <div class="contentBox padLg clrP clrBr clrSh3">
     <div>
       <div>
       <% ob.item.categories.forEach(function(category){
@@ -142,15 +152,4 @@
       </div>
     </div>
   </div>
-
-
-    <% console.log(ob) %>
-    <span class="clrE1 clrTOnEmph txTiny txCtr txUp padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner">Free Shipping (translate me yo)</span>
 </div>
-
-
-<h1><%= ob.item.title %></h1>
-<div><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></div>
-<br />
-<span class="clrE1 clrTOnEmph txTiny txCtr txUp padTn <% print(ob.shipsFreeToMe ? '' : 'hide') %> js-shipsFreeBanner"><%= ob.polyT('listingDetail.freeShippingBanner') %></span>
-

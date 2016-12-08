@@ -59,6 +59,7 @@ export default class extends BaseModal {
       'click .js-editListing': 'onClickEditListing',
       'click .js-deleteListing': 'onClickDeleteListing',
       'click .js-gotoPhotos': 'onClickGotoPhotos',
+      'click .js-freeShippingLabel': 'onClickFreeShippingLabel',
       'change #shippingDestinations': 'setShippingDestination',
       ...super.events(),
     };
@@ -122,6 +123,16 @@ export default class extends BaseModal {
     }, 500);
   }
 
+  onClickFreeShippingLabel() {
+    this.gotoShippingOptions();
+  }
+
+  gotoShippingOptions() {
+    this.$el.animate({
+      scrollTop: this.$shippingOptions.offset().top,
+    }, 500);
+  }
+
   showDataChangedMessage() {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
@@ -147,13 +158,10 @@ export default class extends BaseModal {
   }
 
   setShippingDestination(e) {
-    console.log(this.model.get('listing'));
-
     const shippingOptions = this.model.get('listing').get('shippingOptions').toJSON();
-    const matchedOptions = shippingOptions.filter((option) =>
+    const templateData = shippingOptions.filter((option) =>
       option.regions.includes($(e.target).val())
     );
-    const templateData = matchedOptions;
     loadTemplate('modals/listingDetail/shippingOptions.html', t => {
       this.$shippingOptions.html(t({
         templateData,
