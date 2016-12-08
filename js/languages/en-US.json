@@ -53,7 +53,7 @@
         "noListings": "This store has no listings.",
         "noListingsFound": "No listings match your search criteria",
         "btnClearSearch": "Clear Search Criteria",
-        "shipsToFilterAny": "(Any Country)",
+        "shipsToFilterAny": "(Any country)",
         "sortBy": "Sort By",
         "countListings": "%{smart_count} listing |||| %{smart_count} listings",
         "countListingsFound": "%{countListings} found",
