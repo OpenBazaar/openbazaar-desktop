@@ -6,16 +6,6 @@ import $ from 'jquery';
 const siblingsToggle = '[data-next-siblings-toggle]';
 const siblingsToggleInputs = `${siblingsToggle} input[type="radio"]`;
 
-function getResponseReason(resp) {
-  let reason;
-  try {
-    reason = resp.responseJSON.reason || '';
-  } catch (e) {
-    reason = '';
-  }
-  return reason;
-}
-
 export default class extends baseVw {
   constructor(options = {}) {
     super({
@@ -55,54 +45,37 @@ export default class extends baseVw {
     return super.getFormData(subset);
   }
 
-  setAndValidate() {
+  save() {
     this.localSettings.set(this.getFormData(this.$localFields), { validate: true });
     this.settings.set(this.getFormData(), { validate: true });
-  }
 
-  startSaving() {
-    return {
-      local: this.localSettings.save(),
-      cloud: this.settings.save(),
-    };
-  }
-
-  attemptSave({ cloudFail, localFail }) {
     if (this.localSettings.validationError || this.settings.validationError) {
+      // client side validation failed on one or both models
       this.trigger('saveComplete', true);
     } else {
       this.trigger('savingToServer');
-      const saving = this.startSaving();
-      saving.local.done(() =>
-      saving.cloud.done(() => this.trigger('saveComplete'))   // both succeeded
-        .fail(r => this.reportFail(r, cloudFail)))            // cloud failed
-        .fail(r => this.reportFail(r, localFail));            // local failed
+
+      // let's save and monitor both save processes
+      const localSave = this.localSettings.save();
+      const serverSave = this.settings.save();
+
+      $.when(localSave, serverSave)
+        .done(() => {
+          // both succeeded!
+          this.trigger('saveComplete');
+        })
+        .fail((...args) => {
+          // One has failed, the other may have also failed or may
+          // fail or may succeed. It doesn't matter, for our purposed one
+          // failure is enough for us to consider the "save" to have failed
+          this.trigger('saveComplete', false, true,
+          args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
+        });
     }
-  }
 
-  reportFail(resp, then) {
-    const reason = getResponseReason(resp);
-    this.trigger('saveComplete', false, true, reason);
-    if (then instanceof Function) then();
-  }
-
-  showErrors() {
+    this.render();
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-  }
-
-  saveLocalAndServer() {
-    const backupLocalSettings = this.localSettings.toJSON();
-    const rollbackLocal = () => { this.localSettings.set(backupLocalSettings); this.localSettings.save(); };
-
-    this.setAndValidate();
-    this.attemptSave({ cloudFail: rollbackLocal });
-    this.render();
-    this.showErrors();
-  }
-
-  save() {
-    this.saveLocalAndServer();
   }
 
   render() {
