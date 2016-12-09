@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Menu, Tray, autoUpdater, ipcRenderer, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, Tray, autoUpdater, shell } from 'electron';
 
 import os from 'os';
 import path from 'path';
@@ -438,11 +438,11 @@ function createWindow() {
 
     autoUpdater.on('update-not-available', (msg) => {
       console.log(msg);
-      ipcRenderer.send('updateNotAvailable');
+      mainWindow.send('updateNotAvailable');
     });
 
     autoUpdater.on('update-available', () => {
-      ipcRenderer.send('updateAvailable');
+      mainWindow.send('updateAvailable');
     });
 
     autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
@@ -451,7 +451,7 @@ function createWindow() {
       // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
       // .removeClass("softwareUpdateHidden");');
       console.log(quitAndUpdate);
-      ipcRenderer.send('updateReadyForInstall');
+      mainWindow.send('updateReadyForInstall');
     });
 
     // Listen for installUpdate command to install the update
