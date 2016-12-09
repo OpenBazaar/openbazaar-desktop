@@ -36,17 +36,37 @@ function socketConnect(socket) {
   const deferred = $.Deferred();
 
   const onOpen = () => deferred.resolve();
-  const onClose = (e) => deferred.reject(e);
+  const onClose = (e) => deferred.reject('failed', e);
 
   const cancel = () => {
     socket.off(null, onOpen);
     socket.off(null, onClose);
-    deferred.reject(null, true);
+    deferred.reject('canceled');
   };
 
   socket.on('open', onOpen);
   socket.on('close', onClose);
   socket.connect();
+
+  const promise = deferred.promise();
+  promise.cancel = cancel;
+
+  return promise;
+}
+
+function authenticate(server) {
+  // todo: validate args
+
+  const deferred = $.Deferred();
+
+  const fetchConfig = $.get(`${server.httpUrl}/ob/config`)
+    .done(() => deferred.resolve())
+    .fail((e) => deferred.reject('failed', e));
+
+  const cancel = () => {
+    deferred.reject('canceled');
+    fetchConfig.abort();
+  };
 
   const promise = deferred.promise();
   promise.cancel = cancel;
@@ -107,7 +127,7 @@ export function connect(server, options = {}) {
     }
 
     if (connectAttempt) connectAttempt.cancel();
-    reject('cancelled');
+    reject('canceled');
   };
 
   if (curCon) {
@@ -144,28 +164,36 @@ export function connect(server, options = {}) {
         socketConnectAttempt = socketConnect(socket)
           .done(() => {
             innerConnectDeferred.resolve('connected');
-          }).fail((e, cancelled) => {
-            if (cancelled) {
-              innerConnectDeferred.reject('cancelled');
+          }).fail((reason, e) => {
+            if (reason === 'canceled') {
+              innerConnectDeferred.reject('canceled');
             } else {
-              innerConnectDeferred.reject('connection-failed', { socketCloseEvent: e });
+              innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
             }
           });
       });
 
       localServer.start();
     } else {
-      // connect to stand-alone server
       innerConnectDeferred.notify('connecting');
 
       socketConnectAttempt = socketConnect(socket)
         .done(() => {
-          innerConnectDeferred.resolve('connected');
-        }).fail((e, cancelled) => {
-          if (cancelled) {
-            innerConnectDeferred.reject('cancelled');
+          // innerConnectDeferred.resolve('connected');
+          if (server.needsAuthentication()) {
+            authenticate(server)
+              .done(() => innerConnectDeferred.resolve('connected'))
+              .fail((reason, e) => {
+                innerConnectDeferred.reject('authentiction-failed', { failedAuthEvent: e });
+              });
           } else {
-            innerConnectDeferred.reject('connection-failed', { socketCloseEvent: e });
+            innerConnectDeferred.resolve('connected');
+          }
+        }).fail((reason, e) => {
+          if (reason === 'canceled') {
+            innerConnectDeferred.reject('canceled');
+          } else {
+            innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
           }
         });
     }
@@ -188,7 +216,9 @@ export function connect(server, options = {}) {
       .fail((status, data = {}) => {
         clearTimeout(maxTimeTimeout);
 
-        if (attempt === opts.attempts) {
+        if (status === 'canceled') {
+          return;
+        } else if (attempt === opts.attempts || status === 'authentiction-failed') {
           reject(status, data);
         } else {
           const delay = opts.timeoutBetweenAttempts - (Date.now() - connectAttemptStartTime);
@@ -201,7 +231,7 @@ export function connect(server, options = {}) {
       });
 
     const attemptConnectionCancel = () => {
-      reject('cancelled');
+      reject('canceled');
       clearTimeout(maxTimeTimeout);
       clearTimeout(nextAttemptTimeout);
       innerConnectAttempt.cancel();

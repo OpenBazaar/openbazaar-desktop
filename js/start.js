@@ -365,16 +365,19 @@ function start() {
 }
 
 function connectToServer() {
-  console.log(`Will attempt to connect to server [${app.serverConfigs.activeServer.get('name')}].`)
+  const server = app.serverConfigs.activeServer;
+
+  console.log(`Will attempt to connect to server "${server.get('name')}".` +
+    ` at ${server.get('serverIp')}.`);
   serverConnect(app.serverConfigs.activeServer)
     .progress(e => {
-      console.log(`Status is [${e.status}] for connect attempt` +
+      console.log(`Status is "${e.status}" for connect attempt` +
         ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
     }).done((e) => {
-      console.log(`Connected to [${e.server.get('name')}]`);
+      console.log(`Connected to "${e.server.get('name')}"`);
       start();
     }).fail((e) => {
-      console.log(`Failed to connect to [${e.server.get('name')}]`);
+      console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
     });
 }
 
@@ -434,7 +437,7 @@ app.serverConfigs.fetch().done(() => {
   }
 });
 
-console.log('serverConfigs');
+// console.log('serverConfigs');
 window.serverConfigs = app.serverConfigs;
 
 // connect to the API websocket
