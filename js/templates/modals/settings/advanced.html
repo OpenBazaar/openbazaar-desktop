@@ -174,6 +174,7 @@
           <label><%= ob.polyT('settings.advancedTab.smtp.notifications') %></label>
         </div>
         <div class="col9">
+          <% if (ob.errors['smtpSettings.notifications']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.notifications'] })) %>
           <div class="btnRadio clrBr">
             <input type="radio"
                    name="smtpSettings.notifications"
@@ -276,12 +277,13 @@
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label>
-            <%= ob.polyT('settings.advancedTab.smtp._testAction') %>
-          </label>
         </div>
         <div class="col9">
           <a class="btn clrP clrBr js-testSMTPSettings flexNoShrink"><%= ob.polyT('settings.advancedTab.smtp._testAction') %></a>
+          <input  class="btn clrP clrBr flexNoShrink" 
+                  type=reset 
+                  value="<%= ob.polyT('settings.advancedTab.smtp._clearAction') %>"
+          >
         </div>
       </div>
     </form>

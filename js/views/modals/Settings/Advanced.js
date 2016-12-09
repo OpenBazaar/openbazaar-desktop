@@ -3,9 +3,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import $ from 'jquery';
 
-const siblingsToggle = '[data-next-siblings-toggle]';
-const siblingsToggleInputs = `${siblingsToggle} input[type="radio"]`;
-
 export default class extends baseVw {
   constructor(options = {}) {
     super({
@@ -23,22 +20,14 @@ export default class extends baseVw {
 
   get events() {
     return {
-      [`change ${siblingsToggleInputs}`]: 'handleNextSiblingsToggle',
+      'click .js-smtpContainer input[type="reset"]': 'resetSMTPFields',
     };
   }
 
-  handleNextSiblingsToggle(event) {
-    const t = event.target;
-    this.applyNextSiblingsToggle(t, t.value);
-  }
-
-  applyNextSiblingsToggle(t, val) {
-    const p = $(t).parents(siblingsToggle);
-    if (val === 'true') {
-      p.addClass('showNextSiblings');
-    } else {
-      p.removeClass('showNextSiblings');
-    }
+  resetSMTPFields() {
+    this.settings.set('smtpSettings',
+      this.settings.get('smtpSettings').defaults(), { validate: true });
+    this.render();
   }
 
   getFormData(subset = this.$formFields) {
@@ -89,8 +78,6 @@ export default class extends baseVw {
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
-      this.$(`${siblingsToggleInputs}:checked`).
-        each((_, inp) => this.applyNextSiblingsToggle(inp, inp.value));
     });
 
     return this;

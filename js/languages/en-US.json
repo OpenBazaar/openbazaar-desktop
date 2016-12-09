@@ -90,6 +90,7 @@
       "smtp": {
         "_sectionName": "SMTP Integration",
         "_testAction": "Test Integration",
+        "_clearAction": "Clear Settings",
         "notifications": "Notifications",
         "username": "Username",
         "password": "Password",
@@ -306,7 +307,10 @@
     "password": "Please provide a valid password.",
     "serverAddress": "Please provide a valid URL.",
     "senderEmail": "Please provide a valid email.",
-    "recipientEmail": "Please provide a valid email."
+    "recipientEmail": "Please provide a valid email.",
+    "notifications": {
+      "caseOffIfEmpty": "Please fill out all settings if you turn notifications on."
+    }
   },
   "errors": {
     "saveError": "There was an error saving your data.",

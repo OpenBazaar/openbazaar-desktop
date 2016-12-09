@@ -22,15 +22,19 @@ export default class extends BaseModel {
     };
 
     // get all keys that have String values
-    const stringValuedKeys = Object.keys(attrs).filter(k => typeof attrs[k] == "string");
+    const stringValuedKeys = Object.keys(attrs).filter(k => typeof attrs[k] === 'string');
 
     // trim all string values of whitespace
-    stringValuedKeys.forEach(k => attrs[k] = attrs[k].trim());
+    stringValuedKeys.forEach(k => { attrs[k] = attrs[k].trim(); });
 
     // check if they are all empty
-    const everyInputEmpty = stringValuedKeys.every(k => attrs[k].length == 0);
+    const everyInputEmpty = stringValuedKeys.every(k => attrs[k].length === 0);
 
-    if (!everyInputEmpty) {
+    if (everyInputEmpty) {
+      if (attrs.notifications) {
+        addError('notifications', app.polyglot.t('smtpModelErrors.notifications.caseOffIfEmpty'));
+      }
+    } else {
       if (is.not.url(attrs.serverAddress.trim())) {
         addError('serverAddress', app.polyglot.t('smtpModelErrors.serverAddress'));
       }
