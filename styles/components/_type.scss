@@ -93,6 +93,12 @@ p {
   text-transform: uppercase;
 }
 
+.txNoUnd:hover,
+a.txNoUnd:hover,
+a .txNoUnd:hover {
+  text-decoration: none;
+}
+
 .ic90r:before {
   //rotate icon 90 degrees
   transform: rotate(90deg);
