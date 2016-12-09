@@ -49,8 +49,8 @@
             -->
             <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
             <div class="flexHCent gutterH">
-              <div class="ion-star"> X.X</div><!-- placeholder until reviews exist -->
-              <div class="ion-chatbubble"> X.X</div><!-- placeholder until reviews exist -->
+              <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
+              <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->
               <% if(ob.shipsFreeToMe) { %>
               <div class="txCtr">
                 <a class="clrE1 clrTOnEmph phraseBox js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
@@ -87,8 +87,12 @@
 
   <% if (ob.item.images.length) { %>
     <div class="contentBox clrP clrBr clrSh3" id="photoSection">
-      <div class="photoSelected js-photoSelected" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.item.images[0].original}`) %>);">
+      <div class="photoSelected js-photoSelected" data-index="0" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.item.images[0].original}`) %>);">
       </div>
+      <% if (ob.item.images.length > 1) { %>
+        <button class="btn clrTEmph2 ion-ios-arrow-left photoPrev hide js-photoPrev"></button>
+        <button class="btn clrTEmph2 ion-ios-arrow-right photoNext js-photoNext"></button>
+      <% } %>
       <div class="photoStrip flex gutterH clrBrEmph2">
         <% ob.item.images.forEach(function(image, index){
         const chk = index === 0 ? "checked" : "";
@@ -99,12 +103,18 @@
     </div>
   <% } %>
 
+<!-- Reviews and attachments are not yet available -->
+<!--
   <div class="contentBox padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
     Placeholder for Reviews
   </div>
 
-  <!-- attachments here -->
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.attachments') %></h2>
+    Placeholder for Attachments
+  </div>
+ -->
 
   <% if (ob.shippingOptions.length) { %>
     <div class="contentBox padLg clrP clrBr clrSh3">
@@ -135,28 +145,4 @@
     </div>
   <% } %>
 
-  <div class="contentBox padLg clrP clrBr clrSh3">
-    <div>
-      <div>
-      <% ob.item.categories.forEach(function(category){
-      print(`category: ${category}`);
-      }); %>
-      </div>
-      <div>
-        nsfw: <%= ob.item.nsfw %>
-      </div>
-      <div>
-      sku: <%= ob.item.sku %>
-      </div>
-
-      <div>
-        format: <%= ob.metadata.format %>
-      </div>
-      <div>
-      <% ob.shippingOptions.forEach(function(option){
-        print(`shipping option: ${option}`);
-      }); %>
-      </div>
-    </div>
-  </div>
 </div>

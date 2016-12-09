@@ -99,6 +99,10 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1);
 }
 
+.clrTEmph2 {
+  @include textColor($emphasis2);
+}
+
 .clrBr {
   border-color: $border;
 

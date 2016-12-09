@@ -63,6 +63,8 @@ export default class extends BaseModal {
       'click .js-freeShippingLabel': 'onClickFreeShippingLabel',
       'change #shippingDestinations': 'setShippingDestination',
       'click .js-photoSelect': 'onClickPhotoSelect',
+      'click .js-photoPrev': 'onClickPhotoPrev',
+      'click .js-photoNext': 'onClickPhotoNext',
       ...super.events(),
     };
   }
@@ -130,11 +132,41 @@ export default class extends BaseModal {
   }
 
   setSelectedPhoto(photoIndex) {
-    const photoHash = this.model.get('listing').toJSON().item.images[photoIndex].original;
+    const photoCol = this.model.get('listing').toJSON().item.images;
+    const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
-    this.$photoSelected.attr('style', `background-image: url(${phSrc});`);
+
+    this.$photoSelected.attr({
+      style: `background-image: url(${phSrc});`,
+      'data-index': photoIndex,
+    });
+
+    this.$photoPrev.toggleClass('hide', photoIndex === 0);
+    this.$photoNext.toggleClass('hide', photoIndex === photoCol.length - 1);
   }
 
+  setActivePhotoThumbnail(thumbIndex) {
+    this.$photoRadioBtns.prop('checked', false).eq(thumbIndex).prop('checked', true);
+  }
+
+  onClickPhotoPrev() {
+    const targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) - 1;
+    if (targetIndex > -1) {
+      this.setSelectedPhoto(targetIndex);
+      this.setActivePhotoThumbnail(targetIndex);
+    }
+  }
+
+  onClickPhotoNext() {
+    const targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) + 1;
+    const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
+
+    if (targetIndex < imagesLength) {
+      this.setSelectedPhoto(targetIndex);
+      this.setActivePhotoThumbnail(targetIndex);
+      this.$photoPrev.removeClass('hide');
+    }
+  }
 
   onClickFreeShippingLabel() {
     this.gotoShippingOptions();
@@ -218,6 +250,21 @@ export default class extends BaseModal {
   get $shippingOptions() {
     return this._$shippingOptions ||
       (this._$shippingOptions = this.$('.js-shippingOptions'));
+  }
+
+  get $photoPrev() {
+    return this._$photoPrev ||
+      (this._$photoPrev = this.$('.js-photoPrev'));
+  }
+
+  get $photoNext() {
+    return this._$photoNext ||
+      (this._$photoNext = this.$('.js-photoNext'));
+  }
+
+  get $photoRadioBtns() {
+    return this._$photoRadioBtns ||
+      (this._$photoRadioBtns = this.$('.js-photoSelect'));
   }
 
   remove() {

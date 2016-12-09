@@ -58,8 +58,36 @@
           height: 100%;
         }
 
+        .photoPrev,
+        .photoNext {
+          background-color: rgba(37,37,37,0.7);
+          border: 0;
+          width: 90px;
+          height: 90px;
+          font-size: 70px;
+          @include center(false, true);
+          z-index: 2;
+        }
+
+        .photoPrev {
+          left: 0;
+
+          &:before {
+            padding-right: 10px; // tweak centering visually
+          }
+        }
+
+        .photoNext {
+          right: 0;
+
+          &:before {
+            padding-left: 10px; // tweak centering visually
+          }
+        }
+
         .photoStrip {
           position: absolute;
+          z-index: 1;
           bottom: 0;
           left: 0;
           right: 0;
