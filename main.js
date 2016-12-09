@@ -399,7 +399,7 @@ ipcMain.on('active-server-set', (e, server) => {
   };
 
   session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-    if (!server.default && (server.username || server.password)) {
+    if (server.authenticate) {
       const un = server.username;
       const pw = server.password;
 

@@ -383,11 +383,11 @@ const sendMainActiveServer = (activeServer) => {
     ...activeServer.toJSON(),
     httpUrl: activeServer.httpUrl,
     socketUrl: activeServer.socketUrl,
+    authenticate: activeServer.needsAuthentication(),
   });
 };
 
 app.serverConfigs = new ServerConfigs();
-
 app.serverConfigs.on('activeServerChange', (activeServer) =>
   sendMainActiveServer(activeServer));
 
@@ -433,6 +433,9 @@ app.serverConfigs.fetch().done(() => {
     connectToServer();
   }
 });
+
+console.log('serverConfigs');
+window.serverConfigs = app.serverConfigs;
 
 // connect to the API websocket
 // todo: this will be incorporated in the server

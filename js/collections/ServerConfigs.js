@@ -18,6 +18,7 @@ export default class extends Collection {
   constructor(models, options) {
     super(models, options);
     this._activeId = localStorage.activeServerConfig;
+    this.on('sync', () => this.bindActiveServerChangeHandler());
   }
 
   get activeServer() {
@@ -43,6 +44,18 @@ export default class extends Collection {
       this._activeId = md.id;
       localStorage.activeServerConfig = md.id;
       this.trigger('activeServerChange', md);
+      this.bindActiveServerChangeHandler();
+    }
+  }
+
+  onActiveServerChange(md) {
+    this.trigger('activeServerChange', md);
+  }
+
+  bindActiveServerChangeHandler() {
+    if (this.activeServer) {
+      this.activeServer.off('change', this.onActiveServerChange)
+        .on('change', this.onActiveServerChange);
     }
   }
 

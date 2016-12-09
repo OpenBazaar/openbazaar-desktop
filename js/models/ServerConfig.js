@@ -20,6 +20,22 @@ export default class extends BaseModel {
     };
   }
 
+  needsAuthentication() {
+    let needsAuth = false;
+
+    if (!this.isLocalServer()) {
+      needsAuth = true;
+    } else {
+      if (!this.get('default')) {
+        if (this.get('username') || this.get('password')) {
+          needsAuth = true;
+        }
+      }
+    }
+
+    return needsAuth;
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -49,6 +65,9 @@ export default class extends BaseModel {
       }
     }
 
+    // TODO: remotes must provide credentials
+    // TODO: enforce SSL on remotes
+
     if (!attrs.default) {
       if (!is.number(attrs.port)) {
         addError('port', 'Please provide a number.');
@@ -58,7 +77,6 @@ export default class extends BaseModel {
         }
       }
 
-      // TODO: remotes must provide credentials
       // if (!is.existy(attrs.username) || is.empty(attrs.username)) {
       //   addError('username', 'Please provide a value.');
       // }
