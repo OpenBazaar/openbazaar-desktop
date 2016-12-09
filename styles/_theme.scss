@@ -122,6 +122,22 @@ input[type=range][class~="clrS"] {
   box-shadow: 0 0 3px rgba(0,0,0,0.4);
 }
 
+.clrBrEmph1 {
+  border-color: $emphasis1;
+
+  hr {
+    border-color: $emphasis1;
+  }
+}
+
+.clrBrEmph2 {
+  border-color: $emphasis2;
+
+  hr {
+    border-color: $emphasis2
+  }
+}
+
 .clrBAtt1 {
   background-color: $emphasis1;
 }

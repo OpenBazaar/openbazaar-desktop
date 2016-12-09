@@ -7,6 +7,7 @@ import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
 import 'select2';
 import { getTranslatedCountries } from '../../../data/countries';
+import '../../../utils/draggable_background';
 
 
 export default class extends BaseModal {
@@ -61,6 +62,7 @@ export default class extends BaseModal {
       'click .js-gotoPhotos': 'onClickGotoPhotos',
       'click .js-freeShippingLabel': 'onClickFreeShippingLabel',
       'change #shippingDestinations': 'setShippingDestination',
+      'click .js-photoSelect': 'onClickPhotoSelect',
       ...super.events(),
     };
   }
@@ -122,6 +124,17 @@ export default class extends BaseModal {
       scrollTop: this.$photoSection.offset().top,
     }, 500);
   }
+
+  onClickPhotoSelect(e) {
+    this.setSelectedPhoto($(e.target).data('index'));
+  }
+
+  setSelectedPhoto(photoIndex) {
+    const photoHash = this.model.get('listing').toJSON().item.images[photoIndex].original;
+    const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
+    this.$photoSelected.attr('style', `background-image: url(${phSrc});`);
+  }
+
 
   onClickFreeShippingLabel() {
     this.gotoShippingOptions();
@@ -216,8 +229,6 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
-    console.log(...this.model.get('listing').toJSON());
-
     loadTemplate('modals/listingDetail/listing.html', t => {
       this.$el.html(t({
         ...this.model.get('listing').toJSON(),
@@ -236,6 +247,9 @@ export default class extends BaseModal {
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
+
+      this.$photoSelected = this.$('.js-photoSelected');
+      this.$photoSelected.backgroundDraggable();
 
       const shippingDest = this.$('#shippingDestinations');
 
