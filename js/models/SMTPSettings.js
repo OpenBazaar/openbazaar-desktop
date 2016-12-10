@@ -27,29 +27,35 @@ export default class extends BaseModel {
     // trim all string values of whitespace
     stringValuedKeys.forEach(k => { attrs[k] = attrs[k].trim(); });
 
-    // check if they are all empty
-    const everyInputEmpty = stringValuedKeys.every(k => attrs[k].length === 0);
-
-    if (everyInputEmpty) {
-      if (attrs.notifications) {
-        addError('notifications', app.polyglot.t('smtpModelErrors.notifications.caseOffIfEmpty'));
-      }
-    } else {
-      if (is.not.url(attrs.serverAddress.trim())) {
+    if (attrs.notifications) {
+      if (is.not.url(attrs.serverAddress)) {
         addError('serverAddress', app.polyglot.t('smtpModelErrors.serverAddress'));
       }
-      if (is.empty(attrs.username.trim())) {
+      if (is.empty(attrs.username)) {
         addError('username', app.polyglot.t('smtpModelErrors.username.caseEmpty'));
-      } else if (is.not.alphaNumeric(attrs.username.trim())) {
+      } else if (is.not.alphaNumeric(attrs.username)) {
         addError('username', app.polyglot.t('smtpModelErrors.username.caseInvalid'));
       }
-      if (is.empty(attrs.password.trim())) {
+      if (is.empty(attrs.password)) {
         addError('password', app.polyglot.t('smtpModelErrors.password'));
       }
-      if (is.not.email(attrs.senderEmail.trim())) {
+      if (is.not.email(attrs.senderEmail)) {
         addError('senderEmail', app.polyglot.t('smtpModelErrors.senderEmail'));
       }
-      if (is.not.email(attrs.recipientEmail.trim())) {
+      if (is.not.email(attrs.recipientEmail)) {
+        addError('recipientEmail', app.polyglot.t('smtpModelErrors.recipientEmail'));
+      }
+    } else {
+      if (is.not.url(attrs.serverAddress) && is.not.empty(attrs.serverAddress)) {
+        addError('serverAddress', app.polyglot.t('smtpModelErrors.serverAddress'));
+      }
+      if (is.not.alphaNumeric(attrs.username) && is.not.empty(attrs.username)) {
+        addError('username', app.polyglot.t('smtpModelErrors.username.caseInvalid'));
+      }
+      if (is.not.email(attrs.senderEmail) && is.not.empty(attrs.senderEmail)) {
+        addError('senderEmail', app.polyglot.t('smtpModelErrors.senderEmail'));
+      }
+      if (is.not.email(attrs.recipientEmail) && is.not.empty(attrs.recipientEmail)) {
         addError('recipientEmail', app.polyglot.t('smtpModelErrors.recipientEmail'));
       }
     }

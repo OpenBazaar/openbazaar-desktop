@@ -35,6 +35,7 @@ export default class extends baseVw {
   }
 
   save() {
+    this.trigger('saving');
     this.localSettings.set(this.getFormData(this.$localFields), { validate: true });
     this.settings.set(this.getFormData(), { validate: true });
 
