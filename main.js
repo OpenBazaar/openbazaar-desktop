@@ -84,19 +84,16 @@ if (isBundledApp) {
       'openbazaard' : 'openbazaard.exe',
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
   });
-
-  // localServer.start();
 }
 
-function showDebugLog() {
-  if (!localServer) {
-    throw new Error('The debug log is only available on the bundled app' +
-      'once we\'ve created a local server.');
+function showDebugLog(log) {
+  if (typeof log !== 'string') {
+    throw new Error('Please provide a log as a string.');
   }
 
   const debugPath = `${serverPath}debug.txt`;
 
-  fs.writeFile(debugPath, localServer.debugLog, (err) => {
+  fs.writeFile(debugPath, log, (err) => {
     if (err) {
       dialog.showErrorBox('Unable To Open Debug Log',
         'There was an error and we are unable to open the server debug' +
@@ -289,7 +286,10 @@ function createWindow() {
       {
         label: 'View Server Debug Log',
         type: 'normal',
-        click() { showDebugLog(); },
+        click() {
+          mainWindow.webContents.send('request-debug-log');
+          ipcMain.on('provided-debug-log', (e, debugLog) => showDebugLog(debugLog));
+        },
       },
       {
         type: 'separator',
@@ -327,6 +327,10 @@ function createWindow() {
       contextMenu.items[1].enabled = false;
     });
   }
+
+  // we'll enable the debug log when our serverConnect module is ready
+  contextMenu.items[2].enabled = false;
+  ipcMain.on('server-connect-ready', () => (contextMenu.items[2].enabled = true));
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

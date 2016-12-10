@@ -367,7 +367,7 @@ function start() {
 function connectToServer() {
   const server = app.serverConfigs.activeServer;
 
-  console.log(`Will attempt to connect to server "${server.get('name')}".` +
+  console.log(`Will attempt to connect to server "${server.get('name')}"` +
     ` at ${server.get('serverIp')}.`);
   serverConnect(app.serverConfigs.activeServer)
     .progress(e => {
@@ -439,6 +439,14 @@ app.serverConfigs.fetch().done(() => {
 
 // console.log('serverConfigs');
 window.serverConfigs = app.serverConfigs;
+
+// $(window).on('beforeunload', () => {
+//   const localServer = remote.getGlobal('localServer');
+
+//   if (localServer) {
+//     localServer.
+//   }  
+// });
 
 // connect to the API websocket
 // todo: this will be incorporated in the server

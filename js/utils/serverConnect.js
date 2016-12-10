@@ -1,4 +1,5 @@
-import { remote } from 'electron';
+import { EOL } from 'os';
+import { remote, ipcRenderer } from 'electron';
 import _ from 'underscore';
 import ServerConfig from '../models/ServerConfig';
 import Socket from '../utils/Socket';
@@ -10,9 +11,24 @@ import $ from 'jquery';
 //   ...Events,
 // };
 
-let currentConnection = null;
-
 const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
+
+let currentConnection = null;
+let debugLog = '';
+
+function log(msg) {
+  if (typeof msg !== 'string') {
+    throw new Error('Please provide a message.');
+  }
+
+  if (!msg) return;
+
+  debugLog += `[SERVER-CONNECT] ${msg}${EOL}`;
+}
+
+export function getDebugLog() {
+  return debugLog;
+}
 
 // function setCurrentConnection(state = {}) {
 //   // todo: doc additive nature
@@ -79,11 +95,14 @@ export function connect(server, options = {}) {
     throw new Error('Please provide a server as a ServerConfig instance.');
   }
 
-  const curCon = getCurrentConnection();
+  // const curCon = getCurrentConnection();
 
-  if (curCon && curCon.server.id === server.id) {
-    throw new Error('You are already connected to the given server');
-  }
+  // if (curCon && curCon.server.id === server.id) {
+  //   throw new Error('You are already connected to the given server');
+  // }
+
+  log(`[${server.id.slice(0, 8)}] Will attempt to connect to server "${server.get('name')}"` +
+    ` at ${server.get('serverIp')}.`);
 
   const opts = {
     attempts: 3,
@@ -130,18 +149,18 @@ export function connect(server, options = {}) {
     reject('canceled');
   };
 
-  if (curCon) {
-    curCon.cancel();
+  // if (curCon) {
+  //   curCon.cancel();
 
-    // if (curCon.server.get('default')) {
-    //   deferred.notify({
-    //     status: 'stopping-local-server',
-    //     localServer,
-    //   });
+  //   if (curCon.server.get('default')) {
+  //     deferred.notify({
+  //       status: 'stopping-local-server',
+  //       localServer,
+  //     });
 
-    //   localServer.stop();
-    // }
-  }
+  //     localServer.stop();
+  //   }
+  // }
 
   currentConnection = { cancel };
 
@@ -179,12 +198,14 @@ export function connect(server, options = {}) {
 
       socketConnectAttempt = socketConnect(socket)
         .done(() => {
-          // innerConnectDeferred.resolve('connected');
           if (server.needsAuthentication()) {
+            innerConnectDeferred.notify('authenticating');
             authenticate(server)
               .done(() => innerConnectDeferred.resolve('connected'))
               .fail((reason, e) => {
-                innerConnectDeferred.reject('authentiction-failed', { failedAuthEvent: e });
+                console.log('moonie');
+                window.moonie = e;
+                innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
               });
           } else {
             innerConnectDeferred.resolve('connected');
@@ -218,7 +239,7 @@ export function connect(server, options = {}) {
 
         if (status === 'canceled') {
           return;
-        } else if (attempt === opts.attempts || status === 'authentiction-failed') {
+        } else if (attempt === opts.attempts || status === 'authentication-failed') {
           reject(status, data);
         } else {
           const delay = opts.timeoutBetweenAttempts - (Date.now() - connectAttemptStartTime);
@@ -246,8 +267,39 @@ export function connect(server, options = {}) {
 
   if (attempt <= opts.attempts) connectAttempt = attemptConnection();
 
+  // wire in some logging
+  deferred.progress(e => {
+    log(`[${server.id.slice(0, 8)}] Status is "${e.status}" for connect attempt` +
+      ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
+  }).done((e) => {
+    log(`[${server.id.slice(0, 8)}] Connected to "${e.server.get('name')}"`);
+  }).fail((e) => {
+    log(`[${server.id.slice(0, 8)}] Failed to connect to "${e.server.get('name')}"`);
+    log(` ====> Reason: ${e.status}`);
+
+    if (e.socketCloseEvent) {
+      log(` ====> Code: ${e.socketCloseEvent.code}`);
+      if (e.socketCloseEvent.reason) log(`Reason: ${e.socketCloseEvent.reason}`);
+    } else if (e.failedAuthEvent) {
+      log(` ====> Status: ${e.failedAuthEvent.status}`);
+      log(` ====> Status text: ${e.failedAuthEvent.statusText}`);
+
+      if (e.failedAuthEvent.responseText) {
+        log(` ====> Response text: ${e.failedAuthEvent.responseText}`);
+      }
+    }
+  });
+
   const promise = deferred.promise();
   promise.cancel = cancel;
 
   return promise;
 }
+
+ipcRenderer.send('server-connect-ready');
+ipcRenderer.on('request-debug-log', () => {
+  ipcRenderer.send('provided-debug-log', getDebugLog());
+});
+
+log(getLocalServer().debugLog);
+getLocalServer().on('log', (localServer, localServerLog) => log(localServerLog));

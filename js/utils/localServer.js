@@ -34,18 +34,16 @@ export default class LocalServer {
   start() {
     if (this.pendingStop) {
       this.pendingStop.once('close', this.startAfterStop);
-      const debugInfo = '[SERVER-INFO] Attempt to start server while an existing one' +
+      const debugInfo = 'Attempt to start server while an existing one' +
         ' is the process of shutting down. Will start after shut down is complete.';
-      this._debugLog += `${debugInfo}${EOL}`;
-      console.log(debugInfo);
+      this.log(debugInfo);
       return;
     }
 
     if (this.isRunning) return;
     this._isRunning = true;
 
-    console.log('[SERVER-INFO] Starting OpenBazaar Server');
-    this._debugLog += `[SERVER-INFO] Starting Server${EOL}`;
+    this.log('Starting local server.');
 
     this.serverSubProcess = childProcess.spawn(this.serverPath + this.serverFilename, ['start'], {
       detach: false,
@@ -57,8 +55,7 @@ export default class LocalServer {
         this.trigger('start');
       }
 
-      console.log('[SERVER-OUT] "%s"', String(buf));
-      this._debugLog += `[SERVER-OUT] ${buf}${EOL}`;
+      this.log(`[STDOUT] ${buf}`);
     });
 
     const stderrcallback = function stderrcallback(err) {
@@ -70,14 +67,12 @@ export default class LocalServer {
     };
 
     this.serverSubProcess.stderr.on('data', buf => {
-      console.log('[SERVER-ERR] "%s"', String(buf));
       fs.appendFile(this.errorLogPath, String(buf), stderrcallback);
-      this._debugLog += `[SERVER-ERR] ${buf}${EOL}`;
+      this.log(`[STDERR] ${buf}${EOL}`);
     });
 
     this.serverSubProcess.on('close', code => {
-      console.log(`[SERVER-INFO] server closed with ${code}`);
-      this._debugLog += `[SERVER-INFO] Server closed with ${code}${EOL}`;
+      this.log(`[CLOSE] Server closed with ${code}`);
       this._isRunning = false;
       this.lastCloseCode = code;
       this.trigger('close', { code });
@@ -95,12 +90,8 @@ export default class LocalServer {
     }
 
     this.pendingStop = this.serverSubProcess;
-
     this.pendingStop.once('close', () => (this.pendingStop = null));
-
-    const debugInfo = '[SERVER-INFO] Shutting down server';
-    console.log(debugInfo);
-    this._debugLog += `${debugInfo}${EOL}`;
+    this.log('Shutting down server');
 
     if (platform() === 'darwin' || platform() === 'linux') {
       this.serverSubProcess.kill('SIGINT');
@@ -111,5 +102,17 @@ export default class LocalServer {
 
   get debugLog() {
     return this._debugLog;
+  }
+
+  log(msg) {
+    if (!msg) {
+      throw new Error('Please provide a message.');
+    }
+
+    if (!msg) return;
+
+    const newLog = `[LOCAL-SERVER] ${msg}${EOL}`;
+    this._debugLog += newLog;
+    this.trigger('log', this, newLog);
   }
 }
