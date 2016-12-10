@@ -32,7 +32,7 @@ const handleStartupEvent = function () {
 
   function install(cb) {
     const target = path.basename(process.execPath);
-    exeSquirrelCommand(['--createShortcut', target], cb);
+    exeSquirrelCommand(['--createShortcut', target, ' --shortcut-locations=Desktop,StartMenu'], cb);
   }
 
   function uninstall(cb) {
@@ -131,11 +131,8 @@ const startLocalServer = function startLocalServer() {
     };
     sub.on('close', closecallback);
     sub.unref();
-  } else {
-    if (mainWindow) {
-      mainWindow.webContents.executeJavaScript("console.log('Unable " +
-      "to find openbazaard')");
-    }
+  } else if (mainWindow) {
+    mainWindow.webContents.executeJavaScript("console.log('Unable to find openbazaard')");
   }
 };
 startLocalServer();
@@ -360,11 +357,8 @@ function createWindow() {
             detach: false,
             cwd: workingDir,
           });
-        } else {
-          if (mainWindow) {
-            mainWindow.webContents.executeJavaScript("console.log('Server is not " +
-            "running locally')");
-          }
+        } else if (mainWindow) {
+          mainWindow.webContents.executeJavaScript("console.log('Server is not running locally')");
         }
       },
     },
