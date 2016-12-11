@@ -18,7 +18,8 @@
     "process-index:build": "babel-node ./bin/processIndexForBuild.js",
     "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' prod",
     "babel": "babel js --out-dir prod; babel main.js --out-file mainBuilt.js",
-    "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders"
+    "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders",
+    "binaries": "./build.sh"
   },
   "repository": {
     "type": "git",
