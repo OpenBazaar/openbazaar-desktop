@@ -1,7 +1,7 @@
 {
   "name": "openbazaar-desktop",
   "version": "2.0.0",
-  "description": "",
+  "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development npm-run-all sass:build process-index --parallel sass:watch index:watch browsersync start-app",
