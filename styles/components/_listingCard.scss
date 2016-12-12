@@ -1,8 +1,6 @@
 .listingCard {
   width: 225px;
   height: 283px;
-  border-style: solid;
-  border-width: 1px;
   font-size: $tx5b;
   cursor: pointer;
 
@@ -62,7 +60,7 @@
     }
 
     &.ownListing {
-      border-color: $focusedBorder;
+      border-color: $border3;
       border-bottom-width: 1px;
     }
   }

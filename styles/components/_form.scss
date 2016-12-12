@@ -42,6 +42,8 @@ select {
 }
 
 input[type="text"],
+input[type="email"],
+input[type="password"],
 textarea,
 .select2-container--focus .select2-selection__rendered,
 .select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
@@ -74,7 +76,7 @@ textarea {
 
 .errorList {
   color: $error;
-  
+
   li {
     i {
       margin-right: 5px;
@@ -97,14 +99,14 @@ label {
 .required::after {
   content: '*';
   position: absolute;
-  font-size: 130%;    
+  font-size: 130%;
 }
 
 // By default, using width values appropriate for currency codes.
 // Overwrite in your own implementation if you need to deviate.
 .inputSelect {
   position: relative;
-  
+
   input {
     padding-right: 75px;
   }
@@ -134,3 +136,4 @@ label {
 input[type="radio"]:checked + label {
   font-weight: 700;
 }
+

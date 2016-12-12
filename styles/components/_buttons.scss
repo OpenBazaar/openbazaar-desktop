@@ -5,7 +5,7 @@
   border-width: 1px;
   border-style: solid;
   font-size: $tx5;
-  font-weight: 500;
+  font-weight: 400;
   box-sizing: border-box;
   display: inline-flex;
   vertical-align: middle;
@@ -18,13 +18,11 @@
   cursor: pointer;
   font-weight: 700;
 
-  &:hover {
-    text-decoration: none;
-    cursor: pointer;
-  }
-
+  &:hover,
   &:focus {
     text-decoration: none;
+    cursor: pointer;
+    border: solid 1px $border3;
     outline: 0;
   }
 
@@ -117,8 +115,10 @@
   //creates a set of buttons with no gaps between them
   & > .btn {
     border-radius: 0;
-    border-right-width: 0;
     float: left; //float left will collapse the button and position it correctly
+  }
+  & > .btn:not(:last-child):not(:hover) {   // on hover use the normal border width
+    border-right-color: transparent;
   }
   & > .btn:first-child {
     border-top-left-radius: $corner;
@@ -127,7 +127,6 @@
   & > .btn:last-child {
     border-top-right-radius: $corner;
     border-bottom-right-radius: $corner;
-    border-right-width: 1px;
   }
 }
 

@@ -52,6 +52,11 @@ export default class ObRouter extends Router {
   execute(callback, args) {
     app.loadingModal.open();
 
+    // This block is intentionally duplicated here and in loadPage. It's
+    // here because we want to remove any current views (and have them
+    // do their remove cleanup) as soon as we know we're matching a new
+    // route. Based on some subsequent async fecthes, it may be a little
+    // bit of time before loadPage is called.
     if (this.currentPage) {
       this.currentPage.remove();
       this.currentPage = null;
@@ -64,6 +69,14 @@ export default class ObRouter extends Router {
   }
 
   loadPage(vw) {
+    // This block is intentionally duplicated here in case a route
+    // method was called directly on the app.router instance therefore
+    // bypassing execute.
+    if (this.currentPage) {
+      this.currentPage.remove();
+      this.currentPage = null;
+    }
+
     this.currentPage = vw;
     getPageContainer().append(vw.el);
     app.loadingModal.close();
@@ -223,6 +236,28 @@ export default class ObRouter extends Router {
     this.loadPage(
       new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render()
     );
+  }
+
+  listingError(failedXhr) {
+    if (!failedXhr) {
+      throw new Error('Please provide the failed Xhr request');
+    }
+
+    if (failedXhr.status === 404) {
+      this.listingNotFound();
+    } else {
+      let content = '<p>There was an error retreiving the listing.</p>';
+
+      if (failedXhr.responseText) {
+        const reason = failedXhr.responseJSON && failedXhr.responseJSON.reason ||
+          failedXhr.responseText;
+        content += `<p>${reason}</p>`;
+      }
+
+      this.loadPage(
+        new TemplateOnly({ template: 'error-pages/genericError.html' }).render({ content })
+      );
+    }
   }
 
   genericError(context = {}) {

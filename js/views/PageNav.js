@@ -1,4 +1,4 @@
-import electron from 'electron';
+import { remote } from 'electron';
 import multihashes from 'multihashes';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
@@ -9,14 +9,13 @@ import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { isHiRez } from '../utils/responsive';
 
-const remote = electron.remote;
-
 export default class extends View {
   constructor(options) {
     const opts = {
       events: {
         'click .js-navBack': 'navBackClick',
         'click .js-navFwd': 'navFwdClick',
+        'click .js-navReload': 'navReload',
         'click .js-navClose': 'navCloseClick',
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
@@ -36,9 +35,9 @@ export default class extends View {
 
     $(document).on('click', this.onDocClick.bind(this));
 
-    this.listenTo(app.localSettings, 'change:macStyleWinControls',
-      this.onWinControlsStyleChange);
-    this.setWinControlsStyle(app.localSettings.get('macStyleWinControls') ? 'mac' : 'win');
+    this.listenTo(app.localSettings, 'change:windowControlStyle',
+      (_, style) => this.setWinControlsStyle(style));
+    this.setWinControlsStyle(app.localSettings.get('windowControlStyle'));
   }
 
   get navigable() {
@@ -67,6 +66,12 @@ export default class extends View {
     window.history.forward();
   }
 
+  navReload() {
+    location.reload();
+    // TODO: Only refresh the content not the whole BrowserWindow
+    // Backbone.history.loadUrl();
+  }
+
   setWinControlsStyle(style) {
     if (style !== 'mac' && style !== 'win') {
       throw new Error('Style must be \'mac\' or \'win\'.');
@@ -74,10 +79,6 @@ export default class extends View {
 
     this.$el.removeClass('winStyleWindowControls macStyleWindowControls');
     this.$el.addClass(style === 'mac' ? 'macStyleWindowControls' : 'winStyleWindowControls');
-  }
-
-  onWinControlsStyleChange(model, useMacStyle) {
-    this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
   }
 
   setAppProfile() {
