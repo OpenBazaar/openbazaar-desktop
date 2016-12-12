@@ -3,7 +3,7 @@
   display: block;
 
   .select2-selection {
-    border-radius: 0;
+    border-radius: $corner;
     height: $formElementHeight;
 
     .select2-selection__rendered {
@@ -15,7 +15,7 @@
       width: $formElementHeight;
 
       b {
-        border-width: 10px 7px 0 7px;
+        border-width: 6px 5px 0 5px;
         margin-left: -6px;
         margin-top: -5px;
       }
@@ -29,6 +29,18 @@
       }
     }
   }  
+}
+
+.select2-container--default {
+  &.select2-container--open {
+    .select2-selection--single {
+      .select2-selection__arrow {
+        b {
+          border-width: 0 5px 6px 5px;
+        }
+      }
+    }
+  }
 }
 
 // In order for these styles also work on the drop down part of the component, when
@@ -47,7 +59,8 @@
     }
 
     .select2-selection__arrow {
-      height: 3rem;
+      height: 3.25rem;
+      width: 2.75rem;
     }
   }
 

@@ -110,7 +110,7 @@
         margin-right: 8px;
         height: 30px;
 
-        i {
+        span {
           font-size: 30px;
           line-height:1em;
         }
@@ -120,6 +120,10 @@
           height: 12px;
           border-bottom-width: 1px;
           border-bottom-style: solid;
+
+          span {
+            visibility: hidden;
+          }
         }
 
         &.navClose {
@@ -131,6 +135,10 @@
           border-style: solid;
           height: 12px;
           order: 2;
+
+          span {
+            visibility: hidden;
+          }
         }
       }
     }
