@@ -8,6 +8,7 @@ import childProcess from 'child_process';
 import open from 'open';
 import _ from 'underscore';
 import LocalServer from './js/utils/localServer';
+import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -83,6 +84,9 @@ if (isBundledApp) {
     serverFilename: process.platform === 'darwin' || process.platform === 'linux' ?
       'openbazaard' : 'openbazaard.exe',
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
+    // IMPORTANT: From the main process, only bind events to the localServer instance
+    // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
+    // will be exaplained in the module.
   });
 }
 
@@ -317,12 +321,12 @@ function createWindow() {
       contextMenu.items[1].enabled = false;
     }
 
-    localServer.on('start', () => {
+    bindLocalServerEvent('start', () => {
       contextMenu.items[0].enabled = false;
       contextMenu.items[1].enabled = true;
     });
 
-    localServer.on('stop', () => {
+    bindLocalServerEvent('stop', () => {
       contextMenu.items[0].enabled = true;
       contextMenu.items[1].enabled = false;
     });

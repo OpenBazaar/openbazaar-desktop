@@ -50,13 +50,8 @@ export default class LocalServer {
       cwd: this.serverPath,
     });
 
-    this.serverSubProcess.stdout.on('data', buf => {
-      if (!this.isRunning) {
-        this.trigger('start');
-      }
-
-      this.log(`[STDOUT] ${buf}`);
-    });
+    this.serverSubProcess.stdout.once('data', () => this.trigger('start'));
+    this.serverSubProcess.stdout.on('data', buf => this.obServerLog(`${buf}`));
 
     const stderrcallback = function stderrcallback(err) {
       if (err) {
@@ -68,11 +63,11 @@ export default class LocalServer {
 
     this.serverSubProcess.stderr.on('data', buf => {
       fs.appendFile(this.errorLogPath, String(buf), stderrcallback);
-      this.log(`[STDERR] ${buf}${EOL}`);
+      this.obServerLog(`${buf}`, 'STDERR');
     });
 
     this.serverSubProcess.on('close', code => {
-      this.log(`[CLOSE] Server closed with ${code}`);
+      this.log(`Server closed with ${code}`, 'CLOSE');
       this._isRunning = false;
       this.lastCloseCode = code;
       this.trigger('close', { code });
@@ -104,15 +99,31 @@ export default class LocalServer {
     return this._debugLog;
   }
 
+  _log(msg, type = 'LOCAL-SERVER') {
+    const newLog = `[${type}] ${msg}${msg.endsWith(EOL) ? '' : EOL}`;
+    this._debugLog += newLog;
+    this.trigger('log', this, newLog);
+  }
+
   log(msg) {
-    if (!msg) {
+    if (typeof msg !== 'string') {
       throw new Error('Please provide a message.');
     }
 
     if (!msg) return;
+    this._log(msg);
+  }
 
-    const newLog = `[LOCAL-SERVER] ${msg}${EOL}`;
-    this._debugLog += newLog;
-    this.trigger('log', this, newLog);
+  obServerLog(msg, type = 'STDOUT') {
+    if (typeof msg !== 'string') {
+      throw new Error('Please provide a message.');
+    }
+
+    if (!msg) return;
+    console.log(msg);
+
+    const msgPreface = type ? `[${type}] ` : '';
+    msg.split(EOL).forEach(splitMsg =>
+      this._log(`${msgPreface}${splitMsg}`, '[OB-SERVER]'));
   }
 }

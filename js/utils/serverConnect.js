@@ -302,4 +302,14 @@ ipcRenderer.on('request-debug-log', () => {
 });
 
 log(getLocalServer().debugLog);
-getLocalServer().on('log', (localServer, localServerLog) => log(localServerLog));
+getLocalServer().on('log', (localServer, localServerLog) => (debugLog += localServerLog));
+
+let started = false;
+log('Browser has been started.');
+$(document).ready(() => {
+  if (started) {
+    log('Browser has been refreshed.');
+  } else {
+    started = false;
+  }
+});

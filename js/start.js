@@ -440,13 +440,23 @@ app.serverConfigs.fetch().done(() => {
 // console.log('serverConfigs');
 window.serverConfigs = app.serverConfigs;
 
-// $(window).on('beforeunload', () => {
-//   const localServer = remote.getGlobal('localServer');
+$(window).on('beforeunload', () => {
+  const localServer = remote.getGlobal('localServer');
 
-//   if (localServer) {
-//     localServer.
-//   }  
-// });
+  if (localServer) {
+    // Since on a refresh any browser variables go away,
+    // we need to unbind our handlers from the localServer instance.
+    // Otherwise, since that instance lives in the main process
+    // and continues to live beyond a refresg, the app would crash
+    // when a localServer event is triggered for any of those handlers.
+    localServer.off();
+
+    // Let the main process know we've just blown away all the handlers,
+    // since some of them may be main process callbacks that the main
+    // process may want to revive.
+    ipcRenderer.send('renderer-cleared-local-server-events');
+  }
+});
 
 // connect to the API websocket
 // todo: this will be incorporated in the server
