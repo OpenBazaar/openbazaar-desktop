@@ -33,16 +33,16 @@
       <div class="listItem">
         <div class="flex">
           <span class="flexExpand">GUID</span>
-          <span class=" clrT4 hide js-guidCopied"><%= ob.polyT('userPage.guidCopied') %></span>
+          <span class="clrT hide js-guidCopied"><%= ob.polyT('userPage.guidCopied') %></span>
         </div>
         <div class="clrT2">
-          <a class="js-guid" data-guid="<%= ob.id %>"><%= ob.id %></a>
+          <a class="js-guid clrT2" data-guid="<%= ob.id %>"><%= ob.id %></a>
         </div>
       </div>
       <% if(ob.website){ %>
         <div class="listItem">
           <div><%= ob.polyT('userPage.website') %></div>
-          <div class="clrT2"><a href="<%= ob.website %>"><%= ob.website %></a></div>
+          <a class="clrT2" href="<%= ob.website %>"><%= ob.website %></a>
         </div>
       <% } %>
       <% if(ob.email){ %>
@@ -62,7 +62,14 @@
   <div class="col8">
     <div class="box">
       <div class="contentBox padMd clrBr clrP clrSh2">
-        <%= ob.about %>
+        <div class="informationHeader row">
+          <strong><%= ob.polyT('userPage.about') %></strong>
+        </div>
+        <% if (ob.about) { %>
+          <%= ob.about %>
+        <% }else{ %> 
+          <span class="clrT2"><i><%= ob.polyT('userPage.aboutEmpty') %></i></span>
+        <% } %> 
       </div>
       <div class="contentBox padMd2 clrBr clrP clrSh2 termsDisplay js-termsDisplay">
         <a class="cornerTR ion-close-round js-termsClose"></a>
