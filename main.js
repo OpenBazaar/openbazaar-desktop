@@ -14,7 +14,6 @@ let closeConfirmed = false;
 // let launchedFromInstaller = false;
 const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
 // let version = app.getVersion();
-// let TrayMenu;
 
 const handleStartupEvent = function () {
   if (process.platform !== 'win32') {
@@ -367,18 +366,17 @@ function createWindow() {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  // put logic here to set tray icon based on OS
-  const osTrayIcon = 'openbazaar-mac-system-tray.png';
-
+  // Tray Menu
+  const osTrayIcon = (platform === 'win32') ? 'windows-icon.ico' : 'openbazaar-mac-system-tray.png';
   const trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
   const trayTemplate = [
     {
-      label: 'Start Local Server',
+      label: 'Start Bundled Server',
       type: 'normal',
       click() { startLocalServer(); },
     },
     {
-      label: 'Shutdown Local Server',
+      label: 'Shutdown Bundled Server',
       type: 'normal',
       click() {
         if (fs.existsSync(serverPath)) {
