@@ -17,6 +17,8 @@
     }
 
     #AvatarBtn {
+      border-width: 2px;
+      border-style: solid;
       margin: 5px 0;
     }
   }
@@ -144,33 +146,41 @@
     }
   }
 
-  .navList {
-    box-sizing: border-box;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border: none;
-    width: 260px;
-    padding: $pad;
+  .navListWrapper {
     z-index: 1;
+    padding: 0 $pad $pad $pad; // give room for border and shadow
+    right: $pad; // compensate for padding
 
-    .listItem {
-      display: flex;
+    .navList {
+      box-sizing: border-box;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-width: 1px;
+      border-style: solid;
+      width: 235px;
+      padding: $pad;
+      margin-top: 1px; // blend top shadwo with border in parent
 
-      & > * {
-        flex-shrink: 0;
-        box-sizing: border-box;
-        padding-right: $padSm;
-        word-break: break-all;
 
-        &:last-child {
-          padding-right: 0;
-        }
+      .listItem {
+        display: flex;
 
-        &:first-child {
-          // expand the first child to fill as much space as it can.
-          // The second child (shortcut text) will be pushed to the right.
-          flex-shrink: 1;
-          flex-grow: 1;
+        & > * {
+          flex-shrink: 0;
+          box-sizing: border-box;
+          padding-right: $padSm;
+          word-break: break-all;
+
+          &:last-child {
+            padding-right: 0;
+          }
+
+          &:first-child {
+            // expand the first child to fill as much space as it can.
+            // The second child (shortcut text) will be pushed to the right.
+            flex-shrink: 1;
+            flex-grow: 1;
+          }
         }
       }
     }
