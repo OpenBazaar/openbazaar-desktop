@@ -6,3 +6,4 @@ dist
 prod
 mainBuilt.js
 error.log
+.idea
