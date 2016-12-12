@@ -257,6 +257,11 @@
   padding: $padLg;
 }
 
+.padGi,
+.padGiKids > * {
+  padding: $padGi;
+}
+
 .padStack > *:not(:last-child) {
   //use if the children should collapse the padding between them
   padding-bottom: 0;
