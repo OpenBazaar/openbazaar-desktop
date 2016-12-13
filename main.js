@@ -1,11 +1,10 @@
 import {
   electron, app, BrowserWindow, ipcMain,
-  Menu, Tray, dialog, session,
+  Menu, Tray, session,
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
-import open from 'open';
 import _ from 'underscore';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
@@ -15,6 +14,7 @@ import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 let mainWindow;
 let trayMenu;
 let closeConfirmed = false;
+global.serverLog = '';
 
 const handleStartupEvent = function () {
   if (process.platform !== 'win32') {
@@ -87,25 +87,6 @@ if (isBundledApp) {
     // IMPORTANT: From the main process, only bind events to the localServer instance
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
     // will be exaplained in the module.
-  });
-}
-
-function showDebugLog(log) {
-  if (typeof log !== 'string') {
-    throw new Error('Please provide a log as a string.');
-  }
-
-  const debugPath = `${serverPath}debug.txt`;
-
-  fs.writeFile(debugPath, log, (err) => {
-    if (err) {
-      dialog.showErrorBox('Unable To Open Debug Log',
-        'There was an error and we are unable to open the server debug' +
-        ` log at this time.\n\n${err}`);
-      return;
-    }
-
-    open(debugPath);
   });
 }
 
@@ -291,8 +272,7 @@ function createWindow() {
         label: 'View Server Debug Log',
         type: 'normal',
         click() {
-          mainWindow.webContents.send('request-debug-log');
-          ipcMain.on('provided-debug-log', (e, debugLog) => showDebugLog(debugLog));
+          mainWindow.webContents.send('show-server-log', global.serverLog);
         },
       },
       {
@@ -425,3 +405,22 @@ process.on('exit', () => {
   app.quit();
   if (localServer) localServer.stop();
 });
+
+// Aggreate and make available the localServer and serverConnect
+// module logs into one cohesive server log.
+const log = msg => {
+  if (typeof msg !== 'string') {
+    throw new Error('Please provide a message as a string.');
+  }
+
+  if (!msg) return;
+  global.serverLog += msg;
+
+  if (mainWindow) {
+    mainWindow.webContents.send('server-log', msg);
+  }
+};
+
+bindLocalServerEvent('log', (localServ, msg) => log(msg));
+ipcMain.on('server-connect-log', (e, msg) => log(msg));
+

@@ -54,10 +54,16 @@ export function unbindLocalServerEvent(event, callback, localServer = global.loc
 
 // Revive any main process handlers the renderer process blew away on a refresh.
 ipcMain.on('renderer-cleared-local-server-events', () => {
+  const curEvents = {
+    ...localServerEvents,
+  };
+
+  localServerEvents = {};
+
   if (global.localServer) {
-    Object.keys(localServerEvents).forEach(localServerEventKey => {
-      localServerEvents[localServerEventKey]
-        .forEach(callback => bindLocalServerEvent(localServerEventKey, callback));
+    Object.keys(curEvents).forEach(curEventKey => {
+      curEvents[curEventKey]
+        .forEach(callback => bindLocalServerEvent(curEventKey, callback));
     });
   }
 });

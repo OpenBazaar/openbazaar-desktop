@@ -23,7 +23,9 @@ function log(msg) {
 
   if (!msg) return;
 
-  debugLog += `[SERVER-CONNECT] ${msg}${EOL}`;
+  const logMsg = `[SERVER-CONNECT] ${msg}${EOL}`;
+  debugLog += logMsg;
+  ipcRenderer.send('server-connect-log', logMsg);
 }
 
 export function getDebugLog() {
@@ -297,19 +299,5 @@ export function connect(server, options = {}) {
 }
 
 ipcRenderer.send('server-connect-ready');
-ipcRenderer.on('request-debug-log', () => {
-  ipcRenderer.send('provided-debug-log', getDebugLog());
-});
 
-log(getLocalServer().debugLog);
-getLocalServer().on('log', (localServer, localServerLog) => (debugLog += localServerLog));
-
-let started = false;
-log('Browser has been started.');
-$(document).ready(() => {
-  if (started) {
-    log('Browser has been refreshed.');
-  } else {
-    started = false;
-  }
-});
+log('Browser has been started or refreshed.');

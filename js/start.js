@@ -24,6 +24,7 @@ import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
 import { getBody } from './utils/selectors';
+import { launchDebugLogModal } from './utils/modalManager';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -440,6 +441,7 @@ app.serverConfigs.fetch().done(() => {
 // console.log('serverConfigs');
 window.serverConfigs = app.serverConfigs;
 
+// Clear localServer events on browser refresh.
 $(window).on('beforeunload', () => {
   const localServer = remote.getGlobal('localServer');
 
@@ -457,6 +459,9 @@ $(window).on('beforeunload', () => {
     ipcRenderer.send('renderer-cleared-local-server-events');
   }
 });
+
+// Handle 'show debug log' requests from the main process.
+ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
 // connect to the API websocket
 // todo: this will be incorporated in the server
