@@ -105,7 +105,7 @@ export function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 3,
+    attempts: 5,
     timeoutBetweenAttempts: 3000,
     maxAttemptTime: 5000,
     // todo: work this one in

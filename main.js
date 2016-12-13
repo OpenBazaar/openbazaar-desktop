@@ -326,7 +326,7 @@ function createWindow() {
       contextMenu.items[1].enabled = true;
     });
 
-    bindLocalServerEvent('stop', () => {
+    bindLocalServerEvent('close', () => {
       contextMenu.items[0].enabled = true;
       contextMenu.items[1].enabled = false;
     });

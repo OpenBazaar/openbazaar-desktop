@@ -44,6 +44,7 @@ export default class LocalServer {
     this._isRunning = true;
 
     this.log('Starting local server.');
+    console.log('Starting local server.');
 
     this.serverSubProcess = childProcess.spawn(this.serverPath + this.serverFilename, ['start'], {
       detach: false,
@@ -67,11 +68,19 @@ export default class LocalServer {
     });
 
     this.serverSubProcess.on('close', code => {
+      console.log(`Server closed with ${code}`);
       this.log(`Server closed with ${code}`, 'CLOSE');
       this._isRunning = false;
       this.lastCloseCode = code;
       this.trigger('close', { code });
     });
+
+    // Approach taken from https://www.exratione.com/2013/05/die-child-process-die/
+    // this.serverSubProcess.on('uncaughtException', error => {
+    //   console.log('UNVASODIJ CAUGHT VAUGHT BOOM BAM BiZZLE!');
+    //   this.log(`Uncaught server exception: ${error}`);
+    //   this.stop();
+    // });
 
     this.serverSubProcess.unref();
   }
@@ -87,6 +96,7 @@ export default class LocalServer {
     this.pendingStop = this.serverSubProcess;
     this.pendingStop.once('close', () => (this.pendingStop = null));
     this.log('Shutting down server');
+    console.log('Shutting down server');
 
     if (platform() === 'darwin' || platform() === 'linux') {
       this.serverSubProcess.kill('SIGINT');
