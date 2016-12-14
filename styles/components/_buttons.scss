@@ -1,5 +1,5 @@
 .ctrl {
-  height: 35px;
+  height: $buttonHeight;
   padding: 0 24px;
   border-radius: $corner;
   border-width: 1px;
@@ -107,6 +107,7 @@
   @extend .btn;
   font-size: 2rem;
   padding: 0 12px;
+  width: $buttonHeight;
 }
 
 .btnThin {

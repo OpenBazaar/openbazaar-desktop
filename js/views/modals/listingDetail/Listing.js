@@ -291,6 +291,10 @@ export default class extends BaseModal {
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
       this._$photoSection = null;
+      this._$shippingOptions = null;
+      this._$photoPrev = null;
+      this._$photoNext = null;
+      this._$photoRadioBtns = null;
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();

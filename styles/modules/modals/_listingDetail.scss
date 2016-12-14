@@ -1,19 +1,9 @@
 .listingDetail {
   .modalContent {
-    width: 947px;
-    padding: $padSm; // allow padding for box shadows
-
-    & > .cornerTR {
-      top: $padSm;
-      right: $padSm;
-    }
-
-    .popInMessageHolder {
-      top: 20px;
-    }
 
     .listingControls {
-       margin-bottom: $padSm;
+      margin-bottom: $padSm;
+      height: 35px;
     }
 
     .listingContent {
@@ -65,6 +55,9 @@
           width: 90px;
           height: 90px;
           font-size: 70px;
+          color: #fff;
+          opacity: 0;
+          transition: opacity 1s;
           @include center(false, true);
           z-index: 2;
         }
@@ -83,6 +76,11 @@
           &:before {
             padding-left: 10px; // tweak centering visually
           }
+        }
+
+        &:hover .photoPrev,
+        &:hover .photoNext {
+          opacity: 1;
         }
 
         .photoStrip {
@@ -108,12 +106,14 @@
             border-width: 3px;
             border-style: solid;
             border-color: transparent;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0);
+            transition: border-color 0.25s, box-shadow 0.25s;
             flex-shrink: 0;
           }
 
           input[type="radio"]:checked + label {
-            border-color: inherit;
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.2);
+            border-color: #fff;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.5);
           }
         }
       }

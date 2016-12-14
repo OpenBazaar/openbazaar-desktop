@@ -187,6 +187,7 @@ ul, ol {
     z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width);
     overflow-y: auto;
+    overflow-x: hidden;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -203,6 +204,10 @@ ul, ol {
 
     .chatOpen & {
       width: $chatOpen;
+    }
+
+    .chatWrapper {
+      justify-content: flex-start;
     }
   }
 }

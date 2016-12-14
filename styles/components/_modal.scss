@@ -34,13 +34,38 @@
 
   &.modalScrollPage {
     overflow-y: scroll;
+    transform: none;
 
     .modalContent {
       max-height: none;
-      margin-bottom: $padLg;
+      margin-bottom: $padHg;
+      padding: 0;
+      width: 100%;
+      left: 0;
+      transform: none;
+      //adjust by 15 px to visually center
+      margin-left: calc(((100% - (#{$modalContentInner + $chatClosed})) / 2) + 15px);
+      @include chatOpeningTransition(margin-left);
+
+      .chatOpen & {
+        left: 0;
+        margin-left: calc(((100% - (#{$modalContentInner + $chatOpen})) / 2) + 15px);
+      }
+
+      .modalContentInner {
+        width: $modalContentInner;
+      }
+
+      & > .cornerTR {
+        right: auto;
+        left: calc(#{$modalContentInner} - #{$buttonHeight});
+        top: 0;
+      }
     }
   }
 }
+
+
 
 // temporary test code
 .modal {

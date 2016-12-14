@@ -49,6 +49,14 @@
       </div>
     </div>
   </div>
+
+  <% if (ob.ownListing) { %>
+    <div class="editOverlay overlayPanel">
+      <div class="overlayPanelInner clrS"></div>
+      <a class='btn clrP clrBr js-edit'><span class="ion-edit"></span></a>
+      <a class='btn clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
+    </div>
+  <% } %>
 <% } %>
 <div class="deleteOverlay overlayPanel">
   <div class="overlayPanelInner clrS"></div>
