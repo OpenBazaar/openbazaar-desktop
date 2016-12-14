@@ -72,8 +72,6 @@ if (handleStartupEvent()) {
 }
 
 const serverPath = `${__dirname}${path.sep}..${path.sep}OpenBazaar-Server${path.sep}`;
-// const serverPath = `${__dirname}${path.sep}..${path.sep}` +
-//   `test-server${path.sep}`;
 const isBundledApp = _.once(() => fs.existsSync(serverPath));
 global.isBundledApp = isBundledApp;
 let localServer;

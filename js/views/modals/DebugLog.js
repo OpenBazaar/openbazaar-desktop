@@ -23,7 +23,7 @@ export default class extends BaseModal {
       .split('\n');
 
     if (splitDebugLog.length > this.maxDebugLines) {
-      this.debugLog = '< Previous content has been truncated (translate) >\n\n' +
+      this.debugLog = '< Previous content has been truncated >\n\n' +
         `${splitDebugLog.slice(splitDebugLog.length - this.maxDebugLines).join('\n')}`;
     }
 

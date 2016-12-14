@@ -24,6 +24,9 @@
     "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
     "noResults": "No connected peers"
   },
+  "serverConnect": {
+    "defaultServerName": "Default Server"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
@@ -256,6 +259,11 @@
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
     "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
     "fetchingRatesFailStatusMsgRetryLink": "retry"
+  },
+  "debugLog": {
+    "copiedToClipboard": "Copied to clipboard",
+    "copyToClipboard": "Copy to clipboard"
+
   },
   "profileModelErrors": {
     "provideName": "You must provide a name.",

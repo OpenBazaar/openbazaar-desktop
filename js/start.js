@@ -404,7 +404,7 @@ app.serverConfigs.fetch().done(() => {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
-        name: 'Default (translate)',
+        name: app.polyglot.t('serverConnect.defaultServerName'),
         default: true,
       });
 
@@ -429,7 +429,7 @@ app.serverConfigs.fetch().done(() => {
 
       // for now will just create a new connection
       const serverConfig = new ServerConfig({
-        name: 'Default (translate)',
+        name: app.polyglot.t('serverConnect.defaultServerName'),
         default: true,
       });
 
