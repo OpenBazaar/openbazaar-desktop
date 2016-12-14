@@ -158,7 +158,12 @@ export default class extends BaseModel {
     }
 
     if (method === 'read') {
-      options.url = app.getServerUrl(`ipns/${model.id}/profile`);
+      if (app.profile.id === model.id) {
+        // options.url = app.getServerUrl('ob/profile');
+        options.url = app.getServerUrl(`ipns/${model.id}/profile`);
+      } else {
+        options.url = app.getServerUrl(`ipns/${model.id}/profile`);
+      }
     } else {
       options.url = app.getServerUrl(`ob/profile/${app.profile.id !== model.id ? model.id : ''}`);
     }
