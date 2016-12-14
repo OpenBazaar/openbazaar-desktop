@@ -1,14 +1,15 @@
 import { screen, remote, ipcRenderer } from 'electron';
-// import { ipcRenderer, screen, remote } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import app from './app';
-// import Socket from './utils/Socket';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
-import { connect as serverConnect } from './utils/serverConnect';
+import {
+  connect as serverConnect,
+  events as serverConnectEvents,
+} from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
@@ -489,157 +490,114 @@ $(window).on('beforeunload', () => {
 // Handle 'show debug log' requests from the main process.
 ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
-// connect to the API websocket
-// todo: this will be incorporated in the server
-// connection flow
-// let socketOpened = false;
-// let lostSocketConnectionDialog;
-
-// app.apiSocket = new Socket(app.getSocketUrl());
-// app.apiSocket.on('open', () => {
-//   if (!socketOpened) {
-//     socketOpened = true;
-//     if (lostSocketConnectionDialog) lostSocketConnectionDialog.remove();
-//     lostSocketConnectionDialog = null;
-//     start();
-//   } else {
-//     location.reload();
-//   }
-// });
-
-// app.apiSocket.on('close', () => {
-//   if (lostSocketConnectionDialog) return;
-
-//   lostSocketConnectionDialog = new Dialog({
-//     title: 'Socket connection failure',
-//     message: 'We are unable to connect to the API websocket.',
-//     buttons: [{
-//       text: 'Retry',
-//       fragment: 'retry',
-//     }],
-//     dismissOnOverlayClick: false,
-//     dismissOnEscPress: false,
-//     showCloseButton: false,
-//   }).on('click-retry', () => {
-//     lostSocketConnectionDialog.$('.js-retry').addClass('processing');
-//     app.apiSocket.connect();
-
-//     // timeout is slight of hand to make it look like its doing something
-//     // in the case of instant failures
-//     setTimeout(() => {
-//       if (lostSocketConnectionDialog) {
-//         lostSocketConnectionDialog.$('.js-retry').removeClass('processing');
-//       }
-//     }, 300);
-//   })
-//   .render()
-//   .open();
-// });
-
 // manage publishing sockets
 // todo: break the publishing socket startup functionality
 // into its own micro-module in js/startup/
-// let publishingStatusMsg;
-// let publishingStatusMsgRemoveTimer;
-// let unpublishedContent = false;
+let publishingStatusMsg;
+let publishingStatusMsgRemoveTimer;
+let unpublishedContent = false;
 
-// function setPublishingStatus(msg) {
-//   if (!msg && typeof msg !== 'object') {
-//     throw new Error('Please provide a msg as an object.');
-//   }
+function setPublishingStatus(msg) {
+  if (!msg && typeof msg !== 'object') {
+    throw new Error('Please provide a msg as an object.');
+  }
 
-//   msg.duration = 99999999999999;
+  msg.duration = 99999999999999;
 
-//   if (!publishingStatusMsg) {
-//     publishingStatusMsg = app.statusBar.pushMessage({
-//       ...msg,
-//     });
-//     publishingStatusMsg.on('clickRetry', () => {
-//       alert('Coming soon - need publish API');
-//     });
-//   } else {
-//     clearTimeout(publishingStatusMsgRemoveTimer);
-//     publishingStatusMsg.update(msg);
-//   }
+  if (!publishingStatusMsg) {
+    publishingStatusMsg = app.statusBar.pushMessage({
+      ...msg,
+    });
+    publishingStatusMsg.on('clickRetry', () => {
+      alert('Coming soon - need publish API');
+    });
+  } else {
+    clearTimeout(publishingStatusMsgRemoveTimer);
+    publishingStatusMsg.update(msg);
+  }
 
-//   return publishingStatusMsg;
-// }
+  return publishingStatusMsg;
+}
 
-// app.apiSocket.on('message', (e) => {
-//   if (e.jsonData) {
-//     if (e.jsonData.status === 'publishing') {
-//       setPublishingStatus({
-//         msg: 'Publishing...',
-//         type: 'message',
-//       });
+serverConnectEvents.on('connected', (connectedEvent) => {
+  connectedEvent.socket.on('message', (e) => {
+    if (e.jsonData) {
+      if (e.jsonData.status === 'publishing') {
+        setPublishingStatus({
+          msg: 'Publishing...',
+          type: 'message',
+        });
 
-//       unpublishedContent = true;
-//     } else if (e.jsonData.status === 'error publishing') {
-//       setPublishingStatus({
-//         msg: 'Publishing failed. <a class="js-retry">Retry</a>',
-//         type: 'warning',
-//       });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'error publishing') {
+        setPublishingStatus({
+          msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+          type: 'warning',
+        });
 
-//       unpublishedContent = true;
-//     } else if (e.jsonData.status === 'publish complete') {
-//       setPublishingStatus({
-//         msg: 'Publishing complete.',
-//         type: 'message',
-//       });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'publish complete') {
+        setPublishingStatus({
+          msg: 'Publishing complete.',
+          type: 'message',
+        });
 
-//       unpublishedContent = false;
+        unpublishedContent = false;
 
-//       publishingStatusMsgRemoveTimer = setTimeout(() => {
-//         publishingStatusMsg.remove();
-//         publishingStatusMsg = null;
-//       }, 3000);
-//     }
-//   }
-// });
+        publishingStatusMsgRemoveTimer = setTimeout(() => {
+          publishingStatusMsg.remove();
+          publishingStatusMsg = null;
+        }, 3000);
+      }
+    }
+  });
+});
 
-// let unpublishedConfirm;
+let unpublishedConfirm;
 
-// ipcRenderer.on('close-attempt', (e) => {
-//   if (!unpublishedContent) {
-//     e.sender.send('close-confirmed');
-//   } else {
-//     if (unpublishedConfirm) return;
+ipcRenderer.on('close-attempt', (e) => {
+  if (!unpublishedContent) {
+    e.sender.send('close-confirmed');
+  } else {
+    if (unpublishedConfirm) return;
 
-//     unpublishedConfirm = new Dialog({
-//       title: app.polyglot.t('unpublishedConfirmTitle'),
-//       message: app.polyglot.t('unpublishedConfirmBody'),
-//       buttons: [{
-//         text: app.polyglot.t('unpublishedConfirmYes'),
-//         fragment: 'yes',
-//       }, {
-//         text: app.polyglot.t('unpublishedConfirmNo'),
-//         fragment: 'no',
-//       }],
-//       dismissOnOverlayClick: false,
-//       dismissOnEscPress: false,
-//       showCloseButton: false,
-//     }).on('click-yes', () => e.sender.send('close-confirmed'))
-//     .on('click-no', () => {
-//       unpublishedConfirm.close();
-//       unpublishedConfirm = null;
-//     })
-//     .render()
-//     .open();
-//   }
-// });
+    unpublishedConfirm = new Dialog({
+      title: app.polyglot.t('unpublishedConfirmTitle'),
+      message: app.polyglot.t('unpublishedConfirmBody'),
+      buttons: [{
+        text: app.polyglot.t('unpublishedConfirmYes'),
+        fragment: 'yes',
+      }, {
+        text: app.polyglot.t('unpublishedConfirmNo'),
+        fragment: 'no',
+      }],
+      dismissOnOverlayClick: false,
+      dismissOnEscPress: false,
+      showCloseButton: false,
+    }).on('click-yes', () => e.sender.send('close-confirmed'))
+    .on('click-no', () => {
+      unpublishedConfirm.close();
+      unpublishedConfirm = null;
+    })
+    .render()
+    .open();
+  }
+});
 
 // update ownFollowers based on follow socket communication
-// app.apiSocket.on('message', (e) => {
-//   if (e.jsonData) {
-//     if (e.jsonData.notification) {
-//       if (e.jsonData.notification.follow) {
-//         app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
-//       } else if (e.jsonData.notification.unfollow) {
-//         app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
-//       }
-//     }
-//   }
-// });
+serverConnectEvents.on('connected', (connectedEvent) => {
+  connectedEvent.socket.on('message', (e) => {
+    if (e.jsonData) {
+      if (e.jsonData.notification) {
+        if (e.jsonData.notification.follow) {
+          app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
+        } else if (e.jsonData.notification.unfollow) {
+          app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+        }
+      }
+    }
+  });
+});
 
 // initialize our listing delete handler
 listingDeleteHandler();
