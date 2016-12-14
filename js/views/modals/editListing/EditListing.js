@@ -5,6 +5,7 @@ import _ from 'underscore';
 import path from 'path';
 import { MediumEditor } from 'medium-editor';
 import '../../../utils/velocityUiPack.js';
+import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
@@ -463,6 +464,14 @@ export default class extends BaseModal {
         msg: 'Saving listing...',
         type: 'message',
         duration: 99999999999999,
+      }).on('clickViewListing', () => {
+        const url = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
+
+        // This couldn't have been a simple href because that URL may already be the
+        // page we're on, with the Listing Detail likely obscured by this modal. Since
+        // the url wouldn't be changing, clicking that anchor would do nothing, hence
+        // the use of loadUrl.
+        Backbone.history.loadUrl(url);
       });
 
       save.always(() => this.$saveButton.removeClass('disabled'))
@@ -481,9 +490,8 @@ export default class extends BaseModal {
           .render()
           .open();
         }).done(() => {
-          const listingUrl = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
           savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
-            ` saved. <a href="${listingUrl}">view</a>`);
+            ' saved. <a class="js-viewListing">view</a>');
 
           setTimeout(() => savingStatusMsg.remove(), 6000);
         });
