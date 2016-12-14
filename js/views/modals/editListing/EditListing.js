@@ -3,7 +3,7 @@ import '../../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
 import path from 'path';
-import { MediumEditor } from 'medium-editor';
+import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
@@ -16,6 +16,8 @@ import Image from '../../../models/listing/Image';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
+
+$.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg'
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -643,7 +645,6 @@ export default class extends BaseModal {
   }
 
   remove() {
-    if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
 
@@ -810,16 +811,7 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
-        this.descriptionMediumEditor = new MediumEditor('#editListingDescription', {
-          placeholder: {
-            text: '',
-          },
-          toolbar: {
-            buttons: ['bold', 'italic', 'underline', 'anchor', 'unorderedlist', 'orderedlist'],
-          },
-        });
-
+        $('#editListingDescription').trumbowyg();
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
