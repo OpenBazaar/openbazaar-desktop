@@ -375,10 +375,12 @@ function connectToServer() {
     .progress(e => {
       console.log(`Status is "${e.status}" for connect attempt` +
         ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
-    }).done((e) => {
+    })
+    .done((e) => {
       console.log(`Connected to "${e.server.get('name')}"`);
       start();
-    }).fail((e) => {
+    })
+    .fail((e) => {
       console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
     });
 }
