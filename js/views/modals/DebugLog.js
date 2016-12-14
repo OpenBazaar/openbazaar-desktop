@@ -1,6 +1,6 @@
-import { remote, ipcRenderer } from 'electron';
+import { remote, ipcRenderer, clipboard } from 'electron';
+import '../../utils/velocity';
 import loadTemplate from '../../utils/loadTemplate';
-import Clipboard from 'clipboard';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -40,8 +40,17 @@ export default class extends BaseModal {
 
   events() {
     return {
+      'click .js-copy': 'onCopyClick',
       ...super.events(),
     };
+  }
+
+  onCopyClick() {
+    clipboard.writeText(this.$debugLog.text());
+    this.$copiedConfirm
+      .velocity('stop')
+      .velocity('fadeIn')
+      .velocity('fadeOut', { delay: 1000 });
   }
 
   onServerConnectLog(e, msg) {
@@ -53,9 +62,13 @@ export default class extends BaseModal {
       (this._$debugLog = this.$('.js-debugLog'));
   }
 
+  get $copiedConfirm() {
+    return this._$copiedConfirm ||
+      (this._$copiedConfirm = this.$('.js-copiedConfirm'));
+  }
+
   remove() {
     ipcRenderer.removeListener('server-log', this.onServerConnectLog);
-    this.clipboard.destroy();
     super.remove();
   }
 
@@ -68,11 +81,7 @@ export default class extends BaseModal {
       super.render();
 
       this._$debugLog = null;
-
-      if (this.clipboard) this.clipboard.destroy();
-      this.clipboard = new Clipboard(this.$('.js-copy')[0], {
-        text: () => this.$debugLog.val(),
-      });
+      this._$copiedConfirm = null;
     });
 
     return this;
