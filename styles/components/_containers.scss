@@ -111,17 +111,19 @@
   @extend .contentBox, .boxList;
 
   .listGroup {
-    border-width: 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
     border-style: solid;
     margin-bottom: $pad / 2;
 
     &:last-child {
       margin-bottom: 0;
+      border-bottom-width: 0;
     }
   }
 
   .listItem {
-    padding: $padMd2;
+    padding: 9px 5px;
     font-size: 1.4rem;
     width: 100%;
     box-sizing: border-box;

@@ -25,6 +25,7 @@ export default class extends BaseModal {
       General,
       Page,
       Addresses,
+      Advanced,
     };
 
     this.savesInProgress = 0;
