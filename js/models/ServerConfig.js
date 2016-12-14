@@ -20,22 +20,6 @@ export default class extends BaseModel {
     };
   }
 
-  needsAuthentication() {
-    let needsAuth = false;
-
-    if (!this.isLocalServer()) {
-      needsAuth = true;
-    } else {
-      if (!this.get('default')) {
-        if (this.get('username') || this.get('password')) {
-          needsAuth = true;
-        }
-      }
-    }
-
-    return needsAuth;
-  }
-
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -110,6 +94,29 @@ export default class extends BaseModel {
     return `${prefix}://${this.get('serverIp')}:${this.get('port')}/ws`;
   }
 
+  /**
+   * Indicates if we need to authenticate when connecting to this server.
+   */
+  needsAuthentication() {
+    let needsAuth = false;
+
+    if (!this.isLocalServer()) {
+      needsAuth = true;
+    } else {
+      if (!this.get('default') &&
+        (this.get('username') || this.get('password'))) {
+        needsAuth = true;
+      }
+    }
+
+    return needsAuth;
+  }
+
+  /**
+   * Based on the ip, indicates whether this is a server running locally on
+   * your machine. It may be the local bundled server or it may be a locally
+   * run stand-alone server.
+   */
   isLocalServer() {
     const ip = this.get('server_ip');
 

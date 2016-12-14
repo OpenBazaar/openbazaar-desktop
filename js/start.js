@@ -418,12 +418,35 @@ app.serverConfigs.fetch().done(() => {
       } else {
         const validationErr = defaultConfig.validationError;
 
+        // This is developer error.
         throw new Error('There were one or more errors saving the default server configuration' +
           `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
       }
     } else {
       // show connection modal with a state that
       // at least one connection must be created
+
+      // for now will just create a new connection
+      const serverConfig = new ServerConfig({
+        name: 'Default (translate)',
+        default: true,
+      });
+
+      const save = serverConfig.save();
+
+      if (save) {
+        save.done(() => {
+          app.serverConfigs.add(serverConfig);
+          app.serverConfigs.activeServer = serverConfig;
+          connectToServer();
+        });
+      } else {
+        const validationErr = serverConfig.validationError;
+
+        // This is developer error.
+        throw new Error('There were one or more errors saving an initial server configuration' +
+          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
+      }
     }
   } else {
     const activeServer = app.serverConfigs.activeServer;
@@ -434,12 +457,15 @@ app.serverConfigs.fetch().done(() => {
       app.serverConfigs.activeServer = app.serverConfigs.at(0);
     }
 
+    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')()) {
+      // Your active server is the locally bundled server, but you're
+      // not running the bundled app. You have bad data!
+      activeServer.set('default', false);
+    }
+
     connectToServer();
   }
 });
-
-// console.log('serverConfigs');
-window.serverConfigs = app.serverConfigs;
 
 // Clear localServer events on browser refresh.
 $(window).on('beforeunload', () => {

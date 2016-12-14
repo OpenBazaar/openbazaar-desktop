@@ -4,12 +4,15 @@ import _ from 'underscore';
 import ServerConfig from '../models/ServerConfig';
 import Socket from '../utils/Socket';
 import $ from 'jquery';
-// import { Events } from 'backbone';
-// import app from '../app';
+import { Events } from 'backbone';
+import app from '../app';
+import Dialog from '../views/modals/Dialog';
 
-// const events = {
-//   ...Events,
-// };
+const events = {
+  ...Events,
+};
+
+export { events };
 
 const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
 
@@ -31,18 +34,6 @@ function log(msg) {
 export function getDebugLog() {
   return debugLog;
 }
-
-// function setCurrentConnection(state = {}) {
-//   // todo: doc additive nature
-//   currentConnection = {
-//     ...currentConnection,
-//     ...state,
-//   };
-// }
-
-// function clearCurrentConnection() {
-//   currentConnection = null;
-// }
 
 export function getCurrentConnection() {
   return currentConnection;
@@ -108,7 +99,7 @@ export function connect(server, options = {}) {
 
   const opts = {
     attempts: 5,
-    timeoutBetweenAttempts: 3000,
+    timeoutBetweenAttempts: 2000,
     maxAttemptTime: 5000,
     // todo: work this one in
     restartDefaultServerOnFirstAttempt: true,
@@ -137,9 +128,20 @@ export function connect(server, options = {}) {
     return aggregateData;
   };
 
-  const notify = (...args) => deferred.notify(getPromiseData(...args));
-  const reject = (...args) => deferred.reject(getPromiseData(...args));
-  const resolve = (...args) => deferred.resolve(getPromiseData(...args));
+  const notify = (e, ...args) => {
+    events.trigger(e.status, getPromiseData(e, ...args));
+    deferred.notify(getPromiseData(e, ...args));
+  };
+
+  const reject = (e, ...args) => {
+    events.trigger('connect-attempt-failed', getPromiseData(e, ...args));
+    deferred.reject(getPromiseData(e, ...args));
+  };
+
+  const resolve = (e, ...args) => {
+    events.trigger('connected', getPromiseData(e, ...args));
+    deferred.resolve(getPromiseData(e, ...args));
+  };
 
   const cancel = () => {
     if (socket) {
@@ -205,8 +207,6 @@ export function connect(server, options = {}) {
             authenticate(server)
               .done(() => innerConnectDeferred.resolve('connected'))
               .fail((reason, e) => {
-                console.log('moonie');
-                window.moonie = e;
                 innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
               });
           } else {
@@ -298,6 +298,42 @@ export function connect(server, options = {}) {
   return promise;
 }
 
-ipcRenderer.send('server-connect-ready');
+// Temporary flow to handle a lost connection.
+let noConnectionDialog;
 
+const showNoConnectionDialog = () => {
+  if (noConnectionDialog) return;
+
+  noConnectionDialog = new Dialog({
+    title: 'No server connection',
+    message: 'We were unable to connect or have lost a connection with the server.',
+    buttons: [{
+      text: 'Retry',
+      fragment: 'retry',
+    }],
+    dismissOnOverlayClick: false,
+    dismissOnEscPress: false,
+    showCloseButton: false,
+  }).on('click-retry', () => {
+    noConnectionDialog.$('.js-retry').addClass('processing');
+    connect(app.serverConfigs.activeServer).done(() => location.reload())
+      .always(() => {
+        if (noConnectionDialog) {
+          noConnectionDialog.$('.js-retry').removeClass('processing');
+        }
+      });
+  })
+  .render()
+  .open();
+};
+
+events.on('connected', (e) => {
+  e.socket.on('close', () => {
+    showNoConnectionDialog();
+  });
+});
+
+events.on('connect-attempt-failed', () => showNoConnectionDialog());
+
+ipcRenderer.send('server-connect-ready');
 log('Browser has been started or refreshed.');

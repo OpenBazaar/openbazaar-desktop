@@ -71,14 +71,14 @@ if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
 
-// const serverPath = `${__dirname}${path.sep}..${path.sep}OpenBazaar-Server${path.sep}`;
-const serverPath = `${__dirname}${path.sep}..${path.sep}` +
-  `test-server${path.sep}`;
+const serverPath = `${__dirname}${path.sep}..${path.sep}OpenBazaar-Server${path.sep}`;
+// const serverPath = `${__dirname}${path.sep}..${path.sep}` +
+//   `test-server${path.sep}`;
 const isBundledApp = _.once(() => fs.existsSync(serverPath));
 global.isBundledApp = isBundledApp;
 let localServer;
 
-if (isBundledApp) {
+if (isBundledApp()) {
   global.localServer = localServer = new LocalServer({
     serverPath,
     serverFilename: process.platform === 'darwin' || process.platform === 'linux' ?
@@ -86,7 +86,7 @@ if (isBundledApp) {
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
     // IMPORTANT: From the main process, only bind events to the localServer instance
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
-    // will be exaplained in the module.
+    // will be explained in the module.
   });
 }
 
@@ -254,7 +254,7 @@ function createWindow() {
 
   trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
 
-  let trayTemplate;
+  let trayTemplate = [];
 
   if (localServer) {
     trayTemplate = [
@@ -310,11 +310,11 @@ function createWindow() {
       contextMenu.items[0].enabled = true;
       contextMenu.items[1].enabled = false;
     });
-  }
 
-  // we'll enable the debug log when our serverConnect module is ready
-  contextMenu.items[2].enabled = false;
-  ipcMain.on('server-connect-ready', () => (contextMenu.items[2].enabled = true));
+    // we'll enable the debug log when our serverConnect module is ready
+    contextMenu.items[2].enabled = false;
+    ipcMain.on('server-connect-ready', () => (contextMenu.items[2].enabled = true));
+  }
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -421,6 +421,6 @@ const log = msg => {
   }
 };
 
-bindLocalServerEvent('log', (localServ, msg) => log(msg));
+if (localServer) bindLocalServerEvent('log', (localServ, msg) => log(msg));
 ipcMain.on('server-connect-log', (e, msg) => log(msg));
 
