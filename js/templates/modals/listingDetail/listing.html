@@ -86,12 +86,41 @@
       <%= ob.item.description %>
     </div>
 
+  <div class="flexRow gutterH" id="avatarCropper">
+    <div class="contentBox avatarPreview clrP clrBr flexNoShrink js-avatarPreview"></div>
+    <div class="flexNoShrink">
+      <div class="flexColRows gutterV">
+        <div>
+          <div class="flex gutterH">
+            <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-avatarLeft"></a>
+            <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-avatarRight"></a>
+          </div>
+        </div>
+        <div class="posR">
+          <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" />
+          <div class="clrTEm zoomWarning hide js-avatarZoomWarning">
+            <%= ob.polyT('settings.loadAvatarZoomTooSmall') %>
+          </div>
+        </div>
+        <div>
+          <input type="file" id="avatarInput" class="cropit-image-input hide" />
+          <label for="avatarInput" class="btn clrP clrBr">
+            <%= ob.polyT('settings.loadAvatar') %>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="clrT2"><%= ob.polyT('settings.loadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
+  </div>
+
     <% if (ob.item.images.length) { %>
       <div class="contentBox clrP clrBr clrSh3" id="photoSection">
-        <div class="photoSelected js-photoSelected" data-index="0" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.item.images[0].original}`) %>);">
+        <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
         </div>
+        <input type="file" class="cropit-image-input hide">
+        <input type="range" class="cropit-image-zoom-input hide">
         <% if (ob.item.images.length > 1) { %>
-          <button class="btn ion-ios-arrow-left photoPrev hide js-photoPrev"></button>
+          <button class="btn ion-ios-arrow-left photoPrev js-photoPrev"></button>
           <button class="btn ion-ios-arrow-right photoNext js-photoNext"></button>
         <% } %>
         <% if(ob.item.images.length > 1) { %>

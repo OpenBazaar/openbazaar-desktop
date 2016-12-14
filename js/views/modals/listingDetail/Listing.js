@@ -7,7 +7,7 @@ import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
 import 'select2';
 import { getTranslatedCountries } from '../../../data/countries';
-import '../../../utils/draggable_background';
+import 'cropit';
 
 
 export default class extends BaseModal {
@@ -136,13 +136,8 @@ export default class extends BaseModal {
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
-    this.$photoSelected.attr({
-      style: `background-image: url(${phSrc});`,
-      'data-index': photoIndex,
-    });
-
-    this.$photoPrev.toggleClass('hide', photoIndex === 0);
-    this.$photoNext.toggleClass('hide', photoIndex === photoCol.length - 1);
+    this.$photoSection.cropit('imageSrc', phSrc);
+    this.$photoSelected.attr('data-index', photoIndex);
   }
 
   setActivePhotoThumbnail(thumbIndex) {
@@ -150,22 +145,21 @@ export default class extends BaseModal {
   }
 
   onClickPhotoPrev() {
-    const targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) - 1;
-    if (targetIndex > -1) {
-      this.setSelectedPhoto(targetIndex);
-      this.setActivePhotoThumbnail(targetIndex);
-    }
+    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) - 1;
+    const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
+
+    targetIndex = targetIndex < 0 ? imagesLength - 1 : targetIndex;
+    this.setSelectedPhoto(targetIndex);
+    this.setActivePhotoThumbnail(targetIndex);
   }
 
   onClickPhotoNext() {
-    const targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) + 1;
+    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) + 1;
     const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
 
-    if (targetIndex < imagesLength) {
-      this.setSelectedPhoto(targetIndex);
-      this.setActivePhotoThumbnail(targetIndex);
-      this.$photoPrev.removeClass('hide');
-    }
+    targetIndex = targetIndex >= imagesLength ? 0 : targetIndex;
+    this.setSelectedPhoto(targetIndex);
+    this.setActivePhotoThumbnail(targetIndex);
   }
 
   onClickFreeShippingLabel() {
@@ -247,19 +241,14 @@ export default class extends BaseModal {
       (this._$photoSection = this.$('#photoSection'));
   }
 
+  get $photoSelected() {
+    return this._$photoSelected ||
+      (this._$photoSelected = this.$('.js-photoSelected'));
+  }
+
   get $shippingOptions() {
     return this._$shippingOptions ||
       (this._$shippingOptions = this.$('.js-shippingOptions'));
-  }
-
-  get $photoPrev() {
-    return this._$photoPrev ||
-      (this._$photoPrev = this.$('.js-photoPrev'));
-  }
-
-  get $photoNext() {
-    return this._$photoNext ||
-      (this._$photoNext = this.$('.js-photoNext'));
   }
 
   get $photoRadioBtns() {
@@ -292,15 +281,22 @@ export default class extends BaseModal {
       this._$popInMessages = null;
       this._$photoSection = null;
       this._$shippingOptions = null;
-      this._$photoPrev = null;
-      this._$photoNext = null;
       this._$photoRadioBtns = null;
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
 
-      this.$photoSelected = this.$('.js-photoSelected');
-      this.$photoSelected.backgroundDraggable();
+      const initialPhotoHash = this.model.get('listing').toJSON().item.images[0].original;
+      const initialPhoto = app.getServerUrl(`ipfs/${initialPhotoHash}`);
+
+      setTimeout(() => {
+        this.$photoSection.cropit({
+          smallImage: 'stretch',
+          allowDragNDrop: false,
+        });
+
+        this.$photoSection.cropit('imageSrc', initialPhoto);
+      }, 0);
 
       const shippingDest = this.$('#shippingDestinations');
 
