@@ -75,13 +75,6 @@ export default class LocalServer {
       this.trigger('close', { code });
     });
 
-    // Approach taken from https://www.exratione.com/2013/05/die-child-process-die/
-    // this.serverSubProcess.on('uncaughtException', error => {
-    //   console.log('UNVASODIJ CAUGHT VAUGHT BOOM BAM BiZZLE!');
-    //   this.log(`Uncaught server exception: ${error}`);
-    //   this.stop();
-    // });
-
     this.serverSubProcess.unref();
   }
 

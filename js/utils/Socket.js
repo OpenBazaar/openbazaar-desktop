@@ -20,7 +20,6 @@ export default class {
 
     _.extend(this, Events);
     this.url = url;
-    // this.connect();
     if (options.autoConnect) this.connect();
   }
 
