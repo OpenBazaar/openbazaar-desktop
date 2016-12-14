@@ -12,15 +12,4 @@ export default {
     return this.serverConfigs.activeServer ?
       `${this.serverConfigs.activeServer.httpUrl}${urlFrag}` : '';
   },
-
-  // Short-hand convenience method to get the socket url of the active server configuration
-  getSocketUrl() {
-    if (!this.serverConfigs) {
-      throw new Error('I\'m expecting a ServerConfigs collection instance to have' +
-        ' been attached to this instance.');
-    }
-
-    return this.serverConfigs.activeServer ?
-      this.serverConfigs.activeServer.socketUrl() : '';
-  },
 };

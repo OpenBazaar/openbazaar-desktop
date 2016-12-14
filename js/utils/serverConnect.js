@@ -306,7 +306,7 @@ const showNoConnectionDialog = () => {
 
   noConnectionDialog = new Dialog({
     title: 'No server connection',
-    message: 'We were unable to connect to or have lost a connection to the server.',
+    message: 'We were unable to connect to or have lost a connection with the server.',
     buttons: [{
       text: 'Retry',
       fragment: 'retry',
