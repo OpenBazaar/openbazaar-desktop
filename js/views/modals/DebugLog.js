@@ -1,5 +1,6 @@
 import { remote, ipcRenderer } from 'electron';
 import loadTemplate from '../../utils/loadTemplate';
+import Clipboard from 'clipboard';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -22,7 +23,7 @@ export default class extends BaseModal {
       .split('\n');
 
     if (splitDebugLog.length > this.maxDebugLines) {
-      this.debugLog = '< Previous content has been truncated (translate) >\n' +
+      this.debugLog = '< Previous content has been truncated (translate) >\n\n' +
         `${splitDebugLog.slice(splitDebugLog.length - this.maxDebugLines).join('\n')}`;
     }
 
@@ -30,7 +31,7 @@ export default class extends BaseModal {
   }
 
   get maxDebugLines() {
-    return 1000;
+    return 5000;
   }
 
   className() {
@@ -39,7 +40,6 @@ export default class extends BaseModal {
 
   events() {
     return {
-      // 'click .js-editListing': 'onClickEditListing',
       ...super.events(),
     };
   }
@@ -55,6 +55,7 @@ export default class extends BaseModal {
 
   remove() {
     ipcRenderer.removeListener('server-log', this.onServerConnectLog);
+    this.clipboard.destroy();
     super.remove();
   }
 
@@ -67,6 +68,11 @@ export default class extends BaseModal {
       super.render();
 
       this._$debugLog = null;
+
+      if (this.clipboard) this.clipboard.destroy();
+      this.clipboard = new Clipboard(this.$('.js-copy')[0], {
+        text: () => this.$debugLog.val(),
+      });
     });
 
     return this;
