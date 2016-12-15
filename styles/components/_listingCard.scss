@@ -3,6 +3,9 @@
   height: 283px;
   font-size: $tx5b;
   cursor: pointer;
+  position: relative;
+  bottom: 0;
+  transition: all .2s ease;
 
   .gridViewContent {
     .listingImage {
@@ -26,8 +29,6 @@
     left: 0;
     right: 0;
     bottom: 0;
-    align-items: center;
-    justify-content: center;
     z-index: 1; // so it's above the overlay icons
 
     .overlayPanelInner {
@@ -46,28 +47,26 @@
   .editOverlay {
     .btn {
       z-index: 1;
-      border-left-width: 0;
-
-      &:first-of-type {
-        border-left-width: 1px;
-      }
     }
+  }
+
+  .listingsGrid:not(.listingsGridListView) &:hover {
+    bottom: 4px;
   }
 
   &:hover:not(.listingDeleting):not(.listingDeleted) {
     .editOverlay {
       display: flex;
     }
-
-    &.ownListing {
-      border-color: $border3;
-      border-bottom-width: 1px;
-    }
   }
 
   .deleteOverlay {
+    align-items: center;
+    justify-content: center;
+
     .deletingText, .deletedText {
       display: none;
+      text-align: center;
     }
   }
 
