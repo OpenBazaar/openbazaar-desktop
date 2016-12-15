@@ -448,15 +448,21 @@ export default class extends BaseModal {
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
-    // if any shipping options have a type of 'LOCAL_PICKUP', we'll
-    // clear out any services that may be there
-    this.innerListing.get('shippingOptions').forEach(shipOpt => {
-      if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-        shipOpt.set('services', []);
-      }
-    });
-
     this.model.set(formData);
+
+    // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
+    if (this.innerListing.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+      this.innerListing.get('shippingOptions').reset();
+    } else {
+      // If any shipping options have a type of 'LOCAL_PICKUP', we'll
+      // clear out any services that may be there.
+      this.innerListing.get('shippingOptions').forEach(shipOpt => {
+        if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+          shipOpt.set('services', []);
+        }
+      });
+    }
+
     const save = this.model.save();
 
     if (save) {
