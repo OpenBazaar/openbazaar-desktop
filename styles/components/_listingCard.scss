@@ -42,28 +42,16 @@
       right: 0;
       bottom: 0;
     }
-
-    .overlayPanelButtons {
-      // The edit and delete buttons need to display above overlayPanelInner
-      z-index: 1;
-    }
   }
 
-  .editOverlay {    
+  .editOverlay {
     .btn {
       z-index: 1;
-      border-left-width: 0;
-
-      &:first-of-type {
-        border-left-width: 1px;
-      }
     }
   }
 
-  &:hover {
-    border-color: $focusedBorder;
-    border-bottom-width: 1px;
-    bottom: 4px; 
+  .listingsGrid:not(.listingsGridListView) &:hover {
+    bottom: 4px;
   }
 
   &:hover:not(.listingDeleting):not(.listingDeleted) {
@@ -75,7 +63,7 @@
   .deleteOverlay {
     align-items: center;
     justify-content: center;
-    
+
     .deletingText, .deletedText {
       display: none;
       text-align: center;

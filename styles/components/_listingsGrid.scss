@@ -16,32 +16,24 @@
 
     .listingCard {
       margin: 0;
-      border-bottom-width: 0;
       border-radius: 0;
       padding: 6px;
-      -webkit-box-sizing: border-box;
-
-      &:hover {
-        bottom: 0;
-      }
+      box-sizing: border-box;
 
       &:first-child {
         // we want the first listView row to have a border radius
         border-top-left-radius: $corner;
         border-top-right-radius: $corner;
       }
-      
+
       &:last-child {
         // we want the last listView row to have a border radius
-        border-bottom-width: 1px;
         border-bottom-left-radius: $corner;
         border-bottom-right-radius: $corner;
       }
 
-      .overlayPanelButtons {
-        // makes the edit/delete buttons display in the center of the table row within the listView
-        position: absolute;
-        left: calc(50% - 32px); // 32px is intended to represent half the width of overlayPanelButtons (there may be a cleaner way to accomplish this)
+      &:not(:last-child) {
+        border-bottom-color: transparent;
       }
     }
   }

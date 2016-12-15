@@ -5,7 +5,7 @@
   border-width: 1px;
   border-style: solid;
   font-size: $tx5;
-  font-weight: 500;
+  font-weight: 400;
   box-sizing: border-box;
   display: inline-flex;
   vertical-align: middle;
@@ -19,16 +19,12 @@
   font-weight: 700;
   transition: border 0.15s ease;
 
-  &:hover {
+  &:hover:not(.btnRadio),
+  &:focus:not(.btnRadio) {
     text-decoration: none;
     cursor: pointer;
     border-width: 1px;
     border-style: solid;
-    border-color: $focusedBorder;
-  }
-
-  &:focus {
-    text-decoration: none;
     outline: 0;
   }
 
@@ -61,10 +57,6 @@
   padding: 0 6px;
   font-weight: normal;
   height: auto;
-
-  &:hover {
-    border: 0;
-  }
 
   input[type="radio"] {
     display: none;
@@ -122,7 +114,6 @@
   @extend .btn;
   font-size: $tx5;
   padding: 0;
-  margin: 0;
   width: 30px;
   height: 30px;
 }
@@ -135,8 +126,10 @@
   //creates a set of buttons with no gaps between them
   & > .btn {
     border-radius: 0;
-    border-right-width: 0;
     float: left; //float left will collapse the button and position it correctly
+  }
+  & > .btn:not(:last-child):not(:hover) {   // on hover use the normal border width
+    border-right-color: transparent;
   }
   & > .btn:first-child {
     border-top-left-radius: $corner;
@@ -145,7 +138,6 @@
   & > .btn:last-child {
     border-top-right-radius: $corner;
     border-bottom-right-radius: $corner;
-    border-right-width: 1px;
   }
 }
 
