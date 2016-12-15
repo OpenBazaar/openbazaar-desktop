@@ -25,8 +25,11 @@ export default class extends BaseModal {
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
 
-    this.select2CountryData = getTranslatedCountries(app.settings.get('language'))
+    this.countryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
+
+    this.defaultCountry = app.settings.get('shippingAddresses').length ?
+      app.settings.get('shippingAddresses').at(0).get('country') : app.settings.get('country');
 
     this.listenTo(app.settings, 'change:country', () =>
       (this.shipsFreeToMe = this.model.shipsFreeToMe));
@@ -61,7 +64,7 @@ export default class extends BaseModal {
       'click .js-deleteListing': 'onClickDeleteListing',
       'click .js-gotoPhotos': 'onClickGotoPhotos',
       'click .js-freeShippingLabel': 'onClickFreeShippingLabel',
-      'change #shippingDestinations': 'setShippingDestination',
+      'change #shippingDestinations': 'onSetShippingDestination',
       'click .js-photoSelect': 'onClickPhotoSelect',
       'click .js-photoPrev': 'onClickPhotoPrev',
       'click .js-photoNext': 'onClickPhotoNext',
@@ -132,6 +135,9 @@ export default class extends BaseModal {
   }
 
   setSelectedPhoto(photoIndex) {
+    if (!photoIndex) {
+      throw new Error('Please provide an index for the selected photo.');
+    }
     const photoCol = this.model.get('listing').toJSON().item.images;
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
@@ -141,6 +147,9 @@ export default class extends BaseModal {
   }
 
   setActivePhotoThumbnail(thumbIndex) {
+    if (!thumbIndex) {
+      throw new Error('Please provide an index for the selected photo thumbnail.');
+    }
     this.$photoRadioBtns.prop('checked', false).eq(thumbIndex).prop('checked', true);
   }
 
@@ -196,10 +205,17 @@ export default class extends BaseModal {
     }
   }
 
-  setShippingDestination(e) {
+  onSetShippingDestination(e) {
+    this.renderShippingDestinations($(e.target).val());
+  }
+
+  renderShippingDestinations(destination) {
+    if (!destination) {
+      throw new Error('Please provide a destination.');
+    }
     const shippingOptions = this.model.get('listing').get('shippingOptions').toJSON();
     const templateData = shippingOptions.filter((option) =>
-      option.regions.includes($(e.target).val())
+      option.regions.includes(destination)
     );
     loadTemplate('modals/listingDetail/shippingOptions.html', t => {
       this.$shippingOptions.html(t({
@@ -271,7 +287,10 @@ export default class extends BaseModal {
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing,
         displayCurrency: app.settings.get('localCurrency'),
-        shipsFromCountry: app.settings.get('country'),
+        // the ships from data doesn't exist yet
+        // shipsFromCountry: this.model.get('listing').get('shipsFrom');
+        countryData: this.countryData,
+        defaultCountry: this.defaultCountry,
       }));
 
       super.render();
@@ -298,14 +317,11 @@ export default class extends BaseModal {
         this.$photoSection.cropit('imageSrc', initialPhoto);
       }, 0);
 
-      const shippingDest = this.$('#shippingDestinations');
-
-      shippingDest.select2({
-        data: this.select2CountryData,
+      this.$('#shippingDestinations').select2({
         placeholder: app.polyglot.t('listingDetail.shipToPlaceholder'),
       });
 
-      shippingDest.val(app.settings.get('country')).trigger('change');
+      this.renderShippingDestinations(this.defaultCountry);
     });
 
     return this;

@@ -19,7 +19,7 @@
       </div>
       <div class="flex gutterHLg">
         <div>
-          <div class="mainImage clrBr"
+          <div class="mainImage clrBr js-gotoPhotos"
           <% if (ob.item.images.length) { %>
             style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
           <% } else { %>
@@ -62,10 +62,10 @@
           </div>
           <div class="flexHCent gutterHLg tx5 rowLg">
             <div>
-              <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`editListing.formats.${ob.metadata.contractType}`)}</b>` }) %>
+              <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
             </div>
             <% if (ob.item.condition) { %>
-              <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`listingDetail.conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
+              <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
             <% } %>
           </div>
           <% if(ob.item.tags.length) { %>
@@ -159,7 +159,10 @@
           <div><%= ob.polyT('listingDetail.shipTo') %></div>
           <div class="col4">
             <select id="shippingDestinations">
-
+              <% ob.countryData.forEach(function(country) {
+              var selected = country.id === ob.defaultCountry ? 'selected' : '';
+              print(`<option value="${country.id}" ${selected}>${country.text}</option>`);
+              }) %>
             </select>
           </div>
         </div>
@@ -168,19 +171,17 @@
       </div>
     <% } %>
 
-    <% if (ob.refundPolicy) { %>
-      <div class="contentBox padLg clrP clrBr clrSh3">
-        <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
-        <%= ob.refundPolicy %>
-      </div>
-    <% } %>
+    <div class="contentBox padLg clrP clrBr clrSh3">
+      <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
+      <%= ob.refundPolicy %>
+      <% if (!ob.refundPolicy) { %><%= ob.polyT('listingDetail.noRefundPolicy') %><% } %>
+    </div>
 
-    <% if (ob.termsAndConditions) { %>
-      <div class="contentBox padLg clrP clrBr clrSh3">
-        <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
-        <%= ob.termsAndConditions %>
-      </div>
-    <% } %>
+    <div class="contentBox padLg clrP clrBr clrSh3">
+      <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
+      <%= ob.termsAndConditions %>
+      <% if (!ob.termsAndConditions) { %><%= ob.polyT('listingDetail.noTermsAndConditions') %><% } %>
+    </div>
 
   </div>
 </div>

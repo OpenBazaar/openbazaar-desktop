@@ -23,7 +23,7 @@
   }
 
   &.modalTop .modalContent {
-    top: $padLg;
+    top: $padMd;
     @include center(true, false);
     left: calc(50% - #{$chatClosed / 2});
 
@@ -38,13 +38,13 @@
 
     .modalContent {
       max-height: none;
-      margin-bottom: $padHg;
+      margin-bottom: $padGi;
       padding: 0;
-      width: 100%;
+      width: $modalContentInner;
       left: 0;
       transform: none;
-      // adjust by 15 px to visually center
-      margin-left: calc(((100% - (#{$modalContentInner + $chatClosed})) / 2) + 15px);
+      // adjust by 20 px to visually center
+      margin-left: calc(((100% - (#{$modalContentInner + $chatClosed})) / 2) + 20px);
       @include chatOpeningTransition(margin-left);
 
       .chatOpen & {

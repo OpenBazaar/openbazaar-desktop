@@ -189,6 +189,19 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "formats": {
+    "PHYSICAL_GOOD": "Physical Good",
+    "DIGITAL_GOOD": "Digital Good",
+    "SERVICE": "Service",
+    "CROWD_FUND": "Crowd fund"
+  },
+  "conditionTypes": {
+    "NEW": "New",
+    "USED_EXCELLENT": "Used - Excellent",
+    "USED_GOOD": "Used - Good",
+    "USED_POOR": "Used - Poor",
+    "REFURBISHED": "Refurbished"
+  },
   "listingDetail": {
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
@@ -203,25 +216,14 @@
     "reviews": "Reviews",
     "attachments": "Attachments",
     "refundPolicy": "Refund Policy",
+    "noRefundPolicy": "This listing does not have a refund policy.",
     "termsAndConditions": "Terms Of Service",
+    "noTermsAndConditions": "This listing has neither terms nor conditions.",
     "shipping": "Shipping",
     "shipsFrom": "Ships from %{country}",
     "shipTo": "Ship to:",
     "shipToPlaceholder": "Select a Country",
-    "noShippingFound": "This listing does not ship to the selected country.",
-    "formats": {
-      "PHYSICAL_GOOD": "Physical Good",
-      "DIGITAL_GOOD": "Digital Good",
-      "SERVICE": "Service",
-      "CROWD_FUND": "Crowd fund"
-    },
-    "conditionTypes": {
-      "NEW": "New",
-      "USED_EXCELLENT": "Used - Excellent",
-      "USED_GOOD": "Used - Good",
-      "USED_POOR": "Used - Poor",
-      "REFURBISHED": "Refurbished"
-    }
+    "noShippingFound": "This listing does not ship to the selected country."
   },
   "listingCard": {
     "btnDetails": "Details",
@@ -238,19 +240,6 @@
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
   },
   "editListing": {
-    "formats": {
-      "PHYSICAL_GOOD": "Physical Good",
-      "DIGITAL_GOOD": "Digital Good",
-      "SERVICE": "Service",
-      "CROWD_FUND": "Crowd fund"
-    },
-    "conditionTypes": {
-      "NEW": "New",
-      "USED_EXCELLENT": "Used - Excellent",
-      "USED_GOOD": "Used - Good",
-      "USED_POOR": "Used - Poor",
-      "REFURBISHED": "Refurbished"
-    },
     "nsfwYes": "Yes",
     "nsfwNo": "No",
     "sectionNames": {
