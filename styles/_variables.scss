@@ -11,6 +11,7 @@ $textOnEmph: rgb(255, 255, 255);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
 $border3: adjust-color($text, $lightness: 35%);
+
 $emphasis1: rgb(253,166,57);
 $emphasis2: rgb(174, 138, 88);
 
@@ -20,7 +21,7 @@ $overlay: adjust-color($secondary, $alpha: -0.1);
 
 // typography
 $baseFontSize: 10px;
-$txBg: 5rem;
+$txBg: 4.75rem;
 $tx1: 2.6rem;
 $tx2: 2.3rem;
 $tx3: 1.7rem;

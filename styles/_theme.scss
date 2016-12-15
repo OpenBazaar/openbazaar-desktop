@@ -105,8 +105,10 @@ input[type=range][class~="clrS"] {
   .btn:focus,
   &.btn:hover,
   &.btn:focus,
+  .clrHover:hover,
+  .clrHover:focus,
   &.clrHover:hover,
-  &.clrHover.focus {
+  &.clrHover:focus {
     border-color: $border3;
 
     .disabled &,
@@ -128,8 +130,10 @@ input[type=range][class~="clrS"] {
   .btn:focus,
   &.btn:hover,
   &.btn:focus,
+  .clrHover:hover,
+  .clrHover:focus,
   &.clrHover:hover,
-  &.clrHover.focus {
+  &.clrHover:focus {
     border-color: $border3;
 
     .disabled &,
