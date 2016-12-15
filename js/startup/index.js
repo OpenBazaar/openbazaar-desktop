@@ -1,11 +1,11 @@
+// Putting one offs here that are too small for their own module and
+// aren't appropriate to be in any existing module
+
 import { screen, shell } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import { getBody } from '../utils/selectors';
 import { findAncestorByTag } from '../utils/dom';
-
-// Putting one offs here that are too small for their own module and
-// aren't appropriate to be in any existing module
 
 export function fixLinuxZoomIssue() {
   // fix zoom issue on Linux hiDPI
@@ -32,7 +32,7 @@ export function handleLinks() {
 
     let href = $a.attr('href');
 
-    // Anchor must be being handled by JS.
+    // Anchor without href is likely being handled programatically.
     if (!href) return;
 
     const link = document.createElement('a');
@@ -54,7 +54,5 @@ export function handleLinks() {
     }
 
     e.preventDefault();
-
-    // internal links we'll leave alone for the router to handle
   });
 }

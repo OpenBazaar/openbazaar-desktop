@@ -36,24 +36,40 @@ export default class ObRouter extends Router {
     });
   }
 
+  standardizedRoute(route = location.hash) {
+    let standardized = route;
+
+    if (standardized.startsWith('#')) {
+      standardized = standardized.slice(1);
+    }
+
+    if (standardized.startsWith('/')) {
+      standardized = standardized.slice(1);
+    }
+
+    if (standardized.endsWith('/')) {
+      standardized = standardized.slice(0, standardized.length - 1);
+    }
+
+    return standardized;
+  }
+
   setAddressBarText() {
-    if (location.hash.startsWith('#transactions')) {
+    const route = this.standardizedRoute();
+
+    if (route.startsWith('transactions')) {
       // certain pages should not have their route visible
       // in the address bar
       app.pageNav.setAddressBar('');
     } else {
-      let address = location.hash.slice(1);
-
-      if (address.endsWith('/')) {
-        address = address.slice(0, address.length - 1);
-      }
-
-      app.pageNav.setAddressBar(address);
+      app.pageNav.setAddressBar(route);
     }
   }
 
   execute(callback, args) {
     app.loadingModal.open();
+
+    this.navigate(this.standardizedRoute(), { replace: true });
 
     // This block is intentionally duplicated here and in loadPage. It's
     // here because we want to remove any current views (and have them

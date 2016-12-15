@@ -24,7 +24,13 @@ export function isScrolledIntoView(element) {
 // benefit that it will stop going up the ancestor chain once
 // it finds the element it's seeking.
 export function findAncestorByTag(el, tag) {
-  // todo: validate args
+  if (!el instanceof HTMLElement) {
+    throw new Error('Please provide a DOM element.');
+  }
+
+  if (typeof tag !== 'string') {
+    throw new Error('Please provide a tag name as a string.');
+  }
 
   let ancestor = el.parentElement;
 
