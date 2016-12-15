@@ -115,6 +115,13 @@
   align-items: flex-end;
 }
 
+.flexVBase {
+  //creates a container with children aligned to the baseline of the parent. Useful for aligning with text.
+  @extend .flex;
+  height: 100%;
+  align-items: baseline;
+}
+
 .flexHCent {
   //creates a container with horizontally centered children
   @extend .flex;
@@ -306,10 +313,6 @@
 
 .margL {
   margin-left: $pad;
-}
-
-.margTLg {
-  margin-top: $padLg
 }
 
 #ov1 .marginTopAuto {
