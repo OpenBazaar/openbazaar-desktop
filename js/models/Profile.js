@@ -159,6 +159,8 @@ export default class extends BaseModel {
 
     if (method === 'read') {
       if (app.profile.id === model.id) {
+        // not using local api for now pending the fix of:
+        // https://github.com/OpenBazaar/openbazaar-go/issues/269
         // options.url = app.getServerUrl('ob/profile');
         options.url = app.getServerUrl(`ipns/${model.id}/profile`);
       } else {
