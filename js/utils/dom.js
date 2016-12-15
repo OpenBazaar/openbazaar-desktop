@@ -19,3 +19,18 @@ export function isScrolledIntoView(element) {
   // Check its within the document viewport
   return top <= document.documentElement.clientHeight;
 }
+
+// This is a partial alternative to $.parents() with the added
+// benefit that it will stop going up the ancestor chain once
+// it finds the element it's seeking.
+export function findAncestorByTag(el, tag) {
+  // todo: validate args
+
+  let ancestor = el.parentElement;
+
+  while (ancestor && !ancestor.tagName === tag.toUpperCase()) {
+    ancestor = ancestor.parentElement;
+  }
+
+  return ancestor;
+}

@@ -121,6 +121,7 @@ export default class extends View {
   }
 
   navListBtnClick() {
+    console.log('boom goes MANISHA');
     const $popMenu = this.$navList.hasClass('open') ? '' : this.$navList;
     this.togglePopMenu($popMenu);
   }

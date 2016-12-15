@@ -17,11 +17,11 @@ export default class ObRouter extends Router {
     this.options = options;
 
     const routes = [
-      [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
-      [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
-      ['transactions', 'transactions'],
-      ['transactions/:tab', 'transactions'],
-      ['connected-peers', 'connectedPeers'],
+      [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'userViaHandle'],
+      [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'user'],
+      ['transactions(/)', 'transactions'],
+      ['transactions/:tab(/)', 'transactions'],
+      ['connected-peers(/)', 'connectedPeers'],
       ['*path', 'pageNotFound'],
     ];
 
@@ -37,15 +37,18 @@ export default class ObRouter extends Router {
   }
 
   setAddressBarText() {
-    if (
-      location.hash.startsWith('#transactions') ||
-      location.hash.startsWith('#test-')
-    ) {
+    if (location.hash.startsWith('#transactions')) {
       // certain pages should not have their route visible
       // in the address bar
       app.pageNav.setAddressBar('');
     } else {
-      app.pageNav.setAddressBar(location.hash.slice(1));
+      let address = location.hash.slice(1);
+
+      if (address.endsWith('/')) {
+        address = address.slice(0, address.length - 1);
+      }
+
+      app.pageNav.setAddressBar(address);
     }
   }
 
