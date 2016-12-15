@@ -1,4 +1,6 @@
 import BaseModel from './BaseModel';
+import app from '../app';
+import is from 'is_js';
 
 export default class extends BaseModel {
   defaults() {

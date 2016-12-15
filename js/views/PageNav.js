@@ -81,10 +81,6 @@ export default class extends View {
     this.$el.addClass(style === 'mac' ? 'macStyleWindowControls' : 'winStyleWindowControls');
   }
 
-  onWinControlsStyleChange(model, useMacStyle) {
-    this.setWinControlsStyle(useMacStyle ? 'mac' : 'win');
-  }
-
   setAppProfile() {
     // when this view is created, the app.profile doesn't exist
     this.listenTo(app.profile.get('avatarHashes'), 'change', this.updateAvatar);
