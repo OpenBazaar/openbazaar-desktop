@@ -5,7 +5,7 @@ import _ from 'underscore';
 import path from 'path';
 import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
-import { isScrolledIntoView } from '../../../utils/dom';
+import { throttle, isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
@@ -811,7 +811,14 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        $('#editListingDescription').trumbowyg();
+        const txt = document.querySelector('#editListingDescription');
+        const watchScope = txt.parentElement;
+        const ted = $(txt).trumbowyg();
+        const tdo = (...args) => ted.trumbowyg(...args);
+        const reveal = z => console.info(z.type, z, tdo('html'));
+        const spacedReveal = throttle(reveal, 1);
+        watchScope.addEventListener('textInput', spacedReveal); 
+        watchScope.addEventListener('beforecut', spacedReveal); 
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
