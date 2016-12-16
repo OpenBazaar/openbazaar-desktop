@@ -122,7 +122,7 @@
                 <br>
                 <span class="tx5"><%= ob.polyT('security.sanitizeWhileYouType') %></span>
                 <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
-                <textarea rows="6" name="listing.item.description" id="editListingDescription"><%= ob.listing.item.description %></textarea>
+                <div contenteditable class="rows6" name="listing.item.description" id="editListingDescription"><%= ob.sanitize(ob.listing.item.description) %></div>
               </div>
             </div>
           </form>

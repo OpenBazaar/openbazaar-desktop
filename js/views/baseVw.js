@@ -37,7 +37,11 @@ export default class baseVw extends View {
    */
   getFormData(selector) {
     const $formFields = selector instanceof $ ?
-      selector : this.$(selector || 'select[name], input[name], textarea[name]');
+      selector : this.$(selector ||
+        `select[name], input[name], 
+        textarea[name]:not([data-do-not-collect]), 
+        div[contenteditable][name]`
+      );
     const data = {};
 
     $formFields.each((index, field) => {
@@ -45,6 +49,10 @@ export default class baseVw extends View {
       const varType = $field.data('var-type');
 
       let val = $field.val();
+
+      if (field.tagName === 'DIV') {
+        val = field.innerHTML;
+      }
 
       if (field.type === 'radio' && !field.checked) return;
 

@@ -28,6 +28,11 @@ function installHTMLSanitizationWatcher() {
   const watchScope = txt.parentElement;
   const ted = $(txt).trumbowyg();
   const tdo = (...args) => ted.trumbowyg(...args);
+  // do not collect form data from
+  // the internal textarea which
+  // trumbowyg creates here
+  $(watchScope).find('textarea.trumbowyg-textarea').
+    each((__, el) => { el.dataset.doNotCollect = ''; });
   const filter = () => {
     const unsanitized = tdo('html');
     const sanitized = sanitizeHtml(unsanitized, htmlFilter);
@@ -556,7 +561,8 @@ export default class extends BaseModal {
     return this._$formFields ||
       (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
         '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]'));
+        '.js-scrollToSection:not(.js-sectionShipping) div[contenteditable][name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]:not([data-do-not-collect])'));
   }
 
   get $currencySelect() {
