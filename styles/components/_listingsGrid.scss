@@ -16,10 +16,24 @@
 
     .listingCard {
       margin: 0;
-      border-bottom-width: 0;
+      border-radius: 0;
+      padding: 6px;
+      box-sizing: border-box;
+
+      &:first-child {
+        // we want the first listView row to have a border radius
+        border-top-left-radius: $corner;
+        border-top-right-radius: $corner;
+      }
 
       &:last-child {
-        border-bottom-width: 1px;
+        // we want the last listView row to have a border radius
+        border-bottom-left-radius: $corner;
+        border-bottom-right-radius: $corner;
+      }
+
+      &:not(:last-child) {
+        border-bottom-color: transparent;
       }
     }
   }

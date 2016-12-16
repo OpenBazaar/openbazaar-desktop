@@ -17,12 +17,12 @@
   @extend .ctrl;
   cursor: pointer;
   font-weight: 700;
+  transition: border 0.15s ease;
 
-  &:hover,
-  &:focus {
+  &:hover:not(.btnRadio),
+  &:focus:not(.btnRadio) {
     text-decoration: none;
     cursor: pointer;
-    border: solid 1px $border3;
     outline: 0;
   }
 
@@ -106,6 +106,15 @@
   font-size: 2rem;
   padding: 0 12px;
   width: $buttonHeight;
+}
+
+.iconBtnSm {
+  //this button has only an icon in it and it's smaller than iconBtn
+  @extend .btn;
+  font-size: $tx5;
+  padding: 0;
+  width: 30px;
+  height: 30px;
 }
 
 .btnThin {

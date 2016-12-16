@@ -2,6 +2,9 @@
 // The text class will be applied to the body element, if text is colored differently, apply it to the nearest
 // parent container.
 
+// any color that should change on hover, active, etc. should have a rule for &.clrHover, and the
+// element that should change should have a .clrHover class on it.
+
 .clrP {
   background-color: $primary;
 
@@ -109,7 +112,11 @@ input[type=range][class~="clrS"] {
   .btn:hover,
   .btn:focus,
   &.btn:hover,
-  &.btn:focus {
+  &.btn:focus,
+  .clrHover:hover,
+  .clrHover:focus,
+  &.clrHover:hover,
+  &.clrHover:focus {
     border-color: $border3;
 
     .disabled &,
@@ -130,7 +137,11 @@ input[type=range][class~="clrS"] {
   .btn:hover,
   .btn:focus,
   &.btn:hover,
-  &.btn:focus {
+  &.btn:focus,
+  .clrHover:hover,
+  .clrHover:focus,
+  &.clrHover:hover,
+  &.clrHover:focus {
     border-color: $border3;
 
     .disabled &,
