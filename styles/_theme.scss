@@ -95,53 +95,19 @@ input[type=range][class~="clrS"] {
 }
 
 .clrBr {
-  border-color: $border;
-
-  hr {
-    border-color: $border;
-  }
-
-  .btn:hover,
-  .btn:focus,
-  &.btn:hover,
-  &.btn:focus,
-  .clrHover:hover,
-  .clrHover:focus,
-  &.clrHover:hover,
-  &.clrHover:focus {
-    border-color: $border3;
-
-    .disabled &,
-    &.disabled,
-    &:disabled {
-      border-color: $border;
-    }
-  }
+  @include borderColor($border, $border3);
 }
 
 .clrBr2 {
-  border-color: $border2;
+  @include borderColor($border2, $border3);
+}
 
-  hr {
-    border-color: $border2;
-  }
+.clrBr3 {
+  @include borderColor($border3, $border4);
+}
 
-  .btn:hover,
-  .btn:focus,
-  &.btn:hover,
-  &.btn:focus,
-  .clrHover:hover,
-  .clrHover:focus,
-  &.clrHover:hover,
-  &.clrHover:focus {
-    border-color: $border3;
-
-    .disabled &,
-    &.disabled,
-    &:disabled {
-      border-color: $border2;
-    }
-  }
+.clrBr4 {
+  @include borderColor($border4);
 }
 
 // select2 dropdowns always use the theme border color.
