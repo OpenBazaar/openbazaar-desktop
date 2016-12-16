@@ -2,6 +2,8 @@ import { guid } from '../../utils';
 import is from 'is_js';
 import app from '../../app';
 import { Collection } from 'backbone';
+import { htmlFilter } from '../../data/security/htmlFilter';
+import 'sanitize-html';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 
@@ -82,6 +84,9 @@ export default class extends BaseModel {
       addError('description', 'The description must be of type string.');
     } else if (attrs.description.length > max.descriptionLength) {
       addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
+      //FLAG: Following line does nothing. Attrs changed here have no effect on what is saved.
+      //This is one reason the sanitize upon save is placed in the view.
+      attrs.description = sanitizeHtml(attrs.description, htmlFilter);
     }
 
     if (attrs.price === '') {

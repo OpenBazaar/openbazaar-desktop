@@ -20,35 +20,42 @@ export function isScrolledIntoView(element) {
   return top <= document.documentElement.clientHeight;
 }
 
-export function throttle(task, toHertz, withContext = this) {
-  const msTimeout = Math.floor(1000.0 / toHertz);
-  let notWaiting = true;
-  let latestTask;
+export function throttle(handler, fps) {
+  const ms = 1000/fps;
+  let wait = false;
 
-  const execute = (...args) => task.call(withContext, ...args);
+  return function(...e) {
+    const context = this;
 
-  const flushTask = () => {
-    latestTask();
-    latestTask = null;
-    wait();
+    if (!wait) {
+      handler.call(context, ...e)
+      wait = true;
+      setTimeout(() => wait = false, ms);
+    }
   };
+}
 
-  const guard = (...args) => {
-    latestTask = () => execute(...args);
-    if (notWaiting) flushTask();
+/**
+  Inspired by: https://gist.github.com/bameyrick/0e3ac3b32c0a1af98c1c
+**/
+export function debounce(func, wait = 1000, immediate = false) {
+  let timeout = null;
+
+  return () => {
+    const context = this,
+    args = arguments;
+
+    const later = () => {
+      timeout = null;
+      if(!immediate) func.apply(context, args);
+    }
+
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+
+    if(callNow) func.apply(context, args);
   };
-
-  const stopWaiting = () => {
-    notWaiting = true;
-    if (latestTask) flushTask();
-  };
-
-  const wait = () => {
-    notWaiting = false;
-    setTimeout(stopWaiting, msTimeout);
-  };
-
-  return guard;
 }
 
 export function filterHTMLString(str, toTagMap) {

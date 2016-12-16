@@ -5,7 +5,9 @@ import _ from 'underscore';
 import path from 'path';
 import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
-import { throttle, isScrolledIntoView } from '../../../utils/dom';
+import { debounce, throttle, isScrolledIntoView } from '../../../utils/dom';
+import sanitizeHtml from 'sanitize-html';
+import { htmlFilter } from '../../../data/security/htmlFilter';
 import Backbone from 'backbone';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
@@ -19,6 +21,22 @@ import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 
 $.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg'
+
+function installHTMLSanitizationWatcher() {
+  const msWaitToFilterTags = 2000;
+  const txt = document.querySelector('#editListingDescription');
+  const watchScope = txt.parentElement;
+  const ted = $(txt).trumbowyg();
+  const tdo = (...args) => ted.trumbowyg(...args);
+  const filter = ev => {
+    const unsanitized = tdo('html');
+    const sanitized = sanitizeHtml(unsanitized, htmlFilter);
+    tdo('html', sanitized);
+  };
+  const spacedFilter = debounce(filter, msWaitToFilterTags);
+  watchScope.addEventListener('textInput', spacedFilter); 
+  watchScope.addEventListener('beforecut', spacedFilter); 
+}
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -447,6 +465,9 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
 
+    // one reason this is here since slots are not modified within validate
+    formData.listing.item.description = sanitizeHtml(formData.listing.item.description, htmlFilter);
+
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
@@ -825,14 +846,7 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        const txt = document.querySelector('#editListingDescription');
-        const watchScope = txt.parentElement;
-        const ted = $(txt).trumbowyg();
-        const tdo = (...args) => ted.trumbowyg(...args);
-        const reveal = z => console.info(z.type, z, tdo('html'));
-        const spacedReveal = throttle(reveal, 1);
-        watchScope.addEventListener('textInput', spacedReveal); 
-        watchScope.addEventListener('beforecut', spacedReveal); 
+        installHTMLSanitizationWatcher();
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
