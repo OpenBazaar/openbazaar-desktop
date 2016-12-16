@@ -99,3 +99,29 @@
     color: $col3;
   }
 }
+
+@mixin borderColor($col1, $col2: $border2) {
+  /* generates the border color rules */
+  border-color: $col1;
+
+  hr {
+    border-color: $col1;
+  }
+
+  .btn:hover,
+  .btn:focus,
+  &.btn:hover,
+  &.btn:focus,
+  .clrHover:hover,
+  .clrHover:focus,
+  &.clrHover:hover,
+  &.clrHover:focus {
+    border-color: $col2;
+
+    .disabled &,
+    &.disabled,
+    &:disabled {
+      border-color: $col1;
+    }
+  }
+}
