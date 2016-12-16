@@ -5,7 +5,7 @@ import _ from 'underscore';
 import path from 'path';
 import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
-import { debounce, throttle, isScrolledIntoView } from '../../../utils/dom';
+import { debounce, isScrolledIntoView } from '../../../utils/dom';
 import sanitizeHtml from 'sanitize-html';
 import { htmlFilter } from '../../../data/security/htmlFilter';
 import Backbone from 'backbone';
@@ -20,7 +20,7 @@ import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 
-$.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg'
+$.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
 
 function installHTMLSanitizationWatcher() {
   const msWaitToFilterTags = 2000;
@@ -28,14 +28,14 @@ function installHTMLSanitizationWatcher() {
   const watchScope = txt.parentElement;
   const ted = $(txt).trumbowyg();
   const tdo = (...args) => ted.trumbowyg(...args);
-  const filter = ev => {
+  const filter = () => {
     const unsanitized = tdo('html');
     const sanitized = sanitizeHtml(unsanitized, htmlFilter);
     tdo('html', sanitized);
   };
   const spacedFilter = debounce(filter, msWaitToFilterTags);
-  watchScope.addEventListener('textInput', spacedFilter); 
-  watchScope.addEventListener('beforecut', spacedFilter); 
+  watchScope.addEventListener('textInput', spacedFilter);
+  watchScope.addEventListener('beforecut', spacedFilter);
 }
 
 export default class extends BaseModal {

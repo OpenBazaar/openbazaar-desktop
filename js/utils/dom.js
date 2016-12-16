@@ -21,16 +21,16 @@ export function isScrolledIntoView(element) {
 }
 
 export function throttle(handler, fps) {
-  const ms = 1000/fps;
+  const ms = 1000 / fps;
   let wait = false;
 
-  return function(...e) {
+  return function throttled(...e) {
     const context = this;
 
     if (!wait) {
-      handler.call(context, ...e)
+      handler.call(context, ...e);
       wait = true;
-      setTimeout(() => wait = false, ms);
+      setTimeout(() => { wait = false; }, ms);
     }
   };
 }
@@ -41,27 +41,19 @@ export function throttle(handler, fps) {
 export function debounce(func, wait = 1000, immediate = false) {
   let timeout = null;
 
-  return () => {
-    const context = this,
-    args = arguments;
+  return (...args) => {
+    const context = this;
 
     const later = () => {
       timeout = null;
-      if(!immediate) func.apply(context, args);
-    }
+      if (!immediate) func.apply(context, args);
+    };
 
     const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
 
-    if(callNow) func.apply(context, args);
+    if (callNow) func.apply(context, args);
   };
 }
 
-export function filterHTMLString(str, toTagMap) {
-
-}
-
-export function filterDOMTree(root, toTagMap) {
-
-}
