@@ -126,9 +126,13 @@ export default class extends BaseModal {
   }
 
   gotoPhotos() {
-    this.$el.animate({
-      scrollTop: this.$photoSection.offset().top,
-    }, 500);
+    this.$photoSection.velocity(
+      'scroll',
+      {
+        duration: 500,
+        easing: 'easeOutSine',
+        container: this.$el,
+      });
   }
 
   onClickPhotoSelect(e) {
@@ -183,9 +187,13 @@ export default class extends BaseModal {
   }
 
   gotoShippingOptions() {
-    this.$el.animate({
-      scrollTop: this.$shippingOptions.offset().top,
-    }, 500);
+    this.$shippingSection.velocity(
+      'scroll',
+      {
+        duration: 500,
+        easing: 'easeOutSine',
+        container: this.$el,
+      });
   }
 
   showDataChangedMessage() {
@@ -269,6 +277,11 @@ export default class extends BaseModal {
       (this._$photoSelected = this.$('.js-photoSelected'));
   }
 
+  get $shippingSection() {
+    return this._$shippingSection ||
+      (this._$shippingSection = this.$('#shippingSection'));
+  }
+
   get $shippingOptions() {
     return this._$shippingOptions ||
       (this._$shippingOptions = this.$('.js-shippingOptions'));
@@ -308,6 +321,7 @@ export default class extends BaseModal {
       this._$photoSection = null;
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
+      this._$shippingSection = null;
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
@@ -324,9 +338,7 @@ export default class extends BaseModal {
         this.$photoSection.cropit('imageSrc', initialPhoto);
       }, 0);
 
-      this.$('#shippingDestinations').select2({
-        placeholder: app.polyglot.t('listingDetail.shipToPlaceholder'),
-      });
+      this.$('#shippingDestinations').select2();
 
       this.renderShippingDestinations(this.defaultCountry);
     });

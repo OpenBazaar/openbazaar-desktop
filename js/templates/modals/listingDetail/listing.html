@@ -4,8 +4,8 @@
   <div class="listingControls flex">
     <% if (ob.ownListing) { %>
     <div class="btnStrip clrSh3">
-      <a class="btn js-editListing clrP clrBr">Edit</a>
-      <a class="btn js-deleteListing clrP clrBr">Delete</a>
+      <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
+      <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
     </div>
     <% } %>
   </div>
@@ -68,15 +68,14 @@
               <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
             <% } %>
           </div>
-          <% if(ob.item.tags.length) { %>
-            <hr class="rowLg">
-            <h5><%= ob.polyT('listingDetail.tags') %></h5>
-            <div class="tagWrapper">
-              <% ob.item.tags.forEach(function(tag){
-              print(`<div class="btn tag clrBr">${tag}</div>`);
-              }); %>
-            </div>
-          <% } %>
+          <hr class="rowLg">
+          <h5><%= ob.polyT('listingDetail.tags') %></h5>
+          <div class="tagWrapper">
+            <% ob.item.tags.forEach(function(tag){
+            print(`<div class="btn tag clrBr">${tag}</div>`);
+            }); %>
+            <% if(!ob.item.tags.length) { print(ob.polyT('listingDetail.noTags')) } %>
+          </div>
         </div>
       </div>
     </div>
@@ -124,12 +123,12 @@
    -->
 
     <% if (ob.shippingOptions.length) { %>
-      <div class="contentBox padLg clrP clrBr clrSh3">
+      <div class="contentBox padLg clrP clrBr clrSh3" id="shippingSection">
         <h2 class="txUnb"><%= ob.polyT('listingDetail.shipping') %></h2>
         <div class="flexVCent gutterHLg tx5">
           <!-- this data is not yet available -->
           <!--
-          <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>${ob.polyT(`countries.${ob.shipsFromCountry}`)}</b>` }) %></div>
+          <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>insert translation of the country here</b>` }) %></div>
           -->
           <div><%= ob.polyT('listingDetail.shipTo') %></div>
           <div class="col4">
