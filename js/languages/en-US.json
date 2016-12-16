@@ -215,6 +215,7 @@
     "tags": "Tags",
     "buyNow": "BuyNow",
     "description": "Description",
+    "noDescription": "This listing does not have a description.",
     "reviews": "Reviews",
     "attachments": "Attachments",
     "refundPolicy": "Refund Policy",

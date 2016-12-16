@@ -84,34 +84,9 @@
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
       <%= ob.item.description %>
+      <% console.log(ob.item.description) %>
+      <% if(!ob.item.description) { print(ob.polyT('listingDetail.noDescription')) } %>
     </div>
-
-  <div class="flexRow gutterH" id="avatarCropper">
-    <div class="contentBox avatarPreview clrP clrBr flexNoShrink js-avatarPreview"></div>
-    <div class="flexNoShrink">
-      <div class="flexColRows gutterV">
-        <div>
-          <div class="flex gutterH">
-            <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-avatarLeft"></a>
-            <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-avatarRight"></a>
-          </div>
-        </div>
-        <div class="posR">
-          <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" />
-          <div class="clrTEm zoomWarning hide js-avatarZoomWarning">
-            <%= ob.polyT('settings.loadAvatarZoomTooSmall') %>
-          </div>
-        </div>
-        <div>
-          <input type="file" id="avatarInput" class="cropit-image-input hide" />
-          <label for="avatarInput" class="btn clrP clrBr">
-            <%= ob.polyT('settings.loadAvatar') %>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="clrT2"><%= ob.polyT('settings.loadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
-  </div>
 
     <% if (ob.item.images.length) { %>
       <div class="contentBox clrP clrBr clrSh3" id="photoSection">
@@ -174,13 +149,13 @@
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
       <%= ob.refundPolicy %>
-      <% if (!ob.refundPolicy) { %><%= ob.polyT('listingDetail.noRefundPolicy') %><% } %>
+      <% if (!ob.refundPolicy) { print(ob.polyT('listingDetail.noRefundPolicy')) } %>
     </div>
 
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
       <%= ob.termsAndConditions %>
-      <% if (!ob.termsAndConditions) { %><%= ob.polyT('listingDetail.noTermsAndConditions') %><% } %>
+      <% if (!ob.termsAndConditions) { print(ob.polyT('listingDetail.noTermsAndConditions')) } %>
     </div>
 
   </div>

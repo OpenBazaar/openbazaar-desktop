@@ -8,6 +8,7 @@ import PopInMessage from '../../PopInMessage';
 import 'select2';
 import { getTranslatedCountries } from '../../../data/countries';
 import 'cropit';
+import is from 'is_js';
 
 
 export default class extends BaseModal {
@@ -135,8 +136,11 @@ export default class extends BaseModal {
   }
 
   setSelectedPhoto(photoIndex) {
-    if (!photoIndex) {
+    if (is.not.number(photoIndex)) {
       throw new Error('Please provide an index for the selected photo.');
+    }
+    if (photoIndex < 0) {
+      throw new Error('Please provide a valid index for the selected photo.');
     }
     const photoCol = this.model.get('listing').toJSON().item.images;
     const photoHash = photoCol[photoIndex].original;
@@ -147,8 +151,11 @@ export default class extends BaseModal {
   }
 
   setActivePhotoThumbnail(thumbIndex) {
-    if (!thumbIndex) {
+    if (is.not.number(thumbIndex)) {
       throw new Error('Please provide an index for the selected photo thumbnail.');
+    }
+    if (thumbIndex < 0) {
+      throw new Error('Please provide a valid index for the selected photo thumbnail.');
     }
     this.$photoRadioBtns.prop('checked', false).eq(thumbIndex).prop('checked', true);
   }

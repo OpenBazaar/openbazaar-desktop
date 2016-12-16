@@ -92,7 +92,7 @@
           right: 0;
           padding: $pad;
           background-color: rgba(37,37,37,0.7);
-          overflow-x: scroll;
+          overflow-x: auto;
 
           input[type="radio"] {
             display: none;
@@ -104,17 +104,14 @@
             box-sizing: border-box;
             background-size: cover;
             background-position: center;
-            border-width: 3px;
-            border-style: solid;
-            border-color: transparent;
-            box-shadow: 0 0 0 2px rgba(0,0,0,0);
-            transition: border-color 0.25s, box-shadow 0.25s;
+            background-repeat: no-repeat;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0), inset 0 0 0 3px rgba(256, 256, 256, 0);
+            transition: box-shadow 0.25s;
             flex-shrink: 0;
           }
 
           input[type="radio"]:checked + label {
-            border-color: #fff;
-            box-shadow: 0 0 0 2px rgba(0,0,0,0.5);
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.5), inset 0 0 0 3px rgba(256, 256, 256, 1);;
           }
         }
       }
