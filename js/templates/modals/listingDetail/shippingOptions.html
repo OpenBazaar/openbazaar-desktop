@@ -4,7 +4,14 @@
       <hr class="clrBr">
     <% } %>
     <div class="rowLg tx4">
-      <h3 class="rowLg"><%= option.name %></h3>
+      <div class="flexRow row">
+        <h3 class="col8 rowLg"><%= option.name %></h3>
+        <% if (option.type === "LOCAL_PICKUP") { %>
+          <div class="col4">
+            <%= ob.polyT('listingDetail.localPickup') %>
+          </div>
+        <% } %>
+      </div>    
       <% option.services.sort((a,b) => parseFloat(a.price) - parseFloat(b.price)).forEach((service) => { %>
         <% if (service.price === 0) var fShp = true; %>
         <div class="flexRow rowLg <% if (fShp) { %>txB<% } %>">

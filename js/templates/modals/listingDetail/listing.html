@@ -68,15 +68,14 @@
               <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
             <% } %>
           </div>
-          <% if(ob.item.tags.length) { %>
-            <hr class="rowLg">
-            <h5><%= ob.polyT('listingDetail.tags') %></h5>
-            <div class="tagWrapper">
-              <% ob.item.tags.forEach(function(tag){
-              print(`<div class="btn tag clrBr">#${tag}</div>`);
-              }); %>
-            </div>
-          <% } %>
+          <hr class="rowLg">
+          <h5><%= ob.polyT('listingDetail.tags') %></h5>
+          <div class="tagWrapper">
+            <% ob.item.tags.forEach(function(tag){
+            print(`<div class="btn tag clrBr">#${tag}</div>`);
+            }); %>
+            <% if(!ob.item.tags.length) { print(ob.polyT('listingDetail.noTags')) } %>
+          </div>
         </div>
       </div>
     </div>
