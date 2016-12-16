@@ -191,6 +191,9 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "security": {
+    "sanitizeWhileYouType": "We modify your HTML to match our requirements as you type. For more information on the allowed HTML and how we modify it please see http://pastebin.com/Fy31muVC"
+  },
   "listingDetail": {
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",

@@ -119,8 +119,10 @@
             <div class="flexRow gutterH">
               <div class="col12">
                 <label for="editListingDescription"><%= ob.polyT('editListing.description') %></label>
+                <br>
+                <span class="tx5"><%= ob.polyT('security.sanitizeWhileYouType') %></span>
                 <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
-                <textarea rows="6" name="listing.item.description" x-class="clrBr clrP" id="editListingDescription"><%= ob.listing.item.description %></textarea>
+                <textarea rows="6" name="listing.item.description" id="editListingDescription"><%= ob.listing.item.description %></textarea>
               </div>
             </div>
           </form>
