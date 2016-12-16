@@ -12,15 +12,15 @@
         [
           ob.polyT('editListing.sectionNames.general'),
           ob.polyT('editListing.sectionNames.photos'),
-          ob.polyT('editListing.sectionNames.attachments'),
+<!--           ob.polyT('editListing.sectionNames.attachments'), -->
           ob.polyT('editListing.sectionNames.shipping'),
           ob.polyT('editListing.sectionNames.tags'),
           ob.polyT('editListing.sectionNames.category'),
-          ob.polyT('editListing.sectionNames.inventory'),
+<!--           ob.polyT('editListing.sectionNames.inventory'),
           ob.polyT('editListing.sectionNames.variants'),
-          ob.polyT('editListing.sectionNames.returnPolicy'),
+ -->          ob.polyT('editListing.sectionNames.returnPolicy'),
           ob.polyT('editListing.sectionNames.termsAndConditions'),
-          ob.polyT('editListing.sectionNames.expiration'),
+<!--           ob.polyT('editListing.sectionNames.expiration'), -->
         ].forEach((tabName, index) => {
           print(`<a class="js-scrollLink tab ${ob.selectedNavTabIndex === index ? 'clrP active' : ''}">${tabName}</a>`)
         });
@@ -50,13 +50,16 @@
                 </select>
               </div>
               <div class="col6 simpleFlexCol">
-                <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
-                <select id="editListingVisibility" class="clrBr clrP marginTopAuto">
-                  <%
-                    // todo: will translate and implement fully when this field is implemented into the API.
-                  %>
-                  <option value="hidden">Hidden (doesn't display in store)</option>
-                </select>
+                <% // hiding until this is ready on the back end %>
+                <div class="hide">
+                  <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
+                  <select id="editListingVisibility" class="clrBr clrP marginTopAuto">
+                    <%
+                      // todo: will translate and implement fully when this field is implemented into the API.
+                    %>
+                    <option value="hidden">Hidden (doesn't display in store)</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="flexRow gutterH">
@@ -142,14 +145,14 @@
           </ul>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection pad tx3">
+<!--         <section class="js-scrollToSection pad tx3">
           <div class="overflowAuto">
             <h1 class="tx3 tx500 floL"><%= ob.polyT('editListing.sectionNames.attachments') %></h1>
             <div class="js-attachmentsUploadingLabel floR <% if (!ob.attachmentUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploading') %> <a class="js-cancelAttachmentUploads"><%= ob.polyT('editListing.btnCancelUpload') %></a></div>
           </div>
           <% // waiting on back-end to provide field for this %>          
         </section>
-        <hr class="dashed margR margL" />
+        <hr class="dashed margR margL" /> -->
         <section class="js-scrollToSection js-sectionShipping tx3 shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('hasShippingOptions') %>">
           <div class="pad overflowAuto emptyShippingOptionsSection">
             <h1 class="tx3 tx500 required"><%= ob.polyT('editListing.sectionNames.shipping') %></h1>
@@ -195,12 +198,6 @@
             </div>
         </section>
         <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: yellow">
-        </section>
-        <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: green">
-        </section>
-        <hr class="dashed margR margL" />
         <% // TODO: probably going to want to turn Terms and Conditions & Return Policy into, at least very basic, WYSIWYG fields
            // so we have p's. As of now, it's including line breaks between paragraphs as \n's, which display perfectly in a text
            // area but display literally as \n's outside of text areas. %>
@@ -217,9 +214,6 @@
           <a class="btn clrP clrBr js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
           <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions"><%= ob.listing.termsAndConditions %></textarea>
         </section>
-        <hr class="dashed margR margL" />
-        <section class="js-scrollToSection" style="height: 350px;background-color: aquamarine">
-        </section>        
       </div>
     </div>
     <div class="tabControls flex clrBr">

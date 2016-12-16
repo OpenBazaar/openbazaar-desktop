@@ -157,15 +157,9 @@ export default class extends baseVw {
       }
     });
 
-    let listingsFetch;
-
-    if (listingsCount) {
-      listingsFetch = this.listings.fetch();
-    }
-
     return this.createChild(this.tabViews.Store, {
       ...opts,
-      initialFetch: listingsFetch,
+      initialFetch: this.listings.fetch(),
       collection: this.listings,
       model: this.model,
     });
