@@ -5,6 +5,7 @@ import _ from 'underscore';
 import path from 'path';
 import { MediumEditor } from 'medium-editor';
 import '../../../utils/velocityUiPack.js';
+import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
@@ -447,15 +448,21 @@ export default class extends BaseModal {
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
-    // if any shipping options have a type of 'LOCAL_PICKUP', we'll
-    // clear out any services that may be there
-    this.innerListing.get('shippingOptions').forEach(shipOpt => {
-      if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-        shipOpt.set('services', []);
-      }
-    });
-
     this.model.set(formData);
+
+    // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
+    if (this.innerListing.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+      this.innerListing.get('shippingOptions').reset();
+    } else {
+      // If any shipping options have a type of 'LOCAL_PICKUP', we'll
+      // clear out any services that may be there.
+      this.innerListing.get('shippingOptions').forEach(shipOpt => {
+        if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+          shipOpt.set('services', []);
+        }
+      });
+    }
+
     const save = this.model.save();
 
     if (save) {
@@ -463,6 +470,14 @@ export default class extends BaseModal {
         msg: 'Saving listing...',
         type: 'message',
         duration: 99999999999999,
+      }).on('clickViewListing', () => {
+        const url = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
+
+        // This couldn't have been a simple href because that URL may already be the
+        // page we're on, with the Listing Detail likely obscured by this modal. Since
+        // the url wouldn't be changing, clicking that anchor would do nothing, hence
+        // the use of loadUrl.
+        Backbone.history.loadUrl(url);
       });
 
       save.always(() => this.$saveButton.removeClass('disabled'))
@@ -481,9 +496,8 @@ export default class extends BaseModal {
           .render()
           .open();
         }).done(() => {
-          const listingUrl = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
           savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
-            ` saved. <a href="${listingUrl}">view</a>`);
+            ' saved. <a class="js-viewListing">view</a>');
 
           setTimeout(() => savingStatusMsg.remove(), 6000);
         });

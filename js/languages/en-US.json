@@ -205,14 +205,17 @@
     "REFURBISHED": "Refurbished"
   },
   "listingDetail": {
+    "edit": "Edit",
+    "delete": "Delete",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "refresh",
+    "listingDataChangedPopinRefresh": "Refresh",
     "viewPhotos": "View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
     "tags": "Tags",
+    "noTags": "This listing does not have any tags.",
     "buyNow": "BuyNow",
     "description": "Description",
     "noDescription": "This listing does not have a description.",
@@ -225,8 +228,8 @@
     "shipping": "Shipping",
     "shipsFrom": "Ships from %{country}",
     "shipTo": "Ship to:",
-    "shipToPlaceholder": "Select a Country",
-    "noShippingFound": "This listing does not ship to the selected country."
+    "noShippingFound": "This listing does not ship to the selected country.",
+    "localPickup": "This option is for local pickup only."
   },
   "listingCard": {
     "btnDetails": "Details",

@@ -20,7 +20,7 @@ export default class extends Collection {
   url() {
     let url;
 
-    if (this.guid === app.profile.guid) {
+    if (this.guid === app.profile.id) {
       url = app.getServerUrl('ob/listings');
     } else {
       url = app.getServerUrl(`ipns/${this.guid}/listings/index.json`);
