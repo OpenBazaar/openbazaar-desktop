@@ -72,15 +72,18 @@ if (handleStartupEvent()) {
 }
 
 const serverPath = `${__dirname}${path.sep}..${path.sep}OpenBazaar-Server${path.sep}`;
-const isBundledApp = _.once(() => fs.existsSync(serverPath));
+// const serverPath = `${__dirname}${path.sep}..${path.sep}` +
+//   `test-server${path.sep}`;
+const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
+      'openbazaard' : 'openbazaard.exe';
+const isBundledApp = _.once(() => fs.existsSync(serverPath + path.sep + serverFilename));
 global.isBundledApp = isBundledApp;
 let localServer;
 
 if (isBundledApp()) {
   global.localServer = localServer = new LocalServer({
     serverPath,
-    serverFilename: process.platform === 'darwin' || process.platform === 'linux' ?
-      'openbazaard' : 'openbazaard.exe',
+    serverFilename,
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
     // IMPORTANT: From the main process, only bind events to the localServer instance
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
@@ -304,7 +307,7 @@ function createWindow() {
       contextMenu.items[1].enabled = true;
     });
 
-    bindLocalServerEvent('close', () => {
+    bindLocalServerEvent('exit', () => {
       contextMenu.items[0].enabled = true;
       contextMenu.items[1].enabled = false;
     });

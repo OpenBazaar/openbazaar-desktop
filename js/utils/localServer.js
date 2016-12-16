@@ -33,7 +33,7 @@ export default class LocalServer {
 
   start() {
     if (this.pendingStop) {
-      this.pendingStop.once('close', this.startAfterStop);
+      this.pendingStop.once('exit', this.startAfterStop);
       const debugInfo = 'Attempt to start server while an existing one' +
         ' is the process of shutting down. Will start after shut down is complete.';
       this.log(debugInfo);
@@ -54,25 +54,42 @@ export default class LocalServer {
     this.serverSubProcess.stdout.once('data', () => this.trigger('start'));
     this.serverSubProcess.stdout.on('data', buf => this.obServerLog(`${buf}`));
 
-    const stderrcallback = function stderrcallback(err) {
-      if (err) {
-        console.log(err);
-        return err;
-      }
-      return false;
-    };
+    this.serverSubProcess.on('error', err => {
+      const errOutput = `The local server child process has an error: ${err}`;
+
+      fs.appendFile(this.errorLogPath, errOutput, (appendFileErr) => {
+        if (appendFileErr) {
+          console.log(`Unable to write to the error log: ${err}`);
+        }
+      });
+
+      this.log(errOutput);
+    });
 
     this.serverSubProcess.stderr.on('data', buf => {
-      fs.appendFile(this.errorLogPath, String(buf), stderrcallback);
+      fs.appendFile(this.errorLogPath, String(buf), (err) => {
+        if (err) {
+          console.log(`Unable to write to the error log: ${err}`);
+        }
+      });
+
       this.obServerLog(`${buf}`, 'STDERR');
     });
 
-    this.serverSubProcess.on('close', code => {
-      console.log(`Server closed with ${code}`);
-      this.log(`Server closed with ${code}`, 'CLOSE');
+    this.serverSubProcess.on('exit', (code, signal) => {
+      let logMsg;
+
+      if (code) {
+        logMsg = `Server exited with code: ${code}`;
+      } else {
+        logMsg = `Server exited at request of signal: ${signal}.`;
+      }
+
+      console.log(logMsg);
+      this.log(logMsg, 'EXIT');
       this._isRunning = false;
       this.lastCloseCode = code;
-      this.trigger('close', { code });
+      this.trigger('exit', { code });
     });
 
     this.serverSubProcess.unref();
@@ -82,12 +99,12 @@ export default class LocalServer {
     if (!this.isRunning) return;
 
     if (this.pendingStop) {
-      this.pendingStop.removeListener('close', this.startAfterStop);
+      this.pendingStop.removeListener('exit', this.startAfterStop);
       return;
     }
 
     this.pendingStop = this.serverSubProcess;
-    this.pendingStop.once('close', () => (this.pendingStop = null));
+    this.pendingStop.once('exit', () => (this.pendingStop = null));
     this.log('Shutting down server');
     console.log('Shutting down server');
 
