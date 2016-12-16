@@ -4,10 +4,10 @@
       <hr class="clrBr">
     <% } %>
     <div class="rowLg tx4">
-      <h3 class="row"><%= option.name %></h3>
+      <h3 class="rowLg"><%= option.name %></h3>
       <% option.services.sort((a,b) => parseFloat(a.price) - parseFloat(b.price)).forEach((service) => { %>
         <% if (service.price === 0) var fShp = true; %>
-        <div class="flexRow row <% if (fShp) { %>txB<% } %>">
+        <div class="flexRow rowLg <% if (fShp) { %>txB<% } %>">
           <div class="col4">
             <div class="flex gutterH">
               <div class="floL"><%= service.name %></div>

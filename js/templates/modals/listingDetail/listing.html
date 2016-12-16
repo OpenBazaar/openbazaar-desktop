@@ -11,7 +11,7 @@
   </div>
 
 
-  <div class="listingContent flexColRow gutterVLg">
+  <div class="listingContent flexColRow gutterVMd">
     <div class="contentBox padLg clrP clrBr clrSh3">
       <div class="flex">
         <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
@@ -26,7 +26,7 @@
             style="background-image: url('../imgs/defaultListing.png')"
           <% } %>
           ></div>
-          <div class="pad txCtr">
+          <div class="txCtr">
             <a class="tx5 js-gotoPhotos">
               <u><%= ob.polyT('listingDetail.viewPhotos', { count: ob.item.images.length }) %></u>
             </a>
@@ -73,7 +73,7 @@
             <h5><%= ob.polyT('listingDetail.tags') %></h5>
             <div class="tagWrapper">
               <% ob.item.tags.forEach(function(tag){
-              print(`<div class="btn tag clrBr">${tag}</div>`);
+              print(`<div class="btn tag clrBr">#${tag}</div>`);
               }); %>
             </div>
           <% } %>
@@ -141,7 +141,7 @@
             </select>
           </div>
         </div>
-        <hr>
+        <hr class="rowLg">
         <div class="js-shippingOptions"></div>
       </div>
     <% } %>
