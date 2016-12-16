@@ -431,8 +431,7 @@ app.serverConfigs.fetch().done(() => {
 
       // for now will just create a new connection
       const serverConfig = new ServerConfig({
-        name: app.polyglot.t('serverConnect.defaultServerName'),
-        default: true,
+        name: 'Dummy Connection',
       });
 
       const save = serverConfig.save();
