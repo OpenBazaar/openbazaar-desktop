@@ -83,7 +83,6 @@
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
       <%= ob.item.description %>
-      <% console.log(ob.item.description) %>
       <% if(!ob.item.description) { print(ob.polyT('listingDetail.noDescription')) } %>
     </div>
 
@@ -92,7 +91,7 @@
         <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
         </div>
         <input type="file" class="cropit-image-input hide">
-        <input type="range" class="cropit-image-zoom-input hide">
+        <input type="range" class="cropit-image-zoom-input">
         <% if (ob.item.images.length > 1) { %>
           <button class="btn ion-ios-arrow-left photoPrev js-photoPrev"></button>
           <button class="btn ion-ios-arrow-right photoNext js-photoNext"></button>
@@ -133,6 +132,7 @@
           <div><%= ob.polyT('listingDetail.shipTo') %></div>
           <div class="col4">
             <select id="shippingDestinations">
+              <option value="ALL"><%= ob.polyT('listingDetail.allCountries') %></option>
               <% ob.countryData.forEach(function(country) {
               var selected = country.id === ob.defaultCountry ? 'selected' : '';
               print(`<option value="${country.id}" ${selected}>${country.text}</option>`);

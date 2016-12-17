@@ -9,6 +9,7 @@ import 'select2';
 import { getTranslatedCountries } from '../../../data/countries';
 import 'cropit';
 import is from 'is_js';
+import '../../../utils/velocity';
 
 
 export default class extends BaseModal {
@@ -229,9 +230,10 @@ export default class extends BaseModal {
       throw new Error('Please provide a destination.');
     }
     const shippingOptions = this.model.get('listing').get('shippingOptions').toJSON();
-    const templateData = shippingOptions.filter((option) =>
-      option.regions.includes(destination)
-    );
+    const templateData = shippingOptions.filter((option) => {
+      if (destination === 'ALL') return option.regions;
+      return option.regions.includes(destination);
+    });
     loadTemplate('modals/listingDetail/shippingOptions.html', t => {
       this.$shippingOptions.html(t({
         templateData,
@@ -331,8 +333,9 @@ export default class extends BaseModal {
 
       setTimeout(() => {
         this.$photoSection.cropit({
-          smallImage: 'stretch',
+          smallImage: 'allow',
           allowDragNDrop: false,
+          maxZoom: 2,
         });
 
         this.$photoSection.cropit('imageSrc', initialPhoto);

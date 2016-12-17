@@ -43,10 +43,8 @@
         height: 701px;
 
         .photoSelected {
-          background-position: center;
-          background-size: cover;
-          background-repeat: no-repeat;
           height: 100%;
+          cursor: pointer;
         }
 
         .photoPrev,
@@ -84,6 +82,13 @@
           opacity: 1;
         }
 
+        .cropit-image-zoom-input {
+          position: absolute;
+          bottom: 100px;
+          width: 90%;
+          margin: 0 5%;
+        }
+
         .photoStrip {
           position: absolute;
           z-index: 1;
@@ -108,6 +113,7 @@
             box-shadow: 0 0 0 2px rgba(0,0,0,0), inset 0 0 0 3px rgba(256, 256, 256, 0);
             transition: box-shadow 0.25s;
             flex-shrink: 0;
+            cursor: pointer;
           }
 
           input[type="radio"]:checked + label {

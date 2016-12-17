@@ -229,7 +229,8 @@
     "shipsFrom": "Ships from %{country}",
     "shipTo": "Ship to:",
     "noShippingFound": "This listing does not ship to the selected country.",
-    "localPickup": "This option is for local pickup only."
+    "localPickup": "This option is for local pickup only.",
+    "allCountries": "Any Country"
   },
   "listingCard": {
     "btnDetails": "Details",
