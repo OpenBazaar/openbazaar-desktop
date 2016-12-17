@@ -4,11 +4,11 @@ import 'select2';
 import _ from 'underscore';
 import path from 'path';
 import '../../../utils/velocityUiPack.js';
+import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/trumbowyg';
 import sanitizeHtml from 'sanitize-html';
 import { htmlFilter } from '../../../data/security/htmlFilter';
-import Backbone from 'backbone';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
@@ -19,7 +19,6 @@ import Image from '../../../models/listing/Image';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
-
 
 export default class extends BaseModal {
   constructor(options = {}) {

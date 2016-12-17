@@ -19,4 +19,3 @@ export function isScrolledIntoView(element) {
   // Check its within the document viewport
   return top <= document.documentElement.clientHeight;
 }
-
