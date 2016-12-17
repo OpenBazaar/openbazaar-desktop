@@ -119,8 +119,6 @@
             <div class="flexRow gutterH">
               <div class="col12">
                 <label for="editListingDescription"><%= ob.polyT('editListing.description') %></label>
-                <br>
-                <span class="tx5"><%= ob.polyT('security.sanitizeWhileYouType') %></span>
                 <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
                 <div contenteditable class="rows6" name="listing.item.description" id="editListingDescription"><%= ob.sanitize(ob.listing.item.description) %></div>
               </div>

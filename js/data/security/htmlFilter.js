@@ -1,6 +1,6 @@
-const htmlFilter = {
+export const htmlFilter = {
   allowedTags: [
-    'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'u',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a', 'u',
     'ul', 'ol', 'li', 'b', 'i', 'strong', 'em',
     'strike', 'hr', 'br', 'img', 'blockquote', 'span',
     'picture', 'source',
@@ -17,6 +17,3 @@ const htmlFilter = {
   },
   allowedSchemes: ['http', 'https', 'ftp', 'mailto', 'ob2'],
 };
-
-export default htmlFilter;
-

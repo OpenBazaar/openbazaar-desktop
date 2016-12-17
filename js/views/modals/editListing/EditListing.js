@@ -5,7 +5,7 @@ import _ from 'underscore';
 import path from 'path';
 import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
-import { debounce, isScrolledIntoView } from '../../../utils/dom';
+import { isScrolledIntoView } from '../../../utils/dom';
 import sanitizeHtml from 'sanitize-html';
 import { htmlFilter } from '../../../data/security/htmlFilter';
 import Backbone from 'backbone';
@@ -20,27 +20,30 @@ import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 
-$.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
 
-function installHTMLSanitizationWatcher() {
-  const msWaitToFilterTags = 2000;
+function installRichEditor() {
+  const editorOptions = {
+    btns: [
+      ['viewHTML'],
+      ['formatting'],
+      ['bold', 'italic'],
+      ['link'],
+      ['insertImage'],
+      'btnGrp-justify',
+      'btnGrp-lists',
+    ],
+  };
+  $.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
   const txt = document.querySelector('#editListingDescription');
-  const watchScope = txt.parentElement;
-  const ted = $(txt).trumbowyg();
-  const tdo = (...args) => ted.trumbowyg(...args);
+
+  // create editor
+  $(txt).trumbowyg(editorOptions);
+
   // do not collect form data from
   // the internal textarea which
   // trumbowyg creates here
-  $(watchScope).find('textarea.trumbowyg-textarea').
+  $(txt.parentElement).find('textarea.trumbowyg-textarea').
     each((__, el) => { el.dataset.doNotCollect = ''; });
-  const filter = () => {
-    const unsanitized = tdo('html');
-    const sanitized = sanitizeHtml(unsanitized, htmlFilter);
-    tdo('html', sanitized);
-  };
-  const spacedFilter = debounce(filter, msWaitToFilterTags);
-  watchScope.addEventListener('textInput', spacedFilter);
-  watchScope.addEventListener('beforecut', spacedFilter);
 }
 
 export default class extends BaseModal {
@@ -852,7 +855,7 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        installHTMLSanitizationWatcher();
+        installRichEditor();
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
