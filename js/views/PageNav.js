@@ -20,6 +20,7 @@ export default class extends View {
         'click .js-navMin': 'navMinClick',
         'click .js-navMax': 'navMaxClick',
         'keyup .js-addressBar': 'onKeyupAddressBar',
+        'focusin .js-addressBar': 'onFocusInAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
         'click .js-navCreateListing': 'navCreateListingClick',
@@ -140,6 +141,10 @@ export default class extends View {
     if (!$(e.target).closest('.js-navListBtn, .js-navNotifBtn').length) {
       this.togglePopMenu();
     }
+  }
+
+  onFocusInAddressBar() {
+    this.$addressBar.select();
   }
 
   onKeyupAddressBar(e) {
