@@ -3,9 +3,9 @@ import '../../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
 import path from 'path';
-import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
 import { isScrolledIntoView } from '../../../utils/dom';
+import { installRichEditor } from '../../../utils/trumbowyg';
 import sanitizeHtml from 'sanitize-html';
 import { htmlFilter } from '../../../data/security/htmlFilter';
 import Backbone from 'backbone';
@@ -20,30 +20,6 @@ import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 
-
-function installRichEditor() {
-  const editorOptions = {
-    btns: [
-      ['formatting'],
-      ['bold', 'italic'],
-      ['link'],
-      ['insertImage'],
-      'btnGrp-justify',
-      'btnGrp-lists',
-    ],
-  };
-  $.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
-  const txt = document.querySelector('#editListingDescription');
-
-  // create editor
-  $(txt).trumbowyg(editorOptions);
-
-  // do not collect form data from
-  // the internal textarea which
-  // trumbowyg creates here
-  $(txt.parentElement).find('textarea.trumbowyg-textarea').
-    each((__, el) => { el.dataset.doNotCollect = ''; });
-}
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -854,7 +830,7 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        installRichEditor();
+        installRichEditor('#editListingDescription');
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
