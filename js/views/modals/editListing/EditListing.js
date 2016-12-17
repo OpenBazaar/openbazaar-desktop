@@ -24,7 +24,6 @@ import ShippingOption from './ShippingOption';
 function installRichEditor() {
   const editorOptions = {
     btns: [
-      ['viewHTML'],
       ['formatting'],
       ['bold', 'italic'],
       ['link'],
