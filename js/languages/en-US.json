@@ -199,8 +199,8 @@
     "about": "About",
     "nsfwContent": "NSFW Content",
     "avatar": "Avatar",
-    "loadAvatar": "Load Image",
-    "loadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
+    "loadAvatar": "Select Photo",
+    "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
     "loadAvatarSizeError": {
       "title": "Your avatar image is too small.",
       "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
@@ -208,8 +208,8 @@
     },
     "loadAvatarZoomTooSmall": "This image is too small to zoom.",
     "header": "Cover Photo",
-    "loadHeader": "Load Image",
-    "loadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
+    "loadHeader": "Select Photo",
+    "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
     "loadHeaderSizeError": {
       "title": "Your header image is too small",
       "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
