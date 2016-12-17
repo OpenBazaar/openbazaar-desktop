@@ -5,7 +5,6 @@ import { screen, shell } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import { getBody } from '../utils/selectors';
-import { findAncestorByTag } from '../utils/dom';
 
 export function fixLinuxZoomIssue() {
   // fix zoom issue on Linux hiDPI
@@ -22,14 +21,7 @@ export function fixLinuxZoomIssue() {
 
 export function handleLinks() {
   $(document).on('click', 'a:not([data-bypass])', (e) => {
-    let $a;
-
-    if (e.target.tagName === 'A') {
-      $a = $(e.target);
-    } else {
-      $a = $(findAncestorByTag(e.target, 'A'));
-    }
-
+    const $a = $(e.target).closest('a');
     let href = $a.attr('href');
 
     // Anchor without href is likely being handled programatically.
