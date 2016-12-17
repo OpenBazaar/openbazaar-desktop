@@ -19,3 +19,41 @@ export function isScrolledIntoView(element) {
   // Check its within the document viewport
   return top <= document.documentElement.clientHeight;
 }
+
+export function throttle(handler, fps) {
+  const ms = 1000 / fps;
+  let wait = false;
+
+  return function throttled(...e) {
+    const context = this;
+
+    if (!wait) {
+      handler.call(context, ...e);
+      wait = true;
+      setTimeout(() => { wait = false; }, ms);
+    }
+  };
+}
+
+/**
+  Inspired by: https://gist.github.com/bameyrick/0e3ac3b32c0a1af98c1c
+**/
+export function debounce(func, wait = 1000, immediate = false) {
+  let timeout = null;
+
+  return (...args) => {
+    const context = this;
+
+    const later = () => {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+
+    if (callNow) func.apply(context, args);
+  };
+}
+

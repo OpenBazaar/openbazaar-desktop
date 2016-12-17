@@ -3,10 +3,12 @@ import '../../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
 import path from 'path';
-import { MediumEditor } from 'medium-editor';
+import 'trumbowyg';
 import '../../../utils/velocityUiPack.js';
+import { debounce, isScrolledIntoView } from '../../../utils/dom';
+import sanitizeHtml from 'sanitize-html';
+import { htmlFilter } from '../../../data/security/htmlFilter';
 import Backbone from 'backbone';
-import { isScrolledIntoView } from '../../../utils/dom';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
@@ -17,6 +19,29 @@ import Image from '../../../models/listing/Image';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
+
+$.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
+
+function installHTMLSanitizationWatcher() {
+  const msWaitToFilterTags = 2000;
+  const txt = document.querySelector('#editListingDescription');
+  const watchScope = txt.parentElement;
+  const ted = $(txt).trumbowyg();
+  const tdo = (...args) => ted.trumbowyg(...args);
+  // do not collect form data from
+  // the internal textarea which
+  // trumbowyg creates here
+  $(watchScope).find('textarea.trumbowyg-textarea').
+    each((__, el) => { el.dataset.doNotCollect = ''; });
+  const filter = () => {
+    const unsanitized = tdo('html');
+    const sanitized = sanitizeHtml(unsanitized, htmlFilter);
+    tdo('html', sanitized);
+  };
+  const spacedFilter = debounce(filter, msWaitToFilterTags);
+  watchScope.addEventListener('textInput', spacedFilter);
+  watchScope.addEventListener('beforecut', spacedFilter);
+}
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -445,6 +470,9 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
 
+    // one reason this is here since slots are not modified within validate
+    formData.listing.item.description = sanitizeHtml(formData.listing.item.description, htmlFilter);
+
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
@@ -533,7 +561,8 @@ export default class extends BaseModal {
     return this._$formFields ||
       (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
         '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]'));
+        '.js-scrollToSection:not(.js-sectionShipping) div[contenteditable][name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]:not([data-do-not-collect])'));
   }
 
   get $currencySelect() {
@@ -657,7 +686,6 @@ export default class extends BaseModal {
   }
 
   remove() {
-    if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
 
@@ -824,16 +852,7 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
-        this.descriptionMediumEditor = new MediumEditor('#editListingDescription', {
-          placeholder: {
-            text: '',
-          },
-          toolbar: {
-            buttons: ['bold', 'italic', 'underline', 'anchor', 'unorderedlist', 'orderedlist'],
-          },
-        });
-
+        installHTMLSanitizationWatcher();
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
