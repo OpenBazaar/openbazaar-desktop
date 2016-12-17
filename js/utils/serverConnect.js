@@ -178,7 +178,9 @@ export function connect(server, options = {}) {
       innerConnectDeferred.reject('canceled');
     };
 
-    if (server.get('default') && !localServer.isRunning) {
+    if (server.get('default') && !localServer.isRunning && !localServer.isStopping) {
+      // If we're connecting to the bundled server and the local server is not
+      // running or in the process of stopping, we'll start it.
       innerConnectDeferred.notify('starting-local-server');
 
       localServer.on('start', () => {

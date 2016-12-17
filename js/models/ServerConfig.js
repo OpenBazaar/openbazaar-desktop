@@ -103,8 +103,7 @@ export default class extends BaseModel {
     if (!this.isLocalServer()) {
       needsAuth = true;
     } else {
-      if (!this.get('default') &&
-        (this.get('username') || this.get('password'))) {
+      if (this.get('username') || this.get('password')) {
         needsAuth = true;
       }
     }
@@ -118,7 +117,7 @@ export default class extends BaseModel {
    * run stand-alone server.
    */
   isLocalServer() {
-    const ip = this.get('server_ip');
+    const ip = this.get('serverIp');
 
     return ip === 'localhost' || ip === '127.0.0.1';
   }

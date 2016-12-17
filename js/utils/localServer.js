@@ -23,12 +23,17 @@ export default class LocalServer {
     this.serverFilename = options.serverFilename;
     this.errorLogPath = options.errorLogPath;
     this._isRunning = false;
+    this._isStopping = false;
     this._debugLog = '';
     this.startAfterStop = () => this.start();
   }
 
   get isRunning() {
     return this._isRunning;
+  }
+
+  get isStopping() {
+    return this._isStopping;
   }
 
   start() {
@@ -79,7 +84,7 @@ export default class LocalServer {
     this.serverSubProcess.on('exit', (code, signal) => {
       let logMsg;
 
-      if (code) {
+      if (code !== null) {
         logMsg = `Server exited with code: ${code}`;
       } else {
         logMsg = `Server exited at request of signal: ${signal}.`;
@@ -103,8 +108,13 @@ export default class LocalServer {
       return;
     }
 
+    this._isStopping = true;
     this.pendingStop = this.serverSubProcess;
-    this.pendingStop.once('exit', () => (this.pendingStop = null));
+    this.pendingStop.once('exit', () => {
+      this.pendingStop = null;
+      this._isStopping = false;
+    });
+
     this.log('Shutting down server');
     console.log('Shutting down server');
 
