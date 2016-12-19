@@ -20,6 +20,12 @@
       padding: 268px 0 40px 0;
     }
 
+    .listBox {
+      .listItem {
+        padding: $pad 0;
+      }
+    }
+
     .informationList {
 
       .informationHeader {
