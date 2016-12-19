@@ -26,6 +26,7 @@ import './utils/exchangeRateSyncer';
 import './utils/listingData';
 import { getBody } from './utils/selectors';
 import { launchDebugLogModal } from './utils/modalManager';
+import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagament';
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -361,6 +362,8 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
+
+        setTimeout(() => app.connectionManagmentModal.open());
       });
     });
   });
@@ -602,3 +605,5 @@ serverConnectEvents.on('connected', (connectedEvent) => {
 
 // initialize our listing delete handler
 listingDeleteHandler();
+
+app.connectionManagmentModal = new ConnectionManagement().render();

@@ -180,7 +180,7 @@ ul, ol {
   #chatContainer {
     position: fixed;
     top: 105px;
-    right: 0;
+    right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
     height: calc(100% - 100px);
     z-index: 2; // chat needs to be on top of modals
