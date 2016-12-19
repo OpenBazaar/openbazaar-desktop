@@ -148,8 +148,7 @@
 
   .navListWrapper {
     z-index: 1;
-    padding: 0 $pad $pad $pad; // give room for border and shadow
-    right: $pad; // compensate for padding
+    padding: 0 0 $pad $pad; // give room for border and shadow
 
     .navList {
       box-sizing: border-box;
@@ -159,8 +158,6 @@
       border-style: solid;
       width: 235px;
       padding: $pad;
-      margin-top: 1px; // blend top shadwo with border in parent
-
 
       .listItem {
         display: flex;

@@ -49,6 +49,12 @@ h6, .h6, .tx6, .btn.tx6 {
   font-size: 1rem;
 }
 
+.txGlow {
+  text-shadow: #525252 0 1px 2px;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #fff;
+}
+
 p {
   margin: 0;
   line-height: 1.3;
