@@ -17,9 +17,9 @@
   </div>
 </div>
 <% if (ob.isFetching) { %>
-  <div class="txCtr padBg contentBox clrBr clrP"><h1 class="txCtr">Loading...</h1></div>
+  <div class="txCtr padLg contentBox clrBr clrP"><h1 class="txCtr">Loading...</h1></div>
 <% } else if (ob.fetchFailed) { %>
-  <div class="txCtr padBg contentBox clrBr clrP">
+  <div class="txCtr padLg contentBox clrBr clrP">
     <h3><%= ob.polyT('userPage.store.unableToFetchListings') %></h3>
     <p><%= ob.fetchFailReason %></p>
     <a class='btn clrP clrBr js-retryFetch'><%= ob.polyT('userPage.store.retryStoreFetch') %></a>
@@ -41,7 +41,7 @@
         </div>
         <div class="flexVCent rowSm gutterHSm">
           <input type="checkbox" id="filterFreeShipping" class="margRSm js-filterFreeShipping" <% if (ob.filter.freeShipping) print('checked') %> />
-          <label class="clrE1 clrTOnEmph txTn txCtr upper padTn txB" for="filterFreeShipping"><%= ob.polyT('userPage.store.freeShippingBanner') %></label>
+          <label class="clrE1 clrTOnEmph phraseBox" for="filterFreeShipping"><%= ob.polyT('userPage.store.freeShippingBanner') %></label>
         </div>
       </div>
       <div class="js-catFilterContainer"></div>
@@ -65,7 +65,7 @@
         </div>
       </div>
       <div class="js-listingsContainer"></div>
-      <div class="txCtr padGi clrP clrSh2 clrBr tx4 contentBox js-noResults hide"> 
+      <div class="txCtr padGi clrP clrSh2 clrBr tx4 contentBox js-noResults hide">
         <p><%= ob.polyT('userPage.store.noListingsFound') %></p>
         <div class="btn clrP clrBr js-clearSearch"><%= ob.polyT('userPage.store.btnClearSearch') %></div>
       </div>

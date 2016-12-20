@@ -11,11 +11,11 @@ $textOnEmph: rgb(255, 255, 255);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
 $border3: adjust-color($text, $lightness: 35%);
-
-$emphasis1: rgb(253,166,57);
-$emphasis2: rgb(174, 138, 88);
-
-$error: red; // TODO: set this to a better color that matches the base theme
+$focusedBorder: rgb(0, 0, 0);
+$emphasis1: hsl(116.5, 66.3, 41);
+$emphasis2: adjust-color($emphasis1, $lightness: +20%);
+$emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
+$error: red;
 
 $overlay: adjust-color($secondary, $alpha: -0.1);
 
@@ -24,11 +24,13 @@ $baseFontSize: 10px;
 $txBg: 4.75rem;
 $tx1: 2.6rem;
 $tx2: 2.3rem;
+$tx2b: 2rem;
 $tx3: 1.7rem;
 $tx4: 1.5rem;
 $tx5: 1.4rem;
 $tx5b: 1.3rem;
 $tx6: 1.2rem;
+$tx7: 0.9rem;
 
 $formElementHeight: 4rem;
 
@@ -42,9 +44,12 @@ $padLg: $pad * 2;
 $padHg: $pad * 2.5;
 $padGi: $pad * 4;
 $marg: 10px;
-$chatClosed: 70px; //fake number
-$chatOpen: 200px; //fake number
+$chatClosed: 48px;
+$chatOpen: 220px;
 $pageWidth: 950px;
+$scrollbar: 8px;
+$modalContentInner: 957px;
+$buttonHeight: 35px;
 
 // controls
 $corner: 2px;
