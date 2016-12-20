@@ -1,9 +1,11 @@
 import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
 
+import childProcess from 'child_process';
+import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import fs from 'fs';
-import childProcess from 'child_process';
+
+const urlparse = require('url-parse');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -12,8 +14,6 @@ let closeConfirmed = false;
 // let launchedFromInstaller = false;
 const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
 // let version = app.getVersion();
-// let TrayMenu;
-
 
 const handleStartupEvent = function () {
   if (process.platform !== 'win32') {
@@ -129,11 +129,9 @@ const startLocalServer = function startLocalServer() {
     };
     sub.on('close', closecallback);
     sub.unref();
-  } else {
-    if (mainWindow) {
-      mainWindow.webContents.executeJavaScript("console.log('Unable " +
-      "to find openbazaard')");
-    }
+  } else if (mainWindow) {
+    mainWindow.webContents.executeJavaScript("console.log('Unable " +
+    "to find openbazaard')");
   }
 };
 startLocalServer();
@@ -163,6 +161,51 @@ startLocalServer();
 // is not running locally')");
 //   }
 // };
+
+/**
+ * Handles valid OB2 protocol URLs in the webapp.
+ *
+ * @param  {Object} externalURL Contains a string url
+ */
+function handleDeepLinkEvent(externalURL) {
+  if (!(typeof externalURL === 'string')) return;
+
+  const theUrl = urlparse(externalURL);
+  if (theUrl.protocol !== 'ob2:') {
+    console.warn(`Unable to handle ${externalURL} because it's not the ob2: protocol.`);
+    return;
+  }
+
+  const query = theUrl.query;
+  const hash = theUrl.host;
+  const pathname = theUrl.pathname;
+
+  console.warn(`This is the hash to visit: ${hash}`);
+  console.warn(`These are the query params: ${query}`);
+  console.warn(`This is the path: ${pathname}`);
+
+  // TODO: handle protocol links
+}
+
+/**
+ * Prevent window navigation
+ *
+ * @param  {Object} win Contains a browserwindow object
+ */
+function preventWindowNavigation(win) {
+  win.webContents.on('will-navigate', (e, url) => {
+    // NB: Let page reloads through.
+    if (url === win.webContents.getURL()) return;
+
+    e.preventDefault();
+
+    if (url.startsWith('ob2:')) {
+      handleDeepLinkEvent(url);
+    } else {
+      console.info(`Preventing navigation to: ${url}`);
+    }
+  });
+}
 
 function createWindow() {
   const template = [
@@ -323,18 +366,17 @@ function createWindow() {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  // put logic here to set tray icon based on OS
-  const osTrayIcon = 'openbazaar-mac-system-tray.png';
-
+  // Tray Menu
+  const osTrayIcon = (platform === 'win32') ? 'windows-icon.ico' : 'openbazaar-mac-system-tray.png';
   const trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
   const trayTemplate = [
     {
-      label: 'Start Local Server',
+      label: 'Start Bundled Server',
       type: 'normal',
       click() { startLocalServer(); },
     },
     {
-      label: 'Shutdown Local Server',
+      label: 'Shutdown Bundled Server',
       type: 'normal',
       click() {
         if (fs.existsSync(serverPath)) {
@@ -343,11 +385,9 @@ function createWindow() {
             detach: false,
             cwd: workingDir,
           });
-        } else {
-          if (mainWindow) {
-            mainWindow.webContents.executeJavaScript("console.log('Server is not " +
-            "running locally')");
-          }
+        } else if (mainWindow) {
+          mainWindow.webContents.executeJavaScript("console.log('Server is not " +
+          "running locally')");
         }
       },
     },
@@ -406,6 +446,12 @@ function createWindow() {
     mainWindow.send('close-attempt');
     if (!closeConfirmed) e.preventDefault();
   });
+
+  // Set up protocol
+  app.setAsDefaultProtocolClient('ob2');
+
+  // Check for URL hijacking in the browser
+  preventWindowNavigation(mainWindow);
 }
 
 // This method will be called when Electron has finished
@@ -424,6 +470,11 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow) mainWindow.show();
+});
+
+app.on('open-url', (e, url) => {
+  e.preventDefault();
+  handleDeepLinkEvent(url);
 });
 
 // const checkServerChange = function (event, server) {
