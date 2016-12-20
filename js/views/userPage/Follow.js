@@ -98,7 +98,7 @@ export default class extends BaseVw {
       const noneString = app.polyglot.t(
         `userPage.no${this.options.ownPage ? 'Own' : ''}${this.followType}`,
         { name: this.model.get('name') });
-      const noneStringPartial1 = '<div class="col12 txCtr padBg contentBox clrBr clrP">';
+      const noneStringPartial1 = '<div class="col12 txCtr padLg contentBox clrBr clrP">';
       this.$el.append(`${noneStringPartial1}<h3 class="flexExpand txCtr">${noneString}</h3></div>`);
     }
     return this;
