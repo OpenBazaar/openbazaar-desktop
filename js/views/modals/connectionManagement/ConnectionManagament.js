@@ -11,34 +11,29 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
+    console.log('skippy');
+    window.skippy = this;
   }
 
   className() {
-    return `${super.className()} modalTop modalScrollPage`;
+    return `${super.className()} modalTewrewop mfffodalScrollPage`;
   }
 
   events() {
     return {
-      // 'click .js-copy': 'onCopyClick',
+      'click .js-sanity': 'howdyClick',
       ...super.events(),
     };
   }
 
-  remove() {
-    // ipcRenderer.removeListener('server-log', this.onServerConnectLog);
-    super.remove();
+  howdyClick() {
+    console.log('charlie says mariah mariah aroo.');
   }
 
   render() {
     loadTemplate('modals/connectionManagement/connectionManagement.html', t => {
-      this.$el.html(t({
-        debugLog: this.debugLog,
-      }));
-
+      this.$el.html(t());
       super.render();
-
-      this._$debugLog = null;
-      this._$copiedConfirm = null;
     });
 
     return this;

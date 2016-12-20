@@ -362,8 +362,9 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
-
-        setTimeout(() => app.connectionManagmentModal.open());
+        app.connectionManagmentModal = new ConnectionManagement()
+          .render()
+          .open();
       });
     });
   });
@@ -605,5 +606,3 @@ serverConnectEvents.on('connected', (connectedEvent) => {
 
 // initialize our listing delete handler
 listingDeleteHandler();
-
-app.connectionManagmentModal = new ConnectionManagement().render();
