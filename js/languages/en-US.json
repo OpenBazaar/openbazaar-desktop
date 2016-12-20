@@ -87,7 +87,12 @@
   "settings": {
     "settingsLabel": "Settings",
     "generalTab": "General",
-    "pageTab": "Page",
+    "pageTab": {
+      "sectionPage": "Page",
+      "sectionLinks": "Links",
+      "sectionAbout": "About",
+      "sectionTheme": "Theme"
+    },
     "addressesTab": "Addresses",
     "advancedTab": {
       "_sectionName": "Advanced",

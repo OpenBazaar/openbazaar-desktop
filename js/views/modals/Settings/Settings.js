@@ -13,7 +13,6 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP clrBr border clrSh2',
       removeOnRoute: false,
       ...options,
     };
@@ -38,7 +37,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} settings tabbedModal modalTop`;
+    return `${super.className()} settings tabbedModal modalTop modalScrollPage`;
   }
 
   events() {
@@ -77,11 +76,11 @@ export default class extends BaseModal {
         tabView.render();
       }
 
-      if (tabView instanceof Addresses) {
-        this.$save.text(app.polyglot.t('settings.btnAddAddress'));
-      } else {
-        this.$save.text(app.polyglot.t('settings.btnSave'));
-      }
+      // if (tabView instanceof Addresses) {
+      //   this.$save.text(app.polyglot.t('settings.btnAddAddress'));
+      // } else {
+      //   this.$save.text(app.polyglot.t('settings.btnSave'));
+      // }
 
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
@@ -89,6 +88,7 @@ export default class extends BaseModal {
   }
 
   saveClick() {
+    console.log('you have the saved a click correct.');
     this.save();
   }
 
@@ -110,8 +110,9 @@ export default class extends BaseModal {
   }
 
   onTabSaving() {
+    console.log('we are saving a tab');
     this.savesInProgress++;
-    this.$save.addClass('processing');
+    // this.$('.js-save').addClass('processing');
     this.saving = true;
     this.$saveStatus.text('');
   }
@@ -138,7 +139,7 @@ export default class extends BaseModal {
 
     if (!this.savesInProgress) {
       this.saving = false;
-      this.$save.removeClass('processing');
+      // this.$('.js-save').removeClass('processing');
 
       if (this.statusMessage) {
         this.statusMessageRemoveTimer = setTimeout(() => {
@@ -214,7 +215,7 @@ export default class extends BaseModal {
       super.render();
 
       this.$tabContent = this.$('.js-tabContent');
-      this.$save = this.$('.js-save');
+      // this.$save = this.$('.js-save');
       this._$saveStatus = null;
 
       this.selectTab(this.$('.js-tab[data-tab="General"]'));

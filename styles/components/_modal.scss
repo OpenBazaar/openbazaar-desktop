@@ -54,10 +54,6 @@
         margin-left: calc(((100% - (#{$modalContentInner + $chatOpen})) / 2) + 5px);
       }
 
-      .modalContentInner {
-        width: $modalContentInner;
-      }
-
       & > .cornerTR {
         right: auto;
         left: calc(#{$modalContentInner} - #{$buttonHeight});

@@ -45,15 +45,22 @@ export default class extends baseVw {
       save.done(() => this.trigger('saveComplete'))
         .fail((...args) =>
           this.trigger('saveComplete', false, true,
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''))
+        .always(() => this.$btnSave.removeClass('processing'));
     }
 
     // render so errrors are shown / cleared
     this.render();
+    if (save) this.$btnSave.addClass('processing');
 
     const $firstErr = this.$('.errorList:first');
 
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+  }
+
+  get $btnSave() {
+    return this._$btnSave ||
+      (this._$btnSave = this.$('.js-save'));
   }
 
   render() {
@@ -71,6 +78,7 @@ export default class extends baseVw {
       this.$('#settingsCurrencySelect').select2();
 
       this.$formFields = this.$('select[name], input[name]');
+      this._$btnSave = null;
     });
 
     return this;

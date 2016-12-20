@@ -97,5 +97,9 @@
 
   .tab.active {
     color: $col3;
+
+    &::after {
+      color: $col3;
+    }
   }
 }
