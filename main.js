@@ -1,4 +1,4 @@
-import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
+import { electron, app, BrowserWindow, ipcMain, Menu, Tray, crashReporter } from 'electron';
 
 import os from 'os';
 import path from 'path';
@@ -14,6 +14,23 @@ const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
 // let version = app.getVersion();
 // let TrayMenu;
 
+// Set daemon binary name
+const daemon = (platform === 'darwin' || platform === 'linux') ? 'openbazaard' : 'openbazaard.exe';
+
+const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
+let serverRunning = false;
+let pendingKill;
+// let startAfterClose;
+
+crashReporter.start({
+  productName: 'OpenBazaar 2',
+  companyName: 'OpenBazaar',
+  submitURL: 'http://104.131.17.128:1127/post',
+  autoSubmit: true,
+  extra: {
+    bundled: (fs.existsSync(serverPath)) ? 'yes' : 'no',
+  },
+});
 
 const handleStartupEvent = function () {
   if (process.platform !== 'win32') {
@@ -69,14 +86,6 @@ const handleStartupEvent = function () {
 if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
-
-// Set daemon binary name
-const daemon = (platform === 'darwin' || platform === 'linux') ? 'openbazaard' : 'openbazaard.exe';
-
-const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
-let serverRunning = false;
-let pendingKill;
-// let startAfterClose;
 
 const startLocalServer = function startLocalServer() {
   if (fs.existsSync(serverPath)) {
@@ -274,6 +283,8 @@ function createWindow() {
         },
         {
           role: 'quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click: function() { closeConfirmed=true; app.quit(); },
         },
       ],
     });
@@ -400,6 +411,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+    app.quit();
   });
 
   mainWindow.on('close', (e) => {
