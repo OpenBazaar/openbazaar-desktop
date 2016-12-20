@@ -110,9 +110,7 @@ export default class extends BaseModal {
   }
 
   onTabSaving() {
-    console.log('we are saving a tab');
     this.savesInProgress++;
-    // this.$('.js-save').addClass('processing');
     this.saving = true;
     this.$saveStatus.text('');
   }
@@ -139,7 +137,6 @@ export default class extends BaseModal {
 
     if (!this.savesInProgress) {
       this.saving = false;
-      // this.$('.js-save').removeClass('processing');
 
       if (this.statusMessage) {
         this.statusMessageRemoveTimer = setTimeout(() => {

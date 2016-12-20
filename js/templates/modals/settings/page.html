@@ -90,8 +90,8 @@
             <input type="text" class="clrBr" name="email" id="settingsEmail" value="<%= ob.email %>">
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>      
   </div>
 
   <div class="contentBox padMd clrP clrBr clrSh3">
@@ -107,20 +107,14 @@
             <textarea rows="6" name="about" class="clrBr" id="settingsAbout"><%= ob.about %></textarea>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 
-  <!--   
-
-        <div class="flexRow">
-          <div class="col3">
-            <label for="settingsLocationSelect">Public Location</label>
-          </div>
-          <div class="col9">
-            Implementation to be determined.
-          </div>
-        </div>
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h3 clrT"><%= ob.polyT('settings.pageTab.sectionTheme') %></h2>
+    <div class="tabFormWrapper">
+      <form class="box padMdKids padStack">
         <div class="flexRow">
           <div class="col3">
             <label><%= ob.polyT('settings.avatar') %></label>
@@ -152,20 +146,6 @@
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="flexRow">
-          <h3><%= ob.polyT('settings.socialSection') %></h3>
-        </div>
-        <div class="flexRow">
-          <h3><%= ob.polyT('settings.themesSection') %></h3>
-        </div>
-        <div class="flexRow">
-          <div class="col3">
-            <label><%= ob.polyT('settings.standardThemes') %></label>
-          </div>
-          <div class="col9">
-            thumbnails of themes
           </div>
         </div>
         <div class="flexRow">
@@ -232,7 +212,8 @@
           </div>
         </div>
       </form>
-    </div> -->
+    </div>
+  </div>  
 
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
