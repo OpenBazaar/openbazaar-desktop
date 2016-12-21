@@ -7,8 +7,6 @@ import '../../../utils/velocityUiPack.js';
 import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/trumbowyg';
-import sanitizeHtml from 'sanitize-html';
-import { htmlFilter } from '../../../data/security/htmlFilter';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
@@ -447,9 +445,6 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
 
-    // one reason this is here since slots are not modified within validate
-    formData.listing.item.description = sanitizeHtml(formData.listing.item.description, htmlFilter);
-
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
@@ -539,7 +534,7 @@ export default class extends BaseModal {
       (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
         '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
         '.js-scrollToSection:not(.js-sectionShipping) div[contenteditable][name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]:not([data-do-not-collect])'));
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]:not([class*="trumbowyg"])'));
   }
 
   get $currencySelect() {
@@ -829,7 +824,7 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        installRichEditor('#editListingDescription');
+        installRichEditor(this.$('#editListingDescription'));
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();

@@ -39,7 +39,7 @@ export default class baseVw extends View {
     const $formFields = selector instanceof $ ?
       selector : this.$(selector ||
         `select[name], input[name], 
-        textarea[name]:not([data-do-not-collect]), 
+        textarea[name]:not([class*="trumbowyg"]), 
         div[contenteditable][name]`
       );
     const data = {};

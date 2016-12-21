@@ -20,10 +20,4 @@ export function installRichEditor(attachPoint) {
 
   // create editor
   attach.trumbowyg(editorOptions);
-
-  // do not collect form data from
-  // the internal textarea which
-  // trumbowyg creates here
-  attach.parent().find('textarea.trumbowyg-textarea').
-    each((__, el) => { el.dataset.doNotCollect = ''; });
 }
