@@ -170,6 +170,7 @@
     "secondaryColor": "Secondary Color",
     "textColor": "Text Color",
     "addresses": {
+      "sectionName": "New Address",
       "name": "Name",
       "company": "Company",
       "street": "Street",

@@ -1,9 +1,17 @@
-<div class="bar padMd clrBr borderBottom">
-  <h2 class="h3 txUnb"><%= ob.polyT('settings.addressesTab') %></h2>
-</div>
-<div class="tabFormWrapper js-addressesWrap clrP">
-  <div class="settingsTabFormWrapperInner">
-    <div class="js-listContainer"></div>
-    <div class="js-formContainer"></div>
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexHCent">
+    <h2 class="h3 clrT"><%= ob.polyT('settings.addressesTab') %></h2>
   </div>
+  <hr class="clrBr" />
+
+  <div class="tabFormWrapper js-addressesWrap clrP">
+    <div class="settingsTabFormWrapperInner">
+      <div class="js-listContainer"></div>
+      <div class="js-formContainer"></div>
+    </div>
+  </div>
+
+  <div class="flexHRight">
+    <a class="btn clrP clrBr js-save"><%= ob.polyT('settings.btnAddAddress') %></a>
+  </div>  
 </div>
