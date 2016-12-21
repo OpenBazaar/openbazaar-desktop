@@ -108,6 +108,9 @@ export default class extends Model {
       (attrs = {})[key] = val;
     }
 
+    // let's work off of a clone since we make modifications
+    attrs = JSON.parse(JSON.stringify(attrs));
+
     if (this.nested) {
       const nested = _.result(this, 'nested', []);
 

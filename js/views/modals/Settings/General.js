@@ -45,13 +45,11 @@ export default class extends baseVw {
       save.done(() => this.trigger('saveComplete'))
         .fail((...args) =>
           this.trigger('saveComplete', false, true,
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''))
-        .always(() => this.$btnSave.removeClass('processing'));
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
     }
 
     // render so errrors are shown / cleared
     this.render();
-    if (save) this.$btnSave.addClass('processing');
 
     const $firstErr = this.$('.errorList:first');
 

@@ -76,19 +76,12 @@ export default class extends BaseModal {
         tabView.render();
       }
 
-      // if (tabView instanceof Addresses) {
-      //   this.$save.text(app.polyglot.t('settings.btnAddAddress'));
-      // } else {
-      //   this.$save.text(app.polyglot.t('settings.btnSave'));
-      // }
-
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
   }
 
   saveClick() {
-    console.log('you have the saved a click correct.');
     this.save();
   }
 
@@ -212,7 +205,6 @@ export default class extends BaseModal {
       super.render();
 
       this.$tabContent = this.$('.js-tabContent');
-      // this.$save = this.$('.js-save');
       this._$saveStatus = null;
 
       this.selectTab(this.$('.js-tab[data-tab="General"]'));

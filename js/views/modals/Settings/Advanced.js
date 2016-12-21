@@ -37,7 +37,9 @@ export default class extends baseVw {
   save() {
     this.trigger('saving');
     this.localSettings.set(this.getFormData(this.$localFields), { validate: true });
-    this.settings.set(this.getFormData(), { validate: true });
+
+    const serverFormData = this.getFormData();
+    this.settings.set(serverFormData, { validate: true });
 
     if (this.localSettings.validationError || this.settings.validationError) {
       // client side validation failed on one or both models
@@ -47,7 +49,10 @@ export default class extends baseVw {
 
       // let's save and monitor both save processes
       const localSave = this.localSettings.save();
-      const serverSave = this.settings.save();
+      const serverSave = this.settings.save(serverFormData, {
+        attrs: serverFormData,
+        type: 'PATCH',
+      });
 
       $.when(localSave, serverSave)
         .done(() => {
