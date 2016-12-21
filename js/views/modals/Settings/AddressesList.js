@@ -16,10 +16,6 @@ export default class extends baseVw {
     this.listenTo(this.collection, 'update', this.render);
   }
 
-  className() {
-    return 'settingsAddresses';
-  }
-
   events() {
     return {
       'click .js-delete': 'onClickDelete',

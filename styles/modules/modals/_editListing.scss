@@ -3,13 +3,6 @@
     overflow: hidden;
     min-height: 0;
 
-    .topBar {
-      // temporary styling until we re-factor modals to
-      // match the updated design
-      border-bottom-width: 1px;
-      border-bottom-style: solid;
-    }
-
     .medium-editor-element {
       min-height: 150px;
     }
@@ -92,10 +85,6 @@
         form {
           label {
             font-weight: 400;          
-          }
-
-          .shippingOptionButtonBar {
-            margin-top: 25px;
           }
 
           .servicesWrap {

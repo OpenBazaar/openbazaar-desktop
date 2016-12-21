@@ -299,13 +299,15 @@
           "LOCAL_PICKUP": "Local Pickup"
         },
         "btnAddShippingOption": "Add Shipping Option",
+        "btnDeleteShippingOption": "Delete Shipping Option",
         "services": {
           "nameLabel": "Service",
           "namePlaceholder": "e.g. Standard, Express, Overnight",
           "estimatedDeliveryLabel": "Est. Delivery Time",
           "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
           "priceLabel": "Price",
-          "pricePlaceholder": "0.00"
+          "pricePlaceholder": "0.00",
+          "addService": "+ Add Service"
         }
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",

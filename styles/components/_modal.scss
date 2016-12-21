@@ -24,7 +24,7 @@
     & > .cornerTR {
       top: -40px;
       right: 0;
-    }    
+    }
   }
 
   &.modalTop .modalContent {
@@ -64,6 +64,11 @@
         left: calc(#{$modalContentInner} - #{$buttonHeight});
         top: 0;
       }
+
+      .topControls {
+        margin-bottom: $padSm;
+        height: 35px;
+      }      
     }
   }
 }

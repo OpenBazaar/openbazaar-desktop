@@ -26,7 +26,7 @@ export default class extends BaseModal {
 
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP clrBr border',
+      // modelContentClass: 'modalContent clrP clrBr border',
       ...options,
     };
 
@@ -55,6 +55,7 @@ export default class extends BaseModal {
       // event emitter in models/listing/index.js.
     });
 
+    this.$scrollContainer = this.$el;
     this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
     this.createMode = !(this.model.lastSyncedAttrs.listing &&
@@ -71,7 +72,7 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      this.$('.js-sectionShipping').addClass('hasShippingOptions');
+      this.$sectionShipping.addClass('hasShippingOptions');
 
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
@@ -84,7 +85,7 @@ export default class extends BaseModal {
 
     this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
       if (!this.shippingOptions.length) {
-        this.$('.js-sectionShipping').removeClass('hasShippingOptions');
+        this.$sectionShipping.removeClass('hasShippingOptions');
       }
 
       const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
@@ -92,10 +93,20 @@ export default class extends BaseModal {
       this.shippingOptionViews.slice(removeOpts.index)
         .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
     });
+
+    this.listenTo(this.shippingOptions, 'update', (cl, updateOpts) => {
+      if (!(updateOpts.changes.added.length || updateOpts.changes.removed.length)) {
+        return;
+      }
+
+      this.$addShipOptSectionHeading
+        .text(app.polyglot.t('editListing.shippingOptions.optionHeading',
+          { listPosition: this.shippingOptions.length + 1 }));
+    });
   }
 
   className() {
-    return `${super.className()} editListing tabbedModal modalTop`;
+    return `${super.className()} editListing tabbedModal modalTop modalScrollPage`;
   }
 
   events() {
@@ -600,6 +611,11 @@ export default class extends BaseModal {
     return `<div class="clrT2 tx5 row">${app.polyglot.t('editListing.maxTagsWarning')}</div>`;
   }
 
+  get $addShipOptSectionHeading() {
+    return this._$addShipOptSectionHeading ||
+      (this._$addShipOptSectionHeading = this.$('.js-addShipOptSectionHeading'));
+  }
+
   showMaxTagsWarning() {
     this.$maxTagsWarning.empty()
       .append(this.maxTagsWarning);
@@ -708,7 +724,6 @@ export default class extends BaseModal {
 
       super.render();
 
-      this.$scrollContainer = this.$('.js-scrollContainer');
       this.$editListingTags = this.$('#editListingTags');
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
@@ -855,6 +870,7 @@ export default class extends BaseModal {
       this._$sectionShipping = null;
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
+      this._$addShipOptSectionHeading = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
