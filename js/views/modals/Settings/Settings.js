@@ -48,6 +48,13 @@ export default class extends BaseModal {
     };
   }
 
+  get closeClickTargets() {
+    return [
+      ...this.$closeClickTargets.get(),
+      ...super.closeClickTargets,
+    ];
+  }
+
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
 
@@ -173,11 +180,19 @@ export default class extends BaseModal {
     }
   }
 
+  get $closeClickTargets() {
+    return this._$closeClickTargets ||
+      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
+  }
+
   render() {
     loadTemplate('modals/settings/settings.html', (t) => {
       this.$el.html(t(this.options));
       super.render();
+
       this.$tabContent = this.$('.js-tabContent');
+      this._$closeClickTargets = null;
+
       this.selectTab(this.$('.js-tab[data-tab="General"]'));
     });
 
