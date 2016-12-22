@@ -96,7 +96,7 @@ export default class extends Model {
     });
   }
 
-  set(key, val, options) {
+  set(key, val, options = {}) {
     // Handle both `"key", value` and `{key: value}` -style arguments.
     let attrs;
     let opts = options;
@@ -108,24 +108,27 @@ export default class extends Model {
       (attrs = {})[key] = val;
     }
 
-    // let's work off of a clone since we modify attrs
-    attrs = JSON.parse(JSON.stringify(attrs));
+    // todo: will it break things if we unset a nested attribute?
+    if (!options.unset) {
+      // let's work off of a clone since we modify attrs
+      attrs = JSON.parse(JSON.stringify(attrs));
 
-    if (this.nested) {
-      const nested = _.result(this, 'nested', []);
+      if (this.nested) {
+        const nested = _.result(this, 'nested', []);
 
-      Object.keys(nested).forEach((nestedKey) => {
-        const NestedClass = nested[nestedKey];
-        const nestedData = attrs[nestedKey];
-        const nestedInstance = this.attributes[nestedKey];
+        Object.keys(nested).forEach((nestedKey) => {
+          const NestedClass = nested[nestedKey];
+          const nestedData = attrs[nestedKey];
+          const nestedInstance = this.attributes[nestedKey];
 
-        if (nestedInstance) {
-          if (nestedData) nestedInstance.set(nestedData);
-          delete attrs[nestedKey];
-        } else {
-          attrs[nestedKey] = new NestedClass(nestedData);
-        }
-      });
+          if (nestedInstance) {
+            if (nestedData) nestedInstance.set(nestedData);
+            delete attrs[nestedKey];
+          } else {
+            attrs[nestedKey] = new NestedClass(nestedData);
+          }
+        });
+      }
     }
 
     return super.set(attrs, opts);
