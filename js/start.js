@@ -431,7 +431,7 @@ app.apiSocket.on('message', (e) => {
   if (e.jsonData) {
     if (e.jsonData.status === 'publishing') {
       setPublishingStatus({
-        msg: 'Publishing...',
+        msg: 'Publishing changes to network...',
         type: 'message',
       });
 
