@@ -74,6 +74,13 @@ export default class extends BaseModal {
     };
   }
 
+  get closeClickTargets() {
+    return [
+      ...this.$closeClickTargets.get(),
+      ...super.closeClickTargets,
+    ];
+  }
+
   onClickEditListing() {
     this.editModal = launchEditListingModal({
       model: this.model,
@@ -294,6 +301,11 @@ export default class extends BaseModal {
       (this._$photoRadioBtns = this.$('.js-photoSelect'));
   }
 
+  get $closeClickTargets() {
+    return this._$closeClickTargets ||
+      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -324,6 +336,7 @@ export default class extends BaseModal {
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
+      this._$closeClickTargets = null;
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();

@@ -11,9 +11,7 @@ export default class BaseModal extends baseVw {
       dismissOnOverlayClick: true,
       dismissOnEscPress: true,
       showCloseButton: true,
-      // closeButtonClass: 'cornerTR ion-ios-close-empty',
       closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3',
-      // modelContentClass: 'modalContent clrP clrBr border clrSh2',
       modelContentClass: 'modalContent',
       removeOnClose: false,
       removeOnRoute: true,
@@ -48,9 +46,39 @@ export default class BaseModal extends baseVw {
     };
   }
 
+
+  /**
+   * Returns an array of HTMLElements and if any of these are directly clicked the modal
+   * will be closed. By default, the only target will be this.el, which means any clicks
+   * outside of the modal will close it. But... with the new modal design where everything
+   * is in boxes, the waters are muddied because the overlay is visible inbetween boxes
+   * and you may want a click on those regions to close the modal (e.g. left navigation
+   * is much shorter than the right content exposing a large amount of the overlay).
+   *
+   * Anyhow, since the content inside a modal is very specific to the modal, it is up to
+   * the specific child view to let this base view know what qualifies as a close target.
+   * That should be done by overriding this method. You will very likely want to include
+   * a call to super in the array you are returning, e.g:
+   *
+   *     return [myCustomEl, myCustomEl2, ...super.closeClickTargets];
+   *
+   * Also, the overridden method will be called on EVERY click in this modal, so it is
+   * critical you are caching the elements returned (i.e. DO NOT go to the DOM every time
+   * the method is called).
+   */
+  get closeClickTargets() {
+    return [this.el];
+  }
+
   __modalClick(e) {
-    if (this.__options.dismissOnOverlayClick && e.target === this.el) {
-      this.close();
+    if (this.__options.dismissOnOverlayClick) {
+      const closeTargets = this.closeClickTargets;
+
+      if (!(_.isArray(closeTargets))) {
+        throw new Error('closeClickTargets must return an array.');
+      }
+
+      if (closeTargets.indexOf(e.target) !== -1) this.close();
     }
   }
 
