@@ -1,4 +1,4 @@
-import { electron, app, BrowserWindow, ipcMain, Menu, Tray } from 'electron';
+import { electron, app, BrowserWindow, ipcMain, Menu, Tray, autoUpdater, ipcRenderer } from 'electron';
 
 import os from 'os';
 import path from 'path';
@@ -11,11 +11,13 @@ let mainWindow;
 let closeConfirmed = false;
 // let launchedFromInstaller = false;
 const platform = os.platform(); // 'darwin', 'linux', 'win32', 'android'
-// let version = app.getVersion();
+const version = app.getVersion();
+const feedURL = 'https://updates2.openbazaar.org:5001/update/' + platform + '/' + version;
 // let TrayMenu;
 
 
 const handleStartupEvent = function () {
+  //noinspection ES6ModulesDependencies
   if (process.platform !== 'win32') {
     return false;
   }
@@ -235,8 +237,23 @@ function createWindow() {
       role: 'help',
       submenu: [
         {
-          label: 'Learn More',
-          click() { electron.shell.openExternal('https://openbazaar.org'); },
+          label: 'Report Issue...',
+          click() {
+            // TODO: Open an issue tracking window
+          },
+        },
+        {
+          label: 'Check for Updates...',
+          click() {
+            autoUpdater.checkForUpdates();
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Documentation',
+          click() { electron.shell.openExternal('https://docs.openbazaar.org'); },
         },
       ],
     },
@@ -406,6 +423,52 @@ function createWindow() {
     mainWindow.send('close-attempt');
     if (!closeConfirmed) e.preventDefault();
   });
+
+  /**
+   * For OS X users Squirrel manages the auto-updating code.
+   * If there is an update available then we will send an IPC message to the render process to notify the user. If
+   * the user wants to update the software then they will send an IPC message back to the main process and we will
+   * begin to download the file and update the software.
+   */
+  if(platform === "darwin") {
+
+    autoUpdater.on("error", (err, msg) => {
+      console.log(msg);
+    });
+
+    autoUpdater.on("update-not-available", (msg) => {
+      ipcRenderer.send('updateNotAvailable');
+    });
+
+    autoUpdater.on("update-available", () => {
+      ipcRenderer.send('updateAvailable');
+    });
+
+    autoUpdater.on("update-downloaded", (e, releaseNotes, releaseName, releaseDate, updateUrl, quitAndUpdate) => {
+      // Old way of doing things
+      // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate").removeClass("softwareUpdateHidden");');
+      ipcRenderer.send('updateReadyForInstall');
+    });
+
+    // Listen for installUpdate command to install the update
+    ipcMain.on('installUpdate', () => {
+      autoUpdater.quitAndInstall();
+    });
+
+    // Listen for checkForUpdate command to manually check for new versions
+    ipcMain.on('checkForUpdate', () => {
+      autoUpdater.checkForUpdates();
+    });
+
+    autoUpdater.setFeedURL(feedURL);
+
+    // Check for updates every hour
+    autoUpdater.checkForUpdates();
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60 * 60 * 1000);
+  }
+
 }
 
 // This method will be called when Electron has finished
@@ -443,5 +506,3 @@ ipcMain.on('close-confirmed', () => {
   if (mainWindow) mainWindow.close();
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
