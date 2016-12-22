@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../../app';
 import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
@@ -14,7 +15,12 @@ export default class extends baseVw {
     });
 
     this.settings = app.settings.clone();
-    this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
+    this.listenTo(this.settings, 'sync', (md, resp, syncOpts) => {
+      // Since different tabs are working off different parts of
+      // the settings model, to not overwrite each other, we'll only
+      // update fields that our tab has changed.
+      app.settings.set(syncOpts.attrs);
+    });
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
@@ -34,25 +40,22 @@ export default class extends baseVw {
       type: 'PATCH',
     });
 
-    this.trigger('saving');
+    if (save) {
+      const saveDeferred = $.Deferred();
+      this.trigger('saving', saveDeferred.promise());
 
-    if (!save) {
-      // client side validation failed
-      this.trigger('saveComplete', true);
-    } else {
-      this.trigger('savingToServer');
-
-      save.done(() => this.trigger('saveComplete'))
-        .fail((...args) =>
-          this.trigger('saveComplete', false, true,
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || ''));
+      save.done(() => saveDeferred.resolve())
+        .fail((...args) => {
+          const errMsg =
+            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
+          saveDeferred.reject(errMsg);
+        });
     }
 
     // render so errrors are shown / cleared
     this.render();
 
     const $firstErr = this.$('.errorList:first');
-
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 

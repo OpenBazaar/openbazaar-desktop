@@ -13,9 +13,15 @@ export default class extends baseVw {
     this.settings = app.settings.clone();
     this.localSettings = app.localSettings.clone();
 
-    this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
     this.listenTo(this.localSettings, 'sync',
       () => app.localSettings.set(this.localSettings.toJSON()));
+
+    this.listenTo(this.settings, 'sync', (md, resp, syncOpts) => {
+      // Since different tabs are working off different parts of
+      // the settings model, to not overwrite each other, we'll only
+      // update fields that our tab has changed.
+      app.settings.set(syncOpts.attrs);
+    });
   }
 
   get events() {
