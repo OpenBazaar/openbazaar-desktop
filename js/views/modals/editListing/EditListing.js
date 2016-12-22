@@ -433,16 +433,26 @@ export default class extends BaseModal {
     this.selectedNavTabIndex = index;
     this.$scrollLinks.removeClass('active');
     $(e.target).addClass('active');
-    this.$scrollContainer.off('scroll', this.throttledOnScrollContainer);
+    this.$el.off('scroll', this.throttledOnScroll);
 
-    this.$scrollToSections.eq(index)
-      .velocity('scroll', {
-        container: this.$scrollContainer,
-        complete: () => this.$scrollContainer.on('scroll', this.throttledOnScrollContainer),
-      });
+    // Had this initially in Velocity, but after markup re-factor, it
+    // doesn't work consistently, so we'll go old-school for now.
+    this.$el
+      .animate({
+        scrollTop: this.$scrollToSections.eq(index)
+          .position()
+          .top,
+      }, {
+        complete: () => {
+          setTimeout(
+            () => this.$el.on('scroll', this.throttledOnScroll),
+            100);
+        },
+      }, 400);
   }
 
-  onScrollContainer() {
+  onScroll() {
+    console.log('scroll handler');
     let index = 0;
     let keepLooping = true;
 
@@ -673,17 +683,6 @@ export default class extends BaseModal {
     return view;
   }
 
-  setScrollContainerHeight() {
-    this.$scrollContainer.css('height', '');
-    const height = this.$modalContent.outerHeight() -
-      this.$tabControls.outerHeight() - this.$('.topBar').outerHeight();
-
-    // todo: if .topBar ends up staying after the design refactor,
-    // cache that guy.
-
-    this.$scrollContainer.height(height);
-  }
-
   remove() {
     if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
@@ -692,7 +691,7 @@ export default class extends BaseModal {
     super.remove();
   }
 
-  render(onScrollUpdateComplete, restoreScrollPos = true) {
+  render(restoreScrollPos = true) {
     let prevScrollPos = 0;
     const item = this.innerListing.get('item');
 
@@ -700,6 +699,7 @@ export default class extends BaseModal {
       prevScrollPos = this.$scrollContainer[0].scrollTop;
     }
 
+    this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
     loadTemplate('modals/editListing/editListing.html', t => {
@@ -888,45 +888,15 @@ export default class extends BaseModal {
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
 
-      this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
-      this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
-
-      // we'll hide our modal until the height is adjusted, otherwise
-      // there's a noticable glitch
-      if (!this.jsHeightSet) {
-        this.$modalContent.css('opacity', 0);
-      }
-
       setTimeout(() => {
-        this.setScrollContainerHeight();
-
         // restore the scroll position
         if (restoreScrollPos) {
           this.$scrollContainer[0].scrollTop = prevScrollPos;
         }
 
-        if (typeof onScrollUpdateComplete === 'function') {
-          onScrollUpdateComplete.call(this);
-        }
-
-        window.requestAnimationFrame(() => {
-          this.$modalContent.css('opacity', '');
-        });
+        this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
+        setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
       });
-
-      if (!this.jsHeightSet) {
-        this.jsHeightSet = true;
-
-        const onWinResize = () => {
-          const prevScroll = this.$scrollContainer[0].scrollTop;
-          this.setScrollContainerHeight();
-          this.$scrollContainer[0].scrollTop = prevScroll;
-        };
-
-        this.throttledResizeWin =
-          _.bind(_.throttle(onWinResize, 100), this);
-        $(window).on('resize', this.throttledResizeWin);
-      }
     });
 
     return this;
