@@ -126,7 +126,7 @@ export default class extends BaseModal {
         .open();
       }
 
-      this.statusMessage.update({
+      statusMessage.update({
         msg: app.polyglot.t('settings.statusSaveFailed'),
         type: 'warning',
       });

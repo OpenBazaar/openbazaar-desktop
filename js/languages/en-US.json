@@ -184,7 +184,6 @@
     "statusSaving": "Saving settings...",
     "statusSaveFailed": "Settings failed to save.",
     "statusSaveComplete": "Settings saved.",
-    "statusSafeToClose": "Save has completed. You may close the modal",
     "btnYes": "Yes",
     "btnNo": "No",
     "btnSave": "Save",

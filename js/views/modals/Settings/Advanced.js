@@ -41,17 +41,14 @@ export default class extends baseVw {
   }
 
   save() {
-    this.trigger('saving');
     this.localSettings.set(this.getFormData(this.$localFields), { validate: true });
 
     const serverFormData = this.getFormData();
     this.settings.set(serverFormData, { validate: true });
 
-    if (this.localSettings.validationError || this.settings.validationError) {
-      // client side validation failed on one or both models
-      this.trigger('saveComplete', true);
-    } else {
-      this.trigger('savingToServer');
+    if (!this.localSettings.validationError && !this.settings.validationError) {
+      const saveDeferred = $.Deferred();
+      this.trigger('saving', saveDeferred.promise());
 
       // let's save and monitor both save processes
       const localSave = this.localSettings.save();
@@ -63,20 +60,32 @@ export default class extends baseVw {
       $.when(localSave, serverSave)
         .done(() => {
           // both succeeded!
-          this.trigger('saveComplete');
+          saveDeferred.resolve();
         })
         .fail((...args) => {
           // One has failed, the other may have also failed or may
           // fail or may succeed. It doesn't matter, for our purposed one
           // failure is enough for us to consider the "save" to have failed
-          this.trigger('saveComplete', false, true,
-          args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
-        });
+          const errMsg = args[0] && args[0].responseJSON &&
+            args[0].responseJSON.reason || '';
+          saveDeferred.reject(errMsg);
+        })
+        .always(() => this.$btnSave.removeClass('processing'));
     }
 
     this.render();
+
+    if (!this.localSettings.validationError && !this.settings.validationError) {
+      this.$btnSave.addClass('processing');
+    }
+
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+  }
+
+  get $btnSave() {
+    return this._$btnSave ||
+      (this._$btnSave = this.$('.js-save'));
   }
 
   render() {
@@ -90,6 +99,7 @@ export default class extends baseVw {
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
+      this._$btnSave = null;
     });
 
     return this;

@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -94,12 +95,7 @@ export default class extends baseVw {
     model.set(formData);
     model.set(formData, { validate: true });
 
-    this.trigger('saving');
-
-    if (model.validationError) {
-      // client side validation failed
-      this.trigger('saveComplete', true);
-    } else {
+    if (!model.validationError) {
       const shippingAddresses = this.settings.get('shippingAddresses');
 
       shippingAddresses.push(model);
@@ -109,23 +105,20 @@ export default class extends baseVw {
         type: 'PATCH',
       });
 
-      if (!save) {
-        // this shouldn't happen - must be a developer error
-        this.trigger('saveComplete', true);
-        throw new Error('Client side validation failed: ' +
-          `${JSON.stringify(this.settings.validationError)}`);
-      } else {
-        this.trigger('savingToServer');
+      if (save) {
+        const saveDeferred = $.Deferred();
+        this.trigger('saving', saveDeferred.promise());
 
         save.done(() => {
-          this.trigger('saveComplete');
+          saveDeferred.resolve();
           this.addressForm.model = new ShippingAddress();
           this.addressForm.render();
         }).fail((...args) => {
           // remove the address that failed to add
           shippingAddresses.remove(model);
-          this.trigger('saveComplete', false, true,
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
+
+          const errMsg = args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
+          saveDeferred.reject(errMsg);
         });
       }
     }

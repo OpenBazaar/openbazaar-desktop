@@ -132,13 +132,9 @@ export default class extends baseVw {
     let saveAvatar;
     let saveHeader;
 
-    this.trigger('saving');
-
-    if (!save) {
-      // client side validation failed
-      this.trigger('saveComplete', true);
-    } else {
-      this.trigger('savingToServer');
+    if (save) {
+      const saveDeferred = $.Deferred();
+      this.trigger('saving', saveDeferred.promise());
 
       if (this.avatarOffsetOnLoad !== this.avatarCropper.cropit('offset') ||
         this.avatarZoomOnLoad !== this.avatarCropper.cropit('zoom')) {
@@ -170,15 +166,20 @@ export default class extends baseVw {
 
       $.whenAll(save, saveAvatar, saveHeader)
         .done(() => {
-          this.trigger('saveComplete');
+          saveDeferred.resolve();
         })
-        .fail((...args) => {
-          this.trigger('saveComplete', false, true,
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
-        });
+        .fail((args) => {
+          const errMsg =
+            args && args[0] && args[0].responseJSON &&
+            args[0].responseJSON.reason || '';
+          saveDeferred.reject(errMsg);
+        })
+        .always(() => this.$btnSave.removeClass('processing'));
     }
 
     this.render();
+    if (save) this.$btnSave.addClass('processing');
+
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
@@ -207,6 +208,11 @@ export default class extends baseVw {
     })
       .render()
       .open();
+  }
+
+  get $btnSave() {
+    return this._$btnSave ||
+      (this._$btnSave = this.$('.js-save'));
   }
 
   render() {
@@ -241,6 +247,8 @@ export default class extends baseVw {
       }));
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
+      this._$btnSave = null;
+
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');

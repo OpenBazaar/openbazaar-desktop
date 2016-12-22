@@ -49,11 +49,13 @@ export default class extends baseVw {
           const errMsg =
             args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
           saveDeferred.reject(errMsg);
-        });
+        }).always(() => this.$btnSave.removeClass('processing'));
     }
 
     // render so errrors are shown / cleared
     this.render();
+
+    if (save) this.$btnSave.addClass('processing');
 
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
