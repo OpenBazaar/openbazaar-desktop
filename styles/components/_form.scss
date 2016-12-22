@@ -19,7 +19,7 @@ textarea::-webkit-input-placeholder {
 input,
 select,
 textarea,
-.medium-editor-element {
+.trumbowyg div[contenteditable] {
   border: none;
   outline: none;
   background: none;
@@ -45,7 +45,7 @@ input[type="text"],
 textarea,
 .select2-container--focus .select2-selection__rendered,
 .select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
-.medium-editor-element {
+.trumbowyg div[contenteditable] {
   border-style: solid;
   border-width: 1px;
   //use the color class to set the border color
@@ -55,8 +55,8 @@ textarea,
   line-height: 40px;
 }
 
-.medium-editor-element {
-  padding-top: $padSm;
+.trumbowyg div[contenteditable].rows6 {
+  height: 18ex;
 }
 
 .select2-container--default.select2-container--focus .select2-selection {
@@ -135,6 +135,3 @@ input[type="radio"]:checked + label {
   font-weight: 700;
 }
 
-div[contenteditable].rows6 {
-  height: 18ex;
-}
