@@ -2,8 +2,19 @@
 
 <div class="modalContentInner">
   <div class="listingControls flex">
+    <div class="jsModalClose contentBox clrP clrBr clrSh3" style="height: 35px; line-height: 35px; padding: 0 8px; cursor: pointer">
+      <div class="userIcon floL discTn clrBr2 clrSh1"
+        <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+        <% if (avatarHash) { %>
+          style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+        <% } else { %>
+         style="background-image: url('../imgs/defaultAvatar.png');"
+        <% } %>>
+      </div>
+      <div style="overflow: auto; font-size: 13px">Store Name <u style="font-size: 12px">View store</u></div>
+    </div>
     <% if (ob.ownListing) { %>
-    <div class="btnStrip clrSh3">
+    <div class="btnStrip clrSh3" style="margin-left: auto; margin-right: 40px">
       <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
       <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
     </div>
@@ -48,7 +59,7 @@
                 </div>
               </div>
               -->
-              <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
+              <button class="btnHg clrBAttGrad clrBr3 txUp clrTOnEmph">Buy Now</button>
               <div class="flexHCent gutterH">
                 <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
                 <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->
@@ -72,9 +83,9 @@
           <h5><%= ob.polyT('listingDetail.tags') %></h5>
           <div class="tagWrapper">
             <% ob.item.tags.forEach(function(tag){
-            print(`<div class="btn tag clrBr">#${tag}</div>`);
+            print(`<div class="btn tag clrSh2 clrBr">#${tag}</div>`);
             }); %>
-            <% if(!ob.item.tags.length) { print(ob.polyT('listingDetail.noTags')) } %>
+            <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
           </div>
         </div>
       </div>
@@ -83,11 +94,11 @@
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
       <%= ob.item.description %>
-      <% if(!ob.item.description) { print(ob.polyT('listingDetail.noDescription')) } %>
+      <% if(!ob.item.description) { print(`<i class="clrT2">${ob.polyT('listingDetail.noDescription')}</i>`) } %>
     </div>
 
     <% if (ob.item.images.length) { %>
-      <div class="contentBox clrP clrBr clrSh3" id="photoSection">
+      <div class="contentBox clrSh3" id="photoSection">
         <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
         </div>
         <input type="file" class="cropit-image-input hide">
@@ -148,13 +159,13 @@
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
       <%= ob.refundPolicy %>
-      <% if (!ob.refundPolicy) { print(ob.polyT('listingDetail.noRefundPolicy')) } %>
+      <% if (!ob.refundPolicy) { print(`<i class="clrT2">${ob.polyT('listingDetail.noRefundPolicy')}</i>`) } %>
     </div>
 
     <div class="contentBox padLg clrP clrBr clrSh3">
       <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
       <%= ob.termsAndConditions %>
-      <% if (!ob.termsAndConditions) { print(ob.polyT('listingDetail.noTermsAndConditions')) } %>
+      <% if (!ob.termsAndConditions) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTermsAndConditions')}</i>`) } %>
     </div>
 
   </div>
