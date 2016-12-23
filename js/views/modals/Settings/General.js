@@ -1,11 +1,11 @@
-import $ from 'jquery';
+import 'select2';
 import app from '../../../app';
 import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
 import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import 'select2';
+import { alert } from '../SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -26,13 +26,18 @@ export default class extends baseVw {
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
   }
 
+  events() {
+    return {
+      'click .js-save': 'save',
+    };
+  }
+
   getFormData() {
     return super.getFormData(this.$formFields);
   }
 
   save() {
     const formData = this.getFormData();
-
     this.settings.set(formData);
 
     const save = this.settings.save(formData, {
@@ -41,15 +46,36 @@ export default class extends baseVw {
     });
 
     if (save) {
-      const saveDeferred = $.Deferred();
-      this.trigger('saving', saveDeferred.promise());
+      const msg = {
+        msg: app.polyglot.t('settings.generalTab.statusSaving'),
+        type: 'message',
+      };
 
-      save.done(() => saveDeferred.resolve())
-        .fail((...args) => {
-          const errMsg =
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
-          saveDeferred.reject(errMsg);
-        }).always(() => this.$btnSave.removeClass('processing'));
+      const statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
+      });
+
+      save.done(() => {
+        statusMessage.update({
+          msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
+          type: 'confirmed',
+        });
+      })
+      .fail((...args) => {
+        const errMsg =
+          args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
+
+        alert(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
+
+        statusMessage.update({
+          msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
+          type: 'warning',
+        });
+      }).always(() => {
+        this.$btnSave.removeClass('processing');
+        setTimeout(() => statusMessage.remove(), 3000);
+      });
     }
 
     // render so errrors are shown / cleared

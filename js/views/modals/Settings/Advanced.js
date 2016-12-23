@@ -1,7 +1,8 @@
+import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import $ from 'jquery';
+import { alert } from '../SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -27,6 +28,7 @@ export default class extends baseVw {
   get events() {
     return {
       'click .js-smtpContainer input[type="reset"]': 'resetSMTPFields',
+      'click .js-save': 'save',
     };
   }
 
@@ -47,8 +49,15 @@ export default class extends baseVw {
     this.settings.set(serverFormData, { validate: true });
 
     if (!this.localSettings.validationError && !this.settings.validationError) {
-      const saveDeferred = $.Deferred();
-      this.trigger('saving', saveDeferred.promise());
+      const msg = {
+        msg: app.polyglot.t('settings.advancedTab.statusSaving'),
+        type: 'message',
+      };
+
+      const statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
+      });
 
       // let's save and monitor both save processes
       const localSave = this.localSettings.save();
@@ -60,7 +69,10 @@ export default class extends baseVw {
       $.when(localSave, serverSave)
         .done(() => {
           // both succeeded!
-          saveDeferred.resolve();
+          statusMessage.update({
+            msg: app.polyglot.t('settings.advancedTab.statusSaveComplete'),
+            type: 'confirmed',
+          });
         })
         .fail((...args) => {
           // One has failed, the other may have also failed or may
@@ -68,13 +80,21 @@ export default class extends baseVw {
           // failure is enough for us to consider the "save" to have failed
           const errMsg = args[0] && args[0].responseJSON &&
             args[0].responseJSON.reason || '';
-          saveDeferred.reject(errMsg);
+
+          alert(app.polyglot.t('settings.advancedTab.saveErrorAlertTitle'), errMsg);
+
+          statusMessage.update({
+            msg: app.polyglot.t('settings.advancedTab.statusSaveFailed'),
+            type: 'warning',
+          });
         })
-        .always(() => this.$btnSave.removeClass('processing'));
+        .always(() => {
+          this.$btnSave.removeClass('processing');
+          setTimeout(() => statusMessage.remove(), 3000);
+        });
     }
 
     this.render();
-
     if (!this.localSettings.validationError && !this.settings.validationError) {
       this.$btnSave.addClass('processing');
     }

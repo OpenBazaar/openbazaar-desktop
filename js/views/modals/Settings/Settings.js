@@ -43,7 +43,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-tab': 'tabClick',
-      'click .js-save': 'saveClick',
+      // 'click .js-save': 'saveClick',
       ...super.events(),
     };
   }
