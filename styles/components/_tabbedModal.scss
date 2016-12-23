@@ -29,4 +29,15 @@
       }
     }
   }
+
+  &.fixedNav {
+    .tabColumn {
+      position: fixed;
+      top: 57px;
+    }
+
+    .tabContent {
+      margin-left: 200px;
+    }
+  }
 }

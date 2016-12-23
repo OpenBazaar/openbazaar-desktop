@@ -55,7 +55,6 @@ export default class extends BaseModal {
       // event emitter in models/listing/index.js.
     });
 
-    this.$scrollContainer = this.$el;
     this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
     this.createMode = !(this.model.lastSyncedAttrs.listing &&
@@ -102,6 +101,14 @@ export default class extends BaseModal {
       this.$addShipOptSectionHeading
         .text(app.polyglot.t('editListing.shippingOptions.optionHeading',
           { listPosition: this.shippingOptions.length + 1 }));
+    });
+
+    this.$el.on('scroll', () => {
+      if (this.el.scrollTop > 57 && !this.$el.hasClass('fixedNav')) {
+        this.$el.addClass('fixedNav');
+      } else if (this.el.scrollTop <= 57 && this.$el.hasClass('fixedNav')) {
+        this.$el.removeClass('fixedNav');
+      }
     });
   }
 
@@ -452,7 +459,6 @@ export default class extends BaseModal {
   }
 
   onScroll() {
-    console.log('scroll handler');
     let index = 0;
     let keepLooping = true;
 
@@ -695,11 +701,11 @@ export default class extends BaseModal {
     let prevScrollPos = 0;
     const item = this.innerListing.get('item');
 
-    if (restoreScrollPos && this.$scrollContainer && this.$scrollContainer.length) {
-      prevScrollPos = this.$scrollContainer[0].scrollTop;
+    if (restoreScrollPos) {
+      prevScrollPos = this.el.scrollTop;
     }
 
-    this.$el.off('scroll', this.throttledOnScroll);
+    if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
     loadTemplate('modals/editListing/editListing.html', t => {
@@ -891,7 +897,7 @@ export default class extends BaseModal {
       setTimeout(() => {
         // restore the scroll position
         if (restoreScrollPos) {
-          this.$scrollContainer[0].scrollTop = prevScrollPos;
+          this.el.scrollTop = prevScrollPos;
         }
 
         this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
