@@ -1,18 +1,17 @@
-<% console.log('mike');window.mike = ob %>
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="modalContentInner">
   <div class="listingControls flex">
-    <div class="jsModalClose contentBox clrP clrBr clrSh3" style="height: 35px; line-height: 35px; padding: 0 10px; cursor: pointer">
-      <div class="userIcon discTn clrBr2 clrSh1"
+    <div class="jsModalClose contentBox clrP clrBr clrSh3" style="height: 35px; line-height: 35px; padding: 0 8px; cursor: pointer">
+      <div class="userIcon floL discTn clrBr2 clrSh1"
         <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
         <% if (avatarHash) { %>
           style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
         <% } else { %>
-         style="background-image: url('../imgs/defaultAvatar.png')"
+         style="background-image: url('../imgs/defaultAvatar.png');"
         <% } %>>
       </div>
-      <span><%= ob.name %></span>
+      <div style="overflow: auto; font-size: 13px">Store Name <u style="font-size: 12px">View store</u></div>
     </div>
     <% if (ob.ownListing) { %>
     <div class="btnStrip clrSh3" style="margin-left: auto; margin-right: 40px">
