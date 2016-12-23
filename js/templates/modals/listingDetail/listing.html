@@ -1,9 +1,21 @@
+<% console.log('mike');window.mike = ob %>
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="modalContentInner">
   <div class="listingControls flex">
+    <div class="jsModalClose contentBox clrP clrBr clrSh3" style="height: 35px; line-height: 35px; padding: 0 10px; cursor: pointer">
+      <div class="userIcon discTn clrBr2 clrSh1"
+        <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+        <% if (avatarHash) { %>
+          style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+        <% } else { %>
+         style="background-image: url('../imgs/defaultAvatar.png')"
+        <% } %>>
+      </div>
+      <span><%= ob.name %></span>
+    </div>
     <% if (ob.ownListing) { %>
-    <div class="btnStrip clrSh3">
+    <div class="btnStrip clrSh3" style="margin-left: auto; margin-right: 40px">
       <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
       <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
     </div>
@@ -87,7 +99,7 @@
     </div>
 
     <% if (ob.item.images.length) { %>
-      <div class="contentBox clrP clrBr clrSh3" id="photoSection">
+      <div class="contentBox clrSh3" id="photoSection">
         <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
         </div>
         <input type="file" class="cropit-image-input hide">

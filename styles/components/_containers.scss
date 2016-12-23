@@ -55,6 +55,12 @@
   height: 38px;
 }
 
+.discTn {
+  @extend .disc;
+  width: 22px;
+  height: 22px;
+}
+
 .border {
   //use on wrapping containers that should have a border. The element should also have a clrBr class.
   border-width: 1px;
