@@ -17,7 +17,7 @@ export function launchEditListingModal(modalOptions = {}) {
 export function launchAboutModal(modalOptions = {}) {
   if (aboutModal) aboutModal.remove();
 
-  aboutModal = new EditListing(modalOptions)
+  aboutModal = new About(modalOptions)
     .render()
     .open();
 
