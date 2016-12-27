@@ -1,6 +1,7 @@
 import {
-  electron, app, BrowserWindow, ipcMain,
+  app, BrowserWindow, ipcMain,
   Menu, Tray, session, crashReporter,
+  autoUpdater, shell,
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -14,6 +15,8 @@ import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 let mainWindow;
 let trayMenu;
 let closeConfirmed = false;
+const version = app.getVersion();
+const feedURL = `https://updates2.openbazaar.org:5001/update/${process.platform}/${version}`;
 global.serverLog = '';
 
 const handleStartupEvent = function () {
@@ -31,7 +34,7 @@ const handleStartupEvent = function () {
 
   function install(cb) {
     const target = path.basename(process.execPath);
-    exeSquirrelCommand(['--createShortcut', target], cb);
+    exeSquirrelCommand(['--createShortcut', target, ' --shortcut-locations=Desktop,StartMenu'], cb);
   }
 
   function uninstall(cb) {
@@ -169,9 +172,26 @@ function createWindow() {
     {
       role: 'help',
       submenu: [
+        // {
+        //   label: 'Report Issue...',
+        //   click() {
+        //     // TODO: Open an issue tracking window
+        //   },
+        // },
         {
-          label: 'Learn More',
-          click() { electron.shell.openExternal('https://openbazaar.org'); },
+          label: 'Check for Updates...',
+          click() {
+            autoUpdater.checkForUpdates();
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Documentation',
+          click() {
+            shell.openExternal('https://docs.openbazaar.org');
+          },
         },
       ],
     },
@@ -369,6 +389,55 @@ function createWindow() {
       e.preventDefault();
     }
   });
+
+  /**
+   * For OS X users Squirrel manages the auto-updating code.
+   * If there is an update available then we will send an IPC message to the
+   * render process to notify the user. If the user wants to update
+   * the software then they will send an IPC message back to the main process and we will
+   * begin to download the file and update the software.
+   */
+  if (process.platform === 'darwin') {
+    autoUpdater.on('error', (err, msg) => {
+      console.log(msg);
+    });
+
+    autoUpdater.on('update-not-available', (msg) => {
+      console.log(msg);
+      mainWindow.send('updateNotAvailable');
+    });
+
+    autoUpdater.on('update-available', () => {
+      mainWindow.send('updateAvailable');
+    });
+
+    autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
+      releaseDate, updateUrl, quitAndUpdate) => {
+      // Old way of doing things
+      // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
+      // .removeClass("softwareUpdateHidden");');
+      console.log(quitAndUpdate);
+      mainWindow.send('updateReadyForInstall');
+    });
+
+    // Listen for installUpdate command to install the update
+    ipcMain.on('installUpdate', () => {
+      autoUpdater.quitAndInstall();
+    });
+
+    // Listen for checkForUpdate command to manually check for new versions
+    ipcMain.on('checkForUpdate', () => {
+      autoUpdater.checkForUpdates();
+    });
+
+    autoUpdater.setFeedURL(feedURL);
+
+    // Check for updates every hour
+    autoUpdater.checkForUpdates();
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60 * 60 * 1000);
+  }
 }
 
 // This method will be called when Electron has finished
@@ -438,4 +507,3 @@ const log = msg => {
 
 if (localServer) bindLocalServerEvent('log', (localServ, msg) => log(msg));
 ipcMain.on('server-connect-log', (e, msg) => log(msg));
-
