@@ -3,19 +3,13 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
-import SimpleMessage from '../SimpleMessage';
+import { alert } from '../SimpleMessage';
 import 'cropit';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsGeneral',
-      events: {
-        'click .js-avatarLeft': 'avatarLeftClick',
-        'click .js-avatarRight': 'avatarRightClick',
-        'click .js-headerLeft': 'headerLeftClick',
-        'click .js-headerRight': 'headerRightClick',
-      },
       ...options,
     });
 
@@ -26,6 +20,16 @@ export default class extends baseVw {
 
     this.profile = app.profile.clone();
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
+  }
+
+  events() {
+    return {
+      'click .js-save': 'save',
+      'click .js-avatarLeft': 'avatarLeftClick',
+      'click .js-avatarRight': 'avatarRightClick',
+      'click .js-headerLeft': 'headerLeftClick',
+      'click .js-headerRight': 'headerRightClick',
+    };
   }
 
   imageTooSmall(imageType) {
@@ -132,14 +136,7 @@ export default class extends baseVw {
     let saveAvatar;
     let saveHeader;
 
-    this.trigger('saving');
-
-    if (!save) {
-      // client side validation failed
-      this.trigger('saveComplete', true);
-    } else {
-      this.trigger('savingToServer');
-
+    if (save) {
       if (this.avatarOffsetOnLoad !== this.avatarCropper.cropit('offset') ||
         this.avatarZoomOnLoad !== this.avatarCropper.cropit('zoom')) {
         this.avatarChanged = true;
@@ -168,45 +165,73 @@ export default class extends baseVw {
         });
       }
 
+      const msg = {
+        msg: app.polyglot.t('settings.pageTab.statusSaving'),
+        type: 'message',
+      };
+
+      const statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
+      });
+
       $.whenAll(save, saveAvatar, saveHeader)
         .done(() => {
-          this.trigger('saveComplete');
+          statusMessage.update({
+            msg: app.polyglot.t('settings.pageTab.statusSaveComplete'),
+            type: 'confirmed',
+          });
         })
-        .fail((...args) => {
-          this.trigger('saveComplete', false, true,
-            args[0] && args[0].responseJSON && args[0].responseJSON.reason || '');
+        .fail((args) => {
+          const errMsg =
+            args && args[0] && args[0].responseJSON &&
+            args[0].responseJSON.reason || '';
+
+          alert(app.polyglot.t('settings.pageTab.saveErrorAlertTitle'), errMsg);
+
+          statusMessage.update({
+            msg: app.polyglot.t('settings.pageTab.statusSaveFailed'),
+            type: 'warning',
+          });
+        })
+        .always(() => {
+          this.$btnSave.removeClass('processing');
+          setTimeout(() => statusMessage.remove(), 3000);
         });
     }
 
     this.render();
+    if (save) this.$btnSave.addClass('processing');
+
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   showAvatarSizeWarning(loadedSize, bodyText = 'settings.loadAvatarSizeError.body') {
-    new SimpleMessage({
-      title: app.polyglot.t('settings.loadAvatarSizeError.title'),
-      message: app.polyglot.t(bodyText,
+    alert(
+      app.polyglot.t('settings.loadAvatarSizeError.title'),
+      app.polyglot.t(bodyText,
         { minWidth: this.avatarMinWidth,
           minHeight: this.avatarMinHeight,
           curWidth: loadedSize.width,
-          curHeight: loadedSize.height }),
-    })
-      .render()
-      .open();
+          curHeight: loadedSize.height })
+    );
   }
 
   showHeaderSizeWarning(loadedSize, bodyText = 'settings.loadHeaderSizeError.body') {
-    new SimpleMessage({
-      title: app.polyglot.t('settings.loadHeaderSizeError.title'),
-      message: app.polyglot.t(bodyText,
+    alert(
+      app.polyglot.t('settings.loadHeaderSizeError.title'),
+      app.polyglot.t(bodyText,
         { minWidth: this.headerMinWidth,
           minHeight: this.headerMinHeight,
           curWidth: loadedSize.width,
-          curHeight: loadedSize.height }),
-    })
-      .render()
-      .open();
+          curHeight: loadedSize.height })
+    );
+  }
+
+  get $btnSave() {
+    return this._$btnSave ||
+      (this._$btnSave = this.$('.js-save'));
   }
 
   render() {
@@ -241,6 +266,8 @@ export default class extends baseVw {
       }));
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
+      this._$btnSave = null;
+
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');

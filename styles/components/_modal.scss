@@ -8,10 +8,8 @@
   background-color: $overlay;
 
   .modalContent {
-    padding: $padHg;
     min-width: 300px;
     max-height: calc(100% - 50px);
-    overflow: auto;
     border-radius: $corner;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
@@ -19,6 +17,11 @@
 
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
+    }
+
+    & > .cornerTR {
+      top: -40px;
+      right: 0;
     }
   }
 
@@ -54,28 +57,16 @@
         margin-left: calc(((100% - (#{$modalContentInner + $chatOpen})) / 2) + 5px);
       }
 
-      .modalContentInner {
-        width: $modalContentInner;
-      }
-
       & > .cornerTR {
         right: auto;
         left: calc(#{$modalContentInner} - #{$buttonHeight});
         top: 0;
       }
+
+      .topControls {
+        margin-bottom: $padSm;
+        height: 35px;
+      }      
     }
-  }
-}
-
-
-
-// temporary test code
-.modal {
-  &.testModal .modalContent {
-    background-color: orange;
-  }
-
-  &.testModal2 .modalContent {
-    background-color: pink;
   }
 }
