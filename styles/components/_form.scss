@@ -42,6 +42,8 @@ select {
 }
 
 input[type="text"],
+input[type="password"],
+input[type="email"],
 textarea,
 .select2-container--focus .select2-selection__rendered,
 .select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,

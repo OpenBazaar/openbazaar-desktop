@@ -1,161 +1,159 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 
-<div class="modalContentInner">
-  <div class="listingControls flex">
-    <% if (ob.ownListing) { %>
-    <div class="btnStrip clrSh3">
-      <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
-      <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
-    </div>
-    <% } %>
+<div class="topControls flex js-closeClickTarget">
+  <% if (ob.ownListing) { %>
+  <div class="btnStrip clrSh3">
+    <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
+    <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
   </div>
+  <% } %>
+</div>
 
 
-  <div class="listingContent flexColRow gutterVMd">
-    <div class="contentBox padLg clrP clrBr clrSh3">
-      <div class="flex">
-        <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
-        <h2 class="txUnb"><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></h2>
+<div class="listingContent flexColRow gutterVMd">
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <div class="flex">
+      <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
+      <h2 class="txUnb"><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></h2>
+    </div>
+    <div class="flex gutterHLg">
+      <div>
+        <div class="mainImage clrBr js-gotoPhotos"
+        <% if (ob.item.images.length) { %>
+          style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
+        <% } else { %>
+          style="background-image: url('../imgs/defaultListing.png')"
+        <% } %>
+        ></div>
+        <div class="txCtr">
+          <a class="tx5 js-gotoPhotos">
+            <u><%= ob.polyT('listingDetail.viewPhotos', { count: ob.item.images.length }) %></u>
+          </a>
+        </div>
       </div>
-      <div class="flex gutterHLg">
-        <div>
-          <div class="mainImage clrBr js-gotoPhotos"
-          <% if (ob.item.images.length) { %>
-            style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
-          <% } else { %>
-            style="background-image: url('../imgs/defaultListing.png')"
+      <div class="flexExpand">
+        <div class="buyBox clrP clrBr">
+          <div class="flexColRows flexHCent gutterV">
+            <!-- this will loop through each variant, just placeholder code for formatting-->
+            <!-- commented out until variants exist
+            <div class="flexVCent gutterHLg">
+              <div class="h5 txUnl">Size</div>
+              <div class="flexExpand">
+                <select class="js-variantSelect" name="">
+                  <option>some option 1</option>
+                  <option>some option 2</option>
+                  <option>some option 3</option>
+                </select>
+              </div>
+            </div>
+            -->
+            <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
+            <div class="flexHCent gutterH">
+              <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
+              <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->
+              <% if(ob.shipsFreeToMe) { %>
+              <div class="txCtr">
+                <a class="clrE1 clrTOnEmph phraseBox txNoUnd js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+        <div class="flexHCent gutterHLg tx5 rowLg">
+          <div>
+            <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
+          </div>
+          <% if (ob.item.condition) { %>
+            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
           <% } %>
-          ></div>
-          <div class="txCtr">
-            <a class="tx5 js-gotoPhotos">
-              <u><%= ob.polyT('listingDetail.viewPhotos', { count: ob.item.images.length }) %></u>
-            </a>
-          </div>
-        </div>
-        <div class="flexExpand">
-          <div class="buyBox clrP clrBr">
-            <div class="flexColRows flexHCent gutterV">
-              <!-- this will loop through each variant, just placeholder code for formatting-->
-              <!-- commented out until variants exist
-              <div class="flexVCent gutterHLg">
-                <div class="h5 txUnl">Size</div>
-                <div class="flexExpand">
-                  <select class="js-variantSelect" name="">
-                    <option>some option 1</option>
-                    <option>some option 2</option>
-                    <option>some option 3</option>
-                  </select>
-                </div>
-              </div>
-              -->
-              <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
-              <div class="flexHCent gutterH">
-                <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
-                <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->
-                <% if(ob.shipsFreeToMe) { %>
-                <div class="txCtr">
-                  <a class="clrE1 clrTOnEmph phraseBox txNoUnd js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
-                </div>
-                <% } %>
-              </div>
-            </div>
-          </div>
-          <div class="flexHCent gutterHLg tx5 rowLg">
-            <div>
-              <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
-            </div>
-            <% if (ob.item.condition) { %>
-              <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
-            <% } %>
-          </div>
-          <hr class="rowLg">
-          <h5><%= ob.polyT('listingDetail.tags') %></h5>
-          <div class="tagWrapper">
-            <% ob.item.tags.forEach(function(tag){
-            print(`<div class="btn tag clrBr">#${tag}</div>`);
-            }); %>
-            <% if(!ob.item.tags.length) { print(ob.polyT('listingDetail.noTags')) } %>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="contentBox padLg clrP clrBr clrSh3">
-      <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
-      <%= ob.item.description %>
-      <% if(!ob.item.description) { print(ob.polyT('listingDetail.noDescription')) } %>
-    </div>
-
-    <% if (ob.item.images.length) { %>
-      <div class="contentBox clrP clrBr clrSh3" id="photoSection">
-        <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
-        </div>
-        <input type="file" class="cropit-image-input hide">
-        <input type="range" class="cropit-image-zoom-input">
-        <% if (ob.item.images.length > 1) { %>
-          <button class="btn ion-ios-arrow-left photoPrev js-photoPrev"></button>
-          <button class="btn ion-ios-arrow-right photoNext js-photoNext"></button>
-        <% } %>
-        <% if(ob.item.images.length > 1) { %>
-          <div class="photoStrip flex gutterH">
-            <% ob.item.images.forEach(function(image, index){
-            const chk = index === 0 ? "checked" : "";
-            print(`<input type="radio" name="photoStripThumbnails" class="js-photoSelect" data-index=${index} id="photoStrip${index}" ${chk}>`);
-            print(`<label style="background-image: url(${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}" for="photoStrip${index}"></label>`);
-            }); %>
-          </div>
-        <% } %>
-      </div>
-    <% } %>
-
-  <!-- Reviews and attachments are not yet available -->
-  <!--
-    <div class="contentBox padLg clrP clrBr clrSh3">
-      <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
-      Placeholder for Reviews
-    </div>
-
-    <div class="contentBox padLg clrP clrBr clrSh3">
-      <h2 class="txUnb"><%= ob.polyT('listingDetail.attachments') %></h2>
-      Placeholder for Attachments
-    </div>
-   -->
-
-    <% if (ob.shippingOptions.length) { %>
-      <div class="contentBox padLg clrP clrBr clrSh3" id="shippingSection">
-        <h2 class="txUnb"><%= ob.polyT('listingDetail.shipping') %></h2>
-        <div class="flexVCent gutterHLg tx5">
-          <!-- this data is not yet available -->
-          <!--
-          <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>insert translation of the country here</b>` }) %></div>
-          -->
-          <div><%= ob.polyT('listingDetail.shipTo') %></div>
-          <div class="col4">
-            <select id="shippingDestinations">
-              <option value="ALL"><%= ob.polyT('listingDetail.allCountries') %></option>
-              <% ob.countryData.forEach(function(country) {
-              var selected = country.id === ob.defaultCountry ? 'selected' : '';
-              print(`<option value="${country.id}" ${selected}>${country.text}</option>`);
-              }) %>
-            </select>
-          </div>
         </div>
         <hr class="rowLg">
-        <div class="js-shippingOptions"></div>
+        <h5><%= ob.polyT('listingDetail.tags') %></h5>
+        <div class="tagWrapper">
+          <% ob.item.tags.forEach(function(tag){
+          print(`<div class="btn tag clrBr">#${tag}</div>`);
+          }); %>
+          <% if(!ob.item.tags.length) { print(ob.polyT('listingDetail.noTags')) } %>
+        </div>
       </div>
-    <% } %>
-
-    <div class="contentBox padLg clrP clrBr clrSh3">
-      <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
-      <%= ob.refundPolicy %>
-      <% if (!ob.refundPolicy) { print(ob.polyT('listingDetail.noRefundPolicy')) } %>
     </div>
-
-    <div class="contentBox padLg clrP clrBr clrSh3">
-      <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
-      <%= ob.termsAndConditions %>
-      <% if (!ob.termsAndConditions) { print(ob.polyT('listingDetail.noTermsAndConditions')) } %>
-    </div>
-
   </div>
+
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
+    <%= ob.item.description %>
+    <% if(!ob.item.description) { print(ob.polyT('listingDetail.noDescription')) } %>
+  </div>
+
+  <% if (ob.item.images.length) { %>
+    <div class="contentBox clrP clrBr clrSh3" id="photoSection">
+      <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
+      </div>
+      <input type="file" class="cropit-image-input hide">
+      <input type="range" class="cropit-image-zoom-input">
+      <% if (ob.item.images.length > 1) { %>
+        <button class="btn ion-ios-arrow-left photoPrev js-photoPrev"></button>
+        <button class="btn ion-ios-arrow-right photoNext js-photoNext"></button>
+      <% } %>
+      <% if(ob.item.images.length > 1) { %>
+        <div class="photoStrip flex gutterH">
+          <% ob.item.images.forEach(function(image, index){
+          const chk = index === 0 ? "checked" : "";
+          print(`<input type="radio" name="photoStripThumbnails" class="js-photoSelect" data-index=${index} id="photoStrip${index}" ${chk}>`);
+          print(`<label style="background-image: url(${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}" for="photoStrip${index}"></label>`);
+          }); %>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+
+<!-- Reviews and attachments are not yet available -->
+<!--
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
+    Placeholder for Reviews
+  </div>
+
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.attachments') %></h2>
+    Placeholder for Attachments
+  </div>
+ -->
+
+  <% if (ob.shippingOptions.length) { %>
+    <div class="contentBox padLg clrP clrBr clrSh3" id="shippingSection">
+      <h2 class="txUnb"><%= ob.polyT('listingDetail.shipping') %></h2>
+      <div class="flexVCent gutterHLg tx5">
+        <!-- this data is not yet available -->
+        <!--
+        <div><%= ob.polyT('listingDetail.shipsFrom', { country: `<b>insert translation of the country here</b>` }) %></div>
+        -->
+        <div><%= ob.polyT('listingDetail.shipTo') %></div>
+        <div class="col4">
+          <select id="shippingDestinations">
+            <option value="ALL"><%= ob.polyT('listingDetail.allCountries') %></option>
+            <% ob.countryData.forEach(function(country) {
+            var selected = country.id === ob.defaultCountry ? 'selected' : '';
+            print(`<option value="${country.id}" ${selected}>${country.text}</option>`);
+            }) %>
+          </select>
+        </div>
+      </div>
+      <hr class="rowLg">
+      <div class="js-shippingOptions"></div>
+    </div>
+  <% } %>
+
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
+    <%= ob.refundPolicy %>
+    <% if (!ob.refundPolicy) { print(ob.polyT('listingDetail.noRefundPolicy')) } %>
+  </div>
+
+  <div class="contentBox padLg clrP clrBr clrSh3">
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
+    <%= ob.termsAndConditions %>
+    <% if (!ob.termsAndConditions) { print(ob.polyT('listingDetail.noTermsAndConditions')) } %>
+  </div>
+
 </div>

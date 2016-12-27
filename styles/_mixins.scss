@@ -50,6 +50,8 @@
 }
 
 // todo: refactor this style once we have designs
+// FYI: this is not only used for buttons, but also to overlay
+// the addresses tab as you're saving it.
 @mixin processingOverlay {
   position: relative;
 
@@ -97,5 +99,9 @@
 
   .tab.active {
     color: $col3;
+
+    &::after {
+      color: $col3;
+    }
   }
 }

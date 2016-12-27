@@ -8,10 +8,11 @@ import BaseModal from './BaseModal';
   please create a custom modal extending from the baseModal.
 */
 
-export default class extends BaseModal {
+class SimpleMessage extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
+      removeOnRoute: true,
       title: '',
       message: '',
       ...options,
@@ -54,4 +55,22 @@ export default class extends BaseModal {
 
     return this;
   }
+}
+
+export default SimpleMessage;
+
+// Convenience method to create a SimpleMessage modal,
+// render and open it.
+export function alert(title = '', message = '', options = {}) {
+  if (!title && !message) {
+    throw new Error('Please provide a title and / or message.');
+  }
+
+  new SimpleMessage({
+    title,
+    message,
+    ...options,
+  })
+  .render()
+  .open();
 }

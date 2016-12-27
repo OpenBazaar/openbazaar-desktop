@@ -1,20 +1,18 @@
-<div class="flexRow">
-  <div class="tabColumn clrP clrBr clrT">
-    <h1 class="h3 txUnb padMd"><%= ob.polyT('settings.settingsLabel') %></h1>
+<div class="topControls flex js-closeClickTarget">
+  <!-- will include BTC price widget -->
+</div>
+<div class="flex gutterH js-closeClickTarget">
+  <div class="tabColumn contentBox padMd clrP clrBr clrSh3">
+    <h1 class="h3 txUp clrT2"><%= ob.polyT('settings.settingsLabel') %></h1>
     <div class="boxList tx4 clrTx1Br">
-      <a class="js-tab tab clrT active" data-tab="General"><%= ob.polyT('settings.generalTab') %></a>
-      <a class="js-tab tab" data-tab="Page"><%= ob.polyT('settings.pageTab') %></a>
-      <a class="js-tab tab" data-tab="Addresses"><%= ob.polyT('settings.addressesTab') %></a>
-      <a class="js-tab tab" data-tab="Advanced"><%= ob.polyT('settings.advancedTab._sectionName') %></a>
+      <a class="js-tab tab clrT row active" data-tab="General"><%= ob.polyT('settings.generalTab.sectionName') %></a>
+      <a class="js-tab tab row" data-tab="Page"><%= ob.polyT('settings.pageTab.sectionPage') %></a>
+      <a class="js-tab tab row" data-tab="Addresses"><%= ob.polyT('settings.addressesTab.sectionName') %></a>
+      <a class="js-tab tab row" data-tab="Advanced"><%= ob.polyT('settings.advancedTab._sectionName') %></a>
     </div>
 
   </div>
   <div class="flexExpand posR">
     <div class="js-tabContent tabContent"></div>
-    <div class="tabControls flex clrP clrBr">
-      <div class="saveStatus"></div>
-      <a class="btn clrP clrBr js-save flexNoShrink"><%= ob.polyT('settings.btnSave') %></a>
-    </div>
-
   </div>
 </div>
