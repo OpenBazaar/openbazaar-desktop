@@ -77,6 +77,10 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1, $emphasis2);
 }
 
+.clrTAtt {
+  @include textColor($emphasis1, $emphasis2);
+}
+
 .clrTErr {
   @include textColor($error);
 }
@@ -94,6 +98,10 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1);
 }
 
+.clrTEmph2 {
+  @include textColor($emphasis2);
+}
+
 .clrBr {
   @include borderColor($border, $border3);
 }
@@ -109,6 +117,64 @@ input[type=range][class~="clrS"] {
 .clrBr4 {
   @include borderColor($border4);
 }
+
+.clrBr3 {
+  // decorative border with a shadow to create a faint outline
+  border-color: $textOnEmph;
+  border-width: 2px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+
+.clrBrEmph1 {
+  border-color: $emphasis1;
+
+  hr {
+    border-color: $emphasis1;
+  }
+}
+
+.clrBrEmph2 {
+  border-color: $emphasis2;
+
+  hr {
+    border-color: $emphasis2
+  }
+}
+
+.clrBAtt1 {
+  background-color: $emphasis1;
+}
+
+.clrBAtt2 {
+  background-color: $emphasis2;
+}
+
+.clrBAttGrad {
+  background: $emphasisGradient;
+
+
+}
+
+::-webkit-scrollbar {
+  width: $scrollbar;
+}
+
+::-webkit-scrollbar-track {
+  background: $secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $text3;
+
+  &:hover {
+    background: $text4;
+  }
+
+  &:active {
+    background: $text4;
+  }
+}
+
 
 // select2 dropdowns always use the theme border color.
 // Override them in the view stylesheet if necessary.
@@ -152,8 +218,12 @@ input[type=range][class~="clrS"] {
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-.clrSh2  {
+.clrSh2 {
   box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+}
+
+.clrSh3 {
+  box-shadow: 0 0 1px rgba(0,0,0,0.3);
 }
 
 .required::after {
