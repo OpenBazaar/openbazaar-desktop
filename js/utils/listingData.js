@@ -67,6 +67,11 @@ const categories = [
   'billy goats',
   'filberts',
   'hippos',
+  'left-eyed',
+  'bearded',
+  'morose',
+  'straight edge',
+  'you name it',
 ];
 
 const tags = [
@@ -92,6 +97,17 @@ const titleAdverbs = [
   'quite',
   'slightly',
   'hardly',
+  'willfully',
+  'wearily',
+  'delicately',
+  'firmly',
+  'financially',
+  'beautifully',
+  'uneasily',
+  'weirdly',
+  'cheerfully',
+  'lightly',
+  'delightfully',
 ];
 
 const titleAdjectives = [
@@ -105,6 +121,22 @@ const titleAdjectives = [
   'obnoxious',
   'smitten',
   'driven',
+  'bland',
+  'fruity',
+  'pickled',
+  'tangy',
+  'fuzzy',
+  'slimy',
+  'azure',
+  'shrill',
+  'muffled',
+  'melodic',
+  'cylindrical',
+  'globular',
+  'rotund',
+  'futuristic',
+  'plentiful',
+  'abrasive',
 ];
 
 const titleNouns = [
@@ -112,7 +144,6 @@ const titleNouns = [
   'hippo',
   'trooper',
   'salamander',
-  'nipple',
   'pimple',
   'marsupial',
   'governor',
@@ -122,6 +153,17 @@ const titleNouns = [
   'vagabond',
   'kitten',
   'pupster',
+  'army',
+  'regiment',
+  'jellyfish',
+  'troupe',
+  'bodyguard',
+  'father-in-law',
+  'choir',
+  'suitcase',
+  'xylophone',
+  'panther',
+  'bird',
 ];
 
 function generateTitle() {
@@ -162,7 +204,7 @@ function createListing(callback, images) {
     listingTags.push(tags[index]);
   }
 
-  const price = Math.random() * 40000;
+  const price = Math.random() * 1000;
   const offersFreeShipping = Math.floor(Math.random() * 2);
 
   const shippingOptions = [

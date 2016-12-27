@@ -1,9 +1,16 @@
+import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
+import 'select2';
+import { getTranslatedCountries } from '../../../data/countries';
+import 'cropit';
+import is from 'is_js';
+import '../../../utils/velocity';
+
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -20,6 +27,12 @@ export default class extends BaseModal {
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
 
+    this.countryData = getTranslatedCountries(app.settings.get('language'))
+      .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
+
+    this.defaultCountry = app.settings.get('shippingAddresses').length ?
+      app.settings.get('shippingAddresses').at(0).get('country') : app.settings.get('country');
+
     this.listenTo(app.settings, 'change:country', () =>
       (this.shipsFreeToMe = this.model.shipsFreeToMe));
 
@@ -31,7 +44,7 @@ export default class extends BaseModal {
         }
       });
 
-    if (this.model.isOwnListing()) {
+    if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
         const slug = this.model.get('listing')
           .get('slug');
@@ -44,13 +57,19 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} listingDetail modalTop`;
+    return `${super.className()} listingDetail modalScrollPage modalTop`;
   }
 
   events() {
     return {
       'click .js-editListing': 'onClickEditListing',
       'click .js-deleteListing': 'onClickDeleteListing',
+      'click .js-gotoPhotos': 'onClickGotoPhotos',
+      'click .js-freeShippingLabel': 'onClickFreeShippingLabel',
+      'change #shippingDestinations': 'onSetShippingDestination',
+      'click .js-photoSelect': 'onClickPhotoSelect',
+      'click .js-photoPrev': 'onClickPhotoPrev',
+      'click .js-photoNext': 'onClickPhotoNext',
       ...super.events(),
     };
   }
@@ -103,6 +122,81 @@ export default class extends BaseModal {
     }
   }
 
+  onClickGotoPhotos() {
+    this.gotoPhotos();
+  }
+
+  gotoPhotos() {
+    this.$photoSection.velocity(
+      'scroll',
+      {
+        duration: 500,
+        easing: 'easeOutSine',
+        container: this.$el,
+      });
+  }
+
+  onClickPhotoSelect(e) {
+    this.setSelectedPhoto($(e.target).data('index'));
+  }
+
+  setSelectedPhoto(photoIndex) {
+    if (is.not.number(photoIndex)) {
+      throw new Error('Please provide an index for the selected photo.');
+    }
+    if (photoIndex < 0) {
+      throw new Error('Please provide a valid index for the selected photo.');
+    }
+    const photoCol = this.model.get('listing').toJSON().item.images;
+    const photoHash = photoCol[photoIndex].original;
+    const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
+
+    this.$photoSection.cropit('imageSrc', phSrc);
+    this.$photoSelected.attr('data-index', photoIndex);
+  }
+
+  setActivePhotoThumbnail(thumbIndex) {
+    if (is.not.number(thumbIndex)) {
+      throw new Error('Please provide an index for the selected photo thumbnail.');
+    }
+    if (thumbIndex < 0) {
+      throw new Error('Please provide a valid index for the selected photo thumbnail.');
+    }
+    this.$photoRadioBtns.prop('checked', false).eq(thumbIndex).prop('checked', true);
+  }
+
+  onClickPhotoPrev() {
+    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) - 1;
+    const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
+
+    targetIndex = targetIndex < 0 ? imagesLength - 1 : targetIndex;
+    this.setSelectedPhoto(targetIndex);
+    this.setActivePhotoThumbnail(targetIndex);
+  }
+
+  onClickPhotoNext() {
+    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) + 1;
+    const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
+
+    targetIndex = targetIndex >= imagesLength ? 0 : targetIndex;
+    this.setSelectedPhoto(targetIndex);
+    this.setActivePhotoThumbnail(targetIndex);
+  }
+
+  onClickFreeShippingLabel() {
+    this.gotoShippingOptions();
+  }
+
+  gotoShippingOptions() {
+    this.$shippingSection.velocity(
+      'scroll',
+      {
+        duration: 500,
+        easing: 'easeOutSine',
+        container: this.$el,
+      });
+  }
+
   showDataChangedMessage() {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
@@ -125,6 +219,28 @@ export default class extends BaseModal {
 
       this.$popInMessages.append(this.dataChangePopIn.render().el);
     }
+  }
+
+  onSetShippingDestination(e) {
+    this.renderShippingDestinations($(e.target).val());
+  }
+
+  renderShippingDestinations(destination) {
+    if (!destination) {
+      throw new Error('Please provide a destination.');
+    }
+    const shippingOptions = this.model.get('listing').get('shippingOptions').toJSON();
+    const templateData = shippingOptions.filter((option) => {
+      if (destination === 'ALL') return option.regions;
+      return option.regions.includes(destination);
+    });
+    loadTemplate('modals/listingDetail/shippingOptions.html', t => {
+      this.$shippingOptions.html(t({
+        templateData,
+        displayCurrency: app.settings.get('localCurrency'),
+        pricingCurrency: this.model.get('listing').get('metadata').get('pricingCurrency'),
+      }));
+    });
   }
 
   get shipsFreeToMe() {
@@ -153,6 +269,31 @@ export default class extends BaseModal {
       (this._$popInMessages = this.$('.js-popInMessages'));
   }
 
+  get $photoSection() {
+    return this._$photoSection ||
+      (this._$photoSection = this.$('#photoSection'));
+  }
+
+  get $photoSelected() {
+    return this._$photoSelected ||
+      (this._$photoSelected = this.$('.js-photoSelected'));
+  }
+
+  get $shippingSection() {
+    return this._$shippingSection ||
+      (this._$shippingSection = this.$('#shippingSection'));
+  }
+
+  get $shippingOptions() {
+    return this._$shippingOptions ||
+      (this._$shippingOptions = this.$('.js-shippingOptions'));
+  }
+
+  get $photoRadioBtns() {
+    return this._$photoRadioBtns ||
+      (this._$photoRadioBtns = this.$('.js-photoSelect'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -166,8 +307,12 @@ export default class extends BaseModal {
       this.$el.html(t({
         ...this.model.get('listing').toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
-        ownListing: this.model.isOwnListing(),
+        ownListing: this.model.isOwnListing,
         displayCurrency: app.settings.get('localCurrency'),
+        // the ships from data doesn't exist yet
+        // shipsFromCountry: this.model.get('listing').get('shipsFrom');
+        countryData: this.countryData,
+        defaultCountry: this.defaultCountry,
       }));
 
       super.render();
@@ -175,6 +320,30 @@ export default class extends BaseModal {
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
+      this._$photoSection = null;
+      this._$shippingOptions = null;
+      this._$photoRadioBtns = null;
+      this._$shippingSection = null;
+
+      // commented out until variants are available
+      // this.$('.js-variantSelect').select2();
+
+      const initialPhotoHash = this.model.get('listing').toJSON().item.images[0].original;
+      const initialPhoto = app.getServerUrl(`ipfs/${initialPhotoHash}`);
+
+      setTimeout(() => {
+        this.$photoSection.cropit({
+          smallImage: 'allow',
+          allowDragNDrop: false,
+          maxZoom: 2,
+        });
+
+        this.$photoSection.cropit('imageSrc', initialPhoto);
+      }, 0);
+
+      this.$('#shippingDestinations').select2();
+
+      this.renderShippingDestinations(this.defaultCountry);
     });
 
     return this;

@@ -7,6 +7,7 @@
     margin-bottom: 9px;
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 
     .userIcon {
       position: absolute;
@@ -33,6 +34,7 @@
     padding: 0 $padMd2 $padMd2 $padMd2;
     height: 112px;
     box-sizing: border-box;
+    word-wrap: break-word;
 
     .contentTop {
       height: 86px;

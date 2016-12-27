@@ -2,19 +2,23 @@
   <nav class="bar clrBr clrP navBar">
     <div class="flexVCent">
       <div class="windowControlsHolder">
-        <div class="windowControls windowControlsMac">
+        <div class="windowControls">
           <a class="navClose js-navClose">
-            <i class="ion-ios-close-empty"></i>
+            <span class="ion-ios-close-empty"></span>
           </a>
-          <a class="navMin js-navMin"></a>
-          <a class="navMax js-navMax"></a>
+          <a class="navMin js-navMin">
+            <span class="ion-ios-minus-empty"></span>
+          </a>
+          <a class="navMax js-navMax">
+            <span class="ion-ios-plus-empty"></span>
+          </a>
         </div>
       </div>
       <div>
         <div class="flexVCent">
           <a class="iconBtn ion-chevron-left js-navBack"></a>
           <a class="iconBtn ion-chevron-right js-navFwd"></a>
-          <a class="iconBtn ion-refresh"></a>
+          <a class="iconBtn ion-refresh js-navReload"></a>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
@@ -22,7 +26,7 @@
         <div class="flexVCent">
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar"
-                   placeholder="Type a @handle, OpenBazaar ID or keyword" value="<%= ob.addressBarText %>" />
+                   placeholder="Type a @handle, OpenBazaar ID or #tag" value="<%= ob.addressBarText %>" />
           </div>
         </div>
       </div>
@@ -30,7 +34,7 @@
       <div>
         <div class="flexVCent box">
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
-          <a id="AvatarBtn" class="discSm border clrBr js-navListBtn navListBtn"
+          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn"
           <% if (ob.avatarHash) { %>
           //this will be updated to the real image parameter
           style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
@@ -38,50 +42,52 @@
             style="background-image: url('../imgs/defaultAvatar.png')"
           <% } %>
           ></a>
-          <nav class="navList listBox clrS clrSh1 foldDown js-navList js-navPopMenu">
-            <div class="listGroup clrP clrBr clrSh2">
-              <a class="listItem">
-                <span>Current Node</span>
-                <span><i class="ion-arrow-right-b floR"></i></span>
-              </a>
-            </div>
-            <div class="listGroup clrP clrBr clrSh2">
-              <a class="listItem" href="#<%= ob.id ? `${ob.id}` : ''%>">
-                <span>My Page</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-              <a class="listItem"><!--TODO add route for Page Customization-->
-                <span>Customize Page</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-              <a class="listItem js-navCreateListing">
-                <span>Create Listing</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-              <a class="listItem" href="#connected-peers">
-                <span>Connected Peers</span><span class="clrT2">Cltrl + ?</span>
-              </a>              
-            </div>
-            <div class="listGroup clrP clrBr clrSh2">
-              <a href="#transactions/purchases" class="listItem">
-                <span>Purchases</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-              <a href="#transactions/sales" class="listItem">
-                <span>Sales</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-              <a href="#transactions/cases" class="listItem">
-                <span>Cases</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-            </div>
-            <div class="listGroup clrP clrBr clrSh2">
-              <a class="listItem js-navSettings">
-                <span>Settings</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-            </div>
-            <div class="listGroup clrP clrBr clrSh2">
-              <a class="listItem">
-                <span>About OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
-              </a>
-              <a class="listItem">
-                <span>Support OpenBazaar</span><span class="clrT2">Cltrl + ?</span>
-              </a>
+          <nav class="navListWrapper foldDown js-navList js-navPopMenu">
+            <div class="navList clrBr listBox clrP clrSh1">
+              <div class="listGroup clrP clrBr">
+                <div class="listItem"><span class="txB tx4"><%= ob.name %></span></div>
+              </div>
+              <div class="listGroup clrP clrBr">
+                <a class="listItem">
+                  <span>Current Node</span>
+                  <span><i class="ion-arrow-right-b floR"></i></span>
+                </a>
+              </div>
+              <div class="listGroup clrP clrBr">
+                <a class="listItem" href="#<%= ob.id ? `${ob.id}` : ''%>">
+                  <span>My Page</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+                <a class="listItem"><!--TODO add route for Page Customization-->
+                  <span>Customize Page</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+                <a class="listItem js-navCreateListing">
+                  <span>Create Listing</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+                <a class="listItem" href="#connected-peers">
+                  <span>Connected Peers</span>
+                </a>
+              </div>
+              <div class="listGroup clrP clrBr">
+                <a href="#transactions/purchases" class="listItem">
+                  <span>Purchases</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+                <a href="#transactions/sales" class="listItem">
+                  <span>Sales</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+                <a href="#transactions/cases" class="listItem">
+                  <span>Cases</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+              </div>
+              <div class="listGroup clrP clrBr">
+                <a class="listItem js-navSettings">
+                  <span>Settings</span><span class="clrT2">Cltrl + ?</span>
+                </a>
+              </div>
+              <div class="listGroup clrP clrBr">
+                <a class="listItem">
+                  <span>About OpenBazaar</span>
+                </a>
+              </div>
             </div>
           </nav>
         </div>
