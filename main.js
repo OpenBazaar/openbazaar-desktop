@@ -6,6 +6,7 @@ import {
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
+import urlparse from 'url-parse';
 import _ from 'underscore';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
@@ -101,6 +102,51 @@ crashReporter.start({
     bundled: isBundledApp(),
   },
 });
+
+/**
+ * Handles valid OB2 protocol URLs in the webapp.
+ *
+ * @param  {Object} externalURL Contains a string url
+ */
+function handleDeepLinkEvent(externalURL) {
+  if (!(typeof externalURL === 'string')) return;
+
+  const theUrl = urlparse(externalURL);
+  if (theUrl.protocol !== 'ob2:') {
+    console.warn(`Unable to handle ${externalURL} because it's not the ob2: protocol.`);
+    return;
+  }
+
+  const query = theUrl.query;
+  const hash = theUrl.host;
+  const pathname = theUrl.pathname;
+
+  console.warn(`This is the hash to visit: ${hash}`);
+  console.warn(`These are the query params: ${query}`);
+  console.warn(`This is the path: ${pathname}`);
+
+  // TODO: handle protocol links
+}
+
+/**
+ * Prevent window navigation
+ *
+ * @param  {Object} win Contains a browserwindow object
+ */
+function preventWindowNavigation(win) {
+  win.webContents.on('will-navigate', (e, url) => {
+    // NB: Let page reloads through.
+    if (url === win.webContents.getURL()) return;
+
+    e.preventDefault();
+
+    if (url.startsWith('ob2:')) {
+      handleDeepLinkEvent(url);
+    } else {
+      console.info(`Preventing navigation to: ${url}`);
+    }
+  });
+}
 
 function createWindow() {
   const template = [
@@ -390,6 +436,12 @@ function createWindow() {
     }
   });
 
+  // Set up protocol
+  app.setAsDefaultProtocolClient('ob2');
+
+  // Check for URL hijacking in the browser
+  preventWindowNavigation(mainWindow);
+
   /**
    * For OS X users Squirrel manages the auto-updating code.
    * If there is an update available then we will send an IPC message to the
@@ -456,6 +508,11 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow) mainWindow.show();
+});
+
+app.on('open-url', (e, url) => {
+  e.preventDefault();
+  handleDeepLinkEvent(url);
 });
 
 ipcMain.on('close-confirmed', () => {
