@@ -14,10 +14,22 @@ export const editorOptions = {
   ],
 };
 
-export function installRichEditor(attachPoint, editorOpts = editorOptions) {
+export function installRichEditor(attachPoint, options = {}) {
+  const opts = {
+    editorOptions,
+    ...options,
+  };
+
   // accept a selector, element, or jQuery object
   const attach = $(attachPoint);
 
   // create editor
-  attach.trumbowyg(editorOpts);
+  attach.trumbowyg(opts.editorOptions);
+
+  if (opts.topLevelClass) {
+    attach.closest('.trumbowyg')
+      .addClass(opts.topLevelClass);
+  }
+
+  return attach;
 }

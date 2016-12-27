@@ -120,7 +120,7 @@
               <div class="col12">
                 <label for="editListingDescription"><%= ob.polyT('editListing.description') %></label>
                 <% if (ob.errors['listing.item.description']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.description'] })) %>
-                <div contenteditable class="rows6" name="listing.item.description" id="editListingDescription"><%= ob.listing.item.description %></div>
+                <div contenteditable class="rows6 clrBr" name="listing.item.description" id="editListingDescription"><%= ob.listing.item.description %></div>
               </div>
             </div>
           </form>

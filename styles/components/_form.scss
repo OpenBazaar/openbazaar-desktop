@@ -19,7 +19,7 @@ textarea::-webkit-input-placeholder {
 input,
 select,
 textarea,
-.trumbowyg div[contenteditable] {
+.trumbowyg-editor {  
   border: none;
   outline: none;
   background: none;
@@ -29,6 +29,14 @@ textarea,
     family: "Noto Sans", sans-serif;
     size: $tx5;
   }
+}
+
+.trumbowyg-editor {
+  border-radius: 0;
+}
+
+.trumbowyg textarea {
+  display: none;
 }
 
 .select2-container--focus .select2-selection__rendered,
@@ -45,7 +53,7 @@ input[type="text"],
 textarea,
 .select2-container--focus .select2-selection__rendered,
 .select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
-.trumbowyg div[contenteditable] {
+.trumbowyg-editor {
   border-style: solid;
   border-width: 1px;
   //use the color class to set the border color

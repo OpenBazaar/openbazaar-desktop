@@ -824,7 +824,10 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        installRichEditor(this.$('#editListingDescription'));
+        installRichEditor(this.$('#editListingDescription'), {
+          topLevelClass: 'clrBr',
+        });
+
         if (!this.rendered) {
           this.rendered = true;
           this.$titleInput.focus();
