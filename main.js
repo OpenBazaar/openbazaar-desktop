@@ -1,6 +1,6 @@
 import {
   electron, app, BrowserWindow, ipcMain,
-  Menu, Tray, session,
+  Menu, Tray, session, crashReporter,
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
@@ -88,6 +88,16 @@ if (isBundledApp()) {
     // will be explained in the module.
   });
 }
+
+crashReporter.start({
+  productName: 'OpenBazaar 2',
+  companyName: 'OpenBazaar',
+  submitURL: 'http://104.131.17.128:1127/post',
+  autoSubmit: true,
+  extra: {
+    bundled: isBundledApp(),
+  },
+});
 
 function createWindow() {
   const template = [
@@ -199,6 +209,11 @@ function createWindow() {
         },
         {
           role: 'quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click() {
+            closeConfirmed = true;
+            app.quit();
+          },
         },
       ],
     });
@@ -344,6 +359,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+    app.quit();
   });
 
   mainWindow.on('close', (e) => {
