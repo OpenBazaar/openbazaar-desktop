@@ -148,7 +148,8 @@
 
   .navListWrapper {
     z-index: 1;
-    padding: 0 0 $pad $pad; // give room for border and shadow
+    padding: 0 $pad $pad $pad; // give room for border and shadow
+    right: -$pad; // compensate for padding
 
     .navList {
       box-sizing: border-box;
