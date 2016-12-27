@@ -31,6 +31,8 @@
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
+    "about": "About",
+    "aboutEmpty": "About is empty...",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "searchStore": "Search",
@@ -49,12 +51,14 @@
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
     "store": {
-        "retryStoreFetch": "retry",
+        "retryStoreFetch": "Retry",
         "btnLayoutStandard": "950px",
         "btnLayoutFullWidth": "100%",
-        "unableToFetchListings": "Unable to retrieve your listings.",
+        "unableToFetchListings": "Unable to retrieve your listings",
         "noListings": "This store has no listings.",
-        "shipsToFilterAny": "(Any Country)",
+        "noListingsFound": "No listings match your search criteria",
+        "btnClearSearch": "Clear Search Criteria",
+        "shipsToFilterAny": "(Any country)",
         "sortBy": "Sort By",
         "countListings": "%{smart_count} listing |||| %{smart_count} listings",
         "countListingsFound": "%{countListings} found",
@@ -76,7 +80,7 @@
           "heading": "Category",
           "showMore": "%{smart_count} more... |||| %{smart_count} more...",
           "showLess": "less"
-        }        
+        }
     }
   },
   "userShort": {
@@ -88,6 +92,42 @@
     "generalTab": "General",
     "pageTab": "Page",
     "addressesTab": "Addresses",
+    "advancedTab": {
+      "_sectionName": "Advanced",
+      "smtp": {
+        "_sectionName": "SMTP Integration",
+        "_testAction": "Test Integration",
+        "_clearAction": "Clear Settings",
+        "notifications": "Notifications",
+        "username": "Username",
+        "password": "Password",
+        "serverAddress": "Server Address",
+        "senderEmail": "Send from",
+        "recipientEmail": "Send to"
+      },
+      "server": {
+        "_sectionName": "Server Settings",
+        "management": "Management",
+        "peers": "Peers",
+        "btnShowManagementAction": "Connection Management",
+        "btnShowPeersAction": "Show Connected Peers"
+      },
+      "transaction": {
+        "_sectionName": "Transactions",
+        "saveMetadata": "Save Metadata",
+        "defaultFee": "Default Fee",
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "appearance": {
+        "_sectionName": "Appearance",
+        "visualEffects": "Visual Effects",
+        "windowControlStyle": "Window Style",
+        "macOS": "Mac",
+        "windowsOS": "Windows"
+      }
+    },
     "language": "Language",
     "country": "Country",
     "currency": "Currency",
@@ -100,8 +140,8 @@
     "about": "About",
     "nsfwContent": "NSFW Content",
     "avatar": "Avatar",
-    "loadAvatar": "Load Image",
-    "loadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
+    "loadAvatar": "Select Photo",
+    "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
     "loadAvatarSizeError": {
       "title": "Your avatar image is too small.",
       "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
@@ -109,8 +149,8 @@
     },
     "loadAvatarZoomTooSmall": "This image is too small to zoom.",
     "header": "Cover Photo",
-    "loadHeader": "Load Image",
-    "loadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
+    "loadHeader": "Select Photo",
+    "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
     "loadHeaderSizeError": {
       "title": "Your header image is too small",
       "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
@@ -154,15 +194,48 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "formats": {
+    "PHYSICAL_GOOD": "Physical Good",
+    "DIGITAL_GOOD": "Digital Good",
+    "SERVICE": "Service",
+    "CROWD_FUND": "Crowd fund"
+  },
+  "conditionTypes": {
+    "NEW": "New",
+    "USED_EXCELLENT": "Used - Excellent",
+    "USED_GOOD": "Used - Good",
+    "USED_POOR": "Used - Poor",
+    "REFURBISHED": "Refurbished"
+  },
   "listingDetail": {
+    "edit": "Edit",
+    "delete": "Delete",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "refresh"
+    "listingDataChangedPopinRefresh": "Refresh",
+    "viewPhotos": "View %{count} Photos",
+    "type": "Type: %{type}",
+    "condition": "Condition: %{condition}",
+    "tags": "Tags",
+    "noTags": "This listing does not have any tags.",
+    "buyNow": "BuyNow",
+    "description": "Description",
+    "noDescription": "This listing does not have a description.",
+    "reviews": "Reviews",
+    "attachments": "Attachments",
+    "refundPolicy": "Refund Policy",
+    "noRefundPolicy": "This listing does not have a refund policy.",
+    "termsAndConditions": "Terms Of Service",
+    "noTermsAndConditions": "This listing has neither terms nor conditions.",
+    "shipping": "Shipping",
+    "shipsFrom": "Ships from %{country}",
+    "shipTo": "Ship to:",
+    "noShippingFound": "This listing does not ship to the selected country.",
+    "localPickup": "This option is for local pickup only.",
+    "allCountries": "Any Country"
   },
   "listingCard": {
-    "btnEdit": "Edit",
-    "btnDelete": "Delete",
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting...",
@@ -177,19 +250,6 @@
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
   },
   "editListing": {
-    "formats": {
-      "PHYSICAL_GOOD": "Physical Good",
-      "DIGITAL_GOOD": "Digital Good",
-      "SERVICE": "Service",
-      "CROWD_FUND": "Crowd fund"
-    },
-    "conditionTypes": {
-      "NEW": "New",
-      "USED_EXCELLENT": "Used - Excellent",
-      "USED_GOOD": "Used - Good",
-      "USED_POOR": "Used - Poor",
-      "REFURBISHED": "Refurbished"
-    },
     "nsfwYes": "Yes",
     "nsfwNo": "No",
     "sectionNames": {
@@ -273,6 +333,19 @@
     "provideUsername": "Please provide a username.",
     "duplicateSocialAccount": "You already have a social account of this type."
   },
+  "smtpModelErrors": {
+    "username": {
+      "caseEmpty": "Please provide a username.",
+      "caseInvalid": "Usernames can only contain characters A to Z a to z and 0 to 9."
+    },
+    "password": "Please provide a valid password.",
+    "serverAddress": "Please provide a valid URL.",
+    "senderEmail": "Please provide a valid email.",
+    "recipientEmail": "Please provide a valid email.",
+    "notifications": {
+      "caseOffIfEmpty": "Please fill out all settings if you turn notifications on."
+    }
+  },
   "errors": {
     "saveError": "There was an error saving your data.",
     "badResult": "The server returned an error."
@@ -309,8 +382,8 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
-    "provideAmountGreaterThanZero": "The price must be greater than 0."    
-  },  
+    "provideAmountGreaterThanZero": "The price must be greater than 0."
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

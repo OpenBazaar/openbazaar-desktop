@@ -74,7 +74,7 @@ textarea {
 
 .errorList {
   color: $error;
-  
+
   li {
     i {
       margin-right: 5px;
@@ -97,14 +97,14 @@ label {
 .required::after {
   content: '*';
   position: absolute;
-  font-size: 130%;    
+  font-size: 130%;
 }
 
 // By default, using width values appropriate for currency codes.
 // Overwrite in your own implementation if you need to deviate.
 .inputSelect {
   position: relative;
-  
+
   input {
     padding-right: 75px;
   }
@@ -134,3 +134,4 @@ label {
 input[type="radio"]:checked + label {
   font-weight: 700;
 }
+

@@ -9,32 +9,45 @@
     <link rel="stylesheet" href="../node_modules/medium-editor/dist/css/medium-editor.min.css">
     <link rel="stylesheet" href="./styles/main.css">
   </head>
-  <body class="clrT clrBk">
+  <body class="clrT clrS">
     <div id="appFrame">
       <section id="pageNavContainer"></section>
       <section id="contentFrame">
         <div id="pageContainer"></div>
       </section>
-      <section id="chatContainer" class="chat pad box">
-        <div class="padSmKids"><!-- fake chat elements -->
+      <div id="chatContainer" class="chat">
+        <div class="chatWrapper flexColRows gutterV"><!-- fake chat elements -->
           <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
+            <div class="flex gutterH">
+              <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
+              <div class="contentBox pad clrBr clrP noOverflow">
+                <span class="tx6">
+                  <b>@handle</b> example message that fades out
+                </span>
+              </div>
+            </div>
           </div>
           <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
+            <div class="flex gutterH">
+              <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
+              <div class="contentBox pad clrBr clrP noOverflow">
+                <span class="tx6">
+                  <b>@handle</b> example message that fades out
+                </span>
+              </div>
+            </div>
+          </div><div>
+            <div class="flex gutterH">
+              <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
+              <div class="contentBox pad clrBr clrP noOverflow">
+                <span class="tx6">
+                  <b>@handle</b> example message that fades out
+                </span>
+              </div>
+            </div>
           </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <p>Example chat content</p>
-        </section>
-      </section>
+        </div>
+      </div>
       <section id="statusBar"></section>
     </div>
     <script>

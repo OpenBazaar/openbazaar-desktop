@@ -1,4 +1,4 @@
-import { screen, remote, ipcRenderer } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
@@ -20,18 +20,18 @@ import { getLangByCode } from './data/languages';
 import Profile from './models/Profile';
 import Settings from './models/Settings';
 import Followers from './collections/Followers';
-import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
-import { getBody } from './utils/selectors';
 import { launchDebugLogModal } from './utils/modalManager';
+import listingDeleteHandler from './startup/listingDelete';
+import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagament';
+
+fixLinuxZoomIssue();
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
-
-const platform = process.platform;
 
 // initialize language functionality
 function getValidLanguage(lang) {
@@ -84,14 +84,7 @@ app.loadingModal = new LoadingModal({
   removeOnRoute: false,
 }).render().open();
 
-// fix zoom issue on Linux hiDPI
-if (platform === 'linux') {
-  let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
-  if (scaleFactor === 0) {
-    scaleFactor = 1;
-  }
-  getBody().css('zoom', 1 / scaleFactor);
-}
+handleLinks();
 
 const fetchConfigDeferred = $.Deferred();
 

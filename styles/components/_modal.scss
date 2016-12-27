@@ -12,6 +12,7 @@
     min-width: 300px;
     max-height: calc(100% - 50px);
     overflow: auto;
+    border-radius: $corner;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
     @include chatOpeningTransition(left);
@@ -22,7 +23,7 @@
   }
 
   &.modalTop .modalContent {
-    top: $padLg;
+    top: $padMd;
     @include center(true, false);
     left: calc(50% - #{$chatClosed / 2});
 
@@ -64,16 +65,4 @@
       }
     }
   }  
-}
- 
-
-// temporary test code
-.modal {
-  &.testModal .modalContent {
-    background-color: orange;
-  }
-
-  &.testModal2 .modalContent {
-    background-color: pink;
-  }
 }

@@ -1,10 +1,12 @@
 import {
-  electron, app, BrowserWindow, ipcMain,
-  Menu, Tray, session,
+  app, BrowserWindow, ipcMain,
+  Menu, Tray, session, crashReporter,
+  autoUpdater, shell,
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
+import urlparse from 'url-parse';
 import _ from 'underscore';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
@@ -14,6 +16,8 @@ import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 let mainWindow;
 let trayMenu;
 let closeConfirmed = false;
+const version = app.getVersion();
+const feedURL = `https://updates2.openbazaar.org:5001/update/${process.platform}/${version}`;
 global.serverLog = '';
 
 const handleStartupEvent = function () {
@@ -31,7 +35,7 @@ const handleStartupEvent = function () {
 
   function install(cb) {
     const target = path.basename(process.execPath);
-    exeSquirrelCommand(['--createShortcut', target], cb);
+    exeSquirrelCommand(['--createShortcut', target, ' --shortcut-locations=Desktop,StartMenu'], cb);
   }
 
   function uninstall(cb) {
@@ -86,6 +90,61 @@ if (isBundledApp()) {
     // IMPORTANT: From the main process, only bind events to the localServer instance
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
     // will be explained in the module.
+  });
+}
+
+crashReporter.start({
+  productName: 'OpenBazaar 2',
+  companyName: 'OpenBazaar',
+  submitURL: 'http://104.131.17.128:1127/post',
+  autoSubmit: true,
+  extra: {
+    bundled: isBundledApp(),
+  },
+});
+
+/**
+ * Handles valid OB2 protocol URLs in the webapp.
+ *
+ * @param  {Object} externalURL Contains a string url
+ */
+function handleDeepLinkEvent(externalURL) {
+  if (!(typeof externalURL === 'string')) return;
+
+  const theUrl = urlparse(externalURL);
+  if (theUrl.protocol !== 'ob2:') {
+    console.warn(`Unable to handle ${externalURL} because it's not the ob2: protocol.`);
+    return;
+  }
+
+  const query = theUrl.query;
+  const hash = theUrl.host;
+  const pathname = theUrl.pathname;
+
+  console.warn(`This is the hash to visit: ${hash}`);
+  console.warn(`These are the query params: ${query}`);
+  console.warn(`This is the path: ${pathname}`);
+
+  // TODO: handle protocol links
+}
+
+/**
+ * Prevent window navigation
+ *
+ * @param  {Object} win Contains a browserwindow object
+ */
+function preventWindowNavigation(win) {
+  win.webContents.on('will-navigate', (e, url) => {
+    // NB: Let page reloads through.
+    if (url === win.webContents.getURL()) return;
+
+    e.preventDefault();
+
+    if (url.startsWith('ob2:')) {
+      handleDeepLinkEvent(url);
+    } else {
+      console.info(`Preventing navigation to: ${url}`);
+    }
   });
 }
 
@@ -159,9 +218,26 @@ function createWindow() {
     {
       role: 'help',
       submenu: [
+        // {
+        //   label: 'Report Issue...',
+        //   click() {
+        //     // TODO: Open an issue tracking window
+        //   },
+        // },
         {
-          label: 'Learn More',
-          click() { electron.shell.openExternal('https://openbazaar.org'); },
+          label: 'Check for Updates...',
+          click() {
+            autoUpdater.checkForUpdates();
+          },
+        },
+        {
+          type: 'separator',
+        },
+        {
+          label: 'Documentation',
+          click() {
+            shell.openExternal('https://docs.openbazaar.org');
+          },
         },
       ],
     },
@@ -199,6 +275,11 @@ function createWindow() {
         },
         {
           role: 'quit',
+          accelerator: 'CmdOrCtrl+Q',
+          click() {
+            closeConfirmed = true;
+            app.quit();
+          },
         },
       ],
     });
@@ -344,6 +425,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+    app.quit();
   });
 
   mainWindow.on('close', (e) => {
@@ -353,6 +435,61 @@ function createWindow() {
       e.preventDefault();
     }
   });
+
+  // Set up protocol
+  app.setAsDefaultProtocolClient('ob2');
+
+  // Check for URL hijacking in the browser
+  preventWindowNavigation(mainWindow);
+
+  /**
+   * For OS X users Squirrel manages the auto-updating code.
+   * If there is an update available then we will send an IPC message to the
+   * render process to notify the user. If the user wants to update
+   * the software then they will send an IPC message back to the main process and we will
+   * begin to download the file and update the software.
+   */
+  if (process.platform === 'darwin') {
+    autoUpdater.on('error', (err, msg) => {
+      console.log(msg);
+    });
+
+    autoUpdater.on('update-not-available', (msg) => {
+      console.log(msg);
+      mainWindow.send('updateNotAvailable');
+    });
+
+    autoUpdater.on('update-available', () => {
+      mainWindow.send('updateAvailable');
+    });
+
+    autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
+      releaseDate, updateUrl, quitAndUpdate) => {
+      // Old way of doing things
+      // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
+      // .removeClass("softwareUpdateHidden");');
+      console.log(quitAndUpdate);
+      mainWindow.send('updateReadyForInstall');
+    });
+
+    // Listen for installUpdate command to install the update
+    ipcMain.on('installUpdate', () => {
+      autoUpdater.quitAndInstall();
+    });
+
+    // Listen for checkForUpdate command to manually check for new versions
+    ipcMain.on('checkForUpdate', () => {
+      autoUpdater.checkForUpdates();
+    });
+
+    autoUpdater.setFeedURL(feedURL);
+
+    // Check for updates every hour
+    autoUpdater.checkForUpdates();
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60 * 60 * 1000);
+  }
 }
 
 // This method will be called when Electron has finished
@@ -371,6 +508,11 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow) mainWindow.show();
+});
+
+app.on('open-url', (e, url) => {
+  e.preventDefault();
+  handleDeepLinkEvent(url);
 });
 
 ipcMain.on('close-confirmed', () => {
@@ -422,4 +564,3 @@ const log = msg => {
 
 if (localServer) bindLocalServerEvent('log', (localServ, msg) => log(msg));
 ipcMain.on('server-connect-log', (e, msg) => log(msg));
-

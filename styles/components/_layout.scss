@@ -36,7 +36,6 @@
   @extend .flex;
   //use this to contain columns
   align-items: stretch; //this stretches the items to 100% height
-  justify-content: space-between;
 }
 
 .snip,
@@ -114,6 +113,13 @@
   @extend .flex;
   height: 100%;
   align-items: flex-end;
+}
+
+.flexVBase {
+  //creates a container with children aligned to the baseline of the parent. Useful for aligning with text.
+  @extend .flex;
+  height: 100%;
+  align-items: baseline;
 }
 
 .flexHCent {
@@ -253,9 +259,14 @@
 }
 
 
-.padBg,
-.padBgKids > * {
+.padLg,
+.padLgKids > * {
   padding: $padLg;
+}
+
+.padGi,
+.padGiKids > * {
+  padding: $padGi;
 }
 
 .padStack > *:not(:last-child) {
@@ -331,7 +342,7 @@
       padding-left: 0;
     }
 
-    &:last-child {
+    &:last-child:not(:only-child) {
       padding-right: 0;
     }
   }

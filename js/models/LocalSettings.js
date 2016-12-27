@@ -1,9 +1,11 @@
 import electron from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
-import is from 'is_js';
 
 const remote = electron.remote;
+const controlStyles = ['mac', 'win'];
+const viewStyles = ['list', 'grid'];
+const feeLevels = ['low', 'medium', 'high'];
 
 export default class extends Model {
   localStorage() {
@@ -16,7 +18,10 @@ export default class extends Model {
 
   defaults() {
     return {
-      macStyleWinControls: remote.process.platform === 'darwin',
+      windowControlStyle: remote.process.platform === 'darwin' ? 'mac' : 'win',
+      showAdvancedVisualEffects: true,
+      saveTransactionMetadata: true,
+      defaultTransactionFee: 'high',
       language: 'en-US',
       listingsGridViewType: 'grid',
     };
@@ -29,12 +34,16 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.boolean(attrs.macStyleWinControls)) {
-      addError('macStyleWinControls', 'Please provide a boolean value.');
+    if (!controlStyles.includes(attrs.windowControlStyle)) {
+      addError('windowControlStyle', `Please provide one of ${controlStyles}.`);
     }
 
-    if (['list', 'grid'].indexOf(attrs.listingsGridViewType) === '-1') {
-      addError('The listingsGridViewType provided is not one of the available types.');
+    if (!viewStyles.includes(attrs.listingsGridViewType)) {
+      addError(`ListingGrideViewType needs to be one of ${viewStyles}.`);
+    }
+
+    if (!feeLevels.includes(attrs.defaultTransactionFee)) {
+      addError('defaultTransactionFee', `Default transaction fee needs to be one of ${feeLevels}.`);
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;
