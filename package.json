@@ -53,7 +53,8 @@
     "node-sass": "^3.13.0",
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.2.0",
-    "sinon": "^1.17.6"
+    "sinon": "^1.17.6",
+    "trumbowyg": "^2.4.2"
   },
   "pre-commit": [
     "lint",
@@ -69,7 +70,6 @@
     "ionicons": "^2.0.1",
     "is_js": "^0.8.0",
     "jquery": "^3.0.0",
-    "medium-editor": "^5.21.1",
     "multihashes": "^0.2.2",
     "node-polyglot": "^2.0.0",
     "open": "0.0.5",
