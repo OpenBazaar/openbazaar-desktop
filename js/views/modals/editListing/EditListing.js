@@ -26,7 +26,6 @@ export default class extends BaseModal {
 
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP clrBr border',
       ...options,
     };
 
@@ -71,7 +70,7 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      this.$('.js-sectionShipping').addClass('hasShippingOptions');
+      this.$sectionShipping.addClass('hasShippingOptions');
 
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
@@ -84,7 +83,7 @@ export default class extends BaseModal {
 
     this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
       if (!this.shippingOptions.length) {
-        this.$('.js-sectionShipping').removeClass('hasShippingOptions');
+        this.$sectionShipping.removeClass('hasShippingOptions');
       }
 
       const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
@@ -92,10 +91,28 @@ export default class extends BaseModal {
       this.shippingOptionViews.slice(removeOpts.index)
         .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
     });
+
+    this.listenTo(this.shippingOptions, 'update', (cl, updateOpts) => {
+      if (!(updateOpts.changes.added.length || updateOpts.changes.removed.length)) {
+        return;
+      }
+
+      this.$addShipOptSectionHeading
+        .text(app.polyglot.t('editListing.shippingOptions.optionHeading',
+          { listPosition: this.shippingOptions.length + 1 }));
+    });
+
+    this.$el.on('scroll', () => {
+      if (this.el.scrollTop > 57 && !this.$el.hasClass('fixedNav')) {
+        this.$el.addClass('fixedNav');
+      } else if (this.el.scrollTop <= 57 && this.$el.hasClass('fixedNav')) {
+        this.$el.removeClass('fixedNav');
+      }
+    });
   }
 
   className() {
-    return `${super.className()} editListing tabbedModal modalTop`;
+    return `${super.className()} editListing tabbedModal modalTop modalScrollPage`;
   }
 
   events() {
@@ -114,6 +131,13 @@ export default class extends BaseModal {
       'click .js-addShippingOption': 'onClickAddShippingOption',
       ...super.events(),
     };
+  }
+
+  get closeClickTargets() {
+    return [
+      ...this.$closeClickTargets.get(),
+      ...super.closeClickTargets,
+    ];
   }
 
   get MAX_PHOTOS() {
@@ -415,16 +439,25 @@ export default class extends BaseModal {
     this.selectedNavTabIndex = index;
     this.$scrollLinks.removeClass('active');
     $(e.target).addClass('active');
-    this.$scrollContainer.off('scroll', this.throttledOnScrollContainer);
+    this.$el.off('scroll', this.throttledOnScroll);
 
-    this.$scrollToSections.eq(index)
-      .velocity('scroll', {
-        container: this.$scrollContainer,
-        complete: () => this.$scrollContainer.on('scroll', this.throttledOnScrollContainer),
-      });
+    // Had this initially in Velocity, but after markup re-factor, it
+    // doesn't work consistently, so we'll go old-school for now.
+    this.$el
+      .animate({
+        scrollTop: this.$scrollToSections.eq(index)
+          .position()
+          .top,
+      }, {
+        complete: () => {
+          setTimeout(
+            () => this.$el.on('scroll', this.throttledOnScroll),
+            100);
+        },
+      }, 400);
   }
 
-  onScrollContainer() {
+  onScroll() {
     let index = 0;
     let keepLooping = true;
 
@@ -587,6 +620,11 @@ export default class extends BaseModal {
       (this._$sectionShipping = this.$('.js-sectionShipping'));
   }
 
+  get $closeClickTargets() {
+    return this._$closeClickTargets ||
+      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
+  }
+
   get $maxCatsWarning() {
     return this._$maxCatsWarning ||
       (this._$maxCatsWarning = this.$('.js-maxCatsWarning'));
@@ -599,6 +637,11 @@ export default class extends BaseModal {
 
   get maxTagsWarning() {
     return `<div class="clrT2 tx5 row">${app.polyglot.t('editListing.maxTagsWarning')}</div>`;
+  }
+
+  get $addShipOptSectionHeading() {
+    return this._$addShipOptSectionHeading ||
+      (this._$addShipOptSectionHeading = this.$('.js-addShipOptSectionHeading'));
   }
 
   showMaxTagsWarning() {
@@ -646,17 +689,6 @@ export default class extends BaseModal {
     return view;
   }
 
-  setScrollContainerHeight() {
-    this.$scrollContainer.css('height', '');
-    const height = this.$modalContent.outerHeight() -
-      this.$tabControls.outerHeight() - this.$('.topBar').outerHeight();
-
-    // todo: if .topBar ends up staying after the design refactor,
-    // cache that guy.
-
-    this.$scrollContainer.height(height);
-  }
-
   remove() {
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
@@ -664,14 +696,15 @@ export default class extends BaseModal {
     super.remove();
   }
 
-  render(onScrollUpdateComplete, restoreScrollPos = true) {
+  render(restoreScrollPos = true) {
     let prevScrollPos = 0;
     const item = this.innerListing.get('item');
 
-    if (restoreScrollPos && this.$scrollContainer && this.$scrollContainer.length) {
-      prevScrollPos = this.$scrollContainer[0].scrollTop;
+    if (restoreScrollPos) {
+      prevScrollPos = this.el.scrollTop;
     }
 
+    if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
     loadTemplate('modals/editListing/editListing.html', t => {
@@ -708,7 +741,6 @@ export default class extends BaseModal {
 
       super.render();
 
-      this.$scrollContainer = this.$('.js-scrollContainer');
       this.$editListingTags = this.$('#editListingTags');
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
@@ -849,49 +881,21 @@ export default class extends BaseModal {
       this._$sectionShipping = null;
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
+      this._$addShipOptSectionHeading = null;
+      this._$closeClickTargets = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
 
-      this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
-      this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
-
-      // we'll hide our modal until the height is adjusted, otherwise
-      // there's a noticable glitch
-      if (!this.jsHeightSet) {
-        this.$modalContent.css('opacity', 0);
-      }
-
       setTimeout(() => {
-        this.setScrollContainerHeight();
-
         // restore the scroll position
         if (restoreScrollPos) {
-          this.$scrollContainer[0].scrollTop = prevScrollPos;
+          this.el.scrollTop = prevScrollPos;
         }
 
-        if (typeof onScrollUpdateComplete === 'function') {
-          onScrollUpdateComplete.call(this);
-        }
-
-        window.requestAnimationFrame(() => {
-          this.$modalContent.css('opacity', '');
-        });
+        this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
+        setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
       });
-
-      if (!this.jsHeightSet) {
-        this.jsHeightSet = true;
-
-        const onWinResize = () => {
-          const prevScroll = this.$scrollContainer[0].scrollTop;
-          this.setScrollContainerHeight();
-          this.$scrollContainer[0].scrollTop = prevScroll;
-        };
-
-        this.throttledResizeWin =
-          _.bind(_.throttle(onWinResize, 100), this);
-        $(window).on('resize', this.throttledResizeWin);
-      }
     });
 
     return this;
