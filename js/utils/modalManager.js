@@ -3,7 +3,7 @@ import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
 
 let aboutModal;
-let editListindModal;
+let editListingModal;
 let debugLogModal;
 
 export function launchEditListingModal(modalOptions = {}) {
