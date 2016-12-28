@@ -1,7 +1,7 @@
 {
   "name": "openbazaar-desktop",
   "version": "2.0.0",
-  "description": "",
+  "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development npm-run-all sass:build process-index --parallel sass:watch index:watch browsersync start-app",
@@ -18,7 +18,8 @@
     "process-index:build": "babel-node ./bin/processIndexForBuild.js",
     "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' prod",
     "babel": "babel js --out-dir prod; babel main.js --out-file mainBuilt.js",
-    "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders"
+    "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders",
+    "binaries": "./build.sh"
   },
   "repository": {
     "type": "git",
@@ -65,14 +66,16 @@
     "babel-register": "^6.9.0",
     "backbone": "^1.3.3",
     "backbone.localstorage": "^1.1.16",
-    "ionicons": "^2.0.1",
     "cropit": "^0.5.1",
+    "ionicons": "^2.0.1",
     "is_js": "^0.8.0",
     "jquery": "^3.0.0",
     "multihashes": "^0.2.2",
     "node-polyglot": "^2.0.0",
+    "open": "0.0.5",
     "select2": "^4.0.3",
     "underscore": "^1.8.3",
+    "url-parse": "^1.1.7",
     "velocity-animate": "^1.2.3"
   }
 }
