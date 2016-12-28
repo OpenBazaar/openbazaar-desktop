@@ -6,7 +6,7 @@ export function polyT(...args) {
   return app.polyglot.t(...args);
 }
 
-export const getServerUrl = app.getServerUrl;
+export const getServerUrl = app.getServerUrl.bind(app);
 
 export { formatCurrency };
 
