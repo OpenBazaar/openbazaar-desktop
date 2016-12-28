@@ -6,10 +6,7 @@ import './lib/whenAll.jquery';
 import app from './app';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
-import {
-  connect as serverConnect,
-  events as serverConnectEvents,
-} from './utils/serverConnect';
+import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';

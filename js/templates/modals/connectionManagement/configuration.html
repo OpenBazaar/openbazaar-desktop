@@ -1,0 +1,24 @@
+<div class="flexVCent" style="height: 57px">
+  <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.name %></div>
+  <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.serverIp %></div>
+  <div class="col4">
+    <div class="flexHRight">
+      <% if (ob.status === 'connected') { %>
+      <div class="txB connectedText"><span class="ion-ios-checkmark-empty clrTEmph1"></span>Connected</div>
+      <% } else { %>
+      <div class="gutterHTn">
+        <a class="iconBtn clrP clrBr ion-trash-b"></a>
+        <a class="iconBtn clrP clrBr ion-ios-gear"></a>
+        <% if (ob.status === 'connecting') { %>
+          <a class="btn clrP clrBr js-btnCancel btnConnectCancel">
+            <%= ob.spinner() %>
+            Cancel (t yo)
+          </a>
+        <% } else { %>
+          <a class="btn clrP clrBr js-btnConnect btnConnectCancel">Connect (t yo)</a>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 .connectionManagement {
-  .connectionManagementConfigurations {
+  .configurations {
     position: relative;
 
     .statusBar {
@@ -16,6 +16,27 @@
       right: -115px;
       top: 58px;
       width: 150px;
+    }
+
+    .configuration {
+      .btnConnectCancel {
+        width: 140px;
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .connectedText {
+        position: relative;
+
+        span {
+          font-size: $tx1;
+          // Icon is getting an abnormally large height, which messes up the vertical centering
+          // of the text. Therefore, we'll absolutely position.
+          position: absolute;
+          left: -15px;
+          top: -6px;
+        }
+      }
     }
   }
 }

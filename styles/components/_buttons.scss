@@ -47,6 +47,11 @@
   &.processing {
     @include processingOverlay;
   }
+
+  .spinner {
+    width: 20px;
+    margin-right: $padSm;
+  }
 }
 
 .btnRadio {

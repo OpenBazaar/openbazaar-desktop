@@ -83,16 +83,17 @@ function authenticate(server) {
   return promise;
 }
 
-export function connect(server, options = {}) {
+export default function connect(server, options = {}) {
   if (!server instanceof ServerConfig) {
     throw new Error('Please provide a server as a ServerConfig instance.');
   }
 
-  // const curCon = getCurrentConnection();
+  const curCon = getCurrentConnection();
 
-  // if (curCon && curCon.server.id === server.id) {
-  //   throw new Error('You are already connected to the given server');
-  // }
+  if (curCon && curCon.server.id === server.id &&
+    (curCon.status === 'connected' || curCon.status === 'connecting')) {
+    throw new Error('You are already connected or connecting to the given server');
+  }
 
   log(`[${server.id.slice(0, 8)}] Will attempt to connect to server "${server.get('name')}"` +
     ` at ${server.get('serverIp')}.`);
@@ -111,6 +112,7 @@ export function connect(server, options = {}) {
   let attempt = 1;
   let socket = null;
   let connectAttempt = null;
+  let cancel = null;
 
   const getPromiseData = (status, data = {}) => {
     const aggregateData = {
@@ -129,21 +131,37 @@ export function connect(server, options = {}) {
   };
 
   const notify = (e, ...args) => {
+    currentConnection = {
+      ...getPromiseData(e, ...args),
+      status: e.status,
+      cancel,
+    };
+
     events.trigger(e.status, getPromiseData(e, ...args));
     deferred.notify(getPromiseData(e, ...args));
   };
 
   const reject = (e, ...args) => {
+    currentConnection = {
+      ...getPromiseData(e, ...args),
+      status: 'connect-attempt-failed',
+    };
+
     events.trigger('connect-attempt-failed', getPromiseData(e, ...args));
     deferred.reject(getPromiseData(e, ...args));
   };
 
   const resolve = (e, ...args) => {
+    currentConnection = {
+      ...getPromiseData(e, ...args),
+      status: 'connected',
+    };
+
     events.trigger('connected', getPromiseData(e, ...args));
     deferred.resolve(getPromiseData(e, ...args));
   };
 
-  const cancel = () => {
+  cancel = () => {
     if (socket) {
       socket.off();
       socket.close();
@@ -153,20 +171,20 @@ export function connect(server, options = {}) {
     reject('canceled');
   };
 
-  // if (curCon) {
-  //   curCon.cancel();
+  // If we're not connecting to the local bundled server,
+  // then let's ensure it's stopped.
+  if (!server.get('default') && localServer && localServer.isRunning()) {
+    deferred.notify({
+      status: 'stopping-local-server',
+      localServer,
+    });
 
-  //   if (curCon.server.get('default')) {
-  //     deferred.notify({
-  //       status: 'stopping-local-server',
-  //       localServer,
-  //     });
+    localServer.stop();
+  }
 
-  //     localServer.stop();
-  //   }
-  // }
-
-  currentConnection = { cancel };
+  if (curCon && curCon.cancel) {
+    curCon.cancel();
+  }
 
   socket = new Socket(server.socketUrl);
 
@@ -236,15 +254,18 @@ export function connect(server, options = {}) {
     connectAttemptStartTime = Date.now();
 
     const innerConnectAttempt = innerConnect()
-      .progress((status, data = {}) => notify(status, data))
-      .done((status, data = {}) => resolve(status, data))
+      .progress((status, data = {}) => notify({ status, ...data }))
+      .done((status, data = {}) => resolve({ status, ...data }))
       .fail((status, data = {}) => {
         clearTimeout(maxTimeTimeout);
 
         if (status === 'canceled') {
           return;
         } else if (attempt === opts.attempts || status === 'authentication-failed') {
-          reject(status, data);
+          reject({
+            status,
+            ...data,
+          });
         } else {
           const delay = opts.timeoutBetweenAttempts - (Date.now() - connectAttemptStartTime);
 
@@ -329,13 +350,17 @@ const showNoConnectionDialog = () => {
   .open();
 };
 
+let connectedAtLeastOnce = false;
 events.on('connected', (e) => {
+  connectedAtLeastOnce = true;
   e.socket.on('close', () => {
     showNoConnectionDialog();
   });
 });
 
-events.on('connect-attempt-failed', () => showNoConnectionDialog());
+events.on('connect-attempt-failed', () => {
+  if (!connectedAtLeastOnce) showNoConnectionDialog();
+});
 
 ipcRenderer.send('server-connect-ready');
 log('Browser has been started or refreshed.');

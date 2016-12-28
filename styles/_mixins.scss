@@ -105,10 +105,19 @@
     }
   }
 
+  // spinner will inherit text color
   .spinner {
     path,
     rect {
       fill: $col1;
     }
   }
+
+  // spinner will override inherited color if you directly add a color class to it
+  &.spinner {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }  
 }

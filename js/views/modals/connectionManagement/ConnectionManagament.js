@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import app from '../../../app';
+import { events as serverConnectEvents } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Configurations from './Configurations';
@@ -21,6 +23,8 @@ export default class extends BaseModal {
       Configurations,
       NewConfiguration,
     };
+
+    // this.listenTo(serverConnectEvents, 
   }
 
   className() {
@@ -46,6 +50,12 @@ export default class extends BaseModal {
     this.selectTab(targ);
   }
 
+  createConfigurationsTabView() {
+    return this.createChild(Configurations, {
+      collection: app.serverConfigs,
+    });
+  }
+
   selectTab(targ) {
     const tabViewName = targ.data('tab');
     let tabView = this.tabViewCache[tabViewName];
@@ -56,8 +66,12 @@ export default class extends BaseModal {
       if (this.currentTabView) this.currentTabView.$el.detach();
 
       if (!tabView) {
-        console.log('new tab view yo izzle: ' + tabViewName);
-        tabView = this.createChild(this.tabViews[tabViewName]);
+        if (this[`create${tabViewName}TabView`]) {
+          tabView = this[`create${tabViewName}TabView`].apply(this);
+        } else {
+          tabView = this.createChild(this.tabViews[tabViewName]);
+        }
+
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
       }
