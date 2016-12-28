@@ -104,4 +104,11 @@
       color: $col3;
     }
   }
+
+  .spinner {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
 }

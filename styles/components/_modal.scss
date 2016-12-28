@@ -25,7 +25,12 @@
     }
   }
 
-  &.modalTop .modalContent {
+  // These are .modalTop styles. Will also apply them to
+  // .modalScrollPage since you're really not going to want
+  // a modal that scrolls with the page and isn't positioned
+  // at the top.
+  &.modalTop .modalContent,
+  &.modalScrollPage .modalContent {
     top: $padMd;
     @include center(true, false);
     left: calc(50% - #{$chatClosed / 2});

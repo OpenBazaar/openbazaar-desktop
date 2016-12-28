@@ -112,7 +112,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} editListing tabbedModal modalTop modalScrollPage`;
+    return `${super.className()} editListing tabbedModal modalScrollPage`;
   }
 
   events() {

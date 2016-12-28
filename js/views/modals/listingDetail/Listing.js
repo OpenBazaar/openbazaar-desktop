@@ -57,7 +57,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} listingDetail modalScrollPage modalTop`;
+    return `${super.className()} listingDetail modalScrollPage`;
   }
 
   events() {

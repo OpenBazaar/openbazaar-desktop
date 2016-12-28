@@ -1,0 +1,21 @@
+.connectionManagement {
+  .connectionManagementConfigurations {
+    position: relative;
+
+    .statusBar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 115px;
+      height: 58px;
+    }
+
+    // this was the least ugly way I found to do this :(
+    .borderFillIn {
+      position: absolute;
+      right: -115px;
+      top: 58px;
+      width: 150px;
+    }
+  }
+}
