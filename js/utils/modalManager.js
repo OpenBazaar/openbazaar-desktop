@@ -1,8 +1,10 @@
 import About from '../views/modals/About/About';
 import EditListing from '../views/modals/editListing/EditListing';
+import DebugLog from '../views/modals/DebugLog';
 
 let aboutModal;
-let editListingModal;
+let editListindModal;
+let debugLogModal;
 
 export function launchEditListingModal(modalOptions = {}) {
   if (editListingModal) editListingModal.remove();
@@ -25,3 +27,13 @@ export function launchAboutModal(modalOptions = {}) {
 }
 
 // todo: give opening of the settings modal the same treatment
+
+export function launchDebugLogModal(modalOptions = {}) {
+  if (debugLogModal) debugLogModal.remove();
+
+  debugLogModal = new DebugLog(modalOptions)
+    .render()
+    .open();
+
+  return debugLogModal;
+}

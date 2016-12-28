@@ -13,14 +13,14 @@ export default class {
    * @constructor
    * @param {string} url - The websocket url.
    */
-  constructor(url) {
+  constructor(url, options = {}) {
     if (!url) {
       throw new Error('Please provide an url.');
     }
 
     _.extend(this, Events);
     this.url = url;
-    this.connect();
+    if (options.autoConnect) this.connect();
   }
 
   /**
