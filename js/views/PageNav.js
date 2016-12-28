@@ -5,6 +5,7 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
+import AboutModal from './modals/About/About';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { isHiRez } from '../utils/responsive';
@@ -23,6 +24,7 @@ export default class extends View {
         'focusin .js-addressBar': 'onFocusInAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navAboutModal': 'navAboutClick',
         'click .js-navCreateListing': 'navCreateListingClick',
       },
       navigable: false,
@@ -195,6 +197,13 @@ export default class extends View {
   navSettingsClick() {
     if (!this.settingsModal || !this.settingsModal.isOpen()) {
       this.settingsModal = new SettingsModal().render().open();
+    }
+    this.togglePopMenu();
+  }
+
+  navAboutClick() {
+    if (!this.settingsModal || !this.settingsModal.isOpen()) {
+      this.settingsModal = new AboutModal().render().open();
     }
     this.togglePopMenu();
   }
