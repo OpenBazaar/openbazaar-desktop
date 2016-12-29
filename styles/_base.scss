@@ -103,6 +103,12 @@ ul, ol {
   background-repeat: no-repeat;
 }
 
+.trumbowyg .trumbowyg-editor {
+  height: auto !important;
+  /* gross hack to stop trumbowyg from setting inline height to huge numbers when external
+  images are added */
+}
+
 #appFrame {
   position: absolute;
   height: 100%;
