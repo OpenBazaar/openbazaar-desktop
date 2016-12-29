@@ -86,11 +86,10 @@
   </div>
 
   <% if (ob.item.images.length) { %>
-    <div class="contentBox clrP clrBr clrSh3" id="photoSection">
-      <div class="photoSelected cropit-preview js-photoSelected" data-index="0">
+    <div class="contentBox clrP clrBr clrSh3 photoSection js-photoSection">
+      <div class="flexCent photoSelected js-photoSelected" data-index="0">
+        <img class="photoSelectedInner js-photoSelectedInner">
       </div>
-      <input type="file" class="cropit-image-input hide">
-      <input type="range" class="cropit-image-zoom-input">
       <% if (ob.item.images.length > 1) { %>
         <button class="btn ion-ios-arrow-left photoPrev js-photoPrev"></button>
         <button class="btn ion-ios-arrow-right photoNext js-photoNext"></button>

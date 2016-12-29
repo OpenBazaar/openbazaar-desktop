@@ -7,9 +7,9 @@ import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
 import 'select2';
 import { getTranslatedCountries } from '../../../data/countries';
-import 'cropit';
 import is from 'is_js';
 import '../../../utils/velocity';
+import 'jquery-zoom';
 
 
 export default class extends BaseModal {
@@ -158,8 +158,15 @@ export default class extends BaseModal {
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
-    this.$photoSection.cropit('imageSrc', phSrc);
-    this.$photoSelected.attr('data-index', photoIndex);
+    this.$photoSelected.trigger('zoom.destroy'); // old zoom must be removed
+    this.$photoSelectedInner.attr('src', phSrc);
+
+    this.$photoSelected.attr('data-index', photoIndex).zoom({
+      url: phSrc,
+      on: 'grab',
+      onZoomIn: () => { this.$photoSelectedInner.addClass('hide'); },
+      onZoomOut: () => { this.$photoSelectedInner.removeClass('hide'); },
+    });
   }
 
   setActivePhotoThumbnail(thumbIndex) {
@@ -278,12 +285,17 @@ export default class extends BaseModal {
 
   get $photoSection() {
     return this._$photoSection ||
-      (this._$photoSection = this.$('#photoSection'));
+      (this._$photoSection = this.$('.js-photoSection'));
   }
 
   get $photoSelected() {
     return this._$photoSelected ||
       (this._$photoSelected = this.$('.js-photoSelected'));
+  }
+
+  get $photoSelectedInner() {
+    return this._$photoSelectedInner ||
+      (this._$photoSelectedInner = this.$('.js-photoSelectedInner'));
   }
 
   get $shippingSection() {
@@ -333,6 +345,8 @@ export default class extends BaseModal {
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
       this._$photoSection = null;
+      this._$photoSelected = null;
+      this._$photoSelectedInner = null;
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
@@ -341,21 +355,8 @@ export default class extends BaseModal {
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
 
-      const initialPhotoHash = this.model.get('listing').toJSON().item.images[0].original;
-      const initialPhoto = app.getServerUrl(`ipfs/${initialPhotoHash}`);
-
-      setTimeout(() => {
-        this.$photoSection.cropit({
-          smallImage: 'allow',
-          allowDragNDrop: false,
-          maxZoom: 2,
-        });
-
-        this.$photoSection.cropit('imageSrc', initialPhoto);
-      }, 0);
-
+      this.setSelectedPhoto(0);
       this.$('#shippingDestinations').select2();
-
       this.renderShippingDestinations(this.defaultCountry);
     });
 
