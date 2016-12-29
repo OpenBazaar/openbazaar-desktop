@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import app from '../../../app';
-import { events as serverConnectEvents } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Configurations from './Configurations';
@@ -23,8 +22,6 @@ export default class extends BaseModal {
       Configurations,
       NewConfiguration,
     };
-
-    // this.listenTo(serverConnectEvents, 
   }
 
   className() {

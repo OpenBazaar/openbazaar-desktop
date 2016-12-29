@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { capitalize } from '../../../utils/string';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -19,11 +20,30 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnClose': 'onClickClose',
+      'click .connectingMsg [class^="js-"], .connectingMsg [class*=" js-"]': 'onMsgContentClick',
     };
   }
 
   onClickClose() {
     this.trigger('closeClick');
+  }
+
+  // User of this view may embed CTA's in the msg. This is a generic handler to
+  // trigger events for them.
+  onMsgContentClick(e) {
+    // If the the el has a '.js-<class>' class, we'll trigger a
+    // 'click<Class>' event from this view.
+    const events = [];
+
+    e.currentTarget.classList.forEach((className) => {
+      if (className.startsWith('js-')) events.push(className.slice(3));
+    });
+
+    if (events.length) {
+      events.forEach(event => {
+        this.trigger(`click${capitalize(event)}`, { view: this, e });
+      });
+    }
   }
 
   setState(state, replace = false) {

@@ -166,7 +166,7 @@ export default function connect(server, options = {}) {
     }
 
     if (connectAttempt) connectAttempt.cancel();
-    reject('canceled');
+    // reject('canceled');
   };
 
   // If we're not connecting to the local bundled server,
@@ -275,7 +275,7 @@ export default function connect(server, options = {}) {
       });
 
     const attemptConnectionCancel = () => {
-      reject('canceled');
+      reject({ reason: 'canceled' });
       clearTimeout(maxTimeTimeout);
       clearTimeout(nextAttemptTimeout);
       innerConnectAttempt.cancel();

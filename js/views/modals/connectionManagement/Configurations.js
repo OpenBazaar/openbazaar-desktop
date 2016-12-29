@@ -24,7 +24,11 @@ export default class extends baseVw {
     this.listenTo(serverConnectEvents, 'connecting', e => {
       this.statusBarMessage.setState({
         status: 'connecting',
-        msg: `Attempting to connect to ${e.server.get('name')}...`,
+        msg: app.polyglot.t('connectionManagement.statusBar.connectAttemptMsg', {
+          serverName: e.server.get('name'),
+          cancelConnAttempt: '<a class="js-cancelLink">' +
+            `${app.polyglot.t('connectionManagement.statusBar.cancelConnAttempt')}</a>`,
+        }),
       });
 
       this.configViews.forEach(configVw => {
@@ -37,23 +41,27 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connect-attempt-failed', e => {
-      if (this.moo) return;
+      // if (this.moo) return;
 
-      this.moo = 'shoo';
-      
+      // this.moo = 'shoo';
+
       let msg = '';
 
       if (e.reason === 'authentication-failed') {
         msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
           serverName: e.server.get('name'),
-          errorPreface: '<span class="txtB">' +
+          errorPreface: '<span class="txB">' +
             `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
           needHelpLink: `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`,
         });
-      } else {
+      } else if (e.reason === 'canceled') {
+        this.$statusBarOuterWrap.addClass('hide');
+        this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
+        return;
+      } else { // generic unable to reach server
         msg = app.polyglot.t('connectionManagement.statusBar.errorUnableToReachServer', {
           serverName: e.server.get('name'),
-          errorPreface: '<span class="txtB">' +
+          errorPreface: '<span class="txB">' +
             `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
           needHelpLink: `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`,
         });
@@ -90,11 +98,17 @@ export default class extends baseVw {
   }
 
   onConfigConnectClick(e) {
-    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), { attempts: 2 });
+    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), { attempts: 5 });
   }
 
   getConfigVw(id) {
     return this.configViews.filter(configVw => configVw.model.id === id)[0];
+  }
+
+  cancelConnAttempt() {
+    const curConn = getCurrentConnection();
+
+    if (curConn && curConn.cancel) curConn.cancel();
   }
 
   createConfigView(options = {}) {
@@ -113,6 +127,7 @@ export default class extends baseVw {
 
     const configVw = this.createChild(Configuration, opts);
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
+    this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
     return configVw;
   }
 
@@ -142,6 +157,8 @@ export default class extends baseVw {
       this.listenTo(this.statusBarMessage, 'closeClick',
         () => this.$statusBarOuterWrap.addClass('hide'));
       this.$('.js-statusBarMessageContainer').append(this.statusBarMessage.render().el);
+
+      this.listenTo(this.statusBarMessage, 'clickCancelLink', () => this.cancelConnAttempt());
 
       this._$statusBarOuterWrap = null;
     });

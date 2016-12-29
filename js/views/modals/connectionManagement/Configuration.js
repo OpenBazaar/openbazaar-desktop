@@ -23,11 +23,16 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnConnect': 'onConnectClick',
+      'click .js-btnCancel': 'onCancelClick',
     };
   }
 
   onConnectClick() {
     this.trigger('connectClick', { view: this });
+  }
+
+  onCancelClick() {
+    this.trigger('cancelClick', { view: this });
   }
 
   setState(state, replace = false) {

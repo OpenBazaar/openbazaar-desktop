@@ -224,12 +224,12 @@
     }
   },
   "connectionManagement": {
-    "cancelConnAttempt": "Cancel",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
       "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{needHelpLink}",
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{needHelpLink}",
+      "cancelConnAttempt": "Cancel",
       "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
     }
   },
