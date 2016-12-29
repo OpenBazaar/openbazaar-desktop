@@ -54,9 +54,8 @@
     "node-sass": "^3.13.0",
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.2.0",
-    "sanitize-html": "^1.13.0",
-    "trumbowyg": "^2.4.2",
-    "sinon": "^1.17.6"
+    "sinon": "^1.17.6",
+    "trumbowyg": "^2.4.2"
   },
   "pre-commit": [
     "lint",

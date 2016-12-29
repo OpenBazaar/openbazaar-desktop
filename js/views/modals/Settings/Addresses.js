@@ -1,7 +1,7 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import { alert } from '../SimpleMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 import AddressesForm from './AddressesForm';
 import AddressesList from './AddressesList';
 import ShippingAddress from '../../../models/ShippingAddress';
@@ -73,7 +73,7 @@ export default class extends baseVw {
         const errMsg = args[0] && args[0].responseJSON &&
           args[0].responseJSON.reason || '';
 
-        alert(
+        openSimpleMessage(
           app.polyglot.t('settings.addressesTab.deleteAddressErrorAlertTitle',
             { name: `<em>${truncatedName}</em>` }),
           errMsg
@@ -138,7 +138,7 @@ export default class extends baseVw {
 
           const errMsg = args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
 
-          alert(
+          openSimpleMessage(
             app.polyglot.t('settings.addressesTab.addAddressErrorAlertTitle',
               { name: `<em>${truncatedName}</em>` }),
             errMsg

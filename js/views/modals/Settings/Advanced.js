@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import { alert } from '../SimpleMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -81,7 +81,7 @@ export default class extends baseVw {
           const errMsg = args[0] && args[0].responseJSON &&
             args[0].responseJSON.reason || '';
 
-          alert(app.polyglot.t('settings.advancedTab.saveErrorAlertTitle'), errMsg);
+          openSimpleMessage(app.polyglot.t('settings.advancedTab.saveErrorAlertTitle'), errMsg);
 
           statusMessage.update({
             msg: app.polyglot.t('settings.advancedTab.statusSaveFailed'),

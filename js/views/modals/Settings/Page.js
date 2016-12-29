@@ -3,7 +3,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
-import { alert } from '../SimpleMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 import 'cropit';
 
 export default class extends baseVw {
@@ -187,7 +187,7 @@ export default class extends baseVw {
             args && args[0] && args[0].responseJSON &&
             args[0].responseJSON.reason || '';
 
-          alert(app.polyglot.t('settings.pageTab.saveErrorAlertTitle'), errMsg);
+          openSimpleMessage(app.polyglot.t('settings.pageTab.saveErrorAlertTitle'), errMsg);
 
           statusMessage.update({
             msg: app.polyglot.t('settings.pageTab.statusSaveFailed'),
@@ -208,7 +208,7 @@ export default class extends baseVw {
   }
 
   showAvatarSizeWarning(loadedSize, bodyText = 'settings.loadAvatarSizeError.body') {
-    alert(
+    openSimpleMessage(
       app.polyglot.t('settings.loadAvatarSizeError.title'),
       app.polyglot.t(bodyText,
         { minWidth: this.avatarMinWidth,
@@ -219,7 +219,7 @@ export default class extends baseVw {
   }
 
   showHeaderSizeWarning(loadedSize, bodyText = 'settings.loadHeaderSizeError.body') {
-    alert(
+    openSimpleMessage(
       app.polyglot.t('settings.loadHeaderSizeError.title'),
       app.polyglot.t(bodyText,
         { minWidth: this.headerMinWidth,
