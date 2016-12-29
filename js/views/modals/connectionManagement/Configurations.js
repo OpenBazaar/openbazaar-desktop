@@ -41,10 +41,6 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connect-attempt-failed', e => {
-      // if (this.moo) return;
-
-      // this.moo = 'shoo';
-
       let msg = '';
 
       if (e.reason === 'authentication-failed') {
@@ -128,6 +124,8 @@ export default class extends baseVw {
     const configVw = this.createChild(Configuration, opts);
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
     this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
+    this.listenTo(configVw, 'editClick', e => this.trigger('editConfig', { model: e.view.model }));
+
     return configVw;
   }
 

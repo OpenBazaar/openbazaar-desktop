@@ -24,6 +24,7 @@ export default class extends baseVw {
     return {
       'click .js-btnConnect': 'onConnectClick',
       'click .js-btnCancel': 'onCancelClick',
+      'click .js-btnEdit': 'onEditClick',
     };
   }
 
@@ -33,6 +34,11 @@ export default class extends baseVw {
 
   onCancelClick() {
     this.trigger('cancelClick', { view: this });
+  }
+
+  onEditClick() {
+    console.log('suzy says musy');
+    this.trigger('editClick', { view: this });
   }
 
   setState(state, replace = false) {
