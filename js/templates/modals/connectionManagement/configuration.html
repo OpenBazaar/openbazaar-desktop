@@ -1,4 +1,4 @@
-<div class="flexVCent">
+<div class="flexVCent clrT">
   <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.name %></div>
   <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.serverIp %></div>
   <div class="col4">
@@ -7,7 +7,7 @@
       <div class="txB connectedText"><span class="ion-ios-checkmark-empty clrTEmph1"></span>Connected</div>
       <% } else { %>
       <div class="gutterHTn">
-        <a class="iconBtn clrP clrBr ion-trash-b"></a>
+        <a class="iconBtn clrP clrBr ion-trash-b js-btnDelete <% if (ob.deleteConfirmOn) print('confirmDisabled') %>"></a>
         <a class="iconBtn clrP clrBr ion-ios-gear js-btnEdit"></a>
         <% if (ob.status === 'connecting') { %>
           <a class="btn clrP clrBr js-btnCancel btnConnectCancel">
@@ -26,3 +26,13 @@
 <% if (ob.status === 'connect-attempt-failed') { %>
 <div class="errorBorder clrErr"></div>
 <% } %>
+<div class="deleteConfirm arrowBoxTop border clrBr clrP clrT txCtr pad <% if (!ob.deleteConfirmOn) print('hide') %>">
+  <div class="tx3 txB rowSm">Are you sure?</div>
+  <p class="clrT2">The server configuration will be deleted. This will not delete the actual server.</p>
+  <hr class="clrBr row" />
+
+  <div class="flexHRight flexVCent gutterHLg">
+    <a class="js-deleteConfirmCancel">Cancel</a>
+    <a class="btn clrP clrBr js-deleteConfirmYes">Yes, delete</a>
+  </div>
+</div>

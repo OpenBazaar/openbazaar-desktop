@@ -25,6 +25,9 @@ export default class extends baseVw {
       'click .js-btnConnect': 'onConnectClick',
       'click .js-btnCancel': 'onCancelClick',
       'click .js-btnEdit': 'onEditClick',
+      'click .js-btnDelete': 'onDeleteClick',
+      'click .js-deleteConfirmYes': 'onDeleteConfirm',
+      'click .js-deleteConfirmCancel': 'onDeleteConfirmCancel',
     };
   }
 
@@ -37,8 +40,20 @@ export default class extends baseVw {
   }
 
   onEditClick() {
-    console.log('suzy says musy');
     this.trigger('editClick', { view: this });
+  }
+
+  onDeleteClick() {
+    this.setState({ deleteConfirmOn: true });
+  }
+
+  onDeleteConfirm() {
+    this.trigger('delete', { view: this });
+    this.setState({ deleteConfirmOn: false });
+  }
+
+  onDeleteConfirmCancel() {
+    this.setState({ deleteConfirmOn: false });
   }
 
   setState(state, replace = false) {

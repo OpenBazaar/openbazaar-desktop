@@ -121,3 +121,13 @@
     }
   }  
 }
+
+@mixin triangle($width, $color: inherit) {
+  width: 0;
+  height: 0;
+  border-top: $width solid transparent;
+  border-bottom: $width solid transparent;
+  border-right-width: $width;
+  border-right-style: solid;
+  border-right-color: $color;
+}

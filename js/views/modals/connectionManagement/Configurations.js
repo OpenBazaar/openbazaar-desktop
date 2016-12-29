@@ -74,9 +74,13 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connected', e => {
+      this.$statusBarOuterWrap.addClass('hide');
       this.getConfigVw(e.server.id)
         .setState({ status: 'connected' });
     });
+
+    this.listenTo(this.collection, 'remove', (cl, md, opts) =>
+      this.configViews[opts.index].remove());
   }
 
   className() {
@@ -94,7 +98,7 @@ export default class extends baseVw {
   }
 
   onConfigConnectClick(e) {
-    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), { attempts: 5 });
+    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), { attempts: 2 });
   }
 
   getConfigVw(id) {
@@ -125,6 +129,7 @@ export default class extends baseVw {
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
     this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
     this.listenTo(configVw, 'editClick', e => this.trigger('editConfig', { model: e.view.model }));
+    this.listenTo(configVw, 'delete', e => this.collection.remove(e.view.model));
 
     return configVw;
   }

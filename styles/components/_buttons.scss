@@ -52,6 +52,11 @@
     width: $spinnerSm;
     margin-right: $padSm;
   }
+
+  &.confirmDisabled {
+    border-width: 0;
+    @include disabled;
+  }
 }
 
 .btnRadio {

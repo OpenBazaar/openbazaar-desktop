@@ -80,6 +80,18 @@
         top: 0;
         bottom: 0;
       }
+
+      .deleteConfirm {
+        display: block;
+        position: absolute;
+        right: 83px;
+        width: 245px;
+        transform: translateY(7px);
+      }
+
+      &:first-child .deleteConfirm {
+        display: none;
+      }
     }
   }
 }
