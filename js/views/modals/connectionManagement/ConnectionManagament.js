@@ -53,7 +53,7 @@ export default class extends BaseModal {
 
     this.listenTo(configTab, 'editConfig',
       e => this.selectTab('ConfigForm', { configFormModel: e.model }));
-    this.listenTo(configTab, 'newClick', e => this.selectTab('ConfigForm'));
+    this.listenTo(configTab, 'newClick', () => this.selectTab('ConfigForm'));
 
     return configTab;
   }
