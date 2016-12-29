@@ -238,7 +238,6 @@ export default class extends baseVw {
       const headerPrev = this.$('.js-headerPreview');
       const headerInpt = this.$('#headerInput');
       this.headerCropper = this.$('#headerCropper');
-      this.headerZoomMsg = this.$('.js-headerZoomWarning');
 
       // if the avatar or header exist, don't count the first load as a change
       this.avatarLoadedOnRender =
