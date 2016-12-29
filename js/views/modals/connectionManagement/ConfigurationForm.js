@@ -24,7 +24,13 @@ export default class extends baseVw {
     loadTemplate('modals/connectionManagement/configurationForm.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
+        errors: this.model.validationError || {},
       }));
+
+      if (!this.rendered) {
+        this.rendered = true;
+        setTimeout(() => this.$('.js-inputName').focus());
+      }
     });
 
     return this;

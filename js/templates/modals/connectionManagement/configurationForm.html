@@ -11,9 +11,85 @@
   </div>
   <hr class="clrBr rowLg" />
 
-  <% if (ob.name) { %>
-    <p>My name is <%= ob.name %></p>
-  <% } else { %>
-    <p>I gotz no name yo.</p>
-  <% } %>  
+  <form class="padMdKids padStack">
+    <div class="flexRow">
+      <div class="col3">
+        <!-- <label for="settingsName"><%= ob.polyT('settings.name') %></label> -->
+        <label for="serverConfigName">Name</label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
+        <input type="text" class="clrBr js-inputName" name="name" id="serverConfigName" value="<%= ob.name %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigServerIp">Server IP</label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.serverIp) print(ob.formErrorTmpl({ errors: ob.errors.serverIp })) %>
+        <input type="text" class="clrBr" name="serverIp" id="serverConfigServerIp" value="<%= ob.serverIp %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigUsername">Username</label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.username) print(ob.formErrorTmpl({ errors: ob.errors.username })) %>
+        <input type="text" class="clrBr" name="username" id="serverConfigUsername" value="<%= ob.username %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigPassword">Password</label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
+        <input type="password" class="clrBr" name="username" id="serverConfigPassword" value="<%= ob.password %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>SSL</label>
+      </div>
+      <div class="col9">
+        <% if (ob.errors.ssl) print(ob.formErrorTmpl({ errors: ob.errors.ssl })) %>
+        <div class="btnStrip">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="SSL"
+                   value="true"
+                   id="serverConfigSSLOn"
+                   data-var-type="boolean"
+            <% if(ob.SSL) { %>checked<% } %>>
+            <label for="serverConfigSSLOn">On</label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="SSL"
+                   value="false"
+                   id="serverConfigSSLOff"
+                   data-var-type="boolean"
+            <% if(!ob.SSL) { %>checked<% } %>>
+            <label for="settingsNSFWInputFalse">Off</label>
+          </div>
+        </div>
+      </div>
+    </div>    
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigPort">Port</label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>
+        <input type="text" class="clrBr" name="username" id="serverConfigPort" value="<%= ob.port %>">
+      </div>
+    </div>    
+  </form>
+
+  <hr class="clrBr" />
+  <div class="flexHRight">
+    <a class="btn clrP clrBr js-save">Save - t</a>
+  </div>
 </div>
