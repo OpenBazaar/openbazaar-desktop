@@ -4,30 +4,26 @@ import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    if (!options.model) {
-      throw new Error('Please provide a server configuration model.');
-    }
-
     super(options);
 
     this._state = {
-      status: 'not-connected',
+      msg: '',
       ...options.initialState || {},
     };
   }
 
   className() {
-    return 'configuration';
+    return 'statusBarMessage ';
   }
 
   events() {
     return {
-      'click .js-btnConnect': 'onConnectClick',
+      'click .js-btnClose': 'onClickClose',
     };
   }
 
-  onConnectClick() {
-    this.trigger('connectClick', { view: this });
+  onClickClose() {
+    this.trigger('closeClick');
   }
 
   setState(state, replace = false) {
@@ -48,11 +44,8 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/connectionManagement/configuration.html', (t) => {
-      this.$el.html(t({
-        ...this.model.toJSON(),
-        ...this._state,
-      }));
+    loadTemplate('modals/connectionManagement/statusBar.html', (t) => {
+      this.$el.html(t(this._state));
     });
 
     return this;

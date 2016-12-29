@@ -1,9 +1,11 @@
+import app from '../../../app';
 import
   serverConnect,
   { getCurrentConnection, events as serverConnectEvents } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Configuration from './Configuration';
+import StatusBar from './StatusBar';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -20,6 +22,11 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connecting', e => {
+      this.statusBarMessage.setState({
+        status: 'connecting',
+        msg: `Attempting to connect to ${e.server.get('name')}...`,
+      });
+
       this.configViews.forEach(configVw => {
         if (configVw.model.id === e.server.id) {
           configVw.setState({ status: 'connecting' });
@@ -30,8 +37,41 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connect-attempt-failed', e => {
+      if (this.moo) return;
+
+      this.moo = 'shoo';
+      
+      let msg = '';
+
+      if (e.reason === 'authentication-failed') {
+        msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
+          serverName: e.server.get('name'),
+          errorPreface: '<span class="txtB">' +
+            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+          needHelpLink: `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`,
+        });
+      } else {
+        msg = app.polyglot.t('connectionManagement.statusBar.errorUnableToReachServer', {
+          serverName: e.server.get('name'),
+          errorPreface: '<span class="txtB">' +
+            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+          needHelpLink: `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`,
+        });
+      }
+
+      this.statusBarMessage.setState({
+        status: 'connect-attempt-failed',
+        msg,
+      });
+      this.$statusBarOuterWrap.removeClass('hide');
+
       this.getConfigVw(e.server.id)
         .setState({ status: 'connect-attempt-failed' });
+    });
+
+    this.listenTo(serverConnectEvents, 'connected', e => {
+      this.getConfigVw(e.server.id)
+        .setState({ status: 'connected' });
     });
   }
 
@@ -50,7 +90,7 @@ export default class extends baseVw {
   }
 
   onConfigConnectClick(e) {
-    serverConnect(this.collection.at(this.configViews.indexOf(e.view)));
+    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), { attempts: 2 });
   }
 
   getConfigVw(id) {
@@ -76,6 +116,11 @@ export default class extends baseVw {
     return configVw;
   }
 
+  get $statusBarOuterWrap() {
+    return this._$statusBarOuterWrap ||
+      (this._$statusBarOuterWrap = this.$('.js-statusBarOuterWrap'));
+  }
+
   render() {
     loadTemplate('modals/connectionManagement/configurations.html', (t) => {
       this.$el.html(t());
@@ -91,6 +136,14 @@ export default class extends baseVw {
       });
 
       this.$('.js-serverConfigsContainer').html(configContainer);
+
+      if (this.statusBarMessage) this.statusBarMessage.remove();
+      this.statusBarMessage = this.createChild(StatusBar);
+      this.listenTo(this.statusBarMessage, 'closeClick',
+        () => this.$statusBarOuterWrap.addClass('hide'));
+      this.$('.js-statusBarMessageContainer').append(this.statusBarMessage.render().el);
+
+      this._$statusBarOuterWrap = null;
     });
 
     return this;

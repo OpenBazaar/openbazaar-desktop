@@ -1,4 +1,4 @@
-<div class="flexVCent" style="height: 57px">
+<div class="flexVCent">
   <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.name %></div>
   <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.serverIp %></div>
   <div class="col4">
@@ -11,14 +11,18 @@
         <a class="iconBtn clrP clrBr ion-ios-gear"></a>
         <% if (ob.status === 'connecting') { %>
           <a class="btn clrP clrBr js-btnCancel btnConnectCancel">
-            <%= ob.spinner() %>
+            <%= ob.spinner({ className: 'spinnerSm' }) %>
             Cancel (t yo)
           </a>
         <% } else { %>
-          <a class="btn clrP clrBr js-btnConnect btnConnectCancel">Connect (t yo)</a>
+          <% const btnText = ob.status === 'connect-attempt-failed' ? 'Retry (t)' : 'Connect (t yo)' %>
+          <a class="btn clrP clrBr js-btnConnect btnConnectCancel"><%= btnText %></a>
         <% } %>
       </div>
       <% } %>
     </div>
   </div>
 </div>
+<% if (ob.status === 'connect-attempt-failed') { %>
+<div class="errorBorder clrErr"></div>
+<% } %>

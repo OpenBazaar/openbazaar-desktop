@@ -114,9 +114,8 @@ export default function connect(server, options = {}) {
   let connectAttempt = null;
   let cancel = null;
 
-  const getPromiseData = (status, data = {}) => {
+  const getPromiseData = (data = {}) => {
     const aggregateData = {
-      status,
       localServer,
       server,
       socket,
@@ -130,35 +129,34 @@ export default function connect(server, options = {}) {
     return aggregateData;
   };
 
-  const notify = (e, ...args) => {
+  const notify = (e) => {
     currentConnection = {
-      ...getPromiseData(e, ...args),
-      status: e.status,
+      ...getPromiseData(e),
       cancel,
     };
 
-    events.trigger(e.status, getPromiseData(e, ...args));
-    deferred.notify(getPromiseData(e, ...args));
+    events.trigger(e.status, getPromiseData(e));
+    deferred.notify(getPromiseData(e));
   };
 
-  const reject = (e, ...args) => {
+  const reject = (e) => {
     currentConnection = {
-      ...getPromiseData(e, ...args),
+      ...getPromiseData(e),
       status: 'connect-attempt-failed',
     };
 
-    events.trigger('connect-attempt-failed', getPromiseData(e, ...args));
-    deferred.reject(getPromiseData(e, ...args));
+    events.trigger('connect-attempt-failed', getPromiseData(e));
+    deferred.reject(getPromiseData(e));
   };
 
-  const resolve = (e, ...args) => {
+  const resolve = (e) => {
     currentConnection = {
-      ...getPromiseData(e, ...args),
+      ...getPromiseData(e),
       status: 'connected',
     };
 
-    events.trigger('connected', getPromiseData(e, ...args));
-    deferred.resolve(getPromiseData(e, ...args));
+    events.trigger('connected', getPromiseData(e));
+    deferred.resolve(getPromiseData(e));
   };
 
   cancel = () => {
@@ -263,7 +261,7 @@ export default function connect(server, options = {}) {
           return;
         } else if (attempt === opts.attempts || status === 'authentication-failed') {
           reject({
-            status,
+            reason: attempt === opts.attempts ? 'unable-to-reach-server' : 'authentication-failed',
             ...data,
           });
         } else {
