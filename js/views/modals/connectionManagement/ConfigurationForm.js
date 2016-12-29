@@ -16,8 +16,12 @@ export default class extends baseVw {
 
   events() {
     return {
-      // 'click .js-save': 'save',
+      'click .js-cancel': 'onCancelClick',
     };
+  }
+
+  onCancelClick() {
+    this.trigger('cancel');
   }
 
   render() {
@@ -28,7 +32,7 @@ export default class extends baseVw {
       }));
 
       if (!this.rendered) {
-        this.rendered = true;
+        this.render = true;
         setTimeout(() => this.$('.js-inputName').focus());
       }
     });

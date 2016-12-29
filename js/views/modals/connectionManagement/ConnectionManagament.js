@@ -58,26 +58,23 @@ export default class extends BaseModal {
     return configTab;
   }
 
-  createConfigFormTabView(model) {
+  createConfigurationFormView(model) {
     if (!model) {
       throw new Error('Please provide a server config model.');
     }
 
     const configForm = new ConfigurationForm({ model });
+    this.listenTo(configForm, 'cancel', () => this.selectTab('Configurations'));
+
     return configForm;
   }
 
   selectTab(tabViewName, data = {}) {
-    // The prescence of data.configFormModel indicates we are showing the config form
-    // in Edit mode.
-    const configFormEditMode = !!data.configFormModel;
-    const cacheKey = !configFormEditMode ?
-      tabViewName : `${tabViewName}-${data.configFormModel.id}`;
     let $tabTarg = data.targ;
     let $tabs = null;
-    let tabView = this.tabViewCache[cacheKey];
+    let tabView = this.tabViewCache[tabViewName];
 
-    if (!$tabTarg && !configFormEditMode) {
+    if (!$tabTarg && !data.configFormModel) {
       // The prescence of data.configFormModel indicates we are showing the config form
       // in Edit mode and in that case there is no $tabTarg we want to highlight with
       // an active class.
@@ -91,21 +88,26 @@ export default class extends BaseModal {
       if ($tabTarg) $tabTarg.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
 
-      if (!tabView) {
-        if (tabViewName === 'ConfigForm') {
-          tabView = this.createConfigFormTabView(data.configFormModel || new ServerConfig());
-        } else if (this[`create${tabViewName}TabView`]) {
-          tabView = this[`create${tabViewName}TabView`].apply(this);
-        } else {
-          tabView = this.createChild(this.tabViews[tabViewName]);
+      if (tabViewName === 'ConfigForm') {
+        // we won't cache the Config Form tab and we'll manage it ourselves
+        this.currentTabView =
+          this.createConfigurationFormView(data.configFormModel || new ServerConfig());
+        this.$tabContent.append(this.currentTabView.render().el);
+      } else {
+        if (!tabView) {
+          if (this[`create${tabViewName}TabView`]) {
+            tabView = this[`create${tabViewName}TabView`].apply(this);
+          } else {
+            tabView = this.createChild(this.tabViews[tabViewName]);
+          }
+
+          this.tabViewCache[tabViewName] = tabView;
+          tabView.render();
         }
 
-        this.tabViewCache[cacheKey] = tabView;
-        tabView.render();
+        this.$tabContent.append(tabView.$el);
+        this.currentTabView = tabView;
       }
-
-      this.$tabContent.append(tabView.$el);
-      this.currentTabView = tabView;
     }
   }
 
