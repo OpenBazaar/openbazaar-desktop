@@ -21,6 +21,9 @@
 
     .cropit-preview-image-container {
       border-radius: 50%;
+      background-image: url(../../imgs/defaultAvatar.png);
+      background-position: center;
+      background-size: cover;
     }
   }
 
@@ -39,6 +42,12 @@
   .headerPreview {
     width: 474px;
     height: 136px;
+
+    .cropit-preview-image-container {
+      background-image: url(../../imgs/defaultHeader.png);
+      background-position: center;
+      background-size: cover;
+    }
   }
 
   .zoomWarning {
