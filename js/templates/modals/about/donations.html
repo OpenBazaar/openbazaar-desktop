@@ -22,18 +22,18 @@
     </div>
   </div>
   <hr class="clrBr" />
-  <div class="flexHCent">
-    <div id=donate-cta class="flexRow flex0">
-      <div id=donation-qr-code>
+  <div class="padLg">
+    <div id=donate-cta class="padMd flexBar">
+      <div id=donation-qr-code class="padMd">
         <img src=qr>
       </div>
-      <div id=donation-dashboard class="flexCol">
-        <h2><%= ob.polyT('about.donationsTab.bannerCountDonations') %></h2>
-        <div>
+      <div id=donation-dashboard class="padMd flexCol">
+        <h4><%= ob.polyT('about.donationsTab.bannerCountDonations') %></h4>
+        <div class="flexShrink0">
           <span id=donationAddress></span>
           <span>Copied</span>
         </div>
-        <div>
+        <div class="flexShrink0">
           <a class="btn clrP clrBr js-copyAddress flexNoShrink">
             <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
           </a>
@@ -45,7 +45,9 @@
     </div>
   </div>
   <hr class="clrBr" />
-  <p class="center">
-    <%= ob.polyT('about._blurbs.tradeFree') %>
-  </p>
+  <div class="padLg">
+    <p class="txtCent">
+      <%= ob.polyT('about._blurbs.tradeFree') %>
+    </p>
+  </div>
 </div>

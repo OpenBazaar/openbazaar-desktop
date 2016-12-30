@@ -136,19 +136,6 @@
   text-align: right;
 }
 
-.flexSpaceBetween {
-  @extend .flex;
-  justify-content: space-between;
-}
-
-.flex0 {
-  flex: 0;
-}
-
-.txtRight {
-  text-align: right;
-}
-
 .flexExpand,           //make a flex element expand to fill the remaining space
 .flexKidsExpand > * {  //make all child elements expand
   flex-grow: 1;
@@ -437,4 +424,43 @@
 
 .posF {
   position: fixed;
+}
+.about { 
+  .flexBar {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .flexSpaceBetween {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  #donation-qr-code {
+    width: 200px; 
+    height: 200px;
+    background: black;
+  } 
+
+  #donate-cta {
+    max-width: 80%;
+    margin: auto;
+  }
+
+  .flex0 {
+    flex: 0;
+  }
+
+  .txtRight {
+    text-align: right;
+  }
+
+  .txtCent {
+    text-align: center;
+  } 
+
+  .flexShrink0 {
+    flex-shrink: 0;
+  }
 }

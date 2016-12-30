@@ -22,12 +22,14 @@
     </div>
   </div>
   <hr class="clrBr" />
-  <p>
-    <%= ob.polyT('about._blurbs.tradeFree') %>
-    <%= ob.polyT('about.contributorsTab.listPreface') %>
-  </p>
-  <ul>
-    <% ob.names.forEach(name => print(`<li>${name}</li>`)) %>
-  </ul>
-  <hr class="clrBr" />
+  <div class="padMd">
+    <p>
+      <%= ob.polyT('about._blurbs.tradeFree') %>
+      <%= ob.polyT('about.contributorsTab.listPreface') %>
+    </p>
+    <ul>
+      <% ob.names.forEach(name => print(`<li>${name}</li>`)) %>
+    </ul>
+    <hr class="clrBr" />
+  </div>
 </div>
