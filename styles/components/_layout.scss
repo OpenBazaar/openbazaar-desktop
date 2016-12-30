@@ -426,6 +426,10 @@
   position: fixed;
 }
 .about { 
+  .brandSmall {
+    width: 50px;
+    hegiht: 50px;
+  }
   .flexBar {
     display: flex;
     flex-direction: row;

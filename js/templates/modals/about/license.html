@@ -1,9 +1,7 @@
 <div class="contentBox padMd clrP clrBr clrSh3">
   <div class="flexSpaceBetween">
     <div class="flexRow flex0">
-      <div>
-        <img src=ob1>
-      </div>
+      <div class="brandSmall" style="background-image: url('../imgs/baseRounded.svg');"></div>
       <div>
         <div><%= ob.polyT('about._brand') %></div>
         <div class="flexRow">
@@ -15,7 +13,7 @@
     </div>
     <h2 class="h3 clrT"><%= ob.polyT('about.licenseTab._sectionHeader') %></h2>
     <div class="txtRight">
-      <div>version</div>
+      <div><%= ob.polyT('about.version') %> <%= ob.polyT('about.versionCode') %></div>
       <a class="btn clrP clrBr js-copyAddress flexNoShrink">
         <%= ob.polyT('about.btnUpdateCheck') %>
       </a>
