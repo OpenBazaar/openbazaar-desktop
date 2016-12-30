@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../../../app';
+import serverConnect from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import ServerConfig from '../../../models/ServerConfig';
 import BaseModal from '../BaseModal';
@@ -65,8 +66,11 @@ export default class extends BaseModal {
 
     const configForm = new ConfigurationForm({ model });
     this.listenTo(configForm, 'cancel', () => this.selectTab('Configurations'));
-    this.listenTo(configForm, 'saved', () =>
-      app.serverConfigs.add(configForm.model, { merge: true }));
+    this.listenTo(configForm, 'saved', () => {
+      app.serverConfigs.add(configForm.model, { merge: true });
+      this.selectTab('Configurations');
+      serverConnect(configForm.model, { attempts: 2 });
+    });
 
     return configForm;
   }

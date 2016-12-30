@@ -166,7 +166,6 @@ export default function connect(server, options = {}) {
     }
 
     if (connectAttempt) connectAttempt.cancel();
-    // reject('canceled');
   };
 
   // If we're not connecting to the local bundled server,
@@ -189,9 +188,9 @@ export default function connect(server, options = {}) {
   const innerConnect = () => {
     const innerConnectDeferred = $.Deferred();
     let socketConnectAttempt = null;
-    const connectCancel = () => {
+    const connectCancel = (reason) => {
+      innerConnectDeferred.reject(reason || 'canceled');
       if (socketConnectAttempt) socketConnectAttempt.cancel();
-      innerConnectDeferred.reject('canceled');
     };
 
     if (server.get('default') && !localServer.isRunning && !localServer.isStopping) {
@@ -255,13 +254,20 @@ export default function connect(server, options = {}) {
       .progress((status, data = {}) => notify({ status, ...data }))
       .done((status, data = {}) => resolve({ status, ...data }))
       .fail((status, data = {}) => {
-        clearTimeout(maxTimeTimeout);
+        if (attempt === opts.attempts || status === 'authentication-failed' ||
+          status === 'outer-connect-attempt-canceled') {
+          let reason;
 
-        if (status === 'canceled') {
-          return;
-        } else if (attempt === opts.attempts || status === 'authentication-failed') {
+          if (status === 'socket-connect-failed') {
+            reason = 'unable-to-reach-server';
+          } else if (status === 'outer-connect-attempt-canceled') {
+            reason = 'canceled';
+          } else {
+            reason = status;
+          }
+
           reject({
-            reason: attempt === opts.attempts ? 'unable-to-reach-server' : 'authentication-failed',
+            reason,
             ...data,
           });
         } else {
@@ -272,23 +278,25 @@ export default function connect(server, options = {}) {
             connectAttempt = attemptConnection();
           }, delay < 0 ? 0 : delay);
         }
-      });
+      })
+      .always(() => clearTimeout(maxTimeTimeout));
 
     const attemptConnectionCancel = () => {
       reject({ reason: 'canceled' });
       clearTimeout(maxTimeTimeout);
       clearTimeout(nextAttemptTimeout);
-      innerConnectAttempt.cancel();
+      innerConnectAttempt.cancel('outer-connect-attempt-canceled');
     };
 
     maxTimeTimeout = setTimeout(() => {
-      if (innerConnectAttempt.state === 'pending') innerConnectAttempt.cancel();
+      if (innerConnectAttempt.state() === 'pending') innerConnectAttempt.cancel('timed-out');
     }, opts.maxAttemptTime);
 
     return { cancel: attemptConnectionCancel };
   };
 
-  if (attempt <= opts.attempts) connectAttempt = attemptConnection();
+  // if (attempt <= opts.attempts) connectAttempt = attemptConnection();
+  connectAttempt = attemptConnection();
 
   // wire in some logging
   deferred.progress(e => {
