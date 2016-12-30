@@ -15,7 +15,7 @@
     <div class="flexRow">
       <div class="col3">
         <!-- <label for="settingsName"><%= ob.polyT('settings.name') %></label> -->
-        <label for="serverConfigName">Name</label>
+        <label for="serverConfigName" class="required">Name</label>
       </div>
       <div class="col9">
       <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
@@ -24,7 +24,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="serverConfigServerIp">Server IP</label>
+        <label for="serverConfigServerIp" class="required">Server IP</label>
       </div>
       <div class="col9">
       <% if (ob.errors.serverIp) print(ob.formErrorTmpl({ errors: ob.errors.serverIp })) %>
@@ -33,7 +33,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="serverConfigUsername">Username</label>
+        <label for="serverConfigUsername" class="<% if (ob.isRemote) print('required') %> js-usernameLabel">Username</label>
       </div>
       <div class="col9">
       <% if (ob.errors.username) print(ob.formErrorTmpl({ errors: ob.errors.username })) %>
@@ -42,7 +42,7 @@
     </div>
     <div class="flexRow">
       <div class="col3">
-        <label for="serverConfigPassword">Password</label>
+        <label for="serverConfigPassword" class="<% if (ob.isRemote) print('required') %> js-passwordLabel">Password</label>
       </div>
       <div class="col9">
       <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
@@ -55,7 +55,7 @@
       </div>
       <div class="col9">
         <% if (ob.errors.ssl) print(ob.formErrorTmpl({ errors: ob.errors.ssl })) %>
-        <div class="btnStrip">
+        <div class="btnStrip js-btnStripSsl <% if (ob.isRemote) print('disabled') %>">
           <div class="btnRadio clrBr">
             <input type="radio"
                    name="SSL"
@@ -72,14 +72,14 @@
                    id="serverConfigSSLOff"
                    data-var-type="boolean"
             <% if(!ob.SSL) { %>checked<% } %>>
-            <label for="settingsNSFWInputFalse">Off</label>
+            <label for="serverConfigSSLOff">Off</label>
           </div>
         </div>
       </div>
     </div>    
     <div class="flexRow">
       <div class="col3">
-        <label for="serverConfigPort">Port</label>
+        <label for="serverConfigPort" class="required">Port</label>
       </div>
       <div class="col9">
       <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>

@@ -295,7 +295,6 @@ export default function connect(server, options = {}) {
     return { cancel: attemptConnectionCancel };
   };
 
-  // if (attempt <= opts.attempts) connectAttempt = attemptConnection();
   connectAttempt = attemptConnection();
 
   // wire in some logging

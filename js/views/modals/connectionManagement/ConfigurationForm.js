@@ -19,6 +19,7 @@ export default class extends baseVw {
     return {
       'click .js-cancel': 'onCancelClick',
       'click .js-save': 'onSaveClick',
+      'change #serverConfigServerIp': 'onChangeServerIp',
     };
   }
 
@@ -27,7 +28,9 @@ export default class extends baseVw {
   }
 
   onSaveClick() {
-    const save = this.model.save(this.getFormData(this.$formFields));
+    this.model.set(this.getFormData(this.$formFields));
+
+    const save = this.model.save();
 
     if (save) {
       save.done(() => this.trigger('saved', { view: this }))
@@ -35,12 +38,23 @@ export default class extends baseVw {
           // since we're saving to localStorage this really shouldn't happen
           openSimpleMessage('Unable to save server configuration');
         });
-    } else {
-      console.log('client side failed');
-      window.client = this.model;
     }
 
     this.render();
+  }
+
+  onChangeServerIp(e) {
+    if (['localhost', '127.0.0.1'].indexOf(e.target.value) !== -1) {
+      // it's a local ip
+      this.$usernameLabel.add(this.$passwordLabel)
+        .removeClass('required');
+      this.$btnStripSsl.removeClass('disabled');
+    } else {
+      this.$usernameLabel.add(this.$passwordLabel)
+        .addClass('required');
+      this.$radioSslOn[0].checked = true;
+      this.$btnStripSsl.addClass('disabled');
+    }
   }
 
   get $formFields() {
@@ -48,14 +62,39 @@ export default class extends baseVw {
       (this._$formFields = this.$('select[name], input[name], textarea[name]'));
   }
 
+  get $usernameLabel() {
+    return this._$usernameLabel ||
+      (this._$usernameLabel = this.$('.js-usernameLabel'));
+  }
+
+  get $passwordLabel() {
+    return this._$passwordLabel ||
+      (this._$passwordLabel = this.$('.js-passwordLabel'));
+  }
+
+  get $radioSslOn() {
+    return this._$radioSslOn ||
+      (this._$radioSslOn = this.$('#serverConfigSSLOn'));
+  }
+
+  get $btnStripSsl() {
+    return this._$btnStripSsl ||
+      (this._$btnStripSsl = this.$('.js-btnStripSsl'));
+  }
+
   render() {
     loadTemplate('modals/connectionManagement/configurationForm.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
+        isRemote: !this.model.isLocalServer(),
       }));
 
       this._$formFields = null;
+      this._$usernameLabel = null;
+      this._$passwordLabel = null;
+      this._$radioSslOn = null;
+      this._$btnStripSsl = null;
 
       if (!this.rendered) {
         this.rendered = true;
