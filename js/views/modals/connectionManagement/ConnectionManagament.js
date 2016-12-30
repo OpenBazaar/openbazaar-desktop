@@ -65,6 +65,8 @@ export default class extends BaseModal {
 
     const configForm = new ConfigurationForm({ model });
     this.listenTo(configForm, 'cancel', () => this.selectTab('Configurations'));
+    this.listenTo(configForm, 'saved', () =>
+      app.serverConfigs.add(configForm.model, { merge: true }));
 
     return configForm;
   }

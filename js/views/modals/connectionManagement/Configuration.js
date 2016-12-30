@@ -14,6 +14,8 @@ export default class extends baseVw {
       status: 'not-connected',
       ...options.initialState || {},
     };
+
+    this.listenTo(this.model, 'change', () => this.render());
   }
 
   className() {
@@ -48,7 +50,7 @@ export default class extends baseVw {
   }
 
   onDeleteConfirm() {
-    this.trigger('delete', { view: this });
+    this.model.destroy();
     this.setState({ deleteConfirmOn: false });
   }
 

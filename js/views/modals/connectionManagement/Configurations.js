@@ -79,8 +79,16 @@ export default class extends baseVw {
         .setState({ status: 'connected' });
     });
 
-    this.listenTo(this.collection, 'remove', (cl, md, opts) =>
-      this.configViews[opts.index].remove());
+    this.listenTo(this.collection, 'remove', (cl, md, opts) => {
+      this.configViews[opts.index].remove();
+      delete this.configViews[opts.index];
+    });
+
+    this.listenTo(this.collection, 'add', (md) => {
+      const configVw = this.createConfigView({ model: md });
+      this.configViews.push(configVw);
+      this.$serverConfigsContainer.append(configVw.render().el);
+    });
   }
 
   className() {
@@ -116,6 +124,10 @@ export default class extends baseVw {
       ...options,
     };
 
+    if (!opts.model) {
+      throw new Error('Please provide a server config model in the options.');
+    }
+
     const curConn = getCurrentConnection();
 
     if (curConn && curConn.server.id === opts.model.id) {
@@ -129,7 +141,7 @@ export default class extends baseVw {
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
     this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
     this.listenTo(configVw, 'editClick', e => this.trigger('editConfig', { model: e.view.model }));
-    this.listenTo(configVw, 'delete', e => this.collection.remove(e.view.model));
+    // this.listenTo(opt.model, 'destroy', e => this.collection.remove(e.view.model));
 
     return configVw;
   }
@@ -143,6 +155,9 @@ export default class extends baseVw {
     loadTemplate('modals/connectionManagement/configurations.html', (t) => {
       this.$el.html(t());
 
+      this.$serverConfigsContainer = this.$('.js-serverConfigsContainer');
+      this._$statusBarOuterWrap = null;
+
       this.configViews.forEach(configVw => configVw.remove());
       this.configViews = [];
 
@@ -153,7 +168,7 @@ export default class extends baseVw {
         configContainer.appendChild(configVw.render().el);
       });
 
-      this.$('.js-serverConfigsContainer').html(configContainer);
+      this.$serverConfigsContainer.html(configContainer);
 
       if (this.statusBarMessage) this.statusBarMessage.remove();
       this.statusBarMessage = this.createChild(StatusBar);
@@ -162,8 +177,6 @@ export default class extends baseVw {
       this.$('.js-statusBarMessageContainer').append(this.statusBarMessage.render().el);
 
       this.listenTo(this.statusBarMessage, 'clickCancelLink', () => this.cancelConnAttempt());
-
-      this._$statusBarOuterWrap = null;
     });
 
     return this;

@@ -46,7 +46,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
-        <input type="password" class="clrBr" name="username" id="serverConfigPassword" value="<%= ob.password %>">
+        <input type="password" class="clrBr" name="password" id="serverConfigPassword" value="<%= ob.password %>">
       </div>
     </div>
     <div class="flexRow">
@@ -83,7 +83,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>
-        <input type="text" class="clrBr" name="username" id="serverConfigPort" value="<%= ob.port %>">
+        <input type="text" class="clrBr" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number">
       </div>
     </div>    
   </form>

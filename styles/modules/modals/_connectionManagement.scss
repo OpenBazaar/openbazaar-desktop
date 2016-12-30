@@ -87,6 +87,7 @@
         right: 83px;
         width: 245px;
         transform: translateY(7px);
+        z-index: 1;
       }
 
       &:first-child .deleteConfirm {
