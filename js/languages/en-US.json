@@ -24,6 +24,9 @@
     "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
     "noResults": "No connected peers"
   },
+  "serverConnect": {
+    "defaultServerName": "Default Server"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
@@ -86,9 +89,34 @@
   },
   "settings": {
     "settingsLabel": "Settings",
-    "generalTab": "General",
-    "pageTab": "Page",
-    "addressesTab": "Addresses",
+    "generalTab": {
+      "sectionName": "General",
+      "statusSaving": "Saving general settings...",
+      "statusSaveComplete": "General settings saved.",
+      "statusSaveFailed": "Unable to save general settings.",
+      "saveErrorAlertTitle": "Unable to save general settings"
+    },
+    "pageTab": {
+      "sectionPage": "Page",
+      "sectionLinks": "Links",
+      "sectionAbout": "About",
+      "sectionTheme": "Theme",
+      "statusSaving": "Saving page settings...",
+      "statusSaveComplete": "Page settings saved.",
+      "statusSaveFailed": "Unable to save page settings.",
+      "saveErrorAlertTitle": "Unable to save page settings"
+    },
+    "addressesTab": {
+      "sectionName": "Addresses",
+      "statusDeletingAddress": "Deleting address %{name}...",
+      "statusDeleteAddressComplete": "Address %{name} deleted.",
+      "statusDeleteAddressFailed": "Unable to delete address %{name}.",
+      "deleteAddressErrorAlertTitle": "Unable to delete address %{name}",
+      "statusAddingAddress": "Adding address %{name}...",
+      "statusAddAddressComplete": "Address %{name} added.",
+      "statusAddAddressFailed": "Unable to add address %{name}.",
+      "addAddressErrorAlertTitle": "Unable to add address %{name}"
+    },
     "advancedTab": {
       "_sectionName": "Advanced",
       "smtp": {
@@ -123,7 +151,11 @@
         "windowControlStyle": "Window Style",
         "macOS": "Mac",
         "windowsOS": "Windows"
-      }
+      },
+      "statusSaving": "Saving advanced settings...",
+      "statusSaveComplete": "Advanced settings saved.",
+      "statusSaveFailed": "Unable to save advanced settings.",
+      "saveErrorAlertTitle": "Unable to save advanced settings"
     },
     "language": "Language",
     "country": "Country",
@@ -139,21 +171,9 @@
     "avatar": "Avatar",
     "loadAvatar": "Select Photo",
     "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
-    "loadAvatarSizeError": {
-      "title": "Your avatar image is too small.",
-      "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
-      "bodyRotated": "When rotated this image is %{curHeight}px wide by %{curWidth}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
-    },
-    "loadAvatarZoomTooSmall": "This image is too small to zoom.",
     "header": "Cover Photo",
     "loadHeader": "Select Photo",
     "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
-    "loadHeaderSizeError": {
-      "title": "Your header image is too small",
-      "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
-      "bodyRotated": "When rotated this image is %{curHeight}px wide by %{curWidth}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
-    },
-    "loadHeaderZoomTooSmall": "This image is too small to zoom.",
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
@@ -165,6 +185,7 @@
     "secondaryColor": "Secondary Color",
     "textColor": "Text Color",
     "addresses": {
+      "sectionName": "New Address",
       "name": "Name",
       "company": "Company",
       "street": "Street",
@@ -178,7 +199,6 @@
     "statusSaving": "Saving settings...",
     "statusSaveFailed": "Settings failed to save.",
     "statusSaveComplete": "Settings saved.",
-    "statusSafeToClose": "Save has completed. You may close the modal",
     "btnYes": "Yes",
     "btnNo": "No",
     "btnSave": "Save",
@@ -293,13 +313,15 @@
           "LOCAL_PICKUP": "Local Pickup"
         },
         "btnAddShippingOption": "Add Shipping Option",
+        "btnDeleteShippingOption": "Delete Shipping Option",
         "services": {
           "nameLabel": "Service",
           "namePlaceholder": "e.g. Standard, Express, Overnight",
           "estimatedDeliveryLabel": "Est. Delivery Time",
           "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
           "priceLabel": "Price",
-          "pricePlaceholder": "0.00"
+          "pricePlaceholder": "0.00",
+          "addService": "+ Add Service"
         }
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
@@ -316,6 +338,11 @@
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
     "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
     "fetchingRatesFailStatusMsgRetryLink": "retry"
+  },
+  "debugLog": {
+    "copiedToClipboard": "Copied to clipboard",
+    "copyToClipboard": "Copy to clipboard"
+
   },
   "profileModelErrors": {
     "provideName": "You must provide a name.",

@@ -1,10 +1,15 @@
-import { ipcRenderer } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import app from './app';
-import Socket from './utils/Socket';
+import ServerConfigs from './collections/ServerConfigs';
+import ServerConfig from './models/ServerConfig';
+import {
+  connect as serverConnect,
+  events as serverConnectEvents,
+} from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import PageNav from './views/PageNav.js';
@@ -18,6 +23,7 @@ import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
+import { launchDebugLogModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
 
@@ -353,54 +359,134 @@ function start() {
   });
 }
 
-// connect to the API websocket
-// todo: this will be incorporated in the server
-// connection flow
-let socketOpened = false;
-let lostSocketConnectionDialog;
+function connectToServer() {
+  const server = app.serverConfigs.activeServer;
 
-app.apiSocket = new Socket(app.getSocketUrl());
-app.apiSocket.on('open', () => {
-  if (!socketOpened) {
-    socketOpened = true;
-    if (lostSocketConnectionDialog) lostSocketConnectionDialog.remove();
-    lostSocketConnectionDialog = null;
-    start();
+  console.log(`Will attempt to connect to server "${server.get('name')}"` +
+    ` at ${server.get('serverIp')}.`);
+  serverConnect(app.serverConfigs.activeServer)
+    .progress(e => {
+      console.log(`Status is "${e.status}" for connect attempt` +
+        ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
+    })
+    .done((e) => {
+      console.log(`Connected to "${e.server.get('name')}"`);
+      start();
+    })
+    .fail((e) => {
+      console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
+    });
+}
+
+const sendMainActiveServer = (activeServer) => {
+  ipcRenderer.send('active-server-set', {
+    ...activeServer.toJSON(),
+    httpUrl: activeServer.httpUrl,
+    socketUrl: activeServer.socketUrl,
+    authenticate: activeServer.needsAuthentication(),
+  });
+};
+
+app.serverConfigs = new ServerConfigs();
+app.serverConfigs.on('activeServerChange', (activeServer) =>
+  sendMainActiveServer(activeServer));
+
+// get the saved server configurations
+app.serverConfigs.fetch().done(() => {
+  if (!app.serverConfigs.length) {
+    // no saved server configurations
+    if (remote.getGlobal('isBundledApp')()) {
+      // for a bundled app, we'll create a
+      // "default" one and try to connect
+      const defaultConfig = new ServerConfig({
+        name: app.polyglot.t('serverConnect.defaultServerName'),
+        default: true,
+      });
+
+      const save = defaultConfig.save();
+
+      if (save) {
+        save.done(() => {
+          app.serverConfigs.add(defaultConfig);
+          app.serverConfigs.activeServer = defaultConfig;
+          connectToServer();
+        });
+      } else {
+        const validationErr = defaultConfig.validationError;
+
+        // This is developer error.
+        throw new Error('There were one or more errors saving the default server configuration' +
+          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
+      }
+    } else {
+      // show connection modal with a state that
+      // at least one connection must be created
+
+      // for now will just create a new connection
+      const serverConfig = new ServerConfig({
+        name: 'Dummy Connection',
+      });
+
+      const save = serverConfig.save();
+
+      if (save) {
+        save.done(() => {
+          app.serverConfigs.add(serverConfig);
+          app.serverConfigs.activeServer = serverConfig;
+          connectToServer();
+        });
+      } else {
+        const validationErr = serverConfig.validationError;
+
+        // This is developer error.
+        throw new Error('There were one or more errors saving an initial server configuration' +
+          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
+      }
+    }
   } else {
-    location.reload();
+    const activeServer = app.serverConfigs.activeServer;
+
+    if (activeServer) {
+      sendMainActiveServer(activeServer);
+    } else {
+      app.serverConfigs.activeServer = app.serverConfigs.at(0);
+    }
+
+    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')()) {
+      // Your active server is the locally bundled server, but you're
+      // not running the bundled app. You have bad data!
+      activeServer.set('default', false);
+    }
+
+    connectToServer();
   }
 });
 
-app.apiSocket.on('close', () => {
-  if (lostSocketConnectionDialog) return;
+// Clear localServer events on browser refresh.
+$(window).on('beforeunload', () => {
+  const localServer = remote.getGlobal('localServer');
 
-  lostSocketConnectionDialog = new Dialog({
-    title: 'Socket connection failure',
-    message: 'We are unable to connect to the API websocket.',
-    buttons: [{
-      text: 'Retry',
-      fragment: 'retry',
-    }],
-    dismissOnOverlayClick: false,
-    dismissOnEscPress: false,
-    showCloseButton: false,
-  }).on('click-retry', () => {
-    lostSocketConnectionDialog.$('.js-retry').addClass('processing');
-    app.apiSocket.connect();
+  if (localServer) {
+    // Since on a refresh any browser variables go away,
+    // we need to unbind our handlers from the localServer instance.
+    // Otherwise, since that instance lives in the main process
+    // and continues to live beyond a refresg, the app would crash
+    // when a localServer event is triggered for any of those handlers.
+    localServer.off();
 
-    // timeout is slight of hand to make it look like its doing something
-    // in the case of instant failures
-    setTimeout(() => {
-      if (lostSocketConnectionDialog) {
-        lostSocketConnectionDialog.$('.js-retry').removeClass('processing');
-      }
-    }, 300);
-  })
-  .render()
-  .open();
+    // Let the main process know we've just blown away all the handlers,
+    // since some of them may be main process callbacks that the main
+    // process may want to revive.
+    ipcRenderer.send('renderer-cleared-local-server-events');
+  }
 });
 
+// Handle 'show debug log' requests from the main process.
+ipcRenderer.on('show-server-log', () => launchDebugLogModal());
+
 // manage publishing sockets
+// todo: break the publishing socket startup functionality
+// into its own micro-module in js/startup/
 let publishingStatusMsg;
 let publishingStatusMsgRemoveTimer;
 let unpublishedContent = false;
@@ -427,36 +513,38 @@ function setPublishingStatus(msg) {
   return publishingStatusMsg;
 }
 
-app.apiSocket.on('message', (e) => {
-  if (e.jsonData) {
-    if (e.jsonData.status === 'publishing') {
-      setPublishingStatus({
-        msg: 'Publishing...',
-        type: 'message',
-      });
+serverConnectEvents.on('connected', (connectedEvent) => {
+  connectedEvent.socket.on('message', (e) => {
+    if (e.jsonData) {
+      if (e.jsonData.status === 'publishing') {
+        setPublishingStatus({
+          msg: 'Publishing...',
+          type: 'message',
+        });
 
-      unpublishedContent = true;
-    } else if (e.jsonData.status === 'error publishing') {
-      setPublishingStatus({
-        msg: 'Publishing failed. <a class="js-retry">Retry</a>',
-        type: 'warning',
-      });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'error publishing') {
+        setPublishingStatus({
+          msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+          type: 'warning',
+        });
 
-      unpublishedContent = true;
-    } else if (e.jsonData.status === 'publish complete') {
-      setPublishingStatus({
-        msg: 'Publishing complete.',
-        type: 'message',
-      });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'publish complete') {
+        setPublishingStatus({
+          msg: 'Publishing complete.',
+          type: 'message',
+        });
 
-      unpublishedContent = false;
+        unpublishedContent = false;
 
-      publishingStatusMsgRemoveTimer = setTimeout(() => {
-        publishingStatusMsg.remove();
-        publishingStatusMsg = null;
-      }, 2000);
+        publishingStatusMsgRemoveTimer = setTimeout(() => {
+          publishingStatusMsg.remove();
+          publishingStatusMsg = null;
+        }, 3000);
+      }
     }
-  }
+  });
 });
 
 let unpublishedConfirm;
@@ -490,16 +578,19 @@ ipcRenderer.on('close-attempt', (e) => {
   }
 });
 
-app.apiSocket.on('message', (e) => {
-  if (e.jsonData) {
-    if (e.jsonData.notification) {
-      if (e.jsonData.notification.follow) {
-        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
-      } else if (e.jsonData.notification.unfollow) {
-        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+// update ownFollowers based on follow socket communication
+serverConnectEvents.on('connected', (connectedEvent) => {
+  connectedEvent.socket.on('message', (e) => {
+    if (e.jsonData) {
+      if (e.jsonData.notification) {
+        if (e.jsonData.notification.follow) {
+          app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
+        } else if (e.jsonData.notification.unfollow) {
+          app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+        }
       }
     }
-  }
+  });
 });
 
 // initialize our listing delete handler

@@ -1,11 +1,6 @@
 .listingDetail {
   .modalContent {
 
-    .listingControls {
-      margin-bottom: $padSm;
-      height: 35px;
-    }
-
     .listingContent {
 
       .mainImage {
@@ -36,6 +31,14 @@
           float: left;
           margin: 0 $padSm $padSm 0;
           font-size: $tx5b;
+        }
+      }
+
+      .descriptionSection {
+
+        img {
+          max-width: 100%;
+          height: auto;
         }
       }
 

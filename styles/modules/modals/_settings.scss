@@ -21,6 +21,9 @@
 
     .cropit-preview-image-container {
       border-radius: 50%;
+      background-image: url(../../imgs/defaultAvatar.png);
+      background-position: center;
+      background-size: cover;
     }
   }
 
@@ -39,6 +42,12 @@
   .headerPreview {
     width: 474px;
     height: 136px;
+
+    .cropit-preview-image-container {
+      background-image: url(../../imgs/defaultHeader.png);
+      background-position: center;
+      background-size: cover;
+    }
   }
 
   .zoomWarning {
@@ -56,7 +65,8 @@
 
   .settingsAddresses {
     .addresses {
-      margin-bottom: $marg;
+      margin-top: $padMd;
+      margin-bottom: $padMd;
 
       .addressBox {
         padding: $padMd;
@@ -76,24 +86,6 @@
         .notes {
           margin-top: $pad;
           margin-bottom: 0;
-        }
-      }
-    }
-
-    &.processing {
-      @include processingOverlay;
-
-      &::after {
-        background: none;
-        pointer-events: none;
-      }
-
-      & .settingsTabFormWrapper.mouseMovedDuringSave .settingsTabFormWrapperInner {
-        @include processingOverlay;
-
-        &::after {
-          background-color: rgba(0, 0, 0, 0.3);
-          content: '';
         }
       }
     }

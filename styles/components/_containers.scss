@@ -121,10 +121,14 @@
       margin-bottom: 0;
       border-bottom-width: 0;
     }
+
+    .listItem {
+      padding: 9px 5px;
+    }
   }
 
   .listItem {
-    padding: 9px 5px;
+    padding: 9px 0;
     font-size: 1.4rem;
     width: 100%;
     box-sizing: border-box;
