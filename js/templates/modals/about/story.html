@@ -1,23 +1,35 @@
 <div class="contentBox padMd clrP clrBr clrSh3">
-
-  <div class="flexHCent">
+  <div class="flexSpaceBetween">
+    <div class="flexRow flex0">
+      <div>
+        <img src=ob1>
+      </div>
+      <div>
+        <div><%= ob.polyT('about._brand') %></div>
+        <div class="flexRow">
+          <img src=1>
+          <img src=2>
+          <img src=3>
+        </div>
+      </div>
+    </div>
     <h2 class="h3 clrT"><%= ob.polyT('about.storyTab._sectionHeader') %></h2>
+    <div class="txtRight">
+      <div>version</div>
+      <a class="btn clrP clrBr js-copyAddress flexNoShrink">
+        <%= ob.polyT('about.btnUpdateCheck') %>
+      </a>
+    </div>
   </div>
-
   <hr class="clrBr" />
-
-  <div class="flexRow">
-    <h2>Next</h2>
-  </div>
-
-  <div class="flexRow">
-    <h2>Next</h2>
-  </div>
-
+  <p>
+    <%= ob.polyT('about.storyTab.paragraphs.beginning') %>
+  </p>
+  <p>
+    <%= ob.polyT('about.storyTab.paragraphs.middle') %>
+  </p>
+  <p>
+    <%= ob.polyT('about.storyTab.paragraphs.end') %>
+  </p>
   <hr class="clrBr" />
-
-  <div class="flexHRight">
-    <h2>Okay</h2>
-  </div>
-
 </div>

@@ -136,6 +136,19 @@
   text-align: right;
 }
 
+.flexSpaceBetween {
+  @extend .flex;
+  justify-content: space-between;
+}
+
+.flex0 {
+  flex: 0;
+}
+
+.txtRight {
+  text-align: right;
+}
+
 .flexExpand,           //make a flex element expand to fill the remaining space
 .flexKidsExpand > * {  //make all child elements expand
   flex-grow: 1;
