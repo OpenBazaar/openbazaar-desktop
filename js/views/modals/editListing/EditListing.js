@@ -3,10 +3,10 @@ import '../../../utils/velocity';
 import 'select2';
 import _ from 'underscore';
 import path from 'path';
-import { MediumEditor } from 'medium-editor';
 import '../../../utils/velocityUiPack.js';
 import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
+import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
@@ -566,7 +566,8 @@ export default class extends BaseModal {
     return this._$formFields ||
       (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
         '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]'));
+        '.js-scrollToSection:not(.js-sectionShipping) div[contenteditable][name],' +
+        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]:not([class*="trumbowyg"])'));
   }
 
   get $currencySelect() {
@@ -689,7 +690,6 @@ export default class extends BaseModal {
   }
 
   remove() {
-    if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
 
@@ -856,14 +856,8 @@ export default class extends BaseModal {
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
       setTimeout(() => {
-        if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
-        this.descriptionMediumEditor = new MediumEditor('#editListingDescription', {
-          placeholder: {
-            text: '',
-          },
-          toolbar: {
-            buttons: ['bold', 'italic', 'underline', 'anchor', 'unorderedlist', 'orderedlist'],
-          },
+        installRichEditor(this.$('#editListingDescription'), {
+          topLevelClass: 'clrBr',
         });
 
         if (!this.rendered) {

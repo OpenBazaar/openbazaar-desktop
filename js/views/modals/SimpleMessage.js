@@ -61,7 +61,7 @@ export default SimpleMessage;
 
 // Convenience method to create a SimpleMessage modal,
 // render and open it.
-export function alert(title = '', message = '', options = {}) {
+export function openSimpleMessage(title = '', message = '', options = {}) {
   if (!title && !message) {
     throw new Error('Please provide a title and / or message.');
   }

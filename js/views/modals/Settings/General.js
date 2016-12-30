@@ -5,7 +5,7 @@ import { getTranslatedCountries } from '../../../data/countries';
 import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import { alert } from '../SimpleMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -66,7 +66,7 @@ export default class extends baseVw {
         const errMsg =
           args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
 
-        alert(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
+        openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
 
         statusMessage.update({
           msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),

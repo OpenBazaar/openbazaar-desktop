@@ -3,7 +3,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
-import { alert } from '../SimpleMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 import 'cropit';
 
 export default class extends baseVw {
@@ -32,15 +32,8 @@ export default class extends baseVw {
     };
   }
 
-  imageTooSmall(imageType) {
-    const size = this[`${imageType}Cropper`].cropit('imageSize');
-
-    return size.width < this[`${imageType}MinWidth`] || size.height < this[`${imageType}MinHeight`];
-  }
-
   avatarRotate(direction) {
     if (this.avatarCropper.cropit('imageSrc')) {
-      // we don't have to check the rotated size of the avatar, because it is square
       this.avatarCropper.cropit(direction > 0 ? 'rotateCW' : 'rotateCCW');
       this.avatarChanged = true;
     }
@@ -56,14 +49,6 @@ export default class extends baseVw {
 
   headerRotate(direction) {
     if (this.headerCropper.cropit('imageSrc')) {
-      const loadedSize = this.headerCropper.cropit('imageSize');
-
-      // check to see if rotating the image will make it too small
-      if (loadedSize.height < this.headerMinWidth ||
-        loadedSize.width < this.headerMinHeight) {
-        this.showHeaderSizeWarning(loadedSize, 'settings.loadAvatarSizeError.bodyRotated');
-      }
-
       this.headerCropper.cropit(direction > 0 ? 'rotateCW' : 'rotateCCW');
       this.headerChanged = true;
     }
@@ -187,7 +172,7 @@ export default class extends baseVw {
             args && args[0] && args[0].responseJSON &&
             args[0].responseJSON.reason || '';
 
-          alert(app.polyglot.t('settings.pageTab.saveErrorAlertTitle'), errMsg);
+          openSimpleMessage(app.polyglot.t('settings.pageTab.saveErrorAlertTitle'), errMsg);
 
           statusMessage.update({
             msg: app.polyglot.t('settings.pageTab.statusSaveFailed'),
@@ -205,28 +190,6 @@ export default class extends baseVw {
 
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-  }
-
-  showAvatarSizeWarning(loadedSize, bodyText = 'settings.loadAvatarSizeError.body') {
-    alert(
-      app.polyglot.t('settings.loadAvatarSizeError.title'),
-      app.polyglot.t(bodyText,
-        { minWidth: this.avatarMinWidth,
-          minHeight: this.avatarMinHeight,
-          curWidth: loadedSize.width,
-          curHeight: loadedSize.height })
-    );
-  }
-
-  showHeaderSizeWarning(loadedSize, bodyText = 'settings.loadHeaderSizeError.body') {
-    alert(
-      app.polyglot.t('settings.loadHeaderSizeError.title'),
-      app.polyglot.t(bodyText,
-        { minWidth: this.headerMinWidth,
-          minHeight: this.headerMinHeight,
-          curWidth: loadedSize.width,
-          curHeight: loadedSize.height })
-    );
   }
 
   get $btnSave() {
@@ -271,12 +234,10 @@ export default class extends baseVw {
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');
-      this.avatarZoomMsg = this.$('.js-avatarZoomWarning');
 
       const headerPrev = this.$('.js-headerPreview');
       const headerInpt = this.$('#headerInput');
       this.headerCropper = this.$('#headerCropper');
-      this.headerZoomMsg = this.$('.js-headerZoomWarning');
 
       // if the avatar or header exist, don't count the first load as a change
       this.avatarLoadedOnRender =
@@ -290,31 +251,15 @@ export default class extends baseVw {
           $fileInput: avatarInpt,
           smallImage: 'stretch',
           allowDragNDrop: false,
+          maxZoom: 2,
           onImageLoaded: () => {
-            const loadedSize = this.avatarCropper.cropit('imageSize');
-            const imgTooSmall = this.imageTooSmall('avatar');
             this.avatarOffsetOnLoad = this.avatarCropper.cropit('offset');
             this.avatarZoomOnLoad = this.avatarCropper.cropit('zoom');
             this.$('.js-avatarLeft').removeClass('disabled');
             this.$('.js-avatarRight').removeClass('disabled');
             this.$('.js-avatarZoom').removeClass('disabled');
-
-            if (!this.avatarLoadedOnRender && imgTooSmall) {
-              this.showAvatarSizeWarning(loadedSize);
-            }
-
             this.avatarChanged = !this.avatarLoadedOnRender;
             this.avatarLoadedOnRender = false;
-          },
-          onZoomEnabled: () => {
-            this.avatarZoomMsg.addClass('hide');
-          },
-          onZoomDisabled: () => {
-            // when the zoome is disabled, show the warning
-            // the zoom is disabled if no image is loaded, check for that condition
-            if (this.avatarCropper.cropit('imageSrc')) {
-              this.avatarZoomMsg.removeClass('hide');
-            }
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -331,31 +276,15 @@ export default class extends baseVw {
           $fileInput: headerInpt,
           smallImage: 'stretch',
           allowDragNDrop: false,
+          maxZoom: 2,
           onImageLoaded: () => {
-            const loadedSize = this.headerCropper.cropit('imageSize');
-            const imgTooSmall = this.imageTooSmall('header');
             this.headerOffsetOnLoad = this.headerCropper.cropit('offset');
             this.headerZoomOnLoad = this.headerCropper.cropit('zoom');
             this.$('.js-headerLeft').removeClass('disabled');
             this.$('.js-headerRight').removeClass('disabled');
             this.$('.js-headerZoom').removeClass('disabled');
-
-            if (!this.headerLoadedOnRender && imgTooSmall) {
-              this.showHeaderSizeWarning(loadedSize);
-            }
-
             this.headerChanged = !this.headerLoadedOnRender;
             this.headerLoadedOnRender = false;
-          },
-          onZoomEnabled: () => {
-            this.headerZoomMsg.addClass('hide');
-          },
-          onZoomDisabled: () => {
-            // when the zoome is disabled, show the warning
-            // the zoom is disabled if no image is loaded, check for that condition
-            if (this.headerCropper.cropit('imageSrc')) {
-              this.headerZoomMsg.removeClass('hide');
-            }
           },
           onFileReaderError: (data) => {
             console.log('file reader error');
@@ -380,18 +309,6 @@ export default class extends baseVw {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
         }
-
-        // after the preview is set, set the max zoom so the cropped size can't be less than the min
-        // calculated here in case the preview sizes are changed in the future.
-        const avatarPrevInner = avatarPrev.find('.cropit-preview-image-container');
-        const maxAWZoom = avatarPrevInner.width() / this.avatarMinWidth;
-        const maxAHZoom = avatarPrevInner.height() / this.avatarMinHeight;
-        this.avatarCropper.cropit('maxZoom', Math.min(maxAWZoom, maxAHZoom));
-
-        const headerPrevInner = headerPrev.find('.cropit-preview-image-container');
-        const maxHWZoom = headerPrevInner.width() / this.headerMinWidth;
-        const maxHHZoom = headerPrevInner.height() / this.headerMinHeight;
-        this.headerCropper.cropit('maxZoom', Math.min(maxHWZoom, maxHHZoom));
       }, 0);
     });
 

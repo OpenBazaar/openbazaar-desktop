@@ -89,11 +89,6 @@ input[type=range][class~="clrS"] {
   @include textColor($error);
 }
 
-.clrTGlow {
-  // glow around text so it is visible on low-contrast backgrounds
-  text-shadow: transparentize(invert($text), 0.6) 0 0 20px ;
-}
-
 .clrTOnEmph {
   @include textColor($textOnEmph);
 }
@@ -111,6 +106,20 @@ input[type=range][class~="clrS"] {
 
   hr {
     border-color: $border;
+  }
+
+  &.trumbowyg {
+    border-width: 0;
+
+    .trumbowyg-button-pane {
+      border: 1px solid $border;
+     
+      border-bottom: 0;
+
+      .trumbowyg-button-group::before {
+        background-color: $border;
+      }
+    }
   }
 
   .btn:hover,
@@ -137,6 +146,20 @@ input[type=range][class~="clrS"] {
   hr {
     border-color: $border2;
   }
+
+  &.trumbowyg {
+    border-width: 0;
+
+    .trumbowyg-button-pane {
+      border: 1px solid $border2;
+     
+      border-bottom: 0;
+
+      .trumbowyg-button-group::before {
+        background-color: $border2;
+      }
+    }
+  }  
 
   .btn:hover,
   .btn:focus,
@@ -277,7 +300,8 @@ input[type=range][class~="clrS"] {
 input,
 select,
 textarea,
-button {
+button,
+.trumbowyg div[contenteditable]{
   &:focus {
     border-color: $border3;
   }
