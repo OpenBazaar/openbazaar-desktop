@@ -91,7 +91,7 @@ export default class extends BaseModal {
       this._$closeClickTargets = null;
 
       // default About tab
-      // this.selectTab(this.$('.js-tab[data-tab="General"]'));
+      this.selectTab(this.$('.js-tab[data-tab="Story"]'));
     });
 
     return this;
