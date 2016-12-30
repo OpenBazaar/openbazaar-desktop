@@ -2,8 +2,10 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
-
-// import About tabs
+import Story from './Story';
+import Contributors from './Contributors';
+import Donations from './Donations';
+import License from './License';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -18,7 +20,10 @@ export default class extends BaseModal {
 
     this.tabViewCache = {};
     this.tabViews = {
-      // About tabs go here
+      Story,
+      Contributors,
+      Donations,
+      License,
     };
 
     this.listenTo(app.router, 'will-route', () => {

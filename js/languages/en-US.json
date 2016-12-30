@@ -128,7 +128,7 @@
       "listPreface": "This is a partial list of people who have contributed to the project, either through code or other assistance."
     },
     "storyTab": {
-      "_sectionName": "The Story",
+      "_linkText": "The Story",
       "_sectionHeader": "The Story of OpenBazaar",
       "storyParagraphs": [
         "The Beginning",
