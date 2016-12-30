@@ -159,14 +159,36 @@ export default class extends BaseModal {
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
     this.$photoSelected.trigger('zoom.destroy'); // old zoom must be removed
-    this.$photoSelectedInner.attr('src', phSrc);
 
-    this.$photoSelected.attr('data-index', photoIndex).zoom({
-      url: phSrc,
-      on: 'grab',
-      onZoomIn: () => { this.$photoSelectedInner.addClass('hide'); },
-      onZoomOut: () => { this.$photoSelectedInner.removeClass('hide'); },
-    });
+    this.$photoSelectedInner
+        .one('load', this.activateZoom(photoIndex, phSrc))
+        .attr('src', phSrc);
+  }
+
+  activateZoom(photoIndex, phSrc) {
+    setTimeout(() => {
+      // without a timeout the image hasn't rendered yet and has no height or width
+
+      if (this.$photoSelectedInner.width() >= this.$photoSelectedWidth ||
+          this.$photoSelectedInner.height() >= this.$photoSelectedHeight) {
+
+        this.$photoSelected
+            .attr('data-index', photoIndex)
+            .removeClass('unzoomable')
+            .zoom({
+              url: phSrc,
+              on: 'click',
+              onZoomIn: () => {
+                this.$photoSelected.addClass('open');
+              },
+              onZoomOut: () => {
+                this.$photoSelected.removeClass('open');
+              },
+            });
+      } else {
+        this.$photoSelected.addClass('unzoomable');
+      }
+    }, 500);
   }
 
   setActivePhotoThumbnail(thumbIndex) {
@@ -293,6 +315,16 @@ export default class extends BaseModal {
       (this._$photoSelected = this.$('.js-photoSelected'));
   }
 
+  get $photoSelectedHeight() {
+    return this._$photoSelectedHeight ||
+      (this._$photoSelectedHeight = this.$photoSelected.height());
+  }
+
+  get $photoSelectedWidth() {
+    return this._$photoSelectedWidth ||
+      (this._$photoSelectedWidth = this.$photoSelected.width());
+  }
+
   get $photoSelectedInner() {
     return this._$photoSelectedInner ||
       (this._$photoSelectedInner = this.$('.js-photoSelectedInner'));
@@ -355,9 +387,9 @@ export default class extends BaseModal {
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
 
-      this.setSelectedPhoto(0);
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);
+      this.setSelectedPhoto(0);
     });
 
     return this;

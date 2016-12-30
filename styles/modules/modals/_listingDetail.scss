@@ -39,7 +39,19 @@
 
         .photoSelected {
           height: 100%;
-          cursor: pointer;
+          cursor: zoom-in;
+
+          &.unzoomable {
+            cursor: auto;
+          }
+
+          &.open {
+            cursor: zoom-out;
+
+            .photoSelectedInner {
+              display: none;
+            }
+          }
 
           .photoSelectedInner {
             max-width: 100%;
