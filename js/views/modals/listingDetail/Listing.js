@@ -145,7 +145,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoSelect(e) {
-    this.setSelectedPhoto($(e.target).data('index'));
+    this.setSelectedPhoto($(e.target).index('.js-photoSelect'));
   }
 
   setSelectedPhoto(photoIndex) {
@@ -159,8 +159,8 @@ export default class extends BaseModal {
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
+    this.activePhotoIndex = photoIndex;
     this.$photoSelected.trigger('zoom.destroy'); // old zoom must be removed
-
     this.$photoSelectedInner.attr('src', phSrc);
   }
 
@@ -379,7 +379,7 @@ export default class extends BaseModal {
 
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);
-      this.setSelectedPhoto(0);
+      this.setSelectedPhoto(this.activePhotoIndex);
     });
 
     return this;
