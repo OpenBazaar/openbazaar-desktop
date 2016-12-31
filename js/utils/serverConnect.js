@@ -170,7 +170,7 @@ export default function connect(server, options = {}) {
 
   // If we're not connecting to the local bundled server,
   // then let's ensure it's stopped.
-  if (!server.get('default') && localServer && localServer.isRunning()) {
+  if (!server.get('default') && localServer && localServer.isRunning) {
     deferred.notify({
       status: 'stopping-local-server',
       localServer,
