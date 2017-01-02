@@ -215,8 +215,9 @@
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
-      "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{needHelpLink}",
-      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{needHelpLink}",
+      "viewLocalServerDebugLogLink": "View Server Debug Log",
+      "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
+      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
       "cancelConnAttempt": "Cancel",
       "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
     }

@@ -102,6 +102,7 @@ export default function connect(server, options = {}) {
     attempts: 5,
     timeoutBetweenAttempts: 2000,
     maxAttemptTime: 5000,
+    maxAttemptTime: 1000,
     // todo: work this one in
     restartDefaultServerOnFirstAttempt: true,
     ...options,

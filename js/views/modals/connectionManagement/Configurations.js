@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import app from '../../../app';
 import
   serverConnect,
@@ -6,6 +7,9 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Configuration from './Configuration';
 import StatusBar from './StatusBar';
+import { launchDebugLogModal } from '../../../utils/modalManager';
+
+const localServer = remote.getGlobal('localServer');
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -41,14 +45,22 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connect-attempt-failed', e => {
+      let links = `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`;
       let msg = '';
+
+      if (localServer) {
+        links =
+          '<a class="js-viewDebugLog">' +
+          `${app.polyglot.t('connectionManagement.statusBar.viewLocalServerDebugLogLink')}` +
+          `</a>&nbsp;|&nbsp;<a>${links}</a>`;
+      }
 
       if (e.reason === 'authentication-failed') {
         msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
           serverName: e.server.get('name'),
           errorPreface: '<span class="txB">' +
             `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
-          needHelpLink: `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`,
+          links,
         });
       } else if (e.reason === 'canceled') {
         this.$statusBarOuterWrap.addClass('hide');
@@ -59,7 +71,7 @@ export default class extends baseVw {
           serverName: e.server.get('name'),
           errorPreface: '<span class="txB">' +
             `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
-          needHelpLink: `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`,
+          links,
         });
       }
 
@@ -141,7 +153,6 @@ export default class extends baseVw {
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
     this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
     this.listenTo(configVw, 'editClick', e => this.trigger('editConfig', { model: e.view.model }));
-    // this.listenTo(opt.model, 'destroy', e => this.collection.remove(e.view.model));
 
     return configVw;
   }
@@ -174,6 +185,8 @@ export default class extends baseVw {
       this.statusBarMessage = this.createChild(StatusBar);
       this.listenTo(this.statusBarMessage, 'closeClick',
         () => this.$statusBarOuterWrap.addClass('hide'));
+      this.listenTo(this.statusBarMessage, 'clickViewDebugLog',
+        () => launchDebugLogModal());
       this.$('.js-statusBarMessageContainer').append(this.statusBarMessage.render().el);
 
       this.listenTo(this.statusBarMessage, 'clickCancelLink', () => this.cancelConnAttempt());

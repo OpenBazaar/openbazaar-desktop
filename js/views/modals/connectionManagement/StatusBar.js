@@ -20,7 +20,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnClose': 'onClickClose',
-      'click .connectingMsg [class^="js-"], .connectingMsg [class*=" js-"]': 'onMsgContentClick',
+      'click .statusMsg [class^="js-"], .statusMsg [class*=" js-"]': 'onMsgContentClick',
     };
   }
 
