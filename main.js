@@ -76,6 +76,7 @@ if (handleStartupEvent()) {
 }
 
 const serverPath = `${__dirname}${path.sep}..${path.sep}OpenBazaar-Server${path.sep}`;
+// const serverPath = `${__dirname}${path.sep}..${path.sep}test-server${path.sep}`;
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
       'openbazaard' : 'openbazaard.exe';
 const isBundledApp = _.once(() => fs.existsSync(serverPath + path.sep + serverFilename));
