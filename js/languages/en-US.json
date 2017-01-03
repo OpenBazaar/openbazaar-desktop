@@ -97,6 +97,7 @@
       "saveErrorAlertTitle": "Unable to save general settings"
     },
     "pageTab": {
+      "helperHandle": "Register a unique handle at <a href='https://onename.com'>Onename.com</a>",
       "helperShortDescription": "160 characters or less",
       "helperPrimaryColor": "Header, Modals, Buttons",
       "helperSecondaryColor": "Body, Background",

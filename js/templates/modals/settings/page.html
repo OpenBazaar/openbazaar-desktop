@@ -26,6 +26,7 @@
           <div class="col6">
             <% if (ob.errors.handle) print(ob.formErrorTmpl({ errors: ob.errors.handle })) %>
             <input type="text" class="clrBr clrSh2" name="handle" id="settingsHandle" value="<%= ob.handle %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHandle') %>">
+            <div class="clrT2 txBase padSm"><%= ob.polyT('settings.pageTab.helperHandle') %></div>
           </div>
         </div>
         <div class="flexRow">
@@ -103,6 +104,24 @@
     </div>
   </div>
 
+
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionAbout') %></h2>
+    <div class="tabFormWrapper">
+      <form class="box padMdKids padStack">
+        <div class="flexRow">
+<!--           <div class="col3">
+            <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
+          </div> -->
+          <div class="col12">
+            <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
+            <textarea rows="6" name="about" class="clrBr clrSh2" id="settingsAbout"><%= ob.about %></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="contentBox padMd clrP clrBr clrSh3">
     <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionLinks') %></h2>
     <div class="tabFormWrapper">
@@ -124,23 +143,6 @@
           <div class="col6">
             <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
             <input type="text" class="clrBr clrSh2" name="email" id="settingsEmail" value="<%= ob.email %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderEmail') %>">
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="contentBox padMd clrP clrBr clrSh3">
-    <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionAbout') %></h2>
-    <div class="tabFormWrapper">
-      <form class="box padMdKids padStack">
-        <div class="flexRow">
-<!--           <div class="col3">
-            <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
-          </div> -->
-          <div class="col12">
-            <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
-            <textarea rows="6" name="about" class="clrBr clrSh2" id="settingsAbout"><%= ob.about %></textarea>
           </div>
         </div>
       </form>

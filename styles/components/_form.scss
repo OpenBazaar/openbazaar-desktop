@@ -76,6 +76,11 @@ textarea {
   resize: none;
   line-height: 1.2em;
   padding: $pad;
+  overflow: hidden;
+
+  &:focus {
+    overflow: auto;
+  }
 }
 
 .errorList {
