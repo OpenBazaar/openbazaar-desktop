@@ -193,6 +193,13 @@ export default function connect(server, options = {}) {
       if (socketConnectAttempt) socketConnectAttempt.cancel();
     };
 
+    if (server.get('default') && !localServer) {
+      // This should never happen to normal users. The only way it would is if you are a dev
+      // and mucking with localStorage and / or fudging the source for the app to masquerade
+      // as a bundled app.
+      throw new Error('The default configuration should only be used on the bundled app.');
+    }
+
     if (server.get('default') && !localServer.isRunning && !localServer.isStopping) {
       // If we're connecting to the bundled server and the local server is not
       // running or in the process of stopping, we'll start it.

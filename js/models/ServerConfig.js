@@ -58,9 +58,11 @@ export default class extends BaseModel {
         addError('password', 'Please provide a value.');
       }
 
-      if (!is.boolean(attrs.SSL)) {
-        addError('SSL', 'SSL must be provided as a boolean.');
-      }
+      // Turning off for now pending documentation on how to set up SSL
+      // on the server.
+      // if (!attrs.SSL) {
+      //   addError('SSL', 'SSL must be turned on for remote servers.');
+      // }
     }
 
     if (!attrs.default) {

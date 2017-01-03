@@ -55,7 +55,13 @@
       </div>
       <div class="col9">
         <% if (ob.errors.ssl) print(ob.formErrorTmpl({ errors: ob.errors.ssl })) %>
-        <div class="btnStrip js-btnStripSsl <% if (ob.isRemote) print('disabled') %>">
+        <!-- 
+          Until we have some documentation on how to set up SSL on the server, will not disable the SSL radio and force it to true.
+
+          TODO: make sure to force it to true as well.
+         -->
+        <!-- <div class="btnStrip js-btnStripSsl <% if (ob.isRemote) print('disabled') %>"> -->
+        <div class="btnStrip js-btnStripSsl %>">
           <div class="btnRadio clrBr">
             <input type="radio"
                    name="SSL"

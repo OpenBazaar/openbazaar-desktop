@@ -118,7 +118,9 @@ export default class extends baseVw {
   }
 
   onConfigConnectClick(e) {
-    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), {
+    const serverConfig = this.collection.at(this.configViews.indexOf(e.view));
+    this.collection.activeServer = serverConfig;
+    serverConnect(serverConfig, {
       // Unlike the start-up sequence, the assumption is that at this point
       // any server is already up and running, so we'll only try to connect
       // once. If it fails, the user can retry.
