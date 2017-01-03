@@ -9,6 +9,7 @@ import ServerConfig from './models/ServerConfig';
 import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
+import { getChatContainer } from './utils/selectors';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
@@ -349,6 +350,7 @@ function start() {
       fetchStartupData().done(() => {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
+        getChatContainer().removeClass('hide');
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
