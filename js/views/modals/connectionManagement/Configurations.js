@@ -118,7 +118,17 @@ export default class extends baseVw {
   }
 
   onConfigConnectClick(e) {
-    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), { attempts: 2 });
+    serverConnect(this.collection.at(this.configViews.indexOf(e.view)), {
+      // Unlike the start-up sequence, the assumption is that at this point
+      // any server is already up and running, so we'll only try to connect
+      // once. If it fails, the user can retry.
+      //
+      // We'll also give a quite high attempt time before giving up to account
+      // for edge case really slow servers / machines. The user will have the option
+      // to cancel the attempt if it's taking longer than they think it should.
+      attempts: 1,
+      maxAttemptTime: 25 * 1000,
+    });
   }
 
   getConfigVw(id) {

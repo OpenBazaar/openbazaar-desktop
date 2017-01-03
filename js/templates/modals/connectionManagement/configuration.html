@@ -26,7 +26,7 @@
 <% if (ob.status === 'connect-attempt-failed') { %>
 <div class="errorBorder clrErr"></div>
 <% } %>
-<div class="deleteConfirm arrowBoxTop border clrBr clrP clrT txCtr pad <% if (!ob.deleteConfirmOn) print('hide') %>">
+<div class="deleteConfirm js-deleteConfirm arrowBoxTop border clrBr clrP clrT txCtr pad <% if (!ob.deleteConfirmOn) print('hide') %>">
   <div class="tx3 txB rowSm">Are you sure?</div>
   <p class="clrT2">The server configuration will be deleted. This will not delete the actual server.</p>
   <hr class="clrBr row" />
