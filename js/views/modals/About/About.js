@@ -24,11 +24,6 @@ export default class extends BaseModal {
       Donations,
       License,
     };
-
-    this.listenTo(app.router, 'will-route', () => {
-      this.close(true);
-      this.remove();
-    });
   }
 
   className() {
