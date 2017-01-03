@@ -118,6 +118,12 @@
       "saveErrorAlertTitle": "Unable to save page settings"
     },
     "addressesTab": {
+      "placeholderName": "Your name / name of recipient",
+      "placeholderAddress": "427 N Greenfield Road",
+      "placeholderCity": "Chicago",
+      "placeholderState": "IL",
+      "placeholderPostalCode": "60654",
+      "placeholderNotes": "e.g. leave packages behind bush",
       "sectionName": "Addresses",
       "statusDeletingAddress": "Deleting address %{name}...",
       "statusDeleteAddressComplete": "Address %{name} deleted.",
@@ -168,10 +174,11 @@
       "statusSaveFailed": "Unable to save advanced settings.",
       "saveErrorAlertTitle": "Unable to save advanced settings"
     },
+    "optional": "optional",
     "language": "Language",
     "country": "Country",
     "currency": "Currency",
-    "viewNsfwContent": "View Mature Content",
+    "viewNsfwContent": "Display Mature Content",
     "on": "On",
     "off": "Off",
     "yes": "Yes",

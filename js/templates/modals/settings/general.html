@@ -11,7 +11,7 @@
     <form class="box clrP padMdKids padStack settingsGeneralForm">
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.language') %></label>
+          <label><%= ob.polyT('settings.language') %><span class="clrTEmph1">*</span></label>
         </div>
         <div class="col6 clrSh2">
           <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
@@ -24,7 +24,7 @@
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.country') %></label>
+          <label><%= ob.polyT('settings.country') %><span class="clrTEmph1">*</span></label>
         </div>
         <div class="col6 clrSh2">
           <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
@@ -37,7 +37,7 @@
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.currency') %></label>
+          <label><%= ob.polyT('settings.currency') %><span class="clrTEmph1">*</span></label>
         </div>
         <div class="col6 clrSh2">
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
@@ -50,7 +50,7 @@
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.viewNsfwContent') %></label>
+          <label><%= ob.polyT('settings.viewNsfwContent') %><span class="clrTEmph1">*</span></label>
         </div>
         <div class="col9">
           <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
