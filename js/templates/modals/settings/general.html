@@ -13,7 +13,7 @@
         <div class="col3">
           <label><%= ob.polyT('settings.language') %></label>
         </div>
-        <div class="col9 clrSh2">
+        <div class="col6 clrSh2">
           <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
           <select id="settingsLanguageSelect" name="language">
             <% ob.languageList.forEach((lang) => { %>
@@ -26,7 +26,7 @@
         <div class="col3">
           <label><%= ob.polyT('settings.country') %></label>
         </div>
-        <div class="col9 clrSh2">
+        <div class="col6 clrSh2">
           <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
           <select id="settingsCountrySelect" name="country">
             <% ob.countryList.forEach((country) => { %>
@@ -39,7 +39,7 @@
         <div class="col3">
           <label><%= ob.polyT('settings.currency') %></label>
         </div>
-        <div class="col9 clrSh2">
+        <div class="col6 clrSh2">
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
           <select id="settingsCurrencySelect"  name="localCurrency">
             <% ob.currencyList.forEach((currency) => { %>
