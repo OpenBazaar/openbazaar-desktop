@@ -11,7 +11,6 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
-      removeOnRoute: false,
       ...options,
     };
 
