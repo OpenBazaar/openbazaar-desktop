@@ -27,13 +27,12 @@
 <div class="errorBorder clrErr"></div>
 <% } %>
 <div class="deleteConfirm js-deleteConfirm arrowBoxTop border clrBr clrP clrT txCtr pad <% if (!ob.deleteConfirmOn) print('hide') %>">
-deleteConfirm
-  <div class="tx3 txB rowSm"><%= ob.polyT('connectionManagement.deleteConfirm.heading') %></div>
-  <p class="clrT2"><%= ob.polyT('connectionManagement.deleteConfirm.message') %></p>
+  <div class="tx3 txB rowSm"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.heading') %></div>
+  <p class="clrT2"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.body') %></p>
   <hr class="clrBr row" />
 
   <div class="flexHRight flexVCent gutterHLg">
-    <a class="js-deleteConfirmCancel"><%= ob.polyT('connectionManagement.deleteConfirm.btnCancel') %></a>
-    <a class="btn clrP clrBr js-deleteConfirmYes"><%= ob.polyT('connectionManagement.deleteConfirm.btnDelete') %></a>
+    <a class="js-deleteConfirmCancel"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.btnCancel') %></a>
+    <a class="btn clrP clrBr js-deleteConfirmYes"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.btnDelete') %></a>
   </div>
 </div>
