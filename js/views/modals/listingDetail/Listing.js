@@ -26,6 +26,7 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
+    this.activePhotoIndex = 0;
 
     this.countryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
@@ -144,7 +145,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoSelect(e) {
-    this.setSelectedPhoto($(e.target).data('index'));
+    this.setSelectedPhoto($(e.target).index('.js-photoSelect'));
   }
 
   setSelectedPhoto(photoIndex) {
@@ -158,37 +159,29 @@ export default class extends BaseModal {
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
+    this.activePhotoIndex = photoIndex;
     this.$photoSelected.trigger('zoom.destroy'); // old zoom must be removed
-
-    this.$photoSelectedInner
-        .one('load', this.activateZoom(photoIndex, phSrc))
-        .attr('src', phSrc);
+    this.$photoSelectedInner.attr('src', phSrc);
   }
 
-  activateZoom(photoIndex, phSrc) {
-    setTimeout(() => {
-      // without a timeout the image hasn't rendered yet and has no height or width
-
-      if (this.$photoSelectedInner.width() >= this.$photoSelectedWidth ||
-          this.$photoSelectedInner.height() >= this.$photoSelectedHeight) {
-
-        this.$photoSelected
-            .attr('data-index', photoIndex)
-            .removeClass('unzoomable')
-            .zoom({
-              url: phSrc,
-              on: 'click',
-              onZoomIn: () => {
-                this.$photoSelected.addClass('open');
-              },
-              onZoomOut: () => {
-                this.$photoSelected.removeClass('open');
-              },
-            });
-      } else {
-        this.$photoSelected.addClass('unzoomable');
-      }
-    }, 500);
+  activateZoom() {
+    if (this.$photoSelectedInner.width() >= this.$photoSelectedWidth ||
+        this.$photoSelectedInner.height() >= this.$photoSelectedHeight) {
+      this.$photoSelected
+          .removeClass('unzoomable')
+          .zoom({
+            url: this.$photoSelectedInner.attr('src'),
+            on: 'click',
+            onZoomIn: () => {
+              this.$photoSelected.addClass('open');
+            },
+            onZoomOut: () => {
+              this.$photoSelected.removeClass('open');
+            },
+          });
+    } else {
+      this.$photoSelected.addClass('unzoomable');
+    }
   }
 
   setActivePhotoThumbnail(thumbIndex) {
@@ -202,7 +195,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoPrev() {
-    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) - 1;
+    let targetIndex = this.activePhotoIndex - 1;
     const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
 
     targetIndex = targetIndex < 0 ? imagesLength - 1 : targetIndex;
@@ -211,7 +204,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoNext() {
-    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) + 1;
+    let targetIndex = this.activePhotoIndex + 1;
     const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
 
     targetIndex = targetIndex >= imagesLength ? 0 : targetIndex;
@@ -325,11 +318,6 @@ export default class extends BaseModal {
       (this._$photoSelectedWidth = this.$photoSelected.width());
   }
 
-  get $photoSelectedInner() {
-    return this._$photoSelectedInner ||
-      (this._$photoSelectedInner = this.$('.js-photoSelectedInner'));
-  }
-
   get $shippingSection() {
     return this._$shippingSection ||
       (this._$shippingSection = this.$('#shippingSection'));
@@ -373,23 +361,25 @@ export default class extends BaseModal {
 
       super.render();
 
+      this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
       this._$photoSection = null;
       this._$photoSelected = null;
-      this._$photoSelectedInner = null;
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
       this._$closeClickTargets = null;
+
+      this.$photoSelectedInner.on('load', () => this.activateZoom());
 
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
 
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);
-      this.setSelectedPhoto(0);
+      this.setSelectedPhoto(this.activePhotoIndex);
     });
 
     return this;
