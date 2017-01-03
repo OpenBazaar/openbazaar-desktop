@@ -105,7 +105,7 @@
       "helperHighlightColor": "Notifications, Alerts, Badges",
       "helperHighlightTextColor": "Color within Notifications",
       "placeholderName": "Name of your page",
-      "placeholderHandle": "@handle",
+      "placeholderHandle": "Enter your Onename @handle",
       "placeholderShortDescription": "Say something interesting...",
       "placeholderWebsite": "http://",
       "placeholderEmail": "name@domain.com",

@@ -12,7 +12,7 @@
       <form class="box padMdKids padStack">
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsName"><%= ob.polyT('settings.name') %><span class="clrTEmph1">*</span></label>
+            <label for="settingsName" class="required"><%= ob.polyT('settings.name') %></label>
           </div>
           <div class="col6">
           <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
@@ -185,7 +185,7 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsPrimaryColor"><%= ob.polyT('settings.primaryColor') %><span class="clrTEmph1">*</span></label>
+            <label for="settingsPrimaryColor" class="required"><%= ob.polyT('settings.primaryColor') %></label>
             <div class="clrT2 txBase"><%= ob.polyT('settings.pageTab.helperPrimaryColor') %></div>
           </div>
           <div class="col3">
@@ -196,7 +196,7 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsSecondaryColor"><%= ob.polyT('settings.secondaryColor') %><span class="clrTEmph1">*</span></label>
+            <label for="settingsSecondaryColor" class="required"><%= ob.polyT('settings.secondaryColor') %></label>
             <div class="clrT2 txBase"><%= ob.polyT('settings.pageTab.helperSecondaryColor') %></div>
           </div>
           <div class="col3">
@@ -207,7 +207,7 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsTextColor"><%= ob.polyT('settings.textColor') %><span class="clrTEmph1">*</span></label>
+            <label for="settingsTextColor" class="required"><%= ob.polyT('settings.textColor') %></label>
             <div class="clrT2 txBase"><%= ob.polyT('settings.pageTab.helperTextColor') %></div>
           </div>
           <div class="col3">
@@ -218,7 +218,7 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsHighlightColor"><%= ob.polyT('settings.highlightColor') %><span class="clrTEmph1">*</span></label>
+            <label for="settingsHighlightColor" class="required"><%= ob.polyT('settings.highlightColor') %></label>
             <div class="clrT2 txBase"><%= ob.polyT('settings.pageTab.helperHighlightColor') %></div>
           </div>
           <div class="col3">
@@ -229,7 +229,7 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsHighlightTextColor"><%= ob.polyT('settings.highlightTextColor') %><span class="clrTEmph1">*</span></label>
+            <label for="settingsHighlightTextColor" class="required"><%= ob.polyT('settings.highlightTextColor') %></label>
             <div class="clrT2 txBase"><%= ob.polyT('settings.pageTab.helperHighlightTextColor') %></div>
           </div>
           <div class="col3">

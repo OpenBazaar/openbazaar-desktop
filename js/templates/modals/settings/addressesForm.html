@@ -2,7 +2,7 @@
 <form class="box padKids padStack contentBox pad rowMd clrP border clrBr js-addAddressForm">
   <div class="flexRow">
     <div class="col3">
-      <label for="settingsAddressName"><%= ob.polyT('settings.addresses.name') %><span class="clrTEmph1">*</span></label>
+      <label for="settingsAddressName" class="required"><%= ob.polyT('settings.addresses.name') %></label>
     </div>
     <div class="col6">
       <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
@@ -65,7 +65,7 @@
   </div>
   <div class="flexRow">
     <div class="col3">
-      <label for="settingsAddressCountry"><%= ob.polyT('settings.addresses.country') %><span class="clrTEmph1">*</span></label>
+      <label for="settingsAddressCountry" class="required"><%= ob.polyT('settings.addresses.country') %></label>
     </div>
     <div class="col6 clrSh2">
       <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
