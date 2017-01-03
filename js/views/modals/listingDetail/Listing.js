@@ -7,9 +7,9 @@ import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
 import 'select2';
 import { getTranslatedCountries } from '../../../data/countries';
-import 'cropit';
 import is from 'is_js';
 import '../../../utils/velocity';
+import 'jquery-zoom';
 
 
 export default class extends BaseModal {
@@ -26,6 +26,7 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
+    this.activePhotoIndex = 0;
 
     this.countryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
@@ -144,7 +145,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoSelect(e) {
-    this.setSelectedPhoto($(e.target).data('index'));
+    this.setSelectedPhoto($(e.target).index('.js-photoSelect'));
   }
 
   setSelectedPhoto(photoIndex) {
@@ -158,8 +159,29 @@ export default class extends BaseModal {
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
-    this.$photoSection.cropit('imageSrc', phSrc);
-    this.$photoSelected.attr('data-index', photoIndex);
+    this.activePhotoIndex = photoIndex;
+    this.$photoSelected.trigger('zoom.destroy'); // old zoom must be removed
+    this.$photoSelectedInner.attr('src', phSrc);
+  }
+
+  activateZoom() {
+    if (this.$photoSelectedInner.width() >= this.$photoSelectedWidth ||
+        this.$photoSelectedInner.height() >= this.$photoSelectedHeight) {
+      this.$photoSelected
+          .removeClass('unzoomable')
+          .zoom({
+            url: this.$photoSelectedInner.attr('src'),
+            on: 'click',
+            onZoomIn: () => {
+              this.$photoSelected.addClass('open');
+            },
+            onZoomOut: () => {
+              this.$photoSelected.removeClass('open');
+            },
+          });
+    } else {
+      this.$photoSelected.addClass('unzoomable');
+    }
   }
 
   setActivePhotoThumbnail(thumbIndex) {
@@ -173,7 +195,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoPrev() {
-    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) - 1;
+    let targetIndex = this.activePhotoIndex - 1;
     const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
 
     targetIndex = targetIndex < 0 ? imagesLength - 1 : targetIndex;
@@ -182,7 +204,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoNext() {
-    let targetIndex = parseInt(this.$photoSelected.attr('data-index'), 10) + 1;
+    let targetIndex = this.activePhotoIndex + 1;
     const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
 
     targetIndex = targetIndex >= imagesLength ? 0 : targetIndex;
@@ -278,12 +300,22 @@ export default class extends BaseModal {
 
   get $photoSection() {
     return this._$photoSection ||
-      (this._$photoSection = this.$('#photoSection'));
+      (this._$photoSection = this.$('.js-photoSection'));
   }
 
   get $photoSelected() {
     return this._$photoSelected ||
       (this._$photoSelected = this.$('.js-photoSelected'));
+  }
+
+  get $photoSelectedHeight() {
+    return this._$photoSelectedHeight ||
+      (this._$photoSelectedHeight = this.$photoSelected.height());
+  }
+
+  get $photoSelectedWidth() {
+    return this._$photoSelectedWidth ||
+      (this._$photoSelectedWidth = this.$photoSelected.width());
   }
 
   get $shippingSection() {
@@ -329,34 +361,25 @@ export default class extends BaseModal {
 
       super.render();
 
+      this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
       this._$popInMessages = null;
       this._$photoSection = null;
+      this._$photoSelected = null;
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
       this._$closeClickTargets = null;
 
+      this.$photoSelectedInner.on('load', () => this.activateZoom());
+
       // commented out until variants are available
       // this.$('.js-variantSelect').select2();
 
-      const initialPhotoHash = this.model.get('listing').toJSON().item.images[0].original;
-      const initialPhoto = app.getServerUrl(`ipfs/${initialPhotoHash}`);
-
-      setTimeout(() => {
-        this.$photoSection.cropit({
-          smallImage: 'allow',
-          allowDragNDrop: false,
-          maxZoom: 2,
-        });
-
-        this.$photoSection.cropit('imageSrc', initialPhoto);
-      }, 0);
-
       this.$('#shippingDestinations').select2();
-
       this.renderShippingDestinations(this.defaultCountry);
+      this.setSelectedPhoto(this.activePhotoIndex);
     });
 
     return this;

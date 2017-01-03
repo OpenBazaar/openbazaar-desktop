@@ -42,12 +42,30 @@
         }
       }
 
-      #photoSection {
+      .photoSection {
         height: 701px;
 
         .photoSelected {
           height: 100%;
-          cursor: pointer;
+          cursor: zoom-in;
+
+          &.unzoomable {
+            cursor: auto;
+          }
+
+          &.open {
+            cursor: zoom-out;
+
+            .photoSelectedInner {
+              display: none;
+            }
+          }
+
+          .photoSelectedInner {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+          }
         }
 
         .photoPrev,
