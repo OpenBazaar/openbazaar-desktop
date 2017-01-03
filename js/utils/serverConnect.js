@@ -150,11 +150,14 @@ export default function connect(server, options = {}) {
   };
 
   const resolve = (e) => {
+    const data = getPromiseData(e);
+
     currentConnection = {
-      ...getPromiseData(e),
+      ...data,
       status: 'connected',
     };
 
+    data.socket.on('close', () => (currentConnection = null));
     events.trigger('connected', getPromiseData(e));
     deferred.resolve(getPromiseData(e));
   };
