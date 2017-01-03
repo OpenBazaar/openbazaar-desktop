@@ -430,6 +430,14 @@
     width: 50px;
     hegiht: 50px;
   }
+
+  .gemSmall {
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+    background-size: contain;
+  }
+
   .flexBar {
     display: flex;
     flex-direction: row;
