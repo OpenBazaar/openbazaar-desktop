@@ -165,8 +165,8 @@ export default class extends BaseModal {
   }
 
   activateZoom() {
-    if (this.$photoSelectedInner.width() >= this.$photoSelectedWidth ||
-        this.$photoSelectedInner.height() >= this.$photoSelectedHeight) {
+    if (this.$photoSelectedInner.width() >= this.$photoSelected.width() ||
+        this.$photoSelectedInner.height() >= this.$photoSelected.height()) {
       this.$photoSelected
           .removeClass('unzoomable')
           .zoom({
@@ -306,16 +306,6 @@ export default class extends BaseModal {
   get $photoSelected() {
     return this._$photoSelected ||
       (this._$photoSelected = this.$('.js-photoSelected'));
-  }
-
-  get $photoSelectedHeight() {
-    return this._$photoSelectedHeight ||
-      (this._$photoSelectedHeight = this.$photoSelected.height());
-  }
-
-  get $photoSelectedWidth() {
-    return this._$photoSelectedWidth ||
-      (this._$photoSelectedWidth = this.$photoSelected.width());
   }
 
   get $shippingSection() {
