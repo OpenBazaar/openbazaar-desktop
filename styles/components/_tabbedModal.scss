@@ -30,6 +30,10 @@
     }
   }
 
+  .tabContent {
+    max-width: 757px;
+  }
+
   &.fixedNav {
     .tabColumn {
       position: fixed;
