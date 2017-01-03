@@ -88,9 +88,9 @@
     "userNotFound": "Information for %{guid} was not found on the network."
   },
   "about": {
-    "_linkText": "About OpenBazaar",
-    "_brand": "OpenBazaar",
-    "_blurbs": {
+    "linkText": "About OpenBazaar",
+    "brand": "OpenBazaar",
+    "blurbs": {
       "tradeFree": "OpenBazaar is made possible by an international community of developers and volunteers contributing their time to help make trade free."
     },
     "version": "version",
@@ -99,21 +99,21 @@
     "server": "Server",
     "btnUpdateCheck": "Check for Update",
     "menu": {
-      "_sectionHeader": "MENU",
+      "sectionHeader": "MENU",
       "btnNext": "Next",
       "btnPrevious": "Previous"
     },
     "donationsTab": {
-      "_linkText": "Donations",
-      "_sectionHeader": "Donations",
+      "linkText": "Donations",
+      "sectionHeader": "Donations",
       "btnCopyAddress": "Copy Address",
       "btnOpenInWallet" : "Open in Wallet",
       "notifyCopied": "Copied",
       "bannerCountDonations": "500+ Donations Received!"
     },
     "licenseTab": {
-      "_linkText": "License",
-      "_sectionHeader": "OpenBazaar MIT License",
+      "linkText": "License",
+      "sectionHeader": "OpenBazaar MIT License",
       "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
       "header": "The MIT License (MIT)",
       "copyright": "Copright &copy; 2016 OpenBazaar Developers",
@@ -124,13 +124,13 @@
       }
     },
     "contributorsTab": {
-      "_linkText": "Contributors",
-      "_sectionHeader": "OpenBazaar Contributors",
+      "linkText": "Contributors",
+      "sectionHeader": "OpenBazaar Contributors",
       "listPreface": "This is a partial list of people who have contributed to the project, either through code or other assistance."
     },
     "storyTab": {
-      "_linkText": "The Story",
-      "_sectionHeader": "The Story of OpenBazaar",
+      "linkText": "The Story",
+      "sectionHeader": "The Story of OpenBazaar",
       "paragraphs": {
         "beginning": "This is only the beginning. In the beginning there was the Three which is also the One. The Three looked on the face of the Void and said...",
         "middle": "There is so much left to do.",
@@ -169,11 +169,11 @@
       "addAddressErrorAlertTitle": "Unable to add address %{name}"
     },
     "advancedTab": {
-      "_sectionName": "Advanced",
+      "sectionName": "Advanced",
       "smtp": {
-        "_sectionName": "SMTP Integration",
-        "_testAction": "Test Integration",
-        "_clearAction": "Clear Settings",
+        "sectionName": "SMTP Integration",
+        "testAction": "Test Integration",
+        "clearAction": "Clear Settings",
         "notifications": "Notifications",
         "username": "Username",
         "password": "Password",
@@ -182,14 +182,14 @@
         "recipientEmail": "Send to"
       },
       "server": {
-        "_sectionName": "Server Settings",
+        "sectionName": "Server Settings",
         "management": "Management",
         "peers": "Peers",
         "btnShowManagementAction": "Connection Management",
         "btnShowPeersAction": "Show Connected Peers"
       },
       "transaction": {
-        "_sectionName": "Transactions",
+        "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
         "defaultFee": "Default Fee",
         "low": "Low",
@@ -197,7 +197,7 @@
         "high": "High"
       },
       "appearance": {
-        "_sectionName": "Appearance",
+        "sectionName": "Appearance",
         "visualEffects": "Visual Effects",
         "windowControlStyle": "Window Style",
         "macOS": "Mac",
