@@ -1,26 +1,48 @@
-/* 
- * When this was added it had not effect. 
- * So the intended styles were moved to:
- * ../../components/_layout.scss temporarily
- * 
-*/
-
-/*
-
-  .about { 
-    .flexSpaceBetween {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-
-    .flex0 {
-      flex: 0;
-    }
-
-    .txtRight {
-      text-align: right;
-    }
+.about { 
+  .brandSmall {
+    width: 50px;
+    height: 50px;
   }
 
-*/
+  .gemSmall {
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+    background-size: contain;
+  }
+
+  .flexBar {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .flexSpaceBetween {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  #donation-qr-code {
+    width: 200px; 
+    height: 200px;
+    background: black;
+  } 
+
+  #donate-cta {
+    max-width: 80%;
+    margin: auto;
+  }
+
+  .flex0 {
+    flex: 0;
+  }
+
+  .txtRight {
+    text-align: right;
+  }
+
+  .flexShrink0 {
+    flex-shrink: 0;
+  }
+}
+

@@ -48,6 +48,7 @@
     "eslint-plugin-import": "^1.10.0",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
+    "jquery-zoom": "^1.7.18",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
     "node-sass": "^3.13.0",
