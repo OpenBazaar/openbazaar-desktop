@@ -8,6 +8,8 @@ import General from './General';
 import Page from './Page';
 import Addresses from './Addresses';
 import Advanced from './Advanced';
+import { installRichEditor } from '../../../utils/trumbowyg';
+
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -194,6 +196,10 @@ export default class extends BaseModal {
       this._$closeClickTargets = null;
 
       this.selectTab(this.$('.js-tab[data-tab="General"]'));
+    });
+
+    installRichEditor(this.$('#settingsAbout'), {
+      topLevelClass: 'clrBr',
     });
 
     return this;

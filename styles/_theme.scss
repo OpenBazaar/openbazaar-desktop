@@ -103,6 +103,11 @@ input[type=range][class~="clrS"] {
   hr {
     border-color: $border;
   }
+  
+  .trumbowyg-box,
+  .trumbowyg-editor {
+    margin: auto;
+  }
 
   &.trumbowyg {
     border-width: 0;
