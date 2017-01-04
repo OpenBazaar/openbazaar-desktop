@@ -6,7 +6,6 @@ import Socket from '../utils/Socket';
 import $ from 'jquery';
 import { Events } from 'backbone';
 import app from '../app';
-import Dialog from '../views/modals/Dialog';
 
 const events = {
   ...Events,
