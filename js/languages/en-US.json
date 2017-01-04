@@ -214,6 +214,7 @@
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
       "viewLocalServerDebugLogLink": "View Server Debug Log",
+      "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
       "cancelConnAttempt": "Cancel",

@@ -89,10 +89,6 @@
         transform: translateY(7px);
         z-index: 1;
       }
-
-      &:first-child .deleteConfirm {
-        display: none;
-      }
     }
   }
 }

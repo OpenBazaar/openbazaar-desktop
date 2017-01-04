@@ -19,6 +19,16 @@ export default class extends baseVw {
 
     super(options);
     this.configViews = [];
+    this.emptyConfigs = !!this.collection.length;
+
+    this.listenTo(this.collection, 'update', cl => {
+      const prevEmptyConfigs = this.emptyConfigs;
+      this.emptyConfigs = !!cl.length;
+
+      if (this.emptyConfigs !== prevEmptyConfigs) {
+        this.render();
+      }
+    });
 
     this.listenTo(serverConnectEvents, 'all', (eventName, eventData) => {
       console.log(`gotta ${eventName} event wit sum data`);
@@ -44,46 +54,11 @@ export default class extends baseVw {
       });
     });
 
-    this.listenTo(serverConnectEvents, 'connect-attempt-failed', e => {
-      let links = `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`;
-      let msg = '';
+    this.listenTo(serverConnectEvents, 'connection-lost',
+      e => this.handleFailedConnection('connection-lost', e));
 
-      if (localServer) {
-        links =
-          '<a class="js-viewDebugLog">' +
-          `${app.polyglot.t('connectionManagement.statusBar.viewLocalServerDebugLogLink')}` +
-          `</a>&nbsp;|&nbsp;<a>${links}</a>`;
-      }
-
-      if (e.reason === 'authentication-failed') {
-        msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
-          serverName: e.server.get('name'),
-          errorPreface: '<span class="txB">' +
-            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
-          links,
-        });
-      } else if (e.reason === 'canceled') {
-        this.$statusBarOuterWrap.addClass('hide');
-        this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
-        return;
-      } else { // generic unable to reach server
-        msg = app.polyglot.t('connectionManagement.statusBar.errorUnableToReachServer', {
-          serverName: e.server.get('name'),
-          errorPreface: '<span class="txB">' +
-            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
-          links,
-        });
-      }
-
-      this.statusBarMessage.setState({
-        status: 'connect-attempt-failed',
-        msg,
-      });
-      this.$statusBarOuterWrap.removeClass('hide');
-
-      this.getConfigVw(e.server.id)
-        .setState({ status: 'connect-attempt-failed' });
-    });
+    this.listenTo(serverConnectEvents, 'connect-attempt-failed',
+      e => this.handleFailedConnection('connect-attempt-failed', e));
 
     this.listenTo(serverConnectEvents, 'connected', e => {
       this.$statusBarOuterWrap.addClass('hide');
@@ -111,6 +86,54 @@ export default class extends baseVw {
     return {
       'click .js-btnNew': 'onNewClick',
     };
+  }
+
+  handleFailedConnection(eventName, e) {
+    let links = `<a>${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`;
+    let msg = '';
+
+    if (localServer) {
+      links =
+        '<a class="js-viewDebugLog">' +
+        `${app.polyglot.t('connectionManagement.statusBar.viewLocalServerDebugLogLink')}` +
+        `</a>&nbsp;|&nbsp;<a>${links}</a>`;
+    }
+
+    if (e.reason === 'authentication-failed') {
+      msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
+        serverName: e.server.get('name'),
+        errorPreface: '<span class="txB">' +
+          `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+        links,
+      });
+    } else if (e.reason === 'canceled') {
+      this.$statusBarOuterWrap.addClass('hide');
+      this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
+      return;
+    } else if (eventName === 'connection-lost') {
+      msg = app.polyglot.t('connectionManagement.statusBar.errorConnectionLost', {
+        serverName: e.server.get('name'),
+        errorPreface: '<span class="txB">' +
+          `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+        links,
+      });
+    } else { // generic unable to reach server
+      msg = app.polyglot.t('connectionManagement.statusBar.errorUnableToReachServer', {
+        serverName: e.server.get('name'),
+        errorPreface: '<span class="txB">' +
+          `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+        links,
+      });
+    }
+
+    this.statusBarMessage.setState({
+      status: 'connect-attempt-failed',
+      msg,
+    });
+    this.$statusBarOuterWrap.removeClass('hide');
+
+    this.getConfigVw(e.server.id)
+      .setState({ status: 'connect-attempt-failed' });
   }
 
   onNewClick() {
@@ -175,8 +198,12 @@ export default class extends baseVw {
   }
 
   render() {
+    console.log(`They be a RENDERin me with ${this.collection.length} configs.`);
+    console.trace();
     loadTemplate('modals/connectionManagement/configurations.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        configurations: this.collection.toJSON(),
+      }));
 
       this.$serverConfigsContainer = this.$('.js-serverConfigsContainer');
       this._$statusBarOuterWrap = null;
@@ -199,9 +226,8 @@ export default class extends baseVw {
         () => this.$statusBarOuterWrap.addClass('hide'));
       this.listenTo(this.statusBarMessage, 'clickViewDebugLog',
         () => launchDebugLogModal());
-      this.$('.js-statusBarMessageContainer').append(this.statusBarMessage.render().el);
-
       this.listenTo(this.statusBarMessage, 'clickCancelLink', () => this.cancelConnAttempt());
+      this.$('.js-statusBarMessageContainer').append(this.statusBarMessage.render().el);
     });
 
     return this;

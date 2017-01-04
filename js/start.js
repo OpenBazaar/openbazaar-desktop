@@ -354,9 +354,7 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
-        app.connectionManagmentModal = new ConnectionManagement()
-          .render()
-          .open();
+        app.connectionManagmentModal.setModalOptions({ removeOnRoute: true });
       });
     });
   });
@@ -378,6 +376,7 @@ function connectToServer() {
     })
     .fail((e) => {
       console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
+      app.connectionManagmentModal.open();
     });
 }
 
@@ -393,6 +392,11 @@ const sendMainActiveServer = (activeServer) => {
 app.serverConfigs = new ServerConfigs();
 app.serverConfigs.on('activeServerChange', (activeServer) =>
   sendMainActiveServer(activeServer));
+
+// Let's create our Connection Management modal so that it's
+// available to show when needed.
+app.connectionManagmentModal = new ConnectionManagement({ removeOnRoute: false })
+  .render();
 
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
@@ -422,29 +426,7 @@ app.serverConfigs.fetch().done(() => {
           `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
       }
     } else {
-      // show connection modal with a state that
-      // at least one connection must be created
-
-      // for now will just create a new connection
-      const serverConfig = new ServerConfig({
-        name: 'Dummy Connection',
-      });
-
-      const save = serverConfig.save();
-
-      if (save) {
-        save.done(() => {
-          app.serverConfigs.add(serverConfig);
-          app.serverConfigs.activeServer = serverConfig;
-          connectToServer();
-        });
-      } else {
-        const validationErr = serverConfig.validationError;
-
-        // This is developer error.
-        throw new Error('There were one or more errors saving an initial server configuration' +
-          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
-      }
+      app.connectionManagmentModal.open();
     }
   } else {
     const activeServer = app.serverConfigs.activeServer;

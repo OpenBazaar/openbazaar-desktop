@@ -99,7 +99,7 @@ export default function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 5,
+    attempts: 2,
     timeoutBetweenAttempts: 2000,
     maxAttemptTime: 5000,
     // todo: work this one in
@@ -114,15 +114,26 @@ export default function connect(server, options = {}) {
   let connectAttempt = null;
   let cancel = null;
 
-  const getPromiseData = (data = {}) => {
-    const aggregateData = {
+  const getPromiseData = (data = {}, getPromiseOpts = {}) => {
+    const getPromiseDataOpts = {
+      includeAttemptData: true,
+      ...getPromiseOpts,
+    };
+
+    let aggregateData = {
       localServer,
       server,
       socket,
-      connectAttempt: attempt,
-      totalConnectAttempts: opts.attempts,
       ...data,
     };
+
+    if (getPromiseDataOpts.includeAttemptData) {
+      aggregateData = {
+        ...aggregateData,
+        connectAttempt: attempt,
+        totalConnectAttempts: opts.attempts,
+      };
+    }
 
     if (localServer) aggregateData.localServer = localServer;
 
@@ -157,7 +168,13 @@ export default function connect(server, options = {}) {
       status: 'connected',
     };
 
-    data.socket.on('close', () => (currentConnection = null));
+    data.socket.on('close', (connectionLostE) => {
+      const connectionLostEventData = getPromiseData({ socketCloseEvent: connectionLostE },
+        { includeAttemptData: false });
+      events.trigger('connection-lost', connectionLostEventData);
+      currentConnection = null;
+    });
+
     events.trigger('connected', getPromiseData(e));
     deferred.resolve(getPromiseData(e));
   };
@@ -337,44 +354,18 @@ export default function connect(server, options = {}) {
 }
 
 // Temporary flow to handle a lost connection.
-let noConnectionDialog;
-
-const showNoConnectionDialog = () => {
-  if (noConnectionDialog) return;
-
-  noConnectionDialog = new Dialog({
-    title: 'No server connection',
-    message: 'We were unable to connect to or have lost a connection with the server.',
-    buttons: [{
-      text: 'Retry',
-      fragment: 'retry',
-    }],
-    dismissOnOverlayClick: false,
-    dismissOnEscPress: false,
-    showCloseButton: false,
-  }).on('click-retry', () => {
-    noConnectionDialog.$('.js-retry').addClass('processing');
-    connect(app.serverConfigs.activeServer).done(() => location.reload())
-      .always(() => {
-        if (noConnectionDialog) {
-          noConnectionDialog.$('.js-retry').removeClass('processing');
-        }
-      });
-  })
-  .render()
-  .open();
-};
-
 let connectedAtLeastOnce = false;
-events.on('connected', (e) => {
-  connectedAtLeastOnce = true;
-  e.socket.on('close', () => {
-    showNoConnectionDialog();
-  });
-});
 
-events.on('connect-attempt-failed', () => {
-  if (!connectedAtLeastOnce) showNoConnectionDialog();
+events.on('connected', (e) => {
+  if (connectedAtLeastOnce) {
+    location.reload();
+  } else {
+    connectedAtLeastOnce = true;
+  }
+
+  e.socket.on('close', () => {
+    app.connectionManagmentModal.open();
+  });
 });
 
 ipcRenderer.send('server-connect-ready');

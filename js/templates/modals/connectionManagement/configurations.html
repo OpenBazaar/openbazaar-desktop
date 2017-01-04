@@ -14,7 +14,14 @@
   </div>
   <hr class="clrBr rowLg" />
 
+  <% if (ob.configurations.length) { %>
   <div class="borderStacked contentBox clrBr padKids js-serverConfigsContainer"></div>
+  <% } else { %>
+  <div class="js-emptyConfigurations flexCent">
+    <p>You have no server configurations. At least one is required to use the app. Please
+    <a class="js-btnNew">create</a> one in order to proceed.</p>
+  </div>
+  <% } %>
 </div>
 <div class="statusBarOuterWrap js-statusBarOuterWrap clrBr border hide">
   <div class="js-statusBarMessageContainer" style="height: 100%"></div>
