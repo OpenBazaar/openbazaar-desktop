@@ -99,9 +99,7 @@
     "server": "Server",
     "btnUpdateCheck": "Check for Update",
     "menu": {
-      "sectionHeader": "MENU",
-      "btnNext": "Next",
-      "btnPrevious": "Previous"
+      "sectionHeader": "MENU"
     },
     "donationsTab": {
       "linkText": "Donations",
