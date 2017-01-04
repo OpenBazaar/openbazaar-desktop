@@ -11,34 +11,11 @@
     background-size: contain;
   }
 
-  .flexSpaceBetween {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  
   #donation-qr-code {
     width: 200px; 
     height: 200px;
     background: black;
   } 
-
-  #donate-cta {
-    max-width: 80%;
-    margin: auto;
-  }
-
-  .flex0 {
-    flex: 0;
-  }
-
-  .txtRight {
-    text-align: right;
-  }
-
-  .flexShrink0 {
-    flex-shrink: 0;
-  }
 
   .columns {
     column-gap: $padMd;
