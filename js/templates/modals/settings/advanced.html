@@ -194,9 +194,9 @@
           <div class="flexRow" data-next-siblings-toggle>
             <div class="col3">
               <label><%= ob.polyT('settings.advancedTab.smtp.notifications') %></label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperServerPeers') %></div>
+              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperNotifications') %></div>
             </div>
-            <div class="col5">
+            <div class="col6">
               <% if (ob.errors['smtpSettings.notifications']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.notifications'] })) %>
               <div class="btnRadio clrBr">
                 <input type="radio"
@@ -223,8 +223,9 @@
               <label for="smtpServerAddress">
                 <%= ob.polyT('settings.advancedTab.smtp.serverAddress') %>
               </label>
+              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperServerAddress') %></div>
             </div>
-            <div class="col5">
+            <div class="col6">
               <% if (ob.errors['smtpSettings.serverAddress']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.serverAddress'] })) %>
               <input class="clrBr clrSh2" 
                 required
@@ -233,6 +234,7 @@
                 id="smtpServerAddress" 
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderServerAddress') %>"
                 value="<%= ob.smtpSettings.serverAddress %>">
+              <div class="clrT2 txBase padSm"><%= ob.polyT('settings.advancedTab.smtp.helperNewEmail') %> <a href="https://accounts.google.com/SignUp" class="clrTEm">Gmail</a></div>
             </div>
           </div>
           <div class="flexRow">
@@ -240,8 +242,9 @@
               <label for="smtpUsername">
                 <%= ob.polyT('settings.advancedTab.smtp.username') %>
               </label>
+              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperUsername') %></div>
             </div>
-            <div class="col5">
+            <div class="col6">
               <% if (ob.errors['smtpSettings.username']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.username'] })) %>
               <input class="clrBr clrSh2" 
                 required        
@@ -257,8 +260,9 @@
               <label for="smtpPassword">
                 <%= ob.polyT('settings.advancedTab.smtp.password') %>
               </label>
+              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperPassword') %></div>
             </div>
-            <div class="col5">
+            <div class="col6">
               <% if (ob.errors['smtpSettings.password']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.password'] })) %>
               <input class="clrBr clrSh2" 
                 required 
@@ -274,8 +278,9 @@
               <label for="smtpSenderEmail">
                 <%= ob.polyT('settings.advancedTab.smtp.senderEmail') %>
               </label>
+              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperSendFrom') %></div>
             </div>
-            <div class="col5">
+            <div class="col6">
               <% if (ob.errors['smtpSettings.senderEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.senderEmail'] })) %>
               <input class="clrBr clrSh2" 
                 required
@@ -291,8 +296,9 @@
               <label for="smtpRecipientEmail">
                 <%= ob.polyT('settings.advancedTab.smtp.recipientEmail') %>
               </label>
+              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperSendTo') %></div>
             </div>
-            <div class="col5">
+            <div class="col6">
               <% if (ob.errors['smtpSettings.recipientEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.recipientEmail'] })) %>
               <input class="clrBr clrSh2" 
                 required
@@ -306,7 +312,7 @@
           <div class="flexRow">
             <div class="col3">
             </div>
-            <div class="col5">
+            <div class="col6">
               <input  class="clrBr clrP clrTEm margR flexNoShrink" 
                       type=reset 
                       value="<%= ob.polyT('settings.advancedTab.smtp._clearAction') %>"

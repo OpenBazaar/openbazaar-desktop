@@ -26,7 +26,7 @@
           <div class="col6">
             <% if (ob.errors.handle) print(ob.formErrorTmpl({ errors: ob.errors.handle })) %>
             <input type="text" class="clrBr clrSh2" name="handle" id="settingsHandle" value="<%= ob.handle %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHandle') %>">
-            <div class="clrT2 txBase padSm"><%= ob.polyT('settings.pageTab.helperHandle') %> <a href="https://onename.com">Onename.com</a></div>
+            <div class="clrT2 txBase padSm"><%= ob.polyT('settings.pageTab.helperHandle') %> <a href="https://onename.com" class="clrTEm">Onename.com</a></div>
           </div>
         </div>
         <div class="flexRow">
@@ -116,7 +116,7 @@
           </div> -->
           <div class="col12">
             <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
-            <textarea rows="6" name="about" class="clrBr clrSh2" id="settingsAbout"><%= ob.about %></textarea>
+            <textarea rows="10" name="about" class="clrBr clrSh2" id="settingsAbout"><%= ob.about %></textarea>
             <div class="clrT2 txBase padSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
         </div>

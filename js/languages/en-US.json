@@ -162,7 +162,14 @@
         "placeholderUsername": "name@domain.com",
         "placeholderPassword": "The password to your email address",
         "placeholderSendFrom": "name@domain.com",
-        "placeholderSendTo": "name@domain.com"
+        "placeholderSendTo": "name@domain.com",
+        "helperNotifications": "Receive emails for order updates and new followers",
+        "helperServerAddress": "Use gmail, yahoo or anything",
+        "helperNewEmail": "Create an email address at",
+        "helperUsername": "Your email address (username)",
+        "helperPassword": "Encrypted and saved privately in your database",
+        "helperSendFrom": "The email address to send from",
+        "helperSendTo": "The email address to send to"
       },
       "server": {
         "_sectionName": "Server",
