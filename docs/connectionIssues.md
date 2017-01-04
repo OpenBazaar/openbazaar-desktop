@@ -12,7 +12,7 @@ Check your JS console. If you are not seeing any red `WebSocket...` errors:
 1. Ensure your server is running.
 2. In the config file, ensure Addresses.Gateway has your server's IP embedded in it. For example, if your server ip is `123.45.6.78`, the `Gateway` value would be `/ip4/138.197.205.97/tcp/4002`.
 3. In the client, ensure the port set in the server configuration UI matches the port value you set above:
-![image](https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/imgs/connectionIssues/setPortInUi.png)
+![](https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/imgs/connectionIssues/setPortInUi.png)
 
 If you are seeing the following error in your JS console:
 !(https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/imgs/connectionIssues/sslProtocolError.png)
