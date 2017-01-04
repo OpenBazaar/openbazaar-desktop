@@ -12,6 +12,30 @@
     </div>
   </div>
   <div class="flexExpand posR">
-    <div class="js-tabContent tabContent"></div>
+    <div class="js-tabContent tabContent">
+      <div class="contentBox padMd clrP clrBr clrSh3">
+        <div class="flexSpaceBetween">
+          <div class="flexRow flex0">
+            <div class="brandSmall" style="background-image: url('../imgs/obVectorIcon.svg');"></div>
+            <div>
+              <h4><%= ob.polyT('about.brand') %></h4>
+              <div class="flexRow">
+                <div class="gemSmall" style="background-image: url('../imgs/btcIcon128.png');"></div>
+                <div class="gemSmall" style="background-image: url('../imgs/globeIcon64.png');"></div>
+                <div class="gemSmall" style="background-image: url('../imgs/peaceIcon64.png');"></div>
+              </div>
+            </div>
+          </div>
+          <h2 class="h3 clrT"><%= ob.polyT('about.storyTab.sectionHeader') %></h2>
+          <div class="txtRight">
+            <div><%= ob.polyT('about.version') %> <%= ob.polyT('about.versionCode') %></div>
+            <a class="btn clrP clrBr js-copyAddress flexNoShrink">
+              <%= ob.polyT('about.btnUpdateCheck') %>
+            </a>
+          </div>
+        </div>
+        <hr class="clrBr" />
+      </div>
+    </div>
   </div>
 </div>

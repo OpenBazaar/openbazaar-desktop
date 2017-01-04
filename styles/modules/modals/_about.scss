@@ -41,9 +41,13 @@
   }
 
   .columns {
-    column-gap: 2rem;
-    column-rule: 1px solid $border;
+    column-gap: $padMd;
     max-height: fit-content;
+
+    li {
+      padding-left: $padLg;
+      padding-bottom: $padSm;
+    }
   }
 
   .twoColumns {

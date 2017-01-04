@@ -76,11 +76,15 @@ export default class extends BaseModal {
   }
 
   render() {
+    const tabTitle = 'Hello World!';
     loadTemplate('modals/about/about.html', (t) => {
-      this.$el.html(t(this.options));
+      this.$el.html(t({
+        ...this.options,
+        tabTitle,
+      }));
       super.render();
 
-      this.$tabContent = this.$('.js-tabContent');
+      this.$tabContent = this.$('.js-tabContent .contentBox');
       this._$closeClickTargets = null;
 
       // default About tab
