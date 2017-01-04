@@ -1,22 +1,20 @@
-<div class="padLg">
-  <div id=donate-cta class="padMd flexRow">
-    <div id=donation-qr-code class="padMd">
-      <img src=qr>
+<div class="flex padGi">
+  <div id=donation-qr-code class="padMd">
+    <img src=qr>
+  </div>
+  <div id=donation-dashboard class="padMd flexCol">
+    <h2><%= ob.polyT('about.donationsTab.bannerCountDonations') %></h2>
+    <div class="padMd">
+      <span id=donationAddress>thisIsSomeReallyLongBTCWalletAddress</span>
+      <span>Copied</span>
     </div>
-    <div id=donation-dashboard class="padMd flexCol">
-      <h2><%= ob.polyT('about.donationsTab.bannerCountDonations') %></h2>
-      <div class="padMd">
-        <span id=donationAddress>thisIsSomeReallyLongBTCWalletAddress</span>
-        <span>Copied</span>
-      </div>
-      <div class="padMd">
-        <a class="btn clrP clrBr js-copyAddress flexNoShrink">
-          <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
-        </a>
-        <a class="btn clrP clrBr js-openInWallet flexNoShrink">
-          <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
-        </a>
-      </div>
+    <div class="padMd">
+      <a class="btn clrP clrBr js-copyAddress flexNoShrink">
+        <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
+      </a>
+      <a class="btn clrP clrBr js-openInWallet flexNoShrink">
+        <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
+      </a>
     </div>
   </div>
 </div>
