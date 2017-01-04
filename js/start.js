@@ -355,6 +355,7 @@ function start() {
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
         app.connectionManagmentModal.setModalOptions({ removeOnRoute: true });
+        app.connectionManagmentModal.open();
       });
     });
   });

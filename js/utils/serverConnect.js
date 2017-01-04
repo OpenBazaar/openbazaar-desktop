@@ -171,7 +171,7 @@ export default function connect(server, options = {}) {
     data.socket.on('close', (connectionLostE) => {
       const connectionLostEventData = getPromiseData({ socketCloseEvent: connectionLostE },
         { includeAttemptData: false });
-      events.trigger('connection-lost', connectionLostEventData);
+      events.trigger('disconnect', connectionLostEventData);
       currentConnection = null;
     });
 
@@ -330,6 +330,12 @@ export default function connect(server, options = {}) {
       ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
   }).done((e) => {
     log(`[${server.id.slice(0, 8)}] Connected to "${e.server.get('name')}"`);
+
+    e.socket.on('close', () => {
+      const logMsg = `[${e.server.id.slice(0, 8)}] Disconnected from ` +
+        `"${e.server.get('name')}"`;
+      log(logMsg);
+    });
   }).fail((e) => {
     log(`[${server.id.slice(0, 8)}] Failed to connect to "${e.server.get('name')}"`);
     log(` ====> Reason: ${e.status}`);

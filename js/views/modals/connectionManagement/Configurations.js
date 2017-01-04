@@ -54,8 +54,8 @@ export default class extends baseVw {
       });
     });
 
-    this.listenTo(serverConnectEvents, 'connection-lost',
-      e => this.handleFailedConnection('connection-lost', e));
+    this.listenTo(serverConnectEvents, 'disconnect',
+      e => this.handleFailedConnection('disconnect', e));
 
     this.listenTo(serverConnectEvents, 'connect-attempt-failed',
       e => this.handleFailedConnection('connect-attempt-failed', e));
@@ -110,7 +110,7 @@ export default class extends baseVw {
       this.$statusBarOuterWrap.addClass('hide');
       this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
       return;
-    } else if (eventName === 'connection-lost') {
+    } else if (eventName === 'disconnect') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorConnectionLost', {
         serverName: e.server.get('name'),
         errorPreface: '<span class="txB">' +
@@ -198,8 +198,6 @@ export default class extends baseVw {
   }
 
   render() {
-    console.log(`They be a RENDERin me with ${this.collection.length} configs.`);
-    console.trace();
     loadTemplate('modals/connectionManagement/configurations.html', (t) => {
       this.$el.html(t({
         configurations: this.collection.toJSON(),
