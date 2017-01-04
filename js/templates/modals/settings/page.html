@@ -116,7 +116,7 @@
           </div> -->
           <div class="col12">
             <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
-            <textarea rows="10" name="about" class="clrBr clrSh2" id="settingsAbout"><%= ob.about %></textarea>
+            <textarea rows="10" name="about" class="clrBr clrSh2" id="settingsAbout" placeholder="<%= ob.polyT('settings.pageTab.placeholderAbout') %>"><%= ob.about %></textarea>
             <div class="clrT2 txBase padSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
         </div>
@@ -197,7 +197,7 @@
           <div class="col3">
             <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
             <input type="text" class="clrBr clrSh2" name="primaryColor" id="settingsPrimaryColor"
-                   value="<%= ob.primaryColor %>">
+                   value="<%= ob.primaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>">
           </div>
         </div>
         <div class="flexRow">
@@ -208,7 +208,7 @@
           <div class="col3">
             <% if (ob.errors.secondaryColor) print(ob.formErrorTmpl({ errors: ob.errors.secondaryColor })) %>
             <input type="text" class="clrBr clrSh2" name="secondaryColor" id="settingsSecondaryColor"
-                   value="<%= ob.secondaryColor %>">
+                   value="<%= ob.secondaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>">
           </div>
         </div>
         <div class="flexRow">
@@ -219,7 +219,7 @@
           <div class="col3">
             <% if (ob.errors.textColor) print(ob.formErrorTmpl({ errors: ob.errors.textColor })) %>
             <input type="text" class="clrBr clrSh2" name="textColor" id="settingsTextColor"
-                   value="<%= ob.textColor %>">
+                   value="<%= ob.textColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>">
           </div>
         </div>
         <div class="flexRow">
@@ -230,7 +230,7 @@
           <div class="col3">
             <% if (ob.errors.highlightColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightColor })) %>
             <input type="text" class="clrBr clrSh2" name="highlightColor" id="settingsHighlightColor"
-                   value="<%= ob.highlightColor %>">
+                   value="<%= ob.highlightColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightColor') %>">
           </div>
         </div>
         <div class="flexRow">
@@ -241,7 +241,7 @@
           <div class="col3">
             <% if (ob.errors.highlightTextColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightTextColor })) %>
             <input type="text" class="clrBr clrSh2" name="highlightTextColor" id="settingsHighlightTextColor"
-                   value="<%= ob.highlightTextColor %>">
+                   value="<%= ob.highlightTextColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
           </div>
         </div>
       </form>
