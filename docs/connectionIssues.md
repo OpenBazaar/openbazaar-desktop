@@ -15,6 +15,8 @@ Check your JS console. If you are not seeing any red `WebSocket...` errors:
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/imgs/connectionIssues/setPortInUi.png)
 
+---
+
 If you are seeing the following error in your JS console:
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/imgs/connectionIssues/sslProtocolError.png)
@@ -24,6 +26,8 @@ For your protection, the client will only connect to a remote server via SSL. Th
 When you install the rootCA.crt file on your client machine, be sure to enable it as a trusted certificate. On OSX, this is done via the Always Trust button.
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/imgs/connectionIssues/osxTrustCertificate.png)
+
+---
 
 If you are seeing the following error in your JS console:
 
