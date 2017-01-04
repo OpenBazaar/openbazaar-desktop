@@ -24,6 +24,9 @@ export default class extends BaseModal {
       Donations,
       License,
     };
+
+    // default About tab is Story
+    this.currentTabName = 'Story';
   }
 
   className() {
@@ -46,17 +49,17 @@ export default class extends BaseModal {
 
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
-
-    this.selectTab(targ);
+    const tabName = targ.data('tab');
+    this.selectTab(tabName);
   }
 
-  selectTab(targ) {
-    const tabViewName = targ.data('tab');
+  selectTab(tabViewName) {
     let tabView = this.tabViewCache[tabViewName];
 
+    this.$('.js-tab.clrT.active').removeClass('clrT active');
+    this.$(`.js-tab[data-tab="${tabViewName}"]`).addClass('clrT active');
+
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      this.$('.js-tab').removeClass('clrT active');
-      targ.addClass('clrT active');
       if (this.currentTabView) this.currentTabView.$el.detach();
 
       if (!tabView) {
@@ -67,6 +70,9 @@ export default class extends BaseModal {
 
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
+      this.currentTabName = tabViewName;
+      this.$('#tabTitle').text(app.polyglot.t(
+      `about.${this.currentTabName.toLowerCase()}Tab.sectionHeader`));
     }
   }
 
@@ -76,19 +82,14 @@ export default class extends BaseModal {
   }
 
   render() {
-    const tabTitle = 'Hello World!';
     loadTemplate('modals/about/about.html', (t) => {
-      this.$el.html(t({
-        ...this.options,
-        tabTitle,
-      }));
+      this.$el.html(t(this.options));
       super.render();
 
       this.$tabContent = this.$('.js-tabContent .contentBox');
       this._$closeClickTargets = null;
 
-      // default About tab
-      this.selectTab(this.$('.js-tab[data-tab="Story"]'));
+      this.selectTab(this.currentTabName);
     });
 
     return this;
