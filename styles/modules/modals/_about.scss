@@ -39,5 +39,15 @@
   .flexShrink0 {
     flex-shrink: 0;
   }
+
+  .columns {
+    column-gap: 2rem;
+    column-rule: 1px solid $border;
+    max-height: fit-content;
+  }
+
+  .twoColumns {
+    column-count: 2;
+  }
 }
 

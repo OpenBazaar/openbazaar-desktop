@@ -25,8 +25,10 @@
       <%= ob.polyT('about.blurbs.tradeFree') %>
       <%= ob.polyT('about.contributorsTab.listPreface') %>
     </p>
-    <ul>
-      <% ob.names.forEach(name => print(`<li>${name}</li>`)) %>
-    </ul>
+    <div class="columns twoColumns">
+      <ul>
+        <% ob.names.forEach(name => print(`<li>${name}</li>`)) %>
+      </ul>
+    </div>
   </div>
 </div>
