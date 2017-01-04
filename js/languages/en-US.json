@@ -90,6 +90,10 @@
   "settings": {
     "settingsLabel": "Settings",
     "generalTab": {
+      "helperLanguage": "Interface elements display in",
+      "helperCountry": "The country you primarily reside",
+      "helperCurrency": "Prices display in",
+      "helperTranslations": "Help translate OpenBazaar on",
       "sectionName": "General",
       "statusSaving": "Saving general settings...",
       "statusSaveComplete": "General settings saved.",
@@ -97,7 +101,8 @@
       "saveErrorAlertTitle": "Unable to save general settings"
     },
     "pageTab": {
-      "helperHandle": "Register a unique handle at <a href='https://onename.com'>Onename.com</a>",
+      "helperAbout": "Displays on your Home page",
+      "helperHandle": "Register a unique handle at",
       "helperShortDescription": "160 characters or less",
       "helperPrimaryColor": "Header, Modals, Buttons",
       "helperSecondaryColor": "Body, Background",
@@ -137,6 +142,10 @@
     },
     "advancedTab": {
       "_sectionName": "Advanced",
+      "helperVisualEffects": "Smooth Transitions, Easing, Opacity",
+      "helperWindowControls": "Maximize, Minimize, Close",
+      "helperSaveMetaData": "Store additional transaction information",
+      "helperDefaultFee": "Average is recommended. High may clear faster.",
       "smtp": {
         "_sectionName": "SMTP Integration",
         "_testAction": "Test Integration",
@@ -158,15 +167,15 @@
       "transaction": {
         "_sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
-        "defaultFee": "Default Fee",
+        "defaultFee": "Bitcoin Fee",
         "low": "Low",
-        "medium": "Medium",
+        "medium": "Average",
         "high": "High"
       },
       "appearance": {
         "_sectionName": "Appearance",
         "visualEffects": "Visual Effects",
-        "windowControlStyle": "Window Style",
+        "windowControlStyle": "Window Controls",
         "macOS": "Mac",
         "windowsOS": "Windows"
       },

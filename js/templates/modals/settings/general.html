@@ -12,23 +12,26 @@
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.language') %></label>
+          <div class="clrT2 txBase"><%= ob.polyT('settings.generalTab.helperLanguage') %></div>
         </div>
-        <div class="col6 clrSh2">
+        <div class="col6">
           <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
-          <select id="settingsLanguageSelect" name="language">
+          <select id="settingsLanguageSelect" name="language" class="clrSh2">
             <% ob.languageList.forEach((lang) => { %>
               <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
             <% }); %>
           </select>
+          <div class="clrT2 txBase padSm"><%= ob.polyT('settings.generalTab.helperTranslations') %> <a href="https://www.transifex.com/ob1/openbazaar/"">Transifex</a></div>
         </div>
       </div>
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.country') %></label>
+          <div class="clrT2 txBase"><%= ob.polyT('settings.generalTab.helperCountry') %></div>
         </div>
-        <div class="col6 clrSh2">
+        <div class="col6">
           <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
-          <select id="settingsCountrySelect" name="country">
+          <select id="settingsCountrySelect" name="country" class="clrSh2">
             <% ob.countryList.forEach((country) => { %>
             <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
             <% }); %>
@@ -38,10 +41,11 @@
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.currency') %></label>
+          <div class="clrT2 txBase"><%= ob.polyT('settings.generalTab.helperCurrency') %></div>
         </div>
-        <div class="col6 clrSh2">
+        <div class="col6">
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
-          <select id="settingsCurrencySelect"  name="localCurrency">
+          <select id="settingsCurrencySelect"  name="localCurrency" class="clrSh2">
             <% ob.currencyList.forEach((currency) => { %>
             <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
             <% }); %>
