@@ -1,3 +1,4 @@
+import app from '../../../app';
 import openSimpleMessage from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -6,9 +7,18 @@ export default class extends baseVw {
   constructor(options = {}) {
     super(options);
 
+    this.title = this.model.isNew() ?
+      app.polyglot.t('connectionManagement.configurationForm.tabName') :
+      this.model.get('name');
+
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
+
+    this.listenTo(this.model, 'change:name', () => {
+      const newName = this.model.get('name');
+      if (newName) this.title = newName;
+    });
   }
 
   className() {
@@ -88,6 +98,7 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         isRemote: !this.model.isLocalServer(),
+        title: this.title,
       }));
 
       this._$formFields = null;

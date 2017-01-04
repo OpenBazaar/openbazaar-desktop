@@ -4,7 +4,7 @@
   <div class="col4">
     <div class="flexHRight">
       <% if (ob.status === 'connected') { %>
-      <div class="txB connectedText"><span class="ion-ios-checkmark-empty clrTEmph1"></span><%= ob.polyT('connectionManagement.newConfiguration.statusConnected') %></div>
+      <div class="txB connectedText"><span class="ion-ios-checkmark-empty clrTEmph1"></span><%= ob.polyT('connectionManagement.configurations.statusConnected') %></div>
       <% } else { %>
       <div class="gutterHTn">
         <a class="iconBtn clrP clrBr ion-trash-b js-btnDelete <% if (ob.deleteConfirmOn) print('confirmDisabled') %> <% if (ob.default) print('hide') %>"></a>
@@ -12,10 +12,10 @@
         <% if (ob.status === 'connecting') { %>
           <a class="btn clrP clrBr js-btnCancel btnConnectCancel">
             <%= ob.spinner({ className: 'spinnerSm' }) %>
-            <%= ob.polyT('connectionManagement.newConfiguration.btnCancel') %>
+            <%= ob.polyT('connectionManagement.configurations.btnCancel') %>
           </a>
         <% } else { %>
-          <% const btnText = ob.status === 'connect-attempt-failed' ? ob.polyT('connectionManagement.newConfiguration.btnRetry') : ob.polyT('connectionManagement.newConfiguration.btnConnect') %>
+          <% const btnText = ob.status === 'connect-attempt-failed' ? ob.polyT('connectionManagement.configurations.btnRetry') : ob.polyT('connectionManagement.configurations.btnConnect') %>
           <a class="btn clrP clrBr js-btnConnect btnConnectCancel"><%= btnText %></a>
         <% } %>
       </div>

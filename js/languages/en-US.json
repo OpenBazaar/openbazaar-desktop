@@ -224,6 +224,9 @@
       "tabName": "Configurations",
       "heading": "Server Configurations",
       "btnNew": "New",
+      "btnCancel": "Cancel",
+      "btnRetry": "Retry",
+      "btnConnect": "Connect",
       "deleteConfirm": {
         "heading": "Are you sure?",
         "body": "The server configuration will be deleted. This will not delete the actual server.",
@@ -231,12 +234,18 @@
         "btnDelete": "Yes, delete"
       }      
     },
-    "newConfiguration": {
+    "configurationForm": {
       "tabName": "New configuration",
       "statusConnected": "Connected",
       "btnCancel": "Cancel",
-      "btnRetry": "Retry",
-      "btnConnect": "Connect"
+      "btnSave": "Save",
+      "port": "Port",
+      "sslOn": "On",
+      "sslOff": "Off",
+      "password": "Password",
+      "username": "Username",
+      "serverIp": "Server IP",
+      "name": "Name"
     }
   },
   "formats": {
