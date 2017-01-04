@@ -143,9 +143,11 @@
     "advancedTab": {
       "_sectionName": "Advanced",
       "helperVisualEffects": "Smooth Transitions, Easing, Opacity",
-      "helperWindowControls": "Maximize, Minimize, Close",
+      "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
       "helperDefaultFee": "Average is recommended. High may clear faster.",
+      "helperServerManagement": "Switch and manage server connections",
+      "helperServerPeers": "Peers you're connected to",
       "smtp": {
         "_sectionName": "SMTP Integration",
         "_testAction": "Test Integration",
@@ -176,8 +178,8 @@
         "_sectionName": "Appearance",
         "visualEffects": "Visual Effects",
         "windowControlStyle": "Window Controls",
-        "macOS": "Mac",
-        "windowsOS": "Windows"
+        "macOS": "Mac (upper left)",
+        "windowsOS": "Windows (upper right)"
       },
       "statusSaving": "Saving advanced settings...",
       "statusSaveComplete": "Advanced settings saved.",
