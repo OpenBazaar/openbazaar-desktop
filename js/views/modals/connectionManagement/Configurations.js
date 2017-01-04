@@ -152,7 +152,7 @@ export default class extends baseVw {
       // for edge case really slow servers / machines. The user will have the option
       // to cancel the attempt if it's taking longer than they think it should.
       attempts: 1,
-      maxAttemptTime: 25 * 1000,
+      maxAttemptTime: 20 * 1000,
     });
   }
 

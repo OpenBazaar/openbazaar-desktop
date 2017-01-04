@@ -48,15 +48,12 @@ export default class extends baseVw {
       // it's a local ip
       this.$usernameLabel.add(this.$passwordLabel)
         .removeClass('required');
-      // this.$btnStripSsl.removeClass('disabled');
+      this.$btnStripSsl.removeClass('disabled');
     } else {
       this.$usernameLabel.add(this.$passwordLabel)
         .addClass('required');
-
-      // Turning off for now pending documentation on how to set up SSL
-      // on the server.
-      // this.$radioSslOn[0].checked = true;
-      // this.$btnStripSsl.addClass('disabled');
+      this.$radioSslOn[0].checked = true;
+      this.$btnStripSsl.addClass('disabled');
     }
   }
 

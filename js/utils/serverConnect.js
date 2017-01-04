@@ -48,6 +48,7 @@ function socketConnect(socket) {
   const onClose = (e) => deferred.reject('failed', e);
 
   const cancel = () => {
+    socket.close();
     socket.off(null, onOpen);
     socket.off(null, onClose);
     deferred.reject('canceled');
@@ -180,11 +181,6 @@ export default function connect(server, options = {}) {
   };
 
   cancel = () => {
-    if (socket) {
-      socket.off();
-      socket.close();
-    }
-
     if (connectAttempt) connectAttempt.cancel();
   };
 
