@@ -119,7 +119,7 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/win32
 
     echo 'Running Electron Packager...'
-    electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
+    electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/
@@ -139,7 +139,10 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/win64
 
     echo 'Running Electron Packager...'
-    electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --version-string.ProductName=OpenBazaar --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
+    electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
+  
+    echo 'Copying server binary into application folder...'
+    cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/

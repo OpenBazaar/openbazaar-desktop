@@ -101,6 +101,14 @@
   }
 }
 
+.flexCent {
+  //creates a container with centered children
+  @extend .flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .flexVCent {
   //creates a container with vertically centered children
   @extend .flex;
@@ -420,4 +428,8 @@
 
 .posR {
   position: relative;
+}
+
+.posF {
+  position: fixed;
 }

@@ -3,10 +3,10 @@
 // TODO: if we find they end up sharing very little in common, we can break them
 // out into seperate files.
 .messageModal {
-  .titleWrap, .msgWrap {
-    text-align: center;
+  .modalContent {
+    width: 600px;
   }
-
+  
   .msgWrap {
     font-size: 1.4rem;
   }

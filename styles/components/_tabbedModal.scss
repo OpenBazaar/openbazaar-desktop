@@ -1,58 +1,47 @@
 .tabbedModal {
-
   .modalContent {
-    width: 906px;
-    min-height: 640px;
-    padding: 0;
+    width: 950px;
 
-    .tabColumn {
-      width: 194px;
-      border-right-width: 1px;
-      border-right-style: solid;
-      min-height: 640px;
-      flex-shrink: 0;
-
-      .tab {
-        padding: $pad/2 $pad/2 $pad/2 $pad;
-
-        // Setting the border here as transparent, so there's no flicker
-        // when the colored border is added.
-        border-right: none;
-        border-top: none;
-        border-bottom: none;
-        border-left: solid 2px;
-        border-color: transparent;
-
-        &.active {
-          // Use the clrBr class on the .tab.active for the border color.          
-          border-color: black; // todo: temporary pending css specifity fix.
-          font-weight: 500;
-        }
-      }
+    .cornerTR {
+      right: 25px;
     }
+  }
 
-    .tabControls {
-      height: 80px;
-      padding: $pad * 1.5;
-      border-top-style: solid;
-      border-top-width: 1px;
-      align-items: center;
-      justify-content: flex-end;
+  .tabColumn {
+    min-width: 190px;
 
-      .saveStatus {
-        flex-grow: 1;
-        font-size: $tx5;
-      }
+    .tab {
+      position: relative;
 
-      & > .btn {
-        margin-right: $padSm;
-        font-size: $tx4;
+      &.active {
+        font-weight: bold;
 
-        &:last-child {
-          margin-right: 0;
+        &::after {
+          content: "";
+          display: block;
+          border-width: 1px;
+          border-style: solid;
+          height: 100%;
+          position: absolute;
+          left: -16px;
+          top: 0;
         }
       }
     }
   }
 
+  .tabContent {
+    max-width: 757px;
+  }
+
+  &.fixedNav {
+    .tabColumn {
+      position: fixed;
+      top: 57px;
+    }
+
+    .tabContent {
+      margin-left: 200px;
+    }
+  }
 }
