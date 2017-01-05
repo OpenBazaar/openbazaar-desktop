@@ -173,7 +173,7 @@
         "helperNotifications": "Receive emails for order updates and new followers",
         "helperServerAddress": "Use Gmail, Yahoo, anything",
         "helperNewEmail": "Create an email address at",
-        "helperUsername": "Your email address (username)",
+        "helperUsername": "Your email address",
         "helperPassword": "Encrypted and saved privately in your database",
         "helperSendFrom": "The email address to send from",
         "helperSendTo": "The email address to send to"
