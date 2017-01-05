@@ -5,6 +5,17 @@
 // any color that should change on hover, active, etc. should have a rule for &.clrHover, and the
 // element that should change should have a .clrHover class on it.
 
+/* default for inputs with no color class */
+input,
+select,
+textarea,
+button,
+.trumbowyg div[contenteditable]{
+  &:focus {
+    border-color: $border3;
+  }
+}
+
 .clrP {
   background-color: $primary;
 
@@ -113,7 +124,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrBr4 {
-  @include borderColor($border4);
+  @include borderColor($border4, $border4);
 }
 
 .clrBrEmph1 {
@@ -219,16 +230,6 @@ input[type=range][class~="clrS"] {
 
 .required::after {
   color: $emphasis2;
-}
-
-input,
-select,
-textarea,
-button,
-.trumbowyg div[contenteditable]{
-  &:focus {
-    border-color: $border3;
-  }
 }
 
 .select2-container--focus .select2-selection__rendered {

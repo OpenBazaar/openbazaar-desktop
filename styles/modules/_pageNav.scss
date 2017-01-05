@@ -11,22 +11,19 @@
       line-height: 1em;
     }
 
-    .searchWrapper {
+    .addressBar {
       box-sizing: border-box;
-      padding: $padSm $padSm $padSm 0;
+      padding: $padSm;
       border-width: 1px;
       border-style: solid;
       border-radius: $corner;
       transition: border-color .2s;
-
-      &:not(:hover){
-        border-color: transparent;
-      }
-    }
-
-    .addressBar {
       font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
+
+      &:not(:hover, :focus){
+        border-color: transparent;
+      }
     }
 
     #AvatarBtn {
@@ -48,11 +45,6 @@
     }
   }
 
-  input[type="text"] {
-    height: auto;
-    border: none;
-  }
-
   .windowControls {
     display: flex;
     align-items: center;
@@ -62,7 +54,6 @@
     & > * {
       flex: 0 0 auto;
     }
-
 
     a {
       width: 12px;
