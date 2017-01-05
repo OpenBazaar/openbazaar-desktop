@@ -391,22 +391,13 @@ function connectToServer() {
       startupLoadingModal.close();
     });
 
-  // console.log(`Will attempt to connect to server "${server.get('name')}"` +
-  //   ` at ${server.get('serverIp')}.`);
-
   connectAttempt = serverConnect(app.serverConfigs.activeServer)
-    // .progress(e => {
-    //   console.log(`Status is "${e.status}" for connect attempt` +
-    //     ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
-    // })
     .done(() => {
-      // console.log(`Connected to "${e.server.get('name')}"`);
       startupLoadingModal.close();
       app.loadingModal.open();
       start();
     })
     .fail(() => {
-      // console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
       app.connectionManagmentModal.open();
       startupLoadingModal.close();
       serverConnectEvents.once('connected', () => {
@@ -415,6 +406,38 @@ function connectToServer() {
       });
     });
 }
+
+// Handle a server connection event.
+let connectedAtLeastOnce = false;
+
+serverConnectEvents.on('connected', () => {
+  app.connectionManagmentModal.setModalOptions({
+    dismissOnOverlayClick: true,
+    dismissOnEscPress: true,
+    showCloseButton: true,
+  });
+
+  if (connectedAtLeastOnce) {
+    location.reload();
+  } else {
+    connectedAtLeastOnce = true;
+    app.connectionManagmentModal.close();
+  }
+});
+
+// Handle a lost connection.
+serverConnectEvents.on('disconnect', () => {
+  app.connectionManagmentModal.setModalOptions({
+    dismissOnOverlayClick: false,
+    dismissOnEscPress: false,
+    showCloseButton: false,
+  });
+
+  getChatContainer().hide();
+  app.pageNav.navigable = false;
+  app.connectionManagmentModal.open();
+});
+
 
 const sendMainActiveServer = (activeServer) => {
   ipcRenderer.send('active-server-set', {
@@ -431,8 +454,12 @@ app.serverConfigs.on('activeServerChange', (activeServer) =>
 
 // Let's create our Connection Management modal so that it's
 // available to show when needed.
-app.connectionManagmentModal = new ConnectionManagement({ removeOnRoute: false })
-  .render();
+app.connectionManagmentModal = new ConnectionManagement({
+  removeOnRoute: false,
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render();
 
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {

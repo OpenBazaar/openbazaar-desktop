@@ -4,9 +4,7 @@ import _ from 'underscore';
 import ServerConfig from '../models/ServerConfig';
 import Socket from '../utils/Socket';
 import $ from 'jquery';
-import { getChatContainer } from '../utils/selectors';
 import { Events } from 'backbone';
-import app from '../app';
 
 const events = {
   ...Events,
@@ -360,27 +358,6 @@ export default function connect(server, options = {}) {
 
   return promise;
 }
-
-// Temporary flow to handle a lost connection.
-let connectedAtLeastOnce = false;
-
-events.on('connected', (e) => {
-  if (connectedAtLeastOnce) {
-    location.reload();
-  } else {
-    connectedAtLeastOnce = true;
-    app.connectionManagmentModal.close();
-  }
-
-  e.socket.on('close', () => {
-    app.connectionManagmentModal.open();
-  });
-});
-
-events.on('disconnect', () => {
-  getChatContainer().hide();
-  app.pageNav.navigable = false;
-});
 
 ipcRenderer.send('server-connect-ready');
 log('Browser has been started or refreshed.');
