@@ -227,6 +227,7 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
+      "statusConnected": "Connected",      
       "deleteConfirm": {
         "heading": "Are you sure?",
         "body": "The server configuration will be deleted. This will not delete the actual server.",
@@ -236,7 +237,6 @@
     },
     "configurationForm": {
       "tabName": "New configuration",
-      "statusConnected": "Connected",
       "btnCancel": "Cancel",
       "btnSave": "Save",
       "port": "Port",

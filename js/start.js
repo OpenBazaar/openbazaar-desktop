@@ -355,7 +355,7 @@ function start() {
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
         app.connectionManagmentModal.setModalOptions({ removeOnRoute: true });
-        app.connectionManagmentModal.open();
+        // app.connectionManagmentModal.open();
       });
     });
   });
@@ -378,6 +378,7 @@ function connectToServer() {
     .fail((e) => {
       console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
       app.connectionManagmentModal.open();
+      serverConnectEvents.once('connected', () => start());
     });
 }
 

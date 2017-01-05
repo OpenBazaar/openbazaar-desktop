@@ -4,6 +4,7 @@ import _ from 'underscore';
 import ServerConfig from '../models/ServerConfig';
 import Socket from '../utils/Socket';
 import $ from 'jquery';
+import { getChatContainer } from '../utils/selectors';
 import { Events } from 'backbone';
 import app from '../app';
 
@@ -362,11 +363,17 @@ events.on('connected', (e) => {
     location.reload();
   } else {
     connectedAtLeastOnce = true;
+    app.connectionManagmentModal.close();
   }
 
   e.socket.on('close', () => {
     app.connectionManagmentModal.open();
   });
+});
+
+events.on('disconnect', () => {
+  getChatContainer().hide();
+  app.pageNav.navigable = false;
 });
 
 ipcRenderer.send('server-connect-ready');
