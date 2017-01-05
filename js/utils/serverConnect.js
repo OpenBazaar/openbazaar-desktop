@@ -173,7 +173,12 @@ export default function connect(server, options = {}) {
       const connectionLostEventData = getPromiseData({ socketCloseEvent: connectionLostE },
         { includeAttemptData: false });
       events.trigger('disconnect', connectionLostEventData);
-      currentConnection = null;
+      if (!currentConnection || currentConnection.socket === data.socket) {
+        currentConnection = {
+          ...data,
+          status: 'disconnected',
+        };
+      }
     });
 
     events.trigger('connected', getPromiseData(e));
@@ -195,8 +200,9 @@ export default function connect(server, options = {}) {
     localServer.stop();
   }
 
-  if (curCon && curCon.cancel) {
-    curCon.cancel();
+  if (curCon) {
+    if (curCon.cancel) curCon.cancel();
+    if (curCon.socket) curCon.socket.close();
   }
 
   socket = new Socket(server.socketUrl);

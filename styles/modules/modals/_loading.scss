@@ -5,15 +5,32 @@
     padding: 0;
     max-height: none;
     left: 50%; //don't adjust for the chat sidebar
+  }
 
-    .chatOpen & {
-      // since the loading modal is full screen, we don't
-      // want it to adjust to the chat opening.
-      left: 50%;
-    }
+  &.startupLoadingModal {
+    // Positioning this in a way in which the spinner will remain centered and the .infoContent
+    // will be displayed below it. The reason for that is because the standard loadingModal is
+    // shown right after the startupLoadingModal and this will ensure the spinner of each modal
+    // lines up so there is no jump going from one modal to the next.
+    .infoContent {
+      @include center();
+      margin-top: $spinnerLg / 2 + 15;
+      color: black !important;
 
-    .loadingText {
-      @include center;
+      .loadingMessage {
+        &.fadeInAnim {
+          animation: fadeInAnim 1s ease;
+        }
+      }
     }
+  }
+}
+
+@keyframes fadeInAnim {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

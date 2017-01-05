@@ -12,6 +12,7 @@ import ObRouter from './router';
 import { getChatContainer } from './utils/selectors';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
+import StartupLoadingModal from './views/modals/StartupLoading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
@@ -74,13 +75,22 @@ app.router = new ObRouter();
 app.statusBar = new StatusBar();
 $('#statusBar').html(app.statusBar.render().el);
 
-// create and launch loading modal
+// Create and launch a startup loading modal which will be
+// used during the startup connecting process.
+const startupLoadingModal = new StartupLoadingModal({
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render().open();
+
+// Create loading modal, which is a shared instance used by
+// the app after the initial connect sequence
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
   removeOnRoute: false,
-}).render().open();
+}).render();
 
 handleLinks();
 
@@ -355,7 +365,6 @@ function start() {
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
         app.connectionManagmentModal.setModalOptions({ removeOnRoute: true });
-        // app.connectionManagmentModal.open();
       });
     });
   });
@@ -363,22 +372,47 @@ function start() {
 
 function connectToServer() {
   const server = app.serverConfigs.activeServer;
+  let connectAttempt = null;
 
-  console.log(`Will attempt to connect to server "${server.get('name')}"` +
-    ` at ${server.get('serverIp')}.`);
-  serverConnect(app.serverConfigs.activeServer)
-    .progress(e => {
-      console.log(`Status is "${e.status}" for connect attempt` +
-        ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
-    })
-    .done((e) => {
-      console.log(`Connected to "${e.server.get('name')}"`);
+  startupLoadingModal
+    .setState({
+      msg: app.polyglot.t('startupConnect.connectAttemptMsg', {
+        serverName: server.get('name'),
+        canceLink: '<a class="js-cancel delayBorder">' +
+          `${app.polyglot.t('startupConnect.canceLink')}</a>`,
+      }),
+      // There's a weird issue where the first time we render a message, it renders the
+      // underline for the link first and then after a brief delay, the text after it. Looks
+      // tacky, so to avoid it, we'll fade in the message.
+      msgClass: 'fadeInAnim',
+    }).on('clickCancel', () => {
+      connectAttempt.cancel();
+      app.connectionManagmentModal.open();
+      startupLoadingModal.close();
+    });
+
+  // console.log(`Will attempt to connect to server "${server.get('name')}"` +
+  //   ` at ${server.get('serverIp')}.`);
+
+  connectAttempt = serverConnect(app.serverConfigs.activeServer)
+    // .progress(e => {
+    //   console.log(`Status is "${e.status}" for connect attempt` +
+    //     ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
+    // })
+    .done(() => {
+      // console.log(`Connected to "${e.server.get('name')}"`);
+      startupLoadingModal.close();
+      app.loadingModal.open();
       start();
     })
-    .fail((e) => {
-      console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
+    .fail(() => {
+      // console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
       app.connectionManagmentModal.open();
-      serverConnectEvents.once('connected', () => start());
+      startupLoadingModal.close();
+      serverConnectEvents.once('connected', () => {
+        app.loadingModal.open();
+        start();
+      });
     });
 }
 

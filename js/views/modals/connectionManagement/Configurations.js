@@ -30,11 +30,6 @@ export default class extends baseVw {
       }
     });
 
-    this.listenTo(serverConnectEvents, 'all', (eventName, eventData) => {
-      console.log(`gotta ${eventName} event wit sum data`);
-      window.data = eventData;
-    });
-
     this.listenTo(serverConnectEvents, 'connecting', e => {
       this.statusBarMessage.setState({
         status: 'connecting',
@@ -54,8 +49,16 @@ export default class extends baseVw {
       });
     });
 
-    this.listenTo(serverConnectEvents, 'disconnect',
-      e => this.handleFailedConnection('disconnect', e));
+    this.listenTo(serverConnectEvents, 'disconnect', e => {
+      const curConn = getCurrentConnection();
+
+      // If we lost a connection, but another one is in progress,
+      // we'll do nothing. Otherwise, we'll show a "lost connection"
+      // state for the disconnected connection.
+      if (!(curConn && curConn.socket !== e.socket)) {
+        this.handleFailedConnection('disconnect', e);
+      }
+    });
 
     this.listenTo(serverConnectEvents, 'connect-attempt-failed',
       e => this.handleFailedConnection('connect-attempt-failed', e));
