@@ -14,7 +14,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/about/donations.html', (t) => {
       this.$el.html(t({
-        obDonationAddress, 
+        obDonationAddress,
       }));
     });
 
