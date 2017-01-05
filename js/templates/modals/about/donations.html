@@ -5,7 +5,9 @@
   <div id=donation-dashboard class="padMd flexCol">
     <h2><%= ob.polyT('about.donationsTab.bannerCountDonations') %></h2>
     <div class="padMd">
-      <span id=donationAddress>thisIsSomeReallyLongBTCWalletAddress</span>
+      <span id=donationAddress>
+        <%= ob.obDonationAddress %> 
+      </span>
       <span>Copied</span>
     </div>
     <div class="padMd">
