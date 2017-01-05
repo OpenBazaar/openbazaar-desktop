@@ -1,5 +1,5 @@
 .ctrl {
-  height: 35px;
+  height: $buttonHeight;
   padding: 0 24px;
   border-radius: $corner;
   border-width: 1px;
@@ -105,6 +105,7 @@
   @extend .btn;
   font-size: 2rem;
   padding: 0 12px;
+  width: $buttonHeight;
 }
 
 .iconBtnSm {
@@ -120,8 +121,16 @@
   padding: 0 12px;
 }
 
+.btnHg {
+  @extend .btn;
+  font-size: $tx2b;
+  height: 56px;
+}
+
 .btnStrip {
   //creates a set of buttons with no gaps between them
+  overflow: hidden; // clear the floats to avoid layout issues.
+
   & > .btn {
     border-radius: 0;
     float: left; //float left will collapse the button and position it correctly

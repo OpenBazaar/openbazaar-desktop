@@ -684,11 +684,11 @@ export default class extends BaseModal {
         contractTypes: this.innerListing.get('metadata')
           .contractTypes
           .map((contractType) => ({ code: contractType,
-            name: app.polyglot.t(`editListing.formats.${contractType}`) })),
+            name: app.polyglot.t(`formats.${contractType}`) })),
         conditionTypes: this.innerListing.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
-            name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
+            name: app.polyglot.t(`conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
         photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,

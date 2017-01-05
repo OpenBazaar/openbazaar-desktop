@@ -12,9 +12,15 @@
     }
 
     .searchWrapper {
-      padding: $padSm;
+      box-sizing: border-box;
+      padding: $padSm $padSm $padSm 0;
       border-width: 1px;
       border-style: solid;
+      transition: border-color 1s;
+
+      &:not(:hover) {
+        border-color: transparent;
+      }
     }
 
     .addressBar {

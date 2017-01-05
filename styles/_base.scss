@@ -180,14 +180,34 @@ ul, ol {
   #chatContainer {
     position: fixed;
     top: 105px;
-    right: 0;
+    right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
     height: calc(100% - 100px);
     z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    &:hover {
+      right: 0;
+      padding-right: $scrollbar;
+
+      &::-webkit-scrollbar {
+        width: $scrollbar;
+      }
+    }
 
     .chatOpen & {
       width: $chatOpen;
+    }
+
+    .chatWrapper {
+      justify-content: flex-start;
+      padding: $padSm $padSm $padSm 0;
     }
   }
 }
