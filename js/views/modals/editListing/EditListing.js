@@ -544,10 +544,9 @@ export default class extends BaseModal {
     }
 
     // render so errrors are shown / cleared
-    this.render(() => {
-      const $firstErr = this.$('.errorList:first');
-      if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-    });
+    this.render(false);
+    const $firstErr = this.$('.errorList:first');
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   get $scrollToSections() {
@@ -855,15 +854,8 @@ export default class extends BaseModal {
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
-      setTimeout(() => {
-        installRichEditor(this.$('#editListingDescription'), {
-          topLevelClass: 'clrBr',
-        });
-
-        if (!this.rendered) {
-          this.rendered = true;
-          this.$titleInput.focus();
-        }
+      installRichEditor(this.$('#editListingDescription'), {
+        topLevelClass: 'clrBr',
       });
 
       this._$scrollLinks = null;
@@ -886,6 +878,13 @@ export default class extends BaseModal {
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
+
+      setTimeout(() => {
+        if (!this.rendered) {
+          this.rendered = true;
+          this.$titleInput.focus();
+        }
+      });
 
       setTimeout(() => {
         // restore the scroll position
