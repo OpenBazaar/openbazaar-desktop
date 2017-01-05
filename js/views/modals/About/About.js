@@ -6,6 +6,7 @@ import Story from './Story';
 import Contributors from './Contributors';
 import Donations from './Donations';
 import License from './License';
+import { version } from '../../../../package.json';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -83,7 +84,10 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/about/about.html', (t) => {
-      this.$el.html(t(this.options));
+      this.$el.html(t({
+        ...this.options,
+        version,
+      }));
       super.render();
 
       this.$tabContent = this.$('.js-tabContent .contentBox');
