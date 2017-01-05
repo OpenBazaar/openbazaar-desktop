@@ -21,5 +21,22 @@
     padding-left: $padLg;
     padding-bottom: $padSm;
   }
+
+  #donationAddress {
+    color: $text2;
+  }
+
+  #copyNotification {
+    @extend .clrBr, .border;
+    font-weight: bold;
+    margin-left: $padMd;
+    padding: 0 $padSm;
+    border-radius: 3px;
+    visibility: hidden;
+  }
+
+  #copyNotification.active {
+    visibility: visible;
+  }
 }
 
