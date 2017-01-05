@@ -73,7 +73,7 @@ export default class extends BaseModal {
       this.currentTabView = tabView;
       this.currentTabName = tabViewName;
       this.$('#tabTitle').text(app.polyglot.t(
-      `about.${this.currentTabName.toLowerCase()}Tab.sectionHeader`));
+        `about.${this.currentTabName.toLowerCase()}Tab.sectionHeader`));
     }
   }
 
