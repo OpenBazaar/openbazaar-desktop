@@ -29,7 +29,7 @@
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3">
         <div class="flexHCent">
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
-          <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>  
+          <a class="btn clrP clrBr clrSh2 cornerTR js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
         <hr clr="clrBr" />
 
@@ -102,7 +102,7 @@
               <div class="col6 simpleFlexCol">
                 <label>Mature Content (NSFW, adult, 18+, etc)</label>
                 <% if (ob.errors['listing.item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.nsfw'] })) %>
-                <div class="btnStrip marginTopAuto">
+                <div class="btnStrip">
                   <div class="btnRadio clrBr">
                     <input type="radio"
                            name="listing.item.nsfw"
