@@ -16,9 +16,10 @@
       padding: $padSm $padSm $padSm 0;
       border-width: 1px;
       border-style: solid;
-      transition: border-color 1s;
+      border-radius: $corner;
+      transition: border-color .2s;
 
-      &:not(:hover) {
+      &:not(:hover){
         border-color: transparent;
       }
     }
