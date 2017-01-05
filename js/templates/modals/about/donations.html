@@ -3,7 +3,7 @@
     <img src=qr>
   </div>
   <div id=donation-dashboard class="padMd flexCol">
-    <h2><%= ob.polyT('about.donationsTab.bannerCountDonations') %></h2>
+    <h2><%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %></h2>
     <div class="padMd">
       <span id=donationAddress>
         <%= ob.obDonationAddress %> 
