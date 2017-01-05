@@ -21,7 +21,7 @@ export default class extends baseVw {
     };
   }
 
-  copyDonationAddress(e) {
+  copyDonationAddress() {
     const address = document.querySelector('#donationAddress');
     const range = document.createRange();
     const selection = window.getSelection();
@@ -33,7 +33,7 @@ export default class extends baseVw {
 
     this.$('#copyNotification').addClass('active');
     if (!!hiderTimer) {
-      clearTimeout(hiderTimer); 
+      clearTimeout(hiderTimer);
     }
     hiderTimer = setTimeout(
       () => this.$('#copyNotification').removeClass('active'), 3000);
