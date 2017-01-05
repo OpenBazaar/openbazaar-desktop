@@ -150,3 +150,12 @@ a .txNoUnd:hover {
   @extend .clamp;
   -webkit-line-clamp: 4;
 }
+
+// two column flow
+
+.columns {
+  column-count: 2;
+  column-gap: $padMd;
+  max-height: fit-content;
+}
+

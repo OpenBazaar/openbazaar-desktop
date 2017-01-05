@@ -17,18 +17,9 @@
     background: black;
   } 
 
-  .columns {
-    column-gap: $padMd;
-    max-height: fit-content;
-
-    li {
-      padding-left: $padLg;
-      padding-bottom: $padSm;
-    }
-  }
-
-  .twoColumns {
-    column-count: 2;
+  .contributorList li {
+    padding-left: $padLg;
+    padding-bottom: $padSm;
   }
 }
 
