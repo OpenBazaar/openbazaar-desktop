@@ -5,6 +5,7 @@ import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
 import { openSimpleMessage } from '../SimpleMessage';
 import 'cropit';
+import { installRichEditor } from '../../../utils/trumbowyg';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -228,7 +229,8 @@ export default class extends baseVw {
         headerMinWidth: this.headerMinWidth,
       }));
 
-      this.$formFields = this.$('select[name], input[name], textarea[name]');
+      const formFields = 'select[name], input[name], textarea[name], div[contenteditable][name]';
+      this.$formFields = this.$(formFields);
       this._$btnSave = null;
 
       const avatarPrev = this.$('.js-avatarPreview');
@@ -309,6 +311,10 @@ export default class extends baseVw {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
         }
+
+        installRichEditor(this.$('#settingsAbout'), {
+          topLevelClass: 'clrBr',
+        });
       }, 0);
     });
 
