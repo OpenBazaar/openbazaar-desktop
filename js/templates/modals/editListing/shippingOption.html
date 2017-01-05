@@ -1,5 +1,5 @@
-<div class="contentBox padMd clrP clrBr clrSh3 tx3">
-  <form class="padKids padStack">
+<div class="contentBox pad clrP clrBr clrSh3 tx3">
+  <form class="padSmKids padStack">
     <div class="flexVCent">
       <h2 class="h4 clrT flexExpand <% if (ob.listPosition === 1) print('required') %>"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listPosition }) %></h2
       >
@@ -7,6 +7,7 @@
     </div>
     <div class="flexRow padTop0">
       <div class="col12">
+        <hr class="clrBr rowMd" />
         <label for="<%= `shipDestinationsSelect_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
         <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
         <div class="select2TagsWrap showDropdown">

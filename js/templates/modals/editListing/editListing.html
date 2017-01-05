@@ -31,10 +31,10 @@
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
           <a class="btn clrP clrBr clrSh2 cornerTR js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
-        <hr clr="clrBr" />
+        <hr class="clrBr" />
 
         <div class="tabFormWrapper">
-          <form class="box padMdKids padStack">
+          <form class="box padSmKids padStack">
             <div class="flexRow">
               <div class="col12">
                 <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
@@ -139,6 +139,7 @@
       <section class="js-scrollToSection photoUploadSection contentBox padMd clrP clrBr clrSh3 tx3">
         <div class="overflowAuto">
           <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.photos') %></h2>
+          <hr class="clrBr rowMd" />
           <div class="js-photoUploadingLabel floR <% if (!ob.photoUploadInprogress) print('hide') %>"><%= ob.polyT('editListing.uploading') %> <a class="js-cancelPhotoUploads"><%= ob.polyT('editListing.btnCancelUpload') %></a></div>
         </div>
         <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
@@ -152,7 +153,8 @@
               print(ob.uploadPhotoT(Object.assign(image, { closeIconClass: 'js-removeImage' })))
             });
           %>
-        </ul>        
+        </ul>  
+        <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperPhotos') %></div>
       </section>
 
       <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('hasShippingOptions') %>">
@@ -171,7 +173,9 @@
           <div class="">
             <div class="contentBox padMd clrP clrBr clrSh3 tx3">
               <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listing.shippingOptions.length + 1 }) %></h2>
-              <a class="btn clrBr clrP clrSh2 margLSm js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>              
+              <hr class="clrBr rowMd" />
+              <a class="btn clrBr clrP clrSh2 js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>              
+              <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperShipping') %></div>
             </div>
           </div>
         </div>
@@ -179,6 +183,7 @@
 
       <section class="js-scrollToSection tagsSection contentBox padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.tagsDetailed') %></h2>
+        <hr class="clrBr rowMd" />
         <% if (ob.errors['listing.item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.tags'] })) %>
         <div class="js-maxTagsWarning"><% if (ob.listing.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
         <div class="select2TagsWrap hashPrefacedTags">
@@ -195,7 +200,8 @@
       </section>
 
       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
-        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.categoryDetailed') %></h1>
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.categoryDetailed') %></h2>
+        <hr class="clrBr rowMd" />
         <% if (ob.errors['listing.item.categories']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.categories'] })) %>
         <div class="js-maxCatsWarning"><% if (ob.listing.item.categories.length >= ob.max.cats) print(ob.maxCatsWarning) %></div>
         <div class="select2TagsWrap">
@@ -212,7 +218,8 @@
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
-        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h1>
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h2>
+        <hr class="clrBr rowMd" />
         <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
         <a class="btn clrP clrBr clrSh2 js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
         <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP clrSh2 <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy" placeholder="<%= ob.polyT('editListing.placeholderReturnPolicy') %>"><%= ob.listing.refundPolicy %></textarea>     
@@ -220,7 +227,8 @@
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
-        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.termsAndConditions') %></h1>
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.termsAndConditions') %></h2>
+        <hr class="clrBr rowMd" />
         <% if (ob.errors['listing.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.termsAndConditions'] })) %>
         <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
         <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.listing.termsAndConditions %></textarea>      
