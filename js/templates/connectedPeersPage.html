@@ -2,15 +2,22 @@
   <% console.log(ob) %>
   <h1><%= ob.polyT('connectedPeersPage.heading') %></h1>
   <p><em><%= ob.polyT('connectedPeersPage.infoMessage') %></em></p>
+
+  <div class="pageContent">
+    <div class="userPageFollow flexRow js-peerWrapper">
+
+    </div>
+    <div class="js-morePeers hide">
+      <hr>
+      <a class="btn js-morePeersBtn">Load More</a>
+    </div>
+  </div>
+
   <% if (!ob.peers.length) { %>
     <p><%= ob.polyT('connectedPeersPage.noResults') %></p>
   <% } %>
-  <div class="userPage">
-    <div class="pageContent">
-      <div class="userPageFollow flexRow js-peerWrapper">
 
-      </div>
-    </div>
-  </div>
+
+
 
 </div>
