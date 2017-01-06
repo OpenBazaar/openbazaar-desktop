@@ -39,6 +39,10 @@
 
     .tabContent {
       .photoUploadSection {
+        h2 {
+          display: inline-block;
+        }
+
         .uploadingLabel {
           float: right;
         }

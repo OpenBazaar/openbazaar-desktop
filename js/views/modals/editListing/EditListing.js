@@ -525,14 +525,10 @@ export default class extends BaseModal {
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
-
-      // temporary for debugging purposes
-      console.error('client side validation failed');
-      console.error(this.model.validationError);
     }
 
     // render so errrors are shown / cleared
-    this.render(false);
+    this.render(!!save);
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
