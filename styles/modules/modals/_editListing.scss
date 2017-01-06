@@ -63,6 +63,25 @@
                 top: 35%;
               }
             }
+
+            .primaryIndicatorWrap {
+              display: none;
+            }
+
+            &:nth-child(2) {
+              .primaryIndicatorWrap {
+                position: absolute;
+                bottom: 5px;
+                left: 0;
+                right: 0;
+                display: block;
+                text-align: center;
+
+                .phraseBox {
+                  display: inline;
+                }
+              }
+            }
           }
         }
       }
