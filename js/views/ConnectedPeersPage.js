@@ -1,5 +1,6 @@
 import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
+import userShort from './userShort';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -19,6 +20,17 @@ export default class extends baseVw {
         peers: this.peers,
       }));
     });
+    
+    const peerWrapper = this.$('.js-peerWrapper');
+
+    if (this.peers.length) {
+      this.peers.forEach((peer) => {
+        const user = this.createChild(userShort, {
+          guid: peer,
+        });
+        peerWrapper.append(user.render().$el);
+      });
+    }
 
     return this;
   }
