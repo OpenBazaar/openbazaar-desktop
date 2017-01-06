@@ -11,22 +11,20 @@
     background-size: contain;
   }
 
-  #donation-qr-code {
-    width: 200px; 
-    height: 200px;
-    background: black;
-  } 
-
   .contributorList li {
     padding-left: $padLg;
     padding-bottom: $padSm;
   }
 
-  #donationAddress {
+  .donationAddress {
     color: $text2;
   }
 
-  #copyNotification {
+  .singleLine {
+    white-space: pre;
+  }
+
+  .copyNotification {
     @extend .clrBr, .border;
     font-weight: bold;
     margin-left: $padMd;
@@ -35,7 +33,7 @@
     visibility: hidden;
   }
 
-  #copyNotification.active {
+  .copyNotification.active {
     visibility: visible;
   }
 }

@@ -1,8 +1,10 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { clipboard } from 'electron';
+import QR from 'qr-encode';
 
 const obDonationAddress = '3MXYUBLWNETa5HTewZp1xMTt7AW9kbFNqs';
+const qrCodeDataURI = QR(`bitcoin:${obDonationAddress}`, { type: 6, size: 6, level: 'Q' });
 const donationCountFloor = 500;
 let hiderTimer;
 
@@ -16,27 +18,19 @@ export default class extends baseVw {
 
   events() {
     return {
-      'click #copyAddress': 'copyDonationAddress',
-      'click #donationAddress': 'copyDonationAddress',
+      'click .js-copyAddress': 'copyDonationAddress',
     };
   }
 
   copyDonationAddress() {
-    const address = document.querySelector('#donationAddress');
-    const range = document.createRange();
-    const selection = window.getSelection();
-    range.selectNodeContents(address);
-    selection.removeAllRanges();
-    selection.addRange(range);
-
     clipboard.writeText(obDonationAddress);
 
-    this.$('#copyNotification').addClass('active');
+    this.$('.copyNotification').addClass('active');
     if (!!hiderTimer) {
       clearTimeout(hiderTimer);
     }
     hiderTimer = setTimeout(
-      () => this.$('#copyNotification').removeClass('active'), 3000);
+      () => this.$('.copyNotification').removeClass('active'), 3000);
   }
 
   render() {
@@ -44,6 +38,7 @@ export default class extends baseVw {
       this.$el.html(t({
         obDonationAddress,
         donationCountFloor,
+        qrCodeDataURI,
       }));
     });
 

@@ -1,17 +1,14 @@
 <div class="flex padGi">
-  <div id=donation-qr-code class="padMd">
-    <img src=qr>
-  </div>
+  <img src="<%= ob.qrCodeDataURI %>">
   <div id=donation-dashboard class="padMd flexCol">
-    <h2><%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %></h2>
     <div class="padMd">
-      <span id=donationAddress>
-        <%= ob.obDonationAddress %> 
+      <h2><%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %></h2>
+      <span class=singleLine>
+        <span class=donationAddress><%= ob.obDonationAddress %></span><span class=copyNotification>Copied</span>
       </span>
-      <span id=copyNotification>Copied</span>
     </div>
     <div class="padMd">
-      <a id=copyAddress class="btn clrP clrBr js-copyAddress flexNoShrink">
+      <a class="btn clrP clrBr js-copyAddress flexNoShrink">
         <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
       </a>
       <a class="btn clrP clrBr js-openInWallet flexNoShrink">
