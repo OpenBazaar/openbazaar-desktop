@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import 'select2';
+import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
 import '../../../utils/velocityUiPack.js';
@@ -592,11 +593,6 @@ export default class extends BaseModal {
       (this._$photoUploadingLabel = this.$('.js-photoUploadingLabel'));
   }
 
-  get $photoUploadItems() {
-    return this._$photoUploadItems ||
-      (this._$photoUploadItems = this.$('.js-photoUploadItems'));
-  }
-
   get $editListingReturnPolicy() {
     return this._$editListingReturnPolicy ||
       (this._$editListingReturnPolicy = this.$('#editListingReturnPolicy'));
@@ -842,10 +838,6 @@ export default class extends BaseModal {
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
-      installRichEditor(this.$('#editListingDescription'), {
-        topLevelClass: 'clrBr',
-      });
-
       this._$scrollLinks = null;
       this._$scrollToSections = null;
       this._$formFields = null;
@@ -855,16 +847,34 @@ export default class extends BaseModal {
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
       this._$photoUploadingLabel = null;
-      this._$photoUploadItems = null;
       this._$editListingReturnPolicy = null;
       this._$editListingTermsAndConditions = null;
       this._$sectionShipping = null;
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
       this._$addShipOptSectionHeading = null;
+      this.$photoUploadItems = this.$('.js-photoUploadItems');
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
+
+      installRichEditor(this.$('#editListingDescription'), {
+        topLevelClass: 'clrBr',
+      });
+
+      if (this.sortablePhotos) this.sortablePhotos.destroy();
+      this.sortablePhotos = Sortable.create(this.$photoUploadItems[0], {
+        filter: '.js-addPhotoWrap',
+        onUpdate: (e) => {
+          const imageModels = this.innerListing
+            .get('item')
+            .get('images')
+            .models;
+
+          imageModels[e.oldIndex - 1] =
+            imageModels.splice(e.newIndex - 1, 1, imageModels[e.oldIndex - 1])[0];
+        },
+      });
 
       setTimeout(() => {
         if (!this.rendered) {

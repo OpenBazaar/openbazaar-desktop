@@ -138,7 +138,7 @@
         <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
         <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
         <ul class="unstyled uploadItems clrBr js-photoUploadItems">
-          <li class="addElement tile">
+          <li class="addElement tile js-addPhotoWrap">
             <span class="imagesIcon ion-images clrT4"></span>
             <button class="btn clrP clrBr clrT tx6 js-addPhoto"><%= ob.polyT('editListing.btnAddPhoto') %></button>
           </li>
