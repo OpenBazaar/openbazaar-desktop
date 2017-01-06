@@ -412,7 +412,6 @@ let connectedAtLeastOnce = false;
 
 serverConnectEvents.on('connected', () => {
   app.connectionManagmentModal.setModalOptions({
-    dismissOnOverlayClick: true,
     dismissOnEscPress: true,
     showCloseButton: true,
   });
