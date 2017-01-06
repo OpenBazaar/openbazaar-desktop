@@ -54,6 +54,7 @@
     "node-sass": "^3.13.0",
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.2.0",
+    "qr-encode": "^0.3.0",
     "sinon": "^1.17.6"
   },
   "pre-commit": [
