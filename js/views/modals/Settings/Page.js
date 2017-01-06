@@ -233,6 +233,10 @@ export default class extends baseVw {
       this.$formFields = this.$(formFields);
       this._$btnSave = null;
 
+      installRichEditor(this.$('#settingsAbout'), {
+        topLevelClass: 'clrBr',
+      });
+
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');
@@ -311,10 +315,6 @@ export default class extends baseVw {
           this.headerCropper.cropit('imageSrc',
             app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
         }
-
-        installRichEditor(this.$('#settingsAbout'), {
-          topLevelClass: 'clrBr',
-        });
       }, 0);
     });
 
