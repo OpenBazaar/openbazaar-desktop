@@ -6,6 +6,22 @@ import Socket from '../utils/Socket';
 import $ from 'jquery';
 import { Events } from 'backbone';
 
+/*
+  The module is used to establish a connection with a server as well as monitor
+  the state of any current connection.
+
+  To establish a connection call connect().
+
+  To get a snapshot of a current connection, call getCurrentConnection().
+
+  To be informed of the state of a connection as it changes - If you initiated the
+  connection (via a call to connect()),you can use the promise handlers (progress,
+  done, fail) of the promise returned via the connect() call. Alternatively,
+  particularly if you weren't the one that made the connect() call, you can bind
+  to the { events } object exported in this module, which will fire relevant events
+  ('connecting', 'connected', etc...).
+*/
+
 const events = {
   ...Events,
 };
@@ -33,6 +49,21 @@ export function getDebugLog() {
   return debugLog;
 }
 
+/**
+ * Returns an object with data about the current connection, incuding
+ * the status (e.g. 'connecting', 'connected'...) and any relevant data
+ * (e.g. the Socket instance, the Server Configuration model...).
+ *
+ * If you're looking to bind to Socket events, you would call this method
+ * and then bind to the Socket instance that's returned. Keep in mind that
+ * until the first connection is made, this method will return null, in which
+ * case you'd wanted to wait until the 'connected' event to do your binding.
+ *
+ * But, since the app won't proceed out of Start.js, until a connection is
+ * made, it's really only in Start.js that you need to wait for the event
+ * and beyond Start.js you should just be able to get the socket via this
+ * method.
+ */
 export function getCurrentConnection() {
   return currentConnection;
 }
@@ -82,6 +113,39 @@ function authenticate(server) {
   return promise;
 }
 
+/**
+ * Called to establish a connection with a server. This involves ensuring the
+ * local server is running, if attempting to connect to the Default
+ * (i.e. local bundled) connection. It also involves opening a websocket connection
+ * with the server. Additionally, if the configuration requires authentication,
+ * it will call a server endpoint to make sure authentication was successful.
+ *
+ * @param {object} server - A ServerConfig instance representing the server you want to
+ *   connect to.
+ * @param {object} [options={}] - Options determining certain behavior of the connection
+ *   process.
+ * @param {number} [options.attempts=2] - The number of connection attempts to make. During
+ *   the initial connection process (e.g. at startup), it is useful to have multiple attempts
+ *   since the server may still be in the process of starting up.
+ * @param {number} [options.timeoutBetweenAttempts=2000] - Number of milliseconds to wait
+ *   after an unsuccessful connection attempt before starting the next one. If a server is
+ *   is down, in most cases the failure will be instant, so it is important to have a timeout
+ *   inbetween connection attempts, otherwise they will all happen in a fraction of a second,
+ *   never giving a server a chance to startup.
+ * @param {number} [options.maxAttemptTime=5000] - The maximum amount of milliseconds before
+ *   giving up on a connection attempt (and moving on to the next one if there is one) and
+ *   considering it a failure. This is particularly important if you are attempting to connect
+ *   to a remote server with a non numeric ServerIp value. Since it's trying to get the name
+ *   via DNS, it will take over a minute before it fails. The recommendation is to not make this
+ *   value too large during start-up, or you risk making a very long start-up sequence,
+ *   particularly if you have multiple attempts. In the Connection Managament modal, the value
+ *   could be much higher and the user could always cancel the attempt if they feel it is
+ *   taking too long.
+ * @return {object} A promise object will be returned that will allow you
+ *   to monitor the progress and result of the connection via progress, done
+ *   and fail handlers. The object will also include a cancel function, whereby
+ *   you can cancel the connection attempt.
+ */
 export default function connect(server, options = {}) {
   if (!server instanceof ServerConfig) {
     throw new Error('Please provide a server as a ServerConfig instance.');
