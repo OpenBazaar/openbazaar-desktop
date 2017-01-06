@@ -133,13 +133,6 @@ export default class extends BaseModal {
     };
   }
 
-  get closeClickTargets() {
-    return [
-      ...this.$closeClickTargets.get(),
-      ...super.closeClickTargets,
-    ];
-  }
-
   get MAX_PHOTOS() {
     return this.model.get('listing').get('item').max.images;
   }
@@ -619,11 +612,6 @@ export default class extends BaseModal {
       (this._$sectionShipping = this.$('.js-sectionShipping'));
   }
 
-  get $closeClickTargets() {
-    return this._$closeClickTargets ||
-      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
-  }
-
   get $maxCatsWarning() {
     return this._$maxCatsWarning ||
       (this._$maxCatsWarning = this.$('.js-maxCatsWarning'));
@@ -874,7 +862,6 @@ export default class extends BaseModal {
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
       this._$addShipOptSectionHeading = null;
-      this._$closeClickTargets = null;
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
