@@ -150,16 +150,6 @@
       </section>
 
       <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('hasShippingOptions') %>">
-        <div class="pad overflowAuto emptyShippingOptionsSection contentBox padMd clrP clrBr clrSh3 tx3">
-          <h1 class="tx3 tx500 required"><%= ob.polyT('editListing.sectionNames.shipping') %></h1>
-          <% if (ob.errors['listing.shippingOptions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.shippingOptions'] })) %>
-          <div class="clrBr">
-            <div class="tile">
-              <span class="locationIcon ion-ios-location clrT4"></span>
-              <button class="btn clrP clrBr clrT tx6 js-addShippingOption"><%= ob.polyT('editListing.btnAddShippingOptionShort') %></button>
-            </div>
-          </div>
-        </div>
         <div class="gutterVMd">
           <div class="js-shippingOptionsWrap gutterVMd"></div> 
           <div class="">

@@ -71,8 +71,6 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      this.$sectionShipping.addClass('hasShippingOptions');
-
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
         model: shipOptMd,
@@ -83,10 +81,6 @@ export default class extends BaseModal {
     });
 
     this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
-      if (!this.shippingOptions.length) {
-        this.$sectionShipping.removeClass('hasShippingOptions');
-      }
-
       const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
       splicedVw.remove();
       this.shippingOptionViews.slice(removeOpts.index)
