@@ -355,7 +355,7 @@
   "smtpModelErrors": {
     "username": {
       "caseEmpty": "Please provide a username.",
-      "caseInvalid": "Usernames can only contain characters A to Z a to z and 0 to 9."
+      "noWhitespace": "The username cannot contain spaces."
     },
     "password": "Please provide a valid password.",
     "serverAddress": "Please provide a valid URL.",
