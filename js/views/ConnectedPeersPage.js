@@ -13,7 +13,7 @@ export default class extends baseVw {
 
     this.peers = options.peers;
     this.peersLoaded = 0;
-    this.peersIterator = 3;
+    this.peersIterator = 12;
   }
 
   className() {
@@ -47,7 +47,7 @@ export default class extends baseVw {
       });
       this.peersLoaded += this.peersIterator;
     }
-    
+
     // check if next set exists
     if (this.peers.length > this.peersLoaded) {
       this.$morePeers.removeClass('hide');
