@@ -21,7 +21,6 @@
   }
 
   .copyNotification {
-    @extend .clrBr, .border;
     font-weight: bold;
     margin-left: $padMd;
     padding: 0 $padSm;
