@@ -1,12 +1,10 @@
 <div class="pad tx4">
-  <% console.log(ob) %>
   <h1><%= ob.polyT('connectedPeersPage.heading') %></h1>
   <p><em><%= ob.polyT('connectedPeersPage.infoMessage') %></em></p>
 
   <div class="pageContent">
-    <div class="userPageFollow flexRow js-peerWrapper">
+    <div class="userPageFollow flexRow js-peerWrapper"></div>
 
-    </div>
     <div class="js-morePeers hide">
       <hr class="clrBr">
       <a class="btn floR clrBr clrP js-morePeersBtn">Load More</a>
@@ -16,8 +14,4 @@
   <% if (!ob.peers.length) { %>
     <p><%= ob.polyT('connectedPeersPage.noResults') %></p>
   <% } %>
-
-
-
-
 </div>

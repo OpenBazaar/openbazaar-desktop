@@ -1,6 +1,7 @@
 import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import userShort from './userShort';
+import $ from 'jquery';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -12,7 +13,7 @@ export default class extends baseVw {
     }
 
     this.peers = options.peers;
-    this.peersLoaded = 0;
+    this.loadPeersUpTo = 0;
     this.peersIterator = 12;
   }
 
@@ -33,23 +34,25 @@ export default class extends baseVw {
 
   get $morePeers() {
     return this._$morePeers ||
-        (this._$morePeers = this.$('.js-morePeers'))
+        (this._$morePeers = this.$('.js-morePeers'));
   }
 
   loadPeers() {
-    if (this.peers.length > this.peersLoaded) {
-      this.peers.slice(this.peersLoaded, this.peersLoaded + this.peersIterator).forEach((peer) => {
-        console.log(peer)
-        const user = this.createChild(userShort, {
-          guid: peer,
+    if (this.peers.length > this.loadPeersUpTo) {
+      const docFrag = $(document.createDocumentFragment());
+      this.peers.slice(this.loadPeersUpTo, this.loadPeersUpTo + this.peersIterator)
+        .forEach((peer) => {
+          const user = this.createChild(userShort, {
+            guid: peer,
+          });
+          docFrag.append(user.render().$el);
         });
-        this.$peerWrapper.append(user.render().$el);
-      });
-      this.peersLoaded += this.peersIterator;
+      this.$peerWrapper.append(docFrag);
+      this.loadPeersUpTo += this.peersIterator;
     }
 
     // check if next set exists
-    if (this.peers.length > this.peersLoaded) {
+    if (this.peers.length > this.loadPeersUpTo) {
       this.$morePeers.removeClass('hide');
     } else {
       this.$morePeers.addClass('hide');
