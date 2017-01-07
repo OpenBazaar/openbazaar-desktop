@@ -3,9 +3,7 @@
   <div id=donation-dashboard class="padMd flexCol">
     <div class="padMd">
       <h2><%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %></h2>
-      <span class=singleLine>
-        <span class=donationAddress><%= ob.obDonationAddress %></span><span class=copyNotification>Copied</span>
-      </span>
+      <span class=singleLine><span class="clrT2 donationAddress"><%= ob.obDonationAddress %></span><span class=copyNotification>Copied</span></span>
     </div>
     <div class="padMd">
       <a class="btn clrP clrBr js-copyAddress flexNoShrink">
