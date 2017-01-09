@@ -93,7 +93,8 @@
       "helperLanguage": "Display interface elements in",
       "helperCountry": "The country you primarily reside in",
       "helperCurrency": "Display Prices in",
-      "helperTranslations": "Help translate OpenBazaar on",
+      "helperTranslations": "Help translate OpenBazaar on %{helperTranslationsLink}",
+      "helperTranslationsLink": "Transifex",
       "sectionName": "General",
       "statusSaving": "Saving general settings...",
       "statusSaveComplete": "General settings saved.",
@@ -103,7 +104,8 @@
     "pageTab": {
       "helperAbout": "Displays on your Home page",
       "helperHandle": "Handles make it easy to access your page/store",
-      "helperHandleRegister": "Register a unique handle at",
+      "helperHandleRegister": "Register a unique handle at %{helperHandleRegisterLink}",
+      "helperHandleRegisterLink": "Onename",
       "helperShortDescription": "160 characters or less",
       "helperPrimaryColor": "Header, Containers, Buttons",
       "helperSecondaryColor": "Body, Background",
@@ -172,11 +174,12 @@
         "placeholderSendTo": "name@domain.com",
         "helperNotifications": "Receive emails for order updates and new followers",
         "helperServerAddress": "Use Gmail, Yahoo, anything",
-        "helperNewEmail": "Create an email address at",
+        "helperNewEmail": "Create an email address at %{helperGmailLink}",
         "helperUsername": "Your email address",
         "helperPassword": "Encrypted and saved privately in your database",
         "helperSendFrom": "The email address to send from",
-        "helperSendTo": "The email address to send to"
+        "helperSendTo": "The email address to send to",
+        "helperGmailLink": "Gmail"
       },
       "server": {
         "_sectionName": "Server",

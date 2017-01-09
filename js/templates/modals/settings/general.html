@@ -10,7 +10,7 @@
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.language') %></label>
-          <div class="clrT2 txBase"><%= ob.polyT('settings.generalTab.helperLanguage') %></div>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperLanguage') %></div>
         </div>
         <div class="col6">
           <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
@@ -19,13 +19,13 @@
               <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
             <% }); %>
           </select>
-          <div class="clrT2 txBase padSm"><%= ob.polyT('settings.generalTab.helperTranslations') %> <a href="https://www.transifex.com/ob1/openbazaar/" class="clrTEm">Transifex</a></div>
+          <div class="clrT2 txSm padSm"><%= ob.polyT('settings.generalTab.helperTranslations', { helperTranslationsLink: `<a href="https://www.transifex.com/ob1/openbazaar/" class="clrTEm">${ob.polyT('settings.generalTab.helperTranslationsLink')}</a>` }) %></div>
         </div>
       </div>
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.country') %></label>
-          <div class="clrT2 txBase"><%= ob.polyT('settings.generalTab.helperCountry') %></div>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCountry') %></div>
         </div>
         <div class="col6">
           <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
@@ -39,7 +39,7 @@
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.currency') %></label>
-          <div class="clrT2 txBase"><%= ob.polyT('settings.generalTab.helperCurrency') %></div>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCurrency') %></div>
         </div>
         <div class="col6">
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>

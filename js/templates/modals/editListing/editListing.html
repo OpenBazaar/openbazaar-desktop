@@ -40,7 +40,7 @@
                 <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
                 <% if (ob.errors['listing.item.title']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="listing.item.title" id="editListingTitle" value="<%= ob.listing.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
-                <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperTitle') %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTitle') %></div>
               </div>
             </div>
             <div class="flexRow gutterH">
@@ -52,7 +52,7 @@
                   <option value="<%= contractType.code %>" <% if (contractType.code === ob.listing.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                   <% }); %>
                 </select>
-                <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperType') %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperType') %></div>
               </div>
               <div class="col6 simpleFlexCol">
                 <% // hiding until this is ready on the back end %>
@@ -79,7 +79,7 @@
                     <% }); %>
                   </select>
                 </div>
-                <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperPrice') %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPrice') %></div>
               </div>
               <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
                 <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
@@ -89,7 +89,7 @@
                   <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.listing.item.condition) print('selected') %>><%= conditionType.name %></option>
                   <% }); %>
                 </select>
-                <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperCondition') %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCondition') %></div>
               </div>
             </div>
             <div class="flexRow gutterH">
@@ -97,7 +97,7 @@
                 <label for="editListingSku"><%= ob.polyT('editListing.sku') %></label>
                 <% if (ob.errors['listing.item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.sku'] })) %>
                 <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="listing.item.sku" id="editListingSku" value="<%= ob.listing.item.sku %>" placeholder="<%= ob.polyT('editListing.placeholderSKU') %>">
-                <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperSKU') %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperSKU') %></div>
               </div>
               <div class="col6 simpleFlexCol">
                 <label>Mature Content (NSFW, adult, 18+, etc)</label>
@@ -122,7 +122,7 @@
                     <label for="editListingNSFWInputFalse"><%= ob.polyT('editListing.nsfwNo') %></label>
                   </div>
                 </div>
-                <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperNSFW') %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperNSFW') %></div>
               </div>
             </div>
             <div class="flexRow gutterH">
@@ -154,7 +154,7 @@
             });
           %>
         </ul>  
-        <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperPhotos') %></div>
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos') %></div>
       </section>
 
       <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('hasShippingOptions') %>">
@@ -175,7 +175,7 @@
               <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listing.shippingOptions.length + 1 }) %></h2>
               <hr class="clrBr rowMd" />
               <a class="btn clrBr clrP clrSh2 js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>              
-              <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperShipping') %></div>
+              <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperShipping') %></div>
             </div>
           </div>
         </div>
@@ -195,7 +195,7 @@
           <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.tagsPlaceholder') %></div>
           <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
           <div id="editListingTagsDropdown" class="tagsDropdown"></div>
-          <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperTags') %></div>
+          <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>
         </div>          
       </section>
 
@@ -213,7 +213,7 @@
           <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.categoryPlaceholder') %></div>
           <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
           <div id="editListingCategoriesDropdown" class="tagsDropdown"></div>
-          <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperCategories') %></div>
+          <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCategories') %></div>
         </div>
       </section>
 
@@ -223,7 +223,7 @@
         <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
         <a class="btn clrP clrBr clrSh2 js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
         <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP clrSh2 <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy" placeholder="<%= ob.polyT('editListing.placeholderReturnPolicy') %>"><%= ob.listing.refundPolicy %></textarea>     
-        <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperReturnPolicy') %></div>   
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperReturnPolicy') %></div>   
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
@@ -232,7 +232,7 @@
         <% if (ob.errors['listing.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.termsAndConditions'] })) %>
         <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
         <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.listing.termsAndConditions %></textarea>      
-        <div class="clrT2 txBase padSm"><%= ob.polyT('editListing.helperTerms') %></div>  
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTerms') %></div>  
       </section>
 
       <div class="contentBox padMd clrP clrBr clrSh3">

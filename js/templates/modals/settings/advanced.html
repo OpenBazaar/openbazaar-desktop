@@ -12,7 +12,7 @@
             <div class="flexRow">
               <div class="col3">
                 <label><%= ob.polyT('settings.advancedTab.appearance.visualEffects') %></label>
-                <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperVisualEffects') %></div>
+                <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperVisualEffects') %></div>
               </div>
               <div class="col9">
                 <div class="btnRadio clrBr">
@@ -40,7 +40,7 @@
             <div class="flexRow">
               <div class="col3">
                 <label><%= ob.polyT('settings.advancedTab.appearance.windowControlStyle') %></label>
-                <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperWindowControls') %></div>
+                <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperWindowControls') %></div>
               </div>
               <div class="col9">
                 <div class="btnRadio clrBr">
@@ -79,7 +79,7 @@
           <div class="flexRow">
             <div class="col3">
               <label><%= ob.polyT('settings.advancedTab.transaction.saveMetadata') %></label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperSaveMetaData') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperSaveMetaData') %></div>
             </div>
             <div class="col9">
               <div class="btnRadio clrBr">
@@ -107,7 +107,7 @@
           <div class="flexRow">
             <div class="col3">
               <label><%= ob.polyT('settings.advancedTab.transaction.defaultFee') %></label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperDefaultFee') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperDefaultFee') %></div>
             </div>
             <div class="col9">
               <div class="btnRadio clrBr">
@@ -158,7 +158,7 @@
               <label>
                 <%= ob.polyT('settings.advancedTab.server.management') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperServerManagement') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperServerManagement') %></div>
             </div>
             <div class="col9">
               <a class="btn clrP clrBr clrSh2 js-showConnectionManagement flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnShowManagementAction') %></a>
@@ -169,7 +169,7 @@
               <label>
                 <%= ob.polyT('settings.advancedTab.server.peers') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.helperServerPeers') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperServerPeers') %></div>
             </div>
             <div class="col9">
               <a  href="#connected-peers"
@@ -192,7 +192,7 @@
           <div class="flexRow" data-next-siblings-toggle>
             <div class="col3">
               <label><%= ob.polyT('settings.advancedTab.smtp.notifications') %></label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperNotifications') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperNotifications') %></div>
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.notifications']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.notifications'] })) %>
@@ -221,7 +221,7 @@
               <label for="smtpServerAddress">
                 <%= ob.polyT('settings.advancedTab.smtp.serverAddress') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperServerAddress') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperServerAddress') %></div>
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.serverAddress']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.serverAddress'] })) %>
@@ -232,7 +232,7 @@
                 id="smtpServerAddress" 
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderServerAddress') %>"
                 value="<%= ob.smtpSettings.serverAddress %>">
-              <div class="clrT2 txBase padSm"><%= ob.polyT('settings.advancedTab.smtp.helperNewEmail') %> <a href="https://accounts.google.com/SignUp" class="clrTEm">Gmail.com</a></div>
+              <div class="clrT2 txBase padSm"><%= ob.polyT('settings.advancedTab.smtp.helperNewEmail', { helperGmailLink: `<a href="https://accounts.google.com/SignUp" class="clrTEm">${ob.polyT('settings.advancedTab.smtp.helperGmailLink')}</a>` }) %></div>
             </div>
           </div>
           <div class="flexRow">
@@ -240,7 +240,7 @@
               <label for="smtpUsername">
                 <%= ob.polyT('settings.advancedTab.smtp.username') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperUsername') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperUsername') %></div>
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.username']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.username'] })) %>
@@ -258,7 +258,7 @@
               <label for="smtpPassword">
                 <%= ob.polyT('settings.advancedTab.smtp.password') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperPassword') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperPassword') %></div>
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.password']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.password'] })) %>
@@ -276,7 +276,7 @@
               <label for="smtpSenderEmail">
                 <%= ob.polyT('settings.advancedTab.smtp.senderEmail') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperSendFrom') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperSendFrom') %></div>
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.senderEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.senderEmail'] })) %>
@@ -294,7 +294,7 @@
               <label for="smtpRecipientEmail">
                 <%= ob.polyT('settings.advancedTab.smtp.recipientEmail') %>
               </label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.advancedTab.smtp.helperSendTo') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperSendTo') %></div>
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.recipientEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.recipientEmail'] })) %>
