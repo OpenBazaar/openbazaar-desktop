@@ -301,6 +301,7 @@
     "btnAddShippingOptionShort": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
+    "primaryPhoto": "Primary Photo",
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
         "shippingDestinations": "Shipping Destinations",

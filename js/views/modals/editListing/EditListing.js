@@ -861,9 +861,11 @@ export default class extends BaseModal {
             .get('images')
             .models;
 
-          imageModels[e.oldIndex - 1] =
-            imageModels.splice(e.newIndex - 1, 1, imageModels[e.oldIndex - 1])[0];
+          const movingModel = imageModels[e.oldIndex - 1];
+          imageModels.splice(e.oldIndex - 1, 1);
+          imageModels.splice(e.newIndex - 1, 0, movingModel);
         },
+        onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
       });
 
       setTimeout(() => {
