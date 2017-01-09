@@ -1,5 +1,7 @@
 .listingsGrid {
   flex-wrap: wrap;
+  position: relative;
+  z-index: 0; // contain any positioned elements
 
   .listingCard {
     margin: 0 $padMd $padMd 0;
