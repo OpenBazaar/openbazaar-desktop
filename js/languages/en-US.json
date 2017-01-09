@@ -21,7 +21,8 @@
   },
   "connectedPeersPage": {
     "heading": "Connected Peers",
-    "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
+    "totalPeers": "%{totalPeers} Found",
+    "infoMessage": "If you do not see any peers below, you are not connected to the OpenBazaar network. If a peer does not have information available on the network, clicking on their guid below will result in a User Not Found page.",
     "noResults": "No connected peers"
   },
   "serverConnect": {
@@ -348,7 +349,7 @@
     "helperTitle": "Something descriptive that clearly explains what you're selling",
     "helperType": "Choose from 4 types",
     "helperShipping": "Ship wherever you'd like!",
-    "helperPhotos": "Include up to 35 photos",
+    "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
     "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
     "helperCondition": "The overall condition of your listing",
@@ -374,6 +375,7 @@
     "btnAddShippingOptionShort": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
+    "primaryPhoto": "Primary Photo",
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
         "shippingDestinations": "Destinations",
@@ -428,7 +430,7 @@
   "smtpModelErrors": {
     "username": {
       "caseEmpty": "Please provide a username.",
-      "caseInvalid": "Usernames can only contain characters A to Z a to z and 0 to 9."
+      "noWhitespace": "The username cannot contain spaces."
     },
     "password": "Please provide a valid password.",
     "serverAddress": "Please provide a valid URL.",

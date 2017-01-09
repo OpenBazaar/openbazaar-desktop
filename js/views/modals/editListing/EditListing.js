@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import 'select2';
+import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
 import '../../../utils/velocityUiPack.js';
@@ -70,8 +71,6 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      this.$sectionShipping.addClass('hasShippingOptions');
-
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
         model: shipOptMd,
@@ -82,10 +81,6 @@ export default class extends BaseModal {
     });
 
     this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
-      if (!this.shippingOptions.length) {
-        this.$sectionShipping.removeClass('hasShippingOptions');
-      }
-
       const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
       splicedVw.remove();
       this.shippingOptionViews.slice(removeOpts.index)
@@ -131,13 +126,6 @@ export default class extends BaseModal {
       'click .js-addShippingOption': 'onClickAddShippingOption',
       ...super.events(),
     };
-  }
-
-  get closeClickTargets() {
-    return [
-      ...this.$closeClickTargets.get(),
-      ...super.closeClickTargets,
-    ];
   }
 
   get MAX_PHOTOS() {
@@ -537,17 +525,12 @@ export default class extends BaseModal {
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
-
-      // temporary for debugging purposes
-      console.error('client side validation failed');
-      console.error(this.model.validationError);
     }
 
     // render so errrors are shown / cleared
-    this.render(() => {
-      const $firstErr = this.$('.errorList:first');
-      if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-    });
+    this.render(!!save);
+    const $firstErr = this.$('.errorList:first');
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
   get $scrollToSections() {
@@ -600,11 +583,6 @@ export default class extends BaseModal {
       (this._$photoUploadingLabel = this.$('.js-photoUploadingLabel'));
   }
 
-  get $photoUploadItems() {
-    return this._$photoUploadItems ||
-      (this._$photoUploadItems = this.$('.js-photoUploadItems'));
-  }
-
   get $editListingReturnPolicy() {
     return this._$editListingReturnPolicy ||
       (this._$editListingReturnPolicy = this.$('#editListingReturnPolicy'));
@@ -618,11 +596,6 @@ export default class extends BaseModal {
   get $sectionShipping() {
     return this._$sectionShipping ||
       (this._$sectionShipping = this.$('.js-sectionShipping'));
-  }
-
-  get $closeClickTargets() {
-    return this._$closeClickTargets ||
-      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
   }
 
   get $maxCatsWarning() {
@@ -735,6 +708,7 @@ export default class extends BaseModal {
           title: item.max.titleLength,
           cats: item.max.cats,
           tags: item.max.tags,
+          photos: this.MAX_PHOTOS,
         },
         ...this.model.toJSON(),
       }));
@@ -855,17 +829,6 @@ export default class extends BaseModal {
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
-      setTimeout(() => {
-        installRichEditor(this.$('#editListingDescription'), {
-          topLevelClass: 'clrBr',
-        });
-
-        if (!this.rendered) {
-          this.rendered = true;
-          this.$titleInput.focus();
-        }
-      });
-
       this._$scrollLinks = null;
       this._$scrollToSections = null;
       this._$formFields = null;
@@ -875,17 +838,43 @@ export default class extends BaseModal {
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
       this._$photoUploadingLabel = null;
-      this._$photoUploadItems = null;
       this._$editListingReturnPolicy = null;
       this._$editListingTermsAndConditions = null;
       this._$sectionShipping = null;
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
       this._$addShipOptSectionHeading = null;
-      this._$closeClickTargets = null;
+      this.$photoUploadItems = this.$('.js-photoUploadItems');
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
+
+      installRichEditor(this.$('#editListingDescription'), {
+        topLevelClass: 'clrBr',
+      });
+
+      if (this.sortablePhotos) this.sortablePhotos.destroy();
+      this.sortablePhotos = Sortable.create(this.$photoUploadItems[0], {
+        filter: '.js-addPhotoWrap',
+        onUpdate: (e) => {
+          const imageModels = this.innerListing
+            .get('item')
+            .get('images')
+            .models;
+
+          const movingModel = imageModels[e.oldIndex - 1];
+          imageModels.splice(e.oldIndex - 1, 1);
+          imageModels.splice(e.newIndex - 1, 0, movingModel);
+        },
+        onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
+      });
+
+      setTimeout(() => {
+        if (!this.rendered) {
+          this.rendered = true;
+          this.$titleInput.focus();
+        }
+      });
 
       setTimeout(() => {
         // restore the scroll position
