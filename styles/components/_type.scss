@@ -146,3 +146,7 @@ a .txNoUnd:hover {
   @extend .clamp;
   -webkit-line-clamp: 4;
 }
+
+.tx1Ln {
+  white-space: pre;
+}

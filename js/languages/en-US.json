@@ -27,6 +27,13 @@
   "serverConnect": {
     "defaultServerName": "Default Server"
   },
+  "mainNav": {
+    "followers": "Followers",
+    "following": "Following",
+    "home": "Home",
+    "store": "Store",
+    "peers": "Peers"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
