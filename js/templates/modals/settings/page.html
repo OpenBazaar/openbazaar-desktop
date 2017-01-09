@@ -2,39 +2,75 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT"><%= ob.polyT('settings.pageTab.sectionPage') %></h2>
+      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
     </div>
-    <hr clr="clrBr" />
+    <hr class="clrBr" />
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsName"><%= ob.polyT('settings.name') %></label>
+            <label for="settingsName" class="required"><%= ob.polyT('settings.name') %></label>
           </div>
-          <div class="col9">
+          <div class="col6">
           <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
-            <input type="text" class="clrBr" name="name" id="settingsName" value="<%= ob.name %>">
+            <input type="text" class="clrBr clrSh2" name="name" id="settingsName" value="<%= ob.name %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderName') %>">
           </div>
         </div>
         <div class="flexRow">
           <div class="col3">
             <label for="settingsHandle"><%= ob.polyT('settings.handle') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHandle') %></div>
           </div>
-          <div class="col9">
+          <div class="col6">
             <% if (ob.errors.handle) print(ob.formErrorTmpl({ errors: ob.errors.handle })) %>
-            <input type="text" class="clrBr" name="handle" id="settingsHandle" value="<%= ob.handle %>">
+            <input type="text" class="clrBr clrSh2" name="handle" id="settingsHandle" value="<%= ob.handle %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHandle') %>">
+            <div class="clrT2 txSm padSm"><%= ob.polyT('settings.pageTab.helperHandleRegister', { helperHandleRegisterLink: `<a href="https://onename.com" class="clrTEm">${ob.polyT('settings.pageTab.helperHandleRegisterLink')}</a>` }) %></div>
           </div>
         </div>
         <div class="flexRow">
           <div class="col3">
             <label for="settingsShortDescription"><%= ob.polyT('settings.shortDescription') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperShortDescription') %></div>
           </div>
           <div class="col9">
             <% if (ob.errors.shortDescription) print(ob.formErrorTmpl({ errors: ob.errors.shortDescription })) %>
             <textarea rows="3" maxlength="160" name="shortDescription" id="settingsShortDescription"
-                      class="clrBr"><%= ob.shortDescription %></textarea>
+                      class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.pageTab.placeholderShortDescription') %>"><%= ob.shortDescription %></textarea>
           </div>
         </div>
+
+        <div class="flexRow">
+          <div class="col3">
+            <label><%= ob.polyT('settings.avatar') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.loadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
+          </div>
+          <div class="col9 contentBox clrBr clrP clrSh2 padLg">
+            <div class="flexRow gutterH" id="avatarCropper">
+              <div class="contentBox avatarPreview clrP clrBr2 clrSh1 flexNoShrink js-avatarPreview"></div>
+              <div class="flexNoShrink">
+                <div class="flexColRows gutterV">
+                  <div>
+                    <div class="flex gutterH">
+                      <a class="iconBtn ion-reply flexExpand clrP clrBr clrSh2 disabled js-avatarLeft"></a>
+                      <a class="iconBtn ion-forward flexExpand clrP clrBr clrSh2 disabled js-avatarRight"></a>
+                    </div>
+                  </div>
+                  <div class="posR">
+                    <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" />
+                  </div>
+                  <div>
+                    <input type="file" id="avatarInput" class="cropit-image-input hide" />
+                    <label for="avatarInput" class="btn clrP clrBr clrSh2">
+                      <%= ob.polyT('settings.loadAvatar') %>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="flexRow">
           <div class="col3">
             <label><%= ob.polyT('settings.nsfwContent') %></label>
@@ -49,7 +85,7 @@
                        id="settingsNSFWInputTrue"
                        data-var-type="boolean"
                 <% if(ob.NSFW) { %>checked<% } %>>
-                <label for="settingsNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
+                <label for="settingsNSFWInputTrue"><%= ob.polyT('settings.yes') %></label>
               </div>
               <div class="btnRadio clrBr">
                 <input type="radio"
@@ -58,9 +94,29 @@
                        id="settingsNSFWInputFalse"
                        data-var-type="boolean"
                 <% if(!ob.NSFW) { %>checked<% } %>>
-                <label for="settingsNSFWInputFalse"><%= ob.polyT('settings.off') %></label>
+                <label for="settingsNSFWInputFalse"><%= ob.polyT('settings.no') %></label>
               </div>
             </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionAbout') %></h2>
+    <hr class="clrBr" />
+    <div class="tabFormWrapper">
+      <form class="box padMdKids padStack">
+        <div class="flexRow">
+<!--           <div class="col3">
+            <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
+          </div> -->
+          <div class="col12">
+            <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
+            <div contenteditable class="clrBr clrSh2" name="about" id="settingsAbout" placeholder="<%= ob.polyT('settings.pageTab.placeholderAbout') %>""><%= ob.about %></div>
+            <div class="clrT2 txSm padSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
         </div>
       </form>
@@ -69,42 +125,28 @@
 
   <div class="contentBox padMd clrP clrBr clrSh3">
     <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionLinks') %></h2>
+    <hr class="clrBr" />
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
         <div class="flexRow">
           <div class="col3">
             <label for="settingsWebsite"><%= ob.polyT('settings.website') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
-          <div class="col9">
+          <div class="col6">
             <% if (ob.errors.website) print(ob.formErrorTmpl({ errors: ob.errors.website })) %>
-            <input type="text" class="clrBr" name="website" id="settingsWebsite"
-                   value="<%= ob.website %>">
+            <input type="text" class="clrBr clrSh2" name="website" id="settingsWebsite"
+                   value="<%= ob.website %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderWebsite') %>">
           </div>
         </div>
         <div class="flexRow">
           <div class="col3">
             <label for="settingsEmail"><%= ob.polyT('settings.email') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
-          <div class="col9">
+          <div class="col6">
             <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
-            <input type="text" class="clrBr" name="email" id="settingsEmail" value="<%= ob.email %>">
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="contentBox padMd clrP clrBr clrSh3">
-    <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionAbout') %></h2>
-    <div class="tabFormWrapper">
-      <form class="box padMdKids padStack">
-        <div class="flexRow">
-          <div class="col3">
-            <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
-          </div>
-          <div class="col9">
-            <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
-            <textarea rows="6" name="about" class="clrBr" id="settingsAbout"><%= ob.about %></textarea>
+            <input type="text" class="clrBr clrSh2" name="email" id="settingsEmail" value="<%= ob.email %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderEmail') %>">
           </div>
         </div>
       </form>
@@ -113,52 +155,23 @@
 
   <div class="contentBox padMd clrP clrBr clrSh3">
     <h2 class="h4 clrT"><%= ob.polyT('settings.pageTab.sectionTheme') %></h2>
+    <hr class="clrBr" />
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
         <div class="flexRow">
           <div class="col3">
-            <label><%= ob.polyT('settings.avatar') %></label>
-            <div class="clrT2 txBase"><%= ob.polyT('settings.loadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
-          </div>
-          <div class="col9">
-            <div class="flexRow gutterH" id="avatarCropper">
-              <div class="contentBox avatarPreview clrP clrBr2 clrSh1 flexNoShrink js-avatarPreview"></div>
-              <div class="flexNoShrink">
-                <div class="flexColRows gutterV">
-                  <div>
-                    <div class="flex gutterH">
-                      <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-avatarLeft"></a>
-                      <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-avatarRight"></a>
-                    </div>
-                  </div>
-                  <div class="posR">
-                    <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" />
-                  </div>
-                  <div>
-                    <input type="file" id="avatarInput" class="cropit-image-input hide" />
-                    <label for="avatarInput" class="btn clrP clrBr">
-                      <%= ob.polyT('settings.loadAvatar') %>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="flexRow">
-          <div class="col3">
             <label><%= ob.polyT('settings.header') %></label>
-              <div class="clrT2 txBase"><%= ob.polyT('settings.loadHeaderHelp', {minWidth: ob.headerMinWidth, minHeight: ob.headerMinHeight}) %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.loadHeaderHelp', {minWidth: ob.headerMinWidth, minHeight: ob.headerMinHeight}) %></div>
           </div>
-          <div class="col9 row">
+          <div class="col9 row contentBox clrBr clrP clrSh2 pad">
             <div class="flexColRows gutterV" id="headerCropper">
               <div class="contentBox headerPreview clrP clrBr js-headerPreview"></div>
               <div>
                 <div class="flexRow gutterH">
                   <div>
                     <div class="flex gutterH">
-                      <a class="iconBtn ion-reply flexExpand clrP clrBr disabled js-headerLeft"></a>
-                      <a class="iconBtn ion-forward flexExpand clrP clrBr disabled js-headerRight"></a>
+                      <a class="iconBtn ion-reply flexExpand clrP clrBr clrSh2 disabled js-headerLeft"></a>
+                      <a class="iconBtn ion-forward flexExpand clrP clrBr clrSh2 disabled js-headerRight"></a>
                     </div>
                   </div>
                   <div class="posR">
@@ -166,7 +179,7 @@
                   </div>
                   <div>
                     <input type="file" id="headerInput" class="cropit-image-input hide" />
-                    <label for="headerInput" class="btn clrP clrBr">
+                    <label for="headerInput" class="btn clrP clrBr clrSh2">
                       <%= ob.polyT('settings.loadHeader') %>
                     </label>
                   </div>
@@ -177,32 +190,57 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsPrimaryColor"><%= ob.polyT('settings.primaryColor') %></label>
+            <label for="settingsPrimaryColor" class="required"><%= ob.polyT('settings.primaryColor') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperPrimaryColor') %></div>
           </div>
-          <div class="col9">
+          <div class="col3">
             <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
-            <input type="text" class="clrBr" name="primaryColor" id="settingsPrimaryColor"
-                   value="<%= ob.primaryColor %>">
+            <input type="text" class="clrBr clrSh2" name="primaryColor" id="settingsPrimaryColor"
+                   value="<%= ob.primaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>">
           </div>
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsSecondaryColor"><%= ob.polyT('settings.secondaryColor') %></label>
+            <label for="settingsSecondaryColor" class="required"><%= ob.polyT('settings.secondaryColor') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperSecondaryColor') %></div>
           </div>
-          <div class="col9">
+          <div class="col3">
             <% if (ob.errors.secondaryColor) print(ob.formErrorTmpl({ errors: ob.errors.secondaryColor })) %>
-            <input type="text" class="clrBr" name="secondaryColor" id="settingsSecondaryColor"
-                   value="<%= ob.secondaryColor %>">
+            <input type="text" class="clrBr clrSh2" name="secondaryColor" id="settingsSecondaryColor"
+                   value="<%= ob.secondaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>">
           </div>
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsTextColor"><%= ob.polyT('settings.textColor') %></label>
+            <label for="settingsTextColor" class="required"><%= ob.polyT('settings.textColor') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperTextColor') %></div>
           </div>
-          <div class="col9">
+          <div class="col3">
             <% if (ob.errors.textColor) print(ob.formErrorTmpl({ errors: ob.errors.textColor })) %>
-            <input type="text" class="clrBr" name="textColor" id="settingsTextColor"
-                   value="<%= ob.textColor %>">
+            <input type="text" class="clrBr clrSh2" name="textColor" id="settingsTextColor"
+                   value="<%= ob.textColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>">
+          </div>
+        </div>
+        <div class="flexRow">
+          <div class="col3">
+            <label for="settingsHighlightColor" class="required"><%= ob.polyT('settings.highlightColor') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightColor') %></div>
+          </div>
+          <div class="col3">
+            <% if (ob.errors.highlightColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightColor })) %>
+            <input type="text" class="clrBr clrSh2" name="highlightColor" id="settingsHighlightColor"
+                   value="<%= ob.highlightColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightColor') %>">
+          </div>
+        </div>
+        <div class="flexRow">
+          <div class="col3">
+            <label for="settingsHighlightTextColor" class="required"><%= ob.polyT('settings.highlightTextColor') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightTextColor') %></div>
+          </div>
+          <div class="col3">
+            <% if (ob.errors.highlightTextColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightTextColor })) %>
+            <input type="text" class="clrBr clrSh2" name="highlightTextColor" id="settingsHighlightTextColor"
+                   value="<%= ob.highlightTextColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
           </div>
         </div>
       </form>
@@ -211,7 +249,7 @@
 
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
-      <a class="btn clrP clrBr js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
     </div>
   </div>
 </div>

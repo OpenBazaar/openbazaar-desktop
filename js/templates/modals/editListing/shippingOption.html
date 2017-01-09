@@ -1,16 +1,17 @@
-<div class="contentBox padMd clrP clrBr clrSh3 tx3">
-  <form class="padKids padStack">
+<div class="contentBox pad clrP clrBr clrSh3 tx3">
+  <form class="padSmKids padStack">
     <div class="flexVCent">
       <h2 class="h4 clrT flexExpand <% if (ob.listPosition === 1) print('required') %>"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listPosition }) %></h2
       >
-      <a class="clrBr clrP margRSm btn js-removeShippingOption"><%= ob.polyT('editListing.shippingOptions.btnDeleteShippingOption') %></a>
+      <a class="clrBr clrP clrSh2 margRSm btn js-removeShippingOption"><%= ob.polyT('editListing.shippingOptions.btnDeleteShippingOption') %></a>
     </div>
     <div class="flexRow padTop0">
       <div class="col12">
+        <hr class="clrBr rowMd" />
         <label for="<%= `shipDestinationsSelect_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
         <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
         <div class="select2TagsWrap showDropdown">
-          <select id="<%= `shipDestinationsSelect_${ob.cid}` %>" multiple name="regions" class="clrBr clrP select2Tags">
+          <select id="<%= `shipDestinationsSelect_${ob.cid}` %>" multiple name="regions" class="clrBr clrP clrSh2 select2Tags">
             <% ob.regions.forEach(region =>
                 print(`<option value="${region.value}" selected="selected">${region.text}</option>`)) %>          
           </select>
@@ -23,12 +24,12 @@
       <div class="col6 simpleFlexCol">
         <label for="<%= `shipOptionTitle_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.nameLabel') %></label>
         <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
-        <input type="text" class="clrBr clrP marginTopAuto" name="name" id="<%= `shipOptionTitle_${ob.cid}` %>" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.shippingOptions.namePlaceholder') %>">
+        <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="name" id="<%= `shipOptionTitle_${ob.cid}` %>" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.shippingOptions.namePlaceholder') %>">
       </div>
       <div class="col6 simpleFlexCol">
         <label for="<%= `shipOptionType_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.typeLabel') %></label>
         <% if (ob.errors['type']) print(ob.formErrorTmpl({ errors: ob.errors['type'] })) %>
-        <select id="<%= `shipOptionType_${ob.cid}` %>" name="type" class="clrBr clrP marginTopAuto">
+        <select id="<%= `shipOptionType_${ob.cid}` %>" name="type" class="clrBr clrP clrSh2 marginTopAuto">
           <% ob.shippingTypes.forEach(shippingType => { %>
             <option value="<%= shippingType %>" <% if (ob.type === shippingType) print('selected="selected"') %>><%= ob.polyT(`editListing.shippingOptions.shippingTypes.${shippingType}`) %></option>
           <% }); %>
