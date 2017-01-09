@@ -1,6 +1,7 @@
 <div class="contentBox padMd clrP clrBr clrSh3">
   <div class="flexHCent">
     <h2 class="h3 clrT"><%= ob.polyT('settings.generalTab.sectionName') %></h2>
+    <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
   </div>
   <hr class="clrBr" />
 
@@ -8,24 +9,27 @@
     <form class="box clrP padMdKids padStack settingsGeneralForm">
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.language') %></label>
+          <label class="required"><%= ob.polyT('settings.language') %></label>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperLanguage') %></div>
         </div>
-        <div class="col9">
+        <div class="col6">
           <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
-          <select id="settingsLanguageSelect" name="language">
+          <select id="settingsLanguageSelect" name="language" class="clrSh2">
             <% ob.languageList.forEach((lang) => { %>
               <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
             <% }); %>
           </select>
+          <div class="clrT2 txSm padSm"><%= ob.polyT('settings.generalTab.helperTranslations', { helperTranslationsLink: `<a href="https://www.transifex.com/ob1/openbazaar/" class="clrTEm">${ob.polyT('settings.generalTab.helperTranslationsLink')}</a>` }) %></div>
         </div>
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.country') %></label>
+          <label class="required"><%= ob.polyT('settings.country') %></label>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCountry') %></div>
         </div>
-        <div class="col9">
+        <div class="col6">
           <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
-          <select id="settingsCountrySelect" name="country">
+          <select id="settingsCountrySelect" name="country" class="clrSh2">
             <% ob.countryList.forEach((country) => { %>
             <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
             <% }); %>
@@ -34,11 +38,12 @@
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.currency') %></label>
+          <label class="required"><%= ob.polyT('settings.currency') %></label>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCurrency') %></div>
         </div>
-        <div class="col9">
+        <div class="col6">
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
-          <select id="settingsCurrencySelect"  name="localCurrency">
+          <select id="settingsCurrencySelect"  name="localCurrency" class="clrSh2">
             <% ob.currencyList.forEach((currency) => { %>
             <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
             <% }); %>
@@ -47,7 +52,7 @@
       </div>
       <div class="flexRow">
         <div class="col3">
-          <label><%= ob.polyT('settings.viewNsfwContent') %></label>
+          <label class="required"><%= ob.polyT('settings.viewNsfwContent') %></label>
         </div>
         <div class="col9">
           <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
@@ -59,7 +64,7 @@
                      id="settingsViewNSFWInputTrue"
                      data-var-type="boolean"
               <% if(ob.showNsfw) { %>checked<% } %>>
-              <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
+              <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.yes') %></label>
             </div>
             <div class="btnRadio clrBr">
               <input type="radio"
@@ -68,7 +73,7 @@
                      id="settingsViewNSFWInputFalse"
                      data-var-type="boolean"
               <% if(!ob.showNsfw) { %>checked<% } %>>
-              <label for="settingsViewNSFWInputFalse"><%= ob.polyT('settings.off') %></label>
+              <label for="settingsViewNSFWInputFalse"><%= ob.polyT('settings.no') %></label>
             </div>
           </div>
         </div>
@@ -78,6 +83,6 @@
 
   <hr class="clrBr" />
   <div class="flexHRight">
-    <a class="btn clrP clrBr js-save"><%= ob.polyT('settings.btnSave') %></a>
+    <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
   </div>
 </div>
