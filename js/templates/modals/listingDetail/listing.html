@@ -47,7 +47,7 @@
               </div>
             </div>
             -->
-            <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph">Buy Now</button>
+            <button class="btnHg clrBAttGrad clrBr3 clrTOnEmph"><%= ob.polyT('listingDetail.buyNow') %></button>
             <div class="flexHCent gutterH">
               <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
               <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->
@@ -71,9 +71,9 @@
         <h5><%= ob.polyT('listingDetail.tags') %></h5>
         <div class="tagWrapper">
           <% ob.item.tags.forEach(function(tag){
-          print(`<div class="btn tag clrBr">#${tag}</div>`);
+          print(`<div class="btn tag clrSh2 clrBr">#${tag}</div>`);
           }); %>
-          <% if(!ob.item.tags.length) { print(ob.polyT('listingDetail.noTags')) } %>
+          <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>
       </div>
     </div>
@@ -82,11 +82,11 @@
   <div class="contentBox descriptionSection padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.description') %></h2>
     <%= ob.item.description %>
-    <% if(!ob.item.description) { print(ob.polyT('listingDetail.noDescription')) } %>
+    <% if(!ob.item.description) { print(`<i class="clrT2">${ob.polyT('listingDetail.noDescription')}</i>`) } %>
   </div>
 
   <% if (ob.item.images.length) { %>
-    <div class="contentBox clrBr clrSh3 photoSection js-photoSection">
+    <div class="contentBox clrSh3 photoSection js-photoSection">
       <div class="flexCent photoSelected js-photoSelected">
         <img class="photoSelectedInner js-photoSelectedInner">
       </div>
@@ -146,13 +146,13 @@
   <div class="contentBox padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.refundPolicy') %></h2>
     <%= ob.refundPolicy %>
-    <% if (!ob.refundPolicy) { print(ob.polyT('listingDetail.noRefundPolicy')) } %>
+    <% if (!ob.refundPolicy) { print(`<i class="clrT2">${ob.polyT('listingDetail.noRefundPolicy')}</i>`) } %>
   </div>
 
   <div class="contentBox padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.termsAndConditions') %></h2>
     <%= ob.termsAndConditions %>
-    <% if (!ob.termsAndConditions) { print(ob.polyT('listingDetail.noTermsAndConditions')) } %>
+    <% if (!ob.termsAndConditions) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTermsAndConditions')}</i>`) } %>
   </div>
 
 </div>
