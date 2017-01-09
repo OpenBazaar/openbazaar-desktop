@@ -8,7 +8,9 @@ import app from '../../app';
 export default class BaseModal extends baseVw {
   constructor(options = {}) {
     const opts = {
-      dismissOnOverlayClick: true,
+      // #259 - we've decided not have modals close on an overlay click, so you
+      // probably should never be passing in true for this.
+      dismissOnOverlayClick: false,
       dismissOnEscPress: true,
       showCloseButton: true,
       closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3',

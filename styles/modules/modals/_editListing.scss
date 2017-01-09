@@ -45,6 +45,10 @@
 
     .tabContent {
       .photoUploadSection {
+        h2 {
+          display: inline-block;
+        }
+
         .uploadingLabel {
           float: right;
         }
@@ -56,6 +60,7 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
+            cursor: move;
 
             &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
             &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
@@ -63,10 +68,31 @@
             }
 
             &.addElement {
+              cursor: default;
+              
               .imagesIcon {
                 font-size: 50px;
                 @include center;
                 top: 35%;
+              }
+            }
+
+            .primaryIndicatorWrap {
+              display: none;
+            }
+
+            &:nth-child(2) {
+              .primaryIndicatorWrap {
+                position: absolute;
+                bottom: 5px;
+                left: 0;
+                right: 0;
+                display: block;
+                text-align: center;
+
+                .phraseBox {
+                  display: inline;
+                }
               }
             }
           }
@@ -79,12 +105,6 @@
             font-size: 38px;
             @include center;
             top: 34%;
-          }
-        }
-
-        &.hasShippingOptions {
-          .emptyShippingOptionsSection {
-            display: none;
           }
         }
 

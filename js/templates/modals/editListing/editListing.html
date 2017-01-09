@@ -1,4 +1,4 @@
-<div class="topControls flex js-closeClickTarget">
+<div class="topControls flex">
   <div class="btnStrip clrSh3">
     <% if (ob.returnText) { %>
     <a class="btn clrP clrBr clrT js-return"><%= ob.returnText %></a>
@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<div class="flex gutterH js-closeClickTarget">
+<div class="flex gutterH">
   <div class="tabColumn contentBox padMd clrP clrBr clrSh3">
     <div class="boxList tx4 clrTx1Br">
       <%
@@ -145,7 +145,7 @@
         <% if (ob.errors['listing.item.images']) print(ob.formErrorTmpl({ errors: ob.errors['listing.item.images'] })) %>
         <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
         <ul class="unstyled uploadItems clrBr js-photoUploadItems">
-          <li class="addElement tile">
+          <li class="addElement tile js-addPhotoWrap">
             <span class="imagesIcon ion-images clrT4"></span>
             <button class="btn clrP clrBr clrT tx6 js-addPhoto"><%= ob.polyT('editListing.btnAddPhoto') %></button>
           </li>
@@ -154,20 +154,10 @@
             });
           %>
         </ul>  
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos') %></div>
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos', { maxPhotos: ob.max.photos }) %></div>
       </section>
 
-      <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %> <% if (ob.listing.shippingOptions.length) print('hasShippingOptions') %>">
-<!--         <div class="pad overflowAuto emptyShippingOptionsSection contentBox padMd clrP clrBr clrSh3 tx3">
-          <h1 class="tx3 tx500 required"><%= ob.polyT('editListing.sectionNames.shipping') %></h1>
-          <% if (ob.errors['listing.shippingOptions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.shippingOptions'] })) %>
-          <div class="clrBr">
-            <div class="tile">
-              <span class="locationIcon ion-ios-location clrT4"></span>
-              <button class="btn clrP clrBr clrT tx6 js-addShippingOption"><%= ob.polyT('editListing.btnAddShippingOptionShort') %></button>
-            </div>
-          </div>
-        </div> -->
+      <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
         <div class="gutterVMd">
           <div class="js-shippingOptionsWrap gutterVMd"></div> 
           <div class="">
