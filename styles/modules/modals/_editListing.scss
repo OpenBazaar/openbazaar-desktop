@@ -54,6 +54,7 @@
             background-repeat: no-repeat;
             background-position: center center;
             background-size: cover;
+            cursor: move;
 
             &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
             &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
@@ -61,6 +62,8 @@
             }
 
             &.addElement {
+              cursor: default;
+              
               .imagesIcon {
                 font-size: 50px;
                 @include center;
