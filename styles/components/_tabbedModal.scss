@@ -33,10 +33,11 @@
   .tabContent {
     max-width: 757px;
   
-    .cornerTR {
+    .modalContentCornerBtn {
       right: 15px;
       top: 8px;
       font-size: $tx5;
+      position: absolute;
     }
   }
 
