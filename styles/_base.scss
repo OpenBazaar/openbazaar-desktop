@@ -115,8 +115,7 @@ ul, ol {
   }
 
   #contentFrame {
-    position: relative;
-    top: $barLg;
+    padding-top: $barLg;
     overflow-y: scroll;
     height: calc(100% - #{$bar} - #{$barLg});
     box-sizing: border-box;

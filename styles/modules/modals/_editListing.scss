@@ -1,4 +1,10 @@
 .editListing {
+  form {
+    label {
+      line-height: 2.75rem;
+    }
+  }
+
   .modalContent {
     overflow: hidden;
     min-height: 0;
@@ -128,18 +134,6 @@
               }
             }
           }
-        }
-      }
-
-      .tagsSection {
-        .select2 {
-          margin-bottom: $padSm;
-        }
-      }
-
-      .categoriesSection {
-        .select2 {
-          margin-bottom: $padSm;
         }
       }
     }
