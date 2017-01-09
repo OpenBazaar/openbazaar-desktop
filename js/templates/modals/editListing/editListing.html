@@ -154,7 +154,7 @@
             });
           %>
         </ul>  
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos') %></div>
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos', { maxPhotos: ob.max.photos }) %></div>
       </section>
 
       <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">

@@ -708,6 +708,7 @@ export default class extends BaseModal {
           title: item.max.titleLength,
           cats: item.max.cats,
           tags: item.max.tags,
+          photos: this.MAX_PHOTOS,
         },
         ...this.model.toJSON(),
       }));
