@@ -85,7 +85,7 @@
   },
   "userShort": {
     "userLoading": "Loading...",
-    "userNotFound": "Information for %{guid} was not found on the network."
+    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
   },
   "settings": {
     "settingsLabel": "Settings",
