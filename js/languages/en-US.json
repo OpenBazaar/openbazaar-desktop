@@ -21,6 +21,7 @@
   },
   "connectedPeersPage": {
     "heading": "Connected Peers",
+    "totalPeers": "%{totalPeers} Found",
     "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
     "noResults": "No connected peers"
   },
