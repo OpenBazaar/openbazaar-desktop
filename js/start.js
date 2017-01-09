@@ -518,7 +518,7 @@ serverConnectEvents.on('connected', (connectedEvent) => {
     if (e.jsonData) {
       if (e.jsonData.status === 'publishing') {
         setPublishingStatus({
-          msg: 'Publishing...',
+          msg: 'Publishing updates to network...',
           type: 'message',
         });
 

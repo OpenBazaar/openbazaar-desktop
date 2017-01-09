@@ -104,6 +104,12 @@ input[type=range][class~="clrS"] {
     border-color: $border;
   }
 
+  .trumbowyg-box,
+  .trumbowyg-editor {
+    border-top-color: transparent;
+    margin: auto;
+  }
+
   &.trumbowyg {
     border-width: 0;
 
@@ -111,6 +117,7 @@ input[type=range][class~="clrS"] {
       border: 1px solid $border;
      
       border-bottom: 0;
+      background-color: $primary;
 
       .trumbowyg-button-group::before {
         background-color: $border;
@@ -280,7 +287,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrSh3 {
-  box-shadow: 0 0 1px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
 
 .required::after {
