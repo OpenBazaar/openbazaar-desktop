@@ -3,6 +3,7 @@ import baseVw from '../../baseVw';
 import regeneratorRuntime from 'regenerator-runtime';
 
 let names;
+let fetchNames;
 
 // Linter notes:
   // linter will not be happy with some things which also work:
@@ -30,6 +31,8 @@ let names;
     name: ({ user }) => `${base}/users/${user}${query}`,
   };
   const process = {
+    // our process for fetching the names is first fetch the repositories
+    // then for each fetch the contributors then for each get their name
     contributor_names: [
       {
         api: 'repos',
@@ -154,11 +157,17 @@ let names;
     // obtain this list a few times a day and then provide a copy to clients
     // Or perhaps we can somehow cache this data on IPFS somehow
     // now that WOULD be cool :P ;) xxx.l
-  processSequence(
-    'contributor_names',
-    { owner: obGitHubName },
-    contributors => updateNameList(contributors)
-  );
+  fetchNames = function(then = () => {}) {
+    const whenProcessed = (contributors) => {
+      updateNameList(contributors);
+      then(names);
+    };
+    processSequence(
+      'contributor_names',
+      { owner: obGitHubName },
+      whenProcessed
+    );
+  };
 }
 
 // note: this list was generated using the above code
@@ -296,6 +305,7 @@ export default class extends baseVw {
       className: 'aboutContributors',
       ...options,
     });
+    fetchNames(() => this.render());
   }
 
   render() {
@@ -308,3 +318,4 @@ export default class extends baseVw {
     return this;
   }
 }
+
