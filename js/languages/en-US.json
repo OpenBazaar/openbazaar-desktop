@@ -22,7 +22,6 @@
   "connectedPeersPage": {
     "heading": "Connected Peers",
     "totalPeers": "%{totalPeers} Found",
-    "infoMessage": "You should see up to 12 peers below. If you are connected to more than 12 peers, click the more button to load the next 12.",
     "noResults": "No connected peers"
   },
   "serverConnect": {
