@@ -7,7 +7,7 @@ let fetchNames;
 
 // Linter notes:
   // linter will not be happy with some things which also work:
-  // no-use-before-define -- becuase of const variable hoisting and invocation time
+  // no-use-before-define -- because of const variable hoisting and invocation time
   // this works and is a way to share data in closures. The linter is also unhappy.
 {
   // proof of concept for Dynamic Contributors List
@@ -31,8 +31,8 @@ let fetchNames;
     name: ({ user }) => `${base}/users/${user}${query}`,
   };
   const process = {
-    // our process for fetching the names is first fetch the repositories
-    // then for each fetch the contributors then for each get their name
+    // our process for fetching the names is first fetch all the repositories 
+    // then for each fetch all the contributors then for each unique contributor get their name
     contributor_names: [
       {
         api: 'repos',
@@ -73,21 +73,22 @@ let fetchNames;
     //
     // As the processor processes the queue
     // It takes the output of each job, filters it, and creates a new job
-    // That applies to the next step in the sequence.
-    // This new job takes the output of its previous job as input.
+    // Which applies to the next step and takes the output of its previous job as input.
     //
     // If a step shall process its returned data as a list then
-    // that step's isList slot is set
-    // and in that case the processor takes the output of the job for this step
+    // that step's isList slot is set and the processor takes the output of the job for this step
     // and creates a list of new jobs for **for each item in this output** 
     // and adds all these new jobs to the queue.
     // All these new jobs all apply to the next step in the sequence. 
+    // And all these new jobs each take one item of the output of their previous job
+    // as input.
     //
     // An optimization has been added to specify that duplicates be removed
+    // it is invoked by adding a 'uniqueKey' to the sequence step object.
     // An optimization to process some number of jobs concurrently shall be added
 
   function processSequence(name, firstData, then = val => val) {
-    // we could use async/await as well
+    // we could use async/await as well even tho it would take more lines
     function *makeProcessor(steps) {
       while (queue.length) {
         const job = queue.shift();
@@ -149,10 +150,9 @@ let fetchNames;
 
   // In Depth -- Caching, Rate Limits and Moving to a Server
     // We shall wish to cache our contributor names in local settings
-    // And unfortunately GitHub has a authenticated rate limit of 5000 per hour
+    // And unfortunately GitHub has an authenticated rate limit of 5000 per hour
     // which shall not be enough for humans to use this in the client
-    // I have created a temporary github account linked to 
-    // my work email for the purpose of testing
+    // I have created a temporary GitHub account for the purpose of testing
     // In future it shall work to move this code to some kind of "helper server" that can
     // obtain this list a few times a day and then provide a copy to clients
     // Or perhaps we can somehow cache this data on IPFS somehow
@@ -244,7 +244,7 @@ names = [
   'Duo Search',
   'Michael Lynch',
   'Oyebanji Jacob Mayowa',
-  'Check your git settings!',
+  'Check your git settings!', // it may be cool to list "names" as <name> (<login>) 
   'Giannis Adamopoulos',
   'Steven Roose',
   'Gianluca Boiano',
