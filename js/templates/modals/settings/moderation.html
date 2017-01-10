@@ -1,0 +1,51 @@
+<div class="gutterVMd">
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <div class="flexHCent">
+      <h2 class="h3 clrT">Moderation</h2>
+      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+    </div>
+    <hr class="clrBr" />
+
+    <div class="tabFormWrapper">
+      <form class="box padMdKids padStack">
+        <div class="flexRow">
+          <div class="col3">
+            <label class="required">Status</label>
+          </div>
+          <div class="col9">
+            <div class="btnStrip">
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="moderator"
+                       value="true"
+                       id="settingsModerationStatusTrue"
+                       data-var-type="boolean"
+                <% if(ob.isModerator) { %>checked<% } %>>
+                <label for="settingsModerationStatusTrue">On</label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="moderator"
+                       value="false"
+                       id="settingsModerationStatusFalse"
+                       data-var-type="boolean"
+                <% if(!ob.isModerator) { %>checked<% } %>>
+                <label for="settingsModerationStatusFalse">Off</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flexRow">
+          <div class="col3">
+            <label for="settingsModeratorDescription" class="required">Decription</label>
+          </div>
+          <div class="col9">
+            <% if (ob.errors.description) print(ob.formErrorTmpl({ errors: ob.errors.description })) %>
+            <textarea rows="3" maxlength="160" name="modInfo.description" id="settingsModeratorDescription"
+                      class="clrBr clrSh2" placeholder="Describe yourself"><%= ob.description %></textarea>
+          </div>
+        </div>        
+      </form>
+    </div>
+  </div>
+</div>

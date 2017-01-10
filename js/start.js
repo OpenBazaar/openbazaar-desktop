@@ -17,7 +17,7 @@ import LoadingModal from './views/modals/Loading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
-import Profile from './models/Profile';
+import Profile from './models/profile/Profile';
 import Settings from './models/Settings';
 import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';

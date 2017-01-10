@@ -8,7 +8,7 @@ import UserPage from './views/userPage/UserPage';
 import TransactionsPage from './views/TransactionsPage';
 import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
-import Profile from './models/Profile';
+import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 
 export default class ObRouter extends Router {

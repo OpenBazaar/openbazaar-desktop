@@ -1,29 +1,35 @@
-import 'select2';
 import app from '../../../app';
-import languages from '../../../data/languages';
-import { getTranslatedCountries } from '../../../data/countries';
-import { getTranslatedCurrencies } from '../../../data/currencies';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../SimpleMessage';
+import loadTemplate from '../../../utils/loadTemplate';
+import Moderator from '../../../models/profile/Moderator';
+import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super({
-      className: 'settingsGeneral',
+      className: 'settingsModeration',
       ...options,
     });
 
-    this.settings = app.settings.clone();
-    this.listenTo(this.settings, 'sync', (md, resp, syncOpts) => {
-      // Since different tabs are working off different parts of
-      // the settings model, to not overwrite each other, we'll only
-      // update fields that our tab has changed.
-      app.settings.set(syncOpts.attrs);
+    this.profile = app.profile.clone();
+
+    if (this.profile.get('modInfo')) {
+      this.moderator = this.profile.get('modInfo');
+    } else {
+      this.moderator = new Moderator();
+      this.profile.set('modInfo', this.moderator);
+    }
+
+    this.listenTo(this.profile, 'sync', () => {
+      console.log('kitchen to the sinker');
+      app.profile.set({
+        moderator: this.get('moderator'),
+        modInfo: this.profile.get('modInfo').toJSON(),
+      });
     });
 
-    this.countryList = getTranslatedCountries(app.settings.get('language'));
-    this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
+    console.log('moo time');
+    window.moo = this.profile;
   }
 
   events() {
@@ -38,16 +44,22 @@ export default class extends baseVw {
 
   save() {
     const formData = this.getFormData();
-    this.settings.set(formData);
+    this.profile.set(formData);
 
-    const save = this.settings.save(formData, {
+    console.log('hippo happo');
+    window.hippo = formData;
+
+    const save = this.profile.save(formData, {
       attrs: formData,
-      type: 'PATCH',
+      // type: 'PATCH',
+      // ^ uncomment when server bug is fixed:
+      // https://github.com/OpenBazaar/openbazaar-go/issues/314
     });
 
     if (save) {
       const msg = {
-        msg: app.polyglot.t('settings.generalTab.statusSaving'),
+        // msg: app.polyglot.t('settings.generalTab.statusSaving'),
+        msg: 'Saving moderation settings...',
         type: 'message',
       };
 
@@ -58,7 +70,8 @@ export default class extends baseVw {
 
       save.done(() => {
         statusMessage.update({
-          msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
+          // msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
+          msg: 'Moderation settings saved.',
           type: 'confirmed',
         });
       })
@@ -66,16 +79,23 @@ export default class extends baseVw {
         const errMsg =
           args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
 
-        openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
+        // openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
+        openSimpleMessage('Unable to save moderation settings', errMsg);
 
         statusMessage.update({
-          msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
+          // msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
+          msg: 'Unable to save moderation settings.',
           type: 'warning',
         });
       }).always(() => {
         this.$btnSave.removeClass('processing');
         setTimeout(() => statusMessage.remove(), 3000);
       });
+    } else {
+      // todo: for debugging purposes. remove this else block when this
+      // feature is complete.
+      console.log('Client side validation error.');
+      console.log(this.profile.validationError);
     }
 
     // render so errrors are shown / cleared
@@ -93,18 +113,14 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/settings/general.html', (t) => {
-      this.$el.html(t({
-        languageList: languages,
-        countryList: this.countryList,
-        currencyList: this.currencyList,
-        errors: this.settings.validationError || {},
-        ...this.settings.toJSON(),
-      }));
+    loadTemplate('modals/settings/moderation.html', (t) => {
+      const moderator = this.profile.get('modInfo');
 
-      this.$('#settingsLanguageSelect').select2();
-      this.$('#settingsCountrySelect').select2();
-      this.$('#settingsCurrencySelect').select2();
+      this.$el.html(t({
+        errors: moderator.validationError || {},
+        ...moderator.toJSON(),
+        isModerator: this.profile.get('moderator'),
+      }));
 
       this.$formFields = this.$('select[name], input[name]');
       this._$btnSave = null;

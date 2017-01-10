@@ -209,6 +209,9 @@
       "statusSaveFailed": "Unable to save advanced settings.",
       "saveErrorAlertTitle": "Unable to save advanced settings"
     },
+    "moderationTab": {
+      "sectionName": "Moderation"
+    },
     "optional": "optional",
     "language": "Language",
     "country": "Country",
