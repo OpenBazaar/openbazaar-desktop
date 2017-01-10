@@ -19,8 +19,8 @@ let names;
   // for purposes of testing this code: theob1ioaccount000
   // it has no access to anything except public information
   // because of the limit of 5K calls
-  // there can only be around 25 such calls to the
-  //  contributor_names process per day ( each call makes around 200 requests )
+  // there can only be around 600 ( 25 * 24 ) such calls to the
+  // contributor_names process per day ( each call makes around 200 requests )
   const param = 'e337ed04a17834db421690774b00125b64c51f06';
   const parts = ['acc', /* this is */ 'ess_to', /* to foil GitHub searches */ 'ken'];
   const query = `?${parts.join('')}=${param}`;
@@ -61,15 +61,25 @@ let names;
     console.info(`Name list updated ${names}`);
   }
 
-  // In Depth -- Take Processor
+  // In Depth -- Task Processor
     // This is a simple asynchronous task processor that
-    // Takes an initial piece of data, and a named sequence of steps
-    // And creates a job from that piece of data that applies to the first step
-    // It adds that job to the queue. As it processes the queue
+    // Takes an initial piece of data, and a sequence of steps
+    // And creates a job from that piece of data.
+    // This first job applies to the first step of the sequence.
+    // It adds that job to the queue. 
+    //
+    // As the processor processes the queue
     // It takes the output of each job, filters it, and creates a new job
-    // That applies to the next step in the sequence and
-    // That passes the filtered output of the previous step
-    // as input for the step
+    // That applies to the next step in the sequence.
+    // This new job takes the output of its previous job as input.
+    //
+    // If a step shall process its returned data as a list then
+    // that step's isList slot is set
+    // and in that case the processor takes the output of the job for this step
+    // and creates a list of new jobs for **for each item in this output** 
+    // and adds all these new jobs to the queue.
+    // All these new jobs all apply to the next step in the sequence. 
+    //
     // An optimization has been added to specify that duplicates be removed
     // An optimization to process some number of jobs concurrently shall be added
 
@@ -135,12 +145,15 @@ let names;
   }
 
   // In Depth -- Caching, Rate Limits and Moving to a Server
-    // we shall wish to cache our contributor names in local settings
-    // and unfortunately github has a authenticated rate limit of 5000 per hour
+    // We shall wish to cache our contributor names in local settings
+    // And unfortunately GitHub has a authenticated rate limit of 5000 per hour
     // which shall not be enough for humans to use this in the client
-    // I have created a temporary github account linked to my work email for the purpose of testing
-    // in future it shall work to move this code to some kind of "helper server" that can
+    // I have created a temporary github account linked to 
+    // my work email for the purpose of testing
+    // In future it shall work to move this code to some kind of "helper server" that can
     // obtain this list a few times a day and then provide a copy to clients
+    // Or perhaps we can somehow cache this data on IPFS somehow
+    // now that WOULD be cool :P ;) xxx.l
   processSequence(
     'contributor_names',
     { owner: obGitHubName },
