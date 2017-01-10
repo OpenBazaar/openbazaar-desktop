@@ -23,7 +23,6 @@
   "connectedPeersPage": {
     "heading": "Connected Peers",
     "totalPeers": "%{totalPeers} Found",
-    "infoMessage": "If you do not see any peers below, you are not connected to the OpenBazaar network. If a peer does not have information available on the network, clicking on their guid below will result in a User Not Found page.",
     "noResults": "No connected peers"
   },
   "serverConnect": {
