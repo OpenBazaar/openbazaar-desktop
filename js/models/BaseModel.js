@@ -121,11 +121,15 @@ export default class extends Model {
           const nestedData = attrs[nestedKey];
           const nestedInstance = this.attributes[nestedKey];
 
-          if (nestedInstance) {
-            if (nestedData) nestedInstance.set(nestedData);
-            delete attrs[nestedKey];
-          } else {
-            attrs[nestedKey] = new NestedClass(nestedData);
+          if (nestedData) {
+            if (nestedData instanceof NestedClass) {
+              attrs[nestedKey] = nestedData;
+            } else if (nestedInstance) {
+              nestedInstance.set(nestedData);
+              delete attrs[nestedKey];
+            } else {
+              attrs[nestedKey] = new NestedClass(nestedData);
+            }
           }
         });
       }
@@ -200,8 +204,9 @@ export default class extends Model {
     if (this.nested) {
       const nested = _.result(this, 'nested', []);
       Object.keys(nested).forEach((nestedKey) => {
-        attrs[nestedKey] = attrs[nestedKey].toJSON ?
-          attrs[nestedKey].toJSON.call(attrs[nestedKey]) : attrs[nestedKey];
+        if (attrs[nestedKey]) {
+          attrs[nestedKey] = attrs[nestedKey].toJSON();
+        }
       });
     }
 

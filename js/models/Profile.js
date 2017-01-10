@@ -19,7 +19,9 @@ export default class extends BaseModel {
       secondaryColor: '#317DB8',
       textColor: '#ffffff',
       shortDescription: '',
-      social: [],
+      social: new SocialAccounts(),
+      avatarHashes: new Image(),
+      headerHashes: new Image(),
       vendor: false,
       website: '',
     };

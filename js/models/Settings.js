@@ -16,6 +16,8 @@ export default class extends BaseModel {
       refundPolicy: '',
       blockedNodes: [],
       storeModerators: [],
+      shippingAddresses: new ShippingAddresses(),
+      smtpSettings: new SMTPSettings(),
     };
   }
 

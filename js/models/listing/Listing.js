@@ -17,6 +17,12 @@ export default class extends BaseModel {
     return 'use-sync';
   }
 
+  defaults() {
+    return {
+      listing: new ListingInner(),
+    };
+  }
+
   get nested() {
     return {
       listing: ListingInner,
