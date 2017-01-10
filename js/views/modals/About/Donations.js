@@ -24,14 +24,15 @@ export default class extends baseVw {
   }
 
   copyDonationAddress() {
+    const $copyNotification = this.$('.js-copyNotification');
     clipboard.writeText(obDonationAddress);
 
-    this.$('.copyNotification').addClass('active');
+    $copyNotification.addClass('active');
     if (!!hiderTimer) {
       clearTimeout(hiderTimer);
     }
     hiderTimer = setTimeout(
-      () => this.$('.copyNotification').removeClass('active'), 3000);
+      () => $copyNotification.removeClass('active'), 3000);
   }
 
   render() {

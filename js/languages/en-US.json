@@ -82,6 +82,12 @@
           "showMore": "%{smart_count} more... |||| %{smart_count} more...",
           "showLess": "less"
         }
+    },
+    "mainNav": {
+      "home": "Home",
+      "store": "Store",
+      "following": "Following",
+      "followers": "Followers"
     }
   },
   "userShort": {
