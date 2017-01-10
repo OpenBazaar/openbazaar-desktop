@@ -5,6 +5,17 @@
 // any color that should change on hover, active, etc. should have a rule for &.clrHover, and the
 // element that should change should have a .clrHover class on it.
 
+/* default for inputs with no color class */
+input,
+select,
+textarea,
+button,
+.trumbowyg div[contenteditable]{
+  &:focus {
+    border-color: $border3;
+  }
+}
+
 .clrP {
   background-color: $primary;
 
@@ -98,81 +109,11 @@ input[type=range][class~="clrS"] {
 }
 
 .clrBr {
-  border-color: $border;
-
-  hr {
-    border-color: $border;
-  }
-
-  &.trumbowyg {
-    border-width: 0;
-
-    .trumbowyg-button-pane {
-      border: 1px solid $border;
-     
-      border-bottom: 0;
-
-      .trumbowyg-button-group::before {
-        background-color: $border;
-      }
-    }
-  }
-
-  .btn:hover,
-  .btn:focus,
-  &.btn:hover,
-  &.btn:focus,
-  .clrHover:hover,
-  .clrHover:focus,
-  &.clrHover:hover,
-  &.clrHover:focus {
-    border-color: $border3;
-
-    .disabled &,
-    &.disabled,
-    &:disabled {
-      border-color: $border;
-    }
-  }
+  @include borderColor($border, $border3);
 }
 
 .clrBr2 {
-  border-color: $border2;
-
-  hr {
-    border-color: $border2;
-  }
-
-  &.trumbowyg {
-    border-width: 0;
-
-    .trumbowyg-button-pane {
-      border: 1px solid $border2;
-     
-      border-bottom: 0;
-
-      .trumbowyg-button-group::before {
-        background-color: $border2;
-      }
-    }
-  }  
-
-  .btn:hover,
-  .btn:focus,
-  &.btn:hover,
-  &.btn:focus,
-  .clrHover:hover,
-  .clrHover:focus,
-  &.clrHover:hover,
-  &.clrHover:focus {
-    border-color: $border3;
-
-    .disabled &,
-    &.disabled,
-    &:disabled {
-      border-color: $border2;
-    }
-  }
+  @include borderColor($border2, $border3);
 }
 
 .clrBr3 {
@@ -180,6 +121,10 @@ input[type=range][class~="clrS"] {
   border-color: $textOnEmph;
   border-width: 2px;
   box-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+
+.clrBr4 {
+  @include borderColor($border4, $border4);
 }
 
 .clrBrEmph1 {
@@ -280,21 +225,11 @@ input[type=range][class~="clrS"] {
 }
 
 .clrSh3 {
-  box-shadow: 0 0 1px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
 
 .required::after {
   color: $emphasis2;
-}
-
-input,
-select,
-textarea,
-button,
-.trumbowyg div[contenteditable]{
-  &:focus {
-    border-color: $border3;
-  }
 }
 
 .select2-container--focus .select2-selection__rendered {
