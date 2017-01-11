@@ -210,7 +210,26 @@
       "saveErrorAlertTitle": "Unable to save advanced settings"
     },
     "moderationTab": {
-      "sectionName": "Moderation"
+      "sectionName": "Moderation",
+      "disputeResolution": "Dispute Resolution",
+      "disputeResolutionText": "Sellers have the ability to select you as a Moderator for their store. If a dispute arises between them and a customer, you'll be called in to review the details of the order and determine how the order's funds should be distributed.",
+      "moderationStatus": "Moderate Disputes",
+      "pricePerDispute": "Price per dispute",
+      "pricePerDisputeOptions": {
+        "percentageOfOrder": "Percentage of Order",
+        "fixedPrice": "Fixed Fee",
+        "percentagePlusFixed": "Fixed Fee Plus Percentage"
+      },
+      "pricePerDisputeHelper": "The amount you charge to review and close a dispute",
+      "description": "Description",
+      "descriptionHelper": "Add your description (e.g. What is your strategy for reviewing cases? What is your expected response time? What is your schedule of operation? During what hours are you available each day? etc.)",
+      "terms": "Terms",
+      "termsHelper": "Add your terms of service (e.g. Do you have legal limitations? What happens after you make a decisions? etc.)",
+      "languages": "Languages",
+      "languagesHelper": "Enter all of the languages you support (ie: you can communicate clearly in).",
+      "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
+      "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
+      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them."
     },
     "optional": "optional",
     "language": "Language",

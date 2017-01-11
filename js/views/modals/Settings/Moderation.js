@@ -1,9 +1,11 @@
 import _ from 'underscore';
+import 'select2';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
+import languages from '../../../data/languages';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -127,7 +129,13 @@ export default class extends baseVw {
         errors: moderator.validationError || {},
         ...moderator.toJSON(),
         isModerator: this.profile.get('moderator'),
+        languageList: languages,
       }));
+
+      this.$('#moderationLanguageSelect').select2({
+        multiple: true,
+        tags: true,
+      });
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
       this._$btnSave = null;

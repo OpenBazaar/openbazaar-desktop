@@ -8,9 +8,10 @@
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
+        <h2></h2>
         <div class="flexRow">
           <div class="col3">
-            <label class="required">Status</label>
+            <label class="required"><%= ob.polyT('settings.moderationTab.moderationStatus') %></label>
           </div>
           <div class="col9">
             <div class="btnStrip">
@@ -37,14 +38,46 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-            <label for="settingsModeratorDescription" class="required">Decription</label>
+            <label for="settingsModeratorDescription" class="required"><%= ob.polyT('settings.moderationTab.description') %></label>
           </div>
           <div class="col9">
             <% if (ob.errors.description) print(ob.formErrorTmpl({ errors: ob.errors.description })) %>
             <textarea rows="3" maxlength="160" name="modInfo.description" id="settingsModeratorDescription"
-                      class="clrBr clrSh2" placeholder="Describe yourself"><%= ob.description %></textarea>
+                      class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.descriptionHelper') %>"><%= ob.description %></textarea>
           </div>
-        </div>        
+        </div>
+        <div class="flexRow">
+          <div class="col3">
+            <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.terms') %></label>
+          </div>
+          <div class="col9">
+            <% if (ob.errors.terms) print(ob.formErrorTmpl({ errors: ob.errors.terms })) %>
+            <textarea rows="3" maxlength="160" name="modInfo.description" id="settingsModeratorTerms"
+                      class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.terms %></textarea>
+          </div>
+        </div>
+        <div class="flexRow">
+          <div class="col3">
+
+          </div>
+          <div class="col9">
+            <div class="select2TagsWrap">
+              <select id="moderationLanguageSelect" multiple name="language" class="clrBr clrP clrSh2 select2Tags">
+                <% ob.languageList.forEach((lang) => { %>
+                <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
+                <% }); %>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="flexRow">
+          <div class="col3"></div>
+          <div class="col9">
+            <label>
+              <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/docs/disputeResolution.md" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
+            </label>
+          </div>
+        </div>
       </form>
     </div>
   </div>
