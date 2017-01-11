@@ -11,13 +11,14 @@ $textOnEmph: rgb(255, 255, 255);
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
 $border3: adjust-color($text, $lightness: 35%);
+$border4: adjust-color($text, $lightness: 70%);
 $focusedBorder: rgb(0, 0, 0);
 $emphasis1: hsl(116.5, 66.3, 41);
 $emphasis2: adjust-color($emphasis1, $lightness: +20%);
 $emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
 $error: red;
 
-$overlay: adjust-color($secondary, $alpha: -0.1);
+$overlay: adjust-color($secondary, $alpha: -0.04);
 
 // typography
 $baseFontSize: 10px;

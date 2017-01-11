@@ -14,6 +14,7 @@
     @include center;
     left: calc(50% - #{$chatClosed / 2});
     @include chatOpeningTransition(left);
+    margin-bottom: 100px;
 
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
@@ -55,6 +56,7 @@
       // adjust by 20 px to visually center
       margin-left: calc(((100% - (#{$modalContentInner + $chatClosed})) / 2) + 20px);
       @include chatOpeningTransition(margin-left);
+      margin-bottom: 100px;
 
       .chatOpen & {
         left: 0;

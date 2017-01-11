@@ -1,4 +1,4 @@
-<div class="contentBox clrBr clrP clrSh2">
+<div class="contentBox clrBr clrP clrSh2 <% if (ob.notFound) { %>disabled<% } %>">
   <div class="shortHeader"
     <% var headerHash = ob.headerHashes ? ob.isHiRez() ? ob.headerHashes.small : ob.headerHashes.tiny : ''; %>
     <% if (headerHash) { %>

@@ -9,6 +9,7 @@ import Page from './Page';
 import Addresses from './Addresses';
 import Advanced from './Advanced';
 
+
 export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
@@ -43,16 +44,8 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-tab': 'tabClick',
-      // 'click .js-save': 'saveClick',
       ...super.events(),
     };
-  }
-
-  get closeClickTargets() {
-    return [
-      ...this.$closeClickTargets.get(),
-      ...super.closeClickTargets,
-    ];
   }
 
   tabClick(e) {
@@ -180,18 +173,12 @@ export default class extends BaseModal {
     }
   }
 
-  get $closeClickTargets() {
-    return this._$closeClickTargets ||
-      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
-  }
-
   render() {
     loadTemplate('modals/settings/settings.html', (t) => {
       this.$el.html(t(this.options));
       super.render();
 
       this.$tabContent = this.$('.js-tabContent');
-      this._$closeClickTargets = null;
 
       this.selectTab(this.$('.js-tab[data-tab="General"]'));
     });
