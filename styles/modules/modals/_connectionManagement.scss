@@ -6,11 +6,13 @@
       position: absolute;
       top: 0;
       left: 0;
-      right: 115px;
-      height: 58px;
+      height: 59px;
+      box-sizing: border-box;
+      width: 100%;
 
       .statusBarMessage {
         height: 100%;
+        width: calc(100% - 115px);
 
         .btnClose {
           position: absolute;
@@ -35,14 +37,6 @@
           }
         }
       }
-    }
-
-    // this was the least ugly way I found to do this :(
-    .borderFillIn {
-      position: absolute;
-      right: -115px;
-      top: 58px;
-      width: 150px;
     }
 
     .configuration {
