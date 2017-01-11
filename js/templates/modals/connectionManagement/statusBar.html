@@ -1,0 +1,11 @@
+<div class="pad posR clrP flexVCent <% if (ob.status === 'connect-attempt-failed') print('clrBrError connectFailed') %>">
+  <% if (ob.status === 'connecting') { %>
+  <p class="txUnl tx5 statusMsg connectingMsg clamp3">
+    <% print(ob.spinner({ className: 'spinnerSm posA' })) %>
+    <%= ob.msg %>
+  </p>
+  <% } else { %>
+  <p class="txUnl tx5 statusMsg clamp3"><%= ob.msg %></p>
+  <% } %>
+  <a class="js-btnClose btnClose"><span class="ion-ios-close-empty"></span></a>
+</div>
