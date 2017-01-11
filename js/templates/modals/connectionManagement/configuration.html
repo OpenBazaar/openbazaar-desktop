@@ -4,7 +4,7 @@
   <div class="col4">
     <div class="flexHRight">
       <% if (ob.status === 'connected') { %>
-      <div class="txB connectedText"><span class="ion-ios-checkmark-empty clrTEmph1"></span><%= ob.polyT('connectionManagement.configurations.statusConnected') %></div>
+      <div class="txB flexVCent flexHRight gutterHTn"><span class="ion-ios-checkmark-empty clrTEmph1 tx1"></span><span><%= ob.polyT('connectionManagement.configurations.statusConnected') %></span></div>
       <% } else { %>
       <div class="gutterHTn">
         <a class="iconBtn clrP clrBr ion-trash-b js-btnDelete <% if (ob.deleteConfirmOn) print('confirmDisabled') %> <% if (ob.default) print('hide') %>"></a>

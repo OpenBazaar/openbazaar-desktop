@@ -55,19 +55,6 @@
         padding-right: 0;
       }
 
-      .connectedText {
-        position: relative;
-
-        span {
-          font-size: $tx1;
-          // Icon is getting an abnormally large height, which messes up the vertical centering
-          // of the text. Therefore, we'll absolutely position.
-          position: absolute;
-          left: -15px;
-          top: -6px;
-        }
-      }
-
       &.failedConnectAttempt {
         border-left-width: 4px;
         border-left-style: solid;
