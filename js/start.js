@@ -6,14 +6,13 @@ import './lib/whenAll.jquery';
 import app from './app';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
-import {
-  connect as serverConnect,
-  events as serverConnectEvents,
-} from './utils/serverConnect';
+import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
+import { getChatContainer } from './utils/selectors';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
+import StartupLoadingModal from './views/modals/StartupLoading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
@@ -26,6 +25,7 @@ import './utils/listingData';
 import { launchDebugLogModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
+import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagament';
 
 fixLinuxZoomIssue();
 
@@ -75,13 +75,22 @@ app.router = new ObRouter();
 app.statusBar = new StatusBar();
 $('#statusBar').html(app.statusBar.render().el);
 
-// create and launch loading modal
+// Create and launch a startup loading modal which will be
+// used during the startup connecting process.
+const startupLoadingModal = new StartupLoadingModal({
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render().open();
+
+// Create loading modal, which is a shared instance used by
+// the app after the initial connect sequence
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
   removeOnRoute: false,
-}).render().open();
+}).render();
 
 handleLinks();
 
@@ -92,11 +101,17 @@ function fetchConfig() {
     fetchConfigDeferred.resolve(...args);
   }).fail(() => {
     const retryConfigDialog = new Dialog({
-      title: 'Unable to get your server config.',
-      buttons: [{
-        text: 'Retry',
-        fragment: 'retry',
-      }],
+      title: app.polyglot.t('startUp.dialogs.retryConfig.title'),
+      buttons: [
+        {
+          text: app.polyglot.t('startUp.dialogs.btnRetry'),
+          fragment: 'retry',
+        },
+        {
+          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+          fragment: 'manageConnections',
+        },
+      ],
       dismissOnOverlayClick: false,
       dismissOnEscPress: false,
       showCloseButton: false,
@@ -108,7 +123,8 @@ function fetchConfig() {
       setTimeout(() => {
         fetchConfig();
       }, 300);
-    })
+    }).on('click-manageConnections', () =>
+      app.connectionManagmentModal.open())
     .render()
     .open();
   });
@@ -160,12 +176,18 @@ function isOnboardingNeeded() {
     .fail((jqXhr) => {
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
-          title: 'Unable to get your profile and settings data.',
+          title: app.polyglot.t('startUp.dialogs.retryOnboardingFetch.title'),
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          buttons: [{
-            text: 'Retry',
-            fragment: 'retry',
-          }],
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+              fragment: 'manageConnections',
+            },
+          ],
           dismissOnOverlayClick: false,
           dismissOnEscPress: false,
           showCloseButton: false,
@@ -177,7 +199,8 @@ function isOnboardingNeeded() {
           setTimeout(() => {
             isOnboardingNeeded();
           }, 300);
-        })
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
         .render()
         .open();
       } else if (onboardProfile || onboardSettings) {
@@ -231,12 +254,20 @@ function onboard() {
     }
 
     const retryOnboardingSaveDialog = new Dialog({
-      title: `Unable to save your ${jqXhr === profileSave ? 'profile' : 'settings'} data.`,
+      title: app.polyglot.t('startUp.dialogs.retryOnboardingSave.title', {
+        type: jqXhr === profileSave ? 'profile' : 'settings',
+      }),
       message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-      buttons: [{
-        text: 'Retry',
-        fragment: 'retry',
-      }],
+      buttons: [
+        {
+          text: app.polyglot.t('startUp.dialogs.btnRetry'),
+          fragment: 'retry',
+        },
+        {
+          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+          fragment: 'manageConnections',
+        },
+      ],
       dismissOnOverlayClick: false,
       dismissOnEscPress: false,
       showCloseButton: false,
@@ -248,7 +279,8 @@ function onboard() {
       setTimeout(() => {
         onboard();
       }, 300);
-    })
+    }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
     .render()
     .open();
   });
@@ -284,21 +316,31 @@ function fetchStartupData() {
     .fail((jqXhr) => {
       if (ownFollowingFailed) {
         const retryFetchStarupDataDialog = new Dialog({
-          title: 'Unable to get data about who you\'re following.',
+          title: app.polyglot.t('startUp.dialogs.unableToGetFollowData.title'),
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          buttons: [{
-            text: 'Retry',
-            fragment: 'retry',
-          }],
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+              fragment: 'manageConnections',
+            },
+          ],
           dismissOnOverlayClick: false,
           dismissOnEscPress: false,
           showCloseButton: false,
         }).on('click-retry', () => {
           retryFetchStarupDataDialog.close();
-          fetchStartupData();
-        })
-          .render()
-          .open();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => fetchStartupData(), 300);
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
+        .render()
+        .open();
       } else {
         // We don't care if the exchange rate fetch failed, because
         // the exchangeRateSyncer will display a status message about it
@@ -354,6 +396,7 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
+        app.connectionManagmentModal.setModalOptions({ removeOnRoute: true });
       });
     });
   });
@@ -361,22 +404,73 @@ function start() {
 
 function connectToServer() {
   const server = app.serverConfigs.activeServer;
+  let connectAttempt = null;
 
-  console.log(`Will attempt to connect to server "${server.get('name')}"` +
-    ` at ${server.get('serverIp')}.`);
-  serverConnect(app.serverConfigs.activeServer)
-    .progress(e => {
-      console.log(`Status is "${e.status}" for connect attempt` +
-        ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
-    })
-    .done((e) => {
-      console.log(`Connected to "${e.server.get('name')}"`);
+  startupLoadingModal
+    .setState({
+      msg: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {
+        serverName: server.get('name'),
+        canceLink: '<a class="js-cancel delayBorder">' +
+          `${app.polyglot.t('startUp.startupLoadingModal.canceLink')}</a>`,
+      }),
+      // There's a weird issue where the first time we render a message, it renders the
+      // underline for the link first and then after a brief delay, the text after it. Looks
+      // tacky, so to avoid it, we'll fade in the message.
+      msgClass: 'fadeInAnim',
+    }).on('clickCancel', () => {
+      connectAttempt.cancel();
+      app.connectionManagmentModal.open();
+      startupLoadingModal.close();
+    });
+
+  connectAttempt = serverConnect(app.serverConfigs.activeServer)
+    .done(() => {
+      startupLoadingModal.close();
+      app.loadingModal.open();
       start();
     })
-    .fail((e) => {
-      console.log(`Failed to connect to "${e.server.get('name')}" for reason: ${e.status}.`);
+    .fail(() => {
+      app.connectionManagmentModal.open();
+      startupLoadingModal.close();
+      serverConnectEvents.once('connected', () => {
+        app.loadingModal.open();
+        start();
+      });
     });
 }
+
+// Handle a server connection event.
+let connectedAtLeastOnce = false;
+
+serverConnectEvents.on('connected', () => {
+  getChatContainer().removeClass('hide');
+
+  app.connectionManagmentModal.setModalOptions({
+    dismissOnEscPress: true,
+    showCloseButton: true,
+  });
+
+  if (connectedAtLeastOnce) {
+    location.reload();
+  } else {
+    connectedAtLeastOnce = true;
+    app.connectionManagmentModal.close();
+  }
+});
+
+// Handle a lost connection.
+serverConnectEvents.on('disconnect', () => {
+  app.connectionManagmentModal.setModalOptions({
+    dismissOnOverlayClick: false,
+    dismissOnEscPress: false,
+    showCloseButton: false,
+  });
+
+  getChatContainer().addClass('hide');
+  app.pageNav.navigable = false;
+  app.connectionManagmentModal.open();
+});
+
 
 const sendMainActiveServer = (activeServer) => {
   ipcRenderer.send('active-server-set', {
@@ -391,6 +485,15 @@ app.serverConfigs = new ServerConfigs();
 app.serverConfigs.on('activeServerChange', (activeServer) =>
   sendMainActiveServer(activeServer));
 
+// Let's create our Connection Management modal so that it's
+// available to show when needed.
+app.connectionManagmentModal = new ConnectionManagement({
+  removeOnRoute: false,
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render();
+
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
   if (!app.serverConfigs.length) {
@@ -399,7 +502,7 @@ app.serverConfigs.fetch().done(() => {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
-        name: app.polyglot.t('serverConnect.defaultServerName'),
+        name: app.polyglot.t('connectionManagement.defaultServerName'),
         default: true,
       });
 
@@ -419,29 +522,7 @@ app.serverConfigs.fetch().done(() => {
           `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
       }
     } else {
-      // show connection modal with a state that
-      // at least one connection must be created
-
-      // for now will just create a new connection
-      const serverConfig = new ServerConfig({
-        name: 'Dummy Connection',
-      });
-
-      const save = serverConfig.save();
-
-      if (save) {
-        save.done(() => {
-          app.serverConfigs.add(serverConfig);
-          app.serverConfigs.activeServer = serverConfig;
-          connectToServer();
-        });
-      } else {
-        const validationErr = serverConfig.validationError;
-
-        // This is developer error.
-        throw new Error('There were one or more errors saving an initial server configuration' +
-          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
-      }
+      app.connectionManagmentModal.open();
     }
   } else {
     const activeServer = app.serverConfigs.activeServer;

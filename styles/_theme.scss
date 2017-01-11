@@ -66,6 +66,10 @@ input[type=range][class~="clrS"] {
   }
 }
 
+.clrErr {
+  background-color: $error;
+}
+
 .clrT {
   @include textColor($text, $text2, $text);
 }
@@ -143,6 +147,14 @@ input[type=range][class~="clrS"] {
   }
 }
 
+.clrBrError {
+  border-color: $error;
+
+  hr {
+    border-color: $error
+  }
+}
+
 .clrBAtt1 {
   background-color: $emphasis1;
 }
@@ -153,8 +165,6 @@ input[type=range][class~="clrS"] {
 
 .clrBAttGrad {
   background: $emphasisGradient;
-
-
 }
 
 ::-webkit-scrollbar {

@@ -1,0 +1,30 @@
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexVCent">
+    <div class="col4">
+      <!-- OB branding comming soon... -->
+    </div>  
+    <div class="col4">
+      <h2 class="h3 clrT txUnl txCtr"><%= ob.polyT('connectionManagement.configurations.heading') %></h2>
+    </div>
+    <div class="col4">
+      <div class="flexHRight">
+        <a class="btn clrP clrBr js-btnNew"><%= ob.polyT('connectionManagement.configurations.btnNew') %></a>
+      </div>
+    </div>
+  </div>
+  <hr class="clrBr rowLg" />
+
+  <% if (ob.configurations.length) { %>
+  <div class="borderStacked contentBox clrBr padKids js-serverConfigsContainer"></div>
+  <% } else { %>
+  <div class="js-emptyConfigurations flexCent">
+    <p>You have no server configurations. At least one is required to use the app. Please
+    <a class="js-btnNew">create</a> one in order to proceed.</p>
+  </div>
+  <% } %>
+</div>
+<div class="statusBarOuterWrap js-statusBarOuterWrap clrBr border hide">
+  <div class="js-statusBarMessageContainer" style="height: 100%"></div>
+  <div class="btnNewCell clrBr"></div>
+  <div class="clrBr borderBottom borderFillIn"></div>
+</div>
