@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -21,15 +22,20 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.profile, 'sync', () => {
-      console.log('kitchen to the sinker');
       app.profile.set({
-        moderator: this.get('moderator'),
+        moderator: this.profile.get('moderator'),
         modInfo: this.profile.get('modInfo').toJSON(),
       });
     });
 
-    console.log('moo time');
-    window.moo = this.profile;
+    // When this bug is fixed and we're saving via PATCH,
+    // the block below could be removed:
+    // https://github.com/OpenBazaar/openbazaar-go/issues/314
+    this.listenTo(app.profile, 'someChange', () => {
+      const profileAttrs = _.omit(app.profile.toJSON(),
+        ['moderator', 'modInfo']);
+      this.profile.set(profileAttrs);
+    });
   }
 
   events() {
@@ -46,15 +52,16 @@ export default class extends baseVw {
     const formData = this.getFormData();
     this.profile.set(formData);
 
-    console.log('hippo happo');
-    window.hippo = formData;
+    const save = this.profile.save();
 
-    const save = this.profile.save(formData, {
-      attrs: formData,
-      // type: 'PATCH',
-      // ^ uncomment when server bug is fixed:
-      // https://github.com/OpenBazaar/openbazaar-go/issues/314
-    });
+    // When server bug is fixed, use the block below to save
+    // instead of the one above.
+    // https://github.com/OpenBazaar/openbazaar-go/issues/314
+
+    // const save = this.profile.save(formData, {
+    //   attrs: formData,
+    //   type: 'PATCH',
+    // });
 
     if (save) {
       const msg = {
@@ -122,7 +129,7 @@ export default class extends baseVw {
         isModerator: this.profile.get('moderator'),
       }));
 
-      this.$formFields = this.$('select[name], input[name]');
+      this.$formFields = this.$('select[name], input[name], textarea[name]');
       this._$btnSave = null;
     });
 

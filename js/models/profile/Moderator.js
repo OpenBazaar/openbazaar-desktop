@@ -9,6 +9,9 @@ export default class extends BaseModel {
     };
   }
 
+  // look at moderator proto to determine nested models
+  // https://github.com/OpenBazaar/openbazaar-go/blob/master/pb/protos/moderator.proto
+  //
   // get nested() {
   //   return {
   //     social: SocialAccounts,
@@ -27,15 +30,16 @@ export default class extends BaseModel {
 
     if (!attrs.description) {
       // todo: translate any error messages the user may see
-      addError('name', 'Please provide a name.');
-
-      // todo: more validations -
-      // - termsAndConditions max length
-      // - descirpiont max length??
-      // - are all lang codes provided valid codes based
-      //   on our utils/languages module (which needs to
-      //   be built up).
+      addError('description', 'Please provide a description.');
     }
+
+    // todo: more validations -
+    // - termsAndConditions max length
+    // - descirpiont max length??
+    // - are all lang codes provided valid codes based
+    //   on our utils/languages module (which needs to
+    //   be built up).
+    // etc...
 
     if (Object.keys(errObj).length) return errObj;
 

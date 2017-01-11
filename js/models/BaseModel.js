@@ -108,6 +108,8 @@ export default class extends Model {
       (attrs = {})[key] = val;
     }
 
+    const previousAttrs = this.toJSON();
+
     // todo: will it break things if we unset a nested attribute?
     if (!options.unset) {
       // let's work off of a clone since we modify attrs
@@ -135,7 +137,16 @@ export default class extends Model {
       }
     }
 
-    return super.set(attrs, opts);
+    const superSet = super.set(attrs, opts);
+
+    // Since the standard change event doesn't properly take into
+    // account nested models, we'll fire our own event if any part of the
+    // model (including nested parts) change.
+    if (!_.isEqual(this.toJSON(), previousAttrs)) {
+      this.trigger('someChange', this, {});
+    }
+
+    return superSet;
   }
 
   mergeInNestedModelErrors(errObj = {}) {
