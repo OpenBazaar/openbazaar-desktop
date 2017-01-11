@@ -113,7 +113,7 @@ input[type=range][class~="clrS"] {
 
     .trumbowyg-button-pane {
       border: 1px solid $border;
-     
+
       border-bottom: 0;
 
       .trumbowyg-button-group::before {
@@ -152,14 +152,14 @@ input[type=range][class~="clrS"] {
 
     .trumbowyg-button-pane {
       border: 1px solid $border2;
-     
+
       border-bottom: 0;
 
       .trumbowyg-button-group::before {
         background-color: $border2;
       }
     }
-  }  
+  }
 
   .btn:hover,
   .btn:focus,
@@ -291,6 +291,11 @@ input[type=range][class~="clrS"] {
 
 .clrSh3 {
   box-shadow: 0 0 1px rgba(0,0,0,0.3);
+}
+
+.clrSh4 {
+  /* used to fix some unusual rendering issues with an inner border */
+  box-shadow: inset 0 0 0 1px $primary;
 }
 
 .required::after {
