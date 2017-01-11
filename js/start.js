@@ -360,7 +360,6 @@ function start() {
       fetchStartupData().done(() => {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
-        getChatContainer().removeClass('hide');
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
@@ -411,6 +410,8 @@ function connectToServer() {
 let connectedAtLeastOnce = false;
 
 serverConnectEvents.on('connected', () => {
+  getChatContainer().removeClass('hide');
+
   app.connectionManagmentModal.setModalOptions({
     dismissOnEscPress: true,
     showCloseButton: true,
@@ -432,7 +433,7 @@ serverConnectEvents.on('disconnect', () => {
     showCloseButton: false,
   });
 
-  getChatContainer().hide();
+  getChatContainer().addClass('hide');
   app.pageNav.navigable = false;
   app.connectionManagmentModal.open();
 });
