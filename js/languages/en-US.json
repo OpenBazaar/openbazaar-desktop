@@ -24,9 +24,27 @@
     "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
     "noResults": "No connected peers"
   },
-  "startupConnect": {
-    "canceLink": "cancel",
-    "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
+  "startUp": {
+    "dialogs": {
+      "btnRetry": "Retry",
+      "btnManageConnections": "Manage Connections",
+      "retryConfig": {
+        "title": "Unable to obtain your server config."
+      },
+      "retryOnboardingFetch": {
+        "title": "Unable to get your profile and settings data."
+      },
+      "retryOnboardingSave": {
+        "title": "Unable to save your %{type} data."
+      },
+      "unableToGetFollowData": {
+        "title": "Unable to get data about who you're following."
+      }
+    },
+    "startupLoadingModal": {
+      "canceLink": "cancel",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
+    }
   },
   "userPage": {
     "followsYou": "Follows You",

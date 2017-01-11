@@ -101,11 +101,17 @@ function fetchConfig() {
     fetchConfigDeferred.resolve(...args);
   }).fail(() => {
     const retryConfigDialog = new Dialog({
-      title: 'Unable to get your server config.',
-      buttons: [{
-        text: 'Retry',
-        fragment: 'retry',
-      }],
+      title: app.polyglot.t('startUp.dialogs.retryConfig.title'),
+      buttons: [
+        {
+          text: app.polyglot.t('startUp.dialogs.btnRetry'),
+          fragment: 'retry',
+        },
+        {
+          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+          fragment: 'manageConnections',
+        },
+      ],
       dismissOnOverlayClick: false,
       dismissOnEscPress: false,
       showCloseButton: false,
@@ -117,7 +123,8 @@ function fetchConfig() {
       setTimeout(() => {
         fetchConfig();
       }, 300);
-    })
+    }).on('click-manageConnections', () =>
+      app.connectionManagmentModal.open())
     .render()
     .open();
   });
@@ -169,12 +176,18 @@ function isOnboardingNeeded() {
     .fail((jqXhr) => {
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
-          title: 'Unable to get your profile and settings data.',
+          title: app.polyglot.t('startUp.dialogs.retryOnboardingFetch.title'),
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          buttons: [{
-            text: 'Retry',
-            fragment: 'retry',
-          }],
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+              fragment: 'manageConnections',
+            },
+          ],
           dismissOnOverlayClick: false,
           dismissOnEscPress: false,
           showCloseButton: false,
@@ -186,7 +199,8 @@ function isOnboardingNeeded() {
           setTimeout(() => {
             isOnboardingNeeded();
           }, 300);
-        })
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
         .render()
         .open();
       } else if (onboardProfile || onboardSettings) {
@@ -240,12 +254,20 @@ function onboard() {
     }
 
     const retryOnboardingSaveDialog = new Dialog({
-      title: `Unable to save your ${jqXhr === profileSave ? 'profile' : 'settings'} data.`,
+      title: app.polyglot.t('startUp.dialogs.retryOnboardingSave.title', {
+        type: jqXhr === profileSave ? 'profile' : 'settings',
+      }),
       message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-      buttons: [{
-        text: 'Retry',
-        fragment: 'retry',
-      }],
+      buttons: [
+        {
+          text: app.polyglot.t('startUp.dialogs.btnRetry'),
+          fragment: 'retry',
+        },
+        {
+          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+          fragment: 'manageConnections',
+        },
+      ],
       dismissOnOverlayClick: false,
       dismissOnEscPress: false,
       showCloseButton: false,
@@ -257,7 +279,8 @@ function onboard() {
       setTimeout(() => {
         onboard();
       }, 300);
-    })
+    }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
     .render()
     .open();
   });
@@ -293,21 +316,31 @@ function fetchStartupData() {
     .fail((jqXhr) => {
       if (ownFollowingFailed) {
         const retryFetchStarupDataDialog = new Dialog({
-          title: 'Unable to get data about who you\'re following.',
+          title: app.polyglot.t('startUp.dialogs.unableToGetFollowData.title'),
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          buttons: [{
-            text: 'Retry',
-            fragment: 'retry',
-          }],
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+              fragment: 'manageConnections',
+            },
+          ],
           dismissOnOverlayClick: false,
           dismissOnEscPress: false,
           showCloseButton: false,
         }).on('click-retry', () => {
           retryFetchStarupDataDialog.close();
-          fetchStartupData();
-        })
-          .render()
-          .open();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => fetchStartupData(), 300);
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
+        .render()
+        .open();
       } else {
         // We don't care if the exchange rate fetch failed, because
         // the exchangeRateSyncer will display a status message about it
@@ -375,10 +408,10 @@ function connectToServer() {
 
   startupLoadingModal
     .setState({
-      msg: app.polyglot.t('startupConnect.connectAttemptMsg', {
+      msg: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {
         serverName: server.get('name'),
         canceLink: '<a class="js-cancel delayBorder">' +
-          `${app.polyglot.t('startupConnect.canceLink')}</a>`,
+          `${app.polyglot.t('startUp.startupLoadingModal.canceLink')}</a>`,
       }),
       // There's a weird issue where the first time we render a message, it renders the
       // underline for the link first and then after a brief delay, the text after it. Looks
