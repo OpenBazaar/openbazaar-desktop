@@ -117,6 +117,7 @@ export default class BaseModal extends baseVw {
     }
 
     if (this.__options.removeOnClose) {
+      console.log('meatballs');
       this.remove();
     }
 
