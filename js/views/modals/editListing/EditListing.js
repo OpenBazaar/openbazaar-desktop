@@ -375,15 +375,6 @@ export default class extends BaseModal {
           new Service(),
         ],
       }));
-
-    console.log('moo');
-    if (this.shippingOptions.length > 1) {
-      console.log('shoo');
-      this.$shipOptRequiredErr.addClass('hide');
-    } else {
-      console.log('pickles: ' + (this.$shipOptRequiredErr.length));
-      this.$shipOptRequiredErr.removeClass('hide');
-    }
   }
 
   uploadImages(images) {
@@ -626,11 +617,6 @@ export default class extends BaseModal {
       (this._$addShipOptSectionHeading = this.$('.js-addShipOptSectionHeading'));
   }
 
-  get $shipOptRequiredErr() {
-    return this._$shipOptRequiredErr ||
-      (this._$shipOptRequiredErr = this.$('.errorAtLeastOneShipOptRequred'));
-  }
-
   showMaxTagsWarning() {
     this.$maxTagsWarning.empty()
       .append(this.maxTagsWarning);
@@ -858,7 +844,6 @@ export default class extends BaseModal {
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
       this._$addShipOptSectionHeading = null;
-      this._$shipOptRequiredErr = null;
       this.$photoUploadItems = this.$('.js-photoUploadItems');
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');

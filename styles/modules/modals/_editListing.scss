@@ -135,6 +135,18 @@
             }
           }
         }
+
+        .errorAtLeastOneShipOptRequred {
+          display: none;
+        }
+
+        .shippingOptionsWrap {
+          &:empty + .shipOptPlaceholder {
+            .errorAtLeastOneShipOptRequred {
+              display: block;
+            }
+          }
+        }
       }
     }
   }

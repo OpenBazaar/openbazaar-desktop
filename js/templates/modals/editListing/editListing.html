@@ -159,13 +159,12 @@
 
       <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
         <div class="gutterVMd">
-          <div class="js-shippingOptionsWrap gutterVMd"></div> 
+          <div class="js-shippingOptionsWrap shippingOptionsWrap gutterVMd"></div> 
           <div class="contentBox padMd clrP clrBr clrSh3 tx3 shipOptPlaceholder">
             <%
-              const className = `errorAtLeastOneShipOptRequred ${ob.listing.shippingOptions.length > 1 ? 'hide' : ''}`;
               if (ob.errors['listing.shippingOptions']) print(ob.formErrorTmpl({
                 errors: ob.errors['listing.shippingOptions'],
-                class: className
+                class: 'errorAtLeastOneShipOptRequred'
               })) %>
             <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listing.shippingOptions.length + 1 }) %></h2>
             <hr class="clrBr rowMd" />
