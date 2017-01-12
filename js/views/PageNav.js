@@ -27,6 +27,10 @@ export default class extends View {
         'click .js-navSettings': 'navSettingsClick',
         'click .js-navCreateListing': 'navCreateListingClick',
         'click .js-navListItem': 'onNavListItemClick',
+        'mouseenter .js-connectedServerListItem': 'onMouseEnterConnectedServerListItem',
+        'mouseleave .js-connectedServerListItem': 'onMouseLeaveConnectedServerListItem',
+        'mouseenter .js-connManagementContainer': 'onMouseEnterConnManagementContainer',
+        'mouseleave .js-connManagementContainer': 'onMouseLeaveConnManagementContainer',
       },
       navigable: false,
       ...options,
@@ -132,6 +136,35 @@ export default class extends View {
       remote.getCurrentWindow().maximize();
       // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Restore'));
     }
+  }
+
+  onMouseEnterConnectedServerListItem() {
+    this.overConnectedServerListItem = true;
+    this.$connManagementContainer.addClass('open');
+  }
+
+  onMouseLeaveConnectedServerListItem() {
+    this.overConnectedServerListItem = false;
+
+    setTimeout(() => {
+      if (!this.overConnManagementContainer) {
+        this.$connManagementContainer.removeClass('open');
+      }
+    }, 100);
+  }
+
+  onMouseEnterConnManagementContainer() {
+    this.overConnManagementContainer = true;
+  }
+
+  onMouseLeaveConnManagementContainer() {
+    this.overConnManagementContainer = false;
+
+    setTimeout(() => {
+      if (!this.overConnectedServerListItem) {
+        this.$connManagementContainer.removeClass('open');
+      }
+    }, 100);
   }
 
   onNavListItemClick() {
@@ -256,6 +289,7 @@ export default class extends View {
     this.$navList = this.$('.js-navList');
     this.$navOverlay = this.$('.js-navOverlay');
     this.$connectedServerName = this.$('.js-connectedServerName');
+    this.$connManagementContainer = this.$('.js-connManagementContainer');
 
     return this;
   }

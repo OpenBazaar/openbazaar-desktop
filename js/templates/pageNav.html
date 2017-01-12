@@ -48,7 +48,7 @@
                 <div class="listItem js-navListItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
               </div>
               <div class="listGroup clrP clrBr">
-                <a class="listItem">
+                <a class="listItem js-connectedServerListItem">
                   <span class="noOverflow js-connectedServerName <% if (ob.currentServer) print('txB') %>"><% print(ob.currentServer ? ob.currentServer.name : ob.polyT('pageNav.notConnectedMenuItem')) %></span>
                   <span><i class="ion-arrow-right-b floR"></i></span>
                 </a>
@@ -88,6 +88,23 @@
                   <span>About OpenBazaar</span>
                 </a>
               </div>
+            </div>
+          </nav>
+          <nav class="connManagementContainer foldDown js-connManagementContainer">
+            <div class="listBox clrBr listBox clrP clrSh1">
+              <div class="listGroup clrP clrBr">
+                <div class="listItem js-navListItem">
+                  <span class="noOverflow">Howdy Do Dah</span>
+                </div>
+                <div class="listItem js-navListItem">
+                  <span class="noOverflow">Boom Badah</span>
+                </div>      
+              </div>
+              <div class="listGroup clrP clrBr">
+                <div class="listItem js-navListItem">
+                  <span class="noOverflow">Moo Shoo Pickles</span>
+                </div>
+              </div>    
             </div>
           </nav>
         </div>
