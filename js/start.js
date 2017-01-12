@@ -531,14 +531,18 @@ app.serverConfigs.fetch().done(() => {
       }
     } else {
       app.connectionManagmentModal.open();
+      serverConnectEvents.once('connected', () => {
+        app.loadingModal.open();
+        start();
+      });
     }
   } else {
-    const activeServer = app.serverConfigs.activeServer;
+    let activeServer = app.serverConfigs.activeServer;
 
     if (activeServer) {
       sendMainActiveServer(activeServer);
     } else {
-      app.serverConfigs.activeServer = app.serverConfigs.at(0);
+      activeServer = app.serverConfigs.activeServer = app.serverConfigs.at(0);
     }
 
     if (activeServer.get('default') && !remote.getGlobal('isBundledApp')()) {
