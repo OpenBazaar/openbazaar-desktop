@@ -34,6 +34,10 @@ echo 'Preparing to build installers'
 
 echo 'Installing npm modules'
 npm run build
+
+echo 'Copying transpiled files into js/'
+cp -rf prod/* js/
+
 npm install -g electron-packager --silent
 npm install grunt-cli -g --silent
 npm install grunt --save-dev
