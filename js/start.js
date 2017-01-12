@@ -531,6 +531,10 @@ app.serverConfigs.fetch().done(() => {
       }
     } else {
       app.connectionManagmentModal.open();
+      serverConnectEvents.once('connected', () => {
+        app.loadingModal.open();
+        start();
+      });
     }
   } else {
     let activeServer = app.serverConfigs.activeServer;
