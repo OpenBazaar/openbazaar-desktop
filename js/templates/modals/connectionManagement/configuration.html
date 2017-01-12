@@ -1,0 +1,38 @@
+<div class="flexVCent clrT">
+  <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.name %></div>
+  <div class="col4 <% if (ob.status === 'connected') print('txB') %>"><%= ob.serverIp %></div>
+  <div class="col4">
+    <div class="flexHRight">
+      <% if (ob.status === 'connected') { %>
+      <div class="txB flexVCent flexHRight gutterHTn"><span class="ion-ios-checkmark-empty clrTEmph1 tx1"></span><span><%= ob.polyT('connectionManagement.configurations.statusConnected') %></span></div>
+      <% } else { %>
+      <div class="gutterHTn">
+        <a class="iconBtn clrP clrBr ion-trash-b js-btnDelete <% if (ob.deleteConfirmOn) print('confirmDisabled') %> <% if (ob.default) print('hide') %>"></a>
+        <a class="iconBtn clrP clrBr ion-ios-gear js-btnEdit <% if (ob.default) print('hide') %>"></a>
+        <% if (ob.status === 'connecting') { %>
+          <a class="btn clrP clrBr js-btnCancel btnConnectCancel">
+            <%= ob.spinner({ className: 'spinnerSm' }) %>
+            <%= ob.polyT('connectionManagement.configurations.btnCancel') %>
+          </a>
+        <% } else { %>
+          <% const btnText = ob.status === 'connect-attempt-failed' ? ob.polyT('connectionManagement.configurations.btnRetry') : ob.polyT('connectionManagement.configurations.btnConnect') %>
+          <a class="btn clrP clrBr js-btnConnect btnConnectCancel"><%= btnText %></a>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<% if (ob.status === 'connect-attempt-failed') { %>
+<div class="errorBorder clrErr"></div>
+<% } %>
+<div class="deleteConfirm js-deleteConfirm arrowBoxTop border clrBr clrP clrT txCtr pad <% if (!ob.deleteConfirmOn) print('hide') %>">
+  <div class="tx3 txB rowSm"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.heading') %></div>
+  <p class="clrT2"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.body') %></p>
+  <hr class="clrBr row" />
+
+  <div class="flexHRight flexVCent gutterHLg">
+    <a class="js-deleteConfirmCancel"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.btnCancel') %></a>
+    <a class="btn clrP clrBr js-deleteConfirmYes"><%= ob.polyT('connectionManagement.configurations.deleteConfirm.btnDelete') %></a>
+  </div>
+</div>

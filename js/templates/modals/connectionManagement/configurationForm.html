@@ -1,0 +1,94 @@
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexVCent" style="height: 35px">
+    <div class="col4">
+      <!-- OB branding comming soon... -->
+    </div>  
+    <div class="col4">
+      <h2 class="h3 clrT txUnl txCtr"><%= ob.title %></h2>
+    </div>
+    <div class="col4"></div>
+  </div>
+  <hr class="clrBr rowLg" />
+
+  <form class="padMdKids padStack">
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigName" class="required"><%= ob.polyT('connectionManagement.configurationForm.name') %></label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
+        <input type="text" class="clrBr js-inputName" name="name" id="serverConfigName" value="<%= ob.name %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigServerIp" class="required"><%= ob.polyT('connectionManagement.configurationForm.serverIp') %></label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.serverIp) print(ob.formErrorTmpl({ errors: ob.errors.serverIp })) %>
+        <input type="text" class="clrBr" name="serverIp" id="serverConfigServerIp" value="<%= ob.serverIp %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigUsername" class="<% if (ob.isRemote) print('required') %> js-usernameLabel"><%= ob.polyT('connectionManagement.configurationForm.username') %></label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.username) print(ob.formErrorTmpl({ errors: ob.errors.username })) %>
+        <input type="text" class="clrBr" name="username" id="serverConfigUsername" value="<%= ob.username %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigPassword" class="<% if (ob.isRemote) print('required') %> js-passwordLabel"><%= ob.polyT('connectionManagement.configurationForm.password') %></label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
+        <input type="password" class="clrBr" name="password" id="serverConfigPassword" value="<%= ob.password %>">
+      </div>
+    </div>
+    <div class="flexRow">
+      <div class="col3">
+        <label>SSL</label>
+      </div>
+      <div class="col9">
+        <% if (ob.errors.ssl) print(ob.formErrorTmpl({ errors: ob.errors.ssl })) %>
+        <div class="btnStrip js-btnStripSsl <% if (ob.isRemote) print('disabled') %>">
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="SSL"
+                   value="true"
+                   id="serverConfigSSLOn"
+                   data-var-type="boolean"
+            <% if(ob.SSL) { %>checked<% } %>>
+            <label for="serverConfigSSLOn"><%= ob.polyT('connectionManagement.configurationForm.sslOn') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   name="SSL"
+                   value="false"
+                   id="serverConfigSSLOff"
+                   data-var-type="boolean"
+            <% if(!ob.SSL) { %>checked<% } %>>
+            <label for="serverConfigSSLOff"><%= ob.polyT('connectionManagement.configurationForm.sslOff') %></label>
+          </div>
+        </div>
+      </div>
+    </div>    
+    <div class="flexRow">
+      <div class="col3">
+        <label for="serverConfigPort" class="required"><%= ob.polyT('connectionManagement.configurationForm.port') %></label>
+      </div>
+      <div class="col9">
+      <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>
+        <input type="text" class="clrBr" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number">
+      </div>
+    </div>    
+  </form>
+
+  <hr class="clrBr" />
+  <div class="flexHRight flexVCent gutterHLg">
+    <a class="js-cancel"><%= ob.polyT('connectionManagement.configurationForm.btnCancel') %></a>
+    <a class="btn clrP clrBr js-save"><%= ob.polyT('connectionManagement.configurationForm.btnSave') %></a>
+  </div>
+</div>

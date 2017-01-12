@@ -25,8 +25,27 @@
     "totalPeers": "%{totalPeers} Found",
     "noResults": "No connected peers"
   },
-  "serverConnect": {
-    "defaultServerName": "Default Server"
+  "startUp": {
+    "dialogs": {
+      "btnRetry": "Retry",
+      "btnManageConnections": "Manage Connections",
+      "retryConfig": {
+        "title": "Unable to obtain your server config."
+      },
+      "retryOnboardingFetch": {
+        "title": "Unable to get your profile and settings data."
+      },
+      "retryOnboardingSave": {
+        "title": "Unable to save your %{type} data."
+      },
+      "unableToGetFollowData": {
+        "title": "Unable to get data about who you're following."
+      }
+    },
+    "startupLoadingModal": {
+      "canceLink": "cancel",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
+    }
   },
   "userPage": {
     "followsYou": "Follows You",
@@ -321,6 +340,46 @@
     "confirmNavAwayWarning": {
       "title": "Save in progress",
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
+    }
+  },
+  "connectionManagement": {
+    "defaultServerName": "Local Bundled Server",
+    "statusBar": {
+      "errorPreface": "Error:",
+      "needHelpLink": "Need help?",
+      "viewLocalServerDebugLogLink": "View Server Debug Log",
+      "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
+      "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
+      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "cancelConnAttempt": "Cancel",
+      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+    },
+    "configurations": {
+      "tabName": "Configurations",
+      "heading": "Server Configurations",
+      "btnNew": "New",
+      "btnCancel": "Cancel",
+      "btnRetry": "Retry",
+      "btnConnect": "Connect",
+      "statusConnected": "Connected",      
+      "deleteConfirm": {
+        "heading": "Are you sure?",
+        "body": "The server configuration will be deleted. This will not delete the actual server.",
+        "btnCancel": "Cancel",
+        "btnDelete": "Yes, delete"
+      }      
+    },
+    "configurationForm": {
+      "tabName": "New configuration",
+      "btnCancel": "Cancel",
+      "btnSave": "Save",
+      "port": "Port",
+      "sslOn": "On",
+      "sslOff": "Off",
+      "password": "Password",
+      "username": "Username",
+      "serverIp": "Server IP",
+      "name": "Name"
     }
   },
   "formats": {

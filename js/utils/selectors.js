@@ -3,6 +3,7 @@ import $ from 'jquery';
 let $html;
 let $body;
 let $pageContainer;
+let $chatContainer;
 let $appFrame;
 let $contentFrame;
 
@@ -16,6 +17,10 @@ export function getBody() {
 
 export function getPageContainer() {
   return $pageContainer || ($pageContainer = $('#pageContainer'));
+}
+
+export function getChatContainer() {
+  return $chatContainer || ($chatContainer = $('#chatContainer'));
 }
 
 export function getAppFrame() {

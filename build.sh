@@ -123,8 +123,10 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/
+    cp -rf temp/libwinpthread-1.win32.dll dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll
     mkdir dist/OpenBazaar2-win32-ia32/resources/openbazaar-go
     mv dist/OpenBazaar2-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/openbazaard.exe
+    mv dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/libwinpthread-1.dll
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-ia32 --outdir=dist/win32
@@ -140,14 +142,16 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Running Electron Packager...'
     electron-packager . OpenBazaar2 --asar=true --out=dist --protocol-name=OpenBazaar --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/windows-icon.ico --version=${ELECTRONVER} --overwrite
-  
+
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/
+    cp -rf temp/libwinpthread-1.win64.dll dist/OpenBazaar2-win32-x64/resources/libwinpthread-1.dll
     mkdir dist/OpenBazaar2-win32-x64/resources/openbazaar-go
     mv dist/OpenBazaar2-win32-x64/resources/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/openbazaar-go/openbazaard.exe
+    mv dist/OpenBazaar2-win32-x64/resources/libwinpthread-1.dll dist/OpenBazaar2-win32-x64/resources/openbazaar-go/libwinpthread-1.dll
 
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
