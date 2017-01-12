@@ -139,7 +139,7 @@ function authenticate(server) {
  *   to a remote server with a non numeric ServerIp value. Since it's trying to get the name
  *   via DNS, it will take over a minute before it fails. The recommendation is to not make this
  *   value too large during start-up, or you risk making a very long start-up sequence,
- *   particularly if you have multiple attempts. In the Connection Managament modal, the value
+ *   particularly if you have multiple attempts. In the Connection Management modal, the value
  *   could be much higher and the user could always cancel the attempt if they feel it is
  *   taking too long.
  * @return {object} A promise object will be returned that will allow you

@@ -25,7 +25,7 @@ import './utils/listingData';
 import { launchDebugLogModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
-import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagament';
+import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 
 fixLinuxZoomIssue();
 
