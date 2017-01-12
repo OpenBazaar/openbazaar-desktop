@@ -136,13 +136,13 @@
           }
         }
 
-        .errorAtLeastOneShipOptRequred {
+        .topLevelShipOptErrs {
           display: none;
         }
 
         .shippingOptionsWrap {
           &:empty + .shipOptPlaceholder {
-            .errorAtLeastOneShipOptRequred {
+            .topLevelShipOptErrs {
               display: block;
             }
           }

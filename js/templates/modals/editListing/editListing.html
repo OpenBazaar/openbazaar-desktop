@@ -164,7 +164,7 @@
             <%
               if (ob.errors['listing.shippingOptions']) print(ob.formErrorTmpl({
                 errors: ob.errors['listing.shippingOptions'],
-                class: 'errorAtLeastOneShipOptRequred'
+                class: 'topLevelShipOptErrs'
               })) %>
             <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listing.shippingOptions.length + 1 }) %></h2>
             <hr class="clrBr rowMd" />
