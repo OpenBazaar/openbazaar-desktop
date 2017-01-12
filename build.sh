@@ -30,19 +30,22 @@ rm -rf dist/*
 mkdir temp/
 rm -rf temp/*
 
-echo 'Preparing to build installers'
+echo 'Preparing to build installers...'
 
-echo 'Installing npm modules'
+echo 'Installing npm packages...'
+npm install electron-packager -g --silent
+npm install npm-run-all -g --silent
+npm install grunt-cli -g --silent
+npm install grunt --save-dev --silent
+npm install grunt-electron-installer --save-dev --silent
+npm install --silent
+
+echo 'Building OpenBazaar app...'
 npm run build
 
-echo 'Copying transpiled files into js/'
+echo 'Copying transpiled files into js folder...'
 cp -rf prod/* js/
 
-npm install -g electron-packager --silent
-npm install grunt-cli -g --silent
-npm install grunt --save-dev
-npm install --save-dev grunt-electron-installer --silent
-npm install --silent
 
 case "$TRAVIS_OS_NAME" in
   "linux")
