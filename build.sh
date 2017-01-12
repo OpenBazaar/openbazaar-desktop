@@ -123,7 +123,7 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Copying server binary into application folder...'
     cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/
-    cp -rf temp/libwinpthread-1.win32.dll dist/OpenBazaar2-win32-ia32/resources/
+    cp -rf temp/libwinpthread-1.win32.dll dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll
     mkdir dist/OpenBazaar2-win32-ia32/resources/openbazaar-go
     mv dist/OpenBazaar2-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/openbazaard.exe
     mv dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/libwinpthread-1.dll
