@@ -6,7 +6,7 @@ import './lib/whenAll.jquery';
 import app from './app';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
-import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
+import serverConnect, { events as serverConnectEvents, getCurrentConnection } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer } from './utils/selectors';
@@ -441,7 +441,13 @@ function connectToServer() {
 // Handle a server connection event.
 let connectedAtLeastOnce = false;
 
+console.log('moo');
+window.moo = getCurrentConnection();
+
 serverConnectEvents.on('connected', () => {
+  console.log('poo');
+  window.poo = getCurrentConnection();
+
   getChatContainer().removeClass('hide');
 
   app.connectionManagmentModal.setModalOptions({
@@ -450,7 +456,7 @@ serverConnectEvents.on('connected', () => {
   });
 
   if (connectedAtLeastOnce) {
-    location.reload();
+    // location.reload();
   } else {
     connectedAtLeastOnce = true;
     app.connectionManagmentModal.close();
