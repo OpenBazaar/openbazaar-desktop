@@ -112,7 +112,6 @@ export default class extends BaseModal {
         }
 
         this.$tabContent.append(tabView.$el);
-        window.moo = tabView;
         this.currentTabView = tabView;
       }
     }

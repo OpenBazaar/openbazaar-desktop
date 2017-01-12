@@ -135,10 +135,21 @@
 @mixin borderColor($col1, $col2: $border2) {
   /* generates the border color rules */
   border-color: $col1;
+  
   &:hover,
   &:focus {
     border-color: $col1;
   }
+
+  input,
+  select,
+  textarea,
+  button,
+  .trumbowyg div[contenteditable]{
+    &:focus {
+      border-color: $col2;
+    }
+  }  
 
   hr {
     border-color: $col1;

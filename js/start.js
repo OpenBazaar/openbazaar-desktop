@@ -396,7 +396,6 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
-        app.connectionManagmentModal.setModalOptions({ removeOnRoute: true });
       });
     });
   });
@@ -470,6 +469,15 @@ serverConnectEvents.on('disconnect', () => {
   app.pageNav.navigable = false;
   app.connectionManagmentModal.open();
 });
+
+// If we have a connection, close the Connection Management modal on a
+// will-route event.
+const onWillRouteCloseConnModal =
+  () => app.connectionManagmentModal.close();
+serverConnectEvents.on('connected', () =>
+  app.router.on('will-route', onWillRouteCloseConnModal));
+serverConnectEvents.on('disconnect', () =>
+  app.router.off('will-route', onWillRouteCloseConnModal));
 
 
 const sendMainActiveServer = (activeServer) => {
