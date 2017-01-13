@@ -282,7 +282,7 @@ export default class extends BaseModal {
     photoFiles.forEach(photoFile => {
       const newImage = document.createElement('img');
 
-      newImage.src = photoFile.path;
+      newImage.src = encodeURI(photoFile.path);
 
       newImage.onload = () => {
         const imgW = newImage.width;
@@ -335,14 +335,16 @@ export default class extends BaseModal {
         });
       };
 
-      newImage.onerror = () => {
+      newImage.onerror = (e) => {
+        console.log('moo');
+        window.moo = e;
         errored += 1;
 
         if (errored === photoFiles.length) {
           this.$photoUploadingLabel.addClass('hide');
 
           new SimpleMessage({
-            title: app.polyglot.t('editListing.errors.unableToLoadImagesBody',
+            title: app.polyglot.t('editListing.errors.unableToLoadImages',
               { smart_count: errored }),
           })
           .render()
