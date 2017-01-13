@@ -75,7 +75,7 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Move go server to electron app'
     mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
-    cp -rf temp/${APPNAME}-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
+    cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
     mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
     chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
 
@@ -91,7 +91,7 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Move go server to electron app'
     mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
-    cp -rf temp/${APPNAME}-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go
+    cp -rf temp/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go
     mv dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
     chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
 
