@@ -366,6 +366,12 @@
   }
 }
 
+.gutterHTn > * {
+  @extend .gutterHFlush;
+  margin-right: $padTn;
+  @include colHGutter($padTn);
+}
+
 .gutterHSm > * {
   @extend .gutterHFlush;
   margin-right: $padSm;

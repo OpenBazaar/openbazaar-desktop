@@ -104,15 +104,52 @@
       color: $col3;
     }
   }
+
+  // spinner will inherit text color
+  .spinner {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
+
+  // spinner will override inherited color if you directly add a color class to it
+  &.spinner {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }  
+}
+
+@mixin triangle($width, $color: inherit) {
+  width: 0;
+  height: 0;
+  border-top: $width solid transparent;
+  border-bottom: $width solid transparent;
+  border-right-width: $width;
+  border-right-style: solid;
+  border-right-color: $color;
 }
 
 @mixin borderColor($col1, $col2: $border2) {
   /* generates the border color rules */
   border-color: $col1;
+  
   &:hover,
   &:focus {
     border-color: $col1;
   }
+
+  input,
+  select,
+  textarea,
+  button,
+  .trumbowyg div[contenteditable]{
+    &:focus {
+      border-color: $col2;
+    }
+  }  
 
   hr {
     border-color: $col1;

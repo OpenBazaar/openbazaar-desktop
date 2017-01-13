@@ -35,7 +35,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} settings tabbedModal modalTop modalScrollPage`;
+    return `${super.className()} settings tabbedModal modalScrollPage`;
   }
 
   events() {

@@ -1,12 +1,12 @@
 {
   "productName": "OpenBazaar",
-  "name": "openbazaar",
+  "name": "openbazaar2",
   "version": "2.0.0",
-  "bin": "openbazaar",
+  "bin": "openbazaar2",
   "description": "Decentralized Peer to Peer Marketplace for Bitcoin",
   "maintainer": "OpenBazaar <project@openbazaar.org>",
   "arch": "i386",
-  "src": "dist/openbazaar-linux-ia32/",
+  "src": "dist/openbazaar2-linux-ia32/",
   "dest": "dist/linux32",
   "productDescription": "Decentralized Peer to Peer Marketplace for Bitcoin",
   "intianOverrides": [

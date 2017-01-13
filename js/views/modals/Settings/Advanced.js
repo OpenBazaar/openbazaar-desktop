@@ -29,6 +29,7 @@ export default class extends baseVw {
     return {
       'click .js-smtpContainer input[type="reset"]': 'resetSMTPFields',
       'click .js-save': 'save',
+      'click .js-showConnectionManagement': 'showConnectionManagement',
     };
   }
 
@@ -36,6 +37,10 @@ export default class extends baseVw {
     this.settings.set('smtpSettings',
       this.settings.get('smtpSettings').defaults(), { validate: true });
     this.render();
+  }
+
+  showConnectionManagement() {
+    app.connectionManagmentModal.open();
   }
 
   getFormData(subset = this.$formFields) {

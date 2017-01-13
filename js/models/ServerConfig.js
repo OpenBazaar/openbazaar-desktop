@@ -49,8 +49,19 @@ export default class extends BaseModel {
       }
     }
 
-    // TODO: remotes must provide credentials
-    // TODO: enforce SSL on remotes
+    if (!this.isLocalServer()) {
+      if (!attrs.username) {
+        addError('username', 'Please provide a value.');
+      }
+
+      if (!attrs.password) {
+        addError('password', 'Please provide a value.');
+      }
+
+      if (!attrs.SSL) {
+        addError('SSL', 'SSL must be turned on for remote servers.');
+      }
+    }
 
     if (!attrs.default) {
       if (!is.number(attrs.port)) {
@@ -60,14 +71,6 @@ export default class extends BaseModel {
           addError('port', 'Please provide a number between 0 and 65535.');
         }
       }
-
-      // if (!is.existy(attrs.username) || is.empty(attrs.username)) {
-      //   addError('username', 'Please provide a value.');
-      // }
-
-      // if (!is.existy(attrs.password) || is.empty(attrs.password)) {
-      //   addError('password', 'Please provide a value.');
-      // }
     } else {
       if (is.existy(attrs.port) && attrs.port !== this.defaults().port) {
         // For now, not allowing the port to be changed on the default server,
