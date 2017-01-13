@@ -178,11 +178,16 @@ export default class extends View {
   togglePopMenu() {
     this.$navList.toggleClass('open');
     this.$navOverlay.toggleClass('open');
+
+    if (!this.$navList.hasClass('open')) {
+      this.$connManagementContainer.addClass('open');
+    }
   }
 
   closePopMenu() {
     this.$navList.removeClass('open');
     this.$navOverlay.removeClass('open');
+    this.$connManagementContainer.removeClass('open');
   }
 
   onDocClick(e) {

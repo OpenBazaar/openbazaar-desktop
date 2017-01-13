@@ -208,6 +208,22 @@
       .listItem {
         padding-left: 5px + $pad;
         padding-right: 5px + $pad;
+        display: flex;
+      }
+
+      .serverList {
+        .listItem {        
+          & > span {
+            padding-left: 15px;
+            position: relative;
+
+            .connectedIcon {
+              position: absolute;
+              top: -5px;
+              left: 0;
+            }
+          }
+        }
       }
     }
   }  
