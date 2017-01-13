@@ -83,7 +83,7 @@
   }
 
   .btn, .listItem, &.btn, &.listItem {
-    /* btnTxt and iconBtn are included because they extend .btn */
+    /* btnTxt and iconBtn are included automatically because they extend .btn */
     color: $col1;
   }
 
@@ -95,6 +95,14 @@
 
   input[type="radio"]:checked + label:before {
     background: $col1;
+  }
+
+  input[type="checkbox"] + label:before {
+    color: $col2;
+  }
+
+  input[type="checkbox"]:checked + label:before {
+    color: $col1;
   }
 
   .tab.active {
@@ -119,7 +127,7 @@
     rect {
       fill: $col1;
     }
-  }  
+  }
 }
 
 @mixin triangle($width, $color: inherit) {
@@ -135,7 +143,7 @@
 @mixin borderColor($col1, $col2: $border2) {
   /* generates the border color rules */
   border-color: $col1;
-  
+
   &:hover,
   &:focus {
     border-color: $col1;
@@ -149,7 +157,7 @@
     &:focus {
       border-color: $col2;
     }
-  }  
+  }
 
   hr {
     border-color: $col1;

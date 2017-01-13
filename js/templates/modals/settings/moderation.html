@@ -1,4 +1,5 @@
 <div class="gutterVMd">
+  <% console.log(ob) %>
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT">Moderation</h2>
@@ -58,27 +59,46 @@
         </div>
         <div class="flexRow">
           <div class="col3">
-
+            <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.languages') %></label>
           </div>
           <div class="col9">
             <div class="select2TagsWrap">
+              <% console.log(ob.languages.length) %>
+              <% var languages = ob.languages.length ? ob.languages : [ob.defaultLanguage] %>
+              <% console.log(languages) %>
               <select id="moderationLanguageSelect" multiple name="language" class="clrBr clrP clrSh2 select2Tags">
                 <% ob.languageList.forEach((lang) => { %>
-                <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
+                <option value="<%= lang.code %>" <% if (languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
                 <% }); %>
               </select>
             </div>
-          </div>
-        </div>
-        <div class="flexRow">
-          <div class="col3"></div>
-          <div class="col9">
-            <label>
-              <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/docs/disputeResolution.md" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
-            </label>
+            <div class="tx6 txPlaceholder">
+              <%= ob.polyT('settings.moderationTab.languagesHelper') %>
+            </div>
           </div>
         </div>
       </form>
+      <!-- the elements below are not part of the data being saved to the server -->
+      <div class="flexRow">
+        <div class="col3"></div>
+        <div class="col9">
+          <input type="checkbox" id="acceptGuidelines">
+          <label class="tx5b js-acceptGuidelines" for="acceptGuidelines">
+            <span>
+              <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/docs/disputeResolution.md" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
+            </span>
+          </label>
+        </div>
+      </div>
+      <div class="flexRow">
+        <div class="col3"></div>
+        <div class="col9">
+          <input type="checkbox" id="understandRequirements">
+          <label class="tx5b js-understandRequirements" for="understandRequirements">
+            <span><%= ob.polyT('settings.moderationTab.understandRequirements') %></span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
 </div>

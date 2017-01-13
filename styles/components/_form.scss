@@ -10,16 +10,17 @@ form {
 
 input::-webkit-input-placeholder,
 select::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
+textarea::-webkit-input-placeholder,
+.txPlaceholder {
+  // use txPlaceholder for non-placeholder text that needs to match the placeholder style
   color: inherit;
   opacity: 0.35;
 }
 
-
 input,
 select,
 textarea,
-.trumbowyg-editor {  
+.trumbowyg-editor {
   border: none;
   outline: none;
   background: none;
@@ -144,5 +145,29 @@ label {
 
 input[type="radio"]:checked + label {
   font-weight: 700;
+}
+
+input[type="checkbox"] {
+  display: none;
+
+  & + label {
+    display: flex;
+    align-items: baseline;
+    cursor: pointer;
+
+    &:before {
+      content: "\f372";
+      font-family: Ionicons;
+      line-height:inherit;
+      font-size: 1.5em;
+      position: relative;
+      top: 0.15em;
+      margin-right: 0.25em;
+    }
+  }
+
+  &:checked + label:before {
+    content: "\f373";
+  }
 }
 

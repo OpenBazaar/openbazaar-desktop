@@ -1,4 +1,5 @@
 import BaseModel from '../BaseModel';
+import Fee from './Fee';
 
 export default class extends BaseModel {
   defaults() {
@@ -9,17 +10,11 @@ export default class extends BaseModel {
     };
   }
 
-  // look at moderator proto to determine nested models
-  // https://github.com/OpenBazaar/openbazaar-go/blob/master/pb/protos/moderator.proto
-  //
-  // get nested() {
-  //   return {
-  //     social: SocialAccounts,
-  //     avatarHashes: Image,
-  //     headerHashes: Image,
-  //     modInfo: Moderator,
-  //   };
-  // }
+  get nested() {
+    return {
+      fee: Fee,
+    };
+  }
 
   validate(attrs) {
     const errObj = {};

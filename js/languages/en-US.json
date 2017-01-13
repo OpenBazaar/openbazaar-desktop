@@ -248,7 +248,14 @@
       "languagesHelper": "Enter all of the languages you support (ie: you can communicate clearly in).",
       "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
-      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them."
+      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
+      "errors": {
+        "noFeeType": "You must set a fee type",
+        "fixedNofee": "If your fee type is fixed or fixed plus percentage, you must include a fixed fee.",
+        "fixedNoCurrency": "If your fee type is fixed or fixed plus percentage, you must set a currency for your fee.",
+        "fixedNoAmount": "If your fee type is fixed or fixed plus percentage, you must set an amount for your fixed fee.",
+        "percentageNoPercentage": "If your fee type is percentage or fixed plus percentage, you must set a percentage."
+      }
     },
     "optional": "optional",
     "language": "Language",
@@ -328,13 +335,13 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
-      "statusConnected": "Connected",      
+      "statusConnected": "Connected",
       "deleteConfirm": {
         "heading": "Are you sure?",
         "body": "The server configuration will be deleted. This will not delete the actual server.",
         "btnCancel": "Cancel",
         "btnDelete": "Yes, delete"
-      }      
+      }
     },
     "configurationForm": {
       "tabName": "New configuration",

@@ -125,11 +125,13 @@ export default class extends baseVw {
     loadTemplate('modals/settings/moderation.html', (t) => {
       const moderator = this.profile.get('modInfo');
 
+
       this.$el.html(t({
         errors: moderator.validationError || {},
         ...moderator.toJSON(),
         isModerator: this.profile.get('moderator'),
         languageList: languages,
+        defaultLanguage: app.settings.get('language'),
       }));
 
       this.$('#moderationLanguageSelect').select2({
