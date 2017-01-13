@@ -1,0 +1,20 @@
+<div class="listGroup clrP clrBr serverList">
+  <% ob.servers.forEach(server => { %>
+  <a class="listItem js-navListItem js-serverListItem <% ob.connectedServer === server.id && print('notClickable') %>" data-server-id="<%= server.id %>">
+    <span class="noOverflow">
+      <% if (ob.connectedServer === server.id) { %>
+        <span class="connectedIcon ion-ios-checkmark-empty clrTEmph1 tx1"></span>
+      <% } %>
+      <%= server.name %>
+    </span>
+  </a>
+  <%}) %>
+</div>
+<div class="listGroup clrP clrBr">
+  <a class="listItem js-navListItem js-newServer">
+    <span class="noOverflow">New Server</span>
+  </a>
+  <a class="listItem js-navListItem js-manageServers">
+    <span class="noOverflow">Manage Servers</span>
+  </a>
+</div>

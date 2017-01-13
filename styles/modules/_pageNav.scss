@@ -167,13 +167,10 @@
       border-width: 1px;
       border-style: solid;
       width: 235px;
-      padding-top: $pad;
-      padding-bottom: $pad;
+      padding: $pad;
 
       .listItem {
         display: flex;
-        padding-left: 5px + $pad;
-        padding-right: 5px + $pad;
 
         & > * {
           flex-shrink: 0;
@@ -192,6 +189,22 @@
             flex-grow: 1;
           }
         }
+
+        &.connectedServerListItem {
+          position: relative;
+
+          &::after {
+            // This is needed so as the cursor goes into the padding
+            // outside of the list item, it doesn't trigger a mouseleave
+            // event and therefore close the server list menu.
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -10px;
+            bottom: 0;
+            width: 11px;
+          }
+        }
       }
     }
   }
@@ -202,12 +215,9 @@
     right: 234px;
 
     .listBox {
-      padding-top: $pad;
-      padding-bottom: $pad;
+      padding: $pad;
 
       .listItem {
-        padding-left: 5px + $pad;
-        padding-right: 5px + $pad;
         display: flex;
       }
 

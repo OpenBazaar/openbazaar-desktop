@@ -48,7 +48,7 @@
                 <div class="listItem js-navListItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
               </div>
               <div class="listGroup clrP clrBr">
-                <a class="listItem js-connectedServerListItem">
+                <a class="listItem connectedServerListItem js-connectedServerListItem">
                   <span class="noOverflow js-connectedServerName <% if (ob.currentServer) print('txB') %>"><% print(ob.currentServer ? ob.currentServer.name : ob.polyT('pageNav.notConnectedMenuItem')) %></span>
                   <span><i class="ion-arrow-right-b floR"></i></span>
                 </a>
@@ -90,30 +90,7 @@
               </div>
             </div>
           </nav>
-          <nav class="connManagementContainer foldDown js-connManagementContainer">
-            <div class="listBox clrBr listBox clrP clrSh1">
-              <div class="listGroup clrP clrBr serverList">
-                <a class="listItem js-navListItem">
-                  <span class="noOverflow">
-                    <span class="connectedIcon ion-ios-checkmark-empty clrTEmph1 tx1"></span>Howdy Do Dah
-                  </span>
-                </a>
-                <a class="listItem js-navListItem">
-                  <span class="noOverflow">
-                    Arro Bless You!
-                  </span>
-                </a>
-              </div>
-              <div class="listGroup clrP clrBr">
-                <a class="listItem js-navListItem js-newServer">
-                  <span class="noOverflow">New Server</span>
-                </a>
-                <a class="listItem js-navListItem js-manageServers">
-                  <span class="noOverflow">Manage Servers</span>
-                </a>
-              </div>    
-            </div>
-          </nav>
+          <nav class="connManagementContainer foldDown js-connManagementContainer"></nav>
         </div>
       </div>
     </div>

@@ -59,6 +59,15 @@ a {
   &.link {
     text-decoration: underline;
   }
+
+  &.notClickable {
+    pointer-events: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
 }
 
 hr {

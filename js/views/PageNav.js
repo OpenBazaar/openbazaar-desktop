@@ -1,11 +1,11 @@
 import { remote } from 'electron';
 import multihashes from 'multihashes';
-import serverConnect,
-  { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
+import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
+import PageNavServersMenu from './PageNavServersMenu';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
@@ -35,6 +35,10 @@ export default class extends View {
       navigable: false,
       ...options,
     };
+
+    if (!opts.serverConfigs) {
+      throw new Error('Please provide a Server Configs collection');
+    }
 
     opts.className = `pageNav ${opts.navigable ? '' : 'notNavigable'}`;
     super(opts);
@@ -289,6 +293,12 @@ export default class extends View {
         avatarHash,
       }));
     });
+
+    if (this.pageNavServersMenu) this.pageNavServersMenu.remove();
+    this.pageNavServersMenu = new PageNavServersMenu({
+      collection: app.serverConfigs,
+    });
+    this.$('.js-connManagementContainer').append(this.pageNavServersMenu.render().el);
 
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');

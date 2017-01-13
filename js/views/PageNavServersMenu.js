@@ -1,5 +1,8 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import app from '../app';
+import serverConnect,
+  { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import loadTemplate from '../utils/loadTemplate';
 import baseVw from './baseVw';
 
@@ -11,64 +14,90 @@ export default class extends baseVw {
 
     super(options);
 
-    // this._state = {
-    //   status: 'not-connected',
-    //   ...options.initialState || {},
-    // };
+    let connectedServer = getCurrentConnection();
 
-    // this._state = {
+    if (connectedServer && connectedServer.status !== 'disconnected') {
+      connectedServer = connectedServer.server.id;
+    } else {
+      connectedServer = null;
+    }
 
-    // };
+    this._state = {
+      connectedServer,
+      ...options.initialState || {},
+    };
 
-    // this.listenTo(this.model, 'change', () => this.render());
-    // $(document).on('click', this.onDocumentClick.bind(this));
+    this.listenTo(this.collection, 'update', this.render);
+
+    this.listenTo(serverConnectEvents, 'disconnect',
+      () => this.setState({
+        connectedServer: null,
+      }));
+
+    this.listenTo(serverConnectEvents, 'connected',
+      e => this.setState({
+        connectedServer: e.server.id,
+      }));
   }
 
-  // className() {
-  //   return 'configuration';
-  // }
+  className() {
+    return 'listBox clrBr listBox clrP clrSh1';
+  }
 
   events() {
     return {
-      // 'click .js-btnConnect': 'onConnectClick',
+      'click .js-serverListItem': 'onServerClick',
+      'click .js-newServer': 'onNewServerClick',
+      'click .js-manageServers': 'onManageServersClick',
     };
   }
 
-  // getState() {
-  //   return this._state;
-  // }
+  onServerClick(e) {
+    const serverId = $(e.target)
+      .closest('.js-serverListItem')
+      .data('server-id');
 
-  // setState(state, replace = false) {
-  //   let newState;
+    const server = this.collection.get(serverId);
 
-  //   if (replace) {
-  //     this._state = {};
-  //   } else {
-  //     newState = _.extend({}, this._state, state);
-  //   }
+    serverConnect(server);
+    app.connectionManagmentModal.open();
+  }
 
-  //   if (!_.isEqual(this._state, newState)) {
-  //     this._state = newState;
-  //     this.render();
-  //   }
+  onNewServerClick() {
+    app.connectionManagmentModal.selectTab('ConfigForm');
+    app.connectionManagmentModal.open();
+  }
 
-  //   return this;
-  // }
+  onManageServersClick() {
+    app.connectionManagmentModal.open();
+  }
 
-  // remove() {
-  //   $(document).off('click', this.onDocumentClick);
-  //   super.remove();
-  // }
+  getState() {
+    return this._state;
+  }
 
-  render() {
-    if (!this.rendered) {
-      this.rendered = true;
-      this.listenTo(this.collection, 'update', this.render);
+  setState(state, replace = false) {
+    let newState;
+
+    if (replace) {
+      this._state = {};
+    } else {
+      newState = _.extend({}, this._state, state);
     }
 
+    if (!_.isEqual(this._state, newState)) {
+      this._state = newState;
+      this.render();
+    }
+
+    return this;
+  }
+
+  render() {
     loadTemplate('pageNavServersMenu.html', (t) => {
       this.$el.html(t({
-        ...this.collection.toJSON(),
+        servers: this.collection.toJSON(),
+        ...this._state,
       }));
     });
 
