@@ -164,7 +164,7 @@ export default function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 2,
+    attempts: 5,
     timeoutBetweenAttempts: 2000,
     maxAttemptTime: 5000,
     // todo: work this one in
