@@ -6,6 +6,8 @@
       <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
     </div>
     <hr class="clrBr" />
+    <h3><%= ob.polyT('settings.moderationTab.disputeResolution') %></h3>
+    <p class="tx5 clrT2"><%= ob.polyT('settings.moderationTab.disputeResolutionText') %></p>
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
@@ -53,8 +55,8 @@
           </div>
           <div class="col9">
             <% if (ob.errors.terms) print(ob.formErrorTmpl({ errors: ob.errors.terms })) %>
-            <textarea rows="3" maxlength="160" name="modInfo.description" id="settingsModeratorTerms"
-                      class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.terms %></textarea>
+            <textarea rows="3" maxlength="160" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
+                      class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
           </div>
         </div>
         <div class="flexRow">
@@ -62,11 +64,12 @@
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.languages') %></label>
           </div>
           <div class="col9">
+            <% if (ob.errors.languages) print(ob.formErrorTmpl({ errors: ob.errors.languages })) %>
             <div class="select2TagsWrap">
               <% console.log(ob.languages.length) %>
               <% var languages = ob.languages.length ? ob.languages : [ob.defaultLanguage] %>
               <% console.log(languages) %>
-              <select id="moderationLanguageSelect" multiple name="language" class="clrBr clrP clrSh2 select2Tags">
+              <select id="moderationLanguageSelect" multiple name="modInfo.languages" class="clrBr clrP clrSh2 select2Tags">
                 <% ob.languageList.forEach((lang) => { %>
                 <option value="<%= lang.code %>" <% if (languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
                 <% }); %>

@@ -1,4 +1,5 @@
 import BaseModel from '../BaseModel';
+import app from '../../app';
 import Fee from './Fee';
 
 export default class extends BaseModel {
@@ -24,8 +25,15 @@ export default class extends BaseModel {
     };
 
     if (!attrs.description) {
-      // todo: translate any error messages the user may see
-      addError('description', 'Please provide a description.');
+      addError('description', app.polyglot.t('settings.moderationTab.errors.noDescription'));
+    }
+
+    if (!attrs.termsAndConditions) {
+      addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.noTerms'));
+    }
+
+    if (!attrs.languages.length) {
+      addError('languages', app.polyglot.t('settings.moderationTab.errors.noLanguages'));
     }
 
     // todo: more validations -

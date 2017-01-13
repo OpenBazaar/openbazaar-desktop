@@ -250,7 +250,10 @@
       "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
       "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
       "errors": {
-        "noFeeType": "You must set a fee type",
+        "noDescription": "Please provide a description.",
+        "noTerms": "Please provide your terms of service.",
+        "noLanguages": "Please list at least one language you can communicate in.",
+        "noFeeType": "Please set a fee type",
         "fixedNofee": "If your fee type is fixed or fixed plus percentage, you must include a fixed fee.",
         "fixedNoCurrency": "If your fee type is fixed or fixed plus percentage, you must set a currency for your fee.",
         "fixedNoAmount": "If your fee type is fixed or fixed plus percentage, you must set an amount for your fixed fee.",
