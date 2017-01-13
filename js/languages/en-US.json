@@ -253,11 +253,11 @@
         "noDescription": "Please provide a description.",
         "noTerms": "Please provide your terms of service.",
         "noLanguages": "Please list at least one language you can communicate in.",
-        "noFeeType": "Please set a fee type",
-        "fixedNofee": "If your fee type is fixed or fixed plus percentage, you must include a fixed fee.",
-        "fixedNoCurrency": "If your fee type is fixed or fixed plus percentage, you must set a currency for your fee.",
-        "fixedNoAmount": "If your fee type is fixed or fixed plus percentage, you must set an amount for your fixed fee.",
-        "percentageNoPercentage": "If your fee type is percentage or fixed plus percentage, you must set a percentage."
+        "noFeeType": "Please set a valid fee type",
+        "fixedNofee": "If your fee type is fixed or fixed plus percentage, you must include a valid fixed fee.",
+        "fixedNoCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
+        "fixedNoAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee.",
+        "percentageNoPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage."
       }
     },
     "optional": "optional",

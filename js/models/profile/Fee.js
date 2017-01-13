@@ -1,11 +1,18 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
+import FixedFee from './FixedFee';
 
 export default class extends BaseModel {
   defaults() {
     return {
       feeType: 'PERCENTAGE',
       percentage: 0,
+    };
+  }
+
+  get nested() {
+    return {
+      fixedFee: FixedFee,
     };
   }
 
@@ -17,23 +24,12 @@ export default class extends BaseModel {
     };
 
     if (!attrs.feeType) {
-      // the user should never see this error
       addError('feeType', app.polyglot.t('settings.moderationTab.errors.noFeeType'));
     }
 
     if ((attrs.feeType === 'FIXED' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
       !attrs.fixedFee) {
       addError('feeType', app.polyglot.t('settings.moderationTab.errors.fixedNofee'));
-    }
-
-    if ((attrs.feeType === 'FIXED' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
-      !attrs.fixedFee.currencyCode) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.errors.fixedNoCurrency'));
-    }
-
-    if ((attrs.feeType === 'FIXED' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
-      !attrs.fixedFee.amount) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.errors.fixedNoAmount'));
     }
 
     if ((attrs.feeType === 'PERCENTAGE' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
