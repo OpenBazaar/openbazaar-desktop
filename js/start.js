@@ -66,7 +66,7 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   .open();
 });
 
-// Instantiated our Server Configs collection now since the page nav
+// Instantiating our Server Configs collection now since the page nav
 // utilizes it. We'll fetch it later on.
 app.serverConfigs = new ServerConfigs();
 
