@@ -68,14 +68,16 @@ case "$TRAVIS_OS_NAME" in
     cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
+    APPNAME="openbazaar2"
+
     echo "Packaging Electron application"
-    electron-packager . openbazaar --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    mkdir dist/openbazaar-linux-ia32/resources/openbazaar-go/
-    cp -rf temp/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go
-    mv dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
-    chmod +x dist/openbazaar-linux-ia32/resources/openbazaar-go/openbazaard
+    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
+    cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
+    mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
+    chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_ia32.json
@@ -85,13 +87,13 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Linux 64-bit Installer....'
 
     echo "Packaging Electron application"
-    electron-packager . openbazaar --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    mkdir dist/openbazaar-linux-x64/resources/openbazaar-go/
-    cp -rf temp/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaar-go
-    mv dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
-    chmod +x dist/openbazaar-linux-x64/resources/openbazaar-go/openbazaard
+    mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
+    cp -rf temp/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go
+    mv dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
+    chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_amd64.json

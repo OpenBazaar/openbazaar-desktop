@@ -1,6 +1,7 @@
 import { EOL } from 'os';
 import { remote, ipcRenderer } from 'electron';
 import _ from 'underscore';
+import app from '../app';
 import ServerConfig from '../models/ServerConfig';
 import Socket from '../utils/Socket';
 import $ from 'jquery';
@@ -138,7 +139,7 @@ function authenticate(server) {
  *   to a remote server with a non numeric ServerIp value. Since it's trying to get the name
  *   via DNS, it will take over a minute before it fails. The recommendation is to not make this
  *   value too large during start-up, or you risk making a very long start-up sequence,
- *   particularly if you have multiple attempts. In the Connection Managament modal, the value
+ *   particularly if you have multiple attempts. In the Connection Management modal, the value
  *   could be much higher and the user could always cancel the attempt if they feel it is
  *   taking too long.
  * @return {object} A promise object will be returned that will allow you
@@ -151,6 +152,7 @@ export default function connect(server, options = {}) {
     throw new Error('Please provide a server as a ServerConfig instance.');
   }
 
+  app.serverConfigs.activeServer = server;
   const curCon = getCurrentConnection();
 
   if (curCon && curCon.server.id === server.id &&
@@ -162,7 +164,7 @@ export default function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 2,
+    attempts: 5,
     timeoutBetweenAttempts: 2000,
     maxAttemptTime: 5000,
     // todo: work this one in
