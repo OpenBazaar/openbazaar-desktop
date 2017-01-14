@@ -1,9 +1,11 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="topControls flex">
+  <% if (ob.vendor) { %>
   <div class="contentBox flexExpand clrP clrBr clrT">
     <p>Who in the heck is the west of it all - <%= ob.vendor.name %></p>
   </div>
+  <% } %>
   <% if (ob.ownListing) { %>
   <div class="flexHRight" style="margin-right: 40px">
     <div class="btnStrip clrSh3">
