@@ -335,7 +335,7 @@ export default class extends BaseModal {
         });
       };
 
-      newImage.onerror = (e) => {
+      newImage.onerror = () => {
         errored += 1;
 
         if (errored === photoFiles.length) {
