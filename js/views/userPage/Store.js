@@ -464,7 +464,7 @@ export default class extends BaseVw {
 
       this.storeListings = new ListingsGrid({
         collection: storeListingsCol,
-        storeOwner: this.model.id,
+        storeOwnerProfile: this.model,
         viewType: this.listingsViewType,
       });
 

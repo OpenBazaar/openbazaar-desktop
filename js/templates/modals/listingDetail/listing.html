@@ -1,10 +1,15 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="topControls flex">
+  <div class="contentBox flexExpand clrP clrBr clrT">
+    <p>Who in the heck is the west of it all - <%= ob.vendor.name %></p>
+  </div>
   <% if (ob.ownListing) { %>
-  <div class="btnStrip clrSh3">
-    <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
-    <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
+  <div class="flexHRight" style="margin-right: 40px">
+    <div class="btnStrip clrSh3">
+      <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
+      <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
+    </div>
   </div>
   <% } %>
 </div>

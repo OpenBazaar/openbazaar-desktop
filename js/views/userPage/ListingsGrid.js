@@ -4,6 +4,8 @@ import ListingCard from '../ListingCard';
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    // If this grid is for a Store, pass in a storeOwnerProfile option
+    // with the Profile model of the store owner.
     const opts = {
       viewType: app.localSettings.get('listingsGridViewType'),
       ...options,
@@ -16,11 +18,22 @@ export default class extends BaseVw {
       throw new Error('Please provide a collection.');
     }
 
-    if (!this.options.storeOwner) {
-      // For search and channels this will need to be provided
-      // with the listing index data, in which case this
-      // option could be made truly optional.
-      throw new Error('Please provide the guid of the storeOwner.');
+    if (!this.options.listingBaseUrl && !this.options.storeOwnerProfile) {
+      let allHaveVendor = true;
+
+      try {
+        this.collection.forEach(md => {
+          if (!md.get('vendor')) throw new Error();
+        });
+      } catch (e) {
+        allHaveVendor = false;
+      }
+
+      if (!allHaveVendor) {
+        throw new Error('I am unable to determine one or more listingBaseUrls for the provided' +
+          ' listings. Please either pass in a listingBaseUrl option or it can be derived if you' +
+          ' provided a storeOwnerProfile option or every model needs an embedded Vendor object.');
+      }
     }
 
     this.viewType = opts.viewType;
@@ -58,13 +71,26 @@ export default class extends BaseVw {
       this.listingCardViews.length : 0;
   }
 
-  createListingCardView(opts = {}) {
+  createListingCardView(model) {
+    let listingBaseUrl;
+
+    if (this.options.listingBaseUrl) {
+      listingBaseUrl = this.options.listingBaseUrl;
+    } else if (model.get('vendor')) {
+      listingBaseUrl = `${model.get('vendor').guid}/store/`;
+    } else if (this.options.storeOwnerProfile) {
+      listingBaseUrl = `${this.options.storeOwnerProfile.id}/store/`;
+    }
+
     const options = {
-      ownerGuid: this.options.storeOwner,
-      listingBaseUrl: `${this.options.storeOwner}/store/`,
+      listingBaseUrl,
       viewType: this.viewType,
-      ...opts,
+      model,
     };
+
+    if (this.options.storeOwnerProfile) {
+      options.profile = this.options.storeOwnerProfile;
+    }
 
     return this.createChild(ListingCard, options);
   }
@@ -73,7 +99,11 @@ export default class extends BaseVw {
     const listingsFrag = document.createDocumentFragment();
 
     models.forEach(model => {
-      const listingCardVw = this.createListingCardView({ model });
+      // In the proposed search API, vendor info will be provided in the
+      // search results. If that's the case we'll pass it to the listing
+      // card view.
+      const listingCardVw = this.createListingCardView(model);
+
       this.listingCardViews.push(listingCardVw);
       listingCardVw.render().$el.appendTo(listingsFrag);
     });

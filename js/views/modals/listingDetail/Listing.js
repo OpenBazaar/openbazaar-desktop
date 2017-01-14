@@ -28,6 +28,28 @@ export default class extends BaseModal {
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
 
+    // Sometimes a profile model is available and the vendor info
+    // can be obtained from that.
+    if (opts.profile) {
+      const avatarHashes = opts.profile.get('avatarHashes');
+
+      this.vendor = {
+        guid: opts.profile.id,
+        name: opts.profile.get('name'),
+        handle: opts.profile.get('handle'),
+        avatar: {
+          tiny: avatarHashes.get('tiny'),
+          small: avatarHashes.get('small'),
+        },
+      };
+    }
+
+    // In most cases the page opening this modal will already have and be able
+    // to provide the vendor information. If it cannot, then I suppose we
+    // could fetch the profile and lazy load it in, but we can cross that
+    // bridge when we get to it.
+    this.vendor = this.vendor || opts.vendor;
+
     this.countryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
 
@@ -335,6 +357,7 @@ export default class extends BaseModal {
         // shipsFromCountry: this.model.get('listing').get('shipsFrom');
         countryData: this.countryData,
         defaultCountry: this.defaultCountry,
+        vendor: this.vendor,
       }));
 
       super.render();
