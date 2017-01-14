@@ -41,9 +41,6 @@ export default class extends baseVw {
         ' a profile model or pass in an ownerGuid option.');
     }
 
-    console.log('base url is:');
-    console.log(opts.listingBaseUrl);
-      
     if (!opts.listingBaseUrl) {
       // When the listing card is clicked and the listing detail modal is
       // opened, the slug of the listing is concatenated with the listingBaseUrl
