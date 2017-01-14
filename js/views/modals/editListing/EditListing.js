@@ -336,8 +336,6 @@ export default class extends BaseModal {
       };
 
       newImage.onerror = (e) => {
-        console.log('moo');
-        window.moo = e;
         errored += 1;
 
         if (errored === photoFiles.length) {
