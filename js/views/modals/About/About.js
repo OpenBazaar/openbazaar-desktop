@@ -6,6 +6,7 @@ import Story from './Story';
 import Contributors from './Contributors';
 import Donations from './Donations';
 import License from './License';
+import BTCTicker from './BTCTicker';
 import { version } from '../../../../package.json';
 
 export default class extends BaseModal {
@@ -71,6 +72,9 @@ export default class extends BaseModal {
   }
 
   render() {
+    this.btcTicker = this.createChild(BTCTicker);
+    this.btcTicker.render();
+
     loadTemplate('modals/about/about.html', (t) => {
       this.$el.html(t({
         ...this.options,
@@ -81,6 +85,8 @@ export default class extends BaseModal {
       this.$tabContent = this.$('.js-tabContent .contentBox');
 
       this.selectTab(this.currentTabName);
+      this.$btcTicker = this.$('.js-btcTicker');
+      this.$btcTicker.append(this.btcTicker.$el);
     });
 
     return this;
