@@ -221,7 +221,7 @@
       "placeholderState": "IL",
       "placeholderPostalCode": "60654",
       "placeholderNotes": "e.g. leave packages behind bush",
-      "sectionName": "Addresses",
+      "sectionName": "Shipping Addresses",
       "statusDeletingAddress": "Deleting address %{name}...",
       "statusDeleteAddressComplete": "Address %{name} deleted.",
       "statusDeleteAddressFailed": "Unable to delete address %{name}.",
