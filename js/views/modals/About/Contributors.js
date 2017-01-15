@@ -1,9 +1,6 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
-// note: this list was generated automatically
-// the order is the order produced by that code
-// it was not sorted in any way
 const names = [
   'Jenn Cloud',
   'Chris Pacia',
@@ -75,7 +72,6 @@ const names = [
   'Duo Search',
   'Michael Lynch',
   'Oyebanji Jacob Mayowa',
-  'Check your git settings!', // it may be cool to list "names" as <name> (<login>)
   'Giannis Adamopoulos',
   'Steven Roose',
   'Gianluca Boiano',
