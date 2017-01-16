@@ -23,7 +23,7 @@ export default class extends baseVw {
     }
 
 
-    // Any provided profile model or vendor info object will be passed into the
+    // Any provided profile model or vendor info object will also be passed into the
     // listing detail modal.
     if (opts.profile) {
       // If a profile model of the listing owner is available, please pass it in.
