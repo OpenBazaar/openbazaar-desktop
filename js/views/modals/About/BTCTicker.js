@@ -2,6 +2,9 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { getExchangeRate } from '../../../utils/currency';
 
+
+const RATE_EXPIRY_S = '300';
+
 export default class extends baseVw {
   constructor(options = {}) {
     super({
@@ -22,7 +25,17 @@ export default class extends baseVw {
     }
   }
 
+  remove() {
+    clearInterval(this.refreshCode);
+    console.info("Refresh checks stopped");
+    super.remove();
+  }
+
   render() {
+    if (this.refreshCode == null) {
+      this.refreshCode = setInterval(() => this.updatePrice(), RATE_EXPIRY_S*1000);
+    }
+
     if (this.currentBTCPrice == null) {
       this.currentBTCPrice = this.getCurrentPrice(); 
     }
@@ -33,7 +46,6 @@ export default class extends baseVw {
       }));
     });
 
-    console.info('render');
     return this;
   }
 }
