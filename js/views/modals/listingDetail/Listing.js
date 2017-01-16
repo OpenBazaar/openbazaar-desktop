@@ -1,16 +1,16 @@
 import $ from 'jquery';
+import 'select2';
+import is from 'is_js';
+import '../../../utils/velocity';
+import 'jquery-zoom';
 import app from '../../../app';
+import { getAvatarBgImage } from '../../../utils/responsive';
+import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
-import 'select2';
-import { getTranslatedCountries } from '../../../data/countries';
-import is from 'is_js';
-import '../../../utils/velocity';
-import 'jquery-zoom';
-
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -75,6 +75,11 @@ export default class extends BaseModal {
         if (savedOpts.slug === slug && savedOpts.hasChanged()) {
           this.showDataChangedMessage();
         }
+      });
+
+      this.listenTo(app.profile.get('avatarHashes'), 'change', () => {
+        this.$storeOwnerAvatar
+          .attr('style', getAvatarBgImage(app.profile.get('avatarHashes').toJSON()));
       });
     }
   }
@@ -351,6 +356,11 @@ export default class extends BaseModal {
       (this._$photoRadioBtns = this.$('.js-photoSelect'));
   }
 
+  get $storeOwnerAvatar() {
+    return this._$storeOwnerAvatar ||
+      (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -385,6 +395,7 @@ export default class extends BaseModal {
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
+      this._$storeOwnerAvatar = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
