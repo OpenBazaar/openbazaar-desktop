@@ -1,4 +1,6 @@
 <div class="<%= ob.modelContentClass %>">
-  <i class="jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>"></i>
+  <div class="topControls pureFlex spread stretch js-closeClickTarget js-btcTicker">
+    <i class="jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>"></i>
+  </div>
   <%= ob.innerContent %>
 </div>

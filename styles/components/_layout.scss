@@ -93,19 +93,22 @@
 .pureFlex {
   display: flex;
 
-  .spread {
+  &.alwaysFirst {
+    order: -1;
+  }
+
+  &.spread {
     justify-content: space-between;
   }
 
-  .stretch {
+  &.stretch {
     align-items: stretch;
   }
 
-  .cent {
+  &.cent {
     align-items: center;
   }
 }
-
 
 .flexColRows {
   //vertical colums that have 100% width and are spaced across the height
@@ -456,3 +459,4 @@
 .posF {
   position: fixed;
 }
+

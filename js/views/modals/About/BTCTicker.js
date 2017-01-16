@@ -8,7 +8,7 @@ const RATE_EXPIRY_S = '300';
 export default class extends baseVw {
   constructor(options = {}) {
     super({
-      className: 'aboutBTCTicker pureFlex',
+      className: 'aboutBTCTicker pureFlex alwaysFirst',
       ...options,
     });
   }
