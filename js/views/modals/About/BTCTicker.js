@@ -27,17 +27,16 @@ export default class extends baseVw {
 
   remove() {
     clearInterval(this.refreshCode);
-    console.info("Refresh checks stopped");
     super.remove();
   }
 
   render() {
     if (this.refreshCode == null) {
-      this.refreshCode = setInterval(() => this.updatePrice(), RATE_EXPIRY_S*1000);
+      this.refreshCode = setInterval(() => this.updatePrice(), RATE_EXPIRY_S * 1000);
     }
 
     if (this.currentBTCPrice == null) {
-      this.currentBTCPrice = this.getCurrentPrice(); 
+      this.currentBTCPrice = this.getCurrentPrice();
     }
 
     loadTemplate('modals/about/btcticker.html', (t) => {
