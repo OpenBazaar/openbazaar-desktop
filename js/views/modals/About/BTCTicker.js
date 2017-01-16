@@ -4,7 +4,7 @@ import baseVw from '../../baseVw';
 export default class extends baseVw {
   constructor(options = {}) {
     super({
-      className: 'aboutBTCTicker',
+      className: 'aboutBTCTicker pureFlex',
       ...options,
     });
   }
@@ -29,7 +29,7 @@ export default class extends baseVw {
 
     loadTemplate('modals/about/btcticker.html', (t) => {
       this.$el.html(t({
-        currentBTCPrice: this.currentBTCPrice,
+        currentBTCPrice: this.currentBTCPrice.toFixed(2),
       }));
     });
 
