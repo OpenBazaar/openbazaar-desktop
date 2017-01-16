@@ -7,7 +7,7 @@ import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
-import { isHiRez, getAvatarBgImage } from '../utils/responsive';
+import { getAvatarBgImage } from '../utils/responsive';
 
 export default class extends View {
   constructor(options) {
