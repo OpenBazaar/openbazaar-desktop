@@ -1,16 +1,17 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 
-<div class="topControls flex">
+<div class="topControls gutterHSm flex">
   <% if (ob.vendor) { %>
-  <div class="contentBox flexExpand clrP clrBr clrT">
-    <div class="padSm gutterHSm overflowAuto">
-      <a class="clrBr2 clrSh1 disc storeOwnerAvatar js-storeOwnerAvatar" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
-      <p><%= ob.vendor.name %> <a class="link">Go to store</a></p>
+  <div class="contentBox clrP clrBr clrT">
+    <div class="padSm gutterHSm overflowAuto flexVCent">
+      <a class="clrBr2 clrSh1 disc storeOwnerAvatar flexNoShrink js-storeOwnerAvatar" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+      <p class="txUnl clamp"><%= ob.vendor.name %></p>
+      <a class="link flexNoShrink">Go to store</a>
     </div>
   </div>
   <% } %>
   <% if (ob.ownListing) { %>
-  <div style="margin-right: 40px; margin-left: auto">
+  <div class="flexNoShrink" style="margin-right: 40px; margin-left: auto">
     <div class="btnStrip clrSh3">
       <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
       <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
