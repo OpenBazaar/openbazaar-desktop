@@ -48,6 +48,7 @@ a {
   text-decoration: none;
   cursor: pointer;
   -webkit-user-drag: none;
+  -webkit-user-select: none; // quick clicks shall now not highlight
   transition: color .15s  cubic-bezier(0, 0, 0.2, 1);
   color: inherit;
 
@@ -252,4 +253,8 @@ ul, ol {
 
 .preWrap {
   white-space: pre-wrap;
+}
+
+.clickMe {
+  cursor: pointer;
 }

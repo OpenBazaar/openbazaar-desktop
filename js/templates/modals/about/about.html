@@ -1,0 +1,38 @@
+<div class="flex gutterH js-closeClickTarget">
+  <div class="tabColumn contentBox padMd clrP clrBr clrSh3">
+    <h1 class="h3 txUp clrT2"><%= ob.polyT('about.menu.sectionHeader') %></h1>
+    <div class="boxList tx4 clrTx1Br">
+      <a class="js-tab tab clrT row active" data-tab="Story"><%= ob.polyT('about.storyTab.linkText') %></a>
+      <a class="js-tab tab row" data-tab="Contributors"><%= ob.polyT('about.contributorsTab.linkText') %></a>
+      <a class="js-tab tab row" data-tab="Donations"><%= ob.polyT('about.donationsTab.linkText') %></a>
+      <a class="js-tab tab row" data-tab="License"><%= ob.polyT('about.licenseTab.linkText') %></a>
+    </div>
+  </div>
+  <div class="flexExpand posR">
+    <div class="js-tabContent tabContent">
+      <div class="contentBox padMd clrP clrBr clrSh3">
+        <div class="flex">
+          <div>
+            <div class="brandSmall floL" style="background-image: url('../imgs/obVectorIcon.svg');"></div>
+            <div class="floL">
+              <h4><%= ob.polyT('about.brand') %></h4>
+              <div class="flex">
+                <i class="gemSmall" style="background-image: url('../imgs/btcIcon128.png');"></i>
+                <i class="gemSmall" style="background-image: url('../imgs/globeIcon64.png');"></i>
+                <i class="gemSmall" style="background-image: url('../imgs/peaceIcon64.png');"></i>
+              </div>
+            </div>
+          </div>
+          <h2 id=tabTitle class="h3 clrT txCtr flexExpand"></h2>
+          <div class="txRight">
+            <div><%= ob.polyT('about.version') %> <%= ob.version %></div>
+            <a class="btn clrP clrBr js-copyAddress flexNoShrink">
+              <%= ob.polyT('about.btnUpdateCheck') %>
+            </a>
+          </div>
+        </div>
+        <hr class="clrBr" />
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="flex padGi">
+  <img src="<%= ob.qrCodeDataURI %>">
+  <div id=donation-dashboard class="padMd flexCol">
+    <div class="padMd">
+      <h2><%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %></h2>
+      <span class=singleLine><span class="clrT2 donationAddress"><%= ob.obDonationAddress %></span><span class="js-copyNotification copyNotification clrBr border">Copied</span></span>
+    </div>
+    <div class="padMd">
+      <a class="btn clrP clrBr js-copyAddress flexNoShrink">
+        <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
+      </a>
+      <a class="btn clrP clrBr js-openInWallet flexNoShrink">
+        <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
+      </a>
+    </div>
+  </div>
+</div>
+<hr class="clrBr" />
+<div class="padLg">
+  <p class="txCtr">
+    <%= ob.polyT('about.blurbs.tradeFree') %>
+  </p>
+</div>

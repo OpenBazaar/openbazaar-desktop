@@ -90,6 +90,30 @@
   flex-direction: column;
 }
 
+.pureFlex {
+  display: flex;
+
+  &.alwaysFirst {
+    order: -1;
+  }
+
+  &.alwaysRight {
+    margin-left: auto;
+  }
+
+  &.spread {
+    justify-content: space-between;
+  }
+
+  &.stretch {
+    align-items: stretch;
+  }
+
+  &.cent {
+    align-items: center;
+  }
+}
+
 .flexColRows {
   //vertical colums that have 100% width and are spaced across the height
   @extend .flexCol;
@@ -439,3 +463,4 @@
 .posF {
   position: fixed;
 }
+
