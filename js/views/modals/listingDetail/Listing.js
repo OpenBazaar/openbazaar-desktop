@@ -93,6 +93,7 @@ export default class extends BaseModal {
       'click .js-photoSelect': 'onClickPhotoSelect',
       'click .js-photoPrev': 'onClickPhotoPrev',
       'click .js-photoNext': 'onClickPhotoNext',
+      'click .js-goToStore': 'onClickGoToStore',
       ...super.events(),
     };
   }
@@ -147,6 +148,18 @@ export default class extends BaseModal {
 
   onClickGotoPhotos() {
     this.gotoPhotos();
+  }
+
+  onClickGoToStore() {
+    if (this.options.openedFromStore) {
+      this.close();
+    } else {
+      if (this.vendor.handle) {
+        location.hash = `#@${this.vendor.handle}/store`;
+      } else {
+        location.hash = `#${this.vendor.guid}/store`;
+      }
+    }
   }
 
   gotoPhotos() {
@@ -358,6 +371,7 @@ export default class extends BaseModal {
         countryData: this.countryData,
         defaultCountry: this.defaultCountry,
         vendor: this.vendor,
+        openedFromStore: this.options.openedFromStore,
       }));
 
       super.render();

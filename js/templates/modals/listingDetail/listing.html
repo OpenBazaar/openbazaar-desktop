@@ -4,9 +4,9 @@
   <% if (ob.vendor) { %>
   <div class="contentBox clrP clrBr clrT">
     <div class="padSm gutterHSm overflowAuto flexVCent">
-      <a class="clrBr2 clrSh1 disc storeOwnerAvatar flexNoShrink js-storeOwnerAvatar" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+      <a class="clrBr2 clrSh1 disc storeOwnerAvatar flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendor.avatar) %>"></a>
       <p class="txUnl clamp"><%= ob.vendor.name %></p>
-      <a class="link flexNoShrink">Go to store</a>
+      <a class="link flexNoShrink js-goToStore"><% print(ob.openedFromStore ? ob.polyT('listingDetail.returnToStore'): ob.polyT('listingDetail.goToStore')) %></a>
     </div>
   </div>
   <% } %>

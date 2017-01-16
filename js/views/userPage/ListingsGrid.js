@@ -95,6 +95,9 @@ export default class extends BaseVw {
 
     if (this.options.storeOwnerProfile) {
       options.profile = this.options.storeOwnerProfile;
+      // Flag so the listing card knows it's on a store. This is useful to
+      // the listing detail modal and will be passed into there.
+      options.onStore = true;
     }
 
     return this.createChild(ListingCard, options);
