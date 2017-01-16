@@ -97,6 +97,10 @@
     order: -1;
   }
 
+  &.alwaysRight {
+    margin-left: auto;
+  }
+
   &.spread {
     justify-content: space-between;
   }
