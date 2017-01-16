@@ -1,5 +1,6 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
+import { getExchangeRate } from '../../../utils/currency';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -10,8 +11,7 @@ export default class extends baseVw {
   }
 
   getCurrentPrice() {
-    // for realz
-    return 2000 + Math.random()*100 - 50;
+    return getExchangeRate('USD');
   }
 
   updatePrice() {
