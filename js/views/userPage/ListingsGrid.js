@@ -30,9 +30,10 @@ export default class extends BaseVw {
       }
 
       if (!allHaveVendor) {
-        throw new Error('I am unable to determine one or more listingBaseUrls for the provided' +
-          ' listings. Please either pass in a listingBaseUrl option or it can be derived if you' +
-          ' provided a storeOwnerProfile option or every model needs an embedded Vendor object.');
+        throw new Error('I am unable to determine a listingBaseUrl for one or more of the ' +
+          'provided listings. Please either pass in a listingBaseUrl option or it can be ' +
+          'derived if you provid a storeOwnerProfile option or every model has an embedded ' +
+          ' Vendor object.');
       }
     }
 
@@ -74,6 +75,9 @@ export default class extends BaseVw {
   createListingCardView(model) {
     let listingBaseUrl;
 
+    // The listingBaseUrl can be directly provided as an option or we
+    // will attempt to derive it from a passed in Profile model or
+    // Vendor information in the listing short models.
     if (this.options.listingBaseUrl) {
       listingBaseUrl = this.options.listingBaseUrl;
     } else if (model.get('vendor')) {
@@ -88,10 +92,6 @@ export default class extends BaseVw {
       viewType: this.viewType,
       model,
     };
-
-    if (model.get('vendor')) {
-      options.vendor = model.get('vendor');
-    }
 
     if (this.options.storeOwnerProfile) {
       options.profile = this.options.storeOwnerProfile;

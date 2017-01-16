@@ -7,7 +7,7 @@ import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
-import { isHiRez } from '../utils/responsive';
+import { isHiRez, getAvatarBgImage } from '../utils/responsive';
 
 export default class extends View {
   constructor(options) {
@@ -89,14 +89,7 @@ export default class extends View {
   }
 
   updateAvatar() {
-    const avatarHashes = app.profile.get('avatarHashes').toJSON();
-    const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
-
-    if (avatarHash) {
-      this.$('#AvatarBtn').attr('style',
-        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
-      url('../imgs/defaultAvatar.png')`);
-    }
+    this.$('#AvatarBtn').attr('style', getAvatarBgImage(app.profile.get('avatarHashes').toJSON()));
   }
 
   navCloseClick() {
@@ -208,23 +201,10 @@ export default class extends View {
   }
 
   render() {
-    let avatarHash = '';
-
-    if (app.profile) {
-      const avatarHashes = app.profile.get('avatarHashes').toJSON();
-
-      if (isHiRez() && avatarHashes.small) {
-        avatarHash = avatarHashes.small;
-      } else if (avatarHashes.tiny) {
-        avatarHash = avatarHashes.tiny;
-      }
-    }
-
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t({
         addressBarText: this.addressBarText,
         ...(app.profile && app.profile.toJSON() || {}),
-        avatarHash,
       }));
     });
 

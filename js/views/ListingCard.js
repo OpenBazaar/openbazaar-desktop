@@ -28,9 +28,9 @@ export default class extends baseVw {
     if (opts.profile) {
       // If a profile model of the listing owner is available, please pass it in.
       this.ownerGuid = opts.profile.id;
-    } else if (opts.vendor) {
+    } else if (this.model.get('vendor')) {
       // If a vendor object is available (part of proposed search API), please pass it in.
-      this.ownerGuid = opts.vendor.guid;
+      this.ownerGuid = this.model.get('vendor').guid;
     } else {
       // Otherwise please provide a boolean indicating ownListing.
       this.ownerGuid = opts.ownerGuid;
