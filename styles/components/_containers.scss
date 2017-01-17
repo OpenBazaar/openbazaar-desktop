@@ -154,7 +154,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: inherit;
-  }  
+  }
 }
 
 .arrowBoxTop {
@@ -165,5 +165,32 @@
     left: 50%;
     transform: translate(-50%, -50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
-  }  
+  }
+}
+
+.toolTip {
+  position: relative;
+  cursor: pointer;
+
+  &:hover:before {
+    @extend .contentBox;
+    content: attr(data-tip);
+    border-color: inherit;
+    position: absolute;
+  }
+
+  &:hover:after {
+    content: '';
+    position: absolute;
+    background-color: inherit;
+    width: 25px;
+    height: 25px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: inherit;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-135deg);
+    -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  }
 }

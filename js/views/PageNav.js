@@ -204,6 +204,7 @@ export default class extends View {
     loadTemplate('pageNav.html', (t) => {
       this.$el.html(t({
         addressBarText: this.addressBarText,
+        testnet: app.testnet,
         ...(app.profile && app.profile.toJSON() || {}),
       }));
     });

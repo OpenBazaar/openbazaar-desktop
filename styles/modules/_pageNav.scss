@@ -197,4 +197,19 @@
       display: block;
     }
   }
+
+  .testnetFlag {
+    align-self: stretch;
+    padding: $pad;
+
+    .testnetIcon {
+      display: block;
+      height: 29px;
+      width: 29px;
+      background: url('../../imgs/testnetIcon.png') no-repeat;
+      background-size: contain;
+    }
+
+
+  }
 }

@@ -30,6 +30,11 @@
           </div>
         </div>
       </div>
+      <% if(ob.testnet) { %>
+      <div class="testnetFlag">
+        <a class="toolTip testnetIcon" data-tip="<%= ob.polyT('testnet') %>"></a>
+      </div>
+      <% } %>
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box">
