@@ -352,6 +352,8 @@ function createWindow() {
         label: 'View Server Debug Log',
         type: 'normal',
         click() {
+          mainWindow.focus();
+          mainWindow.restore();
           mainWindow.webContents.send('show-server-log', global.serverLog);
         },
       },
