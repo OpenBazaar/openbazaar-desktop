@@ -41,7 +41,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'listBox clrBr listBox clrP clrSh1';
+    return 'listBox clrBr clrP clrSh1';
   }
 
   events() {
