@@ -9,7 +9,7 @@ import PageNavServersMenu from './PageNavServersMenu';
 import SettingsModal from './modals/Settings/Settings';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
-import { isHiRez } from '../utils/responsive';
+import { getAvatarBgImage } from '../utils/responsive';
 
 export default class extends View {
   constructor(options) {
@@ -110,14 +110,7 @@ export default class extends View {
   }
 
   updateAvatar() {
-    const avatarHashes = app.profile.get('avatarHashes').toJSON();
-    const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
-
-    if (avatarHash) {
-      this.$('#AvatarBtn').attr('style',
-        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
-      url('../imgs/defaultAvatar.png')`);
-    }
+    this.$('#AvatarBtn').attr('style', getAvatarBgImage(app.profile.get('avatarHashes').toJSON()));
   }
 
   navCloseClick() {
@@ -183,8 +176,10 @@ export default class extends View {
     this.$navList.toggleClass('open');
     this.$navOverlay.toggleClass('open');
 
-    if (!this.$navList.hasClass('open')) {
-      this.$connManagementContainer.addClass('closed');
+    if (this.$navList.hasClass('open')) {
+      this.$connManagementContainer.removeClass('open');
+    } else {
+      this.$connManagementContainer.addClass('open');
     }
   }
 
@@ -265,18 +260,6 @@ export default class extends View {
   }
 
   render() {
-    let avatarHash = '';
-
-    if (app.profile) {
-      const avatarHashes = app.profile.get('avatarHashes').toJSON();
-
-      if (isHiRez() && avatarHashes.small) {
-        avatarHash = avatarHashes.small;
-      } else if (avatarHashes.tiny) {
-        avatarHash = avatarHashes.tiny;
-      }
-    }
-
     let connectedServer = getCurrentConnection();
 
     if (connectedServer && connectedServer.status !== 'disconnected') {
@@ -289,8 +272,8 @@ export default class extends View {
       this.$el.html(t({
         addressBarText: this.addressBarText,
         connectedServer,
+        testnet: app.testnet,
         ...(app.profile && app.profile.toJSON() || {}),
-        avatarHash,
       }));
     });
 

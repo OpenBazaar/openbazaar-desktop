@@ -1,6 +1,7 @@
 import { EOL } from 'os';
 import { remote, ipcRenderer } from 'electron';
 import _ from 'underscore';
+import app from '../app';
 import ServerConfig from '../models/ServerConfig';
 import Socket from '../utils/Socket';
 import $ from 'jquery';
@@ -151,6 +152,7 @@ export default function connect(server, options = {}) {
     throw new Error('Please provide a server as a ServerConfig instance.');
   }
 
+  app.serverConfigs.activeServer = server;
   const curCon = getCurrentConnection();
 
   if (curCon && curCon.server.id === server.id &&
@@ -162,7 +164,7 @@ export default function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 2,
+    attempts: 5,
     timeoutBetweenAttempts: 2000,
     maxAttemptTime: 5000,
     // todo: work this one in

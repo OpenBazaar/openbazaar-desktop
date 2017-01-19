@@ -22,26 +22,26 @@
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
-      <div class="flexExpand">
-        <div class="flexVCent">
+      <div class="pageNavCenter">
+        <div class="flexVCent gutterHSm">
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar clrBr4"
                    placeholder="<%= ob.polyT('addressBarPlaceholder') %>" value="<%= ob.addressBarText %>" />
           </div>
+          <% if (ob.testnet) { %>
+            <div id="testnetFlag" class="btn barBtn toolTip clrP clrBr" data-tip="<%= ob.polyT('testnetTooltip') %>">
+              <%= ob.polyT('testnet') %>
+            </div>
+          <% } %>
+          <a class="btn barBtn clrP clrBr ion-navicon-round"></a>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box">
+          <a class="iconBtn ion-eye"></a>
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
-          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn"
-          <% if (ob.avatarHash) { %>
-          //this will be updated to the real image parameter
-          style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
-          <% } else { %>
-            style="background-image: url('../imgs/defaultAvatar.png')"
-          <% } %>
-          ></a>
+          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
           <nav class="navListWrapper foldDown js-navList">
             <div class="navList clrBr listBox clrP clrSh1">
               <div class="listGroup clrP clrBr">

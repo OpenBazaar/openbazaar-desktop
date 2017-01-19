@@ -6,13 +6,23 @@ Installation
 ------------
 
 1. Clone the client repository into a directory of your choice:
-  - `git clone git@github.com:OpenBazaar/openbazaar-desktop.git`
+  - `git clone https://github.com/OpenBazaar/openbazaar-desktop`
 2. Navigate into the new folder created in (1)
   - `cd openbazaar-desktop`
 3. `npm install`
 
-Running
--------
+Running in non-dev mode
+-------------------
+
+Use this option if you're not actively developing on the client and just want to run the client from source.
+
+`npm run start-app` will:
+- launch the Electron app
+
+Running in dev mode
+-------------------
+
+Use this option if you're actively developing on the client and want the client started along with some helper development processes.
 
 `npm start` will:
 - compile your Sass / re-compile on changes

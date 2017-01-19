@@ -8,6 +8,8 @@
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or #tag",
+  "testnet": "Test Mode",
+  "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -162,7 +164,7 @@
       "placeholderState": "IL",
       "placeholderPostalCode": "60654",
       "placeholderNotes": "e.g. leave packages behind bush",
-      "sectionName": "Addresses",
+      "sectionName": "Shipping Addresses",
       "statusDeletingAddress": "Deleting address %{name}...",
       "statusDeleteAddressComplete": "Address %{name} deleted.",
       "statusDeleteAddressFailed": "Unable to delete address %{name}.",
@@ -309,13 +311,13 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
-      "statusConnected": "Connected",      
+      "statusConnected": "Connected",
       "deleteConfirm": {
         "heading": "Are you sure?",
         "body": "The server configuration will be deleted. This will not delete the actual server.",
         "btnCancel": "Cancel",
         "btnDelete": "Yes, delete"
-      }      
+      }
     },
     "configurationForm": {
       "tabName": "New configuration",
@@ -369,7 +371,9 @@
     "shipTo": "Ship to:",
     "noShippingFound": "This listing does not ship to the selected country.",
     "localPickup": "This option is for local pickup only.",
-    "allCountries": "Any Country"
+    "allCountries": "Any Country",
+    "returnToStore": "Return to store",
+    "goToStore": "Go to store"
   },
   "listingCard": {
     "btnDetails": "Details",
