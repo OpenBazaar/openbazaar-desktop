@@ -8,7 +8,8 @@
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or #tag",
-  "testnet": "You are on the Testnet.",
+  "testnet": "Test Mode",
+  "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",

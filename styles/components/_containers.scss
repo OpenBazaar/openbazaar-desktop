@@ -175,18 +175,23 @@
   &:before {
     @extend .box;
     content: attr(data-tip);
-    bottom: -36px;
-    padding: $padSm;
     transform: translateX(-50%);
-    font-size: $tx5;
-    white-space: nowrap;
+    font-size: $tx5b;
+    line-height:1.4;
+    font-weight: 400;
+    white-space: normal;
+    width: 255px;
+    box-sizing: border-box;
+    padding: $padHg;
+    top: 100%;
+    margin-top: 8px;
   }
 
   &:after {
     content: '';
-    width: 10px;
-    height: 10px;
-    bottom: -20px;
+    width: 20px;
+    height: 20px;
+    bottom: -30px;
     transform: translate(-50%, -50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
   }
@@ -198,10 +203,15 @@
     position: absolute;
     left: 50%;
     transition: opacity 0.5s;
+    z-index: 1;
+    border-width: 1px;
+    border-style: solid;
   }
 
   &:hover:before,
-  &:hover:after {
+  &.openTooltip:before,
+  &:hover:after,
+  &.openToolTip:after {
     opacity: 1;
     pointer-events: auto;
   }

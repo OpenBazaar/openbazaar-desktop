@@ -284,12 +284,14 @@ input[type=range][class~="clrS"] {
 
 .toolTip {
   &:before {
-    background-color: $emphasis1;
-    color: $textOnEmph;
+    background-color: $primary;
+    border-color: $border;
+    color: $text;
     box-shadow: 0 1px 2px rgba(0,0,0,0.4);
   }
 
   &:after {
-    background-color: $emphasis1;
+    background-color: $primary;
+    border-color: $border;
   }
 }
