@@ -792,7 +792,7 @@
   "regions": {
     "ALL": "All",
     "EUROPEAN_UNION": "European Union",
-    "EUROPEAN_ECONOMIC_AREA": "European Economic Area",
+    "EUROPEAN_ECONOMIC_AREA": "European Economic Area"
   },
   "currencies": {
     "AED": "UAE Dirham",

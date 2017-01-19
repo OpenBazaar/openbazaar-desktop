@@ -1,6 +1,10 @@
 import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries, getCountryByDataName } from '../../../data/countries';
+import regions, {
+  getTranslatedRegions,
+  getIndexedRegions,
+} from '../../../data/regions';
 import ServiceMd from '../../../models/listing/Service';
 import app from '../../../app';
 import Service from './Service';
@@ -23,8 +27,25 @@ export default class extends BaseView {
 
     super(opts);
     this.options = opts;
-    this.select2CountryData = getTranslatedCountries(app.settings.get('language'))
-      .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
+
+    // get regions
+    this.select2CountryData = getTranslatedRegions(app.settings.get('language'))
+      .map(regionObj => ({ id: regionObj.id, text: regionObj.name }));
+
+    // now, we'll add in the countries
+    const select2countries = getTranslatedCountries(app.settings.get('language'))
+      .map(countryObj => ({
+        id: countryObj.dataName,
+        text: countryObj.name,
+      }));
+    this.select2CountryData = this.select2CountryData.concat(select2countries);
+
+    // let's index the country / region list for fast retrieval
+    // this.indexedCountries = this.select2CountryData.reduce((indexedObj, country) => {
+    //   indexedObj[country.id] = _.omit(country, 'id');
+    //   return indexedObj;
+    // }, {});
+
     this.services = this.model.get('services');
     this.serviceViews = [];
 
@@ -141,11 +162,31 @@ export default class extends BaseView {
       (this._$serviceSection = this.$('.js-serviceSection'));
   }
 
+  get $shipDestinationsSelect() {
+    return this._$shipDestinationsSelect ||
+      (this._$shipDestinationsSelect = this.$('.js-shipDestinationsSelect'));
+  }
+
   get $formFields() {
     return this._$formFields ||
       (this._$formFields =
         this.$('select[name], input[name], textarea[name]').filter((index, el) => (
           !$(el).parents('.js-serviceSection').length)));
+  }
+
+  get selectedRegions() {
+    // Returns a list of any regions that are fully represented
+    // in the country dropdown
+    const curSelectionVal = this.$shipDestinationSelect.val();
+    const selectedRegions = [];
+
+    regions.forEach(region => {
+      if (region.countries.every(elem => curSelectionVal.indexOf(elem.id) > -1)) {
+        selectedRegions.push(region.id);
+      }
+    });
+
+    return selectedRegions;
   }
 
   render() {
@@ -157,15 +198,16 @@ export default class extends BaseView {
         listPosition: this.options.listPosition,
         shippingTypes: this.model.shippingTypes,
         errors: this.model.validationError || {},
+        countrySelectOptions: this.select2CountryData,
         ...this.model.toJSON(),
-        regions: this.model.get('regions').map(region => {
-          const countryData = getCountryByDataName(region);
+        // regions: this.model.get('regions').map(region => {
+        //   const countryData = getCountryByDataName(region);
 
-          return {
-            text: countryData.name,
-            value: region,
-          };
-        }),
+        //   return {
+        //     text: countryData.name,
+        //     value: region,
+        //   };
+        // }),
       }));
 
       this.$(`#shipOptionType_${this.model.cid}`).select2({
@@ -184,11 +226,76 @@ export default class extends BaseView {
         // add tags not in the list
         // tags: true,
         dropdownParent: this.$(`#shipDestinationsDropdown_${this.model.cid}`),
-        data: this.select2CountryData,
+        // escapeMarkup: function(markup) {
+        //   return markup;
+        // },
+        // templateSelection: (data) => {
+        //   // `<option value="${option.id}" ${selected ? 'selected="selected"' : ''}>${option.text}</option>`
+        //   return $('<span />').text('moonshine');
+        // },
       }).on('change', () => {
         this.$shipDestinationsPlaceholder[
           this.$shipDestinationSelect.val().length ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
+      }).on('select2:selecting', (e) => {
+        // manage regions
+        const region = getIndexedRegions()[e.params.args.data.id];
+
+        console.log('moo');
+        window.moo = region;
+
+        if (region) {
+          console.log('sugar: ' + (e.params.args.data.id));
+          window.sugar = this.selectedRegions;
+          // adding or removing a region
+
+          if (this.selectedRegions.indexOf(e.params.args.data.id) !== -1) {
+            // the region is fully represented, so we'll remove it
+            $(e.target).val(
+              $(e.target).val()
+                .filter(selectedCountry =>
+                  (region.countries.indexOf(selectedCountry) === -1))
+            ).trigger('change');
+          } else {
+            // the region is not fully represented, so we'll add it
+            $(e.target).val(
+              $(e.target).val()
+                .concat(region.countries)
+            ).trigger('change');
+          }
+        }
+
+        // make sure any fully represented regions are in
+        // the dropdown
+        setTimeout(() => {
+          const regionsToAdd = [];
+
+          this.selectedRegions.forEach(selectedRegion => {
+            if ($(e.target).val().indexOf(selectedRegion) === -1) {
+              regionsToAdd.push(selectedRegion);
+            }
+          });
+
+          if (regionsToAdd.length) {
+            $(e.target).val((
+              $(e.target).val().concat(regionsToAdd)
+            )).trigger('change');
+          }
+        });
+      })
+      .on('select2:unselecting', (e) => {
+        // manage regions
+        const region = getIndexedRegions()[e.params.args.data.id];
+
+        console.log('hippo');
+
+        if (region) {
+          $(e.target).val(
+            $(e.target).val()
+              .filter(country =>
+                region.countries.indexOf(country) === -1)
+          ).trigger('change');
+        }
       });
 
       this.$shipDestinationsPlaceholder[
@@ -212,6 +319,7 @@ export default class extends BaseView {
       this._$shipDestinationDropdown = null;
       this._$formFields = null;
       this._$serviceSection = null;
+      this._$shipDestinationsSelect = null;
     });
 
     return this;

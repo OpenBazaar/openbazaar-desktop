@@ -2,55 +2,72 @@ import _ from 'underscore';
 import app from '../app';
 import countries from './countries';
 
+const euCountries = [
+  'AUSTRIA',
+  'BELGIUM',
+  'BULGARIA',
+  'CROATIA',
+  'CYPRUS',
+  'CZECH_REPUBLIC',
+  'DENMARK',
+  'ESTONIA',
+  'FINLAND',
+  'FRANCE',
+  'GERMANY',
+  'GREECE',
+  'HUNGARY',
+  'IRELAND',
+  'ITALY',
+  'LATVIA',
+  'LITHUANIA',
+  'LUXEMBOURG',
+  'MALTA',
+  'NETHERLANDS',
+  'POLAND',
+  'PORTUGAL',
+  'ROMANIA',
+  'SLOVAKIA',
+  'SLOVENIA',
+  'SPAIN',
+  'SWEDEN',
+  'UNITED_KINGDOM',
+];
+
+
 const regions = [
   {
+    id: 'ALL',
+    countries: [...(countries.map(country => country.dataName))],
+  },
+  {
     id: 'EUROPEAN_UNION',
-    countries: [
-      'AUSTRIA',
-      'BELGIUM',
-      'BULGARIA',
-      'CROATIA',
-      'CYPRUS',
-      'CZECH_REPUBLIC',
-      'DENMARK',
-      'ESTONIA',
-      'FINLAND',
-      'FRANCE',
-      'GERMANY',
-      'GREECE',
-      'HUNGARY',
-      'IRELAND',
-      'ITALY',
-      'LATVIA',
-      'LITHUANIA',
-      'LUXEMBOURG',
-      'MALTA',
-      'NETHERLANDS',
-      'POLAND',
-      'PORTUGAL',
-      'ROMANIA',
-      'SLOVAKIA',
-      'SLOVENIA',
-      'SPAIN',
-      'SWEDEN',
-      'UNITED_KINGDOM',
-    ]
+    countries: euCountries,
   },
   {
     id: 'EUROPEAN_ECONOMIC_AREA',
     countries: [
-    'ICELAND',
-    'LIECHTENSTEIN',
-    'NORWAY',
-  ],
+      ...euCountries,
+      'ICELAND',
+      'LIECHTENSTEIN',
+      'NORWAY',
+    ],
+  },
 ];
 
-regions.EUROPEAN_ECONOMIC_AREA.countries =
-  regions.EUROPEAN_UNION
-    .countries
-    .concat(regions.countries.EUROPEAN_ECONOMIC_AREA);
+export default regions;
 
-regions.ALL.countries = countries.map(country => country.dataName);
+let indexedRegions;
+
+export function getIndexedRegions() {
+  if (indexedRegions) return indexedRegions;
+
+  indexedRegions = regions.reduce((indexedObj, region) => {
+    indexedObj[region.id] = _.omit(region, 'id');
+    return indexedObj;
+  }, {});
+
+  return indexedRegions;
+}
 
 function getTranslatedRegions(lang, sort = true) {
   if (!lang) {
@@ -58,13 +75,13 @@ function getTranslatedRegions(lang, sort = true) {
       ' should be returned in.');
   }
 
-  let translated = regions.map(region => {
+  let translated = regions.map(region => ({
     ...region,
     name: app.polyglot.t(`regions.${region.id}`),
-  });
+  }));
 
   if (sort) {
-    translated = translated.sort((a.name, b) => a.localeCompare(b.name, lang));
+    translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));
   }
 
   return translated;
@@ -75,4 +92,3 @@ const memoizedGetTranslatedRegions =
 
 export { memoizedGetTranslatedRegions as getTranslatedRegions };
 
-export default regions;

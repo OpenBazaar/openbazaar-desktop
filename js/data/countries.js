@@ -1484,7 +1484,7 @@ export default countries;
 
 let indexedCountries;
 
-function getIndexedCountries() {
+export function getIndexedCountries() {
   if (indexedCountries) return indexedCountries;
 
   indexedCountries = countries.reduce((indexedObj, country) => {

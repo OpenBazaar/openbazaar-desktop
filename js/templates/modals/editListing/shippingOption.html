@@ -10,10 +10,15 @@
         <hr class="clrBr rowMd" />
         <label for="<%= `shipDestinationsSelect_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
         <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
-        <div class="select2TagsWrap showDropdown">
+        <div class="select2TagsWrap showDropdown js-shipDestinationsSelect">
           <select id="<%= `shipDestinationsSelect_${ob.cid}` %>" multiple name="regions" class="clrBr clrP clrSh2 select2Tags">
-            <% ob.regions.forEach(region =>
-                print(`<option value="${region.value}" selected="selected">${region.text}</option>`)) %>          
+            <%
+              ob.countrySelectOptions.forEach(option => {
+                const selected = ob.regions.indexOf(option.id) > -1;
+
+                print(`<option value="${option.id}" ${selected ? 'selected="selected"' : ''}>${option.text}</option>`);
+              });
+            %>
           </select>
           <div id="<%= `shipDestinationsPlaceholder_${ob.cid}` %>" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.shippingOptions.regionsPlaceholder') %></div>
           <div id="<%= `shipDestinationsDropdown_${ob.cid}` %>" class="tagsDropdown"></div>      
