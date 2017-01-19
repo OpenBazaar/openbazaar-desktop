@@ -23,6 +23,7 @@ textarea,
 .trumbowyg-editor {
   border: none;
   outline: none;
+  outline-color: transparent;
   background: none;
   color: inherit;
   border-radius: 3px;
@@ -51,6 +52,7 @@ select {
 }
 
 input[type="text"],
+input[type="number"],
 input[type="password"],
 input[type="email"],
 textarea,
@@ -64,6 +66,35 @@ textarea,
   box-sizing: border-box;
   padding: 0 $pad;
   line-height: 40px;
+}
+
+input[type="number"].noSpin::-webkit-outer-spin-button,
+input[type="number"].noSpin::-webkit-inner-spin-button {
+  display:none;
+}
+
+.inputPercentWrapper {
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+
+  input {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    width: calc(100% - 1.5em);
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      display:none;
+    }
+  }
+
+  &:after {
+    content: "%";
+    display: inline-block;
+  }
 }
 
 .select2-container--default.select2-container--focus .select2-selection {
@@ -170,4 +201,3 @@ input[type="checkbox"] {
     content: "\f373";
   }
 }
-

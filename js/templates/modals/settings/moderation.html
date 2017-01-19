@@ -41,6 +41,34 @@
         </div>
         <div class="flexRow">
           <div class="col3">
+            <label class="required" for="moderationFeeType"><%= ob.polyT('settings.moderationTab.feeTypeAmount') %></label>
+          </div>
+          <div class="col9">
+            <div class="flexRow gutterH rowTn">
+              <div class="col5">
+                <select id="moderationFeeType" name="modInfo.fee.feeType" class="clrBr clrP clrSh2">
+                  <option value="PERCENTAGE"><%= ob.polyT('settings.moderationTab.percentage') %></option>
+                  <option value="FIXED"><%= ob.polyT('settings.moderationTab.fixed') %></option>
+                  <option value="FIXED_PLUS_PERCENTAGE"><%= ob.polyT('settings.moderationTab.fixedPlusPercentage') %></option>
+                </select>
+              </div>
+              <div class="col3">
+                <div class="inputPercentWrapper clrBr clrSh2">
+                  <input type="number">
+                </div>
+              </div>
+              <div class="col3">
+                <input type="number" class="noSpin clrBr clrSh2">
+              </div>
+            </div>
+            <div class="tx6 txPlaceholder">
+              <%= ob.polyT('settings.moderationTab.feeTypeHelper') %>
+            </div>
+          </div>
+
+        </div>
+        <div class="flexRow">
+          <div class="col3">
             <label for="settingsModeratorDescription" class="required"><%= ob.polyT('settings.moderationTab.description') %></label>
           </div>
           <div class="col9">

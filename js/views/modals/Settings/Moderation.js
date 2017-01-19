@@ -139,6 +139,10 @@ export default class extends baseVw {
         tags: true,
       });
 
+      this.$('#moderationFeeType').select2({
+        minimumResultsForSearch: Infinity,
+      });
+
       this.$formFields = this.$('select[name], input[name], textarea[name]');
       this._$btnSave = null;
     });

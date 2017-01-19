@@ -240,6 +240,11 @@
         "percentagePlusFixed": "Fixed Fee Plus Percentage"
       },
       "pricePerDisputeHelper": "The amount you charge to review and close a dispute",
+      "feeTypeAmount": "Price per dispute",
+      "fixed": "Fixed",
+      "percentage": "Percentage",
+      "fixedPlusPercentage": "Fixed Plus Percentage",
+      "feeTypeHelper": "The amount you charge to review and close a dispute.",
       "description": "Description",
       "descriptionHelper": "Add your description (e.g. What is your strategy for reviewing cases? What is your expected response time? What is your schedule of operation? During what hours are you available each day? etc.)",
       "terms": "Terms",
