@@ -1505,7 +1505,7 @@ export function getCountryByDataName(dataName) {
 
 function getTranslatedCountries(lang, sort = true) {
   if (!lang) {
-    throw new Error('Please provide the language the translated couuntries' +
+    throw new Error('Please provide the language the translated countries' +
       ' should be returned in.');
   }
 
