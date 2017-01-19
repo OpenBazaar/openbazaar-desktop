@@ -374,6 +374,9 @@ function start() {
     app.profile = new Profile({ id: data.guid });
 
     app.settings = new Settings();
+    // If the server is running testnet, set that here
+    app.testnet = data.testnet; // placeholder for later when we need this data for purchases
+
     // We'll default our server language to whatever is stored locally.
     app.settings.set('language', app.localSettings.get('language'));
 

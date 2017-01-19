@@ -11,6 +11,16 @@
       line-height: 1em;
     }
 
+    .barBtn {
+      height: 28px;
+      padding: 9px;
+    }
+
+    .pageNavCenter  {
+      flex-grow: 1;
+      padding-right: $pad;
+    }
+
     .addressBar {
       box-sizing: border-box;
       padding: $padSm $pad;
@@ -30,6 +40,11 @@
       border-width: 2px;
       border-style: solid;
       margin: 5px 0;
+    }
+
+    #testnetFlag {
+      font-size: $tx6;
+      white-space: nowrap;
     }
   }
 

@@ -8,6 +8,8 @@
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or #tag",
+  "testnet": "Test Mode",
+  "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -306,13 +308,13 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
-      "statusConnected": "Connected",      
+      "statusConnected": "Connected",
       "deleteConfirm": {
         "heading": "Are you sure?",
         "body": "The server configuration will be deleted. This will not delete the actual server.",
         "btnCancel": "Cancel",
         "btnDelete": "Yes, delete"
-      }      
+      }
     },
     "configurationForm": {
       "tabName": "New configuration",

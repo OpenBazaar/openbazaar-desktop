@@ -49,15 +49,15 @@
 .rowDivV {
   //a vertical divider. Use when you need to separate things without adding a border to one of them
   //use a color class for the background color
-  //only works inside of a flexRow, align-items sets the height
   width: 1px;
+  height: 100%;
 }
 
 .rowDivH {
   //a horizontal divider. Use when you need to separate vertical elements without adding a border to one of them
   //use a color class for the background color
-  //only works inside of a flexRow, align-items sets the width
   height:1px;
+  width: 100%;
 }
 
 .flexCol {
@@ -439,3 +439,4 @@
 .posF {
   position: fixed;
 }
+

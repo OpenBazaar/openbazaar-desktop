@@ -22,17 +22,24 @@
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
-      <div class="flexExpand">
-        <div class="flexVCent">
+      <div class="pageNavCenter">
+        <div class="flexVCent gutterHSm">
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar clrBr4"
                    placeholder="<%= ob.polyT('addressBarPlaceholder') %>" value="<%= ob.addressBarText %>" />
           </div>
+          <% if (ob.testnet) { %>
+            <div id="testnetFlag" class="btn barBtn toolTip clrP clrBr" data-tip="<%= ob.polyT('testnetTooltip') %>">
+              <%= ob.polyT('testnet') %>
+            </div>
+          <% } %>
+          <a class="btn barBtn clrP clrBr ion-navicon-round"></a>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box">
+          <a class="iconBtn ion-eye"></a>
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
           <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
           <nav class="navListWrapper foldDown js-navList js-navPopMenu">

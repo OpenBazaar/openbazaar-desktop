@@ -281,3 +281,17 @@ input[type=range][class~="clrS"] {
     border-color: $border3;
   }
 }
+
+.toolTip {
+  &:before {
+    background-color: $primary;
+    border-color: $border;
+    color: $text;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  &:after {
+    background-color: $primary;
+    border-color: $border;
+  }
+}
