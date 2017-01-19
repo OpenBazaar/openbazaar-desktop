@@ -49,6 +49,9 @@
       "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
     }
   },
+  "pageNav": {
+    "notConnectedMenuItem": "Not Connected"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",

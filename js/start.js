@@ -66,7 +66,13 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   .open();
 });
 
-app.pageNav = new PageNav();
+// Instantiating our Server Configs collection now since the page nav
+// utilizes it. We'll fetch it later on.
+app.serverConfigs = new ServerConfigs();
+
+app.pageNav = new PageNav({
+  serverConfigs: app.serverConfigs,
+});
 $('#pageNavContainer').append(app.pageNav.render().el);
 
 app.router = new ObRouter();
@@ -492,7 +498,7 @@ const sendMainActiveServer = (activeServer) => {
   });
 };
 
-app.serverConfigs = new ServerConfigs();
+// Alert the main process if we are changing the active server.
 app.serverConfigs.on('activeServerChange', (activeServer) =>
   sendMainActiveServer(activeServer));
 

@@ -7,13 +7,13 @@ export default class extends baseVw {
   constructor(options = {}) {
     super(options);
 
-    this.title = this.model.isNew() ?
-      app.polyglot.t('connectionManagement.configurationForm.tabName') :
-      this.model.get('name');
-
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
+
+    this.title = this.model.isNew() ?
+      app.polyglot.t('connectionManagement.configurationForm.tabName') :
+      this.model.get('name');
 
     this.listenTo(this.model, 'change:name', () => {
       const newName = this.model.get('name');
