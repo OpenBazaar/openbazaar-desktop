@@ -147,7 +147,9 @@
             }
           }
 
-          
+          .select2-selection__choice[title*=REGION_] {
+            display: none;
+          }
         }
       }
     }
