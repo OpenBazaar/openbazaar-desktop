@@ -1,7 +1,7 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import is from 'is_js';
-import integerToDecimal from '../../utils/currency';
+import { integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {

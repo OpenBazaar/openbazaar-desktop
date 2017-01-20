@@ -154,6 +154,7 @@ export default class extends baseVw {
         isModerator: this.profile.get('moderator'),
         languageList: languages,
         defaultLanguage: app.settings.get('language'),
+        defaultCurrency: app.settings.get('localCurrency'),
         currencyList: this.currencyList,
       }));
 
@@ -165,6 +166,8 @@ export default class extends baseVw {
       this.$('#moderationFeeType').select2({
         minimumResultsForSearch: Infinity,
       });
+
+      this.$('#moderationCurrency').select2();
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
       this._$btnSave = null;

@@ -4,7 +4,7 @@ import is from 'is_js';
 import SocialAccounts from '../../collections/SocialAccounts';
 import Image from './Image';
 import Moderator from './Moderator';
-import decimalToInteger from '../../utils/currency';
+import { decimalToInteger } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
@@ -171,14 +171,15 @@ export default class extends BaseModel {
       if (method !== 'delete') {
         // convert the percentage field
         if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.percentage) {
-          let percentage = options.attrs.modInfo.fee.percentage;
-          percentage = decimalToInteger(Number(percentage));
+          const percentage = Number(options.attrs.modInfo.fee.percentage);
+          options.attrs.modInfo.fee.percentage = decimalToInteger(percentage);
         }
         // convert the amount field
         if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.fixedFee &&
           options.attrs.modInfo.fee.fixedFee.amount) {
-          let amount = Number(options.attrs.modInfo.fee.fixedFee.amount);
-          amount = decimalToInteger(amount, options.attrs.modInfo.fee.fixedFee.currencyCode);
+          const amount = Number(options.attrs.modInfo.fee.fixedFee.amount);
+          const isBTC = options.attrs.modInfo.fee.fixedFee.currencyCode === 'BTC';
+          options.attrs.modInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
         }
       }
     }
