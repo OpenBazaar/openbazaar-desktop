@@ -1,6 +1,6 @@
 import { guid } from '../utils';
 import { Collection } from 'backbone';
-import SocialAccount from '../models/SocialAccount';
+import SocialAccount from '../models/profile/SocialAccount';
 
 export default class extends Collection {
   model(attrs, options) {

@@ -16,6 +16,9 @@ export default class extends BaseModel {
     return {
       termsAndConditions: '',
       refundPolicy: '',
+      item: new Item(),
+      metadata: new Metadata(),
+      shippingOptions: new ShippingOptions(),
     };
   }
 

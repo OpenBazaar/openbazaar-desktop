@@ -3,7 +3,7 @@ import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
-import Profile from '../models/Profile';
+import Profile from '../models/profile/Profile';
 
 export default class extends BaseVw {
   constructor(options = {}) {
