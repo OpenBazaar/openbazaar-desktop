@@ -217,7 +217,6 @@ export default class extends BaseView {
         // add tags not in the list
         // tags: true,
         dropdownParent: this.$(`#shipDestinationsDropdown_${this.model.cid}`),
-        // escapeMarkup: (text) => text,
         templateSelection: (data) => {
           const text = data.text.startsWith('REGION_') ?
             data.text.slice(7) : data.text;
