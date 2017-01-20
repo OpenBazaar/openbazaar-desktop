@@ -1,6 +1,7 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import is from 'is_js';
+import integerToDecimal from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
@@ -8,6 +9,10 @@ export default class extends BaseModel {
       currencyCode: 'BTC',
       amount: 0,
     };
+  }
+
+  parse(response) {
+    response.amount = integerToDecimal(response.amound, response.currencyCode === 'BTC');
   }
 
   validate(attrs) {
@@ -19,12 +24,12 @@ export default class extends BaseModel {
 
     if (is.not.string(attrs.currencyCode)) {
       // the user should never see this error
-      addError('feeType', app.polyglot.t('settings.moderationTab.errors.fixedNoCurrency'));
+      addError('feeTypeNoCurrency', app.polyglot.t('settings.moderationTab.errors.noCurrency'));
     }
 
-    if (is.not.number(attrs.amount)) {
+    if (is.not.existy(attrs.amount)) {
       // the user should never see this error
-      addError('feeType', app.polyglot.t('settings.moderationTab.errors.fixedNoAmount'));
+      addError('feeTypeNoAmount', app.polyglot.t('settings.moderationTab.errors.noAmount'));
     }
 
     if (Object.keys(errObj).length) return errObj;

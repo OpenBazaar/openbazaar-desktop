@@ -68,10 +68,12 @@ textarea,
   line-height: 40px;
 }
 
-input[type="number"].noSpin::-webkit-outer-spin-button,
+//input[type="number"].noSpin::-webkit-outer-spin-button,
 input[type="number"].noSpin::-webkit-inner-spin-button {
   display:none;
 }
+
+// TODO: style the spin buttons on normal number inputs
 
 .inputPercentWrapper {
   border-radius: 3px;

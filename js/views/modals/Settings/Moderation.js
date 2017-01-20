@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import $ from 'jquery';
 import 'select2';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -6,6 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
 import languages from '../../../data/languages';
+import { getTranslatedCurrencies } from '../../../data/currencies';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -22,6 +24,8 @@ export default class extends baseVw {
       this.moderator = new Moderator();
       this.profile.set('modInfo', this.moderator);
     }
+
+    this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
 
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({
@@ -43,6 +47,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-save': 'save',
+      'change #moderationFeeType': 'changeFeeType',
     };
   }
 
@@ -116,9 +121,26 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  changeFeeType(e) {
+    const feeType = $(e.target).val();
+
+    this.$feePercentageInput.toggleClass('visuallyHidden', feeType === 'FIXED');
+    this.$feeFixedInput.toggleClass('visuallyHidden', feeType === 'PERCENTAGE');
+  }
+
   get $btnSave() {
     return this._$btnSave ||
       (this._$btnSave = this.$('.js-save'));
+  }
+
+  get $feePercentageInput() {
+    return this._$feePercetageInput ||
+      (this._$feePercentageInput = this.$('.js-feePercentageInput'));
+  }
+
+  get $feeFixedInput() {
+    return this._$feeFixedInput ||
+      (this._$feeFixedInput = this.$('.js-feeFixedInput'));
   }
 
   render() {
@@ -127,11 +149,12 @@ export default class extends baseVw {
 
 
       this.$el.html(t({
-        errors: moderator.validationError || {},
+        errors: this.profile.validationError || {},
         ...moderator.toJSON(),
         isModerator: this.profile.get('moderator'),
         languageList: languages,
         defaultLanguage: app.settings.get('language'),
+        currencyList: this.currencyList,
       }));
 
       this.$('#moderationLanguageSelect').select2({
@@ -145,6 +168,8 @@ export default class extends baseVw {
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
       this._$btnSave = null;
+      this._$feePercentageInput = null;
+      this._$feeFixedInput = null;
     });
 
     return this;

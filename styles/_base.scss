@@ -234,6 +234,25 @@ ul, ol {
   display: none;
 }
 
+#ov1 .invisible {
+  // use when an element is not visible but should occupy space in the DOM
+  visibility: hidden;
+}
+
+#ov1 .visuallyHidden {
+  // use when an element most take no room in the DOM, but still be available for forms and JS
+  // from the HTML5 Boilerplate https://github.com/h5bp/html5-boilerplate
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap; /* 1 */
+}
+
 #ov1 .disabled {
   @include disabled;
 }

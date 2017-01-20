@@ -4,6 +4,7 @@ import is from 'is_js';
 import SocialAccounts from '../../collections/SocialAccounts';
 import Image from './Image';
 import Moderator from './Moderator';
+import decimalToInteger from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
@@ -166,6 +167,20 @@ export default class extends BaseModel {
       delete options.attrs.followingCount;
       delete options.attrs.listingCount;
       delete options.attrs.lastModified;
+
+      if (method !== 'delete') {
+        // convert the percentage field
+        if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.percentage) {
+          let percentage = options.attrs.modInfo.fee.percentage;
+          percentage = decimalToInteger(Number(percentage));
+        }
+        // convert the amount field
+        if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.fixedFee &&
+          options.attrs.modInfo.fee.fixedFee.amount) {
+          let amount = Number(options.attrs.modInfo.fee.fixedFee.amount);
+          amount = decimalToInteger(amount, options.attrs.modInfo.fee.fixedFee.currencyCode);
+        }
+      }
     }
 
     if (method === 'read') {

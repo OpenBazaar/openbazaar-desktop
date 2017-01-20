@@ -44,22 +44,40 @@
             <label class="required" for="moderationFeeType"><%= ob.polyT('settings.moderationTab.feeTypeAmount') %></label>
           </div>
           <div class="col9">
+            <% if (ob.errors['modInfo.fee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeType'] })) %>
+            <% if (ob.errors['modInfo.fee.feeTypeNoFee']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeTypeNoFee'] })) %>
+            <% if (ob.errors['modInfo.fee.feeTypeNoPercent']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeTypeNoPercent'] })) %>
+            <% if (ob.errors['modInfo.fee.fixedFee.feeTypeNoCurrency']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.fixedFee.feeTypeNoCurrency'] })) %>
+            <% if (ob.errors['modInfo.fee.fixedFee.feeTypeNoAmount']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.fixedFee.feeTypeNoAmount'] })) %>
             <div class="flexRow gutterH rowTn">
               <div class="col5">
                 <select id="moderationFeeType" name="modInfo.fee.feeType" class="clrBr clrP clrSh2">
-                  <option value="PERCENTAGE"><%= ob.polyT('settings.moderationTab.percentage') %></option>
-                  <option value="FIXED"><%= ob.polyT('settings.moderationTab.fixed') %></option>
-                  <option value="FIXED_PLUS_PERCENTAGE"><%= ob.polyT('settings.moderationTab.fixedPlusPercentage') %></option>
+                  <option value="PERCENTAGE" <% if(!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) print('selected') %>>
+                    <%= ob.polyT('settings.moderationTab.percentage') %>
+                  </option>
+                  <option value="FIXED" <% if(ob.fee && ob.fee.feeType === 'FIXED') print('selected') %>>
+                    <%= ob.polyT('settings.moderationTab.fixed') %>
+                  </option>
+                  <option value="FIXED_PLUS_PERCENTAGE" <% if(ob.fee && ob.fee.feeType === 'FIXED_PLUS_PERCENTAGE') print('selected') %>>
+                    <%= ob.polyT('settings.moderationTab.fixedPlusPercentage') %>
+                  </option>
                 </select>
               </div>
-              <div class="col3">
-                <div class="inputPercentWrapper clrBr clrSh2">
-                  <input type="number">
+                <div class="col3 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
+                  <div class="inputPercentWrapper clrBr clrSh2">
+                    <% var perc = ob.fee.percentage || 0; %>
+                    <input type="number" min="0" step="0.1" name="modInfo.fee.percentage" value="<%= perc %>">
+                  </div>
                 </div>
-              </div>
-              <div class="col3">
-                <input type="number" class="noSpin clrBr clrSh2">
-              </div>
+                <div class="col3 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
+                  <% var amt = ob.fee.fixedFee.amount || 0; %>
+                  <input type="number" min="0" name="modInfo.fee.fixedFee.amount" class="noSpin clrBr clrSh2" value="<%= amt %>">
+                </div>
+
+
+
+
+
             </div>
             <div class="tx6 txPlaceholder">
               <%= ob.polyT('settings.moderationTab.feeTypeHelper') %>
@@ -94,9 +112,7 @@
           <div class="col9">
             <% if (ob.errors.languages) print(ob.formErrorTmpl({ errors: ob.errors.languages })) %>
             <div class="select2TagsWrap">
-              <% console.log(ob.languages.length) %>
               <% var languages = ob.languages.length ? ob.languages : [ob.defaultLanguage] %>
-              <% console.log(languages) %>
               <select id="moderationLanguageSelect" multiple name="modInfo.languages" class="clrBr clrP clrSh2 select2Tags">
                 <% ob.languageList.forEach((lang) => { %>
                 <option value="<%= lang.code %>" <% if (languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>

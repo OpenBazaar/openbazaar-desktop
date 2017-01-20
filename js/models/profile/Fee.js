@@ -7,6 +7,7 @@ export default class extends BaseModel {
     return {
       feeType: 'PERCENTAGE',
       percentage: 0,
+      fixedFee: new FixedFee(),
     };
   }
 
@@ -17,7 +18,7 @@ export default class extends BaseModel {
   }
 
   validate(attrs) {
-    const errObj = {};
+    const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
@@ -27,14 +28,9 @@ export default class extends BaseModel {
       addError('feeType', app.polyglot.t('settings.moderationTab.errors.noFeeType'));
     }
 
-    if ((attrs.feeType === 'FIXED' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
-      !attrs.fixedFee) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.errors.fixedNofee'));
-    }
-
     if ((attrs.feeType === 'PERCENTAGE' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
       !attrs.percentage) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.errors.percentageNoPercentage'));
+      addError('feeTypeNoPercent', app.polyglot.t('settings.moderationTab.errors.noPercentage'));
     }
 
     if (Object.keys(errObj).length) return errObj;
