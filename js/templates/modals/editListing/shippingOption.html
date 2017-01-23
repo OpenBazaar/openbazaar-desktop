@@ -5,25 +5,29 @@
       >
       <a class="clrBr clrP clrSh2 margRSm btn js-removeShippingOption"><%= ob.polyT('editListing.shippingOptions.btnDeleteShippingOption') %></a>
     </div>
-    <div class="flexRow padTop0">
-      <div class="col12">
-        <hr class="clrBr rowMd" />
-        <label for="<%= `shipDestinationsSelect_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>
-        <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
-        <div class="select2TagsWrap showDropdown js-shipDestinationsSelect">
-          <select id="<%= `shipDestinationsSelect_${ob.cid}` %>" multiple name="regions" class="clrBr clrP clrSh2 select2Tags">
-            <%
-              ob.countrySelectOptions.forEach(option => {
-                const selected = ob.regions.indexOf(option.id) > -1;
-
-                print(`<option value="${option.id}" ${selected ? 'selected="selected"' : ''}>${option.text}</option>`);
-              });
-            %>
-          </select>
-          <div id="<%= `shipDestinationsPlaceholder_${ob.cid}` %>" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.shippingOptions.regionsPlaceholder') %></div>
-          <div id="<%= `shipDestinationsDropdown_${ob.cid}` %>" class="tagsDropdown"></div>      
+      <hr class="clrBr rowMd" />
+      <div class="flexRow">
+        <label for="<%= `shipDestinationsSelect_${ob.cid}` %>" class="required"><%= ob.polyT('editListing.shippingOptions.shippingDestinations') %></label>        
+        <div class="flexExpand">
+          <div class="flexHRight flexVCent">
+            <a class="js-clearAllShipDest tx6"><%= 
+            ob.polyT('editListing.shippingOptions.clearAll') %></a>
+          </div>
         </div>
       </div>
+      <% if (ob.errors['regions']) print(ob.formErrorTmpl({ errors: ob.errors['regions'] })) %>
+      <div class="select2TagsWrap showDropdown js-shipDestinationsSelect">
+        <select id="<%= `shipDestinationsSelect_${ob.cid}` %>" multiple name="regions" class="clrBr clrP clrSh2 select2Tags">
+          <%
+            ob.countrySelectOptions.forEach(option => {
+              const selected = ob.regions.indexOf(option.id) > -1;
+
+              print(`<option value="${option.id}" ${selected ? 'selected="selected"' : ''}>${option.text}</option>`);
+            });
+          %>
+        </select>
+        <div id="<%= `shipDestinationsPlaceholder_${ob.cid}` %>" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.shippingOptions.regionsPlaceholder') %></div>
+        <div id="<%= `shipDestinationsDropdown_${ob.cid}` %>" class="tagsDropdown"></div>
     </div>
     <div class="flexRow gutterH">
       <div class="col6 simpleFlexCol">

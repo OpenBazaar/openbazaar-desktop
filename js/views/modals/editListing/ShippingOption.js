@@ -66,6 +66,7 @@ export default class extends BaseView {
     const events = {
       'click .js-removeShippingOption': 'onClickRemoveShippingOption',
       'click .js-btnAddService': 'onClickAddService',
+      'click .js-clearAllShipDest': 'onClickClearShipDest',
     };
 
     events[`change #shipOptionType_${this.model.cid}`] = 'onChangeShippingType';
@@ -84,6 +85,13 @@ export default class extends BaseView {
   onClickAddService() {
     this.services
       .push(new ServiceMd());
+  }
+
+  onClickClearShipDest() {
+    this.$shipDestinationsSelect
+      .find('select')
+      .val(null)
+      .trigger('change', true);
   }
 
   onChangeShippingType(e) {
