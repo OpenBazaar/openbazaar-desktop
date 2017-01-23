@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import 'select2';
+import '../../../lib/select2';
 import is from 'is_js';
 import '../../../utils/velocity';
 import 'jquery-zoom';

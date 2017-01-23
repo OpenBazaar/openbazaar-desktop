@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
-import 'select2';
+import '../../../lib/select2';
 import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
