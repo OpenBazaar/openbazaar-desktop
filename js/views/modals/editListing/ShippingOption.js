@@ -129,11 +129,23 @@ export default class extends BaseView {
     return this.options.listPosition;
   }
 
+  getFormData(fields = this.$formFields) {
+    const formData = super.getFormData(fields);
+    const indexedRegions = getIndexedRegions();
+
+    // Strip out any region elements from shipping destinations
+    // drop down. The individual countries will remain.
+    formData.regions = formData.regions
+      .filter(region => !indexedRegions[region]);
+
+    return formData;
+  }
+
   // Sets the model based on the current data in the UI.
   setModelData() {
     // set the data for our nested Services views
     this.serviceViews.forEach((serviceVw) => serviceVw.setModelData());
-    this.model.set(this.getFormData(this.$formFields));
+    this.model.set(this.getFormData());
   }
 
   createServiceView(opts) {
