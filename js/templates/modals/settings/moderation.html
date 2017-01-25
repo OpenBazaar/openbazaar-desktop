@@ -74,13 +74,14 @@
                 <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
                   <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
                      var ccode = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
+                     amt =  amt ? ob.formatPrice(amt, ccode === 'BTC') : 0;
                   %>
                   <!-- use text and set max length so excess decimals can't be entered.-->
                   <input type="text"
                          maxlength="5"
                          class="noSpin clrBr clrSh2"
                          name="modInfo.fee.fixedFee.amount"
-                         value="<%= ob.formatPrice(amt, ccode === 'BTC') %>"
+                         value="<%= amt %>"
                          data-var-type="number">
                 </div>
               <div class="col3 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">

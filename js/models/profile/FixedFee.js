@@ -1,6 +1,5 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
-import is from 'is_js';
 import { integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
@@ -22,13 +21,11 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.string(attrs.currencyCode)) {
-      // the user should never see this error
+    if (!attrs.currencyCode || typeof attrs.currencyCode !== 'string') {
       addError('feeTypeNoCurrency', app.polyglot.t('settings.moderationTab.errors.noCurrency'));
     }
 
-    if (is.not.existy(attrs.amount)) {
-      // the user should never see this error
+    if (typeof attrs.amount !== 'number' || attrs.amount < 0) {
       addError('feeTypeNoAmount', app.polyglot.t('settings.moderationTab.errors.noAmount'));
     }
 

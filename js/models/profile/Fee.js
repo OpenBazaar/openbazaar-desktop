@@ -45,8 +45,8 @@ export default class extends BaseModel {
           app.polyglot.t('settings.moderationTab.errors.percentageHigh'));
       }
 
-      // are there too many decimals?
-      // move the decimal 2 places, ie 1.01 = 101.0
+      // are there too many decimals? There should be 2 decimal places maximum.
+      // move the decimal 2 places, ie 1.01 = 101.0, check if any are after the decimal.
       let decimals = attrs.percentage * 100;
       const integers = Math.trunc(decimals);
       decimals = decimals - integers;
