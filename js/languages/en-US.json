@@ -121,6 +121,13 @@
       "helperTranslations": "Help translate OpenBazaar on %{helperTranslationsLink}",
       "helperTranslationsLink": "Transifex",
       "sectionName": "General",
+      "bitcoinUnit": "Bitcoin Unit",
+      "bitcoinUnitTypes": {
+        "BTC": "BTC",
+        "MBTC": "mBTC",
+        "UBTC": "BTC",
+        "SATOSHI": "Satoshi (sat)"
+      },
       "statusSaving": "Saving general settings...",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
