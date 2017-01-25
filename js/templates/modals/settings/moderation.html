@@ -104,7 +104,7 @@
           </div>
           <div class="col9">
             <% if (ob.errors['modInfo.description']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.description'] })) %>
-            <textarea rows="3" maxlength="300" name="modInfo.description" id="settingsModeratorDescription"
+            <textarea rows="3" maxlength="<%= ob.max.description %>" name="modInfo.description" id="settingsModeratorDescription"
                       class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.descriptionHelper') %>"><%= ob.description %></textarea>
           </div>
         </div>
@@ -114,7 +114,7 @@
           </div>
           <div class="col9">
             <% if (ob.errors['modInfo.terms']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.terms'] })) %>
-            <textarea rows="3" maxlength="10000" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
+            <textarea rows="3" maxlength="<%= ob.max.terms %>" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
                       class="resizable clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
           </div>
         </div>

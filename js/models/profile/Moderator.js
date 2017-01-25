@@ -5,6 +5,7 @@ import Fee from './Fee';
 export default class extends BaseModel {
   defaults() {
     return {
+      fee: new Fee(),
       description: '',
       termsAndConditions: '',
       languages: [],
@@ -17,18 +18,26 @@ export default class extends BaseModel {
     };
   }
 
+  get max() {
+    return {
+      descriptionLength: 300,
+      termsLength: 10000,
+    };
+  }
+
   validate(attrs) {
     const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+    const max = this.max;
 
     if (!attrs.description) {
       addError('description', app.polyglot.t('settings.moderationTab.errors.noDescription'));
     }
 
-    if (attrs.description.length > 300) {
+    if (attrs.description.length > max.descriptionLength) {
       addError('description', app.polyglot.t('settings.moderationTab.errors.descriptionLength'));
     }
 
@@ -36,7 +45,7 @@ export default class extends BaseModel {
       addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.noTerms'));
     }
 
-    if (attrs.termsAndConditions.length > 10000) {
+    if (attrs.termsAndConditions.length > max.termsLength) {
       addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.termsLength'));
     }
 

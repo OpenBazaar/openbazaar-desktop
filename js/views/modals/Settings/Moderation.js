@@ -153,7 +153,6 @@ export default class extends baseVw {
     loadTemplate('modals/settings/moderation.html', (t) => {
       const moderator = this.profile.get('modInfo');
 
-
       this.$el.html(t({
         errors: this.profile.validationError || {},
         isModerator: this.profile.get('moderator'),
@@ -161,6 +160,10 @@ export default class extends baseVw {
         defaultLanguage: app.settings.get('language'),
         defaultCurrency: app.settings.get('localCurrency'),
         currencyList: this.currencyList,
+        max: {
+          description: this.moderator.max.descriptionLength,
+          terms: this.moderator.max.termsLength,
+        },
         formatPrice,
         ...moderator.toJSON(),
       }));
