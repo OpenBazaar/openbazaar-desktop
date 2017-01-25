@@ -176,10 +176,8 @@ export default class extends View {
     this.$navList.toggleClass('open');
     this.$navOverlay.toggleClass('open');
 
-    if (this.$navList.hasClass('open')) {
+    if (!this.$navList.hasClass('open')) {
       this.$connManagementContainer.removeClass('open');
-    } else {
-      this.$connManagementContainer.addClass('open');
     }
   }
 
