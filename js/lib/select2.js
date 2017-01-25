@@ -6,8 +6,8 @@
 // NPM dependency.
 
 // We should keep the version locked at 4.0.3 so a.) the css stays in line with this JS
-// b.) we've done a lot of code gymnastics to make with this version and a new version
-// may introduce new behavior / markup / styling that wouldn't work with that.
+// b.) we've done a lot of code gymnastics to make it work with this version and a new
+// version may introduce new behavior / markup / styling that wouldn't work with that.
 
 /*!
  * Select2 4.0.3
