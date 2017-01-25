@@ -1,5 +1,4 @@
 <div class="gutterVMd">
-  <% console.log(ob) %>
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT">Moderation</h2>
@@ -24,7 +23,7 @@
                        value="true"
                        id="settingsModerationStatusTrue"
                        data-var-type="boolean"
-                <% if(ob.isModerator) { %>checked<% } %>>
+                <% if (ob.isModerator) { %>checked<% } %>>
                 <label for="settingsModerationStatusTrue">On</label>
               </div>
               <div class="btnRadio clrBr">
@@ -33,7 +32,7 @@
                        value="false"
                        id="settingsModerationStatusFalse"
                        data-var-type="boolean"
-                <% if(!ob.isModerator) { %>checked<% } %>>
+                <% if (!ob.isModerator) { %>checked<% } %>>
                 <label for="settingsModerationStatusFalse">Off</label>
               </div>
             </div>
@@ -52,13 +51,13 @@
             <div class="flexRow gutterH rowTn">
               <div class="col4">
                 <select id="moderationFeeType" name="modInfo.fee.feeType" class="clrBr clrP clrSh2">
-                  <option value="PERCENTAGE" <% if(!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) print('selected') %>>
+                  <option value="PERCENTAGE" <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.percentage') %>
                   </option>
-                  <option value="FIXED" <% if(ob.fee && ob.fee.feeType === 'FIXED') print('selected') %>>
+                  <option value="FIXED" <% if (ob.fee && ob.fee.feeType === 'FIXED') print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.fixed') %>
                   </option>
-                  <option value="FIXED_PLUS_PERCENTAGE" <% if(ob.fee && ob.fee.feeType === 'FIXED_PLUS_PERCENTAGE') print('selected') %>>
+                  <option value="FIXED_PLUS_PERCENTAGE" <% if (ob.fee && ob.fee.feeType === 'FIXED_PLUS_PERCENTAGE') print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.fixedPlusPercentage') %>
                   </option>
                 </select>
@@ -66,17 +65,28 @@
                 <div class="col2 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
                   <div class="inputPercentWrapper clrBr clrSh2">
                     <% var perc = ob.fee.percentage || 0; %>
-                    <input type="number" min="0" step="0.1" name="modInfo.fee.percentage" value="<%= perc %>">
+                    <input type="number"
+                           name="modInfo.fee.percentage"
+                           value="<%= perc %>"
+                           data-var-type="number">
                   </div>
                 </div>
                 <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
-                  <% var amt = ob.fee.fixedFee.amount || 0; %>
-                  <input type="number" min="0" name="modInfo.fee.fixedFee.amount" class="noSpin clrBr clrSh2" value="<%= amt %>">
+                  <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
+                     var ccode = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
+                  %>
+                  <!-- use text and set max length so excess decimals can't be entered.-->
+                  <input type="text"
+                         maxlength="5"
+                         class="noSpin clrBr clrSh2"
+                         name="modInfo.fee.fixedFee.amount"
+                         value="<%= ob.formatPrice(amt, ccode === 'BTC') %>"
+                         data-var-type="number">
                 </div>
               <div class="col3 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
                 <select  id="moderationCurrency" name="modInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2">
                   <% ob.currencyList.forEach((currency) => { %>
-                  <option value="<%= currency.code %>" <% if (currency.code == ob.defaultCurrency) print('selected') %>><%= currency.name %></option>
+                  <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.name %></option>
                   <% }); %>
                 </select>
               </div>
@@ -92,8 +102,8 @@
             <label for="settingsModeratorDescription" class="required"><%= ob.polyT('settings.moderationTab.description') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors.description) print(ob.formErrorTmpl({ errors: ob.errors.description })) %>
-            <textarea rows="3" maxlength="160" name="modInfo.description" id="settingsModeratorDescription"
+            <% if (ob.errors['modInfo.description']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.description'] })) %>
+            <textarea rows="3" maxlength="300" name="modInfo.description" id="settingsModeratorDescription"
                       class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.descriptionHelper') %>"><%= ob.description %></textarea>
           </div>
         </div>
@@ -102,9 +112,9 @@
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.terms') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors.terms) print(ob.formErrorTmpl({ errors: ob.errors.terms })) %>
-            <textarea rows="3" maxlength="160" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
-                      class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
+            <% if (ob.errors['modInfo.terms']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.terms'] })) %>
+            <textarea rows="3" maxlength="10000" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
+                      class="resizable clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
           </div>
         </div>
         <div class="flexRow">
@@ -112,14 +122,15 @@
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.languages') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors.languages) print(ob.formErrorTmpl({ errors: ob.errors.languages })) %>
-            <div class="select2TagsWrap">
+            <% if (ob.errors['modInfo.languages']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.languages'] })) %>
+            <div class="select2TagsWrap showDropdown">
               <% var languages = ob.languages.length ? ob.languages : [ob.defaultLanguage] %>
               <select id="moderationLanguageSelect" multiple name="modInfo.languages" class="clrBr clrP clrSh2 select2Tags">
                 <% ob.languageList.forEach((lang) => { %>
                 <option value="<%= lang.code %>" <% if (languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
                 <% }); %>
               </select>
+              <div id="moderationLanguageDropdown" class="tagsDropdown"></div>
             </div>
             <div class="tx6 txPlaceholder">
               <%= ob.polyT('settings.moderationTab.languagesHelper') %>
@@ -131,8 +142,11 @@
       <div class="flexRow">
         <div class="col3"></div>
         <div class="col9">
-          <input type="checkbox" id="acceptGuidelines">
-          <label class="tx5b js-acceptGuidelines" for="acceptGuidelines">
+          <ul class="unstyled errorList hide js-moderationConfirmError">
+            <li><i class="ion-alert-circled"></i> <%= ob.polyT('settings.moderationTab.errors.confirm') %></li>
+          </ul>
+          <input type="checkbox" id="acceptGuidelines" class="<% if (ob.isModerator) { print('fauxChecked') } %>">
+          <label class="tx5b" for="acceptGuidelines">
             <span>
               <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/docs/disputeResolution.md" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
             </span>
@@ -142,8 +156,8 @@
       <div class="flexRow">
         <div class="col3"></div>
         <div class="col9">
-          <input type="checkbox" id="understandRequirements">
-          <label class="tx5b js-understandRequirements" for="understandRequirements">
+          <input type="checkbox" id="understandRequirements" class="<% if (ob.isModerator) print('fauxChecked') %>">
+          <label class="tx5b" for="understandRequirements">
             <span><%= ob.polyT('settings.moderationTab.understandRequirements') %></span>
           </label>
         </div>

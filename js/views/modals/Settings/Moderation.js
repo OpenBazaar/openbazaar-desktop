@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import $ from 'jquery';
 import 'select2';
 import app from '../../../app';
@@ -8,6 +7,7 @@ import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
 import languages from '../../../data/languages';
 import { getTranslatedCurrencies } from '../../../data/currencies';
+import { formatPrice } from '../../../utils/currency';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -33,20 +33,11 @@ export default class extends baseVw {
         modInfo: this.profile.get('modInfo').toJSON(),
       });
     });
-
-    // When this bug is fixed and we're saving via PATCH,
-    // the block below could be removed:
-    // https://github.com/OpenBazaar/openbazaar-go/issues/314
-    this.listenTo(app.profile, 'someChange', () => {
-      const profileAttrs = _.omit(app.profile.toJSON(),
-        ['moderator', 'modInfo']);
-      this.profile.set(profileAttrs);
-    });
   }
 
   events() {
     return {
-      'click .js-save': 'save',
+      'click .js-save': 'saveCheck',
       'change #moderationFeeType': 'changeFeeType',
     };
   }
@@ -55,20 +46,25 @@ export default class extends baseVw {
     return super.getFormData(this.$formFields);
   }
 
+  saveCheck() {
+    /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
+       aren't checked, show an error */
+    const blockSave = (!this.profile.get('moderator') &&
+      $('input[name=moderator]:checked').val() === 'true' &&
+      !this.$understandRequirements.prop('checked') && !this.$acceptGuidelines.prop('checked'));
+
+    this.$moderationConfirmError.toggleClass('hide', !blockSave);
+    if (!blockSave) this.save();
+  }
+
   save() {
     const formData = this.getFormData();
     this.profile.set(formData);
 
-    const save = this.profile.save();
-
-    // When server bug is fixed, use the block below to save
-    // instead of the one above.
-    // https://github.com/OpenBazaar/openbazaar-go/issues/314
-
-    // const save = this.profile.save(formData, {
-    //   attrs: formData,
-    //   type: 'PATCH',
-    // });
+    const save = this.profile.save(formData, {
+      attrs: formData,
+      type: 'PATCH',
+    });
 
     if (save) {
       const msg = {
@@ -105,11 +101,6 @@ export default class extends baseVw {
         this.$btnSave.removeClass('processing');
         setTimeout(() => statusMessage.remove(), 3000);
       });
-    } else {
-      // todo: for debugging purposes. remove this else block when this
-      // feature is complete.
-      console.log('Client side validation error.');
-      console.log(this.profile.validationError);
     }
 
     // render so errrors are shown / cleared
@@ -134,13 +125,28 @@ export default class extends baseVw {
   }
 
   get $feePercentageInput() {
-    return this._$feePercetageInput ||
+    return this._$feePercentageInput ||
       (this._$feePercentageInput = this.$('.js-feePercentageInput'));
   }
 
   get $feeFixedInput() {
     return this._$feeFixedInput ||
-      (this._$feeFixedInput = this.$('.js-feeFixedInput'));
+      (this._$feeFixedInput = this.$('#feeFixedInput'));
+  }
+
+  get $understandRequirements() {
+    return this._$understandRequirements ||
+      (this._$understandRequirements = this.$('#understandRequirements'));
+  }
+
+  get $acceptGuidelines() {
+    return this._$acceptGuidelines ||
+      (this._$acceptGuidelines = this.$('.js-acceptGuidelines'));
+  }
+
+  get $moderationConfirmError() {
+    return this._$moderationConfirmError ||
+      (this._$moderationConfirmError = this.$('.js-moderationConfirmError'));
   }
 
   render() {
@@ -150,17 +156,19 @@ export default class extends baseVw {
 
       this.$el.html(t({
         errors: this.profile.validationError || {},
-        ...moderator.toJSON(),
         isModerator: this.profile.get('moderator'),
         languageList: languages,
         defaultLanguage: app.settings.get('language'),
         defaultCurrency: app.settings.get('localCurrency'),
         currencyList: this.currencyList,
+        formatPrice,
+        ...moderator.toJSON(),
       }));
 
       this.$('#moderationLanguageSelect').select2({
         multiple: true,
-        tags: true,
+        // do not set tags to true, or the user can add non-existant languages
+        dropdownParent: this.$('#moderationLanguageDropdown'),
       });
 
       this.$('#moderationFeeType').select2({
@@ -173,6 +181,9 @@ export default class extends baseVw {
       this._$btnSave = null;
       this._$feePercentageInput = null;
       this._$feeFixedInput = null;
+      this._$acceptGuidelines = null;
+      this._$understandRequirements = null;
+      this._$moderationConfirmError = null;
     });
 
     return this;

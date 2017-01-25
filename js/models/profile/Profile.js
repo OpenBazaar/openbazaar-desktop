@@ -4,7 +4,7 @@ import is from 'is_js';
 import SocialAccounts from '../../collections/SocialAccounts';
 import Image from './Image';
 import Moderator from './Moderator';
-import { decimalToInteger } from '../../utils/currency';
+import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
@@ -152,6 +152,12 @@ export default class extends BaseModel {
   }
 
   parse(response) {
+    if (response.modInfo && response.modInfo.fee && response.modInfo.fee.fixedFee) {
+      const amount = response.modInfo.fee.fixedFee.amount;
+      const isBtc = response.modInfo.fee.fixedFee.currencyCode === 'BTC';
+
+      response.modInfo.fee.fixedFee.amount = integerToDecimal(amount, isBtc);
+    }
     return this.standardizeColorFields(response);
   }
 
@@ -169,15 +175,10 @@ export default class extends BaseModel {
       delete options.attrs.lastModified;
 
       if (method !== 'delete') {
-        // convert the percentage field
-        if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.percentage) {
-          const percentage = Number(options.attrs.modInfo.fee.percentage);
-          options.attrs.modInfo.fee.percentage = decimalToInteger(percentage);
-        }
         // convert the amount field
-        if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.fixedFee &&
-          options.attrs.modInfo.fee.fixedFee.amount) {
-          const amount = Number(options.attrs.modInfo.fee.fixedFee.amount);
+        if (options.attrs.modInfo && options.attrs.modInfo.fee &&
+          options.attrs.modInfo.fee.fixedFee && options.attrs.modInfo.fee.fixedFee.amount) {
+          const amount = options.attrs.modInfo.fee.fixedFee.amount;
           const isBTC = options.attrs.modInfo.fee.fixedFee.currencyCode === 'BTC';
           options.attrs.modInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
         }

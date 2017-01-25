@@ -28,21 +28,21 @@ export default class extends BaseModel {
       addError('description', app.polyglot.t('settings.moderationTab.errors.noDescription'));
     }
 
+    if (attrs.description.length > 300) {
+      addError('description', app.polyglot.t('settings.moderationTab.errors.descriptionLength'));
+    }
+
     if (!attrs.termsAndConditions) {
       addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.noTerms'));
+    }
+
+    if (attrs.termsAndConditions.length > 10000) {
+      addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.termsLength'));
     }
 
     if (!attrs.languages.length) {
       addError('languages', app.polyglot.t('settings.moderationTab.errors.noLanguages'));
     }
-
-    // todo: more validations -
-    // - termsAndConditions max length
-    // - descirpiont max length??
-    // - are all lang codes provided valid codes based
-    //   on our utils/languages module (which needs to
-    //   be built up).
-    // etc...
 
     if (Object.keys(errObj).length) return errObj;
 

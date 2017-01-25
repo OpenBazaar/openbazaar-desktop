@@ -115,6 +115,10 @@ textarea {
   &:focus {
     overflow: auto;
   }
+
+  &.resizable {
+    resize: vertical;
+  }
 }
 
 .errorList {
@@ -201,5 +205,18 @@ input[type="checkbox"] {
 
   &:checked + label:before {
     content: "\f373";
+  }
+
+  &.fauxChecked {
+    // checkbox cannot be clicked, and shows a fake checked mark.
+    pointer-events: none;
+
+    & + label {
+      pointer-events: none;
+
+      &:before {
+        content: "\f373";
+      }
+    }
   }
 }

@@ -28,9 +28,33 @@ export default class extends BaseModel {
       addError('feeType', app.polyglot.t('settings.moderationTab.errors.noFeeType'));
     }
 
-    if ((attrs.feeType === 'PERCENTAGE' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') &&
-      !attrs.percentage) {
-      addError('feeTypeNoPercent', app.polyglot.t('settings.moderationTab.errors.noPercentage'));
+    if (attrs.feeType === 'PERCENTAGE' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') {
+      // is the percentage a number?
+      if (typeof attrs.percentage !== 'number') {
+        addError('feeTypeNoPercent', app.polyglot.t('settings.moderationTab.errors.noPercentage'));
+      }
+
+      // is the percentage too low?
+      if (attrs.percentage < 0) {
+        addError('feeTypeNoPercent', app.polyglot.t('settings.moderationTab.errors.percentageLow'));
+      }
+
+      // is the percentage too high?
+      if (attrs.percentage > 100) {
+        addError('feeTypeNoPercent',
+          app.polyglot.t('settings.moderationTab.errors.percentageHigh'));
+      }
+
+      // are there too many decimals?
+      // move the decimal 2 places, ie 1.01 = 101.0
+      let decimals = attrs.percentage * 100;
+      const integers = Math.trunc(decimals);
+      decimals = decimals - integers;
+
+      if (decimals > 0) {
+        addError('feeTypeNoPercent',
+          app.polyglot.t('settings.moderationTab.errors.percentageDecimals'));
+      }
     }
 
     if (Object.keys(errObj).length) return errObj;
@@ -39,13 +63,3 @@ export default class extends BaseModel {
   }
 }
 
-/*
- fee: {
-   feeType: "FIXED / PERCENTAGE / FIXED_PLUS_PERCENTAGE",
-   fixedFee: { // do not include if type is percentage
-     currencyCode: 3 character stringify,
-     amount: Number
-   },
-   percentage: Number // do not include if type is fixed
- },
- */
