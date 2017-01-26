@@ -297,6 +297,7 @@ export default class extends BaseVw {
     const onListingDetailClose = () => app.router.navigate(`${this.model.id}/store`);
 
     this.listingDetail = new ListingDetail({
+      profile: this.model,
       model: listing,
     }).render()
       .open();
@@ -464,7 +465,7 @@ export default class extends BaseVw {
 
       this.storeListings = new ListingsGrid({
         collection: storeListingsCol,
-        storeOwner: this.model.id,
+        storeOwnerProfile: this.model,
         viewType: this.listingsViewType,
       });
 

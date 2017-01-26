@@ -1,5 +1,6 @@
 .pageNav {
   -webkit-app-region: drag;
+  position: relative;
 
   .navBar {
     border-bottom-width: 1px;
@@ -9,6 +10,16 @@
     .iconBtn {
       height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
       line-height: 1em;
+    }
+
+    .barBtn {
+      height: 28px;
+      padding: 9px;
+    }
+
+    .pageNavCenter  {
+      flex-grow: 1;
+      padding-right: $pad;
     }
 
     .addressBar {
@@ -30,6 +41,11 @@
       border-width: 2px;
       border-style: solid;
       margin: 5px 0;
+    }
+
+    #testnetFlag {
+      font-size: $tx6;
+      white-space: nowrap;
     }
   }
 
@@ -151,8 +167,12 @@
   }
 
   .navListWrapper {
-    z-index: 1;
-    padding: 0 $pad $pad $pad; // give room for border and shadow
+    z-index: 2;
+    padding: 0 $pad $pad 1px; // give room for border and shadow -
+                              // the left padding needs to be low
+                              // to allow the mouse over / out of
+                              // the Connected Server list item to
+                              // work properly. 
     right: -$pad; // compensate for padding
 
     .navList {
@@ -184,9 +204,54 @@
             flex-grow: 1;
           }
         }
+
+        &.connectedServerListItem {
+          position: relative;
+
+          &::after {
+            // This is needed so as the cursor goes into the padding
+            // outside of the list item, it doesn't trigger a mouseleave
+            // event and therefore close the server list menu.
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -10px;
+            bottom: 0;
+            width: 11px;
+          }
+        }
       }
     }
   }
+
+  .connManagementContainer {
+    z-index: 1;
+    width: 233px;
+    right: 234px;
+
+    .listBox {
+      padding: $pad;
+
+      .listItem {
+        display: flex;
+      }
+
+      .serverList {
+        .listItem {        
+          & > span {
+            padding-left: 15px;
+            position: relative;
+
+            .connectedIcon {
+              position: absolute;
+              top: -5px;
+              left: 0;
+            }
+          }
+        }
+      }
+    }
+  }  
 
   .navOverlay {
     display: none;

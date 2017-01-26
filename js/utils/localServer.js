@@ -51,10 +51,11 @@ export default class LocalServer {
     this.log('Starting local server.');
     console.log('Starting local server.');
 
-    this.serverSubProcess = childProcess.spawn(this.serverPath + this.serverFilename, ['start'], {
-      detach: false,
-      cwd: this.serverPath,
-    });
+    this.serverSubProcess =
+      childProcess.spawn(this.serverPath + this.serverFilename, ['start', '-t'], {
+        detach: false,
+        cwd: this.serverPath,
+      });
 
     this.serverSubProcess.stdout.once('data', () => this.trigger('start'));
     this.serverSubProcess.stdout.on('data', buf => this.obServerLog(`${buf}`));

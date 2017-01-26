@@ -22,10 +22,23 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
-    if (!options.ownerGuid) {
-      throw new Error('Please provide a guid representing the owner of the listing.');
+
+    // Any provided profile model or vendor info object will also be passed into the
+    // listing detail modal.
+    if (opts.profile) {
+      // If a profile model of the listing owner is available, please pass it in.
+      this.ownerGuid = opts.profile.id;
+    } else if (this.model.get('vendor')) {
+      // If a vendor object is available (part of proposed search API), please pass it in.
+      this.ownerGuid = this.model.get('vendor').guid;
     } else {
-      this.ownerGuid = this.options.ownerGuid;
+      // Otherwise please provide a boolean indicating ownListing.
+      this.ownerGuid = opts.ownerGuid;
+    }
+
+    if (typeof this.ownerGuid === 'undefined') {
+      throw new Error('Unable to determine ownership of the listing. Please either provide' +
+        ' a profile model or pass in an ownerGuid option.');
     }
 
     if (!opts.listingBaseUrl) {
@@ -134,8 +147,11 @@ export default class extends baseVw {
 
           const listingDetail = new ListingDetail({
             model: this.fullListing,
+            profile: this.options.profile,
+            vendor: this.options.vendor,
             closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3',
             modelContentClass: 'modalContent',
+            openedFromStore: !!this.options.onStore,
           }).render()
             .open();
 

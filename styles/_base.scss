@@ -272,3 +272,25 @@ ul, ol {
 .preWrap {
   white-space: pre-wrap;
 }
+
+#milestone {
+  // delete this rule in production
+  position: fixed;
+  bottom: -4px;
+  padding: 4px 132px 22px 8px;
+  font-size: 14px;
+  right: -6px;
+  border-radius: 4px;
+  border-width: 2px;
+  border-style: solid;
+  z-index: 10;
+
+  .milestone-inner {
+    position: relative;
+    top: 10px;
+  }
+}
+
+#doorbell-button {
+  right: 8px;
+}
