@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import 'select2';
 import app from '../../../app';
 import languages from '../../../data/languages';
@@ -15,12 +16,18 @@ export default class extends baseVw {
     });
 
     this.settings = app.settings.clone();
+
     this.listenTo(this.settings, 'sync', (md, resp, syncOpts) => {
       // Since different tabs are working off different parts of
       // the settings model, to not overwrite each other, we'll only
       // update fields that our tab has changed.
       app.settings.set(syncOpts.attrs);
     });
+
+    this.localSettings = app.localSettings.clone();
+
+    this.listenTo(this.localSettings, 'sync',
+      () => app.localSettings.set(this.localSettings.toJSON()));
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
@@ -29,25 +36,31 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-save': 'save',
+      'change #settingsCurrencySelect': 'onChangeCurrencySelect',
     };
   }
 
-  getFormData() {
-    return super.getFormData(this.$formFields);
+  onChangeCurrencySelect(e) {
+    if (e.target.value === 'BTC') {
+      this.$bitcoinUnitField.removeClass('hide');
+    } else {
+      this.$bitcoinUnitField.addClass('hide');
+    }
+  }
+
+  getFormData(fields = this.$settingsFields) {
+    return super.getFormData(fields);
   }
 
   save() {
-    const formData = this.getFormData();
-    this.settings.set(formData);
+    this.localSettings.set(this.getFormData(this.$localSettingsFields), { validate: true });
 
-    const save = this.settings.save(formData, {
-      attrs: formData,
-      type: 'PATCH',
-    });
+    const settingsFormData = this.getFormData();
+    this.settings.set(settingsFormData, { validate: true });
 
-    if (save) {
+    if (!this.localSettings.validationError && !this.settings.validationError) {
       const msg = {
-        msg: app.polyglot.t('settings.generalTab.statusSaving'),
+        msg: app.polyglot.t('settings.advancedTab.statusSaving'),
         type: 'message',
       };
 
@@ -56,32 +69,45 @@ export default class extends baseVw {
         duration: 9999999999999999,
       });
 
-      save.done(() => {
-        statusMessage.update({
-          msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
-          type: 'confirmed',
-        });
-      })
-      .fail((...args) => {
-        const errMsg =
-          args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
-
-        openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
-
-        statusMessage.update({
-          msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
-          type: 'warning',
-        });
-      }).always(() => {
-        this.$btnSave.removeClass('processing');
-        setTimeout(() => statusMessage.remove(), 3000);
+      // let's save and monitor both save processes
+      const localSave = this.localSettings.save();
+      const serverSave = this.settings.save(settingsFormData, {
+        attrs: settingsFormData,
+        type: 'PATCH',
       });
+
+      $.when(localSave, serverSave)
+        .done(() => {
+          // both succeeded!
+          statusMessage.update({
+            msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
+            type: 'confirmed',
+          });
+        })
+        .fail((...args) => {
+          // One has failed, the other may have also failed or may
+          // fail or may succeed. It doesn't matter, for our purposed one
+          // failure is enough for us to consider the "save" to have failed
+          const errMsg = args[0] && args[0].responseJSON &&
+            args[0].responseJSON.reason || '';
+
+          openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
+
+          statusMessage.update({
+            msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
+            type: 'warning',
+          });
+        })
+        .always(() => {
+          this.$btnSave.removeClass('processing');
+          setTimeout(() => statusMessage.remove(), 3000);
+        });
     }
 
-    // render so errrors are shown / cleared
     this.render();
-
-    if (save) this.$btnSave.addClass('processing');
+    if (!this.localSettings.validationError && !this.settings.validationError) {
+      this.$btnSave.addClass('processing');
+    }
 
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
@@ -92,13 +118,35 @@ export default class extends baseVw {
       (this._$btnSave = this.$('.js-save'));
   }
 
+  get $bitcoinUnitField() {
+    return this._$bitcoinUnitField ||
+      (this._$bitcoinUnitField = this.$('.js-bitcoinUnitField'));
+  }
+
+  get $settingsFields() {
+    return this._$settingsFields ||
+      (this._$settingsFields =
+        this.$('select[name], input[name], textarea[name]')
+        .not('[data-persistence-location="local"]'));
+  }
+
+  get $localSettingsFields() {
+    return this._$localSettingsFields ||
+      (this._$localSettingsFields =
+        this.$('[data-persistence-location="local"]'));
+  }
+
   render() {
     loadTemplate('modals/settings/general.html', (t) => {
       this.$el.html(t({
         languageList: languages,
         countryList: this.countryList,
         currencyList: this.currencyList,
-        errors: this.settings.validationError || {},
+        errors: {
+          ...(this.settings.validationError || {}),
+          ...(this.localSettings.validationError || {}),
+        },
+        ...this.localSettings.toJSON(),
         ...this.settings.toJSON(),
       }));
 
@@ -106,8 +154,10 @@ export default class extends baseVw {
       this.$('#settingsCountrySelect').select2();
       this.$('#settingsCurrencySelect').select2();
 
-      this.$formFields = this.$('select[name], input[name]');
+      this._$settingsFields = null;
+      this._$localSettingsFields = null;
       this._$btnSave = null;
+      this._$bitcoinUnitField = null;
     });
 
     return this;

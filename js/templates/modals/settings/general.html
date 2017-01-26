@@ -50,7 +50,7 @@
           </select>
         </div>
       </div>
-      <div class="flexRow">
+      <div class="flexRow <% if (ob.localCurrency !== 'BTC') print('hide') %> js-bitcoinUnitField">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.generalTab.bitcoinUnit') %></label>
           <div class="clrT2 txSm"></div>
