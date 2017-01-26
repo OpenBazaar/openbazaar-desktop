@@ -1,7 +1,7 @@
 import { remote } from 'electron';
 import multihashes from 'multihashes';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
-import { View } from 'backbone';
+import Backbone, { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
@@ -89,9 +89,14 @@ export default class extends View {
   }
 
   navReload() {
-    location.reload();
-    // TODO: Only refresh the content not the whole BrowserWindow
-    // Backbone.history.loadUrl();
+    app.loadingModal.open();
+
+    // Introducing some fake latency to ensure the loading modal has a chance
+    // to appear. Otherwise, views that render quickly (e.g. have cached data)
+    // load so fast it may look like pressing the refresh button did nothing.
+    setTimeout(() => {
+      Backbone.history.loadUrl();
+    }, 200);
   }
 
   setWinControlsStyle(style) {
