@@ -62,8 +62,8 @@ export default class extends BaseVw {
     }
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
-
     this.listenTo(app.settings, 'change:localCurrency', () => (this.showDataChangedMessage()));
+    this.listenTo(app.localSettings, 'change:bitcoinUnit', () => (this.showDataChangedMessage()));
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
       (cl, opts) => {
