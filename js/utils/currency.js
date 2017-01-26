@@ -235,6 +235,7 @@ export function convertCurrency(amount, fromCur, toCur) {
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
     locale: app && app.settings && app.settings.get('language') || 'en-US',
+    btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
     skipConvertIfNoExchangeRateData: true,
     ...options,
   };
@@ -254,5 +255,5 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
-  return formatCurrency(convertedAmt, outputFormat, opts.locale);
+  return formatCurrency(convertedAmt, outputFormat, opts.locale, opts.btcUnit);
 }
