@@ -24,7 +24,10 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (!attrs.feeType) {
+    const feeTypes = ['PERCENTAGE', 'FIXED', 'FIXED_PLUS_PERCENTAGE'];
+
+    // feeType must exist and be one of the valid values
+    if (!attrs.feeType || feeTypes.indexOf(attrs.feeType) === -1) {
       addError('feeType', app.polyglot.t('settings.moderationTab.errors.noFeeType'));
     }
 

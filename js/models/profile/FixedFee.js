@@ -1,6 +1,7 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import { integerToDecimal } from '../../utils/currency';
+import { getCurrenciesSortedByCode } from '../../data/currencies';
 
 export default class extends BaseModel {
   defaults() {
@@ -21,7 +22,14 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (!attrs.currencyCode || typeof attrs.currencyCode !== 'string') {
+    const currencies = getCurrenciesSortedByCode();
+
+    if (typeof attrs.currencyCode !== 'string') {
+      addError('feeTypeNoCurrency', app.polyglot.t('settings.moderationTab.errors.noCurrency'));
+    }
+
+    // make sure currency is a valid value
+    if (currencies.indexOf(attrs.currencyCode) === -1) {
       addError('feeTypeNoCurrency', app.polyglot.t('settings.moderationTab.errors.noCurrency'));
     }
 

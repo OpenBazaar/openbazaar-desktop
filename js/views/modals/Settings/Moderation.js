@@ -131,7 +131,7 @@ export default class extends baseVw {
 
   get $feeFixedInput() {
     return this._$feeFixedInput ||
-      (this._$feeFixedInput = this.$('#feeFixedInput'));
+      (this._$feeFixedInput = this.$('.js-feeFixedInput'));
   }
 
   get $understandRequirements() {

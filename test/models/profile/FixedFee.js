@@ -10,6 +10,16 @@ describe('the Fixed Fee model', () => {
     };
   });
 
+  it('fails validation if the amount does not exist', () => {
+    const fixedFee = new FixedFee();
+    fixedFee.unset('amount');
+    fixedFee.set({}, { validate: true });
+    const valErr = fixedFee.validationError;
+
+    expect(valErr && valErr.feeTypeNoAmount
+      && !!valErr.feeTypeNoAmount.length || false).to.equal(true);
+  });
+
   it('fails validation if the amount is not a number', () => {
     const fixedFee = new FixedFee();
     fixedFee.set({ amount: 'test' }, { validate: true });
@@ -17,5 +27,33 @@ describe('the Fixed Fee model', () => {
 
     expect(valErr && valErr.feeTypeNoAmount
       && !!valErr.feeTypeNoAmount.length || false).to.equal(true);
+  });
+
+  it('fails validation if the currency code does not exist', () => {
+    const fixedFee = new FixedFee();
+    fixedFee.unset('currencyCode');
+    fixedFee.set({}, { validate: true });
+    const valErr = fixedFee.validationError;
+
+    expect(valErr && valErr.feeTypeNoCurrency
+      && !!valErr.feeTypeNoCurrency.length || false).to.equal(true);
+  });
+
+  it('fails validation if the currency code is not a string', () => {
+    const fixedFee = new FixedFee();
+    fixedFee.set({ currencyCode: 1 }, { validate: true });
+    const valErr = fixedFee.validationError;
+
+    expect(valErr && valErr.feeTypeNoCurrency
+      && !!valErr.feeTypeNoCurrency.length || false).to.equal(true);
+  });
+
+  it('fails validation if the currency code is not a known code', () => {
+    const fixedFee = new FixedFee();
+    fixedFee.set({ currencyCode: 'FOO' }, { validate: true });
+    const valErr = fixedFee.validationError;
+
+    expect(valErr && valErr.feeTypeNoCurrency
+      && !!valErr.feeTypeNoCurrency.length || false).to.equal(true);
   });
 });
