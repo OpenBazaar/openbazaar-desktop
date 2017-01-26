@@ -1,10 +1,35 @@
 import $ from 'jquery';
+import app from '../../js/app';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { describe, it, before, after } from 'mocha';
 import * as cur from '../../js/utils/currency';
 
+const translations = {
+  bitcoinCurrencyUnits: {
+    BTC: 'BTC',
+    MBTC: 'mBTC',
+    UBTC: 'µBTC',
+    SATOSHI: 'sat',
+  },
+};
+
 describe('the currency utility module', () => {
+  before(function () {
+    app.polyglot = {
+      t: (str) => {
+        let retStr = '';
+
+        if (str.startsWith('bitcoinCurrencyUnits')) {
+          const btcUnit = str.split('.')[1];
+          retStr = translations.bitcoinCurrencyUnits[btcUnit];
+        }
+
+        return retStr;
+      },
+    };
+  });
+
   it('correctly converts a fiat amount from an integer to decimal', () => {
     expect(cur.integerToDecimal(123)).to.equal(1.23);
   });
@@ -139,15 +164,35 @@ describe('the currency utility module', () => {
     it('properly localizes a BTC amount', () => {
       expect(cur.formatCurrency(523, 'BTC', 'en-US'))
         .to
-        .equal('฿523.00000000');
+        .equal('฿523');
 
       expect(cur.formatCurrency(523.987, 'BTC', 'en-US'))
         .to
-        .equal('฿523.98700000');
+        .equal('฿523.987');
 
       expect(cur.formatCurrency(523.12, 'BTC', 'en-US'))
         .to
-        .equal('฿523.12000000');
+        .equal('฿523.12');
+      expect(cur.formatCurrency(523.12345678, 'BTC', 'en-US'))
+        .to
+        .equal('฿523.12345678');
+    });
+
+    it('properly localizes a BTC amount with the correct bitcoin units', () => {
+      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'BTC'))
+        .to
+        .equal('฿523.3456');
+
+      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'MBTC'))
+        .to
+        .equal(`${translations.bitcoinCurrencyUnits.MBTC}523,345.6`);
+
+      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'UBTC'))
+        .to
+        .equal(`${translations.bitcoinCurrencyUnits.UBTC}523,345,600`);
+      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'SATOSHI'))
+        .to
+        .equal(`${translations.bitcoinCurrencyUnits.SATOSHI}52,334,560,000`);
     });
   });
 
