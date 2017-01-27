@@ -46,7 +46,7 @@
           </div>
           <div class="col6">
             <% if (ob.errors.location) print(ob.formErrorTmpl({ errors: ob.errors.location })) %>
-            <input type="text" class="clrBr clrSh2" name="location" id="settingsLocation" value="<%= ob.location %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderLocation') %>">
+            <input type="text" class="clrBr clrSh2" name="location" id="settingsLocation" value="<%= ob.location %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderLocation') %>" maxlength="<%= ob.max.locationLength %>">
           </div>
         </div>        
 
