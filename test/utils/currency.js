@@ -57,10 +57,10 @@ describe('the currency utility module', () => {
     expect(cur.formatPrice(2, false)).to.equal('2.00');
   });
 
-  it('correctly formats a BTC price to 8 decimal place', () => {
-    expect(cur.formatPrice(2.713546, true)).to.equal('2.71354600');
+  it('correctly formats a BTC price up to 8 decimal places without any insignificant zeros', () => {
+    expect(cur.formatPrice(2.713546, true)).to.equal('2.713546');
     expect(cur.formatPrice(2.718925729, true)).to.equal('2.71892573');
-    expect(cur.formatPrice(2, true)).to.equal('2.00000000');
+    expect(cur.formatPrice(2, true)).to.equal('2');
   });
 
   describe('has a function to localize currency (formatCurrency) that', () => {

@@ -77,9 +77,18 @@ export function formatPrice(price, isBtc = false) {
     throw new Error('Please provide a price that is not NaN');
   }
 
-  const decimalPlaces = isBtc ? 8 : 2;
+  let convertedPrice;
 
-  return price.toFixed(decimalPlaces);
+  if (isBtc) {
+    // Format BTC price so it has up to 8 decimal places,
+    // but without any trailing zeros
+    convertedPrice =
+      parseFloat((price).toFixed(8)).toString();
+  } else {
+    convertedPrice = price.toFixed(2);
+  }
+
+  return convertedPrice;
 }
 
 /**
