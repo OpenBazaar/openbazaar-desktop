@@ -15,7 +15,7 @@
           <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
           <div class="txt5b">
             <a class="js-tab" data-tab="Reputation">
-              <span>Stars(x)</span>
+              <span class="clrT">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
               <span class="js-followsYou <% if (!ob.followsYou) { %>hide<% } %>">
                 <%= ob.polyT('userPage.followsYou') %>
               </span>
