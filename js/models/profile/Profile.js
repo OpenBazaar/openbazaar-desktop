@@ -67,6 +67,12 @@ export default class extends BaseModel {
       !!this.get('modInfo');
   }
 
+  get max() {
+    return {
+      locationLength: 100,
+    };
+  }
+
   validate(attrs) {
     const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
@@ -96,6 +102,10 @@ export default class extends BaseModel {
 
     if (attrs.handle && attrs.handle.charAt(0) === '@') {
       addError('handle', 'The handle should not start with a leading @.');
+    }
+
+    if (attrs.location && attrs.location.length > this.max.locationLength) {
+      addError('location', app.polyglot.t('profileModelErrors.locationTooLong'));
     }
 
     if (attrs.website && is.not.url(attrs.website)) {

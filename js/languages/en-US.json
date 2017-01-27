@@ -498,7 +498,8 @@
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
     "provideUsername": "Please provide a username.",
-    "duplicateSocialAccount": "You already have a social account of this type."
+    "duplicateSocialAccount": "You already have a social account of this type.",
+    "locationTooLong": "The location exceeds the maximum allowable length."
   },
   "smtpModelErrors": {
     "username": {
