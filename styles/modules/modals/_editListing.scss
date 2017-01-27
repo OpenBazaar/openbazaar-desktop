@@ -146,6 +146,16 @@
               display: block;
             }
           }
+
+          .select2TagsWrap {
+            .placeholder {
+              margin-top: 11px;
+            }
+
+            .select2-selection__choice[title*=REGION_] {
+              display: none;
+            }
+          }
         }
       }
     }

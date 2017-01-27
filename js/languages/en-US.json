@@ -465,6 +465,7 @@
         },
         "btnAddShippingOption": "Add Shipping Option",
         "btnDeleteShippingOption": "Delete",
+        "clearAll": "Clear All",
         "services": {
           "nameLabel": "Service",
           "namePlaceholder": "e.g. Standard, Express, Overnight",
@@ -807,6 +808,11 @@
     "YEMEN": "Yemen",
     "ZAMBIA": "Zambia",
     "ZIMBABWE": "Zimbabwe"
+  },
+  "regions": {
+    "ALL": "All",
+    "EUROPEAN_UNION": "European Union",
+    "EUROPEAN_ECONOMIC_AREA": "European Economic Area"
   },
   "currencies": {
     "AED": "UAE Dirham",

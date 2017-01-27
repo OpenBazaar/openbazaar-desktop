@@ -1484,7 +1484,7 @@ export default countries;
 
 let indexedCountries;
 
-function getIndexedCountries() {
+export function getIndexedCountries() {
   if (indexedCountries) return indexedCountries;
 
   indexedCountries = countries.reduce((indexedObj, country) => {
@@ -1505,7 +1505,7 @@ export function getCountryByDataName(dataName) {
 
 function getTranslatedCountries(lang, sort = true) {
   if (!lang) {
-    throw new Error('Please provide the language the translated couuntries' +
+    throw new Error('Please provide the language the translated countries' +
       ' should be returned in.');
   }
 
