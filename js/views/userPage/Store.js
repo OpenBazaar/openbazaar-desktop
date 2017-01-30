@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import 'select2';
+import '../../lib/select2';
 import '../../utils/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
