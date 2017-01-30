@@ -651,6 +651,10 @@ function getIndexedCurrencies() {
   return _indexedCurrencies;
 }
 
+export function getListofCurrencies() {
+  return _.pluck(currencies, 'code');
+}
+
 export function getCurrencyByCode(code) {
   if (!code) {
     throw new Error('Please provide a currency code.');

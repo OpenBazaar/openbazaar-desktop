@@ -35,8 +35,8 @@ describe('the Fee model', () => {
     fee.set({}, { validate: true });
     const valErr = fee.validationError;
 
-    expect(valErr && valErr.feeTypeNoPercent
-      && !!valErr.feeTypeNoPercent.length || false).to.equal(true);
+    expect(valErr && valErr.feeType
+      && !!valErr.feeType.length || false).to.equal(true);
   });
 
   it('fails validation if the feeType is percentage and the percentage is not a number', () => {
@@ -44,8 +44,8 @@ describe('the Fee model', () => {
     fee.set({ feeType: 'PERCENTAGE', percentage: 'Test' }, { validate: true });
     const valErr = fee.validationError;
 
-    expect(valErr && valErr.feeTypeNoPercent
-      && !!valErr.feeTypeNoPercent.length || false).to.equal(true);
+    expect(valErr && valErr.feeType
+      && !!valErr.feeType.length || false).to.equal(true);
   });
 
   // one test to make sure the percentage tests also work if the type is fixed plus percentage
@@ -55,8 +55,8 @@ describe('the Fee model', () => {
     fee.set({ feeType: 'FIXED_PLUS_PERCENTAGE', percentage: 'Test' }, { validate: true });
     const valErr = fee.validationError;
 
-    expect(valErr && valErr.feeTypeNoPercent
-      && !!valErr.feeTypeNoPercent.length || false).to.equal(true);
+    expect(valErr && valErr.feeType
+      && !!valErr.feeType.length || false).to.equal(true);
   });
 
   it('fails validation if the feeType is percentage and the percentage is less than zero', () => {
@@ -64,8 +64,8 @@ describe('the Fee model', () => {
     fee.set({ feeType: 'PERCENTAGE', percentage: -10 }, { validate: true });
     const valErr = fee.validationError;
 
-    expect(valErr && valErr.feeTypeNoPercent
-      && !!valErr.feeTypeNoPercent.length || false).to.equal(true);
+    expect(valErr && valErr.feeType
+      && !!valErr.feeType.length || false).to.equal(true);
   });
 
   it('fails validation if the feeType is percentage and the percentage is over 100', () => {
@@ -73,8 +73,8 @@ describe('the Fee model', () => {
     fee.set({ feeType: 'PERCENTAGE', percentage: 101 }, { validate: true });
     const valErr = fee.validationError;
 
-    expect(valErr && valErr.feeTypeNoPercent
-      && !!valErr.feeTypeNoPercent.length || false).to.equal(true);
+    expect(valErr && valErr.feeType
+      && !!valErr.feeType.length || false).to.equal(true);
   });
 
   it('fails validation if the feeType is percentage ' +
@@ -83,7 +83,7 @@ describe('the Fee model', () => {
     fee.set({ feeType: 'PERCENTAGE', percentage: 19.325 }, { validate: true });
     const valErr = fee.validationError;
 
-    expect(valErr && valErr.feeTypeNoPercent
-      && !!valErr.feeTypeNoPercent.length || false).to.equal(true);
+    expect(valErr && valErr.feeType
+      && !!valErr.feeType.length || false).to.equal(true);
   });
 });
