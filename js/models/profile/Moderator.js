@@ -8,7 +8,7 @@ export default class extends BaseModel {
       fee: new Fee(),
       description: '',
       termsAndConditions: '',
-      languages: [],
+      languages: app.settings.get('language'),
     };
   }
 
@@ -34,23 +34,28 @@ export default class extends BaseModel {
     const max = this.max;
 
     if (!attrs.description) {
-      addError('description', app.polyglot.t('settings.moderationTab.errors.noDescription'));
+      addError('description',
+        app.polyglot.t('settings.moderationTab.moderatorModelErrors.noDescription'));
     }
 
     if (attrs.description.length > max.descriptionLength) {
-      addError('description', app.polyglot.t('settings.moderationTab.errors.descriptionLength'));
+      addError('description',
+        app.polyglot.t('settings.moderationTab.moderatorModelErrors.descriptionLength'));
     }
 
     if (!attrs.termsAndConditions) {
-      addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.noTerms'));
+      addError('termsAndConditions',
+        app.polyglot.t('settings.moderationTab.moderatorModelErrors.noTerms'));
     }
 
     if (attrs.termsAndConditions.length > max.termsLength) {
-      addError('termsAndConditions', app.polyglot.t('settings.moderationTab.errors.termsLength'));
+      addError('termsAndConditions',
+        app.polyglot.t('settings.moderationTab.moderatorModelErrors.termsLength'));
     }
 
     if (!attrs.languages.length) {
-      addError('languages', app.polyglot.t('settings.moderationTab.errors.noLanguages'));
+      addError('languages',
+        app.polyglot.t('settings.moderationTab.moderatorModelErrors.noLanguages'));
     }
 
     if (Object.keys(errObj).length) return errObj;

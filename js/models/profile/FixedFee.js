@@ -1,7 +1,6 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
-import { integerToDecimal } from '../../utils/currency';
-import { getCurrenciesSortedByCode } from '../../data/currencies';
+import { getCurrencyByCode } from '../../data/currencies';
 
 export default class extends BaseModel {
   defaults() {
@@ -11,10 +10,6 @@ export default class extends BaseModel {
     };
   }
 
-  parse(response) {
-    response.amount = integerToDecimal(response.amound, response.currencyCode === 'BTC');
-  }
-
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -22,19 +17,17 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    const currencies = getCurrenciesSortedByCode();
-
     if (typeof attrs.currencyCode !== 'string') {
-      addError('feeTypeNoCurrency', app.polyglot.t('settings.moderationTab.errors.noCurrency'));
+      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noCurrency'));
     }
 
     // make sure currency is a valid value
-    if (currencies.indexOf(attrs.currencyCode) === -1) {
-      addError('feeTypeNoCurrency', app.polyglot.t('settings.moderationTab.errors.noCurrency'));
+    if (!getCurrencyByCode(attrs.currencyCode)) {
+      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noCurrency'));
     }
 
     if (typeof attrs.amount !== 'number' || attrs.amount < 0) {
-      addError('feeTypeNoAmount', app.polyglot.t('settings.moderationTab.errors.noAmount'));
+      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noAmount'));
     }
 
     if (Object.keys(errObj).length) return errObj;

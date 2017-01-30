@@ -44,10 +44,7 @@
           </div>
           <div class="col9">
             <% if (ob.errors['modInfo.fee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeType'] })) %>
-            <% if (ob.errors['modInfo.fee.feeTypeNoFee']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeTypeNoFee'] })) %>
-            <% if (ob.errors['modInfo.fee.feeTypeNoPercent']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeTypeNoPercent'] })) %>
-            <% if (ob.errors['modInfo.fee.fixedFee.feeTypeNoCurrency']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.fixedFee.feeTypeNoCurrency'] })) %>
-            <% if (ob.errors['modInfo.fee.fixedFee.feeTypeNoAmount']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.fixedFee.feeTypeNoAmount'] })) %>
+            <% if (ob.errors['modInfo.fee.fixedFee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.fixedFee.feeType'] })) %>
             <div class="flexRow gutterH rowTn">
               <div class="col4">
                 <select id="moderationFeeType" name="modInfo.fee.feeType" class="clrBr clrP clrSh2">
@@ -62,30 +59,30 @@
                   </option>
                 </select>
               </div>
-                <div class="col2 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
-                  <div class="inputPercentWrapper clrBr clrSh2">
-                    <% var perc = ob.fee.percentage || 0; %>
-                    <input type="number"
-                           name="modInfo.fee.percentage"
-                           value="<%= perc %>"
-                           data-var-type="number">
-                  </div>
-                </div>
-                <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
-                  <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
-                     var ccode = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
-                     amt =  amt ? ob.formatPrice(amt, ccode === 'BTC') : 0;
-                  %>
-                  <!-- use text and set max length so excess decimals can't be entered.-->
-                  <input type="text"
-                         maxlength="5"
-                         class="noSpin clrBr clrSh2"
-                         name="modInfo.fee.fixedFee.amount"
-                         value="<%= amt %>"
+              <div class="col2 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
+                <div class="inputPercentWrapper clrBr clrSh2">
+                  <% var perc = ob.fee.percentage || 0; %>
+                  <input type="number"
+                         name="modInfo.fee.percentage"
+                         value="<%= perc %>"
                          data-var-type="number">
                 </div>
-              <div class="col3 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
-                <select  id="moderationCurrency" name="modInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2">
+              </div>
+              <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
+                <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
+                   var ccode = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
+                   amt = typeof amt === 'number' ? ob.formatPrice(amt, ccode === 'BTC') : amt;
+                %>
+                <!-- use text and set max length so excess decimals can't be entered.-->
+                <input type="text"
+                       maxlength="5"
+                       class="noSpin clrBr clrSh2"
+                       name="modInfo.fee.fixedFee.amount"
+                       value="<%= amt %>"
+                       data-var-type="number">
+              </div>
+              <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
+                <select  id="moderationCurrency" name="modInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2" style="width: 100%">
                   <% ob.currencyList.forEach((currency) => { %>
                   <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.name %></option>
                   <% }); %>
@@ -113,7 +110,7 @@
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.terms') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['modInfo.terms']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.terms'] })) %>
+            <% if (ob.errors['modInfo.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.termsAndConditions'] })) %>
             <textarea rows="3" maxlength="<%= ob.max.terms %>" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
                       class="resizable clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
           </div>
@@ -125,10 +122,9 @@
           <div class="col9">
             <% if (ob.errors['modInfo.languages']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.languages'] })) %>
             <div class="select2TagsWrap showDropdown">
-              <% var languages = ob.languages.length ? ob.languages : [ob.defaultLanguage] %>
               <select id="moderationLanguageSelect" multiple name="modInfo.languages" class="clrBr clrP clrSh2 select2Tags">
                 <% ob.languageList.forEach((lang) => { %>
-                <option value="<%= lang.code %>" <% if (languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
+                <option value="<%= lang.code %>" <% if (ob.languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
                 <% }); %>
               </select>
               <div id="moderationLanguageDropdown" class="tagsDropdown"></div>

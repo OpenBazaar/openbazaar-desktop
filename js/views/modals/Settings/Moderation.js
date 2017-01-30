@@ -69,7 +69,7 @@ export default class extends baseVw {
     if (save) {
       const msg = {
         // msg: app.polyglot.t('settings.generalTab.statusSaving'),
-        msg: 'Saving moderation settings...',
+        msg: app.polyglot.t('settings.moderationTab.status.saving'),
         type: 'message',
       };
 
@@ -81,7 +81,7 @@ export default class extends baseVw {
       save.done(() => {
         statusMessage.update({
           // msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
-          msg: 'Moderation settings saved.',
+          msg: app.polyglot.t('settings.moderationTab.status.done'),
           type: 'confirmed',
         });
       })
@@ -90,11 +90,11 @@ export default class extends baseVw {
           args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
 
         // openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
-        openSimpleMessage('Unable to save moderation settings', errMsg);
+        openSimpleMessage(app.polyglot.t('settings.moderationTab.errors.save'), errMsg);
 
         statusMessage.update({
           // msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
-          msg: 'Unable to save moderation settings.',
+          msg: app.polyglot.t('settings.moderationTab.status.fail'),
           type: 'warning',
         });
       }).always(() => {
@@ -157,7 +157,6 @@ export default class extends baseVw {
         errors: this.profile.validationError || {},
         isModerator: this.profile.get('moderator'),
         languageList: languages,
-        defaultLanguage: app.settings.get('language'),
         defaultCurrency: app.settings.get('localCurrency'),
         currencyList: this.currencyList,
         max: {

@@ -259,7 +259,16 @@
       "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
       "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
+      "status":{
+        "saving": "Saving moderation settings...",
+        "done": "Moderation settings saved.",
+        "fail": "Saving the moderation settings failed."
+      },
       "errors": {
+        "confirm": "To become a moderator, you must agree to both statements below.",
+        "save": "The moderation settings were not saved."
+      },
+      "moderatorModelErrors": {
         "noDescription": "Please provide a description.",
         "descriptionLength": "Descriptions must be no more than 300 characters",
         "noTerms": "Please provide your terms of service.",
@@ -271,8 +280,7 @@
         "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
         "percentageLow": "You cannot set a fee percentage below zero.",
         "percentageHigh": "You cannot set a fee percentage above 100%",
-        "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places.",
-        "confirm": "To become a moderator, you must agree to both statements below."
+        "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
       }
     },
     "optional": "optional",
