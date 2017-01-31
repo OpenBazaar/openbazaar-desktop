@@ -16,16 +16,16 @@
       </div>
       <div>
         <div class="flexVCent">
-          <a class="iconBtn ion-chevron-left js-navBack"></a>
+          <a class="iconBtn margLSm ion-chevron-left js-navBack"></a>
           <a class="iconBtn ion-chevron-right js-navFwd"></a>
-          <a class="iconBtn ion-refresh js-navReload"></a>
+          <a class="iconBtn ion-refresh js-navReload margRSm"></a>
         </div>
       </div>
-      <div class="rowDivV clrBrBk"></div>
+      <div class="rowDivV margR clrBrBk"></div>
       <div class="pageNavCenter">
         <div class="flexVCent gutterHSm">
           <div class="searchWrapper">
-            <input type="text" class="js-addressBar flexExpand addressBar clrBr4"
+            <input type="text" class="js-addressBar flexExpand addressBar clrSh2 clrBr4"
                    placeholder="<%= ob.polyT('addressBarPlaceholder') %>" value="<%= ob.addressBarText %>" />
           </div>
           <% if (ob.testnet) { %>
@@ -33,13 +33,13 @@
               <%= ob.polyT('testnet') %>
             </div>
           <% } %>
-          <a class="btn barBtn clrP clrBr ion-navicon-round"></a>
+          <a class="bookmarkPage btn barBtn clrP clrBr clrSh2 tx4 ion-android-add"></a>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box">
-          <a class="iconBtn ion-eye"></a>
+          <a class="iconBtn margLSm ion-eye"></a>
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
           <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
           <nav class="navListWrapper foldDown js-navList">
@@ -90,7 +90,7 @@
               </div>
             </div>
           </nav>
-          <nav class="connManagementContainer foldDown js-connManagementContainer"></nav>
+          <nav class="connManagementContainer foldDown clrSh1 js-connManagementContainer"></nav>
         </div>
       </div>
     </div>

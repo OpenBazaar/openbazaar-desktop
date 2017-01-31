@@ -2,11 +2,11 @@
 
 <div class="topControls gutterHSm flex">
   <% if (ob.vendor) { %>
-  <div class="contentBox clrP clrBr clrT">
-    <div class="padSm gutterHSm overflowAuto flexVCent">
+  <div class="contentBox clrP clrSh3 clrBr clrT">
+    <div class="padSm gutterHSm overflowAuto margRSm flexVCent">
       <a class="clrBr2 clrSh1 disc storeOwnerAvatar flexNoShrink js-storeOwnerAvatar" style="<%= ob.getAvatarBgImage(ob.vendor.avatar) %>"></a>
-      <p class="txUnl clamp"><%= ob.vendor.name %></p>
-      <a class="link flexNoShrink js-goToStore"><% print(ob.openedFromStore ? ob.polyT('listingDetail.returnToStore'): ob.polyT('listingDetail.goToStore')) %></a>
+      <p class="txUnl tx3 clamp"><%= ob.vendor.name %></p>
+      <a class="link flexNoShrink tx6 margRSm js-goToStore"><% print(ob.openedFromStore ? ob.polyT('listingDetail.returnToStore'): ob.polyT('listingDetail.goToStore')) %></a>
     </div>
   </div>
   <% } %>
