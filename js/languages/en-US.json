@@ -332,7 +332,12 @@
       "password": "Password",
       "username": "Username",
       "serverIp": "Server IP",
-      "name": "Name"
+      "name": "Name",
+      "placeholderName": "Enter a name...",
+      "placeholderServerIp": "The IP to your server (or localhost)",
+      "placeholderUsername": "The username to your server",
+      "placeholderPassword": "The password to your server",
+      "placeholderPort": "The port to your server"
     }
   },
   "formats": {
