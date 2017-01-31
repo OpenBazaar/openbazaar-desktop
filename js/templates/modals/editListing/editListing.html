@@ -183,7 +183,7 @@
           <!-- WARNING! Styling is dependant on the following elements being in this order. -->
           <select id="editListingTags" multiple name="listing.item.tags" class="clrBr clrP select2Tags">
             <% ob.listing.item.tags.forEach(tag =>
-                print(`<option value="${tag}" selected="selected">${tag}</option>`)) %>
+                print(`<option value="${tag}" selected>${tag}</option>`)) %>
           </select>
           <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.tagsPlaceholder') %></div>
           <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
@@ -201,7 +201,7 @@
           <!-- WARNING! Styling is dependant on the following elements being in this order. -->
           <select id="editListingCategories" multiple name="listing.item.categories" class="clrBr clrP select2Tags">
             <% ob.listing.item.categories.forEach(cat =>
-                print(`<option value="${cat}" selected="selected">${cat}</option>`)) %>
+                print(`<option value="${cat}" selected>${cat}</option>`)) %>
           </select>
           <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.categoryPlaceholder') %></div>
           <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->

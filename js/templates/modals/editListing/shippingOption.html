@@ -22,7 +22,7 @@
             ob.countrySelectOptions.forEach(option => {
               const selected = ob.regions.indexOf(option.id) > -1;
 
-              print(`<option value="${option.id}" ${selected ? 'selected="selected"' : ''}>${option.text}</option>`);
+              print(`<option value="${option.id}" ${selected ? 'selected' : ''}>${option.text}</option>`);
             });
           %>
         </select>
@@ -40,7 +40,7 @@
         <% if (ob.errors['type']) print(ob.formErrorTmpl({ errors: ob.errors['type'] })) %>
         <select id="<%= `shipOptionType_${ob.cid}` %>" name="type" class="clrBr clrP clrSh2 marginTopAuto">
           <% ob.shippingTypes.forEach(shippingType => { %>
-            <option value="<%= shippingType %>" <% if (ob.type === shippingType) print('selected="selected"') %>><%= ob.polyT(`editListing.shippingOptions.shippingTypes.${shippingType}`) %></option>
+            <option value="<%= shippingType %>" <% if (ob.type === shippingType) print('selected') %>><%= ob.polyT(`editListing.shippingOptions.shippingTypes.${shippingType}`) %></option>
           <% }); %>
         </select>
       </div>
