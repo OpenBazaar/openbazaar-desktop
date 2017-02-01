@@ -1,6 +1,7 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { getExchangeRate } from '../../../utils/currency';
+import app from '../../../app';
 
 
 const RATE_EXPIRY_S = '300';
@@ -13,8 +14,12 @@ export default class extends baseVw {
     });
   }
 
+  get localCurrency() {
+    return app.settings.get('localCurrency');
+  }
+
   getCurrentPrice() {
-    return getExchangeRate('USD');
+    return getExchangeRate(this.localCurrency);
   }
 
   updatePrice() {
@@ -41,7 +46,8 @@ export default class extends baseVw {
 
     loadTemplate('modals/about/btcticker.html', (t) => {
       this.$el.html(t({
-        currentBTCPrice: this.currentBTCPrice.toFixed(2),
+        currentBTCPrice: this.currentBTCPrice,
+        localCurrency: this.localCurrency,
       }));
     });
 

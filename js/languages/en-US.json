@@ -8,6 +8,8 @@
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or #tag",
+  "testnet": "Test Mode",
+  "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -46,6 +48,9 @@
       "canceLink": "cancel",
       "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
     }
+  },
+  "pageNav": {
+    "notConnectedMenuItem": "Not Connected"
   },
   "userPage": {
     "followsYou": "Follows You",
@@ -212,7 +217,8 @@
       "statusSaving": "Saving page settings...",
       "statusSaveComplete": "Page settings saved.",
       "statusSaveFailed": "Unable to save page settings.",
-      "saveErrorAlertTitle": "Unable to save page settings"
+      "saveErrorAlertTitle": "Unable to save page settings",
+      "locationLabel": "Location"
     },
     "addressesTab": {
       "placeholderName": "Your name / name of recipient",
@@ -289,6 +295,9 @@
       "statusSaveComplete": "Advanced settings saved.",
       "statusSaveFailed": "Unable to save advanced settings.",
       "saveErrorAlertTitle": "Unable to save advanced settings"
+    },
+    "moderationTab": {
+      "sectionName": "Moderation"
     },
     "optional": "optional",
     "language": "Language",
@@ -368,13 +377,13 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
-      "statusConnected": "Connected",      
+      "statusConnected": "Connected",
       "deleteConfirm": {
         "heading": "Are you sure?",
         "body": "The server configuration will be deleted. This will not delete the actual server.",
         "btnCancel": "Cancel",
         "btnDelete": "Yes, delete"
-      }      
+      }
     },
     "configurationForm": {
       "tabName": "New configuration",
@@ -428,7 +437,9 @@
     "shipTo": "Ship to:",
     "noShippingFound": "This listing does not ship to the selected country.",
     "localPickup": "This option is for local pickup only.",
-    "allCountries": "Any Country"
+    "allCountries": "Any Country",
+    "returnToStore": "Return to store",
+    "goToStore": "Go to store"
   },
   "listingCard": {
     "btnDetails": "Details",
@@ -510,6 +521,7 @@
         },
         "btnAddShippingOption": "Add Shipping Option",
         "btnDeleteShippingOption": "Delete",
+        "clearAll": "Clear All",
         "services": {
           "nameLabel": "Service",
           "namePlaceholder": "e.g. Standard, Express, Overnight",
@@ -546,7 +558,8 @@
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
     "provideUsername": "Please provide a username.",
-    "duplicateSocialAccount": "You already have a social account of this type."
+    "duplicateSocialAccount": "You already have a social account of this type.",
+    "locationTooLong": "The location exceeds the maximum allowable length."
   },
   "smtpModelErrors": {
     "username": {
@@ -846,6 +859,11 @@
     "YEMEN": "Yemen",
     "ZAMBIA": "Zambia",
     "ZIMBABWE": "Zimbabwe"
+  },
+  "regions": {
+    "ALL": "All",
+    "EUROPEAN_UNION": "European Union",
+    "EUROPEAN_ECONOMIC_AREA": "European Economic Area"
   },
   "currencies": {
     "AED": "UAE Dirham",

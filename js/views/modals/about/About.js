@@ -72,8 +72,14 @@ export default class extends BaseModal {
   }
 
   render() {
-    this.btcTicker = this.createChild(BTCTicker);
-    this.btcTicker.render();
+    // remove any existing tickers from previous renders
+    if (this.btcTicker) this.btcTicker.remove();
+
+    // don't show the ticker if the currency is BTC
+    if (app.settings.get('localCurrency') !== 'BTC') {
+      this.btcTicker = this.createChild(BTCTicker);
+      this.btcTicker.render();
+    }
 
     loadTemplate('modals/about/about.html', (t) => {
       this.$el.html(t({
@@ -85,8 +91,10 @@ export default class extends BaseModal {
       this.$tabContent = this.$('.js-tabContent .contentBox');
 
       this.selectTab(this.currentTabName);
-      this.$btcTicker = this.$('.js-btcTicker');
-      this.$btcTicker.append(this.btcTicker.$el);
+
+      if (app.settings.get('localCurrency') !== 'BTC') {
+        this.$('.js-btcTicker').append(this.btcTicker.$el);
+      }
     });
 
     return this;
