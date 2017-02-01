@@ -12,6 +12,8 @@ export default class extends baseVw {
       className: 'aboutBTCTicker pureFlex alwaysFirst',
       ...options,
     });
+
+    this.listenTo(app.settings, 'change:localCurrency', this.updatePrice);
   }
 
   get localCurrency() {

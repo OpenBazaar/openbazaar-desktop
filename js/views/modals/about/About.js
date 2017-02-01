@@ -38,6 +38,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-tab': 'tabClick',
+      'click .js-checkForUpdate': 'checkForUpdateClick',
       ...super.events(),
     };
   }
@@ -69,6 +70,11 @@ export default class extends BaseModal {
       this.$('#tabTitle').text(app.polyglot.t(
         `about.${this.currentTabName.toLowerCase()}Tab.sectionHeader`));
     }
+  }
+
+  checkForUpdateClick() {
+    console.log('checking for an update');
+    // TODO: wire this in
   }
 
   render() {
