@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -21,6 +22,15 @@ export default class extends baseVw {
 
     this.profile = app.profile.clone();
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
+
+    // When this bug is fixed and we're saving via PATCH,
+    // the block below could be removed:
+    // https://github.com/OpenBazaar/openbazaar-go/issues/314
+    this.listenTo(app.profile, 'someChange', () => {
+      const profileAttrs = _.pick(app.profile.toJSON(),
+        ['moderator', 'modInfo']);
+      this.profile.set(profileAttrs);
+    });
   }
 
   events() {
@@ -223,6 +233,7 @@ export default class extends baseVw {
       this.$el.html(t({
         errors: this.profile.validationError || {},
         ...this.profile.toJSON(),
+        max: this.profile.max,
         avatarMinHeight: this.avatarMinHeight,
         avatarMinWidth: this.avatarMinWidth,
         headerMinHeight: this.headerMinHeight,

@@ -1,6 +1,8 @@
 import app from '../app';
 import { formatCurrency, convertAndFormatCurrency } from './currency';
-import { isHiRez, isLargeWidth, isSmallHeight } from './responsive';
+import {
+  isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage,
+} from './responsive';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -17,3 +19,5 @@ export { isHiRez };
 export { isLargeWidth };
 
 export { isSmallHeight };
+
+export { getAvatarBgImage };

@@ -9,6 +9,7 @@ export default class extends BaseModel {
       type: 'FIXED_PRICE',
       regions: [],
       name: '',
+      services: new Services(),
     };
   }
 

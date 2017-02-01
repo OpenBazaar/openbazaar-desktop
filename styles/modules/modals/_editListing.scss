@@ -91,7 +91,7 @@
                 text-align: center;
 
                 .phraseBox {
-                  display: inline;
+                  display: inline-block;
                 }
               }
             }
@@ -144,6 +144,16 @@
           &:empty + .shipOptPlaceholder {
             .topLevelShipOptErrs {
               display: block;
+            }
+          }
+
+          .select2TagsWrap {
+            .placeholder {
+              margin-top: 11px;
+            }
+
+            .select2-selection__choice[title*=REGION_] {
+              display: none;
             }
           }
         }

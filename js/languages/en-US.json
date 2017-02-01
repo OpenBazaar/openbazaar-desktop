@@ -192,6 +192,7 @@
     "pageTab": {
       "helperAbout": "Displays on your Home page",
       "helperHandle": "Handles make it easy to access your page/store",
+      "helperLocation": "Where are you located?",
       "helperHandleRegister": "Register a unique handle at %{helperHandleRegisterLink}",
       "helperHandleRegisterLink": "Onename",
       "helperShortDescription": "160 characters or less",
@@ -203,6 +204,7 @@
       "placeholderAbout": "Write whatever you would like on your page...",
       "placeholderName": "Name of your page",
       "placeholderHandle": "Enter your Onename @handle",
+      "placeholderLocation": "Enter your location",
       "placeholderShortDescription": "Say something interesting...",
       "placeholderWebsite": "http://",
       "placeholderEmail": "name@domain.com",

@@ -1,8 +1,9 @@
-import BaseModel from './BaseModel';
-import app from '../app';
+import BaseModel from '../BaseModel';
+import app from '../../app';
 import is from 'is_js';
-import SocialAccounts from '../collections/SocialAccounts';
+import SocialAccounts from '../../collections/SocialAccounts';
 import Image from './Image';
+import Moderator from './Moderator';
 
 export default class extends BaseModel {
   defaults() {
@@ -15,11 +16,15 @@ export default class extends BaseModel {
       name: `ob ${Math.random().toString(36).slice(2)}`,
       nsfw: false,
       phoneNumber: '',
-      primaryColor: '#086A9E',
-      secondaryColor: '#317DB8',
-      textColor: '#ffffff',
+      primaryColor: '#FFFFFF',
+      secondaryColor: '#ECEEF2',
+      textColor: '#252525',
+      highlightColor: '#2BAD23',
+      highlightTextColor: '#FFFFFF',
       shortDescription: '',
-      social: [],
+      social: new SocialAccounts(),
+      avatarHashes: new Image(),
+      headerHashes: new Image(),
       vendor: false,
       website: '',
     };
@@ -36,6 +41,7 @@ export default class extends BaseModel {
       social: SocialAccounts,
       avatarHashes: Image,
       headerHashes: Image,
+      modInfo: Moderator,
     };
   }
 
@@ -56,8 +62,19 @@ export default class extends BaseModel {
     ];
   }
 
+  get isModerator() {
+    return this.get('moderator') &&
+      !!this.get('modInfo');
+  }
+
+  get max() {
+    return {
+      locationLength: 100,
+    };
+  }
+
   validate(attrs) {
-    const errObj = {};
+    const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
@@ -85,6 +102,10 @@ export default class extends BaseModel {
 
     if (attrs.handle && attrs.handle.charAt(0) === '@') {
       addError('handle', 'The handle should not start with a leading @.');
+    }
+
+    if (attrs.location && attrs.location.length > this.max.locationLength) {
+      addError('location', app.polyglot.t('profileModelErrors.locationTooLong'));
     }
 
     if (attrs.website && is.not.url(attrs.website)) {

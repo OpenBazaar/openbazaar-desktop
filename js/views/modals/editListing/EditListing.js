@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
-import 'select2';
+import '../../../lib/select2';
 import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
@@ -282,7 +282,7 @@ export default class extends BaseModal {
     photoFiles.forEach(photoFile => {
       const newImage = document.createElement('img');
 
-      newImage.src = encodeURI(photoFile.path);
+      newImage.src = photoFile.path;
 
       newImage.onload = () => {
         const imgW = newImage.width;

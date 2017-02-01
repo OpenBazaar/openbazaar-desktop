@@ -39,6 +39,16 @@
                       class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.pageTab.placeholderShortDescription') %>"><%= ob.shortDescription %></textarea>
           </div>
         </div>
+        <div class="flexRow">
+          <div class="col3">
+            <label for="settingsLocation"><%= ob.polyT('settings.pageTab.locationLabel') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperLocation') %></div>
+          </div>
+          <div class="col6">
+            <% if (ob.errors.location) print(ob.formErrorTmpl({ errors: ob.errors.location })) %>
+            <input type="text" class="clrBr clrSh2" name="location" id="settingsLocation" value="<%= ob.location %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderLocation') %>" maxlength="<%= ob.max.locationLength %>">
+          </div>
+        </div>
 
         <div class="flexRow">
           <div class="col3">

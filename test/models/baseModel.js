@@ -4,23 +4,25 @@ import BaseModel from '../../js/models/BaseModel';
 import { Collection } from 'backbone';
 
 class TestParentModel extends BaseModel {
+  defaults() {
+    return {
+      nestedModel: new BaseModel(),
+      nestedCollection: new Collection(),
+    };
+  }
+
   nested() {
     return {
       nestedModel: BaseModel,
+      nestedModel2: BaseModel, // optional (i.e. not declared in defaults())
       nestedCollection: Collection,
+      nestedCollection2: Collection, // optional (i.e. not declared in defaults())
     };
   }
 }
 
 describe('the base model', () => {
   describe('manages nested attributes', () => {
-    it('by creating a new instance for each nested attribute when the parent is created', () => {
-      const testParent = new TestParentModel();
-
-      expect(testParent.get('nestedModel') instanceof BaseModel).to.equal(true);
-      expect(testParent.get('nestedCollection') instanceof Collection).to.equal(true);
-    });
-
     it('by setting attributes on the nested instances when they are set on the parent', () => {
       const testParent = new TestParentModel();
 
@@ -34,6 +36,22 @@ describe('the base model', () => {
 
       expect(testParent.get('nestedModel').get('happy')).to.equal('hippo');
       expect(testParent.get('nestedCollection').at(0).get('nappy')).to.equal('nipple');
+    });
+
+    it('by creating a new instance for any nested attributes the first time they' +
+      ' are set via the parent', () => {
+      const testParent = new TestParentModel();
+
+      testParent.set('nestedModel2', {
+        happy: 'hippo',
+      });
+
+      testParent.set('nestedCollection2', [{
+        nappy: 'nipple',
+      }]);
+
+      expect(testParent.get('nestedModel') instanceof BaseModel).to.equal(true);
+      expect(testParent.get('nestedCollection') instanceof Collection).to.equal(true);
     });
 
     it('by ensuring a call to toJSON() on the parent embeds and returns the results of' +

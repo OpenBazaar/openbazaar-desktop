@@ -27,7 +27,7 @@
     outline: 0;
   }
 
-  .bar & {
+  .bar &:not(.barBtn) { //add barBtn to any btn that should keep standard button styling
     line-height: $bar;
     height: $bar;
     border: none;

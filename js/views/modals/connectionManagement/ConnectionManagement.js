@@ -117,6 +117,11 @@ export default class extends BaseModal {
     }
   }
 
+  close() {
+    this.selectTab('Configurations');
+    super.close();
+  }
+
   get $closeClickTargets() {
     return this._$closeClickTargets ||
       (this._$closeClickTargets = this.$('.js-closeClickTarget'));

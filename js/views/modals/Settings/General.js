@@ -1,4 +1,4 @@
-import 'select2';
+import '../../../lib/select2';
 import app from '../../../app';
 import languages from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';

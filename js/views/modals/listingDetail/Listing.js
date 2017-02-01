@@ -1,16 +1,16 @@
 import $ from 'jquery';
+import '../../../lib/select2';
+import is from 'is_js';
+import '../../../utils/velocity';
+import 'jquery-zoom';
 import app from '../../../app';
+import { getAvatarBgImage } from '../../../utils/responsive';
+import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
-import 'select2';
-import { getTranslatedCountries } from '../../../data/countries';
-import is from 'is_js';
-import '../../../utils/velocity';
-import 'jquery-zoom';
-
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -27,6 +27,28 @@ export default class extends BaseModal {
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
+
+    // Sometimes a profile model is available and the vendor info
+    // can be obtained from that.
+    if (opts.profile) {
+      const avatarHashes = opts.profile.get('avatarHashes');
+
+      this.vendor = {
+        guid: opts.profile.id,
+        name: opts.profile.get('name'),
+        handle: opts.profile.get('handle'),
+        avatar: {
+          tiny: avatarHashes.get('tiny'),
+          small: avatarHashes.get('small'),
+        },
+      };
+    }
+
+    // In most cases the page opening this modal will already have and be able
+    // to provide the vendor information. If it cannot, then I suppose we
+    // could fetch the profile and lazy load it in, but we can cross that
+    // bridge when we get to it.
+    this.vendor = this.vendor || opts.vendor;
 
     this.countryData = getTranslatedCountries(app.settings.get('language'))
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
@@ -54,6 +76,11 @@ export default class extends BaseModal {
           this.showDataChangedMessage();
         }
       });
+
+      this.listenTo(app.profile.get('avatarHashes'), 'change', () => {
+        this.$storeOwnerAvatar
+          .attr('style', getAvatarBgImage(app.profile.get('avatarHashes').toJSON()));
+      });
     }
   }
 
@@ -71,6 +98,7 @@ export default class extends BaseModal {
       'click .js-photoSelect': 'onClickPhotoSelect',
       'click .js-photoPrev': 'onClickPhotoPrev',
       'click .js-photoNext': 'onClickPhotoNext',
+      'click .js-goToStore': 'onClickGoToStore',
       ...super.events(),
     };
   }
@@ -125,6 +153,18 @@ export default class extends BaseModal {
 
   onClickGotoPhotos() {
     this.gotoPhotos();
+  }
+
+  onClickGoToStore() {
+    if (this.options.openedFromStore) {
+      this.close();
+    } else {
+      if (this.vendor.handle) {
+        location.hash = `#@${this.vendor.handle}/store`;
+      } else {
+        location.hash = `#${this.vendor.guid}/store`;
+      }
+    }
   }
 
   gotoPhotos() {
@@ -316,6 +356,11 @@ export default class extends BaseModal {
       (this._$photoRadioBtns = this.$('.js-photoSelect'));
   }
 
+  get $storeOwnerAvatar() {
+    return this._$storeOwnerAvatar ||
+      (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -335,6 +380,8 @@ export default class extends BaseModal {
         // shipsFromCountry: this.model.get('listing').get('shipsFrom');
         countryData: this.countryData,
         defaultCountry: this.defaultCountry,
+        vendor: this.vendor,
+        openedFromStore: this.options.openedFromStore,
       }));
 
       super.render();
@@ -348,6 +395,7 @@ export default class extends BaseModal {
       this._$shippingOptions = null;
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
+      this._$storeOwnerAvatar = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
