@@ -2,6 +2,10 @@
   .configurations {
     position: relative;
 
+    .minHeight500 {
+      min-height: 500px;
+    }
+    
     .statusBarOuterWrap {
       position: absolute;
       top: 0;
