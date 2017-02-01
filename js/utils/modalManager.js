@@ -1,4 +1,4 @@
-import About from '../views/modals/About/About';
+import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
 

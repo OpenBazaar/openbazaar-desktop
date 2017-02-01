@@ -5,8 +5,7 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import SettingsModal from './modals/Settings/Settings';
-import AboutModal from './modals/About/About';
-import { launchEditListingModal } from '../utils/modalManager';
+import { launchEditListingModal, launchAboutModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { isHiRez } from '../utils/responsive';
 
@@ -202,9 +201,7 @@ export default class extends View {
   }
 
   navAboutClick() {
-    if (!this.aboutModal || !this.aboutModal.isOpen()) {
-      this.aboutModal = new AboutModal().render().open();
-    }
+    launchAboutModal();
     this.togglePopMenu();
   }
 

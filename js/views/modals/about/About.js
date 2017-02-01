@@ -27,7 +27,7 @@ export default class extends BaseModal {
       License,
     };
 
-    // default About tab is Story
+    // default about tab is Story
     this.currentTabName = 'Story';
   }
 

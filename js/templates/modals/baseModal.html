@@ -1,22 +1,4 @@
-<div class="popInMessageHolder js-popInMessages"></div>
 <div class="<%= ob.modelContentClass %>">
-  <div class="topControls pureFlex spread js-closeClickTarget js-btcTicker">
-    <% if (ob.ownListing) { %>
-      <div class="btnStrip clrSh3">
-        <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
-        <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
-      </div>
-    <% } %>
-    <% if (ob.debugLog) { %>
-      <a class="btn clrP clrBr js-copy"><%= ob.polyT('debugLog.copyToClipboard') %></a>
-      <div class="js-copiedConfirm pad tx6 clrT2 hide"><%= ob.polyT('debugLog.copiedToClipboard') %></div>
-    <% } %>
-    <% if (ob.returnText) { %>
-      <div class="btnStrip clrSh3">
-        <a class="btn clrP clrBr clrT js-return"><%= ob.returnText %></a>
-      </div>
-    <% } %>
-    <i class="jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>"></i>
-  </div>
+  <i class="jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>"></i>
   <%= ob.innerContent %>
 </div>

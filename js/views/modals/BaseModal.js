@@ -13,7 +13,7 @@ export default class BaseModal extends baseVw {
       dismissOnOverlayClick: false,
       dismissOnEscPress: true,
       showCloseButton: true,
-      closeButtonClass: 'pureFlex alwaysRight ion-ios-close-empty iconBtn clrP clrBr clrSh3',
+      closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3',
       modelContentClass: 'modalContent',
       removeOnClose: false,
       removeOnRoute: true,
