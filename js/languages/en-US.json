@@ -138,7 +138,8 @@
       "btnCopyAddress": "Copy Address",
       "btnOpenInWallet" : "Open in Wallet",
       "notifyCopied": "Copied",
-      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!"
+      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
+      "copied": "Copied"
     },
     "licenseTab": {
       "linkText": "License",

@@ -2,14 +2,22 @@
   <img src="<%= ob.qrCodeDataURI %>">
   <div id=donation-dashboard class="padMd flexCol">
     <div class="padMd">
-      <h2><%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %></h2>
-      <span class=singleLine><span class="clrT2 donationAddress"><%= ob.obDonationAddress %></span><span class="js-copyNotification copyNotification clrBr border">Copied</span></span>
+      <h2 class="tx2b">
+        <%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %>
+      </h2>
+      <div class="clrT2 donationAddress posR">
+        <span class="js-copyAddress"><%= ob.obDonationAddress %></span>
+        <div class="js-copyNotification copyNotification clrT clrBr clrP">
+          <%= ob.polyT('about.donationsTab.copied') %>
+        </div>
+      </div>
+
     </div>
     <div class="padMd">
       <a class="btn clrP clrBr js-copyAddress flexNoShrink">
         <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
       </a>
-      <a class="btn clrP clrBr js-openInWallet flexNoShrink">
+      <a class="btn clrP clrBr js-openInWallet flexNoShrink" href="bitcoin: <%= ob.obDonationAddress %>">
         <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
       </a>
     </div>
