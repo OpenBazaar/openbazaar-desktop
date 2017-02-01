@@ -19,6 +19,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-copyAddress': 'copyDonationAddress',
+      'click .js-openInWallet': 'openInWalletClick',
     };
   }
 
@@ -36,6 +37,11 @@ export default class extends baseVw {
   get $copyNotification() {
     return this._$copyNotification ||
       (this._$copyNotification = this.$('.js-copyNotification'));
+  }
+
+  openInWalletClick() {
+    console.log('open this in the internal wallet');
+    // TODO: wire this into the internal wallet
   }
 
   render() {
