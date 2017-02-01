@@ -60,7 +60,7 @@ export default class extends baseVw {
 
     if (!this.localSettings.validationError && !this.settings.validationError) {
       const msg = {
-        msg: app.polyglot.t('settings.advancedTab.statusSaving'),
+        msg: app.polyglot.t('settings.generalTab.statusSaving'),
         type: 'message',
       };
 

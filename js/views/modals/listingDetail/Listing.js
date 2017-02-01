@@ -5,7 +5,6 @@ import '../../../utils/velocity';
 import 'jquery-zoom';
 import app from '../../../app';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import { convertAndFormatCurrency } from '../../../utils/currency';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -365,11 +364,6 @@ export default class extends BaseModal {
       (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
   }
 
-  get $prices() {
-    return this._$prices ||
-      (this._$prices = this.$('.js-price'));
-  }
-
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -405,7 +399,6 @@ export default class extends BaseModal {
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
       this._$storeOwnerAvatar = null;
-      this._$prices = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
