@@ -87,8 +87,12 @@ export default class extends BaseModal {
       this.btcTicker.render();
     }
 
+    let sVersion = app.settings.get('version');
+    sVersion = sVersion.substring(sVersion.lastIndexOf(':') + 1, sVersion.lastIndexOf('/'));
+
     loadTemplate('modals/about/about.html', (t) => {
       this.$el.html(t({
+        serverVersion: sVersion,
         ...this.options,
         version,
       }));

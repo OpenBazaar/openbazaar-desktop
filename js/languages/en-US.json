@@ -124,8 +124,8 @@
     "blurbs": {
       "tradeFree": "OpenBazaar is made possible by an international community of developers and volunteers contributing their time to help make trade free."
     },
-    "version": "version",
-    "versionCode": "2.0",
+    "version": "version %{version}",
+    "bothVersions": "client %{cVer}, server %{sVer}",
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Check for Update",

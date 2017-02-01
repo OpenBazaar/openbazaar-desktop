@@ -26,7 +26,13 @@
           </div>
           <h2 id=tabTitle class="h3 clrT txCtr flexExpand"></h2>
           <div>
-            <div class="tx6 txRgt rowSm"><%= ob.polyT('about.version') %> <%= ob.version %></div>
+            <div class="tx6 txRgt rowSm">
+              <% if (ob.version === ob.serverVersion) { %>
+                <%= ob.polyT('about.version', { version: ob.version }) %>
+              <% } else { %>
+                <%= ob.polyT('about.bothVersions', { cVer: ob.version, sVer: ob.serverVersion }) %>
+              <% } %>
+            </div>
             <a class="btn clrP clrBr js-checkForUpdate">
               <%= ob.polyT('about.btnUpdateCheck') %>
             </a>
