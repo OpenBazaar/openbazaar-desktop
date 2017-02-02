@@ -121,6 +121,13 @@
       "helperTranslations": "Help translate OpenBazaar on %{helperTranslationsLink}",
       "helperTranslationsLink": "Transifex",
       "sectionName": "General",
+      "bitcoinUnit": "Bitcoin Unit",
+      "bitcoinUnitTypes": {
+        "BTC": "BTC",
+        "MBTC": "mBTC",
+        "UBTC": "µBTC",
+        "SATOSHI": "Satoshi (sat)"
+      },
       "statusSaving": "Saving general settings...",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
@@ -556,6 +563,12 @@
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0."
+  },
+  "bitcoinCurrencyUnits": {
+    "BTC": "BTC",
+    "MBTC": "mBTC",
+    "UBTC": "µBTC",
+    "SATOSHI": "sat"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
