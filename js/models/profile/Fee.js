@@ -34,26 +34,26 @@ export default class extends BaseModel {
 
     // feeType must exist and be one of the valid values
     if (!attrs.feeType || feeTypes.indexOf(attrs.feeType) === -1) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noFeeType'));
+      addError('feeType', app.polyglot.t('moderatorModelErrors.noFeeType'));
     }
 
     if (attrs.feeType === 'PERCENTAGE' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') {
       // is the percentage a number?
       if (typeof attrs.percentage !== 'number') {
         addError('feeType',
-          app.polyglot.t('settings.moderationTab.moderatorModelErrors.noPercentage'));
+          app.polyglot.t('moderatorModelErrors.noPercentage'));
       }
 
       // is the percentage too low?
       if (attrs.percentage < 0) {
         addError('feeType',
-          app.polyglot.t('settings.moderationTab.moderatorModelErrors.percentageLow'));
+          app.polyglot.t('moderatorModelErrors.percentageLow'));
       }
 
       // is the percentage too high?
       if (attrs.percentage > 100) {
         addError('feeType',
-          app.polyglot.t('settings.moderationTab.moderatorModelErrors.percentageHigh'));
+          app.polyglot.t('moderatorModelErrors.percentageHigh'));
       }
 
       // are there too many decimals? There should be 2 decimal places maximum.
@@ -64,7 +64,7 @@ export default class extends BaseModel {
 
       if (decimals > 0) {
         addError('feeType',
-          app.polyglot.t('settings.moderationTab.moderatorModelErrors.percentageDecimals'));
+          app.polyglot.t('moderatorModelErrors.percentageDecimals'));
       }
     }
 

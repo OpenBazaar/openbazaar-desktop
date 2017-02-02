@@ -37,7 +37,7 @@ export default class extends baseVw {
 
   events() {
     return {
-      'click .js-save': 'saveCheck',
+      'click .js-save': 'save',
       'change #moderationFeeType': 'changeFeeType',
     };
   }
@@ -46,18 +46,21 @@ export default class extends baseVw {
     return super.getFormData(this.$formFields);
   }
 
-  saveCheck() {
-    /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
-       aren't checked, show an error */
-    const blockSave = (!this.profile.get('moderator') &&
-      $('input[name=moderator]:checked').val() === 'true' &&
-      !this.$understandRequirements.prop('checked') && !this.$acceptGuidelines.prop('checked'));
-
-    this.$moderationConfirmError.toggleClass('hide', !blockSave);
-    if (!blockSave) this.save();
-  }
-
   save() {
+    /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
+     aren't checked, show an error */
+
+    const confirmChecked = this.$understandRequirements.prop('checked') &&
+      this.$acceptGuidelines.prop('checked');
+
+    if (!this.profile.get('moderator') &&
+    $('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
+      this.$moderationConfirmError.removeClass('hide');
+      return;
+    }
+
+    this.$moderationConfirmError.addClass('hide');
+
     const formData = this.getFormData();
     this.profile.set(formData);
 
@@ -141,7 +144,7 @@ export default class extends baseVw {
 
   get $acceptGuidelines() {
     return this._$acceptGuidelines ||
-      (this._$acceptGuidelines = this.$('.js-acceptGuidelines'));
+      (this._$acceptGuidelines = this.$('#acceptGuidelines'));
   }
 
   get $moderationConfirmError() {

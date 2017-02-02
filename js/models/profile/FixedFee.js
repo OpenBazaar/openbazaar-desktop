@@ -1,6 +1,6 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
-import { getListofCurrencies } from '../../data/currencies';
+import { getCurrencyByCode } from '../../data/currencies';
 import is from 'is_js';
 
 export default class extends BaseModel {
@@ -19,16 +19,15 @@ export default class extends BaseModel {
     };
 
     if (is.not.existy(attrs.currencyCode) || typeof attrs.currencyCode !== 'string') {
-      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noCurrency'));
+      addError('feeType', app.polyglot.t('moderatorModelErrors.noCurrency'));
     }
 
-    // make sure currency is a valid value
-    if (getListofCurrencies().indexOf(attrs.currencyCode) === -1) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noCurrency'));
+    if (attrs.currencyCode && !getCurrencyByCode(attrs.currencyCode)) {
+      addError('feeType', app.polyglot.t('moderatorModelErrors.noCurrency'));
     }
 
     if (typeof attrs.amount !== 'number' || attrs.amount < 0) {
-      addError('feeType', app.polyglot.t('settings.moderationTab.moderatorModelErrors.noAmount'));
+      addError('feeType', app.polyglot.t('moderatorModelErrors.noAmount'));
     }
 
     if (Object.keys(errObj).length) return errObj;
