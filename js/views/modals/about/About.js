@@ -102,9 +102,7 @@ export default class extends BaseModal {
 
       this.selectTab(this.currentTabName);
 
-      if (app.settings.get('localCurrency') !== 'BTC') {
-        this.$('.js-btcTicker').append(this.btcTicker.$el);
-      }
+      if (this.btcTicker) this.$('.js-btcTicker').append(this.btcTicker.$el);
     });
 
     return this;
