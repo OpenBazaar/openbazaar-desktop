@@ -18,6 +18,7 @@
           ob.polyT('editListing.sectionNames.category'),
           ob.polyT('editListing.sectionNames.returnPolicy'),
           ob.polyT('editListing.sectionNames.termsAndConditions'),
+          ob.polyT('editListing.sectionNames.coupons'),
         ].forEach((tabName, index) => {
           print(`<a class="js-scrollLink tab row ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tabName}</a>`)
         });
@@ -226,6 +227,12 @@
         <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
         <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.listing.termsAndConditions %></textarea>      
         <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTerms') %></div>  
+      </section>
+
+      <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.coupons') %></h2>
+        <hr class="clrBr rowMd" />
+        <a class="btn clrP clrBr clrSh2 js-addCoupons <% ob.expandedCoupons && print('hide') %>"><%= ob.polyT('editListing.btnAddCoupon') %></a>
       </section>
 
       <div class="contentBox padMd clrP clrBr clrSh3">

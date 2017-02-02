@@ -416,7 +416,7 @@
       "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
-      "expiration": "Expiration"
+      "coupons": "Coupons"
     },
     "placeholderTitle": "Enter your title...",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -452,6 +452,7 @@
     "btnAddShippingOptionShort": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
+    "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "Primary Photo",
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
