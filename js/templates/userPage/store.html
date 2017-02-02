@@ -39,8 +39,9 @@
           </select>
           <div class="select2Small js-shipsToSelectDropdownContainer"></div>
         </div>
-        <div class="flexVCent rowSm gutterHSm">
+        <div class="flexVCent rowSm">
           <input type="checkbox" id="filterFreeShipping" class="margRSm js-filterFreeShipping" <% if (ob.filter.freeShipping) print('checked') %> />
+          <label for="filterFreeShipping"></label><!-- label for the replacement checkbox -->
           <label class="clrE1 clrTOnEmph phraseBox" for="filterFreeShipping"><%= ob.polyT('userPage.store.freeShippingBanner') %></label>
         </div>
       </div>

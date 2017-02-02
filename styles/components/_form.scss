@@ -201,6 +201,10 @@ input[type="checkbox"] {
       position: relative;
       top: 0.15em;
       margin-right: 0.25em;
+
+      .flexVCent & {
+        top: 0; // don't adjust position if it's flex centered
+      }
     }
   }
 
