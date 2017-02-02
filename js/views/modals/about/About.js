@@ -81,11 +81,8 @@ export default class extends BaseModal {
     // remove any existing tickers from previous renders
     if (this.btcTicker) this.btcTicker.remove();
 
-    // don't show the ticker if the currency is BTC
-    if (app.settings.get('localCurrency') !== 'BTC') {
-      this.btcTicker = this.createChild(BTCTicker);
-      this.btcTicker.render();
-    }
+    this.btcTicker = this.createChild(BTCTicker);
+    this.btcTicker.render();
 
     const sVer = app.settings.get('version');
     const serverVersion = sVer.substring(sVer.lastIndexOf(':') + 1, sVer.lastIndexOf('/'));
@@ -102,7 +99,7 @@ export default class extends BaseModal {
 
       this.selectTab(this.currentTabName);
 
-      if (this.btcTicker) this.$('.js-btcTicker').append(this.btcTicker.$el);
+      this.$('.js-btcTicker').append(this.btcTicker.$el);
     });
 
     return this;
