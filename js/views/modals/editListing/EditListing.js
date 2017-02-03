@@ -15,6 +15,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
+import Coupon from '../../../models/listing/Coupon';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
@@ -126,6 +127,7 @@ export default class extends BaseModal {
       'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
       'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
       'click .js-addShippingOption': 'onClickAddShippingOption',
+      'click .js-addCoupon': 'onClickAddCoupon',
       ...super.events(),
     };
   }
@@ -377,6 +379,14 @@ export default class extends BaseModal {
           new Service(),
         ],
       }));
+  }
+
+  onClickAddCoupon() {
+    this.coupons.add(new Coupon());
+
+    if (this.coupons.length) {
+      this.$couponsContainer.removeClass('hide');
+    }
   }
 
   uploadImages(images) {
@@ -722,6 +732,7 @@ export default class extends BaseModal {
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
+      this.$couponsContainer = this.$('.js-couponsContainer');
 
       this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
         // disables the search box
@@ -835,16 +846,14 @@ export default class extends BaseModal {
       // render coupons
       if (this.couponsView) this.couponsView.remove();
 
-      if (true || this.coupons && this.coupons.length) {
-        this.couponsView = new Coupons({
-          // collection: this.coupons,
-          collection: new Backbone.Collection(),
-        });
+      this.couponsView = new Coupons({
+        collection: this.coupons,
+        // collection: new Backbone.Collection(),
+      });
 
-        this.$('.js-couponsContainer').append(
-          this.couponsView.render().el
-        );
-      }
+      this.$couponsContainer.append(
+        this.couponsView.render().el
+      );
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;

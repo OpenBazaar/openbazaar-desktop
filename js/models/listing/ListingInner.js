@@ -20,6 +20,7 @@ export default class extends BaseModel {
       item: new Item(),
       metadata: new Metadata(),
       shippingOptions: new ShippingOptions(),
+      coupons: new Coupons(),
     };
   }
 

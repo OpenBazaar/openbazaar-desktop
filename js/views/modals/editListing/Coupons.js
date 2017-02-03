@@ -13,10 +13,35 @@ export default class extends BaseView {
     super(options);
     this.options = options;
     this.couponViews = [];
+
+    this.listenTo(this.collection, 'add', (md, cl) => {
+      const index = cl.indexOf(md);
+      const view = this.createCouponView(md);
+
+      console.log('one: ' + index);
+
+      if (index) {
+        console.log('three');
+        window.three = this.$couponsWrap.find('> *')
+          .eq(index - 1);
+        this.$couponsWrap.find('> *')
+          .eq(index - 1)
+          .after(view.render().el);        
+      } else {
+        console.log('two');
+        this.$couponsWrap.prepend(view.render().el);
+      }
+
+      this.couponViews.splice(index, 0, view);
+    });
+
+    this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
+      (this.couponViews.splice(removeOpts.index, 1)[0]).remove();
+    });
   }
 
   className() {
-    return 'flexRow gutterH';
+    // return 'flexRow gutterH';
   }
 
   events() {
@@ -31,6 +56,16 @@ export default class extends BaseView {
   //   return 'section';
   // }
 
+  createCouponView(model, options = {}) {
+    const view = this.createChild(Coupon, {
+      model,
+      getCurrency: () => ('USD'),
+      ...options,
+    });
+
+    return view;
+  }
+
   render() {
     loadTemplate('modals/editListing/coupons.html', t => {
       // this.$el.html(t({
@@ -38,22 +73,19 @@ export default class extends BaseView {
       // }));
 
       this.$el.html(t());
+      this.$couponsWrap = this.$('.js-couponsWrap');
 
       this.couponViews.forEach(coupon => coupon.remove());
       this.couponViews = [];
       const couponsFrag = document.createDocumentFragment();
 
       this.collection.forEach(coupon => {
-        const view = this.createChild(Coupon, {
-          model: coupon,
-          getCurrency: () => ('USD'),
-        });
-
+        const view = this.createCouponView(coupon);
         this.couponViews.push(view);
         view.render().$el.appendTo(couponsFrag);
       });
 
-      this.$('.js-couponsWrap').append(couponsFrag);
+      this.$couponsWrap.append(couponsFrag);
 
       // this._$headline = null;
     });
