@@ -484,8 +484,9 @@
       "discountLabel": "Discount",
       "titlePlaceholder": "Please provide a title",
       "discountCodePlaceholder": "Please provide a code",
-      "discountTypePercent": "Percentage",
-      "discountTypeFixed": "Fixed"
+      "discountTypePercent": "Percent",
+      "discountTypeFixed": "Fixed",
+      "btnAddCoupon": "+ Add Coupon"      
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",

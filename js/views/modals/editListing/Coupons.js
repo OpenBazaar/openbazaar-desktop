@@ -1,6 +1,7 @@
 // import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
 // import app from '../../../app';
+import CouponMd from '../../../models/listing/Coupon';
 import BaseView from '../../baseVw';
 import Coupon from './Coupon';
 
@@ -18,17 +19,11 @@ export default class extends BaseView {
       const index = cl.indexOf(md);
       const view = this.createCouponView(md);
 
-      console.log('one: ' + index);
-
       if (index) {
-        console.log('three');
-        window.three = this.$couponsWrap.find('> *')
-          .eq(index - 1);
         this.$couponsWrap.find('> *')
           .eq(index - 1)
-          .after(view.render().el);        
+          .after(view.render().el);
       } else {
-        console.log('two');
         this.$couponsWrap.prepend(view.render().el);
       }
 
@@ -40,21 +35,19 @@ export default class extends BaseView {
     });
   }
 
-  className() {
-    // return 'flexRow gutterH';
-  }
+  // className() {
+  //   return 'flexRow gutterH';
+  // }
 
   events() {
     return {
-      // 'click .js-removeShippingOption': 'onClickRemoveShippingOption',
-      // 'click .js-btnAddService': 'onClickAddService',
-      // 'click .js-clearAllShipDest': 'onClickClearShipDest',
+      'click .js-addCoupon': 'onClickAddCoupon',
     };
   }
 
-  // tagName() {
-  //   return 'section';
-  // }
+  onClickAddCoupon() {
+    this.collection.add(new CouponMd());
+  }
 
   createCouponView(model, options = {}) {
     const view = this.createChild(Coupon, {
@@ -62,6 +55,9 @@ export default class extends BaseView {
       getCurrency: () => ('USD'),
       ...options,
     });
+
+    this.listenTo(view, 'remove-click', e =>
+      this.collection.remove(e.view.model));
 
     return view;
   }

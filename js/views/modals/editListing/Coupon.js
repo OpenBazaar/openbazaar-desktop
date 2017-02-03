@@ -1,5 +1,6 @@
 // import $ from 'jquery';
 import { formatPrice } from '../../../utils/currency';
+import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
 // import app from '../../../app';
 import BaseView from '../../baseVw';
@@ -19,15 +20,17 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'flexRow gutterH';
+    return 'coupon flexRow gutterH';
   }
 
   events() {
     return {
-      // 'click .js-removeShippingOption': 'onClickRemoveShippingOption',
-      // 'click .js-btnAddService': 'onClickAddService',
-      // 'click .js-clearAllShipDest': 'onClickClearShipDest',
+      'click .js-btnRemoveCoupon': 'onClickRemove',
     };
+  }
+
+  onClickRemove() {
+    this.trigger('remove-click', { view: this });
   }
 
   render() {
@@ -38,6 +41,11 @@ export default class extends BaseView {
         getCurrency: this.options.getCurrency,
         formatPrice,
       }));
+
+      this.$('select[name=discountType]').select2({
+        // disables the search box
+        minimumResultsForSearch: Infinity,
+      });
 
       // this._$headline = null;
     });

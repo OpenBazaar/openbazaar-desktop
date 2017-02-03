@@ -229,11 +229,11 @@
         <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTerms') %></div>  
       </section>
 
-      <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
+      <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3 couponsSection js-couponsSection <% ob.expandedCoupons && print('expandedCouponView') %>">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.coupons') %></h2>
         <hr class="clrBr rowMd" />
-        <div class="js-couponsContainer <% if (!ob.coupons) print('hide') %>"></div>
-        <a class="btn clrP clrBr clrSh2 js-addCoupon"><%= ob.polyT('editListing.btnAddCoupon') %></a>
+        <div class="js-couponsContainer couponsContainer"></div>
+        <a class="btn clrP clrBr clrSh2 btnAddCoupon js-btnAddCoupon"><%= ob.polyT('editListing.btnAddCoupon') %></a>
       </section>
 
       <div class="contentBox padMd clrP clrBr clrSh3">

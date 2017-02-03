@@ -65,7 +65,6 @@ export default class extends BaseModal {
     this.images = this.innerListing.get('item').get('images');
     this.shippingOptions = this.innerListing.get('shippingOptions');
     this.shippingOptionViews = [];
-    this.coupons = this.innerListing.get('coupons');
 
     loadTemplate('modals/editListing/uploadPhoto.html',
       uploadT => (this.uploadPhotoT = uploadT));
@@ -100,6 +99,15 @@ export default class extends BaseModal {
           { listPosition: this.shippingOptions.length + 1 }));
     });
 
+    this.coupons = this.innerListing.get('coupons');
+    this.listenTo(this.coupons, 'update', () => {
+      if (this.coupons.length) {
+        this.$couponsSection.addClass('expandedCouponView');
+      } else {
+        this.$couponsSection.removeClass('expandedCouponView');
+      }
+    });
+
     this.$el.on('scroll', () => {
       if (this.el.scrollTop > 57 && !this.$el.hasClass('fixedNav')) {
         this.$el.addClass('fixedNav');
@@ -127,7 +135,7 @@ export default class extends BaseModal {
       'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
       'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
       'click .js-addShippingOption': 'onClickAddShippingOption',
-      'click .js-addCoupon': 'onClickAddCoupon',
+      'click .js-btnAddCoupon': 'onClickAddCoupon',
       ...super.events(),
     };
   }
@@ -384,8 +392,9 @@ export default class extends BaseModal {
   onClickAddCoupon() {
     this.coupons.add(new Coupon());
 
-    if (this.coupons.length) {
-      this.$couponsContainer.removeClass('hide');
+    if (this.coupons.length === 1) {
+      this.$couponsSection.find('.coupon input[name=title]')
+        .focus();
     }
   }
 
@@ -732,7 +741,7 @@ export default class extends BaseModal {
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
-      this.$couponsContainer = this.$('.js-couponsContainer');
+      this.$couponsSection = this.$('.js-couponsSection');
 
       this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
         // disables the search box
@@ -848,10 +857,9 @@ export default class extends BaseModal {
 
       this.couponsView = new Coupons({
         collection: this.coupons,
-        // collection: new Backbone.Collection(),
       });
 
-      this.$couponsContainer.append(
+      this.$couponsSection.find('.js-couponsContainer').append(
         this.couponsView.render().el
       );
 
