@@ -3,6 +3,7 @@ import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
 import ShippingOptions from '../../collections/ShippingOptions.js';
+import Coupons from '../../collections/Coupons.js';
 import is from 'is_js';
 
 export default class extends BaseModel {
@@ -27,6 +28,7 @@ export default class extends BaseModel {
       item: Item,
       metadata: Metadata,
       shippingOptions: ShippingOptions,
+      coupons: Coupons,
     };
   }
 

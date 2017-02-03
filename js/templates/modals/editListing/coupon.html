@@ -1,0 +1,39 @@
+<div class="col4 simpleFlexCol">
+  <% if (ob.errors['title']) print(ob.formErrorTmpl({ errors: ob.errors['title'] })) %>
+  <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="title" value="<%= ob.title %>" placeholder="<%= ob.polyT('editListing.coupons.titlePlaceholder') %>">
+</div>
+<div class="col4 simpleFlexCol">
+  <% if (ob.errors['discountCode']) print(ob.formErrorTmpl({ errors: ob.errors['discountCode'] })) %>
+  <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="discountCode" value="<%= ob.discountCode %>" placeholder="<%= ob.polyT('editListing.coupons.discountCodePlaceholder') %>">
+</div>
+<div class="col4 simpleFlexCol">
+  <% if (ob.errors['percentDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['percentDiscount'] })) %>
+  <% if (ob.errors['priceDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['priceDiscount'] })) %>
+  <div class="flexRow marginTopAuto">
+    <div class="inputSelect marginTopAuto">
+      <%
+        let discountAmount;
+
+        if (ob.discountType === 'FIXED') {
+          discountAmount = typeof ob.priceDiscount === 'number' ?
+            ob.formatPrice(ob.priceDiscount, ob.getCurrency() === 'BTC') :
+            ob.priceDiscount
+        } else {
+          discountAmount = typeof ob.percentDiscount === 'number' ?
+            ob.percentDiscount.toFixed(2) : '';
+        }
+
+        if (typeof ob.price === 'number') {
+          discountAmount = ob.formatPrice(ob.price, ob.getCurrency() === 'BTC')
+        }
+      %>
+      <input type="text" class="clrBr clrP clrSh2 <% if (ob.discountType === 'FIXED') print('js-price') %>" name="discountAmount" value="<%= discoutnAmount %>" data-var-type="number">
+      <select name="discountType" class="clrBr clrP nestInputRight">
+        <option value="FIXED"><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
+        <option value="PERCENTAGE"><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
+      </select>
+    </div>
+
+    <a class="iconBtn ion-trash-b clrBr clrP margLSm js-btnRemoveService btnRemoveService"></a>
+  </div>
+</div>

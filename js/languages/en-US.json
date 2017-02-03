@@ -478,6 +478,15 @@
           "addService": "+ Add Service"
         }
     },
+    "coupons": {
+      "titleLabel": "Title",
+      "couponCodeLabel": "Coupon Code",
+      "discountLabel": "Discount",
+      "titlePlaceholder": "Please provide a title",
+      "discountCodePlaceholder": "Please provide a code",
+      "discountTypePercent": "Percentage",
+      "discountTypeFixed": "Fixed"
+    },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
     "errors": {
@@ -544,6 +553,10 @@
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
+  },
+  "couponModelErrors": {
+    "provideDiscountCode": "Please provide a coupon code.",
+    "provideDiscountAmount": "Please provide a discount value."
   },
   "shippingOptionModelErrors": {
     "provideName": "Please provide a title.",

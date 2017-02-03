@@ -18,6 +18,7 @@ import Image from '../../../models/listing/Image';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
+import Coupons from './Coupons';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -63,6 +64,7 @@ export default class extends BaseModal {
     this.images = this.innerListing.get('item').get('images');
     this.shippingOptions = this.innerListing.get('shippingOptions');
     this.shippingOptionViews = [];
+    this.coupons = this.innerListing.get('coupons');
 
     loadTemplate('modals/editListing/uploadPhoto.html',
       uploadT => (this.uploadPhotoT = uploadT));
@@ -813,6 +815,7 @@ export default class extends BaseModal {
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
+      // render shipping options
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
       this.shippingOptionViews = [];
       const shipOptsFrag = document.createDocumentFragment();
@@ -828,6 +831,20 @@ export default class extends BaseModal {
       });
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
+
+      // render coupons
+      if (this.couponsView) this.couponsView.remove();
+
+      if (true || this.coupons && this.coupons.length) {
+        this.couponsView = new Coupons({
+          // collection: this.coupons,
+          collection: new Backbone.Collection(),
+        });
+
+        this.$('.js-couponsContainer').append(
+          this.couponsView.render().el
+        );
+      }
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;
