@@ -11,6 +11,7 @@
   vertical-align: middle;
   align-items: center; // centers icons if they are a child element
   justify-content: center;
+  -webkit-user-select: none; // quick clicks will now not highlight 
 }
 
 .btn {
@@ -197,13 +198,12 @@
 
   &:before {
     //insert a search icon before the text
-    font-family: Ionicons;
-    content: "\f4a5";
+    content: "🔍";
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.75em;
-    left: 0.6em;
+    font-size: 1.45em;
+    left: 8px;
     color: inherit;
   }
 }

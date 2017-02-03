@@ -223,6 +223,7 @@ export default class extends baseVw {
       this.$el.html(t({
         errors: this.profile.validationError || {},
         ...this.profile.toJSON(),
+        max: this.profile.max,
         avatarMinHeight: this.avatarMinHeight,
         avatarMinWidth: this.avatarMinWidth,
         headerMinHeight: this.headerMinHeight,

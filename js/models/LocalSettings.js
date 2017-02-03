@@ -1,11 +1,6 @@
-import electron from 'electron';
+import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
-
-const remote = electron.remote;
-const controlStyles = ['mac', 'win'];
-const viewStyles = ['list', 'grid'];
-const feeLevels = ['low', 'medium', 'high'];
 
 export default class extends Model {
   localStorage() {
@@ -24,7 +19,24 @@ export default class extends Model {
       defaultTransactionFee: 'high',
       language: 'en-US',
       listingsGridViewType: 'grid',
+      bitcoinUnit: 'BTC',
     };
+  }
+
+  get controlStyles() {
+    return ['mac', 'win'];
+  }
+
+  get viewStyles() {
+    return ['list', 'grid'];
+  }
+
+  get feeLevels() {
+    return ['low', 'medium', 'high'];
+  }
+
+  get bitcoinUnits() {
+    return ['BTC', 'MBTC', 'UBTC', 'SATOSHI'];
   }
 
   validate(attrs) {
@@ -34,16 +46,21 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (!controlStyles.includes(attrs.windowControlStyle)) {
-      addError('windowControlStyle', `Please provide one of ${controlStyles}.`);
+    if (!this.controlStyles.includes(attrs.windowControlStyle)) {
+      addError('windowControlStyle', `Please provide one of ${this.controlStyles}.`);
     }
 
-    if (!viewStyles.includes(attrs.listingsGridViewType)) {
-      addError(`ListingGrideViewType needs to be one of ${viewStyles}.`);
+    if (!this.viewStyles.includes(attrs.listingsGridViewType)) {
+      addError(`ListingGrideViewType needs to be one of ${this.viewStyles}.`);
     }
 
-    if (!feeLevels.includes(attrs.defaultTransactionFee)) {
-      addError('defaultTransactionFee', `Default transaction fee needs to be one of ${feeLevels}.`);
+    if (!this.feeLevels.includes(attrs.defaultTransactionFee)) {
+      addError('defaultTransactionFee',
+        `Default transaction fee needs to be one of ${this.feeLevels}.`);
+    }
+
+    if (!this.bitcoinUnits.includes(attrs.bitcoinUnit)) {
+      addError(`bitcoinUnit needs to be one of ${this.bitcoinUnits}.`);
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;

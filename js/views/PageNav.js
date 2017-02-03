@@ -7,7 +7,7 @@ import app from '../app';
 import $ from 'jquery';
 import PageNavServersMenu from './PageNavServersMenu';
 import SettingsModal from './modals/Settings/Settings';
-import { launchEditListingModal } from '../utils/modalManager';
+import { launchEditListingModal, launchAboutModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 
@@ -25,6 +25,7 @@ export default class extends View {
         'focusin .js-addressBar': 'onFocusInAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navAboutModal': 'navAboutClick',
         'click .js-navCreateListing': 'navCreateListingClick',
         'click .js-navListItem': 'onNavListItemClick',
         'mouseenter .js-connectedServerListItem': 'onMouseEnterConnectedServerListItem',
@@ -252,6 +253,11 @@ export default class extends View {
     if (!this.settingsModal || !this.settingsModal.isOpen()) {
       this.settingsModal = new SettingsModal().render().open();
     }
+  }
+
+  navAboutClick() {
+    launchAboutModal();
+    this.togglePopMenu();
   }
 
   navCreateListingClick() {

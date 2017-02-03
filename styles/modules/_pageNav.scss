@@ -17,9 +17,13 @@
       padding: 9px;
     }
 
+    .iconPad {
+      padding: 0 5px; 
+    }
+
     .pageNavCenter  {
       flex-grow: 1;
-      padding-right: $pad;
+      margin: auto $pad;
     }
 
     .addressBar {
@@ -31,16 +35,18 @@
       transition: border-color .2s;
       font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
+      text-indent: 18px;
+    }
 
-      &:not(:hover, :focus){
-        border-color: transparent;
-      }
+    .bookmarkPage {
+      height: 31px;
+      width: 34px;
     }
 
     #AvatarBtn {
       border-width: 2px;
       border-style: solid;
-      margin: 5px 0;
+      margin: 5px 0 5px 5px;
     }
 
     #testnetFlag {
@@ -84,7 +90,6 @@
       order: -1;
     }
     .windowControls {
-      margin-right: 10px;
 
       a {
         border-radius: 50%;

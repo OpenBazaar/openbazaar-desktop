@@ -5,6 +5,7 @@ form {
   label {
     line-height: $formElementHeight;
     font-weight: 500;
+    -webkit-user-select: none;
   }
 }
 

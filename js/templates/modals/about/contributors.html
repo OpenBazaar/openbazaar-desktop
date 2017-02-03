@@ -1,0 +1,11 @@
+<div class="padMd">
+  <p class="txCtr">
+    <%= ob.polyT('about.blurbs.tradeFree') %>
+    <%= ob.polyT('about.contributorsTab.listPreface') %>
+  </p>
+  <div class="columns">
+    <ul class="contributorList">
+      <% ob.names.forEach(name => print(`<li>${name}</li>`)) %>
+    </ul>
+  </div>
+</div>

@@ -17,7 +17,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
-        <input type="text" class="clrBr js-inputName" name="name" id="serverConfigName" value="<%= ob.name %>">
+        <input type="text" class="clrBr clrSh2 js-inputName" name="name" id="serverConfigName" value="<%= ob.name %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderName') %>" >
       </div>
     </div>
     <div class="flexRow">
@@ -26,7 +26,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.serverIp) print(ob.formErrorTmpl({ errors: ob.errors.serverIp })) %>
-        <input type="text" class="clrBr" name="serverIp" id="serverConfigServerIp" value="<%= ob.serverIp %>">
+        <input type="text" class="clrBr clrSh2" name="serverIp" id="serverConfigServerIp" value="<%= ob.serverIp %>"placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderServerIp') %>">
       </div>
     </div>
     <div class="flexRow">
@@ -35,7 +35,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.username) print(ob.formErrorTmpl({ errors: ob.errors.username })) %>
-        <input type="text" class="clrBr" name="username" id="serverConfigUsername" value="<%= ob.username %>">
+        <input type="text" class="clrBr clrSh2" name="username" id="serverConfigUsername" value="<%= ob.username %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderUsername') %>">
       </div>
     </div>
     <div class="flexRow">
@@ -44,7 +44,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
-        <input type="password" class="clrBr" name="password" id="serverConfigPassword" value="<%= ob.password %>">
+        <input type="password" class="clrBr clrSh2" name="password" id="serverConfigPassword" value="<%= ob.password %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPassword') %>">
       </div>
     </div>
     <div class="flexRow">
@@ -81,7 +81,7 @@
       </div>
       <div class="col9">
       <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>
-        <input type="text" class="clrBr" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number">
+        <input type="text" class="clrBr clrSh2" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPort') %>">
       </div>
     </div>    
   </form>
@@ -89,6 +89,6 @@
   <hr class="clrBr" />
   <div class="flexHRight flexVCent gutterHLg">
     <a class="js-cancel"><%= ob.polyT('connectionManagement.configurationForm.btnCancel') %></a>
-    <a class="btn clrP clrBr js-save"><%= ob.polyT('connectionManagement.configurationForm.btnSave') %></a>
+    <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('connectionManagement.configurationForm.btnSave') %></a>
   </div>
 </div>

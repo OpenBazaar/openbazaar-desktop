@@ -1,17 +1,29 @@
+import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
 
-let editListindModal;
+let aboutModal;
+let editListingModal;
 let debugLogModal;
 
 export function launchEditListingModal(modalOptions = {}) {
-  if (editListindModal) editListindModal.remove();
+  if (editListingModal) editListingModal.remove();
 
-  editListindModal = new EditListing(modalOptions)
+  editListingModal = new EditListing(modalOptions)
     .render()
     .open();
 
-  return editListindModal;
+  return editListingModal;
+}
+
+export function launchAboutModal(modalOptions = {}) {
+  if (aboutModal) aboutModal.remove();
+
+  aboutModal = new About(modalOptions)
+    .render()
+    .open();
+
+  return aboutModal;
 }
 
 // todo: give opening of the settings modal the same treatment

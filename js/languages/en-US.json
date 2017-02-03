@@ -106,11 +106,74 @@
           "showMore": "%{smart_count} more... |||| %{smart_count} more...",
           "showLess": "less"
         }
+    },
+    "mainNav": {
+      "home": "Home",
+      "store": "Store",
+      "following": "Following",
+      "followers": "Followers"
     }
   },
   "userShort": {
     "userLoading": "Loading...",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
+  },
+  "about": {
+    "linkText": "About OpenBazaar",
+    "brand": "OpenBazaar",
+    "blurbs": {
+      "tradeFree": "OpenBazaar is made possible by an international community of developers and volunteers contributing their time to help make trade free."
+    },
+    "version": "version %{version}",
+    "bothVersions": "client %{cVer}, server %{sVer}",
+    "client": "Client",
+    "server": "Server",
+    "btnUpdateCheck": "Check for Update",
+    "menu": {
+      "sectionHeader": "MENU"
+    },
+    "donationsTab": {
+      "linkText": "Donations",
+      "sectionHeader": "Donations",
+      "btnCopyAddress": "Copy Address",
+      "btnOpenInWallet" : "Open in Wallet",
+      "notifyCopied": "Copied",
+      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
+      "copied": "Copied"
+    },
+    "licenseTab": {
+      "linkText": "License",
+      "sectionHeader": "OpenBazaar MIT License",
+      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "header": "The MIT License (MIT)",
+      "copyright": "Copright &copy; 2016 OpenBazaar Developers",
+      "paragraphs": {
+        "permission": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+        "inclusion": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+        "indemnity": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+      }
+    },
+    "contributorsTab": {
+      "linkText": "Contributors",
+      "sectionHeader": "OpenBazaar Contributors",
+      "listPreface": "This is a partial list of people who have contributed to the project, either through code or other assistance."
+    },
+    "storyTab": {
+      "linkText": "The Story",
+      "sectionHeader": "The Story of OpenBazaar",
+      "paragraphs": {
+        "taakisDarkMarket": "In April 2014 at a secretive Toronto hackathon a project called \"Dark Market\" was created. Amir Taaki lead a small team of developers to build a proof of concept for a decentralized marketplace. The software was completely peer to peer with no central organization controlling it. The Dark Market entry won the hackathon, but Amir and his team decided not to continue work on the project.",
+        "briansOpenBazaar": "Brian Hoffman talked to Amir about Dark Market and learned they weren't going to continue development. He liked the idea of a decentralized marketplace, but didn't like the sole focus on darknet markets, so he forked the project and renamed it OpenBazaar",
+        "alphaTeamalphaRelease": "The idea of a permissionless marketplace was powerful, and people around the world joined Brian to help build this open source software. In September this team released the first test version of the software.",
+        "momentOfTruth": "Over the next few months the team continued improving the software and got an encouraging response from the Bitcoin community. They visited FOSSDEM (Free Open Source Software Developers European Meeting) in Brussels early in 2015, and presented the project to an enthusiastic crowd. Brian and a few core members of the team decided that it was time to turn the project from a part-time, volunteer effort into a serious, well-funded campaign to bring free trade to the world.",
+        "foundedAndFunded": "They founded a company, OB1, with a $1 million venture capital investment from Union Square Ventures and Andreessen Horowitz, and immediately began hiring developers to build a better version of the software from the ground up.",
+        "marketOpening": "In April 2016 the first full release of the software was published, and tens of thousands of people around the world downloaded OpenBazaar and began buying and selling with each other directly, using Bitcoin.",
+        "toInfinityAndBeyond": "The initial team's work secured them a $3 million second round investment in the fall of 2016. Building on their ground-breaking work in version 1, an expanded OB1 set to work on OpenBazaar 2, with the aim of making trade free for even more people around the world.",
+        "cashCTA": "Donate now",
+        "or": "or",
+        "codeCTA": "get involved."
+      }
+    }
   },
   "settings": {
     "settingsLabel": "Settings",
@@ -121,6 +184,13 @@
       "helperTranslations": "Help translate OpenBazaar on %{helperTranslationsLink}",
       "helperTranslationsLink": "Transifex",
       "sectionName": "General",
+      "bitcoinUnit": "Bitcoin Unit",
+      "bitcoinUnitTypes": {
+        "BTC": "BTC",
+        "MBTC": "mBTC",
+        "UBTC": "µBTC",
+        "SATOSHI": "Satoshi (sat)"
+      },
       "statusSaving": "Saving general settings...",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
@@ -129,6 +199,7 @@
     "pageTab": {
       "helperAbout": "Displays on your Home page",
       "helperHandle": "Handles make it easy to access your page/store",
+      "helperLocation": "Where are you located?",
       "helperHandleRegister": "Register a unique handle at %{helperHandleRegisterLink}",
       "helperHandleRegisterLink": "Onename",
       "helperShortDescription": "160 characters or less",
@@ -140,6 +211,7 @@
       "placeholderAbout": "Write whatever you would like on your page...",
       "placeholderName": "Name of your page",
       "placeholderHandle": "Enter your Onename @handle",
+      "placeholderLocation": "Enter your location",
       "placeholderShortDescription": "Say something interesting...",
       "placeholderWebsite": "http://",
       "placeholderEmail": "name@domain.com",
@@ -155,7 +227,8 @@
       "statusSaving": "Saving page settings...",
       "statusSaveComplete": "Page settings saved.",
       "statusSaveFailed": "Unable to save page settings.",
-      "saveErrorAlertTitle": "Unable to save page settings"
+      "saveErrorAlertTitle": "Unable to save page settings",
+      "locationLabel": "Location"
     },
     "addressesTab": {
       "placeholderName": "Your name / name of recipient",
@@ -175,7 +248,7 @@
       "addAddressErrorAlertTitle": "Unable to add address %{name}"
     },
     "advancedTab": {
-      "_sectionName": "Advanced",
+      "sectionName": "Advanced",
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
@@ -183,9 +256,9 @@
       "helperServerManagement": "Switch and manage server connections",
       "helperServerPeers": "Peers you're connected to",
       "smtp": {
-        "_sectionName": "Email Integration (SMTP)",
-        "_testAction": "Test Integration",
-        "_clearAction": "Clear All",
+        "sectionName": "Email Integration (SMTP)",
+        "testAction": "Test Integration",
+        "clearAction": "Clear All",
         "notifications": "Notifications",
         "username": "Username",
         "password": "Password",
@@ -207,14 +280,14 @@
         "helperGmailLink": "Gmail"
       },
       "server": {
-        "_sectionName": "Server",
+        "sectionName": "Server",
         "management": "Management",
         "peers": "Peers",
         "btnShowManagementAction": "Connection Management",
         "btnShowPeersAction": "Show Connected Peers"
       },
       "transaction": {
-        "_sectionName": "Transactions",
+        "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
         "defaultFee": "Bitcoin Fee",
         "low": "Low",
@@ -222,7 +295,7 @@
         "high": "High"
       },
       "appearance": {
-        "_sectionName": "Appearance",
+        "sectionName": "Appearance",
         "visualEffects": "Visual Effects",
         "windowControlStyle": "Window Controls",
         "macOS": "Mac (upper left)",
@@ -365,7 +438,12 @@
       "password": "Password",
       "username": "Username",
       "serverIp": "Server IP",
-      "name": "Name"
+      "name": "Name",
+      "placeholderName": "Enter a name...",
+      "placeholderServerIp": "The IP to your server (or localhost)",
+      "placeholderUsername": "The username to your server",
+      "placeholderPassword": "The password to your server",
+      "placeholderPort": "The port to your server"
     }
   },
   "formats": {
@@ -528,7 +606,8 @@
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
     "provideUsername": "Please provide a username.",
-    "duplicateSocialAccount": "You already have a social account of this type."
+    "duplicateSocialAccount": "You already have a social account of this type.",
+    "locationTooLong": "The location exceeds the maximum allowable length."
   },
   "smtpModelErrors": {
     "username": {
@@ -594,6 +673,12 @@
     "percentageLow": "You cannot set a fee percentage below zero.",
     "percentageHigh": "You cannot set a fee percentage above 100%",
     "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
+  },
+  "bitcoinCurrencyUnits": {
+    "BTC": "BTC",
+    "MBTC": "mBTC",
+    "UBTC": "µBTC",
+    "SATOSHI": "sat"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
