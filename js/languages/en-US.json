@@ -482,7 +482,7 @@
       "titleLabel": "Title",
       "couponCodeLabel": "Coupon Code",
       "discountLabel": "Discount",
-      "titlePlaceholder": "Please provide a title",
+      "titlePlaceholder": "Optional",
       "discountCodePlaceholder": "Please provide a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",

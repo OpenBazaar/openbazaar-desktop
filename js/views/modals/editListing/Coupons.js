@@ -1,6 +1,4 @@
-// import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
-// import app from '../../../app';
 import CouponMd from '../../../models/listing/Coupon';
 import BaseView from '../../baseVw';
 import Coupon from './Coupon';
@@ -35,10 +33,6 @@ export default class extends BaseView {
     });
   }
 
-  // className() {
-  //   return 'flexRow gutterH';
-  // }
-
   events() {
     return {
       'click .js-addCoupon': 'onClickAddCoupon',
@@ -47,6 +41,10 @@ export default class extends BaseView {
 
   onClickAddCoupon() {
     this.collection.add(new CouponMd());
+  }
+
+  setCollectionData() {
+    this.couponViews.forEach(coupon => coupon.setModelData());
   }
 
   createCouponView(model, options = {}) {
@@ -64,10 +62,6 @@ export default class extends BaseView {
 
   render() {
     loadTemplate('modals/editListing/coupons.html', t => {
-      // this.$el.html(t({
-      //   ...this.collection.toJSON(),
-      // }));
-
       this.$el.html(t());
       this.$couponsWrap = this.$('.js-couponsWrap');
 

@@ -29,8 +29,8 @@
       %>
       <input type="text" class="clrBr clrP clrSh2 <% if (ob.discountType === 'FIXED') print('js-price') %>" name="discountAmount" value="<%= discountAmount %>" data-var-type="number">
       <select name="discountType" class="clrBr clrP nestInputRight">
-        <option value="FIXED"><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
-        <option value="PERCENTAGE"><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
+        <option value="PERCENTAGE" <% if (ob.discountType === 'PERCENTAGE') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
+        <option value="FIXED" <% if (ob.discountType === 'FIXED') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
       </select>
     </div>
 

@@ -490,6 +490,9 @@ export default class extends BaseModal {
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
+    // set the coupon data
+    this.couponsView.setCollectionData();
+
     this.model.set(formData);
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
@@ -568,10 +571,14 @@ export default class extends BaseModal {
     // todo: the parent selector is not a very efficient selector here.
     // instead alter the initial selector to select only the fields you want.
     return this._$formFields ||
-      (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) div[contenteditable][name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]:not([class*="trumbowyg"])'));
+      (this._$formFields = this.$(
+        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) select[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) input[name],' +
+        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) ' +
+          'div[contenteditable][name],' +
+        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) ' +
+          'textarea[name]:not([class*="trumbowyg"])'
+      ));
   }
 
   get $currencySelect() {
