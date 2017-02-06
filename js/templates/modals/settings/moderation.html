@@ -72,7 +72,7 @@
               <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
                 <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
                    var ccode = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
-                   amt = typeof amt === 'number' ? Number(ob.formatPrice(amt, ccode === 'BTC')) : amt;
+                   amt = typeof amt === 'number' ? ob.formatPrice(amt, ccode === 'BTC') : amt;
                 %>
                 <!-- use text and set max length so excess decimals can't be entered.-->
                 <input type="text"

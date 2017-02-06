@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import 'select2';
+import '../../../lib/select2';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -54,12 +54,10 @@ export default class extends baseVw {
       this.$acceptGuidelines.prop('checked');
 
     if (!this.profile.get('moderator') &&
-    $('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
+    this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
       this.$moderationConfirmError.removeClass('hide');
       return;
     }
-
-    this.$moderationConfirmError.addClass('hide');
 
     const formData = this.getFormData();
     this.profile.set(formData);
@@ -71,7 +69,6 @@ export default class extends baseVw {
 
     if (save) {
       const msg = {
-        // msg: app.polyglot.t('settings.generalTab.statusSaving'),
         msg: app.polyglot.t('settings.moderationTab.status.saving'),
         type: 'message',
       };
@@ -83,7 +80,6 @@ export default class extends baseVw {
 
       save.done(() => {
         statusMessage.update({
-          // msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
           msg: app.polyglot.t('settings.moderationTab.status.done'),
           type: 'confirmed',
         });
@@ -92,11 +88,9 @@ export default class extends baseVw {
         const errMsg =
           args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
 
-        // openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
         openSimpleMessage(app.polyglot.t('settings.moderationTab.errors.save'), errMsg);
 
         statusMessage.update({
-          // msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
           msg: app.polyglot.t('settings.moderationTab.status.fail'),
           type: 'warning',
         });

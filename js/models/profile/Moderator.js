@@ -8,7 +8,7 @@ export default class extends BaseModel {
       fee: new Fee(),
       description: '',
       termsAndConditions: '',
-      languages: app.settings ? app.settings.get('language') : [],
+      languages: app.settings ? [app.settings.get('language')] : [],
     };
   }
 
