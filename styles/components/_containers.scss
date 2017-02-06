@@ -99,7 +99,7 @@
 .phraseBox {
   // use for a word or phrase in a box for emphasis, like free shipping
   @extend .box;
-  padding: $padTn;
+  padding: 3px;
   font-size: $tx7; // override with class on a span inside the container if needed
   text-transform: uppercase;
   text-align: center;
