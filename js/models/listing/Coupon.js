@@ -25,7 +25,7 @@ export default class extends BaseModel {
     }
 
     if (attrs.percentDiscount && attrs.priceDiscount) {
-      // These are internal errors. Assuming a reasonable UI, the user should never be able to
+      // This is an internal error. Assuming a reasonable UI, the user should never be able to
       // create such a case.
       addError('percentDiscount', 'Only one of percentDiscount & priceDiscount is allowed.');
     }
