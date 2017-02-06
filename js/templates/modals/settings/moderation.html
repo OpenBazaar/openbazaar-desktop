@@ -10,7 +10,6 @@
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <h2></h2>
         <div class="flexRow">
           <div class="col3">
             <label class="required"><%= ob.polyT('settings.moderationTab.moderationStatus') %></label>
@@ -24,7 +23,7 @@
                        id="settingsModerationStatusTrue"
                        data-var-type="boolean"
                 <% if (ob.isModerator) { %>checked<% } %>>
-                <label for="settingsModerationStatusTrue">On</label>
+                <label for="settingsModerationStatusTrue"><%= ob.polyT('settings.on') %></label>
               </div>
               <div class="btnRadio clrBr">
                 <input type="radio"
@@ -33,7 +32,7 @@
                        id="settingsModerationStatusFalse"
                        data-var-type="boolean"
                 <% if (!ob.isModerator) { %>checked<% } %>>
-                <label for="settingsModerationStatusFalse">Off</label>
+                <label for="settingsModerationStatusFalse"><%= ob.polyT('settings.off') %></label>
               </div>
             </div>
           </div>
