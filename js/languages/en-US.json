@@ -665,14 +665,18 @@
     "descriptionLength": "Descriptions must be no more than 300 characters",
     "noTerms": "Please provide your terms of service.",
     "termsLength": "Terms of service must be no more than 10,000 characters",
-    "noLanguages": "Please list at least one language you can communicate in.",
+    "noLanguages": "Please list at least one language you can communicate in."
+  },
+  "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
-    "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee.",
     "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
     "percentageLow": "You cannot set a fee percentage below zero.",
     "percentageHigh": "You cannot set a fee percentage above 100%",
     "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
+  },
+  "fixedFeeModelErrors": {
+    "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

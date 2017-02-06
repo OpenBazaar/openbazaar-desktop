@@ -19,15 +19,15 @@ export default class extends BaseModel {
     };
 
     if (is.not.existy(attrs.currencyCode) || typeof attrs.currencyCode !== 'string') {
-      addError('feeType', app.polyglot.t('moderatorModelErrors.noCurrency'));
+      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
     }
 
     if (attrs.currencyCode && !getCurrencyByCode(attrs.currencyCode)) {
-      addError('feeType', app.polyglot.t('moderatorModelErrors.noCurrency'));
+      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
     }
 
     if (typeof attrs.amount !== 'number' || attrs.amount < 0) {
-      addError('feeType', app.polyglot.t('moderatorModelErrors.noAmount'));
+      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noAmount'));
     }
 
     if (Object.keys(errObj).length) return errObj;
