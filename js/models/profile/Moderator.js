@@ -1,45 +1,62 @@
 import BaseModel from '../BaseModel';
+import app from '../../app';
+import Fee from './Fee';
 
 export default class extends BaseModel {
   defaults() {
     return {
+      fee: new Fee(),
       description: '',
       termsAndConditions: '',
-      languages: [],
+      languages: app.settings ? [app.settings.get('language')] : [],
     };
   }
 
-  // look at moderator proto to determine nested models
-  // https://github.com/OpenBazaar/openbazaar-go/blob/master/pb/protos/moderator.proto
-  //
-  // get nested() {
-  //   return {
-  //     social: SocialAccounts,
-  //     avatarHashes: Image,
-  //     headerHashes: Image,
-  //     modInfo: Moderator,
-  //   };
-  // }
+  get nested() {
+    return {
+      fee: Fee,
+    };
+  }
+
+  get max() {
+    return {
+      descriptionLength: 300,
+      termsLength: 10000,
+    };
+  }
 
   validate(attrs) {
-    const errObj = {};
+    const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+    const max = this.max;
 
     if (!attrs.description) {
-      // todo: translate any error messages the user may see
-      addError('description', 'Please provide a description.');
+      addError('description',
+        app.polyglot.t('moderatorModelErrors.noDescription'));
     }
 
-    // todo: more validations -
-    // - termsAndConditions max length
-    // - descirpiont max length??
-    // - are all lang codes provided valid codes based
-    //   on our utils/languages module (which needs to
-    //   be built up).
-    // etc...
+    if (attrs.description.length > max.descriptionLength) {
+      addError('description',
+        app.polyglot.t('moderatorModelErrors.descriptionLength'));
+    }
+
+    if (!attrs.termsAndConditions) {
+      addError('termsAndConditions',
+        app.polyglot.t('moderatorModelErrors.noTerms'));
+    }
+
+    if (attrs.termsAndConditions.length > max.termsLength) {
+      addError('termsAndConditions',
+        app.polyglot.t('moderatorModelErrors.termsLength'));
+    }
+
+    if (!attrs.languages.length) {
+      addError('languages',
+        app.polyglot.t('moderatorModelErrors.noLanguages'));
+    }
 
     if (Object.keys(errObj).length) return errObj;
 

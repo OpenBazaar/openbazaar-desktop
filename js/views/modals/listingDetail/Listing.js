@@ -81,6 +81,9 @@ export default class extends BaseModal {
         this.$storeOwnerAvatar
           .attr('style', getAvatarBgImage(app.profile.get('avatarHashes').toJSON()));
       });
+
+      this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
+      this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
   }
 
@@ -405,6 +408,7 @@ export default class extends BaseModal {
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
+      this.setActivePhotoThumbnail(this.activePhotoIndex);
     });
 
     return this;

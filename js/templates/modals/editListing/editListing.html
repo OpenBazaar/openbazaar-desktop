@@ -22,7 +22,7 @@
         ].forEach((tabName, index) => {
           print(`<a class="js-scrollLink tab row ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tabName}</a>`)
         });
-      %>      
+      %>
     </div>
   </div>
   <div class="flexExpand posR tabContent">
@@ -154,13 +154,13 @@
               print(ob.uploadPhotoT(Object.assign(image, { closeIconClass: 'js-removeImage' })))
             });
           %>
-        </ul>  
+        </ul>
         <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos', { maxPhotos: ob.max.photos }) %></div>
       </section>
 
       <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.listing.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
         <div class="gutterVMd">
-          <div class="js-shippingOptionsWrap shippingOptionsWrap gutterVMd"></div> 
+          <div class="js-shippingOptionsWrap shippingOptionsWrap gutterVMd"></div>
           <div class="contentBox padMd clrP clrBr clrSh3 tx3 shipOptPlaceholder">
             <%
               if (ob.errors['listing.shippingOptions']) print(ob.formErrorTmpl({
@@ -169,7 +169,7 @@
               })) %>
             <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.listing.shippingOptions.length + 1 }) %></h2>
             <hr class="clrBr rowMd" />
-            <a class="btn clrBr clrP clrSh2 js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>              
+            <a class="btn clrBr clrP clrSh2 js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
             <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperShipping') %></div>
           </div>
         </div>
@@ -190,7 +190,7 @@
           <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
           <div id="editListingTagsDropdown" class="tagsDropdown"></div>
           <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>
-        </div>          
+        </div>
       </section>
 
       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
@@ -216,8 +216,8 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['listing.refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['listing.refundPolicy'] })) %>
         <a class="btn clrP clrBr clrSh2 js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
-        <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP clrSh2 <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy" placeholder="<%= ob.polyT('editListing.placeholderReturnPolicy') %>"><%= ob.listing.refundPolicy %></textarea>     
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperReturnPolicy') %></div>   
+        <textarea rows="8" name="listing.refundPolicy" class="clrBr clrP clrSh2 <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy" placeholder="<%= ob.polyT('editListing.placeholderReturnPolicy') %>"><%= ob.listing.refundPolicy %></textarea>
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperReturnPolicy') %></div>
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
@@ -225,8 +225,8 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['listing.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['listing.termsAndConditions'] })) %>
         <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
-        <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.listing.termsAndConditions %></textarea>      
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTerms') %></div>  
+        <textarea rows="8" name="listing.termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.listing.termsAndConditions %></textarea>
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTerms') %></div>
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3 couponsSection js-couponsSection <% ob.listing.coupons.length && print('expandedCouponView') %>">
@@ -240,7 +240,7 @@
         <div class="flexHRight">
           <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
-      </div>        
-    </div>      
+      </div>
+    </div>
   </div>
 </div>

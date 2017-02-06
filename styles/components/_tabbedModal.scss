@@ -9,6 +9,7 @@
 
   .tabColumn {
     width: 200px;
+    flex-shrink: 0;
 
     .tab {
       position: relative;
@@ -32,7 +33,7 @@
 
   .tabContent {
     max-width: 757px;
-  
+
     .modalContentCornerBtn {
       right: 15px;
       top: 8px;

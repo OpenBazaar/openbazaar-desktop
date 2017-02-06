@@ -1,9 +1,13 @@
-import _ from 'underscore';
+import $ from 'jquery';
+import '../../../lib/select2';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
+import languages from '../../../data/languages';
+import { getTranslatedCurrencies } from '../../../data/currencies';
+import { formatPrice } from '../../../utils/currency';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -21,26 +25,20 @@ export default class extends baseVw {
       this.profile.set('modInfo', this.moderator);
     }
 
+    this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
+
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({
         moderator: this.profile.get('moderator'),
         modInfo: this.profile.get('modInfo').toJSON(),
       });
     });
-
-    // When this bug is fixed and we're saving via PATCH,
-    // the block below could be removed:
-    // https://github.com/OpenBazaar/openbazaar-go/issues/314
-    this.listenTo(app.profile, 'someChange', () => {
-      const profileAttrs = _.omit(app.profile.toJSON(),
-        ['moderator', 'modInfo']);
-      this.profile.set(profileAttrs);
-    });
   }
 
   events() {
     return {
       'click .js-save': 'save',
+      'change #moderationFeeType': 'changeFeeType',
     };
   }
 
@@ -49,24 +47,29 @@ export default class extends baseVw {
   }
 
   save() {
+    /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
+     aren't checked, show an error */
+
+    const confirmChecked = this.$understandRequirements.prop('checked') &&
+      this.$acceptGuidelines.prop('checked');
+
+    if (!this.profile.get('moderator') &&
+    this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
+      this.$moderationConfirmError.removeClass('hide');
+      return;
+    }
+
     const formData = this.getFormData();
     this.profile.set(formData);
 
-    const save = this.profile.save();
-
-    // When server bug is fixed, use the block below to save
-    // instead of the one above.
-    // https://github.com/OpenBazaar/openbazaar-go/issues/314
-
-    // const save = this.profile.save(formData, {
-    //   attrs: formData,
-    //   type: 'PATCH',
-    // });
+    const save = this.profile.save(formData, {
+      attrs: formData,
+      type: 'PATCH',
+    });
 
     if (save) {
       const msg = {
-        // msg: app.polyglot.t('settings.generalTab.statusSaving'),
-        msg: 'Saving moderation settings...',
+        msg: app.polyglot.t('settings.moderationTab.status.saving'),
         type: 'message',
       };
 
@@ -77,8 +80,7 @@ export default class extends baseVw {
 
       save.done(() => {
         statusMessage.update({
-          // msg: app.polyglot.t('settings.generalTab.statusSaveComplete'),
-          msg: 'Moderation settings saved.',
+          msg: app.polyglot.t('settings.moderationTab.status.done'),
           type: 'confirmed',
         });
       })
@@ -86,23 +88,16 @@ export default class extends baseVw {
         const errMsg =
           args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
 
-        // openSimpleMessage(app.polyglot.t('settings.generalTab.saveErrorAlertTitle'), errMsg);
-        openSimpleMessage('Unable to save moderation settings', errMsg);
+        openSimpleMessage(app.polyglot.t('settings.moderationTab.errors.save'), errMsg);
 
         statusMessage.update({
-          // msg: app.polyglot.t('settings.generalTab.statusSaveFailed'),
-          msg: 'Unable to save moderation settings.',
+          msg: app.polyglot.t('settings.moderationTab.status.fail'),
           type: 'warning',
         });
       }).always(() => {
         this.$btnSave.removeClass('processing');
         setTimeout(() => statusMessage.remove(), 3000);
       });
-    } else {
-      // todo: for debugging purposes. remove this else block when this
-      // feature is complete.
-      console.log('Client side validation error.');
-      console.log(this.profile.validationError);
     }
 
     // render so errrors are shown / cleared
@@ -114,9 +109,41 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  changeFeeType(e) {
+    const feeType = $(e.target).val();
+
+    this.$feePercentageInput.toggleClass('visuallyHidden', feeType === 'FIXED');
+    this.$feeFixedInput.toggleClass('visuallyHidden', feeType === 'PERCENTAGE');
+  }
+
   get $btnSave() {
     return this._$btnSave ||
       (this._$btnSave = this.$('.js-save'));
+  }
+
+  get $feePercentageInput() {
+    return this._$feePercentageInput ||
+      (this._$feePercentageInput = this.$('.js-feePercentageInput'));
+  }
+
+  get $feeFixedInput() {
+    return this._$feeFixedInput ||
+      (this._$feeFixedInput = this.$('.js-feeFixedInput'));
+  }
+
+  get $understandRequirements() {
+    return this._$understandRequirements ||
+      (this._$understandRequirements = this.$('#understandRequirements'));
+  }
+
+  get $acceptGuidelines() {
+    return this._$acceptGuidelines ||
+      (this._$acceptGuidelines = this.$('#acceptGuidelines'));
+  }
+
+  get $moderationConfirmError() {
+    return this._$moderationConfirmError ||
+      (this._$moderationConfirmError = this.$('.js-moderationConfirmError'));
   }
 
   render() {
@@ -124,13 +151,38 @@ export default class extends baseVw {
       const moderator = this.profile.get('modInfo');
 
       this.$el.html(t({
-        errors: moderator.validationError || {},
-        ...moderator.toJSON(),
+        errors: this.profile.validationError || {},
         isModerator: this.profile.get('moderator'),
+        languageList: languages,
+        defaultCurrency: app.settings.get('localCurrency'),
+        currencyList: this.currencyList,
+        max: {
+          description: this.moderator.max.descriptionLength,
+          terms: this.moderator.max.termsLength,
+        },
+        formatPrice,
+        ...moderator.toJSON(),
       }));
+
+      this.$('#moderationLanguageSelect').select2({
+        multiple: true,
+        // do not set tags to true, or the user can add non-existant languages
+        dropdownParent: this.$('#moderationLanguageDropdown'),
+      });
+
+      this.$('#moderationFeeType').select2({
+        minimumResultsForSearch: Infinity,
+      });
+
+      this.$('#moderationCurrency').select2();
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
       this._$btnSave = null;
+      this._$feePercentageInput = null;
+      this._$feeFixedInput = null;
+      this._$acceptGuidelines = null;
+      this._$understandRequirements = null;
+      this._$moderationConfirmError = null;
     });
 
     return this;

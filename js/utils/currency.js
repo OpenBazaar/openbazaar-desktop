@@ -1,5 +1,6 @@
 import app from '../app';
 import $ from 'jquery';
+import bitcoinConvert from 'bitcoin-convert';
 import { Events } from 'backbone';
 
 const events = {
@@ -76,9 +77,18 @@ export function formatPrice(price, isBtc = false) {
     throw new Error('Please provide a price that is not NaN');
   }
 
-  const decimalPlaces = isBtc ? 8 : 2;
+  let convertedPrice;
 
-  return price.toFixed(decimalPlaces);
+  if (isBtc) {
+    // Format BTC price so it has up to 8 decimal places,
+    // but without any trailing zeros
+    convertedPrice =
+      parseFloat((price).toFixed(8)).toString();
+  } else {
+    convertedPrice = price.toFixed(2);
+  }
+
+  return convertedPrice;
 }
 
 /**
@@ -86,7 +96,9 @@ export function formatPrice(price, isBtc = false) {
  * appropriate for the given locale.
  */
 // todo: check currency is one of our currencies
-export function formatCurrency(amount, currency, locale = app.settings.get('language')) {
+export function formatCurrency(amount, currency,
+  locale = app && app.settings && app.settings.get('language') || 'en-US',
+  btcUnit = app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC') {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -110,20 +122,43 @@ export function formatCurrency(amount, currency, locale = app.settings.get('lang
       style: 'currency',
       currency,
       minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount);
   } else {
+    let curSymbol;
+    let bitcoinConvertUnit;
+
+    switch (btcUnit) {
+      case 'MBTC':
+        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.MBTC');
+        bitcoinConvertUnit = 'mBTC';
+        break;
+      case 'UBTC':
+        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.UBTC');
+        bitcoinConvertUnit = 'μBTC';
+        break;
+      case 'SATOSHI':
+        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.SATOSHI');
+        bitcoinConvertUnit = 'Satoshi';
+        break;
+      default:
+        // The default is BTC. Using the ฿ char for the Bitcoin symbol which will be
+        // replaced by the real Bitcoin symbol once we bring in a Bitcoin font, e.g:
+        // http://www.righto.com/2015/02/how-to-display-bitcoin-symbol-using_14.html
+        curSymbol = '฿';
+        bitcoinConvertUnit = 'BTC';
+    }
+
     // going to use USD just to know the localized placement of the $, which we'll swap
-    // out with the Bitcoin symbol
+    // out with the appropriate Bitcoin symbol
     formattedCurrency = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 8,
-    }).format(amount);
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 8,
+    }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
 
-    // Using the ฿ char for the Bitcoin symbol which will be replaced by the real Bitcoin symbol
-    // once we bring in a Bitcoin font, e.g:
-    // http://www.righto.com/2015/02/how-to-display-bitcoin-symbol-using_14.html
-    formattedCurrency = formattedCurrency.replace('$', '฿');
+    formattedCurrency = formattedCurrency.replace('$', curSymbol);
   }
 
   return formattedCurrency;
@@ -209,6 +244,7 @@ export function convertCurrency(amount, fromCur, toCur) {
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
     locale: app && app.settings && app.settings.get('language') || 'en-US',
+    btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
     skipConvertIfNoExchangeRateData: true,
     ...options,
   };
@@ -228,5 +264,5 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
-  return formatCurrency(convertedAmt, outputFormat, opts.locale);
+  return formatCurrency(convertedAmt, outputFormat, opts.locale, opts.btcUnit);
 }

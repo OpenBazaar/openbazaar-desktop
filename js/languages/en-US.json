@@ -106,11 +106,74 @@
           "showMore": "%{smart_count} more... |||| %{smart_count} more...",
           "showLess": "less"
         }
+    },
+    "mainNav": {
+      "home": "Home",
+      "store": "Store",
+      "following": "Following",
+      "followers": "Followers"
     }
   },
   "userShort": {
     "userLoading": "Loading...",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
+  },
+  "about": {
+    "linkText": "About OpenBazaar",
+    "brand": "OpenBazaar",
+    "blurbs": {
+      "tradeFree": "OpenBazaar is made possible by an international community of developers and volunteers contributing their time to help make trade free."
+    },
+    "version": "version %{version}",
+    "bothVersions": "client %{cVer}, server %{sVer}",
+    "client": "Client",
+    "server": "Server",
+    "btnUpdateCheck": "Check for Update",
+    "menu": {
+      "sectionHeader": "MENU"
+    },
+    "donationsTab": {
+      "linkText": "Donations",
+      "sectionHeader": "Donations",
+      "btnCopyAddress": "Copy Address",
+      "btnOpenInWallet" : "Open in Wallet",
+      "notifyCopied": "Copied",
+      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
+      "copied": "Copied"
+    },
+    "licenseTab": {
+      "linkText": "License",
+      "sectionHeader": "OpenBazaar MIT License",
+      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "header": "The MIT License (MIT)",
+      "copyright": "Copright &copy; 2016 OpenBazaar Developers",
+      "paragraphs": {
+        "permission": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+        "inclusion": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+        "indemnity": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+      }
+    },
+    "contributorsTab": {
+      "linkText": "Contributors",
+      "sectionHeader": "OpenBazaar Contributors",
+      "listPreface": "This is a partial list of people who have contributed to the project, either through code or other assistance."
+    },
+    "storyTab": {
+      "linkText": "The Story",
+      "sectionHeader": "The Story of OpenBazaar",
+      "paragraphs": {
+        "taakisDarkMarket": "In April 2014 at a secretive Toronto hackathon a project called \"Dark Market\" was created. Amir Taaki lead a small team of developers to build a proof of concept for a decentralized marketplace. The software was completely peer to peer with no central organization controlling it. The Dark Market entry won the hackathon, but Amir and his team decided not to continue work on the project.",
+        "briansOpenBazaar": "Brian Hoffman talked to Amir about Dark Market and learned they weren't going to continue development. He liked the idea of a decentralized marketplace, but didn't like the sole focus on darknet markets, so he forked the project and renamed it OpenBazaar",
+        "alphaTeamalphaRelease": "The idea of a permissionless marketplace was powerful, and people around the world joined Brian to help build this open source software. In September this team released the first test version of the software.",
+        "momentOfTruth": "Over the next few months the team continued improving the software and got an encouraging response from the Bitcoin community. They visited FOSSDEM (Free Open Source Software Developers European Meeting) in Brussels early in 2015, and presented the project to an enthusiastic crowd. Brian and a few core members of the team decided that it was time to turn the project from a part-time, volunteer effort into a serious, well-funded campaign to bring free trade to the world.",
+        "foundedAndFunded": "They founded a company, OB1, with a $1 million venture capital investment from Union Square Ventures and Andreessen Horowitz, and immediately began hiring developers to build a better version of the software from the ground up.",
+        "marketOpening": "In April 2016 the first full release of the software was published, and tens of thousands of people around the world downloaded OpenBazaar and began buying and selling with each other directly, using Bitcoin.",
+        "toInfinityAndBeyond": "The initial team's work secured them a $3 million second round investment in the fall of 2016. Building on their ground-breaking work in version 1, an expanded OB1 set to work on OpenBazaar 2, with the aim of making trade free for even more people around the world.",
+        "cashCTA": "Donate now",
+        "or": "or",
+        "codeCTA": "get involved."
+      }
+    }
   },
   "settings": {
     "settingsLabel": "Settings",
@@ -121,6 +184,13 @@
       "helperTranslations": "Help translate OpenBazaar on %{helperTranslationsLink}",
       "helperTranslationsLink": "Transifex",
       "sectionName": "General",
+      "bitcoinUnit": "Bitcoin Unit",
+      "bitcoinUnitTypes": {
+        "BTC": "BTC",
+        "MBTC": "mBTC",
+        "UBTC": "µBTC",
+        "SATOSHI": "Satoshi (sat)"
+      },
       "statusSaving": "Saving general settings...",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
@@ -178,7 +248,7 @@
       "addAddressErrorAlertTitle": "Unable to add address %{name}"
     },
     "advancedTab": {
-      "_sectionName": "Advanced",
+      "sectionName": "Advanced",
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
@@ -186,9 +256,9 @@
       "helperServerManagement": "Switch and manage server connections",
       "helperServerPeers": "Peers you're connected to",
       "smtp": {
-        "_sectionName": "Email Integration (SMTP)",
-        "_testAction": "Test Integration",
-        "_clearAction": "Clear All",
+        "sectionName": "Email Integration (SMTP)",
+        "testAction": "Test Integration",
+        "clearAction": "Clear All",
         "notifications": "Notifications",
         "username": "Username",
         "password": "Password",
@@ -210,14 +280,14 @@
         "helperGmailLink": "Gmail"
       },
       "server": {
-        "_sectionName": "Server",
+        "sectionName": "Server",
         "management": "Management",
         "peers": "Peers",
         "btnShowManagementAction": "Connection Management",
         "btnShowPeersAction": "Show Connected Peers"
       },
       "transaction": {
-        "_sectionName": "Transactions",
+        "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
         "defaultFee": "Bitcoin Fee",
         "low": "Low",
@@ -225,7 +295,7 @@
         "high": "High"
       },
       "appearance": {
-        "_sectionName": "Appearance",
+        "sectionName": "Appearance",
         "visualEffects": "Visual Effects",
         "windowControlStyle": "Window Controls",
         "macOS": "Mac (upper left)",
@@ -237,7 +307,40 @@
       "saveErrorAlertTitle": "Unable to save advanced settings"
     },
     "moderationTab": {
-      "sectionName": "Moderation"
+      "sectionName": "Moderation",
+      "disputeResolution": "Dispute Resolution",
+      "disputeResolutionText": "Sellers have the ability to select you as a Moderator for their store. If a dispute arises between them and a customer, you'll be called in to review the details of the order and determine how the order's funds should be distributed.",
+      "moderationStatus": "Moderate Disputes",
+      "pricePerDispute": "Price per dispute",
+      "pricePerDisputeOptions": {
+        "percentageOfOrder": "Percentage of Order",
+        "fixedPrice": "Fixed Fee",
+        "percentagePlusFixed": "Fixed Fee Plus Percentage"
+      },
+      "pricePerDisputeHelper": "The amount you charge to review and close a dispute",
+      "feeTypeAmount": "Price per dispute",
+      "fixed": "Fixed",
+      "percentage": "Percentage",
+      "fixedPlusPercentage": "Fixed Plus Percentage",
+      "feeTypeHelper": "The amount you charge to review and close a dispute.",
+      "description": "Description",
+      "descriptionHelper": "Add your description (e.g. What is your strategy for reviewing cases? What is your expected response time? What is your schedule of operation? During what hours are you available each day? etc.)",
+      "terms": "Terms",
+      "termsHelper": "Add your terms of service (e.g. Do you have legal limitations? What happens after you make a decisions? etc.)",
+      "languages": "Languages",
+      "languagesHelper": "Enter all of the languages you support (ie: you can communicate clearly in).",
+      "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
+      "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
+      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
+      "status":{
+        "saving": "Saving moderation settings...",
+        "done": "Moderation settings saved.",
+        "fail": "Saving the moderation settings failed."
+      },
+      "errors": {
+        "confirm": "To become a moderator, you must agree to both statements below.",
+        "save": "The moderation settings were not saved."
+      }
     },
     "optional": "optional",
     "language": "Language",
@@ -571,6 +674,30 @@
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0."
+  },
+  "moderatorModelErrors": {
+    "noDescription": "Please provide a description.",
+    "descriptionLength": "Descriptions must be no more than 300 characters",
+    "noTerms": "Please provide your terms of service.",
+    "termsLength": "Terms of service must be no more than 10,000 characters",
+    "noLanguages": "Please list at least one language you can communicate in."
+  },
+  "feeModelErrors": {
+    "noFeeType": "Please set a valid fee type",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "percentageLow": "You cannot set a fee percentage below zero.",
+    "percentageHigh": "You cannot set a fee percentage above 100%",
+    "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
+  },
+  "fixedFeeModelErrors": {
+    "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+  },
+  "bitcoinCurrencyUnits": {
+    "BTC": "BTC",
+    "MBTC": "mBTC",
+    "UBTC": "µBTC",
+    "SATOSHI": "sat"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
