@@ -63,6 +63,9 @@ export default class extends BaseView {
 
   onClickAddCoupon() {
     this.collection.add(new CouponMd());
+    this.couponViews[this.couponViews.length - 1]
+      .$('input[name=title]')
+      .focus();
   }
 
   setCollectionData() {
