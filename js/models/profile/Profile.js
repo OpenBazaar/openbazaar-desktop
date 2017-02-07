@@ -185,12 +185,24 @@ export default class extends BaseModel {
       delete options.attrs.lastModified;
 
       if (method !== 'delete') {
-        // convert the amount field
-        if (options.attrs.modInfo && options.attrs.modInfo.fee &&
-          options.attrs.modInfo.fee.fixedFee && options.attrs.modInfo.fee.fixedFee.amount) {
-          const amount = options.attrs.modInfo.fee.fixedFee.amount;
-          const isBTC = options.attrs.modInfo.fee.fixedFee.currencyCode === 'BTC';
-          options.attrs.modInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
+        if (options.attrs.modInfo) {
+          // set the percentage to zero if the type is FIXED so old values aren't kept
+          if (options.attrs.modInfo.fee.feeType === 'FIXED') {
+            options.attrs.modInfo.fee.percentage = 0;
+          }
+
+          if (options.attrs.modInfo.fee && options.attrs.modInfo.fee.fixedFee &&
+            options.attrs.modInfo.fee.fixedFee.amount) {
+            if (options.attrs.modInfo.fee.feeType !== 'PERCENTAGE') {
+              // convert the amount field
+              const amount = options.attrs.modInfo.fee.fixedFee.amount;
+              const isBTC = options.attrs.modInfo.fee.fixedFee.currencyCode === 'BTC';
+              options.attrs.modInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
+            } else {
+              // set amount to zero if the type is PERCENTAGe to clear old values
+              options.attrs.modInfo.fee.fixedFee.amount = 0;
+            }
+          }
         }
       }
     }
