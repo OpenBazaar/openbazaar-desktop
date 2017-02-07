@@ -27,7 +27,7 @@ describe('the ListingInner model', () => {
     let refundPolicy = '';
     const listingInner = new ListingInner();
 
-    for (let i = 0; i < (listingInner.refundPolicyMaxLength + 1); i++) {
+    for (let i = 0; i < (listingInner.max.refundPolicyLength + 1); i++) {
       refundPolicy += 'a';
     }
 
@@ -52,7 +52,7 @@ describe('the ListingInner model', () => {
     let termsAndConditions = '';
     const listingInner = new ListingInner();
 
-    for (let i = 0; i < (listingInner.termsAndConditionsMaxLength + 1); i++) {
+    for (let i = 0; i < (listingInner.max.termsAndConditionsLength + 1); i++) {
       termsAndConditions += 'a';
     }
 
