@@ -663,9 +663,9 @@
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
     "provideDiscountAmount": "Please provide a discount value.",
-    "percentageLow": "You cannot set a percentage below zero.",
+    "percentageLow": "The percentage value must be greater than zero.",
     "percentageHigh": "You cannot set a percentage above 100%" ,
-    "priceLow": "You cannot set a fixed price below zero.",
+    "priceLow": "The price must be geater than zero.",
     "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },

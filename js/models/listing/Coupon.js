@@ -42,29 +42,28 @@ export default class extends BaseModel {
       }
     }
 
-    if (!attrs.percentDiscount && !attrs.priceDiscount) {
+    if (typeof attrs.percentDiscount === 'undefined' &&
+      typeof attrs.priceDiscount === 'undefined') {
       addError('percentDiscount', app.polyglot.t('couponModelErrors.provideDiscountAmount'));
     } else if (attrs.percentDiscount && attrs.priceDiscount) {
       // This is an internal error. Assuming a reasonable UI, the user should never be able to
       // create such a case.
       addError('percentDiscount', 'Only one of percentDiscount & priceDiscount is allowed.');
-    } else if (attrs.percentDiscount !== undefined) {
+    } else if (typeof attrs.percentDiscount !== 'undefined') {
       if (typeof attrs.percentDiscount !== 'number') {
         addError('percentDiscount',
           app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
-      } else if (attrs.percentDiscount < 0) {
+      } else if (attrs.percentDiscount <= 0) {
         addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageLow'));
       } else if (attrs.percentDiscount > 100) {
         addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageHigh'));
       }
-    } else if (attrs.priceDiscount !== undefined) {
+    } else if (typeof attrs.priceDiscount !== 'undefined') {
       if (typeof attrs.priceDiscount !== 'number') {
         addError('priceDiscount',
           app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
-      } else {
-        if (attrs.priceDiscount < 0) {
-          addError('priceDiscount', app.polyglot.t('couponModelErrors.percentageLow'));
-        }
+      } else if (attrs.priceDiscount <= 0) {
+        addError('priceDiscount', app.polyglot.t('couponModelErrors.priceLow'));
       }
     }
 
