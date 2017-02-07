@@ -79,5 +79,62 @@ describe('the ListingInner model', () => {
         !!valErr.shippingOptions.length || false).to.equal(true);
     });
 
-  // todo: spot check nested val errors
+  it('fails validation if the coupon count exceeds the maximum allowable amount',
+    () => {
+      const listingInner = new ListingInner();
+      const couponData = [];
+
+      for (let i = 0; i < (listingInner.max.couponCount + 1); i++) {
+        couponData.push({
+          discountCode: Date.now() + Math.random(),
+          percentDiscount: 10,
+        });
+      }
+
+      listingInner.set({
+        coupons: couponData,
+      }, { validate: true });
+
+      const valErr = listingInner.validationError;
+
+      expect(valErr && valErr.coupons &&
+        !!valErr.coupons.length || false).to.equal(true);
+    });
+
+  it('fails validation if a coupon price exceeds the listing price',
+    () => {
+      const listingInner = new ListingInner();
+
+      listingInner.set({
+        item: {
+          price: 500,
+        },
+        coupons: [
+          {
+            discountCode: Date.now() + Math.random(),
+            priceDiscount: 500, // should not fail validation
+          },
+          {
+            discountCode: Date.now() + Math.random(),
+            priceDiscount: 501, // should fail validation
+          },
+          {
+            discountCode: Date.now() + Math.random(),
+            priceDiscount: 1500, // should fail validation
+          },
+        ],
+      }, { validate: true });
+
+      const valErr = listingInner.validationError;
+      const coupons = listingInner.get('coupons');
+
+      expect(valErr && valErr[`coupons[${coupons.at(0).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(0).cid}].priceDiscount`].length || false).to.equal(false);
+
+      expect(valErr && valErr[`coupons[${coupons.at(1).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(1).cid}].priceDiscount`].length || false).to.equal(true);
+
+      expect(valErr && valErr[`coupons[${coupons.at(2).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(2).cid}].priceDiscount`].length || false).to.equal(true);
+    });
 });
