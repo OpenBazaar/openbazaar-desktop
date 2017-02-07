@@ -9,6 +9,10 @@ export default class extends BaseView {
       throw new Error('Please provide a collection.');
     }
 
+    if (typeof options.maxCouponCount === 'undefined') {
+      throw new Error('Please provide the maximum coupon count.');
+    }
+
     super(options);
     this.options = options;
     this.couponViews = [];
@@ -26,10 +30,18 @@ export default class extends BaseView {
       }
 
       this.couponViews.splice(index, 0, view);
+
+      if (this.collection.length >= this.options.maxCouponCount) {
+        this.$addCoupon.addClass('hide');
+      }
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
       (this.couponViews.splice(removeOpts.index, 1)[0]).remove();
+
+      if (this.collection.length < this.options.maxCouponCount) {
+        this.$addCoupon.removeClass('hide');
+      }
     });
   }
 
@@ -60,10 +72,21 @@ export default class extends BaseView {
     return view;
   }
 
+  get $addCoupon() {
+    return this._$addCoupon ||
+      (this._$addCoupon =
+        this.$('.js-addCoupon'));
+  }
+
   render() {
     loadTemplate('modals/editListing/coupons.html', t => {
-      this.$el.html(t());
+      this.$el.html(t({
+        coupons: this.collection.toJSON(),
+        maxCouponCount: this.options.maxCouponCount,
+      }));
+
       this.$couponsWrap = this.$('.js-couponsWrap');
+      this._$addCoupon = null;
 
       this.couponViews.forEach(coupon => coupon.remove());
       this.couponViews = [];
@@ -76,8 +99,6 @@ export default class extends BaseView {
       });
 
       this.$couponsWrap.append(couponsFrag);
-
-      // this._$headline = null;
     });
 
     return this;

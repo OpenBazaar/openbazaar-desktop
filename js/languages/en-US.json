@@ -644,7 +644,8 @@
   "listingInnerModelErrors": {
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
-    "provideShippingOption": "For a physical good, at least one shipping option is required."
+    "provideShippingOption": "For a physical good, at least one shipping option is required.",
+    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -660,7 +661,12 @@
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
-    "provideDiscountAmount": "Please provide a discount value."
+    "provideDiscountAmount": "Please provide a discount value.",
+    "percentageLow": "You cannot set a percentage below zero.",
+    "percentageHigh": "You cannot set a percentage above 100%" ,
+    "priceLow": "You cannot set a fixed price below zero.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
+    "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
     "provideName": "Please provide a title.",

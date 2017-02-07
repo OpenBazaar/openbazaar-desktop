@@ -10,4 +10,4 @@
   </div>
 </div>
 <div class="js-couponsWrap padKids padStack padTop0"></div>
-<a class="clrBr clrP clrTEm js-addCoupon"><%= ob.polyT('editListing.coupons.btnAddCoupon') %></a>
+<a class="clrBr clrP clrTEm js-addCoupon <% if (ob.coupons.length >= ob.maxCouponCount) print('hide') %>"><%= ob.polyT('editListing.coupons.btnAddCoupon') %></a>

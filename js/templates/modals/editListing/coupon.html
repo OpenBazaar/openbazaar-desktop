@@ -14,23 +14,23 @@
       <%
         let discountAmount;
 
-        if (ob.discountType === 'FIXED') {
+        if (typeof ob.priceDiscount !== 'undefined') {
           discountAmount = typeof ob.priceDiscount === 'number' ?
             ob.formatPrice(ob.priceDiscount, ob.getCurrency() === 'BTC') :
             ob.priceDiscount
         } else {
           discountAmount = typeof ob.percentDiscount === 'number' ?
-            ob.percentDiscount.toFixed(2) : '';
+            parseFloat((ob.percentDiscount).toFixed(2)).toString() : ob.percentDiscount;
         }
 
         if (typeof ob.price === 'number') {
           discountAmount = ob.formatPrice(ob.price, ob.getCurrency() === 'BTC')
         }
       %>
-      <input type="text" class="clrBr clrP clrSh2 <% if (ob.discountType === 'FIXED') print('js-price') %>" name="discountAmount" value="<%= discountAmount %>" data-var-type="number">
+      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" data-var-type="number">
       <select name="discountType" class="clrBr clrP nestInputRight">
-        <option value="PERCENTAGE" <% if (ob.discountType === 'PERCENTAGE') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
-        <option value="FIXED" <% if (ob.discountType === 'FIXED') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
+        <option value="PERCENTAGE" <% if (typeof ob.percentDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
+        <option value="FIXED" <% if (typeof ob.priceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
       </select>
     </div>
 

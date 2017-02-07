@@ -33,12 +33,12 @@ export default class extends BaseModel {
     };
   }
 
-  get refundPolicyMaxLength() {
-    return 10000;
-  }
-
-  get termsAndConditionsMaxLength() {
-    return 10000;
+  get max() {
+    return {
+      refundPolicyLength: 10000,
+      termsAndConditionsLength: 10000,
+      couponCount: 3,
+    };
   }
 
   validate(attrs) {
@@ -51,7 +51,7 @@ export default class extends BaseModel {
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
-      } else if (attrs.refundPolicy.length > this.refundPolicyMaxLength) {
+      } else if (attrs.refundPolicy.length > this.max.refundPolicyLength) {
         addError('refundPolicy', app.polyglot.t('listingInnerModelErrors.returnPolicyTooLong'));
       }
     }
@@ -59,7 +59,7 @@ export default class extends BaseModel {
     if (attrs.termsAndConditions) {
       if (is.not.string(attrs.termsAndConditions)) {
         addError('termsAndConditions', 'The terms and conditions must be of type string.');
-      } else if (attrs.termsAndConditions.length > this.termsAndConditionsMaxLength) {
+      } else if (attrs.termsAndConditions.length > this.max.termsAndConditionsLength) {
         addError('termsAndConditions',
           app.polyglot.t('listingInnerModelErrors.termsAndConditionsTooLong'));
       }
@@ -68,6 +68,11 @@ export default class extends BaseModel {
     if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
       !attrs.shippingOptions.length) {
       addError('shippingOptions', app.polyglot.t('listingInnerModelErrors.provideShippingOption'));
+    }
+
+    if (attrs.coupons.length > this.max.couponCount) {
+      addError('coupons', app.polyglot.t('listingInnerModelErrors.tooManyCoupons',
+        { maxCouponCount: this.max.couponCount }));
     }
 
     errObj = this.mergeInNestedErrors(errObj);

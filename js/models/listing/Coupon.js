@@ -18,16 +18,44 @@ export default class extends BaseModel {
 
     if (!attrs.discountCode) {
       addError('discountCode', app.polyglot.t('couponModelErrors.provideDiscountCode'));
+    } else {
+      // model.collection is not documented and has at least one quirk, but should work
+      // for this case (http://stackoverflow.com/a/15962917/632806)
+      if (this.collection) {
+        const modelsWithCode = this.collection.where({ discountCode: attrs.discountCode });
+
+        // We'll ensure that the discountCode is unique across the collection and put the error on
+        // all the dupes (i.e. not the initial occurence)
+        if (modelsWithCode.length > 1 && modelsWithCode[0] !== this) {
+          addError('discountCode', app.polyglot.t('couponModelErrors.needUniqueDiscountCode'));
+        }
+      }
     }
 
     if (!attrs.percentDiscount && !attrs.priceDiscount) {
       addError('percentDiscount', app.polyglot.t('couponModelErrors.provideDiscountAmount'));
-    }
-
-    if (attrs.percentDiscount && attrs.priceDiscount) {
+    } else if (attrs.percentDiscount && attrs.priceDiscount) {
       // This is an internal error. Assuming a reasonable UI, the user should never be able to
       // create such a case.
       addError('percentDiscount', 'Only one of percentDiscount & priceDiscount is allowed.');
+    } else if (attrs.percentDiscount !== undefined) {
+      if (typeof attrs.percentDiscount !== 'number') {
+        addError('percentDiscount',
+          app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
+      } else if (attrs.percentDiscount < 0) {
+        addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageLow'));
+      } else if (attrs.percentDiscount > 100) {
+        addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageHigh'));
+      }
+    } else if (attrs.priceDiscount !== undefined) {
+      if (typeof attrs.priceDiscount !== 'number') {
+        addError('priceDiscount',
+          app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
+      } else {
+        if (attrs.priceDiscount < 0) {
+          addError('priceDiscount', app.polyglot.t('couponModelErrors.percentageLow'));
+        }
+      }
     }
 
     if (Object.keys(errObj).length) return errObj;

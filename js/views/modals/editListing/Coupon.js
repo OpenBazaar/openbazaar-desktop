@@ -60,7 +60,15 @@ export default class extends BaseView {
 
   // Sets the model based on the current data in the UI.
   setModelData() {
-    this.model.set(this.getFormData());
+    const formData = this.getFormData();
+
+    if (formData.priceDiscount !== undefined) {
+      this.model.unset('percentDiscount');
+    } else {
+      this.model.unset('priceDiscount');
+    }
+
+    this.model.set(formData);
   }
 
   get $inputDiscountAmount() {
@@ -82,11 +90,9 @@ export default class extends BaseView {
         errors: this.model.validationError || {},
         getCurrency: this.options.getCurrency,
         formatPrice,
-        discountType: this.$discountType ? this.$discountType.val() : 'PERCENTAGE',
       }));
 
-      this.$discountType = this.$('select[name=discountType]');
-      this.$discountType.select2({
+      this.$('select[name=discountType]').select2({
         // disables the search box
         minimumResultsForSearch: Infinity,
       });

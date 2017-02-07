@@ -864,6 +864,7 @@ export default class extends BaseModal {
 
       this.couponsView = new Coupons({
         collection: this.coupons,
+        maxCouponCount: this.innerListing.max.couponCount,
       });
 
       this.$couponsSection.find('.js-couponsContainer').append(
