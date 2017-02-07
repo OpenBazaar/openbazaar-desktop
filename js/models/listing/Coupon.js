@@ -8,6 +8,12 @@ export default class extends BaseModel {
     };
   }
 
+  get max() {
+    return {
+      titleLength: 70,
+    };
+  }
+
   validate(attrs) {
     const errObj = {};
 
@@ -15,6 +21,10 @@ export default class extends BaseModel {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+
+    if (attrs.title.length > this.max.titleLength) {
+      addError('title', `The title cannot exceed ${this.max.titleLength} characters.`);
+    }
 
     if (!attrs.discountCode) {
       addError('discountCode', app.polyglot.t('couponModelErrors.provideDiscountCode'));

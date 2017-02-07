@@ -87,7 +87,10 @@ export default class extends BaseView {
     loadTemplate('modals/editListing/coupon.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        errors: this.model.validationError || {},
+        errors: {
+          ...(this.model.validationError || {}),
+          ...(this.options.couponErrors || {}),
+        },
         getCurrency: this.options.getCurrency,
         formatPrice,
       }));

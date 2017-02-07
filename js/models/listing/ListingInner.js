@@ -37,7 +37,7 @@ export default class extends BaseModel {
     return {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
-      couponCount: 3,
+      couponCount: 30,
     };
   }
 
@@ -76,6 +76,16 @@ export default class extends BaseModel {
     }
 
     errObj = this.mergeInNestedErrors(errObj);
+
+    // Coupon price discount cannot exceed the item price.
+    attrs.coupons.forEach(coupon => {
+      const priceDiscount = coupon.get('priceDiscount');
+
+      if (typeof priceDiscount !== 'undefined' && priceDiscount > attrs.item.get('price')) {
+        addError(`coupons[${coupon.cid}].priceDiscount`,
+          app.polyglot.t('listingInnerModelErrors.couponsPriceTooLarge'));
+      }
+    });
 
     if (Object.keys(errObj).length) return errObj;
 

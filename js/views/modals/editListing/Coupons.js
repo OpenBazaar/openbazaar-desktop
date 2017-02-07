@@ -13,6 +13,16 @@ export default class extends BaseView {
       throw new Error('Please provide the maximum coupon count.');
     }
 
+    // Certain coupon validations are not possible to do purely in the Coupon
+    // model (e.g. validating the coupon price is not greater than the listing price).
+    // In that case, any coupone related errors can be optionally passed in, in the
+    // following format:
+    // options.couponErrors = {
+    //   coupons[<model.cid>].<fieldName> = ['error1', 'error2', ...],
+    //   coupons[<model.cid>].<fieldName2> = ['error1', 'error2', ...],
+    //   coupons[<model2.cid>].<fieldName> = ['error1', 'error2', ...]
+    // }
+
     super(options);
     this.options = options;
     this.couponViews = [];
@@ -60,9 +70,22 @@ export default class extends BaseView {
   }
 
   createCouponView(model, options = {}) {
+    const couponErrors = {};
+
+    if (this.options.couponErrors) {
+      Object.keys(this.options.couponErrors)
+        .forEach(errKey => {
+          if (errKey.startsWith(`coupons[${model.cid}]`)) {
+            couponErrors[errKey.slice(errKey.indexOf('.') + 1)] =
+              this.options.couponErrors[errKey];
+          }
+        });
+    }
+
     const view = this.createChild(Coupon, {
       model,
       getCurrency: () => ('USD'),
+      couponErrors,
       ...options,
     });
 

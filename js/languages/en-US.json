@@ -645,7 +645,8 @@
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
-    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons."
+    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
+    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",

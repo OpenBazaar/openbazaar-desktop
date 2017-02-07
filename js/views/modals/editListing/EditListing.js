@@ -862,9 +862,21 @@ export default class extends BaseModal {
       // render coupons
       if (this.couponsView) this.couponsView.remove();
 
+      const couponErrors = {};
+
+      Object.keys(this.model.validationError || {})
+        .forEach(errKey => {
+          if (errKey.startsWith('listing.coupons[')) {
+            couponErrors[errKey.slice(errKey.indexOf('.') + 1)] =
+              this.model.validationError[errKey];
+          }
+        });
+
+
       this.couponsView = new Coupons({
         collection: this.coupons,
         maxCouponCount: this.innerListing.max.couponCount,
+        couponErrors,
       });
 
       this.$couponsSection.find('.js-couponsContainer').append(
