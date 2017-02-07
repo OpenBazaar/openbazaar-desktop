@@ -1,6 +1,6 @@
 <div class="col4 simpleFlexCol">
   <% if (ob.errors['title']) print(ob.formErrorTmpl({ errors: ob.errors['title'] })) %>
-  <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="title" value="<%= ob.title %>" placeholder="<%= ob.polyT('editListing.coupons.titlePlaceholder') %>">
+  <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="title" value="<%= ob.title %>" placeholder="<%= ob.polyT('editListing.coupons.titlePlaceholder') %>" maxlength=<%= ob.max.titleLength %>>
 </div>
 <div class="col4 simpleFlexCol">
   <% if (ob.errors['discountCode']) print(ob.formErrorTmpl({ errors: ob.errors['discountCode'] })) %>

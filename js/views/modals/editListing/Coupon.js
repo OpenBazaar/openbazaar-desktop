@@ -87,6 +87,7 @@ export default class extends BaseView {
     loadTemplate('modals/editListing/coupon.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
+        max: this.model.max,
         errors: {
           ...(this.model.validationError || {}),
           ...(this.options.couponErrors || {}),
