@@ -1,7 +1,7 @@
 <%
   // Add a 'processing' class to the button for the spinner to appear.
 %>
-<a class="btnProcessing <%= ob.className %>">
+<a class="btnProcessing <%= ob.className %>" <%= ob.attrs || '' %>>
   <%= ob.spinner({ className: ob.spinnerClassName || '' }) %>
   <%= ob.btnText %>
 </a>

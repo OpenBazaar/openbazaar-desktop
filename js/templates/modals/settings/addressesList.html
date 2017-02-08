@@ -16,7 +16,11 @@
           <%= `${address.city}${address.state ? `, ${address.state}` : ''}${address.postalCode ? ` ${address.postalCode}` : ''}${address.country ? '<br />' : ''}` %>
           <%= `${ob.polyT(`countries.${address.country}`)}${address.addressNotes ? '<br />' : ''}` %>
           <% if (address.addressNotes) print(`<p class="notes">${address.addressNotes}</p>`) %>
-          <a class="btn clrP clrBr clrSh2 js-delete" data-address-index="<%= addressIndex %>">Delete</a>
+          <%= ob.processingButton({
+            className: 'btn clrP clrBr clrSh2 js-delete',
+            attrs: `data-address-index="${addressIndex}"`,
+            btnText: ob.polyT('settings.addressesTab.btnDelete')
+          }) %>
         </div>
       </div>
      <% }); %>
