@@ -68,7 +68,7 @@ export default class extends baseVw {
 
     // clear unused values by setting them to the default, if it exists
     if (formData.modInfo.fee.feeType === 'PERCENTAGE') {
-      if (this.defaultAmount) {
+      if (this.defaultAmount !== undefined) {
         formData.modInfo.fee.fixedFee.amount = this.defaultAmount;
       } else {
         // if there is no default, remove the attribute
@@ -76,7 +76,7 @@ export default class extends baseVw {
         this.profile.get('modInfo').get('fee').unset('fixedFee');
       }
     } else if (formData.modInfo.fee.feeType === 'FIXED') {
-      if (this.defaultPercentage) {
+      if (this.defaultPercentage !== undefined) {
         formData.modInfo.fee.percentage = this.defaultPercentage;
       } else {
         // if there is no default, remove the attribute
