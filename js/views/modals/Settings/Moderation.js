@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import '../../../lib/select2';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -27,8 +28,8 @@ export default class extends baseVw {
 
     // retrieve the moderatior default values
     const profileFee = this.profile.get('modInfo').get('fee');
-    this.defaultPercentage = profileFee.defaults().percentage;
-    this.defaultAmount = profileFee.get('fixedFee').defaults().amount;
+    this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage;
+    this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount;
 
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
 
