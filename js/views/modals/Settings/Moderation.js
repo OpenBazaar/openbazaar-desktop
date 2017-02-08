@@ -60,6 +60,33 @@ export default class extends baseVw {
     }
 
     const formData = this.getFormData();
+
+    const profileFee = this.profile.get('modInfo').get('fee');
+    const feeDefaults = profileFee.defaults();
+    const fixedFeeDefaults = profileFee.get('fixedFee').defaults();
+
+    if (formData.modInfo.fee.feeType === 'PERCENTAGE') {
+      if (fixedFeeDefaults) {
+        formData.modInfo.fee.fixedFee.amount = fixedFeeDefaults.amount;
+      } else {
+        // if there is no default, remove the attribute
+        delete formData.modInfo.fee.fixedFee.amount;
+        this.profile.get('modInfo').get('fee').get('fixedFee')
+          .unset('amount');
+      }
+    } else if (formData.modInfo.fee.feeType === 'FIXED') {
+      if (feeDefaults) {
+        formData.modInfo.fee.percentage = feeDefaults.percentage;
+      } else {
+        // if there is no default, remove the attribute
+        delete formData.modInfo.fee.percentage;
+        this.profile.get('modInfo').get('fee')
+          .unset('percentage');
+      }
+    }
+
+    console.log(formData);
+
     this.profile.set(formData);
 
     const save = this.profile.save(formData, {

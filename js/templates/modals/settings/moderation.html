@@ -79,11 +79,10 @@
               </div>
               <div class="col2 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
                 <div class="inputPercentWrapper clrBr clrSh2">
-                  <% var perc = ob.fee.percentage || 0; %>
                   <input type="text"
                          maxlength="5"
                          name="modInfo.fee.percentage"
-                         value="<%= perc %>"
+                         value="<%= ob.fee.percentage %>"
                          data-var-type="number">
                 </div>
               </div>
