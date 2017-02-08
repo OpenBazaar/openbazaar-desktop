@@ -206,7 +206,10 @@
             <label for="settingsPrimaryColor" class="required"><%= ob.polyT('settings.primaryColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperPrimaryColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox" style="background-color: <%= ob.primaryColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
             <input type="text" class="clrBr clrSh2" name="primaryColor" id="settingsPrimaryColor"
                    value="<%= ob.primaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>">
@@ -217,7 +220,10 @@
             <label for="settingsSecondaryColor" class="required"><%= ob.polyT('settings.secondaryColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperSecondaryColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox" style="background-color: <%= ob.secondaryColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.secondaryColor) print(ob.formErrorTmpl({ errors: ob.errors.secondaryColor })) %>
             <input type="text" class="clrBr clrSh2" name="secondaryColor" id="settingsSecondaryColor"
                    value="<%= ob.secondaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>">
@@ -228,7 +234,10 @@
             <label for="settingsTextColor" class="required"><%= ob.polyT('settings.textColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperTextColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox" style="background-color: <%= ob.textColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.textColor) print(ob.formErrorTmpl({ errors: ob.errors.textColor })) %>
             <input type="text" class="clrBr clrSh2" name="textColor" id="settingsTextColor"
                    value="<%= ob.textColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>">
@@ -239,7 +248,10 @@
             <label for="settingsHighlightColor" class="required"><%= ob.polyT('settings.highlightColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox" style="background-color: <%= ob.highlightColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.highlightColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightColor })) %>
             <input type="text" class="clrBr clrSh2" name="highlightColor" id="settingsHighlightColor"
                    value="<%= ob.highlightColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightColor') %>">
@@ -250,7 +262,10 @@
             <label for="settingsHighlightTextColor" class="required"><%= ob.polyT('settings.highlightTextColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightTextColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox" style="background-color: <%= ob.highlightTextColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.highlightTextColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightTextColor })) %>
             <input type="text" class="clrBr clrSh2" name="highlightTextColor" id="settingsHighlightTextColor"
                    value="<%= ob.highlightTextColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
