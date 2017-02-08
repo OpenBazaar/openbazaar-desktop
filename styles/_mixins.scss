@@ -49,30 +49,6 @@
   }
 }
 
-// todo: refactor this style once we have designs
-// FYI: this is not only used for buttons, but also to overlay
-// the addresses tab as you're saving it.
-@mixin processingOverlay {
-  position: relative;
-
-  &::after {
-    content: 'Processing...';
-    position: absolute;
-    background-color: rgba(0,0,0,0.6);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    font-size: 14px;
-    cursor: default;
-    border-radius: inherit;
-  }
-}
-
 @mixin textColor($col1, $col2: $col1, $col3: $col2) {
   /* generates the text color rules */
   /* if no second color is passed, set everything to the first color */
