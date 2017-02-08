@@ -76,9 +76,15 @@ export default class extends BaseVw {
     });
   }
 
-  followClick() {
+  followClick(e) {
     const type = this.followedByYou ? 'unfollow' : 'follow';
-    followUnfollow(this.guid, type);
+    const $btn = $(e.target).closest('.js-follow');
+
+    console.log('moo shoo filly fly yo');
+
+    $btn.addClass('processing');
+    followUnfollow(this.guid, type)
+      .always(() => ($btn.removeClass('processing')));
   }
 
   modClick() {

@@ -53,6 +53,8 @@
     }
 
     &.processing {
+      pointer-events: none;
+
       &::before {
         content: '';
         position: absolute;
@@ -61,6 +63,7 @@
         right: 0;
         bottom: 0;
         background-color: inherit;
+        z-index: 1;
       }
 
       .spinner {
@@ -72,10 +75,10 @@
         bottom: 0;
         background-color: inherit;
         transform: translate(-50%, -50%);
-        cursor: default;
         border-radius: inherit;
         width: 25px;
         height: 25px;
+        z-index: 1;
       }
     }
   }
