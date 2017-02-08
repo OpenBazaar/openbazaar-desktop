@@ -80,8 +80,6 @@ export default class extends BaseVw {
     const type = this.followedByYou ? 'unfollow' : 'follow';
     const $btn = $(e.target).closest('.js-follow');
 
-    console.log('moo shoo filly fly yo');
-
     $btn.addClass('processing');
     followUnfollow(this.guid, type)
       .always(() => ($btn.removeClass('processing')));
