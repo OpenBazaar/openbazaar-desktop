@@ -28,8 +28,8 @@ export default class extends baseVw {
 
     // retrieve the moderatior default values
     const profileFee = this.profile.get('modInfo').get('fee');
-    this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage;
-    this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount;
+    this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
+    this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
 
@@ -69,22 +69,9 @@ export default class extends baseVw {
 
     // clear unused values by setting them to the default, if it exists
     if (formData.modInfo.fee.feeType === 'PERCENTAGE') {
-      if (this.defaultAmount !== undefined) {
-        formData.modInfo.fee.fixedFee.amount = this.defaultAmount;
-      } else {
-        // if there is no default, remove the attribute
-        delete formData.modInfo.fee.fixedFee;
-        this.profile.get('modInfo').get('fee').unset('fixedFee');
-      }
+      formData.modInfo.fee.fixedFee.amount = this.defaultAmount;
     } else if (formData.modInfo.fee.feeType === 'FIXED') {
-      if (this.defaultPercentage !== undefined) {
-        formData.modInfo.fee.percentage = this.defaultPercentage;
-      } else {
-        // if there is no default, remove the attribute
-        delete formData.modInfo.fee.percentage;
-        this.profile.get('modInfo').get('fee')
-          .unset('percentage');
-      }
+      formData.modInfo.fee.percentage = this.defaultPercentage;
     }
 
     this.profile.set(formData);
