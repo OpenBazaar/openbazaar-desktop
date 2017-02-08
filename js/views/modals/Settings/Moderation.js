@@ -25,6 +25,11 @@ export default class extends baseVw {
       this.profile.set('modInfo', this.moderator);
     }
 
+    // retrieve the moderatior default values
+    const profileFee = this.profile.get('modInfo').get('fee');
+    this.defaultPercentage = profileFee.defaults().percentage;
+    this.defaultAmount = profileFee.get('fixedFee').defaults().amount;
+
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
 
     this.listenTo(this.profile, 'sync', () => {
@@ -61,22 +66,18 @@ export default class extends baseVw {
 
     const formData = this.getFormData();
 
-    const profileFee = this.profile.get('modInfo').get('fee');
-    const feeDefaults = profileFee.defaults();
-    const fixedFeeDefaults = profileFee.get('fixedFee').defaults();
-
+    // clear unused values by setting them to the default, if it exists
     if (formData.modInfo.fee.feeType === 'PERCENTAGE') {
-      if (fixedFeeDefaults) {
-        formData.modInfo.fee.fixedFee.amount = fixedFeeDefaults.amount;
+      if (this.defaultAmount) {
+        formData.modInfo.fee.fixedFee.amount = this.defaultAmount;
       } else {
         // if there is no default, remove the attribute
-        delete formData.modInfo.fee.fixedFee.amount;
-        this.profile.get('modInfo').get('fee').get('fixedFee')
-          .unset('amount');
+        delete formData.modInfo.fee.fixedFee;
+        this.profile.get('modInfo').get('fee').unset('fixedFee');
       }
     } else if (formData.modInfo.fee.feeType === 'FIXED') {
-      if (feeDefaults) {
-        formData.modInfo.fee.percentage = feeDefaults.percentage;
+      if (this.defaultPercentage) {
+        formData.modInfo.fee.percentage = this.defaultPercentage;
       } else {
         // if there is no default, remove the attribute
         delete formData.modInfo.fee.percentage;
@@ -84,8 +85,6 @@ export default class extends baseVw {
           .unset('percentage');
       }
     }
-
-    console.log(formData);
 
     this.profile.set(formData);
 
