@@ -10,6 +10,7 @@ import serverConnect, { events as serverConnectEvents } from './utils/serverConn
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer } from './utils/selectors';
+import Chat from './views/chat/Chat.js';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import StartupLoadingModal from './views/modals/StartupLoading';
@@ -405,6 +406,12 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
+
+        // load chat
+        // app.chat = new Chat({
+        //   collection: new 
+        // });
+        getChatContainer().append(app.chat.render().el);
       });
     });
   });

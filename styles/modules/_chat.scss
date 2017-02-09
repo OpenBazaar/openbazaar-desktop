@@ -1,5 +1,10 @@
 #chatContainer {
   // use for chat styles that only apply inside the chat sidebar
+
+  .chatWrapper {
+    justify-content: flex-start;
+    padding: $padSm $padSm $padSm 0;
+  }  
 }
 
 .chat {
