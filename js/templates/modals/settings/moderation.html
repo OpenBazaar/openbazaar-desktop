@@ -58,16 +58,6 @@
                   </option>
                 </select>
               </div>
-              <div class="col2 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
-                <div class="inputPercentWrapper clrBr clrSh2">
-                  <% var perc = ob.fee.percentage || 0; %>
-                  <input type="text"
-                         maxlength="5"
-                         name="modInfo.fee.percentage"
-                         value="<%= perc %>"
-                         data-var-type="number">
-                </div>
-              </div>
               <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
                 <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
                    var ccode = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
@@ -86,6 +76,15 @@
                   <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.name %></option>
                   <% }); %>
                 </select>
+              </div>
+              <div class="col2 js-feePercentageInput <% if (ob.fee && ob.fee.feeType === 'FIXED') { print('visuallyHidden') } %>">
+                <div class="inputPercentWrapper clrBr clrSh2">
+                  <input type="text"
+                         maxlength="5"
+                         name="modInfo.fee.percentage"
+                         value="<%= ob.fee.percentage %>"
+                         data-var-type="number">
+                </div>
               </div>
             </div>
             <div class="tx6 txPlaceholder">
