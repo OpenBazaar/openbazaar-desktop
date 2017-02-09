@@ -1,4 +1,4 @@
-import { remote, ipcRenderer, app as electronApp } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
@@ -24,11 +24,10 @@ import './utils/exchangeRateSyncer';
 import './utils/listingData';
 import { launchDebugLogModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
-import { fixLinuxZoomIssue, handleLinks, handleUserDataClOption } from './startup';
+import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 
 fixLinuxZoomIssue();
-handleUserDataClOption(electronApp);
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());

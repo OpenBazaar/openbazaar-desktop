@@ -2,7 +2,6 @@
 // aren't appropriate to be in any existing module
 
 import { screen, shell } from 'electron';
-import { argv } from 'yargs';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import { getBody } from '../utils/selectors';
@@ -48,18 +47,4 @@ export function handleLinks() {
 
     e.preventDefault();
   });
-}
-
-export function handleUserDataClOption(electronApp) {
-  if (!electronApp) {
-    throw new Error('Please provide the electron app object.');
-  }
-
-  if (argv.userData) {
-    try {
-      electronApp.setPath('userData', argv.userData);
-    } catch (e) {
-      throw new Error(`The passed in userData directory does not appear to be valid: ${e}`);
-    }
-  }
 }
