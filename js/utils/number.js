@@ -7,7 +7,7 @@
  * (18.986).toFixed(2) // 18.99
  * (18.986).upToFixed(2) // 18.99
  * (18.986).toFixed(4) // 18.9860
- * (18.986).toFixed(4) // 18.986
+ * (18.986).upToFixed(4) // 18.986
  */
 export function upToFixed(number, decimalPlaces) {
   if (typeof number !== 'number') {
