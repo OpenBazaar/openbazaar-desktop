@@ -22,7 +22,10 @@
   <div class="txCtr padLg contentBox clrBr clrP">
     <h3><%= ob.polyT('userPage.store.unableToFetchListings') %></h3>
     <p><%= ob.fetchFailReason %></p>
-    <a class='btn clrP clrBr js-retryFetch'><%= ob.polyT('userPage.store.retryStoreFetch') %></a>
+    <%= ob.processingButton({
+      className: 'btn clrP clrBr js-retryFetch',
+      btnText: ob.polyT('userPage.store.retryStoreFetch')
+    }) %>
   </div>
 <% } else if (!ob.isFetching) { %>
   <div class="flex">

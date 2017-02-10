@@ -14,7 +14,10 @@
   <div class="flexNoShrink" style="margin-right: 40px; margin-left: auto">
     <div class="btnStrip clrSh3">
       <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
-      <a class="btn js-deleteListing clrP clrBr"><%= ob.polyT('listingDetail.delete') %></a>
+      <%= ob.processingButton({
+        className: 'btn js-deleteListing clrP clrBr',
+        btnText: ob.polyT('listingDetail.delete')
+      }) %>      
     </div>
   </div>
   <% } %>

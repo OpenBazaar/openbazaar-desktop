@@ -89,11 +89,8 @@ export default class extends baseVw {
     };
   }
 
-  onClickEdit(e) {
-    // todo: Instead of putting a spinner on the edit button, show a
-    // loading modal with a cancel button. That will prevent the user
-    // from being able to take other actions and queue up requests.
-    $(e.target).addClass('processing');
+  onClickEdit() {
+    app.loadingModal.open();
 
     const fullListingFetch = this.fullListing.fetch()
       .done(() => {
@@ -105,7 +102,7 @@ export default class extends baseVw {
       })
       .always(() => {
         if (this.isRemoved()) return;
-        $(e.target).removeClass('processing');
+        app.loadingModal.close();
       })
       .fail(() => {
         // todo: show errors;
@@ -119,16 +116,6 @@ export default class extends baseVw {
   }
 
   onClick(e) {
-    // todo: Think about how we are fetching listings and how fresh they need to
-    // be. We could fetch by hash here, which would be much more beneficial from
-    // a caching perspective, but it means there's a chance the user may load an
-    // out of date version of a listing and then go through the buy process
-    // only to be rejected.
-    //
-    // Boils down to, in the few minutes the user may be on the page the card is on,
-    // how likely is it that the listing will change (probably not very likely) and
-    // how graceful is the experience if the user goes through the buy flow on
-    // an old listing.
     if (!this.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {

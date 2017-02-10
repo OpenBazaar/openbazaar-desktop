@@ -2,7 +2,10 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT">Moderation</h2>
-      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
     <hr class="clrBr" />
     <h3><%= ob.polyT('settings.moderationTab.disputeResolution') %></h3>

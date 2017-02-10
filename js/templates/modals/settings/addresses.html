@@ -12,6 +12,9 @@
   </div>
 
   <div class="flexHRight">
-    <a class="btn clrP clrBr clrSh2 js-addAddress"><%= ob.polyT('settings.btnAddAddress') %></a>
+    <%= ob.processingButton({
+      className: 'btn clrP clrBr clrSh2 js-addAddress',
+      btnText: ob.polyT('settings.btnAddAddress')
+    }) %>    
   </div>  
 </div>
