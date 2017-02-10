@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import '../../../lib/select2';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -24,6 +25,11 @@ export default class extends baseVw {
       this.moderator = new Moderator();
       this.profile.set('modInfo', this.moderator);
     }
+
+    // retrieve the moderatior default values
+    const profileFee = this.profile.get('modInfo').get('fee');
+    this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
+    this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
 
@@ -60,6 +66,14 @@ export default class extends baseVw {
     }
 
     const formData = this.getFormData();
+
+    // clear unused values by setting them to the default, if it exists
+    if (formData.modInfo.fee.feeType === 'PERCENTAGE') {
+      formData.modInfo.fee.fixedFee.amount = this.defaultAmount;
+    } else if (formData.modInfo.fee.feeType === 'FIXED') {
+      formData.modInfo.fee.percentage = this.defaultPercentage;
+    }
+
     this.profile.set(formData);
 
     const save = this.profile.save(formData, {
