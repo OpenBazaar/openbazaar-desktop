@@ -20,7 +20,7 @@
             ob.priceDiscount
         } else {
           discountAmount = typeof ob.percentDiscount === 'number' ?
-            parseFloat((ob.percentDiscount).toFixed(2)).toString() : ob.percentDiscount;
+            ob.upToFixed(ob.percentDiscount, 2) : ob.percentDiscount;
         }
 
         if (typeof ob.price === 'number') {
