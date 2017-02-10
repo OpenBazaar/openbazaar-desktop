@@ -1,42 +1,18 @@
-import app from '../app';
 import { Collection } from 'backbone';
-import ListingShort from '../models/listing/ListingShort';
+import ChatHead from '../models/chat/ChatHead';
+import app from '../app';
 
-export default class extends Collection {
-  // constructor(models = [], options = {}) {
-  //   super(models, options);
-  // }
-
-  model(attrs, options) {
-    return new ListingShort(attrs, options);
-  }
+module.exports = Collection.extend({
+  /* we have to use the older style for this collection, the ES6 style creates a bug where models
+  cannot be removed using their ids */
 
   url() {
-    let url;
+    return app.getServerUrl('ob/chatconversations');
+  },
 
-    if (this.guid === app.profile.id) {
-      url = app.getServerUrl('ob/listings');
-    } else {
-      url = app.getServerUrl(`ipns/${this.guid}/listings/index.json`);
-    }
+  model: ChatHead,
 
-    return url;
-  }
-
-  parse() {
-    const parsedResponse = [];
-
-    // response.forEach(listing => {
-    //   const updatedListing = listing;
-    //   const priceObj = updatedListing.price;
-
-
-    //   updatedListing.price.amount =
-    //     integerToDecimal(priceObj.amount, priceObj.currencyCode === 'BTC');
-
-    //   parsedResponse.push(updatedListing);
-    // });
-
-    return parsedResponse;
-  }
-}
+  parse(response) {
+    return response.filter((conversation) => (conversation.peerId !== app.profile.guid));
+  },
+});

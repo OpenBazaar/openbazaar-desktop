@@ -11,6 +11,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer } from './utils/selectors';
 import Chat from './views/chat/Chat.js';
+import ChatConversations from './collections/ChatConversations';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import StartupLoadingModal from './views/modals/StartupLoading';
@@ -408,10 +409,15 @@ function start() {
         Backbone.history.start();
 
         // load chat
-        // app.chat = new Chat({
-        //   collection: new 
-        // });
-        getChatContainer().append(app.chat.render().el);
+        const chatConvos = new ChatConversations();
+
+        chatConvos.once('request', (cl, xhr) => {
+          xhr.always(getChatContainer().append(app.chat.el));
+        });
+
+        app.chat = new Chat({
+          collection: chatConvos,
+        });
       });
     });
   });
