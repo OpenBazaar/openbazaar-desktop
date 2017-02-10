@@ -1,6 +1,7 @@
 import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
+import { upToFixed } from './number';
 import { Events } from 'backbone';
 
 const events = {
@@ -82,8 +83,7 @@ export function formatPrice(price, isBtc = false) {
   if (isBtc) {
     // Format BTC price so it has up to 8 decimal places,
     // but without any trailing zeros
-    convertedPrice =
-      parseFloat((price).toFixed(8)).toString();
+    convertedPrice = upToFixed(price, 8);
   } else {
     convertedPrice = price.toFixed(2);
   }

@@ -3,6 +3,7 @@ import { formatCurrency, convertAndFormatCurrency } from './currency';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage,
 } from './responsive';
+import { upToFixed } from './number';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -21,3 +22,5 @@ export { isLargeWidth };
 export { isSmallHeight };
 
 export { getAvatarBgImage };
+
+export { upToFixed };

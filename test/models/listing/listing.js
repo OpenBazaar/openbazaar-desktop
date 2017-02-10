@@ -89,6 +89,11 @@ describe('the Listing model', () => {
               ],
             },
           ],
+          coupons: [
+            {
+              priceDiscount: 1333,
+            },
+          ],
         },
       ],
     });
@@ -97,6 +102,7 @@ describe('the Listing model', () => {
     expect(parsed.listing.shippingOptions[0].services[0].price).to.equal(1.23);
     expect(parsed.listing.shippingOptions[0].services[1].price).to.equal(2.34);
     expect(parsed.listing.shippingOptions[1].services[0].price).to.equal(4.56);
+    expect(parsed.listing.coupons[0].priceDiscount).to.equal(13.33);
   });
 
   it('converts BTC prices from Satoshi to BTC format in parse', () => {
@@ -129,6 +135,14 @@ describe('the Listing model', () => {
               ],
             },
           ],
+          coupons: [
+            {
+              priceDiscount: 1333,
+            },
+            {
+              priceDiscount: 281649276,
+            },
+          ],
         },
       ],
     });
@@ -137,6 +151,8 @@ describe('the Listing model', () => {
     expect(parsed.listing.shippingOptions[0].services[0].price).to.equal(2.71453590);
     expect(parsed.listing.shippingOptions[0].services[1].price).to.equal(8.73927651);
     expect(parsed.listing.shippingOptions[1].services[0].price).to.equal(2.81649276);
+    expect(parsed.listing.coupons[0].priceDiscount).to.equal(0.00001333);
+    expect(parsed.listing.coupons[1].priceDiscount).to.equal(2.81649276);
   });
 
   // todo: figure out how to stub BaseModel.sync so we could test conversion

@@ -519,7 +519,7 @@
       "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
-      "expiration": "Expiration"
+      "coupons": "Coupons"
     },
     "placeholderTitle": "Enter your title...",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -555,6 +555,7 @@
     "btnAddShippingOptionShort": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
+    "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "Primary Photo",
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
@@ -579,6 +580,16 @@
           "pricePlaceholder": "0.00",
           "addService": "+ Add Service"
         }
+    },
+    "coupons": {
+      "titleLabel": "Title",
+      "couponCodeLabel": "Coupon Code",
+      "discountLabel": "Discount",
+      "titlePlaceholder": "Optional",
+      "discountCodePlaceholder": "Please provide a code",
+      "discountTypePercent": "Percent",
+      "discountTypeFixed": "Fixed",
+      "btnAddCoupon": "+ Add Coupon"      
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
@@ -633,7 +644,9 @@
   "listingInnerModelErrors": {
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
-    "provideShippingOption": "For a physical good, at least one shipping option is required."
+    "provideShippingOption": "For a physical good, at least one shipping option is required.",
+    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
+    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -646,6 +659,15 @@
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
+  },
+  "couponModelErrors": {
+    "provideDiscountCode": "Please provide a coupon code.",
+    "provideDiscountAmount": "Please provide a discount value.",
+    "percentageLow": "The percentage value must be greater than zero.",
+    "percentageHigh": "You cannot set a percentage above 100%" ,
+    "priceLow": "The price must be geater than zero.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
+    "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
     "provideName": "Please provide a title.",

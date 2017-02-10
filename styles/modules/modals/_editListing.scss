@@ -158,6 +158,46 @@
           }
         }
       }
+
+      .couponsSection {
+        .couponsContainer {
+          display: none;
+        }
+
+        &.expandedCouponView {
+          .couponsContainer {
+            display: block;
+          }
+          
+          .btnAddCoupon {
+            display: none;
+          }
+        }
+
+        .coupon {
+          padding-left: 0;
+          padding-right: 0;
+
+          .inputSelect {
+            input {
+              padding-right: 94px;
+            }
+
+            .select2-container {
+              width: 93px !important;
+            }
+
+            &::after {
+              right: 94px;
+            }          
+          }
+
+          .btnRemoveCoupon {
+            height: auto;
+            width: 50px;
+          }
+        }
+      }
     }
   }
 }
