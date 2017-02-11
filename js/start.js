@@ -412,12 +412,14 @@ function start() {
         const chatConvos = new ChatConversations();
 
         chatConvos.once('request', (cl, xhr) => {
-          xhr.always(getChatContainer().append(app.chat.el));
+          xhr.always(app.chat.attach(getChatContainer()));
         });
 
         app.chat = new Chat({
           collection: chatConvos,
         });
+
+        chatConvos.fetch();
       });
     });
   });
@@ -464,7 +466,8 @@ function connectToServer() {
 let connectedAtLeastOnce = false;
 
 serverConnectEvents.on('connected', () => {
-  getChatContainer().removeClass('hide');
+  // getChatContainer().removeClass('hide');
+  if (app.chat) app.chat.show();
 
   app.connectionManagmentModal.setModalOptions({
     dismissOnEscPress: true,
@@ -487,7 +490,8 @@ serverConnectEvents.on('disconnect', () => {
     showCloseButton: false,
   });
 
-  getChatContainer().addClass('hide');
+  // getChatContainer().addClass('hide');
+  if (app.chat) app.chat.hide();
   app.pageNav.navigable = false;
   app.connectionManagmentModal.open();
 });

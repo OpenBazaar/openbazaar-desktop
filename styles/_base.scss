@@ -179,6 +179,7 @@ ul, ol {
   }
 
   #chatContainer {
+    background-color: orange;
     position: fixed;
     top: 105px;
     right: $scrollbar; // don't cover scroll bars
@@ -186,21 +187,21 @@ ul, ol {
     height: calc(100% - 100px);
     z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width);
-    overflow-y: auto;
-    overflow-x: hidden;
+    // overflow-y: auto;
+    // overflow-x: hidden;
 
-    &::-webkit-scrollbar {
-      width: 0;
-    }
+    // &::-webkit-scrollbar {
+    //   width: 0;
+    // }
 
-    &:hover {
-      right: 0;
-      padding-right: $scrollbar;
+    // &:hover {
+    //   right: 0;
+    //   padding-right: $scrollbar;
 
-      &::-webkit-scrollbar {
-        width: $scrollbar;
-      }
-    }
+    //   &::-webkit-scrollbar {
+    //     width: $scrollbar;
+    //   }
+    // }
 
     .chatOpen & {
       width: $chatOpen;

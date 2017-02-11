@@ -15,7 +15,7 @@
       <section id="contentFrame">
         <div id="pageContainer"></div>
       </section>
-      <div id="chatContainer" class="hide"></div>
+      <div id="chatContainer"></div>
       <section id="statusBar"></section>
     </div>
     <!-- delete this in production, it's just a warning for pre-alpha releases -->
@@ -25,13 +25,6 @@
       </span>
 
     </div>
-    <script>
-      <!--just demo stuff-->
-      let chatToggle = document.getElementById("chatContainer");
-      chatToggle.addEventListener('click', function(){
-        document.body.classList.toggle('chatOpen');
-      })
-    </script>
     <script>
       // install babel hooks in the renderer process
       require('babel-register');
