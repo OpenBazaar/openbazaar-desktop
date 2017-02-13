@@ -1,0 +1,50 @@
+<div class="gutterVMd">
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <div class="flexHCent">
+      <h2 class="h3 clrT"><%= ob.polyT('settings.storeTab.sectionName') %></h2>
+      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+    </div>
+    <hr class="clrBr" />
+
+    <div class="tabFormWrapper">
+      <form class="box padMdKids padStack">
+        <div class="flexRow">
+          <div class="col3">
+            <label class="required"><%= ob.polyT('settings.storeTab.storeStatus') %></label>
+          </div>
+          <div class="col9">
+            <div class="btnStrip">
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="vendor"
+                       value="true"
+                       class="js-profileField"
+                       id="settingsModerationStatusTrue"
+                       data-var-type="boolean"
+                <% if (ob.vendor) { %>checked<% } %>>
+                <label for="settingsModerationStatusTrue"><%= ob.polyT('settings.on') %></label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="vendor"
+                       value="false"
+                       class="js-profileField"
+                       id="settingsModerationStatusFalse"
+                       <% if (!ob.vendor) { %>checked<% } %>
+                       data-var-type="boolean">
+                <label for="settingsModerationStatusFalse"><%= ob.polyT('settings.off') %></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexHRight">
+    <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
+  </div>
+</div>
+</div>
