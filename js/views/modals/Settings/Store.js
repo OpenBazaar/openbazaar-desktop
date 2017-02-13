@@ -26,6 +26,18 @@ export default class extends baseVw {
       type: 'moderators',
     });
 
+    this.fakeModsList = [
+      { guid: 'QmSLTwZQPxX1peJVXxBBKTrVGVMKSSyom5sTDHxtVricvs' },
+      { guid: 'QmbY4yo9Eifg7DPjL7qK5JvNdiJaRAD7N76gVg4YoQsvgA' },
+      { guid: 'QmdzzGGc9xZq8w4z42vSHe32DZM7VXfDUFEUyfPvYNYhXE' },
+      { guid: 'QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX' },
+      { guid: 'QmeVReBnK8UQL3D7DECHuKsaA9SCYknZJ2cNyvyPuvkBLB' },
+      { guid: 'QmPoMw6wgfQZWgoPKeWz9yhCiXofQs1Cg9E557nXuzTJNg' },
+      { guid: 'QmcCoBtYyduyurcLHRF14QhhA88YojJJpGFuMHoMZuU8sc' },
+      { guid: 'QmeXCzUBNGyox8ctiJu4JqwSkqZRGaKgfHLzeuNZ68xfcH' },
+      { guid: 'QmS4MUjSeZrpWcvJj5hM6tWftrH8N5ZdaPaBR3fVqv6FSq' },
+    ];
+
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
   }
@@ -41,16 +53,25 @@ export default class extends baseVw {
     this.modsAvailable.fetch().done(() => {
       console.log(this.modsAvailable.models);
     });
+
+    // fake code for now
+    console.log(this.fakeModsList);
+    this.modsAvailable.add(this.fakeModsList);
+    console.log(this.modsAvailable.models);
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
     return super.getFormData(subset);
   }
 
+  getSettingsData() {
+    console.log(this.allCheckedModsIDs);
+  }
+
   save() {
     // this view saves to two different models
     const profileFormData = this.getProfileFormData();
-    const settingsFormData = this.getSettingsFormData();
+    const settingsFormData = this.getSettingsData();
 
     this.profile.set(profileFormData);
     this.settings.set(settingsFormData);
@@ -113,6 +134,10 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  get allCheckedModsIDs() {
+    return this.$('.js-mod.selected').attr('data-guid');
+  }
+
   get $btnSave() {
     return this._$btnSave ||
       (this._$btnSave = this.$('.js-save'));
@@ -128,6 +153,9 @@ export default class extends baseVw {
         ...this.profile.toJSON(),
         ...this.settings.toJSON(),
       }));
+
+      // fetch the available moderators
+      this.fetchAvailableModerators();
 
       // this.$('#moderationCurrency').select2();
 
