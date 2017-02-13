@@ -335,11 +335,31 @@
       "status":{
         "saving": "Saving moderation settings...",
         "done": "Moderation settings saved.",
-        "fail": "Saving the moderation settings failed."
+        "fail": "There was an error saving your moderation settings."
       },
       "errors": {
         "confirm": "To become a moderator, you must agree to both statements below.",
         "save": "The moderation settings were not saved."
+      }
+    },
+    "storeTab": {
+      "sectionName": "Store",
+      "storeStatus": "Store",
+      "storeStatusHelper": "Add a store to your page",
+      "moderators": "Moderators",
+      "moderatorsHelper": "Select a few moderators for your Store.",
+      "selectedModerators": "Selected Moderators",
+      "selectedModeratorsEmpty": "No Moderators Added",
+      "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
+      "moderatorByIDPlaceholder": "Look up a Moderator by entering their @handle or ID",
+      "moderatoryByIDSubmit": "Submit",
+      "availableModerators": "Available Moderators on the Network",
+      "browseModerators": "Browse Moderators",
+      "status": {
+        "saving": "Saving store settings...",
+        "done": "Store settings saved.",
+        "fail": "Saving the store settings failed.",
+        "error": "There was ab error saving your store settings."
       }
     },
     "optional": "optional",

@@ -7,18 +7,20 @@ module.exports = Collection.extend({
   /* we have to use the older style for this collection, the ES6 style creates a bug where models
   cannot be removed using their ids */
 
-  initialize(models, options) {
-    if (!options.type) {
-      throw new Error('You must provide a type to the collection');
-    }
-
+  initialize(models, options = {}) {
     this.guid = options.guid;
     this.type = options.type;
   },
 
   url() {
-    return app.getServerUrl(this.guid === app.profile.id || !this.guid ?
-      `ob/${this.type}` : `ipns/${this.guid}/${this.type}`);
+    let url;
+    // if a type is provided, fetch a collection of users
+    if (this.type) {
+      url = app.getServerUrl(this.guid === app.profile.id || !this.guid ?
+        `ob/${this.type}` : `ipns/${this.guid}/${this.type}`);
+    }
+
+    return url;
   },
 
   model: UserShort,
