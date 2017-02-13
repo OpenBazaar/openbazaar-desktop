@@ -91,7 +91,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('userShort.html', (t) => {
+    loadTemplate('userCard.html', (t) => {
       this.$el.html(t({
         loading: this.loading,
         notFound: this.notFound,
