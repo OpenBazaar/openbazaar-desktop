@@ -13,28 +13,7 @@ module.exports = Collection.extend({
   model: ChatHead,
 
   parse(response) {
-    // until lastMessage and unread are provided, we'll fudge them
-    const lastMessages = [
-      'I\'ll meet ya at tha crossroads dawg.',
-      'Are you talking to me? I don\'t think you are talking to me in that' +
-        'manner, eh? Is this all she wrote?',
-      'Straight fleecin it out playa',
-      'They be smashing my flo yo',
-      'What in the hell?',
-      'The winter winds came slow and heavy, the bean broth was slightly over done.',
-    ];
-
-    const unreads = [3, 6, 7, 1, 0, 4, 18, 5];
-
-    let resp = response.map((convo, index) => ({
-      ...convo,
-      lastMessage: lastMessages[index % lastMessages.length],
-      unread: unreads[index % unreads.length],
-    }));
-
-    // return resp.filter(convo => (convo.peerId !== app.profile.guid));
-
-    resp = resp.filter(convo => (convo.peerId !== app.profile.guid));
+    let resp = response.filter(convo => (convo.peerId !== app.profile.guid));
 
     if (resp.length) {
       while (resp.length < 50) {
@@ -45,6 +24,7 @@ module.exports = Collection.extend({
         .map(convo => ({
           ...convo,
           peerId: Date.now() + Math.random(),
+          unread: Math.floor(Math.random() * (20 - 1 + 1)) + 1,
         }));
     }
 

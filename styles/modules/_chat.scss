@@ -28,13 +28,18 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 20px;
-      height: 20px;
-      font-size: $tx5;
+      width: 22px;
+      height: 22px;
+      line-height: 18px;
+      font-size: $tx5b;
       font-weight: bold;
       text-align: center;
       border-width: 1px;
       border-style: solid;
+
+      &.ellipsisShown {
+        line-height: 14px;
+      }
     }
 
     .handleGuid {

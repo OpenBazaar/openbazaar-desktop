@@ -7,5 +7,5 @@
   </div>
 </div>
 <% if (ob.unread) { %>
-<div class="disc unreadBadge clrE1 clrTOnEmph clrBr2 clrSh1"><%= ob.unread %></div>
+<div class="disc unreadBadge clrE1 clrTOnEmph clrBr2 clrSh1 <% if (ob.unread > 9) print('ellipsisShown') %>"><%= ob.unread > 9 ? '…' : ob.unread  %></div>
 <% } %>
