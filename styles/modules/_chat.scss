@@ -20,6 +20,29 @@
   // use for chat styles that only apply inside the chat sidebar
 
   .chatHead {
+    cursor: pointer;
+    position: relative;
+    padding-left: 5px;
+
+    .unreadBadge {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      font-size: $tx5;
+      font-weight: bold;
+      text-align: center;
+      border-width: 1px;
+      border-style: solid;
+    }
+
+    .handleGuid {
+      max-width: 60px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
     &:first-child {
       margin-top: 5px;
     }

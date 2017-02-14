@@ -21,7 +21,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'chatHeads';
+    return 'chatHeads flexColRows gutterVSm';
   }
 
   events() {
