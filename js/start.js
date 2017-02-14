@@ -420,6 +420,8 @@ function start() {
         });
 
         chatConvos.fetch();
+
+        $('#chatCloseBtn').on('click', () => (app.chat.close()));
       });
     });
   });

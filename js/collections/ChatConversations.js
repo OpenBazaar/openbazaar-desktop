@@ -36,15 +36,17 @@ module.exports = Collection.extend({
 
     resp = resp.filter(convo => (convo.peerId !== app.profile.guid));
 
-    while (resp.length < 50) {
-      resp = [...resp, ...resp];
-    }
+    if (resp.length) {
+      while (resp.length < 50) {
+        resp = [...resp, ...resp];
+      }
 
-    resp = resp.slice(1)
-      .map(convo => ({
-        ...convo,
-        peerId: Date.now() + Math.random(),
-      }));
+      resp = resp.slice(1)
+        .map(convo => ({
+          ...convo,
+          peerId: Date.now() + Math.random(),
+        }));
+    }
 
     return resp;
   },
