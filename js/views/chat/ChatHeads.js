@@ -1,6 +1,6 @@
 // import $ from 'jquery';
 // import _ from 'underscore';
-import loadTemplate from '../../utils/loadTemplate';
+// import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 import ChatHead from './ChatHead';
 
