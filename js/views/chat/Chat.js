@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import '../../utils/velocity';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import loadTemplate from '../../utils/loadTemplate';
@@ -33,7 +34,8 @@ export default class extends baseVw {
 
   events() {
     return {
-      // 'click .js-btnConnect': 'onConnectClick',
+      'click .js-topUnreadBanner': 'onClickTopUnreadBanner',
+      'click .js-bottomUnreadBanner': 'onClickBottomUnreadBanner',
     };
   }
 
@@ -70,6 +72,46 @@ export default class extends baseVw {
 
   onScroll() {
     this.handleUnreadBadge();
+  }
+
+  onClickTopUnreadBanner() {
+    // Find the first chat head with unreads that is out of view above
+    // the current viewport and scroll to it so it is positioned at the
+    // bottom of the viewport.
+    const firstChatHeadAbove = this.chatHeads.views
+      .filter(chatHead => (chatHead.model.get('unread')))
+      .slice()
+      .reverse()
+      .find(chatHead => {
+        const position = chatHead.$el.position();
+
+        return position.top <= chatHead.el.offsetHeight * -1;
+      });
+
+    if (firstChatHeadAbove) {
+      firstChatHeadAbove.$el
+        .velocity('scroll', {
+          container: this.$scrollContainer,
+          offset: this.$scrollContainer[0].offsetHeight * -1,
+        });
+    }
+  }
+
+  onClickBottomUnreadBanner() {
+    // Find the first chat head with unreads that is out of view below
+    // the current viewport and scroll to it.
+    const firstChatHeadBelow = this.chatHeads.views
+      .filter(chatHead => (chatHead.model.get('unread')))
+      .find(chatHead => {
+        const position = chatHead.$el.position();
+
+        return position.top >= this.$scrollContainer[0].offsetHeight;
+      });
+
+    if (firstChatHeadBelow) {
+      firstChatHeadBelow.$el
+        .velocity('scroll', { container: this.$scrollContainer });
+    }
   }
 
   open() {
@@ -121,7 +163,8 @@ export default class extends baseVw {
       .find(chatHead => (chatHead.get('unread')));
 
     // todo: update isScrolledIntoView so that you could pass in an offset to
-    // determine if a certain portion of the el is out of view
+    // determine if a certain portion of the el is out of view rather than the
+    // whole element
 
     if (firstUnreadChatHead) {
       const firstUnreadIndex = this.collection.indexOf(firstUnreadChatHead);

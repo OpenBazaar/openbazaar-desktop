@@ -24,15 +24,20 @@ module.exports = Collection.extend({
         resp = [...resp, ...resp];
       }
 
-      resp = resp.slice(1)
-        .map(convo => ({
-          ...convo,
-          peerId: Date.now() + Math.random(),
-          // unread: Math.floor(Math.random() * 20) + 0,
-          unread: 0,
-        }));
+      resp = resp.map(convo => ({
+        ...convo,
+        peerId: Date.now() + Math.random(),
+        unread: Math.floor(Math.random() * 20) + 0,
+      }));
 
-      resp[0].unread = 5;
+      resp[43].unread = 0;
+      resp[44].unread = 0;
+      resp[45].unread = 0;
+      resp[46].unread = 0;
+      resp[47].unread = 0;
+      resp[48].unread = 0;
+      resp[49].unread = 0;
+      resp[50].unread = 0;
     }
 
     return resp;

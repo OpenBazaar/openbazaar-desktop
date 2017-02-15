@@ -58,24 +58,49 @@
 
     .topUnreadBanner, .bottomUnreadBanner {
       display: none;
+      padding: $pad;
+      font-size: $tx6;
+      position: fixed;
+      right: ($chatClosed / 2) - 8;
+      font-weight: bold;
+      border-radius: $corner;
+      @include chatOpeningTransition(all);
+
+      .fullText {
+        display: none
+      }
+
+      .chatOpen & {
+        right: $chatOpen / 2;
+        transform: translateX(50%);
+
+        .arrowOnly {
+          display: none;
+        }
+
+        .fullText {
+          display: inline;          
+        }
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
     }
 
     &.outOfViewUnreadsAbove {
       .topUnreadBanner {
         display: block;
-        position: fixed;
         top: 105px; // todo: create $chatTop variable if we keep this implementation
-        right: $chatClosed / 2;
-        transform: translateX(50%);
-        @include chatOpeningTransition(right);
-
-        .chatOpen & {
-          right: $chatOpen / 2;
-        }
       }
     }
 
-    &.outOfViewUnreadsBelow {}
+    &.outOfViewUnreadsBelow {
+      .bottomUnreadBanner {
+        display: block;
+        bottom: 45px;
+      }      
+    }
   }
 }
 

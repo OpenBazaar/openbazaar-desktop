@@ -183,7 +183,7 @@ ul, ol {
     top: 105px;
     right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
-    height: calc(100% - 150px);
+    height: calc(100% - 150px); // for now keep chat above "testing only" badge
     z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width);
     overflow-y: auto;
