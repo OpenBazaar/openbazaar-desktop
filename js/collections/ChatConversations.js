@@ -12,6 +12,10 @@ module.exports = Collection.extend({
 
   model: ChatHead,
 
+  comparator(convo) {
+    return -convo.get('unread');
+  },
+
   parse(response) {
     let resp = response.filter(convo => (convo.peerId !== app.profile.guid));
 
@@ -24,8 +28,11 @@ module.exports = Collection.extend({
         .map(convo => ({
           ...convo,
           peerId: Date.now() + Math.random(),
-          unread: Math.floor(Math.random() * (20 - 1 + 1)) + 1,
+          // unread: Math.floor(Math.random() * 20) + 0,
+          unread: 0,
         }));
+
+      resp[0].unread = 5;
     }
 
     return resp;

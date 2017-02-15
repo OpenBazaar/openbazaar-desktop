@@ -1,6 +1,7 @@
 import $ from 'jquery';
-// import _ from 'underscore';
+import _ from 'underscore';
 import { getBody } from '../../utils/selectors';
+import { isScrolledIntoView } from '../../utils/dom';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 import ChatHeads from './ChatHeads';
@@ -19,10 +20,9 @@ export default class extends baseVw {
     // };
 
     this._isOpen = false;
+    this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
     this.listenTo(this.collection, 'sync', () => {
-      console.log('boom selecta');
-      window.boom = this.collection;
       this.render();
     });
   }
@@ -68,6 +68,10 @@ export default class extends baseVw {
     }
   }
 
+  onScroll() {
+    this.handleUnreadBadge();
+  }
+
   open() {
     this._isOpen = true;
     getBody().addClass('chatOpen');
@@ -105,6 +109,51 @@ export default class extends baseVw {
     return this;
   }
 
+  /**
+   * Adds css classes to our scroll element indicating whether the unread messages
+   * badges needs to be shown.
+   */
+  handleUnreadBadge() {
+    // isScrolledIntoView
+    if (!this.chatHeads) return;
+
+    const firstUnreadChatHead = this.collection
+      .find(chatHead => (chatHead.get('unread')));
+
+    // todo: update isScrolledIntoView so that you could pass in an offset to
+    // determine if a certain portion of the el is out of view
+
+    if (firstUnreadChatHead) {
+      const firstUnreadIndex = this.collection.indexOf(firstUnreadChatHead);
+
+      if (!isScrolledIntoView(this.chatHeads.views[firstUnreadIndex].el)) {
+        this.$el.addClass('outOfViewUnreadsAbove');
+      } else {
+        this.$el.removeClass('outOfViewUnreadsAbove');
+      }
+    } else {
+      this.$el.removeClass('outOfViewUnreadsAbove outOfViewUnreadsBelow');
+      return;
+    }
+
+    const lastUnreadChatHead = this.collection
+      .slice()
+      .reverse()
+      .find(chatHead => (chatHead.get('unread')));
+
+    if (lastUnreadChatHead && lastUnreadChatHead !== firstUnreadChatHead) {
+      const lastUnreadIndex = this.collection.indexOf(lastUnreadChatHead);
+
+      if (!isScrolledIntoView(this.chatHeads.views[lastUnreadIndex].el)) {
+        this.$el.addClass('outOfViewUnreadsBelow');
+      } else {
+        this.$el.removeClass('outOfViewUnreadsBelow');
+      }
+    } else {
+      this.$el.removeClass('outOfViewUnreadsBelow');
+    }
+  }
+
   render() {
     loadTemplate('chat/chat.html', (t) => {
       this.$el.html(t({
@@ -124,6 +173,12 @@ export default class extends baseVw {
 
       this.$('.js-chatHeadsContainer')
         .append(this.chatHeads.render().el);
+
+      // todo: pass in scroll container as a view option
+      this.$scrollContainer = $('#chatContainer');
+      this.handleUnreadBadge();
+      this.$scrollContainer.off('scroll', this.throttledOnScroll)
+        .on('scroll', this.throttledOnScroll);
     });
 
     return this;

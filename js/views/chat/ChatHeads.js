@@ -12,7 +12,7 @@ export default class extends baseVw {
 
     super(options);
 
-    this.chatHeadViews = [];
+    this._chatHeadViews = [];
 
     // this._state = {
     //   status: 'not-connected',
@@ -34,6 +34,10 @@ export default class extends baseVw {
   //   super.remove();
   // }
 
+  get views() {
+    return this._chatHeadViews;
+  }
+
   render() {
     // loadTemplate('chat/chatHeads.html', (t) => {
     //   this.$el.html(t({
@@ -45,13 +49,13 @@ export default class extends baseVw {
     //   this._$deleteConfirm = null;
     // });
 
-    this.chatHeadViews.forEach(vw => vw.remove());
-    this.chatHeadViews = [];
+    this._chatHeadViews.forEach(vw => vw.remove());
+    this._chatHeadViews = [];
 
     this.collection.forEach(chatHead => {
       const view = this.createChild(ChatHead, { model: chatHead });
       this.listenTo(view, 'click', () => this.trigger('chatHeadClick'));
-      this.chatHeadViews.push(view);
+      this._chatHeadViews.push(view);
       this.$el.append(view.render().el);
     });
 

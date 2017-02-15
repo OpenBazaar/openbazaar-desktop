@@ -52,6 +52,9 @@
   "pageNav": {
     "notConnectedMenuItem": "Not Connected"
   },
+  "chat": {
+    "unreadMessages": "Unread messages %{arrow}"
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
