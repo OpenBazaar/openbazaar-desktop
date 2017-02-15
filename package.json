@@ -41,13 +41,15 @@
     "chai": "^3.5.0",
     "copyfiles": "^1.0.0",
     "cross-env": "^1.0.8",
-    "electron": "^1.4.12",
+    "electron": "^1.4.15",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-config-defaults": "^9.0.0",
     "eslint-plugin-import": "^1.10.0",
     "eslint-plugin-jsx-a11y": "^1.5.3",
     "eslint-plugin-react": "^5.2.2",
+    "grunt": "^1.0.1",
+    "grunt-electron-installer": "^2.1.0",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
     "node-sass": "^3.13.0",
@@ -74,11 +76,12 @@
     "multihashes": "^0.2.2",
     "node-polyglot": "^2.0.0",
     "open": "0.0.5",
+    "qr-encode": "^0.3.0",
     "sortablejs": "^1.5.0-rc1",
     "trumbowyg": "^2.4.2",
     "underscore": "^1.8.3",
     "url-parse": "^1.1.7",
     "velocity-animate": "^1.2.3",
-    "qr-encode": "^0.3.0"
+    "yargs": "^6.6.0"
   }
 }
