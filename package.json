@@ -53,7 +53,6 @@
     "node-sass": "^3.13.0",
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.2.0",
-    "qr-encode": "^0.3.0",
     "sinon": "^1.17.6"
   },
   "pre-commit": [
@@ -79,6 +78,7 @@
     "trumbowyg": "^2.4.2",
     "underscore": "^1.8.3",
     "url-parse": "^1.1.7",
-    "velocity-animate": "^1.2.3"
+    "velocity-animate": "^1.2.3",
+    "qr-encode": "^0.3.0"
   }
 }
