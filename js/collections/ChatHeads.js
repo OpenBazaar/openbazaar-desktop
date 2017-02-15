@@ -17,15 +17,15 @@ module.exports = Collection.extend({
   },
 
   parse(response) {
-    let resp = response.filter(convo => (convo.peerId !== app.profile.guid));
+    let resp = response.filter(chatHead => (chatHead.peerId !== app.profile.guid));
 
     if (resp.length) {
       while (resp.length < 50) {
         resp = [...resp, ...resp];
       }
 
-      resp = resp.map(convo => ({
-        ...convo,
+      resp = resp.map(chatHead => ({
+        ...chatHead,
         peerId: Date.now() + Math.random(),
         unread: Math.floor(Math.random() * 20) + 0,
       }));

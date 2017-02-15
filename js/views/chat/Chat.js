@@ -10,7 +10,7 @@ import ChatHeads from './ChatHeads';
 export default class extends baseVw {
   constructor(options = {}) {
     if (!options.collection) {
-      throw new Error('Please provide a chat conversations collection.');
+      throw new Error('Please provide a chat heads collection.');
     }
 
     super(options);
@@ -23,9 +23,8 @@ export default class extends baseVw {
     this._isOpen = false;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
-    this.listenTo(this.collection, 'sync', () => {
-      this.render();
-    });
+    // TODO: handle fetch error.
+    this.listenTo(this.collection, 'sync', () => this.render());
   }
 
   className() {
