@@ -206,6 +206,15 @@ ul, ol {
       width: $chatOpen;
     }
   }
+
+  #chatConvoContainer {
+    position: fixed;
+    right: 0;
+    bottom: 41px;
+    border-width: 1px;
+    border-style: solid;
+    z-index: 2; // chat needs to be on top of modals
+  }
 }
 
 // turn off animations and transitions with this style

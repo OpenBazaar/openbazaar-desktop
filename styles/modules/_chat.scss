@@ -19,8 +19,6 @@
 #chatContainer {
   // use for chat styles that only apply inside the chat sidebar
 
-  // position: relative; // needs non static position - _base.scss gives it fixed
-
   .chat {
     .chatHead {
       cursor: pointer;
@@ -102,6 +100,11 @@
       }      
     }
   }
+}
+
+#chatConvoContainer {
+  width: 250px;
+  height: 360px;
 }
 
 .chat {

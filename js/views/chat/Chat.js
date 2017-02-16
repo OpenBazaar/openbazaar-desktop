@@ -4,8 +4,10 @@ import '../../utils/velocity';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import loadTemplate from '../../utils/loadTemplate';
+import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ChatHeads from './ChatHeads';
+import Conversation from './Conversation';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -66,6 +68,29 @@ export default class extends baseVw {
   onChatHeadClick() {
     if (!this.isOpen) {
       this.open();
+    } else {
+      // if (this.currentConversation)
+    }
+  }
+
+  openConversation(guid, profile, chatHead) {
+    if (!profile ||
+      !(profile instanceof Profile) ||
+      !profile.then) {
+      throw new Error('Please provide a profile model or a promise that provides' +
+        ' one when it resolves.');
+
+      // If providing a promise, please pass the Profile instance into the
+      // resolve handler, so the following will work:
+      // promise.done(profile => { // i gotz me a profile model! });
+    }
+
+    if (this.conversation && this.conversation.guid === guid) {
+      return;
+
+      // For now we'll do nothing. An enhancement could be determining if the existing
+      // convo is a.) still waiting on the profile b.) has an older profile than the one
+      // provided, and if so update the convo with the given profile
     }
   }
 
@@ -215,6 +240,13 @@ export default class extends baseVw {
 
       this.$('.js-chatHeadsContainer')
         .append(this.chatHeads.render().el);
+
+      this.conversation = this.createChild(Conversation, {
+        guid: 'abc123',
+        profile: $.Deferred().promise(),
+      });
+      $('#chatConvoContainer')
+        .append(this.conversation.render().el);
 
       // todo: pass in scroll container as a view option
       this.$scrollContainer = $('#chatContainer');
