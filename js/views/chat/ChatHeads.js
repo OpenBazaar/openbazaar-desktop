@@ -54,7 +54,7 @@ export default class extends baseVw {
 
     this.collection.forEach(chatHead => {
       const view = this.createChild(ChatHead, { model: chatHead });
-      this.listenTo(view, 'click', () => this.trigger('chatHeadClick'));
+      this.listenTo(view, 'click', (...args) => this.trigger('chatHeadClick', ...args));
       this._chatHeadViews.push(view);
       this.$el.append(view.render().el);
     });

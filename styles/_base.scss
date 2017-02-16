@@ -210,12 +210,12 @@ ul, ol {
   #chatConvoContainer {
     position: fixed;
     right: 0;
-    bottom: 44px;
+    bottom: 42px;
     z-index: 2; // chat needs to be on top of modals
     width: 250px;
     height: 360px;
     transform: translateY(105%);
-    transition: transform 0.5s ease;
+    transition: transform 300ms ease;
 
     .chatConvoOpen & {
       transform: translateY(0);

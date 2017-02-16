@@ -117,7 +117,12 @@
 
       &.ion-ios-close-empty {
         font-size: $tx1;
-        margin-right: 5px;
+      }
+    }
+
+    .convoProfileHeader {
+      .handle {
+        max-width: 128px;
       }
     }
   }

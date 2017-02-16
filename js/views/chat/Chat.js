@@ -65,18 +65,24 @@ export default class extends baseVw {
   //   super.remove();
   // }
 
-  onChatHeadClick() {
+  onChatHeadClick(e) {
     if (!this.isOpen) {
       this.open();
     } else {
-      // if (this.currentConversation)
+      const profilePromise = $.Deferred().promise();
+
+      this.openConversation(e.view.model.id, profilePromise, e.view.model);
     }
   }
 
   openConversation(guid, profile, chatHead) {
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
     if (!profile ||
-      !(profile instanceof Profile) ||
-      !profile.then) {
+      (!(profile instanceof Profile) &&
+      !profile.then)) {
       throw new Error('Please provide a profile model or a promise that provides' +
         ' one when it resolves.');
 
@@ -94,9 +100,23 @@ export default class extends baseVw {
       // provided, and if so update the convo with the given profile.
     }
 
-    if (chatHead) console.log(); // temporary. be happy linter.
+    const oldConvo = this.conversation;
+
+    this.conversation = this.createChild(Conversation, {
+      guid,
+      profile,
+      chatHead,
+    });
+
+    this.listenTo(this.conversation, 'clickCloseConvo',
+      () => this.closeConversation());
+
+    this.$chatConvoContainer
+      .append(this.conversation.render().el);
 
     getBody().addClass('chatConvoOpen');
+
+    if (oldConvo) oldConvo.remove();
   }
 
   closeConversation() {
@@ -230,6 +250,11 @@ export default class extends baseVw {
     }
   }
 
+  get $chatConvoContainer() {
+    return this._$chatConvoContainer ||
+      (this._$chatConvoContainer = $('#chatConvoContainer'));
+  }
+
   render() {
     loadTemplate('chat/chat.html', (t) => {
       this.$el.html(t({
@@ -248,14 +273,7 @@ export default class extends baseVw {
       this.listenTo(this.chatHeads, 'chatHeadClick', this.onChatHeadClick);
 
       this.$('.js-chatHeadsContainer')
-        .append(this.chatHeads.render().el);
-
-      this.conversation = this.createChild(Conversation, {
-        guid: 'abc123',
-        profile: $.Deferred().promise(),
-      });
-      $('#chatConvoContainer')
-        .append(this.conversation.render().el);
+        .html(this.chatHeads.render().el);
 
       // todo: pass in scroll container as a view option
       this.$scrollContainer = $('#chatContainer');

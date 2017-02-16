@@ -3,6 +3,7 @@
 import Profile from '../../models/profile/Profile';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
+import ConvoProfileHeader from './ConvoProfileHeader';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -28,7 +29,16 @@ export default class extends baseVw {
     if (options.profile instanceof Profile) {
       this.profile = this.options.profile;
     } else {
-      // this.profile.done(() => {});
+      options.profile.done(model => {
+        this.profile = model;
+
+        if (this.convoProfileHeader) {
+          this.convoProfileHeader.setState({
+            handle: model.get('handle'),
+            avatarHashes: model.get('avatarHashes'),
+          });
+        }
+      });
     }
 
     // this._state = {
@@ -43,8 +53,12 @@ export default class extends baseVw {
 
   events() {
     return {
-      // click: 'onClick',
+      'click .js-closeConvo': 'onClickCloseConvo',
     };
+  }
+
+  onClickCloseConvo() {
+    this.trigger('clickCloseConvo');
   }
 
   get guid() {
@@ -66,6 +80,24 @@ export default class extends baseVw {
       }));
 
       // this._$deleteConfirm = null;
+
+      if (this.convoProfileHeader) this.convoProfileHeader.remove();
+
+      const convoProfileHeaderInitialState = {
+        guid: this.guid,
+      };
+
+      if (this.profile) {
+        convoProfileHeaderInitialState.handle = this.profile.get('handle');
+        convoProfileHeaderInitialState.avatarHashes = this.profile.get('avatarHashes');
+      }
+
+      this.convoProfileHeader = this.createChild(ConvoProfileHeader, {
+        initialState: convoProfileHeaderInitialState,
+      });
+
+      this.$('.js-convoProfileHeaderContainer')
+        .html(this.convoProfileHeader.render().el);
     });
 
     return this;
