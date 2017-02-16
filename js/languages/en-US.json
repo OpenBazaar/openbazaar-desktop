@@ -53,7 +53,10 @@
     "notConnectedMenuItem": "Not Connected"
   },
   "chat": {
-    "unreadMessages": "Unread messages %{arrow}"
+    "unreadMessages": "Unread messages %{arrow}",
+    "conversation": {
+      "messageInputPlaceholder": "Enter message…"
+    }
   },
   "userPage": {
     "followsYou": "Follows You",
