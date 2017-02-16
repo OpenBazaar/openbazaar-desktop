@@ -86,12 +86,21 @@ export default class extends baseVw {
     }
 
     if (this.conversation && this.conversation.guid === guid) {
+      getBody().addClass('chatConvoOpen');
       return;
 
       // For now we'll do nothing. An enhancement could be determining if the existing
       // convo is a.) still waiting on the profile b.) has an older profile than the one
-      // provided, and if so update the convo with the given profile
+      // provided, and if so update the convo with the given profile.
     }
+
+    if (chatHead) console.log(); // temporary. be happy linter.
+
+    getBody().addClass('chatConvoOpen');
+  }
+
+  closeConversation() {
+    getBody().removeClass('chatConvoOpen');
   }
 
   onScroll() {

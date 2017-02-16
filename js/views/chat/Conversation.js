@@ -38,7 +38,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'chatConversation clrP';
+    return 'chatConversation flexColRows clrP';
   }
 
   events() {

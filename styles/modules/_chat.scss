@@ -102,9 +102,35 @@
   }
 }
 
-#chatConvoContainer {
-  width: 250px;
-  height: 360px;
+.chatConversation {
+  border-width: 1px;
+  border-style: solid;  
+  height: 100%;
+
+  .convoHeader {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+
+    .btn {
+      border-width: 0;
+      width: 20px;
+
+      &.ion-ios-close-empty {
+        font-size: $tx1;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .convoFooter {
+    border-top-style: solid;
+    border-top-width: 1px;
+
+    input[type=text] {
+      border-width: 0;
+      height: 45px;
+    }
+  }
 }
 
 .chat {
