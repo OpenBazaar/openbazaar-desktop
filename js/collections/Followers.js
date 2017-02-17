@@ -8,7 +8,7 @@ module.exports = Collection.extend({
   cannot be removed using their ids */
 
   initialize(models, options = {}) {
-    this.guid = options.guid;
+    this.guid = options.guid || app.profile.id;
     this.type = options.type;
   },
 
@@ -16,7 +16,7 @@ module.exports = Collection.extend({
     let url;
     // if a type is provided, fetch a collection of users
     if (this.type) {
-      url = app.getServerUrl(this.guid === app.profile.id || !this.guid ?
+      url = app.getServerUrl(this.guid === app.profile.id ?
         `ob/${this.type}` : `ipns/${this.guid}/${this.type}`);
     }
 

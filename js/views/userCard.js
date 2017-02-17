@@ -59,7 +59,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'userShort';
+    return 'userCard';
   }
 
   events() {

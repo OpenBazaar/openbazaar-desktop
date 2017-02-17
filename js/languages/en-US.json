@@ -118,6 +118,12 @@
     "userLoading": "Loading...",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
   },
+  "moderatorCard": {
+    "view": "View",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+${percentage})**"
+  },
   "about": {
     "linkText": "About OpenBazaar",
     "brand": "OpenBazaar",
@@ -609,7 +615,7 @@
       "discountCodePlaceholder": "Please provide a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
-      "btnAddCoupon": "+ Add Coupon"      
+      "btnAddCoupon": "+ Add Coupon"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",

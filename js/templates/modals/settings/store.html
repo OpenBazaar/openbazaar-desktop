@@ -8,7 +8,7 @@
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label class="required"><%= ob.polyT('settings.storeTab.storeStatus') %></label>
           </div>
@@ -38,6 +38,59 @@
           </div>
         </div>
       </form>
+      <div class="box padMdKids padStack">
+        <div class="flexRow gutterH">
+          <div class="col3">
+            <label><%= ob.polyT('settings.storeTab.moderators') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.moderatorsHelper') %></div>
+          </div>
+          <div class="col9">
+            <div class="flexColRows gutterV">
+              <div>
+                <h5><%= ob.polyT('settings.storeTab.selectedModerators') %></h5>
+                <div class="contentBox modBox clrBr js-modListSelected">
+                  <div class="noModsAdded js-noModsAdded">
+                    <div class="txCtr">
+                      <h5 class="txUnl">
+                        <%= ob.polyT('settings.storeTab.selectedModeratorsEmpty') %>
+                      </h5>
+                      <p class="clrT2">
+                        <%= ob.polyT('settings.storeTab.selectedModeratorsEmptyWarning') %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex gutterH">
+                <input
+                    type="text"
+                    class="btnHeight clrBr clrSh2"
+                    placeholder="<%= ob.polyT('settings.storeTab.moderatorByIDPlaceholder') %>">
+                <button class="btn clrP clrBr">
+                  <%= ob.polyT('settings.storeTab.moderatoryByIDSubmit') %>
+                </button>
+              </div>
+              <hr class="clrBr">
+              <div class="rowLg"><% // just a spacer %></div>
+              <div>
+                <div class="contentBox clrBr js-modListByID hide"><!-- unhide when content is added -->
+                </div>
+              </div>
+              <div>
+                <h5><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
+                <div class="contentBox modBox clrBr js-modListAvailable">
+                  <div class="noModsAdded js-noModsAdded">
+                    <%= ob.processingButton({
+                      className: 'btn clrP clrBr js-browseMods',
+                      btnText: ob.polyT('settings.storeTab.browseModerators')
+                    }) %>
+                  </div>
+                </div>
+              </div>
+            </div><% // end of flex inside col9 %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

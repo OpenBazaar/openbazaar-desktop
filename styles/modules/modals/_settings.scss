@@ -96,4 +96,38 @@
       }
     }
   }
+
+  .settingsStore {
+
+    .modBox {
+      min-height:175px;
+
+      .noModsAdded {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+      }
+
+      &.hasMods .noModsAdded {
+        display: none;
+      }
+
+      .moderatorCard {
+
+        .moderatorCardSeperator {
+          display: block;
+        }
+
+        &:last-child {
+
+          .moderatorCardSeperator {
+            display: none;
+          }
+        }
+      }
+    }
+  }
 }

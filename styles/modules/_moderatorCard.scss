@@ -1,0 +1,24 @@
+.moderatorCard {
+  cursor: pointer;
+
+  .moderatorCardInner {
+    padding: $padMd;
+  }
+
+  .moderatorCardMiddle {
+    flex-grow: 1;
+    overflow: hidden;
+    font-size: $tx5b;
+
+    .moreLink {
+      float: right;
+    }
+  }
+
+  .moderatorCardSeperator {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    margin: 0 $padMd;
+    display: none;
+  }
+}
