@@ -55,7 +55,12 @@
   "chat": {
     "unreadMessages": "Unread messages %{arrow}",
     "conversation": {
-      "messageInputPlaceholder": "Enter message…"
+      "messageInputPlaceholder": "Enter message…",
+      "subMenu": {
+        "viewPage": "View page",
+        "blockUser": "Block user",
+        "deleteConvo": "Delete conversation"
+      }
     }
   },
   "userPage": {

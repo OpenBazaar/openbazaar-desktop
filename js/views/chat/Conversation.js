@@ -1,4 +1,4 @@
-// import $ from 'jquery';
+import $ from 'jquery';
 // import _ from 'underscore';
 import Profile from '../../models/profile/Profile';
 import loadTemplate from '../../utils/loadTemplate';
@@ -53,7 +53,11 @@ export default class extends baseVw {
 
   events() {
     return {
+      click: 'onViewClick',
       'click .js-closeConvo': 'onClickCloseConvo',
+      'click .js-subMenuTrigger': 'onClickSubMenuTrigger',
+      'click .js-blockUser': 'onClickBlockUser',
+      'click .js-subMenu a': 'onClickSubMenuLink',
     };
   }
 
@@ -61,13 +65,61 @@ export default class extends baseVw {
     this.trigger('clickCloseConvo');
   }
 
+  onClickSubMenuTrigger() {
+    if (this.isSubmenuOpen()) {
+      this.hideSubMenu();
+    } else {
+      this.showSubMenu();
+    }
+
+    return false; // don't bubble to onViewClick
+  }
+
+  onViewClick(e) {
+    if (!$(e.target).closest('.js-subMenu').length) {
+      this.hideSubMenu();
+    }
+  }
+
+  onClickBlockUser() {
+    alert('coming soon...');
+  }
+
+  onClickSubMenuLink() {
+    this.hideSubMenu();
+  }
+
   get guid() {
     return this._guid;
+  }
+
+  isSubmenuOpen() {
+    return !this.$subMenu.hasClass('hide');
+  }
+
+  showSubMenu() {
+    this.$messagesOverlay.removeClass('hide');
+    this.$subMenu.removeClass('hide');
+  }
+
+  hideSubMenu() {
+    this.$messagesOverlay.addClass('hide');
+    this.$subMenu.addClass('hide');
   }
 
   // remove() {
   //   super.remove();
   // }
+
+  get $subMenu() {
+    return this._$subMenu ||
+      (this._$subMenu = this.$('.js-subMenu'));
+  }
+
+  get $messagesOverlay() {
+    return this._$messagesOverlay ||
+      (this._$messagesOverlay = this.$('.js-messagesOverlay'));
+  }
 
   render() {
     loadTemplate('chat/conversation.html', (t) => {
@@ -79,7 +131,8 @@ export default class extends baseVw {
         // ...this._state,
       }));
 
-      // this._$deleteConfirm = null;
+      this._$subMenu = null;
+      this._$messagesOverlay = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 

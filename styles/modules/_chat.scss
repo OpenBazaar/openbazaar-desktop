@@ -123,6 +123,33 @@
     .convoProfileHeader {
       .handle {
         max-width: 128px;
+        display: block;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .convoMessagesWrap {
+    padding-left: $padSm;
+    padding-right: $padSm;
+  }
+
+  .subMenu {
+    padding: $pad;
+    width: 130px;
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 0;
+    border-right-width: 0;
+    font-size: $tx6;
+    position: absolute;
+    right: 0;
+
+    & > * {
+      padding-bottom: $pad;
+
+      &:last-child {
+        padding: 0;
       }
     }
   }
@@ -133,8 +160,17 @@
 
     input[type=text] {
       border-width: 0;
-      height: 45px;
     }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    opacity: 0.7;
   }
 }
 

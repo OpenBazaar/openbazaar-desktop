@@ -1,13 +1,30 @@
 <div class="clrBr clrP clrBr flexVCent gutterH padSm convoHeader" style="height: 50px">
   <div class="js-convoProfileHeaderContainer flexExpand"></div>
   <div class="btnStrip">
-    <a class="btn clrBr clrP clrSh2 ion-android-more-vertical iconBtn"></a>
+    <a class="btn clrBr clrP clrSh2 ion-android-more-vertical iconBtn js-subMenuTrigger"></a>
     <a class="btn clrBr clrP clrSh2 ion-ios-close-empty iconBtn js-closeConvo"></a>
   </div>
 </div>
-<div class="js-convoMessagesContainer flexExpand"></div>
+<div class="posR flexExpand">
+  <div class="overlay hide js-messagesOverlay"></div>
+  <div class="subMenu boxList clrBr clrP clrSh1 hide js-subMenu">
+    <a class="clrT" href="<%= ob.guid %>"><%= ob.polyT('chat.conversation.subMenu.viewPage') %></a>
+    <a class="clrT js-blockUser"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
+    <a class="clrT"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
+  </div>
+  <div class="js-convoMessagesContainer convoMessagesWrap">
+    <br />
+    <br />
+    Hello world 😀<br />
+    Hello world 😀<br />
+    Hello world 😀<br />
+    Hello world 😀<br />
+    Hello world 😀<br />
+    Hello world 😀<br />
+  </div>
+</div>
 <div class="clrBr clrP convoFooter">
-  <div class="flexCent">
+  <div class="flexCent padTn">
     <input type="text" class="clrP js-inputMessage" placeholder="<%= ob.polyT('chat.conversation.messageInputPlaceholder') %>" />
     <div class="pad tx5 js-emojiMenuTrigger">😀</div>
   </div>
