@@ -56,13 +56,11 @@ for filename in *; do
     echo `$hashcommand $filename` >> "SHA256SUMS"
 done
 
-cat SHA256SUMS.txt
-
 # Sign hash file and remove clear text file
 gpg --digest-algo sha256 --default-key "$GPG_SIGNER" --clearsign SHA256SUMS
 rm SHA256SUMS
 
-echo $currentdir
+# Move the file to script execution directory
 mv SHA256SUMS.asc "${currentdir}/SHA256SUMS.${version}.asc"
 
 echo "Signature file created."
