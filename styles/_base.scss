@@ -42,6 +42,13 @@ html {
 body {
   overflow: hidden;
   margin: 0;
+
+  &.chatOpen {
+    .modal::-webkit-scrollbar,
+    #contentFrame::-webkit-scrollbar {
+      width: 0;
+    }
+  }
 }
 
 a {
@@ -193,17 +200,14 @@ ul, ol {
       width: 0;
     }
 
-    &:hover {
+    .chatOpen & {
+      width: $chatOpen;
       right: 0;
       padding-right: $scrollbar;
 
       &::-webkit-scrollbar {
         width: $scrollbar;
       }
-    }
-
-    .chatOpen & {
-      width: $chatOpen;
     }
 
     .chatWrapper {
