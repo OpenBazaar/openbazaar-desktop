@@ -43,10 +43,24 @@ body {
   overflow: hidden;
   margin: 0;
 
-  &.chatOpen {
-    .modal::-webkit-scrollbar,
-    #contentFrame::-webkit-scrollbar {
-      width: 0;
+  &.chatHover {
+    .modal,
+    #contentFrame {
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+
+        &:hover {
+          background: transparent;
+        }
+
+        &:active {
+          background: transparent;
+        }
+      }
     }
   }
 }
@@ -200,14 +214,14 @@ ul, ol {
       width: 0;
     }
 
-    .chatOpen & {
-      width: $chatOpen;
-      right: 0;
-      padding-right: $scrollbar;
-
+    &:hover {
       &::-webkit-scrollbar {
         width: $scrollbar;
       }
+    }
+
+    .chatOpen & {
+      width: $chatOpen;
     }
 
     .chatWrapper {
