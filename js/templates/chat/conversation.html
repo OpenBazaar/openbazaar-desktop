@@ -12,15 +12,19 @@
     <a class="clrT js-blockUser"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
     <a class="clrT"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
   </div>
-  <div class="js-convoMessagesContainer convoMessagesWrap">
-    <br />
-    <br />
-    Hello world 😀<br />
-    Hello world 😀<br />
-    Hello world 😀<br />
-    Hello world 😀<br />
-    Hello world 😀<br />
-    Hello world 😀<br />
+  <div class="convoMessagesWrap tx6">
+    <%= ob.spinner() %>
+    <%
+      const retryLink = `<a class="js-retryLoadMessage">${ob.polyT('chat.conversation.retryLink')}</a>`;
+      const loadMessagesError = ob.polyT('chat.conversation.loadMessagesError', { retryLink: retryLink });
+    %>
+    <div class="clrTErr messagesFetchError js-loadMessagesError <% if (!ob.showLoadMessagesError) print('hide') %>"><%= loadMessagesError %></div>
+    <div class="js-convoMessagesContainer hide">
+      <p>welcome to the jungle</p>
+      <p>we've got fun and games</p>
+      <p>we've got everything you wanted</p>
+      <p>and we don't even know the names</p>
+    </div>
   </div>
 </div>
 <div class="clrBr clrP convoFooter">

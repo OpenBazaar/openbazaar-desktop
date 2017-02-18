@@ -1,7 +1,7 @@
 import $ from 'jquery';
-// import _ from 'underscore';
-import Profile from '../../models/profile/Profile';
 import loadTemplate from '../../utils/loadTemplate';
+import ChatMessages from '../../collections/ChatMessages';
+import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ConvoProfileHeader from './ConvoProfileHeader';
 
@@ -21,6 +21,7 @@ export default class extends baseVw {
     super(options);
     this.options = options;
     this._guid = this.options.guid;
+    this.showLoadMessagesError = false;
 
     if (this.options.chatHead) {
       this.chatHead = this.options.chatHead;
@@ -41,14 +42,20 @@ export default class extends baseVw {
       });
     }
 
-    // this._state = {
-    //   status: 'not-connected',
-    //   ...options.initialState || {},
-    // };
+    this.messages = new ChatMessages([], { guid: this.guid });
+    this.listenTo(this.messages, 'request', this.onMessagesRequest);
+    this.listenTo(this.messages, 'sync', this.onMessagesSync);
+    this.listenTo(this.messages, 'update', this.onMessagesUpdate);
+    this.listenTo(this.messages, 'error', this.onMessagesFetchError);
+    this.fetchMessages();
+  }
+
+  get messagesPerPage() {
+    return 25;
   }
 
   className() {
-    return 'chatConversation flexColRows clrP';
+    return 'chatConversation flexColRows clrP noMessages';
   }
 
   events() {
@@ -58,6 +65,7 @@ export default class extends baseVw {
       'click .js-subMenuTrigger': 'onClickSubMenuTrigger',
       'click .js-blockUser': 'onClickBlockUser',
       'click .js-subMenu a': 'onClickSubMenuLink',
+      'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
     };
   }
 
@@ -89,6 +97,45 @@ export default class extends baseVw {
     this.hideSubMenu();
   }
 
+  onMessagesRequest() {
+    this.showLoadMessagesError = false;
+    this.$loadMessagesError.addClass('hide');
+    this.$el.addClass('loadingMessages');
+  }
+
+  onMessagesSync() {
+    this.showLoadMessagesError = false;
+    this.$loadMessagesError.addClass('hide');
+    this.$el.removeClass('loadingMessages');
+  }
+
+  onMessagesFetchError() {
+    this.showLoadMessagesError = true;
+    this.$loadMessagesError.removeClass('hide');
+    this.$el.removeClass('loadingMessages');
+  }
+
+  onMessagesUpdate() {
+    if (this.messages.length) {
+      this.$el.removeClass('noMessages');
+    }
+  }
+
+  onClickRetryLoadMessage() {
+    this.fetchMessages(...this.lastFetchMessagesArgs);
+  }
+
+  fetchMessages(offsetId, limit = this.messagesPerPage) {
+    const params = $.param({ limit });
+
+    this.lastFetchMessagesArgs = [offsetId, limit];
+    if (offsetId) params.offsetId = offsetId;
+
+    return this.messages.fetch({
+      data: params,
+    });
+  }
+
   get guid() {
     return this._guid;
   }
@@ -107,10 +154,6 @@ export default class extends baseVw {
     this.$subMenu.addClass('hide');
   }
 
-  // remove() {
-  //   super.remove();
-  // }
-
   get $subMenu() {
     return this._$subMenu ||
       (this._$subMenu = this.$('.js-subMenu'));
@@ -121,18 +164,30 @@ export default class extends baseVw {
       (this._$messagesOverlay = this.$('.js-messagesOverlay'));
   }
 
+  get $loadMessagesError() {
+    let returnVal;
+
+    if (this._$loadMessagesError && this._$loadMessagesError.length) {
+      returnVal = this._$loadMessagesError;
+    } else {
+      returnVal = (this._$loadMessagesError = this.$('.js-loadMessagesError'));
+    }
+
+    return returnVal;
+  }
+
   render() {
     loadTemplate('chat/conversation.html', (t) => {
       this.$el.html(t({
-        // ...this.model.toJSON(),
         guid: this.guid,
         chatHead: this.chatHead && this.chatHead.toJSON() || {},
         profile: this.profile && this.profile.toJSON() || {},
-        // ...this._state,
+        showLoadMessagesError: this.showLoadMessagesError,
       }));
 
       this._$subMenu = null;
       this._$messagesOverlay = null;
+      this._$loadMessagesError = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 

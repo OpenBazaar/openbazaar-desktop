@@ -130,8 +130,49 @@
   }
 
   .convoMessagesWrap {
-    padding-left: $padSm;
-    padding-right: $padSm;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-left: $pad;
+    padding-right: $pad;
+
+    .spinner {
+      display: none;
+      margin: 0 auto;
+      padding: $pad;
+    }
+
+    .messagesFetchError {
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+  }
+
+  &.loadingMessages {
+    .spinner {
+      display: block;
+    }
+
+    &.noMessages {
+      .spinner {
+        @include center();
+        width: 55px;
+        height: 55px;
+      }
+
+      .messagesFetchError {
+        @include center();
+      }
+    }
+  }
+
+  &.noMessages {
+    .messagesFetchError {
+      @include center();
+      margin: 0;
+    }
   }
 
   .subMenu {
@@ -171,7 +212,34 @@
     left: 0;
     background-color: white;
     opacity: 0.7;
+    // display: none;
+
+    // .spinner {
+    //   display: none;
+    //   position: absolute;
+    //   top: 50%;
+    //   left: 50%;
+    //   transform: translate(-50%, -50%);
+    //   width: 55px;
+    //   height: 55px;
+    // }
   }
+
+  // &.overlayOn {
+  //   .overlay {
+  //     display: block;
+  //   }
+  // }
+
+  // &.loading {
+  //   .overlay {
+  //     display: block;
+
+  //     .spinner {
+  //       display: block;
+  //     }
+  //   }
+  // }
 }
 
 .chat {
