@@ -122,7 +122,7 @@
     "view": "View",
     "FIXED": "%{amount}**",
     "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+${percentage})**"
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**"
   },
   "about": {
     "linkText": "About OpenBazaar",
@@ -366,6 +366,10 @@
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
         "error": "There was ab error saving your store settings."
+      },
+      "errors": {
+        "modNotFound": "That Moderator Could Not be Found",
+        "modNotFoundBody": "%{guidOrHandle} could not be found on the network. It may not be a valid value."
       }
     },
     "optional": "optional",

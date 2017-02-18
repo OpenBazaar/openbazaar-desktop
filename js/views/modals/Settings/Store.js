@@ -3,8 +3,10 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
+import { getGuid } from '../../../utils';
 import baseVw from '../../baseVw';
 import Moderators from '../../../collections/Moderators';
+import Profile from '../../../models/profile/Profile';
 import ModCard from '../../moderatorCard';
 import { openSimpleMessage } from '../SimpleMessage';
 
@@ -149,7 +151,7 @@ export default class extends baseVw {
               amount: 0.03,
             },
             percentage: 0.25,
-            feeType: 'FIXED',
+            feeType: 'FIXED_PLUS_PERCENTAGE',
           },
         },
       },
@@ -209,6 +211,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-browseMods': 'fetchAvailableModerators',
+      'click .js-submitModByID': 'processIDorHandle',
       'click .js-save': 'save',
     };
   }
@@ -241,6 +244,42 @@ export default class extends baseVw {
       });
       target.append(docFrag);
     }
+  }
+
+  processIDorHandle() {
+    const modID = this.$submitModByIDInput.val();
+
+    if (modID.charAt(0) === '@') {
+      // if the id is a handle, get the guid
+      const handle = modID.slice(1);
+      getGuid(handle)
+          .done((guid) => {
+            this.loadModByID(guid);
+          })
+          .fail(() => {
+            this.modNotFound(modID, handle);
+          });
+    } else {
+      this.loadModByID(modID);
+    }
+  }
+
+  loadModByID(guid, handle = '') {
+    const mod = new Profile({ id: guid });
+    mod.fetch()
+        .done(() => {
+          this.modsByID.add(mod);
+        })
+        .fail(() => {
+          this.modNotFound(guid, handle);
+        });
+  }
+
+  modNotFound(guid, handle) {
+    const title = app.polyglot.t('settings.storeTab.errors.modNotFound');
+    const message = app.polyglot.t('settings.storeTab.errors.modNotFoundBody',
+        { guidOrHandle: handle || guid });
+    openSimpleMessage(title, message);
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
@@ -329,17 +368,22 @@ export default class extends baseVw {
 
   get $modListByID() {
     return this._$modListByID ||
-        (this._$modListByID = this.$('.js-modListByID'));
+      (this._$modListByID = this.$('.js-modListByID'));
   }
 
   get $modListAvailable() {
     return this._$modListAvailable ||
-        (this._$modListAvailable = this.$('.js-modListAvailable'));
+      (this._$modListAvailable = this.$('.js-modListAvailable'));
   }
 
   get $browseMods() {
     return this._$browseMods ||
-        (this._$browseMods = this.$('.js-browseMods'));
+      (this._$browseMods = this.$('.js-browseMods'));
+  }
+
+  get $submitModByIDInput() {
+    return this._$submitModByIDInput ||
+      (this._$submitModByIDInput = this.$('.js-submitModByIDInput'));
   }
 
   render() {
@@ -355,7 +399,7 @@ export default class extends baseVw {
 
       // this.$('#moderationCurrency').select2();
 
-      this.$profileFormFields = this.$('js-profileField');
+      this.$profileFormFields = this.$('.js-profileField');
       this._$btnSave = null;
       this._$modListSelected = null;
       this._$modListByID = null;

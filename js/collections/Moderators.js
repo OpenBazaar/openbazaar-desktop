@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import { Collection } from 'backbone';
 import Moderator from '../models/profile/Profile';
 import app from '../app';
@@ -19,8 +20,18 @@ export default class extends Collection {
   }
 
   add(models, options) {
+    let filteredModels = models;
+
     // remove any returned profiles that are not valid moderators
-    const filteredModels = models.filter(mod => mod.moderator && mod.modInfo);
+    if (models) {
+      // is models an array or just one model?
+      if (_.isArray(models)) {
+        filteredModels = filteredModels.filter(mod => mod.moderator && mod.modInfo);
+      } else if (!filteredModels.get('moderator') || !filteredModels.get('modInfo')) {
+        return false;
+      }
+    }
+
     return super.add(filteredModels, options);
   }
 
