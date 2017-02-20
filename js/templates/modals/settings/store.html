@@ -66,15 +66,18 @@
                     type="text"
                     class="btnHeight clrBr clrSh2 js-submitModByIDInput"
                     placeholder="<%= ob.polyT('settings.storeTab.moderatorByIDPlaceholder') %>">
-                <button class="btn clrP clrBr js-submitModByID">
-                  <%= ob.polyT('settings.storeTab.moderatoryByIDSubmit') %>
-                </button>
+                <%= ob.processingButton({
+                className: 'btn clrP clrBr js-submitModByID ',
+                btnText: ob.polyT('settings.storeTab.moderatoryByIDSubmit')
+                }) %>
               </div>
-              <hr class="clrBr">
-              <div class="rowLg"><% // just a spacer %></div>
               <div>
-                <div class="contentBox clrBr js-modListByID hide"><!-- unhide when content is added -->
+                <div class="contentBox modBox modBoxByID clrBr js-modListByID"><!-- unhide when content is added -->
                 </div>
+              </div>
+              <hr class="clrBr unleaded">
+              <div>
+                <div class="rowLg"><% // just a spacer %></div>
               </div>
               <div>
                 <h5><%= ob.polyT('settings.storeTab.availableModerators') %></h5>

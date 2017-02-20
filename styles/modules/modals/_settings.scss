@@ -115,6 +115,15 @@
         display: none;
       }
 
+      &.modBoxByID {
+        display: none;
+        min-height: 0;
+
+        &.hasMods {
+          display: block;
+        }
+      }
+
       .moderatorCard {
 
         .moderatorCardSeperator {

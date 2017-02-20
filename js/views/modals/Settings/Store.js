@@ -20,12 +20,21 @@ export default class extends baseVw {
     this.profile = app.profile.clone();
     this.settings = app.settings.clone();
 
-    this.modsSelected = new Moderators(this.settings.get('storeModerators'), { parse: true });
+    this.modsSelected = new Moderators(null, {
+      type: 'fetchprofiles',
+      async: true,
+    });
+
+    this.modsSelected.fetch({
+      data: JSON.stringify(this.settings.get('storeModerators')),
+      type: 'POST',
+    });
 
     this.modsByID = new Moderators(null);
 
     this.modsAvailable = new Moderators(null, {
       async: true,
+      include: 'profile',
     });
 
     this.listenTo(this.modsSelected, 'update', () => {
@@ -40,170 +49,6 @@ export default class extends baseVw {
       this.buildModList(this.modsAvailable, this.$modListAvailable);
     });
 
-    this.fakeModsList = [
-      { guid: 'QmSLTwZQPxX1peJVXxBBKTrVGVMKSSyom5sTDHxtVricvs',
-        handle: 'TestOneHandle',
-        name: 'Test One',
-        location: 'Location One, United States of Bolivian Fartknockers',
-        moderator: true,
-        avatarHashes: {
-          tiny: 'QmUoZPVteEJ3HYXYfbVrVpSQFA3Qw5Wpv3xDrMDtvvNDwd',
-          small: 'QmPC9Et76jMFC9QKTbgDVn4kz539sjNEFquTNV8VBvbcUP',
-          medium: 'QmTxcb8wcFyp3toxcQQHE4rfxDRoqnuc5q7nfCgNbiRjuN',
-          large: 'QmenAm6uY1zByEHpWtYtC1Etppi7TYwKwAuobNLHnhMTQS',
-          original: 'QmR31hX16umHgnvUWmfmvzi7qtYkCJjjn4H6D3ZJ8J5kid',
-        },
-        modInfo: {
-          description: 'Test One Description of moderation stuff Test One Description of ' +
-          'moderation stuff Test One Description of moderation stuff Test One Description of ' +
-          'moderation stuff Test One Description of moderation stuff',
-          termsAndConditions: 'Test One terms and conditions of things that are conditional',
-          languages: [
-            'en-US', 'sp',
-          ],
-          fee: {
-            fixedFee: {
-              currencyCode: 'USD',
-              amount: 2.25,
-            },
-            percentage: 5.1,
-            feeType: 'PERCENTAGE',
-          },
-        },
-      },
-      { guid: 'QmbY4yo9Eifg7DPjL7qK5JvNdiJaRAD7N76gVg4YoQsvgA',
-        handle: 'TestTwoHandle',
-        name: 'Test two',
-        location: 'Location Two, Some other place that is somewhere else',
-        moderator: true,
-        avatarHashes: {
-          tiny: 'QmUoZPVteEJ3HYXYfbVrVpSQFA3Qw5Wpv3xDrMDtvvNDwd',
-          small: 'QmPC9Et76jMFC9QKTbgDVn4kz539sjNEFquTNV8VBvbcUP',
-          medium: 'QmTxcb8wcFyp3toxcQQHE4rfxDRoqnuc5q7nfCgNbiRjuN',
-          large: 'QmenAm6uY1zByEHpWtYtC1Etppi7TYwKwAuobNLHnhMTQS',
-          original: 'QmR31hX16umHgnvUWmfmvzi7qtYkCJjjn4H6D3ZJ8J5kid',
-        },
-        modInfo: {
-          description: 'Test Two Descriptive description',
-          termsAndConditions: 'This is the terms and conditions for test 2',
-          languages: [
-            'en-US',
-          ],
-          fee: {
-            fixedFee: {
-              currencyCode: 'USD',
-              amount: 4,
-            },
-            percentage: 0.25,
-            feeType: 'FIXED',
-          },
-        },
-      },
-      { guid: 'QmdzzGGc9xZq8w4z42vSHe32DZM7VXfDUFEUyfPvYNYhXE',
-        handle: 'THREE YO',
-        name: 'Test 3',
-        location: 'Location 3',
-        moderator: true,
-        avatarHashes: {
-          tiny: 'QmUoZPVteEJ3HYXYfbVrVpSQFA3Qw5Wpv3xDrMDtvvNDwd',
-          small: 'QmPC9Et76jMFC9QKTbgDVn4kz539sjNEFquTNV8VBvbcUP',
-          medium: 'QmTxcb8wcFyp3toxcQQHE4rfxDRoqnuc5q7nfCgNbiRjuN',
-          large: 'QmenAm6uY1zByEHpWtYtC1Etppi7TYwKwAuobNLHnhMTQS',
-          original: 'QmR31hX16umHgnvUWmfmvzi7qtYkCJjjn4H6D3ZJ8J5kid',
-        },
-        modInfo: {
-          description: 'Test 3 Descriptive',
-          termsAndConditions: 'This is the terms and conditions for test 3',
-          languages: [
-            'en-US',
-          ],
-          fee: {
-            fixedFee: {
-              currencyCode: 'USD',
-              amount: 0.03,
-            },
-            percentage: 0.25,
-            feeType: 'FIXED',
-          },
-        },
-      },
-      { guid: 'QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX',
-        handle: '4 444444 4',
-        name: 'Test 4',
-        location: 'Location 4',
-        moderator: true,
-        avatarHashes: {
-          tiny: 'QmUoZPVteEJ3HYXYfbVrVpSQFA3Qw5Wpv3xDrMDtvvNDwd',
-          small: 'QmPC9Et76jMFC9QKTbgDVn4kz539sjNEFquTNV8VBvbcUP',
-          medium: 'QmTxcb8wcFyp3toxcQQHE4rfxDRoqnuc5q7nfCgNbiRjuN',
-          large: 'QmenAm6uY1zByEHpWtYtC1Etppi7TYwKwAuobNLHnhMTQS',
-          original: 'QmR31hX16umHgnvUWmfmvzi7qtYkCJjjn4H6D3ZJ8J5kid',
-        },
-        modInfo: {
-          description: 'Test 4 Descriptive',
-          termsAndConditions: 'This is the terms and conditions for test 4',
-          languages: [
-            'en-US',
-          ],
-          fee: {
-            fixedFee: {
-              currencyCode: 'USD',
-              amount: 0.03,
-            },
-            percentage: 0.25,
-            feeType: 'FIXED_PLUS_PERCENTAGE',
-          },
-        },
-      },
-      { guid: 'QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX',
-        handle: 'Moderator is false',
-        name: 'This should not be displayed',
-        location: 'Location 4',
-        moderator: false,
-        modInfo: {
-          description: 'Test 4 Descriptive',
-          termsAndConditions: 'This is the terms and conditions for test 4',
-          languages: [
-            'en-US',
-          ],
-          fee: {
-            fixedFee: {
-              currencyCode: 'USD',
-              amount: 0.03,
-            },
-            percentage: 0.25,
-            feeType: 'FIXED',
-          },
-        },
-      },
-      { guid: 'QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX',
-        handle: 'Moderator is missing',
-        name: 'This should not be displayed',
-        location: 'Location 4',
-        modInfo: {
-          description: 'Test 4 Descriptive',
-          termsAndConditions: 'This is the terms and conditions for test 4',
-          languages: [
-            'en-US',
-          ],
-          fee: {
-            fixedFee: {
-              currencyCode: 'USD',
-              amount: 0.03,
-            },
-            percentage: 0.25,
-            feeType: 'FIXED',
-          },
-        },
-      },
-      { guid: 'QmePWxsFT9wY3QuukgVDB7XZpqdKhrqJTHTXU7ECLDWJqX',
-        handle: 'ModInfo cannot be found',
-        name: 'This should not be displayed',
-        location: 'Location 4',
-        moderator: true,
-      },
-    ];
-
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
     this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
   }
@@ -211,7 +56,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-browseMods': 'fetchAvailableModerators',
-      'click .js-submitModByID': 'processIDorHandle',
+      'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
     };
   }
@@ -220,12 +65,18 @@ export default class extends baseVw {
     // be aware that this call can take a long time
     this.$browseMods.addClass('processing');
     this.modsAvailable.fetch()
-      .done(() => {
-        // fake code for now
-        this.modsAvailable.add(this.fakeModsList);
+      .fail((...args) => {
+        const title = app.polyglot.t('settings.storeTab.errors.availableModsFailed');
+        const message = args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
+        openSimpleMessage(title, message);
       })
       .always(() => {
-        this.$browseMods.removeClass('processing');
+        setTimeout(() => {
+          // when moderators are added via the async call, this button will be hidden.
+          // remove the processing class after a long enough time if it's still visible
+          // there are probably no moderators coming.
+          this.$browseMods.removeClass('processing');
+        }, 5000);
       });
   }
 
@@ -246,9 +97,13 @@ export default class extends baseVw {
     }
   }
 
-  processIDorHandle() {
+  clickSubmitModByID() {
     const modID = this.$submitModByIDInput.val();
+    this.$submitModByID.addClass('processing');
+    this.processIDorHandle(modID);
+  }
 
+  processIDorHandle(modID) {
     if (modID.charAt(0) === '@') {
       // if the id is a handle, get the guid
       const handle = modID.slice(1);
@@ -258,6 +113,7 @@ export default class extends baseVw {
           })
           .fail(() => {
             this.modNotFound(modID, handle);
+            this.$submitModByID.removeClass('processing');
           });
     } else {
       this.loadModByID(modID);
@@ -272,6 +128,9 @@ export default class extends baseVw {
         })
         .fail(() => {
           this.modNotFound(guid, handle);
+        })
+        .always(() => {
+          this.$submitModByID.removeClass('processing');
         });
   }
 
@@ -384,6 +243,11 @@ export default class extends baseVw {
   get $submitModByIDInput() {
     return this._$submitModByIDInput ||
       (this._$submitModByIDInput = this.$('.js-submitModByIDInput'));
+  }
+
+  get $submitModByID() {
+    return this._$submitModByID ||
+        (this._$submitModByID = this.$('.js-submitModByID'));
   }
 
   render() {

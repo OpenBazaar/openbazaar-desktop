@@ -8,11 +8,13 @@ import { getCurrentConnection } from '../utils/serverConnect';
 export default class extends Collection {
   constructor(models = [], options = {}) {
     super(models, options);
-    this.async = options.async;
+    this.type = options.type || 'moderators';
+    this.async = options.async || false;
+    this.include = options.include || false;
   }
 
   url() {
-    return app.getServerUrl(`ob/moderators${this.async ? '?async=true' : ''}`);
+    return app.getServerUrl(`ob/${this.type}?async=${this.async}&include=${this.include}`);
   }
 
   model(attrs, options) {
@@ -43,8 +45,8 @@ export default class extends Collection {
       const serverConnection = getCurrentConnection();
       if (serverConnection && serverConnection.status !== 'disconnected') {
         this.listenTo(serverConnection.socket, 'message', (event) => {
-          console.log(event);
-          // use this.add() here
+          const data = JSON.parse(event.data);
+          if (data.id === this.socketID) this.add([data.profile]);
         });
       } else {
         throw new Error('There is no connection to the server to listen to.');

@@ -365,11 +365,12 @@
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
-        "error": "There was ab error saving your store settings."
+        "error": "There was an error saving your store settings."
       },
       "errors": {
         "modNotFound": "That Moderator Could Not be Found",
-        "modNotFoundBody": "%{guidOrHandle} could not be found on the network. It may not be a valid value."
+        "modNotFoundBody": "%{guidOrHandle} could not be found on the network. It may not be a valid value.",
+        "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network"
       }
     },
     "optional": "optional",
