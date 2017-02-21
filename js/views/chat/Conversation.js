@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
+import ChatMessage from '../../models/chat/ChatMessage';
 import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ConvoProfileHeader from './ConvoProfileHeader';
@@ -67,6 +68,7 @@ export default class extends baseVw {
       'click .js-blockUser': 'onClickBlockUser',
       'click .js-subMenu a': 'onClickSubMenuLink',
       'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
+      'keyup .js-inputMessage': 'onKeyUpMessageInput',
     };
   }
 
@@ -125,6 +127,33 @@ export default class extends baseVw {
 
   onClickRetryLoadMessage() {
     this.fetchMessages(...this.lastFetchMessagesArgs);
+  }
+
+  onKeyUpMessageInput(e) {
+    if (e.which !== 13) return;
+
+    const message = e.target.value.trim();
+
+    if (!message) return;
+
+    const chatMessage = new ChatMessage({
+      peerId: this.guid,
+      message,
+    });
+
+    const save = chatMessage.save();
+
+    if (save) {
+      // At least for now, ignoring any server failures. Odds are really low of
+      // it happening and repurcussions minimal.
+      this.messages.push(chatMessage);
+    } else {
+      // Developer error - this shouldn't happen.
+      console.error('There was an error saving the chat message.');
+      console.dir(save);
+    }
+
+    $(e.target).val('');
   }
 
   fetchMessages(offsetId, limit = this.messagesPerPage) {

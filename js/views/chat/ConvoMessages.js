@@ -1,8 +1,4 @@
 import $ from 'jquery';
-// import _ from 'underscore';
-// import loadTemplate from '../../utils/loadTemplate';
-// import ChatMessages from '../../collections/ChatMessages';
-// import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ConvoMessage from './ConvoMessage';
 
@@ -33,6 +29,7 @@ export default class extends baseVw {
     const messagesContainer = document.createDocumentFragment();
 
     this.collection.forEach(message => {
+      // Create Child !!!
       const convoMessage = new ConvoMessage({
         model: message,
       });
