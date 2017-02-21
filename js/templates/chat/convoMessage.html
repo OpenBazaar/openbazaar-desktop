@@ -1,33 +1,31 @@
 <% if (!ob.outgoing) { %>
-<div class="row">
-  <div class="flexVCent gutterHSm">
-    <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="background-image: url('../imgs/defaultAvatar.png')" <% } %>></a>  
-    <div class="contentBox padSm clrBr clrP clrSh1">
+<div class="gutterHSm flex rowLg">
+  <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="background-image: url('../imgs/defaultAvatar.png')" <% } %>></a>
+  <div class="posR flexExpand">
+    <div class="contentBox msgContentBox clrBr clrP clrSh1">
       <span class="tx6"><%= ob.message %></span>
     </div>
-  </div>
-  <% if (ob.showTimestampLine) { %>
-  <div>
-    <div style="margin-left: 45px">
+    <% if (ob.showTimestampLine) { %>
+    <div class="timestampLine posA">
       <span class="clrTEm ion-checkmark <% if (!ob.read) print('h2ide') %>"></span>
-      <span><%= ob.moment(ob.timestamp).fromNow() %></span>
+      <span class="clrT2"><%= ob.moment(ob.timestamp).fromNow() %></span>
     </div>
+    <% } %>      
   </div>
-  <% } %>
+</div>
 <% } else { %>
-<div class="row">
-  <div class="flexVCent flexHRight gutterHSm">
-    <div class="contentBox padSm clrBr clrP clrSh1">
+<div class="flexHRight gutterHSm rowLg">
+  <div class="posR flexExpand">
+    <div class="contentBox msgContentBox clrBr clrP clrSh1">
       <span class="tx6"><%= ob.message %></span>
     </div>
-    <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="background-image: url('../imgs/defaultAvatar.png')" <% } %>></a>  
-  </div>
-  <% if (ob.showTimestampLine) { %>
-  <div class="flexHRight">
-    <div style="margin-right: 45px">
+    <% if (ob.showTimestampLine) { %>
+    <div class="timestampLine posA" style="right: 2px;">
       <span class="clrTEm ion-checkmark <% if (!ob.read) print('h2ide') %>"></span>
-      <span><%= ob.moment(ob.timestamp).fromNow() %></span>
+      <span class="clrT2"><%= ob.moment(ob.timestamp).fromNow() %></span>
     </div>
+    <% } %>      
   </div>
-  <% } %>
+  <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="background-image: url('../imgs/defaultAvatar.png')" <% } %>></a>  
+</div>
 <% } %>
