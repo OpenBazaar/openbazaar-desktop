@@ -9,15 +9,7 @@ Before every release:
 
 ### First time / New builders
 
-If you're using the automated script (found in [contrib/gitian-build.sh](/contrib/gitian-build.sh)), then at this point you should run it with the "--setup" command. Otherwise ignore this.
-
-Check out the source code in the following directory hierarchy.
-
-    cd /path/to/your/toplevel/build
-    git clone https://github.com/bitcoin-core/gitian.sigs.git
-    git clone https://github.com/bitcoin-core/bitcoin-detached-sigs.git
-    git clone https://github.com/devrandom/gitian-builder.git
-    git clone https://github.com/bitcoin/bitcoin.git
+TBD
 
 ### OpenBazaar maintainer/release engineers, update version in sources
 
