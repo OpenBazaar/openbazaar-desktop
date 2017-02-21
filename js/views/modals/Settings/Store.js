@@ -27,6 +27,7 @@ export default class extends baseVw {
     });
 
     if (this.currentMods.length) {
+      // get the current moderator data using POST
       this.modsSelected.fetch({
         data: JSON.stringify(this.currentMods),
         type: 'POST',

@@ -19,11 +19,11 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-moderatorCard': 'cardClick',
+      'click .js-moderatorCard': 'viewDetails',
     };
   }
 
-  cardClick() {
+  viewDetails() {
     console.log('click moderator');
     // open modal here
   }

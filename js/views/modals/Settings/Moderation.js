@@ -112,16 +112,6 @@ export default class extends baseVw {
         this.$btnSave.removeClass('processing');
         setTimeout(() => statusMessage.remove(), 3000);
       });
-
-      // test code
-      const testData = this.profile.get('modInfo').toJSON();
-
-      $.ajax({
-        type: 'PUT',
-        url: app.getServerUrl('ob/moderator'),
-        data: JSON.stringify(testData),
-        dataType: 'json',
-      });
     }
 
     // render so errrors are shown / cleared
