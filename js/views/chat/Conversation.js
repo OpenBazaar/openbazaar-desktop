@@ -4,6 +4,7 @@ import ChatMessages from '../../collections/ChatMessages';
 import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ConvoProfileHeader from './ConvoProfileHeader';
+import ConvoMessages from './ConvoMessages';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -107,6 +108,7 @@ export default class extends baseVw {
     this.showLoadMessagesError = false;
     this.$loadMessagesError.addClass('hide');
     this.$el.removeClass('loadingMessages');
+    this.$convoMessagesWrap[0].scrollTop = this.$convoMessagesWrap[0].scrollHeight;
   }
 
   onMessagesFetchError() {
@@ -176,6 +178,11 @@ export default class extends baseVw {
     return returnVal;
   }
 
+  get $convoMessagesWrap() {
+    return this._$convoMessagesWrap ||
+      (this._$convoMessagesWrap = this.$('.js-convoMessagesWrap'));
+  }
+
   render() {
     loadTemplate('chat/conversation.html', (t) => {
       this.$el.html(t({
@@ -188,6 +195,7 @@ export default class extends baseVw {
       this._$subMenu = null;
       this._$messagesOverlay = null;
       this._$loadMessagesError = null;
+      this._$convoMessagesWrap = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 
@@ -206,6 +214,14 @@ export default class extends baseVw {
 
       this.$('.js-convoProfileHeaderContainer')
         .html(this.convoProfileHeader.render().el);
+
+      if (this.ConvoMessages) this.ConvoMessages.remove();
+
+      this.convoMessages = new ConvoMessages({
+        collection: this.messages,
+      });
+
+      this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
     });
 
     return this;

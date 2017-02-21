@@ -1,6 +1,6 @@
 import app from '../app';
 import { Collection } from 'backbone';
-// import ListingShort from '../models/listing/ListingShort';
+import ChatMessage from '../models/chat/ChatMessage';
 
 export default class extends Collection {
   constructor(models = [], options = {}) {
@@ -12,15 +12,15 @@ export default class extends Collection {
     this.guid = options.guid;
   }
 
-  // model(attrs, options) {
-  //   return new ListingShort(attrs, options);
-  // }
+  model(attrs, options) {
+    return new ChatMessage(attrs, options);
+  }
+
+  comparator(message) {
+    return message.get('timestamp');
+  }
 
   url() {
     return app.getServerUrl(`ob/chatmessages/${this.guid}`);
   }
-
-  // parse(response) {
-  //   return response;
-  // }
 }

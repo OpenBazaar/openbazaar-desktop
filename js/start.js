@@ -3,6 +3,7 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
+import moment from 'moment';
 import app from './app';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
@@ -45,12 +46,15 @@ function getValidLanguage(lang) {
 
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
+moment.locale(initialLang);
 app.polyglot = new Polyglot();
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
     require(`./languages/${lang}.json`));  // eslint-disable-line global-require
+
+  moment.locale(lang);
 
   const restartLangChangeDialog = new Dialog({
     title: app.polyglot.t('langChangeRestartTitle'),
