@@ -19,16 +19,19 @@ export default class extends baseVw {
 
     this.profile = app.profile.clone();
     this.settings = app.settings.clone();
+    this.currentMods = this.settings.get('storeModerators');
 
     this.modsSelected = new Moderators(null, {
       type: 'fetchprofiles',
       async: true,
     });
 
-    this.modsSelected.fetch({
-      data: JSON.stringify(this.settings.get('storeModerators')),
-      type: 'POST',
-    });
+    if (this.currentMods.length) {
+      this.modsSelected.fetch({
+        data: JSON.stringify(this.currentMods),
+        type: 'POST',
+      });
+    }
 
     this.modsByID = new Moderators(null);
 
