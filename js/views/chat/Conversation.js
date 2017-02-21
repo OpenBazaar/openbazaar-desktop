@@ -106,7 +106,10 @@ export default class extends baseVw {
     this.$el.addClass('loadingMessages');
   }
 
-  onMessagesSync() {
+  onMessagesSync(mdCl) {
+    // at this point, only interested in the collection sync (not any of its models)
+    if (!mdCl instanceof ChatMessages) return;
+
     this.showLoadMessagesError = false;
     this.$loadMessagesError.addClass('hide');
     this.$el.removeClass('loadingMessages');
