@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
@@ -24,6 +25,9 @@ export default class extends baseVw {
     this.options = options;
     this._guid = this.options.guid;
     this.showLoadMessagesError = false;
+    this.fetching = false;
+    this.fetchedAllMessages = false;
+    this.throttledScroll = _.throttle(this.onScroll, 100).bind(this);
 
     if (this.options.chatHead) {
       this.chatHead = this.options.chatHead;
@@ -53,7 +57,7 @@ export default class extends baseVw {
   }
 
   get messagesPerPage() {
-    return 25;
+    return 5;
   }
 
   className() {
@@ -100,20 +104,33 @@ export default class extends baseVw {
     this.hideSubMenu();
   }
 
-  onMessagesRequest() {
+  onMessagesRequest(mdCl, xhr) {
+    // Only interested in the collection sync (not any of its models).
+    if (!(mdCl instanceof ChatMessages)) return;
+
     this.showLoadMessagesError = false;
     this.$loadMessagesError.addClass('hide');
     this.$el.addClass('loadingMessages');
+    this.fetching = true;
+
+    xhr.always(() => (this.fetching = false));
   }
 
-  onMessagesSync(mdCl) {
+  onMessagesSync(mdCl, response) {
     // Only interested in the collection sync (not any of its models).
     if (!(mdCl instanceof ChatMessages)) return;
 
     this.showLoadMessagesError = false;
     this.$loadMessagesError.addClass('hide');
     this.$el.removeClass('loadingMessages');
-    this.$convoMessagesWrap[0].scrollTop = this.$convoMessagesWrap[0].scrollHeight;
+
+    if (response && !response.length) {
+      this.fetchedAllMessages = true;
+    }
+
+    // this.$convoMessagesWrap.off(null, this.throttledScroll);
+    // this.$convoMessagesWrap[0].scrollTop = this.$convoMessagesWrap[0].scrollHeight;
+    // this.$convoMessagesWrap.on('scroll', this.throttledScroll);
   }
 
   onMessagesFetchError() {
@@ -147,8 +164,8 @@ export default class extends baseVw {
     const save = chatMessage.save();
 
     if (save) {
-      // At least for now, ignoring any server failures. Odds are really low of
-      // it happening and repurcussions minimal.
+      // At least for now, ignoring any server failures and optimistically adding the new
+      // message to the UI. Odds are really low of server failure and repurcussions minimal.
       this.messages.push(chatMessage);
     } else {
       // Developer error - this shouldn't happen.
@@ -159,14 +176,28 @@ export default class extends baseVw {
     $(e.target).val('');
   }
 
+  onScroll(e) {
+    console.log('you are scrolling');
+    if (this.fetching || this.fetchedAllMessages
+      || this.showLoadMessagesError) return;
+
+    console.log('i will process the scroll');
+
+    // If we come within 100px of the top, let's fetch a new page.
+    if (e.target.scrollTop <= 100) {
+      this.fetchMessages(this.messages.at(0).id);
+    }
+  }
+
   fetchMessages(offsetId, limit = this.messagesPerPage) {
-    const params = $.param({ limit });
+    const params = { limit };
 
     this.lastFetchMessagesArgs = [offsetId, limit];
     if (offsetId) params.offsetId = offsetId;
 
     return this.messages.fetch({
-      data: params,
+      data: $.param(params),
+      remove: false,
     });
   }
 
@@ -251,9 +282,13 @@ export default class extends baseVw {
 
       this.convoMessages = new ConvoMessages({
         collection: this.messages,
+        $scrollContainer: this.$convoMessagesWrap,
       });
 
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
+
+      this.$convoMessagesWrap.off(null, this.throttledScroll)
+        .on('scroll', this.throttledScroll);
     });
 
     return this;
