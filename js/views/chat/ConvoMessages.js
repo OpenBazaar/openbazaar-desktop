@@ -14,6 +14,7 @@ export default class extends baseVw {
     this.convoMessages = [];
 
     this.listenTo(this.collection, 'update', this.render);
+    this.listenTo(app.profile.get('avatarHashes'), 'change', this.render);
   }
 
   className() {
@@ -40,11 +41,16 @@ export default class extends baseVw {
       },
     });
 
+    this.convoMessages.push(convoMessage);
+
     return convoMessage;
   }
 
   render() {
     const messagesContainer = document.createDocumentFragment();
+
+    this.convoMessages.forEach(convoMessage => (convoMessage.remove()));
+    this.convoMessages = [];
 
     this.collection.forEach(message => {
       const convoMessage = this.createMessage(message);

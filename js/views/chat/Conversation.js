@@ -107,8 +107,8 @@ export default class extends baseVw {
   }
 
   onMessagesSync(mdCl) {
-    // at this point, only interested in the collection sync (not any of its models)
-    if (!mdCl instanceof ChatMessages) return;
+    // Only interested in the collection sync (not any of its models).
+    if (!(mdCl instanceof ChatMessages)) return;
 
     this.showLoadMessagesError = false;
     this.$loadMessagesError.addClass('hide');
