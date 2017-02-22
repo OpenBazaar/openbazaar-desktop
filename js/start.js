@@ -471,9 +471,6 @@ function connectToServer() {
 let connectedAtLeastOnce = false;
 
 serverConnectEvents.on('connected', () => {
-  // getChatContainer().removeClass('hide');
-  if (app.chat) app.chat.show();
-
   app.connectionManagmentModal.setModalOptions({
     dismissOnEscPress: true,
     showCloseButton: true,
@@ -484,6 +481,7 @@ serverConnectEvents.on('connected', () => {
   } else {
     connectedAtLeastOnce = true;
     app.connectionManagmentModal.close();
+    if (app.chat) app.chat.show();
   }
 });
 
@@ -495,8 +493,11 @@ serverConnectEvents.on('disconnect', () => {
     showCloseButton: false,
   });
 
-  // getChatContainer().addClass('hide');
-  if (app.chat) app.chat.hide();
+  if (app.chat) {
+    app.chat.close();
+    app.chat.hide();
+  }
+
   app.pageNav.navigable = false;
   app.connectionManagmentModal.open();
 });

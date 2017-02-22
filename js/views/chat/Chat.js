@@ -17,11 +17,6 @@ export default class extends baseVw {
 
     super(options);
 
-    // this._state = {
-    //   status: 'not-connected',
-    //   ...options.initialState || {},
-    // };
-
     this._isOpen = false;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
@@ -39,31 +34,6 @@ export default class extends baseVw {
       'click .js-bottomUnreadBanner': 'onClickBottomUnreadBanner',
     };
   }
-
-  // getState() {
-  //   return this._state;
-  // }
-
-  // setState(state, replace = false) {
-  //   let newState;
-
-  //   if (replace) {
-  //     this._state = {};
-  //   } else {
-  //     newState = _.extend({}, this._state, state);
-  //   }
-
-  //   if (!_.isEqual(this._state, newState)) {
-  //     this._state = newState;
-  //     this.render();
-  //   }
-
-  //   return this;
-  // }
-
-  // remove() {
-  //   super.remove();
-  // }
 
   onChatHeadClick(e) {
     if (!this.isOpen) {
@@ -175,6 +145,7 @@ export default class extends baseVw {
   close() {
     this._isOpen = false;
     getBody().removeClass('chatOpen');
+    this.closeConversation();
   }
 
   get isOpen() {

@@ -204,6 +204,7 @@
     font-size: $tx6;
     position: absolute;
     right: 0;
+    z-index: 1;
 
     & > * {
       padding-bottom: $pad;
@@ -231,6 +232,7 @@
     left: 0;
     background-color: white;
     opacity: 0.7;
+    z-index: 1;
   }
 
   .chatIcon {
