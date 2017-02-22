@@ -77,10 +77,10 @@ export default class extends baseVw {
       .always(() => {
         setTimeout(() => {
           // when moderators are added via the async call, this button will be hidden.
-          // remove the processing class after a long enough time if it's still visible
+          // remove the processing class after a long enough time. If it's still visible
           // there are probably no moderators coming.
           this.$browseMods.removeClass('processing');
-        }, 5000);
+        }, 30000);
       });
   }
 

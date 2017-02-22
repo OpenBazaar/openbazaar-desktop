@@ -75,5 +75,20 @@
         min-height: 35px;
       }
     }
+
+    &.modalNarrow {
+      .modalContent {
+        width: $modalContentInnerNarrow;
+        margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatClosed})) / 2) + 20px);
+
+        .chatOpen & {
+          margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatOpen})) / 2) + 5px);
+        }
+
+        & > .cornerTR {
+          left: calc(#{$modalContentInnerNarrow} - #{$buttonHeight});
+        }
+      }
+    }
   }
 }
