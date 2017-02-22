@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
+import app from '../../app';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -11,6 +12,7 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
+    this.model = this.options.model;
   }
 
   className() {
@@ -33,7 +35,8 @@ export default class extends BaseModal {
   render() {
     loadTemplate('modals/moderatorDetails.html', (t) => {
       this.$el.html(t({
-        ...this.options,
+        displayCurrency: app.settings.get('localCurrency'),
+        ...this.model.toJSON(),
       }));
       super.render();
     });

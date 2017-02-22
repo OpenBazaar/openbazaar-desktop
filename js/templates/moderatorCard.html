@@ -16,7 +16,7 @@
         <% var amount = ob.convertAndFormatCurrency(ob.modInfo.fee.fixedFee.amount, ob.modInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
         <%= ob.polyT(`moderatorCard.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %>
       </div>
-      <div class="">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
+      <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
     </div>
   </div>
   <div>

@@ -1,26 +1,62 @@
 <div class="topControls flex js-closeClickTarget"></div>
+<% console.log(ob) %>
 <div class="js-closeClickTarget">
   <div class="flexColRows gutterV">
-    <div class="contentBox padMd clrP clrBr clrSh3">
-      mod info
+    <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
+      <div class="flex gutterH row">
+        <div>
+          <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+        </div>
+        <div>
+          <div class="flex snipKids gutterHSm rowSm">
+            <strong class="txt5"><%= ob.name %></strong>
+            <span class="clrT2"><%= ob.handle %></span>
+          </div>
+          <div class="row clrT2">
+            <p><%=ob.modInfo.description %></p>
+          </div>
+        </div>
+      </div>
+      <div class="flexHCent gutterH">
+        <button class="btn clrP clrBr js-message"><%= ob.polyT('moderatorDetails.messageButton') %></button>
+        <button class="btn clrP clrBr js-follow"><%= ob.polyT('moderatorDetails.followButton') %></button>
+      </div>
     </div>
-    <div class="contentBox padMd clrP clrBr clrSh3">
-      <div class="flexRow gutterH">
-        <div class="flexExpand">
-          location
+    <div class="contentBox mDetailBox flexRow flexVCent gutterH padMd clrP clrBr clrSh3">
+      <div class="flexExpand">
+        <div class="flexCol flexCent">
+          <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
+          <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.location') %></div>
         </div>
-        <div class="rowDivV colBr"></div>
-        <div class="flexExpand">
-          recomendations
+      </div>
+      <div class="rowDivV clrBr"></div>
+      <div class="flexExpand">
+        <div class="flexCol flexCent">
+          <i class="ion-thumbsup">XX</i><% // placeholder for reputation %>
+          <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.recommendations') %></div>
         </div>
-        <div class="rowDivV colBr"></div>
-        <div class="flexExpand">
-          charge
+      </div>
+      <div class="rowDivV clrBr"></div>
+      <div class="flexExpand">
+        <div class="flexCol flexCent">
+          <% var amount = ob.convertAndFormatCurrency(ob.modInfo.fee.fixedFee.amount, ob.modInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+          <div><%= ob.polyT(`moderatorCard.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %></div>
+          <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.serviceCharge') %></div>
         </div>
       </div>
     </div>
-    <div class="contentBox padMd clrP clrBr clrSh3">
-      terms of service
+    <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
+      <h4><%= ob.polyT('moderatorDetails.termsOfService') %></h4>
+      <p><%= ob.modInfo.termsAndConditions %></p>
+      <hr class="clrBr">
+      <div class="flexColRows flexHCent">
+        <div class="rowSm">
+          <button class="btn clrP clrBr"><%= ob.polyT('moderatorDetails.addAsModeratorButton') %></button>
+        </div>
+        <div>
+          <em class="tx6 clrT2"><%= ob.polyT('moderatorDetails.disclaimer') %></em>
+        </div>
+      </div>
     </div>
   </div>
 </div>

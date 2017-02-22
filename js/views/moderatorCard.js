@@ -26,8 +26,7 @@ export default class extends BaseVw {
   }
 
   viewDetails() {
-    console.log('click moderator');
-    launchModeratorDetailsModal();
+    launchModeratorDetailsModal({ model: this.model });
   }
 
   render() {

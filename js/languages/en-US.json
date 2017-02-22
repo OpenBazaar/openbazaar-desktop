@@ -124,6 +124,19 @@
     "PERCENTAGE": "%{percentage}%**",
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**"
   },
+  "moderatorDetails": {
+    "messageButton": "Message",
+    "followButton": "Follow",
+    "location": "Location",
+    "recommendations": "Recommendations",
+    "serviceCharge": "Service Charge",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
+    "termsOfService": "Terms of Service",
+    "addAsModeratorButton": "Add as Moderator",
+    "disclaimer": "**The moderator service charge only applies when a dispute arises."
+  },
   "about": {
     "linkText": "About OpenBazaar",
     "brand": "OpenBazaar",
