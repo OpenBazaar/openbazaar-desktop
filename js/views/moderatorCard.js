@@ -2,6 +2,8 @@ import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import Profile from '../models/profile/Profile';
+import { launchModeratorDetailsModal } from '../utils/modalManager';
+
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -25,7 +27,7 @@ export default class extends BaseVw {
 
   viewDetails() {
     console.log('click moderator');
-    // open modal here
+    launchModeratorDetailsModal();
   }
 
   render() {
