@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
 import loadTemplate from '../../utils/loadTemplate';
@@ -25,12 +24,6 @@ export default class extends baseVw {
     return 'convoMessage';
   }
 
-  events() {
-    return {
-      // 'click .js-btnConnect': 'onConnectClick',
-    };
-  }
-
   getState() {
     return this._state;
   }
@@ -52,11 +45,6 @@ export default class extends baseVw {
     return this;
   }
 
-  // remove() {
-  //   $(document).off('click', this.onDocumentClick);
-  //   super.remove();
-  // }
-
   render() {
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({
@@ -64,8 +52,6 @@ export default class extends baseVw {
         ...this._state,
         moment,
       }));
-
-      // this._$deleteConfirm = null;
     });
 
     return this;

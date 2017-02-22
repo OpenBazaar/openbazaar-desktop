@@ -20,12 +20,6 @@ export default class extends baseVw {
     return 'chatConvoMessages';
   }
 
-  events() {
-    return {
-      // 'click .js-closeConvo': 'onClickCloseConvo',
-    };
-  }
-
   createMessage(model, options = {}) {
     if (!model) {
       throw new Error('Please provide a model.');
