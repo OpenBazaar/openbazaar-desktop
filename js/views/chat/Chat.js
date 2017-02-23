@@ -91,6 +91,9 @@ export default class extends baseVw {
     this.listenTo(this.conversation, 'clickCloseConvo',
       () => this.closeConversation());
 
+    this.listenTo(this.conversation, 'newOutgoingMessage',
+      (e) => this.onNewChatMessage(e.model.toJSON()));
+
     this.$chatConvoContainer
       .append(this.conversation.render().el);
 
@@ -148,13 +151,14 @@ export default class extends baseVw {
   }
 
   onSocketMessage(e) {
-    const msg = e.jsonData.message;
+    this.onNewChatMessage(e.jsonData.message);
+  }
 
+  onNewChatMessage(msg) {
     if (msg && !msg.subject) {
       const chatHead = this.collection.get(msg.peerId);
       const chatHeadData = {
         peerId: msg.peerId,
-        unread: 0,
         lastMessage: msg.message,
         outgoing: false,
       };

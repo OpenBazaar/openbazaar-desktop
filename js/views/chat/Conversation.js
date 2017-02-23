@@ -226,6 +226,7 @@ export default class extends baseVw {
       // At least for now, ignoring any server failures and optimistically adding the new
       // message to the UI. Odds are really low of server failure and repurcussions minimal.
       this.messages.push(chatMessage);
+      this.trigger('newOutgoingMessage', { model: chatMessage });
     } else {
       // Developer error - this shouldn't happen.
       console.error('There was an error saving the chat message.');
