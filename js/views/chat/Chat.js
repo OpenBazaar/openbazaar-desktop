@@ -71,8 +71,17 @@ export default class extends baseVw {
       // promise.done(profile => { // i gotz me a profile model! });
     }
 
+    // todo: if not chat head, create one.
     if (this.conversation && this.conversation.guid === guid) {
-      getBody().addClass('chatConvoOpen');
+      // In order for the chat head unread count to update properly, be sure to
+      // open before marking convo as read.
+      this.conversation.open();
+
+      // todo: after chat head logic, update below line.
+      if (this.collection.get(guid).get('unread') && this.conversation.messages.length) {
+        this.conversation.markConvoAsRead();
+      }
+
       return;
 
       // For now we'll do nothing. An enhancement could be determining if the existing
@@ -94,16 +103,19 @@ export default class extends baseVw {
     this.listenTo(this.conversation, 'newOutgoingMessage',
       (e) => this.onNewChatMessage(e.model.toJSON()));
 
+    this.listenTo(this.conversation, 'convoMarkedAsRead',
+      () => this.onConvoMarkedAsRead(guid));
+
     this.$chatConvoContainer
       .append(this.conversation.render().el);
 
-    getBody().addClass('chatConvoOpen');
+    this.conversation.open();
 
     if (oldConvo) oldConvo.remove();
   }
 
   closeConversation() {
-    getBody().removeClass('chatConvoOpen');
+    if (this.conversation) this.conversation.close();
   }
 
   onScroll() {
@@ -161,9 +173,17 @@ export default class extends baseVw {
         peerId: msg.peerId,
         lastMessage: msg.message,
         outgoing: false,
+        unread: 1,
       };
 
       if (chatHead) {
+        if (this.conversation && this.conversation.guid === msg.peerId &&
+          this.conversation.isOpen) {
+          chatHeadData.unread = 0;
+        } else {
+          chatHeadData.unread = chatHead.get('unread') + 1;
+        }
+
         chatHead.set(chatHeadData);
       } else {
         this.collection.add(chatHeadData, { at: 0 });
@@ -171,12 +191,27 @@ export default class extends baseVw {
     }
   }
 
+  onConvoMarkedAsRead(guid) {
+    console.log('on that mark that read yo what what');
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    if (!this.conversation.isOpen) return;
+
+    const chatHead = this.collection.get(guid);
+
+    if (chatHead) chatHead.set('unread', 0);
+  }
+
   open() {
+    if (this._isOpen) return;
     this._isOpen = true;
     getBody().addClass('chatOpen');
   }
 
   close() {
+    if (!this._isOpen) return;
     this._isOpen = false;
     getBody().removeClass('chatOpen');
     this.closeConversation();

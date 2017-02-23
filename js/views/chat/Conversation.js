@@ -1,7 +1,9 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import loadTemplate from '../../utils/loadTemplate';
+import app from '../../app';
+import { getBody } from '../../utils/selectors';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
 import Profile from '../../models/profile/Profile';
@@ -22,10 +24,16 @@ export default class extends baseVw {
       throw new Error('Please provide the GUID of the person you are conversing with.');
     }
 
-    super(options);
+    const opts = {
+      subject: '',
+      ...options,
+    };
 
-    this.options = options;
+    super(opts);
+
+    this.options = opts;
     this._guid = this.options.guid;
+    this.subject = '';
     this.showLoadMessagesError = false;
     this.fetching = false;
     this.fetchedAllMessages = false;
@@ -69,6 +77,7 @@ export default class extends baseVw {
   }
 
   get messagesPerPage() {
+    // TODO: set to 25 or so after dev complete!!!
     return 5;
   }
 
@@ -143,6 +152,7 @@ export default class extends baseVw {
     if (!this.firstSyncComplete) {
       this.firstSyncComplete = true;
       this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+      this.markConvoAsRead();
     }
   }
 
@@ -254,13 +264,14 @@ export default class extends baseVw {
   onSocketMessage(e) {
     const msg = e.jsonData.message;
 
-    if (msg && !msg.subject) {
+    if (msg && msg.subject === this.subject) {
       const message = new ChatMessage({
         ...msg,
         outgoing: false,
       });
 
       this.messages.push(message);
+      this.markConvoAsRead();
     }
   }
 
@@ -288,8 +299,30 @@ export default class extends baseVw {
     this.$convoMessagesWrap[0].scrollTop = value;
   }
 
+  markConvoAsRead() {
+    const queryString = this.subject ? `/?subject=${this.subject}` : '';
+    $.post(app.getServerUrl(`ob/markchatasread/${this.guid}${queryString}`));
+    this.trigger('convoMarkedAsRead');
+  }
+
   get guid() {
     return this._guid;
+  }
+
+  open() {
+    if (this._isOpen) return;
+    this._isOpen = true;
+    getBody().addClass('chatConvoOpen');
+  }
+
+  close() {
+    if (!this._isOpen) return;
+    this._isOpen = false;
+    getBody().removeClass('chatConvoOpen');
+  }
+
+  get isOpen() {
+    return this._isOpen;
   }
 
   isSubmenuOpen() {

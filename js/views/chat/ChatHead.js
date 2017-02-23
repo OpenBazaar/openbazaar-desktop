@@ -1,5 +1,3 @@
-// import $ from 'jquery';
-// import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
