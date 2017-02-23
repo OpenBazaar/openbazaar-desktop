@@ -151,11 +151,11 @@
       margin-bottom: 5px;
     }
 
-    .convoMessage {
-      &:first-child {
-        margin-top: $pad;
-      }
+    .chatConvoMessages {
+      padding: 10px 0;
+    }
 
+    .convoMessage {
       .msgContentBox {
         padding: $padSm;
         margin-top: 3px;

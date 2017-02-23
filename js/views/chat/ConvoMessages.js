@@ -20,7 +20,7 @@ export default class extends baseVw {
     this.convoMessages = [];
 
     // this.listenTo(this.collection, 'update', this.render);
-    this.listenTo(this.collection, 'update', this.onUpdate);
+    // this.listenTo(this.collection, 'update', this.onUpdate);
     this.listenTo(app.profile.get('avatarHashes'), 'change', this.render);
   }
 
@@ -29,10 +29,6 @@ export default class extends baseVw {
   }
 
   onUpdate(cl, opts) {
-    // console.log('moo time');
-    // window.moo = opts;
-    // window.time = cl;
-
     const prevScroll = {};
     const $scroll = this.$scrollContainer;
 
@@ -65,11 +61,11 @@ export default class extends baseVw {
 
         if (newMessage.get('outgoing')) {
           // It's our own message, so we'll auto scroll to the bottom.
-          // $scroll[0].scrollTop = $scroll[0].scrollHeight;
+          $scroll[0].scrollTop = $scroll[0].scrollHeight;
         } else if (prevScroll.top >= prevScroll.height - $scroll[0].clientHeight - 10) {
           // For an incoming message, if we were scrolled within 10px of the bottom at the
           // time the message came, we'll auto-scroll. Otherwise, we'll leave you where you were.
-          // $scroll[0].scrollTop = $scroll[0].scrollHeight;
+          $scroll[0].scrollTop = $scroll[0].scrollHeight;
         }
       }
     } else if (opts.changes.added.length &&

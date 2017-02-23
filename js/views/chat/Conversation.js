@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
+import { getCurrentConnection } from '../../utils/serverConnect';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
 import Profile from '../../models/profile/Profile';
@@ -22,11 +23,13 @@ export default class extends baseVw {
     }
 
     super(options);
+
     this.options = options;
     this._guid = this.options.guid;
     this.showLoadMessagesError = false;
     this.fetching = false;
     this.fetchedAllMessages = false;
+    this.ignoreScroll = false;
     this.throttledScroll = _.throttle(this.onScroll, 100).bind(this);
 
     if (this.options.chatHead) {
@@ -54,6 +57,15 @@ export default class extends baseVw {
     this.listenTo(this.messages, 'update', this.onMessagesUpdate);
     this.listenTo(this.messages, 'error', this.onMessagesFetchError);
     this.fetchMessages();
+
+    const serverConnection = getCurrentConnection();
+
+    if (serverConnection && serverConnection.status !== 'disconnected') {
+      this.listenTo(serverConnection.socket, 'message', this.onSocketMessage);
+    } else {
+      // There's no connection to the server. The connection modal will appear and
+      // a subsequent reconnect will re-start the app.
+    }
   }
 
   get messagesPerPage() {
@@ -128,9 +140,10 @@ export default class extends baseVw {
       this.fetchedAllMessages = true;
     }
 
-    // this.$convoMessagesWrap.off(null, this.throttledScroll);
-    // this.$convoMessagesWrap[0].scrollTop = this.$convoMessagesWrap[0].scrollHeight;
-    // this.$convoMessagesWrap.on('scroll', this.throttledScroll);
+    if (!this.firstSyncComplete) {
+      this.firstSyncComplete = true;
+      this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+    }
   }
 
   onMessagesFetchError() {
@@ -139,9 +152,55 @@ export default class extends baseVw {
     this.$el.removeClass('loadingMessages');
   }
 
-  onMessagesUpdate() {
+  onMessagesUpdate(cl, opts) {
     if (this.messages.length) {
       this.$el.removeClass('noMessages');
+    }
+
+    const prevTopModel = this.topRenderedMessageMd;
+
+    if (!this.convoMessages) return;
+
+    // As appropriate, update the scroll position.
+    const prevScroll = {};
+
+    prevScroll.height = this.$convoMessagesWrap[0].scrollHeight;
+    prevScroll.top = this.$convoMessagesWrap[0].scrollTop;
+
+    this.convoMessages.render();
+    this.topRenderedMessageMd = this.messages.at(0);
+
+    // Expecting either a new page of messages at the beginning of the collection or
+    // a new single message at the end of the collection. In either of those scenarios
+    // we'll adjust the scroll position as appopriate.
+
+    if (opts.changes.added.length === 1) {
+      // Single new message added.
+
+      const newMessage = opts.changes.added[0];
+
+      if (cl.indexOf(newMessage) === cl.length - 1) {
+        // It's the last message.
+
+        if (newMessage.get('outgoing')) {
+          // It's our own message, so we'll auto scroll to the bottom.
+          this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+        } else if (prevScroll.top >=
+          prevScroll.height - this.$convoMessagesWrap[0].clientHeight - 10) {
+          // For an incoming message, if we were scrolled within 10px of the bottom at the
+          // time the message came, we'll auto-scroll. Otherwise, we'll leave you where you were.
+          this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+        }
+      }
+    } else if (opts.changes.added.length &&
+      cl.indexOf(opts.changes.added[opts.changes.added.length - 1]) !==
+      prevTopModel) {
+      // New page of messages added up top. We'll adjust the scroll position so there is no
+      // jump as they are added in.
+      this.setScrollTop(prevScroll.top +
+        (this.$convoMessagesWrap[0].scrollHeight - prevScroll.height - 60));
+
+      // the hardcode 60 is to account for the loading spinner that is going away
     }
   }
 
@@ -177,15 +236,28 @@ export default class extends baseVw {
   }
 
   onScroll(e) {
-    console.log('you are scrolling');
+    if (this.ignoreScroll) {
+      this.ignoreScroll = false;
+      return;
+    }
+
     if (this.fetching || this.fetchedAllMessages
       || this.showLoadMessagesError) return;
 
-    console.log('i will process the scroll');
-
-    // If we come within 100px of the top, let's fetch a new page.
-    if (e.target.scrollTop <= 100) {
+    // If we come close enough to the top, let's fetch a new page.
+    if (e.target.scrollTop <= 50) {
       this.fetchMessages(this.messages.at(0).id);
+    }
+  }
+
+  onSocketMessage(e) {
+    if (e.jsonData && e.jsonData.message) {
+      const message = new ChatMessage({
+        ...e.jsonData.message,
+        outgoing: false,
+      });
+
+      this.messages.push(message);
     }
   }
 
@@ -199,6 +271,18 @@ export default class extends baseVw {
       data: $.param(params),
       remove: false,
     });
+  }
+
+  setScrollTop(value, silent = true) {
+    if (typeof value !== 'number') {
+      throw new Error('Please provide a value as a number.');
+    }
+
+    if (this.$convoMessagesWrap[0].scrollTop === value) return;
+
+    if (silent) this.ignoreScroll = true;
+
+    this.$convoMessagesWrap[0].scrollTop = value;
   }
 
   get guid() {
@@ -287,8 +371,7 @@ export default class extends baseVw {
 
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
 
-      this.$convoMessagesWrap.off(null, this.throttledScroll)
-        .on('scroll', this.throttledScroll);
+      this.$convoMessagesWrap.on('scroll', this.throttledScroll);
     });
 
     return this;
