@@ -11,10 +11,7 @@ export default class extends baseVw {
 
     super(options);
 
-    // this._state = {
-    //   status: 'not-connected',
-    //   ...options.initialState || {},
-    // };
+    this.listenTo(this.model, 'change', this.render);
   }
 
   className() {
@@ -31,18 +28,11 @@ export default class extends baseVw {
     this.trigger('click', { view: this });
   }
 
-  // remove() {
-  //   super.remove();
-  // }
-
   render() {
     loadTemplate('chat/chatHead.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        // ...this._state,
       }));
-
-      // this._$deleteConfirm = null;
     });
 
     return this;

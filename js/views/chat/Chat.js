@@ -3,6 +3,7 @@ import _ from 'underscore';
 import '../../utils/velocity';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
+import { getCurrentConnection } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
@@ -22,6 +23,15 @@ export default class extends baseVw {
 
     // TODO: handle fetch error.
     this.listenTo(this.collection, 'sync', () => this.render());
+
+    const serverConnection = getCurrentConnection();
+
+    if (serverConnection && serverConnection.status !== 'disconnected') {
+      this.listenTo(serverConnection.socket, 'message', this.onSocketMessage);
+    } else {
+      // There's no connection to the server. The connection modal will appear and
+      // a subsequent reconnect will re-start the app.
+    }
   }
 
   className() {
@@ -137,6 +147,26 @@ export default class extends baseVw {
     }
   }
 
+  onSocketMessage(e) {
+    const msg = e.jsonData.message;
+
+    if (msg && !msg.subject) {
+      const chatHead = this.collection.get(msg.peerId);
+      const chatHeadData = {
+        peerId: msg.peerId,
+        unread: 0,
+        lastMessage: msg.message,
+        outgoing: false,
+      };
+
+      if (chatHead) {
+        chatHead.set(chatHeadData);
+      } else {
+        this.collection.add(chatHeadData, { at: 0 });
+      }
+    }
+  }
+
   open() {
     this._isOpen = true;
     getBody().addClass('chatOpen');
@@ -180,7 +210,6 @@ export default class extends baseVw {
    * badges needs to be shown.
    */
   handleUnreadBadge() {
-    // isScrolledIntoView
     if (!this.chatHeads) return;
 
     const firstUnreadChatHead = this.collection

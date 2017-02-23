@@ -251,9 +251,11 @@ export default class extends baseVw {
   }
 
   onSocketMessage(e) {
-    if (e.jsonData && e.jsonData.message) {
+    const msg = e.jsonData.message;
+
+    if (msg && !msg.subject) {
       const message = new ChatMessage({
-        ...e.jsonData.message,
+        ...msg,
         outgoing: false,
       });
 
