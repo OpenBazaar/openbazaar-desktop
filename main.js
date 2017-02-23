@@ -3,6 +3,7 @@ import {
   Menu, Tray, session, crashReporter,
   autoUpdater, shell,
 } from 'electron';
+import { argv } from 'yargs';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
@@ -10,6 +11,14 @@ import urlparse from 'url-parse';
 import _ from 'underscore';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
+
+if (argv.userData) {
+  try {
+    app.setPath('userData', argv.userData);
+  } catch (e) {
+    throw new Error(`The passed in userData directory does not appear to be valid: ${e}`);
+  }
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

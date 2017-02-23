@@ -98,6 +98,13 @@ export default class extends BaseModel {
             }
           });
         });
+
+        options.attrs.listing.coupons.forEach(coupon => {
+          if (typeof coupon.priceDiscount === 'number') {
+            coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
+              options.attrs.listing.metadata.pricingCurrency === 'BTC');
+          }
+        });
       } else {
         options.data = JSON.stringify({
           slug: this.get('listing').get('slug'),
@@ -199,6 +206,20 @@ export default class extends BaseModel {
                   .services[serviceIndex].price = 0;
               }
             });
+          }
+        });
+      }
+
+      if (parsedResponse.listing && parsedResponse.listing.coupons
+        && parsedResponse.listing.coupons.length) {
+        parsedResponse.listing.coupons.forEach((coupon, couponIndex) => {
+          if (typeof coupon.priceDiscount === 'number') {
+            const price = parsedResponse.listing.coupons[couponIndex].priceDiscount;
+            const isBtc = parsedResponse.listing.metadata &&
+              parsedResponse.listing.metadata.pricingCurrency === 'BTC';
+
+            parsedResponse.listing.coupons[couponIndex].priceDiscount =
+              integerToDecimal(price, isBtc);
           }
         });
       }

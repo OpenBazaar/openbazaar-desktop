@@ -1,13 +1,16 @@
 <div class="contentBox padMd clrP clrBr clrSh3">
   <div class="flexHCent">
     <h2 class="h3 clrT"><%= ob.polyT('settings.generalTab.sectionName') %></h2>
-    <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+    <%= ob.processingButton({
+      className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+      btnText: ob.polyT('settings.btnSave')
+    }) %>
   </div>
   <hr class="clrBr" />
 
   <div class="tabFormWrapper">
     <form class="box clrP padMdKids padStack settingsGeneralForm">
-      <div class="flexRow">
+      <div class="flexRow gutterH">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.language') %></label>
           <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperLanguage') %></div>
@@ -22,7 +25,7 @@
           <div class="clrT2 txSm padSm"><%= ob.polyT('settings.generalTab.helperTranslations', { helperTranslationsLink: `<a href="https://www.transifex.com/ob1/openbazaar/" class="clrTEm">${ob.polyT('settings.generalTab.helperTranslationsLink')}</a>` }) %></div>
         </div>
       </div>
-      <div class="flexRow">
+      <div class="flexRow gutterH">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.country') %></label>
           <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCountry') %></div>
@@ -36,7 +39,7 @@
           </select>
         </div>
       </div>
-      <div class="flexRow">
+      <div class="flexRow gutterH">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.currency') %></label>
           <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCurrency') %></div>
@@ -92,10 +95,10 @@
                    id="settingsBitcoinUnitSatoshi"
             <% if(ob.bitcoinUnit === 'SATOSHI') { %>checked<% } %>>
             <label for="settingsBitcoinUnitSatoshi"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.SATOSHI') %></label>
-          </div>                    
+          </div>
         </div>
-      </div>      
-      <div class="flexRow">
+      </div>
+      <div class="flexRow gutterH">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.viewNsfwContent') %></label>
         </div>
@@ -128,6 +131,9 @@
 
   <hr class="clrBr" />
   <div class="flexHRight">
-    <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
+    <%= ob.processingButton({
+      className: 'btn clrP clrBr clrSh2 js-save',
+      btnText: ob.polyT('settings.btnSave')
+    }) %>
   </div>
 </div>

@@ -25,13 +25,15 @@ export default function loadTemplate(templateFile, callback, root = `${__dirname
     callback(wrappedTmpl);
   };
 
-  // todo: if we need more templates that we want to provide as template
-  // helpers, find a way to abstract it.
   if (!templateHelpers.formErrorTmpl) {
     templateHelpers.formErrorTmpl = 'its coming'; // hack to avoid infinite recursion
 
     loadTemplate('spinner.svg', (t) => {
       templateHelpers.spinner = t;
+    });
+
+    loadTemplate('processingButton.html', (t) => {
+      templateHelpers.processingButton = t;
     });
 
     loadTemplate('formError.html', (t) => {

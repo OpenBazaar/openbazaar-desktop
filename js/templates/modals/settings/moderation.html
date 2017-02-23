@@ -2,7 +2,10 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT">Moderation</h2>
-      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
     <hr class="clrBr" />
     <h3><%= ob.polyT('settings.moderationTab.disputeResolution') %></h3>
@@ -10,7 +13,7 @@
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label class="required"><%= ob.polyT('settings.moderationTab.moderationStatus') %></label>
           </div>
@@ -37,7 +40,7 @@
             </div>
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label class="required" for="moderationFeeType"><%= ob.polyT('settings.moderationTab.feeTypeAmount') %></label>
           </div>
@@ -93,7 +96,7 @@
           </div>
 
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsModeratorDescription" class="required"><%= ob.polyT('settings.moderationTab.description') %></label>
           </div>
@@ -103,7 +106,7 @@
                       class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.descriptionHelper') %>"><%= ob.description %></textarea>
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.terms') %></label>
           </div>
@@ -113,7 +116,7 @@
                       class="resizable clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.languages') %></label>
           </div>
@@ -134,27 +137,29 @@
         </div>
       </form>
       <!-- the elements below are not part of the data being saved to the server -->
-      <div class="flexRow">
-        <div class="col3"></div>
-        <div class="col9">
-          <ul class="unstyled errorList hide js-moderationConfirmError">
-            <li><i class="ion-alert-circled"></i> <%= ob.polyT('settings.moderationTab.errors.confirm') %></li>
-          </ul>
-          <input type="checkbox" id="acceptGuidelines" class="<% if (ob.isModerator) { print('fauxChecked') } %>">
-          <label class="tx5b" for="acceptGuidelines">
-            <span>
-              <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://openbazaar.org" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
-            </span>
-          </label>
+      <div class="box padMd">
+        <div class="flexRow gutterH">
+          <div class="col3"></div>
+          <div class="col9">
+            <ul class="unstyled errorList hide js-moderationConfirmError">
+              <li><i class="ion-alert-circled"></i> <%= ob.polyT('settings.moderationTab.errors.confirm') %></li>
+            </ul>
+            <input type="checkbox" id="acceptGuidelines" class="<% if (ob.isModerator) { print('fauxChecked') } %>">
+            <label class="tx5b" for="acceptGuidelines">
+              <span>
+                <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://openbazaar.org" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
+              </span>
+            </label>
+          </div>
         </div>
-      </div>
-      <div class="flexRow">
-        <div class="col3"></div>
-        <div class="col9">
-          <input type="checkbox" id="understandRequirements" class="<% if (ob.isModerator) print('fauxChecked') %>">
-          <label class="tx5b" for="understandRequirements">
-            <span><%= ob.polyT('settings.moderationTab.understandRequirements') %></span>
-          </label>
+        <div class="flexRow gutterH">
+          <div class="col3"></div>
+          <div class="col9">
+            <input type="checkbox" id="understandRequirements" class="<% if (ob.isModerator) print('fauxChecked') %>">
+            <label class="tx5b" for="understandRequirements">
+              <span><%= ob.polyT('settings.moderationTab.understandRequirements') %></span>
+            </label>
+          </div>
         </div>
       </div>
     </div>

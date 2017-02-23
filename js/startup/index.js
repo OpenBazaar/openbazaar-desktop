@@ -1,4 +1,4 @@
-// Putting one offs here that are too small for their own module and
+// Putting start-up related one offs here that are too small for their own module and
 // aren't appropriate to be in any existing module
 
 import { screen, shell } from 'electron';

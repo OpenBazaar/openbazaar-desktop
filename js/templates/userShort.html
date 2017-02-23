@@ -19,9 +19,10 @@
     <% if (!ob.hideControls) { %>
       <div class="userControls">
         <% if (!ob.ownGuid) { %>
-          <a class="iconBtn clrP clrBr js-follow <% if (ob.followedByYou) { %>active<% } %>">
-            <i class="ion-person-stalker"></i>
-          </a>
+          <%= ob.processingButton({
+            className: `iconBtn clrP clrBr js-follow ${ob.followedByYou ? 'active' : ''}`,
+            btnText: '<i class="ion-person-stalker"></i>'
+          }) %>          
           <% if (ob.moderator) { %>
             <a class="iconBtn clrP clrBr js-mod <% if (ob.ownMod) { %>active<% } %>">
               <i class="ion-briefcase"></i>

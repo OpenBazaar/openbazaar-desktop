@@ -2,13 +2,16 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT"><%= ob.polyT('settings.advancedTab.sectionName') %></h2>
-      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
     <hr class="clrBr" />
     <div class="tabFormWrapper clrS">
         <div class="js-appearanceContainer">
           <form class="box padMdKids padStack clrP clrBr js-appearance">
-            <div class="flexRow">
+            <div class="flexRow gutterH">
               <div class="col3">
                 <label><%= ob.polyT('settings.advancedTab.appearance.visualEffects') %></label>
                 <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperVisualEffects') %></div>
@@ -36,7 +39,7 @@
                 </div>
               </div>
             </div>
-            <div class="flexRow">
+            <div class="flexRow gutterH">
               <div class="col3">
                 <label><%= ob.polyT('settings.advancedTab.appearance.windowControlStyle') %></label>
                 <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperWindowControls') %></div>
@@ -65,7 +68,7 @@
               </div>
             </div>
           </form>
-        </div>    
+        </div>
     </div>
   </div>
   <div class="contentBox padMd clrP clrBr clrSh3">
@@ -74,7 +77,7 @@
     <div class="tabFormWrapper clrS">
       <div class="js-transactionContainer">
         <form class="box padMdKids padStack clrP clrBr js-transaction">
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label><%= ob.polyT('settings.advancedTab.transaction.saveMetadata') %></label>
               <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperSaveMetaData') %></div>
@@ -102,7 +105,7 @@
               </div>
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label><%= ob.polyT('settings.advancedTab.transaction.defaultFee') %></label>
               <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperDefaultFee') %></div>
@@ -141,7 +144,7 @@
             </div>
           </div>
         </form>
-      </div>    
+      </div>
     </div>
   </div>
   <div class="contentBox padMd clrP clrBr clrSh3">
@@ -150,7 +153,7 @@
     <div class="tabFormWrapper clrS">
       <div class="js-serverContainer">
         <form class="box padMdKids padStack clrP clrBr js-server">
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label>
                 <%= ob.polyT('settings.advancedTab.server.management') %>
@@ -161,7 +164,7 @@
               <a class="btn clrP clrBr clrSh2 js-showConnectionManagement flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnShowManagementAction') %></a>
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label>
                 <%= ob.polyT('settings.advancedTab.server.peers') %>
@@ -212,7 +215,7 @@
               </div>
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label for="smtpServerAddress">
                 <%= ob.polyT('settings.advancedTab.smtp.serverAddress') %>
@@ -221,17 +224,17 @@
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.serverAddress']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.serverAddress'] })) %>
-              <input class="clrBr clrSh2" 
+              <input class="clrBr clrSh2"
                 required
                 type="text"
-                name="smtpSettings.serverAddress" 
-                id="smtpServerAddress" 
+                name="smtpSettings.serverAddress"
+                id="smtpServerAddress"
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderServerAddress') %>"
                 value="<%= ob.smtpSettings.serverAddress %>">
               <div class="clrT2 txBase padSm"><%= ob.polyT('settings.advancedTab.smtp.helperNewEmail', { helperGmailLink: `<a href="https://accounts.google.com/SignUp" class="clrTEm">${ob.polyT('settings.advancedTab.smtp.helperGmailLink')}</a>` }) %></div>
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label for="smtpUsername">
                 <%= ob.polyT('settings.advancedTab.smtp.username') %>
@@ -240,16 +243,16 @@
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.username']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.username'] })) %>
-              <input class="clrBr clrSh2" 
-                required        
+              <input class="clrBr clrSh2"
+                required
                 type="text"
-                name="smtpSettings.username" 
-                id="smtpUsername" 
+                name="smtpSettings.username"
+                id="smtpUsername"
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderUsername') %>"
                 value="<%= ob.smtpSettings.username %>">
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label for="smtpPassword">
                 <%= ob.polyT('settings.advancedTab.smtp.password') %>
@@ -258,16 +261,16 @@
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.password']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.password'] })) %>
-              <input class="clrBr clrSh2" 
-                required 
+              <input class="clrBr clrSh2"
+                required
                 type="password"
-                name="smtpSettings.password" 
-                id="smtpPassword" 
+                name="smtpSettings.password"
+                id="smtpPassword"
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderPassword') %>"
                 value="<%= ob.smtpSettings.password %>">
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label for="smtpSenderEmail">
                 <%= ob.polyT('settings.advancedTab.smtp.senderEmail') %>
@@ -276,16 +279,16 @@
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.senderEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.senderEmail'] })) %>
-              <input class="clrBr clrSh2" 
+              <input class="clrBr clrSh2"
                 required
                 type="email"
-                name="smtpSettings.senderEmail" 
-                id="smtpSenderEmail" 
+                name="smtpSettings.senderEmail"
+                id="smtpSenderEmail"
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderSendFrom') %>"
                 value="<%= ob.smtpSettings.senderEmail %>">
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
               <label for="smtpRecipientEmail">
                 <%= ob.polyT('settings.advancedTab.smtp.recipientEmail') %>
@@ -294,21 +297,21 @@
             </div>
             <div class="col6">
               <% if (ob.errors['smtpSettings.recipientEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.recipientEmail'] })) %>
-              <input class="clrBr clrSh2" 
+              <input class="clrBr clrSh2"
                 required
                 type="email"
-                name="smtpSettings.recipientEmail" 
-                id="smtpRecipientEmail" 
+                name="smtpSettings.recipientEmail"
+                id="smtpRecipientEmail"
                 placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderSendTo') %>"
                 value="<%= ob.smtpSettings.recipientEmail %>">
             </div>
           </div>
-          <div class="flexRow">
+          <div class="flexRow gutterH">
             <div class="col3">
             </div>
             <div class="col6">
-              <input  class="clrBr clrP clrTEm margR flexNoShrink" 
-                      type=reset 
+              <input  class="clrBr clrP clrTEm margR flexNoShrink"
+                      type=reset
                       value="<%= ob.polyT('settings.advancedTab.smtp.clearAction') %>"
               >
               <a class="btn clrP clrBr clrSh2 js-testSMTPSettings flexNoShrink"><%= ob.polyT('settings.advancedTab.smtp.testAction') %></a>
@@ -320,7 +323,10 @@
   </div>
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
-      <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
-  </div>  
+  </div>
 </div>

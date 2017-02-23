@@ -2,13 +2,16 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT"><%= ob.polyT('settings.pageTab.sectionPage') %></h2>
-      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+        <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
     <hr class="clrBr" />
 
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsName" class="required"><%= ob.polyT('settings.name') %></label>
           </div>
@@ -17,7 +20,7 @@
             <input type="text" class="clrBr clrSh2" name="name" id="settingsName" value="<%= ob.name %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderName') %>">
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsHandle"><%= ob.polyT('settings.handle') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHandle') %></div>
@@ -28,7 +31,7 @@
             <div class="clrT2 txSm padSm"><%= ob.polyT('settings.pageTab.helperHandleRegister', { helperHandleRegisterLink: `<a href="https://onename.com" class="clrTEm">${ob.polyT('settings.pageTab.helperHandleRegisterLink')}</a>` }) %></div>
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsShortDescription"><%= ob.polyT('settings.shortDescription') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperShortDescription') %></div>
@@ -39,7 +42,7 @@
                       class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.pageTab.placeholderShortDescription') %>"><%= ob.shortDescription %></textarea>
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsLocation"><%= ob.polyT('settings.pageTab.locationLabel') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperLocation') %></div>
@@ -50,7 +53,7 @@
           </div>
         </div>
 
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label><%= ob.polyT('settings.avatar') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.loadAvatarHelp', {minWidth: ob.avatarMinWidth, minHeight: ob.avatarMinHeight}) %></div>
@@ -81,7 +84,7 @@
           </div>
         </div>
 
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label><%= ob.polyT('settings.nsfwContent') %></label>
           </div>
@@ -119,7 +122,7 @@
     <hr class="clrBr" />
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <div class="flexRow">
+        <div class="flexRow gutterH">
 <!--           <div class="col3">
             <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
           </div> -->
@@ -138,7 +141,7 @@
     <hr class="clrBr" />
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsWebsite"><%= ob.polyT('settings.website') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
@@ -149,7 +152,7 @@
                    value="<%= ob.website %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderWebsite') %>">
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsEmail"><%= ob.polyT('settings.email') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
@@ -168,7 +171,7 @@
     <hr class="clrBr" />
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label><%= ob.polyT('settings.header') %></label>
               <div class="clrT2 txSm"><%= ob.polyT('settings.loadHeaderHelp', {minWidth: ob.headerMinWidth, minHeight: ob.headerMinHeight}) %></div>
@@ -198,56 +201,71 @@
             </div>
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsPrimaryColor" class="required"><%= ob.polyT('settings.primaryColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperPrimaryColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox clrBr" style="background-color: <%= ob.primaryColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.primaryColor) print(ob.formErrorTmpl({ errors: ob.errors.primaryColor })) %>
             <input type="text" class="clrBr clrSh2" name="primaryColor" id="settingsPrimaryColor"
                    value="<%= ob.primaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>">
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsSecondaryColor" class="required"><%= ob.polyT('settings.secondaryColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperSecondaryColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox clrBr" style="background-color: <%= ob.secondaryColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.secondaryColor) print(ob.formErrorTmpl({ errors: ob.errors.secondaryColor })) %>
             <input type="text" class="clrBr clrSh2" name="secondaryColor" id="settingsSecondaryColor"
                    value="<%= ob.secondaryColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>">
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsTextColor" class="required"><%= ob.polyT('settings.textColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperTextColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox clrBr" style="background-color: <%= ob.textColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.textColor) print(ob.formErrorTmpl({ errors: ob.errors.textColor })) %>
             <input type="text" class="clrBr clrSh2" name="textColor" id="settingsTextColor"
                    value="<%= ob.textColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>">
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsHighlightColor" class="required"><%= ob.polyT('settings.highlightColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox clrBr" style="background-color: <%= ob.highlightColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.highlightColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightColor })) %>
             <input type="text" class="clrBr clrSh2" name="highlightColor" id="settingsHighlightColor"
                    value="<%= ob.highlightColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightColor') %>">
           </div>
         </div>
-        <div class="flexRow">
+        <div class="flexRow gutterH">
           <div class="col3">
             <label for="settingsHighlightTextColor" class="required"><%= ob.polyT('settings.highlightTextColor') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightTextColor') %></div>
           </div>
-          <div class="col3">
+          <div class="col1">
+            <div class="previewBox clrBr" style="background-color: <%= ob.highlightTextColor %>;"></div>
+          </div>
+          <div class="col2">
             <% if (ob.errors.highlightTextColor) print(ob.formErrorTmpl({ errors: ob.errors.highlightTextColor })) %>
             <input type="text" class="clrBr clrSh2" name="highlightTextColor" id="settingsHighlightTextColor"
                    value="<%= ob.highlightTextColor %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
@@ -259,7 +277,10 @@
 
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
-      <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
   </div>
 </div>
