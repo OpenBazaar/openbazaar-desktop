@@ -219,6 +219,27 @@ export default class extends baseVw {
   }
 
   onKeyUpMessageInput(e) {
+    // Send an empty message to indicate "typing...", but no more than 1 every
+    // second.
+    if (!this.lastTypingSentAt || (Date.now() - this.lastTypingSentAt) >= 1000) {
+      const typingMessage = new ChatMessage({
+        peerId: this.guid,
+        subject: this.subject,
+        message: '',
+      });
+
+      const saveTypingMessage = typingMessage.save();
+
+      if (saveTypingMessage) {
+        this.lastTypingSentAt = Date.now();
+      } else {
+        // Developer error - this shouldn't happen.
+        console.error('There was an error saving the chat message.');
+        console.dir(saveTypingMessage);
+      }
+    }
+
+    // Send actual chat message if the Enter key was pressed
     if (e.which !== 13) return;
 
     const message = e.target.value.trim();
@@ -227,6 +248,7 @@ export default class extends baseVw {
 
     const chatMessage = new ChatMessage({
       peerId: this.guid,
+      subject: this.subject,
       message,
     });
 
@@ -262,17 +284,29 @@ export default class extends baseVw {
   }
 
   onSocketMessage(e) {
-    const msg = e.jsonData.message;
-
-    if (msg && msg.subject === this.subject) {
+    if (e.jsonData.message &&
+      e.jsonData.message.subject === this.subject &&
+      e.jsonData.message.peerId === this.guid) {
       const message = new ChatMessage({
-        ...msg,
+        ...e.jsonData.message,
         outgoing: false,
       });
 
       this.messages.push(message);
       this.markConvoAsRead();
+    } else if (e.jsonData.messageTyping &&
+      e.jsonData.messageTyping.subject === this.subject &&
+      e.jsonData.messageTyping.peerId === this.guid) {
+      this.showTypingIndicator();
     }
+  }
+
+  showTypingIndicator() {
+    clearTimeout(this.typingTimeout);
+    this.$el.addClass('isTyping');
+    this.typingTimeout = setTimeout(
+      () => (this.$el.removeClass('isTyping')),
+      3000);
   }
 
   fetchMessages(offsetId, limit = this.messagesPerPage) {
@@ -339,6 +373,21 @@ export default class extends baseVw {
     this.$subMenu.addClass('hide');
   }
 
+  getTypingIndicatorContent() {
+    const name = this.profile && this.profile.handle ? `@${this.profile.handle}` : this.guid;
+    const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
+    return app.polyglot.t('chat.conversation.typingIndicator', { user: usernameHtml });
+  }
+
+  setTypingIndicator(username) {
+    this.$typingIndicator.html(this.getTypingIndicatorContent(username));
+  }
+
+  get $typingIndicator() {
+    return this._$typingIndicator ||
+      (this._$typingIndicator = this.$('.js-typingIndicator'));
+  }
+
   get $subMenu() {
     return this._$subMenu ||
       (this._$subMenu = this.$('.js-subMenu'));
@@ -373,12 +422,14 @@ export default class extends baseVw {
         chatHead: this.chatHead && this.chatHead.toJSON() || {},
         profile: this.profile && this.profile.toJSON() || {},
         showLoadMessagesError: this.showLoadMessagesError,
+        typingIndicator: this.getTypingIndicatorContent,
       }));
 
       this._$subMenu = null;
       this._$messagesOverlay = null;
       this._$loadMessagesError = null;
       this._$convoMessagesWindow = null;
+      this._$typingIndicator = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 
