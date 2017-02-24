@@ -288,6 +288,7 @@ export default class extends baseVw {
     if (e.jsonData.message &&
       e.jsonData.message.subject === this.subject &&
       e.jsonData.message.peerId === this.guid) {
+      // incoming chat message
       const message = new ChatMessage({
         ...e.jsonData.message,
         outgoing: false,
@@ -302,7 +303,17 @@ export default class extends baseVw {
     } else if (e.jsonData.messageTyping &&
       e.jsonData.messageTyping.subject === this.subject &&
       e.jsonData.messageTyping.peerId === this.guid) {
+      // Conversant is typing...
       this.showTypingIndicator();
+    } else if (e.jsonData.messageRead &&
+      e.jsonData.messageRead.subject === this.subject &&
+      e.jsonData.messageRead.peerId === this.guid) {
+      console.log('i be happity hippity');
+      // Conversant read your message
+      if (this.convoMessages) {
+        console.log('i am iron man');
+        this.convoMessages.markMessageAsRead(e.jsonData.messageRead.messageId);
+      }
     }
   }
 

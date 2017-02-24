@@ -20,6 +20,9 @@ export default class extends baseVw {
     this.convoMessages = [];
 
     this.listenTo(app.profile.get('avatarHashes'), 'change', this.render);
+
+    console.log('moonie');
+    window.moonie = this;
   }
 
   className() {
@@ -51,6 +54,30 @@ export default class extends baseVw {
     return convoMessage;
   }
 
+  markMessageAsRead(id) {
+    console.log(`called with id: ${id}`);
+
+    if (!id) {
+      throw new Error('Please provide an id.');
+    }
+
+    const message = this.collection.get(id);
+
+    if (message) {
+      message.setState({ showAsRead: true });
+
+      // Only one message should be marked as read, so if there already was one,
+      // we'll unmark it.
+      if (this.messageMarkedAsRead) {
+        const index = this.collection.indexOf(this.messageMarkedAsRead);
+
+        if (index !== -1) {
+          this.convoMessages[index].setState({ showAsRead: false });
+        }
+      }
+    }
+  }
+
   render() {
     const messagesContainer = document.createDocumentFragment();
 
@@ -61,6 +88,17 @@ export default class extends baseVw {
       const convoMessage = this.createMessage(message);
       $(messagesContainer).append(convoMessage.render().el);
     });
+
+    // We only want to mark the last 'read' message as read.
+    this.messageMarkedAsRead = this.collection.slice()
+      .reverse()
+      .find(message => (message.get('read') && message.get('outgoing')));
+
+    const lastReadIndex = this.collection.indexOf(this.messageMarkedAsRead);
+
+    if (lastReadIndex !== -1) {
+      this.convoMessages[lastReadIndex].setState({ showAsRead: true });
+    }
 
     this.$el.empty()
       .append(messagesContainer);
