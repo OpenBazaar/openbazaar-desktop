@@ -14,7 +14,6 @@ export default class extends BaseModal {
     this.options = opts;
     this.model = this.options.model;
     this.followedByYou = followedByYou(this.model.id);
-    console.log(this.followedByYou);
 
     // update the follow button when this user is followed or unfollowed
     this.listenTo(app.ownFollowing, 'sync update', () => {
@@ -62,6 +61,7 @@ export default class extends BaseModal {
 
   addAsModerator() {
     this.trigger('addAsModerator');
+    super.close();
   }
 
   render() {

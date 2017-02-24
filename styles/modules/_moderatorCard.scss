@@ -23,11 +23,13 @@
 
   .selectBtn {
 
+    width: 76px;
+
     .showIfView {
       display: none;
     }
 
-    &.view .showIfView {
+    &[data-state='view'] .showIfView {
       display: inline;
     }
 
@@ -35,7 +37,7 @@
       display: none;
     }
 
-    &.selected .showIfSelected {
+    &[data-state='selected'] .showIfSelected {
       display: inline;
     }
 
@@ -43,7 +45,7 @@
       display: none;
     }
 
-    &.deselected .showIfDeselected {
+    &[data-state='deselected'] .showIfDeselected {
       display: inline;
     }
   }

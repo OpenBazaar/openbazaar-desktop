@@ -27,14 +27,6 @@ export default class extends baseVw {
       async: true,
     });
 
-    if (this.currentMods.length) {
-      // get the current moderator data using POST
-      this.modsSelected.fetch({
-        data: JSON.stringify(this.currentMods),
-        type: 'POST',
-      });
-    }
-
     this.modsByID = new Moderators(null);
 
     this.modsAvailable = new Moderators(null, {
@@ -44,7 +36,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsSelected, 'update', () => {
-      this.buildModList(this.modsSelected, this.$modListSelected);
+      this.buildModList(this.modsSelected, this.$modListSelected, { cardState: 'selected' });
     });
 
     this.listenTo(this.modsByID, 'update', () => {
@@ -86,16 +78,17 @@ export default class extends baseVw {
       });
   }
 
-  buildModList(collection, target) {
+  buildModList(collection, target, opts = {}) {
     // clear any existing content
     target.children().not('.js-noModsAdded').remove();
     target.toggleClass('hasMods', !!collection.length);
 
     if (collection.length) {
       const docFrag = $(document.createDocumentFragment());
-      collection.each((moderator) => {
+      collection.each((model) => {
         const newMod = this.createChild(ModCard, {
-          model: moderator,
+          model,
+          ...opts,
         });
         this.listenTo(newMod, 'changeModerator', (data) => this.changeMod(data));
         docFrag.append(newMod.render().$el);
@@ -321,6 +314,14 @@ export default class extends baseVw {
       this._$submitModByIDInputError = null;
       this._$submitModByIDInputErrorText = null;
     });
+
+    if (this.currentMods.length) {
+      // get the current moderator data using POST
+      this.modsSelected.fetch({
+        data: JSON.stringify(this.currentMods),
+        type: 'POST',
+      });
+    }
 
     return this;
   }

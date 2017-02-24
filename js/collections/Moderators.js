@@ -55,7 +55,6 @@ export default class extends Collection {
           if (data.id === this.socketID) {
             const profile = data.profile;
             profile.id = data.peerId;
-            console.log(profile.id);
             this.add([data.profile]);
           }
         });
