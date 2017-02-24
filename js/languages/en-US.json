@@ -127,6 +127,7 @@
   "moderatorDetails": {
     "messageButton": "Message",
     "followButton": "Follow",
+    "unFollowButton": "Unfollow",
     "location": "Location",
     "recommendations": "Recommendations",
     "serviceCharge": "Service Charge",

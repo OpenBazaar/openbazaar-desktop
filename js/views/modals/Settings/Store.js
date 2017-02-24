@@ -95,6 +95,8 @@ export default class extends baseVw {
         const newMod = this.createChild(ModCard, {
           model: moderator,
         });
+        this.listenTo(newMod, 'selectModerator', (data) => this.selectMod(data));
+        this.listenTo(newMod, 'deselectModerator', (data) => this.deselectMod(data));
         docFrag.append(newMod.render().$el);
       });
       target.append(docFrag);
@@ -143,6 +145,14 @@ export default class extends baseVw {
     const message = app.polyglot.t('settings.storeTab.errors.modNotFoundBody',
         { guidOrHandle: handle || guid });
     openSimpleMessage(title, message);
+  }
+
+  selectMod(data) {
+    console.log(data);
+  }
+
+  deselectMod(data) {
+    console.log(data);
   }
 
   getProfileFormData(subset = this.$profileFormFields) {

@@ -21,4 +21,19 @@
     margin: 0 $padMd;
     display: none;
   }
+
+  .selectBtn {
+
+    .showIfView {
+      display: none;
+    }
+
+    .showIfSelected {
+      display: none;
+    }
+
+    .showIfDeselected {
+      display: none;
+    }
+  }
 }

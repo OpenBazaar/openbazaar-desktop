@@ -26,7 +26,11 @@ export default class extends BaseVw {
   }
 
   viewDetails() {
-    launchModeratorDetailsModal({ model: this.model });
+    const modModal = launchModeratorDetailsModal({ model: this.model });
+    this.listenTo(modModal, 'addAsModerator', () => {
+      console.log(`added ${this.model.id}`);
+      this.trigger('selectModerator', { guid: this.model.id });
+    });
   }
 
   render() {

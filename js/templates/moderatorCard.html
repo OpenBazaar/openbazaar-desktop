@@ -11,7 +11,7 @@
       <p class="clamp2"><%=ob.modInfo.description %></p>
     </div>
     <div class="flex snipKids gutterH tx5">
-      <div class="flexNoShrink"><i class="ion-thumbsup">XX</i><% // placeholder for reputation %> </div>
+      <div class="flexNoShrink">👍 XX<% // placeholder for reputation %> </div>
       <div class="flexNoShrink">
         <% var amount = ob.convertAndFormatCurrency(ob.modInfo.fee.fixedFee.amount, ob.modInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
         <%= ob.polyT(`moderatorCard.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %>
@@ -20,7 +20,11 @@
     </div>
   </div>
   <div>
-    <button class="btn clrP clrBr"><%= ob.polyT('moderatorCard.view') %></button>
+    <button class="btn clrP clrBr selectBtn js-selectBtn">
+      <span class="showIfView"><%= ob.polyT('moderatorCard.view') %></span>
+      <i class="ion-checkmark showIfSelected clrTEmph1"></i>
+      <i class="ion-close showIfDeselected clrTEmph1"></i>
+    </button>
   </div>
 </div>
 <div class="moderatorCardSeperator clrBr"></div>

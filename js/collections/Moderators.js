@@ -46,6 +46,8 @@ export default class extends Collection {
       if (serverConnection && serverConnection.status !== 'disconnected') {
         this.listenTo(serverConnection.socket, 'message', (event) => {
           const data = JSON.parse(event.data);
+          const profile = data.profile;
+          profile.id = data.peerId;
           if (data.id === this.socketID) this.add([data.profile]);
         });
       } else {

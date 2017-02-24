@@ -19,7 +19,14 @@
       </div>
       <div class="flexHCent gutterH">
         <button class="btn clrP clrBr js-message"><%= ob.polyT('moderatorDetails.messageButton') %></button>
-        <button class="btn clrP clrBr js-follow"><%= ob.polyT('moderatorDetails.followButton') %></button>
+        <%= ob.processingButton({
+        className: `btn clrP clrBr js-follow ${ob.followedByYou ? 'hide' : ''}`,
+        btnText: ob.polyT('moderatorDetails.followButton')
+        }) %>
+        <%= ob.processingButton({
+        className: `btn clrP clrBr js-unFollow ${!ob.followedByYou ? 'hide' : ''}`,
+        btnText: ob.polyT('moderatorDetails.unFollowButton')
+        }) %>
       </div>
     </div>
     <div class="contentBox mDetailBox flexRow flexVCent gutterH padMd clrP clrBr clrSh3">
@@ -32,7 +39,7 @@
       <div class="rowDivV clrBr"></div>
       <div class="flexExpand">
         <div class="flexCol flexCent">
-          <i class="ion-thumbsup">XX</i><% // placeholder for reputation %>
+          👍 XX<% // placeholder for reputation %>
           <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.recommendations') %></div>
         </div>
       </div>
@@ -51,7 +58,7 @@
       <hr class="clrBr">
       <div class="flexColRows flexHCent">
         <div class="rowSm">
-          <button class="btn clrP clrBr"><%= ob.polyT('moderatorDetails.addAsModeratorButton') %></button>
+          <button class="btn clrP clrBr js-addAsModerator"><%= ob.polyT('moderatorDetails.addAsModeratorButton') %></button>
         </div>
         <div>
           <em class="tx6 clrT2"><%= ob.polyT('moderatorDetails.disclaimer') %></em>

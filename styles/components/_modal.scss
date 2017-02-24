@@ -79,7 +79,7 @@
     &.modalNarrow {
       .modalContent {
         width: $modalContentInnerNarrow;
-        margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatClosed})) / 2) + 20px);
+        margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatClosed})) / 2) + 28px);
 
         .chatOpen & {
           margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatOpen})) / 2) + 5px);
