@@ -11,6 +11,7 @@ export default class extends Collection {
     this.type = options.type || 'moderators';
     this.async = options.async || false;
     this.include = options.include || false;
+    this.excludeList = options.excludeList || [];
   }
 
   url() {
@@ -28,12 +29,17 @@ export default class extends Collection {
     if (models) {
       // is models an array or just one model?
       if (_.isArray(models)) {
-        filteredModels = filteredModels.filter(mod => mod.moderator && mod.modInfo);
-      } else if (!filteredModels.get('moderator') || !filteredModels.get('modInfo')) {
+        filteredModels = filteredModels.filter((mod) => {
+          // don't add excluded ids
+          const notExcluded = this.excludeList.indexOf(mod.id) === -1;
+          // don't add if not a mod or the mod data is missing
+          return mod.moderator && mod.modInfo && notExcluded;
+        });
+      } else if (!filteredModels.get('moderator') || !filteredModels.get('modInfo') ||
+          this.excludeList.indexOf(filteredModels.id) === -1) {
         return false;
       }
     }
-
     return super.add(filteredModels, options);
   }
 
@@ -46,9 +52,12 @@ export default class extends Collection {
       if (serverConnection && serverConnection.status !== 'disconnected') {
         this.listenTo(serverConnection.socket, 'message', (event) => {
           const data = JSON.parse(event.data);
-          const profile = data.profile;
-          profile.id = data.peerId;
-          if (data.id === this.socketID) this.add([data.profile]);
+          console.log(data)
+          if (data.id === this.socketID) {
+            const profile = data.profile;
+            profile.id = data.peerId;
+            this.add([data.profile]);
+          }
         });
       } else {
         throw new Error('There is no connection to the server to listen to.');

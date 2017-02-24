@@ -123,20 +123,6 @@
           display: block;
         }
       }
-
-      .moderatorCard {
-
-        .moderatorCardSeperator {
-          display: block;
-        }
-
-        &:last-child {
-
-          .moderatorCardSeperator {
-            display: none;
-          }
-        }
-      }
     }
   }
 }

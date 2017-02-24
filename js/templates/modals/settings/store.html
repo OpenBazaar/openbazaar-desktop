@@ -48,7 +48,7 @@
             <div class="flexColRows gutterV">
               <div>
                 <h5><%= ob.polyT('settings.storeTab.selectedModerators') %></h5>
-                <div class="contentBox modBox clrBr js-modListSelected">
+                <div class="contentBox modBox clrBr <% if (ob.originalMods) print('hasMods ') %>js-modListSelected">
                   <div class="noModsAdded js-noModsAdded">
                     <div class="txCtr">
                       <h5 class="txUnl">

@@ -19,7 +19,6 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
     margin: 0 $padMd;
-    display: none;
   }
 
   .selectBtn {
@@ -28,12 +27,24 @@
       display: none;
     }
 
+    &.view .showIfView {
+      display: inline;
+    }
+
     .showIfSelected {
       display: none;
     }
 
+    &.selected .showIfSelected {
+      display: inline;
+    }
+
     .showIfDeselected {
       display: none;
+    }
+
+    &.deselected .showIfDeselected {
+      display: inline;
     }
   }
 }

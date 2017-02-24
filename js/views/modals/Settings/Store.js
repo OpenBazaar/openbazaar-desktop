@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
@@ -39,6 +40,7 @@ export default class extends baseVw {
     this.modsAvailable = new Moderators(null, {
       async: true,
       include: 'profile',
+      excludeList: this.currentMods,
     });
 
     this.listenTo(this.modsSelected, 'update', () => {
@@ -95,8 +97,7 @@ export default class extends baseVw {
         const newMod = this.createChild(ModCard, {
           model: moderator,
         });
-        this.listenTo(newMod, 'selectModerator', (data) => this.selectMod(data));
-        this.listenTo(newMod, 'deselectModerator', (data) => this.deselectMod(data));
+        this.listenTo(newMod, 'changeModerator', (data) => this.changeMod(data));
         docFrag.append(newMod.render().$el);
       });
       target.append(docFrag);
@@ -147,12 +148,12 @@ export default class extends baseVw {
     openSimpleMessage(title, message);
   }
 
-  selectMod(data) {
-    console.log(data);
-  }
-
-  deselectMod(data) {
-    console.log(data);
+  changeMod(data) {
+    if (data.selected) {
+      this.currentMods = _.union(this.currentMods, [data.guid]);
+    } else {
+      this.currentMods = _.without(this.currentMods, data.guid);
+    }
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
@@ -160,13 +161,16 @@ export default class extends baseVw {
   }
 
   getSettingsData() {
-    console.log('get settings data');
+    return { storeModerators: this.currentMods };
   }
 
   save() {
     // this view saves to two different models
     const profileFormData = this.getProfileFormData();
     const settingsFormData = this.getSettingsData();
+
+    console.log(profileFormData)
+    console.log(settingsFormData)
 
     this.profile.set(profileFormData);
     this.settings.set(settingsFormData);
@@ -208,7 +212,7 @@ export default class extends baseVw {
           openSimpleMessage(app.polyglot.t('settings.storeTab.status.error'), errMsg);
 
           statusMessage.update({
-            msg: app.polyglot.t('settings.storeTab.settings.fail'),
+            msg: app.polyglot.t('settings.storeTab.status.fail'),
             type: 'warning',
           });
         })
@@ -267,6 +271,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
+        originalMods: this.settings.get('storeModerators').length > 0,
         errors: {
           ...(this.profile.validationError || {}),
           ...(this.settings.validationError || {}),
