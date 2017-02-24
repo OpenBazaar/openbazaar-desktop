@@ -36,7 +36,7 @@ export default class extends Collection {
           return mod.moderator && mod.modInfo && notExcluded;
         });
       } else if (!filteredModels.get('moderator') || !filteredModels.get('modInfo') ||
-          this.excludeList.indexOf(filteredModels.id) === -1) {
+          this.excludeList.indexOf(filteredModels.id) !== -1) {
         return false;
       }
     }
@@ -52,10 +52,10 @@ export default class extends Collection {
       if (serverConnection && serverConnection.status !== 'disconnected') {
         this.listenTo(serverConnection.socket, 'message', (event) => {
           const data = JSON.parse(event.data);
-          console.log(data)
           if (data.id === this.socketID) {
             const profile = data.profile;
             profile.id = data.peerId;
+            console.log(profile.id);
             this.add([data.profile]);
           }
         });

@@ -106,8 +106,17 @@ export default class extends baseVw {
 
   clickSubmitModByID() {
     const modID = this.$submitModByIDInput.val();
-    this.$submitModByID.addClass('processing');
-    this.processIDorHandle(modID);
+    const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
+
+    this.$submitModByIDInputError.addClass('hide');
+
+    if (modID) {
+      this.$submitModByID.addClass('processing');
+      this.processIDorHandle(modID);
+    } else {
+      this.$submitModByIDInputError.removeClass('hide');
+      this.$submitModByIDInputErrorText.text(blankError);
+    }
   }
 
   processIDorHandle(modID) {
@@ -128,24 +137,36 @@ export default class extends baseVw {
   }
 
   loadModByID(guid, handle = '') {
-    const mod = new Profile({ id: guid });
-    mod.fetch()
-        .done(() => {
-          this.modsByID.add(mod);
-        })
-        .fail(() => {
-          this.modNotFound(guid, handle);
-        })
-        .always(() => {
-          this.$submitModByID.removeClass('processing');
-        });
+    const addedError = app.polyglot.t('settings.storeTab.errors.modAlreadyAdded');
+    const badModError = app.polyglot.t('settings.storeTab.errors.modNotFound',
+        { guidOrHandle: handle || guid });
+
+    this.$submitModByIDInputError.addClass('hide');
+
+    if (this.currentMods.indexOf(guid) === -1) {
+      const mod = new Profile({ id: guid });
+      mod.fetch()
+          .done(() => {
+            this.modsByID.add(mod);
+            this.currentMods.push(guid);
+            this.$submitModByIDInput.val('');
+          })
+          .fail(() => {
+            this.showModByIDError(badModError);
+          })
+          .always(() => {
+            this.$submitModByID.removeClass('processing');
+          });
+    } else {
+      this.showModByIDError(addedError);
+    }
   }
 
-  modNotFound(guid, handle) {
-    const title = app.polyglot.t('settings.storeTab.errors.modNotFound');
-    const message = app.polyglot.t('settings.storeTab.errors.modNotFoundBody',
-        { guidOrHandle: handle || guid });
-    openSimpleMessage(title, message);
+  showModByIDError(msg) {
+    this.$submitModByIDInputError.removeClass('hide');
+    this.$submitModByIDInputErrorText.text(msg);
+    this.$submitModByIDInput.val('');
+    this.$submitModByID.removeClass('processing');
   }
 
   changeMod(data) {
@@ -168,9 +189,6 @@ export default class extends baseVw {
     // this view saves to two different models
     const profileFormData = this.getProfileFormData();
     const settingsFormData = this.getSettingsData();
-
-    console.log(profileFormData)
-    console.log(settingsFormData)
 
     this.profile.set(profileFormData);
     this.settings.set(settingsFormData);
@@ -268,6 +286,16 @@ export default class extends baseVw {
         (this._$submitModByID = this.$('.js-submitModByID'));
   }
 
+  get $submitModByIDInputError() {
+    return this._$submitModByIDInputError ||
+        (this._$submitModByIDInputError = this.$('.js-submitModByIDInputError'));
+  }
+
+  get $submitModByIDInputErrorText() {
+    return this._$submitModByIDInputErrorText ||
+        (this._$submitModByIDInputErrorText = this.$submitModByIDInputError.find('.js-errorText'));
+  }
+
   render() {
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
@@ -288,6 +316,10 @@ export default class extends baseVw {
       this._$modListByID = null;
       this._$modListAvailable = null;
       this._$browseMods = null;
+      this._$submitModByIDInput = null;
+      this._$submitModByID = null;
+      this._$submitModByIDInputError = null;
+      this._$submitModByIDInputErrorText = null;
     });
 
     return this;

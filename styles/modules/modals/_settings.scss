@@ -115,12 +115,37 @@
         display: none;
       }
 
+      .moderatorCard {
+
+        &:last-child {
+
+          .moderatorCardSeperator {
+            display: none;
+          }
+        }
+
+        &:nth-child(-n+2){
+
+          // always show the first 2
+          .moderatorCardSeperator {
+            display: block;
+          }
+        }
+      }
+
       &.modBoxByID {
         display: none;
         min-height: 0;
 
         &.hasMods {
           display: block;
+        }
+
+        // in the modByID container, always hide the last seperator
+        .moderatorCard:last-child {
+          .moderatorCardSeperator {
+            display: none;
+          }
         }
       }
     }
