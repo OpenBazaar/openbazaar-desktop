@@ -422,7 +422,7 @@ export default class extends baseVw {
         chatHead: this.chatHead && this.chatHead.toJSON() || {},
         profile: this.profile && this.profile.toJSON() || {},
         showLoadMessagesError: this.showLoadMessagesError,
-        typingIndicator: this.getTypingIndicatorContent,
+        typingIndicator: this.getTypingIndicatorContent(),
       }));
 
       this._$subMenu = null;
