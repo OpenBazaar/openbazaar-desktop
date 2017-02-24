@@ -151,7 +151,7 @@ export default class extends baseVw {
 
     if (!this.firstSyncComplete) {
       this.firstSyncComplete = true;
-      this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+      this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
       this.markConvoAsRead();
     }
   }
@@ -174,8 +174,8 @@ export default class extends baseVw {
     // As appropriate, update the scroll position.
     const prevScroll = {};
 
-    prevScroll.height = this.$convoMessagesWrap[0].scrollHeight;
-    prevScroll.top = this.$convoMessagesWrap[0].scrollTop;
+    prevScroll.height = this.$convoMessagesWindow[0].scrollHeight;
+    prevScroll.top = this.$convoMessagesWindow[0].scrollTop;
 
     this.convoMessages.render();
     this.topRenderedMessageMd = this.messages.at(0);
@@ -194,12 +194,12 @@ export default class extends baseVw {
 
         if (newMessage.get('outgoing')) {
           // It's our own message, so we'll auto scroll to the bottom.
-          this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+          this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
         } else if (prevScroll.top >=
-          prevScroll.height - this.$convoMessagesWrap[0].clientHeight - 10) {
+          prevScroll.height - this.$convoMessagesWindow[0].clientHeight - 10) {
           // For an incoming message, if we were scrolled within 10px of the bottom at the
           // time the message came, we'll auto-scroll. Otherwise, we'll leave you where you were.
-          this.setScrollTop(this.$convoMessagesWrap[0].scrollHeight);
+          this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
         }
       }
     } else if (opts.changes.added.length &&
@@ -208,7 +208,7 @@ export default class extends baseVw {
       // New page of messages added up top. We'll adjust the scroll position so there is no
       // jump as they are added in.
       this.setScrollTop(prevScroll.top +
-        (this.$convoMessagesWrap[0].scrollHeight - prevScroll.height - 60));
+        (this.$convoMessagesWindow[0].scrollHeight - prevScroll.height - 60));
 
       // the hardcode 60 is to account for the loading spinner that is going away
     }
@@ -292,11 +292,11 @@ export default class extends baseVw {
       throw new Error('Please provide a value as a number.');
     }
 
-    if (this.$convoMessagesWrap[0].scrollTop === value) return;
+    if (this.$convoMessagesWindow[0].scrollTop === value) return;
 
     if (silent) this.ignoreScroll = true;
 
-    this.$convoMessagesWrap[0].scrollTop = value;
+    this.$convoMessagesWindow[0].scrollTop = value;
   }
 
   markConvoAsRead() {
@@ -361,9 +361,9 @@ export default class extends baseVw {
     return returnVal;
   }
 
-  get $convoMessagesWrap() {
-    return this._$convoMessagesWrap ||
-      (this._$convoMessagesWrap = this.$('.js-convoMessagesWrap'));
+  get $convoMessagesWindow() {
+    return this._$convoMessagesWindow ||
+      (this._$convoMessagesWindow = this.$('.js-convoMessagesWindow'));
   }
 
   render() {
@@ -378,7 +378,7 @@ export default class extends baseVw {
       this._$subMenu = null;
       this._$messagesOverlay = null;
       this._$loadMessagesError = null;
-      this._$convoMessagesWrap = null;
+      this._$convoMessagesWindow = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 
@@ -402,12 +402,12 @@ export default class extends baseVw {
 
       this.convoMessages = new ConvoMessages({
         collection: this.messages,
-        $scrollContainer: this.$convoMessagesWrap,
+        $scrollContainer: this.$convoMessagesWindow,
       });
 
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
 
-      this.$convoMessagesWrap.on('scroll', this.throttledScroll);
+      this.$convoMessagesWindow.on('scroll', this.throttledScroll);
     });
 
     return this;

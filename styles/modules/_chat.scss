@@ -110,6 +110,7 @@
   .convoHeader {
     border-bottom-style: solid;
     border-bottom-width: 1px;
+    z-index: 2;
 
     .btn {
       border-width: 0;
@@ -129,7 +130,7 @@
     }
   }
 
-  .convoMessagesWrap {
+  .convoMessagesWindow {
     position: absolute;
     top: 0;
     left: 0;
@@ -146,6 +147,25 @@
       padding: $pad;
     }
 
+    .typingIndicator {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, -103%);
+      border-style: solid;
+      border-width: 1px;
+      border-top-width: 0;
+      max-width: 190px;
+      z-index: 1;
+      padding: $padSm $pad;
+      transition: transform 0.25s ease;
+
+      .typingUsername {
+        max-width: 121px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
     .messagesFetchError {
       margin-top: 10px;
       margin-bottom: 5px;
@@ -153,19 +173,19 @@
 
     .chatConvoMessages {
       padding: 10px 0;
-    }
 
-    .convoMessage {
-      .msgContentBox {
-        padding: $padSm;
-        margin-top: 3px;
-        display: inline-block;
-      }
+      .convoMessage {
+        .msgContentBox {
+          padding: $padSm;
+          margin-top: 3px;
+          display: inline-block;
+        }
 
-      .timestampLine {
-        position: absolute;
-        margin-top: 3px;
-      }
+        .timestampLine {
+          position: absolute;
+          margin-top: 3px;
+        }
+      }      
     }
   }
 
@@ -192,6 +212,12 @@
       @include center();
       margin: 0;
     }
+  }
+
+  &.isTyping {
+    .typingIndicator {
+      transform: translate(-50%, 0);
+    }    
   }
 
   .subMenu {

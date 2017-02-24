@@ -192,7 +192,6 @@ export default class extends baseVw {
   }
 
   onConvoMarkedAsRead(guid) {
-    console.log('on that mark that read yo what what');
     if (!guid) {
       throw new Error('Please provide a guid.');
     }

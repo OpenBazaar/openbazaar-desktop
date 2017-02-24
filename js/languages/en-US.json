@@ -62,7 +62,8 @@
         "viewPage": "View page",
         "blockUser": "Block user",
         "deleteConvo": "Delete conversation"
-      }
+      },
+      "typingIndicator": "%{user} is typing..."
     }
   },
   "userPage": {

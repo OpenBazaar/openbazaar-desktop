@@ -12,7 +12,9 @@
     <a class="clrT js-blockUser"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
     <a class="clrT"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
   </div>
-  <div class="convoMessagesWrap tx6 js-convoMessagesWrap">
+  <div class="convoMessagesWindow tx6 js-convoMessagesWindow">
+    <% const username = `<span class="typingUsername noOverflow">${ob.profile.handle || ob.guid}</span>`; %>
+    <div class="typingIndicator noOverflow clrBr clrP clrT2 clrSh1"><%= ob.polyT('chat.conversation.typingIndicator', { user: username }) %></div>
     <%= ob.spinner() %>
     <%
       const retryLink = `<a class="js-retryLoadMessage">${ob.polyT('chat.conversation.retryLink')}</a>`;
