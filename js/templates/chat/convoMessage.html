@@ -7,7 +7,6 @@
     </div>
     <% if (ob.showTimestampLine) { %>
     <div class="timestampLine posA">
-      <span class="clrTEm ion-checkmark <% if (!ob.read) print('hide') %>"></span>
       <span class="clrT2"><%= ob.moment(ob.timestamp).fromNow() %></span>
     </div>
     <% } %>      

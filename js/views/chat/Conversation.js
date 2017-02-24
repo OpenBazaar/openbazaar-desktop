@@ -38,7 +38,6 @@ export default class extends baseVw {
     this.fetching = false;
     this.fetchedAllMessages = false;
     this.ignoreScroll = false;
-    this.throttledScroll = _.throttle(this.onScroll, 100).bind(this);
 
     if (this.options.chatHead) {
       this.chatHead = this.options.chatHead;
@@ -241,10 +240,9 @@ export default class extends baseVw {
 
     // Send actual chat message if the Enter key was pressed
     if (e.which !== 13) return;
-
     const message = e.target.value.trim();
-
     if (!message) return;
+    this.lastTypingSentAt = null;
 
     const chatMessage = new ChatMessage({
       peerId: this.guid,
@@ -271,14 +269,17 @@ export default class extends baseVw {
   onScroll(e) {
     if (this.ignoreScroll) {
       this.ignoreScroll = false;
+      this.throttleScrollHandler();
       return;
     }
 
     if (this.fetching || this.fetchedAllMessages
-      || this.showLoadMessagesError) return;
+      || this.showLoadMessagesError) {
+      return;
+    }
 
     // If we come close enough to the top, let's fetch a new page.
-    if (e.target.scrollTop <= 50) {
+    if (e.target.scrollTop <= 100) {
       this.fetchMessages(this.messages.at(0).id);
     }
   }
@@ -294,6 +295,10 @@ export default class extends baseVw {
 
       this.messages.push(message);
       this.markConvoAsRead();
+
+      // We'll consider them to be done typing if an acutal message came
+      // in. If they re-start typing, we'll get another socket messsage.
+      this.hideTypingIndicator();
     } else if (e.jsonData.messageTyping &&
       e.jsonData.messageTyping.subject === this.subject &&
       e.jsonData.messageTyping.peerId === this.guid) {
@@ -305,8 +310,13 @@ export default class extends baseVw {
     clearTimeout(this.typingTimeout);
     this.$el.addClass('isTyping');
     this.typingTimeout = setTimeout(
-      () => (this.$el.removeClass('isTyping')),
+      () => (this.hideTypingIndicator()),
       3000);
+  }
+
+  hideTypingIndicator() {
+    clearTimeout(this.typingTimeout);
+    this.$el.removeClass('isTyping');
   }
 
   fetchMessages(offsetId, limit = this.messagesPerPage) {
@@ -328,9 +338,27 @@ export default class extends baseVw {
 
     if (this.$convoMessagesWindow[0].scrollTop === value) return;
 
-    if (silent) this.ignoreScroll = true;
+    if (silent) {
+      // Unthrottling the scroll handler so that our ignoreScoll flag won't
+      // be lumped in with a user triggered scroll. The scroll handler will
+      // reset the flag and re-throttle the handler.
+      this.unthrottleScrollHandler();
+      this.ignoreScroll = true;
+    }
 
     this.$convoMessagesWindow[0].scrollTop = value;
+  }
+
+  unthrottleScrollHandler() {
+    this.$convoMessagesWindow.off('scroll', this.boundScrollHandler);
+    this.boundScrollHandler = this.onScroll.bind(this);
+    this.$convoMessagesWindow.on('scroll', this.boundScrollHandler);
+  }
+
+  throttleScrollHandler() {
+    this.$convoMessagesWindow.off('scroll', this.boundScrollHandler);
+    this.boundScrollHandler = _.throttle(this.onScroll, 100).bind(this);
+    this.$convoMessagesWindow.on('scroll', this.boundScrollHandler);
   }
 
   markConvoAsRead() {
@@ -458,7 +486,8 @@ export default class extends baseVw {
 
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
 
-      this.$convoMessagesWindow.on('scroll', this.throttledScroll);
+      // this.$convoMessagesWindow.on('scroll', this.throttledScroll);
+      this.throttleScrollHandler();
     });
 
     return this;

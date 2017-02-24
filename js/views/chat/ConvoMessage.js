@@ -14,6 +14,7 @@ export default class extends baseVw {
     this._state = {
       showAvatar: true,
       showTimestampLine: true,
+      showAsRead: false,
       ...options.initialState || {},
     };
 
