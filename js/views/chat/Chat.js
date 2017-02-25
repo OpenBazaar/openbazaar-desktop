@@ -79,6 +79,7 @@ export default class extends baseVw {
 
       // todo: after chat head logic, update below line.
       if (this.collection.get(guid).get('unread') && this.conversation.messages.length) {
+        console.log('check it');
         this.conversation.markConvoAsRead();
       }
 

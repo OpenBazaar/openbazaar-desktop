@@ -151,7 +151,10 @@ export default class extends baseVw {
     if (!this.firstSyncComplete) {
       this.firstSyncComplete = true;
       this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
-      if (this.isOpen) this.markConvoAsRead();
+      if (this.isOpen) {
+        console.log('howdy yo');
+        this.markConvoAsRead();
+      }
     }
   }
 
@@ -295,7 +298,10 @@ export default class extends baseVw {
       });
 
       this.messages.push(message);
-      if (this.isOpen) this.markConvoAsRead();
+      if (this.isOpen) {
+        console.log('hello');
+        this.markConvoAsRead();
+      }
 
       // We'll consider them to be done typing if an acutal message came
       // in. If they re-start typing, we'll get another socket messsage.
