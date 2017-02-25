@@ -152,7 +152,6 @@ export default class extends baseVw {
       this.firstSyncComplete = true;
       this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
       if (this.isOpen) {
-        console.log('howdy yo');
         this.markConvoAsRead();
       }
     }
@@ -299,7 +298,6 @@ export default class extends baseVw {
 
       this.messages.push(message);
       if (this.isOpen) {
-        console.log('hello');
         this.markConvoAsRead();
       }
 
@@ -314,10 +312,14 @@ export default class extends baseVw {
     } else if (e.jsonData.messageRead &&
       e.jsonData.messageRead.subject === this.subject &&
       e.jsonData.messageRead.peerId === this.guid) {
-      console.log('i be happity hippity');
       // Conversant read your message
       if (this.convoMessages) {
-        console.log('i am iron man');
+        const model = this.messages.get(e.jsonData.messageRead.messageId);
+
+        if (model) {
+          model.set('read', true);
+        }
+
         this.convoMessages.markMessageAsRead(e.jsonData.messageRead.messageId);
       }
     }
