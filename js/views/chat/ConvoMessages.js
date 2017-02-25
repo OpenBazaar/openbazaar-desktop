@@ -20,9 +20,6 @@ export default class extends baseVw {
     this.convoMessages = [];
 
     this.listenTo(app.profile.get('avatarHashes'), 'change', this.render);
-
-    console.log('moonie');
-    window.moonie = this;
   }
 
   className() {
@@ -55,8 +52,6 @@ export default class extends baseVw {
   }
 
   markMessageAsRead(id) {
-    console.log(`called with id: ${id}`);
-
     if (!id) {
       throw new Error('Please provide an id.');
     }
@@ -64,7 +59,10 @@ export default class extends baseVw {
     const message = this.collection.get(id);
 
     if (message) {
-      message.setState({ showAsRead: true });
+      const messageIndex = this.collection.indexOf(message);
+
+      this.convoMessages[messageIndex]
+        .setState({ showAsRead: true });
 
       // Only one message should be marked as read, so if there already was one,
       // we'll unmark it.

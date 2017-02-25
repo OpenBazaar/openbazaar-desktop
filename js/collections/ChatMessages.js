@@ -16,6 +16,10 @@ export default class extends Collection {
     return new ChatMessage(attrs, options);
   }
 
+  modelId(attrs) {
+    return attrs.messageId;
+  }
+
   comparator(message) {
     return message.get('timestamp');
   }
