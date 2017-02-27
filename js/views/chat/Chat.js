@@ -9,7 +9,6 @@ import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ChatHeads from './ChatHeads';
 import Conversation from './Conversation';
-import moment from 'moment';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -118,6 +117,17 @@ export default class extends baseVw {
 
     this.listenTo(this.conversation, 'convoMarkedAsRead',
       () => this.onConvoMarkedAsRead(guid));
+
+    this.listenTo(this.conversation, 'deleting',
+      (e) => {
+        e.request.done(() => {
+          this.collection.remove(e.guid);
+
+          if (this.conversation && this.conversation.guid === e.guid) {
+            this.conversation.close();
+          }
+        });
+      });
 
     this.$chatConvoContainer
       .append(this.conversation.render().el);
@@ -328,6 +338,7 @@ export default class extends baseVw {
 
       this.listenTo(this.chatHeads, 'chatHeadClick', this.onChatHeadClick);
       this.listenTo(this.chatHeads, 'rendered', this.onChatHeadsRendered);
+      this.listenTo(this.chatHeads, 'click')
 
       // It is important that both of the following occur before the chatHeads
       // view is rendered:

@@ -3,6 +3,7 @@ import _ from 'underscore';
 import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
@@ -76,8 +77,7 @@ export default class extends baseVw {
   }
 
   get messagesPerPage() {
-    // TODO: set to 25 or so after dev complete!!!
-    return 5;
+    return 25;
   }
 
   className() {
@@ -92,6 +92,7 @@ export default class extends baseVw {
       'click .js-blockUser': 'onClickBlockUser',
       'click .js-subMenu a': 'onClickSubMenuLink',
       'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
+      'click .js-deleteConversation': 'onClickDeleteConvo',
       'keyup .js-inputMessage': 'onKeyUpMessageInput',
     };
   }
@@ -323,6 +324,26 @@ export default class extends baseVw {
         this.convoMessages.markMessageAsRead(e.jsonData.messageRead.messageId);
       }
     }
+  }
+
+  onClickDeleteConvo() {
+    this.$el.addClass('isDeleting');
+
+    const request = $.ajax({
+      url: app.getServerUrl(`ob/chatconversation/${this.guid}`),
+      type: 'DELETE',
+    }).fail((xhr) => {
+      const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+      openSimpleMessage(
+        app.polyglot.t('chat.conversation.deleteConvoErrorTitle'),
+        failReason
+      );
+    }).always(() => this.$el.removeClass('isDeleting'));
+
+    this.trigger('deleting', {
+      request,
+      guid: this.guid,
+    });
   }
 
   showTypingIndicator() {

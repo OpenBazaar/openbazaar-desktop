@@ -220,6 +220,27 @@
     }    
   }
 
+  .deletingOverlay {
+    display: none;
+    font-size: $tx4;
+
+    & > div {
+      @include center();
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  &.isDeleting {
+    .deletingOverlay {
+      display: block;
+    }
+
+    .deleteConvoMenuItem {
+      @include disabled;
+    }
+  }
+
   .subMenu {
     padding: $pad;
     width: 130px;
