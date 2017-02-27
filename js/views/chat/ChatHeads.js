@@ -16,8 +16,8 @@ export default class extends baseVw {
     super(options);
     this._chatHeadViews = [];
     this.$scrollContainer = options.$scrollContainer;
+
     this.listenTo(this.collection, 'update', this.onCollectionUpdate);
-    // this.listenTo(this.collection, 'sort', this.render);
   }
 
   className() {
@@ -34,8 +34,6 @@ export default class extends baseVw {
       prevScroll.height = this.$scrollContainer[0].scrollHeight;
       prevScroll.top = this.$scrollContainer[0].scrollTop;
 
-      // const view = this.createChatHead(options.changes.added[0]);
-      // this.$el.prepend(view.render().el);
       this.render();
 
       this.$scrollContainer[0].scrollTop = prevScroll.top +

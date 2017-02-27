@@ -9,6 +9,7 @@ import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ChatHeads from './ChatHeads';
 import Conversation from './Conversation';
+import moment from 'moment';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -184,6 +185,7 @@ export default class extends baseVw {
       const chatHeadData = {
         peerId: msg.peerId,
         lastMessage: msg.message,
+        timestamp: msg.timestamp,
         outgoing: false,
         unread: 1,
       };
@@ -196,10 +198,13 @@ export default class extends baseVw {
           chatHeadData.unread = chatHead.get('unread') + 1;
         }
 
-        chatHead.set(chatHeadData);
-      } else {
-        this.collection.add(chatHeadData, { at: 0 });
+        this.collection.remove(chatHead);
       }
+
+      this.collection.add(chatHeadData, {
+        at: 0,
+        merge: true,
+      });
     }
   }
 
