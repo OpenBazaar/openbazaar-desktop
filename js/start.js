@@ -421,6 +421,7 @@ function start() {
 
         app.chat = new Chat({
           collection: chatConvos,
+          $scrollContainer: getChatContainer(),
         });
 
         chatConvos.fetch();

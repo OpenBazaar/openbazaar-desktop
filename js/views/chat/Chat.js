@@ -16,9 +16,15 @@ export default class extends baseVw {
       throw new Error('Please provide a chat heads collection.');
     }
 
+    if (!options.$scrollContainer) {
+      throw new Error('Please provide a jQuery object containing the scrollable element ' +
+        'this view is in.');
+    }
+
     super(options);
 
     this._isOpen = false;
+    this.$scrollContainer = options.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
     // TODO: handle fetch error.
@@ -52,6 +58,12 @@ export default class extends baseVw {
       const profilePromise = $.Deferred().promise();
 
       this.openConversation(e.view.model.id, profilePromise, e.view.model);
+    }
+  }
+
+  onChatHeadsRendered() {
+    if (this.chatHeads.views.length) {
+      this.handleUnreadBadge();
     }
   }
 
@@ -245,7 +257,7 @@ export default class extends baseVw {
 
   /**
    * Adds css classes to our scroll element indicating whether the unread messages
-   * badges needs to be shown.
+   * badges (top and / or bottom) need to be shown.
    */
   handleUnreadBadge() {
     if (!this.chatHeads) return;
@@ -306,16 +318,24 @@ export default class extends baseVw {
       if (this.chatHeads) this.chatHeads.remove();
       this.chatHeads = this.createChild(ChatHeads, {
         collection: this.collection,
+        $scrollContainer: this.$scrollContainer,
       });
 
       this.listenTo(this.chatHeads, 'chatHeadClick', this.onChatHeadClick);
+      this.listenTo(this.chatHeads, 'rendered', this.onChatHeadsRendered);
 
+      // It is important that both of the following occur before the chatHeads
+      // view is rendered:
+      // - the 'rendered' event is bound
+      // - the chatHeads view's el is added to the DOM
+      //
+      // This is important because handleUnreadBadge() needs the chatHead elements
+      // to be visible in the DOM for it to work properly.
+      this.listenTo(this.chatHeads, 'rendered', this.onChatHeadsRendered);
       this.$('.js-chatHeadsContainer')
-        .html(this.chatHeads.render().el);
+        .html(this.chatHeads.el);
+      this.chatHeads.render();
 
-      // todo: pass in scroll container as a view option
-      this.$scrollContainer = $('#chatContainer');
-      this.handleUnreadBadge();
       this.$scrollContainer.off('scroll', this.throttledOnScroll)
         .on('scroll', this.throttledOnScroll);
     });

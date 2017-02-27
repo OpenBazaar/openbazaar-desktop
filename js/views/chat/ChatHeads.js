@@ -1,6 +1,4 @@
-// import $ from 'jquery';
-// import _ from 'underscore';
-// import loadTemplate from '../../utils/loadTemplate';
+import $ from 'jquery';
 import baseVw from '../baseVw';
 import ChatHead from './ChatHead';
 
@@ -10,54 +8,82 @@ export default class extends baseVw {
       throw new Error('Please provide a chat conversations collection.');
     }
 
+    if (!options.$scrollContainer) {
+      throw new Error('Please provide a jQuery object containing the scrollable element ' +
+        'this view is in.');
+    }
+
     super(options);
-
     this._chatHeadViews = [];
-
-    // this._state = {
-    //   status: 'not-connected',
-    //   ...options.initialState || {},
-    // };
+    this.$scrollContainer = options.$scrollContainer;
+    this.listenTo(this.collection, 'update', this.onCollectionUpdate);
+    // this.listenTo(this.collection, 'sort', this.render);
   }
 
   className() {
     return 'chatHeads flexColRows gutterVSm';
   }
 
-  events() {
-    return {
-      // 'click .js-btnConnect': 'onConnectClick',
-    };
-  }
+  onCollectionUpdate(cl, options) {
+    // If a single model is added to the top of the list, we'll add it to the
+    // UI and adjust the scroll position for the list doesn't jump.
+    if (options.changes.added.length === 1 &&
+      this.collection.indexOf(options.changes.added[0]) === 0) {
+      const prevScroll = {};
 
-  // remove() {
-  //   super.remove();
-  // }
+      prevScroll.height = this.$scrollContainer[0].scrollHeight;
+      prevScroll.top = this.$scrollContainer[0].scrollTop;
+
+      // const view = this.createChatHead(options.changes.added[0]);
+      // this.$el.prepend(view.render().el);
+      this.render();
+
+      this.$scrollContainer[0].scrollTop = prevScroll.top +
+        (this.$scrollContainer[0].scrollHeight - prevScroll.height);
+    } else {
+      this.render();
+    }
+  }
 
   get views() {
     return this._chatHeadViews;
   }
 
-  render() {
-    // loadTemplate('chat/chatHeads.html', (t) => {
-    //   this.$el.html(t({
-    //     chatHeads: this.collection.toJSON(),
-    //     ...this.model.toJSON(),
-    //     ...this._state,
-    //   }));
+  createChatHead(model, options = {}) {
+    if (!model) {
+      throw new Error('Please provide a model.');
+    }
 
-    //   this._$deleteConfirm = null;
-    // });
+    const chatHead = this.createChild(ChatHead, {
+      ...options,
+      model,
+    });
 
+    this._chatHeadViews.push(chatHead);
+    this.listenTo(chatHead, 'click', (...args) => this.trigger('chatHeadClick', ...args));
+
+    return chatHead;
+  }
+
+  clearChatHeadViews() {
     this._chatHeadViews.forEach(vw => vw.remove());
     this._chatHeadViews = [];
+  }
+
+  render() {
+    this.clearChatHeadViews();
+
+    const headsContainer = document.createDocumentFragment();
 
     this.collection.forEach(chatHead => {
-      const view = this.createChild(ChatHead, { model: chatHead });
-      this.listenTo(view, 'click', (...args) => this.trigger('chatHeadClick', ...args));
-      this._chatHeadViews.push(view);
-      this.$el.append(view.render().el);
+      const view = this.createChatHead(chatHead);
+      $(headsContainer).append(view.render().el);
     });
+
+    this.$el.empty()
+      .append(headsContainer);
+
+    this.trigger('rendered');
 
     return this;
   }
