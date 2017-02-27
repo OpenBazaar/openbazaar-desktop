@@ -338,7 +338,6 @@ export default class extends baseVw {
 
       this.listenTo(this.chatHeads, 'chatHeadClick', this.onChatHeadClick);
       this.listenTo(this.chatHeads, 'rendered', this.onChatHeadsRendered);
-      this.listenTo(this.chatHeads, 'click')
 
       // It is important that both of the following occur before the chatHeads
       // view is rendered:
