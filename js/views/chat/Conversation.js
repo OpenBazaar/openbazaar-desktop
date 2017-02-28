@@ -58,7 +58,7 @@ export default class extends baseVw {
         }
 
         if (this.convoMessages) {
-          this.convoMessages.setOtherProfile(model);
+          this.convoMessages.setProfile(model);
         }
       });
     }
@@ -511,7 +511,7 @@ export default class extends baseVw {
 
       if (this.profile) {
         convoProfileHeaderInitialState.handle = this.profile.get('handle');
-        convoProfileHeaderInitialState.avatarHashes = this.profile.get('avatarHashes');
+        convoProfileHeaderInitialState.avatarHashes = this.profile.get('avatarHashes').toJSON();
       }
 
       this.convoProfileHeader = this.createChild(ConvoProfileHeader, {
@@ -526,6 +526,7 @@ export default class extends baseVw {
       this.convoMessages = new ConvoMessages({
         collection: this.messages,
         $scrollContainer: this.$convoMessagesWindow,
+        profile: this.profile,
       });
 
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);

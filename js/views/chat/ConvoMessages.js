@@ -17,7 +17,7 @@ export default class extends baseVw {
     super(options);
     this.options = options;
     // Profile of person you are conversing with
-    this.otherProfile = options.otherProfile;
+    this.profile = options.profile;
     this.$scrollContainer = options.$scrollContainer;
     this.convoMessages = [];
 
@@ -31,40 +31,13 @@ export default class extends baseVw {
   /**
    * Set the profile of the person you are conversing with.
    */
-  setOtherProfile(profile) {
+  setProfile(profile) {
     if (!profile) {
       throw new Error('Please provide a Profile model of the person you are conversing with.');
     }
 
-    this.otherProfile = profile;
+    this.profile = profile;
     this.render();
-  }
-
-  createMessage(model, options = {}) {
-    if (!model) {
-      throw new Error('Please provide a model.');
-    }
-
-    const initialState = {};
-
-    if (model.get('outgoing')) {
-      initialState.avatarHashes = app.profile.get('avatarHashes').toJSON();
-    } else if (this.otherProfile) {
-      initialState.avatarHashes = this.otherProfile.get('avatarHashes').toJSON();
-    }
-
-    const convoMessage = this.createChild(ConvoMessage, {
-      ...options,
-      model,
-      initialState: {
-        ...options.initialState,
-        ...initialState,
-      },
-    });
-
-    this.convoMessages.push(convoMessage);
-
-    return convoMessage;
   }
 
   markMessageAsRead(id) {
@@ -90,6 +63,33 @@ export default class extends baseVw {
         }
       }
     }
+  }
+
+  createMessage(model, options = {}) {
+    if (!model) {
+      throw new Error('Please provide a model.');
+    }
+
+    const initialState = {};
+
+    if (model.get('outgoing')) {
+      initialState.avatarHashes = app.profile.get('avatarHashes').toJSON();
+    } else if (this.profile) {
+      initialState.avatarHashes = this.profile.get('avatarHashes').toJSON();
+    }
+
+    const convoMessage = this.createChild(ConvoMessage, {
+      ...options,
+      model,
+      initialState: {
+        ...options.initialState,
+        ...initialState,
+      },
+    });
+
+    this.convoMessages.push(convoMessage);
+
+    return convoMessage;
   }
 
   render() {
