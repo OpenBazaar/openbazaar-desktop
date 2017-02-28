@@ -16,6 +16,8 @@ export default class extends baseVw {
 
     super(options);
     this.options = options;
+    // Profile of person you are conversing with
+    this.otherProfile = options.otherProfile;
     this.$scrollContainer = options.$scrollContainer;
     this.convoMessages = [];
 
@@ -24,6 +26,18 @@ export default class extends baseVw {
 
   className() {
     return 'chatConvoMessages';
+  }
+
+  /**
+   * Set the profile of the person you are conversing with.
+   */
+  setOtherProfile(profile) {
+    if (!profile) {
+      throw new Error('Please provide a Profile model of the person you are conversing with.');
+    }
+
+    this.otherProfile = profile;
+    this.render();
   }
 
   createMessage(model, options = {}) {
@@ -35,6 +49,8 @@ export default class extends baseVw {
 
     if (model.get('outgoing')) {
       initialState.avatarHashes = app.profile.get('avatarHashes').toJSON();
+    } else if (this.otherProfile) {
+      initialState.avatarHashes = this.otherProfile.get('avatarHashes').toJSON();
     }
 
     const convoMessage = this.createChild(ConvoMessage, {

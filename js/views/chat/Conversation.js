@@ -53,8 +53,12 @@ export default class extends baseVw {
         if (this.convoProfileHeader) {
           this.convoProfileHeader.setState({
             handle: model.get('handle'),
-            avatarHashes: model.get('avatarHashes'),
+            avatarHashes: model.get('avatarHashes').toJSON(),
           });
+        }
+
+        if (this.convoMessages) {
+          this.convoMessages.setOtherProfile(model);
         }
       });
     }
@@ -525,8 +529,6 @@ export default class extends baseVw {
       });
 
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
-
-      // this.$convoMessagesWindow.on('scroll', this.throttledScroll);
       this.throttleScrollHandler();
     });
 

@@ -18,4 +18,18 @@ export default class extends Collection {
   comparator(message) {
     return (new Date(message.get('timestamp')).getTime()) * -1;
   }
+
+  // parse(response) {
+  //   const moo = [{ ...response[0] }];
+
+  //   for (let i = 0; i < 100; i++) {
+  //     moo.push({
+  //       ...response[0],
+  //       peerId: String(i),
+  //       lastMessage: `${i}: ${response[0].lastMessage}`,
+  //     });
+  //   }
+
+  //   return moo;
+  // }
 }

@@ -16,12 +16,6 @@ export default class extends baseVw {
     return 'flexVCent gutterH convoProfileHeader';
   }
 
-  events() {
-    return {
-      // 'click .js-closeConvo': 'onClickCloseConvo',
-    };
-  }
-
   getState() {
     return this._state;
   }
@@ -46,17 +40,11 @@ export default class extends baseVw {
     return this;
   }
 
-  // remove() {
-  //   super.remove();
-  // }
-
   render() {
     loadTemplate('chat/convoProfileHeader.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));
-
-      // this._$deleteConfirm = null;
     });
 
     return this;

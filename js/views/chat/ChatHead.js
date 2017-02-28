@@ -8,6 +8,7 @@ export default class extends baseVw {
     }
 
     super(options);
+    this.profile = options.profile;
 
     this.listenTo(this.model, 'change', this.render);
   }
@@ -27,10 +28,19 @@ export default class extends baseVw {
   }
 
   render() {
+    let templateData = {
+      ...this.model.toJSON(),
+    };
+
+    if (this.profile) {
+      templateData = {
+        ...templateData,
+        ...this.profile.toJSON(),
+      };
+    }
+
     loadTemplate('chat/chatHead.html', (t) => {
-      this.$el.html(t({
-        ...this.model.toJSON(),
-      }));
+      this.$el.html(t(templateData));
     });
 
     return this;

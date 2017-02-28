@@ -16,6 +16,9 @@ export default class extends baseVw {
     super(options);
     this._chatHeadViews = [];
     this.$scrollContainer = options.$scrollContainer;
+    // If providing profiles, the expectation is that they will be an object
+    // with the guid as the key and a Profile model instance as the value.
+    this.profiles = options.profiles || {};
 
     this.listenTo(this.collection, 'update', this.onCollectionUpdate);
   }
@@ -47,15 +50,39 @@ export default class extends baseVw {
     return this._chatHeadViews;
   }
 
+  setProfile(guid, profile) {
+    // Todo: when the profile is updated on the server to include the GUID, the signature
+    // of this function can be simplified.
+
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    if (!profile) {
+      throw new Error('Please provide a Profile model.');
+    }
+
+    this.profiles[guid] = profile;
+    this.render();
+  }
+
   createChatHead(model, options = {}) {
     if (!model) {
       throw new Error('Please provide a model.');
     }
 
-    const chatHead = this.createChild(ChatHead, {
+    const viewData = {
       ...options,
       model,
-    });
+    };
+
+    const profile = this.profiles[model.get('peerId')];
+
+    if (profile) {
+      viewData.profile = profile;
+    }
+
+    const chatHead = this.createChild(ChatHead, viewData);
 
     this._chatHeadViews.push(chatHead);
     this.listenTo(chatHead, 'click', (...args) => this.trigger('chatHeadClick', ...args));

@@ -1,9 +1,10 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import '../../utils/velocity';
+import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
@@ -26,17 +27,17 @@ export default class extends baseVw {
     this._isOpen = false;
     this.$scrollContainer = options.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
+    this.debouncedOnProfileFetchScroll = _.debounce(this.onProfileFetchScroll, 200).bind(this);
+    this.profileDeferreds = {};
+    this.lastProfileFetchedIndex = -1;
 
     // TODO: handle fetch error.
     this.listenTo(this.collection, 'sync', () => this.render());
 
-    const serverConnection = getCurrentConnection();
+    this.socket = getSocket();
 
-    if (serverConnection && serverConnection.status !== 'disconnected') {
-      this.listenTo(serverConnection.socket, 'message', this.onSocketMessage);
-    } else {
-      // There's no connection to the server. The connection modal will appear and
-      // a subsequent reconnect will re-start the app.
+    if (this.socket) {
+      this.listenTo(this.socket, 'message', this.onSocketMessage);
     }
   }
 
@@ -55,8 +56,7 @@ export default class extends baseVw {
     if (!this.isOpen) {
       this.open();
     } else {
-      const profilePromise = $.Deferred().promise();
-
+      const profilePromise = this.fetchProfile(e.view.model.id);
       this.openConversation(e.view.model.id, profilePromise, e.view.model);
     }
   }
@@ -143,6 +143,10 @@ export default class extends baseVw {
 
   onScroll() {
     this.handleUnreadBadge();
+  }
+
+  onProfileFetchScroll() {
+    this.fetchProfileOfVisibleChatHeads();
   }
 
   onClickTopUnreadBanner() {
@@ -247,8 +251,10 @@ export default class extends baseVw {
     return this._isOpen;
   }
 
-  // This chat view, in some cases, needs to know when it becomes visible,
-  // so please show it via this method.
+  /**
+   * This chat view, may need to know when it becomes visible,
+   * so please show it via this method.
+   */
   show() {
     this.$el.removeClass('hide');
     return this;
@@ -259,8 +265,10 @@ export default class extends baseVw {
     return this;
   }
 
-  // This chat view, in some cases, needs to know when it is attached to the dom,
-  // so please use this method to do so.
+  /**
+   * This chat view mey need to know when it is attached to the dom,
+   * so please use this method to do so.
+   */
   attach(container) {
     if (!container || !(container instanceof $ && container[0] instanceof HTMLElement)) {
       throw new Error('Please provide a container as a jQuery object or DOM element.');
@@ -315,6 +323,83 @@ export default class extends baseVw {
     }
   }
 
+  /**
+   * Will return a promise that resolves to a Profile. If we have already
+   * fetched or are in the promise of fetching a Profile, then the
+   * existing promise will be returned.
+   */
+  fetchProfile(guid) {
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    const profileDeferred = this.profileDeferreds[guid];
+    let returnVal = profileDeferred;
+
+    if (!profileDeferred) {
+      this.fetchProfiles([guid]);
+      returnVal = this.profileDeferreds[guid];
+    }
+
+    return returnVal.promise();
+  }
+
+  /**
+   * Will asynchronously (profiles returned via sockets) fetch the provided
+   * list of profiles and update the this.profileDeferreds. Will not refetch
+   * profiles that have already been fetched or are in the process of being
+   * fetched.
+   */
+  fetchProfiles(profiles) {
+    if (!_.isArray(profiles)) {
+      throw new Error('Please provide a list of profiles.');
+    }
+
+    const profilesToFetch = [];
+
+    if (profiles.length) {
+      profiles.forEach(profileId => {
+        if (!this.profileDeferreds[profileId]) {
+          const deferred = $.Deferred();
+          this.profileDeferreds[profileId] = deferred;
+          profilesToFetch.push(profileId);
+        }
+      });
+
+      $.post({
+        url: app.getServerUrl('ob/fetchprofiles?async=true'),
+        data: JSON.stringify(profilesToFetch),
+        dataType: 'json',
+        contentType: 'application/json',
+      }).done((data) => {
+        if (this.socket) {
+          this.listenTo(this.socket, 'message', (e) => {
+            if (e.jsonData.id === data.id) {
+              const profile = new Profile(e.jsonData.profile);
+              this.profileDeferreds[e.jsonData.peerId].resolve(profile);
+
+              if (this.chatHeads) {
+                this.chatHeads.setProfile(e.jsonData.peerId, profile);
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  fetchProfileOfVisibleChatHeads() {
+    if (!this.chatHeads || !this.chatHeads.views.length) return;
+
+    // Find which heads are in the viewport and filter out any that have already
+    // had or are having their profiles fetched.
+    const profilesToFetch = this.chatHeads.views.filter(chatHead => (
+      !this.profileDeferreds[chatHead.model.get('peerId')] && isScrolledIntoView(chatHead.el)
+    )).map(chatHead => (chatHead.model.get('peerId')));
+
+    this.fetchProfiles(profilesToFetch);
+  }
+
   get $chatConvoContainer() {
     return this._$chatConvoContainer ||
       (this._$chatConvoContainer = $('#chatConvoContainer'));
@@ -322,13 +407,7 @@ export default class extends baseVw {
 
   render() {
     loadTemplate('chat/chat.html', (t) => {
-      this.$el.html(t({
-        // chatHeads: this.collection.toJSON(),
-        // ...this.model.toJSON(),
-        // ...this._state,
-      }));
-
-      // this._$deleteConfirm = null;
+      this.$el.html(t());
 
       if (this.chatHeads) this.chatHeads.remove();
       this.chatHeads = this.createChild(ChatHeads, {
@@ -353,6 +432,11 @@ export default class extends baseVw {
 
       this.$scrollContainer.off('scroll', this.throttledOnScroll)
         .on('scroll', this.throttledOnScroll);
+
+      this.$scrollContainer.off('scroll', this.debouncedOnProfileFetchScroll)
+        .on('scroll', this.debouncedOnProfileFetchScroll);
+
+      this.fetchProfileOfVisibleChatHeads();
     });
 
     return this;
