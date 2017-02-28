@@ -40,10 +40,6 @@ export default class extends baseVw {
     this.fetchedAllMessages = false;
     this.ignoreScroll = false;
 
-    if (this.options.chatHead) {
-      this.chatHead = this.options.chatHead;
-    }
-
     if (options.profile instanceof Profile) {
       this.profile = this.options.profile;
     } else {
@@ -491,7 +487,6 @@ export default class extends baseVw {
     loadTemplate('chat/conversation.html', (t) => {
       this.$el.html(t({
         guid: this.guid,
-        chatHead: this.chatHead && this.chatHead.toJSON() || {},
         profile: this.profile && this.profile.toJSON() || {},
         showLoadMessagesError: this.showLoadMessagesError,
         typingIndicator: this.getTypingIndicatorContent(),

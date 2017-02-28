@@ -67,7 +67,7 @@ export default class extends baseVw {
     }
   }
 
-  openConversation(guid, profile, chatHead) {
+  openConversation(guid, profile) {
     if (!guid) {
       throw new Error('Please provide a guid.');
     }
@@ -106,7 +106,6 @@ export default class extends baseVw {
     this.conversation = this.createChild(Conversation, {
       guid,
       profile,
-      chatHead,
     });
 
     this.listenTo(this.conversation, 'clickCloseConvo',
