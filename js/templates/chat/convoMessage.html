@@ -7,7 +7,7 @@
     </div>
     <% if (ob.showTimestampLine) { %>
     <div class="timestampLine posA">
-      <span class="clrT2"><%= ob.moment(ob.timestamp).fromNow() %></span>
+      <span class="clrT2"><%= ob.moment(ob.timestamp).format('l LT') %></span>
     </div>
     <% } %>      
   </div>
@@ -21,7 +21,7 @@
     <% if (ob.showTimestampLine) { %>
     <div class="timestampLine posA" style="right: 2px;">
       <span class="clrTEm ion-checkmark <% if (!ob.showAsRead) print('hide') %>"></span>
-      <span class="clrT2"><%= ob.moment(ob.timestamp).fromNow() %></span>
+      <span class="clrT2"><%= ob.moment(ob.timestamp).format('l LT') %></span>
     </div>
     <% } %>      
   </div>
