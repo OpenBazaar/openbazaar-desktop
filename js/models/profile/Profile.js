@@ -113,6 +113,11 @@ export default class extends BaseModel {
       addError('website', app.polyglot.t('profileModelErrors.provideValidURL'));
     }
 
+    if (typeof attrs.vendor !== 'boolean') {
+      // this error should never be visible to the user
+      addError('vendor', `The vendor is invalid: ${attrs.vendor}`);
+    }
+
     const socialAccounts = attrs.social;
     // used to give errors on dupes of the same type
     const groupedByType = socialAccounts.groupBy('type');

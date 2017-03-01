@@ -7,7 +7,6 @@ import '../../../lib/whenAll.jquery';
 import { getGuid } from '../../../utils';
 import baseVw from '../../baseVw';
 import Moderators from '../../../collections/Moderators';
-import Profile from '../../../models/profile/Profile';
 import ModCard from '../../moderatorCard';
 import { openSimpleMessage } from '../SimpleMessage';
 
@@ -23,28 +22,31 @@ export default class extends baseVw {
     this.currentMods = this.settings.get('storeModerators');
 
     this.modsSelected = new Moderators(null, {
-      type: 'fetchprofiles',
+      apiPath: 'fetchprofiles',
       async: true,
     });
 
-    this.modsByID = new Moderators(null);
+    this.modsByID = new Moderators(null, {
+      apiPath: 'fetchprofiles',
+      async: true,
+    });
 
     this.modsAvailable = new Moderators(null, {
       async: true,
       include: 'profile',
-      excludeList: this.currentMods,
+      excludeCollection: this.modsSelected,
     });
 
-    this.listenTo(this.modsSelected, 'update', () => {
-      this.buildModList(this.modsSelected, this.$modListSelected, { cardState: 'selected' });
+    this.listenTo(this.modsSelected, 'add', (model, collection) => {
+      this.buildModList(model, collection, this.$modListSelected, { cardState: 'selected' });
     });
 
-    this.listenTo(this.modsByID, 'update', () => {
-      this.buildModList(this.modsByID, this.$modListByID);
+    this.listenTo(this.modsByID, 'add', (model, collection) => {
+      this.buildModList(model, collection, this.$modListByID);
     });
 
-    this.listenTo(this.modsAvailable, 'update', () => {
-      this.buildModList(this.modsAvailable, this.$modListAvailable);
+    this.listenTo(this.modsAvailable, 'add', (model, collection) => {
+      this.buildModList(model, collection, this.$modListAvailable);
     });
 
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
@@ -62,6 +64,7 @@ export default class extends baseVw {
   fetchAvailableModerators() {
     // be aware that this call can take a long time
     this.$browseMods.addClass('processing');
+    console.log(this.modsSelected.models);
     this.modsAvailable.fetch()
       .fail((...args) => {
         const title = app.polyglot.t('settings.storeTab.errors.availableModsFailed');
@@ -78,21 +81,17 @@ export default class extends baseVw {
       });
   }
 
-  buildModList(collection, target, opts = {}) {
-    // clear any existing content
-    target.children().not('.js-noModsAdded').remove();
+  buildModList(model, collection, target, opts = {}) {
     target.toggleClass('hasMods', !!collection.length);
 
-    if (collection.length) {
+    if (model) {
       const docFrag = $(document.createDocumentFragment());
-      collection.each((model) => {
-        const newMod = this.createChild(ModCard, {
-          model,
-          ...opts,
-        });
-        this.listenTo(newMod, 'changeModerator', (data) => this.changeMod(data));
-        docFrag.append(newMod.render().$el);
+      const newMod = this.createChild(ModCard, {
+        model,
+        ...opts,
       });
+      this.listenTo(newMod, 'changeModerator', (data) => this.changeMod(data));
+      docFrag.append(newMod.render().$el);
       target.append(docFrag);
     }
   }
@@ -137,10 +136,8 @@ export default class extends baseVw {
     this.$submitModByIDInputError.addClass('hide');
 
     if (this.currentMods.indexOf(guid) === -1) {
-      const mod = new Profile({ id: guid });
-      mod.fetch()
+      this.modsByID.fetch({ fetchList: [guid] })
           .done(() => {
-            this.modsByID.add(mod);
             this.currentMods.push(guid);
             this.$submitModByIDInput.val('');
           })
@@ -233,7 +230,6 @@ export default class extends baseVw {
         });
     }
 
-    // render so errrors are shown / cleared
     this.render();
 
     if (!this.profile.validationError && !this.settings.validationError) {
@@ -316,11 +312,7 @@ export default class extends baseVw {
     });
 
     if (this.currentMods.length) {
-      // get the current moderator data using POST
-      this.modsSelected.fetch({
-        data: JSON.stringify(this.currentMods),
-        type: 'POST',
-      });
+      this.modsSelected.fetch({ fetchList: this.currentMods });
     }
 
     return this;

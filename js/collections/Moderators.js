@@ -8,37 +8,47 @@ import { getCurrentConnection } from '../utils/serverConnect';
 export default class extends Collection {
   constructor(models = [], options = {}) {
     super(models, options);
-    this.type = options.type || 'moderators';
+    this.apiPath = options.apiPath || 'moderators';
     this.async = options.async || false;
     this.include = options.include || false;
-    this.excludeList = options.excludeList || [];
+    this.excludeCollection = options.excludeCollection || [];
+    this.notFetchedYet = [];
   }
 
   url() {
-    return app.getServerUrl(`ob/${this.type}?async=${this.async}&include=${this.include}`);
+    return app.getServerUrl(`ob/${this.apiPath}?async=${this.async}&include=${this.include}`);
   }
 
   model(attrs, options) {
     return new Moderator(attrs, options);
   }
 
-  add(models, options) {
-    let filteredModels = models;
+  fetch(options = {}) {
+    // if a list of guids to fetch was passed in, post them to the server
+    if (options.fetchList && options.fetchList.length) {
+      // save the list so the view can determine if the fetch is complete
+      this.notFetchedYet = options.fetchList;
+      options.data = JSON.stringify(options.fetchList);
+      options.type = 'POST';
+    }
+    return super.fetch(options);
+  }
 
+  add(models, options) {
+    let filteredModels = _.isArray(models) ? models : [models];
+    const excludeList = _.pluck(this.excludeCollection.models, 'id');
+    let modIDs = [];
     // remove any returned profiles that are not valid moderators
     if (models) {
-      // is models an array or just one model?
-      if (_.isArray(models)) {
-        filteredModels = filteredModels.filter((mod) => {
-          // don't add excluded ids
-          const notExcluded = this.excludeList.indexOf(mod.id) === -1;
-          // don't add if not a mod or the mod data is missing
-          return mod.moderator && mod.modInfo && notExcluded;
-        });
-      } else if (!filteredModels.get('moderator') || !filteredModels.get('modInfo') ||
-          this.excludeList.indexOf(filteredModels.id) !== -1) {
-        return false;
-      }
+      filteredModels = filteredModels.filter((mod) => {
+        // don't add excluded ids
+        const notExcluded = excludeList.indexOf(mod.id) === -1;
+        // don't add if not a mod or the mod data is missing
+        return mod.moderator && mod.modInfo && notExcluded;
+      });
+      modIDs = _.pluck(filteredModels, 'id');
+
+      this.notFetchedYet = _.without(this.notFetchedYet, ...modIDs);
     }
     return super.add(filteredModels, options);
   }

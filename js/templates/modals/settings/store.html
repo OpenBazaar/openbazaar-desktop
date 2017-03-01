@@ -13,6 +13,7 @@
             <label class="required"><%= ob.polyT('settings.storeTab.storeStatus') %></label>
           </div>
           <div class="col9">
+            <% if (ob.errors.vendor) print(ob.formErrorTmpl({ errors: ob.errors.vendor })) %>
             <div class="btnStrip">
               <div class="btnRadio clrBr">
                 <input type="radio"
@@ -94,6 +95,7 @@
                 </div>
               </div>
             </div><% // end of flex inside col9 %>
+            <% if (ob.errors.storeModerators) print('<div class="row"></div>  ' + ob.formErrorTmpl({ errors: ob.errors.storeModerators })) %>
           </div>
         </div>
       </div>

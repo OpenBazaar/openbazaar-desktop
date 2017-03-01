@@ -2,6 +2,40 @@
   display: block;
   box-sizing: border-box;
   position: relative;
+
+  .spinner {
+    display: none;
+  }
+
+  &.processing {
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: inherit;
+      z-index: 1;
+    }
+
+    .spinner {
+      position: absolute;
+      display: block;
+      top: 50%;
+      left: 50%;
+      right: 0;
+      bottom: 0;
+      background-color: inherit;
+      transform: translate(-50%, -50%);
+      border-radius: inherit;
+      width: 25px;
+      height: 25px;
+      z-index: 1;
+    }
+  }
 }
 
 .boxList > * {
