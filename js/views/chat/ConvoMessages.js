@@ -10,7 +10,6 @@ export default class extends baseVw {
     }
 
     if (!options.$scrollContainer) {
-      // The scroll container should ideally be an ancestor of this view's element.
       throw new Error('Please provide the DOM element that handles scrolling for this view.');
     }
 

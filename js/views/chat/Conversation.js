@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import app from '../../app';
 import { getBody } from '../../utils/selectors';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { getSocket } from '../../utils/serverConnect';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
@@ -71,13 +71,10 @@ export default class extends baseVw {
     this.listenTo(this.messages, 'error', this.onMessagesFetchError);
     this.fetchMessages();
 
-    const serverConnection = getCurrentConnection();
+    const socket = getSocket();
 
-    if (serverConnection && serverConnection.status !== 'disconnected') {
-      this.listenTo(serverConnection.socket, 'message', this.onSocketMessage);
-    } else {
-      // There's no connection to the server. The connection modal will appear and
-      // a subsequent reconnect will re-start the app.
+    if (socket) {
+      this.listenTo(socket, 'message', this.onSocketMessage);
     }
   }
 
