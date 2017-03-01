@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
 import loadTemplate from '../../utils/loadTemplate';
@@ -47,11 +48,20 @@ export default class extends baseVw {
   }
 
   render() {
+    const message = this.model.get('message');
+
+    // Give any links the emphasis color.
+    const $msgHtml = $(`<div>${message}</div>`);
+
+    $msgHtml.find('a')
+      .addClass('clrTEm');
+
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ...this._state,
         moment,
+        message: $msgHtml.html(),
       }));
     });
 

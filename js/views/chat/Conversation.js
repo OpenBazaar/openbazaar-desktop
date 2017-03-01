@@ -50,6 +50,7 @@ export default class extends baseVw {
           this.convoProfileHeader.setState({
             handle: model.get('handle'),
             avatarHashes: model.get('avatarHashes').toJSON(),
+            location: model.get('location'),
           });
         }
 
@@ -152,6 +153,7 @@ export default class extends baseVw {
     if (!this.firstSyncComplete) {
       this.firstSyncComplete = true;
       this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
+
       if (this.isOpen) {
         this.markConvoAsRead();
       }
@@ -298,6 +300,7 @@ export default class extends baseVw {
       });
 
       this.messages.push(message);
+
       if (this.isOpen) {
         this.markConvoAsRead();
       }
@@ -507,6 +510,7 @@ export default class extends baseVw {
       if (this.profile) {
         convoProfileHeaderInitialState.handle = this.profile.get('handle');
         convoProfileHeaderInitialState.avatarHashes = this.profile.get('avatarHashes').toJSON();
+        convoProfileHeaderInitialState.location = this.profile.get('location');
       }
 
       this.convoProfileHeader = this.createChild(ConvoProfileHeader, {

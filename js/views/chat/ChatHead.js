@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
@@ -28,8 +29,17 @@ export default class extends baseVw {
   }
 
   render() {
+    const message = this.model.get('lastMessage');
+
+    // Give any links the emphasis color.
+    const $msgHtml = $(`<div>${message}</div>`);
+
+    $msgHtml.find('a')
+      .addClass('clrTEm');
+
     let templateData = {
       ...this.model.toJSON(),
+      lastMessage: $msgHtml.html(),
     };
 
     if (this.profile) {
