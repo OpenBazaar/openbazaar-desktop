@@ -18,7 +18,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'userPage';
+    return 'userPage connectedPeersPage';
   }
 
   events() {
