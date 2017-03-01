@@ -29,7 +29,6 @@ export default class extends baseVw {
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
     this.debouncedOnProfileFetchScroll = _.debounce(this.onProfileFetchScroll, 200).bind(this);
     this.profileDeferreds = {};
-    this.lastProfileFetchedIndex = -1;
 
     // TODO: handle fetch error.
     this.listenTo(this.collection, 'sync', () => this.render());
@@ -57,7 +56,7 @@ export default class extends baseVw {
       this.open();
     } else {
       const profilePromise = this.fetchProfile(e.view.model.id);
-      this.openConversation(e.view.model.id, profilePromise, e.view.model);
+      this._openConversation(e.view.model.id, profilePromise, e.view.model);
     }
   }
 
@@ -67,45 +66,28 @@ export default class extends baseVw {
     }
   }
 
-  openConversation(guid, profile) {
-    if (!guid) {
-      throw new Error('Please provide a guid.');
-    }
-
-    if (!profile ||
-      (!(profile instanceof Profile) &&
-      !profile.then)) {
-      throw new Error('Please provide a profile model or a promise that provides' +
-        ' one when it resolves.');
-
-      // If providing a promise, please pass the Profile instance into the
-      // resolve handler, so the following will work:
-      // promise.done(profile => { // i gotz me a profile model! });
-    }
-
-    // todo: if not chat head, create one.
+  /**
+   * Outside of this view, please use the "public" openConversation().
+   */
+  _openConversation(guid, profilePromise) {
     if (this.conversation && this.conversation.guid === guid) {
       // In order for the chat head unread count to update properly, be sure to
       // open before marking convo as read.
       this.conversation.open();
 
-      // todo: after chat head logic, update below line.
-      if (this.collection.get(guid).get('unread') && this.conversation.messages.length) {
+      if (this.collection.get(guid) && this.collection.get(guid).get('unread') &&
+        this.conversation.messages.length) {
         this.conversation.markConvoAsRead();
       }
 
       return;
-
-      // For now we'll do nothing. An enhancement could be determining if the existing
-      // convo is a.) still waiting on the profile b.) has an older profile than the one
-      // provided, and if so update the convo with the given profile.
     }
 
     const oldConvo = this.conversation;
 
     this.conversation = this.createChild(Conversation, {
       guid,
-      profile,
+      profile: profilePromise,
     });
 
     this.listenTo(this.conversation, 'clickCloseConvo',
@@ -123,7 +105,8 @@ export default class extends baseVw {
           this.collection.remove(e.guid);
 
           if (this.conversation && this.conversation.guid === e.guid) {
-            this.conversation.close();
+            this.conversation.remove();
+            this.conversation = null;
           }
         });
       });
@@ -132,8 +115,36 @@ export default class extends baseVw {
       .append(this.conversation.render().el);
 
     this.conversation.open();
+    this.open();
 
     if (oldConvo) oldConvo.remove();
+  }
+
+  openConversation(guid, profile) {
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    if (typeof profile !== 'undefined' &&
+      !(profile instanceof Profile)) {
+      throw new Error('If providing a profile, it must be an instance of the profile model.');
+    }
+
+
+    let profilePromise;
+
+    if (profile) {
+      // If the profile model is provided, well turn it into a deferred.
+      const deferred = $.Deferred();
+      this.profileDeferreds[guid] = deferred;
+      deferred.resolve(profile);
+      profilePromise = deferred.promise();
+    } else {
+      // If not providing the profile, we'll fetch it.
+      profilePromise = this.fetchProfile(guid);
+    }
+
+    this._openConversation(guid, profilePromise);
   }
 
   closeConversation() {
@@ -203,11 +214,14 @@ export default class extends baseVw {
         unread: 1,
       };
 
+      if (this.conversation && this.conversation.guid === msg.peerId &&
+        this.conversation.isOpen) {
+        chatHeadData.unread = 0;
+      }
+
       if (chatHead) {
-        if (this.conversation && this.conversation.guid === msg.peerId &&
-          this.conversation.isOpen) {
-          chatHeadData.unread = 0;
-        } else {
+        if (!(this.conversation && this.conversation.guid === msg.peerId &&
+          this.conversation.isOpen)) {
           chatHeadData.unread = chatHead.get('unread') + 1;
         }
 
@@ -374,7 +388,7 @@ export default class extends baseVw {
         if (this.socket) {
           this.listenTo(this.socket, 'message', (e) => {
             if (e.jsonData.id === data.id) {
-              const profile = new Profile(e.jsonData.profile);
+              const profile = new Profile(e.jsonData.profile, { parse: true });
               this.profileDeferreds[e.jsonData.peerId].resolve(profile);
 
               if (this.chatHeads) {
