@@ -2,8 +2,23 @@
   display: block;
   box-sizing: border-box;
   position: relative;
+}
+
+.boxProcessing {
+  position: relative;
 
   .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    background-color: inherit;
+    transform: translate(-50%, -50%);
+    border-radius: inherit;
+    width: 30%;
+    height: 30%;
+    z-index: 1;
     display: none;
   }
 
@@ -22,18 +37,18 @@
     }
 
     .spinner {
-      position: absolute;
       display: block;
-      top: 50%;
-      left: 50%;
-      right: 0;
-      bottom: 0;
-      background-color: inherit;
-      transform: translate(-50%, -50%);
-      border-radius: inherit;
-      width: 25px;
-      height: 25px;
-      z-index: 1;
+    }
+  }
+}
+
+.boxProcessingFaded {
+  @extend .boxProcessing;
+
+  &.processing {
+
+    &::before {
+      opacity: 0.8;
     }
   }
 }

@@ -63,8 +63,7 @@ export default class extends baseVw {
 
   fetchAvailableModerators() {
     // be aware that this call can take a long time
-    this.$browseMods.addClass('processing');
-    console.log(this.modsSelected.models);
+    this.$modListAvailable.addClass('processing');
     this.modsAvailable.fetch()
       .fail((...args) => {
         const title = app.polyglot.t('settings.storeTab.errors.availableModsFailed');
@@ -73,11 +72,10 @@ export default class extends baseVw {
       })
       .always(() => {
         setTimeout(() => {
-          // when moderators are added via the async call, this button will be hidden.
           // remove the processing class after a long enough time. If it's still visible
           // there are probably no moderators coming.
-          this.$browseMods.removeClass('processing');
-        }, 30000);
+          this.$modListAvailable.removeClass('processing');
+        }, 15000);
       });
   }
 
@@ -93,6 +91,11 @@ export default class extends baseVw {
       this.listenTo(newMod, 'changeModerator', (data) => this.changeMod(data));
       docFrag.append(newMod.render().$el);
       target.append(docFrag);
+    }
+
+    // if all moderators have loaded, clear any processing class
+    if (!collection.notFetchedYet.length) {
+      target.removeClass('processing');
     }
   }
 
@@ -312,6 +315,7 @@ export default class extends baseVw {
     });
 
     if (this.currentMods.length) {
+      this.$modListSelected.addClass('processing');
       this.modsSelected.fetch({ fetchList: this.currentMods });
     }
 
