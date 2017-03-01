@@ -1,6 +1,6 @@
 <div class="flexVCent gutterHSm">
   <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.avatarHashes || {}) %>"></a>
-  <div class="contentBox padSm clrBr clrP clrSh1 noOverflow">
+  <div class="contentBox headContent clrBr clrP clrSh1 noOverflow">
     <span class="tx6">
       <span class="handleGuid noOverflow <% if (ob.unread) print('txB') %>"><%= ob.handle ? `@${ob.handle}` : ob.peerId %>:</span> <%= ob.lastMessage %>
     </span>

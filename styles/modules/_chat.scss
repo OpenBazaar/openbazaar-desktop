@@ -43,11 +43,18 @@
         }
       }
 
+      .headContent {
+        padding: $padSm;
+        max-height: 31px;
+      }
+
       .handleGuid {
         max-width: 60px;
         display: inline-block;
         vertical-align: middle;
       }
+
+
 
       &:first-child {
         margin-top: 5px;
@@ -179,6 +186,10 @@
           padding: $padSm;
           margin-top: 3px;
           display: inline-block;
+
+          img {
+            max-width: 100%;
+          }
         }
 
         .timestampLine {
