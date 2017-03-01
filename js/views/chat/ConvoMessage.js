@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
+import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
@@ -62,6 +63,7 @@ export default class extends baseVw {
         ...this._state,
         moment,
         message: $msgHtml.html(),
+        ownGuid: app.profile.id,
       }));
     });
 

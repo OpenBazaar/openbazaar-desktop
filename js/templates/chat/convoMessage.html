@@ -1,6 +1,6 @@
 <% if (!ob.outgoing) { %>
 <div class="gutterHSm flex rowLg">
-  <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>
+  <a  href="#<%= ob.peerId %>" class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>
   <div class="posR flexExpand">
     <div class="contentBox msgContentBox clrBr clrP clrSh1">
       <span class="tx6"><%= ob.message %></span>
@@ -25,6 +25,6 @@
     </div>
     <% } %>      
   </div>
-  <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>  
+  <a href="#<%= ob.ownGuid %>" class="chatIcon disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>  
 </div>
 <% } %>
