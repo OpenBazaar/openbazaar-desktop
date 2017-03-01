@@ -6,6 +6,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       subject: '',
+      message: '',
       read: false,
       outgoing: true,
     };
@@ -13,6 +14,13 @@ export default class extends BaseModel {
 
   get idAttribute() {
     return 'messageId';
+  }
+
+  static get max() {
+    return {
+      subjectLength: 500,
+      messageLength: 20000,
+    };
   }
 
   url() {
@@ -26,10 +34,18 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    // Not translating, since none of these errors are expected to make it into
-    // the UI.
+    const max = this.constructor.max;
+
     if (!attrs.peerId) {
       addError('peerId', 'The peerId is required');
+    }
+
+    if (attrs.subject.length > max.subjectLength) {
+      addError('subject', `The subject exceeds the max length of ${max.subjectLength}`);
+    }
+
+    if (attrs.message.length > max.messageLength) {
+      addError('message', `The message exceeds the max length of ${max.messageLength}`);
     }
 
     if (Object.keys(errObj).length) return errObj;

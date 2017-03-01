@@ -25,6 +25,10 @@ export default class extends baseVw {
       throw new Error('Please provide the GUID of the person you are conversing with.');
     }
 
+    if (options.subject && options.subject.length > ChatMessage.max.subjectLength) {
+      throw new Error(`The subject cannot exceed ${ChatMessage.max.subjectLength} characters`);
+    }
+
     const opts = {
       subject: '',
       ...options,
@@ -245,6 +249,7 @@ export default class extends baseVw {
 
     // Send actual chat message if the Enter key was pressed
     if (e.which !== 13) return;
+
     const message = e.target.value.trim();
     if (!message) return;
     this.lastTypingSentAt = null;
@@ -493,6 +498,7 @@ export default class extends baseVw {
         profile: this.profile && this.profile.toJSON() || {},
         showLoadMessagesError: this.showLoadMessagesError,
         typingIndicator: this.getTypingIndicatorContent(),
+        maxMessageLength: ChatMessage.max.messageLength,
       }));
 
       this._$subMenu = null;
