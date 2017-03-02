@@ -5,6 +5,8 @@ import { screen, shell } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import { getBody } from '../utils/selectors';
+import twemoji from 'twemoji';
+window.twemoji = twemoji;
 
 export function fixLinuxZoomIssue() {
   // fix zoom issue on Linux hiDPI
@@ -48,3 +50,75 @@ export function handleLinks() {
     e.preventDefault();
   });
 }
+
+// todo: move this elsewhere
+window.emojiMap = () => {
+  const deferred = $.Deferred();
+
+  $.get('http://unicode.org/emoji/charts/full-emoji-list.html#1f468_1f3fb_200d_1f373', (data) => {
+    const dataMap = {};
+    const $rows = $(data).find('tr');
+
+    $rows.each((i, row) => {
+      const $char = $(row).find('.chars');
+
+      if ($char.length) {
+        const char = $char.text();
+
+        let name = $(row).find('.name')
+          .eq(0)
+          .text()
+          .replace(/-/g, '_')
+          .replace(/\s&\s/g, '_')
+          .replace(/\s/g, '_')
+          .replace(/[()":’\.'“”]/g, '')
+          .toLowerCase();
+
+        name = `:${name}:`;
+
+        twemoji.parse(char, twemojiCode => {
+          dataMap[twemojiCode] = name;
+        });
+      }
+    });
+
+    deferred.resolve(dataMap);
+  });
+
+  return deferred.promise();
+};
+
+
+window.emojiMap2 = () => {
+  const deferred = $.Deferred();
+
+  $.get('http://unicode.org/emoji/charts/full-emoji-list.html#1f468_1f3fb_200d_1f373', (data) => {
+    const dataMap = {};
+    const $rows = $(data).find('tr');
+
+    $rows.each((i, row) => {
+      const $char = $(row).find('.chars');
+
+      if ($char.length) {
+        const char = $char.text();
+
+        let name = $(row).find('.name')
+          .eq(0)
+          .text()
+          .replace(/-/g, '_')
+          .replace(/\s&\s/g, '_')
+          .replace(/\s/g, '_')
+          .replace(/[()":’\.'“”]/g, '')
+          .toLowerCase();
+
+        name = `:${name}:`;
+
+        dataMap[char] = name;
+      }
+    });
+
+    deferred.resolve(dataMap);
+  });
+
+  return deferred.promise();
+};
