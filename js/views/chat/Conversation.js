@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import '../../utils/velocity';
 import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { getSocket } from '../../utils/serverConnect';
@@ -38,6 +39,8 @@ export default class extends baseVw {
 
     this.options = opts;
     this._guid = this.options.guid;
+    this._isOpen = false;
+    this._isEmojiMenu = false;
     this.subject = '';
     this.showLoadMessagesError = false;
     this.fetching = false;
@@ -96,6 +99,7 @@ export default class extends baseVw {
       'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
       'click .js-deleteConversation': 'onClickDeleteConvo',
       'keyup .js-inputMessage': 'onKeyUpMessageInput',
+      'click .js-emojiMenuTrigger': 'onClickEmojiMenuTrigger',
     };
   }
 
@@ -351,6 +355,14 @@ export default class extends baseVw {
     });
   }
 
+  onClickEmojiMenuTrigger() {
+    if (this.isEmojiMenuOpen) {
+      this.closeEmojiMenu();
+    } else {
+      this.openEmojiMenu();
+    }
+  }
+
   showTypingIndicator() {
     clearTimeout(this.typingTimeout);
     this.$el.addClass('isTyping');
@@ -446,6 +458,32 @@ export default class extends baseVw {
     this.$subMenu.addClass('hide');
   }
 
+  get isEmojiMenuOpen() {
+    return this._isEmojiMenuOpen;
+  }
+
+  openEmojiMenu() {
+    if (this._isEmojiMenuOpen) return;
+
+    this._isEmojiMenuOpen = true;
+    this.$emojiMenuContainer
+      .velocity('stop')
+      .velocity({
+        translateY: [0, '100%'],
+      });
+  }
+
+  closeEmojiMenu() {
+    if (!this._isEmojiMenuOpen) return;
+
+    this._isEmojiMenuOpen = false;
+    this.$emojiMenuContainer
+      .velocity('stop')
+      .velocity({
+        translateY: '100%',
+      });
+  }
+
   getTypingIndicatorContent() {
     const name = this.profile && this.profile.handle ? `@${this.profile.handle}` : this.guid;
     const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
@@ -488,6 +526,11 @@ export default class extends baseVw {
       (this._$convoMessagesWindow = this.$('.js-convoMessagesWindow'));
   }
 
+  get $emojiMenuContainer() {
+    return this._$emojiMenuContainer ||
+      (this._$emojiMenuContainer = this.$('.js-emojiMenuContainer'));    
+  }
+
   render() {
     loadTemplate('chat/conversation.html', (t) => {
       this.$el.html(t({
@@ -503,6 +546,7 @@ export default class extends baseVw {
       this._$loadMessagesError = null;
       this._$convoMessagesWindow = null;
       this._$typingIndicator = null;
+      this._$emojiMenuContainer = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 

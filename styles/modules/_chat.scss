@@ -276,6 +276,9 @@
   .convoFooter {
     border-top-style: solid;
     border-top-width: 1px;
+    z-index: 1;
+    // position: relative;
+    // top: 1px;
 
     input[type=text] {
       border-width: 0;
@@ -296,6 +299,24 @@
   .chatIcon {
     width: 38px;
     height: 38px;
+  }
+
+  .emojiMenuTrigger {
+    border: none;
+    padding: 0;
+    padding-right: 12px;
+    font-size: $tx5;
+  }
+
+  .emojiMenuContainer {
+    border-top-style: solid;
+    border-top-width: 1px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: $pad;
+    transform: translateY(100%);
   }
 }
 

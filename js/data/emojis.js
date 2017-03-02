@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 import $ from 'jquery';
+import app from '../app';
 
 // todo: ideally, keywords should be an array of strings.
-const emojiData = {
+const emojis = {
   '😀': {
     name: ':grinning_face:',
     keywords: 'face, grin',
@@ -10395,7 +10396,7 @@ const emojiData = {
   },
 };
 
-export default emojiData;
+export default emojis;
 
 const emojiGroups = [
   {
@@ -10425,11 +10426,26 @@ const emojiGroups = [
   },
 ];
 
-export { emojiGroups };
+const groupsCache = {};
+
+export function getEmojiGroups() {
+  let groups = groupsCache[app.polyglot.currentLocale];
+
+  if (!groups) {
+    groups = emojiGroups.map(group => ({
+      ...group,
+      name: app.polyglot.t(`emojis.groups.${group.id}`),
+    }));
+
+    groupsCache[app.polyglot.currentLocale] = groups;
+  }
+
+  return groups;
+}
 
 /**
  * The following two methods were used to compile the reference data in this module. They
- * are NOT expected to be used in production.
+ * are NOT expected to be called in production.
  */
 
 // Todo: Make keywords compile an array of strings rather than a comma seperated list.
