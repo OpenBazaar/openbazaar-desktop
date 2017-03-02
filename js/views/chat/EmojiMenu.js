@@ -1,35 +1,36 @@
-// import $ from 'jquery';
-import loadTemplate from '../../utils/loadTemplate';
+import $ from 'jquery';
+import twemoji from 'twemoji';
 import { getEmojiGroups } from '../../data/emojis';
+import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
 export default class extends baseVw {
-  // constructor(options = {}) {
-  //   if (!options.model) {
-  //     throw new Error('Please provide a model.');
-  //   }
-
-  //   super(options);
-  //   this.profile = options.profile;
-
-  //   this.listenTo(this.model, 'change', this.render);
-  // }
-
   className() {
     return 'emojiMenu';
   }
 
-  // events() {
-  //   return {
-  //     click: 'onClick',
-  //   };
-  // }
+  events() {
+    return {
+      'click .js-emoji': 'onClickEmoji',
+    };
+  }
+
+  onClickEmoji(e) {
+    const $emojiEl = $(e.target).closest('button')
+      .find('.emoji');
+
+    this.trigger('emojiSelected', { emoji: $emojiEl.attr('alt') });
+  }
 
   render() {
     loadTemplate('chat/emojiMenu.html', (t) => {
-      this.$el.html(t({
+      const content = t({
         groups: getEmojiGroups(),
-      }));
+      });
+
+      // Let's process the content through Twemoji before adding it to the DOM.
+      this.$el.html(twemoji.parse(content,
+        icon => (`../node_modules/twemoji/2/svg/${icon}.svg`)));
     });
 
     return this;

@@ -5,6 +5,8 @@ import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { getSocket } from '../../utils/serverConnect';
 import { openSimpleMessage } from '../modals/SimpleMessage';
+import { insertAtCursor } from '../../utils/dom';
+import emojis, { getEmojiByName } from '../../data/emojis';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
@@ -12,6 +14,7 @@ import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ConvoProfileHeader from './ConvoProfileHeader';
 import ConvoMessages from './ConvoMessages';
+import EmojiMenu from './EmojiMenu';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -99,6 +102,7 @@ export default class extends baseVw {
       'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
       'click .js-deleteConversation': 'onClickDeleteConvo',
       'keyup .js-inputMessage': 'onKeyUpMessageInput',
+      'blur .js-inputMessage': 'onBlurMessageInput',
       'click .js-emojiMenuTrigger': 'onClickEmojiMenuTrigger',
     };
   }
@@ -251,9 +255,24 @@ export default class extends baseVw {
     // Send actual chat message if the Enter key was pressed
     if (e.which !== 13) return;
 
-    const message = e.target.value.trim();
+    let message = e.target.value.trim();
     if (!message) return;
     this.lastTypingSentAt = null;
+
+    // Convert any emoji placeholder (e.g :smiling_face:) into
+    // emoji unicode characters.
+    const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
+    const matches = message.match(emojiPlaceholderRegEx, 'g');
+
+    if (matches) {
+      matches.forEach(match => {
+        const emoji = getEmojiByName(match);
+
+        if (emoji && emoji.char) {
+          message = message.replace(match, emoji.char);
+        }
+      });
+    }
 
     const chatMessage = new ChatMessage({
       peerId: this.guid,
@@ -275,6 +294,10 @@ export default class extends baseVw {
     }
 
     $(e.target).val('');
+  }
+
+  onBlurMessageInput(e) {
+    this.lastMessageInputCursorPos = e.target.selectionStart;
   }
 
   onScroll(e) {
@@ -361,6 +384,12 @@ export default class extends baseVw {
     } else {
       this.openEmojiMenu();
     }
+  }
+
+  onEmojiSelected(e) {
+    insertAtCursor(this.$inputMessage[0], emojis[e.emoji].name);
+    this.closeEmojiMenu();
+    this.$inputMessage.focus();
   }
 
   showTypingIndicator() {
@@ -469,7 +498,7 @@ export default class extends baseVw {
     this.$emojiMenuContainer
       .velocity('stop')
       .velocity({
-        translateY: [0, '100%'],
+        top: [146, 266],
       });
   }
 
@@ -480,7 +509,7 @@ export default class extends baseVw {
     this.$emojiMenuContainer
       .velocity('stop')
       .velocity({
-        translateY: '100%',
+        top: 266,
       });
   }
 
@@ -528,7 +557,12 @@ export default class extends baseVw {
 
   get $emojiMenuContainer() {
     return this._$emojiMenuContainer ||
-      (this._$emojiMenuContainer = this.$('.js-emojiMenuContainer'));    
+      (this._$emojiMenuContainer = this.$('.js-emojiMenuContainer'));
+  }
+
+  get $inputMessage() {
+    return this._$inputMessage ||
+      (this._$inputMessage = this.$('.js-inputMessage'));
   }
 
   render() {
@@ -547,6 +581,7 @@ export default class extends baseVw {
       this._$convoMessagesWindow = null;
       this._$typingIndicator = null;
       this._$emojiMenuContainer = null;
+      this._$inputMessage = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 
@@ -566,6 +601,11 @@ export default class extends baseVw {
 
       this.$('.js-convoProfileHeaderContainer')
         .html(this.convoProfileHeader.render().el);
+
+      if (this.emojiMenu) this.emojiMenu.remove();
+      this.emojiMenu = this.createChild(EmojiMenu);
+      this.listenTo(this.emojiMenu, 'emojiSelected', this.onEmojiSelected);
+      this.$emojiMenuContainer.html(this.emojiMenu.render().el);
 
       if (this.ConvoMessages) this.ConvoMessages.remove();
 

@@ -186,9 +186,19 @@
           padding: $padSm;
           margin-top: 3px;
           display: inline-block;
+          max-width: 186px;
+
+          & > span {
+            word-break: break-word;
+          }
 
           img {
             max-width: 100%;
+          }
+
+          .emoji {
+            width: 16px;
+            height: 16px;            
           }
         }
 
@@ -277,11 +287,22 @@
     border-top-style: solid;
     border-top-width: 1px;
     z-index: 1;
-    // position: relative;
-    // top: 1px;
 
-    input[type=text] {
+    & > div {
+      padding-top: $padTn;
+      padding-bottom: $padTn;
+    }
+
+    textarea {
       border-width: 0;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }      
     }
   }
 
@@ -314,9 +335,40 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
+    top: 266px;
     padding: $pad;
-    transform: translateY(100%);
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 98px;
+
+    .emojiMenu {
+      .emojiGroup {
+        padding-left: 3px;
+        clear: both;
+        margin-bottom: 5px;
+
+        button {
+          float: left;
+          border: 0;
+          padding: 0;
+          background-color: transparent;
+          cursor: pointer;
+          outline: none;
+          transition: transform 0.1s ease;
+
+          &:hover {
+            transform: scale(1.2, 1.2);
+          }
+
+          .emoji {
+            width: 16px;
+            height: 16px;
+            margin-right: 11px;
+            margin-bottom: 9px;
+          }          
+        }
+      }
+    }
   }
 }
 
