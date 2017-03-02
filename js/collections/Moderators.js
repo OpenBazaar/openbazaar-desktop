@@ -9,14 +9,14 @@ export default class extends Collection {
   constructor(models = [], options = {}) {
     super(models, options);
     this.apiPath = options.apiPath || 'moderators';
-    this.async = options.async || false;
-    this.include = options.include || false;
+    this.async = !!options.async;
+    this.includeString = options.include ? `&include=${options.include}` : '';
     this.excludeCollection = options.excludeCollection || [];
     this.notFetchedYet = [];
   }
 
   url() {
-    return app.getServerUrl(`ob/${this.apiPath}?async=${this.async}&include=${this.include}`);
+    return app.getServerUrl(`ob/${this.apiPath}?async=${this.async}${this.includeString}`);
   }
 
   model(attrs, options) {
@@ -63,8 +63,7 @@ export default class extends Collection {
         this.listenTo(serverConnection.socket, 'message', (event) => {
           const data = JSON.parse(event.data);
           if (data.id === this.socketID) {
-            const profile = data.profile;
-            profile.id = data.peerId;
+            data.profile.id = data.peerId;
             this.add([data.profile]);
           }
         });
