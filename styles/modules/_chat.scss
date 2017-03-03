@@ -109,6 +109,17 @@
   }
 }
 
+.chat {
+  // use for chat styles that apply outside the chat sidebar
+
+  .chatIcon {
+    border-width: 2px;
+    border-style: solid;
+    width: 38px;
+    height: 38px;
+  }
+}
+
 .chatConversation {
   border-width: 1px;
   border-style: solid;  
@@ -194,11 +205,6 @@
 
           img {
             max-width: 100%;
-          }
-
-          .emoji {
-            width: 16px;
-            height: 16px;            
           }
         }
 
@@ -361,8 +367,6 @@
           }
 
           .emoji {
-            width: 16px;
-            height: 16px;
             margin-right: 11px;
             margin-bottom: 9px;
           }          
@@ -372,13 +376,8 @@
   }
 }
 
-.chat {
-  // use for chat styles that apply outside the chat sidebar
-
-  .chatIcon {
-    border-width: 2px;
-    border-style: solid;
-    width: 38px;
-    height: 38px;
-  }
+.chatConversation .emoji, #chatContainer .emoji {
+  width: 16px;
+  height: 16px;
 }
+

@@ -60,7 +60,7 @@ export default class extends baseVw {
 
     // Convert any unicode emoji characters to images via Twemoji
     message = twemoji.parse($msgHtml.html(),
-      icon => (`../node_modules/twemoji/2/svg/${icon}.svg`));
+      icon => (`../imgs/emojis/72X72/${icon}.png`));
 
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({

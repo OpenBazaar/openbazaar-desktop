@@ -460,6 +460,12 @@ export default class extends baseVw {
   open() {
     if (this._isOpen) return;
     this._isOpen = true;
+
+    console.time('chatConvoOpen');
+    $('#chatConvoContainer').one('transitionend', () => {
+      console.timeEnd('chatConvoOpen');
+    });
+
     getBody().addClass('chatConvoOpen');
   }
 
@@ -605,6 +611,7 @@ export default class extends baseVw {
       if (this.emojiMenu) this.emojiMenu.remove();
       this.emojiMenu = this.createChild(EmojiMenu);
       this.listenTo(this.emojiMenu, 'emojiSelected', this.onEmojiSelected);
+
       this.$emojiMenuContainer.html(this.emojiMenu.render().el);
 
       if (this.ConvoMessages) this.ConvoMessages.remove();
