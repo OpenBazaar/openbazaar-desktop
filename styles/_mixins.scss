@@ -14,8 +14,12 @@
   }
 }
 
-@mixin chatOpeningTransition($property) {
-  transition: $property 0.5s ease;
+@mixin chatOpeningTransition($props...) {
+  $transitions: ();
+  @each $prop in $props {
+    $transitions: append($transitions, #{$prop 0.5s ease}, comma);
+  }
+  transition: $transitions;
 }
 
 @mixin disabled {
@@ -168,5 +172,15 @@
     &:disabled {
       border-color: $col1;
     }
+  }
+
+  &#contentFrame:before {
+    // chat close button bottom border
+    border-color: $col1;
+  }
+
+  &#pageTabBar:after {
+    // chat open bottom border
+    background-color: $col1;
   }
 }

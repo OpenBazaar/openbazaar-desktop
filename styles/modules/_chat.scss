@@ -1,18 +1,18 @@
 #chatCloseBtn {
   position: absolute;
-  top: 65px;
-  right: -220px;
-  width: 40px;
-  height: 40px;
+  top: $chatCloseBtnTop;
+  right: -$chatCloseBtn;
+  width: $chatCloseBtn;
+  height: $chatCloseBtn;
   z-index: 3;
   border-radius: 0;
   font-size: $tx1;
-  border-right-width: 0;
   border-bottom-width: 0;
+  background: transparent;
   @include chatOpeningTransition(right);
 
   .chatOpen & {
-    right: 1px;
+    right: $scrollbar;
   }
 }
 
@@ -84,7 +84,7 @@
         }
 
         .fullText {
-          display: inline;          
+          display: inline;
         }
       }
 
@@ -104,14 +104,14 @@
       .bottomUnreadBanner {
         display: block;
         bottom: 45px;
-      }      
+      }
     }
   }
 }
 
 .chatConversation {
   border-width: 1px;
-  border-style: solid;  
+  border-style: solid;
   height: 100%;
 
   .convoHeader {
@@ -196,7 +196,7 @@
           position: absolute;
           margin-top: 3px;
         }
-      }      
+      }
     }
   }
 
@@ -228,7 +228,7 @@
   &.isTyping {
     .typingIndicator {
       transform: translate(-50%, 0);
-    }    
+    }
   }
 
   .deletingOverlay {

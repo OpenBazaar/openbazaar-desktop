@@ -117,48 +117,107 @@ ul, ol {
 
   #contentFrame {
     position: relative;
-    padding-top: $barLg;
     overflow-y: scroll;
     height: calc(100% - #{$bar});
     box-sizing: border-box;
     z-index: 0;
 
-    #pageTabBar {
-      position: fixed;
-      top: $bar;
-      left: 0;
-      z-index: 1;
-      width: 100%;
-      height: $barLg;
+    &:before {
+      // bottom border for the chat close button, it gets covered by the pageTabBar
+      content: '';
+      display: block;
+      width: $chatCloseBtn;
+      height: 0;
       border-bottom-width: 1px;
       border-bottom-style: solid;
+      position: absolute;
+      top: $chatCloseBtnTop - $bar;
+      right: -$chatCloseBtn;
+      width: $chatCloseBtn;
+      height: $chatCloseBtn;
+      @include chatOpeningTransition(right);
+      z-index: 0;
+    }
 
-      .pageTabs {
-        max-width: $pageWidth;
-        margin: 0 auto;
-
-        .userIcon {
-          border-width: 2px;
-          border-style: solid;
-          width: 44px;
-          height: 44px;
-          margin-right: $pad;
-        }
-
-        .tab {
-          border-radius: 0;
-          box-sizing: content-box;
-          font-size: $tx4;
-
-          &.active {
-            border-bottom-width: 1px;
-            border-bottom-style: solid;
-          }
-        }
-      }
+    .chatOpen &:before {
+      right: 0;
     }
 
     #pageContainer {
+      padding-top: $barLg;
+
+      #pageTabBar {
+        position: fixed;
+        top: $bar;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: $barLg;
+        overflow: hidden;
+
+        &:before {
+          // mask for the chat close button
+          content: '';
+          display: block;
+          width: $chatCloseBtn;
+          height: $chatCloseBtn;
+          position: absolute;
+          top: $chatCloseBtnTop - $bar;
+          right: -$chatCloseBtn;
+          @include chatOpeningTransition(right);
+          z-index: 0;
+        }
+
+        &:after {
+          // false bottom border for the pageTab
+          content: '';
+          display: block;
+          height: 1px;
+          width: 100%;
+          position: absolute;
+          right: 0;
+          @include chatOpeningTransition(right);
+          bottom: 0;
+        }
+
+        .chatOpen & {
+          background: transparent;
+          border-bottom: none;
+
+          &:before {
+            right: $scrollbar;
+          }
+
+          &:after {
+            right: $chatCloseBtn + $scrollbar;
+          }
+        }
+
+        .pageTabs {
+          max-width: $pageWidth;
+          margin: 0 auto;
+          position: relative;
+
+          .userIcon {
+            border-width: 2px;
+            border-style: solid;
+            width: 44px;
+            height: 44px;
+            margin-right: $pad;
+          }
+
+          .tab {
+            border-radius: 0;
+            box-sizing: content-box;
+            font-size: $tx4;
+
+            &.active {
+              border-bottom-width: 1px;
+              border-bottom-style: solid;
+            }
+          }
+        }
+      }
 
       .pageContent {
         width: $pageWidth + $padLg + $padLg;
@@ -209,8 +268,8 @@ ul, ol {
 
   #chatConvoContainer {
     position: fixed;
-    right: 0;
-    bottom: 42px;
+    right: $scrollbar;
+    bottom: 1px;
     z-index: 2; // chat needs to be on top of modals
     width: 250px;
     height: 360px;
@@ -286,22 +345,43 @@ ul, ol {
 
 #milestone {
   // delete this rule in production
-  position: fixed;
-  bottom: -4px;
-  padding: 4px 132px 22px 8px;
-  font-size: 14px;
-  right: -6px;
-  border-radius: 4px;
-  border-width: 2px;
-  border-style: solid;
-  z-index: 10;
+  display: none;
 
-  .milestone-inner {
-    position: relative;
-    top: 10px;
+  .pre-release & {
+    display: block;
+    position: fixed;
+    bottom: -8px;
+    padding: 2px 132px 30px 8px;
+    font-size: 14px;
+    right: -6px;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    z-index: 10;
+    @include chatOpeningTransition(right);
+
+    .milestone-inner {
+      position: relative;
+      top: 10px;
+    }
   }
+
+  .pre-release .chatOpen & {
+    right: 264px;
+  }
+
 }
 
 #doorbell-button {
-  right: 8px;
+  display: none;
+
+  .pre-release & {
+    display: block;
+    right: 8px;
+    @include chatOpeningTransition(right);
+  }
+
+  .pre-release .chatOpen & {
+    right: 272px;
+  }
 }
