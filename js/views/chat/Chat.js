@@ -29,9 +29,30 @@ export default class extends baseVw {
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
     this.debouncedOnProfileFetchScroll = _.debounce(this.onProfileFetchScroll, 200).bind(this);
     this.profileDeferreds = {};
+    this.fetching = false;
+    this.fetchError = false;
 
-    // TODO: handle fetch error.
-    this.listenTo(this.collection, 'sync', () => this.render());
+    this.listenTo(this.collection, 'sync', () => {
+      this.fetching = false;
+      this.fetchError = false;
+      this.render();
+    });
+
+    this.listenTo(this.collection, 'request', () => {
+      clearTimeout(this.fakeErrorLatencyTimeout);
+      this.fetching = true;
+      this.fetchError = false;
+      this.render();
+    });
+
+    this.listenTo(this.collection, 'error', (cl, resp) => {
+      this.fakeErrorLatencyTimeout = setTimeout(() => {
+        this.fetching = false;
+        this.fetchError = true;
+        this.fetchErrorMessage = resp.responseJSON && resp.responseJSON.reason || '';
+        this.render();
+      }, 300);
+    });
 
     this.socket = getSocket();
 
@@ -48,6 +69,8 @@ export default class extends baseVw {
     return {
       'click .js-topUnreadBanner': 'onClickTopUnreadBanner',
       'click .js-bottomUnreadBanner': 'onClickBottomUnreadBanner',
+      'click .js-fetchStateHead': 'onClickFetchStateHead',
+      'click .js-retryFetchConvos': 'onClickRetryConvoFetch',
     };
   }
 
@@ -64,91 +87,6 @@ export default class extends baseVw {
     if (this.chatHeads.views.length) {
       this.handleUnreadBadge();
     }
-  }
-
-  /**
-   * Outside of this view, please use the "public" openConversation().
-   */
-  _openConversation(guid, profilePromise) {
-    if (this.conversation && this.conversation.guid === guid) {
-      // In order for the chat head unread count to update properly, be sure to
-      // open before marking convo as read.
-      this.conversation.open();
-
-      if (this.collection.get(guid) && this.collection.get(guid).get('unread') &&
-        this.conversation.messages.length) {
-        this.conversation.markConvoAsRead();
-      }
-
-      return;
-    }
-
-    const oldConvo = this.conversation;
-
-    this.conversation = this.createChild(Conversation, {
-      guid,
-      profile: profilePromise,
-    });
-
-    this.listenTo(this.conversation, 'clickCloseConvo',
-      () => this.closeConversation());
-
-    this.listenTo(this.conversation, 'newOutgoingMessage',
-      (e) => this.onNewChatMessage(e.model.toJSON()));
-
-    this.listenTo(this.conversation, 'convoMarkedAsRead',
-      () => this.onConvoMarkedAsRead(guid));
-
-    this.listenTo(this.conversation, 'deleting',
-      (e) => {
-        e.request.done(() => {
-          this.collection.remove(e.guid);
-
-          if (this.conversation && this.conversation.guid === e.guid) {
-            this.conversation.remove();
-            this.conversation = null;
-          }
-        });
-      });
-
-    this.$chatConvoContainer
-      .append(this.conversation.render().el);
-
-    this.conversation.open();
-    this.open();
-
-    if (oldConvo) oldConvo.remove();
-  }
-
-  openConversation(guid, profile) {
-    if (!guid) {
-      throw new Error('Please provide a guid.');
-    }
-
-    if (typeof profile !== 'undefined' &&
-      !(profile instanceof Profile)) {
-      throw new Error('If providing a profile, it must be an instance of the profile model.');
-    }
-
-
-    let profilePromise;
-
-    if (profile) {
-      // If the profile model is provided, well turn it into a deferred.
-      const deferred = $.Deferred();
-      this.profileDeferreds[guid] = deferred;
-      deferred.resolve(profile);
-      profilePromise = deferred.promise();
-    } else {
-      // If not providing the profile, we'll fetch it.
-      profilePromise = this.fetchProfile(guid);
-    }
-
-    this._openConversation(guid, profilePromise);
-  }
-
-  closeConversation() {
-    if (this.conversation) this.conversation.close();
   }
 
   onScroll() {
@@ -247,6 +185,101 @@ export default class extends baseVw {
     if (chatHead) chatHead.set('unread', 0);
   }
 
+  onClickFetchStateHead() {
+    if (!this.isOpen) {
+      this.open();
+    }
+  }
+
+  onClickRetryConvoFetch() {
+    this.collection.fetch();
+  }
+
+  /**
+   * Outside of this view, please use the "public" openConversation().
+   */
+  _openConversation(guid, profilePromise) {
+    if (this.conversation && this.conversation.guid === guid) {
+      // In order for the chat head unread count to update properly, be sure to
+      // open before marking convo as read.
+      this.conversation.open();
+
+      if (this.collection.get(guid) && this.collection.get(guid).get('unread') &&
+        this.conversation.messages.length) {
+        this.conversation.markConvoAsRead();
+      }
+
+      return;
+    }
+
+    const oldConvo = this.conversation;
+
+    this.conversation = this.createChild(Conversation, {
+      guid,
+      profile: profilePromise,
+    });
+
+    this.listenTo(this.conversation, 'clickCloseConvo',
+      () => this.closeConversation());
+
+    this.listenTo(this.conversation, 'newOutgoingMessage',
+      (e) => this.onNewChatMessage(e.model.toJSON()));
+
+    this.listenTo(this.conversation, 'convoMarkedAsRead',
+      () => this.onConvoMarkedAsRead(guid));
+
+    this.listenTo(this.conversation, 'deleting',
+      (e) => {
+        e.request.done(() => {
+          this.collection.remove(e.guid);
+
+          if (this.conversation && this.conversation.guid === e.guid) {
+            this.conversation.remove();
+            this.conversation = null;
+          }
+        });
+      });
+
+    this.$chatConvoContainer
+      .append(this.conversation.render().el);
+
+    this.conversation.open();
+    this.open();
+
+    if (oldConvo) oldConvo.remove();
+  }
+
+  openConversation(guid, profile) {
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    if (typeof profile !== 'undefined' &&
+      !(profile instanceof Profile)) {
+      throw new Error('If providing a profile, it must be an instance of the profile model.');
+    }
+
+
+    let profilePromise;
+
+    if (profile) {
+      // If the profile model is provided, well turn it into a deferred.
+      const deferred = $.Deferred();
+      this.profileDeferreds[guid] = deferred;
+      deferred.resolve(profile);
+      profilePromise = deferred.promise();
+    } else {
+      // If not providing the profile, we'll fetch it.
+      profilePromise = this.fetchProfile(guid);
+    }
+
+    this._openConversation(guid, profilePromise);
+  }
+
+  closeConversation() {
+    if (this.conversation) this.conversation.close();
+  }
+
   open() {
     if (this._isOpen) return;
     this._isOpen = true;
@@ -288,6 +321,8 @@ export default class extends baseVw {
     }
 
     $(container).append(this.el);
+    this.fetchProfileOfVisibleChatHeads();
+
     return this;
   }
 
@@ -418,9 +453,18 @@ export default class extends baseVw {
       (this._$chatConvoContainer = $('#chatConvoContainer'));
   }
 
+  remove() {
+    clearTimeout(this.fakeErrorLatencyTimeout);
+    super.remove();
+  }
+
   render() {
     loadTemplate('chat/chat.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        fetching: this.fetching,
+        fetchError: this.fetchError,
+        fetchErrorMessage: this.fetchErrorMessage,
+      }));
 
       if (this.chatHeads) this.chatHeads.remove();
       this.chatHeads = this.createChild(ChatHeads, {

@@ -1,3 +1,24 @@
+<% if (ob.fetching) { %>
+<div class="flex gutterHSm js-fetchStateHead" style="width: 225px; margin-top: 10px;">
+  <a class="padTn"><%= ob.spinner() %></a>
+  <div class="contentBox padSm clrBr clrP clrSh1 tx6" style="width: 177px">
+    <span class="tx6"><%= ob.polyT('chat.fetchingConversations') %></span>
+  </div>
+</div>
+<% } else if (ob.fetchError) { %>
+<div class="flex gutterHSm js-fetchStateHead" style="width: 225px; margin-top: 10px;">
+  <a class='pad clrTErr tx1 ion-android-warning'></a>
+  <div class="contentBox padSm clrBr clrP clrSh1 tx6" style="width: 177px">
+    <% if (!ob.fetchErrorMessage) { %>
+    <span class="tx6"><%= ob.polyT('chat.errorFetching') %></span>
+    <% } else { %>
+    <span class="tx6"><%= ob.polyT('chat.errorFetchingWithMessage', { msg: ob.fetchErrorMessage }) %></span>
+    <% } %>
+    <div><a class="tx6 js-retryFetchConvos">Retry</a></div>
+  </div>
+</div>
+<% } %>
+
 <div class="js-chatHeadsContainer"></div>
 <a class="topUnreadBanner js-topUnreadBanner clrE1 clrTOnEmph">
   <span class="fullText"><%= ob.polyT('chat.unreadMessages', { arrow: '▲' }) %></span>

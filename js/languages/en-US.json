@@ -53,6 +53,9 @@
     "notConnectedMenuItem": "Not Connected"
   },
   "chat": {
+    "fetchingConversations": "Retrieving your chat conversations…",
+    "errorFetching": "There was an error retrieving your chat conversations.",
+    "errorFetchingWithMessage": "There was an error retrieving your chat conversations: %{msg}",
     "unreadMessages": "Unread messages %{arrow}",
     "conversation": {
       "messageInputPlaceholder": "Enter message…",
