@@ -460,12 +460,6 @@ export default class extends baseVw {
   open() {
     if (this._isOpen) return;
     this._isOpen = true;
-
-    console.time('chatConvoOpen');
-    $('#chatConvoContainer').one('transitionend', () => {
-      console.timeEnd('chatConvoOpen');
-    });
-
     getBody().addClass('chatConvoOpen');
   }
 
@@ -516,6 +510,10 @@ export default class extends baseVw {
       .velocity('stop')
       .velocity({
         top: 266,
+      }, {
+        complete: () => {
+          this.$emojiMenuContainer[0].scrollTop = 0;
+        },
       });
   }
 
