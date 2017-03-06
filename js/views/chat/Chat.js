@@ -199,6 +199,8 @@ export default class extends baseVw {
    * Outside of this view, please use the "public" openConversation().
    */
   _openConversation(guid, profilePromise) {
+    this.open();
+
     if (this.conversation && this.conversation.guid === guid) {
       // In order for the chat head unread count to update properly, be sure to
       // open before marking convo as read.
@@ -244,7 +246,6 @@ export default class extends baseVw {
       .append(this.conversation.render().el);
 
     this.conversation.open();
-    this.open();
 
     if (oldConvo) oldConvo.remove();
   }

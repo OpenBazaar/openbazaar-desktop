@@ -420,6 +420,7 @@ export default class extends baseVw {
     if (this._isOpen) return;
     this._isOpen = true;
     getBody().addClass('chatConvoOpen');
+    this.$messageInput.focus();
   }
 
   close() {
@@ -488,6 +489,11 @@ export default class extends baseVw {
       (this._$convoMessagesWindow = this.$('.js-convoMessagesWindow'));
   }
 
+  get $messageInput() {
+    return this._$messageInput ||
+      (this._$messageInput = this.$('.js-inputMessage'));
+  }
+
   render() {
     loadTemplate('chat/conversation.html', (t) => {
       this.$el.html(t({
@@ -503,6 +509,7 @@ export default class extends baseVw {
       this._$loadMessagesError = null;
       this._$convoMessagesWindow = null;
       this._$typingIndicator = null;
+      this._$messageInput = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 
