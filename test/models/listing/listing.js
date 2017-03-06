@@ -15,7 +15,7 @@ describe('the Listing model', () => {
 
   it('throws an error if you attempt to fetcha listing without a guid set.', () => {
     const listing = new Listing({
-      listing: { slug: 'a-happy-slug' },
+      slug: 'a-happy-slug',
     });
     let errorThrown = false;
 
@@ -45,7 +45,7 @@ describe('the Listing model', () => {
 
   it('does not throw an error if you attempt to fetch with a guid and slug both set', () => {
     const listing = new Listing({
-      listing: { slug: 'a-happy-slug' },
+      slug: 'a-happy-slug',
     }, { guid: '12345' });
 
     let errorThrown = false;
@@ -98,11 +98,11 @@ describe('the Listing model', () => {
       ],
     });
 
-    expect(parsed.listing.item.price).to.equal(1.23);
-    expect(parsed.listing.shippingOptions[0].services[0].price).to.equal(1.23);
-    expect(parsed.listing.shippingOptions[0].services[1].price).to.equal(2.34);
-    expect(parsed.listing.shippingOptions[1].services[0].price).to.equal(4.56);
-    expect(parsed.listing.coupons[0].priceDiscount).to.equal(13.33);
+    expect(parsed.item.price).to.equal(1.23);
+    expect(parsed.shippingOptions[0].services[0].price).to.equal(1.23);
+    expect(parsed.shippingOptions[0].services[1].price).to.equal(2.34);
+    expect(parsed.shippingOptions[1].services[0].price).to.equal(4.56);
+    expect(parsed.coupons[0].priceDiscount).to.equal(13.33);
   });
 
   it('converts BTC prices from Satoshi to BTC format in parse', () => {
@@ -147,13 +147,138 @@ describe('the Listing model', () => {
       ],
     });
 
-    expect(parsed.listing.item.price).to.equal(2.71453590);
-    expect(parsed.listing.shippingOptions[0].services[0].price).to.equal(2.71453590);
-    expect(parsed.listing.shippingOptions[0].services[1].price).to.equal(8.73927651);
-    expect(parsed.listing.shippingOptions[1].services[0].price).to.equal(2.81649276);
-    expect(parsed.listing.coupons[0].priceDiscount).to.equal(0.00001333);
-    expect(parsed.listing.coupons[1].priceDiscount).to.equal(2.81649276);
+    expect(parsed.item.price).to.equal(2.71453590);
+    expect(parsed.shippingOptions[0].services[0].price).to.equal(2.71453590);
+    expect(parsed.shippingOptions[0].services[1].price).to.equal(8.73927651);
+    expect(parsed.shippingOptions[1].services[0].price).to.equal(2.81649276);
+    expect(parsed.coupons[0].priceDiscount).to.equal(0.00001333);
+    expect(parsed.coupons[1].priceDiscount).to.equal(2.81649276);
   });
+
+  it('fails validation if the refund policy is not provided as a string', () => {
+    const listing = new Listing();
+    listing.set({
+      refundPolicy: 12345,
+    }, { validate: true });
+    const valErr = listing.validationError;
+
+    expect(valErr && valErr.refundPolicy && !!valErr.refundPolicy.length || false).to.equal(true);
+  });
+
+  it('fails validation if the refund policy exceeds the maximum length', () => {
+    let refundPolicy = '';
+    const listing = new Listing();
+
+    for (let i = 0; i < (listing.max.refundPolicyLength + 1); i++) {
+      refundPolicy += 'a';
+    }
+
+    listing.set({ refundPolicy }, { validate: true });
+    const valErr = listing.validationError;
+
+    expect(valErr && valErr.refundPolicy && !!valErr.refundPolicy.length || false).to.equal(true);
+  });
+
+  it('fails validation if the terms and conditions are not provided as a string', () => {
+    const listing = new Listing();
+    listing.set({
+      termsAndConditions: 12345,
+    }, { validate: true });
+    const valErr = listing.validationError;
+
+    expect(valErr && valErr.termsAndConditions &&
+      !!valErr.termsAndConditions.length || false).to.equal(true);
+  });
+
+  it('fails validation if the terms and conditions exceed the maximum length', () => {
+    let termsAndConditions = '';
+    const listing = new Listing();
+
+    for (let i = 0; i < (listing.max.termsAndConditionsLength + 1); i++) {
+      termsAndConditions += 'a';
+    }
+
+    listing.set({ termsAndConditions }, { validate: true });
+    const valErr = listing.validationError;
+
+    expect(valErr && valErr.termsAndConditions &&
+      !!valErr.termsAndConditions.length || false).to.equal(true);
+  });
+
+  it('fails validation if, for a physical good, at least one shipping options is not provided',
+    () => {
+      const listing = new Listing();
+
+      listing.get('metadata').set('contractType', 'PHYSICAL_GOOD');
+
+      listing.set({
+        shippingOptions: [],
+      }, { validate: true });
+
+      const valErr = listing.validationError;
+
+      expect(valErr && valErr.shippingOptions &&
+        !!valErr.shippingOptions.length || false).to.equal(true);
+    });
+
+  it('fails validation if the coupon count exceeds the maximum allowable amount',
+    () => {
+      const listing = new Listing();
+      const couponData = [];
+
+      for (let i = 0; i < (listing.max.couponCount + 1); i++) {
+        couponData.push({
+          discountCode: Date.now() + Math.random(),
+          percentDiscount: 10,
+        });
+      }
+
+      listing.set({
+        coupons: couponData,
+      }, { validate: true });
+
+      const valErr = listing.validationError;
+
+      expect(valErr && valErr.coupons &&
+        !!valErr.coupons.length || false).to.equal(true);
+    });
+
+  it('fails validation if a coupon price exceeds the listing price',
+    () => {
+      const listing = new Listing();
+
+      listing.set({
+        item: {
+          price: 500,
+        },
+        coupons: [
+          {
+            discountCode: Date.now() + Math.random(),
+            priceDiscount: 500, // should not fail validation
+          },
+          {
+            discountCode: Date.now() + Math.random(),
+            priceDiscount: 501, // should fail validation
+          },
+          {
+            discountCode: Date.now() + Math.random(),
+            priceDiscount: 1500, // should fail validation
+          },
+        ],
+      }, { validate: true });
+
+      const valErr = listing.validationError;
+      const coupons = listing.get('coupons');
+
+      expect(valErr && valErr[`coupons[${coupons.at(0).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(0).cid}].priceDiscount`].length || false).to.equal(false);
+
+      expect(valErr && valErr[`coupons[${coupons.at(1).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(1).cid}].priceDiscount`].length || false).to.equal(true);
+
+      expect(valErr && valErr[`coupons[${coupons.at(2).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(2).cid}].priceDiscount`].length || false).to.equal(true);
+    });
 
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync

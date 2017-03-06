@@ -54,8 +54,7 @@ export function shipsFreeToMe(md) {
   } else {
     freeShipping = [];
 
-    md.get('listing')
-      .get('shippingOptions')
+    md.get('shippingOptions')
       .forEach(shipOpt => {
         shipOpt.get('services')
           .forEach(service => {
