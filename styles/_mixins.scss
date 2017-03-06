@@ -173,14 +173,4 @@
       border-color: $col1;
     }
   }
-
-  &#contentFrame:before {
-    // chat close button bottom border
-    border-color: $col1;
-  }
-
-  &#pageTabBar:after {
-    // chat open bottom border
-    background-color: $col1;
-  }
 }

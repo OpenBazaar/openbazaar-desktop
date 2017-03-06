@@ -122,23 +122,6 @@ ul, ol {
     box-sizing: border-box;
     z-index: 0;
 
-    &:before {
-      // bottom border for the chat close button, it gets covered by the pageTabBar
-      content: '';
-      display: block;
-      width: $chatCloseBtn;
-      height: 0;
-      border-bottom-width: 1px;
-      border-bottom-style: solid;
-      position: absolute;
-      top: $chatCloseBtnTop - $bar;
-      right: -$chatCloseBtn;
-      width: $chatCloseBtn;
-      height: $chatCloseBtn;
-      @include chatOpeningTransition(right);
-      z-index: 0;
-    }
-
     .chatOpen &:before {
       right: 0;
     }
@@ -155,43 +138,6 @@ ul, ol {
         height: $barLg;
         overflow: hidden;
 
-        &:before {
-          // mask for the chat close button
-          content: '';
-          display: block;
-          width: $chatCloseBtn;
-          height: $chatCloseBtn;
-          position: absolute;
-          top: $chatCloseBtnTop - $bar;
-          right: -$chatCloseBtn;
-          @include chatOpeningTransition(right);
-          z-index: 0;
-        }
-
-        &:after {
-          // false bottom border for the pageTab
-          content: '';
-          display: block;
-          height: 1px;
-          width: 100%;
-          position: absolute;
-          right: 0;
-          @include chatOpeningTransition(right);
-          bottom: 0;
-        }
-
-        .chatOpen & {
-          background: transparent;
-          border-bottom: none;
-
-          &:before {
-            right: $scrollbar;
-          }
-
-          &:after {
-            right: $chatCloseBtn + $scrollbar;
-          }
-        }
 
         .pageTabs {
           max-width: $pageWidth;
@@ -353,7 +299,7 @@ ul, ol {
     bottom: -8px;
     padding: 2px 132px 30px 8px;
     font-size: 14px;
-    right: -6px;
+    right: $scrollbar;
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
@@ -377,7 +323,7 @@ ul, ol {
 
   .pre-release & {
     display: block;
-    right: 8px;
+    right: $scrollbar + 8px;
     @include chatOpeningTransition(right);
   }
 

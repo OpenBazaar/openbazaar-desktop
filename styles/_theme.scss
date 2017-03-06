@@ -26,11 +26,6 @@ button,
   input[type="radio"]:checked + label:before {
     box-shadow: inset 0 0 0 3px $secondary;
   }
-
-  &#pageTabBar:before {
-    // the chat button cutout shadow fills the rest of the tab bar with color
-    box-shadow: 0 0 0 200vw $primary;
-  }
 }
 
 .clrS {

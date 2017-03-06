@@ -1,14 +1,13 @@
 #chatCloseBtn {
   position: absolute;
-  top: $chatCloseBtnTop;
-  right: -$chatCloseBtn;
-  width: $chatCloseBtn;
-  height: $chatCloseBtn;
+  top: 65px;
+  right: -220px;
+  width: 40px;
+  height: 40px;
   z-index: 3;
   border-radius: 0;
   font-size: $tx1;
-  border-bottom-width: 0;
-  background: transparent;
+  border-right-width: 0;
   @include chatOpeningTransition(right);
 
   .chatOpen & {
