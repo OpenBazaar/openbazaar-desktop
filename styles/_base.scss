@@ -122,10 +122,6 @@ ul, ol {
     box-sizing: border-box;
     z-index: 0;
 
-    .chatOpen &:before {
-      right: 0;
-    }
-
     #pageContainer {
       padding-top: $barLg;
 
