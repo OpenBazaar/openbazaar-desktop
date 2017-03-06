@@ -263,7 +263,7 @@ export default class extends baseVw {
     let profilePromise;
 
     if (profile) {
-      // If the profile model is provided, well turn it into a deferred.
+      // If the profile model is provided, we'll turn it into a deferred.
       const deferred = $.Deferred();
       this.profileDeferreds[guid] = deferred;
       deferred.resolve(profile);
