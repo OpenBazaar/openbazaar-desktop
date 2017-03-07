@@ -515,6 +515,8 @@
       "tagsDetailed": "Tags (For getting your listing discovered)",
       "category": "Category",
       "categoryDetailed": "Category (For organizing your store)",
+      "variants": "Variants",
+      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
       "inventory": "Inventory",
       "variants": "Variants",
       "returnPolicy": "Return Policy",
@@ -590,6 +592,9 @@
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
       "btnAddCoupon": "+ Add Coupon"      
+    },
+    "variants": {
+      "btnAddVariant": "Add Variant"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",

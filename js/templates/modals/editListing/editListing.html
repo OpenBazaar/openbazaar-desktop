@@ -16,6 +16,7 @@
           ob.polyT('editListing.sectionNames.shipping'),
           ob.polyT('editListing.sectionNames.tags'),
           ob.polyT('editListing.sectionNames.category'),
+          ob.polyT('editListing.sectionNames.variants'),
           ob.polyT('editListing.sectionNames.returnPolicy'),
           ob.polyT('editListing.sectionNames.termsAndConditions'),
           ob.polyT('editListing.sectionNames.coupons'),
@@ -210,6 +211,37 @@
           <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCategories') %></div>
         </div>
       </section>
+
+      <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantsDetailed') %></h2>
+        <hr class="clrBr rowMd" />
+        <a class="btn clrP clrBr clrSh2 js-addVariant"><%= ob.polyT('editListing.variants.btnAddVariant') %></a>
+
+        <div class="variantsWrap padKids padStack padTop0">
+          <div class="flexRow gutterH">
+            <div class="col6 simpleFlexCol">
+              <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
+              <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.namePlaceholder') %>">
+            </div>
+            <div class="col3 simpleFlexCol">
+              <% if (ob.errors['estimatedDelivery']) print(ob.formErrorTmpl({ errors: ob.errors['estimatedDelivery'] })) %>
+              <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="estimatedDelivery" value="<%= ob.estimatedDelivery %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.estimatedDeliveryPlaceholder') %>">
+            </div>
+            <div class="col3 simpleFlexCol">
+              <% if (ob.errors['price']) print(ob.formErrorTmpl({ errors: ob.errors['price'] })) %>
+              <div class="flexRow marginTopAuto">
+                <input type="text" class="clrBr clrP clrSh2 js-price" name="price" value="<% print(typeof ob.price === 'number' ? ob.formatPrice(ob.price, ob.getCurrency() === 'BTC') : ob.price || '') %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="number">
+                <a class="iconBtn ion-trash-b clrBr clrP margLSm js-btnRemoveService btnRemoveService"></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flexRow pad js-serviceSection <% if (ob.type === 'LOCAL_PICKUP') print('hide') %>">
+            <a class="clrBr clrP clrTEm js-btnAddVariant"><%= ob.polyT('editListing.variants.btnAddVariant') %></a>
+          </div>
+        </div>
+      </section>      
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h2>
