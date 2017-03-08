@@ -133,6 +133,8 @@ ul, ol {
         width: 100%;
         height: $barLg;
         overflow: hidden;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
 
 
         .pageTabs {
@@ -181,14 +183,19 @@ ul, ol {
 
   #chatContainer {
     position: fixed;
-    top: 105px;
+    top: $bar + $barLg;
     right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
-    height: calc(100% - 150px); // for now keep chat above "testing only" badge
+    height: calc(100% - #{$bar + $barLg});
     z-index: 2; // chat needs to be on top of modals
-    @include chatOpeningTransition(width);
+    @include chatOpeningTransition(width, background-color, border-color);
     overflow-y: auto;
     overflow-x: hidden;
+    background-color: transparent;
+    border-color: transparent;
+    border-width: 0 0 0 1px;
+
+    border-style: solid;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -205,6 +212,8 @@ ul, ol {
 
     .chatOpen & {
       width: $chatOpen;
+      background-color: inherit;
+      border-color: inherit;
     }
   }
 
@@ -295,23 +304,19 @@ ul, ol {
     bottom: -8px;
     padding: 2px 132px 30px 8px;
     font-size: 14px;
-    right: $scrollbar;
+    right: $scrollbar + 4;
     border-radius: 8px;
     border-width: 2px;
     border-style: solid;
-    z-index: 10;
+    z-index: 1;
     @include chatOpeningTransition(right);
 
     .milestone-inner {
       position: relative;
       top: 10px;
+      left: 110px;
     }
   }
-
-  .pre-release .chatOpen & {
-    right: 264px;
-  }
-
 }
 
 #doorbell-button {
@@ -319,11 +324,7 @@ ul, ol {
 
   .pre-release & {
     display: block;
-    right: $scrollbar + 8px;
+    right: 304px;
     @include chatOpeningTransition(right);
-  }
-
-  .pre-release .chatOpen & {
-    right: 272px;
   }
 }

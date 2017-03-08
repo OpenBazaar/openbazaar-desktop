@@ -1,13 +1,13 @@
 #chatCloseBtn {
   position: absolute;
-  top: 65px;
+  top: $bar + $barLg - 40;
   right: -220px;
   width: 40px;
   height: 40px;
   z-index: 3;
   border-radius: 0;
   font-size: $tx1;
-  border-right-width: 0;
+  border-bottom-width: 0;
   @include chatOpeningTransition(right);
 
   .chatOpen & {
@@ -111,6 +111,7 @@
 .chatConversation {
   border-width: 1px;
   border-style: solid;
+  border-color: inherit;
   height: 100%;
 
   .convoHeader {
@@ -140,7 +141,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
+    right: 1px; // don't cover the right border of the parent
     bottom: 0;
     padding-left: $padSm;
     padding-right: $padSm;
@@ -156,7 +157,7 @@
     .typingIndicator {
       position: fixed;
       left: 50%;
-      transform: translate(-50%, -103%);
+      transform: translate(-50%, -110%);
       border-style: solid;
       border-width: 1px;
       border-top-width: 0;

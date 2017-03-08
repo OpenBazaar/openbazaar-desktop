@@ -121,6 +121,10 @@ input[type=range][class~="clrS"] {
 }
 
 .clrBr3 {
+  @include borderColor($border3, $border4);
+}
+
+.clrBrDec1 {
   // decorative border with a shadow to create a faint outline
   border-color: $textOnEmph;
   border-width: 2px;
@@ -293,11 +297,5 @@ input[type=range][class~="clrS"] {
   &:after {
     background-color: $primary;
     border-color: $border;
-  }
-}
-
-#chatConvoContainer {
-  .chatConversation {
-    border-color: $border3;
   }
 }
