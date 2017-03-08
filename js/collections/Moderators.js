@@ -7,16 +7,25 @@ import { getCurrentConnection } from '../utils/serverConnect';
 
 export default class extends Collection {
   constructor(models = [], options = {}) {
-    super(models, options);
-    this.apiPath = options.apiPath || 'moderators';
-    this.async = !!options.async;
-    this.includeString = options.include ? `&include=${options.include}` : '';
-    this.excludeCollection = options.excludeCollection || [];
+    const opts = {
+      // set defaults
+      apiPath: 'moderators',
+      async: false,
+      // defaults will be overwritten by passed in options
+      ...options,
+      includeString: options.include ? `&include=${options.include}` : '',
+    };
+
+    super(models, opts);
+
+    this.options = opts;
+
     this.notFetchedYet = [];
   }
 
   url() {
-    return app.getServerUrl(`ob/${this.apiPath}?async=${this.async}${this.includeString}`);
+    const op = this.options;
+    return app.getServerUrl(`ob/${op.apiPath}?async=${op.async}${op.includeString}`);
   }
 
   model(attrs, options) {
@@ -36,15 +45,17 @@ export default class extends Collection {
 
   add(models, options) {
     let filteredModels = _.isArray(models) ? models : [models];
-    const excludeList = _.pluck(this.excludeCollection.models, 'id');
+    // if an excluded collection was passed into the options, don't add any moderators in it
+    const excludeList = this.options.excludeCollection ?
+        _.pluck(this.options.excludeCollection.models, 'id') : [];
     let modIDs = [];
     // remove any returned profiles that are not valid moderators
     if (models) {
       filteredModels = filteredModels.filter((mod) => {
-        // don't add excluded ids
-        const notExcluded = excludeList.indexOf(mod.id) === -1;
+        // don't add excluded ids or your own id
+        const notExcluded = excludeList.indexOf(mod.id) === -1 && mod.id !== app.profile.id;
         // don't add if not a mod or the mod data is missing
-        return mod.moderator && mod.modInfo && notExcluded;
+        return mod.get('moderator') && mod.get('modInfo') && notExcluded;
       });
       modIDs = _.pluck(filteredModels, 'id');
 
@@ -54,17 +65,25 @@ export default class extends Collection {
   }
 
   parse(response) {
-    if (this.async) {
+    if (this.options.async) {
       // if the fetch is async, don't parse the results, they don't have model data
       this.socketID = response.id;
       // start listening to the web socket using the returned id
       const serverConnection = getCurrentConnection();
       if (serverConnection && serverConnection.status !== 'disconnected') {
         this.listenTo(serverConnection.socket, 'message', (event) => {
-          const data = JSON.parse(event.data);
+          const data = event.jsonData;
           if (data.id === this.socketID) {
-            data.profile.id = data.peerId;
-            this.add([data.profile]);
+            if (data.error || !data.profile) {
+              // don't add the results if there is an error or the profile is missing
+              this.trigger('asyncError', { id: data.peerId, error: data.error });
+              // remove errored id from the not fetched list
+              this.notFetchedYet = this.notFetchedYet.filter(id => id !== data.peerId);
+            } else {
+              data.profile.id = data.peerId;
+              const mod = new Moderator(data.profile, { parse: true });
+              this.add(mod);
+            }
           }
         });
       } else {
@@ -73,7 +92,16 @@ export default class extends Collection {
 
       return '';
     }
+    // return only the profile so it matches the data expected by the Profile model
+    const formattedResponse = response.map((mod) => {
+      const mappedProfile = mod.profile;
+      mappedProfile.id = mod.peerId;
+      return mappedProfile;
+    });
 
-    return response;
+    // clear the not fetched list on POST return
+    this.notFetchedYet = [];
+
+    return formattedResponse;
   }
 }

@@ -382,6 +382,7 @@
         "error": "There was an error saving your store settings."
       },
       "errors": {
+        "modNotFoundTitle": "Moderator Not Found",
         "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
         "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
         "modAlreadyAdded": "You have already added that moderator.",

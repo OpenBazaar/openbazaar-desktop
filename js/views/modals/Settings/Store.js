@@ -37,16 +37,37 @@ export default class extends baseVw {
       excludeCollection: this.modsSelected,
     });
 
+    this.modFetches = [];
+    this.modViewCache = [];
+
+    if (this.currentMods.length) {
+      // fetch the already selected moderators
+      const fetch = this.modsSelected.fetch({ fetchList: this.currentMods });
+      this.modFetches.push(fetch);
+    }
+
     this.listenTo(this.modsSelected, 'add', (model, collection) => {
-      this.buildModList(model, collection, this.$modListSelected, { cardState: 'selected' });
+      this.addModToList(model, collection, this.$modListSelected, { cardState: 'selected' });
+    });
+
+    this.listenTo(this.modsSelected, 'asyncError', (opts) => {
+      this.modNotFound(opts.id, '', opts.error);
     });
 
     this.listenTo(this.modsByID, 'add', (model, collection) => {
-      this.buildModList(model, collection, this.$modListByID);
+      this.addModToList(model, collection, this.$modListByID);
+    });
+
+    this.listenTo(this.modsByID, 'asyncError', (opts) => {
+      this.modNotFound(opts.id, '', opts.error);
     });
 
     this.listenTo(this.modsAvailable, 'add', (model, collection) => {
-      this.buildModList(model, collection, this.$modListAvailable);
+      this.addModToList(model, collection, this.$modListAvailable);
+    });
+
+    this.listenTo(this.modsAvailable, 'asyncError', (opts) => {
+      this.modNotFound(opts.id, '', opts.error);
     });
 
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
@@ -62,41 +83,60 @@ export default class extends baseVw {
   }
 
   fetchAvailableModerators() {
-    // be aware that this call can take a long time
     this.$modListAvailable.addClass('processing');
-    this.modsAvailable.fetch()
+    const fetch = this.modsAvailable.fetch()
       .fail((...args) => {
+        if (this.isRemoved()) return;
         const title = app.polyglot.t('settings.storeTab.errors.availableModsFailed');
         const message = args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
         openSimpleMessage(title, message);
       })
       .always(() => {
-        setTimeout(() => {
-          // remove the processing class after a long enough time. If it's still visible
-          // there are probably no moderators coming.
-          this.$modListAvailable.removeClass('processing');
-        }, 15000);
+        if (this.isRemoved()) return;
+        // remove the processing class after a long enough time. If it's still visible
+        // there are probably no moderators coming.
+        setTimeout(() => this.$modListAvailable.removeClass('processing'), 15000);
       });
+    this.modFetches.push(fetch);
   }
 
-  buildModList(model, collection, target, opts = {}) {
-    target.toggleClass('hasMods', !!collection.length);
+  addModToList(model, collection, target, opts = {}) {
+    let newModView;
+
+    // if DOM is available, set DOM state
+    if (target) {
+      target.addClass('processing');
+      target.toggleClass('hasMods', !!collection.length);
+    }
 
     if (model) {
       const docFrag = $(document.createDocumentFragment());
-      const newMod = this.createChild(ModCard, {
-        model,
-        ...opts,
-      });
-      this.listenTo(newMod, 'changeModerator', (data) => this.changeMod(data));
-      docFrag.append(newMod.render().$el);
-      target.append(docFrag);
+      // check to see if view already exists
+      const cachedView = _.find(this.modViewCache, (mod) => mod.model.id === model.id);
+      // if view hasn't already been created, create it now
+      if (!cachedView) {
+        newModView = this.createChild(ModCard, {
+          model,
+          ...opts,
+        });
+        this.listenTo(newModView, 'changeModerator', (data) => this.changeMod(data));
+      } else {
+        newModView = cachedView;
+        newModView.cardState = opts.cardState || 'view';
+        newModView.delegateEvents();
+      }
+      // if the view already exists and is in the DOM, this will move it
+      docFrag.append(newModView.render().$el);
+      target.prepend(docFrag);
+      this.modViewCache.push(newModView);
     }
 
     // if all moderators have loaded, clear any processing class
-    if (!collection.notFetchedYet.length) {
+    if (!collection.notFetchedYet.length && target) {
       target.removeClass('processing');
     }
+    // if it takes a very long time to get the moderators, clear the processing class
+    setTimeout(() => target && target.removeClass('processing'), 15000);
   }
 
   clickSubmitModByID() {
@@ -131,6 +171,15 @@ export default class extends baseVw {
     }
   }
 
+  modNotFound(guid, handle, error = '') {
+    const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
+    const phrase = app.polyglot.t('settings.storeTab.errors.modNotFound',
+        { guidOrHandle: handle || guid });
+    const msg = `${phrase} \n ${error}`;
+
+    openSimpleMessage(title, msg);
+  }
+
   loadModByID(guid, handle = '') {
     const addedError = app.polyglot.t('settings.storeTab.errors.modAlreadyAdded');
     const badModError = app.polyglot.t('settings.storeTab.errors.modNotFound',
@@ -139,17 +188,20 @@ export default class extends baseVw {
     this.$submitModByIDInputError.addClass('hide');
 
     if (this.currentMods.indexOf(guid) === -1) {
-      this.modsByID.fetch({ fetchList: [guid] })
+      const fetch = this.modsByID.fetch({ fetchList: [guid] })
           .done(() => {
             this.currentMods.push(guid);
             this.$submitModByIDInput.val('');
           })
           .fail(() => {
+            if (this.isRemoved()) return;
             this.showModByIDError(badModError);
           })
           .always(() => {
+            if (this.isRemoved()) return;
             this.$submitModByID.removeClass('processing');
           });
+      this.modFetches.push(fetch);
     } else {
       this.showModByIDError(addedError);
     }
@@ -214,12 +266,38 @@ export default class extends baseVw {
             msg: app.polyglot.t('settings.storeTab.status.done'),
             type: 'confirmed',
           });
+          // remove models that aren't selected any more
+          const oldIDs = this.modsSelected.pluck('id');
+          const removedIDs = _.without(oldIDs, this.currentMods);
+          const addedIDs = _.without(this.currentMods, oldIDs);
+          const removedModels = [];
+
+          // set aside removed models
+          removedIDs.forEach((modelID) => {
+            const modToAdd = this.modsSelected.get(modelID);
+            removedModels.push(modToAdd);
+          });
+
+          // remove moderators by id from the selected moderators
+          this.modsSelected.remove(removedIDs);
+
+          // add removed moderators to available list now that they won't be excluded
+          this.modsAvailable.add(removedModels);
+
+          // add the models from the other collections to the selected moderators
+          addedIDs.forEach((modelID) => {
+            const modToAdd = this.modsByID.get(modelID) || this.modsAvailable.get(modelID);
+            this.modsSelected.add(modToAdd);
+          });
+
+          // remove added models from other collections
+          this.modsByID.remove(addedIDs);
+          this.modsAvailable.remove(addedIDs);
         })
         .fail((...args) => {
           // if at least one save fails, the save has failed.
           const errMsg = args[0] && args[0].responseJSON &&
             args[0].responseJSON.reason || '';
-
           openSimpleMessage(app.polyglot.t('settings.storeTab.status.error'), errMsg);
 
           statusMessage.update({
@@ -230,11 +308,9 @@ export default class extends baseVw {
         .always(() => {
           this.$btnSave.removeClass('processing');
           setTimeout(() => statusMessage.remove(), 3000);
+          this.render();
         });
     }
-
-    this.render();
-
     if (!this.profile.validationError && !this.settings.validationError) {
       this.$btnSave.addClass('processing');
     }
@@ -288,6 +364,11 @@ export default class extends baseVw {
         (this._$submitModByIDInputErrorText = this.$submitModByIDInputError.find('.js-errorText'));
   }
 
+  remove() {
+    this.modFetches.forEach(fetch => fetch.abort());
+    super.remove();
+  }
+
   render() {
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
@@ -300,8 +381,6 @@ export default class extends baseVw {
         ...this.settings.toJSON(),
       }));
 
-      // this.$('#moderationCurrency').select2();
-
       this.$profileFormFields = this.$('.js-profileField');
       this._$btnSave = null;
       this._$modListSelected = null;
@@ -312,12 +391,18 @@ export default class extends baseVw {
       this._$submitModByID = null;
       this._$submitModByIDInputError = null;
       this._$submitModByIDInputErrorText = null;
-    });
 
-    if (this.currentMods.length) {
-      this.$modListSelected.addClass('processing');
-      this.modsSelected.fetch({ fetchList: this.currentMods });
-    }
+      // if mods are already available, add them now
+      this.modsSelected.each((mod) => {
+        this.addModToList(mod, this.modsSelected, this.$modListSelected, { cardState: 'selected' });
+      });
+      this.modsByID.each((mod) => {
+        this.addModToList(mod, this.modsByID, this.$modListByID, { cardState: 'view' });
+      });
+      this.modsAvailable.each((mod) => {
+        this.addModToList(mod, this.modsAvailable, this.$modListAvailable, { cardState: 'view' });
+      });
+    });
 
     return this;
   }

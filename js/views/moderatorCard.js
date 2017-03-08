@@ -7,8 +7,12 @@ import { launchModeratorDetailsModal } from '../utils/modalManager';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
     this.cardState = options.cardState || 'view';
 
     if (!this.model || !(this.model instanceof Profile)) {
@@ -23,7 +27,6 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-moderatorCard': 'viewDetails',
-      'click .js-selectBtn': 'clickSelectBtn',
     };
   }
 

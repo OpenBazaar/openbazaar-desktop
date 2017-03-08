@@ -1,6 +1,7 @@
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import { followedByYou, followUnfollow } from '../../utils/follow';
+import Profile from '../../models/profile/Profile';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -12,7 +13,12 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-    this.model = this.options.model;
+    this.asyncCalls = [];
+
+    if (!this.model || !(this.model instanceof Profile)) {
+      throw new Error('Please provide a Profile model.');
+    }
+
     this.followedByYou = followedByYou(this.model.id);
 
     // update the follow button when this user is followed or unfollowed
@@ -49,19 +55,32 @@ export default class extends BaseModal {
 
   followClick() {
     this.$followBtn.addClass('processing');
-    followUnfollow(this.model.id, 'follow')
-        .always(() => (this.$followBtn.removeClass('processing')));
+    const followAsync = followUnfollow(this.model.id, 'follow')
+        .always(() => {
+          if (this.isRemoved()) return;
+          this.$followBtn.removeClass('processing');
+        });
+    this.asyncCalls.push(followAsync);
   }
 
   unfollowClick() {
-    this.$unFollowBtn.addClass('processing');
+    const unfollowAsync = this.$unFollowBtn.addClass('processing');
     followUnfollow(this.model.id, 'unfollow')
-        .always(() => (this.$unFollowBtn.removeClass('processing')));
+        .always(() => {
+          if (this.isRemoved()) return;
+          this.$unFollowBtn.removeClass('processing');
+        });
+    this.asyncCalls.push(unfollowAsync);
   }
 
   addAsModerator() {
     this.trigger('addAsModerator');
-    super.close();
+    this.close();
+  }
+
+  remove() {
+    this.asyncCalls.forEach(call => call.abort());
+    super.remove();
   }
 
   render() {
