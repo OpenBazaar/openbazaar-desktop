@@ -74,6 +74,7 @@
 // Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {
   position: relative;
+  width: 100%;
 
   .select2Tags + .select2-container {
     &.select2-container--default {

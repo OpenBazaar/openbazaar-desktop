@@ -198,6 +198,32 @@
           }
         }
       }
+
+      .variantsSection {
+        .variantsWrap {
+          .flexRow {
+            padding-left: 0;
+            padding-right: 0;
+
+            &:first-child {
+              padding-top: 0;
+            }
+
+            .select2-selection__choice {
+              margin-top: 6px;
+            }
+            
+            .select2-search__field {
+              height: 22px;
+            }
+
+            .btnRemoveVariant {
+              height: 42px;
+              width: 50px;
+            }
+          }
+        }
+      }
     }
   }
 }

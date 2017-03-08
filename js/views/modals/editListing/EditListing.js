@@ -751,13 +751,17 @@ export default class extends BaseModal {
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
+      this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
+      this.$editListingVariantsChoicesPlaceholder =
+        this.$('#editListingVariantsChoicesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
       this.$couponsSection = this.$('.js-couponsSection');
 
-      this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
-      });
+      this.$('#editContractType, #editListingVisibility, #editListingCondition, ' +
+        '#editInventoryManagementType').select2({
+          // disables the search box
+          minimumResultsForSearch: Infinity,
+        });
 
       this.$('#editListingCurrency').select2();
 
@@ -844,6 +848,36 @@ export default class extends BaseModal {
 
       this.$editListingCategoriesPlaceholder[
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
+      ]('emptyOfTags');
+
+      // this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
+      // this.$editListingVariantsChoicesPlaceholder =
+      //   this.$('#editListingVariantsChoicesPlaceholder');
+
+      this.$editListingVariantsChoices.select2({
+        multiple: true,
+        tags: true,
+        // dropdownParent needed to fully hide dropdown
+        dropdownParent: this.$('#editListingVariantsChoicesDropdown'),
+        // This is necessary, see comment in select2 for tags above.
+        matcher: () => false,
+      }).on('change', () => {
+        const count = this.$editListingVariantsChoices.val().length;
+
+        this.$editListingVariantsChoicesPlaceholder[
+          count ? 'removeClass' : 'addClass'
+        ]('emptyOfTags');
+      // }).on('select2:selecting', (e) => {
+      //   if (this.$editListingCategories.val().length >= item.maxCategories) {
+      //     this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
+      //     e.preventDefault();
+      //   }
+      });
+
+      // TODO TODO TODO: max variant choices!
+
+      this.$editListingVariantsChoicesPlaceholder[
+        this.$editListingVariantsChoices.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
       // render shipping options

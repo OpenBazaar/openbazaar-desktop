@@ -521,7 +521,8 @@
       "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
-      "coupons": "Coupons"
+      "coupons": "Coupons",
+      "inventoryManagement": "Inventory Management"
     },
     "placeholderTitle": "Enter your title...",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -594,7 +595,28 @@
       "btnAddCoupon": "+ Add Coupon"      
     },
     "variants": {
-      "btnAddVariant": "Add Variant"
+      "btnAddVariant": "Add Variant",
+      "addVariant": "+ Add Variant",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Size, Color, Material, etc",
+      "choicesLabel": "Choices",
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+    },
+    "inventoryManagement": {
+      "types": {
+        "DO_NOT_TRACK": {
+          "optionLabel": "Do not track inventory",
+          "helperText": "Consumers can purchase as much as they'd like"
+        },
+        "TRACK_BY_FIXED": {
+          "optionLabel": "Track Inventory (Fixed Amount)",
+          "helperText": "The quantity will decrement until it reaches 0. It will then display as sold out."
+        },
+        "TRACK_BY_VARIANT": {
+          "optionLabel": "Track Inventory (By Variant)",
+          "helperText": "Inventory is tracked per variant / variant combination (below)"
+        }
+      }
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
