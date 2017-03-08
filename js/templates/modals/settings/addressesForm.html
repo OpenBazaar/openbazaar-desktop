@@ -1,6 +1,6 @@
 <h2 class="h4 clrT"><%= ob.polyT('settings.addresses.sectionName') %></h2>
 <form class="padKids padStack contentBox pad rowMd clrP border clrBr js-addAddressForm">
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressName" class="required"><%= ob.polyT('settings.addresses.name') %></label>
     </div>
@@ -9,7 +9,7 @@
       <input type="text" class="clrBr clrSh2" name="name" id="settingsAddressName" value="<%= ob.name %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderName') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressCompany"><%= ob.polyT('settings.addresses.company') %></label>
     </div>
@@ -18,7 +18,7 @@
       <input type="text" class="clrBr clrSh2" name="company" id="settingsAddressCompany" value="<%= ob.company %>" placeholder="<%= ob.polyT('settings.optional') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressLineOne"><%= ob.polyT('settings.addresses.street') %></label>
     </div>
@@ -27,7 +27,7 @@
       <input type="text" class="clrBr clrSh2" name="addressLineOne" id="settingsAddressLineOne" value="<%= ob.addressLineOne %>"  placeholder="<%= ob.polyT('settings.addressesTab.placeholderAddress') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressLineTwo"><%= ob.polyT('settings.addresses.apt') %></label>
     </div>
@@ -36,7 +36,7 @@
       <input type="text" class="clrBr clrSh2" name="addressLineTwo" id="settingsAddressLineTwo" value="<%= ob.addressLineTwo %>" placeholder="<%= ob.polyT('settings.optional') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressCity"><%= ob.polyT('settings.addresses.city') %></label>
     </div>
@@ -45,7 +45,7 @@
       <input type="text" class="clrBr clrSh2" name="city" id="settingsAddressCity" value="<%= ob.city %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderCity') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressState"><%= ob.polyT('settings.addresses.state') %></label>
     </div>
@@ -54,7 +54,7 @@
       <input type="text" class="clrBr clrSh2" name="state" id="settingsAddressState" value="<%= ob.state %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderState') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressPostalCode"><%= ob.polyT('settings.addresses.postalCode') %></label>
     </div>
@@ -63,7 +63,7 @@
       <input type="text" class="clrBr clrSh2" name="postalCode" id="settingsAddressPostalCode" value="<%= ob.postalCode %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderPostalCode') %>" />
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressCountry" class="required"><%= ob.polyT('settings.addresses.country') %></label>
     </div>
@@ -73,10 +73,10 @@
         <% ob.countryList.forEach((country) => { %>
         <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
         <% }); %>
-      </select>      
+      </select>
     </div>
   </div>
-  <div class="flexRow">
+  <div class="flexRow gutterH">
     <div class="col3">
       <label for="settingsAddressNotes"><%= ob.polyT('settings.addresses.notes') %></label>
     </div>

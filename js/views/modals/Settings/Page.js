@@ -10,7 +10,7 @@ import { installRichEditor } from '../../../utils/trumbowyg';
 export default class extends baseVw {
   constructor(options = {}) {
     super({
-      className: 'settingsGeneral',
+      className: 'settingsPage',
       ...options,
     });
 

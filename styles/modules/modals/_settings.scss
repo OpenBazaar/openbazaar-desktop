@@ -97,10 +97,19 @@
     }
   }
 
+  .settingsPage {
+    .previewBox {
+      width: $formElementHeight;
+      height: $formElementHeight;
+      border-style: solid;
+      border-width: 1px;
+    }
+  }
+
   .settingsStore {
 
     .modBox {
-      min-height:175px;
+      min-height: 175px;
 
       .noModsAdded {
         display: flex;
@@ -124,7 +133,7 @@
           }
         }
 
-        &:nth-child(-n+2){
+        &:nth-child(-n+2) {
 
           // always show the first 2
           .moderatorCardSeperator {
