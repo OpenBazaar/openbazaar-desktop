@@ -295,3 +295,9 @@ ul, ol {
 #doorbell-button {
   right: 8px;
 }
+
+// scrollbar styling
+::-webkit-scrollbar {
+  width: $scrollbar;
+  height: $scrollbar;
+}

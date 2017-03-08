@@ -522,7 +522,8 @@
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
       "coupons": "Coupons",
-      "inventoryManagement": "Inventory Management"
+      "inventoryManagement": "Inventory Management",
+      "variantInventory": "Variant Inventory"
     },
     "placeholderTitle": "Enter your title...",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -617,6 +618,9 @@
           "helperText": "Inventory is tracked per variant / variant combination (below)"
         }
       }
+    },
+    "variantInventory": {
+      "helperText": "Variant options with a quantity of 0 will not display"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",

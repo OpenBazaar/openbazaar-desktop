@@ -16,6 +16,11 @@
   overflow-y: scroll;
 }
 
+.scrollBoxX {
+  @extend .box;
+  overflow-x: auto;
+  overflow-y: hidden;
+ }
 
 .bar {
   @extend .box;

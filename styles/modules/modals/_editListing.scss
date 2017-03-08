@@ -224,6 +224,36 @@
           }
         }
       }
+
+      .variantInventorySection {
+        padding-right: 0;
+
+        table {
+          border-spacing: 0;
+          border-collapse: collapse;
+
+          th {
+            text-align: left;
+          }
+
+          td, th {
+            border-width: 1px;
+            border-style: solid;
+            min-width: 125px;
+            max-width: 125px;
+            padding: $pad;
+            // word-break: break-word;
+
+            input[type=text] {
+              max-width: 100px;
+            }
+
+            &:last-child {
+              border-right-width: 0;
+            }
+          }
+        }
+      }
     }
   }
 }
