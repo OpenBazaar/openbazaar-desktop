@@ -1,5 +1,6 @@
 // colors
 $primary: hsl(0,0%,100%);
+$primaryGhost: transparentize($primary, 0.2);
 $secondary: adjust-color($primary, $lightness: -4%);
 
 $text: hsl(0,0,14.8);

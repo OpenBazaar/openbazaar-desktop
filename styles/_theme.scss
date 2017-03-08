@@ -28,6 +28,19 @@ button,
   }
 }
 
+.clrPG { //ghosted primary color
+  background-color: $primaryGhost;
+
+  // inputs should still use opaque colors
+  input[type="radio"] + label:before {
+    background-color: $secondary;
+  }
+
+  input[type="radio"]:checked + label:before {
+    box-shadow: inset 0 0 0 3px $secondary;
+  }
+}
+
 .clrS {
   background-color: $secondary;
 
@@ -298,4 +311,8 @@ input[type=range][class~="clrS"] {
     background-color: $primary;
     border-color: $border;
   }
+}
+
+.chatOpen #appFrame #chatContainer {
+  background-color: $primaryGhost;
 }
