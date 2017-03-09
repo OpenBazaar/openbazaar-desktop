@@ -77,10 +77,10 @@ export default class extends baseVw {
   onChatHeadClick(e) {
     if (!this.isOpen) {
       this.open();
-    } else {
-      const profilePromise = this.fetchProfile(e.view.model.id);
-      this._openConversation(e.view.model.id, profilePromise, e.view.model);
     }
+
+    const profilePromise = this.fetchProfile(e.view.model.id);
+    this._openConversation(e.view.model.id, profilePromise, e.view.model);
   }
 
   onChatHeadsRendered() {
