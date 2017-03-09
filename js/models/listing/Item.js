@@ -4,6 +4,8 @@ import app from '../../app';
 import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Image from './Image';
+import Options from '../../collections/listing/Options';
+import Skus from '../../collections/listing/Skus';
 
 class ListingImages extends Collection {
   model(attrs, options) {
@@ -28,6 +30,8 @@ export default class extends BaseModel {
       nsfw: false,
       condition: 'NEW',
       images: new ListingImages(),
+      options: new Options,
+      skus: new Skus,
     };
   }
 
@@ -55,6 +59,7 @@ export default class extends BaseModel {
       cats: 10,
       titleLength: 140,
       tagLength: 40,
+      productIdLength: 40,
     };
   }
 
@@ -120,6 +125,41 @@ export default class extends BaseModel {
     if (attrs.categories && attrs.categories.length > max.cats) {
       addError('categories',
         app.polyglot.t('itemModelErrors.tooManyCats', { maxCats: max.cats }));
+    }
+
+    // quantity and productId are not allowed on the Item in the listing API. Instead they are
+    // accomplished via a "dummy" Sku object. Since that seems a bit klunky, out model will
+    // allow them and the Listing model will do the translation in parse / sync.
+    if (attrs.productId && attrs.productId.length > this.max.productIdLength) {
+      // TRANSLATE!
+      addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
+    }
+
+    if (typeof attrs.quantity !== 'undefined') {
+      if (typeof attrs.quantity !== 'number') {
+        // TRANSLATE!
+        addError('quantity', 'The quantity must be a number.');
+      } else if (attrs.quantity < 0) {
+        // TRANSLATE!
+        addError('quantity', 'The quantity cannot be less than 0.');
+      }
+    }
+    // END - quantity and productId
+
+    if (!is.array(attrs.options)) {
+      addError('options', 'Options should be provided as an array.');
+    }
+
+    if (!is.array(attrs.skus)) {
+      addError('skus', 'Skus should be provided as an array.');
+    }
+
+    const totalVariants = attrs.options.reduce((count, option) =>
+      (count + (option.variants && option.variants.length || 0)), 0);
+    const maxCombos = totalVariants * attrs.options.length;
+
+    if (attrs.skus.length > maxCombos) {
+      addError('skus', 'You have provided more SKUs than variant combinations.');
     }
 
     errObj = this.mergeInNestedErrors(errObj);

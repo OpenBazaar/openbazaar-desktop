@@ -6,8 +6,8 @@ import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
-import ShippingOptions from '../../collections/ShippingOptions.js';
-import Coupons from '../../collections/Coupons.js';
+import ShippingOptions from '../../collections/listing/ShippingOptions.js';
+import Coupons from '../../collections/listing/Coupons.js';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
