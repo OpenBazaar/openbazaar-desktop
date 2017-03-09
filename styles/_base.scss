@@ -188,7 +188,7 @@ ul, ol {
     width: $chatClosed;
     height: calc(100% - #{$bar + $barLg});
     z-index: 2; // chat needs to be on top of modals
-    @include chatOpeningTransition(width, background-color, border-color);
+    @include chatOpeningTransition(width, background-color, border-color, height);
     overflow-y: auto;
     overflow-x: hidden;
     background-color: transparent;
@@ -214,6 +214,10 @@ ul, ol {
     .chatOpen & {
       width: $chatOpen;
     }
+
+    .chatConvoOpen & {
+      height: calc(100% - #{$bar + $barLg + $chatConvoHeight});
+    }
   }
 
   #chatConvoContainer {
@@ -222,7 +226,7 @@ ul, ol {
     bottom: 0;
     z-index: 2; // chat needs to be on top of modals
     width: 225px;
-    height: 360px;
+    height: $chatConvoHeight;
     transform: translateY(105%);
     transition: transform 300ms ease;
 
