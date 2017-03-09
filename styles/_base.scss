@@ -138,9 +138,14 @@ ul, ol {
 
 
         .pageTabs {
-          max-width: $pageWidth;
-          margin: 0 auto;
+          width: $pageWidth + $padLg + $padLg;
+          margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
+          @include chatOpeningTransition(margin);
           position: relative;
+
+          .chatOpen & {
+            margin-right: $chatOpen;
+          }
 
           .userIcon {
             border-width: 2px;
