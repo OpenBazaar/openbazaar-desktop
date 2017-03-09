@@ -167,7 +167,7 @@ function isOnboardingNeeded() {
             profileFailed = true;
           }
         } else if (jqXhr === settingsFetch) {
-          if (jqXhr.responseJSON && jqXhr.responseJSON.reason === 'sql: no rows in result set') {
+          if (jqXhr.status === 404) {
             onboardSettings = true;
             settingsFailed = false;
           } else {
