@@ -183,15 +183,20 @@ ul, ol {
 
   #chatContainer {
     position: fixed;
-    top: $bar + $barLg;
+    top: $bar + $barLg -1; //overlap the border
     right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
     height: calc(100% - #{$bar + $barLg});
     z-index: 2; // chat needs to be on top of modals
-    @include chatOpeningTransition(width, background-color);
+    @include chatOpeningTransition(width, background-color, border-color);
     overflow-y: auto;
     overflow-x: hidden;
     background-color: transparent;
+    border-color: transparent;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-top-width: 1px;
+    border-top-style: solid;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -214,7 +219,7 @@ ul, ol {
   #chatConvoContainer {
     position: fixed;
     right: $scrollbar;
-    bottom: 1px;
+    bottom: 0;
     z-index: 2; // chat needs to be on top of modals
     width: 225px;
     height: 360px;
