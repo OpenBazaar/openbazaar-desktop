@@ -60,6 +60,11 @@ export default class extends baseVw {
 
         if (this.convoMessages) {
           this.convoMessages.setProfile(model);
+          const handle = model.get('handle');
+
+          if (handle) {
+            this.setTypingIndicator(handle);
+          }
         }
       });
     }
@@ -448,13 +453,19 @@ export default class extends baseVw {
   }
 
   getTypingIndicatorContent() {
-    const name = this.profile && this.profile.handle ? `@${this.profile.handle}` : this.guid;
+    let name = this.guid;
+
+    if (this.profile) {
+      const handle = this.profile.get('handle');
+      if (handle) name = `@${handle}`;
+    }
+
     const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
     return app.polyglot.t('chat.conversation.typingIndicator', { user: usernameHtml });
   }
 
-  setTypingIndicator(username) {
-    this.$typingIndicator.html(this.getTypingIndicatorContent(username));
+  setTypingIndicator() {
+    this.$typingIndicator.html(this.getTypingIndicatorContent());
   }
 
   get $typingIndicator() {
