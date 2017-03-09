@@ -7,12 +7,8 @@ import { launchModeratorDetailsModal } from '../utils/modalManager';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const opts = {
-      ...options,
-    };
-
-    super(opts);
-    this.options = opts;
+    super(options);
+    this.options = options;
     this.cardState = options.cardState || 'view';
 
     if (!this.model || !(this.model instanceof Profile)) {

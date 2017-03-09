@@ -55,7 +55,7 @@ export default class extends Collection {
         // don't add excluded ids or your own id
         const notExcluded = excludeList.indexOf(mod.id) === -1 && mod.id !== app.profile.id;
         // don't add if not a mod or the mod data is missing
-        return mod.get('moderator') && mod.get('modInfo') && notExcluded;
+        return mod.isModerator && notExcluded;
       });
       modIDs = _.pluck(filteredModels, 'id');
 
