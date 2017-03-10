@@ -31,14 +31,16 @@ export default class extends BaseModel {
       nsfw: false,
       condition: 'NEW',
       images: new ListingImages(),
-      options: new Options,
-      skus: new Skus,
+      options: new Options(),
+      skus: new Skus(),
     };
   }
 
   get nested() {
     return {
       images: ListingImages,
+      options: Options,
+      skus: Skus,
     };
   }
 
@@ -164,60 +166,46 @@ export default class extends BaseModel {
     }
     // END - quantity and productId
 
-    let optionAndSkusProvided = true;
+    const totalVariants = attrs.options.reduce((count, option) =>
+      (count + (option.variants && option.variants.length || 0)), 0);
+    const maxCombos = totalVariants * attrs.options.length;
 
-    if (!is.array(attrs.options)) {
-      addError('options', 'Options should be provided as an array.');
-      optionAndSkusProvided = false;
+    if (attrs.skus.length > maxCombos) {
+      addError('skus', 'You have provided more SKUs than variant combinations.');
     }
 
-    if (!is.array(attrs.skus)) {
-      addError('skus', 'Skus should be provided as an array.');
-      optionAndSkusProvided = false;
-    }
+    // ensure no SKUs with the same variantCombo
+    // http://stackoverflow.com/a/24968449/632806
+    const uniqueSkus = attrs.skus.map(sku =>
+      ({ count: 1, name: JSON.stringify(sku.variantCombo) }))
+      .reduce((a, b) => {
+        a[b.name] = (a[b.name] || 0) + b.count;
+        return a;
+      }, {});
 
-    if (optionAndSkusProvided) {
-      const totalVariants = attrs.options.reduce((count, option) =>
-        (count + (option.variants && option.variants.length || 0)), 0);
-      const maxCombos = totalVariants * attrs.options.length;
+    const duplicateSkus = Object.keys(uniqueSkus).filter((a) => uniqueSkus[a] > 1);
 
-      if (attrs.skus.length > maxCombos) {
-        addError('skus', 'You have provided more SKUs than variant combinations.');
+    duplicateSkus.forEach(dupeSku => {
+      addError('skus', `Variant combos must be unique. ${dupeSku} is duplicated.`);
+    });
+
+    attrs.skus.forEach(sku => {
+      const varCombo = sku.variantCombo;
+
+      // ensure that each SKU has a variantCombo with the correct length
+      // (which is the length of the options)
+      if (is.array(varCombo)) {
+        // ensure the variantCombo actually corresponds to a provided option.variant value
+        varCombo.forEach((val, index) => {
+          if (!attrs.options[index] ||
+            !attrs.options[index].variants ||
+            !attrs.options[index].variants.length ||
+            !attrs.options[index].variants[val]) {
+            addError('skus', `Invalid variant combo ${JSON.stringify(varCombo)}.`);
+          }
+        });
       }
-
-      // ensure no SKUs with the same variantCombo
-      // http://stackoverflow.com/a/24968449/632806
-      const uniqueSkus = attrs.skus.map(sku =>
-        ({ count: 1, name: JSON.stringify(sku.variantCombo) }))
-        .reduce((a, b) => {
-          a[b.name] = (a[b.name] || 0) + b.count;
-          return a;
-        }, {});
-
-      const duplicateSkus = Object.keys(uniqueSkus).filter((a) => uniqueSkus[a] > 1);
-
-      duplicateSkus.forEach(dupeSku => {
-        addError('skus', `Variant combos must be unique. ${dupeSku} is duplicated.`);
-      });
-
-      attrs.skus.forEach(sku => {
-        const varCombo = sku.variantCombo;
-
-        // ensure that each SKU has a variantCombo with the correct length
-        // (which is the length of the options)
-        if (is.array(varCombo)) {
-          // ensure the variantCombo actually corresponds to a provided option.variant value
-          varCombo.forEach((val, index) => {
-            if (!attrs.options[index] ||
-              !attrs.options[index].variants ||
-              !attrs.options[index].variants.length ||
-              !attrs.options[index].variants[val]) {
-              addError('skus', `Invalid variant combo ${JSON.stringify(varCombo)}.`);
-            }
-          });
-        }
-      });
-    }
+    });
 
     errObj = this.mergeInNestedErrors(errObj);
 

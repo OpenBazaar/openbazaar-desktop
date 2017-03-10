@@ -1,0 +1,20 @@
+<div class="col6 simpleFlexCol">
+  <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
+  <input type="text" class="clrBr clrP clrSh2 variantNameInput" name="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.variants.titlePlaceholder') %>">
+</div>
+<div class="col6 simpleFlexCol">
+  <% if (ob.errors['variants']) print(ob.formErrorTmpl({ errors: ob.errors['variants'] })) %>
+  <div class="flexRow marginTopAuto">
+    <div class="select2TagsWrap">
+      <!-- WARNING! Styling is dependant on the following elements being in this order. -->
+      <select multiple name="variants" class="clrBr clrP select2Tags" style="width: 100%">
+        <% ob.variants.forEach(variant =>
+            print(`<option value="${variant}" selected>${variant}</option>`)) %>
+      </select>
+      <div class="placeholder tagsPlaceholder js-variantChoicesPlaceholder"><%= ob.polyT('editListing.variants.choicesPlaceholder') %></div>
+      <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
+      <div class="tagsDropdown js-dropDownContainer"></div>
+    </div>                
+    <a class="iconBtn ion-trash-b clrBr clrP margLSm js-btnRemoveVariant btnRemoveVariant"></a>
+  </div>
+</div>

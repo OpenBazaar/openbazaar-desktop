@@ -200,14 +200,22 @@
       }
 
       .variantsSection {
-        .variantsWrap {
-          .flexRow {
+        &.expandedVariantsView {
+          .variantsContainer {
+            display: block;
+          }
+          
+          .addFirstVariant {
+            display: none;
+          }
+        }
+
+        .variantsContainer {
+          display: none;
+
+          .variant {
             padding-left: 0;
             padding-right: 0;
-
-            &:first-child {
-              padding-top: 0;
-            }
 
             .select2-selection__choice {
               margin-top: 6px;
@@ -220,6 +228,14 @@
             .btnRemoveVariant {
               height: 42px;
               width: 50px;
+            }
+
+            &.hasError {
+              .variantNameInput {
+                margin-top: auto; // needed so fields in same row align if only one has an error
+                position: relative;
+                top: -4px; // needed cause it's not so easy to line up with select2 fields
+              }
             }
           }
         }
@@ -249,7 +265,7 @@
             }
 
             &:last-child {
-              border-right-width: 0;
+              // border-right-width: 0;
             }
           }
         }

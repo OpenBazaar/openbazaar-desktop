@@ -16,10 +16,12 @@ import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
 import Coupon from '../../../models/listing/Coupon';
+import Option from '../../../models/listing/Option';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 import Coupons from './Coupons';
+import Variants from './Variants';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -107,6 +109,17 @@ export default class extends BaseModal {
       }
     });
 
+    this.optionsCl = this.model.get('item')
+      .get('options');
+
+    this.listenTo(this.optionsCl, 'update', () => {
+      if (this.optionsCl.length) {
+        this.$variantsSection.addClass('expandedVariantsView');
+      } else {
+        this.$variantsSection.removeClass('expandedVariantsView');
+      }
+    });
+
     this.$el.on('scroll', () => {
       if (this.el.scrollTop > 57 && !this.$el.hasClass('fixedNav')) {
         this.$el.addClass('fixedNav');
@@ -135,6 +148,7 @@ export default class extends BaseModal {
       'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
       'click .js-addShippingOption': 'onClickAddShippingOption',
       'click .js-btnAddCoupon': 'onClickAddCoupon',
+      'click .js-addFirstVariant': 'onClickAddFirstVariant',
       ...super.events(),
     };
   }
@@ -397,6 +411,15 @@ export default class extends BaseModal {
     }
   }
 
+  onClickAddFirstVariant() {
+    this.optionsCl.add(new Option());
+
+    if (this.optionsCl.length === 1) {
+      this.$variantsSection.find('.variant input[name=name]')
+        .focus();
+    }
+  }
+
   uploadImages(images) {
     let imagesToUpload = images;
 
@@ -489,12 +512,15 @@ export default class extends BaseModal {
     // set the data for our nested Shipping Option views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
 
+    // set the variant data
+    this.variantsView.setCollectionData();
+
     // set the coupon data
     this.couponsView.setCollectionData();
 
     // TEMP TEMP TEMP until full variant work is done
     if (formData && formData.item) {
-      delete formData.item.sku;
+      delete formData.item.productId;
     }
 
     this.model.set(formData);
@@ -572,16 +598,14 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
-    // todo: the parent selector is not a very efficient selector here.
-    // instead alter the initial selector to select only the fields you want.
+    const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection';
+
     return this._$formFields ||
       (this._$formFields = this.$(
-        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) select[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) input[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) ' +
-          'div[contenteditable][name],' +
-        '.js-scrollToSection:not(.js-sectionShipping, .js-couponsSection) ' +
-          'textarea[name]:not([class*="trumbowyg"])'
+        `.js-scrollToSection:not(${excludes}) select[name],` +
+        `.js-scrollToSection:not(${excludes}) input[name],` +
+        `.js-scrollToSection:not(${excludes}) div[contenteditable][name],` +
+        `.js-scrollToSection:not(${excludes}) textarea[name]:not([class*="trumbowyg"])`
       ));
   }
 
@@ -756,6 +780,7 @@ export default class extends BaseModal {
         this.$('#editListingVariantsChoicesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
       this.$couponsSection = this.$('.js-couponsSection');
+      this.$variantsSection = this.$('.js-variantsSection');
 
       this.$('#editContractType, #editListingVisibility, #editListingCondition, ' +
         '#editInventoryManagementType').select2({
@@ -850,27 +875,6 @@ export default class extends BaseModal {
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
-      this.$editListingVariantsChoices.select2({
-        multiple: true,
-        tags: true,
-        // dropdownParent needed to fully hide dropdown
-        dropdownParent: this.$('#editListingVariantsChoicesDropdown'),
-        // This is necessary, see comment in select2 for tags above.
-        matcher: () => false,
-      }).on('change', () => {
-        const count = this.$editListingVariantsChoices.val().length;
-
-        this.$editListingVariantsChoicesPlaceholder[
-          count ? 'removeClass' : 'addClass'
-        ]('emptyOfTags');
-      });
-
-      // TODO TODO TODO: max variant choices!
-
-      this.$editListingVariantsChoicesPlaceholder[
-        this.$editListingVariantsChoices.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
-
       // render shipping options
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
       this.shippingOptionViews = [];
@@ -888,6 +892,19 @@ export default class extends BaseModal {
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
+      // render variants
+      if (this.variantsView) this.variantsView.remove();
+
+      this.variantsView = new Variants({
+        collection: this.optionsCl,
+        maxVariantCount: this.model.max.optionCount,
+        // couponErrors,
+      });
+
+      this.$variantsSection.find('.js-variantsContainer').append(
+        this.variantsView.render().el
+      );
+
       // render coupons
       if (this.couponsView) this.couponsView.remove();
 
@@ -900,7 +917,6 @@ export default class extends BaseModal {
               this.model.validationError[errKey];
           }
         });
-
 
       this.couponsView = new Coupons({
         collection: this.coupons,

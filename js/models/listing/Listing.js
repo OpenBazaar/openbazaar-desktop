@@ -54,6 +54,8 @@ export default class extends BaseModel {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
       couponCount: 30,
+      // TODO TODO TODO: add validation below for this.
+      optionCount: 30,
     };
   }
 
@@ -173,21 +175,24 @@ export default class extends BaseModel {
         // providing any SKUs, then we'll send item.quantity and item.productId
         // in as a "dummy" SKU (as the server expects). If you are providing any
         // SKUs, then item.quantity and item.productId will be ignored.
-        if (!options.attrs.item.skus.length &&
-          typeof options.attrs.item.quantity !== 'undefined' ||
-          typeof options.attrs.item.productId !== 'undefined') {
+        if (!options.attrs.item.skus.length) {
           const dummySku = {};
 
-          if (typeof options.attrs.item.quantity !== 'undefined') {
+          if (typeof options.attrs.item.quantity === 'number') {
             dummySku.quantity = options.attrs.item.quantity;
           }
 
-          if (typeof options.attrs.item.productId !== 'undefined') {
+          if (typeof options.attrs.item.productId === 'string') {
             dummySku.productId = options.attrs.item.productId;
           }
 
-          options.attrs.item.skus = [dummySku];
+          if (Object.keys(dummySku).length) {
+            options.attrs.item.skus = [dummySku];
+          }
         }
+
+        delete options.attrs.item.productId;
+        delete options.attrs.item.quantity;
       } else {
         options.data = JSON.stringify({
           slug: this.get('slug'),

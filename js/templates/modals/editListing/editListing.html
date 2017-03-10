@@ -97,8 +97,8 @@
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol">
                 <label for="editListingSku"><%= ob.polyT('editListing.sku') %></label>
-                <% if (ob.errors['item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['item.sku'] })) %>
-                <input type="text" class="clrBr clrP clrSh2 marginTopAuto disabled" name="item.sku" id="editListingSku" value="<%= ob.item.sku %>" placeholder="<%= ob.polyT('editListing.placeholderSKU') %>">
+                <% if (ob.errors['item.productId']) print(ob.formErrorTmpl({ errors: ob.errors['item.productId'] })) %>
+                <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="item.productId" id="editListingSku" value="<%= ob.item.productId %>" placeholder="<%= ob.polyT('editListing.placeholderSKU') %>">
                 <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperSKU') %></div>
               </div>
               <div class="col6 simpleFlexCol">
@@ -212,49 +212,11 @@
         </div>
       </section>
 
-      <section class="js-scrollToSection variantsSection contentBox padMd clrP clrBr clrSh3 tx3">
+      <section class="js-scrollToSection js-variantsSection variantsSection contentBox padMd clrP clrBr clrSh3 tx3 <% ob.item.options.length && print('expandedVariantsView') %>">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantsDetailed') %></h2>
         <hr class="clrBr rowMd" />
-        <a class="btn clrP clrBr clrSh2 js-addVariant"><%= ob.polyT('editListing.variants.btnAddVariant') %></a>
-
-        <form class="padSmKids padStack">
-          <div class="flexRow gutterH">
-            <div class="col6">
-              <label class="required"><%= ob.polyT('editListing.variants.titleLabel') %></label>
-            </div>
-            <div class="col6">
-              <label class="required"><%= ob.polyT('editListing.variants.choicesLabel') %></label>      
-            </div>
-          </div>
-
-          <div class="variantsWrap padKids padStack padTop0">
-            <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
-                <input type="text" class="clrBr clrP clrSh2" bname="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.variants.titlePlaceholder') %>">
-              </div>
-              <div class="col6 simpleFlexCol">
-                <% if (ob.errors['variants']) print(ob.formErrorTmpl({ errors: ob.errors['variants'] })) %>
-                <div class="flexRow choicesCell">
-                  <div class="select2TagsWrap">
-                    <!-- WARNING! Styling is dependant on the following elements being in this order. -->
-                    <select id="editListingVariantsChoices" multiple bname="variants" class="clrBr clrP select2Tags" style="width: 100%">
-                      <% ob.variants = [] %>
-                      <% ob.variants.forEach(variant =>
-                          print(`<option value="${variant}" selected>${variant}</option>`)) %>
-                    </select>
-                    <div id="editListingVariantsChoicesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.variants.choicesPlaceholder') %></div>
-                    <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
-                    <div id="editListingVariantsChoicesDropdown" class="tagsDropdown"></div>
-                  </div>                
-                  <a class="iconBtn ion-trash-b clrBr clrP margLSm js-btnRemoveVariant btnRemoveVariant"></a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <a class="clrBr clrP clrTEm btnAddVariant js-btnAddVariant"><%= ob.polyT('editListing.variants.addVariant') %></a>
-        </form>
+        <div class="js-variantsContainer variantsContainer"></div>
+        <a class="btn clrP clrBr clrSh2 addFirstVariant js-addFirstVariant"><%= ob.polyT('editListing.variants.btnAddVariant') %></a>
       </section>
 
       <section class="contentBox padMd clrP clrBr clrSh3 tx3">

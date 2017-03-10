@@ -28,7 +28,10 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.name.length > this.max.nameLength) {
+    if (!attrs.name) {
+      // TRANSLATE!
+      addError('name', 'Please provide a title.');
+    } else if (attrs.name.length > this.max.nameLength) {
       // TRANSLATE!
       addError('name', `The name cannot exceed ${this.max.nameLength} characters.`);
     }
