@@ -4,7 +4,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
-import { getGuid } from '../../../utils';
+import { getGuid, isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
 import Moderators from '../../../collections/Moderators';
 import ModCard from '../../moderatorCard';
@@ -155,9 +155,11 @@ export default class extends baseVw {
   }
 
   processIDorHandle(modID) {
-    if (modID.charAt(0) === '@') {
-      // if the id is a handle, get the guid
-      const handle = modID.slice(1);
+    if (isMultihash(modID)) {
+      this.loadModByID(modID);
+    } else {
+      // assume id is a handle
+      const handle = modID.charAt(0) === '0' ? modID.slice(1) : modID;
       getGuid(handle)
           .done((guid) => {
             this.loadModByID(guid);
@@ -166,8 +168,6 @@ export default class extends baseVw {
             this.modNotFound(modID, handle);
             this.$submitModByID.removeClass('processing');
           });
-    } else {
-      this.loadModByID(modID);
     }
   }
 
@@ -188,14 +188,15 @@ export default class extends baseVw {
     this.$submitModByIDInputError.addClass('hide');
 
     if (this.currentMods.indexOf(guid) === -1) {
+      this.$modListByID.addClass('processing');
       const fetch = this.modsByID.fetch({ fetchList: [guid] })
           .done(() => {
-            this.currentMods.push(guid);
             this.$submitModByIDInput.val('');
           })
           .fail(() => {
             if (this.isRemoved()) return;
             this.showModByIDError(badModError);
+            this.$modListByID.removeClass('processing');
           })
           .always(() => {
             if (this.isRemoved()) return;
@@ -366,6 +367,9 @@ export default class extends baseVw {
 
   remove() {
     this.modFetches.forEach(fetch => fetch.abort());
+    this.modsSelected.destroy();
+    this.modsByID.destroy();
+    this.modsAvailable.destroy();
     super.remove();
   }
 
@@ -396,12 +400,17 @@ export default class extends baseVw {
       this.modsSelected.each((mod) => {
         this.addModToList(mod, this.modsSelected, this.$modListSelected, { cardState: 'selected' });
       });
+      if (this.modsSelected.notFetchedYet.length) this.$modListSelected.addClass('processing');
+
       this.modsByID.each((mod) => {
         this.addModToList(mod, this.modsByID, this.$modListByID, { cardState: 'view' });
       });
+      if (this.modsByID.notFetchedYet.length) this.$modListByID.addClass('processing');
+
       this.modsAvailable.each((mod) => {
         this.addModToList(mod, this.modsAvailable, this.$modListAvailable, { cardState: 'view' });
       });
+      if (this.modsAvailable.notFetchedYet.length) this.$modListAvailable.addClass('processing');
     });
 
     return this;

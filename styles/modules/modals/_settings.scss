@@ -124,6 +124,20 @@
         display: none;
       }
 
+      .browseMore {
+        display: none;
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        padding: 0;
+        height: 16px;
+        margin-bottom: 7px;
+      }
+
+      &.hasMods .browseMore {
+        display: block;
+      }
+
       .moderatorCard {
 
         &:last-child {
@@ -146,8 +160,10 @@
         display: none;
         min-height: 0;
 
-        &.hasMods {
+        &.hasMods,
+        &.processing {
           display: block;
+          min-height: 95px;
         }
 
         // in the modByID container, always hide the last seperator

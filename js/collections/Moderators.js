@@ -104,4 +104,9 @@ export default class extends Collection {
 
     return formattedResponse;
   }
+
+  destroy() {
+    // unbind the listener to the server connection so the collection can be garbage collected
+    this.stopListening();
+  }
 }

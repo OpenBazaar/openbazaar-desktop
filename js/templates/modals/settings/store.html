@@ -77,7 +77,8 @@
                 }) %>
               </div>
               <div>
-                <div class="contentBox modBox modBoxByID clrBr clrP js-modListByID"><!-- unhide when content is added -->
+                <div class="contentBox boxProcessingFaded modBox modBoxByID clrBr clrP js-modListByID"><!-- unhide when adding moderator-->
+                  <%= ob.spinner() %>
                 </div>
               </div>
               <hr class="clrBr unleaded">
@@ -93,6 +94,9 @@
                        <%= ob.polyT('settings.storeTab.browseModerators') %>
                     </button>
                   </div>
+                  <button class="btnTxt tx6 clrT2 txU browseMore js-browseMods">
+                    <%= ob.polyT('settings.storeTab.browseModerators') %>
+                  </button>
                 </div>
               </div>
             </div><% // end of flex inside col9 %>
