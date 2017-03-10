@@ -134,7 +134,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
       }));
 
-      this.$('.js-userCard').append(this.userCard.render().$el)
+      this.$('.js-userCard').append(this.userCard.render().$el);
 
       this.$modBtn = this.$('.js-addModerator');
       this.$addModeratorLbl = this.$('.js-addModeratorLbl');
