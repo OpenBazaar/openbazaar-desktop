@@ -201,6 +201,19 @@ export default class extends baseVw {
   _openConversation(guid, profilePromise) {
     this.open();
 
+    if (this.chatHeads) {
+      this.clearActiveChatHead();
+
+      // If there's a chat head, mark it as active
+      const chatHeadModel = this.collection.get(guid);
+
+      if (chatHeadModel) {
+        this.chatHeads.views[this.collection.indexOf(chatHeadModel)]
+          .$el
+          .addClass('active');
+      }
+    }
+
     if (this.conversation && this.conversation.guid === guid) {
       // In order for the chat head unread count to update properly, be sure to
       // open before marking convo as read.
@@ -278,7 +291,15 @@ export default class extends baseVw {
   }
 
   closeConversation() {
+    this.clearActiveChatHead();
     if (this.conversation) this.conversation.close();
+  }
+
+  clearActiveChatHead() {
+    if (this.chatHeads) {
+      this.chatHeads.views
+        .forEach(chatHead => chatHead.$el.removeClass('active'));
+    }
   }
 
   open() {
