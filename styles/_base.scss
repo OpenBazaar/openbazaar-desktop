@@ -132,6 +132,7 @@ ul, ol {
         z-index: 1;
         width: 100%;
         height: $barLg;
+        padding: 0;
         overflow: hidden;
         border-bottom-width: 1px;
         border-bottom-style: solid;
@@ -192,16 +193,15 @@ ul, ol {
     right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
     height: calc(100% - #{$bar + $barLg});
+    box-sizing: border-box;
     z-index: 2; // chat needs to be on top of modals
     @include chatOpeningTransition(width, background-color, border-color, height);
     overflow-y: auto;
     overflow-x: hidden;
     background-color: transparent;
     border-color: transparent;
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-top-width: 1px;
-    border-top-style: solid;
+    border-width: 1px;
+    border-style: solid;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -209,7 +209,7 @@ ul, ol {
 
     &:hover {
       right: 0;
-      padding-right: $scrollbar;
+      margin-right: $scrollbar;
 
       &::-webkit-scrollbar {
         width: $scrollbar;
@@ -221,7 +221,7 @@ ul, ol {
     }
 
     .chatConvoOpen & {
-      height: calc(100% - #{$bar + $barLg + $chatConvoHeight});
+      height: calc(100% - #{$bar + $barLg + $chatConvoHeight -1});
     }
   }
 
