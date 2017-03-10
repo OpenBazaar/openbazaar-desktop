@@ -63,7 +63,9 @@
     "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
-    "modFee": "%{modFee} per dispute",
+    "FIXED": "%{amount} per dispute",
+    "PERCENTAGE": "%{percentage}% per dispute",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}) per dispute",
     "addModerator": "Add as Moderator",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
@@ -112,6 +114,12 @@
       "store": "Store",
       "following": "Following",
       "followers": "Followers"
+    },
+    "status": {
+      "saving": "Saving settings...",
+      "done": "Settings saved.",
+      "fail": "There was an error saving your settings.",
+      "error": "There was an error saving your settings. \n %{errMsg}"
     }
   },
   "userShort": {
@@ -379,7 +387,7 @@
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
-        "error": "There was an error saving your store settings."
+        "error": "There was an error saving your store settings. \n %{errMsg}"
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",

@@ -1,22 +1,44 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile from '../models/profile/Profile';
+import { launchModeratorDetailsModal } from '../utils/modalManager';
+import { openSimpleMessage } from './modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
-    this.guid = options.guid || this.model.get('guid');
+
+    if (this.model instanceof Profile) {
+      this.guid = this.model.id;
+      this.fetched = true;
+    } else {
+      this.guid = options.guid || this.model.get('guid');
+      this.fetched = false;
+    }
     this.ownGuid = this.guid === app.profile.id;
-    this.profileArgs = {}; // create blank for placeholder render
     this.followedByYou = followedByYou(this.guid);
-    // TODO: add in code to determine if this user is in the viewer's moderator list
-    this.ownMod = false;
-    this.fetched = false;
-    this.loading = true;
+
+    this.loading = !this.fetched;
+    this.settings = app.settings.clone();
+
+    this.listenTo(this.settings, 'sync', () => {
+      app.settings.set(this.settings.toJSON());
+      this.$modBtn.toggleClass('active', this.ownMod);
+    });
+
+    this.listenTo(app.ownFollowing, 'sync update', () => {
+      this.followedByYou = followedByYou(this.guid);
+      this.$followBtn.toggleClass('active', this.followedByYou);
+    });
+  }
+
+  get ownMod() {
+    return app.settings.get('storeModerators').indexOf(this.guid) !== -1;
   }
 
   loadUser(guid = this.guid) {
@@ -36,25 +58,13 @@ export default class extends BaseVw {
       if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = false;
-      this.profileArgs = profile.toJSON();
+      this.model = profile;
       this.render();
     }).fail(() => {
       if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = true;
       this.render();
-    });
-
-    // update the follow button when this user is followed or unfollowed by another view
-    // this will be used by channels and other views that don't remove the view when it's follow
-    // status changes.
-    this.listenTo(app.ownFollowing, 'sync update', () => {
-      this.followedByYou = followedByYou(this.guid);
-      if (this.followedByYou) {
-        this.$followBtn.addClass('active');
-      } else {
-        this.$followBtn.removeClass('active');
-      }
     });
   }
 
@@ -76,18 +86,87 @@ export default class extends BaseVw {
     });
   }
 
-  followClick(e) {
+  followClick() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
-    const $btn = $(e.target).closest('.js-follow');
 
-    $btn.addClass('processing');
+    this.$followBtn.addClass('processing');
     followUnfollow(this.guid, type)
-      .always(() => ($btn.removeClass('processing')));
+      .always(() => (this.$followBtn.removeClass('processing')));
   }
 
   modClick() {
-    console.log('the mod button was clicked');
-    // TODO: add code for adding and removing this user as a moderator
+    if (this.ownMod) {
+      // remove this user from the moderator list
+      this.$modBtn.addClass('processing');
+      this.saveModeratorList(false);
+    } else {
+      // show the moderator details modal
+      const modModal = launchModeratorDetailsModal({ model: this.model });
+      this.listenTo(modModal, 'addAsModerator', () => {
+        this.$modBtn.addClass('processing');
+        this.saveModeratorList(true);
+      });
+    }
+  }
+
+  saveModeratorList(add = false) {
+    let modList = app.settings.get('storeModerators');
+
+    if (add && !this.ownMod) {
+      modList.push(this.guid);
+    } else {
+      modList = _.without(modList, this.guid);
+    }
+
+    const formData = { storeModerators: modList };
+    this.settings.set(formData);
+
+    if (!this.settings.validationError) {
+      const msg = {
+        msg: app.polyglot.t('settings.storeTab.status.saving'),
+        type: 'message',
+      };
+
+      const statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
+      });
+
+      this.settings.save(formData, {
+        attrs: formData,
+        type: 'PATCH',
+      })
+          .done(() => {
+            statusMessage.update({
+              msg: app.polyglot.t('settings.storeTab.status.done'),
+              type: 'confirmed',
+            });
+          })
+          .fail((...args) => {
+            const errMsg = args[0] && args[0].responseJSON &&
+                args[0].responseJSON.reason || '';
+            openSimpleMessage(app.polyglot.t('settings.storeTab.status.error'), errMsg);
+
+            statusMessage.update({
+              msg: app.polyglot.t('settings.storeTab.status.fail'),
+              type: 'warning',
+            });
+          })
+          .always(() => {
+            this.$modBtn.removeClass('processing');
+            setTimeout(() => statusMessage.remove(), 3000);
+          });
+    }
+  }
+
+  get $followBtn() {
+    return this._$followBtn ||
+        (this._$followBtn = this.$('.js-follow'));
+  }
+
+  get $modBtn() {
+    return this._$modBtn ||
+        (this._$modBtn = this.$('.js-mod'));
   }
 
   render() {
@@ -99,10 +178,12 @@ export default class extends BaseVw {
         ownGuid: this.ownGuid,
         followedByYou: this.followedByYou,
         ownMod: this.ownMod,
-        ...this.profileArgs,
+        ...this.options,
+        ...this.model.toJSON(),
       }));
 
-      this.$followBtn = this.$('.js-follow');
+      this._$followBtn = null;
+      this._$modBtn = null;
 
       if (!this.fetched) this.loadUser();
       /* the view should be rendered when it is created and before it has data, so it can occupy

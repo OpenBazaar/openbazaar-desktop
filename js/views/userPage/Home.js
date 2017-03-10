@@ -1,7 +1,12 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import { clipboard } from 'electron';
 import BaseVw from '../baseVw';
+import app from '../../app';
+import UserCard from '../userCard';
+import { launchModeratorDetailsModal } from '../../utils/modalManager';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -9,7 +14,16 @@ export default class extends BaseVw {
     this.options = options;
 
     this.ownPage = options.ownPage;
-    this.currentModerator = false; // TODO set if this user is one of the viewer's moderators
+
+    this.userCard = new UserCard({ model: this.model, hideControls: true });
+
+    this.settings = app.settings.clone();
+
+    this.listenTo(this.settings, 'sync', () => {
+      app.settings.set(this.settings.toJSON());
+      this.$addModeratorLbl.toggleClass('hide', this.ownMod);
+      this.$removeModeratorLbl.toggleClass('hide', !this.ownMod);
+    });
   }
 
   className() {
@@ -19,33 +33,86 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-termsLink': 'termsClick',
-      'click .js-termsClose': 'termsClose',
-      'click .js-addModerator': 'addModeratorClick',
+      'click .js-addModerator': 'changeModeratorClick',
       'click .js-guid': 'guidClick',
       'mouseleave .js-guid': 'guidLeave',
     };
   }
 
+  get ownMod() {
+    return app.settings.get('storeModerators').indexOf(this.model.id) !== -1;
+  }
+
   termsClick() {
-    this.$termsDisplay.toggleClass('open');
-    if (this.$termsDisplay.hasClass('open')) this.$termsDisplay[0].scrollIntoViewIfNeeded();
+    // show the moderator details modal
+    const modModal = launchModeratorDetailsModal({ model: this.model });
+    this.listenTo(modModal, 'addAsModerator', () => {
+      this.$modBtn.addClass('processing');
+      this.saveModeratorList(true);
+    });
   }
 
-  termsClose() {
-    this.$termsDisplay.removeClass('open');
-  }
-
-  addModeratorClick() {
-    if (this.currentModerator) {
-      // do the following as the callback of the remove moderator action
-      this.currentModerator = false;
-      this.$addModeratorLbl.removeClass('hide');
-      this.$removeModeratorLbl.addClass('hide');
+  changeModeratorClick() {
+    if (this.ownMod) {
+      this.$modBtn.addClass('processing');
+      this.saveModeratorList(false);
     } else {
-      // do the following as the callback of the add moderator action
-      this.currentModerator = true;
-      this.$addModeratorLbl.addClass('hide');
-      this.$removeModeratorLbl.removeClass('hide');
+      // show the moderator details modal
+      const modModal = launchModeratorDetailsModal({ model: this.model });
+      this.listenTo(modModal, 'addAsModerator', () => {
+        this.$modBtn.addClass('processing');
+        this.saveModeratorList(true);
+      });
+    }
+  }
+
+  saveModeratorList(add = false) {
+    let modList = app.settings.get('storeModerators');
+
+    if (add && !this.ownMod) {
+      modList.push(this.model.id);
+    } else {
+      modList = _.without(modList, this.model.id);
+    }
+
+    const formData = { storeModerators: modList };
+    this.settings.set(formData);
+
+    if (!this.settings.validationError) {
+      const msg = {
+        msg: app.polyglot.t('userPage.status.saving'),
+        type: 'message',
+      };
+
+      const statusMessage = app.statusBar.pushMessage({
+        ...msg,
+        duration: 9999999999999999,
+      });
+
+      this.settings.save(formData, {
+        attrs: formData,
+        type: 'PATCH',
+      })
+          .done(() => {
+            statusMessage.update({
+              msg: app.polyglot.t('userPage.status.done'),
+              type: 'confirmed',
+            });
+          })
+          .fail((...args) => {
+            const errMsg = args[0] && args[0].responseJSON &&
+                args[0].responseJSON.reason || '';
+            openSimpleMessage(app.polyglot.t('userPage.status.error'), { errMsg });
+
+            statusMessage.update({
+              msg: app.polyglot.t('userPage.status.fail'),
+              type: 'warning',
+            });
+          })
+          .always(() => {
+            this.$modBtn.removeClass('processing');
+            setTimeout(() => statusMessage.remove(), 3000);
+          });
     }
   }
 
@@ -61,16 +128,15 @@ export default class extends BaseVw {
 
   render() {
     loadTemplate('userPage/home.html', (t) => {
-      loadTemplate('userCard.html', (u) => {
-        this.$el.html(
-          t({
-            currentModerator: this.currentModerator,
-            userShortTmp: u,
-            ...this.model.toJSON(),
-          }));
-      });
+      this.$el.html(t({
+        currentModerator: this.ownMod,
+        displayCurrency: app.settings.get('localCurrency'),
+        ...this.model.toJSON(),
+      }));
 
-      this.$termsDisplay = this.$('.js-termsDisplay');
+      this.$('.js-userCard').append(this.userCard.render().$el)
+
+      this.$modBtn = this.$('.js-addModerator');
       this.$addModeratorLbl = this.$('.js-addModeratorLbl');
       this.$removeModeratorLbl = this.$('.js-removeModeratorLbl');
     });

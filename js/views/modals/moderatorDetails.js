@@ -88,6 +88,7 @@ export default class extends BaseModal {
       this.$el.html(t({
         followedByYou: this.followedByYou,
         displayCurrency: app.settings.get('localCurrency'),
+        ownMod: app.settings.get('storeModerators').indexOf(this.model.id) !== -1,
         ...this.model.toJSON(),
       }));
       super.render();
