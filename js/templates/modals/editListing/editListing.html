@@ -231,14 +231,14 @@
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol">
                 <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
-                <input type="text" class="clrBr clrP clrSh2" name="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.variants.titlePlaceholder') %>">
+                <input type="text" class="clrBr clrP clrSh2" bname="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.variants.titlePlaceholder') %>">
               </div>
               <div class="col6 simpleFlexCol">
                 <% if (ob.errors['variants']) print(ob.formErrorTmpl({ errors: ob.errors['variants'] })) %>
                 <div class="flexRow choicesCell">
                   <div class="select2TagsWrap">
                     <!-- WARNING! Styling is dependant on the following elements being in this order. -->
-                    <select id="editListingVariantsChoices" multiple name="variants" class="clrBr clrP select2Tags" style="width: 100%">
+                    <select id="editListingVariantsChoices" multiple bname="variants" class="clrBr clrP select2Tags" style="width: 100%">
                       <% ob.variants = [] %>
                       <% ob.variants.forEach(variant =>
                           print(`<option value="${variant}" selected>${variant}</option>`)) %>
@@ -267,7 +267,7 @@
           <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
 
           <% ob.inventoryManagementType = 'TRACK_BY_VARIANT'; %>
-          <select id="editInventoryManagementType" name="inventoryManagementType" class="clrBr clrP clrSh2 marginTopAuto">
+          <select id="editInventoryManagementType" bname="inventoryManagementType" class="clrBr clrP clrSh2 marginTopAuto">
             <option value="DO_NOT_TRACK" <% if (ob.inventoryManagementType === 'DO_NOT_TRACK') print('selected') %>>
               <%= ob.polyT('editListing.inventoryManagement.types.DO_NOT_TRACK.optionLabel') %>
             <option value="TRACK_BY_FIXED" <% if (ob.inventoryManagementType === 'TRACK_BY_FIXED') print('selected') %>>
@@ -297,22 +297,22 @@
               <td class="clrBr">Small</td>
               <td class="clrBr">Red</td>
               <td class="clrBr">
-                  <input type="text" class="clrBr clrP clrSh2" name="" value="23.55" data-var-type="number" />
+                  <input type="text" class="clrBr clrP clrSh2" bname="" value="23.55" data-var-type="number" />
               </td>
               <td class="clrBr">$255.00</td>
               <td class="clrBr">
-                <input type="text" class="clrBr clrP clrSh2" name="" value="823" data-var-type="number" />
+                <input type="text" class="clrBr clrP clrSh2" bname="" value="823" data-var-type="number" />
               </td>
             </tr>
             <tr>
               <td class="clrBr">Small</td>
               <td class="clrBr">Blue</td>
               <td class="clrBr">
-                <input type="text" class="clrBr clrP clrSh2" name="" value="0.55" data-var-type="number" />
+                <input type="text" class="clrBr clrP clrSh2" bname="" value="0.55" data-var-type="number" />
               </td>
               <td class="clrBr">$255.00</td>
               <td class="clrBr">
-                <input type="text" class="clrBr clrP clrSh2" name="" value="189" data-var-type="number" />
+                <input type="text" class="clrBr clrP clrSh2" bname="" value="189" data-var-type="number" />
               </td>
             </tr>
           </table>

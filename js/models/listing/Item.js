@@ -64,6 +64,23 @@ export default class extends BaseModel {
     };
   }
 
+  get isInventoryTracked() {
+    let isInventoryTracked = false;
+
+    if (this.get('options').length) {
+      // If we have options and any SKUs have defined quanities,
+      // we'll consider you to be tracking inventory
+
+      isInventoryTracked = _.some(this.get('skus'), sku => (!!sku.get('quantity')));
+    } else {
+      // If you don't have any options and quantity is set,
+      // we'll consider you to be tracking inventory
+      isInventoryTracked = !!this.get('quantity');
+    }
+
+    return isInventoryTracked;
+  }
+
   validate(attrs) {
     let errObj = {};
 

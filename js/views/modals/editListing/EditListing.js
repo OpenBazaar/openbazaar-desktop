@@ -850,10 +850,6 @@ export default class extends BaseModal {
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
-      // this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
-      // this.$editListingVariantsChoicesPlaceholder =
-      //   this.$('#editListingVariantsChoicesPlaceholder');
-
       this.$editListingVariantsChoices.select2({
         multiple: true,
         tags: true,
@@ -867,11 +863,6 @@ export default class extends BaseModal {
         this.$editListingVariantsChoicesPlaceholder[
           count ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
-      // }).on('select2:selecting', (e) => {
-      //   if (this.$editListingCategories.val().length >= item.maxCategories) {
-      //     this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
-      //     e.preventDefault();
-      //   }
       });
 
       // TODO TODO TODO: max variant choices!

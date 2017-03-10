@@ -167,6 +167,27 @@ export default class extends BaseModel {
               options.attrs.metadata.pricingCurrency === 'BTC');
           }
         });
+        // END - convert price fields
+
+        // If providing a quanitity and / or productId on the Item and not
+        // providing any SKUs, then we'll send item.quantity and item.productId
+        // in as a "dummy" SKU (as the server expects). If you are providing any
+        // SKUs, then item.quantity and item.productId will be ignored.
+        if (!options.attrs.item.skus.length &&
+          typeof options.attrs.item.quantity !== 'undefined' ||
+          typeof options.attrs.item.productId !== 'undefined') {
+          const dummySku = {};
+
+          if (typeof options.attrs.item.quantity !== 'undefined') {
+            dummySku.quantity = options.attrs.item.quantity;
+          }
+
+          if (typeof options.attrs.item.productId !== 'undefined') {
+            dummySku.productId = options.attrs.item.productId;
+          }
+
+          options.attrs.item.skus = [dummySku];
+        }
       } else {
         options.data = JSON.stringify({
           slug: this.get('slug'),
@@ -269,6 +290,17 @@ export default class extends BaseModel {
               integerToDecimal(price, isBtc);
           }
         });
+      }
+      // END - convert price fields
+
+      // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
+      // and productId moved to be attributes of the Item model
+      if (parsedResponse.item && parsedResponse.item.skus &&
+        parsedResponse.item.skus.length === 1 &&
+        typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
+        const dummySku = parsedResponse.item.skus[0];
+        parsedResponse.item.quantity = dummySku.quantity;
+        parsedResponse.item.productID = dummySku.productID;
       }
     }
 
