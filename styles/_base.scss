@@ -221,7 +221,7 @@ ul, ol {
     }
 
     .chatConvoOpen & {
-      height: calc(100% - #{$bar + $barLg + $chatConvoHeight -1});
+      height: calc(100% - #{$bar + $barLg + $chatConvoHeight -2});
     }
   }
 
