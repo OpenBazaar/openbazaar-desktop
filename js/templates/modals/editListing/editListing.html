@@ -245,40 +245,7 @@
       <section class="contentBox variantInventorySection padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantInventory') %></h2>
         <hr class="clrBr rowMd">
-
-        <div class="scrollBoxX">
-          <table>
-            <tr>
-              <th class="clrBr">Size</th>
-              <th class="clrBr">Color</th>
-              <th class="clrBr">Surcharge</th>
-              <th class="clrBr">Total Price</th>
-              <th class="clrBr">Quantity</th>
-            </tr>
-            <tr>
-              <td class="clrBr">Small</td>
-              <td class="clrBr">Red</td>
-              <td class="clrBr">
-                  <input type="text" class="clrBr clrP clrSh2" bname="" value="23.55" data-var-type="number" />
-              </td>
-              <td class="clrBr">$255.00</td>
-              <td class="clrBr">
-                <input type="text" class="clrBr clrP clrSh2" bname="" value="823" data-var-type="number" />
-              </td>
-            </tr>
-            <tr>
-              <td class="clrBr">Small</td>
-              <td class="clrBr">Blue</td>
-              <td class="clrBr">
-                <input type="text" class="clrBr clrP clrSh2" bname="" value="0.55" data-var-type="number" />
-              </td>
-              <td class="clrBr">$255.00</td>
-              <td class="clrBr">
-                <input type="text" class="clrBr clrP clrSh2" bname="" value="189" data-var-type="number" />
-              </td>
-            </tr>
-          </table>
-        </div>
+        <div class="js-variantInventoryTableContainer"></div>
         <div class="clrT2 txSm padSm"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
       </section>      
 

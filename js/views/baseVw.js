@@ -80,6 +80,7 @@ export default class baseVw extends View {
         // handle nested collection
         // for now not handling nested collection, please
         // manage manually
+        data[name] = val;
       } else if (name.indexOf('.') !== -1) {
         // handle nested model
         setDeepValue(data, name, val);

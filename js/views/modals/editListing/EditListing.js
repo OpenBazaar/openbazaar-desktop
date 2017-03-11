@@ -22,6 +22,7 @@ import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 import Coupons from './Coupons';
 import Variants from './Variants';
+import VariantInventory from './VariantInventory';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -904,6 +905,22 @@ export default class extends BaseModal {
       this.$variantsSection.find('.js-variantsContainer').append(
         this.variantsView.render().el
       );
+
+      // render variant inventory
+      if (this.variantInventory) this.variantInventory.remove();
+
+      this.variantInventory = this.createChild(VariantInventory, {
+        collection: this.model.get('item')
+          .get('skus'),
+        optionsCl: this.model.get('item')
+          .get('options'),
+        // TODO TODO TODO: switch out this placeholder funcs!!!
+        getPrice: () => 155,
+        getCurrency: () => 'USD',
+      });
+
+      this.$('.js-variantInventoryTableContainer')
+        .html(this.variantInventory.render().el);
 
       // render coupons
       if (this.couponsView) this.couponsView.remove();
