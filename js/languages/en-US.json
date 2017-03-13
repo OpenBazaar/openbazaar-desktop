@@ -620,7 +620,8 @@
       }
     },
     "variantInventory": {
-      "helperText": "Variant options with a quantity of 0 will not display"
+      "helperText": "Variant options with a quantity of 0 will not display",
+      "placeholderSKU": "SKU, ID, etc"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",

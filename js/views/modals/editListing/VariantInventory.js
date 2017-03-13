@@ -1,9 +1,8 @@
-// import $ from 'jquery';
-// import _ from 'underscore';
-import { formatPrice } from '../../../utils/currency';
+import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import Sku from '../../../models/listing/Sku';
 import baseVw from '../../baseVw';
+import VariantInventoryItem from './VariantInventoryItem';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -26,14 +25,26 @@ export default class extends baseVw {
     super(options);
     this.options = options || {};
     this.optionsCl = options.optionsCl;
+    this.itemViews = [];
 
-    // this._state = {
-    //   showQuanity: true,
-    //   ...options.initialState || {},
-    // };
+    // We'll work off of a cloned Skus collection, since we need to
+    // add in a mappingId to map between a Sku and the option it origininated
+    // from and we don't want the mappingId going back to the server.
+    this.skusCl = this.collection.clone();
+    this.skusCl.modelId = attrs => attrs.mappingId;
 
-    this.listenTo(this.collection, 'change', () => this.render());
-    // this.listenTo(this.optionsCl, 'change', () => this.render());
+    // Give each Sku a mappingId which links it to the options it originated from
+    // in a more robust way than relying on order which can change.
+    this.skusCl.forEach(sku => {
+      const variantCombo = sku.get('variantCombo');
+      sku.set('mappingId', this.buildIdFromVariantCombo(variantCombo));
+
+      // const id = this.buildIdFromVariantCombo(variantCombo);
+      // sku.set('mappingId', id);
+      // console.log(`the id is ${id}`);
+    });
+
+    this.listenTo(this.optionsCl, 'change', () => this.render());
   }
 
   className() {
@@ -54,6 +65,45 @@ export default class extends baseVw {
   // remove() {
   //   super.remove();
   // }
+
+  // setCollectionData() {
+  //   const formData = this.getFormData();
+  //   const skus = [];
+
+  //   Object.keys(formData)
+  //     .forEach(key => {
+  //       const prop = key.slice(key.lastIndexOf('.') + 1);
+  //       const index = key.slice(
+  //         key.indexOf('[') + 1,
+  //         key.lastIndexOf(']')
+  //       );
+
+  //       skus[index] = skus[index] || {};
+  //       skus[index][prop] = formData[key];
+  //     });
+
+
+  //   this.skusCl.set(skus);
+
+  //   this.collection.set(
+  //     this.skusCl.toJSON()
+  //       .map(sku => _.omit(sku, 'mappingId', 'choices'))
+  //   );
+  // }
+
+  setCollectionData() {
+    this.itemViews.forEach(item => item.setModelData());
+    this.collection.set(
+      this.skusCl.toJSON()
+        .map(sku => _.omit(sku, 'mappingId', 'choices'))
+    );
+  }
+
+  get $formFields() {
+    return this._$formFields ||
+      (this._$formFields =
+        this.$('select[name], input[name], textarea[name]'));
+  }
 
   // Inpsired by: http://stackoverflow.com/a/4331218/632806
   // TODO: would be nice to unit test this guy
@@ -80,27 +130,33 @@ export default class extends baseVw {
     return returnVal;
   }
 
+  buildIdFromVariantCombo(variantCombo, options = this.optionsCl) {
+    if (!_.isArray(variantCombo)) {
+      throw new Error('Please provide a variantCombo as an array.');
+    }
+
+    let id = '';
+
+    variantCombo.forEach((variantIndex, index) => {
+      const option = options.at(index);
+
+      if (option) {
+        const choice = option.get('variants')[variantIndex];
+
+        if (choice) {
+          id += `${id.length ? '/' : ''}${option.id}-${choice}`;
+        }
+      }
+    });
+
+    return id;
+  }
+
   // todo: good unit test candidate
   buildInventoryData() {
     const options = this.optionsCl.toJSON();
 
     // ensure the Sku collection has the latest data from the UI
-
-    // we'll get any existing quantities and surcharges from the sku collection
-    const skuData = this.collection.clone();
-
-    // ensure each sku has an id
-    skuData.forEach(sku => {
-      // build an id off of the variant choices
-      let id = '';
-
-      sku.get('variantCombo')
-        .forEach((variantComboIndex, index) => {
-          id += `${id.length ? '/' : ''}${options[index].variants[variantComboIndex]}`;
-        });
-
-      sku.set('id', id);
-    });
 
     const inventoryData = [];
 
@@ -118,23 +174,31 @@ export default class extends baseVw {
           choices,
           variantCombo: combo,
         };
-        const id = choices.join('/');
+        const id = this.buildIdFromVariantCombo(combo);
 
         // If there is an existing sku for this variantCombo, we'll
-        // merge it's data in
-        const sku = skuData.get(id);
+        // merge its data in
+        // const sku = this.skusCl.get(id);
+        const sku = this.skusCl.findWhere({ mappingId: id });
+        // console.log(`i want id ${id}`);
 
         if (sku) {
+          console.log('gotta sku');
+
           data = {
             ...data,
-            ...sku,
+            ...sku.toJSON(),
           };
         } else {
+          console.log('no no no no sku');
+
           // If no sku, we'll merge in a new Sku model so the model's
           // defaults get into the data
           data = {
             ...data,
             ...((new Sku()).toJSON()),
+            // _clientID: guid(),
+            mappingId: id,
           };
         }
 
@@ -148,13 +212,40 @@ export default class extends baseVw {
   }
 
   render() {
+    const inventoryData = this.buildInventoryData();
+    this.skusCl.set(inventoryData.inventory);
+
+    console.log('skus');
+    window.skus = this.skusCl;
+
     loadTemplate('modals/editListing/variantInventory.html', (t) => {
       this.$el.html(t({
-        ...this.buildInventoryData(),
+        columns: inventoryData.columns,
+        inventory: this.skusCl.toJSON(),
         getPrice: this.options.getPrice,
         getCurrency: this.options.getCurrency,
-        formatPrice,
       }));
+
+      this.itemViews.forEach(item => item.remove());
+      this.itemViews = [];
+      const itemsFrag = document.createDocumentFragment();
+
+      this.skusCl.forEach(item => {
+        // todo: doc the parent validation error!
+        // const correspondingMd = this.collection.get(item.get('_clientID'));
+        // item.validationError = correspondingMd && correspondingMd.validationError || {};
+
+        const view = this.createChild(VariantInventoryItem, {
+          model: item,
+          getPrice: this.options.getPrice,
+          getCurrency: this.options.getCurrency,
+        });
+
+        this.itemViews.push(view);
+        view.render().$el.appendTo(itemsFrag);
+      });
+
+      this.$('> table').append(itemsFrag);
 
       // this._$deleteConfirm = null;
     });

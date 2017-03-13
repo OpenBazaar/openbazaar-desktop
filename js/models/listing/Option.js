@@ -11,6 +11,10 @@ export default class extends BaseModel {
     };
   }
 
+  get idAttribute() {
+    return '_clientID';
+  }
+
   get max() {
     return {
       nameLength: 40,

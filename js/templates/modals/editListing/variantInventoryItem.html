@@ -1,0 +1,19 @@
+<% ob.choices.forEach(choice => { %>
+  <td class="clrBr"><%= choice %></td>
+  <% }) %>
+  <td class="clrBr">
+    <% if (ob.errors['surcharge']) print(ob.formErrorTmpl({ errors: ob.errors['surcharge'] })) %>
+    <input type="text" class="clrBr clrP clrSh2" name="surcharge" value="<%= ob.surcharge %>" data-var-type="number" placeholder="0.00" />
+  </td>
+  <% const surcharge = typeof ob.surcharge === 'number' ? ob.surcharge : 0; %>
+  <% const totalPrice = ob.formatPrice(ob.getPrice() + surcharge, ob.getCurrency() === 'BTC'); %>
+  <td class="clrBr"><%= totalPrice %></td>
+  <td class="clrBr">
+    <% if (ob.errors['productId']) print(ob.formErrorTmpl({ errors: ob.errors['productId'] })) %>
+    <input type="text" class="clrBr clrP clrSh2" name="productId" value="<%= ob.productId %>" data-var-type="number" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" />
+  </td>    
+  <td class="clrBr">
+    <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>
+    <input type="text" class="clrBr clrP clrSh2" name="quantity" value="<%= ob.quantity %>" data-var-type="number" placeholder="0.00" />
+  </td>
+<% }); %}

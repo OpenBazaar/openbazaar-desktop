@@ -500,7 +500,11 @@ export default class extends BaseModal {
         this.selectedNavTabIndex = index;
         keepLooping = false;
       } else {
-        index += 1;
+        if (index === this.$scrollToSections.length - 1) {
+          keepLooping = false;
+        } else {
+          index += 1;
+        }
       }
     }
   }
@@ -510,13 +514,10 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
 
-    // set the data for our nested Shipping Option views
+    // set model / collection data for variaous child views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
-
-    // set the variant data
     this.variantsView.setCollectionData();
-
-    // set the coupon data
+    this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
     // TEMP TEMP TEMP until full variant work is done
@@ -580,6 +581,8 @@ export default class extends BaseModal {
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
+      console.log('no soup for you');
+      window.soup = this.model;
     }
 
     // render so errrors are shown / cleared
@@ -599,7 +602,8 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
-    const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection';
+    const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection, ' +
+      '.js-variantInventorySection';
 
     return this._$formFields ||
       (this._$formFields = this.$(

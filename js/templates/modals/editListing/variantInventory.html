@@ -1,4 +1,3 @@
-<% console.log('boom'); window.boom = ob; %>
 <table>
   <tr>
     <% ob.columns.forEach(column => { %>
@@ -9,22 +8,4 @@
     <th class="clrBr">Sku</th>
     <th class="clrBr">Quantity</th>
   </tr>
-  <% ob.inventory.forEach((inventoryData, index) => { %>
-  <tr>
-    <% inventoryData.choices.forEach(choice => { %>
-    <td class="clrBr"><%= choice %></td>
-    <% }) %>
-    <td class="clrBr">
-      <input type="text" class="clrBr clrP clrSh2" name="<%= `variant[${index}].surcharge` %>" value="<%= inventoryData.surcharge %>" data-var-type="number" />
-    </td>
-    <% const totalPrice = ob.formatPrice(ob.getPrice() + (inventoryData.surcharge || 0), ob.getCurrency() === 'BTC'); %>
-    <td class="clrBr"><%= totalPrice %></td>
-    <td class="clrBr">
-      <input type="text" class="clrBr clrP clrSh2" name="<%= `variant[${index}].productId` %>" value="<%= inventoryData.productId %>" data-var-type="number" />
-    </td>    
-    <td class="clrBr">
-      <input type="text" class="clrBr clrP clrSh2" name="<%= `variant[${index}].quantity` %>" value="<%= inventoryData.quantity %>" data-var-type="number" />
-    </td>
-  </tr>
-  <% }) %>
 </table>

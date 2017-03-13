@@ -115,6 +115,8 @@ function s4() {
 
 // https://github.com/jeromegn/Backbone.localStorage
 // Generate a pseudo-GUID by concatenating random hexadecimal.
+// This has nothing to do with an OB guid / peerId. This is is just a
+// generic way to generate a unique identifier.
 export function guid(prefix = '') {
   return `${prefix}${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
 }

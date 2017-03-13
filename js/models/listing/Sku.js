@@ -28,7 +28,10 @@ export default class extends BaseModel {
       addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
     }
 
-    if (typeof attrs.quantity !== 'number') {
+    if (attrs.quantity === '') {
+      // TRANSLATE!
+      addError('quantity', 'Please provide a quantity.');
+    } else if (typeof attrs.quantity !== 'number') {
       // TRANSLATE!
       addError('quantity', 'Please provide the quantity as a number.');
     } else if (attrs.quantity < 0) {
@@ -42,7 +45,10 @@ export default class extends BaseModel {
       addError('quantity', 'The quantity cannot be less than 0.');
     }
 
-    if (typeof attrs.surcharge !== 'number') {
+    if (attrs.surcharge === '') {
+      // TRANSLATE!
+      addError('surcharge', 'Please provide a surcharge.');
+    } else if (typeof attrs.surcharge !== 'number') {
       // TRANSLATE!
       addError('surcharge', 'Please provide the surcharge as a number.');
     }
