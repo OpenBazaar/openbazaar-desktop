@@ -22,7 +22,8 @@
     .chatHead {
       cursor: pointer;
       position: relative;
-      padding-left: 5px;
+      padding: 0 $padSm;
+      box-sizing: border-box;
 
       .unreadBadge {
         position: absolute;
@@ -45,6 +46,7 @@
       .headContent {
         padding: $padSm;
         max-height: 31px;
+        flex-grow: 1;
       }
 
       .handleGuid {
