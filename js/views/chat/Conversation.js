@@ -60,6 +60,11 @@ export default class extends baseVw {
 
         if (this.convoMessages) {
           this.convoMessages.setProfile(model);
+          const handle = model.get('handle');
+
+          if (handle) {
+            this.setTypingIndicator(handle);
+          }
         }
       });
     }
@@ -420,6 +425,7 @@ export default class extends baseVw {
     if (this._isOpen) return;
     this._isOpen = true;
     getBody().addClass('chatConvoOpen');
+    this.$messageInput.focus();
   }
 
   close() {
@@ -447,13 +453,19 @@ export default class extends baseVw {
   }
 
   getTypingIndicatorContent() {
-    const name = this.profile && this.profile.handle ? `@${this.profile.handle}` : this.guid;
+    let name = this.guid;
+
+    if (this.profile) {
+      const handle = this.profile.get('handle');
+      if (handle) name = `@${handle}`;
+    }
+
     const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
     return app.polyglot.t('chat.conversation.typingIndicator', { user: usernameHtml });
   }
 
-  setTypingIndicator(username) {
-    this.$typingIndicator.html(this.getTypingIndicatorContent(username));
+  setTypingIndicator() {
+    this.$typingIndicator.html(this.getTypingIndicatorContent());
   }
 
   get $typingIndicator() {
@@ -488,6 +500,11 @@ export default class extends baseVw {
       (this._$convoMessagesWindow = this.$('.js-convoMessagesWindow'));
   }
 
+  get $messageInput() {
+    return this._$messageInput ||
+      (this._$messageInput = this.$('.js-inputMessage'));
+  }
+
   render() {
     loadTemplate('chat/conversation.html', (t) => {
       this.$el.html(t({
@@ -503,6 +520,7 @@ export default class extends baseVw {
       this._$loadMessagesError = null;
       this._$convoMessagesWindow = null;
       this._$typingIndicator = null;
+      this._$messageInput = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 

@@ -416,7 +416,7 @@ function start() {
         const chatConvos = new ChatHeads();
 
         chatConvos.once('request', (cl, xhr) => {
-          xhr.always(app.chat.attach(getChatContainer()));
+          xhr.always(() => app.chat.attach(getChatContainer()));
         });
 
         app.chat = new Chat({
