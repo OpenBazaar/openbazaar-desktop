@@ -3,6 +3,7 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
+import moment from 'moment';
 import app from './app';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
@@ -10,6 +11,8 @@ import serverConnect, { events as serverConnectEvents } from './utils/serverConn
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer } from './utils/selectors';
+import Chat from './views/chat/Chat.js';
+import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import StartupLoadingModal from './views/modals/StartupLoading';
@@ -43,12 +46,15 @@ function getValidLanguage(lang) {
 
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
+moment.locale(initialLang);
 app.polyglot = new Polyglot();
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
     require(`./languages/${lang}.json`));  // eslint-disable-line global-require
+
+  moment.locale(lang);
 
   const restartLangChangeDialog = new Dialog({
     title: app.polyglot.t('langChangeRestartTitle'),
@@ -405,6 +411,21 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
+
+        // load chat
+        const chatConvos = new ChatHeads();
+
+        chatConvos.once('request', (cl, xhr) => {
+          xhr.always(() => app.chat.attach(getChatContainer()));
+        });
+
+        app.chat = new Chat({
+          collection: chatConvos,
+          $scrollContainer: getChatContainer(),
+        });
+
+        chatConvos.fetch();
+        $('#chatCloseBtn').on('click', () => (app.chat.close()));
       });
     });
   });
@@ -451,8 +472,6 @@ function connectToServer() {
 let connectedAtLeastOnce = false;
 
 serverConnectEvents.on('connected', () => {
-  getChatContainer().removeClass('hide');
-
   app.connectionManagmentModal.setModalOptions({
     dismissOnEscPress: true,
     showCloseButton: true,
@@ -463,6 +482,7 @@ serverConnectEvents.on('connected', () => {
   } else {
     connectedAtLeastOnce = true;
     app.connectionManagmentModal.close();
+    if (app.chat) app.chat.show();
   }
 });
 
@@ -474,7 +494,11 @@ serverConnectEvents.on('disconnect', () => {
     showCloseButton: false,
   });
 
-  getChatContainer().addClass('hide');
+  if (app.chat) {
+    app.chat.close();
+    app.chat.hide();
+  }
+
   app.pageNav.navigable = false;
   app.connectionManagmentModal.open();
 });

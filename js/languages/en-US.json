@@ -52,12 +52,31 @@
   "pageNav": {
     "notConnectedMenuItem": "Not Connected"
   },
+  "chat": {
+    "fetchingConversations": "Retrieving your chat conversations…",
+    "errorFetching": "There was an error retrieving your chat conversations.",
+    "errorFetchingWithMessage": "There was an error retrieving your chat conversations: %{msg}",
+    "unreadMessages": "Unread messages %{arrow}",
+    "conversation": {
+      "messageInputPlaceholder": "Enter message…",
+      "loadMessagesError": "There was an error loading the messages. %{retryLink}",
+      "retryLink": "retry",
+      "subMenu": {
+        "viewPage": "View page",
+        "blockUser": "Block user",
+        "deleteConvo": "Delete conversation"
+      },
+      "typingIndicator": "%{user} is typing…",
+      "deleteConvoErrorTitle": "Unable to delete conversation",
+      "deletingOverlayText": "Deleting conversation…"
+    }
+  },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
     "about": "About",
-    "aboutEmpty": "About is empty...",
+    "aboutEmpty": "About is empty…",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "searchStore": "Search",
@@ -103,7 +122,7 @@
         },
         "categoryFilter": {
           "heading": "Category",
-          "showMore": "%{smart_count} more... |||| %{smart_count} more...",
+          "showMore": "%{smart_count} more… |||| %{smart_count} more…",
           "showLess": "less"
         }
     },
@@ -115,7 +134,7 @@
     }
   },
   "userShort": {
-    "userLoading": "Loading...",
+    "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
   },
   "about": {
@@ -191,7 +210,7 @@
         "UBTC": "µBTC",
         "SATOSHI": "Satoshi (sat)"
       },
-      "statusSaving": "Saving general settings...",
+      "statusSaving": "Saving general settings…",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
       "saveErrorAlertTitle": "Unable to save general settings"
@@ -208,11 +227,11 @@
       "helperTextColor": "Copy, About, Descriptions",
       "helperHighlightColor": "Notifications, Alerts, Badges",
       "helperHighlightTextColor": "Color within Notifications",
-      "placeholderAbout": "Write whatever you would like on your page...",
+      "placeholderAbout": "Write whatever you would like on your page…",
       "placeholderName": "Name of your page",
       "placeholderHandle": "Enter your Onename @handle",
       "placeholderLocation": "Enter your location",
-      "placeholderShortDescription": "Say something interesting...",
+      "placeholderShortDescription": "Say something interesting…",
       "placeholderWebsite": "http://",
       "placeholderEmail": "name@domain.com",
       "placeholderPrimaryColor": "#FFFFFF",
@@ -224,7 +243,7 @@
       "sectionLinks": "Links",
       "sectionAbout": "About",
       "sectionTheme": "Theme",
-      "statusSaving": "Saving page settings...",
+      "statusSaving": "Saving page settings…",
       "statusSaveComplete": "Page settings saved.",
       "statusSaveFailed": "Unable to save page settings.",
       "saveErrorAlertTitle": "Unable to save page settings",
@@ -238,11 +257,11 @@
       "placeholderPostalCode": "60654",
       "placeholderNotes": "e.g. leave packages behind bush",
       "sectionName": "Shipping Addresses",
-      "statusDeletingAddress": "Deleting address %{name}...",
+      "statusDeletingAddress": "Deleting address %{name}…",
       "statusDeleteAddressComplete": "Address %{name} deleted.",
       "statusDeleteAddressFailed": "Unable to delete address %{name}.",
       "deleteAddressErrorAlertTitle": "Unable to delete address %{name}",
-      "statusAddingAddress": "Adding address %{name}...",
+      "statusAddingAddress": "Adding address %{name}…",
       "statusAddAddressComplete": "Address %{name} added.",
       "statusAddAddressFailed": "Unable to add address %{name}.",
       "addAddressErrorAlertTitle": "Unable to add address %{name}"
@@ -301,7 +320,7 @@
         "macOS": "Mac (upper left)",
         "windowsOS": "Windows (upper right)"
       },
-      "statusSaving": "Saving advanced settings...",
+      "statusSaving": "Saving advanced settings…",
       "statusSaveComplete": "Advanced settings saved.",
       "statusSaveFailed": "Unable to save advanced settings.",
       "saveErrorAlertTitle": "Unable to save advanced settings"
@@ -333,7 +352,7 @@
       "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
       "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
       "status":{
-        "saving": "Saving moderation settings...",
+        "saving": "Saving moderation settings…",
         "done": "Moderation settings saved.",
         "fail": "Saving the moderation settings failed."
       },
@@ -386,7 +405,7 @@
       "postalCode": "Postal Code",
       "notes": "Address Notes"
     },
-    "statusSaving": "Saving settings...",
+    "statusSaving": "Saving settings…",
     "statusSaveFailed": "Settings failed to save.",
     "statusSaveComplete": "Settings saved.",
     "btnYes": "Yes",
@@ -439,7 +458,7 @@
       "username": "Username",
       "serverIp": "Server IP",
       "name": "Name",
-      "placeholderName": "Enter a name...",
+      "placeholderName": "Enter a name…",
       "placeholderServerIp": "The IP to your server (or localhost)",
       "placeholderUsername": "The username to your server",
       "placeholderPassword": "The password to your server",
@@ -492,11 +511,11 @@
   "listingCard": {
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
-    "deleting": "Deleting...",
+    "deleting": "Deleting…",
     "deleted": "Deleted"
   },
   "listingDelete": {
-    "deletingListing": "Deleting listing %{listing}...",
+    "deletingListing": "Deleting listing %{listing}…",
     "deletedListing": "Listing %{listing} deleted.",
     "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
     "deletedFailedDialogTitle": "Unable to delete listing",
@@ -521,9 +540,9 @@
       "termsAndConditions": "Terms and Conditions",
       "coupons": "Coupons"
     },
-    "placeholderTitle": "Enter your title...",
+    "placeholderTitle": "Enter your title…",
     "placeholderSKU": "SKU, Part Number, ID, etc",
-    "placeholderDescription": "Describe your listing as best as you can... Include inline photos. Link to Youtube videos. etc",
+    "placeholderDescription": "Describe your listing as best as you can… Include inline photos. Link to Youtube videos. etc",
     "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Something descriptive that clearly explains what you're selling",
@@ -547,9 +566,9 @@
     "condition": "Condition",
     "sku": "SKU",
     "description": "Description",
-    "uploading": "Uploading...",
-    "categoryPlaceholder": "Enter a category...",
-    "tagsPlaceholder": "Enter #tags...",
+    "uploading": "Uploading…",
+    "categoryPlaceholder": "Enter a category…",
+    "tagsPlaceholder": "Enter #tags…",
     "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
     "btnAddShippingOptionShort": "Add",
@@ -560,7 +579,7 @@
     "shippingOptions": {
         "optionHeading": "Shipping Option #%{listPosition}",
         "shippingDestinations": "Destinations",
-        "regionsPlaceholder": "Enter countries...",
+        "regionsPlaceholder": "Enter countries…",
         "nameLabel": "Option Title",
         "namePlaceholder": "e.g. USA Shipping, International, etc",
         "typeLabel": "Type",
@@ -601,7 +620,7 @@
     }
   },
   "exchangeRatesSyncer": {
-    "fetchingRatesStatusMsg": "Fetching exchange rates...",
+    "fetchingRatesStatusMsg": "Fetching exchange rates…",
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
     "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
     "fetchingRatesFailStatusMsgRetryLink": "retry"
