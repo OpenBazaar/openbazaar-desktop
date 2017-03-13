@@ -10,7 +10,7 @@ import ServerConfig from './models/ServerConfig';
 import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
-import { getChatContainer } from './utils/selectors';
+import { getChatContainer, getBody } from './utils/selectors';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -380,7 +380,7 @@ function onboardIfNeeded() {
 }
 
  // let's start our flow - do we need onboarding?,
- // fetching app wide models...
+ // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
     app.profile = new Profile({ id: data.guid });
@@ -426,6 +426,10 @@ function start() {
 
         chatConvos.fetch();
         $('#chatCloseBtn').on('click', () => (app.chat.close()));
+
+        getChatContainer()
+            .on('mouseenter', () => getBody().addClass('chatHover'))
+            .on('mouseleave', () => getBody().removeClass('chatHover'));
       });
     });
   });

@@ -42,6 +42,27 @@ html {
 body {
   overflow: hidden;
   margin: 0;
+
+  &.chatHover {
+    .modal,
+    #contentFrame {
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+
+        &:hover {
+          background: transparent;
+        }
+
+        &:active {
+          background: transparent;
+        }
+      }
+    }
+  }
 }
 
 a {
@@ -208,8 +229,6 @@ ul, ol {
     }
 
     &:hover {
-      right: 0;
-      margin-right: $scrollbar;
 
       &::-webkit-scrollbar {
         width: $scrollbar;
