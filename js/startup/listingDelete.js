@@ -6,8 +6,7 @@ import Dialog from '../views/modals/Dialog';
 const getTitle = (model) => (
   // Model might be a Listing or ListingShort instance.
   model instanceof Listing ?
-    model.get('listing')
-      .get('item')
+    model.get('item')
       .get('title') :
     model.get('title')
 );

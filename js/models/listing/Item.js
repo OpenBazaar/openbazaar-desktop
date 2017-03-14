@@ -25,7 +25,6 @@ export default class extends BaseModel {
       description: '',
       tags: [],
       categories: [],
-      sku: '',
       nsfw: false,
       condition: 'NEW',
       images: new ListingImages(),

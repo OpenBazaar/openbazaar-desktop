@@ -42,6 +42,7 @@ export default class extends baseVw {
 
     if (this.currentMods.length) {
       // fetch the already selected moderators
+      this.selectedModsInvalidList = [];
       const fetch = this.modsSelected.fetch({ fetchList: this.currentMods });
       this.modFetches.push(fetch);
     }
@@ -56,6 +57,13 @@ export default class extends baseVw {
 
     this.listenTo(this.modsSelected, 'doneLoading', () => {
       this.doneLoading(this.$modListSelected);
+    });
+
+    this.listenTo(this.modsSelected, 'invalidMod', (opts) => {
+      // one of the current mods is no longer valid, remove it and show an error
+      const data = { guid: opts.id };
+      this.changeMod(data);
+      this.showSelectedModsError(opts.id);
     });
 
     this.listenTo(this.modsByID, 'add', (model, collection) => {
@@ -119,6 +127,11 @@ export default class extends baseVw {
 
   addModToList(model, collection, target, opts = {}) {
     let newModView;
+
+    // if DOM is available, set DOM state
+    if (target) {
+      target.toggleClass('hasMods', !!collection.length);
+    }
 
     if (model) {
       const docFrag = $(document.createDocumentFragment());
@@ -220,6 +233,14 @@ export default class extends baseVw {
     this.$submitModByIDInputError.removeClass('hide');
     this.$submitModByIDInputErrorText.text(msg);
     this.$submitModByID.removeClass('processing');
+  }
+
+  showSelectedModsError(id) {
+    this.selectedModsInvalidList.push(id);
+    const msg = app.polyglot.t('settings.storeTab.errors.modsAreInvalid',
+        { guids: this.selectedModsInvalidList.join(', ') });
+    this.$selectedModsError.removeClass('hide');
+    this.$selectedModsErrorText.text(msg);
   }
 
   changeMod(data) {
@@ -347,11 +368,6 @@ export default class extends baseVw {
       (this._$modListAvailable = this.$('.js-modListAvailable'));
   }
 
-  get $browseMods() {
-    return this._$browseMods ||
-      (this._$browseMods = this.$('.js-browseMods'));
-  }
-
   get $submitModByIDInput() {
     return this._$submitModByIDInput ||
       (this._$submitModByIDInput = this.$('.js-submitModByIDInput'));
@@ -370,6 +386,16 @@ export default class extends baseVw {
   get $submitModByIDInputErrorText() {
     return this._$submitModByIDInputErrorText ||
         (this._$submitModByIDInputErrorText = this.$submitModByIDInputError.find('.js-errorText'));
+  }
+
+  get $selectedModsError() {
+    return this._$selectedModsError ||
+        (this._$selectedModsError = this.$('.js-selectedModsError'));
+  }
+
+  get $selectedModsErrorText() {
+    return this._$selectedModsErrorText ||
+        (this._$selectedModsErrorText = this.$selectedModsError.find('.js-errorText'));
   }
 
   remove() {
@@ -397,11 +423,12 @@ export default class extends baseVw {
       this._$modListSelected = null;
       this._$modListByID = null;
       this._$modListAvailable = null;
-      this._$browseMods = null;
       this._$submitModByIDInput = null;
       this._$submitModByID = null;
       this._$submitModByIDInputError = null;
       this._$submitModByIDInputErrorText = null;
+      this._$selectedModsError = null;
+      this._$selectedModsErrorText = null;
 
       // if mods are already available, add them now
       this.modsSelected.each((mod) => {
