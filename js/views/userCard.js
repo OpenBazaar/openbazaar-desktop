@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
@@ -24,6 +23,7 @@ export default class extends BaseVw {
       this.fetched = false;
     }
     this.ownGuid = this.guid === app.profile.id;
+
     this.followedByYou = followedByYou(this.guid);
 
     this.loading = !this.fetched;
