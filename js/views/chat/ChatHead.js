@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import twemoji from 'twemoji';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
@@ -30,7 +29,7 @@ export default class extends baseVw {
   }
 
   render() {
-    let message = this.model.get('lastMessage');
+    const message = this.model.get('lastMessage');
 
     // Give any links the emphasis color.
     const $msgHtml = $(`<div>${message}</div>`);
@@ -38,13 +37,9 @@ export default class extends baseVw {
     $msgHtml.find('a')
       .addClass('clrTEm');
 
-    // Convert any unicode emoji characters to images via Twemoji
-    message = twemoji.parse($msgHtml.html(),
-      icon => (`../imgs/emojis/72X72/${icon}.png`));
-
     let templateData = {
       ...this.model.toJSON(),
-      lastMessage: message,
+      lastMessage: $msgHtml.html(),
     };
 
     if (this.profile) {

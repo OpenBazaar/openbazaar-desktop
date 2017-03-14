@@ -355,13 +355,3 @@ ul, ol {
     @include chatOpeningTransition(right);
   }
 }
-
-// Sometimes, I just like floats.
-.cf:before,
-.cf:after {
-  content: "";
-  display: table;
-}
-.cf:after {
-  clear: both;
-}

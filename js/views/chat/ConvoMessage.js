@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
-import twemoji from 'twemoji';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
@@ -50,7 +49,7 @@ export default class extends baseVw {
   }
 
   render() {
-    let message = this.model.get('message');
+    const message = this.model.get('message');
 
     // Give any links the emphasis color.
     const $msgHtml = $(`<div>${message}</div>`);
@@ -58,16 +57,12 @@ export default class extends baseVw {
     $msgHtml.find('a')
       .addClass('clrTEm');
 
-    // Convert any unicode emoji characters to images via Twemoji
-    message = twemoji.parse($msgHtml.html(),
-      icon => (`../imgs/emojis/72X72/${icon}.png`));
-
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ...this._state,
         moment,
-        message,
+        message: $msgHtml.html(),
         ownGuid: app.profile.id,
       }));
     });

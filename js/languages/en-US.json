@@ -27,15 +27,6 @@
     "totalPeers": "%{totalPeers} Found",
     "noResults": "No connected peers"
   },
-  "emojis": {
-    "groups": {
-      "PEOPLE": "People",
-      "NATURE": "Nature",
-      "OBJECTS": "Objects",
-      "PLACES": "Places",
-      "SYMBOLS": "Symbols"
-    }
-  },
   "startUp": {
     "dialogs": {
       "btnRetry": "Retry",

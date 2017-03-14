@@ -25,11 +25,10 @@
     <div class="clrTErr messagesFetchError js-loadMessagesError <% if (!ob.showLoadMessagesError) print('hide') %>"><%= loadMessagesError %></div>
     <div class="js-convoMessagesContainer"></div>
   </div>
-  <div class="emojiMenuContainer clrP clrBr js-emojiMenuContainer"></div>
 </div>
 <div class="clrBr clrP convoFooter">
-  <div class="flexCent">
-    <textarea class="clrP js-inputMessage" placeholder="<%= ob.polyT('chat.conversation.messageInputPlaceholder') %>" maxlength="<%= ob.maxMessageLength %>" rows="1"></textarea>
-    <button class="btn clrP emojiMenuTrigger js-emojiMenuTrigger">😀</button>
+  <div class="flexCent padTn">
+    <input type="text" class="clrP js-inputMessage" placeholder="<%= ob.polyT('chat.conversation.messageInputPlaceholder') %>" maxlength="<%= ob.maxMessageLength %>" />
+    <div class="pad tx5 js-emojiMenuTrigger">😀</div>
   </div>
 </div>

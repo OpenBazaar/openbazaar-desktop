@@ -108,17 +108,6 @@
   }
 }
 
-.chat {
-  // use for chat styles that apply outside the chat sidebar
-
-  .chatIcon {
-    border-width: 2px;
-    border-style: solid;
-    width: 38px;
-    height: 38px;
-  }
-}
-
 .chatConversation {
   border-width: 1px;
   border-style: solid;
@@ -197,11 +186,7 @@
           padding: $padSm;
           margin-top: 3px;
           display: inline-block;
-          max-width: 186px;
-
-          & > span {
-            word-break: break-word;
-          }
+          word-break: break-word;
 
           img {
             max-width: 100%;
@@ -292,23 +277,9 @@
   .convoFooter {
     border-top-style: solid;
     border-top-width: 1px;
-    z-index: 1;
 
-    & > div {
-      padding-top: $padTn;
-      padding-bottom: $padTn;
-    }
-
-    textarea {
+    input[type=text] {
       border-width: 0;
-
-      &::-webkit-scrollbar-thumb {
-        background-color: transparent;
-      }
-
-      &::-webkit-scrollbar-track {
-        background-color: transparent;
-      }
     }
   }
 
@@ -327,57 +298,15 @@
     width: 38px;
     height: 38px;
   }
-
-  .emojiMenuTrigger {
-    border: none;
-    padding: 0;
-    padding-right: 12px;
-    font-size: $tx5;
-  }
-
-  .emojiMenuContainer {
-    border-top-style: solid;
-    border-top-width: 1px;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 266px;
-    padding: $pad;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    height: 98px;
-
-    .emojiMenu {
-      .emojiGroup {
-        padding-left: 3px;
-        clear: both;
-        margin-bottom: 5px;
-
-        button {
-          float: left;
-          border: 0;
-          padding: 0;
-          background-color: transparent;
-          cursor: pointer;
-          outline: none;
-          transition: transform 0.1s ease;
-
-          &:hover {
-            transform: scale(1.2, 1.2);
-          }
-
-          .emoji {
-            margin-right: 11px;
-            margin-bottom: 9px;
-          }
-        }
-      }
-    }
-  }
 }
 
-.chatConversation .emoji, #chatContainer .emoji {
-  width: 16px;
-  height: 16px;
-}
+.chat {
+  // use for chat styles that apply outside the chat sidebar
 
+  .chatIcon {
+    border-width: 2px;
+    border-style: solid;
+    width: 38px;
+    height: 38px;
+  }
+}
