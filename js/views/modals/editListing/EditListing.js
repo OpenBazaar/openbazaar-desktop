@@ -16,7 +16,7 @@ import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
 import Coupon from '../../../models/listing/Coupon';
-import Option from '../../../models/listing/Option';
+import VariantOption from '../../../models/listing/VariantOption';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
@@ -110,15 +110,13 @@ export default class extends BaseModal {
       }
     });
 
-    this.optionsCl = this.model.get('item')
+    this.variantOptionsCl = this.model.get('item')
       .get('options');
 
-    this.listenTo(this.optionsCl, 'update', () => {
-      if (this.optionsCl.length) {
-        this.$variantsSection.addClass('expandedVariantsView');
-      } else {
-        this.$variantsSection.removeClass('expandedVariantsView');
-      }
+    this.listenTo(this.variantOptionsCl, 'update', this.onUpdateVariantOptions);
+    this.listenTo(this.variantOptionsCl, 'change:variants', () => {
+      this.$variantInventorySection.toggleClass('hide',
+        !this.shouldShowVariantInventorySection);
     });
 
     this.$el.on('scroll', () => {
@@ -150,6 +148,7 @@ export default class extends BaseModal {
       'click .js-addShippingOption': 'onClickAddShippingOption',
       'click .js-btnAddCoupon': 'onClickAddCoupon',
       'click .js-addFirstVariant': 'onClickAddFirstVariant',
+      'keyup .js-variantNameInput': 'onKeyUpVariantName',
       ...super.events(),
     };
   }
@@ -413,12 +412,54 @@ export default class extends BaseModal {
   }
 
   onClickAddFirstVariant() {
-    this.optionsCl.add(new Option());
+    this.variantOptionsCl.add(new VariantOption());
 
-    if (this.optionsCl.length === 1) {
+    if (this.variantOptionsCl.length === 1) {
       this.$variantsSection.find('.variant input[name=name]')
         .focus();
     }
+  }
+
+  onKeyUpVariantName(e) {
+    // TODO TODO TODO: throttle this guy
+    const index = $(e.target).closest('.variant')
+      .index();
+
+    this.variantsView.setModelData(index);
+  }
+
+  onVariantChoiceChange(e) {
+    const index = this.variantsView.views
+      .indexOf(e.view);
+
+    this.variantsView.setModelData(index);
+  }
+
+  onUpdateVariantOptions() {
+    if (this.variantOptionsCl.length) {
+      this.$variantsSection.addClass('expandedVariantsView');
+    } else {
+      this.$variantsSection.removeClass('expandedVariantsView');
+    }
+
+    this.$variantInventorySection.toggleClass('hide',
+      !this.shouldShowVariantInventorySection);
+  }
+
+  get shouldShowVariantInventorySection() {
+    // Need at least 2 variantOptions with each having at least 1 choice
+    if (this.variantOptionsCl.length > 1) {
+      const haveChoices = this.variantOptionsCl.filter(variantOption => {
+        const choices = variantOption.get('variants');
+        return choices && choices.length;
+      });
+
+      if (haveChoices.length > 1) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   uploadImages(images) {
@@ -678,6 +719,11 @@ export default class extends BaseModal {
       (this._$addShipOptSectionHeading = this.$('.js-addShipOptSectionHeading'));
   }
 
+  get $variantInventorySection() {
+    return this._$variantInventorySection ||
+      (this._$variantInventorySection = this.$('.js-variantInventorySection'));
+  }
+
   showMaxTagsWarning() {
     this.$maxTagsWarning.empty()
       .append(this.maxTagsWarning);
@@ -771,6 +817,7 @@ export default class extends BaseModal {
           tags: item.max.tags,
           photos: this.MAX_PHOTOS,
         },
+        shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
         ...this.model.toJSON(),
       }));
 
@@ -900,11 +947,14 @@ export default class extends BaseModal {
       // render variants
       if (this.variantsView) this.variantsView.remove();
 
-      this.variantsView = new Variants({
-        collection: this.optionsCl,
+      this.variantsView = this.createChild(Variants, {
+        collection: this.variantOptionsCl,
         maxVariantCount: this.model.max.optionCount,
         // couponErrors,
       });
+
+      this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',
+        this.onVariantChoiceChange.bind(this));
 
       this.$variantsSection.find('.js-variantsContainer').append(
         this.variantsView.render().el
@@ -964,6 +1014,7 @@ export default class extends BaseModal {
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
       this._$addShipOptSectionHeading = null;
+      this._$variantInventorySection = null;
       this.$photoUploadItems = this.$('.js-photoUploadItems');
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');

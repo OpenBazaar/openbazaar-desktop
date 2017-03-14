@@ -30,12 +30,13 @@ export default class extends baseVw {
     // We'll work off of a cloned Skus collection, since we need to
     // add in a mappingId to map between a Sku and the option it origininated
     // from and we don't want the mappingId going back to the server.
-    this.skusCl = this.collection.clone();
-    this.skusCl.modelId = attrs => attrs.mappingId;
+    // this.skusCl = this.collection.clone();
+    // this.skusCl.modelId = attrs => attrs.mappingId;
 
     // Give each Sku a mappingId which links it to the options it originated from
     // in a more robust way than relying on order which can change.
-    this.skusCl.forEach(sku => {
+    this.collection.forEach(sku => {
+    // this.skusCl.forEach(sku => {
       const variantCombo = sku.get('variantCombo');
       sku.set('mappingId', this.buildIdFromVariantCombo(variantCombo));
 
@@ -93,10 +94,10 @@ export default class extends baseVw {
 
   setCollectionData() {
     this.itemViews.forEach(item => item.setModelData());
-    this.collection.set(
-      this.skusCl.toJSON()
-        .map(sku => _.omit(sku, 'mappingId', 'choices'))
-    );
+    // this.collection.set(
+    //   this.skusCl.toJSON()
+    //     .map(sku => _.omit(sku, 'mappingId', 'choices'))
+    // );
   }
 
   get $formFields() {
@@ -154,13 +155,16 @@ export default class extends baseVw {
 
   // todo: good unit test candidate
   buildInventoryData() {
-    const options = this.optionsCl.toJSON();
+    const options = this.optionsCl.toJSON()
+      // only process options that have at least one variant
+      .filter(option => option.variants && option.variants.length);
 
     // ensure the Sku collection has the latest data from the UI
+    this.setCollectionData();
 
     const inventoryData = [];
 
-    this.allPossibleCombos(options.map(option => (option.variants)))
+    this.allPossibleCombos(options.map(option => option.variants))
       .sort()
       .map(strCombo => JSON.parse(`[${strCombo}]`))
       .forEach(combo => {
@@ -179,19 +183,16 @@ export default class extends baseVw {
         // If there is an existing sku for this variantCombo, we'll
         // merge its data in
         // const sku = this.skusCl.get(id);
-        const sku = this.skusCl.findWhere({ mappingId: id });
+        const sku = this.collection.findWhere({ mappingId: id });
+        // const sku = this.skusCl.findWhere({ mappingId: id });
         // console.log(`i want id ${id}`);
 
         if (sku) {
-          console.log('gotta sku');
-
           data = {
             ...data,
             ...sku.toJSON(),
           };
         } else {
-          console.log('no no no no sku');
-
           // If no sku, we'll merge in a new Sku model so the model's
           // defaults get into the data
           data = {
@@ -213,15 +214,14 @@ export default class extends baseVw {
 
   render() {
     const inventoryData = this.buildInventoryData();
-    this.skusCl.set(inventoryData.inventory);
-
-    console.log('skus');
-    window.skus = this.skusCl;
+    this.collection.set(inventoryData.inventory);
+    // this.skusCl.set(inventoryData.inventory);
 
     loadTemplate('modals/editListing/variantInventory.html', (t) => {
       this.$el.html(t({
         columns: inventoryData.columns,
-        inventory: this.skusCl.toJSON(),
+        inventory: this.collection.toJSON(),
+        // inventory: this.skusCl.toJSON(),
         getPrice: this.options.getPrice,
         getCurrency: this.options.getCurrency,
       }));
@@ -230,7 +230,8 @@ export default class extends baseVw {
       this.itemViews = [];
       const itemsFrag = document.createDocumentFragment();
 
-      this.skusCl.forEach(item => {
+      // this.skusCl.forEach(item => {
+      this.collection.forEach(item => {
         // todo: doc the parent validation error!
         // const correspondingMd = this.collection.get(item.get('_clientID'));
         // item.validationError = correspondingMd && correspondingMd.validationError || {};

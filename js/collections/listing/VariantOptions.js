@@ -1,10 +1,10 @@
 import { guid } from '../../utils';
 import { Collection } from 'backbone';
-import Option from '../../models/listing/Option';
+import VariantOption from '../../models/listing/VariantOption';
 
 export default class extends Collection {
   model(attrs, options) {
-    return new Option({
+    return new VariantOption({
       _clientID: attrs._clientID || guid(),
       ...attrs,
     }, options);

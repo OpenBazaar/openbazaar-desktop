@@ -5,7 +5,7 @@ import app from '../../app';
 import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Image from './Image';
-import Options from '../../collections/listing/Options';
+import VariantOptions from '../../collections/listing/VariantOptions';
 import Skus from '../../collections/listing/Skus';
 
 class ListingImages extends Collection {
@@ -31,7 +31,7 @@ export default class extends BaseModel {
       nsfw: false,
       condition: 'NEW',
       images: new ListingImages(),
-      options: new Options(),
+      options: new VariantOptions(),
       skus: new Skus(),
     };
   }
@@ -39,7 +39,7 @@ export default class extends BaseModel {
   get nested() {
     return {
       images: ListingImages,
-      options: Options,
+      options: VariantOptions,
       skus: Skus,
     };
   }

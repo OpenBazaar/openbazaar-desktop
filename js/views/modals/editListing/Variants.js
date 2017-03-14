@@ -1,5 +1,5 @@
 import loadTemplate from '../../../utils/loadTemplate';
-import Option from '../../../models/listing/Option';
+import VariantOption from '../../../models/listing/VariantOption';
 import BaseView from '../../baseVw';
 import Variant from './Variant';
 
@@ -8,7 +8,7 @@ import Variant from './Variant';
 export default class extends BaseView {
   constructor(options = {}) {
     if (!options.collection) {
-      throw new Error('Please provide an Options collection.');
+      throw new Error('Please provide an VariantOptions collection.');
     }
 
     if (typeof options.maxVariantCount === 'undefined') {
@@ -27,7 +27,7 @@ export default class extends BaseView {
 
     super(options);
     this.options = options;
-    this.variantViews = [];
+    this._variantViews = [];
 
     this.listenTo(this.collection, 'add', (md, cl) => {
       const index = cl.indexOf(md);
@@ -41,7 +41,7 @@ export default class extends BaseView {
         this.$variantsWrap.prepend(view.render().el);
       }
 
-      this.variantViews.splice(index, 0, view);
+      this._variantViews.splice(index, 0, view);
 
       if (this.collection.length >= this.options.maxVariantCount) {
         this.$btnAddVariant.addClass('hide');
@@ -49,7 +49,7 @@ export default class extends BaseView {
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
-      (this.variantViews.splice(removeOpts.index, 1)[0]).remove();
+      (this._variantViews.splice(removeOpts.index, 1)[0]).remove();
 
       if (this.collection.length < this.options.maxVariantCount) {
         this.$btnAddVariant.removeClass('hide');
@@ -64,14 +64,23 @@ export default class extends BaseView {
   }
 
   onClickAddVariant() {
-    this.collection.add(new Option());
-    this.variantViews[this.variantViews.length - 1]
+    this.collection.add(new VariantOption());
+    this._variantViews[this._variantViews.length - 1]
       .$('input[name=name]')
       .focus();
   }
 
   setCollectionData() {
-    this.variantViews.forEach(variant => variant.setModelData());
+    this._variantViews.forEach(variant => variant.setModelData());
+  }
+
+  setModelData(index) {
+    if (typeof index !== 'number') {
+      throw new Error('Please provide a numeric index.');
+    }
+
+    const view = this._variantViews[index];
+    if (view) view.setModelData();
   }
 
   createVariantView(model, options = {}) {
@@ -93,10 +102,17 @@ export default class extends BaseView {
       ...options,
     });
 
-    this.listenTo(view, 'remove-click', e =>
+    this.listenTo(view, 'removeClick', e =>
       this.collection.remove(e.view.model));
 
+    this.listenTo(view, 'choiceChange', e =>
+      this.trigger('variantChoiceChange', e));
+
     return view;
+  }
+
+  get views() {
+    return this._variantViews;
   }
 
   get $btnAddVariant() {
@@ -115,13 +131,13 @@ export default class extends BaseView {
       this.$variantsWrap = this.$('.js-variantsWrap');
       this._$btnAddVariant = null;
 
-      this.variantViews.forEach(variant => variant.remove());
-      this.variantViews = [];
+      this._variantViews.forEach(variant => variant.remove());
+      this._variantViews = [];
       const variantsFrag = document.createDocumentFragment();
 
       this.collection.forEach(variant => {
         const view = this.createVariantView(variant);
-        this.variantViews.push(view);
+        this._variantViews.push(view);
         view.render().$el.appendTo(variantsFrag);
       });
 

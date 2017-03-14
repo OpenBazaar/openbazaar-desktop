@@ -6,7 +6,7 @@ import BaseView from '../../baseVw';
 export default class extends BaseView {
   constructor(options = {}) {
     if (!options.model) {
-      throw new Error('Please provide an Option model.');
+      throw new Error('Please provide a VariantOption model.');
     }
 
     super(options);
@@ -24,7 +24,7 @@ export default class extends BaseView {
   }
 
   onClickRemove() {
-    this.trigger('remove-click', { view: this });
+    this.trigger('removeClick', { view: this });
   }
 
   getFormData(fields = this.$formFields) {
@@ -73,6 +73,11 @@ export default class extends BaseView {
         this.$variantChoicesPlaceholder[
           count ? 'removeClass' : 'addClass'
         ]('emptyOfTags');
+
+        this.trigger('choiceChange', {
+          view: this,
+          originalEvent: e,
+        });
       });
 
       this.$variantChoicesPlaceholder[
