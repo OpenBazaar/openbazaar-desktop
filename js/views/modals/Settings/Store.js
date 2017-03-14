@@ -54,6 +54,10 @@ export default class extends baseVw {
       this.modNotFound(opts.id, '', opts.error);
     });
 
+    this.listenTo(this.modsSelected, 'doneLoading', () => {
+      this.doneLoading(this.$modListSelected);
+    });
+
     this.listenTo(this.modsByID, 'add', (model, collection) => {
       this.addModToList(model, collection, this.$modListByID);
     });
@@ -62,12 +66,25 @@ export default class extends baseVw {
       this.modNotFound(opts.id, '', opts.error);
     });
 
+    this.listenTo(this.modsByID, 'doneLoading', () => {
+      this.doneLoading(this.$modListByID);
+    });
+
+    this.listenTo(this.modsByID, 'invalidMod', (opts) => {
+      this.showModByIDError(app.polyglot.t('settings.storeTab.errors.modIsInvalid',
+          { guid: opts.id }));
+    });
+
     this.listenTo(this.modsAvailable, 'add', (model, collection) => {
       this.addModToList(model, collection, this.$modListAvailable);
     });
 
     this.listenTo(this.modsAvailable, 'asyncError', (opts) => {
       this.modNotFound(opts.id, '', opts.error);
+    });
+
+    this.listenTo(this.modsAvailable, 'doneLoading', () => {
+      this.doneLoading(this.$modListAvailable);
     });
 
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
@@ -103,12 +120,6 @@ export default class extends baseVw {
   addModToList(model, collection, target, opts = {}) {
     let newModView;
 
-    // if DOM is available, set DOM state
-    if (target) {
-      target.addClass('processing');
-      target.toggleClass('hasMods', !!collection.length);
-    }
-
     if (model) {
       const docFrag = $(document.createDocumentFragment());
       // check to see if view already exists
@@ -130,13 +141,11 @@ export default class extends baseVw {
       target.prepend(docFrag);
       this.modViewCache.push(newModView);
     }
+  }
 
+  doneLoading(target) {
     // if all moderators have loaded, clear any processing class
-    if (!collection.notFetchedYet.length && target) {
-      target.removeClass('processing');
-    }
-    // if it takes a very long time to get the moderators, clear the processing class
-    setTimeout(() => target && target.removeClass('processing'), 15000);
+    target.removeClass('processing');
   }
 
   clickSubmitModByID() {
@@ -157,6 +166,7 @@ export default class extends baseVw {
   processIDorHandle(modID) {
     if (isMultihash(modID)) {
       this.loadModByID(modID);
+      this.$submitModByID.removeClass('processing');
     } else {
       // assume id is a handle
       const handle = modID.charAt(0) === '0' ? modID.slice(1) : modID;
@@ -166,6 +176,8 @@ export default class extends baseVw {
           })
           .fail(() => {
             this.modNotFound(modID, handle);
+          })
+          .always(() => {
             this.$submitModByID.removeClass('processing');
           });
     }
@@ -197,10 +209,6 @@ export default class extends baseVw {
             if (this.isRemoved()) return;
             this.showModByIDError(badModError);
             this.$modListByID.removeClass('processing');
-          })
-          .always(() => {
-            if (this.isRemoved()) return;
-            this.$submitModByID.removeClass('processing');
           });
       this.modFetches.push(fetch);
     } else {
@@ -211,7 +219,6 @@ export default class extends baseVw {
   showModByIDError(msg) {
     this.$submitModByIDInputError.removeClass('hide');
     this.$submitModByIDInputErrorText.text(msg);
-    this.$submitModByIDInput.val('');
     this.$submitModByID.removeClass('processing');
   }
 
