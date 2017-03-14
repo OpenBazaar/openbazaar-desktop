@@ -84,8 +84,8 @@
     "termsOfService": "Terms of Service",
     "FIXED": "%{amount} per dispute",
     "PERCENTAGE": "%{percentage}% per dispute",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}) per dispute",
-    "addModerator": "Add as Moderator",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%) per dispute",
+    "addModerator": "View Details",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
     "website": "Website",
@@ -149,7 +149,7 @@
     "view": "View",
     "FIXED": "%{amount}**",
     "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**"
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**"
   },
   "moderatorDetails": {
     "messageButton": "Message",
