@@ -1,7 +1,15 @@
+import { guid } from '../../utils';
 import is from 'is_js';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
+  constructor(attrs = {}, options = {}) {
+    super({
+      ...attrs,
+      _clientID: attrs._clientID || guid(),
+    }, options);
+  }
+
   defaults() {
     return {
       name: '',

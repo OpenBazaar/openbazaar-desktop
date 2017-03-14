@@ -9,8 +9,8 @@
   <% const totalPrice = ob.formatPrice(ob.getPrice() + surcharge, ob.getCurrency() === 'BTC'); %>
   <td class="clrBr"><%= totalPrice %></td>
   <td class="clrBr">
-    <% if (ob.errors['productId']) print(ob.formErrorTmpl({ errors: ob.errors['productId'] })) %>
-    <input type="text" class="clrBr clrP clrSh2" name="productId" value="<%= ob.productId %>" data-var-type="number" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" />
+    <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>
+    <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" data-var-type="number" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" />
   </td>    
   <td class="clrBr">
     <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>

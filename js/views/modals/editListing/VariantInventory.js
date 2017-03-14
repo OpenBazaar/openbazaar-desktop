@@ -27,22 +27,11 @@ export default class extends baseVw {
     this.optionsCl = options.optionsCl;
     this.itemViews = [];
 
-    // We'll work off of a cloned Skus collection, since we need to
-    // add in a mappingId to map between a Sku and the option it origininated
-    // from and we don't want the mappingId going back to the server.
-    // this.skusCl = this.collection.clone();
-    // this.skusCl.modelId = attrs => attrs.mappingId;
-
     // Give each Sku a mappingId which links it to the options it originated from
     // in a more robust way than relying on order which can change.
     this.collection.forEach(sku => {
-    // this.skusCl.forEach(sku => {
       const variantCombo = sku.get('variantCombo');
       sku.set('mappingId', this.buildIdFromVariantCombo(variantCombo));
-
-      // const id = this.buildIdFromVariantCombo(variantCombo);
-      // sku.set('mappingId', id);
-      // console.log(`the id is ${id}`);
     });
 
     this.listenTo(this.optionsCl, 'change', () => this.render());
@@ -58,46 +47,8 @@ export default class extends baseVw {
   //   };
   // }
 
-  // get $deleteConfirm() {
-  //   return this._$deleteConfirm ||
-  //     (this._$deleteConfirm = this.$('.js-deleteConfirm'));
-  // }
-
-  // remove() {
-  //   super.remove();
-  // }
-
-  // setCollectionData() {
-  //   const formData = this.getFormData();
-  //   const skus = [];
-
-  //   Object.keys(formData)
-  //     .forEach(key => {
-  //       const prop = key.slice(key.lastIndexOf('.') + 1);
-  //       const index = key.slice(
-  //         key.indexOf('[') + 1,
-  //         key.lastIndexOf(']')
-  //       );
-
-  //       skus[index] = skus[index] || {};
-  //       skus[index][prop] = formData[key];
-  //     });
-
-
-  //   this.skusCl.set(skus);
-
-  //   this.collection.set(
-  //     this.skusCl.toJSON()
-  //       .map(sku => _.omit(sku, 'mappingId', 'choices'))
-  //   );
-  // }
-
   setCollectionData() {
     this.itemViews.forEach(item => item.setModelData());
-    // this.collection.set(
-    //   this.skusCl.toJSON()
-    //     .map(sku => _.omit(sku, 'mappingId', 'choices'))
-    // );
   }
 
   get $formFields() {
@@ -178,14 +129,12 @@ export default class extends baseVw {
           choices,
           variantCombo: combo,
         };
+
         const id = this.buildIdFromVariantCombo(combo);
 
         // If there is an existing sku for this variantCombo, we'll
         // merge its data in
-        // const sku = this.skusCl.get(id);
         const sku = this.collection.findWhere({ mappingId: id });
-        // const sku = this.skusCl.findWhere({ mappingId: id });
-        // console.log(`i want id ${id}`);
 
         if (sku) {
           data = {
@@ -198,7 +147,6 @@ export default class extends baseVw {
           data = {
             ...data,
             ...((new Sku()).toJSON()),
-            // _clientID: guid(),
             mappingId: id,
           };
         }
@@ -215,13 +163,11 @@ export default class extends baseVw {
   render() {
     const inventoryData = this.buildInventoryData();
     this.collection.set(inventoryData.inventory);
-    // this.skusCl.set(inventoryData.inventory);
 
     loadTemplate('modals/editListing/variantInventory.html', (t) => {
       this.$el.html(t({
         columns: inventoryData.columns,
         inventory: this.collection.toJSON(),
-        // inventory: this.skusCl.toJSON(),
         getPrice: this.options.getPrice,
         getCurrency: this.options.getCurrency,
       }));
@@ -230,12 +176,7 @@ export default class extends baseVw {
       this.itemViews = [];
       const itemsFrag = document.createDocumentFragment();
 
-      // this.skusCl.forEach(item => {
       this.collection.forEach(item => {
-        // todo: doc the parent validation error!
-        // const correspondingMd = this.collection.get(item.get('_clientID'));
-        // item.validationError = correspondingMd && correspondingMd.validationError || {};
-
         const view = this.createChild(VariantInventoryItem, {
           model: item,
           getPrice: this.options.getPrice,
@@ -247,8 +188,6 @@ export default class extends baseVw {
       });
 
       this.$('> table').append(itemsFrag);
-
-      // this._$deleteConfirm = null;
     });
 
     return this;

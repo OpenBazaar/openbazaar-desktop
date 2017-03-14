@@ -49,6 +49,8 @@ export default class extends BaseView {
       // ...(this.options.optionErrors || {}),
     };
 
+    this.$el.toggleClass('hasError', !!Object.keys(errors).length);
+
     loadTemplate('modals/editListing/variant.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),

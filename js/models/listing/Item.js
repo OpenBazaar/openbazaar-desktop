@@ -166,9 +166,10 @@ export default class extends BaseModel {
     }
     // END - quantity and productId
 
-    const totalVariants = attrs.options.reduce((count, option) =>
-      (count + (option.variants && option.variants.length || 0)), 0);
-    const maxCombos = totalVariants * attrs.options.length;
+    let maxCombos = 1;
+
+    attrs.options.forEach(option => (maxCombos *=
+      (option.get('variants') && option.get('variants').length || 0)));
 
     if (attrs.skus.length > maxCombos) {
       addError('skus', 'You have provided more SKUs than variant combinations.');
@@ -177,7 +178,7 @@ export default class extends BaseModel {
     // ensure no SKUs with the same variantCombo
     // http://stackoverflow.com/a/24968449/632806
     const uniqueSkus = attrs.skus.map(sku =>
-      ({ count: 1, name: JSON.stringify(sku.variantCombo) }))
+      ({ count: 1, name: JSON.stringify(sku.get('variantCombo')) }))
       .reduce((a, b) => {
         a[b.name] = (a[b.name] || 0) + b.count;
         return a;

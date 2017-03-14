@@ -561,6 +561,12 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
+    // If the variantInventory section is hidden, we'll clear out
+    // any of its data.
+    if (!this.shouldShowVariantInventorySection) {
+      formData.skus = [];
+    }
+
     // TEMP TEMP TEMP until full variant work is done
     if (formData && formData.item) {
       delete formData.item.productId;
@@ -581,7 +587,15 @@ export default class extends BaseModal {
       });
     }
 
-    const save = this.model.save();
+    const serverData = this.model.toJSON();
+    serverData.item.skus = serverData.item.skus.map(sku => _.omit(sku, 'mappingId', 'choices'));
+
+    // The variant inventory view adds some stuff to the skus collection that
+    // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
+    // with the save while still allowing it to stay in the collection.
+    const save = this.model.save({}, {
+      attrs: serverData,
+    });
 
     if (save) {
       const savingStatusMsg = app.statusBar.pushMessage({

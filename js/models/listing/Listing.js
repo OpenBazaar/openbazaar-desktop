@@ -193,6 +193,16 @@ export default class extends BaseModel {
 
         delete options.attrs.item.productId;
         delete options.attrs.item.quantity;
+
+        // Our Sku has an infinteInventory boolean attribute, but the server
+        // is expecting a quantity of -1 in that case.
+        options.attrs.item.skus.forEach(sku => {
+          if (sku.infiniteInventory) {
+            sku.quantity = -1;
+          }
+
+          delete sku.infiniteInventory;
+        });
       } else {
         options.data = JSON.stringify({
           slug: this.get('slug'),

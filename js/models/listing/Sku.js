@@ -4,7 +4,7 @@ import BaseModel from '../BaseModel';
 export default class extends BaseModel {
   defaults() {
     return {
-      productId: '',
+      productID: '',
       infiniteInventory: false,
     };
   }
@@ -23,9 +23,9 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.productId.length > this.max.productIdLength) {
+    if (attrs.productID.length > this.max.productIdLength) {
       // TRANSLATE!
-      addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
+      addError('productID', `The productID cannot exceed ${this.max.productIdLength} characters.`);
     }
 
     if (attrs.quantity === '') {
