@@ -48,18 +48,22 @@ export default class extends Collection {
     // if an excluded collection was passed into the options, don't add any moderators in it
     const excludeList = this.options.excludeCollection ?
         _.pluck(this.options.excludeCollection.models, 'id') : [];
-    let modIDs = [];
+
+    // remove any added guids from the not fetched list, even if they are invalid
+    this.notFetchedYet = _.without(this.notFetchedYet, ...filteredModels.map(mod => mod.id));
+
+    // let any listening views know if all the moderators have loaded
+    if (!this.notFetchedYet.length) this.trigger('doneLoading');
+
     // remove any returned profiles that are not valid moderators
     if (models) {
       filteredModels = filteredModels.filter((mod) => {
         // don't add excluded ids or your own id
         const notExcluded = excludeList.indexOf(mod.id) === -1 && mod.id !== app.profile.id;
         // don't add if not a mod or the mod data is missing
+        if (!mod.isModerator) this.trigger('invalidMod', { id: mod.id });
         return mod.isModerator && notExcluded;
       });
-      modIDs = _.pluck(filteredModels, 'id');
-
-      this.notFetchedYet = _.without(this.notFetchedYet, ...modIDs);
     }
     return super.add(filteredModels, options);
   }
@@ -73,13 +77,16 @@ export default class extends Collection {
       if (serverConnection && serverConnection.status !== 'disconnected') {
         this.listenTo(serverConnection.socket, 'message', (event) => {
           const data = event.jsonData;
-          if (data.id === this.socketID) {
-            if (data.error || !data.profile) {
-              // don't add the results if there is an error or the profile is missing
-              this.trigger('asyncError', { id: data.peerId, error: data.error });
-              // remove errored id from the not fetched list
-              this.notFetchedYet = this.notFetchedYet.filter(id => id !== data.peerId);
-            } else {
+          // guid lookup errors are returned with no id. Check to see if the guid matches.
+          if (data.error) {
+            // don't add the results if there is an error or the profile is missing
+            this.trigger('asyncError', { id: data.peerId, error: data.error });
+            // remove errored id from the not fetched list
+            this.notFetchedYet = this.notFetchedYet.filter(id => id !== data.peerId);
+            // let any listening views know if all the moderators have loaded
+            if (!this.notFetchedYet.length) this.trigger('doneLoading');
+          } else {
+            if (data.id === this.socketID) {
               data.profile.id = data.peerId;
               const mod = new Moderator(data.profile, { parse: true });
               this.add(mod);

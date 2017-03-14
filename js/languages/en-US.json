@@ -383,6 +383,7 @@
       "moderatoryByIDSubmit": "Submit",
       "availableModerators": "Available Moderators on the Network",
       "browseModerators": "Browse Moderators",
+      "loading": "Loading",
       "status": {
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
@@ -394,7 +395,8 @@
         "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
         "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
         "modAlreadyAdded": "You have already added that moderator.",
-        "modIsBlank": "You must add a moderator ID or handle"
+        "modIsBlank": "You must add a moderator ID or handle",
+        "modIsInvalid": "%{guid} is not a valid moderator."
       }
     },
     "optional": "optional",

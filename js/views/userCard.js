@@ -5,6 +5,7 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile from '../models/profile/Profile';
+import UserCard from '../models/UserCard';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
 
@@ -16,8 +17,12 @@ export default class extends BaseVw {
     if (this.model instanceof Profile) {
       this.guid = this.model.id;
       this.fetched = true;
+    } else if (this.model) {
+      this.guid = this.model.get('guid');
+      this.fetched = false;
     } else {
-      this.guid = options.guid || this.model.get('guid');
+      this.model = new UserCard({ guid: options.guid });
+      this.guid = options.guid;
       this.fetched = false;
     }
     this.ownGuid = this.guid === app.profile.id;
