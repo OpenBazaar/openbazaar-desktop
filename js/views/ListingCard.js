@@ -166,7 +166,7 @@ export default class extends baseVw {
     // todo: allow fullListing to be provided/retrieved externally
     if (!this._fullListing) {
       this._fullListing = new Listing({
-        listing: { slug: this.model.get('slug') },
+        slug: this.model.get('slug'),
       }, {
         guid: this.ownerGuid,
       });

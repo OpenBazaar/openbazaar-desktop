@@ -54,19 +54,27 @@ export function getDebugLog() {
  * Returns an object with data about the current connection, incuding
  * the status (e.g. 'connecting', 'connected'...) and any relevant data
  * (e.g. the Socket instance, the Server Configuration model...).
- *
- * If you're looking to bind to Socket events, you would call this method
- * and then bind to the Socket instance that's returned. Keep in mind that
- * until the first connection is made, this method will return null, in which
- * case you'd wanted to wait until the 'connected' event to do your binding.
- *
- * But, since the app won't proceed out of Start.js, until a connection is
- * made, it's really only in Start.js that you need to wait for the event
- * and beyond Start.js you should just be able to get the socket via this
- * method.
  */
 export function getCurrentConnection() {
   return currentConnection;
+}
+
+/**
+ * Call this method to obtain the socket instance in order to bind socket events.
+ * If we are not currently connected to a server, this method will return false.
+ * For the most part, you could no-op in that case since as it is now the
+ * Connection Modal will overlay the app when there is no connection and any
+ * subsequent reconnection will result in the app re-starting.
+ */
+export function getSocket() {
+  const serverConnection = getCurrentConnection();
+  let returnVal = false;
+
+  if (serverConnection && serverConnection.status !== 'disconnected') {
+    returnVal = serverConnection.socket;
+  }
+
+  return returnVal;
 }
 
 function socketConnect(socket) {

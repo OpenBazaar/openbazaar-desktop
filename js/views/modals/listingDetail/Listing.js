@@ -69,8 +69,7 @@ export default class extends BaseModal {
 
     if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
-        const slug = this.model.get('listing')
-          .get('slug');
+        const slug = this.model.get('slug');
 
         if (savedOpts.slug === slug && savedOpts.hasChanged()) {
           this.showDataChangedMessage();
@@ -191,7 +190,7 @@ export default class extends BaseModal {
     if (photoIndex < 0) {
       throw new Error('Please provide a valid index for the selected photo.');
     }
-    const photoCol = this.model.get('listing').toJSON().item.images;
+    const photoCol = this.model.toJSON().item.images;
     const photoHash = photoCol[photoIndex].original;
     const phSrc = app.getServerUrl(`ipfs/${photoHash}`);
 
@@ -232,7 +231,7 @@ export default class extends BaseModal {
 
   onClickPhotoPrev() {
     let targetIndex = this.activePhotoIndex - 1;
-    const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
+    const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
     targetIndex = targetIndex < 0 ? imagesLength - 1 : targetIndex;
     this.setSelectedPhoto(targetIndex);
@@ -241,7 +240,7 @@ export default class extends BaseModal {
 
   onClickPhotoNext() {
     let targetIndex = this.activePhotoIndex + 1;
-    const imagesLength = parseInt(this.model.get('listing').toJSON().item.images.length, 10);
+    const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
     targetIndex = targetIndex >= imagesLength ? 0 : targetIndex;
     this.setSelectedPhoto(targetIndex);
@@ -294,7 +293,7 @@ export default class extends BaseModal {
     if (!destination) {
       throw new Error('Please provide a destination.');
     }
-    const shippingOptions = this.model.get('listing').get('shippingOptions').toJSON();
+    const shippingOptions = this.model.get('shippingOptions').toJSON();
     const templateData = shippingOptions.filter((option) => {
       if (destination === 'ALL') return option.regions;
       return option.regions.includes(destination);
@@ -303,7 +302,7 @@ export default class extends BaseModal {
       this.$shippingOptions.html(t({
         templateData,
         displayCurrency: app.settings.get('localCurrency'),
-        pricingCurrency: this.model.get('listing').get('metadata').get('pricingCurrency'),
+        pricingCurrency: this.model.get('metadata').get('pricingCurrency'),
       }));
     });
   }
@@ -375,12 +374,12 @@ export default class extends BaseModal {
 
     loadTemplate('modals/listingDetail/listing.html', t => {
       this.$el.html(t({
-        ...this.model.get('listing').toJSON(),
+        ...this.model.toJSON(),
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing,
         displayCurrency: app.settings.get('localCurrency'),
         // the ships from data doesn't exist yet
-        // shipsFromCountry: this.model.get('listing').get('shipsFrom');
+        // shipsFromCountry: this.model.get('shipsFrom');
         countryData: this.countryData,
         defaultCountry: this.defaultCountry,
         vendor: this.vendor,
