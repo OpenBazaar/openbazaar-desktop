@@ -199,6 +199,11 @@ export default class extends BaseModal {
     } else {
       $(e.target).val(trimmedVal);
     }
+
+    // const price = this.getFormData($(e.target)).item.price;
+    // this.model.get('item')
+    //   .set('price', price);
+    this.variantInventory.render();
   }
 
   onChangeContractType(e) {
@@ -738,6 +743,11 @@ export default class extends BaseModal {
       (this._$variantInventorySection = this.$('.js-variantInventorySection'));
   }
 
+  get $itemPrice() {
+    return this._$itemPrice ||
+      (this._$itemPrice = this.$('[name="item.price"]'));
+  }
+
   showMaxTagsWarning() {
     this.$maxTagsWarning.empty()
       .append(this.maxTagsWarning);
@@ -854,7 +864,8 @@ export default class extends BaseModal {
           minimumResultsForSearch: Infinity,
         });
 
-      this.$('#editListingCurrency').select2();
+      this.$('#editListingCurrency').select2()
+        .on('change', () => this.variantInventory.render());
 
       this.$editListingTags.select2({
         multiple: true,
@@ -964,7 +975,6 @@ export default class extends BaseModal {
       this.variantsView = this.createChild(Variants, {
         collection: this.variantOptionsCl,
         maxVariantCount: this.model.max.optionCount,
-        // couponErrors,
       });
 
       this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',
@@ -978,13 +988,13 @@ export default class extends BaseModal {
       if (this.variantInventory) this.variantInventory.remove();
 
       this.variantInventory = this.createChild(VariantInventory, {
-        collection: this.model.get('item')
-          .get('skus'),
-        optionsCl: this.model.get('item')
-          .get('options'),
-        // TODO TODO TODO: switch out this placeholder funcs!!!
-        getPrice: () => 155,
-        getCurrency: () => 'USD',
+        collection: item.get('skus'),
+        optionsCl: item.get('options'),
+        getPrice: () => this.getFormData(this.$itemPrice).item.price,
+        // getCurrency: () => this.getFormData(this.$currencySelect).metadata.pricingCurrency,
+        // getCurrency: () => this.model.get('metadata')
+        //   .get('pricingCurrency'),
+        getCurrency: () => this.currency,
       });
 
       this.$('.js-variantInventoryTableContainer')
@@ -1029,6 +1039,7 @@ export default class extends BaseModal {
       this._$maxTagsWarning = null;
       this._$addShipOptSectionHeading = null;
       this._$variantInventorySection = null;
+      this._$itemPrice = null;
       this.$photoUploadItems = this.$('.js-photoUploadItems');
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');

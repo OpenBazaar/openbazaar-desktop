@@ -6,7 +6,7 @@
     <input type="text" class="clrBr clrP clrSh2" name="surcharge" value="<%= ob.surcharge %>" data-var-type="number" placeholder="0.00" />
   </td>
   <% const surcharge = typeof ob.surcharge === 'number' ? ob.surcharge : 0; %>
-  <% const totalPrice = ob.formatPrice(ob.getPrice() + surcharge, ob.getCurrency() === 'BTC'); %>
+  <% const totalPrice = ob.formatCurrency(ob.getPrice() + surcharge, ob.getCurrency()); %>
   <td class="clrBr"><%= totalPrice %></td>
   <td class="clrBr">
     <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>

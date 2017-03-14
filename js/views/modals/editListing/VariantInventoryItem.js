@@ -1,4 +1,3 @@
-import { formatPrice } from '../../../utils/currency';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -21,24 +20,9 @@ export default class extends BaseView {
     this.options = options;
   }
 
-  // className() {
-  //   return 'tr';
-  // }
-
   tagName() {
     return 'tr';
   }
-
-  // events() {
-  //   return {
-  //     'click .js-btnRemoveCoupon': 'onClickRemove',
-  //     'change [name=discountType]': 'onChangeDiscountType',
-  //   };
-  // }
-
-  // onClickRemove() {
-  //   this.trigger('remove-click', { view: this });
-  // }
 
   getFormData(fields = this.$formFields) {
     const formData = super.getFormData(fields);
@@ -63,11 +47,9 @@ export default class extends BaseView {
         ...this.model.toJSON(),
         errors: {
           ...(this.model.validationError || {}),
-          // ...(this.options.couponErrors || {}),
         },
         getCurrency: this.options.getCurrency,
         getPrice: this.options.getPrice,
-        formatPrice,
       }));
 
       this._$formFields = null;

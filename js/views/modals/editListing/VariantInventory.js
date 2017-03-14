@@ -41,12 +41,6 @@ export default class extends baseVw {
     return 'scrollBoxX';
   }
 
-  // events() {
-  //   return {
-  //     'click .js-btnConnect': 'onConnectClick',
-  //   };
-  // }
-
   setCollectionData() {
     this.itemViews.forEach(item => item.setModelData());
   }
