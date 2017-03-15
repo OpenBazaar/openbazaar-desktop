@@ -402,6 +402,7 @@
       "moderatoryByIDSubmit": "Submit",
       "availableModerators": "Available Moderators on the Network",
       "browseModerators": "Browse Moderators",
+      "browseMoreModerators": "Load More Moderators",
       "loading": "Loading",
       "status": {
         "saving": "Saving store settings...",
@@ -411,7 +412,7 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
-        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
+        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
         "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
         "modAlreadyAdded": "You have already added that moderator.",
         "modIsBlank": "You must add a moderator ID or handle",

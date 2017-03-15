@@ -52,7 +52,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsSelected, 'asyncError', (opts) => {
-      this.modNotFound(opts.id, '', opts.error);
+      this.modNotFound(opts.id);
     });
 
     this.listenTo(this.modsSelected, 'doneLoading', () => {
@@ -71,7 +71,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsByID, 'asyncError', (opts) => {
-      this.modNotFound(opts.id, '', opts.error);
+      this.modNotFound(opts.id);
     });
 
     this.listenTo(this.modsByID, 'doneLoading', () => {
@@ -88,7 +88,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsAvailable, 'asyncError', (opts) => {
-      this.modNotFound(opts.id, '', opts.error);
+      this.modNotFound(opts.id);
     });
 
     this.listenTo(this.modsAvailable, 'doneLoading', () => {
@@ -144,9 +144,9 @@ export default class extends baseVw {
           ...opts,
         });
         this.listenTo(newModView, 'changeModerator', (data) => this.changeMod(data));
+        newModView.cardState = opts.cardState || 'view';
       } else {
         newModView = cachedView;
-        newModView.cardState = opts.cardState || 'view';
         newModView.delegateEvents();
       }
       // if the view already exists and is in the DOM, this will move it
@@ -196,11 +196,10 @@ export default class extends baseVw {
     }
   }
 
-  modNotFound(guid, handle, error = '') {
+  modNotFound(guid, handle) {
     const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
-    const phrase = app.polyglot.t('settings.storeTab.errors.modNotFound',
+    const msg = app.polyglot.t('settings.storeTab.errors.modNotFound',
         { guidOrHandle: handle || guid });
-    const msg = `${phrase} \n ${error}`;
 
     openSimpleMessage(title, msg);
   }
@@ -316,7 +315,7 @@ export default class extends baseVw {
           // add the models from the other collections to the selected moderators
           addedIDs.forEach((modelID) => {
             const modToAdd = this.modsByID.get(modelID) || this.modsAvailable.get(modelID);
-            this.modsSelected.add(modToAdd);
+            if (modToAdd) this.modsSelected.add(modToAdd);
           });
 
           // remove added models from other collections
