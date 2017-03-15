@@ -57,13 +57,12 @@ export default class extends BaseModal {
       // event emitter in models/listing/index.js.
     });
 
-    this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
-    this.createMode = !(this.model.lastSyncedAttrs.listing &&
-      this.model.lastSyncedAttrs.listing.slug);
+    this.createMode = !(this.model.lastSyncedAttrs &&
+      this.model.lastSyncedAttrs.slug);
     this.photoUploads = [];
-    this.images = this.innerListing.get('item').get('images');
-    this.shippingOptions = this.innerListing.get('shippingOptions');
+    this.images = this.model.get('item').get('images');
+    this.shippingOptions = this.model.get('shippingOptions');
     this.shippingOptionViews = [];
 
     loadTemplate('modals/editListing/uploadPhoto.html',
@@ -99,7 +98,7 @@ export default class extends BaseModal {
           { listPosition: this.shippingOptions.length + 1 }));
     });
 
-    this.coupons = this.innerListing.get('coupons');
+    this.coupons = this.model.get('coupons');
     this.listenTo(this.coupons, 'update', () => {
       if (this.coupons.length) {
         this.$couponsSection.addClass('expandedCouponView');
@@ -141,7 +140,7 @@ export default class extends BaseModal {
   }
 
   get MAX_PHOTOS() {
-    return this.model.get('listing').get('item').max.images;
+    return this.model.get('item').max.images;
   }
 
   onClickReturn() {
@@ -268,7 +267,7 @@ export default class extends BaseModal {
 
     this.$inputPhotoUpload.val('');
 
-    const currPhotoLength = this.innerListing.get('item')
+    const currPhotoLength = this.model.get('item')
       .get('images')
       .length;
 
@@ -493,15 +492,20 @@ export default class extends BaseModal {
     // set the coupon data
     this.couponsView.setCollectionData();
 
+    // TEMP TEMP TEMP until full variant work is done
+    if (formData && formData.item) {
+      delete formData.item.sku;
+    }
+
     this.model.set(formData);
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
-    if (this.innerListing.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
-      this.innerListing.get('shippingOptions').reset();
+    if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+      this.model.get('shippingOptions').reset();
     } else {
       // If any shipping options have a type of 'LOCAL_PICKUP', we'll
       // clear out any services that may be there.
-      this.innerListing.get('shippingOptions').forEach(shipOpt => {
+      this.model.get('shippingOptions').forEach(shipOpt => {
         if (shipOpt.get('type') === 'LOCAL_PICKUP') {
           shipOpt.set('services', []);
         }
@@ -516,7 +520,7 @@ export default class extends BaseModal {
         type: 'message',
         duration: 99999999999999,
       }).on('clickViewListing', () => {
-        const url = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
+        const url = `#${app.profile.id}/store/${this.model.get('slug')}`;
 
         // This couldn't have been a simple href because that URL may already be the
         // page we're on, with the Listing Detail likely obscured by this modal. Since
@@ -528,7 +532,7 @@ export default class extends BaseModal {
       save.always(() => this.$saveButton.removeClass('disabled'))
         .fail((...args) => {
           savingStatusMsg.update({
-            msg: `Listing <em>${this.model.toJSON().listing.item.title}</em> failed to save.`,
+            msg: `Listing <em>${this.model.toJSON().item.title}</em> failed to save.`,
             type: 'warning',
           });
 
@@ -541,7 +545,7 @@ export default class extends BaseModal {
           .render()
           .open();
         }).done(() => {
-          savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
+          savingStatusMsg.update(`Listing ${this.model.toJSON().item.title}` +
             ' saved. <a class="js-viewListing">view</a>');
 
           setTimeout(() => savingStatusMsg.remove(), 6000);
@@ -670,14 +674,14 @@ export default class extends BaseModal {
   // return the currency associated with this listing
   get currency() {
     return (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.innerListing.get('metadata').get('pricingCurrency') ||
+        this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
           app.settings.get('localCurrency'));
   }
 
   createShippingOptionView(opts) {
     const options = {
       getCurrency: () => (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency),
+        this.$currencySelect.val() : this.model.get('metadata').pricingCurrency),
       ...opts || {},
     };
     const view = this.createChild(ShippingOption, options);
@@ -699,7 +703,7 @@ export default class extends BaseModal {
 
   render(restoreScrollPos = true) {
     let prevScrollPos = 0;
-    const item = this.innerListing.get('item');
+    const item = this.model.get('item');
 
     if (restoreScrollPos) {
       prevScrollPos = this.el.scrollTop;
@@ -715,20 +719,20 @@ export default class extends BaseModal {
         returnText: this.options.returnText,
         currency: this.currency,
         currencies: this.currencies,
-        contractTypes: this.innerListing.get('metadata')
+        contractTypes: this.model.get('metadata')
           .contractTypes
           .map((contractType) => ({ code: contractType,
             name: app.polyglot.t(`formats.${contractType}`) })),
-        conditionTypes: this.innerListing.get('item')
+        conditionTypes: this.model.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
             name: app.polyglot.t(`conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
         photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,
-        expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
+        expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
         expandedTermsAndConditions: this.expandedTermsAndConditions ||
-          !!this.innerListing.get('termsAndConditions'),
+          !!this.model.get('termsAndConditions'),
         formatPrice,
         maxCatsWarning: this.maxCatsWarning,
         maxTagsWarning: this.maxTagsWarning,
@@ -790,7 +794,7 @@ export default class extends BaseModal {
         matcher: () => false,
       }).on('change', () => {
         const tags = this.$editListingTags.val();
-        this.innerListing.get('item').set('tags', tags);
+        this.model.get('item').set('tags', tags);
         this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
 
         if (tags.length >= item.maxTags) {
@@ -847,7 +851,7 @@ export default class extends BaseModal {
       this.shippingOptionViews = [];
       const shipOptsFrag = document.createDocumentFragment();
 
-      this.innerListing.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
+      this.model.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
         const shipOptVw = this.createShippingOptionView({
           model: shipOpt,
           listPosition: shipOptIndex + 1,
@@ -875,7 +879,7 @@ export default class extends BaseModal {
 
       this.couponsView = new Coupons({
         collection: this.coupons,
-        maxCouponCount: this.innerListing.max.couponCount,
+        maxCouponCount: this.model.max.couponCount,
         couponErrors,
       });
 
@@ -911,7 +915,7 @@ export default class extends BaseModal {
       this.sortablePhotos = Sortable.create(this.$photoUploadItems[0], {
         filter: '.js-addPhotoWrap',
         onUpdate: (e) => {
-          const imageModels = this.innerListing
+          const imageModels = this.model
             .get('item')
             .get('images')
             .models;

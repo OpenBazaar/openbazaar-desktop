@@ -1,0 +1,11 @@
+<div class="flexVCent gutterHSm">
+  <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.avatarHashes || {}) %>"></a>
+  <div class="contentBox headContent clrBr clrP clrSh1 noOverflow">
+    <span class="tx6">
+      <span class="handleGuid noOverflow <% if (ob.unread) print('txB') %>"><%= ob.handle ? `@${ob.handle}` : ob.peerId %>:</span> <%= ob.lastMessage %>
+    </span>
+  </div>
+</div>
+<% if (ob.unread) { %>
+<div class="disc unreadBadge clrE1 clrTOnEmph clrBr2 clrSh1 <% if (ob.unread > 9) print('ellipsisShown') %>"><%= ob.unread > 9 ? '…' : ob.unread  %></div>
+<% } %>

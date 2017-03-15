@@ -81,7 +81,7 @@ export default class extends baseVw {
 
   messageClick() {
     // activate the chat message
-    console.log('message');
+    app.chat.openConversation(this.model.id);
   }
 
   moreClick() {
