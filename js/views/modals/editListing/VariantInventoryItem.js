@@ -1,4 +1,5 @@
 import '../../../lib/select2';
+import { formatCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -24,6 +25,16 @@ export default class extends BaseView {
     return 'tr';
   }
 
+  events() {
+    return {
+      'keyup .js-surcharge': 'onKeyupSurcharge',
+    };
+  }
+
+  onKeyupSurcharge(e) {
+    this.$totalPrice.text(this.calculateTotalPrice(Number(e.target.value)));
+  }
+
   getFormData(fields = this.$formFields) {
     const formData = super.getFormData(fields);
     return formData;
@@ -35,10 +46,22 @@ export default class extends BaseView {
     this.model.set(formData);
   }
 
+  calculateTotalPrice(surcharge) {
+    return (typeof surcharge === 'number' && !isNaN(surcharge) ?
+      formatCurrency(this.options.getPrice() + surcharge, this.options.getCurrency()) :
+      '');
+  }
+
   get $formFields() {
     return this._$formFields ||
       (this._$formFields =
         this.$('select[name], input[name], textarea[name]'));
+  }
+
+  get $totalPrice() {
+    return this._$totalPrice ||
+      (this._$totalPrice =
+        this.$('.js-totalPrice'));
   }
 
   render() {
@@ -50,9 +73,11 @@ export default class extends BaseView {
         },
         getCurrency: this.options.getCurrency,
         getPrice: this.options.getPrice,
+        calculateTotalPrice: this.calculateTotalPrice.bind(this),
       }));
 
       this._$formFields = null;
+      this._$totalPrice = null;
     });
 
     return this;
