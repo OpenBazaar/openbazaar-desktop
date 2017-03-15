@@ -195,7 +195,7 @@ export default class extends BaseModel {
         delete options.attrs.item.quantity;
 
         // Our Sku has an infinteInventory boolean attribute, but the server
-        // is expecting a quantity of -1 in that case.
+        // is expecting a quantity negative quantity in that case.
         options.attrs.item.skus.forEach(sku => {
           if (sku.infiniteInventory) {
             sku.quantity = -1;
@@ -316,6 +316,18 @@ export default class extends BaseModel {
         const dummySku = parsedResponse.item.skus[0];
         parsedResponse.item.quantity = dummySku.quantity;
         parsedResponse.item.productID = dummySku.productID;
+      }
+
+      // If a sku quantity is set to less than 0, we'll set the
+      // infinite inventory flag.
+      if (parsedResponse.item && parsedResponse.item.skus) {
+        parsedResponse.item.skus.forEach(sku => {
+          if (sku.quantity < 0) {
+            sku.infiniteInventory = true;
+          } else {
+            sku.infiniteInventory = false;
+          }
+        });
       }
     }
 

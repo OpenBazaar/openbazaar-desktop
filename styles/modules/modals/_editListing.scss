@@ -255,17 +255,29 @@
           td, th {
             border-width: 1px;
             border-style: solid;
-            min-width: 125px;
-            max-width: 125px;
             padding: $pad;
             word-break: break-word;
+            min-width: 125px;
+            max-width: 125px;
 
             input[type=text] {
+              width: 100px;
               max-width: 100px;
             }
 
             &:last-child {
               border-right-width: 0;
+            }
+            
+            &.unconstrainedWidth {
+              white-space: nowrap;
+              width: auto;
+              max-width: none;
+
+              .errorList {
+                max-width: 225px;
+                white-space: normal;
+              }
             }
           }
         }

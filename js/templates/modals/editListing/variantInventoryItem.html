@@ -10,8 +10,12 @@
     <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>
     <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" data-var-type="number" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" />
   </td>    
-  <td class="clrBr">
+  <td class="clrBr unconstrainedWidth">
     <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>
-    <input type="text" class="clrBr clrP clrSh2" name="quantity" value="<%= ob.quantity %>" data-var-type="number" placeholder="0" />
+    <div class="flexVCent gutterH">
+      <input type="text" class="clrBr clrP clrSh2 js-quantity" name="quantity" value="<%= ob.infiniteInventory ? ob.infiniteQuantityChar : ob.quantity %>" data-var-type="number" placeholder="0" />
+      <input type="checkbox" id="<%= `${ob.cid}_inventoryItemUnlimtedCheckbox` %>" class="centerLabel js-infiniteInventoryCheckbox" name="infiniteInventory" <% if (ob.infiniteInventory) print('checked') %>>
+      <label class="tx5b" for="<%= `${ob.cid}_inventoryItemUnlimtedCheckbox` %>"><%= ob.polyT('editListing.variantInventory.unlimitedQuantityLabel') %></label>
+    </div>
   </td>
 <% }); %}

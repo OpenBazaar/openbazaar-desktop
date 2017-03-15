@@ -28,21 +28,30 @@ export default class extends BaseModel {
       addError('productID', `The productID cannot exceed ${this.max.productIdLength} characters.`);
     }
 
-    if (attrs.quantity === '') {
+    if (attrs.quantity === '' && !attrs.infiniteInventory) {
       // TRANSLATE!
       addError('quantity', 'Please provide a quantity.');
-    } else if (typeof attrs.quantity !== 'number') {
-      // TRANSLATE!
-      addError('quantity', 'Please provide the quantity as a number.');
-    } else if (attrs.quantity < 0) {
-      // The listing API allows the quantity to be set to -1, which indicates an unlimited
-      // supply. This model does not allow a -1, but does have an infiniteInventory flag.
-      // The expectation is that sync / parse of the listing model will send the quantity
-      // over as -1 if the infiniteInventory flag is set to true. Also the infiniteInventory
-      // flag should not be sent to the server.
+    }
 
-      // TRANSLATE!
-      addError('quantity', 'The quantity cannot be less than 0.');
+    if (typeof attrs.infiniteInventory !== 'undefined' &&
+      typeof attrs.infiniteInventory !== 'boolean') {
+      addError('infiniteInventory', 'If provided, infiniteInventory should be a boolean.');
+    }
+
+    if (attrs.quantity !== '') {
+      if (typeof attrs.quantity !== 'number') {
+        // TRANSLATE!
+        addError('quantity', 'Please provide the quantity as a number.');
+      } else if (!attrs.infiniteInventory && attrs.quantity < 0) {
+        // The listing API allows the quantity to be set to < 0, which indicates an unlimited
+        // supply. This model does not allow that, but does have an infiniteInventory flag.
+        // The expectation is that sync / parse of the listing model will send the quantity
+        // over as -1 if the infiniteInventory flag is set to true. Also the infiniteInventory
+        // flag should not be sent to the server.
+
+        // TRANSLATE!
+        addError('quantity', 'The quantity cannot be less than 0.');
+      }
     }
 
     if (attrs.surcharge === '') {

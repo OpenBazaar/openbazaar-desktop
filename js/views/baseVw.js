@@ -50,7 +50,7 @@ export default class baseVw extends View {
 
       let val = $field.val();
 
-      if (field.tagName === 'DIV') {
+      if (field.tagName.toUpperCase() === 'DIV') {
         val = field.innerHTML;
       }
 
@@ -72,6 +72,10 @@ export default class baseVw extends View {
         } else if (varType === 'boolean') {
           val = val === 'true';
         }
+      }
+
+      if (field.type === 'checkbox') {
+        val = $(field).is(':checked');
       }
 
       const name = $field.attr('name');

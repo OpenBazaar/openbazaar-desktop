@@ -34,7 +34,7 @@ export default class extends baseVw {
       sku.set('mappingId', this.buildIdFromVariantCombo(variantCombo));
     });
 
-    this.listenTo(this.optionsCl, 'change', () => this.render());
+    this.listenTo(this.optionsCl, 'update change', () => this.render());
   }
 
   className() {
@@ -104,10 +104,11 @@ export default class extends baseVw {
       // only process options that have at least one variant
       .filter(option => option.variants && option.variants.length);
 
+    const columns = options.map(option => option.name);
+    const inventoryData = [];
+
     // ensure the Sku collection has the latest data from the UI
     this.setCollectionData();
-
-    const inventoryData = [];
 
     this.allPossibleCombos(options.map(option => option.variants))
       .sort()
@@ -149,7 +150,7 @@ export default class extends baseVw {
       });
 
     return {
-      columns: options.map(option => option.name),
+      columns,
       inventory: inventoryData,
     };
   }

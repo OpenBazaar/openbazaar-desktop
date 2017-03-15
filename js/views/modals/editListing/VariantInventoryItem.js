@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import '../../../lib/select2';
 import { formatCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -28,11 +29,40 @@ export default class extends BaseView {
   events() {
     return {
       'keyup .js-surcharge': 'onKeyupSurcharge',
+      'focus .js-quantity': 'onFocusQuantity',
+      'keyup .js-quantity': 'onKeyupQuantity',
+      'change .js-infiniteInventoryCheckbox': 'onChangeInfiniteCheckbox',
     };
+  }
+
+  get infiniteQuantityChar() {
+    return '—';
   }
 
   onKeyupSurcharge(e) {
     this.$totalPrice.text(this.calculateTotalPrice(Number(e.target.value)));
+  }
+
+  onFocusQuantity(e) {
+    if (e.target.value === this.infiniteQuantityChar) {
+      e.target.setSelectionRange(0, e.target.value.length);
+    }
+  }
+
+  onKeyupQuantity(e) {
+    if (e.target.value !== this.infiniteQuantityChar) {
+      this.$infiniteInventoryCheckbox.prop('checked', false);
+    } else {
+      this.$infiniteInventoryCheckbox.prop('checked', true);
+    }
+  }
+
+  onChangeInfiniteCheckbox(e) {
+    if ($(e.target).is(':checked')) {
+      this.$quantity.val(this.infiniteQuantityChar);
+    } else {
+      this.$quantity.val('');
+    }
   }
 
   getFormData(fields = this.$formFields) {
@@ -43,13 +73,19 @@ export default class extends BaseView {
   // Sets the model based on the current data in the UI.
   setModelData() {
     const formData = this.getFormData();
+
+    if (formData.infiniteInventory) {
+      formData.quantity = -1;
+    }
+
     this.model.set(formData);
   }
 
   calculateTotalPrice(surcharge) {
-    return (typeof surcharge === 'number' && !isNaN(surcharge) ?
-      formatCurrency(this.options.getPrice() + surcharge, this.options.getCurrency()) :
-      '');
+    const updatedSurcharge = (typeof surcharge === 'number' && !isNaN(surcharge)) ?
+      surcharge : 0;
+
+    return formatCurrency(this.options.getPrice() + updatedSurcharge, this.options.getCurrency());
   }
 
   get $formFields() {
@@ -64,6 +100,18 @@ export default class extends BaseView {
         this.$('.js-totalPrice'));
   }
 
+  get $infiniteInventoryCheckbox() {
+    return this._$infiniteInventoryCheckbox ||
+      (this._$infiniteInventoryCheckbox =
+        this.$('.js-infiniteInventoryCheckbox'));
+  }
+
+  get $quantity() {
+    return this._$quantity ||
+      (this._$quantity =
+        this.$('.js-quantity'));
+  }
+
   render() {
     loadTemplate('modals/editListing/variantInventoryItem.html', t => {
       this.$el.html(t({
@@ -74,10 +122,14 @@ export default class extends BaseView {
         getCurrency: this.options.getCurrency,
         getPrice: this.options.getPrice,
         calculateTotalPrice: this.calculateTotalPrice.bind(this),
+        cid: this.cid,
+        infiniteQuantityChar: this.infiniteQuantityChar,
       }));
 
       this._$formFields = null;
       this._$totalPrice = null;
+      this._$infiniteInventoryCheckbox = null;
+      this._$quantity = null;
     });
 
     return this;
