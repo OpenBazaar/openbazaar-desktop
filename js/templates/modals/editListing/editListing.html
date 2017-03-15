@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="flexExpand posR tabContent">
-    <div class="gutterVMd">
+    <div class="gutterVMd js-formSectionsContainer">
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3">
         <div class="flexHCent">
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
@@ -219,28 +219,7 @@
         <a class="btn clrP clrBr clrSh2 addFirstVariant js-addFirstVariant"><%= ob.polyT('editListing.variants.btnAddVariant') %></a>
       </section>
 
-      <section class="contentBox padMd clrP clrBr clrSh3 tx3">
-        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.inventoryManagement') %></h2>
-        <hr class="clrBr rowMd">
-        <div class="col6">
-          
-          <% // TODO TODO TODO: Is the error line needed? %>
-
-          <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
-
-          <% ob.inventoryManagementType = 'TRACK_BY_VARIANT'; %>
-          <select id="editInventoryManagementType" bname="inventoryManagementType" class="clrBr clrP clrSh2 marginTopAuto">
-            <option value="DO_NOT_TRACK" <% if (ob.inventoryManagementType === 'DO_NOT_TRACK') print('selected') %>>
-              <%= ob.polyT('editListing.inventoryManagement.types.DO_NOT_TRACK.optionLabel') %>
-            <option value="TRACK_BY_FIXED" <% if (ob.inventoryManagementType === 'TRACK_BY_FIXED') print('selected') %>>
-              <%= ob.polyT('editListing.inventoryManagement.types.TRACK_BY_FIXED.optionLabel') %>
-            <option value="TRACK_BY_VARIANT" <% if (ob.inventoryManagementType === 'TRACK_BY_VARIANT') print('selected') %>>
-              <%= ob.polyT('editListing.inventoryManagement.types.TRACK_BY_VARIANT.optionLabel') %>                            
-            </option>
-          </select>
-          <div class="clrT2 txSm padSm"><%= ob.polyT(`editListing.inventoryManagement.types.${ob.inventoryManagementType}.helperText`) %></div>
-        </div>
-      </section>
+      <section class="contentBox padMd clrP clrBr clrSh3 tx3 js-inventoryManagementSection inventoryManagementSection"></section>
 
       <section class="contentBox variantInventorySection js-variantInventorySection padMd clrP clrBr clrSh3 tx3 <% if (!ob.shouldShowVariantInventorySection) print('hide') %>">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantInventory') %></h2>

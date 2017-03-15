@@ -72,8 +72,8 @@ export default class extends BaseModel {
     if (this.get('options').length) {
       // If we have options and any SKUs have defined quanities,
       // we'll consider you to be tracking inventory
-
-      isInventoryTracked = _.some(this.get('skus'), sku => (!!sku.get('quantity')));
+      isInventoryTracked = !!this.get('skus')
+        .find(sku => (!!sku.get('quantity') || sku.get('infiniteInventory')));
     } else {
       // If you don't have any options and quantity is set,
       // we'll consider you to be tracking inventory

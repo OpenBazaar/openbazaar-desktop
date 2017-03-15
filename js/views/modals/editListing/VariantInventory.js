@@ -27,12 +27,14 @@ export default class extends baseVw {
     this.optionsCl = options.optionsCl;
     this.itemViews = [];
 
-    // Give each Sku a mappingId which links it to the options it originated from
+    // Give each Sku a mappingId which links it to the option it originated from
     // in a more robust way than relying on order which can change.
-    this.collection.forEach(sku => {
-      const variantCombo = sku.get('variantCombo');
-      sku.set('mappingId', this.buildIdFromVariantCombo(variantCombo));
-    });
+    if (this.optionsCl.length) {
+      this.collection.forEach(sku => {
+        const variantCombo = sku.get('variantCombo');
+        sku.set('mappingId', this.buildIdFromVariantCombo(variantCombo));
+      });
+    }
 
     this.listenTo(this.optionsCl, 'update change', () => this.render());
   }
@@ -77,6 +79,9 @@ export default class extends baseVw {
   }
 
   buildIdFromVariantCombo(variantCombo, options = this.optionsCl) {
+    console.log('mipple');
+    window.mipple = variantCombo;
+
     if (!_.isArray(variantCombo)) {
       throw new Error('Please provide a variantCombo as an array.');
     }

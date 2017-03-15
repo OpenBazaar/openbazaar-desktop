@@ -23,6 +23,7 @@ import ShippingOption from './ShippingOption';
 import Coupons from './Coupons';
 import Variants from './Variants';
 import VariantInventory from './VariantInventory';
+import InventoryManagement from './InventoryManagement';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -49,6 +50,8 @@ export default class extends BaseModal {
           this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
         }
 
+        // TODO TODO TODO TODO
+        // parse out the custom created SKU attrs.
         this._origModel.set(this.model.toJSON());
       });
 
@@ -443,8 +446,20 @@ export default class extends BaseModal {
   onUpdateVariantOptions() {
     if (this.variantOptionsCl.length) {
       this.$variantsSection.addClass('expandedVariantsView');
+
+      if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
+        this.inventoryManagement.setState({
+          trackBy: 'TRACK_BY_VARIANT',
+        });
+      }
     } else {
       this.$variantsSection.removeClass('expandedVariantsView');
+
+      if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
+        this.inventoryManagement.setState({
+          trackBy: 'TRACK_BY_FIXED',
+        });
+      }
     }
 
     this.$variantInventorySection.toggleClass('hide',
@@ -570,6 +585,10 @@ export default class extends BaseModal {
       delete formData.item.productId;
     }
 
+    console.log('bam zupa');
+    window.bam = formData;
+    window.zupa = this.$formFields;
+
     this.model.set(formData);
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
@@ -644,6 +663,19 @@ export default class extends BaseModal {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  onChangeManagementType(e) {
+    if (e.value === 'TRACK') {
+      this.inventoryManagement.setState({
+        trackBy: this.model.get('item').get('options').length ?
+          'TRACK_BY_VARIANT' : 'TRACK_BY_FIXED',
+      });
+    } else {
+      this.inventoryManagement.setState({
+        trackBy: 'DO_NOT_TRACK',
+      });
+    }
+  }
+
   get $scrollToSections() {
     return this._$scrollToSections ||
       (this._$scrollToSections = this.$('.js-scrollToSection'));
@@ -660,10 +692,11 @@ export default class extends BaseModal {
 
     return this._$formFields ||
       (this._$formFields = this.$(
-        `.js-scrollToSection:not(${excludes}) select[name],` +
-        `.js-scrollToSection:not(${excludes}) input[name],` +
-        `.js-scrollToSection:not(${excludes}) div[contenteditable][name],` +
-        `.js-scrollToSection:not(${excludes}) textarea[name]:not([class*="trumbowyg"])`
+        `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
+        `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
+        `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
+        `.js-formSectionsContainer > section:not(${excludes}) ` +
+          'textarea[name]:not([class*="trumbowyg"])'
       ));
   }
 
@@ -851,11 +884,10 @@ export default class extends BaseModal {
       this.$couponsSection = this.$('.js-couponsSection');
       this.$variantsSection = this.$('.js-variantsSection');
 
-      this.$('#editContractType, #editListingVisibility, #editListingCondition, ' +
-        '#editInventoryManagementType').select2({
-          // disables the search box
-          minimumResultsForSearch: Infinity,
-        });
+      this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
+        // disables the search box
+        minimumResultsForSearch: Infinity,
+      });
 
       this.$('#editListingCurrency').select2()
         .on('change', () => this.variantInventory.render());
@@ -977,6 +1009,30 @@ export default class extends BaseModal {
         this.variantsView.render().el
       );
 
+      // render inventory management section
+      if (this.inventoryManagement) this.inventoryManagement.remove();
+      let trackBy = 'DO_NOT_TRACK';
+
+      if (item.isInventoryTracked) {
+        if (this.options.length) {
+          trackBy = 'TRACK_BY_VARIANT';
+        } else {
+          trackBy = 'TRACK_BY_FIXED';
+        }
+      }
+
+      this.inventoryManagement = this.createChild(InventoryManagement, {
+        initialState: {
+          trackBy,
+          quantity: item.get('quantity'),
+          // errors: (this.model.validationError &&
+          //   this.model.validationError['item.quantity'] || {}),
+        },
+      });
+
+      this.$('.js-inventoryManagementSection').html(this.inventoryManagement.render().el);
+      this.listenTo(this.inventoryManagement, 'changeManagementType', this.onChangeManagementType);
+
       // render variant inventory
       if (this.variantInventory) this.variantInventory.remove();
 
@@ -984,9 +1040,6 @@ export default class extends BaseModal {
         collection: item.get('skus'),
         optionsCl: item.get('options'),
         getPrice: () => this.getFormData(this.$itemPrice).item.price,
-        // getCurrency: () => this.getFormData(this.$currencySelect).metadata.pricingCurrency,
-        // getCurrency: () => this.model.get('metadata')
-        //   .get('pricingCurrency'),
         getCurrency: () => this.currency,
       });
 
