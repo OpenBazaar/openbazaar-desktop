@@ -291,3 +291,17 @@ input[type=range][class~="clrS"] {
     border-color: $border;
   }
 }
+
+#chatConvoContainer {
+  .chatConversation {
+    border-color: $border3;
+  }
+}
+
+.chatHead {
+  &.active {
+    .headContent {
+      border-color: $border3;
+    }
+  }
+}

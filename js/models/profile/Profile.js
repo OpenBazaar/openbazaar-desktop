@@ -168,6 +168,9 @@ export default class extends BaseModel {
 
       response.modInfo.fee.fixedFee.amount = integerToDecimal(amount, isBtc);
     }
+
+    if (response.handle.startsWith('@')) response.handle = response.handle.slice(1);
+
     return this.standardizeColorFields(response);
   }
 

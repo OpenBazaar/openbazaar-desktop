@@ -47,6 +47,8 @@ export default class {
     this._socket.onmessage = (...args) => {
       if (args[0] && args[0].data) {
         args[0].jsonData = JSON.parse(args[0].data);
+      } else {
+        args[0].jsonData = {};
       }
 
       this.trigger(...['message'].concat(args));

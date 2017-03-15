@@ -60,8 +60,7 @@
 
       .chatOpen & {
         left: 0;
-        // adjust by 5px to visually center
-        margin-left: calc(((100% - (#{$modalContentInner + $chatOpen})) / 2) + 5px);
+        margin-left: calc(((100% - (#{$modalContentInner + ($chatOpen - 5)})) / 2));
       }
 
       & > .cornerTR {
