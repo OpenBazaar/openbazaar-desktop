@@ -603,6 +603,7 @@ export default class extends BaseModal {
     if (item.get('options').length) {
       // If we have options, we shouldn't be providing a top-level quantity.
       delete formData.item.quantity;
+      delete formData.item.infiniteInventory;
     }
 
     this.model.set(formData);
@@ -627,8 +628,8 @@ export default class extends BaseModal {
       // with the save while still allowing it to stay in the collection.
       const updatedSku = _.omit(sku, 'mappingId', 'choices');
 
-      // If we've selected to not track inventory and we have any options, we'll remove the
-      // quanitity from the data we send over to the server.
+      // If we've selected to not track inventory and we have any options, we'll set the
+      // infiniteInventory flag for all skus we send over to the server.
       if (this.trackInventoryBy === 'DO_NOT_TRACK' && item.get('options').length) {
         updatedSku.infiniteInventory = true;
       }
