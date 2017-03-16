@@ -466,6 +466,7 @@ export default class extends baseVw {
     if (this._isOpen) return;
     this._isOpen = true;
     getBody().addClass('chatConvoOpen');
+    this.$messageInput.focus();
   }
 
   close() {
@@ -575,9 +576,9 @@ export default class extends baseVw {
       (this._$emojiMenuContainer = this.$('.js-emojiMenuContainer'));
   }
 
-  get $inputMessage() {
-    return this._$inputMessage ||
-      (this._$inputMessage = this.$('.js-inputMessage'));
+  get $messageInput() {
+    return this._$messageInput ||
+      (this._$messageInput = this.$('.js-inputMessage'));
   }
 
   render() {
@@ -596,7 +597,7 @@ export default class extends baseVw {
       this._$convoMessagesWindow = null;
       this._$typingIndicator = null;
       this._$emojiMenuContainer = null;
-      this._$inputMessage = null;
+      this._$messageInput = null;
 
       if (this.convoProfileHeader) this.convoProfileHeader.remove();
 
