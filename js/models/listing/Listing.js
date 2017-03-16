@@ -171,10 +171,10 @@ export default class extends BaseModel {
         });
         // END - convert price fields
 
-        // If providing a quanitity and / or productId on the Item and not
-        // providing any SKUs, then we'll send item.quantity and item.productId
+        // If providing a quanitity and / or productID on the Item and not
+        // providing any SKUs, then we'll send item.quantity and item.productID
         // in as a "dummy" SKU (as the server expects). If you are providing any
-        // SKUs, then item.quantity and item.productId will be ignored.
+        // SKUs, then item.quantity and item.productID will be ignored.
         if (!options.attrs.item.skus.length) {
           const dummySku = {};
 
@@ -182,8 +182,9 @@ export default class extends BaseModel {
             dummySku.quantity = options.attrs.item.quantity;
           }
 
-          if (typeof options.attrs.item.productId === 'string') {
-            dummySku.productId = options.attrs.item.productId;
+          if (typeof options.attrs.item.productID === 'string' &&
+            options.attrs.item.productID.length) {
+            dummySku.productID = options.attrs.item.productID;
           }
 
           if (Object.keys(dummySku).length) {
@@ -191,7 +192,7 @@ export default class extends BaseModel {
           }
         }
 
-        delete options.attrs.item.productId;
+        delete options.attrs.item.productID;
         delete options.attrs.item.quantity;
 
         // Our Sku has an infinteInventory boolean attribute, but the server
@@ -309,7 +310,7 @@ export default class extends BaseModel {
       // END - convert price fields
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
-      // and productId moved to be attributes of the Item model
+      // and productID moved to be attributes of the Item model
       if (parsedResponse.item && parsedResponse.item.skus &&
         parsedResponse.item.skus.length === 1 &&
         typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {

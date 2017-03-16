@@ -95,12 +95,7 @@
               </div>
             </div>
             <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <label for="editListingSku"><%= ob.polyT('editListing.sku') %></label>
-                <% if (ob.errors['item.productId']) print(ob.formErrorTmpl({ errors: ob.errors['item.productId'] })) %>
-                <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="item.productId" id="editListingSku" value="<%= ob.item.productId %>" placeholder="<%= ob.polyT('editListing.placeholderSKU') %>">
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperSKU') %></div>
-              </div>
+              <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
                 <label>Mature Content (NSFW, adult, 18+, etc)</label>
                 <% if (ob.errors['item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['item.nsfw'] })) %>
@@ -226,7 +221,6 @@
         <hr class="clrBr rowMd">
         <% if (ob.errors['item.skus']) print(ob.formErrorTmpl({ errors: ob.errors['item.skus'] })) %>
         <div class="js-variantInventoryTableContainer"></div>
-        <div class="clrT2 txSm padSm"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
       </section>      
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">

@@ -8,6 +8,7 @@ export default class extends baseVw {
 
     this._state = {
       trackBy: 'DO_NOT_TRACK', // DO_NOT_TRACK, TRACK_BY_FIXED, TRACK_BY_VARIANT
+      errors: {},
       ...options.initialState || {},
     };
   }

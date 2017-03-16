@@ -1,4 +1,3 @@
-<% console.log('shilly');window.shilly = ob %>
 <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.inventoryManagement') %></h2>
 <hr class="clrBr rowMd">
 <div class="flexRow gutterH">
@@ -15,7 +14,12 @@
   <% if (ob.trackBy === 'TRACK_BY_FIXED') { %>
   <div class="col6 simpleFlexCol">
     <div>
-      <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>
+      <%
+        if (ob.errors['quantity']) print(ob.formErrorTmpl({
+          errors: ob.errors['quantity'],
+          class: 'margL',
+        }));
+      %>
       <div class="flexVCent">
         <span class="margL margR">Quantity</span>
         <input type="text" class="clrBr clrP clrSh2 quantityInput js-quantityInput" name="item.quantity" value="<%= ob.quantity %>" placeholder="0" data-var-type="number">

@@ -1,5 +1,4 @@
 import { guid } from '../../utils';
-import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
 import { Collection } from 'backbone';
@@ -156,6 +155,9 @@ export default class extends BaseModel {
     }
 
     if (typeof attrs.quantity !== 'undefined') {
+      // If providing a top-level quantity, we'll validate it. It should only be provided
+      // if you are tracking inventory and have no options (i.e. are not tracking inventory
+      // on the variant level).
       if (typeof attrs.quantity !== 'number') {
         // TRANSLATE!
         addError('quantity', 'The quantity must be a number.');

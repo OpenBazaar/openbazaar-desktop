@@ -24,6 +24,7 @@ import Coupons from './Coupons';
 import Variants from './Variants';
 import VariantInventory from './VariantInventory';
 import InventoryManagement from './InventoryManagement';
+import SkuField from './SkuField';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -52,6 +53,7 @@ export default class extends BaseModal {
 
         // TODO TODO TODO TODO
         // parse out the custom created SKU attrs.
+        // parse out any top level sku quant if not utilized.
         this._origModel.set(this.model.toJSON());
       });
 
@@ -117,10 +119,6 @@ export default class extends BaseModal {
       .get('options');
 
     this.listenTo(this.variantOptionsCl, 'update', this.onUpdateVariantOptions);
-    this.listenTo(this.variantOptionsCl, 'change:variants', () => {
-      this.$variantInventorySection.toggleClass('hide',
-        !this.shouldShowVariantInventorySection);
-    });
 
     this.$el.on('scroll', () => {
       if (this.el.scrollTop > 57 && !this.$el.hasClass('fixedNav')) {
@@ -152,6 +150,7 @@ export default class extends BaseModal {
       'click .js-btnAddCoupon': 'onClickAddCoupon',
       'click .js-addFirstVariant': 'onClickAddFirstVariant',
       'keyup .js-variantNameInput': 'onKeyUpVariantName',
+      'click .js-scrollToVariantInventory': 'onClickScrollToVariantInventory',
       ...super.events(),
     };
   }
@@ -203,9 +202,6 @@ export default class extends BaseModal {
       $(e.target).val(trimmedVal);
     }
 
-    // const price = this.getFormData($(e.target)).item.price;
-    // this.model.get('item')
-    //   .set('price', price);
     this.variantInventory.render();
   }
 
@@ -446,6 +442,7 @@ export default class extends BaseModal {
   onUpdateVariantOptions() {
     if (this.variantOptionsCl.length) {
       this.$variantsSection.addClass('expandedVariantsView');
+      this.skuField.setState({ variantsPresent: true });
 
       if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
         this.inventoryManagement.setState({
@@ -454,6 +451,7 @@ export default class extends BaseModal {
       }
     } else {
       this.$variantsSection.removeClass('expandedVariantsView');
+      this.skuField.setState({ variantsPresent: false });
 
       if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
         this.inventoryManagement.setState({
@@ -466,7 +464,19 @@ export default class extends BaseModal {
       !this.shouldShowVariantInventorySection);
   }
 
+  onClickScrollToVariantInventory() {
+    this.scrollTo(this.$variantInventorySection);
+  }
+
   get shouldShowVariantInventorySection() {
+    return !!this.variantOptionsCl.length;
+  }
+
+  /**
+   * Will return true if we have at least one variant option with at least
+   * one choice.
+   */
+  get haveVariantOptionsWithChoice() {
     if (this.variantOptionsCl.length) {
       const atLeastOneHasChoice = this.variantOptionsCl.find(variantOption => {
         const choices = variantOption.get('variants');
@@ -526,20 +536,16 @@ export default class extends BaseModal {
     this.$inputPhotoUpload.trigger('click');
   }
 
-  onScrollLinkClick(e) {
-    const index = $(e.target).index();
-    this.selectedNavTabIndex = index;
-    this.$scrollLinks.removeClass('active');
-    $(e.target).addClass('active');
-    this.$el.off('scroll', this.throttledOnScroll);
+  scrollTo($el) {
+    if (!$el) {
+      throw new Error('Please provide a jQuery element to scroll to.');
+    }
 
     // Had this initially in Velocity, but after markup re-factor, it
     // doesn't work consistently, so we'll go old-school for now.
     this.$el
       .animate({
-        scrollTop: this.$scrollToSections.eq(index)
-          .position()
-          .top,
+        scrollTop: $el.position().top,
       }, {
         complete: () => {
           setTimeout(
@@ -547,6 +553,15 @@ export default class extends BaseModal {
             100);
         },
       }, 400);
+  }
+
+  onScrollLinkClick(e) {
+    const index = $(e.target).index();
+    this.selectedNavTabIndex = index;
+    this.$scrollLinks.removeClass('active');
+    $(e.target).addClass('active');
+    this.$el.off('scroll', this.throttledOnScroll);
+    this.scrollTo(this.$scrollToSections.eq(index));
   }
 
   onScroll() {
@@ -574,20 +589,16 @@ export default class extends BaseModal {
 
     this.$saveButton.addClass('disabled');
 
-    // set model / collection data for variaous child views
+    // set model / collection data for various child views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
     this.variantsView.setCollectionData();
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
-    // TEMP TEMP TEMP until full variant work is done
-    if (formData && formData.item) {
-      delete formData.item.productId;
+    // If we have options, we shouldn't be providing a top-level quantity.
+    if (this.model.get('item').get('options').length) {
+      delete formData.item.quantity;
     }
-
-    console.log('bam zupa');
-    window.bam = formData;
-    window.zupa = this.$formFields;
 
     this.model.set(formData);
 
@@ -674,6 +685,28 @@ export default class extends BaseModal {
         trackBy: 'DO_NOT_TRACK',
       });
     }
+  }
+
+  get trackInventoryBy() {
+    let trackBy;
+
+    // If the inventoryManagement has been rendered, we'll let it's drop-down
+    // determine whether we are tracking inventory. Otherwise, we'll get the info
+    // form the model.
+    if (this.inventoryManagement) {
+      trackBy = this.inventoryManagement.getState().trackBy;
+    } else {
+      const item = this.model.get('item');
+
+      if (item.isInventoryTracked) {
+        trackBy = item.get('options').length ?
+          'TRACK_BY_VARIANT' : 'TRACK_BY_FIXED';
+      } else {
+        trackBy = 'DO_NOT_TRACK';
+      }
+    }
+
+    return trackBy;
   }
 
   get $scrollToSections() {
@@ -994,6 +1027,18 @@ export default class extends BaseModal {
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
+      // render sku field
+      if (this.skuField) this.skuField.remove();
+
+      this.skuField = this.createChild(SkuField, {
+        model: item,
+        initialState: {
+          variantsPresent: !!item.get('options').length,
+        },
+      });
+
+      this.$('.js-skuFieldContainer').html(this.skuField.render().el);
+
       // render variants
       if (this.variantsView) this.variantsView.remove();
 
@@ -1011,22 +1056,18 @@ export default class extends BaseModal {
 
       // render inventory management section
       if (this.inventoryManagement) this.inventoryManagement.remove();
-      let trackBy = 'DO_NOT_TRACK';
+      const inventoryManagementErrors = {};
 
-      if (item.isInventoryTracked) {
-        if (this.options.length) {
-          trackBy = 'TRACK_BY_VARIANT';
-        } else {
-          trackBy = 'TRACK_BY_FIXED';
-        }
+      if (this.model.validationError &&
+        this.model.validationError['item.quantity']) {
+        inventoryManagementErrors.quantity = this.model.validationError['item.quantity'];
       }
 
       this.inventoryManagement = this.createChild(InventoryManagement, {
         initialState: {
-          trackBy,
+          trackBy: this.trackInventoryBy,
           quantity: item.get('quantity'),
-          // errors: (this.model.validationError &&
-          //   this.model.validationError['item.quantity'] || {}),
+          errors: inventoryManagementErrors,
         },
       });
 

@@ -1,0 +1,10 @@
+<label for="editListingSku"><%= ob.polyT('editListing.sku') %></label>
+<% if (ob.errors['productId']) print(ob.formErrorTmpl({ errors: ob.errors['productId'] })) %>
+<input type="text" class="clrBr clrP clrSh2 marginTopAuto <% if (ob.variantsPresent) print('disabled') %>" name="item.productID" id="editListingSku" value="<%= ob.productID %>" placeholder="<%= ob.polyT('editListing.placeholderSKU') %>">
+<%
+  const helperText = ob.variantsPresent ?
+    ob.polyT('editListing.helperSKUWithVariants',
+      { variantInventoryLink: `<a class="js-scrollToVariantInventory">${ob.polyT('editListing.variantInventoryLink')}</a>` }) :
+    ob.polyT('editListing.helperSKU');
+%>
+<div class="clrT2 txSm padSm"><%= helperText %></div>

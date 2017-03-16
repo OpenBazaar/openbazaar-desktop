@@ -39,10 +39,6 @@ export default class extends baseVw {
     this.listenTo(this.optionsCl, 'update change', () => this.render());
   }
 
-  className() {
-    return 'scrollBoxX';
-  }
-
   setCollectionData() {
     this.itemViews.forEach(item => item.setModelData());
   }
@@ -79,9 +75,6 @@ export default class extends baseVw {
   }
 
   buildIdFromVariantCombo(variantCombo, options = this.optionsCl) {
-    console.log('mipple');
-    window.mipple = variantCombo;
-
     if (!_.isArray(variantCombo)) {
       throw new Error('Please provide a variantCombo as an array.');
     }
@@ -187,7 +180,7 @@ export default class extends baseVw {
         view.render().$el.appendTo(itemsFrag);
       });
 
-      this.$('> table').append(itemsFrag);
+      this.$('table').append(itemsFrag);
     });
 
     return this;
