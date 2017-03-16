@@ -127,6 +127,10 @@ export default class extends BaseModal {
         this.$el.removeClass('fixedNav');
       }
     });
+
+    if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+      this.$el.addClass('notTrackingInventory');
+    }
   }
 
   className() {
@@ -586,6 +590,7 @@ export default class extends BaseModal {
 
   onSaveClick() {
     const formData = this.getFormData(this.$formFields);
+    const item = this.model.get('item');
 
     this.$saveButton.addClass('disabled');
 
@@ -595,8 +600,8 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
-    // If we have options, we shouldn't be providing a top-level quantity.
-    if (this.model.get('item').get('options').length) {
+    if (item.get('options').length) {
+      // If we have options, we shouldn't be providing a top-level quantity.
       delete formData.item.quantity;
     }
 
@@ -615,11 +620,21 @@ export default class extends BaseModal {
       });
     }
 
-    // The variant inventory view adds some stuff to the skus collection that
-    // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
-    // with the save while still allowing it to stay in the collection.
     const serverData = this.model.toJSON();
-    serverData.item.skus = serverData.item.skus.map(sku => _.omit(sku, 'mappingId', 'choices'));
+    serverData.item.skus = serverData.item.skus.map(sku => {
+      // The variant inventory view adds some stuff to the skus collection that
+      // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
+      // with the save while still allowing it to stay in the collection.
+      const updatedSku = _.omit(sku, 'mappingId', 'choices');
+
+      // If we've selected to not track inventory and we have any options, we'll remove the
+      // quanitity from the data we send over to the server.
+      if (this.trackInventoryBy === 'DO_NOT_TRACK' && item.get('options').length) {
+        updatedSku.infiniteInventory = true;
+      }
+
+      return updatedSku;
+    });
 
     const save = this.model.save({}, {
       attrs: serverData,
@@ -680,10 +695,12 @@ export default class extends BaseModal {
         trackBy: this.model.get('item').get('options').length ?
           'TRACK_BY_VARIANT' : 'TRACK_BY_FIXED',
       });
+      this.$el.removeClass('notTrackingInventory');
     } else {
       this.inventoryManagement.setState({
         trackBy: 'DO_NOT_TRACK',
       });
+      this.$el.addClass('notTrackingInventory');
     }
   }
 

@@ -290,4 +290,14 @@
       }
     }
   }
+
+  &.notTrackingInventory {
+    .modalContent .tabContent {
+      .variantInventorySection {
+        .quantityCol {
+          display: none;
+        }
+      }
+    }
+  }
 }

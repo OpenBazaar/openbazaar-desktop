@@ -10,7 +10,7 @@
     <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>
     <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" data-var-type="number" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" />
   </td>    
-  <td class="clrBr unconstrainedWidth">
+  <td class="clrBr unconstrainedWidth quantityCol">
     <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>
     <div class="flexVCent gutterH">
       <input type="text" class="clrBr clrP clrSh2 js-quantity" name="quantity" value="<%= ob.infiniteInventory ? ob.infiniteQuantityChar : ob.quantity %>" data-var-type="number" placeholder="0" />
