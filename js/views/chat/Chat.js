@@ -249,8 +249,13 @@ export default class extends baseVw {
           this.collection.remove(e.guid);
 
           if (this.conversation && this.conversation.guid === e.guid) {
+            this.conversation.close();
             this.conversation.remove();
             this.conversation = null;
+
+            if (!this.collection.length) {
+              this.close();
+            }
           }
         });
       });

@@ -1,0 +1,10 @@
+<% ob.groups.forEach(group => { %>
+<div class="emojiGroup cf">
+  <% if (group.id !== 'PEOPLE') { %>
+  <div class="row clrT2 tx4"><%= group.name %></div>
+  <% } %>
+  <% group.symbols.forEach(symbol => { %>
+  <button class="js-emoji"><%= symbol %></button>
+  <% }); %>
+</div>
+<% }); %>
