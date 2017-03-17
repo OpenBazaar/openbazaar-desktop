@@ -61,7 +61,6 @@ export default class extends BaseView {
       this.$variantChoicesSelect = this.$('select[name=variants]');
       this._$formFields = null;
 
-      // TODO: add name qualifier
       this.$variantChoicesSelect.select2({
         multiple: true,
         tags: true,

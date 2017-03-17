@@ -443,11 +443,17 @@ export default class extends BaseModal {
   }
 
   onKeyUpVariantName(e) {
-    // TODO TODO TODO: throttle this guy
-    const index = $(e.target).closest('.variant')
-      .index();
+    // wait until they stop typing
+    if (this.variantNameKeyUpTimer) {
+      clearTimeout(this.variantNameKeyUpTimer);
+    }
 
-    this.variantsView.setModelData(index);
+    this.variantNameKeyUpTimer = setTimeout(() => {
+      const index = $(e.target).closest('.variant')
+        .index();
+
+      this.variantsView.setModelData(index);
+    }, 150);
   }
 
   onVariantChoiceChange(e) {
@@ -614,11 +620,20 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
-    // If we have options, we shouldn't be providing a top-level quantity or
-    // productID.
     if (item.get('options').length) {
+      // If we have options, we shouldn't be providing a top-level quantity or
+      // productID.
       item.unset('quantity');
       item.unset('productID');
+
+      // If we have options and are not tracking inventory, we'll set the infiniteInventory
+      // flag for any skus.
+      if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+        item.get('skus')
+          .forEach(sku => {
+            sku.set('infiniteInventory', true);
+          });
+      }
     } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
       // If we're not tracking inventory and don't have any variants, we should provide a top-level
       // quantity as -1, so it's considered infinite.
@@ -641,20 +656,12 @@ export default class extends BaseModal {
     }
 
     const serverData = this.model.toJSON();
-    serverData.item.skus = serverData.item.skus.map(sku => {
+    serverData.item.skus = serverData.item.skus.map(sku => (
       // The variant inventory view adds some stuff to the skus collection that
       // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
       // with the save while still allowing it to stay in the collection.
-      const updatedSku = _.omit(sku, 'mappingId', 'choices');
-
-      // If we've selected to not track inventory and we have any options, we'll set the
-      // infiniteInventory flag for all skus we send over to the server.
-      if (this.trackInventoryBy === 'DO_NOT_TRACK' && item.get('options').length) {
-        updatedSku.infiniteInventory = true;
-      }
-
-      return updatedSku;
-    });
+      _.omit(sku, 'mappingId', 'choices')
+    ));
 
     const save = this.model.save({}, {
       attrs: serverData,
@@ -699,6 +706,8 @@ export default class extends BaseModal {
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
+      console.log('no soup for you');
+      window.soup = this.model;
     }
 
     // render so errrors are shown / cleared
