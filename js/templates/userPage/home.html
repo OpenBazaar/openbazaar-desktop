@@ -1,6 +1,6 @@
 <div class="flexRow gutterH">
   <div class="col4 gutterVMd">
-    <div class="userShort js-userShort">
+    <div class="userCard js-userShort">
       <% print(ob.userShortTmp(ob)) %>
     </div>
     <% if(ob.moderator) { %>
@@ -67,9 +67,9 @@
         </div>
         <% if (ob.about) { %>
           <%= ob.about %>
-        <% }else{ %> 
+        <% }else{ %>
           <span class="clrT2"><i><%= ob.polyT('userPage.aboutEmpty') %></i></span>
-        <% } %> 
+        <% } %>
       </div>
       <div class="contentBox padMd2 clrBr clrP clrSh2 termsDisplay js-termsDisplay">
         <a class="cornerTR ion-close-round js-termsClose"></a>
