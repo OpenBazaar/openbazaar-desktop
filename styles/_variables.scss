@@ -1,5 +1,6 @@
 // colors
 $primary: hsl(0,0%,100%);
+$primaryGhost: transparentize($primary, 0.2);
 $secondary: adjust-color($primary, $lightness: -4%);
 
 $text: hsl(0,0,14.8);
@@ -12,6 +13,7 @@ $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
 $border3: adjust-color($text, $lightness: 35%);
 $border4: adjust-color($text, $lightness: 70%);
+$border5: adjust-color($text, $lightness: 90%);
 $focusedBorder: rgb(0, 0, 0);
 $emphasis1: hsl(116.5, 66.3, 41);
 $emphasis2: adjust-color($emphasis1, $lightness: +20%);
@@ -48,9 +50,10 @@ $marg: 10px;
 $chatClosed: 48px;
 $chatOpen: 225px;
 $pageWidth: 950px;
-$scrollbar: 8px;
+$scrollbar: 10px;
 $modalContentInner: 957px;
 $buttonHeight: 35px;
+$chatConvoHeight: 360px;
 
 // controls
 $corner: 2px;
