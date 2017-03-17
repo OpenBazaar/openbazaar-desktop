@@ -69,14 +69,14 @@ export default class extends BaseModel {
     let isInventoryTracked = false;
 
     if (this.get('options').length) {
-      // If we have options and all SKUs have infiniteInventory set to true,
+      // If we have options and at least one has a non-infinite inventory,
       // we'll consider you to be tracking inventory
-      isInventoryTracked = this.get('skus')
-        .every(sku => sku.get('infiniteInventory'));
+      isInventoryTracked = !!this.get('skus')
+        .find(sku => !sku.get('infiniteInventory'));
     } else {
       // If you don't have any options and have the top level infiniteInventory set to true,
       // we'll consider you to be tracking inventory
-      isInventoryTracked = this.get('infiniteInventory');
+      isInventoryTracked = typeof this.get('quantity') !== 'undefined';
     }
 
     return isInventoryTracked;
@@ -158,7 +158,10 @@ export default class extends BaseModel {
       // If providing a top-level quantity, we'll validate it. It should only be provided
       // if you are tracking inventory and have no options (i.e. are not tracking inventory
       // on the variant level).
-      if (typeof attrs.quantity !== 'number') {
+      if (typeof attrs.quantity === 'string' && !attrs.quantity) {
+        // TRANSLATE!
+        addError('quantity', 'Please provide a quantity.');
+      } else if (typeof attrs.quantity !== 'number') {
         // TRANSLATE!
         addError('quantity', 'The quantity must be a number.');
       } else if (attrs.quantity < 0) {

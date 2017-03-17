@@ -54,7 +54,25 @@ export default class extends BaseModal {
         // TODO TODO TODO TODO
         // parse out the custom created SKU attrs.
         // parse out any top level sku quant if not utilized.
-        this._origModel.set(this.model.toJSON());
+
+        const updatedData = this.model.toJSON();
+
+        // Will parse out some sku attributes that are specific to the variant
+        // inventory view.
+        updatedData.item.skus = updatedData.item.skus.map(sku =>
+          _.omit(sku, 'mappingId', 'choices'));
+
+        if (updatedData.item.quantity === undefined) {
+          this._origModel.get('item')
+            .unset('quantity');
+        }
+
+        if (updatedData.item.productID === undefined) {
+          this._origModel.get('item')
+            .unset('productID');
+        }
+
+        this._origModel.set(updatedData);
       });
 
       // A change event won't fire on a parent model if only nested attributes change.
@@ -600,10 +618,16 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
+    // If we're not tracking inventory, we shouldn't be providing a top-level quantity.
+    if (item.get('options').length || this.trackInventoryBy === 'DO_NOT_TRACK') {
+      item.unset('quantity');
+    }
+
+    // If we have options, we shouldn't be providing a top-level quantity or
+    // productID.
     if (item.get('options').length) {
-      // If we have options, we shouldn't be providing a top-level quantity.
-      delete formData.item.quantity;
-      delete formData.item.infiniteInventory;
+      item.unset('quantity');
+      item.unset('productID');
     }
 
     this.model.set(formData);
