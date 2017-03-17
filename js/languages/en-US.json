@@ -695,12 +695,13 @@
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
   },
-  "listingInnerModelErrors": {
+  "listingModelErrors": {
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price."
+    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price.",
+    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",

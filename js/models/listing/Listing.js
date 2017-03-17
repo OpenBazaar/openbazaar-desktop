@@ -54,7 +54,7 @@ export default class extends BaseModel {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
       couponCount: 30,
-      // TODO TODO TODO: add validation below for this.
+      // TODO TODO TODO: add validation in UI for this.
       optionCount: 30,
     };
   }
@@ -79,7 +79,7 @@ export default class extends BaseModel {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
       } else if (attrs.refundPolicy.length > this.max.refundPolicyLength) {
-        addError('refundPolicy', app.polyglot.t('listingInnerModelErrors.returnPolicyTooLong'));
+        addError('refundPolicy', app.polyglot.t('listingModelErrors.returnPolicyTooLong'));
       }
     }
 
@@ -88,18 +88,23 @@ export default class extends BaseModel {
         addError('termsAndConditions', 'The terms and conditions must be of type string.');
       } else if (attrs.termsAndConditions.length > this.max.termsAndConditionsLength) {
         addError('termsAndConditions',
-          app.polyglot.t('listingInnerModelErrors.termsAndConditionsTooLong'));
+          app.polyglot.t('listingModelErrors.termsAndConditionsTooLong'));
       }
     }
 
     if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
       !attrs.shippingOptions.length) {
-      addError('shippingOptions', app.polyglot.t('listingInnerModelErrors.provideShippingOption'));
+      addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
     }
 
     if (attrs.coupons.length > this.max.couponCount) {
-      addError('coupons', app.polyglot.t('listingInnerModelErrors.tooManyCoupons',
+      addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
         { maxCouponCount: this.max.couponCount }));
+    }
+
+    if (attrs.options.length > this.max.optionCount) {
+      addError('options', app.polyglot.t('listingModelErrors.tooManyOptions',
+        { maxOptionCount: this.max.optionCount }));
     }
 
     errObj = this.mergeInNestedErrors(errObj);
@@ -110,7 +115,7 @@ export default class extends BaseModel {
 
       if (typeof priceDiscount !== 'undefined' && priceDiscount > attrs.item.get('price')) {
         addError(`coupons[${coupon.cid}].priceDiscount`,
-          app.polyglot.t('listingInnerModelErrors.couponsPriceTooLarge'));
+          app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
       }
     });
 
