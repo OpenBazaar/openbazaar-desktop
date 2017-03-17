@@ -392,9 +392,9 @@ export default class extends baseVw {
   }
 
   onEmojiSelected(e) {
-    insertAtCursor(this.$inputMessage[0], emojis[e.emoji].name);
+    insertAtCursor(this.$messageInput[0], emojis[e.emoji].name);
     this.closeEmojiMenu();
-    this.$inputMessage.focus();
+    this.$messageInput.focus();
   }
 
   showTypingIndicator() {
