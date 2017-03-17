@@ -146,6 +146,26 @@
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
   },
+  "moderatorCard": {
+    "view": "View",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**"
+  },
+  "moderatorDetails": {
+    "messageButton": "Message",
+    "followButton": "Follow",
+    "unFollowButton": "Unfollow",
+    "location": "Location",
+    "recommendations": "Recommendations",
+    "serviceCharge": "Service Charge",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
+    "termsOfService": "Terms of Service",
+    "addAsModeratorButton": "Add as Moderator",
+    "disclaimer": "**The moderator service charge only applies when a dispute arises."
+  },
   "about": {
     "linkText": "About OpenBazaar",
     "brand": "OpenBazaar",
@@ -363,11 +383,44 @@
       "status":{
         "saving": "Saving moderation settings…",
         "done": "Moderation settings saved.",
-        "fail": "Saving the moderation settings failed."
+        "fail": "There was an error saving your moderation settings."
       },
       "errors": {
         "confirm": "To become a moderator, you must agree to both statements below.",
         "save": "The moderation settings were not saved."
+      }
+    },
+    "storeTab": {
+      "sectionName": "Store",
+      "storeStatus": "Store",
+      "storeStatusHelper": "Add a store to your page",
+      "moderators": "Moderators",
+      "moderatorsHelper": "Select a few moderators for your Store.",
+      "selectedModerators": "Selected Moderators",
+      "selectedModeratorsEmpty": "No Moderators Added",
+      "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
+      "moderatorByIDPlaceholder": "Look up a Moderator by entering their @handle or ID",
+      "moderatoryByIDSubmit": "Submit",
+      "availableModerators": "Available Moderators on the Network",
+      "browseModerators": "Browse Moderators",
+      "browseMoreModerators": "Load More Moderators",
+      "loading": "Loading",
+      "status": {
+        "saving": "Saving store settings...",
+        "done": "Store settings saved.",
+        "fail": "Saving the store settings failed.",
+        "error": "There was an error saving your store settings."
+      },
+      "errors": {
+        "modNotFoundTitle": "Moderator Not Found",
+        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
+        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
+        "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
+        "modAlreadyAdded": "You have already added that moderator.",
+        "modIsBlank": "You must add a moderator ID or handle",
+        "modIsInvalid": "%{guid} is not a valid moderator.",
+        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
+        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
     },
     "optional": "optional",
@@ -617,7 +670,7 @@
       "discountCodePlaceholder": "Please provide a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
-      "btnAddCoupon": "+ Add Coupon"      
+      "btnAddCoupon": "+ Add Coupon"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",

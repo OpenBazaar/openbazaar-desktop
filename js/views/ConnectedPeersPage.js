@@ -1,6 +1,6 @@
 import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
-import userShort from './userShort';
+import userShort from './userCard';
 import $ from 'jquery';
 
 export default class extends baseVw {

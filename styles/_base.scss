@@ -278,47 +278,50 @@ ul, ol {
 
 // utility classes
 
-#ov1 .hide {
-  display: none;
-}
+#ov1 {
 
-#ov1 .invisible {
-  // use when an element is not visible but should occupy space in the DOM
-  visibility: hidden;
-}
+  .hide {
+    display: none;
+  }
 
-#ov1 .visuallyHidden {
-  // use when an element most take no room in the DOM, but still be available for forms and JS
-  // from the HTML5 Boilerplate https://github.com/h5bp/html5-boilerplate
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  white-space: nowrap; /* 1 */
-}
+  .invisible {
+    // use when an element is not visible but should occupy space in the DOM
+    visibility: hidden;
+  }
 
-#ov1 .disabled {
-  @include disabled;
-}
+  .visuallyHidden {
+    // use when an element most take no room in the DOM, but still be available for forms and JS
+    // from the HTML5 Boilerplate https://github.com/h5bp/html5-boilerplate
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap; /* 1 */
+  }
 
-.overflowAuto {
-  overflow: auto;
-}
+  .disabled {
+    @include disabled;
+  }
 
-.floL {
-  float: left;
-}
+  .overflowAuto {
+    overflow: auto;
+  }
 
-.floR {
-  float: right;
-}
+  .floL {
+    float: left;
+  }
 
-.preWrap {
-  white-space: pre-wrap;
+  .floR {
+    float: right;
+  }
+
+  .preWrap {
+    white-space: pre-wrap;
+  }
 }
 
 #milestone {

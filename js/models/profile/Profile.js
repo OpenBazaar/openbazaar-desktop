@@ -113,6 +113,11 @@ export default class extends BaseModel {
       addError('website', app.polyglot.t('profileModelErrors.provideValidURL'));
     }
 
+    if (typeof attrs.vendor !== 'boolean') {
+      // this error should never be visible to the user
+      addError('vendor', `The vendor value is not a boolean: ${attrs.vendor}`);
+    }
+
     const socialAccounts = attrs.social;
     // used to give errors on dupes of the same type
     const groupedByType = socialAccounts.groupBy('type');
@@ -169,7 +174,9 @@ export default class extends BaseModel {
       response.modInfo.fee.fixedFee.amount = integerToDecimal(amount, isBtc);
     }
 
-    if (response.handle.startsWith('@')) response.handle = response.handle.slice(1);
+    if (response.handle && response.handle.startsWith('@')) {
+      response.handle = response.handle.slice(1);
+    }
 
     return this.standardizeColorFields(response);
   }

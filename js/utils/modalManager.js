@@ -1,10 +1,12 @@
 import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
+import ModeratorDetails from '../views/modals/moderatorDetails';
 
 let aboutModal;
 let editListingModal;
 let debugLogModal;
+let moderatorDetailsModal;
 
 export function launchEditListingModal(modalOptions = {}) {
   if (editListingModal) editListingModal.remove();
@@ -36,4 +38,14 @@ export function launchDebugLogModal(modalOptions = {}) {
     .open();
 
   return debugLogModal;
+}
+
+export function launchModeratorDetailsModal(modalOptions = {}) {
+  if (moderatorDetailsModal) moderatorDetailsModal.remove();
+
+  moderatorDetailsModal = new ModeratorDetails(modalOptions)
+      .render()
+      .open();
+
+  return moderatorDetailsModal;
 }

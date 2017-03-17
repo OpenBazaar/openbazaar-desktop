@@ -11,7 +11,7 @@
   vertical-align: middle;
   align-items: center; // centers icons if they are a child element
   justify-content: center;
-  -webkit-user-select: none; // quick clicks will now not highlight 
+  -webkit-user-select: none; // quick clicks will now not highlight
 }
 
 .btn {
@@ -138,6 +138,7 @@
 .btnTxt {
   @extend .btn;
   border: none;
+  background: none;
 }
 
 .iconBtn {

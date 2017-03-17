@@ -4,19 +4,47 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile from '../models/profile/Profile';
+import UserCard from '../models/UserCard';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
-    this.guid = options.guid || this.model.get('guid');
+
+    if (this.model instanceof Profile) {
+      this.guid = this.model.id;
+      this.fetched = true;
+    } else if (this.model) {
+      this.guid = this.model.get('guid');
+      this.fetched = false;
+    } else {
+      this.model = new UserCard({ guid: options.guid });
+      this.guid = options.guid;
+      this.fetched = false;
+    }
+
+    if (!this.guid) {
+      if (this.model) {
+        throw new Error('The guid must be provided in the model.');
+      } else {
+        throw new Error('The guid must be provided in the options.');
+      }
+    }
+
     this.ownGuid = this.guid === app.profile.id;
-    this.profileArgs = {}; // create blank for placeholder render
+
     this.followedByYou = followedByYou(this.guid);
-    // TODO: add in code to determine if this user is in the viewer's moderator list
-    this.ownMod = false;
-    this.fetched = false;
-    this.loading = true;
+
+    this.loading = !this.fetched;
+
+    this.listenTo(app.ownFollowing, 'sync update', () => {
+      this.followedByYou = followedByYou(this.guid);
+      this.$followBtn.toggleClass('active', this.followedByYou);
+    });
+  }
+
+  get ownMod() {
+    return app.settings.get('storeModerators').indexOf(this.guid) !== -1;
   }
 
   loadUser(guid = this.guid) {
@@ -36,7 +64,7 @@ export default class extends BaseVw {
       if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = false;
-      this.profileArgs = profile.toJSON();
+      this.model = profile;
       this.render();
     }).fail(() => {
       if (this.isRemoved()) return;
@@ -44,22 +72,10 @@ export default class extends BaseVw {
       this.notFound = true;
       this.render();
     });
-
-    // update the follow button when this user is followed or unfollowed by another view
-    // this will be used by channels and other views that don't remove the view when it's follow
-    // status changes.
-    this.listenTo(app.ownFollowing, 'sync update', () => {
-      this.followedByYou = followedByYou(this.guid);
-      if (this.followedByYou) {
-        this.$followBtn.addClass('active');
-      } else {
-        this.$followBtn.removeClass('active');
-      }
-    });
   }
 
   className() {
-    return 'userShort';
+    return 'userCard';
   }
 
   events() {
@@ -76,13 +92,12 @@ export default class extends BaseVw {
     });
   }
 
-  followClick(e) {
+  followClick() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
-    const $btn = $(e.target).closest('.js-follow');
 
-    $btn.addClass('processing');
+    this.$followBtn.addClass('processing');
     followUnfollow(this.guid, type)
-      .always(() => ($btn.removeClass('processing')));
+      .always(() => (this.$followBtn.removeClass('processing')));
   }
 
   modClick() {
@@ -91,7 +106,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('userShort.html', (t) => {
+    loadTemplate('userCard.html', (t) => {
       this.$el.html(t({
         loading: this.loading,
         notFound: this.notFound,
@@ -99,7 +114,8 @@ export default class extends BaseVw {
         ownGuid: this.ownGuid,
         followedByYou: this.followedByYou,
         ownMod: this.ownMod,
-        ...this.profileArgs,
+        ...this.options,
+        ...this.model.toJSON(),
       }));
 
       this.$followBtn = this.$('.js-follow');

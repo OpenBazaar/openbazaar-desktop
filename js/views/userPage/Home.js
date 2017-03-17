@@ -61,7 +61,7 @@ export default class extends BaseVw {
 
   render() {
     loadTemplate('userPage/home.html', (t) => {
-      loadTemplate('userShort.html', (u) => {
+      loadTemplate('userCard.html', (u) => {
         this.$el.html(
           t({
             currentModerator: this.currentModerator,
