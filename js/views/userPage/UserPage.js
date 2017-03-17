@@ -53,6 +53,11 @@ export default class extends baseVw {
 
     this.listenTo(this.model.get('avatarHashes'), 'change', () => this.updateAvatar());
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
+
+    if (app.profile.id === this.model.id) {
+      app.ownFollowing.on('count-change', (cl, count) =>
+        this.$followingCount.text(count));
+    }
   }
 
   className() {
@@ -235,6 +240,11 @@ export default class extends baseVw {
       (this._$listingsCount = this.$('.js-listingsCount'));
   }
 
+  get $followingCount() {
+    return this._$followingCount ||
+      (this._$followingCount = this.$('.js-followingCount'));
+  }
+
   render() {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
@@ -242,6 +252,7 @@ export default class extends baseVw {
         followed: this.followedByYou,
         followsYou: this.followsYou,
         ownPage: this.ownPage,
+        followingCount: app.ownFollowing.followingCount,
       }));
 
       this.$tabContent = this.$('.js-tabContent');
@@ -252,6 +263,7 @@ export default class extends baseVw {
       this.$moreableBtns = this.$('.js-moreableBtn');
       this._$pageContent = null;
       this._$listingsCount = null;
+      this._$followingCount = null;
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {

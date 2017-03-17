@@ -384,8 +384,8 @@ function onboardIfNeeded() {
 function start() {
   fetchConfig().done((data) => {
     app.profile = new Profile({ id: data.guid });
-
     app.settings = new Settings();
+
     // If the server is running testnet, set that here
     app.testnet = data.testnet; // placeholder for later when we need this data for purchases
 
@@ -402,6 +402,33 @@ function start() {
     });
 
     app.ownFollowing = new Followers(null, { type: 'following' });
+    app.ownFollowing.followingCount = 0;
+
+    const setOwnFollowingCount = count => {
+      if (typeof count !== 'number') {
+        throw new Error('Please provide a count as a number.');
+      }
+
+      if (count !== app.ownFollowing.followingCount) {
+        app.ownFollowing.followingCount = count;
+        app.ownFollowing.trigger('count-change', this, count);
+      }
+    };
+
+    app.profile.on('sync', () =>
+      setOwnFollowingCount(app.profile.get('followingCount')));
+
+    app.ownFollowing.once('update', () => {
+      app.ownFollowing.on('update',
+        (cl, opts) => {
+          setOwnFollowingCount(
+            app.ownFollowing.followingCount +
+            opts.changes.added.length -
+            opts.changes.removed.length
+          );
+        });
+    });
+
     app.ownFollowers = new Followers(null, { type: 'followers' });
 
     onboardIfNeeded().done(() => {
