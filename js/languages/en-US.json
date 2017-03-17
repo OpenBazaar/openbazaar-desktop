@@ -608,7 +608,7 @@
       "discountCodePlaceholder": "Please provide a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
-      "btnAddCoupon": "+ Add Coupon"      
+      "btnAddCoupon": "+ Add Coupon"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
@@ -618,6 +618,12 @@
       "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
       "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
     }
+  },
+  "search": {
+    "searchBtn": "Search",
+    "suggestions": "Suggestions",
+    "resultsFound": "%{totalResults} found for \"%{term}\"",
+    "sortBy": "Sort by"
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
