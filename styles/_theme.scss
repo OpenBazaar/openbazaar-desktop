@@ -28,6 +28,19 @@ button,
   }
 }
 
+.clrPG { //ghosted primary color
+  background-color: $primaryGhost;
+
+  // inputs should still use opaque colors
+  input[type="radio"] + label:before {
+    background-color: $secondary;
+  }
+
+  input[type="radio"]:checked + label:before {
+    box-shadow: inset 0 0 0 3px $secondary;
+  }
+}
+
 .clrS {
   background-color: $secondary;
 
@@ -121,14 +134,18 @@ input[type=range][class~="clrS"] {
 }
 
 .clrBr3 {
+  @include borderColor($border3, $border4);
+}
+
+.clrBr4 {
+  @include borderColor($border4, $border5);
+}
+
+.clrBrDec1 {
   // decorative border with a shadow to create a faint outline
   border-color: $textOnEmph;
   border-width: 2px;
   box-shadow: 0 0 3px rgba(0,0,0,0.4);
-}
-
-.clrBr4 {
-  @include borderColor($border4, $border4);
 }
 
 .clrBrEmph1 {
@@ -296,10 +313,9 @@ input[type=range][class~="clrS"] {
   }
 }
 
-#chatConvoContainer {
-  .chatConversation {
-    border-color: $border3;
-  }
+.chatOpen #appFrame #chatContainer {
+  background-color: $primaryGhost;
+  border-color: $border4;
 }
 
 .chatHead {
