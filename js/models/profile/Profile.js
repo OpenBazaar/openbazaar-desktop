@@ -115,7 +115,7 @@ export default class extends BaseModel {
 
     if (typeof attrs.vendor !== 'boolean') {
       // this error should never be visible to the user
-      addError('vendor', `The vendor is invalid: ${attrs.vendor}`);
+      addError('vendor', `The vendor value is not a boolean: ${attrs.vendor}`);
     }
 
     const socialAccounts = attrs.social;

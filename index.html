@@ -1,6 +1,6 @@
 <!-- This file will be run from ./.tmp/, so make paths relative to there -->
 <!DOCTYPE html>
-<html id="ov1">
+<html id="ov1" class="pre-release"><!-- remove pre-release class when released -->
   <head>
     <meta charset="UTF-8">
     <title>OpenBazaar</title>
@@ -12,13 +12,13 @@
   <body class="clrT clrS">
     <div id="appFrame">
       <section id="pageNavContainer"></section>
-      <section id="contentFrame">
+      <section id="contentFrame" class="clrBr">
         <div id="pageContainer"></div>
       </section>
-      
-      <div id="chatCloseBtn" class="chatCloseBtn js-chatClose ion-ios-close-empty iconBtn clrP clrBr clrT2"></div>
+
+      <div id="chatCloseBtn" class="chatCloseBtn js-chatClose ion-ios-close-empty iconBtn clrP clrBr4 clrT2"></div>
       <div id="chatContainer"></div>
-      <div id="chatConvoContainer"></div>
+      <div id="chatConvoContainer" class="clrP clrBr3"></div>
       <section id="statusBar"></section>
     </div>
     <!-- delete this in production, it's just a warning for pre-alpha releases -->

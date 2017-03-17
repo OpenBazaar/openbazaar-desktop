@@ -43,6 +43,7 @@ export default class extends baseVw {
     if (this.currentMods.length) {
       // fetch the already selected moderators
       this.selectedModsInvalidList = [];
+      this.selectedModsAsyncInvalidList = [];
       const fetch = this.modsSelected.fetch({ fetchList: this.currentMods });
       this.modFetches.push(fetch);
     }
@@ -52,7 +53,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsSelected, 'asyncError', (opts) => {
-      this.modNotFound(opts.id);
+      this.showSelectedModsAsyncError(opts.id);
     });
 
     this.listenTo(this.modsSelected, 'doneLoading', () => {
@@ -196,6 +197,14 @@ export default class extends baseVw {
     }
   }
 
+  modNotFoundInSelected(guid, handle) {
+    const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
+    const msg = app.polyglot.t('settings.storeTab.errors.modNotFound',
+        { guidOrHandle: handle || guid });
+
+    openSimpleMessage(title, msg);
+  }
+
   modNotFound(guid, handle) {
     const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
     const msg = app.polyglot.t('settings.storeTab.errors.modNotFound',
@@ -232,6 +241,14 @@ export default class extends baseVw {
     this.$submitModByIDInputError.removeClass('hide');
     this.$submitModByIDInputErrorText.text(msg);
     this.$submitModByID.removeClass('processing');
+  }
+
+  showSelectedModsAsyncError(id) {
+    this.selectedModsAsyncInvalidList.push(id);
+    const msg = app.polyglot.t('settings.storeTab.errors.modsAreInvalidAsync',
+        { guids: this.selectedModsAsyncInvalidList.join(', ') });
+    this.$selectedModsAsyncError.removeClass('hide');
+    this.$selectedModsAsyncErrorText.text(msg);
   }
 
   showSelectedModsError(id) {
@@ -397,6 +414,16 @@ export default class extends baseVw {
         (this._$selectedModsErrorText = this.$selectedModsError.find('.js-errorText'));
   }
 
+  get $selectedModsAsyncError() {
+    return this._$selectedModsAsyncError ||
+        (this._$selectedModsAsyncError = this.$('.js-selectedModsAsyncError'));
+  }
+
+  get $selectedModsAsyncErrorText() {
+    return this._$selectedModsAsyncErrorText ||
+        (this._$selectedModsAsyncErrorText = this.$selectedModsAsyncError.find('.js-errorText'));
+  }
+
   remove() {
     this.modFetches.forEach(fetch => fetch.abort());
     this.modsSelected.destroy();
@@ -428,6 +455,8 @@ export default class extends baseVw {
       this._$submitModByIDInputErrorText = null;
       this._$selectedModsError = null;
       this._$selectedModsErrorText = null;
+      this._$selectedModsAsyncError = null;
+      this._$selectedModsAsyncErrorText = null;
 
       // if mods are already available, add them now
       this.modsSelected.each((mod) => {
