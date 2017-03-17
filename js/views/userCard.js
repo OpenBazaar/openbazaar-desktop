@@ -22,6 +22,15 @@ export default class extends BaseVw {
       this.guid = options.guid;
       this.fetched = false;
     }
+
+    if (!this.guid) {
+      if (this.model) {
+        throw new Error('The guid must be provided in the model.');
+      } else {
+        throw new Error('The guid must be provided in the options.');
+      }
+    }
+
     this.ownGuid = this.guid === app.profile.id;
 
     this.followedByYou = followedByYou(this.guid);

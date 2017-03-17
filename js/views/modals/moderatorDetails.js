@@ -64,8 +64,8 @@ export default class extends BaseModal {
   }
 
   unfollowClick() {
-    const unfollowAsync = this.$unFollowBtn.addClass('processing');
-    followUnfollow(this.model.id, 'unfollow')
+    this.$unFollowBtn.addClass('processing');
+    const unfollowAsync = followUnfollow(this.model.id, 'unfollow')
         .always(() => {
           if (this.isRemoved()) return;
           this.$unFollowBtn.removeClass('processing');

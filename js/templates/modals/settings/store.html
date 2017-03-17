@@ -52,6 +52,9 @@
                 <ul class="unstyled errorList hide js-selectedModsError">
                   <li><i class="ion-alert-circled"></i><span class="js-errorText"></span> </li>
                 </ul>
+                <ul class="unstyled errorList hide js-selectedModsAsyncError">
+                  <li><i class="ion-alert-circled"></i><span class="js-errorText"></span> </li>
+                </ul>
                 <div class="contentBox boxProcessingFaded modBox clrBr clrP <% if (ob.originalMods) print('hasMods ') %>js-modListSelected">
                   <%= ob.spinner() %>
                   <div class="noModsAdded js-noModsAdded">
