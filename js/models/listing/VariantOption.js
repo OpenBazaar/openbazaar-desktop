@@ -1,3 +1,4 @@
+import app from '../../app';
 import { guid } from '../../utils';
 import is from 'is_js';
 import BaseModel from '../BaseModel';
@@ -40,15 +41,12 @@ export default class extends BaseModel {
     };
 
     if (!attrs.name) {
-      // TRANSLATE!
-      addError('name', 'Please provide a title.');
+      addError('name', app.polyglot.t('variantOptionModelErrors.provideName'));
     } else if (attrs.name.length > this.max.nameLength) {
-      // TRANSLATE!
       addError('name', `The name cannot exceed ${this.max.nameLength} characters.`);
     }
 
     if (attrs.description.length > this.max.descriptionLength) {
-      // TRANSLATE!
       addError('description',
         `The description cannot exceed ${this.max.descriptionLength} characters.`);
     }
@@ -57,19 +55,18 @@ export default class extends BaseModel {
       addError('variants', 'The variants must be provided as an array.');
     } else {
       if (attrs.variants.length > this.max.variantCount) {
-        // TRANSLATE!
         addError('variants',
           `You have more than the maximum allowable amount of ${this.max.variantCount} choices.`);
       } else if (attrs.variants.length < 2) {
-        // TRANSLATE! Variabalize the count for the translation.
-        addError('variants', 'You must provide at least 2 choices.');
+        addError('variants', app.polyglot.t('variantOptionModelErrors.atLeast2Variants'));
       }
 
       attrs.variants.forEach(variant => {
         if (variant.length > this.max.variantItemLength) {
-          // TRANSLATE!
-          addError('variants',
-            `${variant} exceeds the maximum length of ${this.max.variantItemLength} characters.`);
+          addError('variants', app.polyglot.t('variantOptionModelErrors.variantTooLong', {
+            variant,
+            maxLength: this.max.variantItemLength,
+          }));
         }
       });
     }

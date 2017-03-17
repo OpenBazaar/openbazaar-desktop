@@ -713,7 +713,9 @@
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
-    "tooManyOptions": "You cannot have more than %{maxOptionCount} options."    
+    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
@@ -755,6 +757,18 @@
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
     "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
   },
+  "skuModelErrors": {
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "providePositiveQuantity": "The quantity cannot be less than 0.",
+    "provideSurcharge": "Please provide a surcharge.",
+    "provideNumericSurcharge": "Please provide the surcharge as a number."
+  },
+  "variantOptionModelErrors": {
+    "provideName": "Please provide a title.",
+    "atLeast2Variants": "Please provide at least two choices.",
+    "variantTooLong": "%{variant} exceeds the maximum length of %{maxLength} characters."
+  },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

@@ -1,4 +1,5 @@
 import is from 'is_js';
+import app from '../../app';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -24,13 +25,11 @@ export default class extends BaseModel {
     };
 
     if (attrs.productID.length > this.max.productIdLength) {
-      // TRANSLATE!
       addError('productID', `The productID cannot exceed ${this.max.productIdLength} characters.`);
     }
 
     if (attrs.quantity === '' && !attrs.infiniteInventory) {
-      // TRANSLATE!
-      addError('quantity', 'Please provide a quantity.');
+      addError('quantity', app.polyglot.t('skuModelErrors.provideQuantity'));
     }
 
     if (typeof attrs.infiniteInventory !== 'undefined' &&
@@ -40,8 +39,7 @@ export default class extends BaseModel {
 
     if (attrs.quantity !== '') {
       if (typeof attrs.quantity !== 'number') {
-        // TRANSLATE!
-        addError('quantity', 'Please provide the quantity as a number.');
+        addError('quantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
       } else if (!attrs.infiniteInventory && attrs.quantity < 0) {
         // The listing API allows the quantity to be set to < 0, which indicates an unlimited
         // supply. This model does not allow that, but does have an infiniteInventory flag.
@@ -49,17 +47,14 @@ export default class extends BaseModel {
         // over as -1 if the infiniteInventory flag is set to true. Also the infiniteInventory
         // flag should not be sent to the server.
 
-        // TRANSLATE!
-        addError('quantity', 'The quantity cannot be less than 0.');
+        addError('quantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
       }
     }
 
     if (attrs.surcharge === '') {
-      // TRANSLATE!
-      addError('surcharge', 'Please provide a surcharge.');
+      addError('surcharge', app.polyglot.t('skuModelErrors.provideSurcharge'));
     } else if (typeof attrs.surcharge !== 'number') {
-      // TRANSLATE!
-      addError('surcharge', 'Please provide the surcharge as a number.');
+      addError('surcharge', app.polyglot.t('skuModelErrors.provideNumericSurcharge'));
     }
 
     // The listing API does not require a variantCombo field, since if you have no options and

@@ -46,7 +46,6 @@ export default class extends BaseView {
   render() {
     const errors = {
       ...(this.model.validationError || {}),
-      // ...(this.options.optionErrors || {}),
     };
 
     this.$el.toggleClass('hasError', !!Object.keys(errors).length);
@@ -69,6 +68,7 @@ export default class extends BaseView {
         // dropdownParent needed to fully hide dropdown
         dropdownParent: this.$('.js-dropDownContainer'),
         matcher: () => false, // this is necessary
+        maximumSelectionLength: this.model.max.variantCount,
       }).on('change', (e) => {
         const count = $(e.target).val().length;
 

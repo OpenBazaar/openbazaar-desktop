@@ -151,7 +151,6 @@ export default class extends BaseModel {
     // accomplished via a "dummy" Sku object. Since that seems a bit klunky, out model will
     // allow them and the Listing model will do the translation in parse / sync.
     if (attrs.productId && attrs.productId.length > this.max.productIdLength) {
-      // TRANSLATE!
       addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
     }
 
@@ -160,11 +159,9 @@ export default class extends BaseModel {
       // if you are tracking inventory and have no options (i.e. are not tracking inventory
       // on the variant level).
       if (typeof attrs.quantity === 'string' && !attrs.quantity) {
-        // TRANSLATE!
-        addError('quantity', 'Please provide a quantity.');
+        addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
       } else if (typeof attrs.quantity !== 'number') {
-        // TRANSLATE!
-        addError('quantity', 'The quantity must be a number.');
+        addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
       }
     }
     // END - quantity and productId

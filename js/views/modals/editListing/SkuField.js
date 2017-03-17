@@ -17,13 +17,6 @@ export default class extends baseVw {
     };
   }
 
-  // events() {
-  //   return {
-  //     'change #editInventoryManagementType': 'onChangeManagementType',
-  //     'change .js-quantityInput': 'onChangeQuantityInput',
-  //   };
-  // }
-
   getState() {
     return this._state;
   }
@@ -51,6 +44,9 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         ...this._state,
         errors: this.model.validationError || {},
+        max: {
+          productIdLength: this.model.max.productIdLength,
+        },
       }));
     });
 

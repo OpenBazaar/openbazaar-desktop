@@ -124,6 +124,7 @@ export default class extends BaseView {
         calculateTotalPrice: this.calculateTotalPrice.bind(this),
         cid: this.cid,
         infiniteQuantityChar: this.infiniteQuantityChar,
+        max: this.model.max,
       }));
 
       this._$formFields = null;
