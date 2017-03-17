@@ -700,8 +700,7 @@
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price.",
-    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -713,7 +712,8 @@
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
-    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
+    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
+    "tooManyOptions": "You cannot have more than %{maxOptionCount} options."    
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",

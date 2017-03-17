@@ -54,8 +54,6 @@ export default class extends BaseModel {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
       couponCount: 30,
-      // TODO TODO TODO: add validation in UI for this.
-      optionCount: 30,
     };
   }
 
@@ -100,11 +98,6 @@ export default class extends BaseModel {
     if (attrs.coupons.length > this.max.couponCount) {
       addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
         { maxCouponCount: this.max.couponCount }));
-    }
-
-    if (attrs.options.length > this.max.optionCount) {
-      addError('options', app.polyglot.t('listingModelErrors.tooManyOptions',
-        { maxOptionCount: this.max.optionCount }));
     }
 
     errObj = this.mergeInNestedErrors(errObj);

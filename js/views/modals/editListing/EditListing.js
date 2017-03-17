@@ -1086,7 +1086,7 @@ export default class extends BaseModal {
 
       this.variantsView = this.createChild(Variants, {
         collection: this.variantOptionsCl,
-        maxVariantCount: this.model.max.optionCount,
+        maxVariantCount: item.max.optionCount,
       });
 
       this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',

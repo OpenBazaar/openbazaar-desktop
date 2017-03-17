@@ -62,6 +62,7 @@ export default class extends BaseModel {
       titleLength: 140,
       tagLength: 40,
       productIdLength: 40,
+      optionCount: 3,
     };
   }
 
@@ -212,6 +213,11 @@ export default class extends BaseModel {
         });
       }
     });
+
+    if (attrs.options.length > this.max.optionCount) {
+      addError('options', app.polyglot.t('itemModelErrors.tooManyOptions',
+        { maxOptionCount: this.max.optionCount }));
+    }
 
     errObj = this.mergeInNestedErrors(errObj);
 
