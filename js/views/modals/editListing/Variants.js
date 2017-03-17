@@ -15,16 +15,6 @@ export default class extends BaseView {
       throw new Error('Please provide the maximum variant count.');
     }
 
-    // Certain option validations are not possible to do purely in an individual
-    // Option model because they are validations relative to other Options / Skus.
-    // In that case, any higher level option related errors can be optionally passed in,
-    // in the following format:
-    // options.optionErrors = {
-    //   options[<model.cid>].<fieldName> = ['error1', 'error2', ...],
-    //   options[<model.cid>].<fieldName2> = ['error1', 'error2', ...],
-    //   options[<model2.cid>].<fieldName> = ['error1', 'error2', ...]
-    // }
-
     super(options);
     this.options = options;
     this._variantViews = [];
@@ -84,21 +74,8 @@ export default class extends BaseView {
   }
 
   createVariantView(model, options = {}) {
-    const variantErrors = {};
-
-    if (this.options.variantErrors) {
-      Object.keys(this.options.variantErrors)
-        .forEach(errKey => {
-          if (errKey.startsWith(`options[${model.cid}]`)) {
-            variantErrors[errKey.slice(errKey.indexOf('.') + 1)] =
-              this.options.couponErrors[errKey];
-          }
-        });
-    }
-
     const view = this.createChild(Variant, {
       model,
-      variantErrors,
       ...options,
     });
 

@@ -169,7 +169,7 @@ export default class extends BaseModel {
     let maxCombos = 1;
 
     attrs.options.forEach(option => (maxCombos *=
-      (option.get('variants') && option.get('variants').length || 0)));
+      (option.get('variants') && option.get('variants').length || 1)));
 
     if (attrs.skus.length > maxCombos) {
       addError('skus', 'You have provided more SKUs than variant combinations.');
