@@ -51,10 +51,6 @@ export default class extends BaseModal {
           this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
         }
 
-        // TODO TODO TODO TODO
-        // parse out the custom created SKU attrs.
-        // parse out any top level sku quant if not utilized.
-
         const updatedData = this.model.toJSON();
 
         // Will parse out some sku attributes that are specific to the variant
@@ -618,16 +614,15 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
-    // If we're not tracking inventory, we shouldn't be providing a top-level quantity.
-    if (item.get('options').length || this.trackInventoryBy === 'DO_NOT_TRACK') {
-      item.unset('quantity');
-    }
-
     // If we have options, we shouldn't be providing a top-level quantity or
     // productID.
     if (item.get('options').length) {
       item.unset('quantity');
       item.unset('productID');
+    } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+      // If we're not tracking inventory and don't have any variants, we should provide a top-level
+      // quantity as -1, so it's considered infinite.
+      formData.item.quantity = -1;
     }
 
     this.model.set(formData);

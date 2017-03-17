@@ -75,9 +75,9 @@ export default class extends BaseModel {
       isInventoryTracked = !!this.get('skus')
         .find(sku => !sku.get('infiniteInventory'));
     } else {
-      // If you don't have any options and have the top level infiniteInventory set to true,
-      // we'll consider you to be tracking inventory
-      isInventoryTracked = typeof this.get('quantity') !== 'undefined';
+      // If you don't have any options and have the top level as a non-negative
+      // value (i.e. not infiniteInventory), we'll consider you to be tracking inventory
+      isInventoryTracked = this.get('quantity') > 0;
     }
 
     return isInventoryTracked;
@@ -165,9 +165,6 @@ export default class extends BaseModel {
       } else if (typeof attrs.quantity !== 'number') {
         // TRANSLATE!
         addError('quantity', 'The quantity must be a number.');
-      } else if (attrs.quantity < 0) {
-        // TRANSLATE!
-        addError('quantity', 'The quantity cannot be less than 0.');
       }
     }
     // END - quantity and productId

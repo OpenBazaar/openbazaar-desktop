@@ -52,16 +52,6 @@ export default class extends baseVw {
     return this;
   }
 
-  // get $deleteConfirm() {
-  //   return this._$deleteConfirm ||
-  //     (this._$deleteConfirm = this.$('.js-deleteConfirm'));
-  // }
-
-  // remove() {
-  //   $(document).off('click', this.onDocumentClick);
-  //   super.remove();
-  // }
-
   render() {
     loadTemplate('modals/editListing/inventoryManagement.html', (t) => {
       this.$el.html(t({
@@ -74,8 +64,6 @@ export default class extends baseVw {
         // disables the search box
         minimumResultsForSearch: Infinity,
       });
-
-      // this._$deleteConfirm = null;
     });
 
     return this;
