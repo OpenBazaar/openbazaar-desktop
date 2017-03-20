@@ -65,6 +65,7 @@ export default class extends BaseView {
         multiple: true,
         tags: true,
         selectOnClose: true,
+        tokenSeparators: [','],
         // dropdownParent needed to fully hide dropdown
         dropdownParent: this.$('.js-dropDownContainer'),
         matcher: () => false, // this is necessary

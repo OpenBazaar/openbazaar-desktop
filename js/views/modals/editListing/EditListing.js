@@ -973,6 +973,7 @@ export default class extends BaseModal {
         multiple: true,
         tags: true,
         selectOnClose: true,
+        tokenSeparators: [','],
         // ***
         // placeholder has issue where it won't show initially, will use
         // own element for this instead
@@ -1029,6 +1030,7 @@ export default class extends BaseModal {
         multiple: true,
         tags: true,
         selectOnClose: true,
+        tokenSeparators: [','],
         // dropdownParent needed to fully hide dropdown
         dropdownParent: this.$('#editListingCategoriesDropdown'),
         // This is necessary, see comment in select2 for tags above.
