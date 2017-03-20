@@ -123,9 +123,6 @@
     <div class="tabFormWrapper">
       <form class="box padMdKids padStack">
         <div class="flexRow gutterH">
-<!--           <div class="col3">
-            <label for="settingsAbout"><%= ob.polyT('settings.about') %></label>
-          </div> -->
           <div class="col12">
             <% if (ob.errors.about) print(ob.formErrorTmpl({ errors: ob.errors.about })) %>
             <div contenteditable class="clrBr clrSh2" name="about" id="settingsAbout" placeholder="<%= ob.polyT('settings.pageTab.placeholderAbout') %>""><%= ob.about %></div>
@@ -147,9 +144,9 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
           <div class="col6">
-            <% if (ob.errors.website) print(ob.formErrorTmpl({ errors: ob.errors.website })) %>
-            <input type="text" class="clrBr clrSh2" name="website" id="settingsWebsite"
-                   value="<%= ob.website %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderWebsite') %>">
+            <% if (ob.errors['contactInfo.website']) print(ob.formErrorTmpl({ errors: ob.errors['contactInfo.website'] })) %>
+            <input type="text" class="clrBr clrSh2" name="contactInfo.website" id="settingsWebsite"
+                   value="<%= ob.contactInfo.website %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderWebsite') %>">
           </div>
         </div>
         <div class="flexRow gutterH">
@@ -158,8 +155,8 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
           </div>
           <div class="col6">
-            <% if (ob.errors.email) print(ob.formErrorTmpl({ errors: ob.errors.email })) %>
-            <input type="text" class="clrBr clrSh2" name="email" id="settingsEmail" value="<%= ob.email %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderEmail') %>">
+            <% if (ob.errors['contactInfo.email']) print(ob.formErrorTmpl({ errors: ob.errors['contactInfo.email'] })) %>
+            <input type="text" class="clrBr clrSh2" name="contactInfo.email" id="settingsEmail" value="<%= ob.contactInfo.email %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderEmail') %>">
           </div>
         </div>
       </form>

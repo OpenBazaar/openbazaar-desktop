@@ -153,10 +153,13 @@ let profileFailed;
 let settingsFailed;
 
 function isOnboardingNeeded() {
-  profileFetch = !profileFetch || profileFailed ?
-    app.profile.fetch() : profileFetch;
-  settingsFetch = !settingsFetch || settingsFailed ?
-    app.settings.fetch() : settingsFetch;
+  // profileFetch = !profileFetch || profileFailed ?
+  //   app.profile.fetch() : profileFetch;
+  // settingsFetch = !settingsFetch || settingsFailed ?
+  //   app.settings.fetch() : settingsFetch;
+
+  profileFetch = app.profile.fetch();
+  settingsFetch = app.settings.fetch();
 
   $.whenAll(profileFetch, settingsFetch)
     .progress((...args) => {
@@ -185,7 +188,9 @@ function isOnboardingNeeded() {
     .done(() => {
       onboardingNeededDeferred.resolve(false);
     })
-    .fail((jqXhr) => {
+    .fail((xhr) => {
+      const jqXhr = xhr.length ? xhr[0] : xhr;
+
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
           title: app.polyglot.t('startUp.dialogs.retryOnboardingFetch.title'),
@@ -383,7 +388,7 @@ function onboardIfNeeded() {
  // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
-    app.profile = new Profile({ id: data.guid });
+    app.profile = new Profile({ peerID: data.guid }, { parse: true });
 
     app.settings = new Settings();
     // If the server is running testnet, set that here
