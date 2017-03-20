@@ -983,6 +983,9 @@ export default class extends BaseModal {
         dropdownParent: this.$('#editListingTagsDropdown'),
         createTag: (params) => {
           let term = params.term;
+          if (term === '') {
+            return null; // don't add blank tags triggered by blur
+          }
 
           // we'll make the tag all lowercase and
           // replace spaces with dashes.
