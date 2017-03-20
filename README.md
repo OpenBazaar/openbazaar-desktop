@@ -11,16 +11,8 @@ Installation
   - `cd openbazaar-desktop`
 3. `npm install`
 
-Running in non-dev mode
--------------------
-
-Use this option if you're not actively developing on the client and just want to run the client from source.
-
-`npm run start-app` will:
-- launch the Electron app
-
-Running in dev mode
--------------------
+Running
+-------
 
 Use this option if you're actively developing on the client and want the client started along with some helper development processes.
 
