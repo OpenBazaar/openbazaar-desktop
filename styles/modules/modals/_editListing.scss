@@ -30,7 +30,7 @@
         position: absolute;
         top: 0;
         left: 0;
-      }      
+      }
 
       .btn {
         width: 61px;
@@ -69,7 +69,7 @@
 
             &.addElement {
               cursor: default;
-              
+
               .imagesIcon {
                 font-size: 50px;
                 @include center;
@@ -110,7 +110,7 @@
 
         form {
           label {
-            font-weight: 400;          
+            font-weight: 400;
           }
 
           .servicesWrap {
@@ -120,7 +120,7 @@
 
               .btnRemoveService {
                 height: auto;
-                width: 50px;                
+                width: 50px;
               }
 
               &:first-child {
@@ -168,7 +168,7 @@
           .couponsContainer {
             display: block;
           }
-          
+
           .btnAddCoupon {
             display: none;
           }
@@ -189,7 +189,7 @@
 
             &::after {
               right: 94px;
-            }          
+            }
           }
 
           .btnRemoveCoupon {
@@ -204,7 +204,7 @@
           .variantsContainer {
             display: block;
           }
-          
+
           .addFirstVariant {
             display: none;
           }
@@ -220,7 +220,7 @@
             .select2-selection__choice {
               margin-top: 6px;
             }
-            
+
             .select2-search__field {
               height: 22px;
             }
@@ -242,11 +242,11 @@
       }
 
       .variantInventorySection {
-        padding-right: 0;
 
         table {
           border-spacing: 0;
           border-collapse: collapse;
+          width: 100%;
 
           th {
             text-align: left;
@@ -257,18 +257,17 @@
             border-style: solid;
             padding: $pad;
             word-break: break-word;
-            min-width: 125px;
+            min-width: 120px;
             max-width: 125px;
 
             input[type=text] {
-              width: 100px;
-              max-width: 100px;
+              width: 100%;
             }
 
             &:last-child {
               border-right-width: 0;
             }
-            
+
             &.unconstrainedWidth {
               white-space: nowrap;
               width: auto;
