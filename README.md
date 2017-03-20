@@ -14,8 +14,6 @@ Installation
 Running
 -------
 
-Use this option if you're actively developing on the client and want the client started along with some helper development processes.
-
 `npm start` will:
 - compile your Sass / re-compile on changes
 - run BrowserSync in watch mode so the app automatically refreshes on JS and HTML changes and dynamically injects any CSS / Sass changes**.
