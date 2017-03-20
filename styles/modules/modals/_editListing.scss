@@ -257,15 +257,11 @@
             border-style: solid;
             padding: $pad;
             word-break: break-word;
-            min-width: 120px;
+            min-width: 90px;
             max-width: 125px;
 
             input[type=text] {
               width: 100%;
-            }
-
-            &:last-child {
-              border-right-width: 0;
             }
 
             &.unconstrainedWidth {
