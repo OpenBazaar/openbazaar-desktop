@@ -42,6 +42,9 @@ export default class extends BaseVw {
 
     this.listenTo(this.settings, 'sync', () => {
       app.settings.set(this.settings.toJSON());
+    });
+
+    this.listenTo(app.settings, 'change:storeModerators', () => {
       this.$modBtn.toggleClass('active', this.ownMod);
     });
 
@@ -52,7 +55,7 @@ export default class extends BaseVw {
   }
 
   get ownMod() {
-    return app.settings.get('storeModerators').indexOf(this.guid) !== -1;
+    return app.settings.ownMod(this.guid);
   }
 
   loadUser(guid = this.guid) {
@@ -124,7 +127,8 @@ export default class extends BaseVw {
   }
 
   saveModeratorList(add = false) {
-    let modList = app.settings.get('storeModerators');
+    // clone the array, otherwise it is a reference
+    let modList = _.clone(app.settings.get('storeModerators'));
 
     if (add && !this.ownMod) {
       modList.push(this.guid);

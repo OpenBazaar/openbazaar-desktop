@@ -33,6 +33,14 @@ export default class extends BaseModel {
     };
   }
 
+  ownMod(guid) {
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    return this.get('storeModerators').indexOf(guid) !== -1;
+  }
+
   validate(attrs) {
     const errObj = this.mergeInNestedErrors({});
 
