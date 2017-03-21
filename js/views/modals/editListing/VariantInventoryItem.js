@@ -85,7 +85,8 @@ export default class extends BaseView {
     const updatedSurcharge = (typeof surcharge === 'number' && !isNaN(surcharge)) ?
       surcharge : 0;
 
-    return formatCurrency(this.options.getPrice() + updatedSurcharge, this.options.getCurrency());
+    return formatCurrency((this.options.getPrice() || 0) +
+      updatedSurcharge, this.options.getCurrency());
   }
 
   get $formFields() {

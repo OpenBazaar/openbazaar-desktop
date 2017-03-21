@@ -62,7 +62,7 @@ export default class extends BaseModel {
       titleLength: 140,
       tagLength: 40,
       productIdLength: 40,
-      optionCount: 3,
+      optionCount: 30,
     };
   }
 

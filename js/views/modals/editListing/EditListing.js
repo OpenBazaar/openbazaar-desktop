@@ -706,8 +706,6 @@ export default class extends BaseModal {
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
-      console.log('no soup for you');
-      window.soup = this.model;
     }
 
     // render so errrors are shown / cleared

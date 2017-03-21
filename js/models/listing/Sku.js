@@ -7,6 +7,8 @@ export default class extends BaseModel {
     return {
       productID: '',
       infiniteInventory: false,
+      quantity: 0,
+      surcharge: 0,
     };
   }
 

@@ -242,6 +242,10 @@
       }
 
       .variantInventorySection {
+        .inventoryTableWrap {
+          overflow: auto;
+          max-height: 500px;
+        }
 
         table {
           border-spacing: 0;
@@ -272,6 +276,12 @@
               .errorList {
                 max-width: 225px;
                 white-space: normal;
+              }
+            }
+
+            &.quantityCol {
+              input[type=text] {
+                min-width: 75px;
               }
             }
           }
