@@ -24,8 +24,8 @@ export default class extends BaseVw {
     });
 
     this.listenTo(app.settings, 'change:storeModerators', () => {
-      this.$addModeratorLbl.toggleClass('hide', this.ownMod);
-      this.$removeModeratorLbl.toggleClass('hide', !this.ownMod);
+      this.$addModerator.toggleClass('hide', this.ownMod);
+      this.$removeModerator.toggleClass('hide', !this.ownMod);
     });
   }
 
@@ -36,7 +36,8 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-termsLink': 'termsClick',
-      'click .js-addModerator': 'changeModeratorClick',
+      'click .js-addModerator': 'addModeratorClick',
+      'click .js-removeModerator': 'removeModeratorClick',
       'click .js-guid': 'guidClick',
       'mouseleave .js-guid': 'guidLeave',
     };
@@ -50,23 +51,23 @@ export default class extends BaseVw {
     // show the moderator details modal
     const modModal = launchModeratorDetailsModal({ model: this.model });
     this.listenTo(modModal, 'addAsModerator', () => {
-      this.$modBtn.addClass('processing');
+      this.$addModerator.addClass('processing');
       this.saveModeratorList(true);
     });
   }
 
-  changeModeratorClick() {
-    if (this.ownMod) {
-      this.$modBtn.addClass('processing');
-      this.saveModeratorList(false);
-    } else {
-      // show the moderator details modal
-      const modModal = launchModeratorDetailsModal({ model: this.model });
-      this.listenTo(modModal, 'addAsModerator', () => {
-        this.$modBtn.addClass('processing');
-        this.saveModeratorList(true);
-      });
-    }
+  addModeratorClick() {
+    // show the moderator details modal
+    const modModal = launchModeratorDetailsModal({ model: this.model });
+    this.listenTo(modModal, 'addAsModerator', () => {
+      this.$addModerator.addClass('processing');
+      this.saveModeratorList(true);
+    });
+  }
+
+  removeModeratorClick() {
+    this.$removeModerator.addClass('processing');
+    this.saveModeratorList(false);
   }
 
   saveModeratorList(add = false) {
@@ -83,39 +84,20 @@ export default class extends BaseVw {
     this.settings.set(formData);
 
     if (!this.settings.validationError) {
-      const msg = {
-        msg: app.polyglot.t('userPage.status.saving'),
-        type: 'message',
-      };
-
-      const statusMessage = app.statusBar.pushMessage({
-        ...msg,
-        duration: 9999999999999999,
-      });
-
       this.settings.save(formData, {
         attrs: formData,
         type: 'PATCH',
       })
           .done(() => {
-            statusMessage.update({
-              msg: app.polyglot.t('userPage.status.done'),
-              type: 'confirmed',
-            });
+
           })
           .fail((...args) => {
             const errMsg = args[0] && args[0].responseJSON &&
                 args[0].responseJSON.reason || '';
             openSimpleMessage(app.polyglot.t('userPage.status.error'), { errMsg });
-
-            statusMessage.update({
-              msg: app.polyglot.t('userPage.status.fail'),
-              type: 'warning',
-            });
           })
           .always(() => {
             this.$modBtn.removeClass('processing');
-            setTimeout(() => statusMessage.remove(), 3000);
           });
     }
   }
@@ -140,9 +122,9 @@ export default class extends BaseVw {
 
       this.$('.js-userCard').append(this.userCard.render().$el);
 
-      this.$modBtn = this.$('.js-addModerator');
-      this.$addModeratorLbl = this.$('.js-addModeratorLbl');
-      this.$removeModeratorLbl = this.$('.js-removeModeratorLbl');
+      this.$modBtn = this.$('.js-addModerator, .js-removeModerator');
+      this.$addModerator = this.$('.js-addModerator');
+      this.$removeModerator = this.$('.js-removeModerator');
     });
 
     return this;

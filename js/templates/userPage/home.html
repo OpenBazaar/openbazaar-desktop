@@ -17,14 +17,14 @@
         <%= ob.polyT(`userPage.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %>
       </div>
       <div class="flexHCent">
-        <a class="btn clrP clrBr clrSh2 js-addModerator">
-          <span class="js-addModeratorLbl <% if(ob.currentModerator) print('hide') %>">
-            <%= ob.polyT('userPage.addModerator') %>
-          </span>
-          <span class="js-removeModeratorLbl <% if(!ob.currentModerator) print('hide') %>">
-            <%= ob.polyT('userPage.removeModerator') %>
-          </span>
-        </a>
+        <%= ob.processingButton({
+        className: `btn clrP clrBr clrSh2 js-addModerator ${ ob.currentModerator ? 'hide' : ''}`,
+        btnText: ob.polyT('userPage.addModerator')
+        }) %>
+        <%= ob.processingButton({
+        className: `btn clrP clrBr clrSh2 js-removeModerator ${ !ob.currentModerator ? 'hide' : ''}`,
+        btnText: ob.polyT('userPage.removeModerator')
+        }) %>
       </div>
     </div>
     <% } %>

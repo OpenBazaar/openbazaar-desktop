@@ -144,10 +144,11 @@
       "followers": "Followers"
     },
     "status": {
-      "saving": "Saving settings...",
-      "done": "Settings saved.",
-      "fail": "There was an error saving your settings.",
-      "error": "There was an error saving your settings. \n %{errMsg}"
+      "modSavingAdd": "Adding Moderator...",
+      "modSavingRemove": "Removing Moderator...",
+      "modDone": "Settings saved.",
+      "modFail": "There was an error saving your settings.",
+      "modError": "There was an error saving your settings. \n %{errMsg}"
     }
   },
   "userShort": {
