@@ -104,11 +104,14 @@ export default class extends baseVw {
       formData.handle = formData.handle.slice(1);
     }
 
-    ['primaryColor', 'secondaryColor', 'textColor'].forEach((colorField) => {
-      if (!formData[colorField].startsWith('#')) {
-        formData[colorField] = `#${formData[colorField]}`;
-      }
-    });
+    if (formData.colors) {
+      Object.keys(formData.colors)
+        .forEach((colorField) => {
+          if (!formData.colors[colorField].startsWith('#')) {
+            formData.colors[colorField] = `#${formData.colors[colorField]}`;
+          }
+        });
+    }
 
     return formData;
   }

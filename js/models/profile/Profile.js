@@ -13,6 +13,7 @@ export default class extends BaseModel {
       handle: '',
       location: '',
       moderator: false,
+      moderatorInfo: new Moderator(),
       name: `ob ${Math.random().toString(36).slice(2)}`,
       nsfw: false,
       shortDescription: '',

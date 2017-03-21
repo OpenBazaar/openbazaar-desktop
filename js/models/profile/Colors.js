@@ -9,7 +9,7 @@ export default class extends BaseModel {
       secondary: '#ECEEF2',
       text: '#252525',
       highlight: '#2BAD23',
-      highlightText: '#FFFFFF',
+      highlightText: '#252525',
     };
   }
 

@@ -19,15 +19,15 @@ export default class extends baseVw {
 
     this.profile = app.profile.clone();
 
-    if (this.profile.get('modInfo')) {
-      this.moderator = this.profile.get('modInfo');
+    if (this.profile.get('moderatorInfo')) {
+      this.moderator = this.profile.get('moderatorInfo');
     } else {
       this.moderator = new Moderator();
       this.profile.set('modInfo', this.moderator);
     }
 
     // retrieve the moderatior default values
-    const profileFee = this.profile.get('modInfo').get('fee');
+    const profileFee = this.profile.get('moderatorInfo').get('fee');
     this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
     this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
@@ -36,7 +36,7 @@ export default class extends baseVw {
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({
         moderator: this.profile.get('moderator'),
-        modInfo: this.profile.get('modInfo').toJSON(),
+        modInfo: this.profile.get('moderatorInfo').toJSON(),
       });
     });
   }
@@ -68,10 +68,10 @@ export default class extends baseVw {
     const formData = this.getFormData();
 
     // clear unused values by setting them to the default, if it exists
-    if (formData.modInfo.fee.feeType === 'PERCENTAGE') {
-      formData.modInfo.fee.fixedFee.amount = this.defaultAmount;
-    } else if (formData.modInfo.fee.feeType === 'FIXED') {
-      formData.modInfo.fee.percentage = this.defaultPercentage;
+    if (formData.moderatorInfo.fee.feeType === 'PERCENTAGE') {
+      formData.moderatorInfo.fee.fixedFee.amount = this.defaultAmount;
+    } else if (formData.moderatorInfo.fee.feeType === 'FIXED') {
+      formData.moderatorInfo.fee.percentage = this.defaultPercentage;
     }
 
     this.profile.set(formData);
@@ -162,7 +162,7 @@ export default class extends baseVw {
 
   render() {
     loadTemplate('modals/settings/moderation.html', (t) => {
-      const moderator = this.profile.get('modInfo');
+      const moderator = this.profile.get('moderatorInfo');
 
       this.$el.html(t({
         errors: this.profile.validationError || {},
