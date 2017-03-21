@@ -13,7 +13,6 @@ export default class extends BaseModel {
       handle: '',
       location: '',
       moderator: false,
-      moderatorInfo: new Moderator(),
       name: `ob ${Math.random().toString(36).slice(2)}`,
       nsfw: false,
       shortDescription: '',
@@ -22,6 +21,7 @@ export default class extends BaseModel {
       vendor: false,
       colors: new Colors(),
       contactInfo: new Contact(),
+      stats: new BaseModel(),
     };
   }
 
@@ -43,6 +43,7 @@ export default class extends BaseModel {
       moderatorInfo: Moderator,
       colors: Colors,
       contactInfo: Contact,
+      stats: BaseModel,
     };
   }
 
@@ -131,10 +132,15 @@ export default class extends BaseModel {
     // ensure certain fields that shouldn't be updated don't go
     // to the server
     if (method !== 'read') {
-      delete options.attrs.followerCount;
-      delete options.attrs.followingCount;
-      delete options.attrs.listingCount;
       delete options.attrs.lastModified;
+
+      if (options.attrs.stats) {
+        delete options.attrs.stats.followerCount;
+        delete options.attrs.stats.followingCount;
+        delete options.attrs.stats.listingCount;
+        delete options.attrs.stats.ratingCount;
+        delete options.attrs.stats.averageRating;
+      }
 
       if (method !== 'delete') {
         // convert the amount field
@@ -146,6 +152,11 @@ export default class extends BaseModel {
           options.attrs.moderatorInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
         }
       }
+    }
+
+    if (method !== 'create' && !this.get('peerID')) {
+      throw new Error('I am unable to fetch, save or delete because the model does not' +
+        ' have a peerID set.');
     }
 
     if (method === 'read') {

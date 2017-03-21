@@ -243,6 +243,8 @@ function onboard() {
     });
 
     if (!profileSave) {
+      console.log('moo');
+      window.moo = app.profile;
       throw new Error('Client side validation failed on your new Profile model.' +
         'Ensure your defaults are valid.');
     }
@@ -388,7 +390,7 @@ function onboardIfNeeded() {
  // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
-    app.profile = new Profile({ peerID: data.guid }, { parse: true });
+    app.profile = new Profile({ peerID: data.guid });
 
     app.settings = new Settings();
     // If the server is running testnet, set that here

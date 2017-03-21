@@ -56,7 +56,7 @@ export default class extends BaseVw {
       this.profileFetch = $.Deferred().resolve();
       profile = app.profile;
     } else {
-      profile = new Profile({ id: guid });
+      profile = new Profile({ peerID: guid });
       this.profileFetch = profile.fetch();
     }
 

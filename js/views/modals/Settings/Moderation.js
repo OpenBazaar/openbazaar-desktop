@@ -23,10 +23,10 @@ export default class extends baseVw {
       this.moderator = this.profile.get('moderatorInfo');
     } else {
       this.moderator = new Moderator();
-      this.profile.set('modInfo', this.moderator);
+      this.profile.set('moderatorInfo', this.moderator);
     }
 
-    // retrieve the moderatior default values
+    // retrieve the moderation default values
     const profileFee = this.profile.get('moderatorInfo').get('fee');
     this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
     this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
