@@ -213,7 +213,10 @@
       "statusSaving": "Saving general settings…",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
-      "saveErrorAlertTitle": "Unable to save general settings"
+      "saveErrorAlertTitle": "Unable to save general settings",
+      "searchProvider": "Search Provider",
+      "searchProviderHelper": "Default: https://search.ob1.io",
+      "searchProviderError": "This is not a valid url for a search provider"
     },
     "pageTab": {
       "helperAbout": "Displays on your Home page",
@@ -623,7 +626,10 @@
     "searchBtn": "Search",
     "suggestions": "Suggestions",
     "resultsFound": "%{totalResults} found for \"%{term}\"",
-    "sortBy": "Sort by"
+    "sortBy": "Sort by",
+    "errors": {
+      "noName": "The search provider did not return a name for the provider"
+    }
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

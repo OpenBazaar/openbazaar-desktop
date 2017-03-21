@@ -1,6 +1,8 @@
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
+import is from 'is_js';
+import app from '../app';
 
 export default class extends Model {
   localStorage() {
@@ -20,6 +22,7 @@ export default class extends Model {
       language: 'en-US',
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
+      searchProvider: 'https://search.ob1.io',
     };
   }
 
@@ -61,6 +64,10 @@ export default class extends Model {
 
     if (!this.bitcoinUnits.includes(attrs.bitcoinUnit)) {
       addError(`bitcoinUnit needs to be one of ${this.bitcoinUnits}.`);
+    }
+
+    if (is.not.url(attrs.searchProvider)) {
+      addError('searchProvider', app.polyglot.t('settings.generalTab.searchProviderError'));
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;

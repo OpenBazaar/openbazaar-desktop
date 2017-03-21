@@ -5,6 +5,7 @@ import { getPageContainer } from './utils/selectors';
 import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
+import Search from './views/search/Search';
 import TransactionsPage from './views/TransactionsPage';
 import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
@@ -22,7 +23,7 @@ export default class ObRouter extends Router {
       ['transactions(/)', 'transactions'],
       ['transactions/:tab(/)', 'transactions'],
       ['connected-peers(/)', 'connectedPeers'],
-      ['*path', 'pageNotFound'],
+      ['*path', 'search'],
     ];
 
     routes.slice(0)
@@ -237,6 +238,12 @@ export default class ObRouter extends Router {
     });
 
     this.once('will-route', () => (peerFetch.abort()));
+  }
+
+  search(term) {
+    this.loadPage(
+        new Search({ term })
+    );
   }
 
   userNotFound() {
