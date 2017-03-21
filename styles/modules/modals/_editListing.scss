@@ -30,7 +30,7 @@
         position: absolute;
         top: 0;
         left: 0;
-      }      
+      }
 
       .btn {
         width: 61px;
@@ -69,7 +69,7 @@
 
             &.addElement {
               cursor: default;
-              
+
               .imagesIcon {
                 font-size: 50px;
                 @include center;
@@ -110,7 +110,7 @@
 
         form {
           label {
-            font-weight: 400;          
+            font-weight: 400;
           }
 
           .servicesWrap {
@@ -120,7 +120,7 @@
 
               .btnRemoveService {
                 height: auto;
-                width: 50px;                
+                width: 50px;
               }
 
               &:first-child {
@@ -168,7 +168,7 @@
           .couponsContainer {
             display: block;
           }
-          
+
           .btnAddCoupon {
             display: none;
           }
@@ -189,13 +189,118 @@
 
             &::after {
               right: 94px;
-            }          
+            }
           }
 
           .btnRemoveCoupon {
             height: auto;
             width: 50px;
           }
+        }
+      }
+
+      .variantsSection {
+        &.expandedVariantsView {
+          .variantsContainer {
+            display: block;
+          }
+
+          .addFirstVariant {
+            display: none;
+          }
+        }
+
+        .variantsContainer {
+          display: none;
+
+          .variant {
+            padding-left: 0;
+            padding-right: 0;
+
+            .select2-selection__choice {
+              margin-top: 6px;
+            }
+
+            .select2-search__field {
+              height: 22px;
+            }
+
+            .btnRemoveVariant {
+              height: 42px;
+              width: 50px;
+            }
+
+            &.hasError {
+              .variantNameInput {
+                margin-top: auto; // needed so fields in same row align if only one has an error
+                position: relative;
+                top: -4px; // needed cause it's not so easy to line up with select2 fields
+              }
+            }
+          }
+        }
+      }
+
+      .variantInventorySection {
+        .inventoryTableWrap {
+          overflow: auto;
+          max-height: 500px;
+        }
+
+        table {
+          border-spacing: 0;
+          border-collapse: collapse;
+          width: 100%;
+
+          th {
+            text-align: left;
+          }
+
+          td, th {
+            border-width: 1px;
+            border-style: solid;
+            padding: $pad;
+            word-break: break-word;
+            min-width: 90px;
+            max-width: 125px;
+
+            input[type=text] {
+              width: 100%;
+            }
+
+            &.unconstrainedWidth {
+              white-space: nowrap;
+              width: auto;
+              max-width: none;
+
+              .errorList {
+                max-width: 225px;
+                white-space: normal;
+              }
+            }
+
+            &.quantityCol {
+              input[type=text] {
+                min-width: 75px;
+              }
+            }
+          }
+        }
+      }
+
+      .inventoryManagementSection {
+        .quantityInput {
+          width: 100px;
+        }
+      }
+    }
+  }
+
+  &.notTrackingInventory {
+    .modalContent .tabContent {
+      .variantInventorySection {
+        .quantityCol {
+          display: none;
         }
       }
     }

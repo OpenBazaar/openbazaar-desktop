@@ -368,3 +368,9 @@ ul, ol {
 .cf:after {
   clear: both;
 }
+
+// scrollbar styling
+::-webkit-scrollbar {
+  width: $scrollbar;
+  height: $scrollbar;
+}

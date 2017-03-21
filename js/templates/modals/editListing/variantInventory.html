@@ -1,0 +1,18 @@
+<% if (!ob.inventory.length) { %>
+<div class="rowMd">The variant inventory table will appear when you have declared at least one variant with at least one choice.</div>
+<% } else { %>
+<div class="inventoryTableWrap">
+  <table>
+    <tr>
+      <% ob.columns.forEach(column => { %>
+      <th class="clrBr"><%= column %></th>
+      <% }) %>
+      <th class="clrBr">Surcharge</th>
+      <th class="clrBr">Total Price</th>
+      <th class="clrBr">Sku</th>
+      <th class="clrBr quantityCol">Quantity</th>
+    </tr>
+  </table>
+</div>
+<div class="clrT2 txSm padSm"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
+<% } %>

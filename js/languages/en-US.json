@@ -596,11 +596,15 @@
       "tagsDetailed": "Tags (For getting your listing discovered)",
       "category": "Category",
       "categoryDetailed": "Category (For organizing your store)",
+      "variants": "Variants",
+      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
       "inventory": "Inventory",
       "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
-      "coupons": "Coupons"
+      "coupons": "Coupons",
+      "inventoryManagement": "Inventory Management",
+      "variantInventory": "Variant Inventory"
     },
     "placeholderTitle": "Enter your title…",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -612,6 +616,8 @@
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
+    "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
+    "variantInventoryLink": "Variant Inventory",
     "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
     "helperCondition": "The overall condition of your listing",
     "helperNSFW": "Mark yes if the listing is NSFW",
@@ -672,6 +678,26 @@
       "discountTypeFixed": "Fixed",
       "btnAddCoupon": "+ Add Coupon"
     },
+    "variants": {
+      "btnAddVariant": "Add Variant",
+      "addVariant": "+ Add Variant",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Size, Color, Material, etc",
+      "choicesLabel": "Choices",
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+    },
+    "inventoryManagement": {
+      "doNotTrackSelectOption": "Do not track inventory",
+      "trackSelectOption": "Track Inventory",
+      "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
+      "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+    },
+    "variantInventory": {
+      "helperText": "Variant options with a quantity of 0 will not display",
+      "placeholderSKU": "SKU, ID, etc",
+      "unlimitedQuantityLabel": "unlimited"
+    },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
     "errors": {
@@ -722,7 +748,7 @@
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
   },
-  "listingInnerModelErrors": {
+  "listingModelErrors": {
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
@@ -739,7 +765,10 @@
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
-    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
+    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
+    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
@@ -781,6 +810,18 @@
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
     "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
   },
+  "skuModelErrors": {
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "providePositiveQuantity": "The quantity cannot be less than 0.",
+    "provideSurcharge": "Please provide a surcharge.",
+    "provideNumericSurcharge": "Please provide the surcharge as a number."
+  },
+  "variantOptionModelErrors": {
+    "provideName": "Please provide a title.",
+    "atLeast2Variants": "Please provide at least two choices.",
+    "variantTooLong": "%{variant} exceeds the maximum length of %{maxLength} characters."
+  },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

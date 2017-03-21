@@ -1,6 +1,6 @@
-import { guid } from '../utils';
+import { guid } from '../../utils';
 import { Collection } from 'backbone';
-import Coupon from '../models/listing/Coupon';
+import Coupon from '../../models/listing/Coupon';
 
 export default class extends Collection {
   model(attrs, options) {

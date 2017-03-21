@@ -1,10 +1,10 @@
-import { guid } from '../utils';
+import { guid } from '../../utils';
 import { Collection } from 'backbone';
-import ShippingOption from '../models/listing/ShippingOption';
+import Sku from '../../models/listing/Sku';
 
 export default class extends Collection {
   model(attrs, options) {
-    return new ShippingOption({
+    return new Sku({
       _clientID: attrs._clientID || guid(),
       ...attrs,
     }, options);

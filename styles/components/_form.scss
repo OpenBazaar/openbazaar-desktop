@@ -230,4 +230,10 @@ input[type="checkbox"] {
       }
     }
   }
+
+  &.centerLabel {
+    & + label {
+      align-items: center;
+    }
+  }
 }

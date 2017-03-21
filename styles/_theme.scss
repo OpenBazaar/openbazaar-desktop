@@ -184,10 +184,6 @@ input[type=range][class~="clrS"] {
   background: $emphasisGradient;
 }
 
-::-webkit-scrollbar {
-  width: $scrollbar;
-}
-
 ::-webkit-scrollbar-track {
   background: $secondary;
 }

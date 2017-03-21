@@ -6,8 +6,8 @@ import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
-import ShippingOptions from '../../collections/ShippingOptions.js';
-import Coupons from '../../collections/Coupons.js';
+import ShippingOptions from '../../collections/listing/ShippingOptions.js';
+import Coupons from '../../collections/listing/Coupons.js';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
@@ -77,7 +77,7 @@ export default class extends BaseModel {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
       } else if (attrs.refundPolicy.length > this.max.refundPolicyLength) {
-        addError('refundPolicy', app.polyglot.t('listingInnerModelErrors.returnPolicyTooLong'));
+        addError('refundPolicy', app.polyglot.t('listingModelErrors.returnPolicyTooLong'));
       }
     }
 
@@ -86,17 +86,17 @@ export default class extends BaseModel {
         addError('termsAndConditions', 'The terms and conditions must be of type string.');
       } else if (attrs.termsAndConditions.length > this.max.termsAndConditionsLength) {
         addError('termsAndConditions',
-          app.polyglot.t('listingInnerModelErrors.termsAndConditionsTooLong'));
+          app.polyglot.t('listingModelErrors.termsAndConditionsTooLong'));
       }
     }
 
     if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
       !attrs.shippingOptions.length) {
-      addError('shippingOptions', app.polyglot.t('listingInnerModelErrors.provideShippingOption'));
+      addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
     }
 
     if (attrs.coupons.length > this.max.couponCount) {
-      addError('coupons', app.polyglot.t('listingInnerModelErrors.tooManyCoupons',
+      addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
         { maxCouponCount: this.max.couponCount }));
     }
 
@@ -108,7 +108,7 @@ export default class extends BaseModel {
 
       if (typeof priceDiscount !== 'undefined' && priceDiscount > attrs.item.get('price')) {
         addError(`coupons[${coupon.cid}].priceDiscount`,
-          app.polyglot.t('listingInnerModelErrors.couponsPriceTooLarge'));
+          app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
       }
     });
 
@@ -166,6 +166,41 @@ export default class extends BaseModel {
             coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
               options.attrs.metadata.pricingCurrency === 'BTC');
           }
+        });
+        // END - convert price fields
+
+        // If providing a quanitity and / or productID on the Item and not
+        // providing any SKUs, then we'll send item.quantity and item.productID
+        // in as a "dummy" SKU (as the server expects). If you are providing any
+        // SKUs, then item.quantity and item.productID will be ignored.
+        if (!options.attrs.item.skus.length) {
+          const dummySku = {};
+
+          if (typeof options.attrs.item.quantity === 'number') {
+            dummySku.quantity = options.attrs.item.quantity;
+          }
+
+          if (typeof options.attrs.item.productID === 'string' &&
+            options.attrs.item.productID.length) {
+            dummySku.productID = options.attrs.item.productID;
+          }
+
+          if (Object.keys(dummySku).length) {
+            options.attrs.item.skus = [dummySku];
+          }
+        }
+
+        delete options.attrs.item.productID;
+        delete options.attrs.item.quantity;
+
+        // Our Sku has an infinteInventory boolean attribute, but the server
+        // is expecting a quantity negative quantity in that case.
+        options.attrs.item.skus.forEach(sku => {
+          if (sku.infiniteInventory) {
+            sku.quantity = -1;
+          }
+
+          delete sku.infiniteInventory;
         });
       } else {
         options.data = JSON.stringify({
@@ -267,6 +302,29 @@ export default class extends BaseModel {
 
             parsedResponse.coupons[couponIndex].priceDiscount =
               integerToDecimal(price, isBtc);
+          }
+        });
+      }
+      // END - convert price fields
+
+      // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
+      // and productID moved to be attributes of the Item model
+      if (parsedResponse.item && parsedResponse.item.skus &&
+        parsedResponse.item.skus.length === 1 &&
+        typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
+        const dummySku = parsedResponse.item.skus[0];
+        parsedResponse.item.quantity = dummySku.quantity;
+        parsedResponse.item.productID = dummySku.productID;
+      }
+
+      // If a sku quantity is set to less than 0, we'll set the
+      // infinite inventory flag.
+      if (parsedResponse.item && parsedResponse.item.skus) {
+        parsedResponse.item.skus.forEach(sku => {
+          if (sku.quantity < 0) {
+            sku.infiniteInventory = true;
+          } else {
+            sku.infiniteInventory = false;
           }
         });
       }
