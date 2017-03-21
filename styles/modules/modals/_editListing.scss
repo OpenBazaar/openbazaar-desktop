@@ -261,11 +261,15 @@
             border-style: solid;
             padding: $pad;
             word-break: break-word;
-            min-width: 90px;
+           // min-width: 90px;
             max-width: 125px;
 
             input[type=text] {
               width: 100%;
+            }
+
+            &.quantityCol input[type=text] {
+              width: 4em;
             }
 
             &.unconstrainedWidth {
