@@ -153,13 +153,10 @@ let profileFailed;
 let settingsFailed;
 
 function isOnboardingNeeded() {
-  // profileFetch = !profileFetch || profileFailed ?
-  //   app.profile.fetch() : profileFetch;
-  // settingsFetch = !settingsFetch || settingsFailed ?
-  //   app.settings.fetch() : settingsFetch;
-
-  profileFetch = app.profile.fetch();
-  settingsFetch = app.settings.fetch();
+  profileFetch = !profileFetch || profileFailed ?
+    app.profile.fetch() : profileFetch;
+  settingsFetch = !settingsFetch || settingsFailed ?
+    app.settings.fetch() : settingsFetch;
 
   $.whenAll(profileFetch, settingsFetch)
     .progress((...args) => {
@@ -243,8 +240,6 @@ function onboard() {
     });
 
     if (!profileSave) {
-      console.log('moo');
-      window.moo = app.profile;
       throw new Error('Client side validation failed on your new Profile model.' +
         'Ensure your defaults are valid.');
     }
