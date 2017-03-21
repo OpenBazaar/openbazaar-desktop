@@ -4,13 +4,11 @@
 
 <div class="pageContent">
   <div class="flexColRows gutterV row">
-    <h3>Name of Provider</h3>
-    <div class="searchWrapper">
-      <div class="searchBar clrP clrBr">
-        <div class="searchLogo">Logo</div>
-        <input class="searchInput js-searchInput" type="text">
-        <button class="btn clrP clrBr js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
-      </div>
+    <h3><%= ob.name %></h3>
+    <div class="searchBar clrP clrBr">
+      <div class="searchLogo" style="background-image: url(<%= ob.logo %>);"></div>
+      <input class="clrP clrBr searchInput js-searchInput" type="text">
+      <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
     </div>
     <div class="suggestions flex gutterH">
       <%= ob.polyT('search.suggestions') %>
@@ -20,7 +18,32 @@
   </div>
   <div class="flexRow gutterHLg">
     <div class="col3 js-filterWrapper">
-
+      <div class="flexColRows gutterV">
+        <%= ob.polyT('search.sortBy') %>
+          <% _.each(ob.options, function(val, key) { %>
+          <div class="contentBox">
+            <h4><%= val.label %></h4>
+            <% if (val.type ==='dropdown') { %>
+              <select>
+              <% _.each(val.options, function(option) {
+               var selected = option.checked ? 'selected' : '';
+                print('<option '+ selected +' value="'+option.value+'">'+option.label+'</option>');
+              }); %>
+              </select>
+            <% } else if (val.type ==='radio') { %>
+              <% _.each(val.options, function(option) {
+                var checked = option.checked ? 'checked' : '';
+                print('<input type="radio" name="' + key + '" '+ checked +' value="'+option.value+'">'+option.label+'</option>');
+              }); %>
+            <% } else if (val.type ==='checkbox') { %>
+              <% _.each(val.options, function(option) {
+                var checked = option.checked ? 'checked' : '';
+                print('<input type="checkbox" '+ checked +' value="'+option.value+'">'+option.label+'</option>');
+              }); %>
+            <% } %>
+          </div>
+          <% }); %>
+      </div>
     </div>
     <div class="col9">
       <div class="row flexVBase">
@@ -28,10 +51,11 @@
         <div>
           <%= ob.polyT('search.sortBy') %>
           <select class="js-sortBy">
-            <% // loop %>
+            <% _.each(ob.sortBy, function(val, key) {
+              print('<option value="'+key+'">'+val.label+'</option>');
+            }); %>
           </select>
         </div>
-
       </div>
       <div class="js-resultsWrapper">
 

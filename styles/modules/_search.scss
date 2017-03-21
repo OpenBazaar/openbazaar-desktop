@@ -1,0 +1,31 @@
+.search {
+
+
+  .searchBar {
+    display: flex;
+    position: relative;
+
+    .searchLogo {
+      position: absolute;
+      background-size: cover;
+      background-position: center;
+      height: 26px;
+      width: 26px;
+    }
+
+    .searchInput {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .searchBtn {
+      padding: 0 $padLg;
+      line-height: 40px;
+      font-size: 1.4rem;
+      height: auto;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: none;
+    }
+  }
+}

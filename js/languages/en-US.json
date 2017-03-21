@@ -628,7 +628,8 @@
     "resultsFound": "%{totalResults} found for \"%{term}\"",
     "sortBy": "Sort by",
     "errors": {
-      "noName": "The search provider did not return a name for the provider"
+      "searchFailTitle": "The search query to %{provider} has failed.",
+      "searchFailReason": "The search provider returned the following message: %{error}"
     }
   },
   "exchangeRatesSyncer": {

@@ -1,8 +1,8 @@
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
-import Search from '../../models/search/Search';
 import app from '../../app';
 import $ from 'jquery';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -11,6 +11,8 @@ export default class extends baseVw {
 
     this.sProvider = app.localSettings.get('searchProvider');
     this.sortBy = '';
+    this.currentPage = 0;
+    this.pageSize = 12;
     // process the data passed in from the router, if any
     this.processTerm(options.term);
   }
@@ -26,33 +28,49 @@ export default class extends baseVw {
     };
   }
 
-  get sortByVal() {
-    // return current sortBy state
+  get sortByQuery() {
+    // return current sortBy state in the form of a query string
+    return '';
   }
 
-  get filterVals() {
-    // return all currently active filters
+  get filterQuery() {
+    // return all currently active filters in the form of a query string
+    return '';
   }
 
   processTerm(term) {
     console.log(term);
     const testForURL = /^((http|https|ob):\/\/)/;
-    let searchQuery = '';
+    let searchURL = '';
+
     if (testForURL.test(term)) {
       // assume term is a search provider query
-      searchQuery = term;
+      searchURL = term;
     } else {
-      const prepTerm = term.replace(/\s+/g, '+');
-      const sortBy = this.sortBy ? `&sortBy=${this.sortBy}` : '';
-      // todo: add filters and other
-      searchQuery = `${this.sProvider}?q=${prepTerm}${sortBy}`;
+      const query = term ? `q=${term.replace(/\s+/g, '+')}` : 'q=*';
+      const page = `&p=${this.currentPage}&ps=${this.pageSize}`;
+      searchURL = `${this.sProvider}?${query}${this.sortByQuery}${this.filterQuery}${page}`;
     }
 
-    this.callSearchProvider(searchQuery);
+    this.callSearchProvider(searchURL);
   }
 
-  callSearchProvider() {
-    // send
+  callSearchProvider(searchURL) {
+    // query the search provider
+    $.get({
+      url: searchURL,
+    })
+        .done((data) => {
+          console.log(data);
+          this.render(data);
+        })
+        .fail((xhr) => {
+          const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+          openSimpleMessage(
+              app.polyglot.t('search.errors.searchFailTitle', { provider: searchURL }),
+              app.polyglot.t('search.errors.searchFailReason', { error: failReason })
+          );
+        });
   }
 
   get $resultsWrapper() {
@@ -60,10 +78,10 @@ export default class extends baseVw {
         (this._$resultsWrapper = this.$('.js-resultsWrapper'));
   }
 
-  render() {
+  render(data) {
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
-        ...this.model.toJSON(),
+        ...data,
       }));
     });
     this._$resultsWrapper = null;
