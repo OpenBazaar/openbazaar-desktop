@@ -38,27 +38,29 @@
           <span class="clrT hide js-guidCopied"><%= ob.polyT('userPage.guidCopied') %></span>
         </div>
         <div class="clrT2">
-          <a class="js-guid clrT2" data-guid="<%= ob.id %>"><%= ob.id %></a>
+          <a class="js-guid clrT2" data-guid="<%= ob.peerID %>"><%= ob.peerID %></a>
         </div>
       </div>
-      <% if(ob.website){ %>
-        <div class="listItem">
-          <div><%= ob.polyT('userPage.website') %></div>
-          <a class="clrT2" href="<%= ob.website %>"><%= ob.website %></a>
-        </div>
+      <% if (ob.contactInfo) { %>
+        <% if (ob.contactInfo.website){ %>
+          <div class="listItem">
+            <div><%= ob.polyT('userPage.website') %></div>
+            <a class="clrT2" href="<%= ob.contactInfo.website.startsWith('http') ? ob.contactInfo.website : `http://${ob.contactInfo.website}` %>"><%= ob.contactInfo.website %></a>
+          </div>
+        <% } %>
+        <% if (ob.contactInfo.email){ %>
+          <div class="listItem">
+            <div><%= ob.polyT('userPage.email') %></div>
+            <div class="clrT2"><%= ob.contactInfo.email %></div>
+          </div>
+        <% } %>
+        <% ob.contactInfo.social.forEach(function(account) { %>
+          <div class="listItem">
+            <div><%= ob.polyT('properNames[account.type]') %></div>
+            <div class="clrT2"><%= account.username %></div>
+          </div>
+        <% }); %>
       <% } %>
-      <% if(ob.email){ %>
-        <div class="listItem">
-          <div><%= ob.polyT('userPage.email') %></div>
-          <div class="clrT2"><%= ob.email %></div>
-        </div>
-      <% } %>
-      <% ob.social.forEach(function(account) { %>
-        <div class="listItem">
-          <div><%= ob.polyT('properNames[account.type]') %></div>
-          <div class="clrT2"><%= account.username %></div>
-        </div>
-      <% }); %>
     </div>
   </div>
   <div class="col8">

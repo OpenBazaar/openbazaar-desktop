@@ -727,11 +727,16 @@
   "profileModelErrors": {
     "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
+    "locationTooLong": "The location exceeds the maximum allowable length."
+  },
+  "contactModelErrors": {
+    "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
-    "provideUsername": "Please provide a username.",
-    "duplicateSocialAccount": "You already have a social account of this type.",
-    "locationTooLong": "The location exceeds the maximum allowable length."
+    "duplicateSocialAccount": "You already have a social account of this type."    
+  },
+  "socialAccountModelErrors": {
+    "provideUsername": "Please provide a username."
   },
   "smtpModelErrors": {
     "username": {
