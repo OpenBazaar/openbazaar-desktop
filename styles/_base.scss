@@ -247,7 +247,7 @@ ul, ol {
   #chatConvoContainer {
     position: fixed;
     right: $scrollbar;
-    bottom: 0;
+    bottom: -1px; // prevents the emoji tray from displaying at the very bottom
     z-index: 2; // chat needs to be on top of modals
     width: 225px;
     height: $chatConvoHeight;
