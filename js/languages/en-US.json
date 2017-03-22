@@ -91,8 +91,10 @@
     "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
-    "modFee": "%{modFee} per dispute",
-    "addModerator": "Add as Moderator",
+    "FIXED": "%{amount} per dispute",
+    "PERCENTAGE": "%{percentage}% per dispute",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%) per dispute",
+    "addModerator": "View Details",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
     "website": "Website",
@@ -103,6 +105,8 @@
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
         "retryStoreFetch": "Retry",
         "btnLayoutStandard": "950px",
@@ -144,13 +148,15 @@
   },
   "userShort": {
     "userLoading": "Loading…",
-    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
+    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
   },
   "moderatorCard": {
     "view": "View",
     "FIXED": "%{amount}**",
     "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**"
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**"
   },
   "moderatorDetails": {
     "messageButton": "Message",
@@ -409,7 +415,7 @@
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
-        "error": "There was an error saving your store settings."
+        "error": "There was an error saving your store settings. \n %{errMsg}"
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",

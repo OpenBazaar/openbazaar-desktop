@@ -56,9 +56,11 @@
       <p><%= ob.modInfo.termsAndConditions %></p>
       <hr class="clrBr">
       <div class="flexColRows flexHCent">
+        <% if (!ob.ownMod) { %>
         <div class="rowSm">
           <button class="btn clrP clrBr js-addAsModerator"><%= ob.polyT('moderatorDetails.addAsModeratorButton') %></button>
         </div>
+        <% } %>
         <div>
           <em class="tx6 clrT2"><%= ob.polyT('moderatorDetails.disclaimer') %></em>
         </div>

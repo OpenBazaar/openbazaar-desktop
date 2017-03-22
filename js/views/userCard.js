@@ -1,10 +1,13 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile from '../models/profile/Profile';
 import UserCard from '../models/UserCard';
+import { launchModeratorDetailsModal } from '../utils/modalManager';
+import { openSimpleMessage } from './modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -32,10 +35,18 @@ export default class extends BaseVw {
     }
 
     this.ownGuid = this.guid === app.profile.id;
-
     this.followedByYou = followedByYou(this.guid);
 
     this.loading = !this.fetched;
+    this.settings = app.settings.clone();
+
+    this.listenTo(this.settings, 'sync', () => {
+      app.settings.set(this.settings.toJSON());
+    });
+
+    this.listenTo(app.settings, 'change:storeModerators', () => {
+      this.$modBtn.toggleClass('active', this.ownMod);
+    });
 
     this.listenTo(app.ownFollowing, 'sync update', () => {
       this.followedByYou = followedByYou(this.guid);
@@ -44,7 +55,7 @@ export default class extends BaseVw {
   }
 
   get ownMod() {
-    return app.settings.get('storeModerators').indexOf(this.guid) !== -1;
+    return app.settings.ownMod(this.guid);
   }
 
   loadUser(guid = this.guid) {
@@ -101,8 +112,58 @@ export default class extends BaseVw {
   }
 
   modClick() {
-    console.log('the mod button was clicked');
-    // TODO: add code for adding and removing this user as a moderator
+    if (this.ownMod) {
+      // remove this user from the moderator list
+      this.$modBtn.addClass('processing');
+      this.saveModeratorList(false);
+    } else {
+      // show the moderator details modal
+      const modModal = launchModeratorDetailsModal({ model: this.model });
+      this.listenTo(modModal, 'addAsModerator', () => {
+        this.$modBtn.addClass('processing');
+        this.saveModeratorList(true);
+      });
+    }
+  }
+
+  saveModeratorList(add = false) {
+    // clone the array, otherwise it is a reference
+    let modList = _.clone(app.settings.get('storeModerators'));
+
+    if (add && !this.ownMod) {
+      modList.push(this.guid);
+    } else {
+      modList = _.without(modList, this.guid);
+    }
+
+    const formData = { storeModerators: modList };
+    this.settings.set(formData);
+
+    if (!this.settings.validationError) {
+      this.settings.save(formData, {
+        attrs: formData,
+        type: 'PATCH',
+      })
+        .fail((...args) => {
+          const errMsg = args[0] && args[0].responseJSON &&
+              args[0].responseJSON.reason || '';
+          const phrase = add ? 'userShort.modAddError' : 'userShort.modRemoveError';
+          openSimpleMessage(app.polyglot.t(phrase), errMsg);
+        })
+        .always(() => {
+          this.$modBtn.removeClass('processing');
+        });
+    }
+  }
+
+  get $followBtn() {
+    return this._$followBtn ||
+        (this._$followBtn = this.$('.js-follow'));
+  }
+
+  get $modBtn() {
+    return this._$modBtn ||
+        (this._$modBtn = this.$('.js-mod'));
   }
 
   render() {
@@ -118,7 +179,8 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
       }));
 
-      this.$followBtn = this.$('.js-follow');
+      this._$followBtn = null;
+      this._$modBtn = null;
 
       if (!this.fetched) this.loadUser();
       /* the view should be rendered when it is created and before it has data, so it can occupy
