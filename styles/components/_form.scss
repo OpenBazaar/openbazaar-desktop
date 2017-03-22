@@ -130,6 +130,7 @@ textarea {
 
 .errorList {
   color: $error;
+  word-wrap: break-word;
 
   li {
     i {

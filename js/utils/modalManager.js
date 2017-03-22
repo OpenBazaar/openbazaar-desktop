@@ -19,11 +19,15 @@ export function launchEditListingModal(modalOptions = {}) {
 }
 
 export function launchAboutModal(modalOptions = {}) {
-  if (aboutModal) aboutModal.remove();
+  if (aboutModal) {
+    aboutModal.bringToTop();
+  } else {
+    aboutModal = new About(modalOptions)
+      .render()
+      .open();
 
-  aboutModal = new About(modalOptions)
-    .render()
-    .open();
+    aboutModal.on('modal-will-remove', () => (aboutModal = null));
+  }
 
   return aboutModal;
 }

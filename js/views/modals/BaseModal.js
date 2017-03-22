@@ -148,6 +148,11 @@ export default class BaseModal extends baseVw {
     return this.__options;
   }
 
+  bringToTop() {
+    getAppFrame()[0].removeChild(this.el);
+    getAppFrame().append(this.el);
+  }
+
   remove() {
     this.trigger('modal-will-remove');
     if (this.isOpen()) this.close();
