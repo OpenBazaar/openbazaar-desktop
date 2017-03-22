@@ -105,6 +105,8 @@
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
         "retryStoreFetch": "Retry",
         "btnLayoutStandard": "950px",
@@ -142,18 +144,13 @@
       "store": "Store",
       "following": "Following",
       "followers": "Followers"
-    },
-    "status": {
-      "modSavingAdd": "Adding Moderator...",
-      "modSavingRemove": "Removing Moderator...",
-      "modDone": "Settings saved.",
-      "modFail": "There was an error saving your settings.",
-      "modError": "There was an error saving your settings. \n %{errMsg}"
     }
   },
   "userShort": {
     "userLoading": "Loading…",
-    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
+    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
   },
   "moderatorCard": {
     "view": "View",

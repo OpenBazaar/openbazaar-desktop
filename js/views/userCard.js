@@ -140,40 +140,19 @@ export default class extends BaseVw {
     this.settings.set(formData);
 
     if (!this.settings.validationError) {
-      const msg = {
-        msg: app.polyglot.t('settings.storeTab.status.saving'),
-        type: 'message',
-      };
-
-      const statusMessage = app.statusBar.pushMessage({
-        ...msg,
-        duration: 9999999999999999,
-      });
-
       this.settings.save(formData, {
         attrs: formData,
         type: 'PATCH',
       })
-          .done(() => {
-            statusMessage.update({
-              msg: app.polyglot.t('settings.storeTab.status.done'),
-              type: 'confirmed',
-            });
-          })
-          .fail((...args) => {
-            const errMsg = args[0] && args[0].responseJSON &&
-                args[0].responseJSON.reason || '';
-            openSimpleMessage(app.polyglot.t('settings.storeTab.status.error'), errMsg);
-
-            statusMessage.update({
-              msg: app.polyglot.t('settings.storeTab.status.fail'),
-              type: 'warning',
-            });
-          })
-          .always(() => {
-            this.$modBtn.removeClass('processing');
-            setTimeout(() => statusMessage.remove(), 3000);
-          });
+        .fail((...args) => {
+          const errMsg = args[0] && args[0].responseJSON &&
+              args[0].responseJSON.reason || '';
+          const phrase = add ? 'userShort.modAddError' : 'userShort.modRemoveError';
+          openSimpleMessage(app.polyglot.t(phrase), errMsg);
+        })
+        .always(() => {
+          this.$modBtn.removeClass('processing');
+        });
     }
   }
 

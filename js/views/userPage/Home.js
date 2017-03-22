@@ -88,13 +88,11 @@ export default class extends BaseVw {
         attrs: formData,
         type: 'PATCH',
       })
-          .done(() => {
-
-          })
           .fail((...args) => {
             const errMsg = args[0] && args[0].responseJSON &&
                 args[0].responseJSON.reason || '';
-            openSimpleMessage(app.polyglot.t('userPage.status.error'), { errMsg });
+            const phrase = add ? 'userPage.modAddError' : 'userPage.modRemoveError';
+            openSimpleMessage(app.polyglot.t(phrase), { errMsg });
           })
           .always(() => {
             this.$modBtn.removeClass('processing');
