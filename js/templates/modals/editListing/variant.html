@@ -1,8 +1,8 @@
-<div class="col6">
+<div class="col6 simpleFlexCol">
   <% if (ob.errors['name']) print(ob.formErrorTmpl({ errors: ob.errors['name'] })) %>
   <input type="text" class="clrBr clrP clrSh2 variantNameInput js-variantNameInput" name="name" value="<%= ob.name %>" placeholder="<%= ob.polyT('editListing.variants.titlePlaceholder') %>" maxlength="<%= ob.max.nameLength %>">
 </div>
-<div class="col6">
+<div class="col6 simpleFlexCol">
   <% if (ob.errors['variants']) print(ob.formErrorTmpl({ errors: ob.errors['variants'] })) %>
   <div class="flexRow marginTopAuto">
     <div class="select2TagFlexWrap">
