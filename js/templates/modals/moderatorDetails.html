@@ -12,7 +12,7 @@
             <span class="clrT2"><%= ob.handle %></span>
           </div>
           <div class="row clrT2">
-            <p><%=ob.modInfo.description %></p>
+            <p><%=ob.moderatorInfo.description %></p>
           </div>
         </div>
       </div>
@@ -45,20 +45,22 @@
       <div class="rowDivV clrBr"></div>
       <div class="flexExpand">
         <div class="flexCol flexCent">
-          <% var amount = ob.convertAndFormatCurrency(ob.modInfo.fee.fixedFee.amount, ob.modInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-          <div><%= ob.polyT(`moderatorCard.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %></div>
+          <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+          <div><%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %></div>
           <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.serviceCharge') %></div>
         </div>
       </div>
     </div>
     <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
       <h4><%= ob.polyT('moderatorDetails.termsOfService') %></h4>
-      <p><%= ob.modInfo.termsAndConditions %></p>
+      <p><%= ob.moderatorInfo.termsAndConditions %></p>
       <hr class="clrBr">
       <div class="flexColRows flexHCent">
+        <% if (!ob.ownMod) { %>
         <div class="rowSm">
           <button class="btn clrP clrBr js-addAsModerator"><%= ob.polyT('moderatorDetails.addAsModeratorButton') %></button>
         </div>
+        <% } %>
         <div>
           <em class="tx6 clrT2"><%= ob.polyT('moderatorDetails.disclaimer') %></em>
         </div>

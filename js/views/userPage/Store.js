@@ -158,7 +158,7 @@ export default class extends BaseVw {
     const startTime = Date.now();
 
     xhr.always(() => {
-      if (xhr.state() === 'rejected') {
+      if (xhr.state() === 'rejected' && xhr.status !== 404) {
         // if fetch is triggered by retry button and
         // it immediately fails, it looks like nothing happend,
         // so, we'll make sure it takes a minimum time.
@@ -529,14 +529,14 @@ export default class extends BaseVw {
     if (this.shippingChangePopIn) this.shippingChangePopIn.remove();
 
     const isFetching = this.fetch && this.fetch.state() === 'pending';
-    const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
+    const fetchFailed = this.fetch && this.fetch.state() === 'rejected'
+      && this.fetch.status !== 404;
 
     loadTemplate('userPage/store.html', (t) => {
       this.$el.html(t({
         isFetching,
         fetchFailed,
-        fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&
-          this.fetch.responseText || '',
+        fetchFailReason: this.fetchFailed && this.fetch.responseText || '',
         filter: this.filter,
         countryList: this.countryList,
         shipsToSelected: this.filter.shipsTo || 'any',

@@ -8,13 +8,13 @@
       <span class="clrT2"><%= ob.handle %></span>
     </div>
     <div class="row clrT2">
-      <p class="clamp2"><%=ob.modInfo.description %></p>
+      <p class="clamp2"><%=ob.moderatorInfo.description %></p>
     </div>
     <div class="flex snipKids gutterH tx5">
       <div class="flexNoShrink">👍 XX<% // placeholder for reputation %> </div>
       <div class="flexNoShrink">
-        <% var amount = ob.convertAndFormatCurrency(ob.modInfo.fee.fixedFee.amount, ob.modInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-        <%= ob.polyT(`moderatorCard.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %>
+        <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+        <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
       </div>
       <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
     </div>
