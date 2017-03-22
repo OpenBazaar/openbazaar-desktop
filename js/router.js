@@ -23,6 +23,7 @@ export default class ObRouter extends Router {
       ['transactions(/)', 'transactions'],
       ['transactions/:tab(/)', 'transactions'],
       ['connected-peers(/)', 'connectedPeers'],
+      ['search', 'search'],
       ['*path', 'search'],
     ];
 
