@@ -24,7 +24,10 @@ export function launchAboutModal(modalOptions = {}) {
   if (aboutModal) {
     aboutModal.bringToTop();
   } else {
-    aboutModal = new About(modalOptions)
+    aboutModal = new About({
+      removeOnClose: true,
+      ...modalOptions,
+    })
       .render()
       .open();
 
@@ -60,7 +63,10 @@ export function launchWallet(modalOptions = {}) {
   if (wallet) {
     wallet.bringToTop();
   } else {
-    wallet = new Wallet(modalOptions)
+    wallet = new Wallet({
+      removeOnClose: true,
+      ...modalOptions,
+    })
       .render()
       .open();
 

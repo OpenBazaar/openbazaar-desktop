@@ -33,15 +33,20 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/wallet/wallet.html', t => {
-      this.$el.html(t());
-      super.render();
+      loadTemplate('walletIcon.svg', (walletIconTmpl) => {
+        this.$el.html(t({
+          walletIconTmpl,
+        }));
 
-      // this.$tabContent = this.$('.js-tabContent');
-      // this._$closeClickTargets = null;
+        super.render();
 
-      if (this.btcTicker) this.btcTicker.remove();
-      this.btcTicker = this.createChild(BTCTicker);
-      this.$('.js-btcTickerContainer').append(this.btcTicker.render().$el);
+        // this.$tabContent = this.$('.js-tabContent');
+        // this._$closeClickTargets = null;
+
+        if (this.btcTicker) this.btcTicker.remove();
+        this.btcTicker = this.createChild(BTCTicker);
+        this.$('.js-btcTickerContainer').append(this.btcTicker.render().$el);
+      });
     });
 
     return this;

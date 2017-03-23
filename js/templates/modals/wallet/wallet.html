@@ -1,5 +1,9 @@
 <div class="topControls flexRow">
-  <div class="contentBox padSm clrP clrBr clrSh3">Is this for realz?</div>
+  <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn">
+    <div class="flexVCent walletIconWrap"><%= ob.walletIconTmpl() %></div>
+    <span><%= ob.polyT('wallet.title') %></span>
+    <a class="jsModalClose tx6"><%= ob.polyT('wallet.closeLink') %></a>
+  </div>
   <div class="js-btcTickerContainer btcTickerContainer"></div>
 </div>
 <div class="flexColRows gutterV">

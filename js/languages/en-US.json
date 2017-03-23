@@ -533,6 +533,10 @@
       "placeholderPort": "The port to your server"
     }
   },
+  "wallet": {
+    "title": "Wallet",
+    "closeLink": "Close wallet"
+  },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
     "DIGITAL_GOOD": "Digital Good",
