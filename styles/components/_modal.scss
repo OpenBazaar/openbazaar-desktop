@@ -89,5 +89,20 @@
         }
       }
     }
+
+    &.modalMedium {
+      .modalContent {
+        width: $modalContentInnerMedium;
+        margin-left: calc(((100% - (#{$modalContentInnerMedium + $chatClosed})) / 2) + 28px);
+
+        .chatOpen & {
+          margin-left: calc(((100% - (#{$modalContentInnerMedium + $chatOpen})) / 2) + 5px);
+        }
+
+        & > .cornerTR {
+          left: calc(#{$modalContentInnerMedium} - #{$buttonHeight});
+        }
+      }
+    }    
   }
 }

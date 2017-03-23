@@ -16,4 +16,18 @@
       height: 100%;
     }
   }
+
+  .statsWrap {
+    border-right-width: 1px;
+    border-right-style: solid;
+
+    .buttonWrap {
+      text-align: center;
+
+      .btn {
+        // center button irrespective of left padding
+        transform: translateX(-($padMd / 2));
+      }
+    }
+  }
 }

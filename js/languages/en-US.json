@@ -535,7 +535,12 @@
   },
   "wallet": {
     "title": "Wallet",
-    "closeLink": "Close wallet"
+    "closeLink": "Close wallet",
+    "btnReceiveMoney": "Receive Money",
+    "btnSendMoney": "Send Money",
+    "btcCurrencyLabel": "Bitcoin",
+    "valueInCurrencyLabel": "Value in %{currency}",
+    "transactionsLabel": "Transactions"
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",

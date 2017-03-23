@@ -8,6 +8,53 @@
 </div>
 <div class="flexColRows gutterV">
   <div class="contentBox padMd clrP clrBr clrSh3">
-  I am wallet. Recognize me.
+    <div class="flexRow">
+      <div class="col3">
+        <div class="flexColRows">
+          <h2 class="h3">Funds</h2>
+          <div class="statsWrap flexColRows clrBr">
+            <div class="js-walletStatsContainer">
+              <%
+                const getTextSize = function(str) {
+                  if (str.length > 19) {
+                    return 'tx4';
+                  } else if (str.length > 14) {
+                    return 'tx3';
+                  } else {
+                    return 'tx2';
+                  }
+                };
+
+                const formattedBtc = ob.formatUnitlessBtc(1.2923);
+                const btcTextSize = getTextSize(formattedBtc);
+                const formattedFiat = ob.formatCurrency(928.21, 'USD');
+                const fiatTextSize = getTextSize(formattedFiat);
+              %>
+              <div class="flexColRows gutterV">
+                <div>
+                  <div class="clrTEmph1 <%= btcTextSize %> txB"><%= formattedBtc %></div>
+                  <div><%= ob.polyT('wallet.btcCurrencyLabel') %></div>
+                </div>
+                <div>
+                  <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
+                  <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: 'USD' }) %></div>
+                </div>
+                <div>
+                  <div class="clrTEmph1 tx2 txB">27</div>
+                  <div><%= ob.polyT('wallet.transactionsLabel') %></div>
+                </div>            
+              </div>
+            </div>
+            <div class="buttonWrap">
+              <a class="btn clrP clrBr clrSh2 btnReceiveMoney js-btnReceiveMoney"><%= ob.polyT('wallet.btnReceiveMoney') %></a>
+              <!-- <a class="btn clrP clrBr clrSh2 btnSendMoney js-btnSendMoney"><%= ob.polyT('wallet.btnSendMoney') %></a> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col9" style="height: 300px">
+        Meatballs and salamanders. Oh my!
+      </div>
+    </div>
   </div>
 </div>
