@@ -125,6 +125,11 @@ ul, ol {
   background-repeat: no-repeat;
 }
 
+svg {
+  width: 100%;
+  height: auto;
+}
+
 #appFrame {
   position: absolute;
   height: 100%;

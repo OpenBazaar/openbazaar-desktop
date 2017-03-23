@@ -6,7 +6,7 @@ import Story from './Story';
 import Contributors from './Contributors';
 import Donations from './Donations';
 import License from './License';
-import BTCTicker from './BTCTicker';
+import BTCTicker from '../../BTCTicker';
 import { version } from '../../../../package.json';
 
 export default class extends BaseModal {

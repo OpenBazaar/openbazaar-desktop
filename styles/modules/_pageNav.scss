@@ -10,6 +10,10 @@
     .iconBtn {
       height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
       line-height: 1em;
+
+      &.navWalletBtn {
+        padding: 0 10px;
+      }
     }
 
     .barBtn {
