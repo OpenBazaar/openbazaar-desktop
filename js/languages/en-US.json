@@ -720,6 +720,8 @@
     "searchBtn": "Search",
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{totalResults} results</b> found for <b>\"%{term}\"</b>",
+    "resultsTotal": "%{totalResults} results",
+    "displaying": "Displaying <b>%{start}-%{end} of %{total}</b>",
     "sortBy": "Sort by",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed.",

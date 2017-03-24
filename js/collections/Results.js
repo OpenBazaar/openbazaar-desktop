@@ -5,27 +5,20 @@ import ListingShort from '../models/listing/ListingShort';
 
 export default class extends Collection {
   constructor(models = [], options = {}) {
-    if (!options.searchURL) {
-      throw new Error('Please provide a url for the search provider.');
-    }
-
     super(models, options);
-    this.serverPage = options.serverPage || 0;
   }
 
   model(attrs, options) {
     return new ListingShort(attrs, options);
   }
 
-  url() {
-    return this.searchURL;
-  }
-
   parse(response) {
-    console.log(response);
     const parsedResponse = [];
+    const results = response.results ? response.results.results : [];
+    this.morePages = !!response.results.morePages;
+    this.total = response.results.total;
 
-    response.forEach(result => {
+    results.forEach(result => {
       const updatedResult = result.data;
       const relationships = result.relationships ? result.relationships : {};
       const vendor = relationships.vendor ? relationships.vendor.data : {};

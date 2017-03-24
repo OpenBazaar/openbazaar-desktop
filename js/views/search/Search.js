@@ -18,7 +18,7 @@ export default class extends baseVw {
       // if a search URL was passed in, reconstruct the url and parse the data
       const searchURL = new URL(`${term}${options.query ? `?${options.query}` : ''}`);
       const params = searchURL.searchParams;
-      this.sProvider = `${searchURL.protocol}//${searchURL.hostname}`;
+      this.sProvider = `${searchURL.origin}${searchURL.pathname}`;
       this.serverPage = params.get('p') || 0;
       this.pageSize = params.get('ps') || 12;
       this.term = params.get('q') || '';
@@ -84,10 +84,8 @@ export default class extends baseVw {
   }
 
   createResults(data, searchURL) {
-    let results = data.results.results;
-    this.resultsCol = new ResultsCol(null, { searchURL });
-    results = this.resultsCol.parse(results);
-    this.resultsCol.add(results);
+    this.resultsCol = new ResultsCol();
+    this.resultsCol.add(this.resultsCol.parse(data));
 
     const resultsView = this.createChild(Results, {
       searchURL,
@@ -124,6 +122,7 @@ export default class extends baseVw {
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
+        term: this.term,
         ...data,
       }));
     });

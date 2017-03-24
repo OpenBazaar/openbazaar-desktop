@@ -1,4 +1,5 @@
 import baseVw from '../baseVw';
+import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import ListingCard from '../ListingCard';
 import ListingCardModel from '../../models/listing/ListingShort';
@@ -31,8 +32,8 @@ export default class extends baseVw {
 
   events() {
     return {
-      'click .js-pagNext': 'clickPagNext',
-      'click .js-pagPrev': 'clickPagPrev',
+      'click .js-pageNext': 'clickPageNext',
+      'click .js-pagePrev': 'clickPagePrev',
     };
   }
 
@@ -58,6 +59,10 @@ export default class extends baseVw {
 
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
+    const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
+    const start = end - this.pageSize + 1;
+    const total = models.total;
+    this.morePages = models.morePages;
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -69,6 +74,8 @@ export default class extends baseVw {
     });
 
     this.$resultsGrid.html(resultsFrag);
+    // update the pagination text
+    this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
@@ -81,14 +88,30 @@ export default class extends baseVw {
       const params = new URLSearchParams(url.search);
       params.set('p', page);
       params.set('ps', size);
-
-      const newPageCol = new ResultsCol(null, { searchURL: url });
+      const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
+      const newPageCol = new ResultsCol();
       this.pageCollection[page] = newPageCol;
 
-      newPageCol.fetch()
-          .done((data) => {
-            console.log(data);
+      newPageCol.fetch({
+        url: newURL,
+      })
+          .done(() => {
+            this.renderCards(newPageCol);
           });
+    }
+  }
+
+  clickPagePrev() {
+    if (this.serverPage > 0) {
+      this.serverPage--;
+      this.loadPage();
+    }
+  }
+
+  clickPageNext() {
+    if (this.morePages) {
+      this.serverPage++;
+      this.loadPage();
     }
   }
 
@@ -97,6 +120,7 @@ export default class extends baseVw {
       this.$el.html(t());
 
       this.$resultsGrid = this.$('.js-resultsGrid');
+      this.$displayText = this.$('.js-displayingText');
       this.cardViews.forEach(vw => vw.remove());
       this.cardViews = [];
       this.loadPage();

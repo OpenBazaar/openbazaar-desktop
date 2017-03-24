@@ -57,7 +57,13 @@
       <div class="flexCol">
         <div class="width100">
           <div class="row flexVBase gutterH">
-            <div class="tx5 flexExpand"><%= ob.polyT('search.resultsFound', { totalResults: ob.totalResults || 0, term: ob.term || ' ' }) %></div>
+            <div class="tx5 flexExpand">
+              <% if (ob.term) { %>
+                <%= ob.polyT('search.resultsFound', { totalResults: ob.results.total, term: ob.term || ' ' }) %>
+              <% } else { %>
+              <b><%= ob.polyT('search.resultsTotal', { totalResults: ob.results.total }) %></b>
+              <% } %>
+            </div>
             <div class="tx5b">
               <%= ob.polyT('search.sortBy') %>
             </div>
