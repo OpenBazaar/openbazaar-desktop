@@ -5,16 +5,19 @@ import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
 import Stats from './Stats';
 import SendMoney from './SendMoney';
+import ReceiveMoney from './ReceiveMoney';
 
 export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       // initialTabView: 'Configurations',
+      sendModeOn: true,
       ...options,
     };
 
     super(opts);
     this.options = opts;
+    this.sendModeOn = opts.sendModeOn;
   }
 
   className() {
@@ -23,9 +26,28 @@ export default class extends BaseModal {
 
   events() {
     return {
-      // 'click .js-tab': 'onTabClick',
+      'click .js-toggleSendReceive': 'onClickToggleSendReceive',
       ...super.events(),
     };
+  }
+
+  onClickToggleSendReceive() {
+    this.sendModeOn = !this.sendModeOn;
+  }
+
+  set sendModeOn(bool) {
+    if (typeof bool !== 'boolean') {
+      throw new Error('Please provide a boolean.');
+    }
+
+    if (bool !== this._sendModeOn) {
+      this.$el.toggleClass('receiveModeOn', !bool);
+      this._sendModeOn = bool;
+    }
+  }
+
+  get sendModeOn() {
+    return this._sendModeOn;
   }
 
   // close() {
@@ -60,7 +82,6 @@ export default class extends BaseModal {
 
         this.$('.js-walletStatsContainer').html(this.stats.render().el);
 
-        // js-sendReceiveContainer
         // render the send money view
         if (this.sendMoney) this.sendMoney.remove();
 
@@ -69,6 +90,15 @@ export default class extends BaseModal {
         });
 
         this.$('.js-sendReceiveContainer').html(this.sendMoney.render().el);
+
+        // render the receive money view
+        if (this.receiveMoney) this.receiveMoney.remove();
+
+        this.receiveMoney = this.createChild(ReceiveMoney, {
+          // model: moo,
+        });
+
+        this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
       });
     });
 

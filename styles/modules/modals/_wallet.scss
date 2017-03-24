@@ -30,4 +30,34 @@
       }
     }
   }
+
+  .receiveMoney, .btnSendMoney {
+    display: none;
+  }
+
+  &.receiveModeOn {
+    .receiveMoney {
+      display: block;
+    }
+
+    .btnSendMoney {
+      display: inline-flex;
+    }
+
+    .sendMoney, .btnReceiveMoney {
+      display: none;
+    }
+  }
+
+  .sendReceiveContainer {
+    // So there's no jump when toggling between send / receive mode. If the larger
+    // size changes, this may need to be updated.
+    height: 300px;
+    padding-top: 25px;
+
+    .receiveMoney {
+      // width: 100%;
+      text-align: center;
+    }
+  }
 }
