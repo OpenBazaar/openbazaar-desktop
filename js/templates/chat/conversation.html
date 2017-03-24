@@ -16,7 +16,7 @@
     <a class="clrT js-deleteConversation deleteConvoMenuItem"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
   </div>
   <div class="convoMessagesWindow tx6 js-convoMessagesWindow">
-    <div class="typingIndicator noOverflow clrBr clrP clrT2 clrSh1 js-typingIndicator"><%= ob.typingIndicator %></div>
+    <div class="typingIndicator txBase noOverflow clrBr clrP clrT2 clrSh1 js-typingIndicator"><%= ob.typingIndicator %></div>
     <%= ob.spinner() %>
     <%
       const retryLink = `<a class="js-retryLoadMessage">${ob.polyT('chat.conversation.retryLink')}</a>`;
