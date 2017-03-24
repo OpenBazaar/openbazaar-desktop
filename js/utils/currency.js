@@ -66,8 +66,6 @@ export function integerToDecimal(amount, isBtc = false) {
  * It is more useful for <input>'s because we are not
  * localizing the numbers in them.
  *
- * todo: add this as a template helper; perhaps there's
- * a better name for this function?
  */
 export function formatPrice(price, isBtc = false) {
   if (typeof price !== 'number') {

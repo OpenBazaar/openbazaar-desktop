@@ -74,6 +74,7 @@
 // Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {
   position: relative;
+  width: 100%;
 
   .select2Tags + .select2-container {
     &.select2-container--default {
@@ -170,4 +171,11 @@
 
 .select2TagsWrapDropDown {
   @extend .select2TagsWrap;
+}
+
+.select2TagFlexWrap {
+  // if the select2 tag input has to be in a flex row with other elements, it will overflow the
+  // row if a tag is too long. Wrap select2TagsWrap in this class to prevent that.
+  flex-grow: 1;
+  overflow: hidden;
 }

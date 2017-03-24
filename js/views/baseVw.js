@@ -50,7 +50,7 @@ export default class baseVw extends View {
 
       let val = $field.val();
 
-      if (field.tagName === 'DIV') {
+      if (field.tagName.toUpperCase() === 'DIV') {
         val = field.innerHTML;
       }
 
@@ -74,12 +74,17 @@ export default class baseVw extends View {
         }
       }
 
+      if (field.type === 'checkbox') {
+        val = $(field).is(':checked');
+      }
+
       const name = $field.attr('name');
 
       if (name.indexOf('[') !== -1) {
         // handle nested collection
         // for now not handling nested collection, please
         // manage manually
+        data[name] = val;
       } else if (name.indexOf('.') !== -1) {
         // handle nested model
         setDeepValue(data, name, val);

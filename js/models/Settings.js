@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../app';
 import BaseModel from './BaseModel';
 import ShippingAddresses from '../collections/ShippingAddresses';
@@ -32,8 +33,26 @@ export default class extends BaseModel {
     };
   }
 
-  validate() {
+  ownMod(guid) {
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    return this.get('storeModerators').indexOf(guid) !== -1;
+  }
+
+  validate(attrs) {
     const errObj = this.mergeInNestedErrors({});
+
+    const addError = (fieldName, error) => {
+      errObj[fieldName] = errObj[fieldName] || [];
+      errObj[fieldName].push(error);
+    };
+
+    if (!_.isArray(attrs.storeModerators)) {
+      // this error should never be visible to the user
+      addError('storeModerators', 'The storeModerators is invalid because it is not an array');
+    }
 
     if (Object.keys(errObj).length) return errObj;
 

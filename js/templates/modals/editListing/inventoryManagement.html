@@ -1,0 +1,42 @@
+<h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.inventoryManagement') %></h2>
+<hr class="clrBr rowMd">
+<div class="flexRow gutterH">
+  <div class="col6 simpleFlexCol">
+    <select id="editInventoryManagementType" class="clrBr clrP clrSh2 marginTopAuto">
+      <option value="DO_NOT_TRACK" <% if (ob.trackBy === 'DO_NOT_TRACK') print('selected') %>>
+        <%= ob.polyT('editListing.inventoryManagement.doNotTrackSelectOption') %>
+      </option>
+      <option value="TRACK" <% if (ob.trackBy !== 'DO_NOT_TRACK') print('selected') %>>
+        <%= ob.polyT('editListing.inventoryManagement.trackSelectOption') %>
+      </option>
+    </select>
+  </div>
+  <% if (ob.trackBy === 'TRACK_BY_FIXED') { %>
+  <div class="col6 simpleFlexCol">
+    <div>
+      <%
+        if (ob.errors['quantity']) print(ob.formErrorTmpl({
+          errors: ob.errors['quantity'],
+          class: 'margL',
+        }));
+      %>
+      <div class="flexVCent">
+        <span class="margL margR">Quantity</span>
+        <input type="text" class="clrBr clrP clrSh2 quantityInput js-quantityInput" name="item.quantity" value="<%= ob.quantity < 0 ? '' : ob.quantity %>" placeholder="0" data-var-type="number">
+      </div>
+    </div>
+  </div>
+  <% } %>
+</div>
+
+<%
+  let helperText = ob.polyT('editListing.inventoryManagement.doNotTrackHelperText');
+
+  if (ob.trackBy === 'TRACK_BY_FIXED') {
+    helperText = ob.polyT('editListing.inventoryManagement.trackByFixedHelperText');    
+  } else if (ob.trackBy === 'TRACK_BY_VARIANT') {
+    helperText = ob.polyT('editListing.inventoryManagement.trackByVariantsHelperText');
+  }
+%>
+
+<div class="clrT2 txSm padSm"><%= helperText %></div>

@@ -1,0 +1,122 @@
+<div class="gutterVMd">
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <div class="flexHCent">
+      <h2 class="h3 clrT"><%= ob.polyT('settings.storeTab.sectionName') %></h2>
+      <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+    </div>
+    <hr class="clrBr" />
+
+    <div class="tabFormWrapper">
+      <form class="box padMdKids padStack">
+        <div class="flexRow gutterH">
+          <div class="col3">
+            <label class="required"><%= ob.polyT('settings.storeTab.storeStatus') %></label>
+          </div>
+          <div class="col9">
+            <% if (ob.errors.vendor) print(ob.formErrorTmpl({ errors: ob.errors.vendor })) %>
+            <div class="btnStrip">
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="vendor"
+                       value="true"
+                       class="js-profileField"
+                       id="settingsModerationStatusTrue"
+                       data-var-type="boolean"
+                <% if (ob.vendor) { %>checked<% } %>>
+                <label for="settingsModerationStatusTrue"><%= ob.polyT('settings.on') %></label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="vendor"
+                       value="false"
+                       class="js-profileField"
+                       id="settingsModerationStatusFalse"
+                       <% if (!ob.vendor) { %>checked<% } %>
+                       data-var-type="boolean">
+                <label for="settingsModerationStatusFalse"><%= ob.polyT('settings.off') %></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="box padMdKids padStack">
+        <div class="flexRow gutterH">
+          <div class="col3">
+            <label><%= ob.polyT('settings.storeTab.moderators') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.moderatorsHelper') %></div>
+          </div>
+          <div class="col9">
+            <div class="flexColRows gutterV">
+              <div>
+                <h5><%= ob.polyT('settings.storeTab.selectedModerators') %></h5>
+                <ul class="unstyled errorList hide js-selectedModsError">
+                  <li><i class="ion-alert-circled"></i><span class="js-errorText"></span> </li>
+                </ul>
+                <ul class="unstyled errorList hide js-selectedModsAsyncError">
+                  <li><i class="ion-alert-circled"></i><span class="js-errorText"></span> </li>
+                </ul>
+                <div class="contentBox boxProcessingFaded modBox clrBr clrP <% if (ob.originalMods) print('hasMods ') %>js-modListSelected">
+                  <%= ob.spinner() %>
+                  <div class="noModsAdded js-noModsAdded">
+                    <div class="txCtr">
+                      <h5 class="txUnl">
+                        <%= ob.polyT('settings.storeTab.selectedModeratorsEmpty') %>
+                      </h5>
+                      <p class="clrT2">
+                        <%= ob.polyT('settings.storeTab.selectedModeratorsEmptyWarning') %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ul class="unstyled errorList hide js-submitModByIDInputError">
+                <li><i class="ion-alert-circled"></i><span class="js-errorText"></span> </li>
+              </ul>
+              <div class="flex gutterH">
+                <input
+                    type="text"
+                    class="btnHeight clrBr clrP clrSh2 js-submitModByIDInput"
+                    placeholder="<%= ob.polyT('settings.storeTab.moderatorByIDPlaceholder') %>">
+                <%= ob.processingButton({
+                className: 'btn clrP clrBr js-submitModByID ',
+                btnText: ob.polyT('settings.storeTab.moderatoryByIDSubmit')
+                }) %>
+              </div>
+              <div>
+                <div class="contentBox boxProcessingFaded modBox modBoxByID clrBr clrP js-modListByID"><!-- unhide when adding moderator-->
+                  <%= ob.spinner() %>
+                </div>
+              </div>
+              <hr class="clrBr unleaded">
+              <div>
+                <div class="rowLg"><% // just a spacer %></div>
+              </div>
+              <div>
+                <h5><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
+                <div class="contentBox boxProcessingFaded modBox clrBr clrP js-modListAvailable">
+                  <%= ob.spinner() %>
+                  <div class="noModsAdded js-noModsAdded">
+                    <button class="btn clrP clrBr js-browseMods">
+                       <%= ob.polyT('settings.storeTab.browseModerators') %>
+                    </button>
+                  </div>
+                  <button class="btnTxt tx6 clrT2 txU browseMore js-browseMods">
+                    <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
+                  </button>
+                </div>
+              </div>
+            </div><% // end of flex inside col9 %>
+            <% if (ob.errors.storeModerators) print('<div class="row"></div>  ' + ob.formErrorTmpl({ errors: ob.errors.storeModerators })) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexHRight">
+    <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
+  </div>
+</div>
+</div>

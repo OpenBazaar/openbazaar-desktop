@@ -27,6 +27,15 @@
     "totalPeers": "%{totalPeers} Found",
     "noResults": "No connected peers"
   },
+  "emojis": {
+    "groups": {
+      "PEOPLE": "People",
+      "NATURE": "Nature",
+      "OBJECTS": "Objects",
+      "PLACES": "Places",
+      "SYMBOLS": "Symbols"
+    }
+  },
   "startUp": {
     "dialogs": {
       "btnRetry": "Retry",
@@ -82,8 +91,10 @@
     "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
-    "modFee": "%{modFee} per dispute",
-    "addModerator": "Add as Moderator",
+    "FIXED": "%{amount} per dispute",
+    "PERCENTAGE": "%{percentage}% per dispute",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%) per dispute",
+    "addModerator": "View Details",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
     "website": "Website",
@@ -94,6 +105,8 @@
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
         "retryStoreFetch": "Retry",
         "btnLayoutStandard": "950px",
@@ -135,7 +148,29 @@
   },
   "userShort": {
     "userLoading": "Loading…",
-    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>"
+    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
+  },
+  "moderatorCard": {
+    "view": "View",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**"
+  },
+  "moderatorDetails": {
+    "messageButton": "Message",
+    "followButton": "Follow",
+    "unFollowButton": "Unfollow",
+    "location": "Location",
+    "recommendations": "Recommendations",
+    "serviceCharge": "Service Charge",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
+    "termsOfService": "Terms of Service",
+    "addAsModeratorButton": "Add as Moderator",
+    "disclaimer": "**The moderator service charge only applies when a dispute arises."
   },
   "about": {
     "linkText": "About OpenBazaar",
@@ -357,11 +392,44 @@
       "status":{
         "saving": "Saving moderation settings…",
         "done": "Moderation settings saved.",
-        "fail": "Saving the moderation settings failed."
+        "fail": "There was an error saving your moderation settings."
       },
       "errors": {
         "confirm": "To become a moderator, you must agree to both statements below.",
         "save": "The moderation settings were not saved."
+      }
+    },
+    "storeTab": {
+      "sectionName": "Store",
+      "storeStatus": "Store",
+      "storeStatusHelper": "Add a store to your page",
+      "moderators": "Moderators",
+      "moderatorsHelper": "Select a few moderators for your Store.",
+      "selectedModerators": "Selected Moderators",
+      "selectedModeratorsEmpty": "No Moderators Added",
+      "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
+      "moderatorByIDPlaceholder": "Look up a Moderator by entering their @handle or ID",
+      "moderatoryByIDSubmit": "Submit",
+      "availableModerators": "Available Moderators on the Network",
+      "browseModerators": "Browse Moderators",
+      "browseMoreModerators": "Load More Moderators",
+      "loading": "Loading",
+      "status": {
+        "saving": "Saving store settings...",
+        "done": "Store settings saved.",
+        "fail": "Saving the store settings failed.",
+        "error": "There was an error saving your store settings. \n %{errMsg}"
+      },
+      "errors": {
+        "modNotFoundTitle": "Moderator Not Found",
+        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
+        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
+        "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
+        "modAlreadyAdded": "You have already added that moderator.",
+        "modIsBlank": "You must add a moderator ID or handle",
+        "modIsInvalid": "%{guid} is not a valid moderator.",
+        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
+        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
     },
     "optional": "optional",
@@ -537,11 +605,15 @@
       "tagsDetailed": "Tags (For getting your listing discovered)",
       "category": "Category",
       "categoryDetailed": "Category (For organizing your store)",
+      "variants": "Variants",
+      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
       "inventory": "Inventory",
       "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
-      "coupons": "Coupons"
+      "coupons": "Coupons",
+      "inventoryManagement": "Inventory Management",
+      "variantInventory": "Variant Inventory"
     },
     "placeholderTitle": "Enter your title…",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -553,6 +625,8 @@
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
+    "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
+    "variantInventoryLink": "Variant Inventory",
     "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
     "helperCondition": "The overall condition of your listing",
     "helperNSFW": "Mark yes if the listing is NSFW",
@@ -613,6 +687,26 @@
       "discountTypeFixed": "Fixed",
       "btnAddCoupon": "+ Add Coupon"
     },
+    "variants": {
+      "btnAddVariant": "Add Variant",
+      "addVariant": "+ Add Variant",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Size, Color, Material, etc",
+      "choicesLabel": "Choices",
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+    },
+    "inventoryManagement": {
+      "doNotTrackSelectOption": "Do not track inventory",
+      "trackSelectOption": "Track Inventory",
+      "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
+      "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+    },
+    "variantInventory": {
+      "helperText": "Variant options with a quantity of 0 will not display",
+      "placeholderSKU": "SKU, ID, etc",
+      "unlimitedQuantityLabel": "unlimited"
+    },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
     "errors": {
@@ -646,11 +740,16 @@
   "profileModelErrors": {
     "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
+    "locationTooLong": "The location exceeds the maximum allowable length."
+  },
+  "contactModelErrors": {
+    "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
-    "provideUsername": "Please provide a username.",
-    "duplicateSocialAccount": "You already have a social account of this type.",
-    "locationTooLong": "The location exceeds the maximum allowable length."
+    "duplicateSocialAccount": "You already have a social account of this type."
+  },
+  "socialAccountModelErrors": {
+    "provideUsername": "Please provide a username."
   },
   "smtpModelErrors": {
     "username": {
@@ -673,7 +772,7 @@
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
   },
-  "listingInnerModelErrors": {
+  "listingModelErrors": {
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
@@ -690,7 +789,10 @@
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
-    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
+    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
+    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
@@ -731,6 +833,18 @@
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
     "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+  },
+  "skuModelErrors": {
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "providePositiveQuantity": "The quantity cannot be less than 0.",
+    "provideSurcharge": "Please provide a surcharge.",
+    "provideNumericSurcharge": "Please provide the surcharge as a number."
+  },
+  "variantOptionModelErrors": {
+    "provideName": "Please provide a title.",
+    "atLeast2Variants": "Please provide at least two choices.",
+    "variantTooLong": "%{variant} exceeds the maximum length of %{maxLength} characters."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

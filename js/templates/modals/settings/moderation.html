@@ -45,11 +45,11 @@
             <label class="required" for="moderationFeeType"><%= ob.polyT('settings.moderationTab.feeTypeAmount') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['modInfo.fee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.feeType'] })) %>
-            <% if (ob.errors['modInfo.fee.fixedFee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.fee.fixedFee.feeType'] })) %>
+            <% if (ob.errors['moderatorInfo.fee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.fee.feeType'] })) %>
+            <% if (ob.errors['moderatorInfo.fee.fixedFee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.fee.fixedFee.feeType'] })) %>
             <div class="flexRow gutterH rowTn">
               <div class="col4">
-                <select id="moderationFeeType" name="modInfo.fee.feeType" class="clrBr clrP clrSh2">
+                <select id="moderationFeeType" name="moderatorInfo.fee.feeType" class="clrBr clrP clrSh2">
                   <option value="PERCENTAGE" <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.percentage') %>
                   </option>
@@ -69,12 +69,12 @@
                 <!-- use text and set max length so excess decimals can't be entered.-->
                 <input type="text"
                        class="noSpin clrBr clrSh2"
-                       name="modInfo.fee.fixedFee.amount"
+                       name="moderatorInfo.fee.fixedFee.amount"
                        value="<%= amt %>"
                        data-var-type="number">
               </div>
               <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
-                <select  id="moderationCurrency" name="modInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2" style="width: 100%">
+                <select  id="moderationCurrency" name="moderatorInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2" style="width: 100%">
                   <% ob.currencyList.forEach((currency) => { %>
                   <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.name %></option>
                   <% }); %>
@@ -84,7 +84,7 @@
                 <div class="inputPercentWrapper clrBr clrSh2">
                   <input type="text"
                          maxlength="5"
-                         name="modInfo.fee.percentage"
+                         name="moderatorInfo.fee.percentage"
                          value="<%= ob.fee.percentage %>"
                          data-var-type="number">
                 </div>
@@ -101,8 +101,8 @@
             <label for="settingsModeratorDescription" class="required"><%= ob.polyT('settings.moderationTab.description') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['modInfo.description']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.description'] })) %>
-            <textarea rows="3" maxlength="<%= ob.max.description %>" name="modInfo.description" id="settingsModeratorDescription"
+            <% if (ob.errors['moderatorInfo.description']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.description'] })) %>
+            <textarea rows="3" maxlength="<%= ob.max.description %>" name="moderatorInfo.description" id="settingsModeratorDescription"
                       class="clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.descriptionHelper') %>"><%= ob.description %></textarea>
           </div>
         </div>
@@ -111,8 +111,8 @@
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.terms') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['modInfo.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.termsAndConditions'] })) %>
-            <textarea rows="3" maxlength="<%= ob.max.terms %>" name="modInfo.termsAndConditions" id="settingsModeratorTerms"
+            <% if (ob.errors['moderatorInfo.termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.termsAndConditions'] })) %>
+            <textarea rows="3" maxlength="<%= ob.max.terms %>" name="moderatorInfo.termsAndConditions" id="settingsModeratorTerms"
                       class="resizable clrBr clrSh2" placeholder="<%= ob.polyT('settings.moderationTab.termsHelper') %>"><%= ob.termsAndConditions %></textarea>
           </div>
         </div>
@@ -121,9 +121,9 @@
             <label for="settingsModeratorTerms" class="required"><%= ob.polyT('settings.moderationTab.languages') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['modInfo.languages']) print(ob.formErrorTmpl({ errors: ob.errors['modInfo.languages'] })) %>
+            <% if (ob.errors['moderatorInfo.languages']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.languages'] })) %>
             <div class="select2TagsWrap showDropdown">
-              <select id="moderationLanguageSelect" multiple name="modInfo.languages" class="clrBr clrP clrSh2 select2Tags">
+              <select id="moderationLanguageSelect" multiple name="moderatorInfo.languages" class="clrBr clrP clrSh2 select2Tags">
                 <% ob.languageList.forEach((lang) => { %>
                 <option value="<%= lang.code %>" <% if (ob.languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
                 <% }); %>

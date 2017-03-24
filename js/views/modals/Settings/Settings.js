@@ -4,6 +4,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import General from './General';
 import Page from './Page';
+import Store from './Store';
 import Addresses from './Addresses';
 import Advanced from './Advanced';
 import Moderation from './Moderation';
@@ -23,6 +24,7 @@ export default class extends BaseModal {
     this.tabViews = {
       General,
       Page,
+      Store,
       Addresses,
       Advanced,
       Moderation,

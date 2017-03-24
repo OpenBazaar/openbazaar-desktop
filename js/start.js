@@ -10,7 +10,7 @@ import ServerConfig from './models/ServerConfig';
 import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
-import { getChatContainer } from './utils/selectors';
+import { getChatContainer, getBody } from './utils/selectors';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -185,7 +185,9 @@ function isOnboardingNeeded() {
     .done(() => {
       onboardingNeededDeferred.resolve(false);
     })
-    .fail((jqXhr) => {
+    .fail((xhr) => {
+      const jqXhr = xhr.length ? xhr[0] : xhr;
+
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
           title: app.polyglot.t('startUp.dialogs.retryOnboardingFetch.title'),
@@ -380,10 +382,10 @@ function onboardIfNeeded() {
 }
 
  // let's start our flow - do we need onboarding?,
- // fetching app wide models...
+ // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
-    app.profile = new Profile({ id: data.guid });
+    app.profile = new Profile({ peerID: data.guid });
 
     app.settings = new Settings();
     // If the server is running testnet, set that here
@@ -426,6 +428,10 @@ function start() {
 
         chatConvos.fetch();
         $('#chatCloseBtn').on('click', () => (app.chat.close()));
+
+        getChatContainer()
+            .on('mouseenter', () => getBody().addClass('chatHover'))
+            .on('mouseleave', () => getBody().removeClass('chatHover'));
       });
     });
   });
