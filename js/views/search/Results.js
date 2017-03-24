@@ -37,13 +37,10 @@ export default class extends baseVw {
   }
 
   createCardView(model) {
-    console.log(model)
     // models can be listings or nodes
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
-      const handle = vendor.handle;
-      const guid = vendor.id;
-      const listingBaseUrl = `${handle || guid}/store/`;
+      const listingBaseUrl = `${vendor.handle || vendor.guid}/store/`;
       const options = {
         listingBaseUrl,
         model,
@@ -54,11 +51,9 @@ export default class extends baseVw {
       return this.createChild(ListingCard, options);
       // }
       // console.log('This listing result has no vendor data');
-
-    } else {
-      // create a user card
-      return false;
     }
+    // create a user card
+    return false;
   }
 
   renderCards(models) {
@@ -67,7 +62,6 @@ export default class extends baseVw {
     models.forEach(model => {
       const cardVw = this.createCardView(model);
 
-      console.log(cardVw)
       if (cardVw) {
         this.cardViews.push(cardVw);
         cardVw.render().$el.appendTo(resultsFrag);

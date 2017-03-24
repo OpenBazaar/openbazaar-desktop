@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { integerToDecimal } from '../utils/currency';
 import { Collection } from 'backbone';
 import ListingShort from '../models/listing/ListingShort';
@@ -22,40 +21,25 @@ export default class extends Collection {
     return this.searchURL;
   }
 
-  add(models, options) {
-    const origModels = _.isArray(models) ? models : [models];
-    const formattedModels = [];
-
-    // loop through provided models and format them correctly
-    origModels.forEach((model, index) => {
-      if (model.type === 'listing' && model.data) {
-        const newModel = model.data;
-        const relationships = model.relationships ? model.relationships : {};
-        const vendor = relationships.vendor ? model.relationships.vendor.data : {};
-        vendor.guid = vendor.id;
-        newModel.vendor = vendor;
-        formattedModels[index] = newModel;
-      } else {
-        // assume a non-listing is a node type
-        // TODO: add node handling code here to create a userCard model
-      }
-    });
-    console.log(formattedModels);
-    return super.add(formattedModels, options);
-  }
-
   parse(response) {
     console.log(response);
     const parsedResponse = [];
 
-    response.forEach(listing => {
-      const updatedListing = listing;
-      const priceObj = updatedListing.price;
+    response.forEach(result => {
+      const updatedResult = result.data;
+      const relationships = result.relationships ? result.relationships : {};
+      const vendor = relationships.vendor ? relationships.vendor.data : {};
+      if (vendor) {
+        vendor.guid = vendor.id;
+        delete vendor.id;
+      }
+      updatedResult.vendor = vendor;
+      const priceObj = updatedResult.price;
 
-      updatedListing.price.amount =
+      updatedResult.price.amount =
           integerToDecimal(priceObj.amount, priceObj.currencyCode === 'BTC');
 
-      parsedResponse.push(updatedListing);
+      parsedResponse.push(updatedResult);
     });
 
     return parsedResponse;

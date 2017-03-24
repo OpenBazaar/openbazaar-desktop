@@ -68,12 +68,10 @@ export default class extends baseVw {
 
   callSearchProvider(searchURL) {
     // query the search provider
-    console.log(searchURL)
     $.get({
       url: searchURL,
     })
         .done((data) => {
-          console.log(data);
           this.render(data, searchURL);
         })
         .fail((xhr) => {
@@ -86,9 +84,10 @@ export default class extends baseVw {
   }
 
   createResults(data, searchURL) {
-    const results = data.results.results;
-    this.resultsCol = new ResultsCol(results, { searchURL });
-    console.log(this.resultsCol)
+    let results = data.results.results;
+    this.resultsCol = new ResultsCol(null, { searchURL });
+    results = this.resultsCol.parse(results);
+    this.resultsCol.add(results);
 
     const resultsView = this.createChild(Results, {
       searchURL,
