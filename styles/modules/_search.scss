@@ -1,12 +1,13 @@
 .search {
 
-
   .searchBar {
     display: flex;
+    align-items: center;
     position: relative;
 
     .searchLogo {
       position: absolute;
+      left: 8px;
       background-size: cover;
       background-position: center;
       height: 26px;
@@ -16,6 +17,7 @@
     .searchInput {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+      text-indent: 30px;
     }
 
     .searchBtn {
@@ -26,6 +28,12 @@
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       border-left: none;
+    }
+  }
+
+  .filterWrapper {
+    label {
+      line-height: 2em;
     }
   }
 }

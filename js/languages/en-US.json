@@ -625,7 +625,7 @@
   "search": {
     "searchBtn": "Search",
     "suggestions": "Suggestions",
-    "resultsFound": "%{totalResults} found for \"%{term}\"",
+    "resultsFound": "<b>%{totalResults} results</b> found for <b>\"%{term}\"</b>",
     "sortBy": "Sort by",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed.",

@@ -11,54 +11,68 @@
       <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
     </div>
     <div class="suggestions flex gutterH">
-      <%= ob.polyT('search.suggestions') %>
+      <span class="tx5 clrT2"><%= ob.polyT('search.suggestions') %></span>
       <% // suggestions loop %>
     </div>
     <hr class="clrBr">
   </div>
   <div class="flexRow gutterHLg">
-    <div class="col3 js-filterWrapper">
+    <form class="col3 filterWrapper js-filterWrapper">
       <div class="flexColRows gutterV">
-        <%= ob.polyT('search.sortBy') %>
-          <% _.each(ob.options, function(val, key) { %>
-          <div class="contentBox">
-            <h4><%= val.label %></h4>
+        <% _.each(ob.options, function(val, key) { %>
+          <div class="contentBox pad clrP clrBr">
+            <h4 class="rowSm"><%= val.label %></h4>
             <% if (val.type ==='dropdown') { %>
-              <select>
+              <select name="<%= key %>">
               <% _.each(val.options, function(option) {
                var selected = option.checked ? 'selected' : '';
                 print('<option '+ selected +' value="'+option.value+'">'+option.label+'</option>');
               }); %>
               </select>
             <% } else if (val.type ==='radio') { %>
-              <% _.each(val.options, function(option) {
-                var checked = option.checked ? 'checked' : '';
-                print('<input type="radio" name="' + key + '" '+ checked +' value="'+option.value+'">'+option.label+'</option>');
-              }); %>
+              <div class="flexCol">
+              <% _.each(val.options, function(option, index) { %>
+                <div class="btnRadio clrBr">
+                   <% var checked = option.checked ? 'checked' : '';
+                     print('<input type="radio" name="' + key + '" id="' + key + index + '" '+ checked +' value="'+option.value+'">');
+                     print('<label for="' + key + index + '">'+option.label+'</label>');
+                   %>
+                </div>
+              <% }); %>
+              </div>
             <% } else if (val.type ==='checkbox') { %>
-              <% _.each(val.options, function(option) {
+              <div class="flexCol">
+              <% _.each(val.options, function(option, index) {
                 var checked = option.checked ? 'checked' : '';
-                print('<input type="checkbox" '+ checked +' value="'+option.value+'">'+option.label+'</option>');
+                print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
+                print(`<label for="${key + index}">${option.label}</label>`);
               }); %>
+              </div>
             <% } %>
           </div>
-          <% }); %>
+        <% }); %>
       </div>
-    </div>
+    </form>
     <div class="col9">
-      <div class="row flexVBase">
-        <div class="tx3 flexExpand"><%= ob.polyT('search.resultsFound', { total: ob.totalResults, term: ob.term }) %></div>
-        <div>
-          <%= ob.polyT('search.sortBy') %>
-          <select class="js-sortBy">
-            <% _.each(ob.sortBy, function(val, key) {
-              print('<option value="'+key+'">'+val.label+'</option>');
-            }); %>
-          </select>
+      <div class="flexCol">
+        <div class="width100">
+          <div class="row flexVBase gutterH">
+            <div class="tx5 flexExpand"><%= ob.polyT('search.resultsFound', { totalResults: ob.totalResults || 0, term: ob.term || ' ' }) %></div>
+            <div class="tx5b">
+              <%= ob.polyT('search.sortBy') %>
+            </div>
+            <div class="col4">
+              <select id="sortBy" class="js-sortBy">
+                <% _.each(ob.sortBy, function(val, key) {
+                print('<option value="'+key+'">'+val.label+'</option>');
+                }); %>
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="js-resultsWrapper">
+        <div class="js-resultsWrapper">
 
+        </div>
       </div>
     </div>
   </div>

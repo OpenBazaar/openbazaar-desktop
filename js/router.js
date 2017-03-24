@@ -24,7 +24,7 @@ export default class ObRouter extends Router {
       ['transactions/:tab(/)', 'transactions'],
       ['connected-peers(/)', 'connectedPeers'],
       ['search', 'search'],
-      ['*path', 'search'],
+      ['*path(?query)', 'search'],
     ];
 
     routes.slice(0)
@@ -241,9 +241,9 @@ export default class ObRouter extends Router {
     this.once('will-route', () => (peerFetch.abort()));
   }
 
-  search(term) {
+  search(term, query) {
     this.loadPage(
-        new Search({ term })
+        new Search({ term, query })
     );
   }
 
