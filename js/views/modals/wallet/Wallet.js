@@ -1,8 +1,10 @@
 // import $ from 'jquery';
-import app from '../../../app';
+// import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
+import Stats from './Stats';
+import SendMoney from './SendMoney';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -31,27 +33,11 @@ export default class extends BaseModal {
     // super.close();
   // }
 
-  // Normally, we'd user the currency module to format currency, but
-  // this is a unique case where we want to format a BTC price without
-  // the BTC symbol, so we'll create a custom function. If we find other
-  // areas in the app need this, we can integrate it into the currency module.
-  formatUnitlessBtc(amount) {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide a number.');
-    }
-
-    return new Intl.NumberFormat(app.settings.get('language'), {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 8,
-    }).format(amount);
-  }
-
   render() {
     loadTemplate('modals/wallet/wallet.html', t => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
           walletIconTmpl,
-          formatUnitlessBtc: this.formatUnitlessBtc,
         }));
 
         super.render();
@@ -62,6 +48,27 @@ export default class extends BaseModal {
         if (this.btcTicker) this.btcTicker.remove();
         this.btcTicker = this.createChild(BTCTicker);
         this.$('.js-btcTickerContainer').append(this.btcTicker.render().$el);
+
+        // render the wallet stats
+        if (this.stats) this.stats.remove();
+
+        this.stats = this.createChild(Stats, {
+          initialState: {
+            isFetching: true,
+          },
+        });
+
+        this.$('.js-walletStatsContainer').html(this.stats.render().el);
+
+        // js-sendReceiveContainer
+        // render the send money view
+        if (this.sendMoney) this.sendMoney.remove();
+
+        this.sendMoney = this.createChild(SendMoney, {
+          // model: moo,
+        });
+
+        this.$('.js-sendReceiveContainer').html(this.sendMoney.render().el);
       });
     });
 
