@@ -15,7 +15,7 @@ export default class extends BaseView {
 
     // Certain coupon validations are not possible to do purely in the Coupon
     // model (e.g. validating the coupon price is not greater than the listing price).
-    // In that case, any coupone related errors can be optionally passed in, in the
+    // In that case, any coupon related errors can be optionally passed in, in the
     // following format:
     // options.couponErrors = {
     //   coupons[<model.cid>].<fieldName> = ['error1', 'error2', ...],

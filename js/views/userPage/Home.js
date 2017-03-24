@@ -1,7 +1,12 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import { clipboard } from 'electron';
 import BaseVw from '../baseVw';
+import app from '../../app';
+import UserCard from '../userCard';
+import { launchModeratorDetailsModal } from '../../utils/modalManager';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -9,7 +14,19 @@ export default class extends BaseVw {
     this.options = options;
 
     this.ownPage = options.ownPage;
-    this.currentModerator = false; // TODO set if this user is one of the viewer's moderators
+
+    this.userCard = new UserCard({ model: this.model, hideControls: true });
+
+    this.settings = app.settings.clone();
+
+    this.listenTo(this.settings, 'sync', () => {
+      app.settings.set(this.settings.toJSON());
+    });
+
+    this.listenTo(app.settings, 'change:storeModerators', () => {
+      this.$addModerator.toggleClass('hide', this.ownMod);
+      this.$removeModerator.toggleClass('hide', !this.ownMod);
+    });
   }
 
   className() {
@@ -19,33 +36,67 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-termsLink': 'termsClick',
-      'click .js-termsClose': 'termsClose',
       'click .js-addModerator': 'addModeratorClick',
+      'click .js-removeModerator': 'removeModeratorClick',
       'click .js-guid': 'guidClick',
       'mouseleave .js-guid': 'guidLeave',
     };
   }
 
-  termsClick() {
-    this.$termsDisplay.toggleClass('open');
-    if (this.$termsDisplay.hasClass('open')) this.$termsDisplay[0].scrollIntoViewIfNeeded();
+  get ownMod() {
+    return app.settings.ownMod(this.model.id);
   }
 
-  termsClose() {
-    this.$termsDisplay.removeClass('open');
+  termsClick() {
+    // show the moderator details modal
+    const modModal = launchModeratorDetailsModal({ model: this.model });
+    this.listenTo(modModal, 'addAsModerator', () => {
+      this.$addModerator.addClass('processing');
+      this.saveModeratorList(true);
+    });
   }
 
   addModeratorClick() {
-    if (this.currentModerator) {
-      // do the following as the callback of the remove moderator action
-      this.currentModerator = false;
-      this.$addModeratorLbl.removeClass('hide');
-      this.$removeModeratorLbl.addClass('hide');
+    // show the moderator details modal
+    const modModal = launchModeratorDetailsModal({ model: this.model });
+    this.listenTo(modModal, 'addAsModerator', () => {
+      this.$addModerator.addClass('processing');
+      this.saveModeratorList(true);
+    });
+  }
+
+  removeModeratorClick() {
+    this.$removeModerator.addClass('processing');
+    this.saveModeratorList(false);
+  }
+
+  saveModeratorList(add = false) {
+    // clone the array, otherwise it is a reference
+    let modList = _.clone(app.settings.get('storeModerators'));
+
+    if (add && !this.ownMod) {
+      modList.push(this.model.id);
     } else {
-      // do the following as the callback of the add moderator action
-      this.currentModerator = true;
-      this.$addModeratorLbl.addClass('hide');
-      this.$removeModeratorLbl.removeClass('hide');
+      modList = _.without(modList, this.model.id);
+    }
+
+    const formData = { storeModerators: modList };
+    this.settings.set(formData);
+
+    if (!this.settings.validationError) {
+      this.settings.save(formData, {
+        attrs: formData,
+        type: 'PATCH',
+      })
+          .fail((...args) => {
+            const errMsg = args[0] && args[0].responseJSON &&
+                args[0].responseJSON.reason || '';
+            const phrase = add ? 'userPage.modAddError' : 'userPage.modRemoveError';
+            openSimpleMessage(app.polyglot.t(phrase), { errMsg });
+          })
+          .always(() => {
+            this.$modBtn.removeClass('processing');
+          });
     }
   }
 
@@ -61,18 +112,17 @@ export default class extends BaseVw {
 
   render() {
     loadTemplate('userPage/home.html', (t) => {
-      loadTemplate('userShort.html', (u) => {
-        this.$el.html(
-          t({
-            currentModerator: this.currentModerator,
-            userShortTmp: u,
-            ...this.model.toJSON(),
-          }));
-      });
+      this.$el.html(t({
+        currentModerator: this.ownMod,
+        displayCurrency: app.settings.get('localCurrency'),
+        ...this.model.toJSON(),
+      }));
 
-      this.$termsDisplay = this.$('.js-termsDisplay');
-      this.$addModeratorLbl = this.$('.js-addModeratorLbl');
-      this.$removeModeratorLbl = this.$('.js-removeModeratorLbl');
+      this.$('.js-userCard').append(this.userCard.render().$el);
+
+      this.$modBtn = this.$('.js-addModerator, .js-removeModerator');
+      this.$addModerator = this.$('.js-addModerator');
+      this.$removeModerator = this.$('.js-removeModerator');
     });
 
     return this;

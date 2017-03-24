@@ -14,8 +14,12 @@
   }
 }
 
-@mixin chatOpeningTransition($property) {
-  transition: $property 0.5s ease;
+@mixin chatOpeningTransition($props...) {
+  $transitions: ();
+  @each $prop in $props {
+    $transitions: append($transitions, #{$prop 0.5s ease}, comma);
+  }
+  transition: $transitions;
 }
 
 @mixin disabled {

@@ -165,7 +165,7 @@ export default class ObRouter extends Router {
       profileFetch = $.Deferred().resolve();
       profile = app.profile;
     } else {
-      profile = new Profile({ id: guid });
+      profile = new Profile({ peerID: guid });
       profileFetch = profile.fetch();
     }
 

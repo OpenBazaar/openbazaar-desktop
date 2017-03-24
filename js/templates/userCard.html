@@ -1,0 +1,65 @@
+<div class="contentBox clrBr clrP clrSh2 <% if (ob.notFound) { %>disabled<% } %>">
+  <div class="shortHeader"
+    <% var headerHash = ob.headerHashes ? ob.isHiRez() ? ob.headerHashes.small : ob.headerHashes.tiny : ''; %>
+    <% if (headerHash) { %>
+      style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
+    <% } else { %>
+      style="background-image: url('../imgs/defaultHeader.png')"
+    <% } %>>
+    <a class="js-userName">
+      <div class="userIcon disc clrBr2 clrSh1"
+        <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+        <% if (avatarHash) { %>
+          style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+        <% } else { %>
+         style="background-image: url('../imgs/defaultAvatar.png')"
+        <% } %>>
+      </div>
+    </a>
+    <% if (!ob.hideControls) { %>
+      <div class="userControls">
+        <% if (!ob.ownGuid) { %>
+          <%= ob.processingButton({
+            className: `iconBtn clrP clrBr js-follow ${ob.followedByYou ? 'active' : ''}`,
+            btnText: '<i class="ion-person-stalker"></i>'
+          }) %>
+          <% if (ob.moderator) { %>
+            <%= ob.processingButton({
+            className: `iconBtn clrP clrBr js-mod ${ob.ownMod ? 'active' : ''}`,
+            btnText: '<i class="ion-briefcase"></i>'
+            }) %>
+          <% } %>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+  <div class="content">
+    <% if (!ob.loading && !ob.notFound) { %>
+      <div class="contentTop">
+        <div>
+          <a class="flex snipKids gutterH rowTn js-userName">
+            <div class="tx3 clrT name"><strong><%= ob.name %></strong></div>
+            <div class="clrT2">
+              <%= ob.handle %>
+            </div>
+          </a>
+        </div>
+        <p class="clamp2">
+          <%= ob.shortDescription %>
+        </p>
+      </div>
+      <div class="flex gutterH">
+        <div class="col8">
+          <span class="clrT2 clamp">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
+        </div>
+        <div class="col4 tx6">
+          stars here (xx)
+        </div>
+      </div>
+    <% } else if (ob.loading) { %>
+      <div class="h3 clrT"><%= ob.polyT('userShort.userLoading') %></div>
+    <% } else if (ob.notFound) { %>
+    <div class="h5 txUnb clrT"><%= ob.polyT('userShort.userNotFound', { guid: ob.guid }) %></div>
+    <% } %>
+  </div>
+</div>

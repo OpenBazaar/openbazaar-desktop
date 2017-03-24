@@ -1,5 +1,5 @@
 import BaseVw from '../baseVw';
-import userShort from '../userShort';
+import userShort from '../userCard';
 import app from '../../app';
 import Follows from '../../collections/Followers';
 import { followedByYou, followsYou } from '../../utils/follow';
