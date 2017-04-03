@@ -66,6 +66,8 @@ export function integerToDecimal(amount, isBtc = false) {
  * It is more useful for <input>'s because we are not
  * localizing the numbers in them.
  *
+ * todo: add this as a template helper; perhaps there's
+ * a better name for this function?
  */
 export function formatPrice(price, isBtc = false) {
   if (typeof price !== 'number') {
@@ -95,8 +97,8 @@ export function formatPrice(price, isBtc = false) {
  */
 // todo: check currency is one of our currencies
 export function formatCurrency(amount, currency,
-  locale = app && app.settings && app.settings.get('language') || 'en-US',
-  btcUnit = app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC') {
+                               locale = app && app.settings && app.settings.get('language') || 'en-US',
+                               btcUnit = app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC') {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -115,14 +117,7 @@ export function formatCurrency(amount, currency,
 
   let formattedCurrency;
 
-  if (currency !== 'BTC') {
-    formattedCurrency = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
-  } else {
+  if (currency.toUpperCase() === 'BTC' || currency.toUpperCase() === 'TBTC') {
     let curSymbol;
     let bitcoinConvertUnit;
 
@@ -157,6 +152,13 @@ export function formatCurrency(amount, currency,
     }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
 
     formattedCurrency = formattedCurrency.replace('$', curSymbol);
+  } else {
+    formattedCurrency = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
   }
 
   return formattedCurrency;
@@ -229,8 +231,8 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCur}.`);
   }
 
-  const fromRate = fromCur === 'BTC' ? 1 : getExchangeRate(fromCur);
-  const toRate = toCur === 'BTC' ? 1 : getExchangeRate(toCur);
+  const fromRate = fromCur.toUpperCase() === 'BTC' || fromCur.toUpperCase() === 'TBTC' ? 1 : getExchangeRate(fromCur);
+  const toRate = toCur.toUpperCase() === 'BTC' || toCur.toUpperCase() === 'TBTC' ? 1 : getExchangeRate(toCur);
 
   return (amount / fromRate) * toRate;
 }
