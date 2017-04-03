@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -9,17 +8,8 @@ export default class extends baseVw {
     super(options);
 
     this._state = {
+      userCurrency: 'USD',
       ...options.initialState || {},
-    };
-  }
-
-  // className() {
-  //   return 'configuration';
-  // }
-
-  events() {
-    return {
-      // 'click .js-btnConnect': 'onConnectClick',
     };
   }
 
@@ -59,18 +49,12 @@ export default class extends baseVw {
     }).format(amount);
   }
 
-  // remove() {
-  //   super.remove();
-  // }
-
   render() {
     loadTemplate('modals/wallet/stats.html', (t) => {
       this.$el.html(t({
         ...this._state,
         formatUnitlessBtc: this.formatUnitlessBtc,
       }));
-
-      // this._$deleteConfirm = null;
     });
 
     return this;

@@ -1,5 +1,4 @@
-// import $ from 'jquery';
-// import app from '../../../app';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
@@ -10,7 +9,6 @@ import ReceiveMoney from './ReceiveMoney';
 export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
-      // initialTabView: 'Configurations',
       sendModeOn: true,
       ...options,
     };
@@ -18,6 +16,22 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this.sendModeOn = opts.sendModeOn;
+
+    this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
+      if (this.stats) {
+        this.stats.setState({
+          balance: confirmedAmount,
+        });
+      }
+    });
+
+    this.listenTo(app.settings, 'change:localCurrency', (md, curr) => {
+      if (this.stats) {
+        this.stats.setState({
+          userCurrency: curr,
+        });
+      }
+    });
   }
 
   className() {
@@ -50,11 +64,6 @@ export default class extends BaseModal {
     return this._sendModeOn;
   }
 
-  // close() {
-    // this.selectTab('Configurations');
-    // super.close();
-  // }
-
   render() {
     loadTemplate('modals/wallet/wallet.html', t => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
@@ -63,9 +72,6 @@ export default class extends BaseModal {
         }));
 
         super.render();
-
-        // this.$tabContent = this.$('.js-tabContent');
-        // this._$closeClickTargets = null;
 
         if (this.btcTicker) this.btcTicker.remove();
         this.btcTicker = this.createChild(BTCTicker);
@@ -76,7 +82,8 @@ export default class extends BaseModal {
 
         this.stats = this.createChild(Stats, {
           initialState: {
-            isFetching: true,
+            balance: app.walletBalance.get('confirmed'),
+            userCurrency: app.settings.get('localCurrency'),
           },
         });
 
@@ -84,20 +91,12 @@ export default class extends BaseModal {
 
         // render the send money view
         if (this.sendMoney) this.sendMoney.remove();
-
-        this.sendMoney = this.createChild(SendMoney, {
-          // model: moo,
-        });
-
+        this.sendMoney = this.createChild(SendMoney);
         this.$('.js-sendReceiveContainer').html(this.sendMoney.render().el);
 
         // render the receive money view
         if (this.receiveMoney) this.receiveMoney.remove();
-
-        this.receiveMoney = this.createChild(ReceiveMoney, {
-          // model: moo,
-        });
-
+        this.receiveMoney = this.createChild(ReceiveMoney);
         this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
       });
     });
