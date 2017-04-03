@@ -31,7 +31,7 @@
 
       .unreadBadge {
         position: absolute;
-        top: 0;
+        top: -4px;
         left: 0;
         width: 22px;
         height: 22px;
@@ -203,6 +203,7 @@
           display: inline-block;
           max-width: 186px;
           line-height: 14px;
+          text-align: left;
 
           & > span {
             word-break: break-word;
@@ -215,7 +216,6 @@
 
         .timestampLine {
           position: absolute;
-          margin-top: 3px;
         }
       }
     }

@@ -1,6 +1,6 @@
 {
   "name": "openbazaar-desktop",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
