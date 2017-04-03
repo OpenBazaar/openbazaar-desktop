@@ -67,7 +67,8 @@ export default class extends baseVw {
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
     const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
-    const start = end - this.pageSize + 1;
+    let start = end - this.pageSize + 1;
+    start = start > 0 ? start : 1;
     const total = models.total;
     this.morePages = models.morePages;
 
