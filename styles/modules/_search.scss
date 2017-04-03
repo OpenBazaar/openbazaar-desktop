@@ -8,16 +8,33 @@
     .searchLogo {
       position: absolute;
       left: 8px;
-      background-size: cover;
-      background-position: center;
       height: 26px;
       width: 26px;
+
+      img {
+        height: 26px;
+        width: 26px;
+      }
+
+      &.loadError {
+        // if the logo fails to load, hide it and show the default
+        background-image: url(../../imgs/defaultSearch.png);
+        background-size: cover;
+        background-position: center;
+
+        img {
+          display: none;
+        }
+      }
     }
 
     .searchInput {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
-      text-indent: 30px;
+
+      &.withLogo {
+        text-indent: 30px;
+      }
     }
 
     .searchBtn {

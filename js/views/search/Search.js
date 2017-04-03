@@ -29,7 +29,7 @@ export default class extends baseVw {
       this.pageSize = options.pageSize || 12;
       // if the term was not a url, process the term before calling the search provider
       this.term = term;
-      this.processTerm();
+      this.processTerm(term);
     }
   }
 
@@ -43,6 +43,7 @@ export default class extends baseVw {
       'change .js-sortBy': 'changeSortBy',
       'change .js-filterWrapper select': 'changeFilter',
       'change .js-filterWrapper input': 'changeFilter',
+      'keyup .js-searchInput': 'onKeyupSearchInput',
     };
   }
 
@@ -56,7 +57,8 @@ export default class extends baseVw {
     return this.$filters ? `&${this.$filters.serialize()}` : '';
   }
 
-  processTerm(term = this.term) {
+  processTerm(term) {
+    this.term = term;
     // if term has spaces, replace them with +
     const query = term ? `q=${term.replace(/\s+/g, '+')}` : 'q=*';
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
@@ -100,16 +102,21 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
-    this.term = this.$searchInput.val();
-    this.processTerm();
+    this.processTerm(this.$searchInput.val());
+  }
+
+  onKeyupSearchInput(e) {
+    if (e.which === 13) {
+      this.processTerm(this.$searchInput.val());
+    }
   }
 
   changeSortBy() {
-    this.processTerm();
+    this.processTerm(this.term);
   }
 
   changeFilter() {
-    this.processTerm();
+    this.processTerm(this.term);
   }
 
   render(data, searchURL) {
@@ -126,14 +133,17 @@ export default class extends baseVw {
         ...data,
       }));
     });
-    this._$resultsWrapper = null;
-
     this.$sortBy = this.$('#sortBy');
     this.$sortBy.select2();
     this.$('.js-filterWrapper').find('select').select2();
     this.$filters = this.$('.js-filterWrapper').find('select, input');
     this.$resultsWrapper = this.$('.js-resultsWrapper');
     this.$searchInput = this.$('.js-searchInput');
+    this.$searchLogo = this.$('.js-searchLogo');
+
+    this.$searchLogo.find('img').on('error', () => {
+      this.$searchLogo.addClass('loadError');
+    });
 
     // use the initial set of results data to create the results view
     this.createResults(data, searchURL);

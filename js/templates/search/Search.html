@@ -6,8 +6,12 @@
   <div class="flexColRows gutterV row">
     <h3><%= ob.name %></h3>
     <div class="searchBar clrP clrBr">
-      <div class="searchLogo" style="background-image: url(<%= ob.logo %>);"></div>
-      <input class="clrP clrBr searchInput js-searchInput" type="text">
+      <% if (ob.logo) { %>
+      <div class="searchLogo js-searchLogo">
+        <img src="<%= ob.logo %>"></img>
+      </div>
+      <% } %>
+      <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>" type="text" value="<%= ob.term %>">
       <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
     </div>
     <div class="suggestions flex gutterH">
