@@ -543,7 +543,11 @@
     "btnSendMoney": "Send Money",
     "btcCurrencyLabel": "Bitcoin",
     "valueInCurrencyLabel": "Value in %{currency}",
-    "transactionsLabel": "Transactions"
+    "transactionsLabel": "Transactions",
+    "receiveMoney": {
+      "title": "Receive Money",
+      "needBitcoin": "Need Bitcoin?"
+    }
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",

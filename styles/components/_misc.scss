@@ -26,3 +26,9 @@
   /* gross hack to stop trumbowyg from setting inline height to huge numbers when external
   images are added */
 }
+
+.btcIcon {
+  width: 18px;
+  height: 18px;
+  background-size: contain;  
+}

@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -16,6 +17,8 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this.sendModeOn = opts.sendModeOn;
+    this.addressFetches = [];
+    this.needAddressFetch = true;
 
     this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
       if (this.stats) {
@@ -57,11 +60,58 @@ export default class extends BaseModal {
     if (bool !== this._sendModeOn) {
       this.$el.toggleClass('receiveModeOn', !bool);
       this._sendModeOn = bool;
+
+      if (!bool && this.needAddressFetch) {
+        this.fetchAddress();
+      }
     }
   }
 
   get sendModeOn() {
     return this._sendModeOn;
+  }
+
+  fetchAddress() {
+    if (this.receiveMoney) {
+      this.receiveMoney.setState({
+        isFetching: true,
+      });
+    }
+
+    this.needAddressFetch = false;
+
+    let address = '';
+
+    const fetch = $.get(app.getServerUrl('wallet/address/'))
+      .done((data) => {
+        address = data.address;
+      }).always(() => {
+        if (this.isRemoved()) return;
+
+        if (this.receiveMoney && !this.isAdressFetching()) {
+          this.receiveMoney.setState({
+            fetching: false,
+            address,
+          });
+        }
+      });
+
+    this.addressFetches.push(fetch);
+
+    return fetch;
+  }
+
+  isAdressFetching() {
+    if (this.addressFetches) {
+      return this.addressFetches.some(fetch => fetch.state() === 'pending');
+    }
+
+    return false;
+  }
+
+  remove() {
+    this.addressFetches.forEach(fetch => fetch.abort());
+    super.remove();
   }
 
   render() {
@@ -96,7 +146,14 @@ export default class extends BaseModal {
 
         // render the receive money view
         if (this.receiveMoney) this.receiveMoney.remove();
-        this.receiveMoney = this.createChild(ReceiveMoney);
+
+        this.receiveMoney = this.createChild(ReceiveMoney, {
+          initialState: {
+            // fetching: this.isAdressFetching(),
+            fetching: true,
+          },
+        });
+
         this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
       });
     });
