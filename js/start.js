@@ -7,7 +7,10 @@ import moment from 'moment';
 import app from './app';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
-import serverConnect, { events as serverConnectEvents } from './utils/serverConnect';
+import serverConnect, {
+  events as serverConnectEvents,
+  getSocket,
+} from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
@@ -21,6 +24,7 @@ import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/Settings';
+import WalletBalance from './models/wallet/WalletBalance';
 import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
@@ -304,15 +308,19 @@ function onboard() {
 
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
-let exchangeRatesFetch;
 let ownFollowingFailed;
+let exchangeRatesFetch;
+let walletBalanceFetch;
+let walletBalanceFetchFailed;
 
 function fetchStartupData() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
+  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch ?
+    app.walletBalance.fetch() : walletBalanceFetch;
 
-  $.whenAll(ownFollowingFetch, exchangeRatesFetch)
+  $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch)
     .progress((...args) => {
       const state = args[1];
 
@@ -321,6 +329,8 @@ function fetchStartupData() {
 
         if (jqXhr === ownFollowingFetch) {
           ownFollowingFailed = true;
+        } else if (jqXhr === walletBalanceFetch) {
+          walletBalanceFetchFailed = true;
         }
       }
     })
@@ -328,9 +338,17 @@ function fetchStartupData() {
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
-      if (ownFollowingFailed) {
+      if (ownFollowingFailed || walletBalanceFetchFailed) {
+        let title = '';
+
+        if (ownFollowingFailed) {
+          title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
+        } else {
+          title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
+        }
+
         const retryFetchStarupDataDialog = new Dialog({
-          title: app.polyglot.t('startUp.dialogs.unableToGetFollowData.title'),
+          title,
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
           buttons: [
             {
@@ -406,6 +424,8 @@ function start() {
     app.ownFollowing = new Followers(null, { type: 'following' });
     app.ownFollowers = new Followers(null, { type: 'followers' });
 
+    app.walletBalance = new WalletBalance();
+
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
         app.pageNav.navigable = true;
@@ -432,6 +452,17 @@ function start() {
         getChatContainer()
             .on('mouseenter', () => getBody().addClass('chatHover'))
             .on('mouseleave', () => getBody().removeClass('chatHover'));
+
+        // have our walletBalance model update from the walletUpdate socket event
+        const serverSocket = getSocket();
+
+        if (serverSocket) {
+          serverSocket.on('message', (e = {}) => {
+            if (e.walletUpdate) {
+              app.walletBalance.set(e.walletUpdate);
+            }
+          });
+        }
       });
     });
   });
