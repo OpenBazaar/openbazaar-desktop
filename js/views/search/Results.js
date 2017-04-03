@@ -2,6 +2,7 @@ import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import ListingCard from '../ListingCard';
+import UserCard from '../userCard';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 
@@ -53,8 +54,14 @@ export default class extends baseVw {
       // }
       // console.log('This listing result has no vendor data');
     }
-    // create a user card
-    return false;
+
+    // the search should use a parameter to prevent profile results from coming in, the code below
+    // should be fleshed out if/when we allow profiles as search results
+    const options = {
+      model,
+    };
+
+    return this.createChild(UserCard, options);
   }
 
   renderCards(models) {

@@ -7,6 +7,7 @@
   &:before,
   &:after {
     // this creates a pair of pseudo elements that fill any gaps in the last row of the grid
+    // this only works when the grid is 3 across. We'll need a fancier solution for other numbers
     content: '';
     width: 225px;
     order: 999999999;
@@ -15,10 +16,50 @@
   .listingCard {
     margin-bottom: $padMd;
     font-size: $tx5b;
+  }
 
-    // todo: adjust this when full width listings is implemented
-    &:nth-child(3n) {
-      margin-right: 0;
+  .userCard {
+    // user cards can be shown in test results, style them to look like listing cards
+    // TODO: design a better look for these when they're actually used
+    width: 225px;
+    height: 283px;
+
+    .shortHeader {
+      width: 223px;
+      height: 225px;
+      margin-bottom: 0;
+
+      .userIcon {
+        top: 201px;
+        right: 8px;
+        left: auto;
+        border: none;
+      }
+
+      .userControls {
+        bottom: auto;
+        right: auto;
+        left: $pad;
+        top: $pad;
+      }
+    }
+
+    .content {
+      height: 56px;
+      padding: $pad;
+
+      .contentTop {
+        height: 72px;
+
+        .userName,
+        .userDescription {
+          font-size: $tx5b;
+          -webkit-line-clamp: 1;
+        }
+      }
+      .contentBottom {
+        display: none;
+      }
     }
   }
 
