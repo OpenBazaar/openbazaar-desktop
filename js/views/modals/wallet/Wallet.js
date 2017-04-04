@@ -44,7 +44,12 @@ export default class extends BaseModal {
         // "wallet" sockets come for new transactions and when a transaction gets it's
         // first confirmation. We're only listed in new transactions (i.e. the height will be 0)
         if (e.jsonData.wallet && !e.jsonData.height) {
-          this.fetchAddress();
+          if (this.sendModeOn) {
+            // we'll fetch the next time we show the receive money section
+            this.needAddressFetch = true;
+          } else {
+            this.fetchAddress();
+          }
         }
       });
     }
@@ -65,7 +70,7 @@ export default class extends BaseModal {
     this.sendModeOn = !this.sendModeOn;
   }
 
-  set sendModeOn(bool) {
+  set sendModeOn(bool = true) {
     if (typeof bool !== 'boolean') {
       throw new Error('Please provide a boolean.');
     }
@@ -73,6 +78,10 @@ export default class extends BaseModal {
     if (bool !== this._sendModeOn) {
       this.$el.toggleClass('receiveModeOn', !bool);
       this._sendModeOn = bool;
+
+      if (bool && this.sendMoney) {
+        this.sendMoney.focusAddress();
+      }
 
       if (!bool && this.needAddressFetch) {
         this.fetchAddress();
@@ -82,6 +91,21 @@ export default class extends BaseModal {
 
   get sendModeOn() {
     return this._sendModeOn;
+  }
+
+  setSendFormData(data = {}, options = {}) {
+    // TODO: handle case of send in progress!!!!
+    const opts = {
+      showSendMode: true,
+      // focus will only happen if you showSendMode
+      focusAddressInput: true,
+      ...options,
+    };
+
+    if (this.sendMoney) {
+      if (opts.showSendMode) this.sendModeOn();
+      this.sendMoney.setFormData(data, !!opts.focusAddressInput);
+    }
   }
 
   fetchAddress() {

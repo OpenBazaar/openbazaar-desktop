@@ -547,7 +547,8 @@
     "receiveMoney": {
       "title": "Receive Money",
       "needBitcoin": "Need Bitcoin?"
-    }
+    },
+    "sendPaymentFailDialogTitle": "Unable to send payment"
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
@@ -852,8 +853,8 @@
   "spendModelErrors": {
     "provideAddress": "Please provide an address.",
     "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
-    "provideAmountNumber": "Please provide an amount as a number",
-    "amountGreaterThanZero": "The amount must be greater than zero"
+    "provideAmountNumber": "Please provide an amount as a number.",
+    "amountGreaterThanZero": "The amount must be greater than zero."
   },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

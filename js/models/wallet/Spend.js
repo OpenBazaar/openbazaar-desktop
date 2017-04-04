@@ -1,5 +1,4 @@
-// import { integerToDecimal } from '../../utils/currency';
-import { isMultihash } from '../../utils';
+import { decimalToInteger, convertCurrency } from '../../utils/currency';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -32,8 +31,6 @@ export default class extends BaseModel {
 
     if (!attrs.address) {
       addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
-    } else if (!isMultihash(attrs.address)) {
-      addError('address', app.polyglot.t('spendModelErrors.invalidAddress'));
     }
 
     if (typeof attrs.amount !== 'number') {
@@ -50,8 +47,29 @@ export default class extends BaseModel {
       addError('memo', 'If provided, the memo should be a string.');
     }
 
+    if (!attrs.currency) {
+      addError('currency', 'Please provide a currency.');
+    }
+
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;
+  }
+
+  sync(method, model, options) {
+    options.attrs = options.attrs || this.toJSON();
+
+    if (method === 'create' || method === 'update') {
+      let amount = options.attrs.amount;
+
+      if (options.attrs.currency !== 'BTC') {
+        amount = convertCurrency(amount, options.attrs.currency, 'BTC');
+      }
+
+      options.attrs.amount = decimalToInteger(amount, true);
+      delete options.attrs.currency;
+    }
+
+    return super.sync(method, model, options);
   }
 }

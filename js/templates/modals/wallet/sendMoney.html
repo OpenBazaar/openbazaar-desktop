@@ -8,7 +8,7 @@
     </div>
     <div class="col9">
       <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
-      <input type="text" class="clrBr clrSh2" name="address" id="walletSendTo" value="" placeholder="Enter a Bitcoin Address">
+      <input type="text" class="clrBr clrSh2" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="Enter a Bitcoin Address">
     </div>
   </div>
   <div class="flexRow gutterHLg">
@@ -19,7 +19,14 @@
     </div>
     <div class="col9">
       <% if (ob.errors.amount) print(ob.formErrorTmpl({ errors: ob.errors.amount })) %>
-      <input type="text" class="clrBr clrSh2" name="amount" id="walletSendAmount" value="" placeholder="0.00">
+      <div class="inputSelect">
+        <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.amount %>" data-var-type="number" placeholder="0.00">
+        <select id="walletSendCurrency" name="currency" class="clrBr clrP nestInputRight">
+          <% ob.currencies.forEach((currency) => {%>
+          <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
+          <% }); %>
+        </select>
+      </div>
     </div>
   </div>
   <div class="flexRow gutterHLg">
@@ -30,12 +37,12 @@
     </div>
     <div class="col9">
       <% if (ob.errors.memo) print(ob.formErrorTmpl({ errors: ob.errors.memo })) %>
-      <input type="text" class="clrBr clrSh2" name="memo" id="walletSendNote" value="" placeholder="Only seen by you">
+      <input type="text" class="clrBr clrSh2" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="Only seen by you">
     </div>
   </div>
   <div class="flexHRight col11">
     <%= ob.processingButton({
-      className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph',
+      className: 'js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph',
       <!-- btnText: ob.polyT('settings.btnSave') -->
       btnText: 'Send'
     }) %>    
