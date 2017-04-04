@@ -458,8 +458,13 @@ function start() {
 
         if (serverSocket) {
           serverSocket.on('message', (e = {}) => {
-            if (e.walletUpdate) {
-              app.walletBalance.set(e.walletUpdate);
+            if (e.jsonData.walletUpdate) {
+              const parsedData = app.walletBalance.parse({
+                confirmed: e.jsonData.walletUpdate.confirmed,
+                unconfirmed: e.jsonData.walletUpdate.unconfirmed,
+              });
+
+              app.walletBalance.set(parsedData);
             }
           });
         }

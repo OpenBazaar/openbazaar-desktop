@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -35,6 +36,17 @@ export default class extends BaseModal {
         });
       }
     });
+
+    const serverSocket = getSocket();
+
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', e => {
+        // todo: distinguish between new transaction and first confirmed transaction
+        if (e.jsonData.wallet) {
+          this.fetchAddress();
+        }
+      });
+    }
   }
 
   className() {
@@ -74,7 +86,7 @@ export default class extends BaseModal {
   fetchAddress() {
     if (this.receiveMoney) {
       this.receiveMoney.setState({
-        isFetching: true,
+        fetching: true,
       });
     }
 
@@ -149,8 +161,7 @@ export default class extends BaseModal {
 
         this.receiveMoney = this.createChild(ReceiveMoney, {
           initialState: {
-            // fetching: this.isAdressFetching(),
-            fetching: true,
+            fetching: this.isAdressFetching(),
           },
         });
 
