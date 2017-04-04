@@ -1,6 +1,8 @@
 <%
   const getTextSize = function(str) {
-    if (str.length > 19) {
+    if (str.length > 23) {
+      return 'tx5';
+    } else if (str.length > 19) {
       return 'tx4';
     } else if (str.length > 14) {
       return 'tx3';
