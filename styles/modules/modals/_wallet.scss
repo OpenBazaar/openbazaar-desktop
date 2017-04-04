@@ -20,13 +20,11 @@
   .statsWrap {
     border-right-width: 1px;
     border-right-style: solid;
+    padding-right: $padMd;
 
     .buttonWrap {
-      text-align: center;
-
       .btn {
-        // center button irrespective of left padding
-        transform: translateX(-($padMd / 2));
+        width: 100%;
       }
     }
   }
