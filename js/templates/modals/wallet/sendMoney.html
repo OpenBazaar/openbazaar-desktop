@@ -1,0 +1,43 @@
+<h2 class="h3 txCtr txUnl">Send Money</h2>
+<form class="padMdKids padStack">
+  <div class="flexRow gutterHLg">
+    <div class="col2">
+      <div class="flexVCent flexHRight">
+        <label for="walletSendTo" class="required">To</label>
+      </div>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
+      <input type="text" class="clrBr clrSh2" name="address" id="walletSendTo" value="" placeholder="Enter a Bitcoin Address">
+    </div>
+  </div>
+  <div class="flexRow gutterHLg">
+    <div class="col2">
+      <div class="flexVCent flexHRight">
+        <label for="walletSendAmount" class="required">Amount</label>
+      </div>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.amount) print(ob.formErrorTmpl({ errors: ob.errors.amount })) %>
+      <input type="text" class="clrBr clrSh2" name="amount" id="walletSendAmount" value="" placeholder="0.00">
+    </div>
+  </div>
+  <div class="flexRow gutterHLg">
+    <div class="col2">
+      <div class="flexVCent flexHRight">
+        <label for="walletSendNote">Note</label>
+      </div>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.memo) print(ob.formErrorTmpl({ errors: ob.errors.memo })) %>
+      <input type="text" class="clrBr clrSh2" name="memo" id="walletSendNote" value="" placeholder="Only seen by you">
+    </div>
+  </div>
+  <div class="flexHRight col11">
+    <%= ob.processingButton({
+      className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph',
+      <!-- btnText: ob.polyT('settings.btnSave') -->
+      btnText: 'Send'
+    }) %>    
+  </div>
+</form>

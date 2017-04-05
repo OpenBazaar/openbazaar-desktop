@@ -1,0 +1,11 @@
+<svg viewBox="0 0 46 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="iconWallet <% if (ob.className) print(` ${ob.className}`) %>">
+    <title>wallet</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="wallet" fill-rule="nonzero" fill="#000000">
+            <path d="M37,10.8 L46,10.8 L46,4 C46,1.8 44.2,0 42,0 L4,0 C1.8,0 0,1.8 0,4 L0,34 C0,36.2 1.8,38 4,38 L42,38 C44.2,38 46,36.2 46,34 L46,26.8 L37,26.8 C31.5,26.8 29,24.1 29,19.6 L29,18 C29,13.4 31.5,10.8 37,10.8 Z" id="Shape"></path>
+            <circle id="Oval" cx="35.8" cy="19" r="2.8"></circle>
+        </g>
+    </g>
+</svg>

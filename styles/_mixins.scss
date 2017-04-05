@@ -108,6 +108,20 @@
       fill: $col1;
     }
   }
+
+  .iconWallet {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
+
+  &.iconWallet {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
 }
 
 @mixin triangle($width, $color: inherit) {
