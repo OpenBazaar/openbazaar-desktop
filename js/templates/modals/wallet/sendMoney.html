@@ -3,18 +3,18 @@
   <div class="flexRow gutterHLg">
     <div class="col2">
       <div class="flexVCent flexHRight">
-        <label for="walletSendTo" class="required">To</label>
+        <label for="walletSendTo" class="required"><%= ob.polyT('wallet.sendMoney.toLabel') %></label>
       </div>
     </div>
     <div class="col9">
       <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
-      <input type="text" class="clrBr clrSh2" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="Enter a Bitcoin Address">
+      <input type="text" class="clrBr clrSh2" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder') %>">
     </div>
   </div>
   <div class="flexRow gutterHLg">
     <div class="col2">
       <div class="flexVCent flexHRight">
-        <label for="walletSendAmount" class="required">Amount</label>
+        <label for="walletSendAmount" class="required"><%= ob.polyT('wallet.sendMoney.amountLabel') %></label>
       </div>
     </div>
     <div class="col9">
@@ -32,19 +32,19 @@
   <div class="flexRow gutterHLg">
     <div class="col2">
       <div class="flexVCent flexHRight">
-        <label for="walletSendNote">Note</label>
+        <label for="walletSendNote"><%= ob.polyT('wallet.sendMoney.noteLabel') %></label>
       </div>
     </div>
     <div class="col9">
       <% if (ob.errors.memo) print(ob.formErrorTmpl({ errors: ob.errors.memo })) %>
-      <input type="text" class="clrBr clrSh2" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="Only seen by you">
+      <input type="text" class="clrBr clrSh2" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="<%= ob.polyT('wallet.sendMoney.notePlaceholder') %>">
     </div>
   </div>
-  <div class="flexHRight col11">
+  <div class="flexHRight flexVCent gutterH col11">
+    <a class="js-sendMoneyClear"><%= ob.polyT('wallet.sendMoney.clear') %></a>
     <%= ob.processingButton({
       className: 'js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph',
-      <!-- btnText: ob.polyT('settings.btnSave') -->
-      btnText: 'Send'
+      btnText: ob.polyT('wallet.sendMoney.sendBtn')
     }) %>    
   </div>
 </form>

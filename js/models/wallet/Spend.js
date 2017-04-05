@@ -3,7 +3,7 @@ import { decimalToInteger, convertCurrency } from '../../utils/currency';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
-export default class extends BaseModel {
+class Spend extends BaseModel {
   url() {
     return app.getServerUrl('wallet/spend/');
   }
@@ -88,4 +88,56 @@ export default class extends BaseModel {
 
     return super.sync(method, model, options);
   }
+
+  parse(response) {
+    const parsed = {
+      ...response,
+    };
+
+    delete parsed.txid;
+    return parsed;
+  }
+}
+
+export default Spend;
+
+/**
+ * Use this function anytime you want to spend money from the internal wallet.
+ * This function will ensure the balance is properly updated and the Wallet view
+ * is informed so that it's UI could reflect the transaction.
+ * @param {Object} fields An object containing the arguments to the spend call -
+ * (address, amount and optionally currency, memo and feeLevel).
+ * @returns {Object} If client side validation passes the return object will contain
+ * a jqXhr attribute represending the POST to the server. If client side validation fails
+ * it will contain an error attribute with specific validation errors.
+ */
+export function spend(fields) {
+  const attrs = {
+    currency: app && app.settings && app.settings.get('localCurrency') || 'BTC',
+    memo: '',
+    ...fields,
+  };
+
+  const spendModel = new Spend(attrs);
+  const save = spendModel.save();
+  const returnObj = {};
+
+  if (save) {
+    returnObj.jqXhr = save;
+
+    save.done(data => {
+      if (app.walletBalance) {
+        app.walletBalance.set(
+          app.walletBalance.parse({
+            confirmed: data.confirmedBalance,
+            unconfirmed: data.unconfirmedBalance,
+          })
+        );
+      }
+    });
+  } else {
+    returnObj.error = spendModel.validationError;
+  }
+
+  return returnObj;
 }

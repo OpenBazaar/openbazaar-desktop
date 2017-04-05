@@ -93,8 +93,19 @@ export default class extends BaseModal {
     return this._sendModeOn;
   }
 
+  /**
+   * Set the contents of the Send Money form. Will return
+   * true if able to set the form or false otherwise. The most
+   * common reason for not being able to set the form is that a
+   * send is already in progress.
+   */
   setSendFormData(data = {}, options = {}) {
-    // TODO: handle case of send in progress!!!!
+    if (!this.sendMoney) return false;
+
+    if (this.sendMoney.saveInProgress) {
+      return false;
+    }
+
     const opts = {
       showSendMode: true,
       // focus will only happen if you showSendMode
@@ -102,10 +113,9 @@ export default class extends BaseModal {
       ...options,
     };
 
-    if (this.sendMoney) {
-      if (opts.showSendMode) this.sendModeOn();
-      this.sendMoney.setFormData(data, !!opts.focusAddressInput);
-    }
+    if (opts.showSendMode) this.sendModeOn();
+    this.sendMoney.setFormData(data, !!opts.focusAddressInput);
+    return true;
   }
 
   fetchAddress() {

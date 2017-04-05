@@ -548,7 +548,16 @@
       "title": "Receive Money",
       "needBitcoin": "Need Bitcoin?"
     },
-    "sendPaymentFailDialogTitle": "Unable to send payment"
+    "sendMoney": {
+      "toLabel": "To",
+      "toPlaceholder": "Enter a Bitcoin Address",
+      "amountLabel": "Amount",
+      "noteLabel": "Note",
+      "notePlaceholder": "Only seen by you",
+      "sendBtn": "Send",
+      "clear": "Clear",
+      "sendPaymentFailDialogTitle": "Unable to send payment"  
+    }    
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
