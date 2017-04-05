@@ -129,16 +129,16 @@
       <div class="flexRow gutterH">
         <div class="col3">
           <label for="settingsSearch"><%= ob.polyT('settings.generalTab.searchProvider') %></label>
-          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.searchProviderHelper') %></div>
         </div>
         <div class="col6">
           <% if (ob.errors.searchProvider) print(ob.formErrorTmpl({ errors: ob.errors.searchProvider })) %>
           <input type="text"
-                 class="clrBr clrSh2"
+                 class="clrBr clrSh2 rowSm"
                  name="searchProvider"
                  id="settingsSearch"
                  data-persistence-location="local"
                  value="<%= ob.searchProvider %>">
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.searchProviderHelper') %></div>
         </div>
       </div>
     </form>

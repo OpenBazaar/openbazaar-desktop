@@ -22,7 +22,7 @@ export default class extends Model {
       language: 'en-US',
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
-      searchProvider: 'https://search.ob1.io',
+      searchProvider: 'https://search.ob1.io/search/listings',
     };
   }
 

@@ -62,7 +62,7 @@ export default class extends baseVw {
     // if term has spaces, replace them with +
     const query = term ? `q=${term.replace(/\s+/g, '+')}` : 'q=*';
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const provider = `${this.sProvider}/search?`;
+    const provider = `${this.sProvider}?`;
     const searchURL = `${provider}${query}${this.sortByQuery}${this.filterQuery}${page}`;
 
     this.callSearchProvider(searchURL);

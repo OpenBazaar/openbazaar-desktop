@@ -250,7 +250,7 @@
       "statusSaveFailed": "Unable to save general settings.",
       "saveErrorAlertTitle": "Unable to save general settings",
       "searchProvider": "Search Provider",
-      "searchProviderHelper": "Default: https://search.ob1.io",
+      "searchProviderHelper": "Default: https://search.ob1.io/search/listings",
       "searchProviderError": "This is not a valid url for a search provider"
     },
     "pageTab": {
