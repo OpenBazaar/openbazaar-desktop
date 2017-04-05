@@ -5,6 +5,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import app from '../app';
 import multihashes from 'multihashes';
+import bitcoreLib from 'bitcore-lib';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -125,6 +126,19 @@ export function guid(prefix = '') {
 export function isMultihash(_string) {
   try {
     multihashes.validate(multihashes.fromB58String(_string));
+    return true;
+  } catch (exc) {
+    return false;
+  }
+}
+
+export function isValidBitcoinAddress(address) {
+  if (typeof address !== 'string') {
+    throw new Error('Please provide a string.');
+  }
+
+  try {
+    bitcoreLib.encoding.Base58Check.decode(address);
     return true;
   } catch (exc) {
     return false;

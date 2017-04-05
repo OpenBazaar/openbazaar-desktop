@@ -1,3 +1,4 @@
+import { isValidBitcoinAddress } from '../../utils/';
 import { decimalToInteger, convertCurrency } from '../../utils/currency';
 import app from '../../app';
 import BaseModel from '../BaseModel';
@@ -22,6 +23,17 @@ export default class extends BaseModel {
     ];
   }
 
+  get amountInBitcoin() {
+    let btcAmount = 0;
+    const amount = this.get('amount');
+
+    if (typeof amount === 'number') {
+      btcAmount = convertCurrency(amount, this.get('currency'), 'BTC');
+    }
+
+    return btcAmount;
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -31,12 +43,16 @@ export default class extends BaseModel {
 
     if (!attrs.address) {
       addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
+    } else if (!isValidBitcoinAddress(attrs.address)) {
+      addError('address', app.polyglot.t('spendModelErrors.invalidAddress'));
     }
 
     if (typeof attrs.amount !== 'number') {
       addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
     } else if (attrs.amount <= 0) {
       addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
+    } else if (this.amountInBitcoin >= app.walletBalance.get('confirmed')) {
+      addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
     }
 
     if (this.feeLevels.indexOf(attrs.feeLevel) === -1) {
@@ -63,7 +79,7 @@ export default class extends BaseModel {
       let amount = options.attrs.amount;
 
       if (options.attrs.currency !== 'BTC') {
-        amount = convertCurrency(amount, options.attrs.currency, 'BTC');
+        amount = this.amountInBitcoin;
       }
 
       options.attrs.amount = decimalToInteger(amount, true);
