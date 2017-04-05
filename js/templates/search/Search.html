@@ -3,6 +3,7 @@
 */ %>
 
 <div class="pageContent">
+  <% if (!ob.emptyData) { %>
   <div class="flexColRows gutterV row">
     <h3><%= ob.name %></h3>
     <div class="searchBar clrP clrBr">
@@ -14,9 +15,10 @@
       <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>" type="text" value="<%= ob.term %>">
       <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
     </div>
+    <% // TODO: if suggestions exist show below %>
     <div class="suggestions flex gutterH">
       <span class="tx5 clrT2"><%= ob.polyT('search.suggestions') %></span>
-      <% // suggestions loop %>
+      <% // TODO: suggestions loop %>
     </div>
     <hr class="clrBr">
   </div>
@@ -62,22 +64,26 @@
         <div class="width100">
           <div class="row flexVBase gutterH">
             <div class="tx5 flexExpand">
-              <% if (ob.term) { %>
-                <%= ob.polyT('search.resultsFound', { totalResults: ob.results.total, term: ob.term || ' ' }) %>
-              <% } else { %>
-              <b><%= ob.polyT('search.resultsTotal', { totalResults: ob.results.total }) %></b>
+              <% if (ob.results) { %>
+                <% if (ob.term) { %>
+                  <%= ob.polyT('search.resultsFound', { totalResults: ob.results.total, term: ob.term }) %>
+                <% } else { %>
+                <b><%= ob.polyT('search.resultsTotal', { totalResults: ob.results.total }) %></b>
+                <% } %>
               <% } %>
             </div>
-            <div class="tx5b">
-              <%= ob.polyT('search.sortBy') %>
-            </div>
-            <div class="col4">
-              <select id="sortBy" class="js-sortBy">
-                <% _.each(ob.sortBy, function(val, key) {
-                print('<option value="'+key+'">'+val.label+'</option>');
-                }); %>
-              </select>
-            </div>
+            <% if (ob.sortBy) { %>
+              <div class="tx5b">
+                <%= ob.polyT('search.sortBy') %>
+              </div>
+              <div class="col4">
+                <select id="sortBy" class="js-sortBy">
+                  <% _.each(ob.sortBy, function(val, key) {
+                  print('<option value="'+key+'">'+val.label+'</option>');
+                  }); %>
+                </select>
+              </div>
+            <% } %>
           </div>
         </div>
         <div class="js-resultsWrapper">
@@ -86,4 +92,20 @@
       </div>
     </div>
   </div>
+  <% } else { %>
+  <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
+    <h2 class="rowLg"><%= ob.polyT('search.errors.emptyData', { provider: ob.provider }) %></h2>
+    <div>
+      <% if (ob.provider === ob.defaultProvider) { %>
+        <button class="btn clrP clrBr js-changeProvider">
+          <%= ob.polyT('search.changeProvider') %>
+        </button>
+      <% } else { %>
+        <button class="btn clrP clrBr js-useDefault">
+          <%= ob.polyT('search.useDefault', { term: ob.term || "", defaultProvider: ob.defaultProvider }) %>
+        </button>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
 </div>

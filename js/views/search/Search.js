@@ -5,6 +5,7 @@ import $ from 'jquery';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
+import SettingsModal from '../modals/Settings/Settings';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -31,6 +32,16 @@ export default class extends baseVw {
       this.term = term;
       this.processTerm(term);
     }
+
+    this.usingDefault = this.sProvider === app.localSettings.get('searchProvider');
+
+    // if not using a passed in URL, update the default provider if it changes
+    this.listenTo(app.localSettings, 'change:searchProvider', (_, provider) => {
+      if (this.usingDefault) {
+        this.sProvider = provider;
+        this.processTerm(this.term);
+      }
+    });
   }
 
   className() {
@@ -44,6 +55,8 @@ export default class extends baseVw {
       'change .js-filterWrapper select': 'changeFilter',
       'change .js-filterWrapper input': 'changeFilter',
       'keyup .js-searchInput': 'onKeyupSearchInput',
+      'click .js-changeProvider': 'clickChangeProvider',
+      'click .js-useDefault': 'clickUseDefault',
     };
   }
 
@@ -78,10 +91,13 @@ export default class extends baseVw {
         })
         .fail((xhr) => {
           const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+          const msg = failReason ?
+              app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
           openSimpleMessage(
               app.polyglot.t('search.errors.searchFailTitle', { provider: searchURL }),
-              app.polyglot.t('search.errors.searchFailReason', { error: failReason })
+              msg
           );
+          this.render({}, searchURL);
         });
   }
 
@@ -119,6 +135,18 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
+  clickChangeProvider() {
+    if (!this.settingsModal || !this.settingsModal.isOpen()) {
+      this.settingsModal = new SettingsModal().render().open();
+    }
+  }
+
+  clickUseDefault() {
+    this.usingDefault = true;
+    this.sProvider = app.localSettings.get('searchProvider');
+    this.processTerm(this.term);
+  }
+
   render(data, searchURL) {
     if (!data) {
       throw new Error('Please provide data for the render.');
@@ -127,9 +155,15 @@ export default class extends baseVw {
       throw new Error('Please provide the search URL used for the render data.');
     }
 
+    // check to see if the call to the provider failed, or returned an empty result
+    const emptyData = $.isEmptyObject(data);
+
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
         term: this.term,
+        provider: this.sProvider,
+        defaultProvider: app.localSettings.get('searchProvider'),
+        emptyData,
         ...data,
       }));
     });
@@ -146,7 +180,7 @@ export default class extends baseVw {
     });
 
     // use the initial set of results data to create the results view
-    this.createResults(data, searchURL);
+    if (data.results) this.createResults(data, searchURL);
 
     return this;
   }

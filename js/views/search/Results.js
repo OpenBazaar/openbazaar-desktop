@@ -24,7 +24,7 @@ export default class extends baseVw {
     // if an initial collection was passed in, add it
     if (options.initCol) this.pageCollection[this.serverPage] = (options.initCol);
     this.currentPage = 0;
-    this.pageSize = this.options.pageSize || 12; // this should be a multiple of 3
+    this.pageSize = this.options.pageSize || 12;
   }
 
   className() {
