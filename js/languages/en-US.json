@@ -54,7 +54,7 @@
       },
       "unableToGetWalletBalance": {
         "title": "Unable to get wallet balance."
-      }      
+      }
     },
     "startupLoadingModal": {
       "canceLink": "cancel",
@@ -620,7 +620,6 @@
       "variants": "Variants",
       "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
       "inventory": "Inventory",
-      "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
       "coupons": "Coupons",
