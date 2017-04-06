@@ -1,3 +1,4 @@
+import app from '../app';
 import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
@@ -63,9 +64,14 @@ export function launchWallet(modalOptions = {}) {
   if (_wallet) {
     _wallet.open();
   } else {
-    _wallet = new Wallet(modalOptions)
+    _wallet = new Wallet({
+      removeOnRoute: false,
+      ...modalOptions,
+    })
       .render()
       .open();
+
+    app.router.on('will-route', () => _wallet.close());
   }
 
   return _wallet;
