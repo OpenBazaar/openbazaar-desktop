@@ -93,5 +93,18 @@
         }
       }      
     }
+
+    .sendMoney {
+      position: relative;
+
+      .sendConfirm {
+        display: block;
+        position: absolute;
+        right: -28px;
+        width: 245px;
+        transform: translateY(-7px);
+        z-index: 1;
+      }
+    }
   }
 }

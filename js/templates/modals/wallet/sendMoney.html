@@ -48,3 +48,13 @@
     }) %>    
   </div>
 </form>
+<div class="js-sendConfirm sendConfirm arrowBoxTop border clrBr clrP clrT txCtr pad <% if (!ob.sendConfirmOn) print('hide') %>">
+  <div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+  <p class="clrT2"><%= ob.polyT('wallet.sendMoney.sendConfirm.body') %></p>
+  <hr class="clrBr row" />
+
+  <div class="flexHRight flexVCent gutterHLg">
+    <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
+    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a>
+  </div>
+</div>

@@ -107,9 +107,7 @@ export default Spend;
  * is informed so that it's UI could reflect the transaction.
  * @param {Object} fields An object containing the arguments to the spend call -
  * (address, amount and optionally currency, memo and feeLevel).
- * @returns {Object} If client side validation passes the return object will contain
- * a jqXhr attribute represending the POST to the server. If client side validation fails
- * it will contain an error attribute with specific validation errors.
+ * @returns {Object} The jqXhr representing the POST call to the server.
  */
 export function spend(fields) {
   const attrs = {

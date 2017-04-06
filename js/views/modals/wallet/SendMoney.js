@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
@@ -11,6 +10,7 @@ export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.saveInProgress = false;
+    this.sendConfirmOn = false;
     this.model = new Spend();
   }
 
@@ -22,7 +22,31 @@ export default class extends baseVw {
     return {
       'click .js-btnSend': 'onClickSend',
       'click .js-sendMoneyClear': 'onClickClear',
+      'click .js-btnConfirmSend': 'onClickConfirmSend',
+      'click .js-sendConfirmCancel': 'onClickSendConfirmCancel',
     };
+  }
+
+  onClickConfirmSend() {
+    this.$sendConfirm.addClass('hide');
+
+    // POSTing payment to the server
+    this.$btnSend.addClass('processing');
+    this.saveInProgress = true;
+
+    spend(this.model.toJSON())
+      .done(() => {
+        // temporary alert until transaction is implemented
+        alert('Payment has been sent.');
+      })
+      .fail(jqXhr => {
+        openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
+          jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
+      })
+      .always(() => {
+        this.$btnSend.removeClass('processing');
+        this.saveInProgress = false;
+      });
   }
 
   onClickSend() {
@@ -34,27 +58,15 @@ export default class extends baseVw {
     this.render();
 
     if (!this.model.validationError) {
-      // POSTing payment to the server
-      this.$btnSend.addClass('processing');
-      this.saveInProgress = true;
-
-      spend(this.model.toJSON())
-        .done(() => {
-          // temporary alert until transaction is implemented
-          alert('Payment has been sent.');
-        })
-        .fail(jqXhr => {
-          openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
-            jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
-        })
-        .always(() => {
-          this.$btnSend.removeClass('processing');
-          this.saveInProgress = false;
-        });
+      this.$sendConfirm.removeClass('hide');
     }
 
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+  }
+
+  onClickSendConfirmCancel() {
+    this.$sendConfirm.addClass('hide');
   }
 
   onClickClear() {
@@ -93,6 +105,11 @@ export default class extends baseVw {
       (this._$btnSend = this.$('.js-btnSend'));
   }
 
+  get $sendConfirm() {
+    return this._$sendConfirm ||
+      (this._$sendConfirm = this.$('.js-sendConfirm'));
+  }
+
   setFormData(data = {}, focusAddressInput = true) {
     this.model.set(data);
     this.render();
@@ -107,11 +124,13 @@ export default class extends baseVw {
         currency: this.model.get('currency') || app.settings.get('localCurrency'),
         currencies: this.currencies ||
           getCurrenciesSortedByCode(),
+        sendConfirmOn: this.sendConfirmOn,
       }));
 
       this._$addressInput = null;
       this._$formFields = null;
       this._$btnSend = null;
+      this._$sendConfirm = null;
 
       this.$('#walletSendCurrency').select2();
     });

@@ -556,7 +556,13 @@
       "notePlaceholder": "Only seen by you",
       "sendBtn": "Send",
       "clear": "Clear",
-      "sendPaymentFailDialogTitle": "Unable to send payment"  
+      "sendPaymentFailDialogTitle": "Unable to send payment",
+      "sendConfirm": {
+        "heading": "Are you sure?",
+        "body": "Double check that the address and amount are correct.",
+        "btnCancel": "Cancel",
+        "btnConfirmSend": "Yes, Send"
+      }      
     }    
   },
   "formats": {
