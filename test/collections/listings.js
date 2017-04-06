@@ -9,11 +9,11 @@ describe('the Listings collection', () => {
       // Please Note: As of now, sorting only works on standard ascii characters.
 
       const listing = new Listings([{
-        category: ['uno', 'dos', 'tres'],
+        categories: ['uno', 'dos', 'tres'],
       }, {
-        category: ['one', 'two', 'three'],
+        categories: ['one', 'two', 'three'],
       }, {
-        category: ['raz', 'dwa', 'trzy'],
+        categories: ['raz', 'dwa', 'trzy'],
       }], { guid: 'QmZY1kx6VrNjgDB4SJDByxvSVuiBfsisRLdUMJRDppTTsS' });
 
       const expectedCats = ['dos', 'dwa', 'one', 'raz', 'three', 'tres', 'trzy', 'two', 'uno'];
@@ -22,11 +22,11 @@ describe('the Listings collection', () => {
 
     it('that returns a list of categories without duplicates', () => {
       const listing = new Listings([{
-        category: ['uno', 'dos', 'tres'],
+        categories: ['uno', 'dos', 'tres'],
       }, {
-        category: ['uno', 'two', 'three'],
+        categories: ['uno', 'two', 'three'],
       }, {
-        category: ['raz', 'dos', 'trzy'],
+        categories: ['raz', 'dos', 'trzy'],
       }], { guid: 'QmZY1kx6VrNjgDB4SJDByxvSVuiBfsisRLdUMJRDppTTsS' });
 
       const expectedCats = ['dos', 'raz', 'three', 'tres', 'trzy', 'two', 'uno'];
