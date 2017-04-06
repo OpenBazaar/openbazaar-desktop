@@ -111,6 +111,10 @@
         width: 245px;
         transform: translateY(-7px);
         z-index: 1;
+        padding: $pad;
+        border-style: solid;
+        border-width: 1px;
+        text-align: center;
       }
     }
   }
