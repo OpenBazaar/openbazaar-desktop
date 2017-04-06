@@ -26,6 +26,7 @@ export default class extends baseVw {
     this.pageCollections = {};
     // if an initial collection was passed in, add it
     if (options.initCol) this.pageCollections[this.serverPage] = (options.initCol);
+    this.firstRender = true;
   }
 
   className() {
@@ -91,18 +92,22 @@ export default class extends baseVw {
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
+    // get the new page
+    const url = new URL(this.searchURL);
+    const params = new URLSearchParams(url.search);
+    params.set('p', page);
+    params.set('ps', size);
+    const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
+
     // if page exists, reuse it
     if (this.pageCollections[page]) {
       this.renderCards(this.pageCollections[page]);
+      // update the address bar
+      app.router.navigate(newURL, { replace: this.firstRender });
     } else {
       // show the loading spinner
       this.$el.addClass('loading');
-       // get the new page
-      const url = new URL(this.searchURL);
-      const params = new URLSearchParams(url.search);
-      params.set('p', page);
-      params.set('ps', size);
-      const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
+
       const newPageCol = new ResultsCol();
       this.pageCollections[page] = newPageCol;
 
@@ -111,6 +116,8 @@ export default class extends baseVw {
       })
           .done(() => {
             this.renderCards(newPageCol);
+            // update the address bar
+            app.router.navigate(newURL, { replace: this.firstRender });
           })
           .fail((xhr) => {
             this.trigger('searchError', xhr);
@@ -118,14 +125,14 @@ export default class extends baseVw {
     }
   }
 
-  clickPagePrev(e) {
+  clickPagePrev() {
     if (this.serverPage > 0) {
       this.serverPage--;
       this.loadPage();
     }
   }
 
-  clickPageNext(e) {
+  clickPageNext() {
     if (this.morePages) {
       this.serverPage++;
       this.loadPage();
@@ -142,6 +149,7 @@ export default class extends baseVw {
       this.cardViews = [];
       this.loadPage();
     });
+    this.firstRender = false;
 
     return this;
   }
