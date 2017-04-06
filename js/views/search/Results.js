@@ -63,8 +63,10 @@ export default class extends baseVw {
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
     const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
-    let start = end - this.pageSize + 1;
-    start = start > 0 ? start : 1;
+    let start = 0;
+    if (models.total) {
+      start = end >= this.pageSize ? end - this.pageSize + 1 : 1;
+    }
     const total = models.total;
     this.morePages = models.morePages;
     // set the classes that control the button states
