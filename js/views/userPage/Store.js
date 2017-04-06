@@ -345,7 +345,7 @@ export default class extends BaseVw {
       }
 
       if (this.filter.category !== 'all' &&
-        md.get('category').indexOf(this.filter.category) === -1) {
+        md.get('categories').indexOf(this.filter.category) === -1) {
         passesFilter = false;
       }
 
