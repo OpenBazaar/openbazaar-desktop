@@ -8,7 +8,7 @@ let aboutModal;
 let editListingModal;
 let debugLogModal;
 let moderatorDetailsModal;
-let wallet;
+let _wallet;
 
 export function launchEditListingModal(modalOptions = {}) {
   if (editListingModal) editListingModal.remove();
@@ -60,18 +60,17 @@ export function launchModeratorDetailsModal(modalOptions = {}) {
 }
 
 export function launchWallet(modalOptions = {}) {
-  if (wallet) {
-    wallet.bringToTop();
+  if (_wallet) {
+    _wallet.open();
   } else {
-    wallet = new Wallet({
-      removeOnClose: true,
-      ...modalOptions,
-    })
+    _wallet = new Wallet(modalOptions)
       .render()
       .open();
-
-    wallet.on('modal-will-remove', () => (wallet = null));
   }
 
-  return wallet;
+  return _wallet;
+}
+
+export function getWallet() {
+  return _wallet;
 }

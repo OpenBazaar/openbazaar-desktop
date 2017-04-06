@@ -80,7 +80,9 @@ export default class extends baseVw {
     this.clearForm();
     this.model.set(data);
     this.render();
-    if (focusAddressInput) this.focusAddressInput();
+    setTimeout(() => {
+      if (focusAddressInput) this.focusAddress();
+    });
   }
 
   clearModel() {

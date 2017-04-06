@@ -196,7 +196,11 @@
       "btnOpenInWallet" : "Open in Wallet",
       "notifyCopied": "Copied",
       "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "copied": "Copied"
+      "copied": "Copied",
+      "unableToOpenInWallet": {
+        "title": "Unable to open in wallet",
+        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
+      }
     },
     "licenseTab": {
       "linkText": "License",

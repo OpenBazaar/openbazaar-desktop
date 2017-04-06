@@ -113,7 +113,7 @@ export default class extends BaseModal {
       ...options,
     };
 
-    if (opts.showSendMode) this.sendModeOn();
+    if (opts.showSendMode) this.sendModeOn = true;
     this.sendMoney.setFormData(data, !!opts.focusAddressInput);
     return true;
   }
