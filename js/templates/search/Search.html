@@ -87,7 +87,7 @@
           </div>
         </div>
         <div class="js-resultsWrapper">
-
+           <% // the results are added here %>
         </div>
       </div>
     </div>
@@ -95,17 +95,6 @@
   <% } else { %>
   <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
     <h2 class="rowLg"><%= ob.polyT('search.errors.emptyData', { provider: ob.provider }) %></h2>
-    <div>
-      <% if (ob.provider === ob.defaultProvider) { %>
-        <button class="btn clrP clrBr js-changeProvider">
-          <%= ob.polyT('search.changeProvider') %>
-        </button>
-      <% } else { %>
-        <button class="btn clrP clrBr js-useDefault">
-          <%= ob.polyT('search.useDefault', { term: ob.term || "", defaultProvider: ob.defaultProvider }) %>
-        </button>
-      <% } %>
-    </div>
   </div>
   <% } %>
 </div>

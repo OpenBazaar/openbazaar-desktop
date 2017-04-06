@@ -17,13 +17,12 @@ export default class extends baseVw {
     }
 
     this.cardViews = [];
-    this.pageCollection = {};
+    this.pageCollections = {};
+    // if an initial collection was passed in, add it
+    if (options.initCol) this.pageCollections[this.serverPage] = (options.initCol);
     this.total = this.options.total || 0;
     this.morePages = !!this.options.morePages;
     this.serverPage = this.options.serverPage || 0;
-    // if an initial collection was passed in, add it
-    if (options.initCol) this.pageCollection[this.serverPage] = (options.initCol);
-    this.currentPage = 0;
     this.pageSize = this.options.pageSize || 12;
   }
 
@@ -49,14 +48,8 @@ export default class extends baseVw {
         onStore: false,
       };
 
-      // if (guid) {
       return this.createChild(ListingCard, options);
-      // }
-      // console.log('This listing result has no vendor data');
     }
-
-    // the search should use a parameter to prevent profile results from coming in, the code below
-    // should be fleshed out if/when we allow profiles as search results
     const options = {
       model,
     };
@@ -88,8 +81,8 @@ export default class extends baseVw {
 
   loadPage(page = this.serverPage, size = this.pageSize) {
     // if page exists, reuse it
-    if (this.pageCollection[page]) {
-      this.renderCards(this.pageCollection[page]);
+    if (this.pageCollections[page]) {
+      this.renderCards(this.pageCollections[page]);
     } else {
        // get the new page
       const url = new URL(this.searchURL);
@@ -98,13 +91,16 @@ export default class extends baseVw {
       params.set('ps', size);
       const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
       const newPageCol = new ResultsCol();
-      this.pageCollection[page] = newPageCol;
+      this.pageCollections[page] = newPageCol;
 
       newPageCol.fetch({
         url: newURL,
       })
           .done(() => {
             this.renderCards(newPageCol);
+          })
+          .fail((xhr) => {
+            this.trigger('searchError', xhr);
           });
     }
   }

@@ -9,6 +9,7 @@ export default class extends Collection {
   }
 
   model(attrs, options) {
+    // models may be listings or profiles, use the appropriate one
     if (attrs.type === 'profile') {
       delete attrs.type;
       return new Profile(attrs, options);
@@ -19,14 +20,15 @@ export default class extends Collection {
 
   parse(response) {
     const parsedResponse = [];
-    const results = response.results ? response.results.results : [];
-    this.morePages = !!response.results.morePages;
-    this.total = response.results.total;
+    const resultsParent = response.results || {};
+    const results = resultsParent.results || [];
+    this.morePages = !!resultsParent.morePages;
+    this.total = resultsParent.total || 0;
 
     results.forEach(result => {
       const updatedResult = result.data;
       updatedResult.type = result.type;
-      const relationships = result.relationships ? result.relationships : {};
+      const relationships = result.relationships || {};
 
       if (updatedResult.type === 'listing') {
         const vendor = relationships.vendor ? relationships.vendor.data : {};

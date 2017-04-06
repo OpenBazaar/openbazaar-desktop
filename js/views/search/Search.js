@@ -2,7 +2,7 @@ import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import $ from 'jquery';
-import { openSimpleMessage } from '../modals/SimpleMessage';
+import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
 import SettingsModal from '../modals/Settings/Settings';
@@ -29,7 +29,6 @@ export default class extends baseVw {
       this.serverPage = options.serverPage || 0;
       this.pageSize = options.pageSize || 12;
       // if the term was not a url, process the term before calling the search provider
-      this.term = term;
       this.processTerm(term);
     }
 
@@ -55,8 +54,6 @@ export default class extends baseVw {
       'change .js-filterWrapper select': 'changeFilter',
       'change .js-filterWrapper input': 'changeFilter',
       'keyup .js-searchInput': 'onKeyupSearchInput',
-      'click .js-changeProvider': 'clickChangeProvider',
-      'click .js-useDefault': 'clickUseDefault',
     };
   }
 
@@ -71,12 +68,12 @@ export default class extends baseVw {
   }
 
   processTerm(term) {
-    this.term = term;
+    this.term = term || '';
     // if term has spaces, replace them with +
-    const query = term ? `q=${term.replace(/\s+/g, '+')}` : 'q=*';
+    // if term is false, search for *
+    const query = `q=${term ? term.replace(/\s+/g, '+') : '*'}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const provider = `${this.sProvider}?`;
-    const searchURL = `${provider}${query}${this.sortByQuery}${this.filterQuery}${page}`;
+    const searchURL = `${this.sProvider}?${query}${this.sortByQuery}${this.filterQuery}${page}`;
 
     this.callSearchProvider(searchURL);
   }
@@ -90,15 +87,44 @@ export default class extends baseVw {
           this.render(data, searchURL);
         })
         .fail((xhr) => {
-          const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-          const msg = failReason ?
-              app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
-          openSimpleMessage(
-              app.polyglot.t('search.errors.searchFailTitle', { provider: searchURL }),
-              msg
-          );
+          this.showSearchError(xhr);
           this.render({}, searchURL);
         });
+  }
+
+  showSearchError(xhr = {}) {
+    const title = app.polyglot.t('search.errors.searchFailTitle', { provider: this.sProvider });
+    const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
+    const msg = failReason ?
+        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
+    const buttons = [];
+    if (this.usingDefault) {
+      buttons.push({
+        text: app.polyglot.t('search.changeProvider'),
+        fragment: 'changeProvider',
+      });
+    } else {
+      buttons.push({
+        text: app.polyglot.t('search.useDefault',
+            { term: this.term, defaultProvider: app.localSettings.get('searchProvider') }),
+        fragment: 'useDefault',
+      });
+    }
+
+    const errorDialog = new Dialog({
+      title,
+      msg,
+      buttons,
+      showCloseButton: false,
+    }).render().open();
+    this.listenTo(errorDialog, 'click-changeProvider', () => {
+      this.changeProvider();
+      errorDialog.close();
+    });
+    this.listenTo(errorDialog, 'click-useDefault', () => {
+      this.useDefault();
+      errorDialog.close();
+    });
   }
 
   createResults(data, searchURL) {
@@ -115,6 +141,8 @@ export default class extends baseVw {
     });
 
     this.$resultsWrapper.html(resultsView.render().el);
+
+    this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
   }
 
   clickSearchBtn() {
@@ -135,13 +163,13 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
-  clickChangeProvider() {
+  changeProvider() {
     if (!this.settingsModal || !this.settingsModal.isOpen()) {
       this.settingsModal = new SettingsModal().render().open();
     }
   }
 
-  clickUseDefault() {
+  useDefault() {
     this.usingDefault = true;
     this.sProvider = app.localSettings.get('searchProvider');
     this.processTerm(this.term);
