@@ -66,6 +66,9 @@ export default class extends baseVw {
     start = start > 0 ? start : 1;
     const total = models.total;
     this.morePages = models.morePages;
+    // set the classes that control the button states
+    this.$el.toggleClass('morePages', this.morePages);
+    this.$el.toggleClass('firstPage', start === 1);
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -83,6 +86,8 @@ export default class extends baseVw {
     this.$el.removeClass('loading');
     // let the parent view know a new page has been loaded
     this.trigger('pageLoaded');
+    // move focus to the first result
+    this.$resultsGrid.find('.listingCard').filter(':first').focus();
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
@@ -113,14 +118,14 @@ export default class extends baseVw {
     }
   }
 
-  clickPagePrev() {
+  clickPagePrev(e) {
     if (this.serverPage > 0) {
       this.serverPage--;
       this.loadPage();
     }
   }
 
-  clickPageNext() {
+  clickPageNext(e) {
     if (this.morePages) {
       this.serverPage++;
       this.loadPage();

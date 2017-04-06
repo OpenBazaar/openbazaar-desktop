@@ -1,6 +1,10 @@
 .userCard {
   font-size: $tx5;
 
+  &:focus {
+    outline: none;
+  }
+
   .shortHeader {
     height: 101px;
     position: relative;
