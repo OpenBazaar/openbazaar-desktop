@@ -1,5 +1,11 @@
 .search {
 
+  .loadingSearch {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+  }
+
   .searchBar {
     display: flex;
     align-items: center;
@@ -55,12 +61,27 @@
     }
   }
 
-  .pageControlsWrapper {
-    overflow: auto;
+  .searchResults {
 
-    .pageControls {
-
+    .listingsGrid {
+      min-height: 298px;
     }
 
+    .loadingSearch {
+      display: none;
+    }
+
+    &.loading .loadingSearch {
+      display: flex;
+    }
+
+    .pageControlsWrapper {
+      overflow: auto;
+
+      .pageControls {
+
+      }
+
+    }
   }
 }

@@ -86,7 +86,7 @@
             <% } %>
           </div>
         </div>
-        <div class="js-resultsWrapper">
+        <div class="width100 js-resultsWrapper">
            <% // the results are added here %>
         </div>
       </div>
@@ -98,3 +98,6 @@
   </div>
   <% } %>
 </div>
+<% if (ob.loading) { %>
+  <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% } %>

@@ -16,14 +16,15 @@ export default class extends baseVw {
       throw new Error('Please provide a search provider URL.');
     }
 
-    this.cardViews = [];
-    this.pageCollections = {};
-    // if an initial collection was passed in, add it
-    if (options.initCol) this.pageCollections[this.serverPage] = (options.initCol);
     this.total = this.options.total || 0;
     this.morePages = !!this.options.morePages;
     this.serverPage = this.options.serverPage || 0;
     this.pageSize = this.options.pageSize || 12;
+
+    this.cardViews = [];
+    this.pageCollections = {};
+    // if an initial collection was passed in, add it
+    if (options.initCol) this.pageCollections[this.serverPage] = (options.initCol);
   }
 
   className() {
@@ -77,6 +78,8 @@ export default class extends baseVw {
     this.$resultsGrid.html(resultsFrag);
     // update the pagination text
     this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
+    // hide the loading spinner
+    this.$el.removeClass('loading');
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
@@ -84,6 +87,8 @@ export default class extends baseVw {
     if (this.pageCollections[page]) {
       this.renderCards(this.pageCollections[page]);
     } else {
+      // show the loading spinner
+      this.$el.addClass('loading');
        // get the new page
       const url = new URL(this.searchURL);
       const params = new URLSearchParams(url.search);

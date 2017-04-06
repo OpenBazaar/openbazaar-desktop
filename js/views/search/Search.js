@@ -79,16 +79,24 @@ export default class extends baseVw {
   }
 
   callSearchProvider(searchURL) {
+    // remove a pending search if it exists
+    if (this.callSearch) this.callSearch.abort();
+
+    // initial render to show the loading spinner
+    this.render();
+
     // query the search provider
-    $.get({
+    this.callSearch = $.get({
       url: searchURL,
     })
         .done((data) => {
           this.render(data, searchURL);
         })
         .fail((xhr) => {
-          this.showSearchError(xhr);
-          this.render({}, searchURL);
+          if (xhr.statusText !== 'abort') {
+            this.showSearchError(xhr);
+            this.render({}, searchURL);
+          }
         });
   }
 
@@ -176,12 +184,12 @@ export default class extends baseVw {
   }
 
   render(data, searchURL) {
-    if (!data) {
-      throw new Error('Please provide data for the render.');
+    if (data && !searchURL) {
+      throw new Error('Please provide the search URL along with the data.');
     }
-    if (!searchURL) {
-      throw new Error('Please provide the search URL used for the render data.');
-    }
+
+    // the first render has no data, and only shows the loading state
+    const loading = !data;
 
     // check to see if the call to the provider failed, or returned an empty result
     const emptyData = $.isEmptyObject(data);
@@ -192,6 +200,7 @@ export default class extends baseVw {
         provider: this.sProvider,
         defaultProvider: app.localSettings.get('searchProvider'),
         emptyData,
+        loading,
         ...data,
       }));
     });
@@ -208,7 +217,7 @@ export default class extends baseVw {
     });
 
     // use the initial set of results data to create the results view
-    if (data.results) this.createResults(data, searchURL);
+    if (data && data.results) this.createResults(data, searchURL);
 
     return this;
   }
