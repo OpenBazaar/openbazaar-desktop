@@ -7,7 +7,10 @@ import app from '../app';
 import $ from 'jquery';
 import PageNavServersMenu from './PageNavServersMenu';
 import SettingsModal from './modals/Settings/Settings';
-import { launchEditListingModal, launchAboutModal } from '../utils/modalManager';
+import {
+  launchEditListingModal, launchAboutModal,
+  launchWallet,
+} from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 
@@ -26,6 +29,7 @@ export default class extends View {
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
         'click .js-navAboutModal': 'navAboutClick',
+        'click .js-navWalletBtn': 'navWalletClick',
         'click .js-navCreateListing': 'navCreateListingClick',
         'click .js-navListItem': 'onNavListItemClick',
         'mouseenter .js-connectedServerListItem': 'onMouseEnterConnectedServerListItem',
@@ -260,6 +264,10 @@ export default class extends View {
     this.togglePopMenu();
   }
 
+  navWalletClick() {
+    launchWallet();
+  }
+
   navCreateListingClick() {
     const listingModel = new Listing({}, { guid: app.profile.id });
 
@@ -278,12 +286,15 @@ export default class extends View {
     }
 
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t({
-        addressBarText: this.addressBarText,
-        connectedServer,
-        testnet: app.testnet,
-        ...(app.profile && app.profile.toJSON() || {}),
-      }));
+      loadTemplate('walletIcon.svg', (walletIconTmpl) => {
+        this.$el.html(t({
+          addressBarText: this.addressBarText,
+          connectedServer,
+          testnet: app.testnet,
+          walletIconTmpl,
+          ...(app.profile && app.profile.toJSON() || {}),
+        }));
+      });
     });
 
     if (this.pageNavServersMenu) this.pageNavServersMenu.remove();

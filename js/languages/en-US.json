@@ -51,7 +51,10 @@
       },
       "unableToGetFollowData": {
         "title": "Unable to get data about who you're following."
-      }
+      },
+      "unableToGetWalletBalance": {
+        "title": "Unable to get wallet balance."
+      }      
     },
     "startupLoadingModal": {
       "canceLink": "cancel",
@@ -408,8 +411,8 @@
       "selectedModerators": "Selected Moderators",
       "selectedModeratorsEmpty": "No Moderators Added",
       "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
-      "moderatorByIDPlaceholder": "Look up a Moderator by entering their @handle or ID",
-      "moderatoryByIDSubmit": "Submit",
+      "moderatorByIDPlaceholder": "Enter a @handle or ID",
+      "moderatoryByIDSubmit": "Find",
       "availableModerators": "Available Moderators on the Network",
       "browseModerators": "Browse Moderators",
       "browseMoreModerators": "Load More Moderators",
@@ -535,6 +538,15 @@
       "placeholderPassword": "The password to your server",
       "placeholderPort": "The port to your server"
     }
+  },
+  "wallet": {
+    "title": "Wallet",
+    "closeLink": "Close wallet",
+    "btnReceiveMoney": "Receive Money",
+    "btnSendMoney": "Send Money",
+    "btcCurrencyLabel": "Bitcoin",
+    "valueInCurrencyLabel": "Value in %{currency}",
+    "transactionsLabel": "Transactions"
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
@@ -681,8 +693,8 @@
       "titleLabel": "Title",
       "couponCodeLabel": "Coupon Code",
       "discountLabel": "Discount",
-      "titlePlaceholder": "Optional",
-      "discountCodePlaceholder": "Please provide a code",
+      "titlePlaceholder": "optional",
+      "discountCodePlaceholder": "Enter a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
       "btnAddCoupon": "+ Add Coupon"

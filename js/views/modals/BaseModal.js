@@ -48,7 +48,6 @@ export default class BaseModal extends baseVw {
     };
   }
 
-
   /**
    * Returns an array of HTMLElements and if any of these are directly clicked the modal
    * will be closed. By default, the only target will be this.el, which means any clicks
@@ -146,6 +145,13 @@ export default class BaseModal extends baseVw {
 
   getModalOptions() {
     return this.__options;
+  }
+
+  bringToTop() {
+    if (this.isOpen()) {
+      getAppFrame()[0].removeChild(this.el);
+      getAppFrame().append(this.el);
+    }
   }
 
   remove() {
