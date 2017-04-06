@@ -20,7 +20,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-receiveAddress': 'onClickReceiveAddress',
-      'mouseleave .js-receiveAddress': 'onAddressLeave',
+      'click .js-receiveQrCode': 'onClickReceiveQrCode',
     };
   }
 
@@ -46,12 +46,22 @@ export default class extends baseVw {
   }
 
   onClickReceiveAddress() {
-    clipboard.writeText(this.getState().address);
-    this.$copiedText.fadeIn(600);
+    this.copyAddressToClipboard();
   }
 
-  onAddressLeave() {
-    this.$copiedText.fadeOut(600);
+  onClickReceiveQrCode() {
+    this.copyAddressToClipboard();
+  }
+
+  copyAddressToClipboard() {
+    clipboard.writeText(this.getState().address);
+    clearTimeout(this.copyTextFadeoutTimeout);
+    this.$copiedText.stop()
+      .fadeIn(600, () => {
+        this.copyTextFadeoutTimeout = setTimeout(() => {
+          this.$copiedText.fadeOut(600);
+        }, 1500);
+      });
   }
 
   get $copiedText() {

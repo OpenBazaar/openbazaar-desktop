@@ -95,6 +95,10 @@ class Spend extends BaseModel {
     };
 
     delete parsed.txid;
+    delete parsed.amount;
+    delete parsed.confirmedBalance;
+    delete parsed.unconfirmedBalance;
+    delete parsed.timestamp;
     return parsed;
   }
 }

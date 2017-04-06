@@ -1,7 +1,7 @@
 <h2 class="h3 txCtr txUnl row"><%= ob.polyT('wallet.receiveMoney.title') %></h2>
 <div class="codeAddressWrap">
   <div class="rowLg <% if (ob.fetching) print('invisible') %>">
-    <img src="<%= ob.qrDataUri %>">
+    <a class="js-receiveQrCode"><img src="<%= ob.qrDataUri %>"></a>
   </div>
   <div class="rowMd receiveAddressWrap <% if (ob.fetching) print('invisible') %>">
     <div class="copiedText hide js-copiedText">Copied</div>

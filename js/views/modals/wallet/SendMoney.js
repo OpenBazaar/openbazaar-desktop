@@ -31,7 +31,6 @@ export default class extends baseVw {
     this.$sendConfirm.addClass('hide');
 
     // POSTing payment to the server
-    // this.$btnSend.addClass('processing');
     this.saveInProgress = true;
 
     spend(this.model.toJSON())
@@ -44,7 +43,6 @@ export default class extends baseVw {
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
       })
       .always(() => {
-        // this.$btnSend.removeClass('processing');
         this.clearModel();
         this.saveInProgress = false;
       });
