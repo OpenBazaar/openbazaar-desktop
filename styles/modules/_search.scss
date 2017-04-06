@@ -1,4 +1,7 @@
 .search {
+  // this is a temporary style to fill the space that will be filled by the tab bar
+  position: relative;
+  top: -30px;
 
   .loadingSearch {
     position: absolute;
