@@ -68,7 +68,6 @@ export default class extends baseVw {
     this.render();
 
     if (!this.model.validationError) {
-      // this.$sendConfirm.removeClass('hide');
       // timeout needed so the document click handler doesn't hide
       // our confirmation box
       setTimeout(() => {
