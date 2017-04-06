@@ -120,11 +120,13 @@ export function spend(fields) {
 
   const spendModel = new Spend(attrs);
   const save = spendModel.save();
-  const returnObj = {};
 
-  if (save) {
-    returnObj.jqXhr = save;
-
+  if (!save) {
+    Object.keys(spendModel.validationError)
+      .forEach(errorKey => {
+        throw new Error(`${errorKey}: ${spendModel.validationError[errorKey][0]}`);
+      });
+  } else {
     save.done(data => {
       if (app.walletBalance) {
         app.walletBalance.set(
@@ -135,9 +137,7 @@ export function spend(fields) {
         );
       }
     });
-  } else {
-    returnObj.error = spendModel.validationError;
   }
 
-  return returnObj;
+  return save;
 }

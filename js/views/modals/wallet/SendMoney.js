@@ -25,32 +25,30 @@ export default class extends baseVw {
     };
   }
 
-  onClickSend(e) {
+  onClickSend() {
     const formData = this.getFormData(this.$formFields);
     this.model.set(formData);
-    const save = spend(this.model.toJSON());
-    this.model.validationError = save.error || null;
+    this.model.set({}, { validate: true });
 
     // render so errors are shown / cleared
     this.render();
 
-    if (save.jqXhr) {
+    if (!this.model.validationError) {
       // POSTing payment to the server
-      $(e.target).addClass('processing');
+      this.$btnSend.addClass('processing');
       this.saveInProgress = true;
 
-      save
-        .jqXhr
+      spend(this.model.toJSON())
         .done(() => {
           // temporary alert until transaction is implemented
-          // alert('Payment has been sent.');
+          alert('Payment has been sent.');
         })
         .fail(jqXhr => {
           openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
             jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
         })
         .always(() => {
-          $(e.target).removeClass('processing');
+          this.$btnSend.removeClass('processing');
           this.saveInProgress = false;
         });
     }
@@ -90,6 +88,11 @@ export default class extends baseVw {
         div[contenteditable][name]`));
   }
 
+  get $btnSend() {
+    return this._$btnSend ||
+      (this._$btnSend = this.$('.js-btnSend'));
+  }
+
   setFormData(data = {}, focusAddressInput = true) {
     this.model.set(data);
     this.render();
@@ -108,6 +111,7 @@ export default class extends baseVw {
 
       this._$addressInput = null;
       this._$formFields = null;
+      this._$btnSend = null;
 
       this.$('#walletSendCurrency').select2();
     });
