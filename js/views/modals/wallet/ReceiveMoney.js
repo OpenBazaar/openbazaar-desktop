@@ -21,6 +21,7 @@ export default class extends baseVw {
     return {
       'click .js-receiveAddress': 'onClickReceiveAddress',
       'click .js-receiveQrCode': 'onClickReceiveQrCode',
+      'click .js-cancelReceiveBtn': 'onClickCancelReceive',
     };
   }
 
@@ -53,6 +54,10 @@ export default class extends baseVw {
     this.copyAddressToClipboard();
   }
 
+  onClickCancelReceive() {
+    this.trigger('click-cancel');
+  }
+
   copyAddressToClipboard() {
     clipboard.writeText(this.getState().address);
     clearTimeout(this.copyTextFadeoutTimeout);
@@ -60,7 +65,7 @@ export default class extends baseVw {
       .fadeIn(600, () => {
         this.copyTextFadeoutTimeout = setTimeout(() => {
           this.$copiedText.fadeOut(600);
-        }, 1500);
+        }, 1000);
       });
   }
 

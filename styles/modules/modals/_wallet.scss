@@ -55,6 +55,7 @@
 
     .receiveMoney {
       text-align: center;
+      position: relative;
 
       .codeAddressWrap {
         height: 273px;
@@ -91,7 +92,13 @@
             @include center();
           }
         }
-      }      
+      }
+
+      .cancelReceiveBtn {
+        position: absolute;
+        right: 0;
+        top: -25px;
+      }
     }
 
     .sendMoney {

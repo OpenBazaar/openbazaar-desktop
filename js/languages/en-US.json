@@ -550,7 +550,8 @@
     "transactionsLabel": "Transactions",
     "receiveMoney": {
       "title": "Receive Money",
-      "needBitcoin": "Need Bitcoin?"
+      "needBitcoin": "Need Bitcoin?",
+      "btnCancel": "Cancel"      
     },
     "sendMoney": {
       "toLabel": "To",

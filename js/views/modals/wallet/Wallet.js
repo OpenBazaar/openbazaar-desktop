@@ -70,7 +70,7 @@ export default class extends BaseModal {
     this.sendModeOn = !this.sendModeOn;
   }
 
-  set sendModeOn(bool = true) {
+  set sendModeOn(bool) {
     if (typeof bool !== 'boolean') {
       throw new Error('Please provide a boolean.');
     }
@@ -200,6 +200,7 @@ export default class extends BaseModal {
           },
         });
 
+        this.listenTo(this.receiveMoney, 'click-cancel', () => (this.sendModeOn = true));
         this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
       });
     });
