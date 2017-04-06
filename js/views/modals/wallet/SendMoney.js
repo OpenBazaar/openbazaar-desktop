@@ -38,7 +38,7 @@ export default class extends baseVw {
   }
 
   onClickConfirmSend() {
-    this.setSendConfirmOn(false);
+    this.setSendConfirmOn(false, false);
 
     // POSTing payment to the server
     this.saveInProgress = true;

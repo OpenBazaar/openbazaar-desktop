@@ -156,6 +156,16 @@ export default class extends BaseModal {
     return false;
   }
 
+  open() {
+    this.sendModeOn = true;
+
+    if (this.sendMoney && !this.sendMoney.saveInProgress) {
+      this.sendMoney.clearForm();
+    }
+
+    return super.open();
+  }
+
   remove() {
     this.addressFetches.forEach(fetch => fetch.abort());
     super.remove();
