@@ -9,7 +9,7 @@ import baseVw from '../../baseVw';
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
-    this.saveInProgress = false;
+    this._saveInProgress = false;
     this.sendConfirmOn = false;
     this.model = new Spend();
   }
@@ -31,20 +31,21 @@ export default class extends baseVw {
     this.$sendConfirm.addClass('hide');
 
     // POSTing payment to the server
-    this.$btnSend.addClass('processing');
+    // this.$btnSend.addClass('processing');
     this.saveInProgress = true;
 
     spend(this.model.toJSON())
       .done(() => {
-        // temporary alert until transaction is implemented
-        alert('Payment has been sent.');
+        // temporary alert until the transactions list is implemented
+        openSimpleMessage('You payment has been sent.');
       })
       .fail(jqXhr => {
         openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
       })
       .always(() => {
-        this.$btnSend.removeClass('processing');
+        // this.$btnSend.removeClass('processing');
+        this.clearModel();
         this.saveInProgress = false;
       });
   }
@@ -70,6 +71,21 @@ export default class extends baseVw {
   }
 
   onClickClear() {
+    this.clearForm();
+  }
+
+  focusAddress() {
+    if (!this.saveInProgress) this.$addressInput.focus();
+  }
+
+  setFormData(data = {}, focusAddressInput = true) {
+    this.clearForm();
+    this.model.set(data);
+    this.render();
+    if (focusAddressInput) this.focusAddressInput();
+  }
+
+  clearModel() {
     // this.model.clear();
 
     // for some reason model.clear is not working, so we'll go
@@ -80,12 +96,26 @@ export default class extends baseVw {
     this.model.unset('currency');
     this.model.set(this.model.defaults || {});
     this.model.validationError = null;
+  }
 
+  clearForm() {
+    this.clearModel();
     this.render();
   }
 
-  focusAddress() {
-    this.$addressInput.focus();
+  set saveInProgress(bool) {
+    if (typeof bool !== 'boolean') {
+      throw new Error('Please provide a boolean.');
+    }
+
+    if (bool !== this.saveInProgress) {
+      this._saveInProgress = bool;
+      this.render();
+    }
+  }
+
+  get saveInProgress() {
+    return this._saveInProgress;
   }
 
   get $addressInput() {
@@ -110,12 +140,6 @@ export default class extends baseVw {
       (this._$sendConfirm = this.$('.js-sendConfirm'));
   }
 
-  setFormData(data = {}, focusAddressInput = true) {
-    this.model.set(data);
-    this.render();
-    if (focusAddressInput) this.focusAddressInput();
-  }
-
   render() {
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
       this.$el.html(t({
@@ -125,6 +149,7 @@ export default class extends baseVw {
         currencies: this.currencies ||
           getCurrenciesSortedByCode(),
         sendConfirmOn: this.sendConfirmOn,
+        saveInProgress: this.saveInProgress,
       }));
 
       this._$addressInput = null;

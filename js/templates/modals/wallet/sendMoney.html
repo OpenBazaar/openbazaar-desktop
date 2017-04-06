@@ -8,7 +8,7 @@
     </div>
     <div class="col9">
       <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
-      <input type="text" class="clrBr clrSh2" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder') %>">
+      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder') %>">
     </div>
   </div>
   <div class="flexRow gutterHLg">
@@ -19,7 +19,7 @@
     </div>
     <div class="col9">
       <% if (ob.errors.amount) print(ob.formErrorTmpl({ errors: ob.errors.amount })) %>
-      <div class="inputSelect">
+      <div class="inputSelect <% if (ob.saveInProgress) print('disabled') %>">
         <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.amount %>" data-var-type="number" placeholder="0.00">
         <select id="walletSendCurrency" name="currency" class="clrBr clrP nestInputRight">
           <% ob.currencies.forEach((currency) => {%>
@@ -37,13 +37,13 @@
     </div>
     <div class="col9">
       <% if (ob.errors.memo) print(ob.formErrorTmpl({ errors: ob.errors.memo })) %>
-      <input type="text" class="clrBr clrSh2" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="<%= ob.polyT('wallet.sendMoney.notePlaceholder') %>">
+      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="<%= ob.polyT('wallet.sendMoney.notePlaceholder') %>">
     </div>
   </div>
   <div class="flexHRight flexVCent gutterH col11">
     <a class="js-sendMoneyClear"><%= ob.polyT('wallet.sendMoney.clear') %></a>
     <%= ob.processingButton({
-      className: 'js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph',
+      className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
       btnText: ob.polyT('wallet.sendMoney.sendBtn')
     }) %>    
   </div>
