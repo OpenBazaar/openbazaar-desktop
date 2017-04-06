@@ -151,6 +151,7 @@ export default class extends baseVw {
     this.$resultsWrapper.html(resultsView.render().el);
 
     this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
+    this.listenTo(resultsView, 'pageLoaded', () => this.scrollToTop());
   }
 
   clickSearchBtn() {
@@ -181,6 +182,10 @@ export default class extends baseVw {
     this.usingDefault = true;
     this.sProvider = app.localSettings.get('searchProvider');
     this.processTerm(this.term);
+  }
+
+  scrollToTop() {
+    this.$el[0].scrollIntoView();
   }
 
   render(data, searchURL) {

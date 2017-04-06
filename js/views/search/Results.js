@@ -6,6 +6,7 @@ import UserCard from '../userCard';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 
+
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
@@ -80,6 +81,8 @@ export default class extends baseVw {
     this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
     // hide the loading spinner
     this.$el.removeClass('loading');
+    // let the parent view know a new page has been loaded
+    this.trigger('pageLoaded');
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
