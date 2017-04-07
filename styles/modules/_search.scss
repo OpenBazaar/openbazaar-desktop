@@ -42,6 +42,10 @@
       border-bottom-right-radius: 0;
       border-right-width: 0;
 
+      &:focus {
+        border-right-width: 1px;
+      }
+
       &.withLogo {
         text-indent: 30px;
       }
