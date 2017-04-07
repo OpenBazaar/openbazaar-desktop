@@ -59,7 +59,7 @@ export default class extends baseVw {
 
   get sortByQuery() {
     // return current sortBy state in the form of a query string
-    return this.sortBy ? `&sortBy=${this.sortBy.val()}` : '';
+    return this.$sortBy ? `&sortBy=${this.$sortBy.val()}` : '';
   }
 
   get filterQuery() {
