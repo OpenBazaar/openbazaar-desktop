@@ -201,7 +201,7 @@ export default class extends baseVw {
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
-        term: this.term,
+        term: this.term === '*' ? '' : this.term,
         provider: this.sProvider,
         defaultProvider: app.localSettings.get('searchProvider'),
         emptyData,

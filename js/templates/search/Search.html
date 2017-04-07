@@ -12,7 +12,7 @@
         <img src="<%= ob.logo %>"></img>
       </div>
       <% } %>
-      <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>" type="text" value="<%= ob.term == '*' ? '' : ob.term %>">
+      <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>" type="text" value="<%= ob.term %>">
       <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
     </div>
     <% // TODO: if suggestions exist show below %>
