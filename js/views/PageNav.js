@@ -6,10 +6,9 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import PageNavServersMenu from './PageNavServersMenu';
-import SettingsModal from './modals/Settings/Settings';
 import {
   launchEditListingModal, launchAboutModal,
-  launchWallet,
+  launchWallet, launchSettingsModal,
 } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
@@ -243,9 +242,7 @@ export default class extends View {
   }
 
   navSettingsClick() {
-    if (!this.settingsModal || !this.settingsModal.isOpen()) {
-      this.settingsModal = new SettingsModal().render().open();
-    }
+    launchSettingsModal();
   }
 
   navAboutClick() {

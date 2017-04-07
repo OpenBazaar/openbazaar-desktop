@@ -5,7 +5,7 @@ import $ from 'jquery';
 import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
-import SettingsModal from '../modals/Settings/Settings';
+import { launchSettingsModal } from '../../utils/modalManager';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -174,9 +174,7 @@ export default class extends baseVw {
   }
 
   changeProvider() {
-    if (!this.settingsModal || !this.settingsModal.isOpen()) {
-      this.settingsModal = new SettingsModal().render().open();
-    }
+    launchSettingsModal();
   }
 
   useDefault() {
