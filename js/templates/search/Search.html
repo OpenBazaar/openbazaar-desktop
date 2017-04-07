@@ -33,17 +33,19 @@
             <% if (val.type ==='dropdown') { %>
               <select name="<%= key %>">
               <% _.each(val.options, function(option) {
-               var selected = option.checked ? 'selected' : '';
-                print('<option '+ selected +' value="'+option.value+'">'+option.label+'</option>');
+                var selected = option.checked ? 'selected' : '';
+                print(`<option ${selected} value="${option.value}">${option.label}</option>`);
               }); %>
               </select>
             <% } else if (val.type ==='radio') { %>
               <div class="flexCol">
-              <% _.each(val.options, function(option, index) { %>
+              <% _.each(val.options, function(option, ind) { %>
                 <div class="btnRadio clrBr">
-                   <% var checked = option.checked ? 'checked' : '';
-                     print('<input type="radio" name="' + key + '" id="' + key + index + '" '+ checked +' value="'+option.value+'">');
-                     print('<label for="' + key + index + '">'+option.label+'</label>');
+                   <%
+                    var checked = option.checked ? 'checked' : '';
+                    var parsedLabel = ob.parseEmojis(option.label);
+                    print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
+                    print(`<label for="${key + ind}">${parsedLabel}</label>`);
                    %>
                 </div>
               <% }); %>
@@ -52,8 +54,9 @@
               <div class="flexCol">
               <% _.each(val.options, function(option, index) {
                 var checked = option.checked ? 'checked' : '';
+                var parsedLabel = ob.parseEmojis(option.label);
                 print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
-                print(`<label for="${key + index}">${option.label}</label>`);
+                print(`<label for="${key + index}">${parsedLabel}</label>`);
               }); %>
               </div>
             <% } %>

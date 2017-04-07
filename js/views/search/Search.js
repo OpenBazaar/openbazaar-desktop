@@ -6,6 +6,7 @@ import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
 import SettingsModal from '../modals/Settings/Settings';
+import { selectEmojis } from '../../utils';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -213,11 +214,15 @@ export default class extends baseVw {
     this.$sortBy.select2({
       // disables the search box
       minimumResultsForSearch: Infinity,
+      templateResult: selectEmojis,
+      templateSelection: selectEmojis,
     });
     const filterWrapper = this.$('.js-filterWrapper');
     filterWrapper.find('select').select2({
       // disables the search box
       minimumResultsForSearch: Infinity,
+      templateResult: selectEmojis,
+      templateSelection: selectEmojis,
     });
     this.$filters = filterWrapper.find('select, input');
     this.$resultsWrapper = this.$('.js-resultsWrapper');
