@@ -141,8 +141,8 @@ export default class extends baseVw {
 
     const resultsView = this.createChild(Results, {
       searchURL,
-      total: data.results.total,
-      morePages: data.results.morePages,
+      total: data.results ? data.results.total : 0,
+      morePages: data.results ? data.results.morePages : false,
       serverPage: this.serverPage,
       pageSize: this.pageSize,
       initCol: this.resultsCol,
@@ -222,7 +222,7 @@ export default class extends baseVw {
     });
 
     // use the initial set of results data to create the results view
-    if (data && data.results) this.createResults(data, searchURL);
+    if (data) this.createResults(data, searchURL);
 
     return this;
   }
