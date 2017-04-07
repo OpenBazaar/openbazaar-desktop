@@ -60,12 +60,12 @@ export default class extends baseVw {
 
   get sortByQuery() {
     // return current sortBy state in the form of a query string
-    return this.$sortBy ? `&sortBy=${this.$sortBy.val()}` : '';
+    return this.$sortBy.length ? `&sortBy=${this.$sortBy.val()}` : '';
   }
 
   get filterQuery() {
     // return all currently active filters in the form of a query string
-    return this.$filters ? `&${this.$filters.serialize()}` : '';
+    return this.$filters.length ? `&${this.$filters.serialize()}` : '';
   }
 
   processTerm(term) {
@@ -89,9 +89,16 @@ export default class extends baseVw {
     // query the search provider
     this.callSearch = $.get({
       url: searchURL,
+      dataType: 'json',
     })
-        .done((data) => {
-          this.render(data, searchURL);
+        .done((data, status, xhr) => {
+        // make sure minimal data is present
+          if (data.name && data.links) {
+            this.render(data, searchURL);
+          } else {
+            this.showSearchError(xhr);
+            this.render({}, searchURL);
+          }
         })
         .fail((xhr) => {
           if (xhr.statusText !== 'abort') {
