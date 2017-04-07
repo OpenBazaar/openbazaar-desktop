@@ -4,9 +4,15 @@ import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage,
 } from './responsive';
 import { upToFixed } from './number';
+import twemoji from 'twemoji';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
+}
+
+export function parseEmojis(msg) {
+  return twemoji.parse(msg,
+      icon => (`../imgs/emojis/72X72/${icon}.png`));
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);

@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
@@ -44,10 +45,12 @@ export default class extends baseVw {
     // models can be listings or nodes
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
+      vendor.avatar = vendor.avatarHashes;
       const listingBaseUrl = `${vendor.handle || vendor.guid}/store/`;
       const options = {
         listingBaseUrl,
         model,
+        vendor,
         onStore: false,
       };
 
@@ -64,14 +67,17 @@ export default class extends baseVw {
     const resultsFrag = document.createDocumentFragment();
     const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
     let start = 0;
-    if (models.total) {
+    const total = models.total;
+    const noResults =
+              $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
+
+    if (total) {
       start = end >= this.pageSize ? end - this.pageSize + 1 : 1;
     }
-    const total = models.total;
     this.morePages = models.morePages;
-    // set the classes that control the button states
-    this.$el.toggleClass('morePages', this.morePages);
-    this.$el.toggleClass('firstPage', start === 1);
+    // set the classes that control the page states
+    this.$el.toggleClass('morePages', this.morePages)
+        .toggleClass('firstPage', start < 2);
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -81,6 +87,9 @@ export default class extends baseVw {
         cardVw.render().$el.appendTo(resultsFrag);
       }
     });
+
+    // if there are no models, add the no models message instead
+    if (total < 1) noResults.appendTo(resultsFrag);
 
     this.$resultsGrid.html(resultsFrag);
     // update the pagination text

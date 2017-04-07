@@ -6,6 +6,7 @@ import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
 import { launchSettingsModal } from '../../utils/modalManager';
+import { selectEmojis } from '../../utils';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -59,7 +60,7 @@ export default class extends baseVw {
 
   get sortByQuery() {
     // return current sortBy state in the form of a query string
-    return this.sortBy ? `&sortBy=${this.sortBy.val()}` : '';
+    return this.$sortBy ? `&sortBy=${this.$sortBy.val()}` : '';
   }
 
   get filterQuery() {
@@ -142,8 +143,8 @@ export default class extends baseVw {
 
     const resultsView = this.createChild(Results, {
       searchURL,
-      total: data.results.total,
-      morePages: data.results.morePages,
+      total: data.results ? data.results.total : 0,
+      morePages: data.results ? data.results.morePages : false,
       serverPage: this.serverPage,
       pageSize: this.pageSize,
       initCol: this.resultsCol,
@@ -200,7 +201,7 @@ export default class extends baseVw {
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
-        term: this.term,
+        term: this.term === '*' ? '' : this.term,
         provider: this.sProvider,
         defaultProvider: app.localSettings.get('searchProvider'),
         emptyData,
@@ -209,9 +210,20 @@ export default class extends baseVw {
       }));
     });
     this.$sortBy = this.$('#sortBy');
-    this.$sortBy.select2();
-    this.$('.js-filterWrapper').find('select').select2();
-    this.$filters = this.$('.js-filterWrapper').find('select, input');
+    this.$sortBy.select2({
+      // disables the search box
+      minimumResultsForSearch: Infinity,
+      templateResult: selectEmojis,
+      templateSelection: selectEmojis,
+    });
+    const filterWrapper = this.$('.js-filterWrapper');
+    filterWrapper.find('select').select2({
+      // disables the search box
+      minimumResultsForSearch: Infinity,
+      templateResult: selectEmojis,
+      templateSelection: selectEmojis,
+    });
+    this.$filters = filterWrapper.find('select, input');
     this.$resultsWrapper = this.$('.js-resultsWrapper');
     this.$searchInput = this.$('.js-searchInput');
     this.$searchLogo = this.$('.js-searchLogo');
@@ -221,7 +233,7 @@ export default class extends baseVw {
     });
 
     // use the initial set of results data to create the results view
-    if (data && data.results) this.createResults(data, searchURL);
+    if (data) this.createResults(data, searchURL);
 
     return this;
   }
