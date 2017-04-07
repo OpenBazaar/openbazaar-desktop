@@ -40,6 +40,7 @@
     .searchInput {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
+      border-right-width: 0;
 
       &.withLogo {
         text-indent: 30px;
@@ -53,7 +54,6 @@
       height: auto;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-      border-left: none;
     }
   }
 
