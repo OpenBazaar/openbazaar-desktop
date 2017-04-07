@@ -124,6 +124,7 @@ export default class extends baseVw {
       msg,
       buttons,
       showCloseButton: false,
+      removeOnClose: true,
     }).render().open();
     this.listenTo(errorDialog, 'click-changeProvider', () => {
       this.changeProvider();
