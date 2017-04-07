@@ -53,10 +53,12 @@ export default class extends baseVw {
   }
 
   save() {
-    this.localSettings.set(this.getFormData(this.$localSettingsFields), { validate: true });
+    this.localSettings.set(this.getFormData(this.$localSettingsFields));
+    this.localSettings.set({}, { validate: true });
 
     const settingsFormData = this.getFormData();
-    this.settings.set(settingsFormData, { validate: true });
+    this.settings.set(settingsFormData);
+    this.settings.set({}, { validate: true });
 
     if (!this.localSettings.validationError && !this.settings.validationError) {
       const msg = {

@@ -72,6 +72,7 @@
     "ionicons": "^2.0.1",
     "is_js": "^0.8.0",
     "jquery": "^3.0.0",
+    "jquery-deparam": "^0.5.3",
     "jquery-zoom": "^1.7.18",
     "moment": "^2.17.1",
     "multihashes": "^0.2.2",

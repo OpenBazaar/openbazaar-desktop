@@ -1,5 +1,5 @@
 import { remote } from 'electron';
-import multihashes from 'multihashes';
+import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import Backbone, { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
@@ -210,38 +210,27 @@ export default class extends View {
 
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.$addressBar.val().trim();
+      const text = this.$addressBar.val().trim();
       this.$addressBar.val(text);
 
-      let isGuid = true;
+      const firstTerm = text.startsWith('ob://') ?
+        text.slice(5)
+          .split(' ')[0]
+          .split('/')[0] :
+        text.split(' ')[0]
+          .split('/')[0];
 
-      if (text.startsWith('ob://')) text = text.slice(5);
-
-      const firstTerm = text.split(' ')[0];
-
-      try {
-        multihashes.validate(multihashes.fromB58String(firstTerm));
-      } catch (exc) {
-        isGuid = false;
-      }
-
-      if (isGuid) {
+      if (isMultihash(firstTerm)) {
         app.router.navigate(firstTerm, { trigger: true });
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
-      } else if (text.indexOf('#') !== -1 || text.indexOf(' ') !== -1) {
-        // If the term has a hash and/or space in it, we'll consider it to be tag(s)
-        const tags = text.trim()
-          .replace(',', ' ')
-          .replace(/\s+/g, ' ') // collapse multiple spaces into single spaces
-          .split(' ')
-          .map((frag) => (frag.charAt(0) === '#' ? frag.slice(1) : frag));
-
-        alert(`boom - Searching for tags: ${tags.join(', ')}`);
-      } else {
-        // it's probably a page route
+      } else if (text.startsWith('ob://')) {
+        // trying to show a specific page
         app.router.navigate(text, { trigger: true });
+      } else {
+        // searching term
+        app.router.navigate(`search?q=${encodeURIComponent(text)}`, { trigger: true });
       }
     }
   }

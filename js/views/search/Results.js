@@ -105,7 +105,8 @@ export default class extends baseVw {
     if (this.pageCollections[page]) {
       this.renderCards(this.pageCollections[page]);
       // update the address bar
-      app.router.navigate(newURL, { replace: this.firstRender });
+      app.router.navigate(`search?providerQ=${encodeURIComponent(newURL)}`,
+        { replace: this.firstRender });
     } else {
       // show the loading spinner
       this.$el.addClass('loading');
@@ -119,7 +120,8 @@ export default class extends baseVw {
           .done(() => {
             this.renderCards(newPageCol);
             // update the address bar
-            app.router.navigate(newURL, { replace: this.firstRender });
+            app.router.navigate(`search?providerQ=${encodeURIComponent(newURL)}`,
+              { replace: this.firstRender });
           })
           .fail((xhr) => {
             this.trigger('searchError', xhr);

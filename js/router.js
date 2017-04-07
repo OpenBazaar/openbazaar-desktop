@@ -20,11 +20,11 @@ export default class ObRouter extends Router {
     const routes = [
       [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'userViaHandle'],
       [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'user'],
-      ['transactions(/)', 'transactions'],
-      ['transactions/:tab(/)', 'transactions'],
-      ['connected-peers(/)', 'connectedPeers'],
-      ['search', 'search'],
-      ['*path(?query)', 'search'],
+      ['(ob://)transactions(/)', 'transactions'],
+      ['(ob://)transactions/:tab(/)', 'transactions'],
+      ['(ob://)connected-peers(/)', 'connectedPeers'],
+      ['(ob://)search(?query)', 'search'],
+      ['(ob://)*path', 'pageNotFound'],
     ];
 
     routes.slice(0)
@@ -59,18 +59,17 @@ export default class ObRouter extends Router {
   setAddressBarText() {
     const route = this.standardizedRoute();
 
-    if (route.startsWith('transactions')) {
+    if (route.startsWith('transactions') || route.startsWith('ob://transactions')) {
       // certain pages should not have their route visible
       // in the address bar
       app.pageNav.setAddressBar('');
     } else {
-      app.pageNav.setAddressBar(route);
+      app.pageNav.setAddressBar(route.startsWith('ob://') ? route : `ob://${route}`);
     }
   }
 
   execute(callback, args) {
     app.loadingModal.open();
-
     this.navigate(this.standardizedRoute(), { replace: true });
 
     // This block is intentionally duplicated here and in loadPage. It's
@@ -241,9 +240,9 @@ export default class ObRouter extends Router {
     this.once('will-route', () => (peerFetch.abort()));
   }
 
-  search(term, query) {
+  search(query) {
     this.loadPage(
-        new Search({ term, query })
+      new Search({ query })
     );
   }
 
