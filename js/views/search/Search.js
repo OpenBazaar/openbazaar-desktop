@@ -210,7 +210,10 @@ export default class extends baseVw {
       }));
     });
     this.$sortBy = this.$('#sortBy');
-    this.$sortBy.select2();
+    this.$sortBy.select2({
+      // disables the search box
+      minimumResultsForSearch: Infinity,
+    });
     this.$('.js-filterWrapper').find('select').select2();
     this.$filters = this.$('.js-filterWrapper').find('select, input');
     this.$resultsWrapper = this.$('.js-resultsWrapper');
