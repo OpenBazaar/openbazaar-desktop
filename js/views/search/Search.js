@@ -214,8 +214,9 @@ export default class extends baseVw {
       // disables the search box
       minimumResultsForSearch: Infinity,
     });
-    this.$('.js-filterWrapper').find('select').select2();
-    this.$filters = this.$('.js-filterWrapper').find('select, input');
+    const filterWrapper = this.$('.js-filterWrapper');
+    filterWrapper.find('select').select2();
+    this.$filters = filterWrapper.find('select, input');
     this.$resultsWrapper = this.$('.js-resultsWrapper');
     this.$searchInput = this.$('.js-searchInput');
     this.$searchLogo = this.$('.js-searchLogo');
