@@ -128,7 +128,7 @@
       </div>
       <div class="flexRow gutterH">
         <div class="col3">
-          <label for="settingsSearch"><%= ob.polyT('settings.generalTab.searchProvider') %></label>
+          <label class="required" for="settingsSearch"><%= ob.polyT('settings.generalTab.searchProvider') %></label>
         </div>
         <div class="col6">
           <% if (ob.errors.searchProvider) print(ob.formErrorTmpl({ errors: ob.errors.searchProvider })) %>
