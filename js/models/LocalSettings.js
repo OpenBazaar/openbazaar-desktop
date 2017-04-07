@@ -66,9 +66,7 @@ export default class extends Model {
       addError(`bitcoinUnit needs to be one of ${this.bitcoinUnits}.`);
     }
 
-    if (typeof attrs.searchProvider !== 'string') {
-      addError('searchProvider', 'Please provide the search provider as a string.');
-    } else if (attrs.searchProvider && is.not.url(attrs.searchProvider)) {
+    if (is.not.url(attrs.searchProvider)) {
       addError('searchProvider', app.polyglot.t('settings.generalTab.searchProviderError'));
     }
 
