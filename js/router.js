@@ -243,7 +243,7 @@ export default class ObRouter extends Router {
 
   search(term, query) {
     this.loadPage(
-        new Search({ term, query })
+      new Search({ term, query })
     );
   }
 
