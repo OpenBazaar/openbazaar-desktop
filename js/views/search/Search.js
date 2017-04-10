@@ -38,10 +38,10 @@ export default class extends baseVw {
     // if not using a passed in URL, update the default provider if it changes
     this.listenTo(app.localSettings, 'change:searchProvider', (_, provider) => {
       if (this.usingDefault) {
-        this.sProvider = provider;
-        this.processTerm(this.term);
-      }
-    });
+      this.sProvider = provider;
+      this.processTerm(this.term);
+    }
+  });
   }
 
   className() {
@@ -60,12 +60,12 @@ export default class extends baseVw {
 
   get sortByQuery() {
     // return current sortBy state in the form of a query string
-    return this.$sortBy.length ? `&sortBy=${this.$sortBy.val()}` : '';
+    return this.$sortBy && this.$sortBy.length ? `&sortBy=${this.$sortBy.val()}` : '';
   }
 
   get filterQuery() {
     // return all currently active filters in the form of a query string
-    return this.$filters.length ? `&${this.$filters.serialize()}` : '';
+    return this.$filters && this.$filters.length ? `&${this.$filters.serialize()}` : '';
   }
 
   processTerm(term) {
@@ -88,31 +88,31 @@ export default class extends baseVw {
 
     // query the search provider
     this.callSearch = $.get({
-      url: searchURL,
-      dataType: 'json',
-    })
+          url: searchURL,
+          dataType: 'json',
+        })
         .done((data, status, xhr) => {
         // make sure minimal data is present
-          if (data.name && data.links) {
-            this.render(data, searchURL);
-          } else {
-            this.showSearchError(xhr);
-            this.render({}, searchURL);
-          }
-        })
-        .fail((xhr) => {
-          if (xhr.statusText !== 'abort') {
-            this.showSearchError(xhr);
-            this.render({}, searchURL);
-          }
-        });
+        if (data.name && data.links) {
+      this.render(data, searchURL);
+    } else {
+      this.showSearchError(xhr);
+      this.render({}, searchURL);
+    }
+  })
+  .fail((xhr) => {
+      if (xhr.statusText !== 'abort') {
+      this.showSearchError(xhr);
+      this.render({}, searchURL);
+    }
+  });
   }
 
   showSearchError(xhr = {}) {
     const title = app.polyglot.t('search.errors.searchFailTitle', { provider: this.sProvider });
     const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
     const msg = failReason ?
-        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
+                app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     const buttons = [];
     if (this.usingDefault) {
       buttons.push({
@@ -122,7 +122,7 @@ export default class extends baseVw {
     } else {
       buttons.push({
         text: app.polyglot.t('search.useDefault',
-            { term: this.term, defaultProvider: app.localSettings.get('searchProvider') }),
+          { term: this.term, defaultProvider: app.localSettings.get('searchProvider') }),
         fragment: 'useDefault',
       });
     }
@@ -135,12 +135,12 @@ export default class extends baseVw {
     }).render().open();
     this.listenTo(errorDialog, 'click-changeProvider', () => {
       this.changeProvider();
-      errorDialog.close();
-    });
+    errorDialog.close();
+  });
     this.listenTo(errorDialog, 'click-useDefault', () => {
       this.useDefault();
-      errorDialog.close();
-    });
+    errorDialog.close();
+  });
   }
 
   createResults(data, searchURL) {
@@ -209,14 +209,14 @@ export default class extends baseVw {
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
-        term: this.term === '*' ? '' : this.term,
-        provider: this.sProvider,
-        defaultProvider: app.localSettings.get('searchProvider'),
-        emptyData,
-        loading,
-        ...data,
-      }));
-    });
+      term: this.term === '*' ? '' : this.term,
+      provider: this.sProvider,
+      defaultProvider: app.localSettings.get('searchProvider'),
+      emptyData,
+      loading,
+      ...data,
+  }));
+  });
     this.$sortBy = this.$('#sortBy');
     this.$sortBy.select2({
       // disables the search box
@@ -238,7 +238,7 @@ export default class extends baseVw {
 
     this.$searchLogo.find('img').on('error', () => {
       this.$searchLogo.addClass('loadError');
-    });
+  });
 
     // use the initial set of results data to create the results view
     if (data) this.createResults(data, searchURL);
