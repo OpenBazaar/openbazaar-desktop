@@ -73,7 +73,7 @@ export default class extends baseVw {
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const sortBy = `&sortBy=${encodeURIComponent(this.sortByQuery)}`;
+    const sortBy = this.sortByQuery ? `&sortBy=${encodeURIComponent(this.sortByQuery)}` : '';
     const searchURL = `${this.sProvider}?${query}${sortBy}${this.filterQuery}${page}`;
 
     this.callSearchProvider(searchURL);
