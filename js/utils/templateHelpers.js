@@ -10,8 +10,8 @@ export function polyT(...args) {
   return app.polyglot.t(...args);
 }
 
-export function parseEmojis(msg) {
-  return twemoji.parse(msg,
+export function parseEmojis(text) {
+  return twemoji.parse(text,
       icon => (`../imgs/emojis/72X72/${icon}.png`));
 }
 
