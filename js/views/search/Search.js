@@ -60,7 +60,7 @@ export default class extends baseVw {
 
   get sortByQuery() {
     // return current sortBy state in the form of a query string
-    return this.$sortBy && this.$sortBy.length ? `&sortBy=${this.$sortBy.val()}` : '';
+    return this.$sortBy && this.$sortBy.length ? this.$sortBy.val() : '';
   }
 
   get filterQuery() {
@@ -73,7 +73,7 @@ export default class extends baseVw {
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const sortBy = encodeURIComponent(this.sortByQuery);
+    const sortBy = `&sortBy=${encodeURIComponent(this.sortByQuery)}`;
     const searchURL = `${this.sProvider}?${query}${sortBy}${this.filterQuery}${page}`;
 
     this.callSearchProvider(searchURL);
