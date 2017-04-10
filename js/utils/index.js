@@ -5,6 +5,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import app from '../app';
 import multihashes from 'multihashes';
+import twemoji from 'twemoji';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -129,4 +130,10 @@ export function isMultihash(_string) {
   } catch (exc) {
     return false;
   }
+}
+
+// applies a template to select2 to turn text emojis into images
+export function selectEmojis(option) {
+  return $(`<span class="select2ImgOpt">${twemoji.parse(option.text,
+      icon => (`../imgs/emojis/72X72/${icon}.png`))}</span>`);
 }

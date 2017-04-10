@@ -86,20 +86,20 @@
   }
 }
 
-.simpleFlexCol {
-  display: flex;
-  flex-direction: column;
-}
-
-.flexColRows {
-  //vertical colums that have 100% width and are spaced across the height
+.flexColWide {
+  // a vertical flex column with 100% wide rows
   @extend .flexCol;
-  justify-content: space-between;
-  height: 100%;
 
   & > * {
     width: 100%;
   }
+}
+
+.flexColRows {
+  //vertical colums that have 100% width and are spaced across the height
+  @extend .flexColWide;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .flexCent {
@@ -143,6 +143,11 @@
   @extend .flex;
   justify-content: flex-end;
   text-align: right;
+}
+
+.simpleFlexCol {
+  display: flex;
+  flex-direction: column;
 }
 
 .flexExpand,           //make a flex element expand to fill the remaining space
@@ -451,5 +456,9 @@
 
 .posF {
   position: fixed;
+}
+
+.width100 {
+  width: 100%;
 }
 
