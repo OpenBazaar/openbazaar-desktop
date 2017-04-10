@@ -92,14 +92,12 @@ export default class extends baseVw {
       dataType: 'json',
     })
         .done((data, status, xhr) => {
-          if (xhr.statusText !== 'abort') {
-            // make sure minimal data is present
-            if (data.name && data.links) {
-              this.render(data, searchURL);
-            } else {
-              this.showSearchError(xhr);
-              this.render({}, searchURL);
-            }
+        // make sure minimal data is present
+          if (data.name && data.links) {
+            this.render(data, searchURL);
+          } else {
+            this.showSearchError(xhr);
+            this.render({}, searchURL);
           }
         })
         .fail((xhr) => {
