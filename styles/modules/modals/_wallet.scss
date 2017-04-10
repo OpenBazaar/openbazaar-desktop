@@ -118,4 +118,27 @@
       }
     }
   }
+
+  .walletTransactions {
+    .transaction {
+      .statusIconCol {
+        width: 20px;
+        text-align: right;
+
+        .ion-ios-checkmark-empty {
+          font-size: $tx1;
+          position: relative;
+          top: -5px;
+          height: 0px;
+        }
+      }
+
+      &.confirmedTransaction {
+        .statusIconCol {
+          height: 0; // making the .ion-ios-checkmark-empty with a sufficiently
+                     // large font size gives it too much vertical padding
+        }
+      }
+    }
+  }  
 }

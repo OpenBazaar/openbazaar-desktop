@@ -329,3 +329,13 @@ input[type=range][class~="clrS"] {
     }
   }
 }
+
+.wallet {
+  .walletTransactions {
+    .statusIconCol {
+      .ion-alert-circled {
+        color: #fecf33;
+      }
+    }
+  }
+}

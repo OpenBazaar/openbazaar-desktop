@@ -543,6 +543,7 @@
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
+    "fundsHeader": "Funds",
     "btnReceiveMoney": "Receive Money",
     "btnSendMoney": "Send Money",
     "btcCurrencyLabel": "Bitcoin",
@@ -568,7 +569,10 @@
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
       }      
-    }    
+    },
+    "transactions": {
+      "header": "Transactions"
+    }
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
