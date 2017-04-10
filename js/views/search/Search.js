@@ -36,12 +36,12 @@ export default class extends baseVw {
     this.usingDefault = this.sProvider === app.localSettings.get('searchProvider');
 
     // if not using a passed in URL, update the default provider if it changes
-    this.listenTo(app.localSettings, 'change:searchProvider', (_, provider) => {
+    this.listenTo(app.localSettings, 'change:searchProvider', (model, provider) => {
       if (this.usingDefault) {
-      this.sProvider = provider;
-      this.processTerm(this.term);
-    }
-  });
+        this.sProvider = provider;
+        this.processTerm(this.term);
+      }
+    });
   }
 
   className() {
@@ -88,24 +88,24 @@ export default class extends baseVw {
 
     // query the search provider
     this.callSearch = $.get({
-          url: searchURL,
-          dataType: 'json',
-        })
+      url: searchURL,
+      dataType: 'json',
+    })
         .done((data, status, xhr) => {
         // make sure minimal data is present
-        if (data.name && data.links) {
-      this.render(data, searchURL);
-    } else {
-      this.showSearchError(xhr);
-      this.render({}, searchURL);
-    }
-  })
-  .fail((xhr) => {
-      if (xhr.statusText !== 'abort') {
-      this.showSearchError(xhr);
-      this.render({}, searchURL);
-    }
-  });
+          if (data.name && data.links) {
+            this.render(data, searchURL);
+          } else {
+            this.showSearchError(xhr);
+            this.render({}, searchURL);
+          }
+        })
+        .fail((xhr) => {
+          if (xhr.statusText !== 'abort') {
+            this.showSearchError(xhr);
+            this.render({}, searchURL);
+          }
+        });
   }
 
   showSearchError(xhr = {}) {
@@ -135,12 +135,12 @@ export default class extends baseVw {
     }).render().open();
     this.listenTo(errorDialog, 'click-changeProvider', () => {
       this.changeProvider();
-    errorDialog.close();
-  });
+      errorDialog.close();
+    });
     this.listenTo(errorDialog, 'click-useDefault', () => {
       this.useDefault();
-    errorDialog.close();
-  });
+      errorDialog.close();
+    });
   }
 
   createResults(data, searchURL) {
@@ -209,14 +209,14 @@ export default class extends baseVw {
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
-      term: this.term === '*' ? '' : this.term,
-      provider: this.sProvider,
-      defaultProvider: app.localSettings.get('searchProvider'),
-      emptyData,
-      loading,
-      ...data,
-  }));
-  });
+        term: this.term === '*' ? '' : this.term,
+        provider: this.sProvider,
+        defaultProvider: app.localSettings.get('searchProvider'),
+        emptyData,
+        loading,
+        ...data,
+      }));
+    });
     this.$sortBy = this.$('#sortBy');
     this.$sortBy.select2({
       // disables the search box
@@ -238,7 +238,7 @@ export default class extends baseVw {
 
     this.$searchLogo.find('img').on('error', () => {
       this.$searchLogo.addClass('loadError');
-  });
+    });
 
     // use the initial set of results data to create the results view
     if (data) this.createResults(data, searchURL);
