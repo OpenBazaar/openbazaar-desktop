@@ -122,7 +122,9 @@ export default class extends baseVw {
       const newPageCol = new ResultsCol();
       this.pageCollections[page] = newPageCol;
 
-      newPageCol.fetch({
+      if (this.newPageFetch) this.newPageFetch.abort();
+
+      this.newPageFetch = newPageCol.fetch({
         url: newURL,
       })
           .done(() => {
@@ -131,7 +133,7 @@ export default class extends baseVw {
             app.router.navigate(newURL, { replace: this.firstRender });
           })
           .fail((xhr) => {
-            this.trigger('searchError', xhr);
+            if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
           });
     }
   }
@@ -149,6 +151,12 @@ export default class extends baseVw {
       this.loadPage();
     }
   }
+
+  remove() {
+    if (this.newPageFetch) this.newPageFetch.abort();
+    super.remove();
+  }
+
 
   render() {
     loadTemplate('search/Results.html', (t) => {
