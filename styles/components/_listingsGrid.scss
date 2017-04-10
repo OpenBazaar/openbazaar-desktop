@@ -1,3 +1,6 @@
+/* The listingsGrid is used anywhere were a grid of listings is shown. Currently this includes
+   the store and search results views. Make sure to check both when making changes to this file.
+ */
 .listingsGrid {
   flex-wrap: wrap;
   justify-content: space-between;

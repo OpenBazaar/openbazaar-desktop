@@ -70,11 +70,11 @@ export default class extends baseVw {
 
   processTerm(term) {
     this.term = term || '';
-    // if term has spaces, replace them with +
     // if term is false, search for *
-    const query = `q=${term ? term.replace(/\s+/g, '+') : '*'}`;
+    const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const searchURL = `${this.sProvider}?${query}${this.sortByQuery}${this.filterQuery}${page}`;
+    const sortBy = encodeURIComponent(this.sortByQuery);
+    const searchURL = `${this.sProvider}?${query}${sortBy}${this.filterQuery}${page}`;
 
     this.callSearchProvider(searchURL);
   }
@@ -92,12 +92,14 @@ export default class extends baseVw {
       dataType: 'json',
     })
         .done((data, status, xhr) => {
-        // make sure minimal data is present
-          if (data.name && data.links) {
-            this.render(data, searchURL);
-          } else {
-            this.showSearchError(xhr);
-            this.render({}, searchURL);
+          if (xhr.statusText !== 'abort') {
+            // make sure minimal data is present
+            if (data.name && data.links) {
+              this.render(data, searchURL);
+            } else {
+              this.showSearchError(xhr);
+              this.render({}, searchURL);
+            }
           }
         })
         .fail((xhr) => {
@@ -194,6 +196,11 @@ export default class extends baseVw {
 
   scrollToTop() {
     this.$el[0].scrollIntoView();
+  }
+
+  remove() {
+    if (this.callSearch) this.callSearch.abort();
+    super.remove();
   }
 
   render(data, searchURL) {
