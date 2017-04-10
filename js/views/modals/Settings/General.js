@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import '../../../lib/select2';
 import app from '../../../app';
@@ -37,6 +38,7 @@ export default class extends baseVw {
     return {
       'click .js-save': 'save',
       'change #settingsCurrencySelect': 'onChangeCurrencySelect',
+      'click .js-restoreDefaultProvider': 'onClickRestoreDefaultProvider',
     };
   }
 
@@ -48,15 +50,24 @@ export default class extends baseVw {
     }
   }
 
+  onClickRestoreDefaultProvider() {
+    const provider = _.result(this.localSettings, 'defaults',
+      { searchProvider: '' })
+        .searchProvider || '';
+    this.$searchProviderInput.val(provider);
+  }
+
   getFormData(fields = this.$settingsFields) {
     return super.getFormData(fields);
   }
 
   save() {
-    this.localSettings.set(this.getFormData(this.$localSettingsFields), { validate: true });
+    this.localSettings.set(this.getFormData(this.$localSettingsFields));
+    this.localSettings.set({}, { validate: true });
 
     const settingsFormData = this.getFormData();
-    this.settings.set(settingsFormData, { validate: true });
+    this.settings.set(settingsFormData);
+    this.settings.set({}, { validate: true });
 
     if (!this.localSettings.validationError && !this.settings.validationError) {
       const msg = {
@@ -123,6 +134,11 @@ export default class extends baseVw {
       (this._$bitcoinUnitField = this.$('.js-bitcoinUnitField'));
   }
 
+  get $searchProviderInput() {
+    return this._$searchProviderInput ||
+      (this._$searchProviderInput = this.$('input[name=searchProvider]'));
+  }
+
   get $settingsFields() {
     return this._$settingsFields ||
       (this._$settingsFields =
@@ -158,6 +174,7 @@ export default class extends baseVw {
       this._$localSettingsFields = null;
       this._$btnSave = null;
       this._$bitcoinUnitField = null;
+      this._$searchProviderInput = null;
     });
 
     return this;

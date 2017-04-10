@@ -5,7 +5,7 @@ import $ from 'jquery';
 import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
-import SettingsModal from '../modals/Settings/Settings';
+import { launchSettingsModal } from '../../utils/modalManager';
 import { selectEmojis } from '../../utils';
 
 export default class extends baseVw {
@@ -13,12 +13,12 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    const term = options.term;
-    const testForURL = /^((http|https|ob):\/\/)/;
+    const queryParams = (new URL(`http://blah-blah?${options.query || ''}`)).searchParams;
+    const providerQuery = queryParams.get('providerQ');
 
-    if (term && testForURL.test(term)) {
-      // if a search URL was passed in, reconstruct the url and parse the data
-      const searchURL = new URL(`${term}${options.query ? `?${options.query}` : ''}`);
+    if (providerQuery) {
+      // A query for a specific provider was provided.
+      const searchURL = new URL(providerQuery);
       const params = searchURL.searchParams;
       this.sProvider = `${searchURL.origin}${searchURL.pathname}`;
       this.serverPage = params.get('p') || 0;
@@ -30,7 +30,7 @@ export default class extends baseVw {
       this.serverPage = options.serverPage || 0;
       this.pageSize = options.pageSize || 12;
       // if the term was not a url, process the term before calling the search provider
-      this.processTerm(term);
+      this.processTerm(queryParams.get('q') || '');
     }
 
     this.usingDefault = this.sProvider === app.localSettings.get('searchProvider');
@@ -134,6 +134,7 @@ export default class extends baseVw {
       msg,
       buttons,
       showCloseButton: false,
+      removeOnClose: true,
     }).render().open();
     this.listenTo(errorDialog, 'click-changeProvider', () => {
       this.changeProvider();
@@ -183,9 +184,7 @@ export default class extends baseVw {
   }
 
   changeProvider() {
-    if (!this.settingsModal || !this.settingsModal.isOpen()) {
-      this.settingsModal = new SettingsModal().render().open();
-    }
+    launchSettingsModal();
   }
 
   useDefault() {
