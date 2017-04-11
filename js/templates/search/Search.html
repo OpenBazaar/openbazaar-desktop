@@ -1,0 +1,108 @@
+<% /*
+<nav id="pageTabBar" class="barLg clrP clrBr"> This will be for the channel bar.</nav>
+*/ %>
+
+<div class="pageContent">
+  <% if (!ob.emptyData) { %>
+  <div class="flexColRows row">
+    <h3 class="txUnl rowSm"><%= ob.name %></h3>
+    <div class="searchBar row clrP clrBr">
+      <% if (ob.logo) { %>
+      <div class="searchLogo js-searchLogo">
+        <img src="<%= ob.logo %>"></img>
+      </div>
+      <% } %>
+      <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>" type="text" value="<%= ob.term %>">
+      <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
+    </div>
+    <% // TODO: if suggestions exist show below %>
+    <% /* %>
+    <div class="suggestions flex gutterH row">
+      <span class="tx5 clrT2"><%= ob.polyT('search.suggestions') %></span>
+      <% // TODO: suggestions loop %>
+    </div>
+    <% */ %>
+    <hr class="clrBr">
+  </div>
+  <div class="flexRow gutterHLg">
+    <form class="col3 filterWrapper js-filterWrapper">
+      <div class="flexColWide gutterV">
+        <% _.each(ob.options, function(val, key) { %>
+          <div class="contentBox pad clrP clrBr">
+            <h4 class="rowSm"><%= val.label %></h4>
+            <% if (val.type ==='dropdown') { %>
+              <select name="<%= key %>">
+              <% _.each(val.options, function(option) {
+                var selected = option.checked ? 'selected' : '';
+                print(`<option ${selected} value="${option.value}">${option.label}</option>`);
+              }); %>
+              </select>
+            <% } else if (val.type ==='radio') { %>
+              <div class="flexCol">
+              <% _.each(val.options, function(option, ind) { %>
+                <div class="btnRadio clrBr">
+                   <%
+                    var checked = option.checked ? 'checked' : '';
+                    var parsedLabel = ob.parseEmojis(option.label);
+                    print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
+                    print(`<label for="${key + ind}">${parsedLabel}</label>`);
+                   %>
+                </div>
+              <% }); %>
+              </div>
+            <% } else if (val.type ==='checkbox') { %>
+              <div class="flexCol">
+              <% _.each(val.options, function(option, index) {
+                var checked = option.checked ? 'checked' : '';
+                var parsedLabel = ob.parseEmojis(option.label);
+                print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
+                print(`<label for="${key + index}">${parsedLabel}</label>`);
+              }); %>
+              </div>
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    </form>
+    <div class="col9">
+      <div class="flexCol">
+        <div class="width100">
+          <div class="row flexVBase gutterH">
+            <div class="tx5 flexExpand">
+              <% if (ob.results) { %>
+                <% if (ob.term) { %>
+                  <%= ob.polyT('search.resultsFound', { totalResults: ob.results.total, term: ob.term }) %>
+                <% } else { %>
+                <b><%= ob.polyT('search.resultsTotal', { totalResults: ob.results.total }) %></b>
+                <% } %>
+              <% } %>
+            </div>
+            <% if (ob.sortBy) { %>
+              <div class="tx5b">
+                <%= ob.polyT('search.sortBy') %>
+              </div>
+              <div class="col4">
+                <select id="sortBy" class="js-sortBy">
+                  <% _.each(ob.sortBy, function(val, key) {
+                  print('<option value="'+key+'">'+val.label+'</option>');
+                  }); %>
+                </select>
+              </div>
+            <% } %>
+          </div>
+        </div>
+        <div class="width100 js-resultsWrapper">
+           <% // the results are added here %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } else { %>
+  <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
+    <h2 class="rowLg"><%= ob.polyT('search.errors.emptyData', { provider: ob.provider }) %></h2>
+  </div>
+  <% } %>
+</div>
+<% if (ob.loading) { %>
+  <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% } %>

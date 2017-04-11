@@ -1,0 +1,103 @@
+.search {
+  // this is a temporary style to fill the space that will be filled by the tab bar
+  position: relative;
+  top: -30px;
+  min-height:710px;
+
+  .loadingSearch {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+  }
+
+  .searchBar {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .searchLogo {
+      position: absolute;
+      left: 8px;
+      height: 26px;
+      width: 26px;
+
+      img {
+        height: 26px;
+        width: 26px;
+      }
+
+      &.loadError {
+        // if the logo fails to load, hide it and show the default
+        background-image: url(../../imgs/defaultSearch.png);
+        background-size: cover;
+        background-position: center;
+
+        img {
+          display: none;
+        }
+      }
+    }
+
+    .searchInput {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right-width: 0;
+
+      &:focus {
+        border-right-width: 1px;
+      }
+
+      &.withLogo {
+        text-indent: 30px;
+      }
+    }
+
+    .searchBtn {
+      padding: 0 $padLg;
+      line-height: 40px;
+      font-size: 1.4rem;
+      height: auto;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+
+  .filterWrapper {
+    padding-right: 5px;
+    label {
+      line-height: 2em;
+    }
+  }
+
+  .searchResults {
+
+    .listingsGrid {
+      min-height: 298px;
+    }
+
+    .loadingSearch {
+      display: none;
+    }
+
+    &.loading .loadingSearch {
+      display: flex;
+    }
+
+    .pageControlsWrapper {
+      overflow: auto;
+
+      .pageControls .pageNext {
+        @include disabled;
+      }
+    }
+
+    &.morePages .pageControlsWrapper .pageControls .pageNext {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    &.firstPage .pageControlsWrapper .pageControls .pagePrev {
+      @include disabled;
+    }
+  }
+}
