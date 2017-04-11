@@ -132,12 +132,28 @@
       .statusIconCol {
         width: 15px;
         text-align: right;
+        flex-shrink: 0;
 
         .ion-ios-checkmark-empty {
           font-size: $tx1;
           position: relative;
-          top: -5px;
+          top: -7px;
           height: 0px;
+        }
+
+        .ion-android-time {
+          position: relative;
+          top: -2px;
+        }
+
+        .ion-alert-circled {
+          position: relative;
+          top: -3px;
+        }
+
+        .ion-ios-close-empty {
+          position: relative;
+          top: -7px;
         }
       }
 
@@ -145,12 +161,6 @@
         .statusIconCol {
           height: 0; // making the .ion-ios-checkmark-empty with a sufficiently
                      // large font size gives it too much vertical padding
-        }
-      }
-
-      .subInfo {
-        & > span {
-          margin-right: 8px;
         }
       }
     }
