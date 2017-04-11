@@ -2,11 +2,13 @@ import $ from 'jquery';
 import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import Transactions from '../../../collections/Transactions';
 import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
 import Stats from './Stats';
 import SendMoney from './SendMoney';
 import ReceiveMoney from './ReceiveMoney';
+import TransactionsVw from './Transactions';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -20,6 +22,18 @@ export default class extends BaseModal {
     this.sendModeOn = opts.sendModeOn;
     this.addressFetches = [];
     this.needAddressFetch = true;
+
+    this.transactions = new Transactions();
+
+    this.listenTo(this.transactions, 'request', (md, xhr) => {
+      xhr.done(data => {
+        if (this.stats) {
+          this.stats.setState({ transactionCount: data.count });
+        }
+      });
+    });
+
+    this.fetchTransactions();
 
     this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
       if (this.stats) {
@@ -156,6 +170,32 @@ export default class extends BaseModal {
     return false;
   }
 
+  /**
+   * This is used for the initial transactions fetch. Subsequent pages
+   * are fetched via the Transactions view.
+   */
+  fetchTransactions() {
+    if (this.transactionsFetch) this.transactionsFetch.abort();
+    this.transactionsFetch = this.transactions.fetch();
+    this.transactionsFetch.always(() => {
+      if (this.transactionsVw) {
+        this.transactionsVw.setState({
+          isFetching: false,
+        });
+      }
+    }).fail((jqXhr) => {
+      if (this.transactionsVw) {
+        const state = { initialFetchFailed: true };
+
+        if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
+          state.initialFetchErrorMessage = jqXhr.responseJSON.reason;
+        }
+
+        this.transactionsVw.setState(state);
+      }
+    });
+  }
+
   open() {
     this.sendModeOn = true;
 
@@ -167,6 +207,7 @@ export default class extends BaseModal {
   }
 
   remove() {
+    if (this.transactionsFetch) this.transactionsFetch.abort();
     this.addressFetches.forEach(fetch => fetch.abort());
     super.remove();
   }
@@ -212,6 +253,18 @@ export default class extends BaseModal {
 
         this.listenTo(this.receiveMoney, 'click-cancel', () => (this.sendModeOn = true));
         this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
+
+        if (this.transactions) this.transactions.remove();
+
+        this.transactionsVw = new TransactionsVw({
+          collection: this.transactions,
+          initialState: {
+            isFetching: this.transactionsFetch.state() === 'pending',
+          },
+        });
+
+        this.listenTo(this.transactionsVw, 'retryFetchClick', () => this.fetchTransactions());
+        this.$('.js-transactionContainer').html(this.transactionsVw.render().el);
       });
     });
 

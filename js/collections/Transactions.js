@@ -14,7 +14,7 @@ export default class extends Collection {
 
   parse(response) {
     response.transactions.forEach(transaction => {
-      transaction.value = integerToDecimal(transaction.value.amount, true);
+      transaction.value = integerToDecimal(transaction.value, true);
     });
 
     return response;
