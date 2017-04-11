@@ -196,7 +196,11 @@
       "btnOpenInWallet" : "Open in Wallet",
       "notifyCopied": "Copied",
       "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "copied": "Copied"
+      "copied": "Copied",
+      "unableToOpenInWallet": {
+        "title": "Unable to open in wallet",
+        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
+      }
     },
     "licenseTab": {
       "linkText": "License",
@@ -546,7 +550,28 @@
     "btnSendMoney": "Send Money",
     "btcCurrencyLabel": "Bitcoin",
     "valueInCurrencyLabel": "Value in %{currency}",
-    "transactionsLabel": "Transactions"
+    "transactionsLabel": "Transactions",
+    "receiveMoney": {
+      "title": "Receive Money",
+      "needBitcoin": "Need Bitcoin?",
+      "btnCancel": "Cancel"      
+    },
+    "sendMoney": {
+      "toLabel": "To",
+      "toPlaceholder": "Enter a Bitcoin Address",
+      "amountLabel": "Amount",
+      "noteLabel": "Note",
+      "notePlaceholder": "Only seen by you",
+      "sendBtn": "Send",
+      "clear": "Clear",
+      "sendPaymentFailDialogTitle": "Unable to send payment",
+      "sendConfirm": {
+        "heading": "Are you sure?",
+        "body": "Double check that the address and amount are correct.",
+        "btnCancel": "Cancel",
+        "btnConfirmSend": "Yes, Send"
+      }      
+    }    
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
@@ -863,6 +888,13 @@
     "atLeast2Variants": "Please provide at least two choices.",
     "variantTooLong": "%{variant} exceeds the maximum length of %{maxLength} characters."
   },
+  "spendModelErrors": {
+    "provideAddress": "Please provide an address.",
+    "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
+    "provideAmountNumber": "Please provide an amount as a number.",
+    "amountGreaterThanZero": "The amount must be greater than zero.",
+    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+  },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

@@ -1,2 +1,18 @@
-<h2 class="h3 txCtr txUnl row">Receive Money</h2>
-<img src="<%= ob.qrDataUri %>">
+<a class="js-cancelReceiveBtn btn clrT clrBr cancelReceiveBtn"><%= ob.polyT('wallet.receiveMoney.btnCancel') %></a>
+<h2 class="h3 txCtr txUnl row"><%= ob.polyT('wallet.receiveMoney.title') %></h2>
+<div class="codeAddressWrap">
+  <div class="rowLg <% if (ob.fetching) print('invisible') %>">
+    <a class="js-receiveQrCode"><img src="<%= ob.qrDataUri %>"></a>
+  </div>
+  <div class="rowMd receiveAddressWrap <% if (ob.fetching) print('invisible') %>">
+    <div class="copiedText hide js-copiedText">Copied</div>
+    <a class="js-receiveAddress clrT clrBr receiveAddressLink"><%= ob.address %></a>
+  </div>
+  <div class="spinnerWrap <% if (!ob.fetching) print('hide') %>">
+    <%= ob.spinner() %>
+  </div>
+</div>
+<div class="flexCent">
+  <i class="btcIcon margRSm" style="background-image: url('../imgs/btcIcon128.png');"></i>
+  <a href="https://openbazaar.org/" class="clrT txB txU"><%= ob.polyT('wallet.receiveMoney.needBitcoin') %></a>
+</div>

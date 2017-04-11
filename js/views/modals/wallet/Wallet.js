@@ -1,3 +1,5 @@
+import $ from 'jquery';
+import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -16,6 +18,8 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
     this.sendModeOn = opts.sendModeOn;
+    this.addressFetches = [];
+    this.needAddressFetch = true;
 
     this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
       if (this.stats) {
@@ -32,6 +36,23 @@ export default class extends BaseModal {
         });
       }
     });
+
+    const serverSocket = getSocket();
+
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', e => {
+        // "wallet" sockets come for new transactions and when a transaction gets it's
+        // first confirmation. We're only listed in new transactions (i.e. the height will be 0)
+        if (e.jsonData.wallet && !e.jsonData.height) {
+          if (this.sendModeOn) {
+            // we'll fetch the next time we show the receive money section
+            this.needAddressFetch = true;
+          } else {
+            this.fetchAddress();
+          }
+        }
+      });
+    }
   }
 
   className() {
@@ -57,11 +78,97 @@ export default class extends BaseModal {
     if (bool !== this._sendModeOn) {
       this.$el.toggleClass('receiveModeOn', !bool);
       this._sendModeOn = bool;
+
+      if (bool && this.sendMoney) {
+        this.sendMoney.focusAddress();
+      }
+
+      if (!bool && this.needAddressFetch) {
+        this.fetchAddress();
+      }
     }
   }
 
   get sendModeOn() {
     return this._sendModeOn;
+  }
+
+  /**
+   * Set the contents of the Send Money form. Will return
+   * true if able to set the form or false otherwise. The most
+   * common reason for not being able to set the form is that a
+   * send is already in progress.
+   */
+  setSendFormData(data = {}, options = {}) {
+    if (!this.sendMoney) return false;
+
+    if (this.sendMoney.saveInProgress) {
+      return false;
+    }
+
+    const opts = {
+      showSendMode: true,
+      // focus will only happen if you showSendMode
+      focusAddressInput: true,
+      ...options,
+    };
+
+    if (opts.showSendMode) this.sendModeOn = true;
+    this.sendMoney.setFormData(data, !!opts.focusAddressInput);
+    return true;
+  }
+
+  fetchAddress() {
+    if (this.receiveMoney) {
+      this.receiveMoney.setState({
+        fetching: true,
+      });
+    }
+
+    this.needAddressFetch = false;
+
+    let address = '';
+
+    const fetch = $.get(app.getServerUrl('wallet/address/'))
+      .done((data) => {
+        address = data.address;
+      }).always(() => {
+        if (this.isRemoved()) return;
+
+        if (this.receiveMoney && !this.isAdressFetching()) {
+          this.receiveMoney.setState({
+            fetching: false,
+            address,
+          });
+        }
+      });
+
+    this.addressFetches.push(fetch);
+
+    return fetch;
+  }
+
+  isAdressFetching() {
+    if (this.addressFetches) {
+      return this.addressFetches.some(fetch => fetch.state() === 'pending');
+    }
+
+    return false;
+  }
+
+  open() {
+    this.sendModeOn = true;
+
+    if (this.sendMoney && !this.sendMoney.saveInProgress) {
+      this.sendMoney.clearForm();
+    }
+
+    return super.open();
+  }
+
+  remove() {
+    this.addressFetches.forEach(fetch => fetch.abort());
+    super.remove();
   }
 
   render() {
@@ -96,7 +203,14 @@ export default class extends BaseModal {
 
         // render the receive money view
         if (this.receiveMoney) this.receiveMoney.remove();
-        this.receiveMoney = this.createChild(ReceiveMoney);
+
+        this.receiveMoney = this.createChild(ReceiveMoney, {
+          initialState: {
+            fetching: this.isAdressFetching(),
+          },
+        });
+
+        this.listenTo(this.receiveMoney, 'click-cancel', () => (this.sendModeOn = true));
         this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
       });
     });

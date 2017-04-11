@@ -1,3 +1,4 @@
+import app from '../app';
 import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
@@ -10,7 +11,7 @@ let settingsModal;
 let editListingModal;
 let debugLogModal;
 let moderatorDetailsModal;
-let wallet;
+let _wallet;
 
 export function launchEditListingModal(modalOptions = {}) {
   if (editListingModal) editListingModal.remove();
@@ -77,18 +78,22 @@ export function launchModeratorDetailsModal(modalOptions = {}) {
 }
 
 export function launchWallet(modalOptions = {}) {
-  if (wallet) {
-    wallet.bringToTop();
+  if (_wallet) {
+    _wallet.open();
   } else {
-    wallet = new Wallet({
-      removeOnClose: true,
+    _wallet = new Wallet({
+      removeOnRoute: false,
       ...modalOptions,
     })
       .render()
       .open();
 
-    wallet.on('modal-will-remove', () => (wallet = null));
+    app.router.on('will-route', () => _wallet.close());
   }
 
-  return wallet;
+  return _wallet;
+}
+
+export function getWallet() {
+  return _wallet;
 }
