@@ -50,12 +50,72 @@
   .sendReceiveContainer {
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
-    height: 300px;
+    height: 346px;
     padding-top: 25px;
 
     .receiveMoney {
-      // width: 100%;
       text-align: center;
+      position: relative;
+
+      .codeAddressWrap {
+        height: 273px;
+
+        .receiveAddressWrap {
+          display: inline-block;
+          position: relative;
+
+          .copiedText {
+            margin-bottom: 5px;
+            position: absolute;
+            top: -20px;
+            right: 0;
+          }
+
+          .receiveAddressLink {
+            border-width: 1px;
+            border-style: solid;
+            padding: 5px 10px;
+            display: inline-block;
+            min-width: 360px;
+          }
+        }
+
+        .spinnerWrap {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+
+          .spinner {
+            width: 100px;
+            @include center();
+          }
+        }
+      }
+
+      .cancelReceiveBtn {
+        position: absolute;
+        right: 0;
+        top: -25px;
+      }
+    }
+
+    .sendMoney {
+      position: relative;
+
+      .sendConfirm {
+        display: block;
+        position: absolute;
+        right: -28px;
+        width: 245px;
+        transform: translateY(-7px);
+        z-index: 1;
+        padding: $pad;
+        border-style: solid;
+        border-width: 1px;
+        text-align: center;
+      }
     }
   }
 }

@@ -98,6 +98,8 @@ export default class BaseModal extends baseVw {
       BaseModal.__openModals.push(this);
       this._open = true;
       this.trigger('open');
+    } else {
+      this.bringToTop();
     }
 
     return this;

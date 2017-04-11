@@ -1,3 +1,6 @@
+import app from '../../../app';
+import { getWallet, launchWallet } from '../../../utils/modalManager';
+import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { clipboard } from 'electron';
@@ -40,8 +43,19 @@ export default class extends baseVw {
   }
 
   openInWalletClick() {
-    console.log('open this in the internal wallet');
-    // TODO: wire this into the internal wallet
+    const wallet = getWallet();
+
+    if (!wallet) {
+      launchWallet()
+        .setSendFormData({ address: obDonationAddress });
+    } else {
+      if (wallet.setSendFormData({ address: obDonationAddress })) {
+        wallet.open();
+      } else {
+        openSimpleMessage(app.polyglot.t('about.donationsTab.unableToOpenInWallet.title'),
+          app.polyglot.t('about.donationsTab.unableToOpenInWallet.body'));
+      }
+    }
   }
 
   render() {

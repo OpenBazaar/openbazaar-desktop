@@ -182,6 +182,14 @@ input[type=range][class~="clrS"] {
 
 .clrBAttGrad {
   background: $emphasisGradient;
+
+  &.processing {
+    .spinner {
+      path:first-child {
+        fill: #666;
+      }
+    }
+  }
 }
 
 ::-webkit-scrollbar-track {
