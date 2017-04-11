@@ -120,9 +120,17 @@
   }
 
   .walletTransactions {
+    padding: $padMd;
+
     .transaction {
+      font-size: $tx5;
+
+      .btn {
+        font-size: $tx6;        
+      }
+
       .statusIconCol {
-        width: 20px;
+        width: 15px;
         text-align: right;
 
         .ion-ios-checkmark-empty {
@@ -137,6 +145,12 @@
         .statusIconCol {
           height: 0; // making the .ion-ios-checkmark-empty with a sufficiently
                      // large font size gives it too much vertical padding
+        }
+      }
+
+      .subInfo {
+        & > span {
+          margin-right: 8px;
         }
       }
     }

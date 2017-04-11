@@ -27,13 +27,16 @@
     </div>
   </div>
 
-  <div class="contentBox padMd clrP clrBr clrSh3 walletTransactions">
+  <div class="contentBox clrP clrBr clrSh3 walletTransactions">
     <h2 class="h3"><%= ob.polyT('wallet.transactions.header') %></h2>
     <div class="borderStacked contentBox clrBr padMdKids">
       <div class="transaction flex gutterHSm clrT confirmedTransaction">
         <div class="statusIconCol clrTEmph1"><span class="ion-ios-checkmark-empty"></span></div>
-        <div class="flexExpand">Feel good flava flave<br />Is this what you came for playa?</div>
-        <div class="col4">
+        <div class="flexExpand tx5">
+          <div class="txB rowTn">+$192.22 (0.312 BTC) to <span class="clrTEmph1">mi2sXuYnw...</span></div>
+          <div class="clrT2 tx6">1h ago (539 confirmations) 4eefa22a...</div>          
+        </div>
+        <div class="col">
           <div class="flexHRight">
             <div class="btnStrip">
               <a class="btn clrP clrBr clrSh2">View Details</a>
@@ -43,8 +46,11 @@
       </div>
       <div class="transaction flex gutterHSm clrT">
         <div class="statusIconCol tx3 clrTEmph1"><span class="ion-alert-circled"></span></div>
-        <div class="flexExpand">Feel good flava flave</div>
-        <div class="col4">
+        <div class="flexExpand tx5">
+          <div class="txB rowTn">-$812.42 (1.012 BTC) to <span class="clrTEmph1">mi2sXuYnw...</span></div>
+          <div class="clrT2 tx6">20h ago (0 confirmations) 4eefa22a...</div>                    
+        </div>
+        <div class="col">
           <div class="flexHRight">
             <div class="btnStrip">
               <a class="btn clrP clrBr clrSh2">View Details</a>
@@ -52,7 +58,26 @@
             </div>
           </div>
         </div>
-      </div>      
+      </div>
+      <div class="transaction flex gutterHSm clrT">
+        <div class="statusIconCol tx3"><span class="ion-android-time"></span></div>
+        <div class="flexExpand">
+          <div class="txB rowTn">+$23.22 (0.024 BTC) received</div>
+          <div class="clrT2 tx6 subInfo">
+            <span>3d ago (427 confirmations)</span>
+            <span>4eefa22a...</span>
+            <span>For dinner 2/22</span>
+          </div>
+        </div>
+        <div class="col">
+          <div class="flexHRight">
+            <div class="btnStrip">
+              <a class="btn clrP clrBr clrSh2">View Details</a>
+              <a class="btn clrP clrBr clrSh2">Retry</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
