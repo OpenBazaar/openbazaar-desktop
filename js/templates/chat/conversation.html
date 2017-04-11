@@ -1,6 +1,6 @@
 <div class="clrBr clrP clrBr flexVCent gutterH padSm convoHeader" style="height: 50px">
-  <div class="js-convoProfileHeaderContainer flexExpand"></div>
-  <div class="btnStrip">
+  <div class="js-convoProfileHeaderContainer"></div>
+  <div class="btnStrip flexNoShrink">
     <a class="btn clrBr clrP clrSh2 ion-android-more-vertical iconBtn js-subMenuTrigger"></a>
     <a class="btn clrBr clrP clrSh2 ion-ios-close-empty iconBtn js-closeConvo"></a>
   </div>
@@ -16,7 +16,7 @@
     <a class="clrT js-deleteConversation deleteConvoMenuItem"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
   </div>
   <div class="convoMessagesWindow tx6 js-convoMessagesWindow">
-    <div class="typingIndicator noOverflow clrBr clrP clrT2 clrSh1 js-typingIndicator"><%= ob.typingIndicator %></div>
+    <div class="typingIndicator txBase noOverflow clrBr clrP clrT2 clrSh1 js-typingIndicator"><%= ob.typingIndicator %></div>
     <%= ob.spinner() %>
     <%
       const retryLink = `<a class="js-retryLoadMessage">${ob.polyT('chat.conversation.retryLink')}</a>`;

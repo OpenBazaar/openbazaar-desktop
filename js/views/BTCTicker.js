@@ -1,19 +1,18 @@
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
-import { getExchangeRate } from '../../../utils/currency';
-import app from '../../../app';
-
+import loadTemplate from '../utils/loadTemplate';
+import baseVw from './baseVw';
+import { getExchangeRate } from '../utils/currency';
+import app from '../app';
 
 const RATE_EXPIRY_S = '300';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super({
-      className: 'aboutBTCTicker',
-      ...options,
-    });
-
+    super(options);
     this.listenTo(app.settings, 'change:localCurrency', this.updatePrice);
+  }
+
+  className() {
+    return 'btcTicker';
   }
 
   get localCurrency() {
@@ -46,7 +45,7 @@ export default class extends baseVw {
       this.currentBTCPrice = this.getCurrentPrice();
     }
 
-    loadTemplate('modals/about/btcticker.html', (t) => {
+    loadTemplate('btcTicker.html', (t) => {
       this.$el.html(t({
         currentBTCPrice: this.currentBTCPrice,
         localCurrency: this.localCurrency,
