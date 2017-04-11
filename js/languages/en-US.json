@@ -7,7 +7,7 @@
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
-  "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or #tag",
+  "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "properNames": {
@@ -54,7 +54,7 @@
       },
       "unableToGetWalletBalance": {
         "title": "Unable to get wallet balance."
-      }      
+      }
     },
     "startupLoadingModal": {
       "canceLink": "cancel",
@@ -111,36 +111,36 @@
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
-        "retryStoreFetch": "Retry",
-        "btnLayoutStandard": "950px",
-        "btnLayoutFullWidth": "100%",
-        "unableToFetchListings": "Unable to retrieve your listings",
-        "noListings": "This store has no listings.",
-        "noListingsFound": "No listings match your search criteria",
-        "btnClearSearch": "Clear Search Criteria",
-        "shipsToFilterAny": "(Any country)",
-        "sortBy": "Sort By",
-        "countListings": "%{smart_count} listing |||| %{smart_count} listings",
-        "countListingsFound": "%{countListings} found",
-        "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-        "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
-        "popinRefreshLink": "refresh",
-        "freeShippingBanner": "Free Shipping",
-        "sortOpts": {
-          "priceAsc": "Price low to high",
-          "priceDesc": "Price high to low",
-          "nameAsc": "Title A-Z",
-          "nameDesc": "Title Z-A"
-        },
-        "shippingFilter": {
-          "heading": "Shipping",
-          "shipsTo": "Ships to"
-        },
-        "categoryFilter": {
-          "heading": "Category",
-          "showMore": "%{smart_count} more… |||| %{smart_count} more…",
-          "showLess": "less"
-        }
+      "retryStoreFetch": "Retry",
+      "btnLayoutStandard": "950px",
+      "btnLayoutFullWidth": "100%",
+      "unableToFetchListings": "Unable to retrieve your listings",
+      "noListings": "This store has no listings.",
+      "noListingsFound": "No listings match your search criteria",
+      "btnClearSearch": "Clear Search Criteria",
+      "shipsToFilterAny": "(Any country)",
+      "sortBy": "Sort By",
+      "countListings": "%{smart_count} listing |||| %{smart_count} listings",
+      "countListingsFound": "%{countListings} found",
+      "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
+      "popinRefreshLink": "refresh",
+      "freeShippingBanner": "Free Shipping",
+      "sortOpts": {
+        "priceAsc": "Price low to high",
+        "priceDesc": "Price high to low",
+        "nameAsc": "Title A-Z",
+        "nameDesc": "Title Z-A"
+      },
+      "shippingFilter": {
+        "heading": "Shipping",
+        "shipsTo": "Ships to"
+      },
+      "categoryFilter": {
+        "heading": "Category",
+        "showMore": "%{smart_count} more… |||| %{smart_count} more…",
+        "showLess": "less"
+      }
     },
     "mainNav": {
       "home": "Home",
@@ -255,7 +255,10 @@
       "statusSaving": "Saving general settings…",
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
-      "saveErrorAlertTitle": "Unable to save general settings"
+      "saveErrorAlertTitle": "Unable to save general settings",
+      "searchProvider": "Search Provider",
+      "restoreDefaultProvider": "Restore default",
+      "searchProviderError": "This is not a valid url for a search provider"
     },
     "pageTab": {
       "helperAbout": "Displays on your Home page",
@@ -642,7 +645,6 @@
       "variants": "Variants",
       "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
       "inventory": "Inventory",
-      "variants": "Variants",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
       "coupons": "Coupons",
@@ -688,28 +690,28 @@
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "Primary Photo",
     "shippingOptions": {
-        "optionHeading": "Shipping Option #%{listPosition}",
-        "shippingDestinations": "Destinations",
-        "regionsPlaceholder": "Enter countries…",
-        "nameLabel": "Option Title",
-        "namePlaceholder": "e.g. USA Shipping, International, etc",
-        "typeLabel": "Type",
-        "shippingTypes": {
-          "FIXED_PRICE": "Fixed Price",
-          "LOCAL_PICKUP": "Local Pickup"
-        },
-        "btnAddShippingOption": "Add Shipping Option",
-        "btnDeleteShippingOption": "Delete",
-        "clearAll": "Clear All",
-        "services": {
-          "nameLabel": "Service",
-          "namePlaceholder": "e.g. Standard, Express, Overnight",
-          "estimatedDeliveryLabel": "Est. Delivery Time",
-          "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
-          "priceLabel": "Price",
-          "pricePlaceholder": "0.00",
-          "addService": "+ Add Service"
-        }
+      "optionHeading": "Shipping Option #%{listPosition}",
+      "shippingDestinations": "Destinations",
+      "regionsPlaceholder": "Enter countries…",
+      "nameLabel": "Option Title",
+      "namePlaceholder": "e.g. USA Shipping, International, etc",
+      "typeLabel": "Type",
+      "shippingTypes": {
+        "FIXED_PRICE": "Fixed Price",
+        "LOCAL_PICKUP": "Local Pickup"
+      },
+      "btnAddShippingOption": "Add Shipping Option",
+      "btnDeleteShippingOption": "Delete",
+      "clearAll": "Clear All",
+      "services": {
+        "nameLabel": "Service",
+        "namePlaceholder": "e.g. Standard, Express, Overnight",
+        "estimatedDeliveryLabel": "Est. Delivery Time",
+        "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
+        "priceLabel": "Price",
+        "pricePlaceholder": "0.00",
+        "addService": "+ Add Service"
+      }
     },
     "coupons": {
       "titleLabel": "Title",
@@ -750,6 +752,22 @@
       "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
     }
   },
+  "search": {
+    "searchBtn": "Search",
+    "suggestions": "Suggestions",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
+    "resultsTotal": "%{totalResults} listings",
+    "displaying": "Displaying <b>%{start}-%{end} of %{total}</b>",
+    "sortBy": "Sort by",
+    "changeProvider": "Change Default Search Provider",
+    "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
+    "noResults": "No listings match your search criteria",
+    "errors": {
+      "searchFailTitle": "The search query to %{provider} has failed.",
+      "searchFailReason": "The search provider returned the following message: %{error}",
+      "emptyData": "No valid data was returned from %{provider}."
+    }
+  },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
@@ -770,7 +788,7 @@
     "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
-    "duplicateSocialAccount": "You already have a social account of this type."    
+    "duplicateSocialAccount": "You already have a social account of this type."
   },
   "socialAccountModelErrors": {
     "provideUsername": "Please provide a username."

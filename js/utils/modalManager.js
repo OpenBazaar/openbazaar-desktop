@@ -4,8 +4,10 @@ import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
 import ModeratorDetails from '../views/modals/moderatorDetails';
 import Wallet from '../views/modals/wallet/Wallet';
+import Settings from '../views/modals/Settings/Settings';
 
 let aboutModal;
+let settingsModal;
 let editListingModal;
 let debugLogModal;
 let moderatorDetailsModal;
@@ -38,7 +40,22 @@ export function launchAboutModal(modalOptions = {}) {
   return aboutModal;
 }
 
-// todo: give opening of the settings modal the same treatment
+export function launchSettingsModal(modalOptions = {}) {
+  if (settingsModal) {
+    settingsModal.bringToTop();
+  } else {
+    settingsModal = new Settings({
+      removeOnClose: true,
+      ...modalOptions,
+    })
+      .render()
+      .open();
+
+    settingsModal.on('modal-will-remove', () => (settingsModal = null));
+  }
+
+  return aboutModal;
+}
 
 export function launchDebugLogModal(modalOptions = {}) {
   if (debugLogModal) debugLogModal.remove();

@@ -403,7 +403,7 @@ function onboardIfNeeded() {
  // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
-    app.profile = new Profile({ peerID: data.guid });
+    app.profile = new Profile({ peerID: data.peerID });
 
     app.settings = new Settings();
     // If the server is running testnet, set that here
