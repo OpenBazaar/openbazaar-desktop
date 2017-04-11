@@ -1,13 +1,15 @@
 import { remote } from 'electron';
-import multihashes from 'multihashes';
+import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import Backbone, { View } from 'backbone';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
 import PageNavServersMenu from './PageNavServersMenu';
-import SettingsModal from './modals/Settings/Settings';
-import { launchEditListingModal, launchAboutModal } from '../utils/modalManager';
+import {
+  launchEditListingModal, launchAboutModal,
+  launchWallet, launchSettingsModal,
+} from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 
@@ -26,6 +28,7 @@ export default class extends View {
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
         'click .js-navAboutModal': 'navAboutClick',
+        'click .js-navWalletBtn': 'navWalletClick',
         'click .js-navCreateListing': 'navCreateListingClick',
         'click .js-navListItem': 'onNavListItemClick',
         'mouseenter .js-connectedServerListItem': 'onMouseEnterConnectedServerListItem',
@@ -206,38 +209,27 @@ export default class extends View {
 
   onKeyupAddressBar(e) {
     if (e.which === 13) {
-      let text = this.$addressBar.val().trim();
+      const text = this.$addressBar.val().trim();
       this.$addressBar.val(text);
 
-      let isGuid = true;
+      const firstTerm = text.startsWith('ob://') ?
+        text.slice(5)
+          .split(' ')[0]
+          .split('/')[0] :
+        text.split(' ')[0]
+          .split('/')[0];
 
-      if (text.startsWith('ob://')) text = text.slice(5);
-
-      const firstTerm = text.split(' ')[0];
-
-      try {
-        multihashes.validate(multihashes.fromB58String(firstTerm));
-      } catch (exc) {
-        isGuid = false;
-      }
-
-      if (isGuid) {
+      if (isMultihash(firstTerm)) {
         app.router.navigate(firstTerm, { trigger: true });
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
         app.router.navigate(firstTerm, { trigger: true });
-      } else if (text.indexOf('#') !== -1 || text.indexOf(' ') !== -1) {
-        // If the term has a hash and/or space in it, we'll consider it to be tag(s)
-        const tags = text.trim()
-          .replace(',', ' ')
-          .replace(/\s+/g, ' ') // collapse multiple spaces into single spaces
-          .split(' ')
-          .map((frag) => (frag.charAt(0) === '#' ? frag.slice(1) : frag));
-
-        alert(`boom - Searching for tags: ${tags.join(', ')}`);
-      } else {
-        // it's probably a page route
+      } else if (text.startsWith('ob://')) {
+        // trying to show a specific page
         app.router.navigate(text, { trigger: true });
+      } else {
+        // searching term
+        app.router.navigate(`search?q=${encodeURIComponent(text)}`, { trigger: true });
       }
     }
   }
@@ -250,14 +242,16 @@ export default class extends View {
   }
 
   navSettingsClick() {
-    if (!this.settingsModal || !this.settingsModal.isOpen()) {
-      this.settingsModal = new SettingsModal().render().open();
-    }
+    launchSettingsModal();
   }
 
   navAboutClick() {
     launchAboutModal();
     this.togglePopMenu();
+  }
+
+  navWalletClick() {
+    launchWallet();
   }
 
   navCreateListingClick() {
@@ -278,12 +272,15 @@ export default class extends View {
     }
 
     loadTemplate('pageNav.html', (t) => {
-      this.$el.html(t({
-        addressBarText: this.addressBarText,
-        connectedServer,
-        testnet: app.testnet,
-        ...(app.profile && app.profile.toJSON() || {}),
-      }));
+      loadTemplate('walletIcon.svg', (walletIconTmpl) => {
+        this.$el.html(t({
+          addressBarText: this.addressBarText,
+          connectedServer,
+          testnet: app.testnet,
+          walletIconTmpl,
+          ...(app.profile && app.profile.toJSON() || {}),
+        }));
+      });
     });
 
     if (this.pageNavServersMenu) this.pageNavServersMenu.remove();

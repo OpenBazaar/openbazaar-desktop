@@ -1,0 +1,30 @@
+<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP">
+  <div>
+    <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+  </div>
+  <div class="moderatorCardMiddle">
+    <div class="flex snipKids gutterHSm rowSm">
+      <strong class="txt5"><%= ob.name %></strong>
+      <span class="clrT2"><%= ob.handle %></span>
+    </div>
+    <div class="row clrT2">
+      <p class="clamp2"><%=ob.moderatorInfo.description %></p>
+    </div>
+    <div class="flex snipKids gutterH tx5">
+      <div class="flexNoShrink">👍 XX<% // placeholder for reputation %> </div>
+      <div class="flexNoShrink">
+        <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+        <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
+      </div>
+      <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
+    </div>
+  </div>
+  <div>
+    <button class="btn clrP clrBr selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
+      <span class="showIfView"><%= ob.polyT('moderatorCard.view') %></span>
+      <i class="ion-checkmark showIfSelected clrTEmph1"></i>
+      <i class="ion-close showIfDeselected clrTErr"></i>
+    </button>
+  </div>
+</div>
+<div class="moderatorCardSeperator clrBr"></div>

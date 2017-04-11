@@ -97,8 +97,8 @@ export function formatPrice(price, isBtc = false) {
  */
 // todo: check currency is one of our currencies
 export function formatCurrency(amount, currency,
-  locale = app && app.settings && app.settings.get('language') || 'en-US',
-  btcUnit = app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC') {
+     locale = app && app.settings && app.settings.get('language') || 'en-US',
+     btcUnit = app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC') {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -117,14 +117,7 @@ export function formatCurrency(amount, currency,
 
   let formattedCurrency;
 
-  if (currency !== 'BTC') {
-    formattedCurrency = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
-  } else {
+  if (currency.toUpperCase() === 'BTC' || currency.toUpperCase() === 'TBTC') {
     let curSymbol;
     let bitcoinConvertUnit;
 
@@ -159,6 +152,13 @@ export function formatCurrency(amount, currency,
     }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
 
     formattedCurrency = formattedCurrency.replace('$', curSymbol);
+  } else {
+    formattedCurrency = new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
   }
 
   return formattedCurrency;
@@ -203,6 +203,9 @@ NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
  * rate data.
  */
 export function convertCurrency(amount, fromCur, toCur) {
+  const fromCurCaps = fromCur.toUpperCase();
+  const toCurCaps = toCur.toUpperCase();
+
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -211,28 +214,29 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new Error('Please provide an amount that is not NaN');
   }
 
-  if (typeof fromCur !== 'string') {
+  if (typeof fromCurCaps !== 'string') {
     throw new Error('Please provide a fromCur as a string');
   }
 
-  if (typeof toCur !== 'string') {
+  if (typeof toCurCaps !== 'string') {
     throw new Error('Please provide a toCur as a string');
   }
 
-  if (fromCur === toCur) {
+  if (fromCurCaps === toCurCaps) {
     return amount;
   }
 
-  if (!exchangeRates[fromCur]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCur}.`);
+  if (!exchangeRates[fromCurCaps]) {
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
   }
 
-  if (!exchangeRates[toCur]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCur}.`);
+  if (!exchangeRates[toCurCaps]) {
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
-  const fromRate = fromCur === 'BTC' ? 1 : getExchangeRate(fromCur);
-  const toRate = toCur === 'BTC' ? 1 : getExchangeRate(toCur);
+  const fromRate = fromCurCaps === 'BTC' || fromCurCaps === 'TBTC' ?
+      1 : getExchangeRate(fromCurCaps);
+  const toRate = toCurCaps === 'BTC' || toCurCaps === 'TBTC' ? 1 : getExchangeRate(toCurCaps);
 
   return (amount / fromRate) * toRate;
 }

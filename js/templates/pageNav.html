@@ -33,13 +33,15 @@
               <%= ob.polyT('testnet') %>
             </div>
           <% } %>
-          <a class="bookmarkPage btn barBtn clrP clrBr clrSh2 tx4 ion-android-add"></a>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box margLSm">
-          <a class="iconBtn ion-eye"></a>
+          <a href="#search" class="discoverButton" style="background-image: url('../imgs/obVectorIconSmall.svg')"></a>
+          <a class="iconBtn navWalletBtn js-navWalletBtn">
+            <%= ob.walletIconTmpl() %>
+          </a>
           <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
           <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
           <nav class="navListWrapper foldDown js-navList">
@@ -54,7 +56,7 @@
                 </a>
               </div>
               <div class="listGroup clrP clrBr">
-                <a class="listItem js-navListItem" href="#<%= ob.id ? `${ob.id}` : ''%>">
+                <a class="listItem js-navListItem" href="#<%= ob.peerID ? `${ob.peerID}` : ''%>">
                   <span>My Page</span><span class="clrT2">Cltrl + ?</span>
                 </a>
                 <a class="listItem js-navListItem"><!--TODO add route for Page Customization-->

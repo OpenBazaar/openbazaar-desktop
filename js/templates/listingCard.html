@@ -22,6 +22,18 @@
     <span class="clrE1 clrTOnEmph phraseBox"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
     <% } %>
   </div>
+  <% if (ob.vendor) { %>
+  <a class="userIconWrapper js-userName">
+    <div class="userIcon disc clrBr2 clrSh1"
+    <% var avatarHash = ob.vendor.avatarHashes ? ob.isHiRez() ? ob.vendor.avatarHashes.small : ob.vendor.avatarHashes.tiny : ''; %>
+    <% if (avatarHash) { %>
+    style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+    <% } else { %>
+    style="background-image: url('../imgs/defaultAvatar.png')"
+    <% } %>>
+</div>
+</a>
+  <% } %>
 </div>
 <% } else { %>
   <div class="listViewContent">

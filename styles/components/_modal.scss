@@ -74,5 +74,35 @@
         min-height: 35px;
       }
     }
+
+    &.modalNarrow {
+      .modalContent {
+        width: $modalContentInnerNarrow;
+        margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatClosed})) / 2) + 28px);
+
+        .chatOpen & {
+          margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatOpen})) / 2) + 5px);
+        }
+
+        & > .cornerTR {
+          left: calc(#{$modalContentInnerNarrow} - #{$buttonHeight});
+        }
+      }
+    }
+
+    &.modalMedium {
+      .modalContent {
+        width: $modalContentInnerMedium;
+        margin-left: calc(((100% - (#{$modalContentInnerMedium + $chatClosed})) / 2) + 28px);
+
+        .chatOpen & {
+          margin-left: calc(((100% - (#{$modalContentInnerMedium + $chatOpen})) / 2) + 5px);
+        }
+
+        & > .cornerTR {
+          left: calc(#{$modalContentInnerMedium} - #{$buttonHeight});
+        }
+      }
+    }    
   }
 }

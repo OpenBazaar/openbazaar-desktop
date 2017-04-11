@@ -16,6 +16,7 @@
           ob.polyT('editListing.sectionNames.shipping'),
           ob.polyT('editListing.sectionNames.tags'),
           ob.polyT('editListing.sectionNames.category'),
+          ob.polyT('editListing.sectionNames.variants'),
           ob.polyT('editListing.sectionNames.returnPolicy'),
           ob.polyT('editListing.sectionNames.termsAndConditions'),
           ob.polyT('editListing.sectionNames.coupons'),
@@ -26,7 +27,7 @@
     </div>
   </div>
   <div class="flexExpand posR tabContent">
-    <div class="gutterVMd">
+    <div class="gutterVMd js-formSectionsContainer">
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3">
         <div class="flexHCent">
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
@@ -94,12 +95,7 @@
               </div>
             </div>
             <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <label for="editListingSku"><%= ob.polyT('editListing.sku') %></label>
-                <% if (ob.errors['item.sku']) print(ob.formErrorTmpl({ errors: ob.errors['item.sku'] })) %>
-                <input type="text" class="clrBr clrP clrSh2 marginTopAuto disabled" name="item.sku" id="editListingSku" value="<%= ob.item.sku %>" placeholder="<%= ob.polyT('editListing.placeholderSKU') %>">
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperSKU') %></div>
-              </div>
+              <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
                 <label>Mature Content (NSFW, adult, 18+, etc)</label>
                 <% if (ob.errors['item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['item.nsfw'] })) %>
@@ -210,6 +206,22 @@
           <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCategories') %></div>
         </div>
       </section>
+
+      <section class="js-scrollToSection js-variantsSection variantsSection contentBox padMd clrP clrBr clrSh3 tx3 <% ob.item.options.length && print('expandedVariantsView') %>">
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantsDetailed') %></h2>
+        <hr class="clrBr rowMd" />
+        <div class="js-variantsContainer variantsContainer"></div>
+        <a class="btn clrP clrBr clrSh2 addFirstVariant js-addFirstVariant"><%= ob.polyT('editListing.variants.btnAddVariant') %></a>
+      </section>
+
+      <section class="contentBox padMd clrP clrBr clrSh3 tx3 js-inventoryManagementSection inventoryManagementSection"></section>
+
+      <section class="contentBox variantInventorySection js-variantInventorySection padMd clrP clrBr clrSh3 tx3 <% if (!ob.shouldShowVariantInventorySection) print('hide') %>">
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantInventory') %></h2>
+        <hr class="clrBr rowMd">
+        <% if (ob.errors['item.skus']) print(ob.formErrorTmpl({ errors: ob.errors['item.skus'] })) %>
+        <div class="js-variantInventoryTableContainer"></div>
+      </section>      
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h2>

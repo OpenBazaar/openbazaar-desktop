@@ -6,6 +6,14 @@ form {
     line-height: $formElementHeight;
     font-weight: 500;
     -webkit-user-select: none;
+    display: flex;
+    align-items: center;
+
+    .emoji {
+      height: 1em;
+      width: 1em;
+      margin-right: 0.3em;
+    }
   }
 }
 
@@ -66,7 +74,12 @@ textarea,
   width: 100%;
   box-sizing: border-box;
   padding: 0 $pad;
-  line-height: 40px;
+  line-height: $inputHeight;
+
+  &.btnHeight {
+    line-height: $buttonHeight;
+    height: $buttonHeight;
+  }
 }
 
 //input[type="number"].noSpin::-webkit-outer-spin-button,
@@ -125,6 +138,7 @@ textarea {
 
 .errorList {
   color: $error;
+  word-wrap: break-word;
 
   li {
     i {
@@ -223,6 +237,12 @@ input[type="checkbox"] {
       &:before {
         content: "\f373";
       }
+    }
+  }
+
+  &.centerLabel {
+    & + label {
+      align-items: center;
     }
   }
 }

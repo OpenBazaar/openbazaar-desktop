@@ -1,18 +1,21 @@
 #chatCloseBtn {
   position: absolute;
-  top: 65px;
+  top: $bar + $barLg - 40;
   right: -220px;
   width: 40px;
   height: 40px;
   z-index: 3;
   border-radius: 0;
   font-size: $tx1;
-  border-right-width: 0;
   border-bottom-width: 0;
   @include chatOpeningTransition(right);
 
+  &:hover {
+    border-color: inherit;
+  }
+
   .chatOpen & {
-    right: 1px;
+    right: $scrollbar;
   }
 }
 
@@ -23,11 +26,12 @@
     .chatHead {
       cursor: pointer;
       position: relative;
-      padding-left: 5px;
+      padding: 0 $padSm;
+      box-sizing: border-box;
 
       .unreadBadge {
         position: absolute;
-        top: 0;
+        top: -4px;
         left: 0;
         width: 22px;
         height: 22px;
@@ -46,6 +50,7 @@
       .headContent {
         padding: $padSm;
         max-height: 31px;
+        flex-grow: 1;
       }
 
       .handleGuid {
@@ -82,7 +87,7 @@
         }
 
         .fullText {
-          display: inline;          
+          display: inline;
         }
       }
 
@@ -102,14 +107,26 @@
       .bottomUnreadBanner {
         display: block;
         bottom: 45px;
-      }      
+      }
     }
+  }
+}
+
+.chat {
+  // use for chat styles that apply outside the chat sidebar
+
+  .chatIcon {
+    border-width: 2px;
+    border-style: solid;
+    width: 38px;
+    height: 38px;
   }
 }
 
 .chatConversation {
   border-width: 1px;
-  border-style: solid;  
+  border-style: solid;
+  border-color: inherit;
   height: 100%;
 
   .convoHeader {
@@ -128,7 +145,7 @@
 
     .convoProfileHeader {
       .handle {
-        max-width: 128px;
+        max-width: 105px;
         display: block;
         font-weight: bold;
       }
@@ -139,7 +156,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
+    right: 1px; // don't cover the right border of the parent
     bottom: 0;
     padding-left: $padSm;
     padding-right: $padSm;
@@ -181,10 +198,16 @@
 
       .convoMessage {
         .msgContentBox {
-          padding: $padSm;
+          padding: 5px 7px;
           margin-top: 3px;
           display: inline-block;
-          word-break: break-word;
+          max-width: 186px;
+          line-height: 14px;
+          text-align: left;
+
+          & > span {
+            word-break: break-word;
+          }
 
           img {
             max-width: 100%;
@@ -193,9 +216,8 @@
 
         .timestampLine {
           position: absolute;
-          margin-top: 3px;
         }
-      }      
+      }
     }
   }
 
@@ -227,7 +249,7 @@
   &.isTyping {
     .typingIndicator {
       transform: translate(-50%, 0);
-    }    
+    }
   }
 
   .deletingOverlay {
@@ -275,9 +297,23 @@
   .convoFooter {
     border-top-style: solid;
     border-top-width: 1px;
+    z-index: 1;
 
-    input[type=text] {
+    & > div {
+      padding-top: $padTn;
+      padding-bottom: $padTn;
+    }
+
+    textarea {
       border-width: 0;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
     }
   }
 
@@ -296,15 +332,66 @@
     width: 38px;
     height: 38px;
   }
-}
 
-.chat {
-  // use for chat styles that apply outside the chat sidebar
+  .chatIconSmall {
+    width: 32px;
+    height: 32px;
+  }
 
-  .chatIcon {
-    border-width: 2px;
-    border-style: solid;
-    width: 38px;
-    height: 38px;
+  .emojiMenuTrigger {
+    border: none;
+    padding: 0;
+    padding-right: 12px;
+    font-size: $tx5;
+  }
+
+  .emojiMenuContainer {
+    border-top-style: solid;
+    border-top-width: 1px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 266px;
+    padding: $pad;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 98px;
+
+    .emojiMenu {
+      .emojiGroup {
+        padding-left: 3px;
+        clear: both;
+        margin-bottom: 5px;
+
+        button {
+          float: left;
+          border: 0;
+          padding: 0;
+          background-color: transparent;
+          cursor: pointer;
+          outline: none;
+          transition: transform 0.1s ease;
+
+          &:hover {
+            transform: scale(1.2, 1.2);
+          }
+
+          .emoji {
+            margin-right: 11px;
+            margin-bottom: 9px;
+          }
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
   }
 }
+
+.chatConversation .emoji, #chatContainer .emoji {
+  width: 16px;
+  height: 16px;
+}
+
