@@ -27,6 +27,13 @@
         width: 100%;
       }
     }
+
+    .transactionCount {
+      .spinner {
+        width: 30px;
+        margin-left: 10px;
+      }
+    }
   }
 
   .receiveMoney, .btnSendMoney {
