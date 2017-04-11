@@ -7,7 +7,7 @@ import '../../../lib/whenAll.jquery';
 import { getGuid, isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
 import Moderators from '../../../collections/Moderators';
-import ModCard from '../../moderatorCard';
+import ModCard from '../../ModeratorCard';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {

@@ -4,7 +4,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import { clipboard } from 'electron';
 import BaseVw from '../baseVw';
 import app from '../../app';
-import UserCard from '../userCard';
+import UserCard from '../UserCard';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 
