@@ -20,6 +20,16 @@ export default class extends baseVw {
     return 'walletTransactions';
   }
 
+  events() {
+    return {
+      'click .js-retryInitialFetch': 'onClickRetryInitialFetch',
+    };
+  }
+
+  onClickRetryInitialFetch() {
+    this.trigger('retryInitialFetchClick');
+  }
+
   getState() {
     return this._state;
   }
@@ -44,6 +54,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/wallet/transactions.html', (t) => {
       this.$el.html(t({
+        transactions: this.collection.toJSON(),
         ...this._state,
       }));
     });

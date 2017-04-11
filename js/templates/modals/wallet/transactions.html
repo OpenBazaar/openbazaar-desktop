@@ -1,14 +1,19 @@
 <h2 class="h3"><%= ob.polyT('wallet.transactions.header') %></h2>
+<div class="js-transactionListContainer"></div>
 <% if (ob.isFetching) { %>
-  <div class="txCtr">
-    <%= ob.spinner({ className: 'spinnerMd transactionFetchSpinner' }) %>
+  <div class="<% print(ob.transactions.length ? 'txCtr' : 'center') %>">
+    <%= ob.spinner({ className: 'spinnerMd' }) %>
   </div>
 <% } else if (ob.initialFetchFailed) { %>
-    <div class="txCtr padLg">
+    <div class="center txCtr">
       <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to obtain your transactions list.</div>
       <% if (ob.initialFetchErrorMessage) { %>
         <div class="row"><%= ob.initialFetchErrorMessage %></div>
       <% } %>
       <a class="btn clrP clrBr clrSh2 js-retryInitialFetch">Retry</a>
     </div>
+<% } else if (!ob.transactions.length) { %>
+  <div class="center txCtr">
+    You have no transactions.
+  </div>
 <% } %>

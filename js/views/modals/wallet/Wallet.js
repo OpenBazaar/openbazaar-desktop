@@ -177,6 +177,7 @@ export default class extends BaseModal {
   fetchTransactions() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
     this.transactionsFetch = this.transactions.fetch();
+
     this.transactionsFetch.always(() => {
       if (this.transactionsVw) {
         this.transactionsVw.setState({
@@ -194,6 +195,12 @@ export default class extends BaseModal {
         this.transactionsVw.setState(state);
       }
     });
+
+    if (this.transactionsVw) {
+      this.transactionsVw.setState({
+        isFetching: true,
+      });
+    }
   }
 
   open() {
@@ -263,7 +270,8 @@ export default class extends BaseModal {
           },
         });
 
-        this.listenTo(this.transactionsVw, 'retryFetchClick', () => this.fetchTransactions());
+        this.listenTo(this.transactionsVw, 'retryInitialFetchClick',
+          () => this.fetchTransactions());
         this.$('.js-transactionContainer').html(this.transactionsVw.render().el);
       });
     });

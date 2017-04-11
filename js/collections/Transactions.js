@@ -17,6 +17,6 @@ export default class extends Collection {
       transaction.value = integerToDecimal(transaction.value, true);
     });
 
-    return response;
+    return response.transactions;
   }
 }

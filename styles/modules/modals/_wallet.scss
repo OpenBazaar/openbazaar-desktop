@@ -128,6 +128,8 @@
 
   .walletTransactions {
     padding: $padMd;
+    min-height: 335px;
+    position: relative;
 
     .transaction {
       font-size: $tx5;
@@ -170,6 +172,10 @@
                      // large font size gives it too much vertical padding
         }
       }
+    }
+
+    .fetchErrorWrap {
+      text-align: center;
     }
   }  
 }
