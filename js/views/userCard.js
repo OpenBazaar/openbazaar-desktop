@@ -89,6 +89,11 @@ export default class extends BaseVw {
     return 'userCard';
   }
 
+  attributes() {
+    // make it possible to tab to this element
+    return { tabIndex: 0 };
+  }
+
   events() {
     return {
       'click .js-userName': 'nameClick',

@@ -37,7 +37,7 @@ export default class extends Collection {
     const cats = [];
 
     this.models.forEach(listing => {
-      listing.get('category')
+      listing.get('categories')
         .forEach(cat => {
           if (cats.indexOf(cat) === -1) cats.push(cat);
         });

@@ -29,6 +29,17 @@
       }
     }
   }
+
+  .select2ImgOpt {
+    display: flex;
+    align-items: center;
+
+    .emoji {
+      height: 1em;
+      width: 1em;
+      margin-right: 0.3em;
+    }
+  }
 }
 
 .select2-container--default {

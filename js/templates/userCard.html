@@ -6,15 +6,13 @@
     <% } else { %>
       style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
-    <a class="js-userName">
-      <div class="userIcon disc clrBr2 clrSh1"
-        <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
-        <% if (avatarHash) { %>
-          style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
-        <% } else { %>
-         style="background-image: url('../imgs/defaultAvatar.png')"
-        <% } %>>
-      </div>
+    <a class="js-userName userIcon disc clrBr2 clrSh1"
+      <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+      <% if (avatarHash) { %>
+        style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+      <% } else { %>
+       style="background-image: url('../imgs/defaultAvatar.png')"
+      <% } %>>
     </a>
     <% if (!ob.hideControls) { %>
       <div class="userControls">
@@ -37,18 +35,18 @@
     <% if (!ob.loading && !ob.notFound) { %>
       <div class="contentTop">
         <div>
-          <a class="flex snipKids gutterH rowTn js-userName">
+          <a class="flex snipKids gutterH rowTn userName js-userName">
             <div class="tx3 clrT name"><strong><%= ob.name %></strong></div>
             <div class="clrT2">
               <%= ob.handle %>
             </div>
           </a>
         </div>
-        <p class="clamp2">
+        <p class="clamp2 userDescription">
           <%= ob.shortDescription %>
         </p>
       </div>
-      <div class="flex gutterH">
+      <div class="flex gutterH contentBottom">
         <div class="col8">
           <span class="clrT2 clamp">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>

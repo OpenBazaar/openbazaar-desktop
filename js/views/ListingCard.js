@@ -81,6 +81,11 @@ export default class extends baseVw {
     return 'listingCard col clrBr clrHover clrT clrP clrSh2 contentBox';
   }
 
+  attributes() {
+    // make it possible to tab to this element
+    return { tabIndex: 0 };
+  }
+
   events() {
     return {
       'click .js-edit': 'onClickEdit',
