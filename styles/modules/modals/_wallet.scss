@@ -166,6 +166,13 @@
         }
       }
 
+      .toAddress {
+        font-weight: bold;
+        display: inline-block;
+        vertical-align: bottom;
+        max-width: 100px;
+      }
+
       &.confirmedTransaction {
         .statusIconCol {
           height: 0; // making the .ion-ios-checkmark-empty with a sufficiently

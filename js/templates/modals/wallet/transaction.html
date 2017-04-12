@@ -1,0 +1,81 @@
+<div class="flex gutterHSm clrT <% if (ob.status === 'CONFIRMED') print('confirmedTransaction') %>">
+  <%
+    let statusIcon = 'ion-ios-checkmark-empty';
+    let statusIconClasses = 'clrTEmph1';
+
+    if (ob.status === 'DEAD') {
+      statusIcon = 'ion-ios-close-empty';
+      statusIconClasses = 'tx1 clrTErr';
+    } else if (ob.status === 'STUCK') {
+      statusIcon = 'ion-alert-circled';
+      statusIconClasses = 'tx3 clrTEmph1';
+    } else if (ob.status === 'PENDING' || ob.status === 'UNCONFIRMED') {
+      statusIcon = 'ion-android-time';
+      statusIconClasses = 'tx3';
+    }
+  %>
+  <div class="statusIconCol <%= statusIconClasses %>"><span class="<%= statusIcon %>"></span></div>
+  <div class="flexExpand tx5">
+    <%
+      let priceFrag = ob.convertAndFormatCurrency(ob.value < 0 ? ob.value * -1 : ob.value,
+        'BTC', ob.userCurrency, { useBtcSymbol: false });
+
+      if (ob.value > 0) {
+        priceFrag = `+${priceFrag}`;
+      } else if (ob.value < 0) {
+        priceFrag = `-${priceFrag}`;
+      }
+
+      if (ob.userCurrency !== 'BTC') {
+        priceFrag = ob.polyT('wallet.transactions.transaction.fiatBtcPairing', {
+          fiatAmount: priceFrag,
+          btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+        });
+      }
+
+      let infoLine = '';
+
+      if (ob.value > 0) {
+        infoLine = ob.polyT('wallet.transactions.transaction.incomingText', {
+          fiatBtcPairing: `<span class="txB">${priceFrag}</span>`,
+        });
+      } else {
+        infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
+          fiatBtcPairing: `<span class="txB">${priceFrag}</span>`,
+          address: `<span class="toAddress noOverflow clrTEmph1">${ob.address}</span>`,
+        });
+      }
+    %>
+    <div class="rowTn"><%= infoLine %></div>
+    <%
+      let timeAgoAndConfirmCount = ob.polyT('wallet.transactions.transaction.timeAgoAndConfirmCount', {
+        timeAgo: ob.moment(ob.timestamp).fromNow(),
+        confirmationsCount: ob.confirmations,
+        smart_count: ob.confirmations,
+      });
+    %>
+    <div class="flex gutterH clrT2 tx6">
+      <div class="" style="flex-shrink: 0"><%= timeAgoAndConfirmCount %></div>
+      <div class="" style="flex-shrink: 0;max-width: 80px">
+        <div class="noOverflow"><%= ob.txid %></div>
+      </div>
+      <div class="">
+        <div class="clamp"><%= ob.memo %></div>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="flexHRight">
+      <div class="btnStrip">
+        <%
+          let blockChainUrl = `https://blockchain.info/tx/${ob.txid}`;
+
+          if (ob.isTestnet) {
+            blockChainUrl = `https://testnet.blockexplorer.com/tx/${ob.txid}`;          
+          }
+        %>
+        <a class="btn clrP clrBr clrSh2" href="<%= blockChainUrl %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
+      </div>
+    </div>
+  </div>
+</div>

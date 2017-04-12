@@ -18,4 +18,8 @@ export default class extends BaseModel {
 
     return returnVal;
   }
+
+  idAttribute() {
+    return 'txid';
+  }
 }

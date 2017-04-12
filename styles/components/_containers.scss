@@ -132,12 +132,18 @@
   }
 }
 
-.borderStacked > * {
-  //use on parent element to separate stacked child containers. The element should also have the clrBr class.
-  @extend .borderBottom;
+.borderStacked {
+  & > * {
+    //use on parent element to separate stacked child containers. The element should also have the clrBr class.
+    @extend .borderBottom;
 
-  &:last-child {
-    border-bottom: none;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &:empty {
+    display: none;
   }
 }
 

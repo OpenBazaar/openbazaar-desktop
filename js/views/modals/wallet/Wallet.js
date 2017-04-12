@@ -25,15 +25,11 @@ export default class extends BaseModal {
 
     this.transactions = new Transactions();
 
-    this.listenTo(this.transactions, 'request', (md, xhr) => {
-      xhr.done(data => {
-        if (this.stats) {
-          this.stats.setState({ transactionCount: data.count });
-        }
-      });
+    this.listenTo(this.transactions, 'sync', (md, response) => {
+      if (this.stats) {
+        this.stats.setState({ transactionCount: response.count });
+      }
     });
-
-    this.fetchTransactions();
 
     this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
       if (this.stats) {
@@ -170,39 +166,6 @@ export default class extends BaseModal {
     return false;
   }
 
-  /**
-   * This is used for the initial transactions fetch. Subsequent pages
-   * are fetched via the Transactions view.
-   */
-  fetchTransactions() {
-    if (this.transactionsFetch) this.transactionsFetch.abort();
-    this.transactionsFetch = this.transactions.fetch();
-
-    this.transactionsFetch.always(() => {
-      if (this.transactionsVw) {
-        this.transactionsVw.setState({
-          isFetching: false,
-        });
-      }
-    }).fail((jqXhr) => {
-      if (this.transactionsVw) {
-        const state = { initialFetchFailed: true };
-
-        if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
-          state.initialFetchErrorMessage = jqXhr.responseJSON.reason;
-        }
-
-        this.transactionsVw.setState(state);
-      }
-    });
-
-    if (this.transactionsVw) {
-      this.transactionsVw.setState({
-        isFetching: true,
-      });
-    }
-  }
-
   open() {
     this.sendModeOn = true;
 
@@ -214,7 +177,6 @@ export default class extends BaseModal {
   }
 
   remove() {
-    if (this.transactionsFetch) this.transactionsFetch.abort();
     this.addressFetches.forEach(fetch => fetch.abort());
     super.remove();
   }
@@ -265,13 +227,13 @@ export default class extends BaseModal {
 
         this.transactionsVw = new TransactionsVw({
           collection: this.transactions,
-          initialState: {
-            isFetching: this.transactionsFetch.state() === 'pending',
-          },
+          // initialState: {
+          //   isFetching: this.transactionsFetch.state() === 'pending',
+          // },
         });
 
-        this.listenTo(this.transactionsVw, 'retryInitialFetchClick',
-          () => this.fetchTransactions());
+        // this.listenTo(this.transactionsVw, 'retryInitialFetchClick',
+        //   () => this.fetchTransactions());
         this.$('.js-transactionContainer').html(this.transactionsVw.render().el);
       });
     });
