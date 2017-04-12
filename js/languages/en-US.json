@@ -554,7 +554,7 @@
     "receiveMoney": {
       "title": "Receive Money",
       "needBitcoin": "Need Bitcoin?",
-      "btnCancel": "Cancel"      
+      "btnCancel": "Cancel"
     },
     "sendMoney": {
       "toLabel": "To",
@@ -570,8 +570,8 @@
         "body": "Double check that the address and amount are correct.",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
-      }      
-    }    
+      }
+    }
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
@@ -768,6 +768,10 @@
       "emptyData": "No valid data was returned from %{provider}."
     }
   },
+  "purchase": {
+    "refreshPurchase": "Refresh",
+    "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}"
+  },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
@@ -894,7 +898,11 @@
     "provideAmountNumber": "Please provide an amount as a number.",
     "amountGreaterThanZero": "The amount must be greater than zero.",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
-  },  
+  },
+  "orderModelErrors": {
+    "mustHaveQuantity": "The quantity must be 1 or more",
+    "quantityMustBeNumber": "The quantity must be a valid number"
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

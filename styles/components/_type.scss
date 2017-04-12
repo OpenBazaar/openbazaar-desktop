@@ -137,6 +137,10 @@ a .txNoUnd:hover {
   overflow: hidden;
 }
 
+.wordBreak {
+  word-break: break-all;
+}
+
 .clamp {
   /* adds an ellipses to the end of wrapped text after 1 line */
   overflow: hidden;

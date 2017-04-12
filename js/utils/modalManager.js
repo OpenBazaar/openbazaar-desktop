@@ -5,6 +5,7 @@ import DebugLog from '../views/modals/DebugLog';
 import ModeratorDetails from '../views/modals/moderatorDetails';
 import Wallet from '../views/modals/wallet/Wallet';
 import Settings from '../views/modals/Settings/Settings';
+import Purchase from '../views/modals/purchase/Purchase';
 
 let aboutModal;
 let settingsModal;
@@ -12,6 +13,7 @@ let editListingModal;
 let debugLogModal;
 let moderatorDetailsModal;
 let _wallet;
+let purchaseModal;
 
 export function launchEditListingModal(modalOptions = {}) {
   if (editListingModal) editListingModal.remove();
@@ -52,6 +54,23 @@ export function launchSettingsModal(modalOptions = {}) {
       .open();
 
     settingsModal.on('modal-will-remove', () => (settingsModal = null));
+  }
+
+  return aboutModal;
+}
+
+export function launchPurchaseModal(modalOptions = {}) {
+  if (purchaseModal) {
+    purchaseModal.bringToTop();
+  } else {
+    purchaseModal = new Purchase({
+      removeOnClose: true,
+      ...modalOptions,
+    })
+        .render()
+        .open();
+
+    purchaseModal.on('modal-will-remove', () => (purchaseModal = null));
   }
 
   return aboutModal;

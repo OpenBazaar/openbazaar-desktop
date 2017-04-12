@@ -7,7 +7,7 @@ import app from '../../../app';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
-import { launchEditListingModal } from '../../../utils/modalManager';
+import { launchEditListingModal, launchPurchaseModal } from '../../../utils/modalManager';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
@@ -101,6 +101,7 @@ export default class extends BaseModal {
       'click .js-photoPrev': 'onClickPhotoPrev',
       'click .js-photoNext': 'onClickPhotoNext',
       'click .js-goToStore': 'onClickGoToStore',
+      'click .js-purchaseBtn': 'startPurchase',
       ...super.events(),
     };
   }
@@ -307,6 +308,22 @@ export default class extends BaseModal {
     });
   }
 
+  startPurchase() {
+    const selectedVariants = [];
+    this.variantSelects.each((i, select) => {
+      const variant = {};
+      variant.name = $(select).attr('name');
+      variant.value = $(select).val();
+      selectedVariants.push(variant);
+    });
+    console.log(this.model.attributes);
+
+    this.purchaseModal = launchPurchaseModal({
+      listing: this.model,
+      variants: selectedVariants,
+    });
+  }
+
   get shipsFreeToMe() {
     return this._shipsFreeToMe;
   }
@@ -401,8 +418,12 @@ export default class extends BaseModal {
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
-      // commented out until variants are available
-      // this.$('.js-variantSelect').select2();
+      this.variantSelects = this.$('.js-variantSelect');
+
+      this.variantSelects.select2({
+        // disables the search box
+        minimumResultsForSearch: Infinity,
+      });
 
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);
