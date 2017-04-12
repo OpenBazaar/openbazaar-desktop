@@ -227,13 +227,9 @@ export default class extends BaseModal {
 
         this.transactionsVw = new TransactionsVw({
           collection: this.transactions,
-          // initialState: {
-          //   isFetching: this.transactionsFetch.state() === 'pending',
-          // },
+          $scrollContainer: this.$el,
         });
 
-        // this.listenTo(this.transactionsVw, 'retryInitialFetchClick',
-        //   () => this.fetchTransactions());
         this.$('.js-transactionContainer').html(this.transactionsVw.render().el);
       });
     });

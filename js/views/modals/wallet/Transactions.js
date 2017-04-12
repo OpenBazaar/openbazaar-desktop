@@ -1,100 +1,110 @@
-import $ from 'jquery';
+// import $ from 'jquery';
 import _ from 'underscore';
 // import app from '../../../app';
+import { isScrolledIntoView } from '../../../utils/dom';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Transaction from './Transaction';
+import TransactionFetchState from './TransactionFetchState';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+    this.options = options;
 
     if (!this.collection) {
       throw new Error('Please provide a Transactions collection.');
     }
 
-    this._state = {
-      ...options.initialState || {},
-    };
+    if (!options.$scrollContainer || !options.$scrollContainer.length) {
+      throw new Error('Please provide a jQuery object containing the scrollable element ' +
+        'this view is in.');
+    }
 
-    this.transactions = [];
+    // this._state = {
+    //   ...options.initialState || {},
+    // };
+
+    this.transactionViews = [];
+    this.fetchFailed = false;
+    this.fetchErrorMessage = '';
 
     this.listenTo(this.collection, 'update', (cl, opts) => {
+      this.render();
+      if (!this.rendered) return;
+
       if (opts.changes.added.length) {
         // Expecting either a single new transactions on top or a page
         // of transactions on the bottom.
         if (opts.changes.added.length === this.collection.length ||
           opts.changes.added[opts.changes.added.length - 1] ===
             this.collection.at(this.collection.length - 1)) {
+          console.log('hey hey another paginamente');
+
           // It's a page of transactions at the bottom
           const docFrag = document.createDocumentFragment();
           this.collection.slice(this.collection.length - opts.changes.added.length)
             .forEach(md => {
-              const view = this.createTransaction({ model: md });
+              // const view = this.createTransaction({ model: md });
 
-              view.render()
-                .$el
-                .appendTo(docFrag);
+              // view.render()
+              //   .$el
+              //   .appendTo(docFrag);
             });
-          setTimeout(() => {
-            this.$('.js-transactionListContainer').append(docFrag);
-          });
         }
       }
     });
 
-    this.fetchTransactions();
-  }
+    this.$scrollContainer = options.$scrollContainer;
+    this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
-  createTransaction(options = {}) {
-    return this.createChild(Transaction, options);
+    this.fetchTransactions();
   }
 
   className() {
     return 'walletTransactions';
   }
 
-  events() {
-    return {
-      'click .js-retryFetch': 'onClickRetryFetch',
-    };
-  }
+  onScroll() {
+    const lastTransaction = this.transactionViews[this.transactionViews.length - 1];
 
-  onClickRetryFetch() {
-    this.fetchTransactions();
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
+    if (!this.isFetching && isScrolledIntoView(lastTransaction.el)) {
+      this.fetchTransactions();
     }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
   }
 
-  get transactionsPerFetch() {
-    return 100;
-  }
-
-  // get transactionsPerPage() {
+  // getState() {
+  //   return this._state;
   // }
 
-  isFetching() {
+  // setState(state, replace = false) {
+  //   let newState;
+
+  //   if (replace) {
+  //     this._state = {};
+  //   } else {
+  //     newState = _.extend({}, this._state, state);
+  //   }
+
+  //   if (!_.isEqual(this._state, newState)) {
+  //     this._state = newState;
+  //     this.render();
+  //   }
+
+  //   return this;
+  // }
+
+  get transactionsPerFetch() {
+    return 2;
+  }
+
+  get isFetching() {
     return this.transactionsFetch &&
-      this.transactionsFetch.state() === 'prending';
+      this.transactionsFetch.state() === 'pending';
+  }
+
+  get allLoaded() {
+    return this.collection.length === this.countAtFirstFetch;
   }
 
   fetchTransactions() {
@@ -110,25 +120,43 @@ export default class extends baseVw {
 
     this.transactionsFetch = this.collection.fetch({
       data: fetchParams,
+      remove: false,
     });
 
     this.transactionsFetch.always(() => {
-      this.setState({
-        isFetching: false,
-      });
+      if (this.transactionFetchState) {
+        this.transactionFetchState.setState({
+          isFetching: false,
+        });
+      }
     }).fail((jqXhr) => {
-      const state = { fetchFailed: true };
+      this.fetchFailed = true;
 
       if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
-        state.fetchErrorMessage = jqXhr.responseJSON.reason;
+        this.fetchErrorMessage = jqXhr.responseJSON.reason;
       }
 
-      this.setState(state);
+      if (this.transactionFetchState) {
+        this.transactionFetchState.setState({
+          fetchFailed: this.fetchFailed,
+          fetchErrorMessage: this.fetchErrorMessage,
+        });
+      }
+    }).done(data => {
+      if (typeof this.countAtFirstFetch === 'undefined') {
+        this.countAtFirstFetch = data.count;
+      }
     });
 
-    this.setState({
-      isFetching: true,
-    });
+    if (this.transactionFetchState) {
+      this.transactionFetchState.setState({
+        isFetching: true,
+        transactionsPresent: !!this.collection.length,
+      });
+    }
+
+    this.fetchFailed = false;
+    this.fetchErrorMessage = '';
   }
 
   remove() {
@@ -136,13 +164,54 @@ export default class extends baseVw {
     super.remove();
   }
 
+  createTransactionView(model, options = {}) {
+    const view = this.createChild(Transaction, {
+      model,
+      ...options,
+    });
+
+    return view;
+  }
+
   render() {
     loadTemplate('modals/wallet/transactions.html', (t) => {
       this.$el.html(t({
         transactions: this.collection.toJSON(),
-        ...this._state,
+        // ...this._state,
+        isFetching: this.isFetching,
       }));
     });
+
+    this.$transactionsContainer = this.$('.js-transactionListContainer');
+    this.transactionViews.forEach(transaction => transaction.remove());
+    this.transactionViews = [];
+    const transactionsFrag = document.createDocumentFragment();
+
+    this.collection.forEach(transaction => {
+      const view = this.createTransactionView(transaction);
+      this.transactionViews.push(view);
+      view.render().$el.appendTo(transactionsFrag);
+    });
+
+    this.$transactionsContainer.append(transactionsFrag);
+
+    if (this.collection.length && !this.allLoaded) {
+      this.$scrollContainer.off('scroll', this.throttledOnScroll)
+        .on('scroll', this.throttledOnScroll);
+    } else {
+      this.$scrollContainer.off('scroll', this.throttledOnScroll);
+    }
+
+    if (this.transactionFetchState) this.transactionFetchState.remove();
+    this.transactionFetchState = this.createChild(TransactionFetchState, {
+      initialState: {
+        isFetching: this.isFetching,
+        fetchFailed: this.fetchFailed,
+        fetchErrorMessage: this.fetchErrorMessage,
+        transactionsPresent: !!this.collection.length,
+      },
+    });
+    this.$('.js-transactionFetchStateWrap').html(this.transactionFetchState.render().el);
 
     return this;
   }

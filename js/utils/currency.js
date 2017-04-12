@@ -162,14 +162,10 @@ export function formatCurrency(amount, currency, options) {
       btcUnit = opts.useBtcSymbol ? 'shortBTC' : 'longBTC';
     }
 
-    console.log('salamanca: ' + formattedAmount);
-    
     formattedCurrency = app.polyglot.t(`bitcoinCurrencyFormat.${btcUnit}`, {
       amount: formattedAmount,
       symbol: curSymbol,
     });
-
-    console.log('meatballs and cheese: ' + formattedCurrency);
   } else {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',

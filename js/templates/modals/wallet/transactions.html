@@ -1,19 +1,7 @@
 <h2 class="h3"><%= ob.polyT('wallet.transactions.header') %></h2>
 <div class="js-transactionListContainer borderStacked contentBox clrBr padMdKids"></div>
 <div class="js-transactionFetchStateWrap"></div>
-<% if (ob.isFetching) { %>
-  <div class="center">
-    <%= ob.spinner({ className: 'spinnerMd' }) %>
-  </div>
-<% } else if (ob.fetchFailed) { %>
-    <div class="center txCtr">
-      <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to obtain your transactions list.</div>
-      <% if (ob.fetchErrorMessage) { %>
-        <div class="row"><%= ob.fetchErrorMessage %></div>
-      <% } %>
-      <a class="btn clrP clrBr clrSh2 js-retryFetch">Retry</a>
-    </div>
-<% } else if (!ob.transactions.length) { %>
+<% if (!ob.transactions.length && !ob.isFetching) { %>
   <div class="center txCtr">
     You have no transactions.
   </div>

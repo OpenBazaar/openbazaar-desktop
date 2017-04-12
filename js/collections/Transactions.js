@@ -12,6 +12,10 @@ export default class extends Collection {
     return app.getServerUrl('wallet/transactions/');
   }
 
+  modelId(attrs) {
+    return attrs.txid;
+  }
+
   parse(response) {
     response.transactions.forEach(transaction => {
       transaction.value = integerToDecimal(transaction.value, true);
