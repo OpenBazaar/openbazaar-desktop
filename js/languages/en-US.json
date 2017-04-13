@@ -770,7 +770,17 @@
   },
   "purchase": {
     "refreshPurchase": "Refresh",
-    "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}"
+    "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
+    "returnToListing": "Return To Listing",
+    "optional": "optional",
+    "shippingTitle": "Shipping",
+    "paymentTypeTitle": "Payment Type",
+    "moderatorTitle": "Moderator",
+    "informationTitle": "Additional Information",
+    "pay": "PAY",
+    "pending": "Pending…",
+    "close": "close",
+    "quantity": "Quantity"
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

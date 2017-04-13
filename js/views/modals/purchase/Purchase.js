@@ -1,7 +1,6 @@
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
-import { getAvatarBgImage } from '../../../utils/responsive';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -11,11 +10,18 @@ import PopInMessage from '../../PopInMessage';
 export default class extends BaseModal {
   constructor(options = {}) {
     if (!options.listing) {
-      throw new Error('Please provide a listing model');
+      throw new Error('Please provide a listing object');
+    }
+
+    if (!options.vendor) {
+      throw new Error('Please provide a vendor object');
     }
 
     super(options);
     this.options = options;
+    this.listing = options.listing;
+    this.variants = options.variants;
+    this.vendor = options.vendor;
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -108,10 +114,12 @@ export default class extends BaseModal {
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
+        listing: this.listing,
+        vendor: this.vendor,
+        variants: this.variants,
         displayCurrency: app.settings.get('localCurrency'),
         countryData: this.countryData,
         defaultCountry: this.defaultCountry,
-        vendor: this.vendor,
       }));
 
       super.render();
