@@ -2,10 +2,12 @@
 import _ from 'underscore';
 // import app from '../../../app';
 import { isScrolledIntoView } from '../../../utils/dom';
+import { getSocket } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Transaction from './Transaction';
 import TransactionFetchState from './TransactionFetchState';
+import PopInMessage from '../../PopInMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -28,6 +30,10 @@ export default class extends baseVw {
     this.transactionViews = [];
     this.fetchFailed = false;
     this.fetchErrorMessage = '';
+    this.newTransactionCount = 0;
+
+    console.log('moo');
+    window.moo = this.collection;
 
     this.listenTo(this.collection, 'update', (cl, opts) => {
       this.render();
@@ -55,6 +61,52 @@ export default class extends baseVw {
       }
     });
 
+    const serverSocket = getSocket();
+
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', e => {
+        // "wallet" sockets come for new transactions and when a transaction gets it's
+        // first confirmation. We're only listed in new transactions (i.e. the height will be 0)
+        if (e.jsonData.wallet) {
+          const transaction = this.collection.get(e.jsonData.wallet.txid);
+
+          if (transaction) {
+            // existing transaction has been confirmed
+            transaction.set(transaction.parse({
+              ...(_.omit(e.jsonData.wallet, 'timestamp')),
+            }));
+          } else {
+            // new transaction
+            this.newTransactionCount += 1;
+            this.showNewTransactionPopup();
+          }
+        }
+
+        // The "walletUpdate" socket comes on a regular interval and gives us the current block
+        // height which we can use to update the confirmations on a transaction.
+        if (e.jsonData.walletUpdate) {
+          this.collection.models
+            .filter(transaction => (transaction.get('height') > 0))
+            .forEach(transaction => {
+              const confirmations = e.jsonData.walletUpdate.height - transaction.get('height');
+              let status = transaction.get('status');
+
+              // This logic to determine at what confirmation count a transaction is confirmed
+              // should be kept in sync with the corrseponding server logic:
+              // https://github.com/OpenBazaar/openbazaar-go/blob/399766ac3d56fdabec5ef0ea2c59538042785aa1/api/jsonapi.go#L2372
+              if (confirmations > 6) {
+                status = 'CONFIRMED';
+              }
+
+              transaction.set({
+                confirmations,
+                status,
+              });
+            });
+        }
+      });
+    }
+
     this.$scrollContainer = options.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
@@ -66,10 +118,17 @@ export default class extends baseVw {
   }
 
   onScroll() {
-    const lastTransaction = this.transactionViews[this.transactionViews.length - 1];
+    if (this.collection.length && !this.allLoaded) {
+      // fetch next batch of transactions
+      const lastTransaction = this.transactionViews[this.transactionViews.length - 1];
 
-    if (!this.isFetching && isScrolledIntoView(lastTransaction.el)) {
-      this.fetchTransactions();
+      if (!this.isFetching && isScrolledIntoView(lastTransaction.el)) {
+        this.fetchTransactions();
+      }
+    }
+
+    if (this.newTransactionPopIn) {
+      this.setPopInMessageHolderPositioning();
     }
   }
 
@@ -159,9 +218,40 @@ export default class extends baseVw {
     this.fetchErrorMessage = '';
   }
 
-  remove() {
-    if (this.transactionsFetch) this.transactionsFetch.abort();
-    super.remove();
+  setPopInMessageHolderPositioning() {
+    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 338);
+  }
+
+  showNewTransactionPopup() {
+    if (this.newTransactionPopIn && !this.newTransactionPopIn.isRemoved()) {
+      this.newTransactionPopIn.setState({
+        messageText: `${this.newTransactionCount} new transactions`,
+      });
+    } else {
+      // TODO TODO TODO TODO: translate!!!
+      const refreshLink =
+        '<a class="js-refresh">Refresh</a>';
+
+      this.newTransactionPopIn = this.createChild(PopInMessage, {
+        // messageText: app.polyglot.t('userPage.store.listingDataChangedPopin',
+            // { refreshLink }),
+        messageText: `${this.newTransactionCount} new transactions ${refreshLink}`,
+      });
+
+      this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => {
+        this.collection.reset();
+        this.fetchTransactions();
+        this.render();
+      });
+
+      this.listenTo(this.newTransactionPopIn, 'clickDismiss', () => {
+        this.newTransactionPopIn.remove();
+        this.newTransactionPopIn = null;
+      });
+
+      this.$popInMessages.append(this.newTransactionPopIn.render().el);
+      this.setPopInMessageHolderPositioning();
+    }
   }
 
   createTransactionView(model, options = {}) {
@@ -173,7 +263,23 @@ export default class extends baseVw {
     return view;
   }
 
+  remove() {
+    if (this.transactionsFetch) this.transactionsFetch.abort();
+    super.remove();
+  }
+
+  get $popInMessages() {
+    return this._$popInMessages ||
+      (this._$popInMessages = this.$('.js-popInMessages'));
+  }
+
   render() {
+    this.newTransactionCount = 0;
+    if (this.newTransactionPopIn) {
+      this.newTransactionPopIn.remove();
+      this.newTransactionPopIn = null;
+    }
+
     loadTemplate('modals/wallet/transactions.html', (t) => {
       this.$el.html(t({
         transactions: this.collection.toJSON(),
@@ -183,6 +289,8 @@ export default class extends baseVw {
     });
 
     this.$transactionsContainer = this.$('.js-transactionListContainer');
+    this._$popInMessages = null;
+
     this.transactionViews.forEach(transaction => transaction.remove());
     this.transactionViews = [];
     const transactionsFrag = document.createDocumentFragment();
@@ -195,12 +303,8 @@ export default class extends baseVw {
 
     this.$transactionsContainer.append(transactionsFrag);
 
-    if (this.collection.length && !this.allLoaded) {
-      this.$scrollContainer.off('scroll', this.throttledOnScroll)
-        .on('scroll', this.throttledOnScroll);
-    } else {
-      this.$scrollContainer.off('scroll', this.throttledOnScroll);
-    }
+    this.$scrollContainer.off('scroll', this.throttledOnScroll)
+      .on('scroll', this.throttledOnScroll);
 
     if (this.transactionFetchState) this.transactionFetchState.remove();
     this.transactionFetchState = this.createChild(TransactionFetchState, {

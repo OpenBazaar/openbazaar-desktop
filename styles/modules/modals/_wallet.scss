@@ -184,5 +184,12 @@
     .fetchErrorWrap {
       text-align: center;
     }
+
+    .popInMessageHolder {
+      &.notFixed {
+        position: absolute;
+        top: -65px;
+      }
+    }
   }  
 }

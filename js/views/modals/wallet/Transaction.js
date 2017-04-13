@@ -16,7 +16,7 @@ export default class extends baseVw {
       ...options.initialState || {},
     };
 
-    this.listenTo(this.model, 'change', this.render());
+    this.listenTo(this.model, 'change', () => this.render());
   }
 
   className() {
