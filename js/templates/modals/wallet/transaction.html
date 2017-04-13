@@ -40,10 +40,16 @@
           fiatBtcPairing: `<span class="txB">${priceFrag}</span>`,
         });
       } else {
-        infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
-          fiatBtcPairing: `<span class="txB">${priceFrag}</span>`,
-          address: `<span class="toAddress noOverflow clrTEmph1">${ob.address}</span>`,
-        });
+        const fiatBtcPairing = `<span class="txB">${priceFrag}</span>`;
+        
+        if (ob.address) {
+          infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
+            fiatBtcPairing,
+            address: `<span class="toAddress noOverflow clrTEmph1">${ob.address}</span>`,
+          });
+        } else {
+          infoLine = fiatBtcPairing;
+        }
       }
     %>
     <div class="rowTn"><%= infoLine %></div>
