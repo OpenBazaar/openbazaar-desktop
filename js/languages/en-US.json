@@ -780,7 +780,10 @@
     "pay": "PAY",
     "pending": "Pending…",
     "close": "close",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "useShapeShift": "Or use ShapeShift in the next step",
+    "moderatedPayment": "Moderated Payment",
+    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

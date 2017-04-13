@@ -38,6 +38,7 @@
                   id="purchaseQuantity"
                   size="1"
                   name="quantity"
+                  value="1"
                   data-var-type="number">
             </div>
           </div>
@@ -49,17 +50,41 @@
         </div>
       </section>
       <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
-      <section class="contentBox pad clrP clrBr clrSh3 s-shipping">
+      <section class="contentBox padLg clrP clrBr clrSh3 s-shipping">
         <% // inject shipping view here %>
       </section>
       <% } %>
-      <section class="contentBox pad clrP clrBr clrSh3">
-        <h2 class="h4"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
+      <section class="contentBox padLg clrP clrBr clrSh3">
+        <div class="flexColRows gutterVSm">
+          <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
+          <div class="contentBox pad clrP clrBr flexVCent">
+            <i class="btcIcon margRSm" style="background-image: url('../imgs/btcIcon128.png');"></i>
+            <div class="flexExpand">
+              <%= ob.polyT('currencies.BTC') %>
+            </div>
+            <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
+            <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
+          </div>
+          <div>
+            <input
+                type="checkbox"
+                name="moderated"
+                checked
+                id="purchaseModerated">
+            <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
+          </div>
+          <p class="clrT2 tx6">
+            <%= ob.polyT('purchase.moderationDisclaimer') %>
+          </p>
+        </div>
+
+
       </section>
-      <section class="contentBox pad clrP clrBr clrSh3 js-moderator">
+      <section class="contentBox padLg clrP clrBr clrSh3 js-moderator">
         <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
+        <div class="js-moderatorsWrapper"></div>
       </section>
-      <section class="contentBox pad clrP clrBr clrSh3">
+      <section class="contentBox padLg clrP clrBr clrSh3">
         <h2 class="h4">
           <%= ob.polyT('purchase.informationTitle') %>
           <span class="clrT2 txUnb tx5b"><%= ob.polyT('purchase.optional') %></span>

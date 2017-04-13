@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
@@ -6,6 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/Order';
 import PopInMessage from '../../PopInMessage';
+import Moderators from './moderators';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -22,28 +24,16 @@ export default class extends BaseModal {
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
+    this.order = new Order({
+      items: [{
+        listingHash: '',
+        quantity: 1,
+      }],
+    });
 
-    // Sometimes a profile model is available and the vendor info
-    // can be obtained from that.
-    if (options.profile) {
-      const avatarHashes = options.profile.get('avatarHashes');
-
-      this.vendor = {
-        guid: options.profile.id,
-        name: options.profile.get('name'),
-        handle: options.profile.get('handle'),
-        avatar: {
-          tiny: avatarHashes.get('tiny'),
-          small: avatarHashes.get('small'),
-        },
-      };
-    }
-
-    // In most cases the page opening this modal will already have and be able
-    // to provide the vendor information. If it cannot, then I suppose we
-    // could fetch the profile and lazy load it in, but we can cross that
-    // bridge when we get to it.
-    this.vendor = this.vendor || options.vendor;
+    this.moderators = new Moderators({
+      moderatorIDs: this.listing.moderators || [],
+    });
 
     this.countryData = getTranslatedCountries(app.settings.get('language'))
         .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
@@ -66,7 +56,7 @@ export default class extends BaseModal {
 
   events() {
     return {
-
+      'click #purchaseModerated': 'clickModerated',
       ...super.events(),
     };
   }
@@ -94,6 +84,10 @@ export default class extends BaseModal {
     }
   }
 
+  clickModerated(e) {
+    this.$moderatorSection.toggleClass('hide', $(e.target).attr('checked'));
+  }
+
 
   get $popInMessages() {
     return this._$popInMessages ||
@@ -103,6 +97,11 @@ export default class extends BaseModal {
   get $storeOwnerAvatar() {
     return this._$storeOwnerAvatar ||
         (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
+  }
+
+  get $moderatorSection() {
+    return this._$moderatorSection ||
+        (this._$moderatorSection = this.$('.js-moderator'));
   }
 
   remove() {
@@ -126,6 +125,10 @@ export default class extends BaseModal {
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
+      this._$moderatorSection = null;
+
+      // add the moderators section content
+      this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
     });
 
     return this;
