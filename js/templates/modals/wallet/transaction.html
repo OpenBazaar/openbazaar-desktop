@@ -41,7 +41,7 @@
         });
       } else {
         const fiatBtcPairing = `<span class="txB">${priceFrag}</span>`;
-        
+
         if (ob.address) {
           infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
             fiatBtcPairing,
@@ -81,6 +81,9 @@
           }
         %>
         <a class="btn clrP clrBr clrSh2" href="<%= blockChainUrl %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
+        <% if (ob.status === 'STUCK' && ob.canBumpFee) { %>
+        <a class="btn clrP clrBr clrSh2"><%= ob.polyT('wallet.transactions.transaction.retryTransactionBtn') %></a>
+        <% } %>
       </div>
     </div>
   </div>

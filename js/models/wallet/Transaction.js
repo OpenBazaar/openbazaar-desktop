@@ -36,19 +36,22 @@ export default class extends BaseModel {
       const height = attrs.height === undefined ?
         this.attributes.height : attrs.height;
       const stuckTime = 6 * 60 * 60 * 100; // 6 hours
+      const value = attrs.value === undefined ?
+        this.attributes.value : attrs.value;
+      const isOutgoing = value < 0;
 
       if (height === -1) {
         attrs.status = 'DEAD';
         attrs.canBumpFee = false;
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) <= stuckTime) {
         attrs.status = 'UNCONFIRMED';
-        attrs.canBumpFee = true;
+        attrs.canBumpFee = !isOutgoing;
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) > stuckTime) {
         attrs.status = 'STUCK';
-        attrs.canBumpFee = true;
+        attrs.canBumpFee = !isOutgoing;
       } else if (confirmations > 0 && confirmations <= 6) {
         attrs.status = 'PENDING';
-        attrs.canBumpFee = true;
+        attrs.canBumpFee = !isOutgoing;
       } else if (confirmations > 6) {
         attrs.status = 'CONFIRMED';
         attrs.canBumpFee = false;
