@@ -23,6 +23,14 @@ export default class extends Collection {
       transaction.value = integerToDecimal(transaction.value, true);
     });
 
+    // if (response.transactions.length) {
+    //   const manyTrans = [];
+
+    //   for (const i = 0; i < 500; i++) {
+    //     const tran = response.transactions.at()
+    //   }
+    // }
+
     return response.transactions;
   }
 }

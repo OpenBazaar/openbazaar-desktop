@@ -37,28 +37,28 @@ export default class extends baseVw {
 
     this.listenTo(this.collection, 'update', (cl, opts) => {
       this.render();
-      if (!this.rendered) return;
+      // if (!this.rendered) return;
 
-      if (opts.changes.added.length) {
-        // Expecting either a single new transactions on top or a page
-        // of transactions on the bottom.
-        if (opts.changes.added.length === this.collection.length ||
-          opts.changes.added[opts.changes.added.length - 1] ===
-            this.collection.at(this.collection.length - 1)) {
-          console.log('hey hey another paginamente');
+      // if (opts.changes.added.length) {
+      //   // Expecting either a single new transactions on top or a page
+      //   // of transactions on the bottom.
+      //   if (opts.changes.added.length === this.collection.length ||
+      //     opts.changes.added[opts.changes.added.length - 1] ===
+      //       this.collection.at(this.collection.length - 1)) {
+      //     console.log('hey hey another paginamente');
 
-          // It's a page of transactions at the bottom
-          const docFrag = document.createDocumentFragment();
-          this.collection.slice(this.collection.length - opts.changes.added.length)
-            .forEach(md => {
-              // const view = this.createTransaction({ model: md });
+      //     // It's a page of transactions at the bottom
+      //     const docFrag = document.createDocumentFragment();
+      //     this.collection.slice(this.collection.length - opts.changes.added.length)
+      //       .forEach(md => {
+      //         // const view = this.createTransaction({ model: md });
 
-              // view.render()
-              //   .$el
-              //   .appendTo(docFrag);
-            });
-        }
-      }
+      //         // view.render()
+      //         //   .$el
+      //         //   .appendTo(docFrag);
+      //       });
+      //   }
+      // }
     });
 
     const serverSocket = getSocket();
@@ -88,20 +88,8 @@ export default class extends baseVw {
           this.collection.models
             .filter(transaction => (transaction.get('height') > 0))
             .forEach(transaction => {
-              const confirmations = e.jsonData.walletUpdate.height - transaction.get('height');
-              let status = transaction.get('status');
-
-              // This logic to determine at what confirmation count a transaction is confirmed
-              // should be kept in sync with the corrseponding server logic:
-              // https://github.com/OpenBazaar/openbazaar-go/blob/399766ac3d56fdabec5ef0ea2c59538042785aa1/api/jsonapi.go#L2372
-              if (confirmations > 6) {
-                status = 'CONFIRMED';
-              }
-
-              transaction.set({
-                confirmations,
-                status,
-              });
+              transaction.set('confirmations',
+                e.jsonData.walletUpdate.height - transaction.get('height'));
             });
         }
       });
@@ -154,7 +142,7 @@ export default class extends baseVw {
   // }
 
   get transactionsPerFetch() {
-    return 2;
+    return 200;
   }
 
   get isFetching() {
