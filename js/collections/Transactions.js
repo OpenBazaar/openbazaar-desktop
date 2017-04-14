@@ -23,14 +23,22 @@ export default class extends Collection {
       transaction.value = integerToDecimal(transaction.value, true);
     });
 
-    // if (response.transactions.length) {
-    //   const manyTrans = [];
+    // const manyTrans = [];
 
-    //   for (const i = 0; i < 500; i++) {
-    //     const tran = response.transactions.at()
+    // if (response.transactions.length) {
+    //   for (let i = 0; i < 20; i++) {
+    //     const index = i % response.transactions.length;
+    //     // console.log(index);
+    //     const tran = JSON.parse(JSON.stringify(response.transactions[index]));
+    //     tran.moo = tran.txid;
+    //     tran.txid = `${i} ==> ${tran.txid}${Date.now() + Math.random()}`;
+    //     // console.log(tran.txid);
+    //     manyTrans.push(tran);
     //   }
     // }
 
-    return response.transactions;
+    // return manyTrans;
+    
+    return response.transactions;    
   }
 }

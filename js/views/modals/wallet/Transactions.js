@@ -32,34 +32,7 @@ export default class extends baseVw {
     this.fetchErrorMessage = '';
     this.newTransactionCount = 0;
 
-    console.log('moo');
-    window.moo = this.collection;
-
-    this.listenTo(this.collection, 'update', (cl, opts) => {
-      this.render();
-      // if (!this.rendered) return;
-
-      // if (opts.changes.added.length) {
-      //   // Expecting either a single new transactions on top or a page
-      //   // of transactions on the bottom.
-      //   if (opts.changes.added.length === this.collection.length ||
-      //     opts.changes.added[opts.changes.added.length - 1] ===
-      //       this.collection.at(this.collection.length - 1)) {
-      //     console.log('hey hey another paginamente');
-
-      //     // It's a page of transactions at the bottom
-      //     const docFrag = document.createDocumentFragment();
-      //     this.collection.slice(this.collection.length - opts.changes.added.length)
-      //       .forEach(md => {
-      //         // const view = this.createTransaction({ model: md });
-
-      //         // view.render()
-      //         //   .$el
-      //         //   .appendTo(docFrag);
-      //       });
-      //   }
-      // }
-    });
+    this.listenTo(this.collection, 'update', () => (this.render()));
 
     const serverSocket = getSocket();
 
@@ -142,7 +115,7 @@ export default class extends baseVw {
   // }
 
   get transactionsPerFetch() {
-    return 200;
+    return 5;
   }
 
   get isFetching() {
@@ -211,15 +184,15 @@ export default class extends baseVw {
   }
 
   showNewTransactionPopup() {
+    const refreshLink =
+      '<a class="js-refresh">Refresh</a>';
+
     if (this.newTransactionPopIn && !this.newTransactionPopIn.isRemoved()) {
       this.newTransactionPopIn.setState({
-        messageText: `${this.newTransactionCount} new transactions`,
+        messageText: `${this.newTransactionCount} new transactions ${refreshLink}`,
       });
     } else {
       // TODO TODO TODO TODO: translate!!!
-      const refreshLink =
-        '<a class="js-refresh">Refresh</a>';
-
       this.newTransactionPopIn = this.createChild(PopInMessage, {
         // messageText: app.polyglot.t('userPage.store.listingDataChangedPopin',
             // { refreshLink }),

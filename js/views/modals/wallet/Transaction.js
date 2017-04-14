@@ -1,5 +1,6 @@
-import _ from 'underscore';
+// import _ from 'underscore';
 import moment from 'moment';
+import { setTimeagoInterval } from '../../../utils/';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -17,6 +18,10 @@ export default class extends baseVw {
     };
 
     this.listenTo(this.model, 'change', () => this.render());
+    this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
+      const timeAgo = moment(this.model.get('timestamp')).fromNow();
+      if (timeAgo !== this.renderedTimeAgo) this.render();
+    });
   }
 
   className() {
@@ -29,33 +34,40 @@ export default class extends baseVw {
   //   };
   // }
 
-  getState() {
-    return this._state;
-  }
+  // getState() {
+  //   return this._state;
+  // }
 
-  setState(state, replace = false) {
-    let newState;
+  // setState(state, replace = false) {
+  //   let newState;
 
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
+  //   if (replace) {
+  //     this._state = {};
+  //   } else {
+  //     newState = _.extend({}, this._state, state);
+  //   }
 
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
+  //   if (!_.isEqual(this._state, newState)) {
+  //     this._state = newState;
+  //     this.render();
+  //   }
 
-    return this;
+  //   return this;
+  // }
+
+  remove() {
+    this.timeAgoInterval.cancel();
+    super.remove();
   }
 
   render() {
+    this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
+
     loadTemplate('modals/wallet/transaction.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         userCurrency: app.settings.get('localCurrency'),
-        moment,
+        timeAgo: this.renderedTimeAgo,
         isTestnet: !!app.testnet,
       }));
     });

@@ -55,7 +55,7 @@
     <div class="rowTn"><%= infoLine %></div>
     <%
       let timeAgoAndConfirmCount = ob.polyT('wallet.transactions.transaction.timeAgoAndConfirmCount', {
-        timeAgo: ob.moment(ob.timestamp).fromNow(),
+        timeAgo: ob.timeAgo,
         confirmationsCount: ob.confirmations,
         smart_count: ob.confirmations,
       });
@@ -65,8 +65,8 @@
       <div class="" style="flex-shrink: 0;max-width: 80px">
         <div class="noOverflow"><%= ob.txid %></div>
       </div>
-      <div class="">
-        <div class="clamp"><%= ob.memo %></div>
+      <div>
+        <div class="noOverflow"><%= ob.memo %></div>
       </div>
     </div>
   </div>
