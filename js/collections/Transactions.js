@@ -1,5 +1,5 @@
 import app from '../app';
-import { integerToDecimal } from '../utils/currency';
+// import { integerToDecimal } from '../utils/currency';
 import { Collection } from 'backbone';
 import Transaction from '../models/wallet/Transaction';
 
