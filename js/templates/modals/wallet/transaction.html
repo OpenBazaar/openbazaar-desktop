@@ -82,9 +82,19 @@
         %>
         <a class="btn clrP clrBr clrSh2" href="<%= blockChainUrl %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
         <% if (ob.status === 'STUCK' && ob.canBumpFee) { %>
-        <a class="btn clrP clrBr clrSh2"><%= ob.polyT('wallet.transactions.transaction.retryTransactionBtn') %></a>
+        <a class="btn clrP clrBr clrSh2 js-retryPmt"><%= ob.polyT('wallet.transactions.transaction.retryTransactionBtn') %></a>
         <% } %>
       </div>
     </div>
   </div>
 </div>
+<!-- <div class="js-retryPmtConfirmed retryConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.sendConfirmOn) print('hide') %>">
+  <div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+  <p class="clrT2"><%= ob.polyT('wallet.sendMoney.sendConfirm.body') %></p>
+  <hr class="clrBr row" />
+
+  <div class="flexHRight flexVCent gutterHLg">
+    <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
+    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a>
+  </div>
+</div> -->

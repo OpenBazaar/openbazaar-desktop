@@ -87,6 +87,7 @@ export default class extends BaseModal {
         value: data.amount * -1,
         txid: data.txid,
         timestamp: data.timestamp,
+        address: data.address,
       }, { parse: true });
 
       this.transactionsVw.collection.unshift(transaction);

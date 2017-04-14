@@ -143,7 +143,10 @@ export function spend(fields) {
       const wallet = getWallet();
 
       if (wallet && wallet.onSuccessSpendSuccess) {
-        wallet.onSuccessSpendSuccess(data);
+        wallet.onSuccessSpendSuccess({
+          address: spendModel.get('address'),
+          ...data,
+        });
       }
     });
   }

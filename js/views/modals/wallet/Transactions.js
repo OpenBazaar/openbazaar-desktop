@@ -32,7 +32,21 @@ export default class extends baseVw {
     this.fetchErrorMessage = '';
     this.newTransactionCount = 0;
 
-    this.listenTo(this.collection, 'update', () => (this.render()));
+    this.listenTo(this.collection, 'update', (cl, opts) => {
+      if (opts.changes.added.length) {
+        // Expecting either a single new transactions on top or a page
+        // of transactions on the bottom.
+        if (opts.changes.added.length === this.collection.length ||
+          opts.changes.added[opts.changes.added.length - 1] ===
+            this.collection.at(this.collection.length - 1)) {
+          // It's a page of transactions at the bottom
+          this.renderTransactions(opts.changes.added, 'append');
+        } else {
+          // New transaction at top
+          this.renderTransactions(opts.changes.added, 'prepend');
+        }
+      }
+    });
 
     const serverSocket = getSocket();
 
@@ -45,8 +59,6 @@ export default class extends baseVw {
 
           if (transaction) {
             // existing transaction has been confirmed
-            console.log('been confirmed');
-            window.confirmed = _.omit(e.jsonData.wallet, 'timestamp');
             transaction.set(transaction.parse({
               // Omitting timestamp since it's not set properly in the socket. In either case,
               // the transaction should already have it set.
@@ -228,6 +240,11 @@ export default class extends baseVw {
     return view;
   }
 
+  // clearTransactions() {
+  //   this.transactionViews.forEach(transaction => transaction.remove());
+  //   this.transactionViews = [];
+  // }
+
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
     super.remove();
@@ -236,6 +253,35 @@ export default class extends baseVw {
   get $popInMessages() {
     return this._$popInMessages ||
       (this._$popInMessages = this.$('.js-popInMessages'));
+  }
+
+  renderTransactions(models = [], insertionType = 'append') {
+    if (!models) {
+      throw new Error('Please provide an array of transactions models.');
+    }
+
+    if (['append', 'prepend', 'replace'].indexOf(insertionType) === -1) {
+      throw new Error('Please provide a valid insertion type.');
+    }
+
+    if (insertionType === 'replace') {
+      this.transactionViews.forEach(transaction => transaction.remove());
+      this.transactionViews = [];
+    }
+
+    const transactionsFrag = document.createDocumentFragment();
+
+    models.forEach(transaction => {
+      const view = this.createTransactionView(transaction);
+      this.transactionViews.push(view);
+      view.render().$el.appendTo(transactionsFrag);
+    });
+
+    if (insertionType === 'prepend') {
+      this.$transactionsContainer.prepend(transactionsFrag);
+    } else {
+      this.$transactionsContainer.append(transactionsFrag);
+    }
   }
 
   render() {
@@ -255,18 +301,21 @@ export default class extends baseVw {
 
     this.$transactionsContainer = this.$('.js-transactionListContainer');
     this._$popInMessages = null;
+    
+    this.renderTransactions(this.collection.models, 'replace');
+    // this.clearTransactions();
 
-    this.transactionViews.forEach(transaction => transaction.remove());
-    this.transactionViews = [];
-    const transactionsFrag = document.createDocumentFragment();
+    // this.transactionViews.forEach(transaction => transaction.remove());
+    // this.transactionViews = [];
+    // const transactionsFrag = document.createDocumentFragment();
 
-    this.collection.forEach(transaction => {
-      const view = this.createTransactionView(transaction);
-      this.transactionViews.push(view);
-      view.render().$el.appendTo(transactionsFrag);
-    });
+    // this.collection.forEach(transaction => {
+    //   const view = this.createTransactionView(transaction);
+    //   this.transactionViews.push(view);
+    //   view.render().$el.appendTo(transactionsFrag);
+    // });
 
-    this.$transactionsContainer.append(transactionsFrag);
+    // this.$transactionsContainer.append(transactionsFrag);
 
     this.$scrollContainer.off('scroll', this.throttledOnScroll)
       .on('scroll', this.throttledOnScroll);

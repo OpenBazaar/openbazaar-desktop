@@ -44,11 +44,6 @@ export default class extends baseVw {
     this.saveInProgress = true;
 
     spend(this.model.toJSON())
-      .done(() => {
-        // temporary alert until the transactions list is implemented
-        openSimpleMessage('You payment has been sent.',
-          'This message is temporary until the transactions list is implemented.');
-      })
       .fail(jqXhr => {
         openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
