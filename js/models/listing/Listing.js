@@ -250,7 +250,7 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    let parsedResponse = response.listing;
+    const parsedResponse = response.listing;
 
     if (parsedResponse) {
       // convert price fields
