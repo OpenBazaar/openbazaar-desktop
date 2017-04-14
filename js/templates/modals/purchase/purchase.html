@@ -22,7 +22,6 @@
             <div class="flexCol gutterVTn">
               <b><%= ob.listing.item.title %></b>
               <% ob.variants.forEach((variant) => { %>
-              <% console.log(variant) %>
                 <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
               <% }); %>
             </div>

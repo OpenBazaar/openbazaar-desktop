@@ -316,7 +316,6 @@ export default class extends BaseModal {
       variant.value = $(select).val();
       selectedVariants.push(variant);
     });
-    console.log(this.model.attributes);
 
     this.purchaseModal = launchPurchaseModal({
       listing: this.model.toJSON(),

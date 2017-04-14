@@ -31,6 +31,8 @@ export default class extends BaseModal {
       }],
     });
 
+    console.log(this.listing)
+
     this.moderators = new Moderators({
       moderatorIDs: this.listing.moderators || [],
     });
@@ -129,6 +131,7 @@ export default class extends BaseModal {
 
       // add the moderators section content
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
+      this.moderators.getModeratorsByID();
     });
 
     return this;

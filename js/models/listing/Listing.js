@@ -250,14 +250,7 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    let parsedResponse;
-
-    if (response.contract &&
-      response.contract.vendorListings && response.contract.vendorListings.length) {
-      parsedResponse = response.contract.vendorListings[0];
-    } else if (response.vendorListings && response.vendorListings.length) {
-      parsedResponse = response.vendorListings[0];
-    }
+    let parsedResponse = response.listing;
 
     if (parsedResponse) {
       // convert price fields
