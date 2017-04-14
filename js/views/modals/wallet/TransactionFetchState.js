@@ -12,7 +12,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'transaction';
+    return 'transactionFetchState';
   }
 
   events() {

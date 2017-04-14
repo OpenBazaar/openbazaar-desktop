@@ -112,16 +112,8 @@
       position: relative;
 
       .sendConfirm {
-        display: block;
-        position: absolute;
         right: -28px;
-        width: 245px;
         transform: translateY(-7px);
-        z-index: 1;
-        padding: $pad;
-        border-style: solid;
-        border-width: 1px;
-        text-align: center;
       }
     }
   }
@@ -132,6 +124,7 @@
     position: relative;
 
     .transaction {
+      position: relative;
       font-size: $tx5;
 
       .btn {
@@ -189,6 +182,24 @@
       &.notFixed {
         position: absolute;
         top: -65px;
+      }
+    }
+
+    .retryConfirm {
+      right: 0;
+      top: 58px;
+      height: 146px;
+
+      .bodyText {
+        margin-bottom: 3px;
+      }
+
+      &::before {
+        left: 79%;
+      }
+
+      .buttonBar {
+        height: auto;
       }
     }
   }  

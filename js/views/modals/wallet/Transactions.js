@@ -1,6 +1,6 @@
-// import $ from 'jquery';
+import $ from 'jquery';
 import _ from 'underscore';
-// import app from '../../../app';
+import app from '../../../app';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getSocket } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -143,6 +143,34 @@ export default class extends baseVw {
     return this.collection.length === this.countAtFirstFetch;
   }
 
+  get estimatedFeeCacheExpire() {
+    return 1000 * 60 * 20;
+  }
+
+  fetchEstimatedFee(feeLevel) {
+    if (!feeLevel) {
+      throw new Error('Please provide a fee level');
+    }
+
+    let xhr;
+
+    if (this.estimatedFeeCache && this.estimatedFeeCache[feeLevel] &&
+      ['pending', 'resolved'].indexOf(this.estimatedFeeCache[feeLevel].xhr.state()) !== -1 &&
+      (Date.now() - this.estimatedFeeCache[feeLevel].createdAt <
+        this.estimatedFeeCacheExpire)) {
+      xhr = this.estimatedFeeCache[feeLevel].xhr;
+    } else {
+      xhr = $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${encodeURIComponent(feeLevel)}`));
+      this.estimatedFeeCache = this.estimatedFeeCache || {};
+      this.estimatedFeeCache[feeLevel] = {
+        xhr,
+        createdAt: Date.now(),
+      };
+    }
+
+    return xhr;
+  }
+
   fetchTransactions() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
 
@@ -234,16 +262,12 @@ export default class extends baseVw {
   createTransactionView(model, options = {}) {
     const view = this.createChild(Transaction, {
       model,
+      getFeeLevel: this.fetchEstimatedFee.bind(this),
       ...options,
     });
 
     return view;
   }
-
-  // clearTransactions() {
-  //   this.transactionViews.forEach(transaction => transaction.remove());
-  //   this.transactionViews = [];
-  // }
 
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
@@ -301,21 +325,8 @@ export default class extends baseVw {
 
     this.$transactionsContainer = this.$('.js-transactionListContainer');
     this._$popInMessages = null;
-    
+
     this.renderTransactions(this.collection.models, 'replace');
-    // this.clearTransactions();
-
-    // this.transactionViews.forEach(transaction => transaction.remove());
-    // this.transactionViews = [];
-    // const transactionsFrag = document.createDocumentFragment();
-
-    // this.collection.forEach(transaction => {
-    //   const view = this.createTransactionView(transaction);
-    //   this.transactionViews.push(view);
-    //   view.render().$el.appendTo(transactionsFrag);
-    // });
-
-    // this.$transactionsContainer.append(transactionsFrag);
 
     this.$scrollContainer.off('scroll', this.throttledOnScroll)
       .on('scroll', this.throttledOnScroll);

@@ -13,7 +13,8 @@ export default class extends baseVw {
     this._saveInProgress = false;
     this._sendConfirmOn = false;
     this.model = new Spend();
-    $(document).on('click', this.onDocumentClick.bind(this));
+    this.boundDocumentClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundDocumentClick);
   }
 
   className() {
@@ -163,6 +164,11 @@ export default class extends baseVw {
   get $sendConfirm() {
     return this._$sendConfirm ||
       (this._$sendConfirm = this.$('.js-sendConfirm'));
+  }
+
+  remove() {
+    $(document).off(null, this.boundDocumentClick);
+    super.remove();
   }
 
   render() {

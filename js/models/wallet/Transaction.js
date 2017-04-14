@@ -35,7 +35,7 @@ export default class extends BaseModel {
         this.attributes.timestamp : attrs.timestamp;
       const height = attrs.height === undefined ?
         this.attributes.height : attrs.height;
-      const stuckTime = 6 * 60 * 60 * 100; // 6 hours
+      const stuckTime = 1000 * 60 * 60 * 6; // 6 hours
       const value = attrs.value === undefined ?
         this.attributes.value : attrs.value;
       const isOutgoing = value < 0;

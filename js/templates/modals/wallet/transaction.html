@@ -81,20 +81,52 @@
           }
         %>
         <a class="btn clrP clrBr clrSh2" href="<%= blockChainUrl %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
-        <% if (ob.status === 'STUCK' && ob.canBumpFee) { %>
-        <a class="btn clrP clrBr clrSh2 js-retryPmt"><%= ob.polyT('wallet.transactions.transaction.retryTransactionBtn') %></a>
+        <%
+          // if (ob.status === 'STUCK' && ob.canBumpFee) {
+          if (ob.canBumpFee) {
+        %>
+        <a class="btn clrP clrBr clrSh2 js-retryPmt <% if (ob.retryConfirmOn) print('disabled') %>"><%= ob.polyT('wallet.transactions.transaction.retryTransactionBtn') %></a>
         <% } %>
       </div>
     </div>
   </div>
 </div>
-<!-- <div class="js-retryPmtConfirmed retryConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.sendConfirmOn) print('hide') %>">
-  <div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
-  <p class="clrT2"><%= ob.polyT('wallet.sendMoney.sendConfirm.body') %></p>
-  <hr class="clrBr row" />
-
-  <div class="flexHRight flexVCent gutterHLg">
-    <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
-    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a>
+<div class="js-retryPmtConfirmed confirmBox retryConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.retryConfirmOn) print('hide') %>">
+  <div class="tx3 txB rowSm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.title') %></div>
+  <% if (ob.retryConfirmOn) {
+      // if we're fetching we'll just hard code some fee and show the text invisibly
+      // so the spacing is still right (i.e. no jump when spinner goes away)
+      let estimatedFee = ob.fetchingEstimatedFee ? .0004 : ob.estimatedFee; 
+      let estimatedFeeCombo = ob.convertAndFormatCurrency(estimatedFee, 'BTC',
+        ob.userCurrency, { useBtcSymbol: false });
+        
+      if (ob.userCurrency !== 'BTC') {
+        estimatedFeeCombo = ob.polyT('wallet.transactions.transaction.fiatBtcPairing', {
+          fiatAmount: estimatedFeeCombo,
+          btcAmount: ob.formatCurrency(estimatedFee, 'BTC', { useBtcSymbol: false }),
+        });
+      }
+  %>
+  <div class="posR">
+    <div class="<% if (ob.fetchingEstimatedFee) print('invisible') %>">
+      <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.body', {
+        fiatBtcPairing: estimatedFeeCombo,
+        asterisk: '<span>*</span>',
+      }) %></p>
+      <p class="clrT2 tx6"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.subText', {
+        asterisk: '<span>*</span>',
+      }) %></p>
+    </div>
+    
+    <% if (ob.fetchingEstimatedFee) { %>
+      <%= ob.spinner({ className: 'center spinnerMd' }) %>
+    <% } %>
   </div>
-</div> -->
+
+  <hr class="clrBr row" />
+  <div class="flexHRight flexVCent gutterHLg buttonBar">
+    <a class="js-retryConfirmCancel"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnCancel') %></a>
+    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmRetrySend <% if (ob.fetchingEstimatedFee) print('disabled') %>"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnConfirmSend') %></a>
+  </div>
+  <% } %>
+</div>
