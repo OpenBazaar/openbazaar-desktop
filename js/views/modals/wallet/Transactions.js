@@ -45,7 +45,11 @@ export default class extends baseVw {
 
           if (transaction) {
             // existing transaction has been confirmed
+            console.log('been confirmed');
+            window.confirmed = _.omit(e.jsonData.wallet, 'timestamp');
             transaction.set(transaction.parse({
+              // Omitting timestamp since it's not set properly in the socket. In either case,
+              // the transaction should already have it set.
               ...(_.omit(e.jsonData.wallet, 'timestamp')),
             }));
           } else {

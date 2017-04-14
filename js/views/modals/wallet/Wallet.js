@@ -2,6 +2,7 @@ import $ from 'jquery';
 import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import Transaction from '../../../models/wallet/Transaction';
 import Transactions from '../../../collections/Transactions';
 import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
@@ -78,6 +79,18 @@ export default class extends BaseModal {
 
   onClickToggleSendReceive() {
     this.sendModeOn = !this.sendModeOn;
+  }
+
+  onSuccessSpendSuccess(data) {
+    if (this.transactionsVw) {
+      const transaction = new Transaction({
+        value: data.amount * -1,
+        txid: data.txid,
+        timestamp: data.timestamp,
+      }, { parse: true });
+
+      this.transactionsVw.collection.unshift(transaction);
+    }
   }
 
   set sendModeOn(bool) {

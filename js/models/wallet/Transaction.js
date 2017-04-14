@@ -5,7 +5,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       confirmations: 0,
-      height: -1,
+      height: 0,
     };
   }
 
@@ -62,7 +62,7 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    let returnVal = response;
+    let returnVal = { ...response };
 
     // The client will in set() will create it's own status and canBumpFee attributes.
     // The reason is that these are dependant on the confirmation count which is
@@ -72,14 +72,14 @@ export default class extends BaseModel {
     delete returnVal.status;
     delete returnVal.canBumpFee;
 
-    if (response.transactions) {
+    if (returnVal.transactions) {
       // this response is coming from the collection, we'll
       // do nothing and let the collection handle it.
     } else {
       returnVal = {
+        ...returnVal,
         // Convert satoshi to BTC
-        value: integerToDecimal(response.value, true),
-        ...response,
+        value: integerToDecimal(returnVal.value, true),
       };
     }
 

@@ -19,10 +19,6 @@ export default class extends Collection {
   parse(response) {
     response.transactions = response.transactions || [];
 
-    response.transactions.forEach(transaction => {
-      transaction.value = integerToDecimal(transaction.value, true);
-    });
-
     // const manyTrans = [];
 
     // if (response.transactions.length) {
@@ -38,7 +34,6 @@ export default class extends Collection {
     // }
 
     // return manyTrans;
-    
-    return response.transactions;    
+    return response.transactions;
   }
 }

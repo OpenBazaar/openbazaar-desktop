@@ -1,5 +1,6 @@
 import { isValidBitcoinAddress } from '../../utils/';
 import { decimalToInteger, convertCurrency } from '../../utils/currency';
+import { getWallet } from '../../utils/modalManager';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -137,6 +138,12 @@ export function spend(fields) {
             unconfirmed: data.unconfirmedBalance,
           })
         );
+      }
+
+      const wallet = getWallet();
+
+      if (wallet && wallet.onSuccessSpendSuccess) {
+        wallet.onSuccessSpendSuccess(data);
       }
     });
   }
