@@ -260,7 +260,6 @@ export default class extends BaseModel {
           parsedResponse.metadata.pricingCurrency === 'BTC';
 
         if (price) {
-          console.log(price)
           parsedResponse.item.price = integerToDecimal(price, isBtc);
         }
       }
