@@ -1,8 +1,9 @@
-// import $ from 'jquery';
+import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
 import { setTimeagoInterval } from '../../../utils/';
 import app from '../../../app';
+import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -29,7 +30,8 @@ export default class extends baseVw {
       if (timeAgo !== this.renderedTimeAgo) this.render();
     });
 
-    // $(document).on('click', this.onDocumentClick.bind(this));
+    this.boundDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundDocClick);
   }
 
   className() {
@@ -40,20 +42,46 @@ export default class extends baseVw {
     return {
       'click .js-retryPmt': 'onClickRetryPmt',
       'click .js-retryConfirmCancel': 'onClickRetryConfirmCancel',
+      'click .js-btnConfirmRetrySend': 'onClickRetryConfirmed',
     };
   }
 
-  // onDocumentClick(e) {
-  //   if (this.isSendConfirmOn() &&
-  //     !($.contains(this.$sendConfirm[0], e.target) ||
-  //       e.target === this.$sendConfirm[0])) {
-  //     this.setSendConfirmOn(false);
-  //   }
-  // }
+  onDocumentClick(e) {
+    if (this.getState().retryConfirmOn &&
+      !($.contains(this.$retryPmtConfirmedBox[0], e.target) ||
+        e.target === this.$retryPmtConfirmedBox[0])) {
+      this.setState({
+        retryConfirmOn: false,
+      });
+    }
+  }
+
+  onClickRetryConfirmed() {
+    this.setState({
+      retryInProgress: true,
+      retryConfirmOn: false,
+    });
+
+    $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`))
+      .always(() => {
+        this.setState({
+          retryInProgress: false,
+        });
+      }).fail((xhr) => {
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
+          failReason);
+      })
+      .done(data => {
+        this.trigger('retrySuccess', { data });
+        this.model.set('canBumpFee', false);
+      });
+  }
 
   onClickRetryPmt() {
     if (this.getFeeLevel) this.getFeeLevel.abort();
-    this.getFeeLevel = this.options.getFeeLevel('NORMAL');
+    this.getFeeLevel = this.options.getFeeLevel('PRIORITY');
 
     const state = {
       retryConfirmOn: true,
@@ -70,11 +98,12 @@ export default class extends baseVw {
       this.setState({
         ...state,
         fetchingEstimatedFee: false,
-        // Fee is per byte in satoshi. Estimated transaction is 200 bytes, then
-        // we'll convert from Satoshi to BTC
-        estimatedFee: fee * 200 / 100000000,
+        estimatedFee: this.feeToBtc(fee),
       });
     });
+
+    // don't bubble to the document click handler
+    return false;
   }
 
   onClickRetryConfirmCancel() {
@@ -102,6 +131,14 @@ export default class extends baseVw {
     return this;
   }
 
+  feeToBtc(fee) {
+    // We'll approximateally match the server's algorythm to estimate the fee.
+    // Fee is per byte in satoshi. A estimated average transaction is 200 bytes.
+    // So we'll multiply the fee by 200, divide by a 100 mil to get BTC and
+    // then multiply by 2 (the server bumps the fee by doubling it.)
+    return fee * 200 / 100000000 * 2;
+  }
+
   closeRetryConfirmBox() {
     if (this.getFeeLevel) this.getFeeLevel.abort();
     this.setState({
@@ -110,7 +147,13 @@ export default class extends baseVw {
     });
   }
 
+  get $retryPmtConfirmedBox() {
+    return this._$retryPmtConfirmed ||
+      (this._$retryPmtConfirmed = this.$('.js-retryPmtConfirmed'));
+  }
+
   remove() {
+    $(document).off(null, this.boundDocClick);
     this.timeAgoInterval.cancel();
     super.remove();
   }
@@ -127,6 +170,8 @@ export default class extends baseVw {
         ...this._state,
       }));
     });
+
+    this._$retryPmtConfirmed = null;
 
     return this;
   }

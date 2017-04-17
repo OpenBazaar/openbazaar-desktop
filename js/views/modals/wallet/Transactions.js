@@ -3,6 +3,7 @@ import _ from 'underscore';
 import app from '../../../app';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getSocket } from '../../../utils/serverConnect';
+import TransactionMd from '../../../models/wallet/Transaction';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Transaction from './Transaction';
@@ -22,10 +23,6 @@ export default class extends baseVw {
       throw new Error('Please provide a jQuery object containing the scrollable element ' +
         'this view is in.');
     }
-
-    // this._state = {
-    //   ...options.initialState || {},
-    // };
 
     this.transactionViews = [];
     this.fetchFailed = false;
@@ -67,7 +64,20 @@ export default class extends baseVw {
           } else {
             // new transaction
             this.newTransactionCount += 1;
-            this.showNewTransactionPopup();
+
+            // This is a bit ugly... but most incoming transactions (ones sent via our UI)
+            // are immediately added to the list when their respective APIs succeeds and
+            // therefore should not be included in the "new transactions" pop in count.
+            // But, at this point we don't know if these are such transactions, so we'll
+            // check back in a bit and see if they've already been added or not. It's a matter
+            // of the socket coming in before the AJAX call returns.
+            setTimeout(() => {
+              if (this.collection.get(e.jsonData.wallet.txid)) {
+                this.newTransactionCount -= 1;
+              } else {
+                this.showNewTransactionPopup();
+              }
+            }, 300);
           }
         }
 
@@ -77,8 +87,14 @@ export default class extends baseVw {
           this.collection.models
             .filter(transaction => (transaction.get('height') > 0))
             .forEach(transaction => {
-              transaction.set('confirmations',
-                e.jsonData.walletUpdate.height - transaction.get('height'));
+              const txHeight = transaction.get('height');
+              let confirmations = 0;
+
+              if (txHeight > 0) {
+                confirmations = e.jsonData.walletUpdate.height - txHeight + 1;
+              }
+
+              transaction.set('confirmations', confirmations);
             });
         }
       });
@@ -109,27 +125,6 @@ export default class extends baseVw {
     }
   }
 
-  // getState() {
-  //   return this._state;
-  // }
-
-  // setState(state, replace = false) {
-  //   let newState;
-
-  //   if (replace) {
-  //     this._state = {};
-  //   } else {
-  //     newState = _.extend({}, this._state, state);
-  //   }
-
-  //   if (!_.isEqual(this._state, newState)) {
-  //     this._state = newState;
-  //     this.render();
-  //   }
-
-  //   return this;
-  // }
-
   get transactionsPerFetch() {
     return 5;
   }
@@ -140,7 +135,7 @@ export default class extends baseVw {
   }
 
   get allLoaded() {
-    return this.collection.length === this.countAtFirstFetch;
+    return this.collection.length >= this.countAtFirstFetch;
   }
 
   get estimatedFeeCacheExpire() {
@@ -189,9 +184,13 @@ export default class extends baseVw {
 
     this.transactionsFetch.always(() => {
       if (this.transactionFetchState) {
-        this.transactionFetchState.setState({
-          isFetching: false,
-        });
+        if (!this.collection.length) {
+          this.render();
+        } else {
+          this.transactionFetchState.setState({
+            isFetching: false,
+          });
+        }
       }
     }).fail((jqXhr) => {
       this.fetchFailed = true;
@@ -266,6 +265,23 @@ export default class extends baseVw {
       ...options,
     });
 
+    this.listenTo(view, 'retrySuccess', e => {
+      app.walletBalance.set({
+        confirmed: e.data.confirmed,
+        unconfirmed: e.data.unconfirmed,
+      });
+
+      const transaction = new TransactionMd({
+        value: e.data.amount * -1,
+        txid: e.data.txid,
+        timestamp: e.data.timestamp,
+        address: e.data.address,
+        memo: e.data.memo,
+      }, { parse: true });
+
+      this.collection.unshift(transaction);
+    });
+
     return view;
   }
 
@@ -318,13 +334,13 @@ export default class extends baseVw {
     loadTemplate('modals/wallet/transactions.html', (t) => {
       this.$el.html(t({
         transactions: this.collection.toJSON(),
-        // ...this._state,
         isFetching: this.isFetching,
       }));
     });
 
     this.$transactionsContainer = this.$('.js-transactionListContainer');
     this._$popInMessages = null;
+    this._$noTransactions = null;
 
     this.renderTransactions(this.collection.models, 'replace');
 

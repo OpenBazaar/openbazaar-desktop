@@ -6,6 +6,7 @@ export default class extends BaseModel {
     return {
       confirmations: 0,
       height: 0,
+      canBumpFee: true,
     };
   }
 
@@ -36,24 +37,20 @@ export default class extends BaseModel {
       const height = attrs.height === undefined ?
         this.attributes.height : attrs.height;
       const stuckTime = 1000 * 60 * 60 * 6; // 6 hours
-      const value = attrs.value === undefined ?
-        this.attributes.value : attrs.value;
-      const isOutgoing = value < 0;
 
       if (height === -1) {
         attrs.status = 'DEAD';
-        attrs.canBumpFee = false;
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) <= stuckTime) {
         attrs.status = 'UNCONFIRMED';
-        attrs.canBumpFee = !isOutgoing;
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) > stuckTime) {
         attrs.status = 'STUCK';
-        attrs.canBumpFee = !isOutgoing;
       } else if (confirmations > 0 && confirmations <= 6) {
         attrs.status = 'PENDING';
-        attrs.canBumpFee = !isOutgoing;
       } else if (confirmations > 6) {
         attrs.status = 'CONFIRMED';
+      }
+
+      if (height !== 0) {
         attrs.canBumpFee = false;
       }
     }
@@ -64,13 +61,12 @@ export default class extends BaseModel {
   parse(response = {}) {
     let returnVal = { ...response };
 
-    // The client will in set() will create it's own status and canBumpFee attributes.
-    // The reason is that these are dependant on the confirmation count which is
+    // The client will in set() manage the status attribute. The reason is that
+    // this is dependant on the confirmation count which is
     // updated on the client side based on block height obtained from the walletUpdate
-    // socket. This allows us to avoid having the client match the logic of the server (which
-    // is quite arbitrary) and remain in sync with it.
+    // socket. This allows us to centralize the logic and avoid having the client match
+    // the logic of the server (which is relatively arbitrary).
     delete returnVal.status;
-    delete returnVal.canBumpFee;
 
     if (returnVal.transactions) {
       // this response is coming from the collection, we'll

@@ -142,8 +142,8 @@ export function spend(fields) {
 
       const wallet = getWallet();
 
-      if (wallet && wallet.onSuccessSpendSuccess) {
-        wallet.onSuccessSpendSuccess({
+      if (wallet && wallet.onSpendSuccess) {
+        wallet.onSpendSuccess({
           address: spendModel.get('address'),
           ...data,
         });

@@ -81,7 +81,7 @@ export default class extends BaseModal {
     this.sendModeOn = !this.sendModeOn;
   }
 
-  onSuccessSpendSuccess(data) {
+  onSpendSuccess(data) {
     if (this.transactionsVw) {
       const transaction = new Transaction({
         value: data.amount * -1,

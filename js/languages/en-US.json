@@ -588,7 +588,10 @@
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
           "btnConfirmSend": "Send"
-        }
+        },
+        "retryFailDialogTitle": "Unable to retry payment",
+        "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
+        "noTransactionsPlaceholder": "You have no transactions."
       }
     }
   },
