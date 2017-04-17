@@ -232,14 +232,13 @@ export default class extends baseVw {
 
     if (this.newTransactionPopIn && !this.newTransactionPopIn.isRemoved()) {
       this.newTransactionPopIn.setState({
-        messageText: `${this.newTransactionCount} new transactions ${refreshLink}`,
+        messageText: app.polyglot.t('wallet.transactions.newTransactionsPopin',
+            { refreshLink, smart_count: this.newTransactionCount }),
       });
     } else {
-      // TODO TODO TODO TODO: translate!!!
       this.newTransactionPopIn = this.createChild(PopInMessage, {
-        // messageText: app.polyglot.t('userPage.store.listingDataChangedPopin',
-            // { refreshLink }),
-        messageText: `${this.newTransactionCount} new transactions ${refreshLink}`,
+        messageText: app.polyglot.t('wallet.transactions.newTransactionsPopin',
+            { refreshLink, smart_count: this.newTransactionCount }),
       });
 
       this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => {
