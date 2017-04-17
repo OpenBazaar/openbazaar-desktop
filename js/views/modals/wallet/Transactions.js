@@ -45,6 +45,10 @@ export default class extends baseVw {
       }
     });
 
+    this.listenTo(app.settings, 'change:localCurrency', () => {
+      this.renderTransactions(this.collection.models, 'replace');
+    });
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -126,7 +130,7 @@ export default class extends baseVw {
   }
 
   get transactionsPerFetch() {
-    return 5;
+    return 25;
   }
 
   get isFetching() {
@@ -183,6 +187,8 @@ export default class extends baseVw {
     });
 
     this.transactionsFetch.always(() => {
+      if (this.isRemoved()) return;
+
       if (this.transactionFetchState) {
         if (!this.collection.length) {
           this.render();
@@ -193,6 +199,7 @@ export default class extends baseVw {
         }
       }
     }).fail((jqXhr) => {
+      // TODO TODO ignore aborts.
       this.fetchFailed = true;
 
       if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
@@ -206,6 +213,8 @@ export default class extends baseVw {
         });
       }
     }).done(data => {
+      if (this.isRemoved()) return;
+
       if (typeof this.countAtFirstFetch === 'undefined') {
         this.countAtFirstFetch = data.count;
       }
