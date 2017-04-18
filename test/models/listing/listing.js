@@ -62,40 +62,38 @@ describe('the Listing model', () => {
   it('converts fiat prices from integer to decimal format in parse', () => {
     const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
-      vendorListings: [
-        {
-          metadata: {
-            pricingCurrency: 'USD',
-          },
-          item: {
-            price: 123,
-          },
-          shippingOptions: [
-            {
-              services: [
-                {
-                  price: 123,
-                },
-                {
-                  price: 234,
-                },
-              ],
-            },
-            {
-              services: [
-                {
-                  price: 456,
-                },
-              ],
-            },
-          ],
-          coupons: [
-            {
-              priceDiscount: 1333,
-            },
-          ],
+      listing: {
+        metadata: {
+          pricingCurrency: 'USD',
         },
-      ],
+        item: {
+          price: 123,
+        },
+        shippingOptions: [
+          {
+            services: [
+              {
+                price: 123,
+              },
+              {
+                price: 234,
+              },
+            ],
+          },
+          {
+            services: [
+              {
+                price: 456,
+              },
+            ],
+          },
+        ],
+        coupons: [
+          {
+            priceDiscount: 1333,
+          },
+        ],
+      },
     });
 
     expect(parsed.item.price).to.equal(1.23);
@@ -108,43 +106,41 @@ describe('the Listing model', () => {
   it('converts BTC prices from Satoshi to BTC format in parse', () => {
     const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
-      vendorListings: [
-        {
-          metadata: {
-            pricingCurrency: 'BTC',
-          },
-          item: {
-            price: 271453590,
-          },
-          shippingOptions: [
-            {
-              services: [
-                {
-                  price: 271453590,
-                },
-                {
-                  price: 873927651,
-                },
-              ],
-            },
-            {
-              services: [
-                {
-                  price: 281649276,
-                },
-              ],
-            },
-          ],
-          coupons: [
-            {
-              priceDiscount: 1333,
-            },
-            {
-              priceDiscount: 281649276,
-            },
-          ],
+      listing: {
+        metadata: {
+          pricingCurrency: 'BTC',
         },
-      ],
+        item: {
+          price: 271453590,
+        },
+        shippingOptions: [
+          {
+            services: [
+              {
+                price: 271453590,
+              },
+              {
+                price: 873927651,
+              },
+            ],
+          },
+          {
+            services: [
+              {
+                price: 281649276,
+              },
+            ],
+          },
+        ],
+        coupons: [
+          {
+            priceDiscount: 1333,
+          },
+          {
+            priceDiscount: 281649276,
+          },
+        ],
+      },
     });
 
     expect(parsed.item.price).to.equal(2.71453590);
