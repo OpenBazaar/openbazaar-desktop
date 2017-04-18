@@ -172,6 +172,10 @@
                      // large font size gives it too much vertical padding
         }
       }
+
+      .btn .ion-android-open {
+        padding-left: 5px;
+      }
     }
 
     .fetchErrorWrap {
