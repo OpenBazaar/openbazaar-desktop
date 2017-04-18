@@ -202,7 +202,8 @@ export default class extends baseVw {
         }
       }
     }).fail((jqXhr) => {
-      // TODO TODO ignore aborts.
+      if (jqXhr.statusText === 'abort') return;
+
       this.fetchFailed = true;
 
       if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
@@ -299,6 +300,7 @@ export default class extends baseVw {
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.estimatedFeeCache.forEach(cacheObj => cacheObj.xhr.abort());
     super.remove();
   }
 

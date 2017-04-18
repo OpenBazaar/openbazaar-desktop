@@ -62,12 +62,13 @@ export default class extends baseVw {
       retryConfirmOn: false,
     });
 
-    $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`))
+    this.retryPost = $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`))
       .always(() => {
         this.setState({
           retryInProgress: false,
         });
       }).fail((xhr) => {
+        if (xhr.statusText === 'abort') return;
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
         openSimpleMessage(
           app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
@@ -153,6 +154,7 @@ export default class extends baseVw {
   }
 
   remove() {
+    if (this.retryPost) this.retryPost.abort();
     $(document).off(null, this.boundDocClick);
     this.timeAgoInterval.cancel();
     super.remove();
