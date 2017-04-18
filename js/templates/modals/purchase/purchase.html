@@ -51,6 +51,7 @@
       <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
       <section class="contentBox padLg clrP clrBr clrSh3 s-shipping">
         <% // inject shipping view here %>
+        This will be the shipping section. It's only visible if the listing has shipping data.
       </section>
       <% } %>
       <section class="contentBox padLg clrP clrBr clrSh3">
@@ -102,6 +103,9 @@
       <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph hide js-closeBtn">
         <%= ob.polyT('purchase.close') %>
       </button>
+    </section>
+    <section class="receipt">
+
     </section>
   </div>
 </div>

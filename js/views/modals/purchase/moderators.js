@@ -4,33 +4,55 @@ import baseVw from '../../baseVw';
 import app from '../../../app';
 import Moderators from '../../../collections/purchase/Moderators';
 import { getCurrentConnection } from '../../../utils/serverConnect';
+import { openSimpleMessage } from '../SimpleMessage';
+import ModCard from '../../ModeratorCard';
 
 export default class extends baseVw {
   constructor(options = {}) {
+    if (!options.fetchErrorTitle || !options.fetchErrorMsg) {
+      throw new Error('Please provide error text for the moderator fetch.');
+    }
+    if (!options.cardState) {
+      throw new Error('Please provide a default card state.');
+    }
+    if (!options.notSelected) {
+      throw new Error('Please provide a default not selected state.');
+    }
     const opts = {
       // set defaults
       apiPath: 'fetchprofiles',
       async: true,
       moderatorIDs: [],
+      method: 'POST',
       include: '',
+      purchase: false,
+      singleSelect: false,
+      selectFirst: false,
       // defaults will be overwritten by passed in options
       ...options,
     };
 
+    if (opts.apiPath === 'moderators' && opts.moderatorIDs.length) {
+      throw new Error('If you provide a list of IDs, the path should not be moderators.');
+    }
+
     if (opts.apiPath === 'moderators') {
-      // this will fetch available moderators
+      // this will fetch available moderators without POSTing a list of IDs.
       opts.include = 'profile';
+      opts.method = 'GET';
     }
 
     super(opts);
     this.options = opts;
     this.moderatorsCol = new Moderators();
-    this.notFetchedYet = this.options.moderatorIDs;
-    this.fetching = false;
+    this.listenTo(this.moderatorsCol, 'add', (model, collection, colOpts) => {
+      this.addMod(model, collection, colOpts);
+    });
+    this.modCards = [];
   }
 
   className() {
-    return 'moderators';
+    return 'moderatorsList';
   }
 
   getModeratorsByID(IDs = this.options.moderatorIDs) {
@@ -38,11 +60,21 @@ export default class extends baseVw {
     const includeString = op.include ? `&include=${op.include}` : '';
     const url = app.getServerUrl(`ob/${op.apiPath}?async=${op.async}${includeString}`);
 
+    this.notFetchedYet = IDs;
+    this.fetchingMods = IDs;
     if (IDs.length) {
-      this.fetching = true;
-      this.fetch = $.post({
+      this.$moderatorsStatus.removeClass('hide').text(app.polyglot.t('moderators.moderatorsLoading',
+          { remaining: IDs.length, total: IDs.length }));
+    }
+    // abort any unfinished fetch
+    if (this.fetch) this.fetch.abort();
+    // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
+    if (IDs.length || this.options.method === 'GET') {
+      this.$moderatorsWrapper.addClass('processing');
+      this.fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
+        method: this.options.method,
       })
           .done((data) => {
             if (op.async) {
@@ -54,11 +86,16 @@ export default class extends baseVw {
                   const eventData = event.jsonData;
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
-                    this.peerIDError(eventData.peerId, eventData.error);
+                    if (this.options.moderatorIDs.indexOf(eventData.peerId) !== -1) {
+                      eventData.profile = { peerID: eventData.peerId };
+                      this.moderatorsCol.add(eventData.profile);
+                    }
                   } else if (eventData.id === socketID) {
-                    // make sure it's a valid moderator
-                    eventData.profile.id = eventData.peerId;
-                    this.moderatorsCol.add(eventData.profile);
+                    // don't add random profiles that are not moderators
+                    if (this.options.method === 'GET' && eventData.profile.moderator &&
+                    eventData.profile.moderatorInfo || this.options.method === 'POST') {
+                      this.moderatorsCol.add(eventData.profile);
+                    }
                   }
                 });
               } else {
@@ -74,15 +111,16 @@ export default class extends baseVw {
               this.notFetchedYet = [];
               this.checkNotFetched();
             }
+          })
+          .fail((...args) => {
+            if (this.isRemoved()) return;
+            let msg = this.options.fetchErrorMsg;
+            if (this.args[0] && args[0].responseJSON) {
+              msg = `${msg}\n\n${args[0].responseJSON.reason}}`;
+            }
+            openSimpleMessage(this.options.fetchErrorTitle, msg);
+            this.$moderatorsWrapper.removeClass('processing');
           });
-    }
-  }
-
-  peerIDError(ID, error) {
-    if (this.options.moderatorIDs.indexOf(ID) !== -1) {
-      console.log(ID)
-      console.log(error)
-      this.removeNotFetched(ID);
     }
   }
 
@@ -92,40 +130,48 @@ export default class extends baseVw {
   }
 
   checkNotFetched() {
-    if (this.notFetchedYet.length < 1) {
+    const nfYet = this.notFetchedYet.length;
+    if (nfYet === 0) {
       // all ids have been fetced
-      this.fetching = false;
+      this.$moderatorsWrapper.removeClass('processing');
+      this.$moderatorsStatus.addClass('hide').text('');
+    } else {
+      this.$moderatorsStatus.text(app.polyglot.t('moderators.moderatorsLoading',
+          { remaining: nfYet, total: this.fetchingMods.length }));
     }
   }
 
-  fetchAddress() {
-    if (this.receiveMoney) {
-      this.receiveMoney.setState({
-        fetching: true,
+  addMod(model, collection, opts) {
+    if (model) {
+      let cardState = this.options.cardState;
+      // if required, set the first moderator to be pre-selected
+      if (this.options.selectFirst && !this.firstSelected) {
+        this.firstSelected = true;
+        cardState = 'selected';
+      }
+      const newModView = this.createChild(ModCard, {
+        model,
+        purchase: this.options.purchase,
+        notSelected: this.options.notSelected,
+        cardState,
+        ...opts,
       });
+      this.listenTo(newModView, 'changeModerator', (data) => {
+        this.trigger('changeModerator', data);
+        if (this.options.singleSelect) this.deselectOthers(data);
+      });
+      this.$moderatorsWrapper.append(newModView.render().$el);
+      this.removeNotFetched(model.id);
+      this.modCards.push(newModView);
     }
+  }
 
-    this.needAddressFetch = false;
-
-    let address = '';
-
-    const fetch = $.get(app.getServerUrl('wallet/address/'))
-        .done((data) => {
-          address = data.address;
-        }).always(() => {
-          if (this.isRemoved()) return;
-
-          if (this.receiveMoney && !this.isAdressFetching()) {
-            this.receiveMoney.setState({
-              fetching: false,
-              address,
-            });
-          }
-        });
-
-    this.addressFetches.push(fetch);
-
-    return fetch;
+  deselectOthers(data) {
+    this.modCards.forEach((mod) => {
+      if (mod.model.get('peerID') !== data.guid) {
+        mod.changeSelectState(this.options.notSelected);
+      }
+    });
   }
 
   remove() {
@@ -139,6 +185,8 @@ export default class extends baseVw {
       }));
 
       super.render();
+      this.$moderatorsWrapper = this.$('.js-moderatorsWrapper');
+      this.$moderatorsStatus = this.$('.js-moderatorsStatus');
     });
 
     return this;

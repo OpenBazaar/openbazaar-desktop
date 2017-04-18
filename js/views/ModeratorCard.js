@@ -9,7 +9,8 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
-    this.cardState = options.cardState || 'view';
+    this.notSelected = options.notSelected || 'unselected';
+    this.cardState = options.cardState || this.notSelected;
 
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
@@ -22,21 +23,30 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-moderatorCard': 'viewDetails',
+      'click .js-moderatorCard': 'clickModerator',
+      'click .js-selectBtn': 'clickSelectBtn',
     };
   }
 
-  viewDetails() {
-    if (this.cardState === 'view') {
-      const modModal = launchModeratorDetailsModal({ model: this.model });
-      this.listenTo(modModal, 'addAsModerator', () => {
-        this.changeSelectState('selected');
-        this.trigger('changeModerator', { selected: true, guid: this.model.id });
-      });
-    } else if (this.cardState === 'selected') {
-      this.changeSelectState('deselected');
+  clickModerator() {
+    const modModal = launchModeratorDetailsModal({
+      model: this.model,
+      purchase: this.options.purchase,
+      cardState: this.cardState,
+    });
+    this.listenTo(modModal, 'addAsModerator', () => {
+      this.changeSelectState('selected');
+      this.trigger('changeModerator', { selected: true, guid: this.model.id });
+    });
+  }
+
+  clickSelectBtn(e) {
+    e.stopPropagation();
+
+    if (this.cardState === 'selected') {
+      this.changeSelectState(this.notSelected);
       this.trigger('changeModerator', { selected: false, guid: this.model.id });
-    } else if (this.cardState === 'deselected') {
+    } else {
       this.changeSelectState('selected');
       this.trigger('changeModerator', { selected: true, guid: this.model.id });
     }

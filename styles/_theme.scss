@@ -121,6 +121,10 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1);
 }
 
+.clrTEmph1Disabled {
+  @include textColor($emphasis1Disabled);
+}
+
 .clrTEmph2 {
   @include textColor($emphasis2);
 }

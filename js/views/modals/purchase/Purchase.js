@@ -26,16 +26,27 @@ export default class extends BaseModal {
     this.vendor = options.vendor;
     this.order = new Order({
       items: [{
-        listingHash: '',
+        listingHash: this.listing.listingHash,
         quantity: 1,
       }],
     });
 
-    console.log(this.listing)
+    const fetchErrorTitle = app.polyglot.t('purchase.errors.moderatorsTitle');
+    const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
+
 
     this.moderators = new Moderators({
       moderatorIDs: this.listing.moderators || [],
+      fetchErrorTitle,
+      fetchErrorMsg,
+      purchase: true,
+      cardState: 'unselected',
+      notSelected: 'unselected',
+      singleSelect: true,
+      selectFirst: true,
     });
+
+    this.listenTo(this.moderators, 'changeModerator', ((data) => this.changeModerator(data)));
 
     this.countryData = getTranslatedCountries(app.settings.get('language'))
         .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
@@ -59,6 +70,8 @@ export default class extends BaseModal {
   events() {
     return {
       'click #purchaseModerated': 'clickModerated',
+      'click .js-payBtn': 'clickPayBtn',
+      'click .js-pendingBtn': 'clickPendingBtn',
       ...super.events(),
     };
   }
@@ -87,9 +100,24 @@ export default class extends BaseModal {
   }
 
   clickModerated(e) {
-    this.$moderatorSection.toggleClass('hide', $(e.target).attr('checked'));
+    const checked = $(e.target).attr('checked');
+    this.$moderatorSection.toggleClass('hide', checked);
   }
 
+  changeModerator(data) {
+    this.order.set({ moderator: data.guid });
+  }
+
+  clickPayBtn() {
+    // if the moderator checkbox was deselected, remove the moderator
+    if (!this.$('#purchaseModerated').attr('checked')) {
+      this.order.set({ moderator: '' });
+    }
+  }
+
+  clickPendingBtn() {
+
+  }
 
   get $popInMessages() {
     return this._$popInMessages ||
@@ -104,6 +132,21 @@ export default class extends BaseModal {
   get $moderatorSection() {
     return this._$moderatorSection ||
         (this._$moderatorSection = this.$('.js-moderator'));
+  }
+
+  get $payBtn() {
+    return this._$payBtn ||
+        (this._$payBtn = this.$('.js-payBtn'));
+  }
+
+  get $pendingBtn() {
+    return this._$pendingBtn ||
+        (this._$pendingBtn = this.$('.js-pendingBtn'));
+  }
+
+  get $closeBtn() {
+    return this._$closeBtn ||
+        (this._$closeBtn = this.$('.js-closeBtn'));
   }
 
   remove() {
@@ -128,6 +171,9 @@ export default class extends BaseModal {
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
       this._$moderatorSection = null;
+      this._$payBtn = null;
+      this._$pendingBtn = null;
+      this._$closeBtn = null;
 
       // add the moderators section content
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);

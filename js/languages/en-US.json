@@ -159,7 +159,9 @@
     "view": "View",
     "FIXED": "%{amount}**",
     "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**"
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "failed": "The information for this moderator failed to load.",
+    "invalid": "This user is not a moderator, or does not have valid moderator data."
   },
   "moderatorDetails": {
     "messageButton": "Message",
@@ -783,7 +785,15 @@
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
-    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened."
+    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
+    "chooseModerator": "Choose This Moderator",
+    "errors": {
+      "moderatorsTitle": "Moderator Data Failted to Load",
+      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded."
+    }
+  },
+  "moderators": {
+    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
