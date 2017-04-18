@@ -81,7 +81,7 @@
           }
         %>
         <a class="btn clrP clrBr clrSh2" href="<%= blockChainUrl %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
-        <% if (ob.canBumpFee) { %>
+        <% if (ob.canBumpFee && ob.status === 'STUCK') { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
             btnText: ob.polyT('wallet.transactions.transaction.retryTransactionBtn')
