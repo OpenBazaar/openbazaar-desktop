@@ -50,6 +50,10 @@ export default class extends baseVw {
       this.renderTransactions(this.collection.models, 'replace');
     });
 
+    this.listenTo(app.localSettings, 'change:bitcoinUnit', () => {
+      this.renderTransactions(this.collection.models, 'replace');
+    });
+
     const serverSocket = getSocket();
 
     if (serverSocket) {

@@ -3,7 +3,7 @@ import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import ListingCard from '../ListingCard';
-import UserCard from '../userCard';
+import UserCard from '../UserCard';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 
