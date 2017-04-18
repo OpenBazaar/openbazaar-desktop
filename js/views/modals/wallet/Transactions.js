@@ -28,6 +28,7 @@ export default class extends baseVw {
     this.fetchFailed = false;
     this.fetchErrorMessage = '';
     this.newTransactionCount = 0;
+    this.popInTimeouts = [];
 
     this.listenTo(this.collection, 'update', (cl, opts) => {
       if (opts.changes.added.length) {
@@ -75,13 +76,15 @@ export default class extends baseVw {
             // But, at this point we don't know if these are such transactions, so we'll
             // check back in a bit and see if they've already been added or not. It's a matter
             // of the socket coming in before the AJAX call returns.
-            setTimeout(() => {
+            const timeout = setTimeout(() => {
               if (this.collection.get(e.jsonData.wallet.txid)) {
                 this.newTransactionCount -= 1;
               } else {
                 this.showNewTransactionPopup();
               }
-            }, 300);
+            }, 1500);
+
+            this.popInTimeouts.push(timeout);
           }
         }
 
@@ -295,6 +298,7 @@ export default class extends baseVw {
 
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
+    this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
     super.remove();
   }
 
@@ -334,6 +338,8 @@ export default class extends baseVw {
 
   render() {
     this.newTransactionCount = 0;
+    this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.popInTimeouts = [];
     if (this.newTransactionPopIn) {
       this.newTransactionPopIn.remove();
       this.newTransactionPopIn = null;
