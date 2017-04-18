@@ -1,3 +1,4 @@
+import app from '../../app';
 import { integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
@@ -72,6 +73,11 @@ export default class extends BaseModel {
       // this response is coming from the collection, we'll
       // do nothing and let the collection handle it.
     } else {
+      if (returnVal.memo.startsWith('Fee bump of ')) {
+        returnVal.translatedMemo = app.polyglot.t('wallet.transactions.transaction.feeBumpOf',
+          { address: returnVal.memo.slice(12) });
+      }
+
       returnVal = {
         ...returnVal,
         // Convert satoshi to BTC
