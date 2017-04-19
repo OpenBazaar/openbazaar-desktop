@@ -741,7 +741,8 @@
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, etc",
-      "unlimitedQuantityLabel": "unlimited"
+      "unlimitedQuantityLabel": "unlimited",
+      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
