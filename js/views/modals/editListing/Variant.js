@@ -11,9 +11,6 @@ export default class extends BaseView {
 
     super(options);
     this.options = options;
-
-    console.log('pickles');
-    window.pickles = this.model;
   }
 
   className() {

@@ -460,7 +460,6 @@ export default class extends BaseModal {
     const index = this.variantsView.views
       .indexOf(e.view);
 
-    console.log('howdy sir');
     this.variantsView.setModelData(index);
   }
 
@@ -707,8 +706,6 @@ export default class extends BaseModal {
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
-      console.log('soup');
-      window.soup = this.model;
     }
 
     // render so errrors are shown / cleared
