@@ -11,6 +11,9 @@ export default class extends BaseView {
 
     super(options);
     this.options = options;
+
+    console.log('pickles');
+    window.pickles = this.model;
   }
 
   className() {
@@ -34,6 +37,7 @@ export default class extends BaseView {
   // Sets the model based on the current data in the UI.
   setModelData() {
     const formData = this.getFormData();
+    formData.variants = formData.variants.map(variantName => ({ name: variantName }));
     this.model.set(formData);
   }
 

@@ -36,7 +36,21 @@ export default class extends baseVw {
       });
     }
 
-    this.listenTo(this.optionsCl, 'update change', () => this.render());
+    this.listenTo(this.optionsCl, 'change:name', () => this.render());
+    this.listenTo(this.optionsCl, 'update', (cl, opts) => {
+      if (opts.changes.added.length) {
+        this.bindOptionVariantsUpdate(opts.changes.added);
+      }
+
+      this.render();
+    });
+    this.bindOptionVariantsUpdate(this.optionsCl.models);
+  }
+
+  bindOptionVariantsUpdate(options = []) {
+    options.forEach(option => {
+      this.listenTo(option.get('variants'), 'update', () => this.render());
+    });
   }
 
   setCollectionData() {
@@ -85,10 +99,11 @@ export default class extends baseVw {
       const option = options.at(index);
 
       if (option) {
-        const choice = option.get('variants')[variantIndex];
+        const choice = option.get('variants')
+          .at(variantIndex);
 
         if (choice) {
-          id += `${id.length ? '/' : ''}${option.id}-${choice}`;
+          id += `${id.length ? '/' : ''}${option.id}-${choice.get('name')}`;
         }
       }
     });
@@ -115,7 +130,7 @@ export default class extends baseVw {
         const choices = [];
 
         combo.forEach((comboIndex, index) => {
-          choices.push(options[index].variants[comboIndex]);
+          choices.push(options[index].variants[comboIndex].name);
         });
 
         let data = {
