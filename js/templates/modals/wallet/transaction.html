@@ -63,12 +63,13 @@
     <div class="flex gutterH clrT2 tx6">
       <div class="" style="flex-shrink: 0"><%= timeAgoAndConfirmCount %></div>
       <div class="" style="flex-shrink: 0;max-width: 80px">
-        <div class="noOverflow"><%= ob.txid %></div>
+        <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
       </div>
       <div>
         <div class="noOverflow"><%= ob.translatedMemo %></div>
       </div>
     </div>
+    
   </div>
   <div class="col">
     <div class="flexHRight">
@@ -130,3 +131,6 @@
   </div>
   <% } %>
 </div>
+<% if (ob.copiedIndicatorOn) { %>
+<div class="copiedIndicator clrT tx6">Copied to clipboard</div>
+<% } %>

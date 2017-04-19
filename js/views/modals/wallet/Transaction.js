@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
+import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../utils/';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
@@ -43,6 +44,7 @@ export default class extends baseVw {
       'click .js-retryPmt': 'onClickRetryPmt',
       'click .js-retryConfirmCancel': 'onClickRetryConfirmCancel',
       'click .js-btnConfirmRetrySend': 'onClickRetryConfirmed',
+      'click .js-txidLink': 'onClickTxidLink',
     };
   }
 
@@ -111,6 +113,21 @@ export default class extends baseVw {
     this.closeRetryConfirmBox();
   }
 
+  onClickTxidLink(e) {
+    this.setState({
+      copiedIndicatorOn: true,
+    });
+
+    clipboard.writeText($(e.target).text());
+    clearTimeout(this.copiedIndicatorTimeout);
+
+    this.copiedIndicatorTimeout = setTimeout(() => {
+      this.setState({
+        copiedIndicatorOn: false,
+      });
+    }, 1000);
+  }
+
   getState() {
     return this._state;
   }
@@ -157,6 +174,7 @@ export default class extends baseVw {
     if (this.retryPost) this.retryPost.abort();
     $(document).off(null, this.boundDocClick);
     this.timeAgoInterval.cancel();
+    clearTimeout(this.copiedIndicatorTimeout);
     super.remove();
   }
 
