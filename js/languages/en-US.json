@@ -591,9 +591,9 @@
         },
         "retryFailDialogTitle": "Unable to retry payment",
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
-        "noTransactionsPlaceholder": "You have no transactions.",
         "feeBumpOf": "Fee bump of %{address}"
       },
+      "noTransactionsPlaceholder": "You have no transactions.",
       "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}"
     }
   },
