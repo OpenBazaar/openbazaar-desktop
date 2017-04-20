@@ -1,27 +1,31 @@
-<div class="topControls flexRow">
-  <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn">
-    <div class="flexVCent walletIconWrap"><%= ob.walletIconTmpl() %></div>
-    <span><%= ob.polyT('wallet.title') %></span>
-    <a class="jsModalClose tx6 txU"><%= ob.polyT('wallet.closeLink') %></a>
-  </div>
-  <div class="js-btcTickerContainer btcTickerContainer"></div>
-</div>
 <div class="flexColRows gutterV">
-  <div class="contentBox padMd clrP clrBr clrSh3">
-    <div class="flexRow">
-      <div class="col3">
-        <div class="flexColRows">
-          <h2 class="h3">Funds</h2>
-          <div class="statsWrap flexColRows clrBr">
-            <div class="js-walletStatsContainer"></div>
-            <div class="buttonWrap">
-              <a class="btn clrP clrBr clrSh2 btnReceiveMoney js-toggleSendReceive"><%= ob.polyT('wallet.btnReceiveMoney') %></a>
-              <a class="btn clrP clrBr clrSh2 btnSendMoney js-toggleSendReceive"><%= ob.polyT('wallet.btnSendMoney') %></a>
+  <div class="topControls flexRow">
+    <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn">
+      <div class="flexVCent walletIconWrap"><%= ob.walletIconTmpl() %></div>
+      <span><%= ob.polyT('wallet.title') %></span>
+      <a class="jsModalClose tx6 txU"><%= ob.polyT('wallet.closeLink') %></a>
+    </div>
+    <div class="js-btcTickerContainer btcTickerContainer"></div>
+  </div>
+  <div class="flexColRows gutterV">
+    <div class="contentBox padMd clrP clrBr clrSh3">
+      <div class="flexRow">
+        <div class="col3">
+          <div class="flexColRows">
+            <h2 class="h3"><%= ob.polyT('wallet.fundsHeader') %></h2>
+            <div class="statsWrap flexColRows clrBr">
+              <div class="js-walletStatsContainer"></div>
+              <div class="buttonWrap">
+                <a class="btn clrP clrBr clrSh2 btnReceiveMoney js-toggleSendReceive"><%= ob.polyT('wallet.btnReceiveMoney') %></a>
+                <a class="btn clrP clrBr clrSh2 btnSendMoney js-toggleSendReceive"><%= ob.polyT('wallet.btnSendMoney') %></a>
+              </div>
             </div>
           </div>
         </div>
+        <div class="col9 sendReceiveContainer js-sendReceiveContainer"></div>
       </div>
-      <div class="col9 sendReceiveContainer js-sendReceiveContainer"></div>
     </div>
   </div>
+
+  <div class="contentBox clrP clrBr clrSh3 js-transactionContainer"></div>
 </div>

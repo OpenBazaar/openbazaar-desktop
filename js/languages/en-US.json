@@ -546,6 +546,7 @@
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
+    "fundsHeader": "Funds",
     "btnReceiveMoney": "Receive Money",
     "btnSendMoney": "Send Money",
     "btcCurrencyLabel": "Bitcoin",
@@ -571,7 +572,30 @@
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
       }      
-    }    
+    },
+    "transactions": {
+      "header": "Transactions",
+      "transaction": {
+        "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+        "outgoingText": "%{fiatBtcPairing} to %{address}",
+        "incomingText": "%{fiatBtcPairing} received",
+        "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
+        "viewDetailsBtn": "View Details",
+        "retryTransactionBtn": "Retry",
+        "retryPaymentConfirmBox": {
+          "title": "Retry Payment",
+          "body": "%{fiatBtcPairing}%{asterisk} will be added to retry the payment",
+          "subText": "%{asterisk}estimated price",
+          "btnCancel": "Cancel",
+          "btnConfirmSend": "Send"
+        },
+        "retryFailDialogTitle": "Unable to retry payment",
+        "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
+        "feeBumpOf": "Fee bump of %{address}"
+      },
+      "noTransactionsPlaceholder": "You have no transactions.",
+      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}"
+    }
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
@@ -894,12 +918,19 @@
     "provideAmountNumber": "Please provide an amount as a number.",
     "amountGreaterThanZero": "The amount must be greater than zero.",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
-  },  
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
     "UBTC": "µBTC",
     "SATOSHI": "sat"
+  },
+  "bitcoinCurrencyFormat": {
+    "shortBTC": "%{symbol}%{amount}",
+    "longBTC": "%{amount} %{symbol}",
+    "MBTC": "%{amount} %{symbol}",
+    "UBTC": "%{amount} %{symbol}",
+    "SATOSHI": "%{amount} %{symbol}"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

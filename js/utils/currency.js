@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
@@ -96,9 +97,15 @@ export function formatPrice(price, isBtc = false) {
  * appropriate for the given locale.
  */
 // todo: check currency is one of our currencies
-export function formatCurrency(amount, currency,
-     locale = app && app.settings && app.settings.get('language') || 'en-US',
-     btcUnit = app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC') {
+export function formatCurrency(amount, currency, options) {
+  const opts = {
+    locale: app && app.settings && app.settings.get('language') || 'en-US',
+    btcUnit: app && app.localSettings &&
+      app.localSettings.get('bitcoinUnit') || 'BTC',
+    useBtcSymbol: true, // if true use ฿ for btc instead of BTC
+    ...options,
+  };
+
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -107,7 +114,7 @@ export function formatCurrency(amount, currency,
     throw new Error('Please provide an amount that is not NaN');
   }
 
-  if (typeof locale !== 'string') {
+  if (typeof opts.locale !== 'string') {
     throw new Error('Please provide a locale as a string');
   }
 
@@ -121,7 +128,7 @@ export function formatCurrency(amount, currency,
     let curSymbol;
     let bitcoinConvertUnit;
 
-    switch (btcUnit) {
+    switch (opts.btcUnit) {
       case 'MBTC':
         curSymbol = app.polyglot.t('bitcoinCurrencyUnits.MBTC');
         bitcoinConvertUnit = 'mBTC';
@@ -138,22 +145,29 @@ export function formatCurrency(amount, currency,
         // The default is BTC. Using the ฿ char for the Bitcoin symbol which will be
         // replaced by the real Bitcoin symbol once we bring in a Bitcoin font, e.g:
         // http://www.righto.com/2015/02/how-to-display-bitcoin-symbol-using_14.html
-        curSymbol = '฿';
+        curSymbol = opts.useBtcSymbol ? '฿' : 'BTC';
         bitcoinConvertUnit = 'BTC';
     }
 
     // going to use USD just to know the localized placement of the $, which we'll swap
     // out with the appropriate Bitcoin symbol
-    formattedCurrency = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency: 'USD',
+    const formattedAmount = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 8,
     }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
 
-    formattedCurrency = formattedCurrency.replace('$', curSymbol);
+    let btcUnit = opts.btcUnit;
+
+    if (opts.btcUnit === 'BTC') {
+      btcUnit = opts.useBtcSymbol ? 'shortBTC' : 'longBTC';
+    }
+
+    formattedCurrency = app.polyglot.t(`bitcoinCurrencyFormat.${btcUnit}`, {
+      amount: formattedAmount,
+      symbol: curSymbol,
+    });
   } else {
-    formattedCurrency = new Intl.NumberFormat(locale, {
+    formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',
       currency,
       minimumFractionDigits: 2,
@@ -268,5 +282,6 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
-  return formatCurrency(convertedAmt, outputFormat, opts.locale, opts.btcUnit);
+  return formatCurrency(convertedAmt, outputFormat,
+    _.omit(opts, 'skipConvertIfNoExchangeRateData'));
 }

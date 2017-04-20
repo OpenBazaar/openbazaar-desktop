@@ -3,31 +3,14 @@ import app from '../../js/app';
 import sinon from 'sinon';
 import { expect } from 'chai';
 import { describe, it, before, after } from 'mocha';
+import Polyglot from 'node-polyglot';
+import enUsTranslations from '../../js/languages/en-US.json';
 import * as cur from '../../js/utils/currency';
-
-const translations = {
-  bitcoinCurrencyUnits: {
-    BTC: 'BTC',
-    MBTC: 'mBTC',
-    UBTC: 'µBTC',
-    SATOSHI: 'sat',
-  },
-};
 
 describe('the currency utility module', () => {
   before(function () {
-    app.polyglot = {
-      t: (str) => {
-        let retStr = '';
-
-        if (str.startsWith('bitcoinCurrencyUnits')) {
-          const btcUnit = str.split('.')[1];
-          retStr = translations.bitcoinCurrencyUnits[btcUnit];
-        }
-
-        return retStr;
-      },
-    };
+    app.polyglot = new Polyglot();
+    app.polyglot.extend(enUsTranslations);
   });
 
   it('correctly converts a fiat amount from an integer to decimal', () => {
@@ -121,7 +104,9 @@ describe('the currency utility module', () => {
         let errorThrown = false;
 
         try {
-          cur.formatCurrency(500, 'USD', 99);
+          cur.formatCurrency(500, 'USD', {
+            locale: 99,
+          });
         } catch (e) {
           errorThrown = true;
         }
@@ -131,7 +116,9 @@ describe('the currency utility module', () => {
         errorThrown = false;
 
         try {
-          cur.formatCurrency(500, 'USD', null);
+          cur.formatCurrency(500, 'USD', {
+            locale: null,
+          });
         } catch (e) {
           errorThrown = true;
         }
@@ -139,7 +126,9 @@ describe('the currency utility module', () => {
         expect(errorThrown).to.equal(true);
 
         try {
-          cur.formatCurrency(500, 'USD', false);
+          cur.formatCurrency(500, 'USD', {
+            locale: false,
+          });
         } catch (e) {
           errorThrown = true;
         }
@@ -148,51 +137,56 @@ describe('the currency utility module', () => {
       });
 
     it('properly localizes a fiat amount', () => {
-      expect(cur.formatCurrency(523, 'USD', 'en-US'))
+      expect(cur.formatCurrency(523, 'USD'))
         .to
         .equal('$523.00');
 
-      expect(cur.formatCurrency(523.987, 'USD', 'en-US'))
+      expect(cur.formatCurrency(523.987, 'USD'))
         .to
         .equal('$523.99');
 
-      expect(cur.formatCurrency(523.12, 'USD', 'en-US'))
+      expect(cur.formatCurrency(523.12, 'USD'))
         .to
         .equal('$523.12');
     });
 
     it('properly localizes a BTC amount', () => {
-      expect(cur.formatCurrency(523, 'BTC', 'en-US'))
+      expect(cur.formatCurrency(523, 'BTC'))
         .to
         .equal('฿523');
 
-      expect(cur.formatCurrency(523.987, 'BTC', 'en-US'))
+      expect(cur.formatCurrency(523.987, 'BTC'))
         .to
         .equal('฿523.987');
 
-      expect(cur.formatCurrency(523.12, 'BTC', 'en-US'))
+      expect(cur.formatCurrency(523.12, 'BTC'))
         .to
         .equal('฿523.12');
-      expect(cur.formatCurrency(523.12345678, 'BTC', 'en-US'))
+      expect(cur.formatCurrency(523.12345678, 'BTC'))
         .to
         .equal('฿523.12345678');
     });
 
     it('properly localizes a BTC amount with the correct bitcoin units', () => {
-      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'BTC'))
-        .to
+      expect(cur.formatCurrency(523.3456, 'BTC', {
+        btcUnit: 'BTC',
+      })).to
         .equal('฿523.3456');
 
-      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'MBTC'))
-        .to
-        .equal(`${translations.bitcoinCurrencyUnits.MBTC}523,345.6`);
+      expect(cur.formatCurrency(523.3456, 'BTC', {
+        btcUnit: 'MBTC',
+      })).to
+        .equal(`523,345.6 ${app.polyglot.phrases['bitcoinCurrencyUnits.MBTC']}`);
 
-      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'UBTC'))
-        .to
-        .equal(`${translations.bitcoinCurrencyUnits.UBTC}523,345,600`);
-      expect(cur.formatCurrency(523.3456, 'BTC', 'en-US', 'SATOSHI'))
-        .to
-        .equal(`${translations.bitcoinCurrencyUnits.SATOSHI}52,334,560,000`);
+      expect(cur.formatCurrency(523.3456, 'BTC', {
+        btcUnit: 'UBTC',
+      })).to
+        .equal(`523,345,600 ${app.polyglot.phrases['bitcoinCurrencyUnits.UBTC']}`);
+
+      expect(cur.formatCurrency(523.3456, 'BTC', {
+        btcUnit: 'SATOSHI',
+      })).to
+        .equal(`52,334,560,000 ${app.polyglot.phrases['bitcoinCurrencyUnits.SATOSHI']}`);
     });
   });
 
