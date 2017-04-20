@@ -1,5 +1,5 @@
 import { Collection } from 'backbone';
-import UserShort from '../models/UserShort';
+import UserShort from '../models/UserCard';
 import app from '../app';
 
 

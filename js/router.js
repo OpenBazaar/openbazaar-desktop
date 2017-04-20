@@ -5,10 +5,11 @@ import { getPageContainer } from './utils/selectors';
 import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
+import Search from './views/search/Search';
 import TransactionsPage from './views/TransactionsPage';
 import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
-import Profile from './models/Profile';
+import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 
 export default class ObRouter extends Router {
@@ -17,12 +18,13 @@ export default class ObRouter extends Router {
     this.options = options;
 
     const routes = [
-      [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'userViaHandle'],
-      [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)$/, 'user'],
-      ['transactions', 'transactions'],
-      ['transactions/:tab', 'transactions'],
-      ['connected-peers', 'connectedPeers'],
-      ['*path', 'pageNotFound'],
+      [/^@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'userViaHandle'],
+      [/^(Qm[a-zA-Z0-9]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'user'],
+      ['(ob://)transactions(/)', 'transactions'],
+      ['(ob://)transactions/:tab(/)', 'transactions'],
+      ['(ob://)connected-peers(/)', 'connectedPeers'],
+      ['(ob://)search(?query)', 'search'],
+      ['(ob://)*path', 'pageNotFound'],
     ];
 
     routes.slice(0)
@@ -36,21 +38,39 @@ export default class ObRouter extends Router {
     });
   }
 
+  standardizedRoute(route = location.hash) {
+    let standardized = route;
+
+    if (standardized.startsWith('#')) {
+      standardized = standardized.slice(1);
+    }
+
+    if (standardized.startsWith('/')) {
+      standardized = standardized.slice(1);
+    }
+
+    if (standardized.endsWith('/')) {
+      standardized = standardized.slice(0, standardized.length - 1);
+    }
+
+    return standardized;
+  }
+
   setAddressBarText() {
-    if (
-      location.hash.startsWith('#transactions') ||
-      location.hash.startsWith('#test-')
-    ) {
+    const route = this.standardizedRoute();
+
+    if (route.startsWith('transactions') || route.startsWith('ob://transactions')) {
       // certain pages should not have their route visible
       // in the address bar
       app.pageNav.setAddressBar('');
     } else {
-      app.pageNav.setAddressBar(location.hash.slice(1));
+      app.pageNav.setAddressBar(route.startsWith('ob://') ? route : `ob://${route}`);
     }
   }
 
   execute(callback, args) {
     app.loadingModal.open();
+    this.navigate(this.standardizedRoute(), { replace: true });
 
     // This block is intentionally duplicated here and in loadPage. It's
     // here because we want to remove any current views (and have them
@@ -146,14 +166,14 @@ export default class ObRouter extends Router {
       profileFetch = $.Deferred().resolve();
       profile = app.profile;
     } else {
-      profile = new Profile({ id: guid });
+      profile = new Profile({ peerID: guid });
       profileFetch = profile.fetch();
     }
 
     if (state === 'store') {
       if (deepRouteParts[0]) {
         listing = new Listing({
-          listing: { slug: deepRouteParts[0] },
+          slug: deepRouteParts[0],
         }, { guid });
 
         listingFetch = listing.fetch();
@@ -218,6 +238,12 @@ export default class ObRouter extends Router {
     });
 
     this.once('will-route', () => (peerFetch.abort()));
+  }
+
+  search(query) {
+    this.loadPage(
+      new Search({ query })
+    );
   }
 
   userNotFound() {

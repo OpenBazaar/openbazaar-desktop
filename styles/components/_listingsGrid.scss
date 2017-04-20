@@ -1,13 +1,68 @@
+/* The listingsGrid is used anywhere were a grid of listings is shown. Currently this includes
+   the store and search results views. Make sure to check both when making changes to this file.
+ */
 .listingsGrid {
   flex-wrap: wrap;
+  justify-content: space-between;
+  position: relative;
+  z-index: 0; // contain any positioned elements
+
+  &:before,
+  &:after {
+    // this creates a pair of pseudo elements that fill any gaps in the last row of the grid
+    // this only works when the grid is 3 across. We'll need a fancier solution for other numbers
+    content: '';
+    width: 225px;
+    order: 999999999;
+  }
 
   .listingCard {
-    margin: 0 $padMd $padMd 0;
+    margin-bottom: $padMd;
     font-size: $tx5b;
+  }
 
-    // todo: adjust this when full width listings is implemented
-    &:nth-child(3n) {
-      margin-right: 0;
+  .userCard {
+    // user cards can be shown in test results, style them to look like listing cards
+    // TODO: design a better look for these when they're actually used
+    width: 225px;
+    height: 283px;
+
+    .shortHeader {
+      width: 223px;
+      height: 225px;
+      margin-bottom: 0;
+
+      .userIcon {
+        top: 201px;
+        right: 8px;
+        left: auto;
+        border: none;
+      }
+
+      .userControls {
+        bottom: auto;
+        right: auto;
+        left: $pad;
+        top: $pad;
+      }
+    }
+
+    .content {
+      height: 56px;
+      padding: $pad;
+
+      .contentTop {
+        height: 72px;
+
+        .userName,
+        .userDescription {
+          font-size: $tx5b;
+          -webkit-line-clamp: 1;
+        }
+      }
+      .contentBottom {
+        display: none;
+      }
     }
   }
 
@@ -16,10 +71,28 @@
 
     .listingCard {
       margin: 0;
-      border-bottom-width: 0;
+      border-radius: 0;
+      padding: 6px;
+      box-sizing: border-box;
+
+      &:first-child {
+        // we want the first listView row to have a border radius
+        border-top-left-radius: $corner;
+        border-top-right-radius: $corner;
+      }
 
       &:last-child {
-        border-bottom-width: 1px;
+        // we want the last listView row to have a border radius
+        border-bottom-left-radius: $corner;
+        border-bottom-right-radius: $corner;
+      }
+
+      &:not(:last-child) {
+        border-bottom-color: transparent;
+
+        &:hover {
+          border-bottom-color: inherit;
+        }
       }
     }
   }

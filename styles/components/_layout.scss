@@ -10,6 +10,7 @@
 
   & > * {
     flex: 0 1 auto; // children won't grow, but will shrink
+    min-width: 0; // prevent children with long text from causing an overflow
   }
 
   &.reverse {
@@ -49,15 +50,15 @@
 .rowDivV {
   //a vertical divider. Use when you need to separate things without adding a border to one of them
   //use a color class for the background color
-  //only works inside of a flexRow, align-items sets the height
   width: 1px;
+  height: 100%;
 }
 
 .rowDivH {
   //a horizontal divider. Use when you need to separate vertical elements without adding a border to one of them
   //use a color class for the background color
-  //only works inside of a flexRow, align-items sets the width
   height:1px;
+  width: 100%;
 }
 
 .flexCol {
@@ -85,20 +86,28 @@
   }
 }
 
-.simpleFlexCol {
-  display: flex;
-  flex-direction: column;
-}
-
-.flexColRows {
-  //vertical colums that have 100% width and are spaced across the height
+.flexColWide {
+  // a vertical flex column with 100% wide rows
   @extend .flexCol;
-  justify-content: space-between;
-  height: 100%;
 
   & > * {
     width: 100%;
   }
+}
+
+.flexColRows {
+  //vertical colums that have 100% width and are spaced across the height
+  @extend .flexColWide;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.flexCent {
+  //creates a container with centered children
+  @extend .flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 .flexVCent {
@@ -115,6 +124,13 @@
   align-items: flex-end;
 }
 
+.flexVBase {
+  //creates a container with children aligned to the baseline of the parent. Useful for aligning with text.
+  @extend .flex;
+  height: 100%;
+  align-items: baseline;
+}
+
 .flexHCent {
   //creates a container with horizontally centered children
   @extend .flex;
@@ -127,6 +143,17 @@
   @extend .flex;
   justify-content: flex-end;
   text-align: right;
+}
+
+.center {
+  // Creates a container with content vertically and horizontally
+  // center. Requires the parent to have a non-static positioning.
+  @include center();
+}
+
+.simpleFlexCol {
+  display: flex;
+  flex-direction: column;
 }
 
 .flexExpand,           //make a flex element expand to fill the remaining space
@@ -252,9 +279,14 @@
 }
 
 
-.padBg,
-.padBgKids > * {
+.padLg,
+.padLgKids > * {
   padding: $padLg;
+}
+
+.padGi,
+.padGiKids > * {
+  padding: $padGi;
 }
 
 .padStack > *:not(:last-child) {
@@ -287,8 +319,20 @@
   margin-bottom: $padLg;
 }
 
+.rowHg {
+  margin-bottom: $padHg;
+}
+
+.rowGi {
+  margin-bottom: $padGi;
+}
+
 .margRSm {
   margin-right: $padSm;
+}
+
+.margRTn {
+  margin-right: $padTn;
 }
 
 .margR {
@@ -344,6 +388,12 @@
   &:last-child {
     margin-right: 0;
   }
+}
+
+.gutterHTn > * {
+  @extend .gutterHFlush;
+  margin-right: $padTn;
+  @include colHGutter($padTn);
 }
 
 .gutterHSm > * {
@@ -409,3 +459,12 @@
 .posR {
   position: relative;
 }
+
+.posF {
+  position: fixed;
+}
+
+.width100 {
+  width: 100%;
+}
+

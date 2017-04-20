@@ -4,6 +4,8 @@ import app from '../../app';
 import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
 import Image from './Image';
+import VariantOptions from '../../collections/listing/VariantOptions';
+import Skus from '../../collections/listing/Skus';
 
 class ListingImages extends Collection {
   model(attrs, options) {
@@ -25,15 +27,19 @@ export default class extends BaseModel {
       description: '',
       tags: [],
       categories: [],
-      sku: '',
       nsfw: false,
       condition: 'NEW',
+      images: new ListingImages(),
+      options: new VariantOptions(),
+      skus: new Skus(),
     };
   }
 
   get nested() {
     return {
       images: ListingImages,
+      options: VariantOptions,
+      skus: Skus,
     };
   }
 
@@ -55,7 +61,26 @@ export default class extends BaseModel {
       cats: 10,
       titleLength: 140,
       tagLength: 40,
+      productIdLength: 40,
+      optionCount: 30,
     };
+  }
+
+  get isInventoryTracked() {
+    let isInventoryTracked = false;
+
+    if (this.get('options').length) {
+      // If we have options and at least one has a non-infinite inventory,
+      // we'll consider you to be tracking inventory
+      isInventoryTracked = !!this.get('skus')
+        .find(sku => !sku.get('infiniteInventory'));
+    } else {
+      // If you don't have any options and have the top level as a non-negative
+      // value (i.e. not infiniteInventory), we'll consider you to be tracking inventory
+      isInventoryTracked = this.get('quantity') > 0;
+    }
+
+    return isInventoryTracked;
   }
 
   validate(attrs) {
@@ -120,6 +145,72 @@ export default class extends BaseModel {
     if (attrs.categories && attrs.categories.length > max.cats) {
       addError('categories',
         app.polyglot.t('itemModelErrors.tooManyCats', { maxCats: max.cats }));
+    }
+
+    // quantity and productId are not allowed on the Item in the listing API. Instead they are
+    // accomplished via a "dummy" Sku object. Since that seems a bit klunky, out model will
+    // allow them and the Listing model will do the translation in parse / sync.
+    if (attrs.productId && attrs.productId.length > this.max.productIdLength) {
+      addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
+    }
+
+    if (typeof attrs.quantity !== 'undefined') {
+      // If providing a top-level quantity, we'll validate it. It should only be provided
+      // if you are tracking inventory and have no options (i.e. are not tracking inventory
+      // on the variant level).
+      if (typeof attrs.quantity === 'string' && !attrs.quantity) {
+        addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
+      } else if (typeof attrs.quantity !== 'number') {
+        addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
+      }
+    }
+    // END - quantity and productId
+
+    let maxCombos = 1;
+
+    attrs.options.forEach(option => (maxCombos *=
+      (option.get('variants') && option.get('variants').length || 1)));
+
+    if (attrs.skus.length > maxCombos) {
+      addError('skus', 'You have provided more SKUs than variant combinations.');
+    }
+
+    // ensure no SKUs with the same variantCombo
+    // http://stackoverflow.com/a/24968449/632806
+    const uniqueSkus = attrs.skus.map(sku =>
+      ({ count: 1, name: JSON.stringify(sku.get('variantCombo')) }))
+      .reduce((a, b) => {
+        a[b.name] = (a[b.name] || 0) + b.count;
+        return a;
+      }, {});
+
+    const duplicateSkus = Object.keys(uniqueSkus).filter((a) => uniqueSkus[a] > 1);
+
+    duplicateSkus.forEach(dupeSku => {
+      addError('skus', `Variant combos must be unique. ${dupeSku} is duplicated.`);
+    });
+
+    attrs.skus.forEach(sku => {
+      const varCombo = sku.variantCombo;
+
+      // ensure that each SKU has a variantCombo with the correct length
+      // (which is the length of the options)
+      if (is.array(varCombo)) {
+        // ensure the variantCombo actually corresponds to a provided option.variant value
+        varCombo.forEach((val, index) => {
+          if (!attrs.options[index] ||
+            !attrs.options[index].variants ||
+            !attrs.options[index].variants.length ||
+            !attrs.options[index].variants[val]) {
+            addError('skus', `Invalid variant combo ${JSON.stringify(varCombo)}.`);
+          }
+        });
+      }
+    });
+
+    if (attrs.options.length > this.max.optionCount) {
+      addError('options', app.polyglot.t('itemModelErrors.tooManyOptions',
+        { maxOptionCount: this.max.optionCount }));
     }
 
     errObj = this.mergeInNestedErrors(errObj);

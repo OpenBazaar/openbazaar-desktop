@@ -1,5 +1,6 @@
 .userPage {
   height: 100%;
+  position: relative;
 
   .header {
     background-position: center;
@@ -24,7 +25,6 @@
 
       .informationHeader {
         font-size: $tx5;
-        padding: $padMd2 $padMd2 0 $padMd2;
       }
 
       .listItem > * {
@@ -53,7 +53,7 @@
       width: auto;
       margin: 0 #{-$padMd / 2};
 
-      .userShort {
+      .userCard {
         width: 33.33333333333333%;
         flex: 0 0 auto;
         padding: 0 $padMd / 2 $padMd $padMd / 2;

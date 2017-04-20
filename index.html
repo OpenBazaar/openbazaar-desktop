@@ -1,49 +1,33 @@
 <!-- This file will be run from ./.tmp/, so make paths relative to there -->
 <!DOCTYPE html>
-<html id="ov1">
+<html id="ov1" class="pre-release"><!-- remove pre-release class when released -->
   <head>
     <meta charset="UTF-8">
     <title>OpenBazaar</title>
     <link rel="stylesheet" href="../node_modules/ionicons/css/ionicons.min.css">
-    <link rel="stylesheet" href="../node_modules/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" href="../node_modules/medium-editor/dist/css/medium-editor.min.css">
+    <link rel="stylesheet" href="../node_modules/trumbowyg/dist/ui/trumbowyg.min.css">
+    <link rel="stylesheet" href="../styles/lib/select2.css">
     <link rel="stylesheet" href="./styles/main.css">
   </head>
   <body class="clrT clrS">
     <div id="appFrame">
       <section id="pageNavContainer"></section>
-      <section id="contentFrame">
+      <section id="contentFrame" class="clrBr">
         <div id="pageContainer"></div>
       </section>
-      <section id="chatContainer" class="chat pad box">
-        <div class="padSmKids"><!-- fake chat elements -->
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <div>
-            <a class="chatIcon disc clrBr2 clrSh1 js-navListBtn" style="background-image: url('../imgs/defaultAvatar.png')"></a>
-          </div>
-          <p>Example chat content</p>
-        </section>
-      </section>
+
+      <div id="chatCloseBtn" class="chatCloseBtn js-chatClose ion-ios-close-empty iconBtn clrP clrBr4 clrT2"></div>
+      <div id="chatContainer"></div>
+      <div id="chatConvoContainer" class="clrP clrBr3"></div>
       <section id="statusBar"></section>
     </div>
-    <script>
-      <!--just demo stuff-->
-      let chatToggle = document.getElementById("chatContainer");
-      chatToggle.addEventListener('click', function(){
-        document.body.classList.toggle('chatOpen');
-      })
-    </script>
+    <!-- delete this in production, it's just a warning for pre-alpha releases -->
+    <div id="milestone" class="clrP clrBr clrT">
+      <span class="milestone-inner">
+        <i class="ion-erlenmeyer-flask"></i> Milestone 1 Release. For testing only.
+      </span>
+
+    </div>
     <script>
       // install babel hooks in the renderer process
       require('babel-register');
@@ -52,6 +36,16 @@
     <script>
       <!-- BROWSER_SYNC_PLACEHOLDER (DO NOT REMOVE OR ALTER!) -->
     </script>
+    <script type="text/javascript">
+          window.doorbellOptions = {
+              appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8'
+          };
+          (function(w, d, t) {
+              var hasLoaded = false;
+              function l() { if (hasLoaded) { return; } hasLoaded = true; window.doorbellOptions.windowLoaded = true; var g = d.createElement(t);g.id = 'doorbellScript';g.type = 'text/javascript';g.async = true;g.src = 'https://embed.doorbell.io/button/4990?t='+(new Date().getTime());(d.getElementsByTagName('head')[0]||d.getElementsByTagName('body')[0]).appendChild(g); }
+              if (w.attachEvent) { w.attachEvent('onload', l); } else if (w.addEventListener) { w.addEventListener('load', l, false); } else { l(); }
+              if (d.readyState == 'complete') { l(); }
+          }(window, document, 'script'));
+      </script>
   </body>
 </html>
-

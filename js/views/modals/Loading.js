@@ -7,7 +7,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} loadingModal`;
+    return `${super.className()} loadingModal clrP clrT`;
   }
 
   render() {

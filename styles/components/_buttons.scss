@@ -1,34 +1,33 @@
 .ctrl {
-  height: 35px;
+  height: $buttonHeight;
   padding: 0 24px;
   border-radius: $corner;
   border-width: 1px;
   border-style: solid;
   font-size: $tx5;
-  font-weight: 500;
+  font-weight: 400;
   box-sizing: border-box;
   display: inline-flex;
   vertical-align: middle;
   align-items: center; // centers icons if they are a child element
   justify-content: center;
+  -webkit-user-select: none; // quick clicks will now not highlight
 }
 
 .btn {
   @extend .ctrl;
   cursor: pointer;
   font-weight: 700;
+  transition: border 0.15s ease;
 
-  &:hover {
+  &:hover:not(.btnRadio),
+  &:focus:not(.btnRadio) {
     text-decoration: none;
     cursor: pointer;
-  }
-
-  &:focus {
-    text-decoration: none;
     outline: 0;
   }
 
-  .bar & {
+  .bar &:not(.barBtn) { //add barBtn to any btn that should keep standard button styling
     line-height: $bar;
     height: $bar;
     border: none;
@@ -46,8 +45,47 @@
     border: none;
   }
 
-  &.processing {
-    @include processingOverlay;
+  &.btnProcessing {
+    position: relative;
+
+    .spinner {
+      display: none;
+    }
+
+    &.processing {
+      pointer-events: none;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        z-index: 1;
+      }
+
+      .spinner {
+        position: absolute;
+        display: block;
+        top: 50%;
+        left: 50%;
+        right: 0;
+        bottom: 0;
+        background-color: inherit;
+        transform: translate(-50%, -50%);
+        border-radius: inherit;
+        width: 25px;
+        height: 25px;
+        z-index: 1;
+      }
+    }
+  }
+
+  &.confirmDisabled {
+    border-width: 0;
+    @include disabled;
   }
 }
 
@@ -100,6 +138,7 @@
 .btnTxt {
   @extend .btn;
   border: none;
+  background: none;
 }
 
 .iconBtn {
@@ -107,18 +146,38 @@
   @extend .btn;
   font-size: 2rem;
   padding: 0 12px;
+  width: $buttonHeight;
+}
+
+.iconBtnSm {
+  //this button has only an icon in it and it's smaller than iconBtn
+  @extend .btn;
+  font-size: $tx5;
+  padding: 0;
+  width: 30px;
+  height: 30px;
 }
 
 .btnThin {
   padding: 0 12px;
 }
 
+.btnHg {
+  @extend .btn;
+  font-size: $tx2b;
+  height: 56px;
+}
+
 .btnStrip {
   //creates a set of buttons with no gaps between them
+  overflow: hidden; // clear the floats to avoid layout issues.
+
   & > .btn {
     border-radius: 0;
-    border-right-width: 0;
     float: left; //float left will collapse the button and position it correctly
+  }
+  & > .btn:not(:last-child):not(:hover) {   // on hover use the normal border width
+    border-right-color: transparent;
   }
   & > .btn:first-child {
     border-top-left-radius: $corner;
@@ -127,7 +186,6 @@
   & > .btn:last-child {
     border-top-right-radius: $corner;
     border-bottom-right-radius: $corner;
-    border-right-width: 1px;
   }
 }
 
@@ -170,13 +228,12 @@
 
   &:before {
     //insert a search icon before the text
-    font-family: Ionicons;
-    content: "\f4a5";
+    content: "🔍";
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.75em;
-    left: 0.6em;
+    font-size: 1.45em;
+    left: 8px;
     color: inherit;
   }
 }

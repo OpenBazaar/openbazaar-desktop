@@ -81,7 +81,7 @@ export default class extends baseVw {
 
   messageClick() {
     // activate the chat message
-    console.log('message');
+    app.chat.openConversation(this.model.id);
   }
 
   moreClick() {
@@ -157,15 +157,9 @@ export default class extends baseVw {
       }
     });
 
-    let listingsFetch;
-
-    if (listingsCount) {
-      listingsFetch = this.listings.fetch();
-    }
-
     return this.createChild(this.tabViews.Store, {
       ...opts,
-      initialFetch: listingsFetch,
+      initialFetch: this.listings.fetch(),
       collection: this.listings,
       model: this.model,
     });

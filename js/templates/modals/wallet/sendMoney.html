@@ -1,0 +1,60 @@
+<h2 class="h3 txCtr txUnl">Send Money</h2>
+<form class="padMdKids padStack">
+  <div class="flexRow gutterHLg">
+    <div class="col2">
+      <div class="flexVCent flexHRight">
+        <label for="walletSendTo" class="required"><%= ob.polyT('wallet.sendMoney.toLabel') %></label>
+      </div>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
+      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder') %>">
+    </div>
+  </div>
+  <div class="flexRow gutterHLg">
+    <div class="col2">
+      <div class="flexVCent flexHRight">
+        <label for="walletSendAmount" class="required"><%= ob.polyT('wallet.sendMoney.amountLabel') %></label>
+      </div>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.amount) print(ob.formErrorTmpl({ errors: ob.errors.amount })) %>
+      <div class="inputSelect <% if (ob.saveInProgress) print('disabled') %>">
+        <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.amount %>" data-var-type="number" placeholder="0.00">
+        <select id="walletSendCurrency" name="currency" class="clrBr clrP nestInputRight">
+          <% ob.currencies.forEach((currency) => {%>
+          <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
+          <% }); %>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="flexRow gutterHLg">
+    <div class="col2">
+      <div class="flexVCent flexHRight">
+        <label for="walletSendNote"><%= ob.polyT('wallet.sendMoney.noteLabel') %></label>
+      </div>
+    </div>
+    <div class="col9">
+      <% if (ob.errors.memo) print(ob.formErrorTmpl({ errors: ob.errors.memo })) %>
+      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="<%= ob.polyT('wallet.sendMoney.notePlaceholder') %>">
+    </div>
+  </div>
+  <div class="flexHRight flexVCent gutterH col11">
+    <a class="js-sendMoneyClear"><%= ob.polyT('wallet.sendMoney.clear') %></a>
+    <%= ob.processingButton({
+      className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
+      btnText: ob.polyT('wallet.sendMoney.sendBtn')
+    }) %>    
+  </div>
+</form>
+<div class="js-sendConfirm confirmBox sendConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.sendConfirmOn) print('hide') %>">
+  <div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+  <p class="clrT2"><%= ob.polyT('wallet.sendMoney.sendConfirm.body') %></p>
+  <hr class="clrBr row" />
+
+  <div class="flexHRight flexVCent gutterHLg">
+    <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
+    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a>
+  </div>
+</div>

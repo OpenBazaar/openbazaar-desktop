@@ -1,30 +1,43 @@
-import { ipcRenderer, screen } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
+import moment from 'moment';
 import app from './app';
-import Socket from './utils/Socket';
+import ServerConfigs from './collections/ServerConfigs';
+import ServerConfig from './models/ServerConfig';
+import serverConnect, {
+  events as serverConnectEvents,
+  getSocket,
+} from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
+import { getChatContainer, getBody } from './utils/selectors';
+import Chat from './views/chat/Chat.js';
+import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
+import StartupLoadingModal from './views/modals/StartupLoading';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
-import Profile from './models/Profile';
+import Profile from './models/profile/Profile';
 import Settings from './models/Settings';
+import WalletBalance from './models/wallet/WalletBalance';
 import Followers from './collections/Followers';
-import listingDeleteHandler from './startup/listingDelete';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
-import { getBody } from './utils/selectors';
+import { launchDebugLogModal } from './utils/modalManager';
+import listingDeleteHandler from './startup/listingDelete';
+import { fixLinuxZoomIssue, handleLinks } from './startup';
+import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
+
+fixLinuxZoomIssue();
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
-
-const platform = process.platform;
 
 // initialize language functionality
 function getValidLanguage(lang) {
@@ -37,12 +50,15 @@ function getValidLanguage(lang) {
 
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
+moment.locale(initialLang);
 app.polyglot = new Polyglot();
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
     require(`./languages/${lang}.json`));  // eslint-disable-line global-require
+
+  moment.locale(lang);
 
   const restartLangChangeDialog = new Dialog({
     title: app.polyglot.t('langChangeRestartTitle'),
@@ -60,7 +76,13 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   .open();
 });
 
-app.pageNav = new PageNav();
+// Instantiating our Server Configs collection now since the page nav
+// utilizes it. We'll fetch it later on.
+app.serverConfigs = new ServerConfigs();
+
+app.pageNav = new PageNav({
+  serverConfigs: app.serverConfigs,
+});
 $('#pageNavContainer').append(app.pageNav.render().el);
 
 app.router = new ObRouter();
@@ -69,22 +91,24 @@ app.router = new ObRouter();
 app.statusBar = new StatusBar();
 $('#statusBar').html(app.statusBar.render().el);
 
-// create and launch loading modal
+// Create and launch a startup loading modal which will be
+// used during the startup connecting process.
+const startupLoadingModal = new StartupLoadingModal({
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render().open();
+
+// Create loading modal, which is a shared instance used by
+// the app after the initial connect sequence
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
   removeOnRoute: false,
-}).render().open();
+}).render();
 
-// fix zoom issue on Linux hiDPI
-if (platform === 'linux') {
-  let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
-  if (scaleFactor === 0) {
-    scaleFactor = 1;
-  }
-  getBody().css('zoom', 1 / scaleFactor);
-}
+handleLinks();
 
 const fetchConfigDeferred = $.Deferred();
 
@@ -93,11 +117,17 @@ function fetchConfig() {
     fetchConfigDeferred.resolve(...args);
   }).fail(() => {
     const retryConfigDialog = new Dialog({
-      title: 'Unable to get your server config.',
-      buttons: [{
-        text: 'Retry',
-        fragment: 'retry',
-      }],
+      title: app.polyglot.t('startUp.dialogs.retryConfig.title'),
+      buttons: [
+        {
+          text: app.polyglot.t('startUp.dialogs.btnRetry'),
+          fragment: 'retry',
+        },
+        {
+          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+          fragment: 'manageConnections',
+        },
+      ],
       dismissOnOverlayClick: false,
       dismissOnEscPress: false,
       showCloseButton: false,
@@ -109,7 +139,8 @@ function fetchConfig() {
       setTimeout(() => {
         fetchConfig();
       }, 300);
-    })
+    }).on('click-manageConnections', () =>
+      app.connectionManagmentModal.open())
     .render()
     .open();
   });
@@ -146,7 +177,7 @@ function isOnboardingNeeded() {
             profileFailed = true;
           }
         } else if (jqXhr === settingsFetch) {
-          if (jqXhr.responseJSON && jqXhr.responseJSON.reason === 'sql: no rows in result set') {
+          if (jqXhr.status === 404) {
             onboardSettings = true;
             settingsFailed = false;
           } else {
@@ -158,15 +189,23 @@ function isOnboardingNeeded() {
     .done(() => {
       onboardingNeededDeferred.resolve(false);
     })
-    .fail((jqXhr) => {
+    .fail((xhr) => {
+      const jqXhr = xhr.length ? xhr[0] : xhr;
+
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
-          title: 'Unable to get your profile and settings data.',
+          title: app.polyglot.t('startUp.dialogs.retryOnboardingFetch.title'),
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          buttons: [{
-            text: 'Retry',
-            fragment: 'retry',
-          }],
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+              fragment: 'manageConnections',
+            },
+          ],
           dismissOnOverlayClick: false,
           dismissOnEscPress: false,
           showCloseButton: false,
@@ -178,7 +217,8 @@ function isOnboardingNeeded() {
           setTimeout(() => {
             isOnboardingNeeded();
           }, 300);
-        })
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
         .render()
         .open();
       } else if (onboardProfile || onboardSettings) {
@@ -232,12 +272,20 @@ function onboard() {
     }
 
     const retryOnboardingSaveDialog = new Dialog({
-      title: `Unable to save your ${jqXhr === profileSave ? 'profile' : 'settings'} data.`,
+      title: app.polyglot.t('startUp.dialogs.retryOnboardingSave.title', {
+        type: jqXhr === profileSave ? 'profile' : 'settings',
+      }),
       message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-      buttons: [{
-        text: 'Retry',
-        fragment: 'retry',
-      }],
+      buttons: [
+        {
+          text: app.polyglot.t('startUp.dialogs.btnRetry'),
+          fragment: 'retry',
+        },
+        {
+          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+          fragment: 'manageConnections',
+        },
+      ],
       dismissOnOverlayClick: false,
       dismissOnEscPress: false,
       showCloseButton: false,
@@ -249,7 +297,8 @@ function onboard() {
       setTimeout(() => {
         onboard();
       }, 300);
-    })
+    }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
     .render()
     .open();
   });
@@ -259,15 +308,19 @@ function onboard() {
 
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
-let exchangeRatesFetch;
 let ownFollowingFailed;
+let exchangeRatesFetch;
+let walletBalanceFetch;
+let walletBalanceFetchFailed;
 
 function fetchStartupData() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
+  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch ?
+    app.walletBalance.fetch() : walletBalanceFetch;
 
-  $.whenAll(ownFollowingFetch, exchangeRatesFetch)
+  $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch)
     .progress((...args) => {
       const state = args[1];
 
@@ -276,6 +329,8 @@ function fetchStartupData() {
 
         if (jqXhr === ownFollowingFetch) {
           ownFollowingFailed = true;
+        } else if (jqXhr === walletBalanceFetch) {
+          walletBalanceFetchFailed = true;
         }
       }
     })
@@ -283,23 +338,41 @@ function fetchStartupData() {
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
-      if (ownFollowingFailed) {
+      if (ownFollowingFailed || walletBalanceFetchFailed) {
+        let title = '';
+
+        if (ownFollowingFailed) {
+          title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
+        } else {
+          title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
+        }
+
         const retryFetchStarupDataDialog = new Dialog({
-          title: 'Unable to get data about who you\'re following.',
+          title,
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-          buttons: [{
-            text: 'Retry',
-            fragment: 'retry',
-          }],
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
+              fragment: 'manageConnections',
+            },
+          ],
           dismissOnOverlayClick: false,
           dismissOnEscPress: false,
           showCloseButton: false,
         }).on('click-retry', () => {
           retryFetchStarupDataDialog.close();
-          fetchStartupData();
-        })
-          .render()
-          .open();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => fetchStartupData(), 300);
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
+        .render()
+        .open();
       } else {
         // We don't care if the exchange rate fetch failed, because
         // the exchangeRateSyncer will display a status message about it
@@ -327,12 +400,15 @@ function onboardIfNeeded() {
 }
 
  // let's start our flow - do we need onboarding?,
- // fetching app wide models...
+ // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
-    app.profile = new Profile({ id: data.guid });
+    app.profile = new Profile({ peerID: data.peerID });
 
     app.settings = new Settings();
+    // If the server is running testnet, set that here
+    app.testnet = data.testnet; // placeholder for later when we need this data for purchases
+
     // We'll default our server language to whatever is stored locally.
     app.settings.set('language', app.localSettings.get('language'));
 
@@ -348,6 +424,8 @@ function start() {
     app.ownFollowing = new Followers(null, { type: 'following' });
     app.ownFollowers = new Followers(null, { type: 'followers' });
 
+    app.walletBalance = new WalletBalance();
+
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
         app.pageNav.navigable = true;
@@ -355,59 +433,228 @@ function start() {
         app.loadingModal.close();
         location.hash = location.hash || app.profile.id;
         Backbone.history.start();
+
+        // load chat
+        const chatConvos = new ChatHeads();
+
+        chatConvos.once('request', (cl, xhr) => {
+          xhr.always(() => app.chat.attach(getChatContainer()));
+        });
+
+        app.chat = new Chat({
+          collection: chatConvos,
+          $scrollContainer: getChatContainer(),
+        });
+
+        chatConvos.fetch();
+        $('#chatCloseBtn').on('click', () => (app.chat.close()));
+
+        getChatContainer()
+            .on('mouseenter', () => getBody().addClass('chatHover'))
+            .on('mouseleave', () => getBody().removeClass('chatHover'));
+
+        // have our walletBalance model update from the walletUpdate socket event
+        const serverSocket = getSocket();
+
+        if (serverSocket) {
+          serverSocket.on('message', (e = {}) => {
+            if (e.jsonData.walletUpdate) {
+              const parsedData = app.walletBalance.parse({
+                confirmed: e.jsonData.walletUpdate.confirmed,
+                unconfirmed: e.jsonData.walletUpdate.unconfirmed,
+              });
+
+              app.walletBalance.set(parsedData);
+            }
+          });
+        }
       });
     });
   });
 }
 
-// connect to the API websocket
-// todo: this will be incorporated in the server
-// connection flow
-let socketOpened = false;
-let lostSocketConnectionDialog;
+function connectToServer() {
+  const server = app.serverConfigs.activeServer;
+  let connectAttempt = null;
 
-app.apiSocket = new Socket(app.getSocketUrl());
-app.apiSocket.on('open', () => {
-  if (!socketOpened) {
-    socketOpened = true;
-    if (lostSocketConnectionDialog) lostSocketConnectionDialog.remove();
-    lostSocketConnectionDialog = null;
-    start();
-  } else {
+  startupLoadingModal
+    .setState({
+      msg: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {
+        serverName: server.get('name'),
+        canceLink: '<a class="js-cancel delayBorder">' +
+          `${app.polyglot.t('startUp.startupLoadingModal.canceLink')}</a>`,
+      }),
+      // There's a weird issue where the first time we render a message, it renders the
+      // underline for the link first and then after a brief delay, the text after it. Looks
+      // tacky, so to avoid it, we'll fade in the message.
+      msgClass: 'fadeInAnim',
+    }).on('clickCancel', () => {
+      connectAttempt.cancel();
+      app.connectionManagmentModal.open();
+      startupLoadingModal.close();
+    });
+
+  connectAttempt = serverConnect(app.serverConfigs.activeServer)
+    .done(() => {
+      startupLoadingModal.close();
+      app.loadingModal.open();
+      start();
+    })
+    .fail(() => {
+      app.connectionManagmentModal.open();
+      startupLoadingModal.close();
+      serverConnectEvents.once('connected', () => {
+        app.loadingModal.open();
+        start();
+      });
+    });
+}
+
+// Handle a server connection event.
+let connectedAtLeastOnce = false;
+
+serverConnectEvents.on('connected', () => {
+  app.connectionManagmentModal.setModalOptions({
+    dismissOnEscPress: true,
+    showCloseButton: true,
+  });
+
+  if (connectedAtLeastOnce) {
     location.reload();
+  } else {
+    connectedAtLeastOnce = true;
+    app.connectionManagmentModal.close();
+    if (app.chat) app.chat.show();
   }
 });
 
-app.apiSocket.on('close', () => {
-  if (lostSocketConnectionDialog) return;
-
-  lostSocketConnectionDialog = new Dialog({
-    title: 'Socket connection failure',
-    message: 'We are unable to connect to the API websocket.',
-    buttons: [{
-      text: 'Retry',
-      fragment: 'retry',
-    }],
+// Handle a lost connection.
+serverConnectEvents.on('disconnect', () => {
+  app.connectionManagmentModal.setModalOptions({
     dismissOnOverlayClick: false,
     dismissOnEscPress: false,
     showCloseButton: false,
-  }).on('click-retry', () => {
-    lostSocketConnectionDialog.$('.js-retry').addClass('processing');
-    app.apiSocket.connect();
+  });
 
-    // timeout is slight of hand to make it look like its doing something
-    // in the case of instant failures
-    setTimeout(() => {
-      if (lostSocketConnectionDialog) {
-        lostSocketConnectionDialog.$('.js-retry').removeClass('processing');
-      }
-    }, 300);
-  })
-  .render()
-  .open();
+  if (app.chat) {
+    app.chat.close();
+    app.chat.hide();
+  }
+
+  app.pageNav.navigable = false;
+  app.connectionManagmentModal.open();
 });
 
+// If we have a connection, close the Connection Management modal on a
+// will-route event.
+const onWillRouteCloseConnModal =
+  () => app.connectionManagmentModal.close();
+serverConnectEvents.on('connected', () =>
+  app.router.on('will-route', onWillRouteCloseConnModal));
+serverConnectEvents.on('disconnect', () =>
+  app.router.off('will-route', onWillRouteCloseConnModal));
+
+
+const sendMainActiveServer = (activeServer) => {
+  ipcRenderer.send('active-server-set', {
+    ...activeServer.toJSON(),
+    httpUrl: activeServer.httpUrl,
+    socketUrl: activeServer.socketUrl,
+    authenticate: activeServer.needsAuthentication(),
+  });
+};
+
+// Alert the main process if we are changing the active server.
+app.serverConfigs.on('activeServerChange', (activeServer) =>
+  sendMainActiveServer(activeServer));
+
+// Let's create our Connection Management modal so that it's
+// available to show when needed.
+app.connectionManagmentModal = new ConnectionManagement({
+  removeOnRoute: false,
+  dismissOnOverlayClick: false,
+  dismissOnEscPress: false,
+  showCloseButton: false,
+}).render();
+
+// get the saved server configurations
+app.serverConfigs.fetch().done(() => {
+  if (!app.serverConfigs.length) {
+    // no saved server configurations
+    if (remote.getGlobal('isBundledApp')()) {
+      // for a bundled app, we'll create a
+      // "default" one and try to connect
+      const defaultConfig = new ServerConfig({
+        name: app.polyglot.t('connectionManagement.defaultServerName'),
+        default: true,
+      });
+
+      const save = defaultConfig.save();
+
+      if (save) {
+        save.done(() => {
+          app.serverConfigs.add(defaultConfig);
+          app.serverConfigs.activeServer = defaultConfig;
+          connectToServer();
+        });
+      } else {
+        const validationErr = defaultConfig.validationError;
+
+        // This is developer error.
+        throw new Error('There were one or more errors saving the default server configuration' +
+          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
+      }
+    } else {
+      app.connectionManagmentModal.open();
+      serverConnectEvents.once('connected', () => {
+        app.loadingModal.open();
+        start();
+      });
+    }
+  } else {
+    let activeServer = app.serverConfigs.activeServer;
+
+    if (activeServer) {
+      sendMainActiveServer(activeServer);
+    } else {
+      activeServer = app.serverConfigs.activeServer = app.serverConfigs.at(0);
+    }
+
+    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')()) {
+      // Your active server is the locally bundled server, but you're
+      // not running the bundled app. You have bad data!
+      activeServer.set('default', false);
+    }
+
+    connectToServer();
+  }
+});
+
+// Clear localServer events on browser refresh.
+$(window).on('beforeunload', () => {
+  const localServer = remote.getGlobal('localServer');
+
+  if (localServer) {
+    // Since on a refresh any browser variables go away,
+    // we need to unbind our handlers from the localServer instance.
+    // Otherwise, since that instance lives in the main process
+    // and continues to live beyond a refresg, the app would crash
+    // when a localServer event is triggered for any of those handlers.
+    localServer.off();
+
+    // Let the main process know we've just blown away all the handlers,
+    // since some of them may be main process callbacks that the main
+    // process may want to revive.
+    ipcRenderer.send('renderer-cleared-local-server-events');
+  }
+});
+
+// Handle 'show debug log' requests from the main process.
+ipcRenderer.on('show-server-log', () => launchDebugLogModal());
+
 // manage publishing sockets
+// todo: break the publishing socket startup functionality
+// into its own micro-module in js/startup/
 let publishingStatusMsg;
 let publishingStatusMsgRemoveTimer;
 let unpublishedContent = false;
@@ -434,36 +681,38 @@ function setPublishingStatus(msg) {
   return publishingStatusMsg;
 }
 
-app.apiSocket.on('message', (e) => {
-  if (e.jsonData) {
-    if (e.jsonData.status === 'publishing') {
-      setPublishingStatus({
-        msg: 'Publishing...',
-        type: 'message',
-      });
+serverConnectEvents.on('connected', (connectedEvent) => {
+  connectedEvent.socket.on('message', (e) => {
+    if (e.jsonData) {
+      if (e.jsonData.status === 'publishing') {
+        setPublishingStatus({
+          msg: 'Publishing updates to network...',
+          type: 'message',
+        });
 
-      unpublishedContent = true;
-    } else if (e.jsonData.status === 'error publishing') {
-      setPublishingStatus({
-        msg: 'Publishing failed. <a class="js-retry">Retry</a>',
-        type: 'warning',
-      });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'error publishing') {
+        setPublishingStatus({
+          msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+          type: 'warning',
+        });
 
-      unpublishedContent = true;
-    } else if (e.jsonData.status === 'publish complete') {
-      setPublishingStatus({
-        msg: 'Publishing complete.',
-        type: 'message',
-      });
+        unpublishedContent = true;
+      } else if (e.jsonData.status === 'publish complete') {
+        setPublishingStatus({
+          msg: 'Publishing complete.',
+          type: 'message',
+        });
 
-      unpublishedContent = false;
+        unpublishedContent = false;
 
-      publishingStatusMsgRemoveTimer = setTimeout(() => {
-        publishingStatusMsg.remove();
-        publishingStatusMsg = null;
-      }, 2000);
+        publishingStatusMsgRemoveTimer = setTimeout(() => {
+          publishingStatusMsg.remove();
+          publishingStatusMsg = null;
+        }, 3000);
+      }
     }
-  }
+  });
 });
 
 let unpublishedConfirm;
@@ -497,16 +746,19 @@ ipcRenderer.on('close-attempt', (e) => {
   }
 });
 
-app.apiSocket.on('message', (e) => {
-  if (e.jsonData) {
-    if (e.jsonData.notification) {
-      if (e.jsonData.notification.follow) {
-        app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
-      } else if (e.jsonData.notification.unfollow) {
-        app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+// update ownFollowers based on follow socket communication
+serverConnectEvents.on('connected', (connectedEvent) => {
+  connectedEvent.socket.on('message', (e) => {
+    if (e.jsonData) {
+      if (e.jsonData.notification) {
+        if (e.jsonData.notification.follow) {
+          app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
+        } else if (e.jsonData.notification.unfollow) {
+          app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+        }
       }
     }
-  }
+  });
 });
 
 // initialize our listing delete handler

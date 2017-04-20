@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import 'select2';
+import '../../lib/select2';
 import '../../utils/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
@@ -31,13 +31,15 @@ export default class extends BaseVw {
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
 
-    this.filter = {
+    this.defaultFilter = {
       category: 'all',
       shipsTo: 'any',
       searchTerm: '',
       sortBy: 'PRICE_ASC',
       freeShipping: false,
     };
+
+    this.filter = { ...this.defaultFilter };
 
     this.listingsViewType = app.localSettings.get('listingsGridViewType');
 
@@ -60,8 +62,8 @@ export default class extends BaseVw {
     }
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
-
     this.listenTo(app.settings, 'change:localCurrency', () => (this.showDataChangedMessage()));
+    this.listenTo(app.localSettings, 'change:bitcoinUnit', () => (this.showDataChangedMessage()));
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
       (cl, opts) => {
@@ -90,6 +92,7 @@ export default class extends BaseVw {
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'change .js-sortBySelect': 'onChangeSortBy',
       'click .js-toggleListGridView': 'onClickToggleListGridView',
+      'click .js-clearSearch': 'onClickClearSearch',
     };
   }
 
@@ -155,7 +158,7 @@ export default class extends BaseVw {
     const startTime = Date.now();
 
     xhr.always(() => {
-      if (xhr.state() === 'rejected') {
+      if (xhr.state() === 'rejected' && xhr.status !== 404) {
         // if fetch is triggered by retry button and
         // it immediately fails, it looks like nothing happend,
         // so, we'll make sure it takes a minimum time.
@@ -178,6 +181,16 @@ export default class extends BaseVw {
     this.retryPressed = true;
     this.collection.fetch();
     this.$btnRetry.addClass('processing');
+  }
+
+  onClickClearSearch() {
+    // will reset filters / search text, but maintain sort
+    this.filter = {
+      ...this.defaultFilter,
+      sortBy: this.filter.sortBy,
+    };
+
+    this.render();
   }
 
   onClickToggleListGridView() {
@@ -284,6 +297,7 @@ export default class extends BaseVw {
     const onListingDetailClose = () => app.router.navigate(`${this.model.id}/store`);
 
     this.listingDetail = new ListingDetail({
+      profile: this.model,
       model: listing,
     }).render()
       .open();
@@ -317,6 +331,11 @@ export default class extends BaseVw {
       (this._$listingCount = this.$('.js-listingCount'));
   }
 
+  get $noResults() {
+    return this._$noResults ||
+      (this._$noResults = this.$('.js-noResults'));
+  }
+
   filteredCollection(filter = this.filter, collection = this.collection) {
     const models = collection.models.filter((md) => {
       let passesFilter = true;
@@ -326,7 +345,7 @@ export default class extends BaseVw {
       }
 
       if (this.filter.category !== 'all' &&
-        md.get('category').indexOf(this.filter.category) === -1) {
+        md.get('categories').indexOf(this.filter.category) === -1) {
         passesFilter = false;
       }
 
@@ -427,29 +446,7 @@ export default class extends BaseVw {
     this.setSortFunction(col);
     col.sort();
 
-    // todo: exceptionally tall screens may fit an entire page
-    // with room to spare. Which means no scrollbar, which means subsequent
-    // pages will not load. Handle that case.
-    const storeListingsCol = new Listings(col.slice(0, LISTINGS_PER_PAGE), { guid: this.model.id });
-
-    if (this.storeListings) this.storeListings.remove();
-
-    this.storeListings = new ListingsGrid({
-      collection: storeListingsCol,
-      storeOwner: this.model.id,
-      viewType: this.listingsViewType,
-    });
-
-    getContentFrame().on('scroll', this.storeListingsScrollHandler);
-    const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
-    this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
-    getContentFrame().on('scroll', this.storeListingsScrollHandler);
-
-    if (!this.$listingsContainer[0].contains(this.storeListings.el)) {
-      this.$listingsContainer.empty()
-        .append(this.storeListings.el);
-    }
-
+    this.$listingsContainer.empty();
     const listingCount =
       `<span class="txB">${app.polyglot.t('userPage.store.countListings', col.length)}</span>`;
     const fullListingCount =
@@ -457,7 +454,31 @@ export default class extends BaseVw {
           { countListings: listingCount });
     this.$listingCount.html(fullListingCount);
 
-    this.storeListings.render();
+    if (col.length) {
+      // todo: exceptionally tall screens may fit an entire page
+      // with room to spare. Which means no scrollbar, which means subsequent
+      // pages will not load. Handle that case.
+      const storeListingsCol =
+        new Listings(col.slice(0, LISTINGS_PER_PAGE), { guid: this.model.id });
+
+      if (this.storeListings) this.storeListings.remove();
+
+      this.storeListings = new ListingsGrid({
+        collection: storeListingsCol,
+        storeOwnerProfile: this.model,
+        viewType: this.listingsViewType,
+      });
+
+      getContentFrame().on('scroll', this.storeListingsScrollHandler);
+      const scrollHandler = e => this.storeListingsScroll.call(this, storeListingsCol, e);
+      this.storeListingsScrollHandler = _.debounce(scrollHandler, 100);
+      getContentFrame().on('scroll', this.storeListingsScrollHandler);
+
+      this.$noResults.addClass('hide');
+      this.$listingsContainer.append(this.storeListings.render().el);
+    } else {
+      this.$noResults.removeClass('hide');
+    }
   }
 
   renderCategories(cats = this.collection.categories) {
@@ -508,14 +529,14 @@ export default class extends BaseVw {
     if (this.shippingChangePopIn) this.shippingChangePopIn.remove();
 
     const isFetching = this.fetch && this.fetch.state() === 'pending';
-    const fetchFailed = this.fetch && this.fetch.state() === 'rejected';
+    const fetchFailed = this.fetch && this.fetch.state() === 'rejected'
+      && this.fetch.status !== 404;
 
     loadTemplate('userPage/store.html', (t) => {
       this.$el.html(t({
         isFetching,
         fetchFailed,
-        fetchFailReason: this.fetch && this.fetch.state() === 'rejected' &&
-          this.fetch.responseText || '',
+        fetchFailReason: this.fetchFailed && this.fetch.responseText || '',
         filter: this.filter,
         countryList: this.countryList,
         shipsToSelected: this.filter.shipsTo || 'any',
@@ -530,6 +551,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$popInMessages = null;
+    this._$noResults = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,

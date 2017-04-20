@@ -1,4 +1,9 @@
 .settings {
+  form {
+    label {
+      line-height: 2rem;
+    }
+  }
 
   .modalContent {
     .tabContent {
@@ -14,6 +19,19 @@
     }
   }
 
+  .avatarPreview {
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 50%;
+
+    .cropit-preview-image-container {
+      border-radius: 50%;
+      background-image: url(../../imgs/defaultAvatar.png);
+      background-position: center;
+      background-size: cover;
+    }
+  }
+
   .avatarPreview,
   .headerPreview {
     width: 120px;
@@ -21,7 +39,6 @@
    // box-sizing: border-box;
 
     .cropit-preview-image-container {
-      border-radius: inherit;
       overflow: hidden;
       z-index: 1; // fixes bug in Chrome where the image inside would not be hidden by border radius.
     }
@@ -30,6 +47,12 @@
   .headerPreview {
     width: 474px;
     height: 136px;
+
+    .cropit-preview-image-container {
+      background-image: url(../../imgs/defaultHeader.png);
+      background-position: center;
+      background-size: cover;
+    }
   }
 
   .zoomWarning {
@@ -47,7 +70,8 @@
 
   .settingsAddresses {
     .addresses {
-      margin-bottom: $marg;
+      margin-top: $padMd;
+      margin-bottom: $padMd;
 
       .addressBox {
         padding: $padMd;
@@ -55,6 +79,7 @@
         line-height: 1.3;
         height: 100%;
         box-sizing: border-box;
+        border-radius: $corner;
         position: relative;
         flex: 0 0 auto;
 
@@ -70,21 +95,82 @@
         }
       }
     }
+  }
 
-    &.processing {
-      @include processingOverlay;
+  .settingsPage {
+    .previewBox {
+      width: $formElementHeight;
+      height: $formElementHeight;
+      border-style: solid;
+      border-width: 1px;
+    }
+  }
 
-      &::after {
-        background: none;
-        pointer-events: none;
+  .settingsStore {
+
+    .modBox {
+      min-height: 175px;
+
+      .noModsAdded {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        position: absolute;
       }
 
-      & .settingsTabFormWrapper.mouseMovedDuringSave .settingsTabFormWrapperInner {
-        @include processingOverlay;
+      &.hasMods .noModsAdded {
+        display: none;
+      }
 
-        &::after {
-          background-color: rgba(0, 0, 0, 0.3);
-          content: '';
+      .browseMore {
+        display: none;
+        position: absolute;
+        right: 0;
+        bottom: 100%;
+        padding: 0;
+        height: 16px;
+        margin-bottom: 7px;
+      }
+
+      &.hasMods .browseMore {
+        display: block;
+      }
+
+      .moderatorCard {
+
+        &:last-child {
+
+          .moderatorCardSeperator {
+            display: none;
+          }
+        }
+
+        &:nth-child(-n+2) {
+
+          // always show the first 2
+          .moderatorCardSeperator {
+            display: block;
+          }
+        }
+      }
+
+      &.modBoxByID {
+        display: none;
+        min-height: 0;
+
+        &.hasMods,
+        &.processing {
+          display: block;
+          min-height: 95px;
+        }
+
+        // in the modByID container, always hide the last seperator
+        .moderatorCard:last-child {
+          .moderatorCardSeperator {
+            display: none;
+          }
         }
       }
     }

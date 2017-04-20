@@ -1,11 +1,19 @@
-<div class="pad tx4">
-  <h1><%= ob.polyT('connectedPeersPage.heading') %></h1>
-  <p><em><%= ob.polyT('connectedPeersPage.infoMessage') %></em></p>
-  <% if (ob.peers.length) { %>
-    <ul>
-    <% ob.peers.forEach(peer => print(`<li><a href="#${peer}">${peer}</a></li>`)) %>
-    </ul>
-  <% } else { %>
-    <p><%= ob.polyT('connectedPeersPage.noResults') %></p>
-  <% } %>
+<div class="pageContent">
+  <div class="rowLg">
+    <div class="flex">
+      <h1 class="flexExpand"><%= ob.polyT('connectedPeersPage.heading') %></h1>
+      <div class="tx4 border clrBr clrP pad"><%= ob.polyT('connectedPeersPage.totalPeers', { totalPeers: ob.peers.length }) %></div>
+    </div>
+  </div>
+  <div class="userPageFollow flexRow js-peerWrapper"></div>
+
+  <div class="js-morePeers hide">
+    <hr class="clrBr">
+    <a class="btn clrBr clrP js-morePeersBtn">Load More</a>
+  </div>
 </div>
+
+<% if (!ob.peers.length) { %>
+  <p><%= ob.polyT('connectedPeersPage.noResults') %></p>
+<% } %>
+

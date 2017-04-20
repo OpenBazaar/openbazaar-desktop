@@ -1,11 +1,13 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
-import 'select2';
+import '../../../lib/select2';
+import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
-import { MediumEditor } from 'medium-editor';
 import '../../../utils/velocityUiPack.js';
+import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
+import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage from '../SimpleMessage';
@@ -13,9 +15,16 @@ import loadTemplate from '../../../utils/loadTemplate';
 import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
+import Coupon from '../../../models/listing/Coupon';
+import VariantOption from '../../../models/listing/VariantOption';
 import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
+import Coupons from './Coupons';
+import Variants from './Variants';
+import VariantInventory from './VariantInventory';
+import InventoryManagement from './InventoryManagement';
+import SkuField from './SkuField';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -25,7 +34,6 @@ export default class extends BaseModal {
 
     const opts = {
       removeOnClose: true,
-      modelContentClass: 'modalContent clrP clrBr border',
       ...options,
     };
 
@@ -43,7 +51,24 @@ export default class extends BaseModal {
           this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
         }
 
-        this._origModel.set(this.model.toJSON());
+        const updatedData = this.model.toJSON();
+
+        // Will parse out some sku attributes that are specific to the variant
+        // inventory view.
+        updatedData.item.skus = updatedData.item.skus.map(sku =>
+          _.omit(sku, 'mappingId', 'choices'));
+
+        if (updatedData.item.quantity === undefined) {
+          this._origModel.get('item')
+            .unset('quantity');
+        }
+
+        if (updatedData.item.productID === undefined) {
+          this._origModel.get('item')
+            .unset('productID');
+        }
+
+        this._origModel.set(updatedData);
       });
 
       // A change event won't fire on a parent model if only nested attributes change.
@@ -54,13 +79,12 @@ export default class extends BaseModal {
       // event emitter in models/listing/index.js.
     });
 
-    this.innerListing = this.model.get('listing');
     this.selectedNavTabIndex = 0;
-    this.createMode = !(this.model.lastSyncedAttrs.listing &&
-      this.model.lastSyncedAttrs.listing.slug);
+    this.createMode = !(this.model.lastSyncedAttrs &&
+      this.model.lastSyncedAttrs.slug);
     this.photoUploads = [];
-    this.images = this.innerListing.get('item').get('images');
-    this.shippingOptions = this.innerListing.get('shippingOptions');
+    this.images = this.model.get('item').get('images');
+    this.shippingOptions = this.model.get('shippingOptions');
     this.shippingOptionViews = [];
 
     loadTemplate('modals/editListing/uploadPhoto.html',
@@ -70,8 +94,6 @@ export default class extends BaseModal {
     this.listenTo(this.images, 'remove', this.onRemoveImage);
 
     this.listenTo(this.shippingOptions, 'add', (shipOptMd) => {
-      this.$('.js-sectionShipping').addClass('hasShippingOptions');
-
       const shipOptVw = this.createShippingOptionView({
         listPosition: this.shippingOptions.length,
         model: shipOptMd,
@@ -82,19 +104,51 @@ export default class extends BaseModal {
     });
 
     this.listenTo(this.shippingOptions, 'remove', (shipOptMd, shipOptCl, removeOpts) => {
-      if (!this.shippingOptions.length) {
-        this.$('.js-sectionShipping').removeClass('hasShippingOptions');
-      }
-
       const [splicedVw] = this.shippingOptionViews.splice(removeOpts.index, 1);
       splicedVw.remove();
       this.shippingOptionViews.slice(removeOpts.index)
         .forEach(shipOptVw => (shipOptVw.listPosition = shipOptVw.listPosition - 1));
     });
+
+    this.listenTo(this.shippingOptions, 'update', (cl, updateOpts) => {
+      if (!(updateOpts.changes.added.length || updateOpts.changes.removed.length)) {
+        return;
+      }
+
+      this.$addShipOptSectionHeading
+        .text(app.polyglot.t('editListing.shippingOptions.optionHeading',
+          { listPosition: this.shippingOptions.length + 1 }));
+    });
+
+    this.coupons = this.model.get('coupons');
+    this.listenTo(this.coupons, 'update', () => {
+      if (this.coupons.length) {
+        this.$couponsSection.addClass('expandedCouponView');
+      } else {
+        this.$couponsSection.removeClass('expandedCouponView');
+      }
+    });
+
+    this.variantOptionsCl = this.model.get('item')
+      .get('options');
+
+    this.listenTo(this.variantOptionsCl, 'update', this.onUpdateVariantOptions);
+
+    this.$el.on('scroll', () => {
+      if (this.el.scrollTop > 57 && !this.$el.hasClass('fixedNav')) {
+        this.$el.addClass('fixedNav');
+      } else if (this.el.scrollTop <= 57 && this.$el.hasClass('fixedNav')) {
+        this.$el.removeClass('fixedNav');
+      }
+    });
+
+    if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+      this.$el.addClass('notTrackingInventory');
+    }
   }
 
   className() {
-    return `${super.className()} editListing tabbedModal modalTop`;
+    return `${super.className()} editListing tabbedModal modalScrollPage`;
   }
 
   events() {
@@ -111,12 +165,16 @@ export default class extends BaseModal {
       'click .js-addReturnPolicy': 'onClickAddReturnPolicy',
       'click .js-addTermsAndConditions': 'onClickAddTermsAndConditions',
       'click .js-addShippingOption': 'onClickAddShippingOption',
+      'click .js-btnAddCoupon': 'onClickAddCoupon',
+      'click .js-addFirstVariant': 'onClickAddFirstVariant',
+      'keyup .js-variantNameInput': 'onKeyUpVariantName',
+      'click .js-scrollToVariantInventory': 'onClickScrollToVariantInventory',
       ...super.events(),
     };
   }
 
   get MAX_PHOTOS() {
-    return this.model.get('listing').get('item').max.images;
+    return this.model.get('item').max.images;
   }
 
   onClickReturn() {
@@ -161,6 +219,8 @@ export default class extends BaseModal {
     } else {
       $(e.target).val(trimmedVal);
     }
+
+    this.variantInventory.render();
   }
 
   onChangeContractType(e) {
@@ -243,7 +303,7 @@ export default class extends BaseModal {
 
     this.$inputPhotoUpload.val('');
 
-    const currPhotoLength = this.innerListing.get('item')
+    const currPhotoLength = this.model.get('item')
       .get('images')
       .length;
 
@@ -329,7 +389,7 @@ export default class extends BaseModal {
           this.$photoUploadingLabel.addClass('hide');
 
           new SimpleMessage({
-            title: app.polyglot.t('editListing.errors.unableToLoadImagesBody',
+            title: app.polyglot.t('editListing.errors.unableToLoadImages',
               { smart_count: errored }),
           })
           .render()
@@ -362,6 +422,97 @@ export default class extends BaseModal {
           new Service(),
         ],
       }));
+  }
+
+  onClickAddCoupon() {
+    this.coupons.add(new Coupon());
+
+    if (this.coupons.length === 1) {
+      this.$couponsSection.find('.coupon input[name=title]')
+        .focus();
+    }
+  }
+
+  onClickAddFirstVariant() {
+    this.variantOptionsCl.add(new VariantOption());
+
+    if (this.variantOptionsCl.length === 1) {
+      this.$variantsSection.find('.variant input[name=name]')
+        .focus();
+    }
+  }
+
+  onKeyUpVariantName(e) {
+    // wait until they stop typing
+    if (this.variantNameKeyUpTimer) {
+      clearTimeout(this.variantNameKeyUpTimer);
+    }
+
+    this.variantNameKeyUpTimer = setTimeout(() => {
+      const index = $(e.target).closest('.variant')
+        .index();
+
+      this.variantsView.setModelData(index);
+    }, 150);
+  }
+
+  onVariantChoiceChange(e) {
+    const index = this.variantsView.views
+      .indexOf(e.view);
+
+    this.variantsView.setModelData(index);
+  }
+
+  onUpdateVariantOptions() {
+    if (this.variantOptionsCl.length) {
+      this.$variantsSection.addClass('expandedVariantsView');
+      this.skuField.setState({ variantsPresent: true });
+
+      if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
+        this.inventoryManagement.setState({
+          trackBy: 'TRACK_BY_VARIANT',
+        });
+      }
+    } else {
+      this.$variantsSection.removeClass('expandedVariantsView');
+      this.skuField.setState({ variantsPresent: false });
+
+      if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
+        this.inventoryManagement.setState({
+          trackBy: 'TRACK_BY_FIXED',
+        });
+      }
+    }
+
+    this.$variantInventorySection.toggleClass('hide',
+      !this.shouldShowVariantInventorySection);
+  }
+
+  onClickScrollToVariantInventory() {
+    this.scrollTo(this.$variantInventorySection);
+  }
+
+  get shouldShowVariantInventorySection() {
+    return !!this.variantOptionsCl.length;
+  }
+
+  /**
+   * Will return true if we have at least one variant option with at least
+   * one choice.
+   */
+  get haveVariantOptionsWithChoice() {
+    if (this.variantOptionsCl.length) {
+      const atLeastOneHasChoice = this.variantOptionsCl.find(variantOption => {
+        const choices = variantOption.get('variants');
+        return choices && choices.length;
+      });
+
+      if (atLeastOneHasChoice) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   uploadImages(images) {
@@ -409,21 +560,35 @@ export default class extends BaseModal {
     this.$inputPhotoUpload.trigger('click');
   }
 
+  scrollTo($el) {
+    if (!$el) {
+      throw new Error('Please provide a jQuery element to scroll to.');
+    }
+
+    // Had this initially in Velocity, but after markup re-factor, it
+    // doesn't work consistently, so we'll go old-school for now.
+    this.$el
+      .animate({
+        scrollTop: $el.position().top,
+      }, {
+        complete: () => {
+          setTimeout(
+            () => this.$el.on('scroll', this.throttledOnScroll),
+            100);
+        },
+      }, 400);
+  }
+
   onScrollLinkClick(e) {
     const index = $(e.target).index();
     this.selectedNavTabIndex = index;
     this.$scrollLinks.removeClass('active');
     $(e.target).addClass('active');
-    this.$scrollContainer.off('scroll', this.throttledOnScrollContainer);
-
-    this.$scrollToSections.eq(index)
-      .velocity('scroll', {
-        container: this.$scrollContainer,
-        complete: () => this.$scrollContainer.on('scroll', this.throttledOnScrollContainer),
-      });
+    this.$el.off('scroll', this.throttledOnScroll);
+    this.scrollTo(this.$scrollToSections.eq(index));
   }
 
-  onScrollContainer() {
+  onScroll() {
     let index = 0;
     let keepLooping = true;
 
@@ -434,41 +599,93 @@ export default class extends BaseModal {
         this.selectedNavTabIndex = index;
         keepLooping = false;
       } else {
-        index += 1;
+        if (index === this.$scrollToSections.length - 1) {
+          keepLooping = false;
+        } else {
+          index += 1;
+        }
       }
     }
   }
 
   onSaveClick() {
     const formData = this.getFormData(this.$formFields);
+    const item = this.model.get('item');
 
     this.$saveButton.addClass('disabled');
 
-    // set the data for our nested Shipping Option views
+    // set model / collection data for various child views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
+    this.variantsView.setCollectionData();
+    this.variantInventory.setCollectionData();
+    this.couponsView.setCollectionData();
 
-    // if any shipping options have a type of 'LOCAL_PICKUP', we'll
-    // clear out any services that may be there
-    this.innerListing.get('shippingOptions').forEach(shipOpt => {
-      if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-        shipOpt.set('services', []);
+    if (item.get('options').length) {
+      // If we have options, we shouldn't be providing a top-level quantity or
+      // productID.
+      item.unset('quantity');
+      item.unset('productID');
+
+      // If we have options and are not tracking inventory, we'll set the infiniteInventory
+      // flag for any skus.
+      if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+        item.get('skus')
+          .forEach(sku => {
+            sku.set('infiniteInventory', true);
+          });
       }
-    });
+    } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+      // If we're not tracking inventory and don't have any variants, we should provide a top-level
+      // quantity as -1, so it's considered infinite.
+      formData.item.quantity = -1;
+    }
 
     this.model.set(formData);
-    const save = this.model.save();
+
+    // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
+    if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+      this.model.get('shippingOptions').reset();
+    } else {
+      // If any shipping options have a type of 'LOCAL_PICKUP', we'll
+      // clear out any services that may be there.
+      this.model.get('shippingOptions').forEach(shipOpt => {
+        if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+          shipOpt.set('services', []);
+        }
+      });
+    }
+
+    const serverData = this.model.toJSON();
+    serverData.item.skus = serverData.item.skus.map(sku => (
+      // The variant inventory view adds some stuff to the skus collection that
+      // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
+      // with the save while still allowing it to stay in the collection.
+      _.omit(sku, 'mappingId', 'choices')
+    ));
+
+    const save = this.model.save({}, {
+      attrs: serverData,
+    });
 
     if (save) {
       const savingStatusMsg = app.statusBar.pushMessage({
         msg: 'Saving listing...',
         type: 'message',
         duration: 99999999999999,
+      }).on('clickViewListing', () => {
+        const url = `#${app.profile.id}/store/${this.model.get('slug')}`;
+
+        // This couldn't have been a simple href because that URL may already be the
+        // page we're on, with the Listing Detail likely obscured by this modal. Since
+        // the url wouldn't be changing, clicking that anchor would do nothing, hence
+        // the use of loadUrl.
+        Backbone.history.loadUrl(url);
       });
 
       save.always(() => this.$saveButton.removeClass('disabled'))
         .fail((...args) => {
           savingStatusMsg.update({
-            msg: `Listing <em>${this.model.toJSON().listing.item.title}</em> failed to save.`,
+            msg: `Listing <em>${this.model.toJSON().item.title}</em> failed to save.`,
             type: 'warning',
           });
 
@@ -481,26 +698,57 @@ export default class extends BaseModal {
           .render()
           .open();
         }).done(() => {
-          const listingUrl = `#${app.profile.id}/store/${this.model.get('listing').get('slug')}`;
-          savingStatusMsg.update(`Listing ${this.model.toJSON().listing.item.title}` +
-            ` saved. <a href="${listingUrl}">view</a>`);
+          savingStatusMsg.update(`Listing ${this.model.toJSON().item.title}` +
+            ' saved. <a class="js-viewListing">view</a>');
 
           setTimeout(() => savingStatusMsg.remove(), 6000);
         });
     } else {
       // client side validation failed
       this.$saveButton.removeClass('disabled');
-
-      // temporary for debugging purposes
-      console.error('client side validation failed');
-      console.error(this.model.validationError);
     }
 
     // render so errrors are shown / cleared
-    this.render(() => {
-      const $firstErr = this.$('.errorList:first');
-      if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-    });
+    this.render(!!save);
+    const $firstErr = this.$('.errorList:first');
+    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+  }
+
+  onChangeManagementType(e) {
+    if (e.value === 'TRACK') {
+      this.inventoryManagement.setState({
+        trackBy: this.model.get('item').get('options').length ?
+          'TRACK_BY_VARIANT' : 'TRACK_BY_FIXED',
+      });
+      this.$el.removeClass('notTrackingInventory');
+    } else {
+      this.inventoryManagement.setState({
+        trackBy: 'DO_NOT_TRACK',
+      });
+      this.$el.addClass('notTrackingInventory');
+    }
+  }
+
+  get trackInventoryBy() {
+    let trackBy;
+
+    // If the inventoryManagement has been rendered, we'll let it's drop-down
+    // determine whether we are tracking inventory. Otherwise, we'll get the info
+    // form the model.
+    if (this.inventoryManagement) {
+      trackBy = this.inventoryManagement.getState().trackBy;
+    } else {
+      const item = this.model.get('item');
+
+      if (item.isInventoryTracked) {
+        trackBy = item.get('options').length ?
+          'TRACK_BY_VARIANT' : 'TRACK_BY_FIXED';
+      } else {
+        trackBy = 'DO_NOT_TRACK';
+      }
+    }
+
+    return trackBy;
   }
 
   get $scrollToSections() {
@@ -514,12 +762,17 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
-    // todo: the parent selector is not a very efficient selector here.
-    // instead alter the initial selector to select only the fields you want.
+    const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection, ' +
+      '.js-variantInventorySection';
+
     return this._$formFields ||
-      (this._$formFields = this.$('.js-scrollToSection:not(.js-sectionShipping) select[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) input[name],' +
-        '.js-scrollToSection:not(.js-sectionShipping) textarea[name]'));
+      (this._$formFields = this.$(
+        `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
+        `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
+        `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
+        `.js-formSectionsContainer > section:not(${excludes}) ` +
+          'textarea[name]:not([class*="trumbowyg"])'
+      ));
   }
 
   get $currencySelect() {
@@ -552,11 +805,6 @@ export default class extends BaseModal {
       (this._$photoUploadingLabel = this.$('.js-photoUploadingLabel'));
   }
 
-  get $photoUploadItems() {
-    return this._$photoUploadItems ||
-      (this._$photoUploadItems = this.$('.js-photoUploadItems'));
-  }
-
   get $editListingReturnPolicy() {
     return this._$editListingReturnPolicy ||
       (this._$editListingReturnPolicy = this.$('#editListingReturnPolicy'));
@@ -586,6 +834,21 @@ export default class extends BaseModal {
     return `<div class="clrT2 tx5 row">${app.polyglot.t('editListing.maxTagsWarning')}</div>`;
   }
 
+  get $addShipOptSectionHeading() {
+    return this._$addShipOptSectionHeading ||
+      (this._$addShipOptSectionHeading = this.$('.js-addShipOptSectionHeading'));
+  }
+
+  get $variantInventorySection() {
+    return this._$variantInventorySection ||
+      (this._$variantInventorySection = this.$('.js-variantInventorySection'));
+  }
+
+  get $itemPrice() {
+    return this._$itemPrice ||
+      (this._$itemPrice = this.$('[name="item.price"]'));
+  }
+
   showMaxTagsWarning() {
     this.$maxTagsWarning.empty()
       .append(this.maxTagsWarning);
@@ -611,14 +874,14 @@ export default class extends BaseModal {
   // return the currency associated with this listing
   get currency() {
     return (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.innerListing.get('metadata').get('pricingCurrency') ||
+        this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
           app.settings.get('localCurrency'));
   }
 
   createShippingOptionView(opts) {
     const options = {
       getCurrency: () => (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.innerListing.get('metadata').pricingCurrency),
+        this.$currencySelect.val() : this.model.get('metadata').pricingCurrency),
       ...opts || {},
     };
     const view = this.createChild(ShippingOption, options);
@@ -631,33 +894,22 @@ export default class extends BaseModal {
     return view;
   }
 
-  setScrollContainerHeight() {
-    this.$scrollContainer.css('height', '');
-    const height = this.$modalContent.outerHeight() -
-      this.$tabControls.outerHeight() - this.$('.topBar').outerHeight();
-
-    // todo: if .topBar ends up staying after the design refactor,
-    // cache that guy.
-
-    this.$scrollContainer.height(height);
-  }
-
   remove() {
-    if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
 
     super.remove();
   }
 
-  render(onScrollUpdateComplete, restoreScrollPos = true) {
+  render(restoreScrollPos = true) {
     let prevScrollPos = 0;
-    const item = this.innerListing.get('item');
+    const item = this.model.get('item');
 
-    if (restoreScrollPos && this.$scrollContainer && this.$scrollContainer.length) {
-      prevScrollPos = this.$scrollContainer[0].scrollTop;
+    if (restoreScrollPos) {
+      prevScrollPos = this.el.scrollTop;
     }
 
+    if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
     loadTemplate('modals/editListing/editListing.html', t => {
@@ -667,20 +919,20 @@ export default class extends BaseModal {
         returnText: this.options.returnText,
         currency: this.currency,
         currencies: this.currencies,
-        contractTypes: this.innerListing.get('metadata')
+        contractTypes: this.model.get('metadata')
           .contractTypes
           .map((contractType) => ({ code: contractType,
-            name: app.polyglot.t(`editListing.formats.${contractType}`) })),
-        conditionTypes: this.innerListing.get('item')
+            name: app.polyglot.t(`formats.${contractType}`) })),
+        conditionTypes: this.model.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
-            name: app.polyglot.t(`editListing.conditionTypes.${conditionType}`) })),
+            name: app.polyglot.t(`conditionTypes.${conditionType}`) })),
         errors: this.model.validationError || {},
         photoUploadInprogress: !!this.inProgressPhotoUploads.length,
         uploadPhotoT: this.uploadPhotoT,
-        expandedReturnPolicy: this.expandedReturnPolicy || !!this.innerListing.get('refundPolicy'),
+        expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
         expandedTermsAndConditions: this.expandedTermsAndConditions ||
-          !!this.innerListing.get('termsAndConditions'),
+          !!this.model.get('termsAndConditions'),
         formatPrice,
         maxCatsWarning: this.maxCatsWarning,
         maxTagsWarning: this.maxTagsWarning,
@@ -688,29 +940,38 @@ export default class extends BaseModal {
           title: item.max.titleLength,
           cats: item.max.cats,
           tags: item.max.tags,
+          photos: this.MAX_PHOTOS,
         },
+        shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
         ...this.model.toJSON(),
       }));
 
       super.render();
 
-      this.$scrollContainer = this.$('.js-scrollContainer');
       this.$editListingTags = this.$('#editListingTags');
       this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
+      this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
+      this.$editListingVariantsChoicesPlaceholder =
+        this.$('#editListingVariantsChoicesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
+      this.$couponsSection = this.$('.js-couponsSection');
+      this.$variantsSection = this.$('.js-variantsSection');
 
       this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
         // disables the search box
         minimumResultsForSearch: Infinity,
       });
 
-      this.$('#editListingCurrency').select2();
+      this.$('#editListingCurrency').select2()
+        .on('change', () => this.variantInventory.render());
 
       this.$editListingTags.select2({
         multiple: true,
         tags: true,
+        selectOnClose: true,
+        tokenSeparators: [','],
         // ***
         // placeholder has issue where it won't show initially, will use
         // own element for this instead
@@ -720,6 +981,9 @@ export default class extends BaseModal {
         dropdownParent: this.$('#editListingTagsDropdown'),
         createTag: (params) => {
           let term = params.term;
+          if (term === '') {
+            return null; // don't add blank tags triggered by blur
+          }
 
           // we'll make the tag all lowercase and
           // replace spaces with dashes.
@@ -741,7 +1005,7 @@ export default class extends BaseModal {
         matcher: () => false,
       }).on('change', () => {
         const tags = this.$editListingTags.val();
-        this.innerListing.get('item').set('tags', tags);
+        this.model.get('item').set('tags', tags);
         this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
 
         if (tags.length >= item.maxTags) {
@@ -766,6 +1030,8 @@ export default class extends BaseModal {
       this.$editListingCategories.select2({
         multiple: true,
         tags: true,
+        selectOnClose: true,
+        tokenSeparators: [','],
         // dropdownParent needed to fully hide dropdown
         dropdownParent: this.$('#editListingCategoriesDropdown'),
         // This is necessary, see comment in select2 for tags above.
@@ -793,11 +1059,12 @@ export default class extends BaseModal {
         this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
       ]('emptyOfTags');
 
+      // render shipping options
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
       this.shippingOptionViews = [];
       const shipOptsFrag = document.createDocumentFragment();
 
-      this.innerListing.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
+      this.model.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
         const shipOptVw = this.createShippingOptionView({
           model: shipOpt,
           listPosition: shipOptIndex + 1,
@@ -809,22 +1076,88 @@ export default class extends BaseModal {
 
       this.$shippingOptionsWrap.append(shipOptsFrag);
 
-      setTimeout(() => {
-        if (this.descriptionMediumEditor) this.descriptionMediumEditor.destroy();
-        this.descriptionMediumEditor = new MediumEditor('#editListingDescription', {
-          placeholder: {
-            text: '',
-          },
-          toolbar: {
-            buttons: ['bold', 'italic', 'underline', 'anchor', 'unorderedlist', 'orderedlist'],
-          },
+      // render sku field
+      if (this.skuField) this.skuField.remove();
+
+      this.skuField = this.createChild(SkuField, {
+        model: item,
+        initialState: {
+          variantsPresent: !!item.get('options').length,
+        },
+      });
+
+      this.$('.js-skuFieldContainer').html(this.skuField.render().el);
+
+      // render variants
+      if (this.variantsView) this.variantsView.remove();
+
+      this.variantsView = this.createChild(Variants, {
+        collection: this.variantOptionsCl,
+        maxVariantCount: item.max.optionCount,
+      });
+
+      this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',
+        this.onVariantChoiceChange.bind(this));
+
+      this.$variantsSection.find('.js-variantsContainer').append(
+        this.variantsView.render().el
+      );
+
+      // render inventory management section
+      if (this.inventoryManagement) this.inventoryManagement.remove();
+      const inventoryManagementErrors = {};
+
+      if (this.model.validationError &&
+        this.model.validationError['item.quantity']) {
+        inventoryManagementErrors.quantity = this.model.validationError['item.quantity'];
+      }
+
+      this.inventoryManagement = this.createChild(InventoryManagement, {
+        initialState: {
+          trackBy: this.trackInventoryBy,
+          quantity: item.get('quantity'),
+          errors: inventoryManagementErrors,
+        },
+      });
+
+      this.$('.js-inventoryManagementSection').html(this.inventoryManagement.render().el);
+      this.listenTo(this.inventoryManagement, 'changeManagementType', this.onChangeManagementType);
+
+      // render variant inventory
+      if (this.variantInventory) this.variantInventory.remove();
+
+      this.variantInventory = this.createChild(VariantInventory, {
+        collection: item.get('skus'),
+        optionsCl: item.get('options'),
+        getPrice: () => this.getFormData(this.$itemPrice).item.price,
+        getCurrency: () => this.currency,
+      });
+
+      this.$('.js-variantInventoryTableContainer')
+        .html(this.variantInventory.render().el);
+
+      // render coupons
+      if (this.couponsView) this.couponsView.remove();
+
+      const couponErrors = {};
+
+      Object.keys(this.model.validationError || {})
+        .forEach(errKey => {
+          if (errKey.startsWith('listing.coupons[')) {
+            couponErrors[errKey.slice(errKey.indexOf('.') + 1)] =
+              this.model.validationError[errKey];
+          }
         });
 
-        if (!this.rendered) {
-          this.rendered = true;
-          this.$titleInput.focus();
-        }
+      this.couponsView = new Coupons({
+        collection: this.coupons,
+        maxCouponCount: this.model.max.couponCount,
+        couponErrors,
       });
+
+      this.$couponsSection.find('.js-couponsContainer').append(
+        this.couponsView.render().el
+      );
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;
@@ -835,55 +1168,55 @@ export default class extends BaseModal {
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
       this._$photoUploadingLabel = null;
-      this._$photoUploadItems = null;
       this._$editListingReturnPolicy = null;
       this._$editListingTermsAndConditions = null;
       this._$sectionShipping = null;
       this._$maxCatsWarning = null;
       this._$maxTagsWarning = null;
+      this._$addShipOptSectionHeading = null;
+      this._$variantInventorySection = null;
+      this._$itemPrice = null;
+      this.$photoUploadItems = this.$('.js-photoUploadItems');
       this.$modalContent = this.$('.modalContent');
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
 
-      this.throttledOnScrollContainer = _.bind(_.throttle(this.onScrollContainer, 100), this);
-      this.$scrollContainer.on('scroll', this.throttledOnScrollContainer);
-
-      // we'll hide our modal until the height is adjusted, otherwise
-      // there's a noticable glitch
-      if (!this.jsHeightSet) {
-        this.$modalContent.css('opacity', 0);
-      }
-
-      setTimeout(() => {
-        this.setScrollContainerHeight();
-
-        // restore the scroll position
-        if (restoreScrollPos) {
-          this.$scrollContainer[0].scrollTop = prevScrollPos;
-        }
-
-        if (typeof onScrollUpdateComplete === 'function') {
-          onScrollUpdateComplete.call(this);
-        }
-
-        window.requestAnimationFrame(() => {
-          this.$modalContent.css('opacity', '');
-        });
+      installRichEditor(this.$('#editListingDescription'), {
+        topLevelClass: 'clrBr',
       });
 
-      if (!this.jsHeightSet) {
-        this.jsHeightSet = true;
+      if (this.sortablePhotos) this.sortablePhotos.destroy();
+      this.sortablePhotos = Sortable.create(this.$photoUploadItems[0], {
+        filter: '.js-addPhotoWrap',
+        onUpdate: (e) => {
+          const imageModels = this.model
+            .get('item')
+            .get('images')
+            .models;
 
-        const onWinResize = () => {
-          const prevScroll = this.$scrollContainer[0].scrollTop;
-          this.setScrollContainerHeight();
-          this.$scrollContainer[0].scrollTop = prevScroll;
-        };
+          const movingModel = imageModels[e.oldIndex - 1];
+          imageModels.splice(e.oldIndex - 1, 1);
+          imageModels.splice(e.newIndex - 1, 0, movingModel);
+        },
+        onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
+      });
 
-        this.throttledResizeWin =
-          _.bind(_.throttle(onWinResize, 100), this);
-        $(window).on('resize', this.throttledResizeWin);
-      }
+      setTimeout(() => {
+        if (!this.rendered) {
+          this.rendered = true;
+          this.$titleInput.focus();
+        }
+      });
+
+      setTimeout(() => {
+        // restore the scroll position
+        if (restoreScrollPos) {
+          this.el.scrollTop = prevScrollPos;
+        }
+
+        this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
+        setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
+      });
     });
 
     return this;

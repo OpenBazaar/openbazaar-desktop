@@ -13,14 +13,14 @@ export default class {
    * @constructor
    * @param {string} url - The websocket url.
    */
-  constructor(url) {
+  constructor(url, options = {}) {
     if (!url) {
       throw new Error('Please provide an url.');
     }
 
     _.extend(this, Events);
     this.url = url;
-    this.connect();
+    if (options.autoConnect) this.connect();
   }
 
   /**
@@ -47,6 +47,8 @@ export default class {
     this._socket.onmessage = (...args) => {
       if (args[0] && args[0].data) {
         args[0].jsonData = JSON.parse(args[0].data);
+      } else {
+        args[0].jsonData = {};
       }
 
       this.trigger(...['message'].concat(args));

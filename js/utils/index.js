@@ -4,6 +4,9 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import app from '../app';
+import multihashes from 'multihashes';
+import bitcoreLib from 'bitcore-lib';
+import twemoji from 'twemoji';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -115,6 +118,91 @@ function s4() {
 
 // https://github.com/jeromegn/Backbone.localStorage
 // Generate a pseudo-GUID by concatenating random hexadecimal.
+// This has nothing to do with an OB guid / peerId. This is is just a
+// generic way to generate a unique identifier.
 export function guid(prefix = '') {
   return `${prefix}${s4()}${s4()}-${s4()}-${s4()}-${s4()}-${s4()}${s4()}${s4()}`;
+}
+
+export function isMultihash(_string) {
+  try {
+    multihashes.validate(multihashes.fromB58String(_string));
+    return true;
+  } catch (exc) {
+    return false;
+  }
+}
+
+export function isValidBitcoinAddress(address) {
+  if (typeof address !== 'string') {
+    throw new Error('Please provide a string.');
+  }
+
+  try {
+    bitcoreLib.encoding.Base58Check.decode(address);
+    return true;
+  } catch (exc) {
+    return false;
+  }
+}
+
+// applies a template to select2 to turn text emojis into images
+export function selectEmojis(option) {
+  return $(`<span class="select2ImgOpt">${twemoji.parse(option.text,
+      icon => (`../imgs/emojis/72X72/${icon}.png`))}</span>`);
+}
+
+/*
+ * If you need to set an interval to update a relative timestamp, this function
+ * will smartly decide how often to ping you based on the age of the timestamp.
+ * This is important if you have a list of many (dozens, hundreds, etc...) items
+ * which would otherwise result in an excess of potentially CPU intensive intervals.
+ * @param {string} timestamp
+ * @param {function} cb Your callback function that will be called periodically and in which
+ * you will likely re-calculate and update your time ago text (e.g. a few seconds ago =>
+ * 1 minute ago)
+ * @param {array} _timeouts Ignore this argument. It is used internally.
+ * @returns {Object} An object with a cancel function so you could cancel this function from
+ * calling your callback when you no longer need it. If you initiate this from a view, you would
+ * want to call cancel in View.remove().
+ */
+export function setTimeagoInterval(timestamp, cb, _timeouts = []) {
+  if (!timestamp) {
+    throw new Error('Please provide a timestamp.');
+  }
+
+  if (typeof cb !== 'function') {
+    throw new Error('Please provide a callback function.');
+  }
+
+  const age = Date.now() - (new Date(timestamp)).getTime();
+
+  const pushTimeout = (time) => {
+    const timeout = setTimeout(() => {
+      cb();
+      setTimeagoInterval(timestamp, cb, _timeouts);
+    }, time);
+
+    _timeouts.push(timeout);
+  };
+
+  if (age < 1000 * 60 * 60) {
+    // less than an hour old
+    pushTimeout(1000 * 20); // check in 20 seconds
+  } else if (age < 1000 * 60 * 60 * 24) {
+    // less than a day old
+    pushTimeout(1000 * 60 * 15); // check in 15 minutes
+  } else if (age < 1000 * 60 * 60 * 24 * 30) {
+    // less than 30 days old
+    pushTimeout(1000 * 60 * 60 * 2); // check in 2 hours
+  } else {
+    // more than 30 days old
+    pushTimeout(1000 * 60 * 60 * 24); // check in a day
+  }
+
+  return {
+    cancel: () => {
+      _timeouts.forEach(timeout => (clearTimeout(timeout)));
+    },
+  };
 }

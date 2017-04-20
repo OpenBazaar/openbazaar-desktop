@@ -3,7 +3,7 @@
   display: block;
 
   .select2-selection {
-    border-radius: 0;
+    border-radius: $corner;
     height: $formElementHeight;
 
     .select2-selection__rendered {
@@ -15,7 +15,7 @@
       width: $formElementHeight;
 
       b {
-        border-width: 10px 7px 0 7px;
+        border-width: 6px 5px 0 5px;
         margin-left: -6px;
         margin-top: -5px;
       }
@@ -28,7 +28,30 @@
         border-bottom: 0;
       }
     }
-  }  
+  }
+
+  .select2ImgOpt {
+    display: flex;
+    align-items: center;
+
+    .emoji {
+      height: 1em;
+      width: 1em;
+      margin-right: 0.3em;
+    }
+  }
+}
+
+.select2-container--default {
+  &.select2-container--open {
+    .select2-selection--single {
+      .select2-selection__arrow {
+        b {
+          border-width: 0 5px 6px 5px;
+        }
+      }
+    }
+  }
 }
 
 // In order for these styles also work on the drop down part of the component, when
@@ -47,7 +70,8 @@
     }
 
     .select2-selection__arrow {
-      height: 3rem;
+      height: 3.25rem;
+      width: 2.75rem;
     }
   }
 
@@ -61,6 +85,7 @@
 // Some focus styling is with other form focus styling in form.scss.
 .select2TagsWrap {
   position: relative;
+  width: 100%;
 
   .select2Tags + .select2-container {
     &.select2-container--default {
@@ -76,12 +101,14 @@
       .select2-search--inline {
         padding: 1px; // match the border on the tags
         margin-top: 5px;
+        line-height:27px;
       }
     }
 
     &.select2-container--default .select2-selection--multiple .select2-selection__choice {
       padding-left: $pad;
       font-weight: 500;
+      line-height:27px;
 
       .select2-selection__choice__remove {
         float: right;
@@ -128,7 +155,7 @@
     &.emptyOfTags {
       display: block;
       top: 0;
-      line-height: 4rem;
+      line-height: 27px;
       margin-top: 6px;
     }
   }
@@ -151,4 +178,15 @@
       border: 1px solid;
     }
   }
+}
+
+.select2TagsWrapDropDown {
+  @extend .select2TagsWrap;
+}
+
+.select2TagFlexWrap {
+  // if the select2 tag input has to be in a flex row with other elements, it will overflow the
+  // row if a tag is too long. Wrap select2TagsWrap in this class to prevent that.
+  flex-grow: 1;
+  overflow: hidden;
 }

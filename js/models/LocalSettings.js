@@ -1,9 +1,8 @@
-import electron from 'electron';
+import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
 import is from 'is_js';
-
-const remote = electron.remote;
+import app from '../app';
 
 export default class extends Model {
   localStorage() {
@@ -16,10 +15,31 @@ export default class extends Model {
 
   defaults() {
     return {
-      macStyleWinControls: remote.process.platform === 'darwin',
+      windowControlStyle: remote.process.platform === 'darwin' ? 'mac' : 'win',
+      showAdvancedVisualEffects: true,
+      saveTransactionMetadata: true,
+      defaultTransactionFee: 'high',
       language: 'en-US',
       listingsGridViewType: 'grid',
+      bitcoinUnit: 'BTC',
+      searchProvider: 'https://search.ob1.io/search/listings',
     };
+  }
+
+  get controlStyles() {
+    return ['mac', 'win'];
+  }
+
+  get viewStyles() {
+    return ['list', 'grid'];
+  }
+
+  get feeLevels() {
+    return ['low', 'medium', 'high'];
+  }
+
+  get bitcoinUnits() {
+    return ['BTC', 'MBTC', 'UBTC', 'SATOSHI'];
   }
 
   validate(attrs) {
@@ -29,12 +49,25 @@ export default class extends Model {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.boolean(attrs.macStyleWinControls)) {
-      addError('macStyleWinControls', 'Please provide a boolean value.');
+    if (!this.controlStyles.includes(attrs.windowControlStyle)) {
+      addError('windowControlStyle', `Please provide one of ${this.controlStyles}.`);
     }
 
-    if (['list', 'grid'].indexOf(attrs.listingsGridViewType) === '-1') {
-      addError('The listingsGridViewType provided is not one of the available types.');
+    if (!this.viewStyles.includes(attrs.listingsGridViewType)) {
+      addError(`ListingGrideViewType needs to be one of ${this.viewStyles}.`);
+    }
+
+    if (!this.feeLevels.includes(attrs.defaultTransactionFee)) {
+      addError('defaultTransactionFee',
+        `Default transaction fee needs to be one of ${this.feeLevels}.`);
+    }
+
+    if (!this.bitcoinUnits.includes(attrs.bitcoinUnit)) {
+      addError(`bitcoinUnit needs to be one of ${this.bitcoinUnits}.`);
+    }
+
+    if (is.not.url(attrs.searchProvider)) {
+      addError('searchProvider', app.polyglot.t('settings.generalTab.searchProviderError'));
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;

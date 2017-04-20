@@ -2,9 +2,36 @@
 // The text class will be applied to the body element, if text is colored differently, apply it to the nearest
 // parent container.
 
+// any color that should change on hover, active, etc. should have a rule for &.clrHover, and the
+// element that should change should have a .clrHover class on it.
+
+/* default for inputs with no color class */
+input,
+select,
+textarea,
+button,
+.trumbowyg div[contenteditable]{
+  &:focus {
+    border-color: $border3;
+  }
+}
+
 .clrP {
   background-color: $primary;
 
+  input[type="radio"] + label:before {
+    background-color: $secondary;
+  }
+
+  input[type="radio"]:checked + label:before {
+    box-shadow: inset 0 0 0 3px $secondary;
+  }
+}
+
+.clrPG { //ghosted primary color
+  background-color: $primaryGhost;
+
+  // inputs should still use opaque colors
   input[type="radio"] + label:before {
     background-color: $secondary;
   }
@@ -52,12 +79,12 @@ input[type=range][class~="clrS"] {
   }
 }
 
-.clrBk {
-  background-color: $background;
+.clrErr {
+  background-color: $error;
 }
 
 .clrT {
-  @include textColor($text, $text2);
+  @include textColor($text, $text2, $text);
 }
 
 .clrT2 {
@@ -78,13 +105,12 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1, $emphasis2);
 }
 
-.clrTErr {
-  @include textColor($error);
+.clrTAtt {
+  @include textColor($emphasis1, $emphasis2);
 }
 
-.clrTGlow {
-  // glow around text so it is visible on low-contrast backgrounds
-  text-shadow: transparentize(invert($text), 0.6) 0 0 20px ;
+.clrTErr {
+  @include textColor($error);
 }
 
 .clrTOnEmph {
@@ -95,17 +121,93 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis1);
 }
 
-.clrBr {
-  border-color: $border;
+.clrTEmph2 {
+  @include textColor($emphasis2);
+}
 
-  hr {
-    border-color: $border;
-  }
+.clrBr {
+  @include borderColor($border, $border3);
 }
 
 .clrBr2 {
-  border-color: $border2;
+  @include borderColor($border2, $border3);
 }
+
+.clrBr3 {
+  @include borderColor($border3, $border4);
+}
+
+.clrBr4 {
+  @include borderColor($border4, $border5);
+}
+
+.clrBrDec1 {
+  // decorative border with a shadow to create a faint outline
+  border-color: $textOnEmph;
+  border-width: 2px;
+  box-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+
+.clrBrEmph1 {
+  border-color: $emphasis1;
+
+  hr {
+    border-color: $emphasis1;
+  }
+}
+
+.clrBrEmph2 {
+  border-color: $emphasis2;
+
+  hr {
+    border-color: $emphasis2
+  }
+}
+
+.clrBrError {
+  border-color: $error;
+
+  hr {
+    border-color: $error
+  }
+}
+
+.clrBAtt1 {
+  background-color: $emphasis1;
+}
+
+.clrBAtt2 {
+  background-color: $emphasis2;
+}
+
+.clrBAttGrad {
+  background: $emphasisGradient;
+
+  &.processing {
+    .spinner {
+      path:first-child {
+        fill: #666;
+      }
+    }
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: $secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $text3;
+
+  &:hover {
+    background: $text4;
+  }
+
+  &:active {
+    background: $text4;
+  }
+}
+
 
 // select2 dropdowns always use the theme border color.
 // Override them in the view stylesheet if necessary.
@@ -118,11 +220,11 @@ input[type=range][class~="clrS"] {
 
   &.select2-container--focus,
   &.select2-container--open {
-    border-color: $focusedBorder;
+    border-color: $border3;
 
     .select2-dropdown,
     .select2-selection {
-      border-color: $focusedBorder;
+      border-color: $border3;
     }
   }
 }
@@ -149,25 +251,20 @@ input[type=range][class~="clrS"] {
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-.clrSh2  {
+.clrSh2 {
   box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+}
+
+.clrSh3 {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.3);
 }
 
 .required::after {
   color: $emphasis2;
 }
 
-input,
-select,
-textarea,
-button {
-  &:focus {
-    border-color: $focusedBorder;
-  }
-}
-
 .select2-container--focus .select2-selection__rendered {
-  border-color: $focusedBorder;
+  border-color: $border3;
 }
 
 // select2 with tags
@@ -185,7 +282,7 @@ button {
     }
 
     &.select2-container--focus .select2-selection--multiple .select2-selection__rendered {
-      border-color: $focusedBorder;
+      border-color: $border3;
     }
   }
 
@@ -202,6 +299,43 @@ button {
 
 .tagsDropdown {
   .select2-container--open .select2-dropdown {
-    border-color: $focusedBorder;
+    border-color: $border3;
+  }
+}
+
+.toolTip {
+  &:before {
+    background-color: $primary;
+    border-color: $border;
+    color: $text;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  &:after {
+    background-color: $primary;
+    border-color: $border;
+  }
+}
+
+.chatOpen #appFrame #chatContainer {
+  background-color: $primaryGhost;
+  border-color: $border4;
+}
+
+.chatHead {
+  &.active {
+    .headContent {
+      border-color: $border3;
+    }
+  }
+}
+
+.wallet {
+  .walletTransactions {
+    .statusIconCol {
+      .ion-alert-circled {
+        color: #fecf33;
+      }
+    }
   }
 }

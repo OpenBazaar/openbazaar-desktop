@@ -1,11 +1,154 @@
 .listingDetail {
   .modalContent {
-    // probably temporary min width and height
-    min-height: 300px;
-    min-width: 450px;
+    .storeOwnerAvatar {
+      width: 24px;
+      height: 24px;
+      float: left;
+    }
 
-    .popInMessageHolder {
-      top: 20px;
+    .listingContent {
+
+      .mainImage {
+        width: 530px;
+        height: 530px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: $corner;
+        margin-bottom: $pad;
+        cursor: pointer;
+      }
+
+      .buyBox {
+        border-width: 1px;
+        border-style: solid;
+        border-radius: $corner;
+        box-sizing: border-box;
+        padding: $padLg $pad * 4;
+        margin-bottom: $padLg;
+      }
+
+      .tagWrapper {
+
+        .tag {
+          float: left;
+          margin: 0 $padSm $padSm 0;
+          font-size: $tx5b;
+          padding: 0 $pad;
+        }
+      }
+
+      .descriptionSection {
+
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+
+      .photoSection {
+        background: #000000; // the photo carousel should always be black
+        height: 701px;
+
+        .photoSelected {
+          height: 100%;
+          cursor: zoom-in;
+
+          &.unzoomable {
+            cursor: auto;
+          }
+
+          &.open {
+            cursor: zoom-out;
+
+            .photoSelectedInner {
+              display: none;
+            }
+          }
+
+          .photoSelectedInner {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+          }
+        }
+
+        .photoPrev,
+        .photoNext {
+          background-color: rgba(37,37,37,0.7);
+          border: 0;
+          width: 90px;
+          height: 90px;
+          font-size: 70px;
+          color: #fff;
+          opacity: 0;
+          transition: opacity 1s;
+          @include center(false, true);
+          z-index: 2;
+        }
+
+        .photoPrev {
+          left: 0;
+
+          &:before {
+            padding-right: 10px; // tweak centering visually
+          }
+        }
+
+        .photoNext {
+          right: 0;
+
+          &:before {
+            padding-left: 10px; // tweak centering visually
+          }
+        }
+
+        &:hover .photoPrev,
+        &:hover .photoNext {
+          opacity: 1;
+        }
+
+        .cropit-image-zoom-input {
+          position: absolute;
+          bottom: 100px;
+          width: 90%;
+          margin: 0 5%;
+        }
+
+        .photoStrip {
+          position: absolute;
+          z-index: 1;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: $pad;
+          background-color: rgba(37,37,37,0.7);
+          overflow-x: auto;
+
+          input[type="radio"] {
+            display: none;
+          }
+
+          label {
+            height: 60px;
+            width: 60px;
+            box-sizing: border-box;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0), inset 0 0 0 3px rgba(256, 256, 256, 0);
+            transition: box-shadow 0.25s;
+            flex-shrink: 0;
+            cursor: pointer;
+          }
+
+          input[type="radio"]:checked + label {
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.5), inset 0 0 0 3px rgba(256, 256, 256, 1);;
+          }
+        }
+      }
     }
   }
 }

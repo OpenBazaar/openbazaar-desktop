@@ -1,5 +1,115 @@
+#chatCloseBtn {
+  position: absolute;
+  top: $bar + $barLg - 40;
+  right: -220px;
+  width: 40px;
+  height: 40px;
+  z-index: 3;
+  border-radius: 0;
+  font-size: $tx1;
+  border-bottom-width: 0;
+  @include chatOpeningTransition(right);
+
+  &:hover {
+    border-color: inherit;
+  }
+
+  .chatOpen & {
+    right: $scrollbar;
+  }
+}
+
 #chatContainer {
   // use for chat styles that only apply inside the chat sidebar
+
+  .chat {
+    .chatHead {
+      cursor: pointer;
+      position: relative;
+      padding: 0 $padSm;
+      box-sizing: border-box;
+
+      .unreadBadge {
+        position: absolute;
+        top: -4px;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        line-height: 18px;
+        font-size: $tx5b;
+        font-weight: bold;
+        text-align: center;
+        border-width: 1px;
+        border-style: solid;
+
+        &.ellipsisShown {
+          line-height: 14px;
+        }
+      }
+
+      .headContent {
+        padding: $padSm;
+        max-height: 31px;
+        flex-grow: 1;
+      }
+
+      .handleGuid {
+        max-width: 60px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      &:first-child {
+        margin-top: 5px;
+      }
+    }
+
+    .topUnreadBanner, .bottomUnreadBanner {
+      display: none;
+      padding: $pad;
+      font-size: $tx6;
+      position: fixed;
+      right: ($chatClosed / 2) - 8;
+      font-weight: bold;
+      border-radius: $corner;
+      @include chatOpeningTransition(all);
+
+      .fullText {
+        display: none
+      }
+
+      .chatOpen & {
+        right: $chatOpen / 2;
+        transform: translateX(50%);
+
+        .arrowOnly {
+          display: none;
+        }
+
+        .fullText {
+          display: inline;
+        }
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    &.outOfViewUnreadsAbove {
+      .topUnreadBanner {
+        display: block;
+        top: 105px; // todo: create $chatTop variable if we keep this implementation
+      }
+    }
+
+    &.outOfViewUnreadsBelow {
+      .bottomUnreadBanner {
+        display: block;
+        bottom: 45px;
+      }
+    }
+  }
 }
 
 .chat {
@@ -8,5 +118,280 @@
   .chatIcon {
     border-width: 2px;
     border-style: solid;
+    width: 38px;
+    height: 38px;
   }
 }
+
+.chatConversation {
+  border-width: 1px;
+  border-style: solid;
+  border-color: inherit;
+  height: 100%;
+
+  .convoHeader {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    z-index: 2;
+
+    .btn {
+      border-width: 0;
+      width: 20px;
+
+      &.ion-ios-close-empty {
+        font-size: $tx1;
+      }
+    }
+
+    .convoProfileHeader {
+      .handle {
+        max-width: 105px;
+        display: block;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .convoMessagesWindow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 1px; // don't cover the right border of the parent
+    bottom: 0;
+    padding-left: $padSm;
+    padding-right: $padSm;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .spinner {
+      display: none;
+      margin: 0 auto;
+      padding: $pad;
+    }
+
+    .typingIndicator {
+      position: fixed;
+      left: 50%;
+      transform: translate(-50%, -110%);
+      border-style: solid;
+      border-width: 1px;
+      border-top-width: 0;
+      max-width: 190px;
+      z-index: 1;
+      padding: $padSm $pad;
+      transition: transform 0.3s ease;
+
+      .typingUsername {
+        max-width: 121px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    .messagesFetchError {
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    .chatConvoMessages {
+      padding: 10px 0;
+
+      .convoMessage {
+        .msgContentBox {
+          padding: 5px 7px;
+          margin-top: 3px;
+          display: inline-block;
+          max-width: 186px;
+          line-height: 14px;
+          text-align: left;
+
+          & > span {
+            word-break: break-word;
+          }
+
+          img {
+            max-width: 100%;
+          }
+        }
+
+        .timestampLine {
+          position: absolute;
+        }
+      }
+    }
+  }
+
+  &.loadingMessages {
+    .spinner {
+      display: block;
+    }
+
+    &.noMessages {
+      .spinner {
+        @include center();
+        width: 55px;
+        height: 55px;
+      }
+
+      .messagesFetchError {
+        @include center();
+      }
+    }
+  }
+
+  &.noMessages {
+    .messagesFetchError {
+      @include center();
+      margin: 0;
+    }
+  }
+
+  &.isTyping {
+    .typingIndicator {
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .deletingOverlay {
+    display: none;
+    font-size: $tx4;
+
+    & > div {
+      @include center();
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  &.isDeleting {
+    .deletingOverlay {
+      display: block;
+    }
+
+    .deleteConvoMenuItem {
+      @include disabled;
+    }
+  }
+
+  .subMenu {
+    padding: $pad;
+    width: 130px;
+    border-style: solid;
+    border-width: 1px;
+    border-top-width: 0;
+    border-right-width: 0;
+    font-size: $tx6;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+
+    & > * {
+      padding-bottom: $pad;
+
+      &:last-child {
+        padding: 0;
+      }
+    }
+  }
+
+  .convoFooter {
+    border-top-style: solid;
+    border-top-width: 1px;
+    z-index: 1;
+
+    & > div {
+      padding-top: $padTn;
+      padding-bottom: $padTn;
+    }
+
+    textarea {
+      border-width: 0;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: white;
+    opacity: 0.7;
+    z-index: 1;
+  }
+
+  .chatIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .chatIconSmall {
+    width: 32px;
+    height: 32px;
+  }
+
+  .emojiMenuTrigger {
+    border: none;
+    padding: 0;
+    padding-right: 12px;
+    font-size: $tx5;
+  }
+
+  .emojiMenuContainer {
+    border-top-style: solid;
+    border-top-width: 1px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 266px;
+    padding: $pad;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 98px;
+
+    .emojiMenu {
+      .emojiGroup {
+        padding-left: 3px;
+        clear: both;
+        margin-bottom: 5px;
+
+        button {
+          float: left;
+          border: 0;
+          padding: 0;
+          background-color: transparent;
+          cursor: pointer;
+          outline: none;
+          transition: transform 0.1s ease;
+
+          &:hover {
+            transform: scale(1.2, 1.2);
+          }
+
+          .emoji {
+            margin-right: 11px;
+            margin-bottom: 9px;
+          }
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.chatConversation .emoji, #chatContainer .emoji {
+  width: 16px;
+  height: 16px;
+}
+

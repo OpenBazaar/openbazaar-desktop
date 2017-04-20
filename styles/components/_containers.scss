@@ -4,6 +4,68 @@
   position: relative;
 }
 
+.boxProcessing {
+  position: relative;
+
+  .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    background-color: inherit;
+    transform: translate(-50%, -50%);
+    border-radius: inherit;
+    width: 30%;
+    height: 30%;
+    z-index: 1;
+    display: none;
+  }
+
+  &.processing {
+    pointer-events: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: inherit;
+      z-index: 1;
+    }
+
+    .spinner {
+      display: block;
+    }
+  }
+}
+
+.boxProcessingFaded {
+  @extend .boxProcessing;
+
+  &.processing {
+
+    &::before {
+      opacity: 0.8;
+    }
+  }
+}
+
+.confirmBox {
+  // - should be in relatively positioned container
+  // - override with your own positioning values (top, right, etc...)
+  display: block;
+  position: absolute;
+  width: 245px;
+  z-index: 1;
+  padding: $pad;
+  border-style: solid;
+  border-width: 1px;
+  text-align: center;    
+}
+
 .boxList > * {
   //convenience class that turns all the direct descendants into blocks. Useful for lists of anchors or spans.
   @extend .box;
@@ -16,6 +78,11 @@
   overflow-y: scroll;
 }
 
+.scrollBoxX {
+  @extend .box;
+  overflow-x: auto;
+  overflow-y: hidden;
+ }
 
 .bar {
   @extend .box;
@@ -75,15 +142,21 @@
     width: 1px;
     style: solid;
     color: inherit;
-  }  
+  }
 }
 
-.borderStacked > * {
-  //use on parent element to separate stacked child containers. The element should also have the clrBr class.
-  @extend .borderBottom;
+.borderStacked {
+  & > * {
+    //use on parent element to separate stacked child containers. The element should also have the clrBr class.
+    @extend .borderBottom;
 
-  &:last-child {
-    border-bottom: none;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &:empty {
+    display: none;
   }
 }
 
@@ -96,22 +169,39 @@
   font-size: $tx4;
 }
 
+.phraseBox {
+  // use for a word or phrase in a box for emphasis, like free shipping
+  @extend .box;
+  padding: 3px;
+  font-size: $tx7; // override with class on a span inside the container if needed
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 1px;
+}
+
 .listBox {
   //a vertical list of children in a box. Usually used for navigation, or to show a list of clickable elements
   @extend .contentBox, .boxList;
 
   .listGroup {
-    border-width: 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
     border-style: solid;
     margin-bottom: $pad / 2;
 
     &:last-child {
       margin-bottom: 0;
+      border-bottom-width: 0;
+    }
+
+    .listItem {
+      padding: 9px 5px;
     }
   }
 
   .listItem {
-    padding: $padMd2;
+    padding: 9px 0;
     font-size: 1.4rem;
     width: 100%;
     box-sizing: border-box;
@@ -120,5 +210,86 @@
     &:last-child {
       margin-bottom: 0;
     }
+  }
+}
+
+// a box with a triangular arrow on some side of it
+.arrowBox {
+  position: relative;
+  border-radius: $corner;
+
+  &.confirmBox {
+    position: absolute;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    background-color: inherit;
+    width: 25px;
+    height: 25px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: inherit;
+  }
+}
+
+.arrowBoxTop {
+  @extend .arrowBox;
+
+  &::before {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-135deg);
+    -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  }
+}
+
+.toolTip {
+  position: relative;
+  cursor: pointer;
+
+  &:before {
+    @extend .box;
+    content: attr(data-tip);
+    transform: translateX(-50%);
+    font-size: $tx5b;
+    line-height:1.4;
+    font-weight: 400;
+    white-space: normal;
+    width: 255px;
+    box-sizing: border-box;
+    padding: $padHg;
+    top: 100%;
+    margin-top: 8px;
+  }
+
+  &:after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    bottom: -30px;
+    transform: translate(-50%, -50%) rotate(-135deg);
+    -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  }
+
+  &:before,
+  &:after {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    transition: opacity 0.5s;
+    z-index: 1;
+    border-width: 1px;
+    border-style: solid;
+  }
+
+  &:hover:before,
+  &.openTooltip:before,
+  &:hover:after,
+  &.openToolTip:after {
+    opacity: 1;
+    pointer-events: auto;
   }
 }

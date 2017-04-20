@@ -1,0 +1,332 @@
+<div class="gutterVMd">
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <div class="flexHCent">
+      <h2 class="h3 clrT"><%= ob.polyT('settings.advancedTab.sectionName') %></h2>
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
+    </div>
+    <hr class="clrBr" />
+    <div class="tabFormWrapper clrS">
+        <div class="js-appearanceContainer">
+          <form class="box padMdKids padStack clrP clrBr js-appearance">
+            <div class="flexRow gutterH">
+              <div class="col3">
+                <label><%= ob.polyT('settings.advancedTab.appearance.visualEffects') %></label>
+                <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperVisualEffects') %></div>
+              </div>
+              <div class="col9">
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="showAdvancedVisualEffects"
+                         value="true"
+                         id="advancedTabVisualEffectsOn"
+                         data-var-type="boolean"
+                  <% if(ob.showAdvancedVisualEffects) { %>checked<% } %>>
+                  <label for="advancedTabVisualEffectsOn"><%= ob.polyT('settings.on') %></label>
+                </div>
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="showAdvancedVisualEffects"
+                         value="false"
+                         id="advancedTabVisualEffectsOff"
+                         data-var-type="boolean"
+                  <% if(!ob.showAdvancedVisualEffects) { %>checked<% } %>>
+                  <label for="advancedTabVisualEffectsOff"><%= ob.polyT('settings.off') %></label>
+                </div>
+              </div>
+            </div>
+            <div class="flexRow gutterH">
+              <div class="col3">
+                <label><%= ob.polyT('settings.advancedTab.appearance.windowControlStyle') %></label>
+                <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperWindowControls') %></div>
+              </div>
+              <div class="col9">
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="windowControlStyle"
+                         value="mac"
+                         id="windowControlStyleMac"
+                         data-var-type="string"
+                  <% if(ob.windowControlStyle == "mac") { %>checked<% } %>>
+                  <label for="windowControlStyleMac"><%= ob.polyT('settings.advancedTab.appearance.macOS') %></label>
+                </div>
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="windowControlStyle"
+                         value="win"
+                         id="windowControlStyleWindows"
+                         data-var-type="string"
+                  <% if(ob.windowControlStyle == "win") { %>checked<% } %>>
+                  <label for="windowControlStyleWindows"><%= ob.polyT('settings.advancedTab.appearance.windowsOS') %></label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+  </div>
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h4 clrT"><%= ob.polyT('settings.advancedTab.transaction.sectionName') %></h2>
+    <hr class="clrBr" />
+    <div class="tabFormWrapper clrS">
+      <div class="js-transactionContainer">
+        <form class="box padMdKids padStack clrP clrBr js-transaction">
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label><%= ob.polyT('settings.advancedTab.transaction.saveMetadata') %></label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperSaveMetaData') %></div>
+            </div>
+            <div class="col9">
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       data-persistence-location="local"
+                       name="saveTransactionMetadata"
+                       value="true"
+                       id="saveTransactionMetadataOn"
+                       data-var-type="boolean"
+                <% if(ob.saveTransactionMetadata) { %>checked<% } %>>
+                <label for="saveTransactionMetadataOn"><%= ob.polyT('settings.on') %></label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       data-persistence-location="local"
+                       name="saveTransactionMetadata"
+                       value="false"
+                       id="saveTransactionsMetadataOff"
+                       data-var-type="boolean"
+                <% if(!ob.saveTransactionMetadata) { %>checked<% } %>>
+                <label for="saveTransactionsMetadataOff"><%= ob.polyT('settings.off') %></label>
+              </div>
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label><%= ob.polyT('settings.advancedTab.transaction.defaultFee') %></label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperDefaultFee') %></div>
+            </div>
+            <div class="col9">
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       data-persistence-location="local"
+                       name="defaultTransactionFee"
+                       value="low"
+                       id="defaultTransactionFeeLow"
+                       data-var-type="string"
+                <% if(ob.defaultTransactionFee == "low") { %>checked<% } %>>
+                <label for="defaultTransactionFeeLow"><%= ob.polyT('settings.advancedTab.transaction.low') %></label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       data-persistence-location="local"
+                       name="defaultTransactionFee"
+                       value="medium"
+                       id="defaultTransactionFeeMedium"
+                       data-var-type="string"
+                <% if(ob.defaultTransactionFee == "medium") { %>checked<% } %>>
+                <label for="defaultTransactionFeeMedium"><%= ob.polyT('settings.advancedTab.transaction.medium') %></label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       data-persistence-location="local"
+                       name="defaultTransactionFee"
+                       value="high"
+                       id="defaultTransactionFeeHigh"
+                       data-var-type="string"
+                <% if(ob.defaultTransactionFee == "high") { %>checked<% } %>>
+                <label for="defaultTransactionFeeHigh"><%= ob.polyT('settings.advancedTab.transaction.high') %></label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h4 clrT"><%= ob.polyT('settings.advancedTab.server.sectionName') %></h2>
+    <hr class="clrBr" />
+    <div class="tabFormWrapper clrS">
+      <div class="js-serverContainer">
+        <form class="box padMdKids padStack clrP clrBr js-server">
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.management') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperServerManagement') %></div>
+            </div>
+            <div class="col9">
+              <a class="btn clrP clrBr clrSh2 js-showConnectionManagement flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnShowManagementAction') %></a>
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.peers') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperServerPeers') %></div>
+            </div>
+            <div class="col9">
+              <a  href="#connected-peers"
+                  class="btn clrP clrBr clrSh2 js-showConnectedPeers flexNoShrink">
+                    <%= ob.polyT('settings.advancedTab.server.btnShowPeersAction') %>
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h4 clrT"><%= ob.polyT('settings.advancedTab.smtp.sectionName') %></h2>
+    <hr class="clrBr" />
+    <div class="tabFormWrapper clrS">
+      <div class="js-smtpContainer">
+        <form class="box padMdKids padStack clrP clrBr js-smtp">
+          <div class="flexRow" data-next-siblings-toggle>
+            <div class="col3">
+              <label><%= ob.polyT('settings.advancedTab.smtp.notifications') %></label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperNotifications') %></div>
+            </div>
+            <div class="col6">
+              <% if (ob.errors['smtpSettings.notifications']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.notifications'] })) %>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="smtpSettings.notifications"
+                       value="true"
+                       id="smtpNotificationsOn"
+                       data-var-type="boolean"
+                <% if(ob.smtpSettings.notifications) { %>checked<% } %>>
+                <label for="smtpNotificationsOn"><%= ob.polyT('settings.on') %></label>
+              </div>
+              <div class="btnRadio clrBr">
+                <input type="radio"
+                       name="smtpSettings.notifications"
+                       value="false"
+                       id="smtpNotificationsOff"
+                       data-var-type="boolean"
+                <% if(!ob.smtpSettings.notifications) { %>checked<% } %>>
+                <label for="smtpNotificationsOff"><%= ob.polyT('settings.off') %></label>
+              </div>
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label for="smtpServerAddress">
+                <%= ob.polyT('settings.advancedTab.smtp.serverAddress') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperServerAddress') %></div>
+            </div>
+            <div class="col6">
+              <% if (ob.errors['smtpSettings.serverAddress']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.serverAddress'] })) %>
+              <input class="clrBr clrSh2"
+                required
+                type="text"
+                name="smtpSettings.serverAddress"
+                id="smtpServerAddress"
+                placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderServerAddress') %>"
+                value="<%= ob.smtpSettings.serverAddress %>">
+              <div class="clrT2 txBase padSm"><%= ob.polyT('settings.advancedTab.smtp.helperNewEmail', { helperGmailLink: `<a href="https://accounts.google.com/SignUp" class="clrTEm">${ob.polyT('settings.advancedTab.smtp.helperGmailLink')}</a>` }) %></div>
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label for="smtpUsername">
+                <%= ob.polyT('settings.advancedTab.smtp.username') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperUsername') %></div>
+            </div>
+            <div class="col6">
+              <% if (ob.errors['smtpSettings.username']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.username'] })) %>
+              <input class="clrBr clrSh2"
+                required
+                type="text"
+                name="smtpSettings.username"
+                id="smtpUsername"
+                placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderUsername') %>"
+                value="<%= ob.smtpSettings.username %>">
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label for="smtpPassword">
+                <%= ob.polyT('settings.advancedTab.smtp.password') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperPassword') %></div>
+            </div>
+            <div class="col6">
+              <% if (ob.errors['smtpSettings.password']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.password'] })) %>
+              <input class="clrBr clrSh2"
+                required
+                type="password"
+                name="smtpSettings.password"
+                id="smtpPassword"
+                placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderPassword') %>"
+                value="<%= ob.smtpSettings.password %>">
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label for="smtpSenderEmail">
+                <%= ob.polyT('settings.advancedTab.smtp.senderEmail') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperSendFrom') %></div>
+            </div>
+            <div class="col6">
+              <% if (ob.errors['smtpSettings.senderEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.senderEmail'] })) %>
+              <input class="clrBr clrSh2"
+                required
+                type="email"
+                name="smtpSettings.senderEmail"
+                id="smtpSenderEmail"
+                placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderSendFrom') %>"
+                value="<%= ob.smtpSettings.senderEmail %>">
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label for="smtpRecipientEmail">
+                <%= ob.polyT('settings.advancedTab.smtp.recipientEmail') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperSendTo') %></div>
+            </div>
+            <div class="col6">
+              <% if (ob.errors['smtpSettings.recipientEmail']) print(ob.formErrorTmpl({ errors: ob.errors['smtpSettings.recipientEmail'] })) %>
+              <input class="clrBr clrSh2"
+                required
+                type="email"
+                name="smtpSettings.recipientEmail"
+                id="smtpRecipientEmail"
+                placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderSendTo') %>"
+                value="<%= ob.smtpSettings.recipientEmail %>">
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+            </div>
+            <div class="col6">
+              <input  class="clrBr clrP clrTEm margR flexNoShrink"
+                      type=reset
+                      value="<%= ob.polyT('settings.advancedTab.smtp.clearAction') %>"
+              >
+              <a class="btn clrP clrBr clrSh2 js-testSMTPSettings flexNoShrink"><%= ob.polyT('settings.advancedTab.smtp.testAction') %></a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <div class="flexHRight">
+      <%= ob.processingButton({
+        className: 'btn clrP clrBr clrSh2 js-save',
+        btnText: ob.polyT('settings.btnSave')
+      }) %>
+    </div>
+  </div>
+</div>

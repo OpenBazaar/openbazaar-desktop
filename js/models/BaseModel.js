@@ -96,7 +96,7 @@ export default class extends Model {
     });
   }
 
-  set(key, val, options) {
+  set(key, val, options = {}) {
     // Handle both `"key", value` and `{key: value}` -style arguments.
     let attrs;
     let opts = options;
@@ -108,24 +108,45 @@ export default class extends Model {
       (attrs = {})[key] = val;
     }
 
-    if (this.nested) {
-      const nested = _.result(this, 'nested', []);
+    const previousAttrs = this.toJSON();
 
-      Object.keys(nested).forEach((nestedKey) => {
-        const NestedClass = nested[nestedKey];
-        const nestedData = attrs[nestedKey];
-        const nestedInstance = this.attributes[nestedKey];
+    // todo: will it break things if we unset a nested attribute?
+    if (!options.unset) {
+      // let's work off of a clone since we modify attrs
+      attrs = JSON.parse(JSON.stringify(attrs));
 
-        if (nestedInstance) {
-          if (nestedData) nestedInstance.set(nestedData);
-          delete attrs[nestedKey];
-        } else {
-          attrs[nestedKey] = new NestedClass(nestedData);
-        }
-      });
+      if (this.nested) {
+        const nested = _.result(this, 'nested', []);
+
+        Object.keys(nested).forEach((nestedKey) => {
+          const NestedClass = nested[nestedKey];
+          const nestedData = attrs[nestedKey];
+          const nestedInstance = this.attributes[nestedKey];
+
+          if (nestedData) {
+            if (nestedData instanceof NestedClass) {
+              attrs[nestedKey] = nestedData;
+            } else if (nestedInstance) {
+              nestedInstance.set(nestedData);
+              delete attrs[nestedKey];
+            } else {
+              attrs[nestedKey] = new NestedClass(nestedData);
+            }
+          }
+        });
+      }
     }
 
-    return super.set(attrs, opts);
+    const superSet = super.set(attrs, opts);
+
+    // Since the standard change event doesn't properly take into
+    // account nested models, we'll fire our own event if any part of the
+    // model (including nested parts) change.
+    if (!_.isEqual(this.toJSON(), previousAttrs)) {
+      this.trigger('someChange', this, {});
+    }
+
+    return superSet;
   }
 
   mergeInNestedModelErrors(errObj = {}) {
@@ -194,8 +215,9 @@ export default class extends Model {
     if (this.nested) {
       const nested = _.result(this, 'nested', []);
       Object.keys(nested).forEach((nestedKey) => {
-        attrs[nestedKey] = attrs[nestedKey].toJSON ?
-          attrs[nestedKey].toJSON.call(attrs[nestedKey]) : attrs[nestedKey];
+        if (attrs[nestedKey]) {
+          attrs[nestedKey] = attrs[nestedKey].toJSON();
+        }
       });
     }
 

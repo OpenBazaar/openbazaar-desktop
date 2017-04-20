@@ -7,6 +7,9 @@
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
+  "testnet": "Test Mode",
+  "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -21,20 +24,80 @@
   },
   "connectedPeersPage": {
     "heading": "Connected Peers",
-    "infoMessage": "Please note: If any peer does not have their profile set, clicking on their guid below will result in a User Not Found page.",
+    "totalPeers": "%{totalPeers} Found",
     "noResults": "No connected peers"
+  },
+  "emojis": {
+    "groups": {
+      "PEOPLE": "People",
+      "NATURE": "Nature",
+      "OBJECTS": "Objects",
+      "PLACES": "Places",
+      "SYMBOLS": "Symbols"
+    }
+  },
+  "startUp": {
+    "dialogs": {
+      "btnRetry": "Retry",
+      "btnManageConnections": "Manage Connections",
+      "retryConfig": {
+        "title": "Unable to obtain your server config."
+      },
+      "retryOnboardingFetch": {
+        "title": "Unable to get your profile and settings data."
+      },
+      "retryOnboardingSave": {
+        "title": "Unable to save your %{type} data."
+      },
+      "unableToGetFollowData": {
+        "title": "Unable to get data about who you're following."
+      },
+      "unableToGetWalletBalance": {
+        "title": "Unable to get wallet balance."
+      }
+    },
+    "startupLoadingModal": {
+      "canceLink": "cancel",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
+    }
+  },
+  "pageNav": {
+    "notConnectedMenuItem": "Not Connected"
+  },
+  "chat": {
+    "fetchingConversations": "Retrieving your chat conversations…",
+    "errorFetching": "There was an error retrieving your chat conversations.",
+    "errorFetchingWithMessage": "There was an error retrieving your chat conversations: %{msg}",
+    "unreadMessages": "Unread messages %{arrow}",
+    "conversation": {
+      "messageInputPlaceholder": "Enter message…",
+      "loadMessagesError": "There was an error loading the messages. %{retryLink}",
+      "retryLink": "retry",
+      "subMenu": {
+        "viewPage": "View page",
+        "blockUser": "Block user",
+        "deleteConvo": "Delete conversation"
+      },
+      "typingIndicator": "%{user} is typing…",
+      "deleteConvoErrorTitle": "Unable to delete conversation",
+      "deletingOverlayText": "Deleting conversation…"
+    }
   },
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
+    "about": "About",
+    "aboutEmpty": "About is empty…",
     "follow": "Follow",
     "unfollow": "Unfollow",
     "searchStore": "Search",
     "moderator": "Moderator",
     "termsOfService": "Terms of Service",
-    "modFee": "%{modFee} per dispute",
-    "addModerator": "Add as Moderator",
+    "FIXED": "%{amount} per dispute",
+    "PERCENTAGE": "%{percentage}% per dispute",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%) per dispute",
+    "addModerator": "View Details",
     "removeModerator": "Remove as Moderator",
     "information": "Information",
     "website": "Website",
@@ -45,75 +108,357 @@
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
     "guidCopied": "Copied to Clipboard",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
-        "retryStoreFetch": "retry",
-        "btnLayoutStandard": "950px",
-        "btnLayoutFullWidth": "100%",
-        "unableToFetchListings": "Unable to retrieve your listings.",
-        "noListings": "This store has no listings.",
-        "shipsToFilterAny": "(Any Country)",
-        "sortBy": "Sort By",
-        "countListings": "%{smart_count} listing |||| %{smart_count} listings",
-        "countListingsFound": "%{countListings} found",
-        "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-        "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
-        "popinRefreshLink": "refresh",
-        "freeShippingBanner": "Free Shipping",
-        "sortOpts": {
-          "priceAsc": "Price low to high",
-          "priceDesc": "Price high to low",
-          "nameAsc": "Title A-Z",
-          "nameDesc": "Title Z-A"
-        },
-        "shippingFilter": {
-          "heading": "Shipping",
-          "shipsTo": "Ships to"
-        },
-        "categoryFilter": {
-          "heading": "Category",
-          "showMore": "%{smart_count} more... |||| %{smart_count} more...",
-          "showLess": "less"
-        }        
+      "retryStoreFetch": "Retry",
+      "btnLayoutStandard": "950px",
+      "btnLayoutFullWidth": "100%",
+      "unableToFetchListings": "Unable to retrieve your listings",
+      "noListings": "This store has no listings.",
+      "noListingsFound": "No listings match your search criteria",
+      "btnClearSearch": "Clear Search Criteria",
+      "shipsToFilterAny": "(Any country)",
+      "sortBy": "Sort By",
+      "countListings": "%{smart_count} listing |||| %{smart_count} listings",
+      "countListingsFound": "%{countListings} found",
+      "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
+      "popinRefreshLink": "refresh",
+      "freeShippingBanner": "Free Shipping",
+      "sortOpts": {
+        "priceAsc": "Price low to high",
+        "priceDesc": "Price high to low",
+        "nameAsc": "Title A-Z",
+        "nameDesc": "Title Z-A"
+      },
+      "shippingFilter": {
+        "heading": "Shipping",
+        "shipsTo": "Ships to"
+      },
+      "categoryFilter": {
+        "heading": "Category",
+        "showMore": "%{smart_count} more… |||| %{smart_count} more…",
+        "showLess": "less"
+      }
+    },
+    "mainNav": {
+      "home": "Home",
+      "store": "Store",
+      "following": "Following",
+      "followers": "Followers"
     }
   },
   "userShort": {
-    "userLoading": "Loading...",
-    "userNotFound": "Information for %{guid} was not found on the network."
+    "userLoading": "Loading…",
+    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
+    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
+  },
+  "moderatorCard": {
+    "view": "View",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**"
+  },
+  "moderatorDetails": {
+    "messageButton": "Message",
+    "followButton": "Follow",
+    "unFollowButton": "Unfollow",
+    "location": "Location",
+    "recommendations": "Recommendations",
+    "serviceCharge": "Service Charge",
+    "FIXED": "%{amount}**",
+    "PERCENTAGE": "%{percentage}%**",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
+    "termsOfService": "Terms of Service",
+    "addAsModeratorButton": "Add as Moderator",
+    "disclaimer": "**The moderator service charge only applies when a dispute arises."
+  },
+  "about": {
+    "linkText": "About OpenBazaar",
+    "brand": "OpenBazaar",
+    "blurbs": {
+      "tradeFree": "OpenBazaar is made possible by an international community of developers and volunteers contributing their time to help make trade free."
+    },
+    "version": "version %{version}",
+    "bothVersions": "client %{cVer}, server %{sVer}",
+    "client": "Client",
+    "server": "Server",
+    "btnUpdateCheck": "Check for Update",
+    "menu": {
+      "sectionHeader": "MENU"
+    },
+    "donationsTab": {
+      "linkText": "Donations",
+      "sectionHeader": "Donations",
+      "btnCopyAddress": "Copy Address",
+      "btnOpenInWallet" : "Open in Wallet",
+      "notifyCopied": "Copied",
+      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
+      "copied": "Copied",
+      "unableToOpenInWallet": {
+        "title": "Unable to open in wallet",
+        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
+      }
+    },
+    "licenseTab": {
+      "linkText": "License",
+      "sectionHeader": "OpenBazaar MIT License",
+      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "header": "The MIT License (MIT)",
+      "copyright": "Copright &copy; 2016 OpenBazaar Developers",
+      "paragraphs": {
+        "permission": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+        "inclusion": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+        "indemnity": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+      }
+    },
+    "contributorsTab": {
+      "linkText": "Contributors",
+      "sectionHeader": "OpenBazaar Contributors",
+      "listPreface": "This is a partial list of people who have contributed to the project, either through code or other assistance."
+    },
+    "storyTab": {
+      "linkText": "The Story",
+      "sectionHeader": "The Story of OpenBazaar",
+      "paragraphs": {
+        "taakisDarkMarket": "In April 2014 at a secretive Toronto hackathon a project called \"Dark Market\" was created. Amir Taaki lead a small team of developers to build a proof of concept for a decentralized marketplace. The software was completely peer to peer with no central organization controlling it. The Dark Market entry won the hackathon, but Amir and his team decided not to continue work on the project.",
+        "briansOpenBazaar": "Brian Hoffman talked to Amir about Dark Market and learned they weren't going to continue development. He liked the idea of a decentralized marketplace, but didn't like the sole focus on darknet markets, so he forked the project and renamed it OpenBazaar",
+        "alphaTeamalphaRelease": "The idea of a permissionless marketplace was powerful, and people around the world joined Brian to help build this open source software. In September this team released the first test version of the software.",
+        "momentOfTruth": "Over the next few months the team continued improving the software and got an encouraging response from the Bitcoin community. They visited FOSSDEM (Free Open Source Software Developers European Meeting) in Brussels early in 2015, and presented the project to an enthusiastic crowd. Brian and a few core members of the team decided that it was time to turn the project from a part-time, volunteer effort into a serious, well-funded campaign to bring free trade to the world.",
+        "foundedAndFunded": "They founded a company, OB1, with a $1 million venture capital investment from Union Square Ventures and Andreessen Horowitz, and immediately began hiring developers to build a better version of the software from the ground up.",
+        "marketOpening": "In April 2016 the first full release of the software was published, and tens of thousands of people around the world downloaded OpenBazaar and began buying and selling with each other directly, using Bitcoin.",
+        "toInfinityAndBeyond": "The initial team's work secured them a $3 million second round investment in the fall of 2016. Building on their ground-breaking work in version 1, an expanded OB1 set to work on OpenBazaar 2, with the aim of making trade free for even more people around the world.",
+        "cashCTA": "Donate now",
+        "or": "or",
+        "codeCTA": "get involved."
+      }
+    }
   },
   "settings": {
     "settingsLabel": "Settings",
-    "generalTab": "General",
-    "pageTab": "Page",
-    "addressesTab": "Addresses",
+    "generalTab": {
+      "helperLanguage": "Display interface elements in",
+      "helperCountry": "The country you primarily reside in",
+      "helperCurrency": "Display Prices in",
+      "helperTranslations": "Help translate OpenBazaar on %{helperTranslationsLink}",
+      "helperTranslationsLink": "Transifex",
+      "sectionName": "General",
+      "bitcoinUnit": "Bitcoin Unit",
+      "bitcoinUnitTypes": {
+        "BTC": "BTC",
+        "MBTC": "mBTC",
+        "UBTC": "µBTC",
+        "SATOSHI": "Satoshi (sat)"
+      },
+      "statusSaving": "Saving general settings…",
+      "statusSaveComplete": "General settings saved.",
+      "statusSaveFailed": "Unable to save general settings.",
+      "saveErrorAlertTitle": "Unable to save general settings",
+      "searchProvider": "Search Provider",
+      "restoreDefaultProvider": "Restore default",
+      "searchProviderError": "This is not a valid url for a search provider"
+    },
+    "pageTab": {
+      "helperAbout": "Displays on your Home page",
+      "helperHandle": "Handles make it easy to access your page/store",
+      "helperLocation": "Where are you located?",
+      "helperHandleRegister": "Register a unique handle at %{helperHandleRegisterLink}",
+      "helperHandleRegisterLink": "Onename",
+      "helperShortDescription": "160 characters or less",
+      "helperPrimaryColor": "Header, Containers, Buttons",
+      "helperSecondaryColor": "Body, Background",
+      "helperTextColor": "Copy, About, Descriptions",
+      "helperHighlightColor": "Notifications, Alerts, Badges",
+      "helperHighlightTextColor": "Color within Notifications",
+      "placeholderAbout": "Write whatever you would like on your page…",
+      "placeholderName": "Name of your page",
+      "placeholderHandle": "Enter your Onename @handle",
+      "placeholderLocation": "Enter your location",
+      "placeholderShortDescription": "Say something interesting…",
+      "placeholderWebsite": "http://",
+      "placeholderEmail": "name@domain.com",
+      "placeholderPrimaryColor": "#FFFFFF",
+      "placeholderSecondaryColor": "#ECEEF2",
+      "placeholderTextColor": "#252525",
+      "placeholderHighlightColor": "#2BAD23",
+      "placeholderHighlightTextColor": "#FFFFFF",
+      "sectionPage": "Page",
+      "sectionLinks": "Links",
+      "sectionAbout": "About",
+      "sectionTheme": "Theme",
+      "statusSaving": "Saving page settings…",
+      "statusSaveComplete": "Page settings saved.",
+      "statusSaveFailed": "Unable to save page settings.",
+      "saveErrorAlertTitle": "Unable to save page settings",
+      "locationLabel": "Location"
+    },
+    "addressesTab": {
+      "placeholderName": "Your name / name of recipient",
+      "placeholderAddress": "427 N Greenfield Road",
+      "placeholderCity": "Chicago",
+      "placeholderState": "IL",
+      "placeholderPostalCode": "60654",
+      "placeholderNotes": "e.g. leave packages behind bush",
+      "sectionName": "Shipping Addresses",
+      "statusDeletingAddress": "Deleting address %{name}…",
+      "statusDeleteAddressComplete": "Address %{name} deleted.",
+      "statusDeleteAddressFailed": "Unable to delete address %{name}.",
+      "deleteAddressErrorAlertTitle": "Unable to delete address %{name}",
+      "statusAddingAddress": "Adding address %{name}…",
+      "statusAddAddressComplete": "Address %{name} added.",
+      "statusAddAddressFailed": "Unable to add address %{name}.",
+      "addAddressErrorAlertTitle": "Unable to add address %{name}"
+    },
+    "advancedTab": {
+      "sectionName": "Advanced",
+      "helperVisualEffects": "Transitions, Easing, Opacity",
+      "helperWindowControls": "Maximize, Minimize & Close controls",
+      "helperSaveMetaData": "Store additional transaction information",
+      "helperDefaultFee": "Average is recommended. High may clear faster.",
+      "helperServerManagement": "Switch and manage server connections",
+      "helperServerPeers": "Peers you're connected to",
+      "smtp": {
+        "sectionName": "Email Integration (SMTP)",
+        "testAction": "Test Integration",
+        "clearAction": "Clear All",
+        "notifications": "Notifications",
+        "username": "Username",
+        "password": "Password",
+        "serverAddress": "Server Address",
+        "senderEmail": "Send from",
+        "recipientEmail": "Send to",
+        "placeholderServerAddress": "smtp.gmail.com",
+        "placeholderUsername": "name@domain.com",
+        "placeholderPassword": "The password to your email address",
+        "placeholderSendFrom": "name@domain.com",
+        "placeholderSendTo": "name@domain.com",
+        "helperNotifications": "Receive emails for order updates and new followers",
+        "helperServerAddress": "Use Gmail, Yahoo, anything",
+        "helperNewEmail": "Create an email address at %{helperGmailLink}",
+        "helperUsername": "Your email address",
+        "helperPassword": "Encrypted and saved privately in your database",
+        "helperSendFrom": "The email address to send from",
+        "helperSendTo": "The email address to send to",
+        "helperGmailLink": "Gmail"
+      },
+      "server": {
+        "sectionName": "Server",
+        "management": "Management",
+        "peers": "Peers",
+        "btnShowManagementAction": "Connection Management",
+        "btnShowPeersAction": "Show Connected Peers"
+      },
+      "transaction": {
+        "sectionName": "Transactions",
+        "saveMetadata": "Save Metadata",
+        "defaultFee": "Bitcoin Fee",
+        "low": "Low",
+        "medium": "Average",
+        "high": "High"
+      },
+      "appearance": {
+        "sectionName": "Appearance",
+        "visualEffects": "Visual Effects",
+        "windowControlStyle": "Window Controls",
+        "macOS": "Mac (upper left)",
+        "windowsOS": "Windows (upper right)"
+      },
+      "statusSaving": "Saving advanced settings…",
+      "statusSaveComplete": "Advanced settings saved.",
+      "statusSaveFailed": "Unable to save advanced settings.",
+      "saveErrorAlertTitle": "Unable to save advanced settings"
+    },
+    "moderationTab": {
+      "sectionName": "Moderation",
+      "disputeResolution": "Dispute Resolution",
+      "disputeResolutionText": "Sellers have the ability to select you as a Moderator for their store. If a dispute arises between them and a customer, you'll be called in to review the details of the order and determine how the order's funds should be distributed.",
+      "moderationStatus": "Moderate Disputes",
+      "pricePerDispute": "Price per dispute",
+      "pricePerDisputeOptions": {
+        "percentageOfOrder": "Percentage of Order",
+        "fixedPrice": "Fixed Fee",
+        "percentagePlusFixed": "Fixed Fee Plus Percentage"
+      },
+      "pricePerDisputeHelper": "The amount you charge to review and close a dispute",
+      "feeTypeAmount": "Price per dispute",
+      "fixed": "Fixed",
+      "percentage": "Percentage",
+      "fixedPlusPercentage": "Fixed Plus Percentage",
+      "feeTypeHelper": "The amount you charge to review and close a dispute.",
+      "description": "Description",
+      "descriptionHelper": "Add your description (e.g. What is your strategy for reviewing cases? What is your expected response time? What is your schedule of operation? During what hours are you available each day? etc.)",
+      "terms": "Terms",
+      "termsHelper": "Add your terms of service (e.g. Do you have legal limitations? What happens after you make a decisions? etc.)",
+      "languages": "Languages",
+      "languagesHelper": "Enter all of the languages you support (ie: you can communicate clearly in).",
+      "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
+      "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
+      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
+      "status":{
+        "saving": "Saving moderation settings…",
+        "done": "Moderation settings saved.",
+        "fail": "There was an error saving your moderation settings."
+      },
+      "errors": {
+        "confirm": "To become a moderator, you must agree to both statements below.",
+        "save": "The moderation settings were not saved."
+      }
+    },
+    "storeTab": {
+      "sectionName": "Store",
+      "storeStatus": "Store",
+      "storeStatusHelper": "Add a store to your page",
+      "moderators": "Moderators",
+      "moderatorsHelper": "Select a few moderators for your Store.",
+      "selectedModerators": "Selected Moderators",
+      "selectedModeratorsEmpty": "No Moderators Added",
+      "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
+      "moderatorByIDPlaceholder": "Enter a @handle or ID",
+      "moderatoryByIDSubmit": "Find",
+      "availableModerators": "Available Moderators on the Network",
+      "browseModerators": "Browse Moderators",
+      "browseMoreModerators": "Load More Moderators",
+      "loading": "Loading",
+      "status": {
+        "saving": "Saving store settings...",
+        "done": "Store settings saved.",
+        "fail": "Saving the store settings failed.",
+        "error": "There was an error saving your store settings. \n %{errMsg}"
+      },
+      "errors": {
+        "modNotFoundTitle": "Moderator Not Found",
+        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
+        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
+        "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
+        "modAlreadyAdded": "You have already added that moderator.",
+        "modIsBlank": "You must add a moderator ID or handle",
+        "modIsInvalid": "%{guid} is not a valid moderator.",
+        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
+        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
+      }
+    },
+    "optional": "optional",
     "language": "Language",
     "country": "Country",
     "currency": "Currency",
-    "viewNsfwContent": "View NSFW Content",
+    "viewNsfwContent": "Display Mature Content",
     "on": "On",
     "off": "Off",
+    "yes": "Yes",
+    "no": "No",
     "name": "Name",
     "handle": "Handle",
     "shortDescription": "Short Description",
     "about": "About",
-    "nsfwContent": "NSFW Content",
+    "nsfwContent": "Mature Content (NSFW, adult, 18+, etc)",
     "avatar": "Avatar",
-    "loadAvatar": "Load Image",
-    "loadAvatarHelp": "The avatar image should be at least %{minWidth}px by %{minHeight}px",
-    "loadAvatarSizeError": {
-      "title": "Your avatar image is too small.",
-      "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
-      "bodyRotated": "When rotated this image is %{curHeight}px wide by %{curWidth}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
-    },
-    "loadAvatarZoomTooSmall": "This image is too small to zoom.",
+    "loadAvatar": "Select Photo",
+    "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
     "header": "Cover Photo",
-    "loadHeader": "Load Image",
-    "loadHeaderHelp": "The header image should be at least %{minWidth}px by %{minHeight}px",
-    "loadHeaderSizeError": {
-      "title": "Your header image is too small",
-      "body": "The image you loaded is %{curWidth}px wide by %{curHeight}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users.",
-      "bodyRotated": "When rotated this image is %{curHeight}px wide by %{curWidth}px tall, which is below the recommended pixel dimensions of %{minWidth}px by %{minHeight}px. It may be blurry when viewed by other users."
-    },
-    "loadHeaderZoomTooSmall": "This image is too small to zoom.",
+    "loadHeader": "Select Photo",
+    "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
@@ -123,8 +468,11 @@
     "coverPhoto": "Cover Photo",
     "primaryColor": "Primary Color",
     "secondaryColor": "Secondary Color",
+    "highlightColor": "Highlight Color",
+    "highlightTextColor": "Highlight Text Color",
     "textColor": "Text Color",
     "addresses": {
+      "sectionName": "New Address",
       "name": "Name",
       "company": "Company",
       "street": "Street",
@@ -135,10 +483,9 @@
       "postalCode": "Postal Code",
       "notes": "Address Notes"
     },
-    "statusSaving": "Saving settings...",
+    "statusSaving": "Saving settings…",
     "statusSaveFailed": "Settings failed to save.",
     "statusSaveComplete": "Settings saved.",
-    "statusSafeToClose": "Save has completed. You may close the modal",
     "btnYes": "Yes",
     "btnNo": "No",
     "btnSave": "Save",
@@ -151,20 +498,156 @@
       "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
     }
   },
+  "connectionManagement": {
+    "defaultServerName": "Local Bundled Server",
+    "statusBar": {
+      "errorPreface": "Error:",
+      "needHelpLink": "Need help?",
+      "viewLocalServerDebugLogLink": "View Server Debug Log",
+      "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
+      "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
+      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "cancelConnAttempt": "Cancel",
+      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+    },
+    "configurations": {
+      "tabName": "Configurations",
+      "heading": "Server Configurations",
+      "btnNew": "New",
+      "btnCancel": "Cancel",
+      "btnRetry": "Retry",
+      "btnConnect": "Connect",
+      "statusConnected": "Connected",
+      "deleteConfirm": {
+        "heading": "Are you sure?",
+        "body": "The server configuration will be deleted. This will not delete the actual server.",
+        "btnCancel": "Cancel",
+        "btnDelete": "Yes, delete"
+      }
+    },
+    "configurationForm": {
+      "tabName": "New configuration",
+      "btnCancel": "Cancel",
+      "btnSave": "Save",
+      "port": "Port",
+      "sslOn": "On",
+      "sslOff": "Off",
+      "password": "Password",
+      "username": "Username",
+      "serverIp": "Server IP",
+      "name": "Name",
+      "placeholderName": "Enter a name…",
+      "placeholderServerIp": "The IP to your server (or localhost)",
+      "placeholderUsername": "The username to your server",
+      "placeholderPassword": "The password to your server",
+      "placeholderPort": "The port to your server"
+    }
+  },
+  "wallet": {
+    "title": "Wallet",
+    "closeLink": "Close wallet",
+    "fundsHeader": "Funds",
+    "btnReceiveMoney": "Receive Money",
+    "btnSendMoney": "Send Money",
+    "btcCurrencyLabel": "Bitcoin",
+    "valueInCurrencyLabel": "Value in %{currency}",
+    "transactionsLabel": "Transactions",
+    "receiveMoney": {
+      "title": "Receive Money",
+      "needBitcoin": "Need Bitcoin?",
+      "btnCancel": "Cancel"      
+    },
+    "sendMoney": {
+      "toLabel": "To",
+      "toPlaceholder": "Enter a Bitcoin Address",
+      "amountLabel": "Amount",
+      "noteLabel": "Note",
+      "notePlaceholder": "Only seen by you",
+      "sendBtn": "Send",
+      "clear": "Clear",
+      "sendPaymentFailDialogTitle": "Unable to send payment",
+      "sendConfirm": {
+        "heading": "Are you sure?",
+        "body": "Double check that the address and amount are correct.",
+        "btnCancel": "Cancel",
+        "btnConfirmSend": "Yes, Send"
+      }      
+    },
+    "transactions": {
+      "header": "Transactions",
+      "transaction": {
+        "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+        "outgoingText": "%{fiatBtcPairing} to %{address}",
+        "incomingText": "%{fiatBtcPairing} received",
+        "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
+        "viewDetailsBtn": "View Details",
+        "retryTransactionBtn": "Retry",
+        "retryPaymentConfirmBox": {
+          "title": "Retry Payment",
+          "body": "%{fiatBtcPairing}%{asterisk} will be added to retry the payment",
+          "subText": "%{asterisk}estimated price",
+          "btnCancel": "Cancel",
+          "btnConfirmSend": "Send"
+        },
+        "retryFailDialogTitle": "Unable to retry payment",
+        "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
+        "feeBumpOf": "Fee bump of %{address}"
+      },
+      "noTransactionsPlaceholder": "You have no transactions.",
+      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}"
+    }
+  },
+  "formats": {
+    "PHYSICAL_GOOD": "Physical Good",
+    "DIGITAL_GOOD": "Digital Good",
+    "SERVICE": "Service",
+    "CROWD_FUND": "Crowd fund"
+  },
+  "conditionTypes": {
+    "NEW": "New",
+    "USED_EXCELLENT": "Used - Excellent",
+    "USED_GOOD": "Used - Good",
+    "USED_POOR": "Used - Poor",
+    "REFURBISHED": "Refurbished"
+  },
   "listingDetail": {
+    "edit": "Edit",
+    "delete": "Delete",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "refresh"
+    "listingDataChangedPopinRefresh": "Refresh",
+    "viewPhotos": "View %{count} Photos",
+    "type": "Type: %{type}",
+    "condition": "Condition: %{condition}",
+    "tags": "Tags",
+    "noTags": "No tags entered",
+    "buyNow": "BUY NOW",
+    "description": "Description",
+    "noDescription": "No description entered",
+    "reviews": "Reviews",
+    "attachments": "Attachments",
+    "refundPolicy": "Refund Policy",
+    "noRefundPolicy": "No return policy entered",
+    "termsAndConditions": "Terms Of Service",
+    "noTermsAndConditions": "No terms and conditions entered",
+    "shipping": "Shipping",
+    "shipsFrom": "Ships from %{country}",
+    "shipTo": "Ship to:",
+    "noShippingFound": "This listing does not ship to the selected country.",
+    "localPickup": "This option is for local pickup only.",
+    "allCountries": "Any Country",
+    "returnToStore": "Return to store",
+    "goToStore": "Go to store"
   },
   "listingCard": {
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
-    "deleting": "Deleting...",
+    "deleting": "Deleting…",
     "deleted": "Deleted"
   },
   "listingDelete": {
-    "deletingListing": "Deleting listing %{listing}...",
+    "deletingListing": "Deleting listing %{listing}…",
     "deletedListing": "Listing %{listing} deleted.",
     "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
     "deletedFailedDialogTitle": "Unable to delete listing",
@@ -172,19 +655,6 @@
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
   },
   "editListing": {
-    "formats": {
-      "PHYSICAL_GOOD": "Physical Good",
-      "DIGITAL_GOOD": "Digital Good",
-      "SERVICE": "Service",
-      "CROWD_FUND": "Crowd fund"
-    },
-    "conditionTypes": {
-      "NEW": "New",
-      "USED_EXCELLENT": "Used - Excellent",
-      "USED_GOOD": "Used - Good",
-      "USED_POOR": "Used - Poor",
-      "REFURBISHED": "Refurbished"
-    },
     "nsfwYes": "Yes",
     "nsfwNo": "No",
     "sectionNames": {
@@ -193,15 +663,37 @@
       "attachments": "Attachments",
       "shipping": "Shipping",
       "tags": "Tags",
-      "tagsDetailed": "Tags (for getting your listing discovered)",
+      "tagsDetailed": "Tags (For getting your listing discovered)",
       "category": "Category",
-      "categoryDetailed": "Category (for organizing your store)",
-      "inventory": "Inventory",
+      "categoryDetailed": "Category (For organizing your store)",
       "variants": "Variants",
+      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
+      "inventory": "Inventory",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
-      "expiration": "Expiration"
+      "coupons": "Coupons",
+      "inventoryManagement": "Inventory Management",
+      "variantInventory": "Variant Inventory"
     },
+    "placeholderTitle": "Enter your title…",
+    "placeholderSKU": "SKU, Part Number, ID, etc",
+    "placeholderDescription": "Describe your listing as best as you can… Include inline photos. Link to Youtube videos. etc",
+    "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
+    "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
+    "helperTitle": "Something descriptive that clearly explains what you're selling",
+    "helperType": "Choose from 4 types",
+    "helperShipping": "Ship wherever you'd like!",
+    "helperPhotos": "Include up to %{maxPhotos} photos",
+    "helperSKU": "A unique identifier for your listing",
+    "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
+    "variantInventoryLink": "Variant Inventory",
+    "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
+    "helperCondition": "The overall condition of your listing",
+    "helperNSFW": "Mark yes if the listing is NSFW",
+    "helperTags": "Add many tags. Enter a tag name, press enter, repeat.",
+    "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
+    "helperReturnPolicy": "If left blank, the listing will disply \"No return policy entered\"",
+    "helperTerms": "If left blank, the listing will disply \"No terms and conditions entered\"",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
@@ -211,34 +703,69 @@
     "condition": "Condition",
     "sku": "SKU",
     "description": "Description",
-    "uploading": "Uploading...",
-    "categoryPlaceholder": "Enter category...",
-    "tagsPlaceholder": "Enter #tags...",
+    "uploading": "Uploading…",
+    "categoryPlaceholder": "Enter a category…",
+    "tagsPlaceholder": "Enter #tags…",
     "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
     "btnAddShippingOptionShort": "Add",
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
+    "btnAddCoupon": "Add Coupon",
+    "primaryPhoto": "Primary Photo",
     "shippingOptions": {
-        "optionHeading": "Shipping Option #%{listPosition}",
-        "shippingDestinations": "Shipping Destinations",
-        "regionsPlaceholder": "Enter countries...",
-        "nameLabel": "Shipping Option Title",
-        "namePlaceholder": "e.g. USA Shipping, International, etc",
-        "typeLabel": "Shipping Type",
-        "shippingTypes": {
-          "FIXED_PRICE": "Fixed Price",
-          "LOCAL_PICKUP": "Local Pickup"
-        },
-        "btnAddShippingOption": "Add Shipping Option",
-        "services": {
-          "nameLabel": "Service",
-          "namePlaceholder": "e.g. Standard, Express, Overnight",
-          "estimatedDeliveryLabel": "Est. Delivery Time",
-          "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
-          "priceLabel": "Price",
-          "pricePlaceholder": "0.00"
-        }
+      "optionHeading": "Shipping Option #%{listPosition}",
+      "shippingDestinations": "Destinations",
+      "regionsPlaceholder": "Enter countries…",
+      "nameLabel": "Option Title",
+      "namePlaceholder": "e.g. USA Shipping, International, etc",
+      "typeLabel": "Type",
+      "shippingTypes": {
+        "FIXED_PRICE": "Fixed Price",
+        "LOCAL_PICKUP": "Local Pickup"
+      },
+      "btnAddShippingOption": "Add Shipping Option",
+      "btnDeleteShippingOption": "Delete",
+      "clearAll": "Clear All",
+      "services": {
+        "nameLabel": "Service",
+        "namePlaceholder": "e.g. Standard, Express, Overnight",
+        "estimatedDeliveryLabel": "Est. Delivery Time",
+        "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
+        "priceLabel": "Price",
+        "pricePlaceholder": "0.00",
+        "addService": "+ Add Service"
+      }
+    },
+    "coupons": {
+      "titleLabel": "Title",
+      "couponCodeLabel": "Coupon Code",
+      "discountLabel": "Discount",
+      "titlePlaceholder": "optional",
+      "discountCodePlaceholder": "Enter a code",
+      "discountTypePercent": "Percent",
+      "discountTypeFixed": "Fixed",
+      "btnAddCoupon": "+ Add Coupon"
+    },
+    "variants": {
+      "btnAddVariant": "Add Variant",
+      "addVariant": "+ Add Variant",
+      "titleLabel": "Title",
+      "titlePlaceholder": "e.g. Size, Color, Material, etc",
+      "choicesLabel": "Choices",
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+    },
+    "inventoryManagement": {
+      "doNotTrackSelectOption": "Do not track inventory",
+      "trackSelectOption": "Track Inventory",
+      "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
+      "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+    },
+    "variantInventory": {
+      "helperText": "Variant options with a quantity of 0 will not display",
+      "placeholderSKU": "SKU, ID, etc",
+      "unlimitedQuantityLabel": "unlimited"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
@@ -249,19 +776,59 @@
       "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
     }
   },
+  "search": {
+    "searchBtn": "Search",
+    "suggestions": "Suggestions",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
+    "resultsTotal": "%{totalResults} listings",
+    "displaying": "Displaying <b>%{start}-%{end} of %{total}</b>",
+    "sortBy": "Sort by",
+    "changeProvider": "Change Default Search Provider",
+    "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
+    "noResults": "No listings match your search criteria",
+    "errors": {
+      "searchFailTitle": "The search query to %{provider} has failed.",
+      "searchFailReason": "The search provider returned the following message: %{error}",
+      "emptyData": "No valid data was returned from %{provider}."
+    }
+  },
   "exchangeRatesSyncer": {
-    "fetchingRatesStatusMsg": "Fetching exchange rates...",
+    "fetchingRatesStatusMsg": "Fetching exchange rates…",
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
     "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
     "fetchingRatesFailStatusMsgRetryLink": "retry"
   },
+  "debugLog": {
+    "copiedToClipboard": "Copied to clipboard",
+    "copyToClipboard": "Copy to clipboard"
+
+  },
   "profileModelErrors": {
     "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
+    "locationTooLong": "The location exceeds the maximum allowable length."
+  },
+  "contactModelErrors": {
+    "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
-    "provideUsername": "Please provide a username.",
     "duplicateSocialAccount": "You already have a social account of this type."
+  },
+  "socialAccountModelErrors": {
+    "provideUsername": "Please provide a username."
+  },
+  "smtpModelErrors": {
+    "username": {
+      "caseEmpty": "Please provide a username.",
+      "noWhitespace": "The username cannot contain spaces."
+    },
+    "password": "Please provide a valid password.",
+    "serverAddress": "Please provide a valid URL.",
+    "senderEmail": "Please provide a valid email.",
+    "recipientEmail": "Please provide a valid email.",
+    "notifications": {
+      "caseOffIfEmpty": "Please fill out all settings if you turn notifications on."
+    }
   },
   "errors": {
     "saveError": "There was an error saving your data.",
@@ -271,10 +838,12 @@
     "provideName": "Please provide a name.",
     "provideCountry": "Please provide a country."
   },
-  "listingInnerModelErrors": {
+  "listingModelErrors": {
     "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
-    "provideShippingOption": "For a physical good, at least one shipping option is required."
+    "provideShippingOption": "For a physical good, at least one shipping option is required.",
+    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
+    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -286,7 +855,19 @@
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
-    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories."
+    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
+    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number."
+  },
+  "couponModelErrors": {
+    "provideDiscountCode": "Please provide a coupon code.",
+    "provideDiscountAmount": "Please provide a discount value.",
+    "percentageLow": "The percentage value must be greater than zero.",
+    "percentageHigh": "You cannot set a percentage above 100%" ,
+    "priceLow": "The price must be geater than zero.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
+    "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
     "provideName": "Please provide a title.",
@@ -299,8 +880,58 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
-    "provideAmountGreaterThanZero": "The price must be greater than 0."    
-  },  
+    "provideAmountGreaterThanZero": "The price must be greater than 0."
+  },
+  "moderatorModelErrors": {
+    "noDescription": "Please provide a description.",
+    "descriptionLength": "Descriptions must be no more than 300 characters",
+    "noTerms": "Please provide your terms of service.",
+    "termsLength": "Terms of service must be no more than 10,000 characters",
+    "noLanguages": "Please list at least one language you can communicate in."
+  },
+  "feeModelErrors": {
+    "noFeeType": "Please set a valid fee type",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "percentageLow": "You cannot set a fee percentage below zero.",
+    "percentageHigh": "You cannot set a fee percentage above 100%",
+    "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
+  },
+  "fixedFeeModelErrors": {
+    "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+  },
+  "skuModelErrors": {
+    "provideQuantity": "Please provide a quantity.",
+    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "providePositiveQuantity": "The quantity cannot be less than 0.",
+    "provideSurcharge": "Please provide a surcharge.",
+    "provideNumericSurcharge": "Please provide the surcharge as a number."
+  },
+  "variantOptionModelErrors": {
+    "provideName": "Please provide a title.",
+    "atLeast2Variants": "Please provide at least two choices.",
+    "variantTooLong": "%{variant} exceeds the maximum length of %{maxLength} characters."
+  },
+  "spendModelErrors": {
+    "provideAddress": "Please provide an address.",
+    "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
+    "provideAmountNumber": "Please provide an amount as a number.",
+    "amountGreaterThanZero": "The amount must be greater than zero.",
+    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+  },
+  "bitcoinCurrencyUnits": {
+    "BTC": "BTC",
+    "MBTC": "mBTC",
+    "UBTC": "µBTC",
+    "SATOSHI": "sat"
+  },
+  "bitcoinCurrencyFormat": {
+    "shortBTC": "%{symbol}%{amount}",
+    "longBTC": "%{amount} %{symbol}",
+    "MBTC": "%{amount} %{symbol}",
+    "UBTC": "%{amount} %{symbol}",
+    "SATOSHI": "%{amount} %{symbol}"
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
@@ -548,6 +1179,11 @@
     "YEMEN": "Yemen",
     "ZAMBIA": "Zambia",
     "ZIMBABWE": "Zimbabwe"
+  },
+  "regions": {
+    "ALL": "All",
+    "EUROPEAN_UNION": "European Union",
+    "EUROPEAN_ECONOMIC_AREA": "European Economic Area"
   },
   "currencies": {
     "AED": "UAE Dirham",

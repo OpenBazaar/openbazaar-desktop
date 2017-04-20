@@ -8,22 +8,31 @@
   background-color: $overlay;
 
   .modalContent {
-    padding: $padHg;
     min-width: 300px;
     max-height: calc(100% - 50px);
-    overflow: auto;
     border-radius: $corner;
     @include center;
     left: calc(50% - #{$chatClosed / 2});
     @include chatOpeningTransition(left);
+    margin-bottom: 100px;
 
     .chatOpen & {
       left: calc(50% - #{$chatOpen / 2});
     }
+
+    & > .cornerTR {
+      top: -40px;
+      right: 0;
+    }
   }
 
-  &.modalTop .modalContent {
-    top: $padLg;
+  // These are .modalTop styles. Will also apply them to
+  // .modalScrollPage since you're really not going to want
+  // a modal that scrolls with the page and isn't positioned
+  // at the top.
+  &.modalTop .modalContent,
+  &.modalScrollPage .modalContent {
+    top: $padMd;
     @include center(true, false);
     left: calc(50% - #{$chatClosed / 2});
 
@@ -31,15 +40,69 @@
       left: calc(50% - #{$chatOpen / 2});
     }
   }
-}
 
-// temporary test code
-.modal {
-  &.testModal .modalContent {
-    background-color: orange;
-  }
+  &.modalScrollPage {
+    overflow-y: scroll;
+    transform: none;
 
-  &.testModal2 .modalContent {
-    background-color: pink;
+    .modalContent {
+      max-height: none;
+      margin-bottom: $padGi;
+      padding: 0;
+      width: $modalContentInner;
+      overflow: visible;
+      left: 0;
+      transform: none;
+      // adjust by 20 px to visually center
+      margin-left: calc(((100% - (#{$modalContentInner + $chatClosed})) / 2) + 20px);
+      @include chatOpeningTransition(margin-left);
+      margin-bottom: 100px;
+
+      .chatOpen & {
+        left: 0;
+        margin-left: calc(((100% - (#{$modalContentInner + ($chatOpen - 5)})) / 2));
+      }
+
+      & > .cornerTR {
+        right: auto;
+        left: calc(#{$modalContentInner} - #{$buttonHeight});
+        top: 0;
+      }
+
+      .topControls {
+        margin-bottom: $padSm;
+        min-height: 35px;
+      }
+    }
+
+    &.modalNarrow {
+      .modalContent {
+        width: $modalContentInnerNarrow;
+        margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatClosed})) / 2) + 28px);
+
+        .chatOpen & {
+          margin-left: calc(((100% - (#{$modalContentInnerNarrow + $chatOpen})) / 2) + 5px);
+        }
+
+        & > .cornerTR {
+          left: calc(#{$modalContentInnerNarrow} - #{$buttonHeight});
+        }
+      }
+    }
+
+    &.modalMedium {
+      .modalContent {
+        width: $modalContentInnerMedium;
+        margin-left: calc(((100% - (#{$modalContentInnerMedium + $chatClosed})) / 2) + 28px);
+
+        .chatOpen & {
+          margin-left: calc(((100% - (#{$modalContentInnerMedium + $chatOpen})) / 2) + 5px);
+        }
+
+        & > .cornerTR {
+          left: calc(#{$modalContentInnerMedium} - #{$buttonHeight});
+        }
+      }
+    }    
   }
 }

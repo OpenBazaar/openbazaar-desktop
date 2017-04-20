@@ -14,8 +14,12 @@
   }
 }
 
-@mixin chatOpeningTransition($property) {
-  transition: $property 0.5s ease;
+@mixin chatOpeningTransition($props...) {
+  $transitions: ();
+  @each $prop in $props {
+    $transitions: append($transitions, #{$prop 0.5s ease}, comma);
+  }
+  transition: $transitions;
 }
 
 @mixin disabled {
@@ -49,28 +53,6 @@
   }
 }
 
-// todo: refactor this style once we have designs
-@mixin processingOverlay {
-  position: relative;
-
-  &::after {
-    content: 'Processing...';
-    position: absolute;
-    background-color: rgba(0,0,0,0.6);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    font-size: 14px;
-    cursor: default;
-    border-radius: inherit;
-  }
-}
-
 @mixin textColor($col1, $col2: $col1, $col3: $col2) {
   /* generates the text color rules */
   /* if no second color is passed, set everything to the first color */
@@ -81,7 +63,7 @@
   }
 
   .btn, .listItem, &.btn, &.listItem {
-    /* btnTxt and iconBtn are included because they extend .btn */
+    /* btnTxt and iconBtn are included automatically because they extend .btn */
     color: $col1;
   }
 
@@ -95,7 +77,114 @@
     background: $col1;
   }
 
+  input[type="checkbox"] + label:before {
+    color: $col2;
+  }
+
+  input[type="checkbox"]:checked + label:before {
+    color: $col1;
+  }
+
   .tab.active {
     color: $col3;
+
+    &::after {
+      color: $col3;
+    }
+  }
+
+  // spinner will inherit text color
+  .spinner {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
+
+  // spinner will override inherited color if you directly add a color class to it
+  &.spinner {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
+
+  .iconWallet {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
+
+  &.iconWallet {
+    path,
+    rect {
+      fill: $col1;
+    }
+  }
+}
+
+@mixin triangle($width, $color: inherit) {
+  width: 0;
+  height: 0;
+  border-top: $width solid transparent;
+  border-bottom: $width solid transparent;
+  border-right-width: $width;
+  border-right-style: solid;
+  border-right-color: $color;
+}
+
+@mixin borderColor($col1, $col2: $border2) {
+  /* generates the border color rules */
+  border-color: $col1;
+
+  &:hover,
+  &:focus {
+    border-color: $col1;
+  }
+
+  input,
+  select,
+  textarea,
+  button,
+  .trumbowyg div[contenteditable]{
+    &:focus {
+      border-color: $col2;
+    }
+  }
+
+  hr {
+    border-color: $col1;
+  }
+
+  &.trumbowyg {
+    border-width: 0;
+
+    .trumbowyg-button-pane {
+      border: 1px solid $col1;
+
+      border-bottom: 0;
+
+      .trumbowyg-button-group::before {
+        background-color: $col1;
+      }
+    }
+  }
+
+  .btn:hover,
+  .btn:focus,
+  &.btn:hover,
+  &.btn:focus,
+  .clrHover:hover,
+  .clrHover:focus,
+  &.clrHover:hover,
+  &.clrHover:focus {
+    border-color: $col2;
+
+    .disabled &,
+    &.disabled,
+    &:disabled {
+      border-color: $col1;
+    }
   }
 }

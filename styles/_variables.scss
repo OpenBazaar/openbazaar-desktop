@@ -1,30 +1,39 @@
 // colors
+$primary: hsl(0,0%,100%);
+$primaryGhost: transparentize($primary, 0.2);
+$secondary: adjust-color($primary, $lightness: -4%);
+
 $text: hsl(0,0,14.8);
 $text2: adjust-color($text, $lightness: +43.2%);
 $text3: adjust-color($text, $lightness: +59%);
 $text4: adjust-color($text, $lightness: +65%);
 $textOnEmph: rgb(255, 255, 255);
-$primary: hsl(0,0%,100%);
-$secondary: adjust-color($primary, $lightness: -4%);
-$background: adjust-color($primary, $lightness: -10%);
+
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
+$border3: adjust-color($text, $lightness: 35%);
+$border4: adjust-color($text, $lightness: 70%);
+$border5: adjust-color($text, $lightness: 90%);
 $focusedBorder: rgb(0, 0, 0);
-$emphasis1: rgb(253,166,57);
-$emphasis2: rgb(174, 138, 88);
+$emphasis1: hsl(116.5, 66.3, 41);
+$emphasis2: adjust-color($emphasis1, $lightness: +20%);
+$emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
 $error: red;
-$overlay: adjust-color($secondary, $alpha: -0.1);
+
+$overlay: adjust-color($secondary, $alpha: -0.04);
 
 // typography
 $baseFontSize: 10px;
-$txBg: 5rem;
+$txBg: 4.75rem;
 $tx1: 2.6rem;
 $tx2: 2.3rem;
+$tx2b: 2rem;
 $tx3: 1.7rem;
 $tx4: 1.5rem;
 $tx5: 1.4rem;
 $tx5b: 1.3rem;
 $tx6: 1.2rem;
+$tx7: 0.9rem;
 
 $formElementHeight: 4rem;
 
@@ -36,16 +45,27 @@ $padMd: $pad * 1.5;
 $padMd2: $pad * 1.2;
 $padLg: $pad * 2;
 $padHg: $pad * 2.5;
+$padGi: $pad * 4;
 $marg: 10px;
-$chatClosed: 70px; //fake number
-$chatOpen: 200px; //fake number
+$chatClosed: 48px;
+$chatOpen: 225px;
 $pageWidth: 950px;
+$scrollbar: 10px;
+$modalContentInner: 957px;
+$modalContentInnerNarrow: 536px;
+$modalContentInnerMedium: 750px;
+$buttonHeight: 35px;
+$inputHeight: 40px;
+$chatConvoHeight: 360px;
 
 // controls
 $corner: 2px;
 $bar: 50px;
 $barSm: 40px;
 $barLg: 55px;
+$spinnerSm: 20px;
+$spinnerMd: 60px;
+$spinnerLg: 80px;
 
 //responsive
 $largeWidth: 1500px;

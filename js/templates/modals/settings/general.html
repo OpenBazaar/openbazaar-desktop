@@ -1,74 +1,154 @@
-<div class="bar padMd clrBr borderBottom">
-  <h2 class="h3 txUnb"><%= ob.polyT('settings.generalTab') %></h2>
-</div>
-<div class="tabFormWrapper clrP">
-  <form class="box clrP padMdKids padStack settingsGeneralForm">
-    <div class="flexRow">
-      <div class="col3">
-        <label><%= ob.polyT('settings.language') %></label>
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexHCent">
+    <h2 class="h3 clrT"><%= ob.polyT('settings.generalTab.sectionName') %></h2>
+    <%= ob.processingButton({
+      className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+      btnText: ob.polyT('settings.btnSave')
+    }) %>
+  </div>
+  <hr class="clrBr" />
+
+  <div class="tabFormWrapper">
+    <form class="box clrP padMdKids padStack settingsGeneralForm">
+      <div class="flexRow gutterH">
+        <div class="col3">
+          <label class="required"><%= ob.polyT('settings.language') %></label>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperLanguage') %></div>
+        </div>
+        <div class="col6">
+          <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
+          <select id="settingsLanguageSelect" name="language" class="clrSh2">
+            <% ob.languageList.forEach((lang) => { %>
+              <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
+            <% }); %>
+          </select>
+          <div class="clrT2 txSm padSm"><%= ob.polyT('settings.generalTab.helperTranslations', { helperTranslationsLink: `<a href="https://www.transifex.com/ob1/openbazaar/" class="clrTEm">${ob.polyT('settings.generalTab.helperTranslationsLink')}</a>` }) %></div>
+        </div>
       </div>
-      <div class="col9">
-        <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
-        <select id="settingsLanguageSelect" name="language">
-          <% ob.languageList.forEach((lang) => { %>
-            <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
-          <% }); %>
-        </select>
+      <div class="flexRow gutterH">
+        <div class="col3">
+          <label class="required"><%= ob.polyT('settings.country') %></label>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCountry') %></div>
+        </div>
+        <div class="col6">
+          <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
+          <select id="settingsCountrySelect" name="country" class="clrSh2">
+            <% ob.countryList.forEach((country) => { %>
+            <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
+            <% }); %>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="flexRow">
-      <div class="col3">
-        <label><%= ob.polyT('settings.country') %></label>
+      <div class="flexRow gutterH">
+        <div class="col3">
+          <label class="required"><%= ob.polyT('settings.currency') %></label>
+          <div class="clrT2 txSm"><%= ob.polyT('settings.generalTab.helperCurrency') %></div>
+        </div>
+        <div class="col6">
+          <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
+          <select id="settingsCurrencySelect"  name="localCurrency" class="clrSh2">
+            <% ob.currencyList.forEach((currency) => { %>
+            <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
+            <% }); %>
+          </select>
+        </div>
       </div>
-      <div class="col9">
-        <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
-        <select id="settingsCountrySelect" name="country">
-          <% ob.countryList.forEach((country) => { %>
-          <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
-          <% }); %>
-        </select>
-      </div>
-    </div>
-    <div class="flexRow">
-      <div class="col3">
-        <label><%= ob.polyT('settings.currency') %></label>
-      </div>
-      <div class="col9">
-        <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
-        <select id="settingsCurrencySelect"  name="localCurrency">
-          <% ob.currencyList.forEach((currency) => { %>
-          <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
-          <% }); %>
-        </select>
-      </div>
-    </div>
-    <div class="flexRow">
-      <div class="col3">
-        <label><%= ob.polyT('settings.viewNsfwContent') %></label>
-      </div>
-      <div class="col9">
-        <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
-        <div class="btnStrip">
+      <div class="flexRow <% if (ob.localCurrency !== 'BTC') print('hide') %> js-bitcoinUnitField">
+        <div class="col3">
+          <label class="required"><%= ob.polyT('settings.generalTab.bitcoinUnit') %></label>
+          <div class="clrT2 txSm"></div>
+        </div>
+        <div class="col6">
+          <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
           <div class="btnRadio clrBr">
             <input type="radio"
-                   name="showNsfw"
-                   value="true"
-                   id="settingsViewNSFWInputTrue"
-                   data-var-type="boolean"
-            <% if(ob.showNsfw) { %>checked<% } %>>
-            <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.on') %></label>
+                   data-persistence-location="local"
+                   name="bitcoinUnit"
+                   value="BTC"
+                   id="settingsBitcoinUnitBtc"
+            <% if(ob.bitcoinUnit === 'BTC') { %>checked<% } %>>
+            <label for="settingsBitcoinUnitBtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.BTC') %></label>
           </div>
           <div class="btnRadio clrBr">
             <input type="radio"
-                   name="showNsfw"
-                   value="false"
-                   id="settingsViewNSFWInputFalse"
-                   data-var-type="boolean"
-            <% if(!ob.showNsfw) { %>checked<% } %>>
-            <label for="settingsViewNSFWInputFalse"><%= ob.polyT('settings.off') %></label>
+                   data-persistence-location="local"
+                   name="bitcoinUnit"
+                   value="MBTC"
+                   id="settingsBitcoinUnitMbtc"
+            <% if(ob.bitcoinUnit === 'MBTC') { %>checked<% } %>>
+            <label for="settingsBitcoinUnitMbtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.MBTC') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   data-persistence-location="local"
+                   name="bitcoinUnit"
+                   value="UBTC"
+                   id="settingsBitcoinUnitUbtc"
+            <% if(ob.bitcoinUnit === 'UBTC') { %>checked<% } %>>
+            <label for="settingsBitcoinUnitUbtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.UBTC') %></label>
+          </div>
+          <div class="btnRadio clrBr">
+            <input type="radio"
+                   data-persistence-location="local"
+                   name="bitcoinUnit"
+                   value="SATOSHI"
+                   id="settingsBitcoinUnitSatoshi"
+            <% if(ob.bitcoinUnit === 'SATOSHI') { %>checked<% } %>>
+            <label for="settingsBitcoinUnitSatoshi"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.SATOSHI') %></label>
           </div>
         </div>
       </div>
-    </div>
-  </form>
+      <div class="flexRow gutterH">
+        <div class="col3">
+          <label class="required"><%= ob.polyT('settings.viewNsfwContent') %></label>
+        </div>
+        <div class="col9">
+          <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>
+          <div class="btnStrip">
+            <div class="btnRadio clrBr">
+              <input type="radio"
+                     name="showNsfw"
+                     value="true"
+                     id="settingsViewNSFWInputTrue"
+                     data-var-type="boolean"
+              <% if(ob.showNsfw) { %>checked<% } %>>
+              <label for="settingsViewNSFWInputTrue"><%= ob.polyT('settings.yes') %></label>
+            </div>
+            <div class="btnRadio clrBr">
+              <input type="radio"
+                     name="showNsfw"
+                     value="false"
+                     id="settingsViewNSFWInputFalse"
+                     data-var-type="boolean"
+              <% if(!ob.showNsfw) { %>checked<% } %>>
+              <label for="settingsViewNSFWInputFalse"><%= ob.polyT('settings.no') %></label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flexRow gutterH">
+        <div class="col3">
+          <label class="required" for="settingsSearch"><%= ob.polyT('settings.generalTab.searchProvider') %></label>
+        </div>
+        <div class="col6">
+          <% if (ob.errors.searchProvider) print(ob.formErrorTmpl({ errors: ob.errors.searchProvider })) %>
+          <input type="text"
+                 class="clrBr clrSh2 rowSm"
+                 name="searchProvider"
+                 id="settingsSearch"
+                 data-persistence-location="local"
+                 value="<%= ob.searchProvider %>">
+          <a class="clrTEm txSm js-restoreDefaultProvider"><%= ob.polyT('settings.generalTab.restoreDefaultProvider') %></a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <hr class="clrBr" />
+  <div class="flexHRight">
+    <%= ob.processingButton({
+      className: 'btn clrP clrBr clrSh2 js-save',
+      btnText: ob.polyT('settings.btnSave')
+    }) %>
+  </div>
 </div>

@@ -37,7 +37,11 @@ export default class baseVw extends View {
    */
   getFormData(selector) {
     const $formFields = selector instanceof $ ?
-      selector : this.$(selector || 'select[name], input[name], textarea[name]');
+      selector : this.$(selector ||
+        `select[name], input[name], 
+        textarea[name]:not([class*="trumbowyg"]), 
+        div[contenteditable][name]`
+      );
     const data = {};
 
     $formFields.each((index, field) => {
@@ -45,6 +49,10 @@ export default class baseVw extends View {
       const varType = $field.data('var-type');
 
       let val = $field.val();
+
+      if (field.tagName.toUpperCase() === 'DIV') {
+        val = field.innerHTML;
+      }
 
       if (field.type === 'radio' && !field.checked) return;
 
@@ -66,12 +74,17 @@ export default class baseVw extends View {
         }
       }
 
+      if (field.type === 'checkbox') {
+        val = $(field).is(':checked');
+      }
+
       const name = $field.attr('name');
 
       if (name.indexOf('[') !== -1) {
         // handle nested collection
         // for now not handling nested collection, please
         // manage manually
+        data[name] = val;
       } else if (name.indexOf('.') !== -1) {
         // handle nested model
         setDeepValue(data, name, val);

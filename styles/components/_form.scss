@@ -5,23 +5,34 @@ form {
   label {
     line-height: $formElementHeight;
     font-weight: 500;
+    -webkit-user-select: none;
+    display: flex;
+    align-items: center;
+
+    .emoji {
+      height: 1em;
+      width: 1em;
+      margin-right: 0.3em;
+    }
   }
 }
 
 input::-webkit-input-placeholder,
 select::-webkit-input-placeholder,
-textarea::-webkit-input-placeholder {
+textarea::-webkit-input-placeholder,
+.txPlaceholder {
+  // use txPlaceholder for non-placeholder text that needs to match the placeholder style
   color: inherit;
   opacity: 0.35;
 }
 
-
 input,
 select,
 textarea,
-.medium-editor-element {
+.trumbowyg-editor {
   border: none;
   outline: none;
+  outline-color: transparent;
   background: none;
   color: inherit;
   border-radius: 3px;
@@ -29,6 +40,14 @@ textarea,
     family: "Noto Sans", sans-serif;
     size: $tx5;
   }
+}
+
+.trumbowyg-editor {
+  border-radius: 0;
+}
+
+.trumbowyg textarea {
+  display: none;
 }
 
 .select2-container--focus .select2-selection__rendered,
@@ -42,21 +61,57 @@ select {
 }
 
 input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
 textarea,
 .select2-container--focus .select2-selection__rendered,
 .select2Tags + .select2-container .select2-container--default .select2-selection--multiple .select2-selection__rendered,
-.medium-editor-element {
+.trumbowyg-editor {
   border-style: solid;
   border-width: 1px;
   //use the color class to set the border color
   width: 100%;
   box-sizing: border-box;
   padding: 0 $pad;
-  line-height: 40px;
+  line-height: $inputHeight;
+
+  &.btnHeight {
+    line-height: $buttonHeight;
+    height: $buttonHeight;
+  }
 }
 
-.medium-editor-element {
-  padding-top: $padSm;
+//input[type="number"].noSpin::-webkit-outer-spin-button,
+input[type="number"].noSpin::-webkit-inner-spin-button {
+  display:none;
+}
+
+// TODO: style the spin buttons on normal number inputs
+
+.inputPercentWrapper {
+  border-radius: 3px;
+  border-style: solid;
+  border-width: 1px;
+  display: inline-block;
+
+  input {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    width: calc(100% - 1.5em);
+    padding-right: 0;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      display:none;
+    }
+  }
+
+  &:after {
+    content: "%";
+    display: inline-block;
+  }
 }
 
 .select2-container--default.select2-container--focus .select2-selection {
@@ -70,10 +125,20 @@ textarea {
   resize: none;
   line-height: 1.2em;
   padding: $pad;
+  overflow: hidden;
+
+  &:focus {
+    overflow: auto;
+  }
+
+  &.resizable {
+    resize: vertical;
+  }
 }
 
 .errorList {
   color: $error;
+  word-wrap: break-word;
 
   li {
     i {
@@ -133,4 +198,51 @@ label {
 
 input[type="radio"]:checked + label {
   font-weight: 700;
+}
+
+input[type="checkbox"] {
+  display: none;
+
+  & + label {
+    display: flex;
+    align-items: baseline;
+    cursor: pointer;
+
+    &:before {
+      content: "\f372";
+      font-family: Ionicons;
+      line-height:inherit;
+      font-size: 1.5em;
+      position: relative;
+      top: 0.15em;
+      margin-right: 0.25em;
+
+      .flexVCent & {
+        top: 0; // don't adjust position if it's flex centered
+      }
+    }
+  }
+
+  &:checked + label:before {
+    content: "\f373";
+  }
+
+  &.fauxChecked {
+    // checkbox cannot be clicked, and shows a fake checked mark.
+    pointer-events: none;
+
+    & + label {
+      pointer-events: none;
+
+      &:before {
+        content: "\f373";
+      }
+    }
+  }
+
+  &.centerLabel {
+    & + label {
+      align-items: center;
+    }
+  }
 }

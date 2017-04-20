@@ -8,11 +8,13 @@ import app from '../../app';
 export default class BaseModal extends baseVw {
   constructor(options = {}) {
     const opts = {
-      dismissOnOverlayClick: true,
+      // #259 - we've decided not have modals close on an overlay click, so you
+      // probably should never be passing in true for this.
+      dismissOnOverlayClick: false,
       dismissOnEscPress: true,
       showCloseButton: true,
-      closeButtonClass: 'cornerTR ion-ios-close-empty',
-      modelContentClass: 'modalContent clrP clrBr border clrSh2',
+      closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3',
+      modelContentClass: 'modalContent',
       removeOnClose: false,
       removeOnRoute: true,
       ...options,
@@ -46,9 +48,38 @@ export default class BaseModal extends baseVw {
     };
   }
 
+  /**
+   * Returns an array of HTMLElements and if any of these are directly clicked the modal
+   * will be closed. By default, the only target will be this.el, which means any clicks
+   * outside of the modal will close it. But... with the new modal design where everything
+   * is in boxes, the waters are muddied because the overlay is visible inbetween boxes
+   * and you may want a click on those regions to close the modal (e.g. left navigation
+   * is much shorter than the right content exposing a large amount of the overlay).
+   *
+   * Anyhow, since the content inside a modal is very specific to the modal, it is up to
+   * the specific child view to let this base view know what qualifies as a close target.
+   * That should be done by overriding this method. You will very likely want to include
+   * a call to super in the array you are returning, e.g:
+   *
+   *     return [myCustomEl, myCustomEl2, ...super.closeClickTargets];
+   *
+   * Also, the overridden method will be called on EVERY click in this modal, so it is
+   * critical you are caching the elements returned (i.e. DO NOT go to the DOM every time
+   * the method is called).
+   */
+  get closeClickTargets() {
+    return [this.el];
+  }
+
   __modalClick(e) {
-    if (this.__options.dismissOnOverlayClick && e.target === this.el) {
-      this.close();
+    if (this.__options.dismissOnOverlayClick) {
+      const closeTargets = this.closeClickTargets;
+
+      if (!(_.isArray(closeTargets))) {
+        throw new Error('closeClickTargets must return an array.');
+      }
+
+      if (closeTargets.indexOf(e.target) !== -1) this.close();
     }
   }
 
@@ -67,6 +98,8 @@ export default class BaseModal extends baseVw {
       BaseModal.__openModals.push(this);
       this._open = true;
       this.trigger('open');
+    } else {
+      this.bringToTop();
     }
 
     return this;
@@ -114,6 +147,13 @@ export default class BaseModal extends baseVw {
 
   getModalOptions() {
     return this.__options;
+  }
+
+  bringToTop() {
+    if (this.isOpen()) {
+      getAppFrame()[0].removeChild(this.el);
+      getAppFrame().append(this.el);
+    }
   }
 
   remove() {

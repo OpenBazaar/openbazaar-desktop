@@ -1,0 +1,10 @@
+<div class="flexRow gutterH">
+  <div class="col6">
+    <label class="required"><%= ob.polyT('editListing.variants.titleLabel') %></label>
+  </div>
+  <div class="col6">
+    <label class="required"><%= ob.polyT('editListing.variants.choicesLabel') %></label>      
+  </div>
+</div>
+<div class="js-variantsWrap padKids padStack padTop0"></div>
+<a class="clrBr clrP clrTEm btnAddVariant js-btnAddVariant <% if (ob.variants.length >= ob.maxVariantCount) print('hide') %>"><%= ob.polyT('editListing.variants.addVariant') %></a>

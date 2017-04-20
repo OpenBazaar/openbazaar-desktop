@@ -6,7 +6,6 @@ import baseVw from '../../baseVw';
 export default class extends baseVw {
   constructor(options = {}) {
     super({
-      className: 'settingsAddressesList pad',
       ...options,
     });
 

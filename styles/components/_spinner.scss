@@ -1,0 +1,16 @@
+.spinner {
+  &.spinnerLg {
+    width: $spinnerLg;
+    height: $spinnerLg;
+  }
+
+  &.spinnerSm {
+    width: $spinnerSm;
+    height: $spinnerSm;
+  }
+
+  &.spinnerMd {
+    width: $spinnerMd;
+    height: $spinnerMd;
+  }
+}

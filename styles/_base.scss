@@ -40,15 +40,36 @@ html {
 }
 
 body {
-  background-color: $background;
   overflow: hidden;
   margin: 0;
+
+  &.chatHover {
+    .modal,
+    #contentFrame {
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+
+        &:hover {
+          background: transparent;
+        }
+
+        &:active {
+          background: transparent;
+        }
+      }
+    }
+  }
 }
 
 a {
   text-decoration: none;
   cursor: pointer;
   -webkit-user-drag: none;
+  -webkit-user-select: none; // quick clicks shall now not highlight
   transition: color .15s  cubic-bezier(0, 0, 0.2, 1);
   color: inherit;
 
@@ -104,6 +125,11 @@ ul, ol {
   background-repeat: no-repeat;
 }
 
+svg {
+  width: 100%;
+  height: auto;
+}
+
 #appFrame {
   position: absolute;
   height: 100%;
@@ -112,53 +138,62 @@ ul, ol {
   // index containers and sections
   #pageNavContainer {
     position: relative;
-    z-index: 3;
+    z-index: 4;
   }
 
   #contentFrame {
     position: relative;
-    top: $barLg;
     overflow-y: scroll;
-    height: calc(100% - #{$bar} - #{$barLg});
+    height: calc(100% - #{$bar});
     box-sizing: border-box;
     z-index: 0;
 
-    #pageTabBar {
-      position: fixed;
-      top: $bar;
-      left: 0;
-      z-index: 1;
-      width: 100%;
-      height: $barLg;
-      border-bottom-width: 1px;
-      border-bottom-style: solid;
+    #pageContainer {
+      padding-top: $barLg;
 
-      .pageTabs {
-        max-width: $pageWidth;
-        margin: 0 auto;
+      #pageTabBar {
+        position: fixed;
+        top: $bar;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: $barLg;
+        padding: 0;
+        overflow: hidden;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
 
-        .userIcon {
-          border-width: 2px;
-          border-style: solid;
-          width: 44px;
-          height: 44px;
-          margin-right: $pad;
-        }
 
-        .tab {
-          border-radius: 0;
-          box-sizing: content-box;
-          font-size: $tx4;
+        .pageTabs {
+          width: $pageWidth + $padLg + $padLg;
+          margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
+          @include chatOpeningTransition(margin);
+          position: relative;
 
-          &.active {
-            border-bottom-width: 1px;
-            border-bottom-style: solid;
+          .chatOpen & {
+            margin-right: $chatOpen;
+          }
+
+          .userIcon {
+            border-width: 2px;
+            border-style: solid;
+            width: 44px;
+            height: 44px;
+            margin-right: $pad;
+          }
+
+          .tab {
+            border-radius: 0;
+            box-sizing: content-box;
+            font-size: $tx4;
+
+            &.active {
+              border-bottom-width: 1px;
+              border-bottom-style: solid;
+            }
           }
         }
       }
-    }
-
-    #pageContainer {
 
       .pageContent {
         width: $pageWidth + $padLg + $padLg;
@@ -180,15 +215,52 @@ ul, ol {
 
   #chatContainer {
     position: fixed;
-    top: 105px;
-    right: 0;
+    top: $bar + $barLg -1; //overlap the border
+    right: $scrollbar; // don't cover scroll bars
     width: $chatClosed;
-    height: calc(100% - 100px);
+    height: calc(100% - #{$bar + $barLg});
+    box-sizing: border-box;
     z-index: 2; // chat needs to be on top of modals
-    @include chatOpeningTransition(width);
+    @include chatOpeningTransition(width, background-color, border-color, height);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: transparent;
+    border-color: transparent;
+    border-width: 1px;
+    border-style: solid;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    &:hover {
+
+      &::-webkit-scrollbar {
+        width: $scrollbar;
+      }
+    }
 
     .chatOpen & {
       width: $chatOpen;
+    }
+
+    .chatConvoOpen & {
+      height: calc(100% - #{$bar + $barLg + $chatConvoHeight -2});
+    }
+  }
+
+  #chatConvoContainer {
+    position: fixed;
+    right: $scrollbar;
+    bottom: -1px; // prevents the emoji tray from displaying at the very bottom
+    z-index: 2; // chat needs to be on top of modals
+    width: 225px;
+    height: $chatConvoHeight;
+    transform: translateY(105%);
+    transition: transform 300ms ease;
+
+    .chatConvoOpen & {
+      transform: translateY(0);
     }
   }
 }
@@ -211,26 +283,99 @@ ul, ol {
 
 // utility classes
 
-#ov1 .hide {
+#ov1 {
+
+  .hide {
+    display: none;
+  }
+
+  .invisible {
+    // use when an element is not visible but should occupy space in the DOM
+    visibility: hidden;
+  }
+
+  .visuallyHidden {
+    // use when an element most take no room in the DOM, but still be available for forms and JS
+    // from the HTML5 Boilerplate https://github.com/h5bp/html5-boilerplate
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap; /* 1 */
+  }
+
+  .disabled {
+    @include disabled;
+  }
+
+  .overflowAuto {
+    overflow: auto;
+  }
+
+  .floL {
+    float: left;
+  }
+
+  .floR {
+    float: right;
+  }
+
+  .preWrap {
+    white-space: pre-wrap;
+  }
+}
+
+#milestone {
+  // delete this rule in production
   display: none;
+
+  .pre-release & {
+    display: block;
+    position: fixed;
+    bottom: -8px;
+    padding: 2px 132px 30px 8px;
+    font-size: 14px;
+    right: $scrollbar + 4;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    z-index: 1;
+    @include chatOpeningTransition(right);
+
+    .milestone-inner {
+      position: relative;
+      top: 10px;
+      left: 110px;
+    }
+  }
 }
 
-#ov1 .disabled {
-  @include disabled;
+#doorbell-button {
+  display: none;
+
+  .pre-release & {
+    display: block;
+    right: 304px;
+    @include chatOpeningTransition(right);
+  }
 }
 
-.overflowAuto {
-  overflow: auto;
+// Sometimes, I just like floats.
+.cf:before,
+.cf:after {
+  content: "";
+  display: table;
+}
+.cf:after {
+  clear: both;
 }
 
-.floL {
-  float: left;
-}
-
-.floR {
-  float: right;
-}
-
-.txU {
-  text-decoration: underline;
+// scrollbar styling
+::-webkit-scrollbar {
+  width: $scrollbar;
+  height: $scrollbar;
 }

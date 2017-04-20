@@ -322,7 +322,7 @@ export function createDummyListings(count = 300) {
                 // console.log(listing.validationError);
               } else {
                 listingSave.done(() => {
-                  console.log(`Listing ${listing.get('listing').get('slug')} created.`);
+                  console.log(`Listing ${listing.get('slug')} created.`);
                 }).fail((xhr) => {
                   const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
                   console.warn(`Unable to create listing${failReason ? ` ${failReason}.` : '.'}`);
