@@ -3,20 +3,15 @@
     <div class="js-miniProfileContainer"></div>
     <div class="flexExpand">
       <div class="flexHRight flexVCent gutterH clrT2">
-        <a class="btn tab clrBr js-tab" data-tab="Home">Purchases</a>
-        <a class="btn tab clrBr js-tab" data-tab="Store">Sales</a>
-        <a class="btn tab clrBr js-tab" data-tab="Following">Cases</a>
+        <a class="btn tab clrBr js-tab" data-tab="purchases">Purchases</a>
+        <a class="btn tab clrBr js-tab" data-tab="sales">Sales</a>
+        <a class="btn tab clrBr js-tab" data-tab="cases">Cases</a>
       </div>
     </div>
   </div>
-
 </nav>
 
-<section class="flexRow header" <% if(ob.header){ %>
-style="background-image: url('<%= ob.header %>, url('../imgs/defaultHeader.png')"
-<% } else { %>
-style="background-image: url('../imgs/defaultHeader.png')"
-<% } %>>
+<section class="flexRow header">
   <div class="pageContent">
     <div class="tabContent js-tabContent">
       <!-- insert the tab subview here -->

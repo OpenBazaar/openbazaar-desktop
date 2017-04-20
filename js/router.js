@@ -207,7 +207,7 @@ export default class ObRouter extends Router {
 
   transactions(tab) {
     this.loadPage(
-      new Transactions({ tab }).render()
+      new Transactions({ initialTab: tab || 'purchases' }).render()
     );
   }
 
