@@ -28,7 +28,9 @@
   </div>
   <% } %>
   <div>
-    <div class="clrTEmph1 tx2 txB">27</div>
+    <% if (typeof ob.transactionCount !== 'undefined') { %>
+    <div class="clrTEmph1 tx2 txB"><%= ob.transactionCount %></div>
     <div><%= ob.polyT('wallet.transactionsLabel') %></div>
+    <% } %>
   </div>            
 </div>

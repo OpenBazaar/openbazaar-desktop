@@ -1,0 +1,13 @@
+<% if (ob.isFetching) { %>
+  <div class="<%= ob.transactionsPresent ? 'txCtr' : 'center' %>  padLg">
+    <%= ob.spinner({ className: 'spinnerMd' }) %>
+  </div>
+<% } else if (ob.fetchFailed) { %>
+    <div class="<%= ob.transactionsPresent ? '' : 'center' %> txCtr">
+      <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to obtain your transactions list.</div>
+      <% if (ob.fetchErrorMessage) { %>
+        <div class="row"><%= ob.fetchErrorMessage %></div>
+      <% } %>
+      <a class="btn clrP clrBr clrSh2 js-retryFetch">Retry</a>
+    </div>
+<% } %>

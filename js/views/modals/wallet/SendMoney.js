@@ -13,7 +13,8 @@ export default class extends baseVw {
     this._saveInProgress = false;
     this._sendConfirmOn = false;
     this.model = new Spend();
-    $(document).on('click', this.onDocumentClick.bind(this));
+    this.boundDocumentClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundDocumentClick);
   }
 
   className() {
@@ -44,11 +45,6 @@ export default class extends baseVw {
     this.saveInProgress = true;
 
     spend(this.model.toJSON())
-      .done(() => {
-        // temporary alert until the transactions list is implemented
-        openSimpleMessage('You payment has been sent.',
-          'This message is temporary until the transactions list is implemented.');
-      })
       .fail(jqXhr => {
         openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
@@ -168,6 +164,11 @@ export default class extends baseVw {
   get $sendConfirm() {
     return this._$sendConfirm ||
       (this._$sendConfirm = this.$('.js-sendConfirm'));
+  }
+
+  remove() {
+    $(document).off(null, this.boundDocumentClick);
+    super.remove();
   }
 
   render() {

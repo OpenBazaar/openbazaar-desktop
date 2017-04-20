@@ -145,6 +145,12 @@
   text-align: right;
 }
 
+.center {
+  // Creates a container with content vertically and horizontally
+  // center. Requires the parent to have a non-static positioning.
+  @include center();
+}
+
 .simpleFlexCol {
   display: flex;
   flex-direction: column;

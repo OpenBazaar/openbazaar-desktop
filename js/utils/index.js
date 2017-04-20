@@ -151,3 +151,58 @@ export function selectEmojis(option) {
   return $(`<span class="select2ImgOpt">${twemoji.parse(option.text,
       icon => (`../imgs/emojis/72X72/${icon}.png`))}</span>`);
 }
+
+/*
+ * If you need to set an interval to update a relative timestamp, this function
+ * will smartly decide how often to ping you based on the age of the timestamp.
+ * This is important if you have a list of many (dozens, hundreds, etc...) items
+ * which would otherwise result in an excess of potentially CPU intensive intervals.
+ * @param {string} timestamp
+ * @param {function} cb Your callback function that will be called periodically and in which
+ * you will likely re-calculate and update your time ago text (e.g. a few seconds ago =>
+ * 1 minute ago)
+ * @param {array} _timeouts Ignore this argument. It is used internally.
+ * @returns {Object} An object with a cancel function so you could cancel this function from
+ * calling your callback when you no longer need it. If you initiate this from a view, you would
+ * want to call cancel in View.remove().
+ */
+export function setTimeagoInterval(timestamp, cb, _timeouts = []) {
+  if (!timestamp) {
+    throw new Error('Please provide a timestamp.');
+  }
+
+  if (typeof cb !== 'function') {
+    throw new Error('Please provide a callback function.');
+  }
+
+  const age = Date.now() - (new Date(timestamp)).getTime();
+
+  const pushTimeout = (time) => {
+    const timeout = setTimeout(() => {
+      cb();
+      setTimeagoInterval(timestamp, cb, _timeouts);
+    }, time);
+
+    _timeouts.push(timeout);
+  };
+
+  if (age < 1000 * 60 * 60) {
+    // less than an hour old
+    pushTimeout(1000 * 20); // check in 20 seconds
+  } else if (age < 1000 * 60 * 60 * 24) {
+    // less than a day old
+    pushTimeout(1000 * 60 * 15); // check in 15 minutes
+  } else if (age < 1000 * 60 * 60 * 24 * 30) {
+    // less than 30 days old
+    pushTimeout(1000 * 60 * 60 * 2); // check in 2 hours
+  } else {
+    // more than 30 days old
+    pushTimeout(1000 * 60 * 60 * 24); // check in a day
+  }
+
+  return {
+    cancel: () => {
+      _timeouts.forEach(timeout => (clearTimeout(timeout)));
+    },
+  };
+}

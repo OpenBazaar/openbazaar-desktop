@@ -2,11 +2,14 @@ import $ from 'jquery';
 import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import Transaction from '../../../models/wallet/Transaction';
+import Transactions from '../../../collections/Transactions';
 import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
 import Stats from './Stats';
 import SendMoney from './SendMoney';
 import ReceiveMoney from './ReceiveMoney';
+import TransactionsVw from './Transactions';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -20,6 +23,14 @@ export default class extends BaseModal {
     this.sendModeOn = opts.sendModeOn;
     this.addressFetches = [];
     this.needAddressFetch = true;
+
+    this.transactions = new Transactions();
+
+    this.listenTo(this.transactions, 'sync', (md, response) => {
+      if (this.stats) {
+        this.stats.setState({ transactionCount: response.count });
+      }
+    });
 
     this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
       if (this.stats) {
@@ -42,8 +53,14 @@ export default class extends BaseModal {
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         // "wallet" sockets come for new transactions and when a transaction gets it's
-        // first confirmation. We're only listed in new transactions (i.e. the height will be 0)
+        // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
         if (e.jsonData.wallet && !e.jsonData.height) {
+          if (this.stats) {
+            this.stats.setState({
+              transactionCount: this.stats.getState().transactionCount + 1,
+            });
+          }
+
           if (this.sendModeOn) {
             // we'll fetch the next time we show the receive money section
             this.needAddressFetch = true;
@@ -68,6 +85,19 @@ export default class extends BaseModal {
 
   onClickToggleSendReceive() {
     this.sendModeOn = !this.sendModeOn;
+  }
+
+  onSpendSuccess(data) {
+    if (this.transactionsVw) {
+      const transaction = new Transaction({
+        value: data.amount * -1,
+        txid: data.txid,
+        timestamp: data.timestamp,
+        address: data.address,
+      }, { parse: true });
+
+      this.transactionsVw.collection.unshift(transaction);
+    }
   }
 
   set sendModeOn(bool) {
@@ -212,6 +242,15 @@ export default class extends BaseModal {
 
         this.listenTo(this.receiveMoney, 'click-cancel', () => (this.sendModeOn = true));
         this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
+
+        if (this.transactions) this.transactions.remove();
+
+        this.transactionsVw = new TransactionsVw({
+          collection: this.transactions,
+          $scrollContainer: this.$el,
+        });
+
+        this.$('.js-transactionContainer').html(this.transactionsVw.render().el);
       });
     });
 
