@@ -15,51 +15,54 @@ h1,h2,h3,h4,h5,h6,
 // us h classes for headlines, tx classes for body text
 
 h1, .h1, .tx1, .btn.tx1 {
-  font-size: $tx1;
+  @include textSize($tx1);
 }
 
 h2, .h2, .tx2, .btn.tx2 {
-  font-size: $tx2;
+  @include textSize($tx2);
 }
 
 .tx2b, .btn.tx2b {
-  font-size: $tx2b;
+  @include textSize($tx2b);
 }
 
 h3, .h3, .tx3, .btn.tx3 {
-  font-size: $tx3;
+  @include textSize($tx3);
 }
 
 h4, .h4, .tx4, .btn.tx4 {
-  font-size: $tx4;
+  @include textSize($tx4);
 }
 
 h5, .h5, .tx5, .btn.tx5 {
-  font-size: $tx5;
+  @include textSize($tx5);
 }
 
 .tx5b, .btn.tx5b {
-  font-size: $tx5b;
+  @include textSize($tx5b);
 }
 
 h6, .h6, .tx6, .btn.tx6 {
   font-size: $tx6;
+  @include textSize($tx6);
 }
 
 .txBg {
   font-size: $txBg;
+  @include textSize($txBg);
 }
 
 .txTn {
   font-size: $tx7;
+  @include textSize($tx7);
 }
 
 .txSm {
-  font-size: 1.1rem;
+  @include textSize(1.1rem);
 }
 
 .txBase {
-  font-size: 1rem;
+  @include textSize(1rem);
 }
 
 .txGlow {

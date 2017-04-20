@@ -17,12 +17,16 @@
         <p class="clamp2"><%=ob.moderatorInfo.description %></p>
       </div>
       <div class="flex snipKids gutterH tx5">
-        <div class="flexNoShrink">👍 XX<% // placeholder for reputation %> </div>
+        <div class="flexNoShrink">
+          <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
+        </div>
         <div class="flexNoShrink">
           <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
           <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
         </div>
-        <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
+        <div>
+          <%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %>
+        </div>
       </div>
     <% } else { %>
       <div class="flexCol gutterVSm clrTErr">
