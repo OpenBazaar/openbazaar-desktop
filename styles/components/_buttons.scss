@@ -97,7 +97,10 @@
   height: auto;
 
   input[type="radio"] {
-    display: none;
+    // visually hide the checkbox, but keep it in the DOM so it's still functional
+    visibility: hidden;
+    z-index: -1;
+    position: absolute;
 
     & + label {
 

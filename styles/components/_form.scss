@@ -201,30 +201,57 @@ input[type="radio"]:checked + label {
 }
 
 input[type="checkbox"] {
-  display: none;
+  // visually hide the checkbox, but keep it in the DOM so it's still functional
+  visibility: hidden;
+  z-index: -1;
+  position: absolute;
 
   & + label {
+    position: relative;
     display: flex;
     align-items: baseline;
     cursor: pointer;
 
     &:before {
-      content: "\f372";
-      font-family: Ionicons;
-      line-height:inherit;
-      font-size: 1.5em;
+      content: '';
       position: relative;
-      top: 0.15em;
-      margin-right: 0.25em;
+      display: inline-block;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      width: 1.4em;
+      height: 1.4em;
+      top: 0.35em;
+      border: 0.12em solid #000;
+      border-radius: 0.3em;
+      margin-right: 0.4em;
+    }
 
-      .flexVCent & {
-        top: 0; // don't adjust position if it's flex centered
-      }
+    &:after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      top: 0.7em;
+      left: 0.3em;
+      width: 0.8em;
+      height: 0.5em;
+      background: transparent;
+      border: 0.17em solid #000;
+      border-top: none;
+      border-right: none;
+      opacity: 0;
+      transform: rotate(-45deg);
+      transition: opacity 0.5s;
+    }
+
+    &:hover:after {
+      opacity: 0.5;
     }
   }
 
-  &:checked + label:before {
-    content: "\f373";
+  &:checked + label:after {
+    opacity: 1;
   }
 
   &.fauxChecked {
@@ -234,8 +261,8 @@ input[type="checkbox"] {
     & + label {
       pointer-events: none;
 
-      &:before {
-        content: "\f373";
+      &:after {
+        opacity: 1;
       }
     }
   }
