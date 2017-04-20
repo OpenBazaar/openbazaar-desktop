@@ -36,25 +36,31 @@ export default class extends BaseVw {
     });
     this.listenTo(modModal, 'addAsModerator', () => {
       this.changeSelectState('selected');
-      this.trigger('changeModerator', { selected: true, guid: this.model.id });
     });
   }
 
   clickSelectBtn(e) {
     e.stopPropagation();
+    this.rotateSelectState();
+  }
 
+  rotateSelectState() {
     if (this.cardState === 'selected') {
       this.changeSelectState(this.notSelected);
-      this.trigger('changeModerator', { selected: false, guid: this.model.id });
     } else {
       this.changeSelectState('selected');
-      this.trigger('changeModerator', { selected: true, guid: this.model.id });
     }
   }
 
   changeSelectState(cardState) {
-    this.cardState = cardState;
-    this.$selectBtn.attr('data-state', cardState);
+    if (cardState !== this.cardState) {
+      this.cardState = cardState;
+      this.$selectBtn.attr('data-state', cardState);
+      this.trigger('changeModerator', {
+        selected: cardState === 'selected',
+        guid: this.model.id,
+      });
+    }
   }
 
   render() {
@@ -62,6 +68,7 @@ export default class extends BaseVw {
       this.$el.html(t({
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
+        valid: this.model.isModerator,
         ...this.model.toJSON(),
       }));
 

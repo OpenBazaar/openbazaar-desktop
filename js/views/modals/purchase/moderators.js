@@ -3,7 +3,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import app from '../../../app';
 import Moderators from '../../../collections/purchase/Moderators';
-import { getCurrentConnection } from '../../../utils/serverConnect';
+import { getSocket } from '../../../utils/serverConnect';
 import { openSimpleMessage } from '../SimpleMessage';
 import ModCard from '../../ModeratorCard';
 
@@ -66,7 +66,7 @@ export default class extends baseVw {
       this.$moderatorsStatus.removeClass('hide').text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: IDs.length, total: IDs.length }));
     }
-    // abort any unfinished fetch
+    // if somehow a new fetch is started while one is in progress, abort it.
     if (this.fetch) this.fetch.abort();
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || this.options.method === 'GET') {
@@ -80,9 +80,9 @@ export default class extends baseVw {
             if (op.async) {
               const socketID = data.id;
               // listen to the websocket for moderator data
-              const serverConnection = getCurrentConnection();
-              if (serverConnection && serverConnection.status !== 'disconnected') {
-                this.listenTo(serverConnection.socket, 'message', (event) => {
+              const serverSocket = getSocket();
+              if (serverSocket) {
+                this.listenTo(serverSocket, 'message', (event) => {
                   const eventData = event.jsonData;
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
@@ -112,12 +112,10 @@ export default class extends baseVw {
               this.checkNotFetched();
             }
           })
-          .fail((...args) => {
-            if (this.isRemoved()) return;
-            let msg = this.options.fetchErrorMsg;
-            if (this.args[0] && args[0].responseJSON) {
-              msg = `${msg}\n\n${args[0].responseJSON.reason}}`;
-            }
+          .fail((xhr) => {
+            if (xhr.statusText === 'abort') return;
+            const failReason = xhr.responseJSON ? `\n\n${xhr.responseJSON.reason}` : '';
+            const msg = `${this.options.fetchErrorMsg}${failReason}`;
             openSimpleMessage(this.options.fetchErrorTitle, msg);
             this.$moderatorsWrapper.removeClass('processing');
           });
@@ -143,12 +141,7 @@ export default class extends baseVw {
 
   addMod(model, collection, opts) {
     if (model) {
-      let cardState = this.options.cardState;
-      // if required, set the first moderator to be pre-selected
-      if (this.options.selectFirst && !this.firstSelected) {
-        this.firstSelected = true;
-        cardState = 'selected';
-      }
+      const cardState = this.options.cardState;
       const newModView = this.createChild(ModCard, {
         model,
         purchase: this.options.purchase,
@@ -158,17 +151,23 @@ export default class extends baseVw {
       });
       this.listenTo(newModView, 'changeModerator', (data) => {
         this.trigger('changeModerator', data);
-        if (this.options.singleSelect) this.deselectOthers(data);
+        // if only one moderator should be selected, deselect the other moderators
+        if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
       });
       this.$moderatorsWrapper.append(newModView.render().$el);
       this.removeNotFetched(model.id);
       this.modCards.push(newModView);
+      // if required, select the first valid moderator
+      if (this.options.selectFirst && !this.firstSelected && model.isModerator) {
+        this.firstSelected = true;
+        newModView.changeSelectState('selected');
+      }
     }
   }
 
-  deselectOthers(data) {
+  deselectOthers(guid = '') {
     this.modCards.forEach((mod) => {
-      if (mod.model.get('peerID') !== data.guid) {
+      if (mod.model.get('peerID') !== guid) {
         mod.changeSelectState(this.options.notSelected);
       }
     });

@@ -1,22 +1,14 @@
 <%
-let failed = false;
-let valid = true;
-if (!ob.name) {
-   // the data fetch returned incomplete data. Show the card but mark it as failed.
-   failed = true;
-} else {
-  if (!ob.moderator || !ob.moderatorInfo) {
-    valid = false; // this user is no longer a moderator or has invalid data
-  }
-}
+   // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
+   loaded = !!ob.name;
 %>
 
-<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!valid) print('disabled'); if(failed) print('disabled');%>">
+<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!ob.valid) print('disabled'); if(!loaded) print('disabled');%>">
   <div>
     <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
   </div>
   <div class="moderatorCardMiddle">
-    <% if (!failed && valid) { %>
+    <% if (loaded && ob.valid) { %>
       <div class="flex snipKids gutterHSm rowSm">
         <strong class="txt5"><%= ob.name %></strong>
         <span class="clrT2"><%= ob.handle %></span>
@@ -35,7 +27,7 @@ if (!ob.name) {
     <% } else { %>
       <div class="flexCol gutterVSm clrTErr">
         <strong class="txt5"><%= ob.peerID %></strong>
-        <% if (valid) { %>
+        <% if (ob.valid) { %>
         <span><%= ob.polyT('moderatorCard.failed') %></span>
         <% } else { %>
         <span><%= ob.polyT('moderatorCard.invalid') %></span>
@@ -44,7 +36,7 @@ if (!ob.name) {
     <% } %>
   </div>
   <div>
-    <% if (valid) { %>
+    <% if (ob.valid) { %>
       <div class="flexColRows gutterV">
         <button class="btn clrP clrBr selectBtn js-viewBtn">
           <%= ob.polyT('moderatorCard.view') %>

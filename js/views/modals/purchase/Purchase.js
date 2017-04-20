@@ -56,6 +56,7 @@ export default class extends BaseModal {
           if (updateOpts.changes.added.length ||
               updateOpts.changes.removed.length) {
             // update the shipping section with the changed address information
+            // TODO: add shipping code here
           }
         });
 
@@ -100,23 +101,40 @@ export default class extends BaseModal {
   }
 
   clickModerated(e) {
-    const checked = $(e.target).attr('checked');
-    this.$moderatorSection.toggleClass('hide', checked);
-  }
+    const checked = $(e.target).prop('checked');
+    this.$moderatorSection.toggleClass('hide', !checked);
 
-  changeModerator(data) {
-    this.order.set({ moderator: data.guid });
-  }
-
-  clickPayBtn() {
-    // if the moderator checkbox was deselected, remove the moderator
-    if (!this.$('#purchaseModerated').attr('checked')) {
-      this.order.set({ moderator: '' });
+    if (checked && this._oldMod) {
+      // re-select the previously selected moderator, if any
+      for (const mod of this.moderators.modCards) {
+        if (mod.model.id === this._oldMod) {
+          mod.changeSelectState('selected');
+          break;
+        }
+      }
+    } else {
+      // deselect all the moderators after storing any selected moderator
+      this._oldMod = this.order.get('moderator');
+      this.moderators.deselectOthers();
+      this.order.set('moderator', '');
     }
   }
 
-  clickPendingBtn() {
+  changeModerator(data) {
+    if (data.selected) {
+      this.order.set('moderator', data.guid);
+    } else if (data.guid === this.order.get('moderator')) {
+      // the current moderator was deselected
+      this.order.set('moderator', '');
+    }
+  }
 
+  clickPayBtn() {
+    console.log(this.order.attributes);
+  }
+
+  clickPendingBtn() {
+    console.log('clicked the pending button');
   }
 
   get $popInMessages() {
@@ -162,8 +180,8 @@ export default class extends BaseModal {
         vendor: this.vendor,
         variants: this.variants,
         displayCurrency: app.settings.get('localCurrency'),
-        countryData: this.countryData,
-        defaultCountry: this.defaultCountry,
+        countryData: this.countryData, // not used yet
+        defaultCountry: this.defaultCountry, // not used yet
       }));
 
       super.render();
@@ -174,6 +192,8 @@ export default class extends BaseModal {
       this._$payBtn = null;
       this._$pendingBtn = null;
       this._$closeBtn = null;
+
+      this.$purchaseModerated = this.$('#purchaseModerated');
 
       // add the moderators section content
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);

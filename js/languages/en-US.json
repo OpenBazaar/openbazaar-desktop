@@ -161,7 +161,7 @@
     "PERCENTAGE": "%{percentage}%**",
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
     "failed": "The information for this moderator failed to load.",
-    "invalid": "This user is not a moderator, or does not have valid moderator data."
+    "invalid": "This user is not currently a moderator."
   },
   "moderatorDetails": {
     "messageButton": "Message",
