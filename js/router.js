@@ -6,7 +6,7 @@ import './lib/whenAll.jquery';
 import app from './app';
 import UserPage from './views/userPage/UserPage';
 import Search from './views/search/Search';
-import TransactionsPage from './views/TransactionsPage';
+import Transactions from './views/transactions/Transactions';
 import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
@@ -58,14 +58,7 @@ export default class ObRouter extends Router {
 
   setAddressBarText() {
     const route = this.standardizedRoute();
-
-    if (route.startsWith('transactions') || route.startsWith('ob://transactions')) {
-      // certain pages should not have their route visible
-      // in the address bar
-      app.pageNav.setAddressBar('');
-    } else {
-      app.pageNav.setAddressBar(route.startsWith('ob://') ? route : `ob://${route}`);
-    }
+    app.pageNav.setAddressBar(route.startsWith('ob://') ? route : `ob://${route}`);
   }
 
   execute(callback, args) {
@@ -213,10 +206,8 @@ export default class ObRouter extends Router {
   }
 
   transactions(tab) {
-    tab = tab || 'inbound'; // eslint-disable-line no-param-reassign
-
     this.loadPage(
-      new TransactionsPage({ tab }).render()
+      new Transactions({ tab }).render()
     );
   }
 
