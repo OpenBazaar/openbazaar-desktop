@@ -8,6 +8,7 @@ export default class extends BaseModel {
       confirmations: 0,
       height: 0,
       canBumpFee: true,
+      memo: '',
     };
   }
 
@@ -73,7 +74,7 @@ export default class extends BaseModel {
       // this response is coming from the collection, we'll
       // do nothing and let the collection handle it.
     } else {
-      if (returnVal.memo.startsWith('Fee bump of ')) {
+      if (returnVal.memo && returnVal.memo.startsWith('Fee bump of ')) {
         returnVal.translatedMemo = app.polyglot.t('wallet.transactions.transaction.feeBumpOf',
           { address: returnVal.memo.slice(12) });
       }
