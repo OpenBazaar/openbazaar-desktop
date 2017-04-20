@@ -449,15 +449,12 @@ function createWindow() {
     }
   });
 
-<<<<<<< HEAD
-=======
   // Set up protocol
   app.setAsDefaultProtocolClient('ob2');
 
   // Check for URL hijacking in the browser
   preventWindowNavigation(mainWindow);
 
->>>>>>> master
   /**
    * For OS X users Squirrel manages the auto-updating code.
    * If there is an update available then we will send an IPC message to the
@@ -580,4 +577,3 @@ const log = msg => {
 
 if (localServer) bindLocalServerEvent('log', (localServ, msg) => log(msg));
 ipcMain.on('server-connect-log', (e, msg) => log(msg));
->>>>>>> master
