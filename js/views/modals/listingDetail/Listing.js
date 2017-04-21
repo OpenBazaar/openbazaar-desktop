@@ -318,7 +318,7 @@ export default class extends BaseModal {
     });
 
     this.purchaseModal = launchPurchaseModal({
-      listing: this.model.toJSON(),
+      listing: this.model,
       variants: selectedVariants,
       vendor: this.vendor,
     });

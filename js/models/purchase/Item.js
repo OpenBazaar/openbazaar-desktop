@@ -11,6 +11,8 @@ export default class extends BaseModel {
         name: '',
         service: '',
       },
+      memo: '',
+      coupons: [], // just the coupon codes
     };
   }
 

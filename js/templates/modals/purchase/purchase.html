@@ -15,7 +15,7 @@
 <div class="flexRow gutterH">
   <div class="col9">
     <div class="flexColRow gutterVMd">
-      <% console.log(ob.items) %>
+      <% // to support multiple items in a purchase, loop this section %>
       <section class="contentBox pad clrP clrBr clrSh3">
         <div class="flexVCent gutterH">
           <div class="thumb" style="<%= ob.getListingBgImage(ob.listing.item.images[0]) %>"></div>
@@ -106,7 +106,7 @@
       </button>
     </section>
     <section class="receipt">
-
+      <% // this will be a separate view tied to the order model %>
     </section>
   </div>
 </div>

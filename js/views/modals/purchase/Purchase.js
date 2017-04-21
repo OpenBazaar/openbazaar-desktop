@@ -27,15 +27,16 @@ export default class extends BaseModal {
     this.variants = options.variants;
     this.vendor = options.vendor;
     this.order = new Order();
-    /* to support multiple items in a purchase in the future, pass in items in the options, and add
-       them to the order here.
-     */
+    /* to support multiple items in a purchase in the future, pass in listings in the options,
+       and add them to the order as items here.
+    */
     const item = new Item({
       listingHash: this.listing.hash,
       quantity: 1,
     });
     if (options.variants) item.get('options').add(options.variants);
-    console.log(item)
+    // add the item to the order.
+    this.order.get('items').add(item);
 
     const fetchErrorTitle = app.polyglot.t('purchase.errors.moderatorsTitle');
     const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
@@ -190,7 +191,7 @@ export default class extends BaseModal {
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
-        listing: this.listing,
+        listing: this.listing.toJSON(),
         vendor: this.vendor,
         variants: this.variants,
         items: this.order.get('items').toJSON(),
