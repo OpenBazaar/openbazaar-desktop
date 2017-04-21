@@ -5,5 +5,49 @@
     .tabHeading {
       font-size: 3rem;
     }
+
+    .filters {
+      .filter {
+        border-width: 1px;
+        border-style: solid;
+        padding: 6px 10px 10px;
+
+        input[type=checkbox] {
+          &:checked {
+            font-weight: bold;
+
+            & + label {
+              font-weight: bold;              
+            }
+          }
+        }
+      }
+    }
+
+    .transactionsTable {
+      border-spacing: 0;
+      border-collapse: collapse;
+      
+      th {
+        text-align: left;
+      }
+
+      td, th {
+        border-width: 1px;
+        border-style: solid;
+        padding: $pad;
+        word-break: break-word;
+
+        &.orderCol {
+          max-width: 100px;
+        }
+      }
+
+      tr {
+        &.unread {
+          // font-weight: bold;
+        }
+      }
+    }
   }
 }

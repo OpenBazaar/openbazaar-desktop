@@ -795,14 +795,26 @@
   "transactions": {
     "sales": {
       "heading": "Sales",
-      "placeholderSearch": "Search by Order #, Title or Vendor"
+      "placeholderSearch": "Search by Order #, Title or Vendor",
+      "countSales": "%{smart_count} sale |||| %{smart_count} sales",
+      "countSalesFound": "%{countSales} found"
     },
     "purchases": {
       "heading": "Purchases"
     },
     "cases": {
       "heading": "Cases"
-    }
+    },
+    "filters": {
+      "purchasing": "Purchasing",
+      "ready": "Ready To Process",
+      "fulfilled": "Fulfilled",
+      "refunded": "Refunded",
+      "disputeOpen": "Dispute Open",
+      "disputePending": "Dispute Pending",
+      "disputeClosed": "Dispute Closed",
+      "completed": "Completed"
+    }    
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

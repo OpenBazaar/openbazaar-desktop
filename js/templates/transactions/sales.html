@@ -1,5 +1,91 @@
 <h2 class="tabHeading txUnb"><%= ob.polyT('transactions.sales.heading') %></h2>
-<div class="searchWrapper">
+<div class="searchWrapper rowMd">
   <input type="text" class="ctrl clrP clrBr clrSh2 js-searchInput"
          placeholder="<%= ob.polyT('transactions.sales.placeholderSearch') %>">
 </div>
+
+<div class="filters rowHg">
+  <div class="flex gutterH gutterV">
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterPurchasing">
+        <label class="tx5b" for="filterPurchasing"><%= ob.polyT('transactions.filters.purchasing') %></label>
+      </div>
+    </div>
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterReady">
+        <label class="tx5b" for="filterReady"><%= ob.polyT('transactions.filters.ready') %></label>
+      </div>
+    </div>
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterFulfilled">
+        <label class="tx5b" for="filterFulfilled"><%= ob.polyT('transactions.filters.fulfilled') %></label>
+      </div>
+    </div>
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterRefunded">
+        <label class="tx5b" for="filterRefunded"><%= ob.polyT('transactions.filters.refunded') %></label>
+      </div>
+    </div>    
+  </div>
+  <div class="flex gutterH gutterV">
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterDisputeOpen">
+        <label class="tx5b" for="filterDisputeOpen"><%= ob.polyT('transactions.filters.disputeOpen') %></label>
+      </div>
+    </div>
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterDisputePending">
+        <label class="tx5b" for="filterDisputePending"><%= ob.polyT('transactions.filters.disputePending') %></label>
+      </div>
+    </div>
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterDisputeClosed">
+        <label class="tx5b" for="filterDisputeClosed"><%= ob.polyT('transactions.filters.disputeClosed') %></label>
+      </div>
+    </div>
+    <div class="col3">
+      <div class="filter clrP clrBr">
+        <input type="checkbox" id="filterCompleted">
+        <label class="tx5b" for="filterCompleted"><%= ob.polyT('transactions.filters.completed') %></label>
+      </div>
+    </div>    
+  </div>  
+</div>
+
+<div class="row">
+<%= ob.polyT('transactions.sales.countSalesFound', {
+  countSales: `<span class="txB">${ob.polyT('transactions.sales.countSales', { smart_count: 3 })}</span>`
+}) %>
+</div>
+
+<table class="transactionsTable clrBr clrP">
+  <tr>
+    <th class="clrBr orderCol">Order ID</th>
+    <th class="clrBr">Date</th>
+    <th class="clrBr">Listing</th>
+    <th class="clrBr">Buyer</th>
+    <th class="clrBr">Total</th>
+    <th class="clrBr">Status</th>
+  </tr>
+  <tr class="unread">
+    <td class="clrBr orderCol noOverflow">QmS9td55a6E9yjsmUvn4WPrHVihy5NaKRcqHviwEsaKjT9</td>
+    <td class="clrBr">4/21 11:17 AM</td>
+    <td class="clrBr">Hip Hopper With Cheese</td>
+    <td class="clrBr" data-unread-count=3>@billyClintonDaPrez</td>
+    <td class="clrBr">$35.00 (0.0028 BTC)</td>
+    <td class="clrBr">
+      <a class="txU">Reject</a>
+      <%= ob.processingButton({
+        className: `js-btnAccept btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptInProgress ? 'processing' : ''}`,
+        btnText: 'Accept'
+      }) %>
+    </td>
+  </tr>
+<table>

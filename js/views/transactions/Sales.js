@@ -10,7 +10,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'sales';
+    return 'sales tx5';
   }
 
   render() {
