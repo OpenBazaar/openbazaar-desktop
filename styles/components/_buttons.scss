@@ -222,17 +222,23 @@
   position: relative;
   width: 100%;
 
-  input {
-    text-indent: 1.5em; /* make room for icon */
+  input[type=text] {
+    text-indent: 1.23em; /* make room for icon */
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 
   &:before {
     //insert a search icon before the text
-    content: "🔍";
+    content: "";
+    background-image: url(../../imgs/emojis/72X72/1f50d.png);
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+    width: 14px;
+    height: 14px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.45em;
     left: 8px;
     color: inherit;
   }

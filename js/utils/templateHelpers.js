@@ -11,7 +11,7 @@ export function polyT(...args) {
   return app.polyglot.t(...args);
 }
 
-export function parseEmojis(text, className = '', attrs = {}) {
+export function parseEmoji(text, className = '', attrs = {}) {
   const twemojiHtml = twemoji.parse(text,
       icon => (`../imgs/emojis/72X72/${icon}.png`));
   const $twemojiHtml = $(twemojiHtml);

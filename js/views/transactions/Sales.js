@@ -1,9 +1,12 @@
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
+import { parseEmoji } from '../../utils/templateHelpers';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+    console.log('moo');
+    window.moo = parseEmoji;
   }
 
   className() {

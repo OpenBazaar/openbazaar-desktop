@@ -28,8 +28,9 @@
 
       &.loadError {
         // if the logo fails to load, hide it and show the default
-        background-image: url(../../imgs/defaultSearch.png);
-        background-size: cover;
+        background-image: url(../../imgs/emojis/72X72/1f50d.png);
+        background-repeat: no-repeat;
+        background-size: 16px 16px;
         background-position: center;
 
         img {

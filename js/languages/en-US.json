@@ -794,7 +794,8 @@
   },
   "transactions": {
     "sales": {
-      "heading": "Sales"
+      "heading": "Sales",
+      "placeholderSearch": "Search by Order #, Title or Vendor"
     },
     "purchases": {
       "heading": "Purchases"

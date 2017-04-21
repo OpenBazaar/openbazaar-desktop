@@ -43,7 +43,7 @@
                 <div class="btnRadio clrBr">
                    <%
                     var checked = option.checked ? 'checked' : '';
-                    var parsedLabel = ob.parseEmojis(option.label);
+                    var parsedLabel = ob.parseEmoji(option.label);
                     print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
                     print(`<label for="${key + ind}">${parsedLabel}</label>`);
                    %>
@@ -54,7 +54,7 @@
               <div class="flexCol">
               <% _.each(val.options, function(option, index) {
                 var checked = option.checked ? 'checked' : '';
-                var parsedLabel = ob.parseEmojis(option.label);
+                var parsedLabel = ob.parseEmoji(option.label);
                 print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
                 print(`<label for="${key + index}">${parsedLabel}</label>`);
               }); %>
