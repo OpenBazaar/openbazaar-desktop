@@ -1,6 +1,6 @@
 <%
    // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
-   loaded = !!ob.name;
+   const loaded = !!ob.name;
 %>
 
 <div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!ob.valid) print('disabled'); if(!loaded) print('disabled');%>">
