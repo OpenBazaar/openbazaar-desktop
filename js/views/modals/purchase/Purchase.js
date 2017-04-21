@@ -43,7 +43,7 @@ export default class extends BaseModal {
 
 
     this.moderators = new Moderators({
-      moderatorIDs: this.listing.moderators || [],
+      moderatorIDs: this.listing.get('moderators') || [],
       fetchErrorTitle,
       fetchErrorMsg,
       purchase: true,
@@ -138,10 +138,14 @@ export default class extends BaseModal {
   }
 
   changeQuantityInput(e) {
-
+    console.log(e);
+    // use a data attribute of the listingHash to associate this with the right item
   }
 
-  changeQuantity(quantity) {
+  changeQuantity(quantity, listingHash) {
+    // change the quantity of the item
+    console.log(quantity);
+    console.log(listingHash);
   }
 
   clickPayBtn() {

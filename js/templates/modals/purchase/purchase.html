@@ -1,3 +1,5 @@
+<% const hasModerators = !!ob.listing.moderators && ob.listing.moderators.length %>
+
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="topControls gutterHSm flex">
@@ -66,7 +68,7 @@
             <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
             <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
           </div>
-          <div>
+          <div class="<% if (!hasModerators) print('hide') %>">
             <input
                 type="checkbox"
                 name="moderated"
@@ -74,17 +76,17 @@
                 id="purchaseModerated">
             <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
           </div>
-          <p class="clrT2 tx6">
+          <p class="clrT2 tx6 <% if (!hasModerators) print('hide') %>">
             <%= ob.polyT('purchase.moderationDisclaimer') %>
           </p>
         </div>
-
-
       </section>
-      <section class="contentBox padLg clrP clrBr clrSh3 js-moderator">
-        <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
-        <div class="js-moderatorsWrapper"></div>
-      </section>
+      <% if (hasModerators) { %>
+        <section class="contentBox padLg clrP clrBr clrSh3 js-moderator">
+          <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
+          <div class="js-moderatorsWrapper"></div>
+        </section>
+      <% } %>
       <section class="contentBox padLg clrP clrBr clrSh3">
         <h2 class="h4">
           <%= ob.polyT('purchase.informationTitle') %>
