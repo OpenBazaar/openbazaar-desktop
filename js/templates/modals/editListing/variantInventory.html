@@ -1,5 +1,5 @@
 <% if (!ob.inventory.length) { %>
-<div class="rowMd">The variant inventory table will appear when you have declared at least one variant with at least one choice.</div>
+<div class="rowMd"><%= ob.polyT(`editListing.variantInventory.placeholderNeedMoreData`) %></div>
 <% } else { %>
 <div class="inventoryTableWrap">
   <table>
