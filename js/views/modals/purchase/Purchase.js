@@ -5,7 +5,7 @@ import app from '../../../app';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
-import Order from '../../../models/Order';
+import Order from '../../../models/purchase/Order';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './moderators';
 

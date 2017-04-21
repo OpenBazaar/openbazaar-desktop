@@ -1,6 +1,6 @@
-import BaseModel from './BaseModel';
-import _ from 'underscore';
-import app from '../app';
+import BaseModel from '../BaseModel';
+import app from '../../app';
+import Items from '../../collections/purchase/items';
 
 export default class extends BaseModel {
   defaults() {
@@ -13,17 +13,13 @@ export default class extends BaseModel {
       countryCode: '',
       addressNotes: '',
       moderator: '',
-      items: [{
-        listingHash: '',
-        quantity: 0,
-        options: [],
-        shipping: {
-          name: '',
-          service: '',
-        },
-        memo: '',
-        coupons: [],
-      }],
+      items: new Items(),
+    };
+  }
+
+  get nested() {
+    return {
+      items: Items,
     };
   }
 
@@ -34,13 +30,19 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
+    if (!attrs.items.length) {
+      addError('item', app.polyglot.t('orderModelErrors.noItems'));
+    }
+
     if (attrs.items.length) {
       attrs.items.forEach((item) => {
-        if (!item.quantity || item.quantity === 'undefined') {
+        const quantity = item.get('quantity');
+
+        if (!quantity || quantity === 'undefined') {
           addError('quantity', app.polyglot.t('orderModelErrors.mustHaveQuantity'));
         }
 
-        if (typeof item.quantity !== 'number') {
+        if (typeof quantity !== 'number') {
           addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
         }
       });

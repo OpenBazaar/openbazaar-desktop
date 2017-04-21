@@ -948,7 +948,8 @@
   },
   "orderModelErrors": {
     "mustHaveQuantity": "The quantity must be 1 or more",
-    "quantityMustBeNumber": "The quantity must be a valid number"
+    "quantityMustBeNumber": "The quantity must be a valid number",
+    "noItems": "You must make at least one purchase."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
