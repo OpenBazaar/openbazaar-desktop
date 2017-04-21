@@ -53,6 +53,19 @@
   }
 }
 
+.confirmBox {
+  // - should be in relatively positioned container
+  // - override with your own positioning values (top, right, etc...)
+  display: block;
+  position: absolute;
+  width: 245px;
+  z-index: 1;
+  padding: $pad;
+  border-style: solid;
+  border-width: 1px;
+  text-align: center;    
+}
+
 .boxList > * {
   //convenience class that turns all the direct descendants into blocks. Useful for lists of anchors or spans.
   @extend .box;
@@ -132,12 +145,18 @@
   }
 }
 
-.borderStacked > * {
-  //use on parent element to separate stacked child containers. The element should also have the clrBr class.
-  @extend .borderBottom;
+.borderStacked {
+  & > * {
+    //use on parent element to separate stacked child containers. The element should also have the clrBr class.
+    @extend .borderBottom;
 
-  &:last-child {
-    border-bottom: none;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &:empty {
+    display: none;
   }
 }
 
@@ -198,6 +217,10 @@
 .arrowBox {
   position: relative;
   border-radius: $corner;
+
+  &.confirmBox {
+    position: absolute;
+  }
 
   &::before {
     content: '';
