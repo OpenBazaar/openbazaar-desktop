@@ -7,7 +7,8 @@ import app from '../../../app';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
-import { launchEditListingModal, launchPurchaseModal } from '../../../utils/modalManager';
+import { launchEditListingModal } from '../../../utils/modalManager';
+import Purchase from '../purchase/Purchase';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
@@ -317,11 +318,21 @@ export default class extends BaseModal {
       selectedVariants.push(variant);
     });
 
-    this.purchaseModal = launchPurchaseModal({
-      listing: this.model,
-      variants: selectedVariants,
-      vendor: this.vendor,
-    });
+    if (this.purchaseModal) {
+      // if the purchase modal somehow exists and is triggered again, move it to the top
+      this.purchaseModal.bringToTop();
+    } else {
+      this.purchaseModal = new Purchase({
+        listing: this.model,
+        variants: selectedVariants,
+        vendor: this.vendor,
+        removeOnClose: true,
+      })
+        .render()
+        .open();
+
+      this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
+    }
   }
 
   get shipsFreeToMe() {
