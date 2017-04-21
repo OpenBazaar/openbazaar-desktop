@@ -59,13 +59,13 @@ describe('the Listing model', () => {
     expect(errorThrown).to.equal(false);
   });
 
-  it('changes a hash in the response to a listingHash in parse', () => {
+  it('changes a hash in the response to a hash in parse', () => {
     const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
       hash: 'test',
       listing: {},
     });
-    expect(parsed.listingHash).to.equal('test');
+    expect(parsed.hash).to.equal('test');
   });
 
   it('converts fiat prices from integer to decimal format in parse', () => {
