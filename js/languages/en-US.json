@@ -767,7 +767,8 @@
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, etc",
-      "unlimitedQuantityLabel": "unlimited"
+      "unlimitedQuantityLabel": "unlimited",
+      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
@@ -936,9 +937,12 @@
   },
   "variantOptionModelErrors": {
     "provideName": "Please provide a title.",
-    "atLeast2Variants": "Please provide at least two choices.",
-    "variantTooLong": "%{variant} exceeds the maximum length of %{maxLength} characters."
+    "atLeast2Variants": "Please provide at least two choices."
   },
+  "variantModelErrors": {
+    "provideName": "Please provide a title.",
+    "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
+  },  
   "spendModelErrors": {
     "provideAddress": "Please provide an address.",
     "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
