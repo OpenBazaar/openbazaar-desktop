@@ -1,11 +1,12 @@
 import BaseModel from '../BaseModel';
+import Options from '../../collections/purchase/Options';
 
 export default class extends BaseModel {
   defaults() {
     return {
       listingHash: '',
       quantity: 0,
-      options: [],
+      options: new Options(),
       shipping: {
         name: '',
         service: '',
@@ -15,5 +16,11 @@ export default class extends BaseModel {
 
   get idAttribute() {
     return 'listingHash';
+  }
+
+  get nested() {
+    return {
+      options: Options,
+    };
   }
 }

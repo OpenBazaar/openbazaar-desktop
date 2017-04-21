@@ -1,6 +1,6 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
-import Items from '../../collections/purchase/items';
+import Items from '../../collections/purchase/Items';
 
 export default class extends BaseModel {
   defaults() {

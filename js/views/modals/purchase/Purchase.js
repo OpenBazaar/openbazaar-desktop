@@ -6,8 +6,10 @@ import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
+import Item from '../../../models/purchase/Item';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './moderators';
+
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -24,12 +26,16 @@ export default class extends BaseModal {
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
-    this.order = new Order({
-      items: [{
-        listingHash: this.listing.listingHash,
-        quantity: 1,
-      }],
+    this.order = new Order();
+    /* to support multiple items in a purchase in the future, pass in items in the options, and add
+       them to the order here.
+     */
+    const item = new Item({
+      listingHash: this.listing.hash,
+      quantity: 1,
     });
+    console.log(options.variants);
+    if (options.variants) item.get(options).add(options.variants);
 
     const fetchErrorTitle = app.polyglot.t('purchase.errors.moderatorsTitle');
     const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
@@ -73,6 +79,7 @@ export default class extends BaseModal {
       'click #purchaseModerated': 'clickModerated',
       'click .js-payBtn': 'clickPayBtn',
       'click .js-pendingBtn': 'clickPendingBtn',
+      'change #purchaseQuantity': 'changeQuantityInput',
       ...super.events(),
     };
   }
@@ -129,6 +136,13 @@ export default class extends BaseModal {
     }
   }
 
+  changeQuantityInput(e) {
+
+  }
+
+  changeQuantity(quantity) {
+  }
+
   clickPayBtn() {
     console.log(this.order.attributes);
   }
@@ -179,6 +193,7 @@ export default class extends BaseModal {
         listing: this.listing,
         vendor: this.vendor,
         variants: this.variants,
+        items: this.order.get('items').toJSON(),
         displayCurrency: app.settings.get('localCurrency'),
         countryData: this.countryData, // not used yet
         defaultCountry: this.defaultCountry, // not used yet

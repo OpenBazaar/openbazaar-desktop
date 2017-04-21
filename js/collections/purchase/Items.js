@@ -1,5 +1,5 @@
 import { Collection } from 'backbone';
-import Item from '../../models/purchase/item';
+import Item from '../../models/purchase/Item';
 
 export default class extends Collection {
   model(attrs, options) {

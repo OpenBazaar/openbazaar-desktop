@@ -204,7 +204,7 @@ export default class extends BaseModel {
         });
 
         // remove the hash
-        delete options.attrs.listingHash;
+        delete options.attrs.hash;
       } else {
         options.data = JSON.stringify({
           slug: this.get('slug'),
@@ -257,7 +257,7 @@ export default class extends BaseModel {
 
     if (parsedResponse) {
       // set the hash
-      parsedResponse.listingHash = response.hash;
+      parsedResponse.hash = response.hash;
       // convert price fields
       if (parsedResponse.item) {
         const price = parsedResponse.item.price;
