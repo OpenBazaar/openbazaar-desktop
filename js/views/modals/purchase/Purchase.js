@@ -34,8 +34,8 @@ export default class extends BaseModal {
       listingHash: this.listing.hash,
       quantity: 1,
     });
-    console.log(options.variants);
-    if (options.variants) item.get(options).add(options.variants);
+    if (options.variants) item.get('options').add(options.variants);
+    console.log(item)
 
     const fetchErrorTitle = app.polyglot.t('purchase.errors.moderatorsTitle');
     const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
