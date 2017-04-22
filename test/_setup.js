@@ -16,6 +16,8 @@ global.document = require('jsdom').jsdom(indexPage);
 global.window = document.defaultView;
 global.navigator = window.navigator = {};
 global.$ = require('jquery')(window);
+global.Backbone = require('backbone');
+global.Backbone.$ = global.$;
 
 let getServerUrl;
 
@@ -25,7 +27,7 @@ before(function () {
   // test environement. So... to work around that, we're stubbing
   // getServerUrl.
   getServerUrl = sinon.stub(app, 'getServerUrl',
-    (urlFrag) => `http://localhost:8080/ob/${urlFrag}`);
+    (urlFrag) => `http://localhost:4002/${urlFrag}`);
 });
 
 after(function () {
