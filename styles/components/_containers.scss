@@ -63,7 +63,7 @@
   padding: $pad;
   border-style: solid;
   border-width: 1px;
-  text-align: center;    
+  text-align: center;
 }
 
 .boxList > * {
@@ -167,6 +167,7 @@
   border-width: 1px;
   border-style: solid;
   font-size: $tx4;
+  word-wrap: break-word;
 }
 
 .phraseBox {
