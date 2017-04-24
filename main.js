@@ -211,6 +211,17 @@ function createWindow() {
         {
           role: 'togglefullscreen',
         },
+        {
+          role: 'zoomin',
+          accelerator: 'CommandOrControl+=',
+        },
+        {
+          role: 'zoomout',
+          accelerator: 'CommandOrControl+-',
+        },
+        {
+          role: 'resetzoom',
+        },
       ],
     },
     {
@@ -337,6 +348,10 @@ function createWindow() {
 
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
+
+  ipcMain.on('contextmenu-click', () => {
+    menu.popup();
+  });
 
   // put logic here to set tray icon based on OS
   const osTrayIcon = 'openbazaar-mac-system-tray.png';
