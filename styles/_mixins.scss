@@ -56,7 +56,8 @@
 @mixin textSize($size) {
   font-size: $size;
 
-  .emoji {
+  .emoji,
+  &.emoji.emoji { // mild hack to override specificity of ancestors
     width: $size;
   }
 }
