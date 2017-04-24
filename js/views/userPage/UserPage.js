@@ -7,6 +7,7 @@ import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
 import Listings from '../../collections/Listings';
+import MiniProfile from '../MiniProfile';
 import Home from './Home';
 import Store from './Store';
 import Follow from './Follow';
@@ -26,9 +27,6 @@ export default class extends baseVw {
     if (!this.ownPage) {
       this.followedByYou = followedByYou(this.model.id);
 
-      // followsYou requires a new api call
-      this.followsYou = false; // temp until api is available
-
       this.listenTo(app.ownFollowing, 'sync update', () => {
         this.followedByYou = followedByYou(this.model.id);
         if (this.followedByYou) {
@@ -39,19 +37,8 @@ export default class extends baseVw {
           this.$unfollowLbl.addClass('hide');
         }
       });
-
-      this.listenTo(app.ownFollowers, 'update', () => {
-        // if the page being viewed stops following the user change the followsYou message
-        this.followsYou = app.ownFollowers.get(this.model.id) !== undefined;
-        if (this.followsYou) {
-          this.$followsYou.removeClass('hide');
-        } else {
-          this.$followsYou.addClass('hide');
-        }
-      });
     }
 
-    this.listenTo(this.model.get('avatarHashes'), 'change', () => this.updateAvatar());
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
   }
 
@@ -86,17 +73,6 @@ export default class extends baseVw {
 
   moreClick() {
     this.$moreableBtns.toggleClass('hide');
-  }
-
-  updateAvatar() {
-    const avatarHashes = this.model.get('avatarHashes').toJSON();
-    const avatarHash = isHiRez() ? avatarHashes.small : avatarHashes.tiny;
-
-    if (avatarHash) {
-      this.$('.js-avatar').attr('style',
-        `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)}), 
-      url('../imgs/defaultAvatar.png')`);
-    }
   }
 
   updateHeader() {
@@ -240,7 +216,6 @@ export default class extends baseVw {
       this.$el.html(t({
         ...this.model.toJSON(),
         followed: this.followedByYou,
-        followsYou: this.followsYou,
         ownPage: this.ownPage,
       }));
 
@@ -248,10 +223,15 @@ export default class extends baseVw {
       this.$tabTitle = this.$('.js-tabTitle');
       this.$followLbl = this.$('.js-followLbl');
       this.$unfollowLbl = this.$('.js-unfollowLbl');
-      this.$followsYou = this.$('.js-followsYou');
       this.$moreableBtns = this.$('.js-moreableBtn');
       this._$pageContent = null;
       this._$listingsCount = null;
+
+      if (this.miniProfile) this.miniProfile.remove();
+      this.miniProfile = this.createChild(MiniProfile, {
+        model: this.model,
+      });
+      this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {

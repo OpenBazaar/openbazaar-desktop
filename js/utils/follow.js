@@ -7,8 +7,11 @@ export function followedByYou(guid) {
 }
 
 export function followsYou(guid) {
-  // note: only useful for changes made by the websocket, ownFollowers may not have been fetched
-  return !!app.ownFollowers.get(guid);
+  if (!guid) {
+    throw new Error('Please provide a guid');
+  }
+
+  return $.get(`${app.getServerUrl(`ob/followsme/${guid}`)}`);
 }
 
 export function followUnfollow(guid, type = 'follow') {
