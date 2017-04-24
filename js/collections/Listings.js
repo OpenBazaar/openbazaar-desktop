@@ -37,10 +37,10 @@ export default class extends Collection {
     const cats = [];
 
     this.models.forEach(listing => {
-      const categories = listing.get('categories') || []; // this may be returned as null
-      categories.forEach(cat => {
-        if (cats.indexOf(cat) === -1) cats.push(cat);
-      });
+      listing.get('categories')
+        .forEach(cat => {
+          if (cats.indexOf(cat) === -1) cats.push(cat);
+        });
     });
 
     // todo: For now sort will only be accurate for standard ascii

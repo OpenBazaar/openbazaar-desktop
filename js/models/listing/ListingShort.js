@@ -22,6 +22,15 @@ export default class extends BaseModel {
     return this.get('shipsTo').indexOf(country) !== -1;
   }
 
+  parse(response) {
+    const parsedResponse = response;
+
+    parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
+      parsedResponse.categories : [];
+    
+    return parsedResponse;
+  }
+
   sync(method, model, options) {
     let returnSync = 'will-set-later';
 

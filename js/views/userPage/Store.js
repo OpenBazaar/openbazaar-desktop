@@ -339,13 +339,13 @@ export default class extends BaseVw {
   filteredCollection(filter = this.filter, collection = this.collection) {
     const models = collection.models.filter((md) => {
       let passesFilter = true;
-      const categories = md.get('categories') || []; // this may be null
 
       if (this.filter.freeShipping && !md.shipsFreeToMe) {
         passesFilter = false;
       }
 
-      if (this.filter.category !== 'all' && categories.indexOf(this.filter.category) === -1) {
+      if (this.filter.category !== 'all' &&
+        md.get('categories').indexOf(this.filter.category) === -1) {
         passesFilter = false;
       }
 
