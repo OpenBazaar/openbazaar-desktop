@@ -820,6 +820,17 @@
   "moderators": {
     "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
   },
+  "transactions": {
+    "sales": {
+      "heading": "Sales"
+    },
+    "purchases": {
+      "heading": "Purchases"
+    },
+    "cases": {
+      "heading": "Cases"
+    }
+  },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
@@ -942,7 +953,7 @@
   "variantModelErrors": {
     "provideName": "Please provide a title.",
     "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
-  },  
+  },
   "spendModelErrors": {
     "provideAddress": "Please provide an address.",
     "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
