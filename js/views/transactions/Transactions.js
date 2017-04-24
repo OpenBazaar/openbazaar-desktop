@@ -26,7 +26,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'transactionsPage clrS';
+    return 'transactions clrS';
   }
 
   events() {
