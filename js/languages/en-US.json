@@ -793,6 +793,17 @@
       "emptyData": "No valid data was returned from %{provider}."
     }
   },
+  "transactions": {
+    "sales": {
+      "heading": "Sales"
+    },
+    "purchases": {
+      "heading": "Purchases"
+    },
+    "cases": {
+      "heading": "Cases"
+    }
+  },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
     "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
