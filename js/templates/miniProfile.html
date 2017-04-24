@@ -1,0 +1,16 @@
+<div class="flexVCent">
+  <div>
+    <div class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes || {}) %>"></div>
+  </div>
+  <div class="flexExpand">
+    <h1 class="h2 txUnb txUnl"><%= ob.name %></h1>
+    <div class="txt5b gutterHSm">
+      <span class="clrT">
+        <%= ob.parseEmojis('📍', '', { style: 'width: 10px' }) %> <%= ob.location || ob.polyT('userPage.noLocation') %>
+      </span>
+      <% if (ob.followsYou) { %>
+      <span><%= ob.parseEmojis('👥', '', { style: 'width: 10px' }) %> <%= ob.polyT('userPage.followsYou') %></span>
+      <% } %>
+    </div>
+  </div>
+</div>
