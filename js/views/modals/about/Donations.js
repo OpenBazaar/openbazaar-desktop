@@ -59,6 +59,7 @@ export default class extends baseVw {
   }
 
   render() {
+    console.log(qrCodeDataURI);
     loadTemplate('modals/about/donations.html', (t) => {
       this.$el.html(t({
         obDonationAddress,
