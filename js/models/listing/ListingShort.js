@@ -23,7 +23,7 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    const parsedResponse = response;
+    const parsedResponse = { ...response };
 
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
       parsedResponse.categories : [];
