@@ -213,9 +213,11 @@ function createWindow() {
         },
         {
           role: 'zoomin',
+          accelerator: 'CommandOrControl+=',
         },
         {
           role: 'zoomout',
+          accelerator: 'CommandOrControl+-',
         },
         {
           role: 'resetzoom',
