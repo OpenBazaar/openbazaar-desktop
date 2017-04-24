@@ -76,6 +76,11 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   .open();
 });
 
+window.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('contextmenu-click');
+}, false);
+
 // Instantiating our Server Configs collection now since the page nav
 // utilizes it. We'll fetch it later on.
 app.serverConfigs = new ServerConfigs();
