@@ -349,7 +349,7 @@ function createWindow() {
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 
-  ipcMain.on('contextmenu-click', (e) => {
+  ipcMain.on('contextmenu-click', () => {
     menu.popup();
   });
 
