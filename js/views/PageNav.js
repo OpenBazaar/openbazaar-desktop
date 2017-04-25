@@ -220,13 +220,13 @@ export default class extends View {
           .split('/')[0];
 
       if (isMultihash(firstTerm)) {
-        app.router.navigate(firstTerm, { trigger: true });
+        app.router.navigate(text.split(' ')[0], { trigger: true });
       } else if (firstTerm.charAt(0) === '@' && firstTerm.length > 1) {
         // a handle
-        app.router.navigate(firstTerm, { trigger: true });
+        app.router.navigate(text.split(' ')[0], { trigger: true });
       } else if (text.startsWith('ob://')) {
         // trying to show a specific page
-        app.router.navigate(text, { trigger: true });
+        app.router.navigate(text.split(' ')[0], { trigger: true });
       } else {
         // searching term
         app.router.navigate(`search?q=${encodeURIComponent(text)}`, { trigger: true });
