@@ -30,5 +30,12 @@
 .btcIcon {
   width: 18px;
   height: 18px;
-  background-size: contain;  
+  background-size: contain;
+  display: inline-block;
+}
+
+.shapeShiftIcon {
+  @extend .btcIcon;
+  background-color: #000;
+  border-radius: 4px;
 }

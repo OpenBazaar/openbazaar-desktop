@@ -49,7 +49,10 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.modsSelected, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListSelected, { cardState: 'selected' });
+      this.addModToList(model, collection, this.$modListSelected, {
+        cardState: 'selected',
+        notSelected: 'deselected',
+      });
     });
 
     this.listenTo(this.modsSelected, 'asyncError', (opts) => {
@@ -68,7 +71,10 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsByID, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListByID);
+      this.addModToList(model, collection, this.$modListByID, {
+        cardState: 'unselected',
+        notSelected: 'unselected',
+      });
     });
 
     this.listenTo(this.modsByID, 'asyncError', (opts) => {
@@ -85,7 +91,10 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsAvailable, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListAvailable);
+      this.addModToList(model, collection, this.$modListAvailable, {
+        cardState: 'unselected',
+        notSelected: 'unselected',
+      });
     });
 
     this.listenTo(this.modsAvailable, 'asyncError', (opts) => {
@@ -145,10 +154,12 @@ export default class extends baseVw {
           ...opts,
         });
         this.listenTo(newModView, 'changeModerator', (data) => this.changeMod(data));
-        newModView.cardState = opts.cardState || 'view';
       } else {
         newModView = cachedView;
         newModView.delegateEvents();
+        // when cards are moved betwen lists, set their options to fit the target list
+        newModView.cardState = opts.cardState || 'unselected';
+        newModView.notSelected = opts.notSelected || 'unselected';
       }
       // if the view already exists and is in the DOM, this will move it
       docFrag.append(newModView.render().$el);
@@ -460,17 +471,26 @@ export default class extends baseVw {
 
       // if mods are already available, add them now
       this.modsSelected.each((mod) => {
-        this.addModToList(mod, this.modsSelected, this.$modListSelected, { cardState: 'selected' });
+        this.addModToList(mod, this.modsSelected, this.$modListSelected, {
+          cardState: 'selected',
+          notSelected: 'deselected',
+        });
       });
       if (this.modsSelected.notFetchedYet.length) this.$modListSelected.addClass('processing');
 
       this.modsByID.each((mod) => {
-        this.addModToList(mod, this.modsByID, this.$modListByID, { cardState: 'view' });
+        this.addModToList(mod, this.modsByID, this.$modListByID, {
+          cardState: 'unselected',
+          notSelected: 'unselected',
+        });
       });
       if (this.modsByID.notFetchedYet.length) this.$modListByID.addClass('processing');
 
       this.modsAvailable.each((mod) => {
-        this.addModToList(mod, this.modsAvailable, this.$modListAvailable, { cardState: 'view' });
+        this.addModToList(mod, this.modsAvailable, this.$modListAvailable, {
+          cardState: 'unselected',
+          notSelected: 'unselected',
+        });
       });
       if (this.modsAvailable.notFetchedYet.length) this.$modListAvailable.addClass('processing');
     });

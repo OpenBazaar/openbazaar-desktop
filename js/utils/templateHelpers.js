@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../app';
 import { formatCurrency, convertAndFormatCurrency } from './currency';
 import {
-  isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage,
+  isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
@@ -43,5 +43,7 @@ export { isLargeWidth };
 export { isSmallHeight };
 
 export { getAvatarBgImage };
+
+export { getListingBgImage };
 
 export { upToFixed };

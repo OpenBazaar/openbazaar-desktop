@@ -29,7 +29,7 @@ describe('the Listing model', () => {
   });
 
   it('throws an error if you attempt to fetch without a slug set' +
-    ' on the nested listing model', () => {
+      ' on the nested listing model', () => {
     const listing = new Listing({}, { guid: '12345' });
 
     let errorThrown = false;
@@ -57,6 +57,15 @@ describe('the Listing model', () => {
     }
 
     expect(errorThrown).to.equal(false);
+  });
+
+  it('changes a hash in the response to a hash in parse', () => {
+    const listing = new Listing({}, { guid: '12345' });
+    const parsed = listing.parse({
+      hash: 'test',
+      listing: {},
+    });
+    expect(parsed.hash).to.equal('test');
   });
 
   it('converts fiat prices from integer to decimal format in parse', () => {
@@ -183,7 +192,7 @@ describe('the Listing model', () => {
     const valErr = listing.validationError;
 
     expect(valErr && valErr.termsAndConditions &&
-      !!valErr.termsAndConditions.length || false).to.equal(true);
+        !!valErr.termsAndConditions.length || false).to.equal(true);
   });
 
   it('fails validation if the terms and conditions exceed the maximum length', () => {
@@ -198,7 +207,7 @@ describe('the Listing model', () => {
     const valErr = listing.validationError;
 
     expect(valErr && valErr.termsAndConditions &&
-      !!valErr.termsAndConditions.length || false).to.equal(true);
+        !!valErr.termsAndConditions.length || false).to.equal(true);
   });
 
   it('fails validation if, for a physical good, at least one shipping options is not provided',
@@ -214,67 +223,68 @@ describe('the Listing model', () => {
       const valErr = listing.validationError;
 
       expect(valErr && valErr.shippingOptions &&
-        !!valErr.shippingOptions.length || false).to.equal(true);
+          !!valErr.shippingOptions.length || false).to.equal(true);
     });
 
-  it('fails validation if the coupon count exceeds the maximum allowable amount',
-    () => {
-      const listing = new Listing();
-      const couponData = [];
+  it('fails validation if the coupon count exceeds the maximum allowable amount', () => {
+    const listing = new Listing();
+    const couponData = [];
 
-      for (let i = 0; i < (listing.max.couponCount + 1); i++) {
-        couponData.push({
-          discountCode: Date.now() + Math.random(),
-          percentDiscount: 10,
-        });
-      }
+    for (let i = 0; i < (listing.max.couponCount + 1); i++) {
+      couponData.push({
+        discountCode: Date.now() + Math.random(),
+        percentDiscount: 10,
+      });
+    }
 
-      listing.set({
-        coupons: couponData,
-      }, { validate: true });
+    listing.set({
+      coupons: couponData,
+    }, { validate: true });
 
-      const valErr = listing.validationError;
+    const valErr = listing.validationError;
 
-      expect(valErr && valErr.coupons &&
+    expect(valErr && valErr.coupons &&
         !!valErr.coupons.length || false).to.equal(true);
-    });
+  });
 
-  it('fails validation if a coupon price exceeds the listing price',
-    () => {
-      const listing = new Listing();
+  it('fails validation if a coupon price exceeds the listing price', () => {
+    const listing = new Listing();
 
-      listing.set({
-        item: {
-          price: 500,
+    listing.set({
+      item: {
+        price: 500,
+      },
+      coupons: [
+        {
+          discountCode: Date.now() + Math.random(),
+          priceDiscount: 500, // should not fail validation
         },
-        coupons: [
-          {
-            discountCode: Date.now() + Math.random(),
-            priceDiscount: 500, // should not fail validation
-          },
-          {
-            discountCode: Date.now() + Math.random(),
-            priceDiscount: 501, // should fail validation
-          },
-          {
-            discountCode: Date.now() + Math.random(),
-            priceDiscount: 1500, // should fail validation
-          },
-        ],
-      }, { validate: true });
+        {
+          discountCode: Date.now() + Math.random(),
+          priceDiscount: 501, // should fail validation
+        },
+        {
+          discountCode: Date.now() + Math.random(),
+          priceDiscount: 1500, // should fail validation
+        },
+      ],
+    }, { validate: true });
 
-      const valErr = listing.validationError;
-      const coupons = listing.get('coupons');
+    const valErr = listing.validationError;
+    const coupons = listing.get('coupons');
 
-      expect(valErr && valErr[`coupons[${coupons.at(0).cid}].priceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(0).cid}].priceDiscount`].length || false).to.equal(false);
+    expect(valErr && valErr[`coupons[${coupons.at(0).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(0).cid}].priceDiscount`].length || false)
+        .to.equal(false);
 
-      expect(valErr && valErr[`coupons[${coupons.at(1).cid}].priceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(1).cid}].priceDiscount`].length || false).to.equal(true);
+    expect(valErr && valErr[`coupons[${coupons.at(1).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(1).cid}].priceDiscount`].length || false)
+        .to.equal(true);
 
-      expect(valErr && valErr[`coupons[${coupons.at(2).cid}].priceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(2).cid}].priceDiscount`].length || false).to.equal(true);
-    });
+    expect(valErr && valErr[`coupons[${coupons.at(2).cid}].priceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(2).cid}].priceDiscount`].length || false)
+        .to.equal(true);
+  });
 
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync

@@ -53,6 +53,15 @@
   }
 }
 
+@mixin textSize($size) {
+  font-size: $size;
+
+  .emoji,
+  &.emoji.emoji { // mild hack to override specificity of ancestors
+    width: $size;
+  }
+}
+
 @mixin textColor($col1, $col2: $col1, $col3: $col2) {
   /* generates the text color rules */
   /* if no second color is passed, set everything to the first color */

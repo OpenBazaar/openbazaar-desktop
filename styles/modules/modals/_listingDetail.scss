@@ -8,17 +8,21 @@
 
     .listingContent {
 
-      .mainImage {
-        width: 530px;
-        height: 530px;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        border-width: 1px;
-        border-style: solid;
-        border-radius: $corner;
-        margin-bottom: $pad;
-        cursor: pointer;
+      .mainImageWrapper {
+        flex-shrink: 0;
+
+        .mainImage {
+          width: 530px;
+          height: 530px;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          border-width: 1px;
+          border-style: solid;
+          border-radius: $corner;
+          margin-bottom: $pad;
+          cursor: pointer;
+        }
       }
 
       .buyBox {

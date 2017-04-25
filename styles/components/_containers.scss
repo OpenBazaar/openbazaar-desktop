@@ -107,10 +107,9 @@
 .disc {
   //the disc can contain an image or an icon, and is usually a clickable element
   @extend .box;
-  box-sizing: border-box;
   border-radius:50%;
-  width: 42px;
-  height: 42px;
+  width: $thumb;
+  height: $thumb;
   //fill the disc with any background image
   background-position: center;
   background-size: cover;
@@ -118,8 +117,29 @@
 
 .discSm {
   @extend .disc;
-  width: 38px;
-  height: 38px;
+  width: $thumbSm;
+  height: $thumbSm;
+}
+
+.discTn {
+  @extend .disc;
+  width: $thumbTn;
+  height: $thumbTn;
+}
+
+.thumb {
+  // thumbnail image, used for small images
+  @extend .box;
+  width: $thumb;
+  height: $thumb;
+  background-position: center;
+  background-size: cover;
+}
+
+.thumbLg {
+  @extend .thumb;
+  width: $thumbLg;
+  height: $thumbLg;
 }
 
 .border {
