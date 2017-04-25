@@ -19,7 +19,7 @@ export function parseEmojis(text, className = '', attrs = {}) {
   $parsed.find('img')
     .each((index, img) => {
       const $img = $(img);
-      $img.addClass(className);
+      $img.addClass(`emoji ${className}`);
 
       Object.keys(attrs)
         .forEach(attr => {
