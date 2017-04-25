@@ -425,7 +425,7 @@
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
-        "error": "There was an error saving your store settings. \n %{errMsg}"
+        "error": "There was an error saving your store settings."
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
@@ -555,7 +555,7 @@
     "receiveMoney": {
       "title": "Receive Money",
       "needBitcoin": "Need Bitcoin?",
-      "btnCancel": "Cancel"      
+      "btnCancel": "Cancel"
     },
     "sendMoney": {
       "toLabel": "To",
@@ -571,7 +571,7 @@
         "body": "Double check that the address and amount are correct.",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
-      }      
+      }
     },
     "transactions": {
       "header": "Transactions",
@@ -926,7 +926,7 @@
   "variantModelErrors": {
     "provideName": "Please provide a title.",
     "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
-  },  
+  },
   "spendModelErrors": {
     "provideAddress": "Please provide an address.",
     "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
