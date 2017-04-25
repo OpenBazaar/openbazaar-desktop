@@ -795,12 +795,13 @@
   "transactions": {
     "sales": {
       "heading": "Sales",
-      "placeholderSearch": "Search by Order #, Title or Vendor",
       "countSales": "%{smart_count} sale |||| %{smart_count} sales",
       "countSalesFound": "%{countSales} found"
     },
     "purchases": {
-      "heading": "Purchases"
+      "heading": "Purchases",
+      "countPurchases": "%{smart_count} purchases |||| %{smart_count} purchases",
+      "countPurchasesFound": "%{countPurchases} found"      
     },
     "cases": {
       "heading": "Cases"
@@ -814,7 +815,8 @@
       "disputePending": "Dispute Pending",
       "disputeClosed": "Dispute Closed",
       "completed": "Completed"
-    }    
+    },
+    "placeholderSearch": "Search by Order #, Title or Vendor"
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

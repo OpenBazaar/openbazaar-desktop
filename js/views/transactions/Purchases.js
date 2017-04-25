@@ -1,3 +1,4 @@
+import moment from 'moment';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 
@@ -7,12 +8,14 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'purchases';
+    return 'purchases tx5';
   }
 
   render() {
     loadTemplate('transactions/purchases.html', (t) => {
-      this.$el.html(t({}));
+      this.$el.html(t({
+        moment,
+      }));
     });
 
     return this;

@@ -339,3 +339,27 @@ input[type=range][class~="clrS"] {
     }
   }
 }
+
+.sortIcon {
+  &::after, &::before {
+    border-color: transparent;
+  }
+
+  &::after {
+    border-bottom-color: $text;
+  }
+
+  &::before {
+    border-top-color: $text2;
+  }
+
+  &.ascending {
+    &::after {
+      border-bottom-color: $text2;      
+    }
+
+    &::before {
+      border-top-color: $text;
+    }
+  }
+}

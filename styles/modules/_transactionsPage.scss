@@ -27,9 +27,41 @@
     .transactionsTable {
       border-spacing: 0;
       border-collapse: collapse;
+      width: 100%;
       
       th {
         text-align: left;
+
+        .dateHeader {
+          text-decoration: none;
+
+          .sortIcon {
+            width: 10px;
+            height: 12px;
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            top: 1px;
+
+            &::after, &::before {
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              position: absolute;
+            }
+
+            &::after {
+              top: 0;
+              border-width: 0 5px 5px 5px;
+            }
+
+            &::before {
+              bottom: 0;
+              border-width: 5px 5px 0 5px;
+            }
+          }          
+        }
       }
 
       td, th {
@@ -41,11 +73,80 @@
         &.orderCol {
           max-width: 100px;
         }
+
+        &.listingCol {
+          max-width: 163px;
+
+          .thumb {
+            width: 33px;
+            height: 33px;
+            flex-shrink: 0;
+          }
+        }
+
+        &.userCol {
+          .avatar {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+          }
+
+          .handle {
+            max-width: 75px;
+            min-width: 75px;
+          }
+
+          .unreadBadge {
+            float: right;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            font-weight: bold;
+            padding-top: 2px;           
+          }
+        }
+
+        &.priceCol {
+          max-width: 163px;
+        }
+
+        &.statusCol {
+          line-height: 2em;
+
+          .btnAccept {
+            padding: 0 10px;
+            font-size: $tx6;
+          }
+        }
       }
 
       tr {
+        .unreadBorder {
+          display: none;
+        }
+
         &.unread {
-          // font-weight: bold;
+          font-weight: bold;
+
+          .statusCol {
+            font-weight: normal;
+          }
+
+          .unreadBorder {
+            display: block;
+          }
+        }
+      }
+
+      td:first-child {
+        position: relative;
+
+        .unreadBorder {
+          width: 5px;
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
         }
       }
     }
