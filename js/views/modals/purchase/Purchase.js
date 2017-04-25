@@ -14,7 +14,7 @@ import Moderators from './moderators';
 export default class extends BaseModal {
   constructor(options = {}) {
     if (!options.listing) {
-      throw new Error('Please provide a listing object');
+      throw new Error('Please provide a listing model');
     }
 
     if (!options.vendor) {

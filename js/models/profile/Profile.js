@@ -13,7 +13,7 @@ export default class extends BaseModel {
       handle: '',
       location: '',
       moderator: false,
-      name: `ob ${Math.random().toString(36).slice(2)}`,
+      name: `OB ${Math.random().toString(36).slice(1).substring(1,7)}`,
       nsfw: false,
       shortDescription: '',
       avatarHashes: new Image(),
