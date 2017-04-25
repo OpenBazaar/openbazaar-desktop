@@ -427,7 +427,7 @@
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
-        "error": "There was an error saving your store settings. \n %{errMsg}"
+        "error": "There was an error saving your store settings."
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
