@@ -61,10 +61,10 @@ const languages = [
   //   name: '한국어 (Korean)',
   //   code: 'ko',
   // },
-  {
-   name: 'Polski (Polish)',
-   code: 'pl',
-  },
+  // {
+  //  name: 'Polski (Polish)',
+  //  code: 'pl',
+  // },
   // {
   //   name: 'Português (Portuguese, Brazil)',
   //   code: 'pt-BR',
