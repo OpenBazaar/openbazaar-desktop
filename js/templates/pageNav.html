@@ -51,7 +51,7 @@
               </div>
               <div class="listGroup clrP clrBr">
                 <a class="listItem connectedServerListItem js-connectedServerListItem">
-                  <span class="noOverflow js-connectedServerName <% if (ob.currentServer) print('txB') %>"><% print(ob.currentServer ? ob.currentServer.name : ob.polyT('pageNav.notConnectedMenuItem')) %></span>
+                  <span class="noOverflow js-connectedServerName <% if (ob.connectedServer) print('txB') %>"><% print(ob.connectedServer ? ob.connectedServer.name : ob.polyT('pageNav.notConnectedMenuItem')) %></span>
                   <span><i class="ion-arrow-right-b floR"></i></span>
                 </a>
               </div>
