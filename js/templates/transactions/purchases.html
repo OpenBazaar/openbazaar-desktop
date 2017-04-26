@@ -4,60 +4,7 @@
          placeholder="<%= ob.polyT('transactions.placeholderSearch') %>">
 </div>
 
-<div class="filters rowHg">
-  <div class="flex gutterH gutterV">
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterPurchasing">
-        <label class="tx5b" for="filterPurchasing"><%= ob.polyT('transactions.filters.purchasing') %></label>
-      </div>
-    </div>
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterReady">
-        <label class="tx5b" for="filterReady"><%= ob.polyT('transactions.filters.ready') %></label>
-      </div>
-    </div>
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterFulfilled">
-        <label class="tx5b" for="filterFulfilled"><%= ob.polyT('transactions.filters.fulfilled') %></label>
-      </div>
-    </div>
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterRefunded">
-        <label class="tx5b" for="filterRefunded"><%= ob.polyT('transactions.filters.refunded') %></label>
-      </div>
-    </div>    
-  </div>
-  <div class="flex gutterH gutterV">
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterDisputeOpen">
-        <label class="tx5b" for="filterDisputeOpen"><%= ob.polyT('transactions.filters.disputeOpen') %></label>
-      </div>
-    </div>
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterDisputePending">
-        <label class="tx5b" for="filterDisputePending"><%= ob.polyT('transactions.filters.disputePending') %></label>
-      </div>
-    </div>
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterDisputeClosed">
-        <label class="tx5b" for="filterDisputeClosed"><%= ob.polyT('transactions.filters.disputeClosed') %></label>
-      </div>
-    </div>
-    <div class="col3">
-      <div class="filter clrP clrBr">
-        <input type="checkbox" id="filterCompleted">
-        <label class="tx5b" for="filterCompleted"><%= ob.polyT('transactions.filters.completed') %></label>
-      </div>
-    </div>    
-  </div>  
-</div>
+<%= ob.filtersHtml %>
 
 <div class="row">
 <%= ob.polyT('transactions.purchases.countPurchasesFound', {

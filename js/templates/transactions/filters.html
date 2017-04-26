@@ -1,0 +1,37 @@
+<%
+  /*
+    pass in the following data structure:
+
+    {
+      className: 'top-level-class', // optional
+      maxPerRow: 3, // optional, deafult is 4
+      filters: [
+        {
+          className: 'filterFulfilled', // optional
+          id: 'filterFulfilled',
+          text: 'Fulfilled',
+        },
+        ...
+      ]
+    }
+  */
+%>
+
+<%
+  const rows = ob.splitIntoRows(ob.filters, ob.maxPerRow || 4);
+%>
+
+<div class="filters rowHg <%= ob.className %>">
+  <% rows.forEach(row => { %>
+  <div class="flex gutterH gutterV">
+    <% row.forEach(filter => { %>
+    <div class="col3">
+      <div class="filter clrP clrBr <%= filter.className %>">
+        <input type="checkbox" id="<%= filter.id %>">
+        <label class="tx5b" for="<%= filter.id %>"><%= filter.text %></label>
+      </div>
+    </div>    
+    <% }) %>
+  </div>
+  <% }) %>
+</div>
