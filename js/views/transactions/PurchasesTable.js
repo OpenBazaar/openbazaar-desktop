@@ -1,6 +1,6 @@
 // import app from '../../app';
 // import moment from 'moment';
-import $ from 'jquery';
+// import $ from 'jquery';
 import _ from 'underscore';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
@@ -67,7 +67,7 @@ export default class extends baseVw {
         const transactionsTable = t({
           type: 'purchases',
         });
-        const $transactionsTable = $(`<div>${transactionsTable}</div>`);
+        // const $transactionsTable = $(`<div>${transactionsTable}</div>`);
 
         this.$el.html(purchasesT({
           ...this._state,
