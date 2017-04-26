@@ -13,7 +13,7 @@ export default class extends BaseModel {
       handle: '',
       location: '',
       moderator: false,
-      name: `OB ${Math.random().toString(36).slice(1).substring(1,7)}`,
+      name: `OB ${(Math.floor(Math.random() * 2116316159) + 60466176).toString(36)}`,
       nsfw: false,
       shortDescription: '',
       avatarHashes: new Image(),
