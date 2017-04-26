@@ -803,7 +803,8 @@
       "countPurchases": "%{smart_count} purchases |||| %{smart_count} purchases",
       "countPurchasesFound": "%{countPurchases} found",
       "unableToObtainPurchases": "Unable to obtain your purchases.",
-      "btnRetry": "Retry"
+      "btnRetry": "Retry",
+      "noResults": "No purchases found"
     },
     "cases": {
       "heading": "Cases"

@@ -71,6 +71,8 @@ export default class extends baseVw {
 
         this.$el.html(purchasesT({
           ...this._state,
+          // purchaseCount: this.collection.length,
+          purchaseCount: 0,
           transactionsTable,
         }));
       });
