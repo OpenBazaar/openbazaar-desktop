@@ -79,9 +79,10 @@ export default class extends baseVw {
       // defaulting to an empty image - needed for proper spacing
       // when the spinner is showing
       let qrDataUri = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
+      const address = this.getState().address;
 
-      if (this.getState().address) {
-        qrDataUri = qr(`bitcoin:${qrDataUri}`,
+      if (address) {
+        qrDataUri = qr(`bitcoin:${address}`,
           { type: 6, size: 5, level: 'Q' });
       }
 

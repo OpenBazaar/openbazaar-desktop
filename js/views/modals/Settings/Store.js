@@ -354,7 +354,7 @@ export default class extends baseVw {
           // if at least one save fails, the save has failed.
           const errMsg = args[0] && args[0].responseJSON &&
             args[0].responseJSON.reason || '';
-          openSimpleMessage(app.polyglot.t('settings.storeTab.status.error'), { errMsg });
+          openSimpleMessage(app.polyglot.t('settings.storeTab.status.error'), errMsg);
 
           statusMessage.update({
             msg: app.polyglot.t('settings.storeTab.status.fail'),
