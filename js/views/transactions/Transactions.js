@@ -2,6 +2,7 @@ import $ from 'jquery';
 import app from '../../app';
 import { capitalize } from '../../utils/string';
 import loadTemplate from '../../utils/loadTemplate';
+import Transactions from '../../collections/Transactions';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Purchases from './Purchases';
@@ -23,6 +24,19 @@ export default class extends baseVw {
       sales: Sales,
       cases: Cases,
     };
+
+    this.defaultPurchasesFilter = {
+      purchasing: false,
+      ready: true,
+      fulfilled: true,
+      refunded: true,
+      disputeOpen: true,
+      disputePending: true,
+      disputeClosed: true,
+      completed: true,
+    };
+
+    this.purchasesCol = new Transactions([], { type: 'purchases' });
   }
 
   className() {
@@ -89,6 +103,15 @@ export default class extends baseVw {
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
     }
+  }
+
+  createPurchasesTabView() {
+    const view = this.createChild(Purchases, {
+      collection: this.purchasesCol,
+      defaultFilter: this.defaultPurchasesFilter,
+    });
+
+    return view;
   }
 
   render() {

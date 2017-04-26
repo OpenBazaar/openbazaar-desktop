@@ -801,7 +801,9 @@
     "purchases": {
       "heading": "Purchases",
       "countPurchases": "%{smart_count} purchases |||| %{smart_count} purchases",
-      "countPurchasesFound": "%{countPurchases} found"      
+      "countPurchasesFound": "%{countPurchases} found",
+      "unableToObtainPurchases": "Unable to obtain your purchases.",
+      "btnRetry": "Retry"
     },
     "cases": {
       "heading": "Cases"
@@ -816,7 +818,28 @@
       "disputeClosed": "Dispute Closed",
       "completed": "Completed"
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor"
+    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "transactionsTable": {
+      "headers": {
+        "orderId": "Order ID",
+        "date": "Date",
+        "listing": "Listing",
+        "buyer": "Buyer",
+        "vendor": "Vendor",
+        "total": "Total",
+        "status": "Status"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "funded": "Funded",
+        "fulfilled": "Fulfilled",
+        "decided": "Decided"
+      },
+      "btnReject": "Reject",
+      "btnAccept": "Accept",
+      "btnCancel": "Cancel",
+      "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})"
+    }
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

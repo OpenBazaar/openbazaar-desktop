@@ -67,7 +67,7 @@
       td, th {
         border-width: 1px;
         border-style: solid;
-        padding: $pad;
+        padding: 8px 10px;
         word-break: break-word;
 
         &.orderCol {
@@ -149,6 +149,11 @@
           bottom: 0;
         }
       }
+    }
+
+    .purchasesTable {
+      position: relative;
+      min-height: 200px;
     }
   }
 }
