@@ -8,7 +8,7 @@ import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import PopInMessage from '../../PopInMessage';
-import Moderators from './moderators';
+import Moderators from './Moderators';
 
 
 export default class extends BaseModal {
@@ -52,8 +52,6 @@ export default class extends BaseModal {
       singleSelect: true,
       selectFirst: true,
     });
-
-    this.listenTo(this.moderators, 'changeModerator', ((data) => this.changeModerator(data)));
 
     this.countryData = getTranslatedCountries(app.settings.get('language'))
         .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
@@ -130,15 +128,6 @@ export default class extends BaseModal {
     }
   }
 
-  changeModerator(data) {
-    if (data.selected) {
-      this.order.set('moderator', data.guid);
-    } else if (data.guid === this.order.get('moderator')) {
-      // the current moderator was deselected
-      this.order.set('moderator', '');
-    }
-  }
-
   changeQuantityInput(e) {
     this.order.get('items').at(0).set('quantity', $(e.target).val());
   }
@@ -157,6 +146,9 @@ export default class extends BaseModal {
   }
 
   purchaseListing() {
+    // set the moderator
+    this.order.set('moderator', this.moderators.getSelectedIDs());
+
     $.post({
       url: app.getServerUrl('ob/purchase'),
       data: JSON.stringify(this.order.toJSON()),
