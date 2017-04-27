@@ -802,9 +802,9 @@
       "heading": "Purchases",
       "countPurchases": "%{smart_count} purchases |||| %{smart_count} purchases",
       "countPurchasesFound": "%{countPurchases} found",
-      "unableToObtainPurchases": "Unable to obtain your purchases.",
-      "btnRetry": "Retry",
-      "noResults": "No purchases found"
+      "unableToFetch": "Unable to obtain your purchases.",
+      "noResults": "No purchases found",
+      "failedCancelHeading": "There was an error canceling the order."
     },
     "cases": {
       "heading": "Cases"
@@ -834,12 +834,14 @@
         "confirmed": "Confirmed",
         "funded": "Funded",
         "fulfilled": "Fulfilled",
-        "decided": "Decided"
+        "decided": "Decided",
+        "canceled": "Canceled"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
       "btnCancel": "Cancel",
-      "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})"
+      "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+      "btnRetryFetch": "Retry"
     }
   },
   "exchangeRatesSyncer": {

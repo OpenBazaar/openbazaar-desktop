@@ -13,7 +13,7 @@ export default class extends BaseModel {
     returnVal = {
       ...returnVal,
       // Convert satoshi to BTC
-      value: integerToDecimal(returnVal.total, true),
+      total: integerToDecimal(returnVal.total, true),
     };
 
     return returnVal;
