@@ -106,6 +106,26 @@
       <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph hide js-closeBtn">
         <%= ob.polyT('purchase.close') %>
       </button>
+      <% // confirmation box %>
+      <div id="confirmPay" class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 hide js-confirmPay">
+        <div class="flexColRows gutterVSm padLg">
+          <h3>
+            <%= ob.polyT('purchase.confirmPayment.title') %>
+          </h3>
+          <p class="tx5">
+            <%= ob.polyT('purchase.confirmPayment.msg') %>
+          </p>
+        </div>
+        <hr class="unleaded clrBr" />
+        <div class="flexHRight flexVCent gutterHLg pad tx5">
+          <a class="js-confirmPayCancel">
+            <%= ob.polyT('purchase.confirmPayment.cancel') %>
+          </a>
+          <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmPayConfirm">
+            <%= ob.polyT('purchase.confirmPayment.confirm') %>
+          </a>
+        </div>
+      </div>
     </section>
     <section class="receipt">
       <% // this will be a separate view tied to the order model %>

@@ -81,6 +81,8 @@ export default class extends BaseModal {
       'click .js-payBtn': 'clickPayBtn',
       'click .js-pendingBtn': 'clickPendingBtn',
       'change #purchaseQuantity': 'changeQuantityInput',
+      'click .js-confirmPayConfirm': 'clickConfirmBtn',
+      'click .js-confirmPayCancel': 'closeConfirmPay',
       ...super.events(),
     };
   }
@@ -142,14 +144,16 @@ export default class extends BaseModal {
   }
 
   clickPayBtn() {
-    console.log(this.order.toJSON());
-    // should show confirm tooltip
-    this.purchaseListing();  // test code
+    this.$confirmPay.removeClass('hide');
   }
 
   clickConfirmBtn() {
     // confirm the purchase
     this.purchaseListing();
+  }
+
+  closeConfirmPay() {
+    this.$confirmPay.addClass('hide');
   }
 
   purchaseListing() {
@@ -199,6 +203,11 @@ export default class extends BaseModal {
         (this._$closeBtn = this.$('.js-closeBtn'));
   }
 
+  get $confirmPay() {
+    return this._$confirmPay ||
+      (this._$confirmPay = this.$('.js-confirmPay'));
+  }
+
   remove() {
     super.remove();
   }
@@ -225,6 +234,7 @@ export default class extends BaseModal {
       this._$payBtn = null;
       this._$pendingBtn = null;
       this._$closeBtn = null;
+      this._$confirmPay = null;
 
       this.$purchaseModerated = this.$('#purchaseModerated');
 
