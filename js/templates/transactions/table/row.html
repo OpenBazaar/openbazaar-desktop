@@ -33,7 +33,16 @@
 </td>
 <td class="clrBr userCol">
   <div class="flexVCent gutterHSm">
-    <a class="avatar discSm clrBr2 clrSh1 flexNoShrink" href="#<%= ob.vendorId %>" style="background-image: url(http://localhost:4002/ipfs/QmUWn4Vd8xFjmnfLikviptmysKLuRU6aCqytzApBKhfpSp), url(../imgs/defaultAvatar.png)"></a>
+    <%
+      var avatarHashes = {};
+
+      if (ob.type === 'sales') {
+        avatarHashes = ob.buyerAvatarHashes || {};
+      } else if (ob.type === 'purchases') {
+        avatarHashes = ob.vendorAvatarHashes || {};
+      }
+    %>
+    <a class="avatar discSm clrBr2 clrSh1 flexNoShrink" href="#<%= ob.vendorId %>" style="<%= ob.getAvatarBgImage(avatarHashes) %>"></a>
     <a class="handle noOverflow clrT" href="#<%= ob.vendorId %>"><%= ob.vendorHandle ? `@${ob.vendorHandle}` : ob.vendorId %></a>
     <div class="flexHRight">
       <% if (ob.unreadChatMessages) { %>

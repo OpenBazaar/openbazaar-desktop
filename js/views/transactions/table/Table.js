@@ -6,6 +6,7 @@ import app from '../../../app';
 import $ from 'jquery';
 import _ from 'underscore';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
+import { getSocket } from '../../../utils/serverConnect';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import Row from './Row';
@@ -62,6 +63,14 @@ export default class extends baseVw {
       ...opts.initialState || {},
     };
     this.views = [];
+
+    this.listenTo(this.collection, 'update', this.onCollectionUpdate);
+
+    this.socket = getSocket();
+
+    if (this.socket) {
+      this.listenTo(this.socket, 'message', this.onSocketMessage);
+    }
   }
 
   className() {
@@ -105,6 +114,52 @@ export default class extends baseVw {
     });
   }
 
+  onCollectionUpdate(cl, opts) {
+    this.getAvatars(opts.changes.added || {});
+  }
+
+  getAvatars(models = []) {
+    const profilesToFetch = [];
+
+    models.forEach(md => {
+      if (this.type === 'purchases') {
+        profilesToFetch.push(md.get('vendorId'));
+      }
+    });
+
+    this.avatarPost = $.post({
+      url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
+      data: JSON.stringify(profilesToFetch),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).done((data) => {
+      if (this.socket) {
+        this.listenTo(this.socket, 'message', (e) => {
+          if (e.jsonData.id === data.id) {
+            if (this.type === 'purchases') {
+              this.indexedViews[e.jsonData.peerId].setState({
+                vendorAvatarHashes: e.jsonData.profile.avatarHashes,
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+
+  /*
+   * Index the Row Views by Vendor and/or Buyer ID so avatar hashes
+   * received via the socket can be correctly applied to them.
+   */
+  indexRowViews() {
+    this.indexedViews = {};
+    this.views.forEach(view => {
+      if (this.type === 'purchases') {
+        this.indexedViews[view.model.get('vendorId')] = view;
+      }
+    });
+  }
+
   getState() {
     return this._state;
   }
@@ -126,6 +181,11 @@ export default class extends baseVw {
     return this;
   }
 
+  remove() {
+    if (this.avatarPost) this.avatarPost.abort();
+    super.remove();
+  }
+
   render() {
     loadTemplate('transactions/table/table.html', (t) => {
       this.$el.html(t({
@@ -136,6 +196,8 @@ export default class extends baseVw {
     });
 
     this.views.forEach(view => view.remove());
+    this.views = [];
+    this.indexedViews = {};
     const transactionsFrag = document.createDocumentFragment();
     this.collection.forEach(transaction => {
       const view = this.createChild(Row, {
@@ -150,6 +212,7 @@ export default class extends baseVw {
       this.views.push(view);
     });
 
+    this.indexRowViews();
     this.$('.js-transactionsTable').append(transactionsFrag);
 
     return this;
