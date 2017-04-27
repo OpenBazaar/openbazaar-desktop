@@ -31,7 +31,7 @@ export default class extends BaseModal {
        and add them to the order as items here.
     */
     const item = new Item({
-      listingHash: this.listing.hash,
+      listingHash: this.listing.get('hash'),
       quantity: 1,
     });
     if (options.variants) item.get('options').add(options.variants);
@@ -138,18 +138,31 @@ export default class extends BaseModal {
   }
 
   changeQuantityInput(e) {
-    console.log(e);
-    // use a data attribute of the listingHash to associate this with the right item
-  }
-
-  changeQuantity(quantity, listingHash) {
-    // change the quantity of the item
-    console.log(quantity);
-    console.log(listingHash);
+    this.order.get('items').at(0).set('quantity', $(e.target).val());
   }
 
   clickPayBtn() {
-    console.log(this.order.attributes);
+    console.log(this.order.toJSON());
+    // should show confirm tooltip
+    this.purchaseListing();  // test code
+  }
+
+  clickConfirmBtn() {
+    // confirm the purchase
+    this.purchaseListing();
+  }
+
+  purchaseListing() {
+    $.post({
+      url: app.getServerUrl('ob/purchase'),
+      data: JSON.stringify(this.order.toJSON()),
+    })
+      .done((data) => {
+        console.log(data);
+      })
+      .fail((data) => {
+        console.log(data);
+      });
   }
 
   clickPendingBtn() {
