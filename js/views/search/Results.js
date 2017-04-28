@@ -4,6 +4,7 @@ import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import ListingCard from '../ListingCard';
 import UserCard from '../UserCard';
+import PageControls from '../components/PageControls';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 
@@ -168,6 +169,15 @@ export default class extends baseVw {
       this.$displayText = this.$('.js-displayingText');
       this.cardViews.forEach(vw => vw.remove());
       this.cardViews = [];
+
+      if (this.pageControls) this.pageControls.remove();
+      this.pageControls = this.createChild(PageControls, {
+        initialState: {
+
+        },
+      });
+      this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
+
       this.loadPage();
     });
     this.firstRender = false;

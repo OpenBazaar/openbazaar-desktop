@@ -84,22 +84,5 @@
     &.loading .loadingSearch {
       display: flex;
     }
-
-    .pageControlsWrapper {
-      overflow: auto;
-
-      .pageControls .pageNext {
-        @include disabled;
-      }
-    }
-
-    &.morePages .pageControlsWrapper .pageControls .pageNext {
-      pointer-events: auto;
-      opacity: 1;
-    }
-
-    &.firstPage .pageControlsWrapper .pageControls .pagePrev {
-      @include disabled;
-    }
   }
 }

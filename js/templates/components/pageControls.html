@@ -1,0 +1,23 @@
+<div class="floR">
+  <div class="pageControls flexVCent gutterH tx5">
+    <div>
+      <%=
+        ob.poly.t('pageControls.displaying', {
+          displayingCounts: ob.poly.t('pageControls.displaying', {
+            start: ob.curPage,
+            end: ob.totalPages,
+            total: ob.total,
+          }),
+        });
+      %>
+    </div>
+    <div class="btnStrip">
+      <button class="btn clrP clrBr pagePrev js-pagePrev">
+        <i class="ion-arrow-left-b"></i>
+      </button>
+      <button class="btn clrP clrBr pageNext js-pageNext">
+        <i class="ion-arrow-right-b"></i>
+      </button>
+    </div>
+  </div>
+</div>

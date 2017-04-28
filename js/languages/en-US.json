@@ -784,7 +784,6 @@
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
-    "displaying": "Displaying <b>%{start}-%{end} of %{total}</b>",
     "sortBy": "Sort by",
     "changeProvider": "Change Default Search Provider",
     "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
@@ -794,6 +793,10 @@
       "searchFailReason": "The search provider returned the following message: %{error}",
       "emptyData": "No valid data was returned from %{provider}."
     }
+  },
+  "pageControls": {
+    "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
+    "displaying": "Displaying %{displayingCounts}"
   },
   "purchase": {
     "refreshPurchase": "Refresh",
