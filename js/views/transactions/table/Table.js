@@ -7,8 +7,10 @@ import $ from 'jquery';
 import _ from 'underscore';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { getSocket } from '../../../utils/serverConnect';
+import Order from '../../../models/order/Order';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
+import OrderDetail from '../../modals/orderDetail/OrderDetail';
 import Row from './Row';
 
 export default class extends baseVw {
@@ -118,6 +120,20 @@ export default class extends baseVw {
     this.getAvatars(opts.changes.added || {});
   }
 
+  onClickRow(e) {
+    const order = new Order({
+      orderId: e.view.model.id,
+    });
+
+    const orderDetail = new OrderDetail({
+      model: order,
+      removeOnClose: true,
+    });
+
+    this.listenTo(orderDetail.model, 'sync', () => (e.view.model.set('read', true)));
+    orderDetail.render().open();
+  }
+
   getAvatars(models = []) {
     const profilesToFetch = [];
 
@@ -140,6 +156,8 @@ export default class extends baseVw {
               this.indexedViews[e.jsonData.peerId].setState({
                 vendorAvatarHashes: e.jsonData.profile.avatarHashes,
               });
+              this.indexedViews[e.jsonData.peerId].model
+                .set('vendorHandle', e.jsonData.profile.handle);
             }
           }
         });
@@ -207,6 +225,7 @@ export default class extends baseVw {
 
       this.listenTo(view, 'clickAcceptOrder', this.onClickAcceptOrder);
       this.listenTo(view, 'clickCancelOrder', this.onClickCancelOrder);
+      this.listenTo(view, 'clickRow', this.onClickRow);
 
       $(transactionsFrag).append(view.render().el);
       this.views.push(view);

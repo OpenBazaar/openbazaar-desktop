@@ -58,15 +58,27 @@ export default class extends baseVw {
     return {
       'click .js-acceptOrder': 'onClickAcceptOrder',
       'click .js-cancelOrder': 'onClickCancelOrder',
+      'click .js-userCol': 'onClickUserColLink',
+      click: 'onRowClick',
     };
   }
 
-  onClickAcceptOrder() {
+  onClickAcceptOrder(e) {
     this.trigger('clickAcceptOrder', { view: this });
+    e.stopPropagation();
   }
 
-  onClickCancelOrder() {
+  onClickCancelOrder(e) {
     this.trigger('clickCancelOrder', { view: this });
+    e.stopPropagation();
+  }
+
+  onClickUserColLink(e) {
+    e.stopPropagation();
+  }
+
+  onRowClick() {
+    this.trigger('clickRow', { view: this });
   }
 
   getState() {

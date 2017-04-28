@@ -104,8 +104,8 @@
             }
 
             .handle {
-              max-width: 80px;
-              min-width: 80px;
+              max-width: 73px;
+              min-width: 73px;
             }
 
             .unreadBadge {
@@ -138,6 +138,8 @@
         }
 
         tr {
+          cursor: pointer;
+
           .unreadBorder {
             display: none;
           }
