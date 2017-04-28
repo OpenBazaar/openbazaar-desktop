@@ -141,7 +141,7 @@ export default class extends BaseModal {
 
   purchaseListing() {
     // set the moderator
-    this.order.set('moderator', this.moderators.selectedIDs());
+    this.order.set('moderator', this.moderators.selectedIDs[0]);
 
     $.post({
       url: app.getServerUrl('ob/purchase'),
