@@ -1,21 +1,47 @@
+<%
+  var countsAvailable = false;
+
+  if (typeof ob.start === 'number' &&
+    typeof ob.end === 'number' &&
+    typeof ob.total === 'number') {
+    countsAvailable = true;
+  }
+
+  var disabledPrev = true;
+  var disabledNext = true;
+
+  if (countsAvailable) {
+    if (ob.start > 1) {
+      disabledPrev = false;
+    }
+
+    if (ob.end < ob.total) {
+      disabledNext = false;
+    }
+  }
+%>
+
+
 <div class="floR">
   <div class="pageControls flexVCent gutterH tx5">
+    <% if (countsAvailable) { %>
     <div>
       <%=
-        ob.poly.t('pageControls.displaying', {
-          displayingCounts: ob.poly.t('pageControls.displaying', {
-            start: ob.curPage,
-            end: ob.totalPages,
+        ob.polyT('pageControls.displaying', {
+          displayingCounts: ob.polyT('pageControls.displayingCounts', {
+            start: ob.start,
+            end: ob.end,
             total: ob.total,
           }),
-        });
+        })
       %>
     </div>
+    <% } %>
     <div class="btnStrip">
-      <button class="btn clrP clrBr pagePrev js-pagePrev">
+      <button class="btn clrP clrBr pagePrev js-pagePrev <% if (disabledPrev) print('disabled') %>">
         <i class="ion-arrow-left-b"></i>
       </button>
-      <button class="btn clrP clrBr pageNext js-pageNext">
+      <button class="btn clrP clrBr pageNext js-pageNext <% if (disabledNext) print('disabled') %>">
         <i class="ion-arrow-right-b"></i>
       </button>
     </div>

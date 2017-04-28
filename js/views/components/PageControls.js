@@ -7,18 +7,13 @@ export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       initialState: {
-        curPage: 1,
+        start: 1,
+        morePages: false,
       },
       ...options,
     };
 
-    if (!opts.initialState ||
-      typeof opts.initialState.curPage !== 'number' ||
-      typeof opts.initialState.totalPages !== 'number' ||
-      typeof opts.initialState.total !== 'number') {
-      throw new Error('At a minimum, please provide an initialState with curPage, ' +
-        'totalPages and total values.');
-    }
+    super(opts);
 
     this._state = {
       ...opts.initialState || {},
@@ -38,16 +33,10 @@ export default class extends baseVw {
 
   onClickNext() {
     this.trigger('clickNext');
-    this.setState({
-      curPage: this.getState().curPage--,
-    });
   }
 
   onClickPrev() {
     this.trigger('clickPrev');
-    this.setState({
-      curPage: this.getState().curPage++,
-    });
   }
 
   getState() {

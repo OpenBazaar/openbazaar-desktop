@@ -83,6 +83,15 @@
 
     &.loading .loadingSearch {
       display: flex;
+
+      .spinner {
+        position: absolute;
+        top: 150px;
+      }
+
+      .listingsGrid {
+        display: none;
+      }
     }
   }
 }
