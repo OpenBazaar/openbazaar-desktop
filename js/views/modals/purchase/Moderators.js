@@ -164,7 +164,7 @@ export default class extends baseVw {
     }
   }
 
-  getSelectedIDs() {
+  get selectedIDs() {
     const IDs = [];
     this.modCards.forEach((mod) => {
       if (mod.cardState === 'selected') {

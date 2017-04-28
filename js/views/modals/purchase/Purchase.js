@@ -2,13 +2,13 @@ import $ from 'jquery';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
-import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './Moderators';
+import Shipping from './Shipping';
 
 
 export default class extends BaseModal {
@@ -42,7 +42,7 @@ export default class extends BaseModal {
     const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
 
 
-    this.moderators = new Moderators({
+    this.moderators = this.createChild(Moderators, {
       moderatorIDs: this.listing.get('moderators') || [],
       fetchErrorTitle,
       fetchErrorMsg,
@@ -53,17 +53,11 @@ export default class extends BaseModal {
       selectFirst: true,
     });
 
-    this.countryData = getTranslatedCountries(app.settings.get('language'))
-        .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
-
-    this.listenTo(app.settings.get('shippingAddresses'), 'update',
-        (cl, updateOpts) => {
-          if (updateOpts.changes.added.length ||
-              updateOpts.changes.removed.length) {
-            // update the shipping section with the changed address information
-            // TODO: add shipping code here
-          }
-        });
+    if (this.listing.get('shippingOptions').length) {
+      this.shipping = this.createChild(Shipping, {
+        model: this.listing,
+      });
+    }
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -147,7 +141,7 @@ export default class extends BaseModal {
 
   purchaseListing() {
     // set the moderator
-    this.order.set('moderator', this.moderators.getSelectedIDs());
+    this.order.set('moderator', this.moderators.selectedIDs());
 
     $.post({
       url: app.getServerUrl('ob/purchase'),
@@ -233,6 +227,9 @@ export default class extends BaseModal {
       // add the moderators section content
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
+
+      // add the shipping section if needed
+      if (this.shipping) this.$('.js-shippingWrapper').append(this.shipping.render().el);
     });
 
     return this;
