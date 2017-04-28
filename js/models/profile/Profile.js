@@ -26,9 +26,7 @@ export default class extends BaseModel {
   }
 
   url() {
-    // url is handled by sync, but backbone bombs if I don't have
-    // something explicitly set
-    return 'use-sync';
+    return app.getServerUrl(`ob/profile/${this.id}`);
   }
 
   // todo: set peerId instead of ID when setting ID.
@@ -157,16 +155,6 @@ export default class extends BaseModel {
     if (method !== 'create' && !this.get('peerID')) {
       throw new Error('I am unable to fetch, save or delete because the model does not' +
         ' have a peerID set.');
-    }
-
-    if (method === 'read') {
-      if (app.profile.id === model.id) {
-        options.url = app.getServerUrl('ob/profile');
-      } else {
-        options.url = app.getServerUrl(`ipns/${model.id}/profile`);
-      }
-    } else {
-      options.url = app.getServerUrl(`ob/profile/${app.profile.id !== model.id ? model.id : ''}`);
     }
 
     return super.sync(method, model, options);
