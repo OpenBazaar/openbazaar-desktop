@@ -7,11 +7,13 @@ import $ from 'jquery';
 import _ from 'underscore';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { getSocket } from '../../../utils/serverConnect';
+import { getContentFrame } from '../../../utils/selectors';
 import Order from '../../../models/order/Order';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import OrderDetail from '../../modals/orderDetail/OrderDetail';
 import Row from './Row';
+import PageControls from '../../components/PageControls';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -65,14 +67,16 @@ export default class extends baseVw {
       ...opts.initialState || {},
     };
     this.views = [];
+    this.curPage = 1;
 
     this.listenTo(this.collection, 'update', this.onCollectionUpdate);
 
     this.socket = getSocket();
-
     if (this.socket) {
       this.listenTo(this.socket, 'message', this.onSocketMessage);
     }
+
+    this.fetchTransactions();
   }
 
   className() {
@@ -134,6 +138,16 @@ export default class extends baseVw {
     orderDetail.render().open();
   }
 
+  onClickNextPage() {
+    this.curPage++;
+    this.fetchTransactions();
+  }
+
+  onClickPrevPage() {
+    this.curPage--;
+    this.fetchTransactions();
+  }
+
   getAvatars(models = []) {
     const profilesToFetch = [];
 
@@ -178,6 +192,80 @@ export default class extends baseVw {
     });
   }
 
+  get transactionsPerPage() {
+    return 20;
+  }
+
+  fetchTransactions(page = this.curPage) {
+    if (typeof page !== 'number') {
+      throw new Error('Please provide a page number to fetch.');
+    }
+
+    if (page <= 0) {
+      throw new Error('Please provide a page number greater than or equal to 1.');
+    }
+
+    if (this.transactionsFetch) this.transactionsFetch.abort();
+
+    const fetchParams = {
+      limit: this.transactionsPerPage,
+    };
+
+    let havePage = false;
+
+    if (page > 1) {
+      if (this.collection.length > (page - 1) * this.transactionsPerPage) {
+        // we already have the page
+        havePage = true;
+        getContentFrame()[0].scrollTop = 0;
+        this.render();
+      } else {
+        if (this.collection.length < (page - 1) * this.transactionsPerPage) {
+          // You cannot fetch a page unless you have it's previous page. The api
+          // requires the ID of the last transaction in the previous page.
+          throw new Error('Cannot fetch page. Do no have the previous pages.');
+        } else {
+          fetchParams.offsetId = this.collection.at(this.collection.length - 1).id;
+        }
+      }
+    }
+
+    if (havePage) return;
+
+    this.purchasesFetch = this.collection.fetch({
+      data: fetchParams,
+      remove: false,
+    });
+
+    this.purchasesFetch.fail((jqXhr) => {
+      if (jqXhr.statusText === 'abort') return;
+
+      let fetchError = '';
+
+      if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
+        fetchError = jqXhr.responseJSON.reason;
+      }
+
+      this.setState({
+        isFetching: false,
+        fetchFailed: true,
+        fetchError,
+      });
+    }).done(() => {
+      if (this.isRemoved()) return;
+
+      this.setState({
+        isFetching: false,
+      });
+    });
+
+    this.setState({
+      isFetching: true,
+      fetchFailed: false,
+      fetchError: '',
+    });
+  }
+
   getState() {
     return this._state;
   }
@@ -201,6 +289,7 @@ export default class extends baseVw {
 
   remove() {
     if (this.avatarPost) this.avatarPost.abort();
+    if (this.transactionsFetch) this.transactionsFetch.abort();
     super.remove();
   }
 
@@ -213,26 +302,43 @@ export default class extends baseVw {
       }));
     });
 
+    const startIndex = (this.curPage - 1) * this.transactionsPerPage;
     this.views.forEach(view => view.remove());
     this.views = [];
     this.indexedViews = {};
     const transactionsFrag = document.createDocumentFragment();
-    this.collection.forEach(transaction => {
-      const view = this.createChild(Row, {
-        model: transaction,
-        type: this.type,
+    // The collection contains all pages we've fetched, but we'll slice it and
+    // only render the current page.
+    this.collection
+      .slice(startIndex, startIndex + this.transactionsPerPage)
+      .forEach(transaction => {
+        const view = this.createChild(Row, {
+          model: transaction,
+          type: this.type,
+        });
+
+        this.listenTo(view, 'clickAcceptOrder', this.onClickAcceptOrder);
+        this.listenTo(view, 'clickCancelOrder', this.onClickCancelOrder);
+        this.listenTo(view, 'clickRow', this.onClickRow);
+
+        $(transactionsFrag).append(view.render().el);
+        this.views.push(view);
       });
-
-      this.listenTo(view, 'clickAcceptOrder', this.onClickAcceptOrder);
-      this.listenTo(view, 'clickCancelOrder', this.onClickCancelOrder);
-      this.listenTo(view, 'clickRow', this.onClickRow);
-
-      $(transactionsFrag).append(view.render().el);
-      this.views.push(view);
-    });
 
     this.indexRowViews();
     this.$('.js-transactionsTable').append(transactionsFrag);
+
+    if (this.pageControls) this.pageControls.remove();
+    this.pageControls = this.createChild(PageControls, {
+      initialState: {
+        start: startIndex + 1,
+        end: startIndex + this.transactionsPerPage,
+        total: 350,
+      },
+    });
+    this.listenTo(this.pageControls, 'clickNext', this.onClickNextPage);
+    this.listenTo(this.pageControls, 'clickPrev', this.onClickPrevPage);
+    this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
 
     return this;
   }

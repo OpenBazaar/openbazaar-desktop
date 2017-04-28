@@ -129,11 +129,13 @@ export default class extends baseVw {
   }
 
   clickPagePrev() {
-    this.loadPage(this.serverPage--);
+    this.serverPage--;
+    this.loadPage(this.serverPage);
   }
 
   clickPageNext() {
-    this.loadPage(this.serverPage++);
+    this.serverPage++;
+    this.loadPage(this.serverPage);
   }
 
   remove() {

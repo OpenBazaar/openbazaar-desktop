@@ -1,4 +1,3 @@
-// import app from '../../../app';
 import _ from 'underscore';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
@@ -8,7 +7,6 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         start: 1,
-        morePages: false,
       },
       ...options,
     };

@@ -28,7 +28,7 @@
   <%
     if (ob.transactions.length) {
   %>
-  <table class="js-transactionsTable transactionsTable clrBr clrP">
+  <table class="js-transactionsTable transactionsTable clrBr clrP row">
     <tr>
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.orderId') %></th>
       <th class="clrBr">
@@ -44,6 +44,7 @@
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.status') %></th>
     </tr>
   <table>
+  <div class="js-pageControlsContainer"></div>
   <%
     } else {
   %>

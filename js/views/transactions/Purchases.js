@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import app from '../../app';
-// import moment from 'moment';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import TransactionsTable from './table/Table';
@@ -22,66 +21,10 @@ export default class extends baseVw {
     // this.acceptPosts = {};
     this.cancelPosts = {};
     this.filter = { ...options.defaultFilter };
-    this.fetchPurchases();
   }
 
   className() {
     return 'purchases tx5';
-  }
-
-  get purchasesPerPage() {
-    return 15;
-  }
-
-  fetchPurchases() {
-    if (this.purchasesFetch) this.purchasesFetch.abort();
-
-    const fetchParams = {
-      limit: this.purchasesPerPage,
-    };
-
-    if (this.collection.length) {
-      fetchParams.offsetId = this.collection.at(this.collection.length - 1).id;
-    }
-
-    this.purchasesFetch = this.collection.fetch({
-      data: fetchParams,
-      remove: false,
-    });
-
-    this.purchasesFetch.fail((jqXhr) => {
-      if (jqXhr.statusText === 'abort') return;
-
-      let fetchError = '';
-
-      if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
-        fetchError = jqXhr.responseJSON.reason;
-      }
-
-      if (this.purchasesTable) {
-        this.purchasesTable.setState({
-          isFetching: false,
-          fetchFailed: true,
-          fetchError,
-        });
-      }
-    }).done(() => {
-      if (this.isRemoved()) return;
-
-      if (this.purchasesTable) {
-        this.purchasesTable.setState({
-          isFetching: false,
-        });
-      }
-    });
-
-    if (this.purchasesTable) {
-      this.purchasesTable.setState({
-        isFetching: true,
-        fetchFailed: false,
-        fetchError: '',
-      });
-    }
   }
 
   // Will move to Sale.js later
@@ -147,7 +90,6 @@ export default class extends baseVw {
   }
 
   remove() {
-    if (this.purchasesFetch) this.purchasesFetch.abort();
     // todo: move to sales
     // Object.keys(this.acceptPosts, post => post.abort());
     Object.keys(this.cancelPosts, post => post.abort());
