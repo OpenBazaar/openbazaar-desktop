@@ -26,7 +26,7 @@ export default class extends BaseModel {
   }
 
   url() {
-    return app.getServerUrl(`ob/profile/${app.profile.id}`);
+    return app.getServerUrl(`ob/profile/${this.id}`);
   }
 
   // todo: set peerId instead of ID when setting ID.
