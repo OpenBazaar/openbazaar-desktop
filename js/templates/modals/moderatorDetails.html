@@ -56,9 +56,15 @@
       <p><%= ob.moderatorInfo.termsAndConditions %></p>
       <hr class="clrBr">
       <div class="flexColRows flexHCent">
-        <% if (!ob.ownMod) { %>
+        <% if (ob.cardState !== 'selected' && (!ob.ownMod || ob.purchase)) { %>
         <div class="rowSm">
-          <button class="btn clrP clrBr js-addAsModerator"><%= ob.polyT('moderatorDetails.addAsModeratorButton') %></button>
+          <button class="btn clrP clrBr js-addAsModerator">
+            <% if (ob.purchase) { %>
+              <%= ob.polyT('purchase.chooseModerator') %>
+            <% } else { %>
+              <%= ob.polyT('moderatorDetails.addAsModeratorButton') %>
+            <% } %>
+          </button>
         </div>
         <% } %>
         <div>

@@ -1,30 +1,57 @@
-<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP">
+<%
+   // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
+   const loaded = !!ob.name;
+%>
+
+<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!ob.valid) print('disabled'); if(!loaded) print('disabled');%>">
   <div>
     <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
   </div>
   <div class="moderatorCardMiddle">
-    <div class="flex snipKids gutterHSm rowSm">
-      <strong class="txt5"><%= ob.name %></strong>
-      <span class="clrT2"><%= ob.handle %></span>
-    </div>
-    <div class="row clrT2">
-      <p class="clamp2"><%=ob.moderatorInfo.description %></p>
-    </div>
-    <div class="flex snipKids gutterH tx5">
-      <div class="flexNoShrink">👍 XX<% // placeholder for reputation %> </div>
-      <div class="flexNoShrink">
-        <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-        <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
+    <% if (loaded && ob.valid) { %>
+      <div class="flex snipKids gutterHSm rowSm">
+        <strong class="txt5"><%= ob.name %></strong>
+        <span class="clrT2"><%= ob.handle %></span>
       </div>
-      <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
-    </div>
+      <div class="row clrT2">
+        <p class="clamp2"><%=ob.moderatorInfo.description %></p>
+      </div>
+      <div class="flex snipKids gutterH tx5">
+        <div class="flexNoShrink">
+          <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
+        </div>
+        <div class="flexNoShrink">
+          <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+          <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
+        </div>
+        <div>
+          <%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="flexCol gutterVSm clrTErr">
+        <strong class="txt5"><%= ob.peerID %></strong>
+        <% if (ob.valid) { %>
+        <span><%= ob.polyT('moderatorCard.failed') %></span>
+        <% } else { %>
+        <span><%= ob.polyT('moderatorCard.invalid') %></span>
+        <% } %>
+      </div>
+    <% } %>
   </div>
   <div>
-    <button class="btn clrP clrBr selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
-      <span class="showIfView"><%= ob.polyT('moderatorCard.view') %></span>
-      <i class="ion-checkmark showIfSelected clrTEmph1"></i>
-      <i class="ion-close showIfDeselected clrTErr"></i>
-    </button>
+    <% if (ob.valid) { %>
+      <div class="flexColRows gutterV">
+        <button class="btn clrP clrBr selectBtn js-viewBtn">
+          <%= ob.polyT('moderatorCard.view') %>
+        </button>
+        <button class="btn clrP clrBr selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
+          <i class="ion-checkmark showIfSelected clrTEmph1"></i>
+          <i class="ion-close showIfDeselected clrTErr"></i>
+          <i class="ion-checkmark showIfUnselected clrTEmph1Disabled"></i>
+        </button>
+      </div>
+    <% } %>
   </div>
 </div>
 <div class="moderatorCardSeperator clrBr"></div>

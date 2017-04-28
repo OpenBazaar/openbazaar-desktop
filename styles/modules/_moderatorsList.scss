@@ -1,0 +1,16 @@
+.moderatorsList {
+  .moderatorsWrapper {
+    min-height: 175px;
+
+    .moderatorCard:last-child .moderatorCardSeperator {
+      display: none;
+    }
+  }
+
+  .moderatorsStatus {
+    padding-top: $pad;
+    text-align: center;
+  }
+}
+
+

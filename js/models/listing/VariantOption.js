@@ -1,6 +1,6 @@
 import app from '../../app';
 import { guid } from '../../utils';
-import is from 'is_js';
+import Variants from '../../collections/listing/Variants';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -15,7 +15,13 @@ export default class extends BaseModel {
     return {
       name: '',
       description: '',
-      variants: [],
+      variants: new Variants(),
+    };
+  }
+
+  get nested() {
+    return {
+      variants: Variants,
     };
   }
 
@@ -28,12 +34,11 @@ export default class extends BaseModel {
       nameLength: 40,
       descriptionLength: 70,
       variantCount: 30,
-      variantItemLength: 40,
     };
   }
 
   validate(attrs) {
-    const errObj = {};
+    let errObj = {};
 
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
@@ -51,25 +56,14 @@ export default class extends BaseModel {
         `The description cannot exceed ${this.max.descriptionLength} characters.`);
     }
 
-    if (!is.array(attrs.variants)) {
-      addError('variants', 'The variants must be provided as an array.');
-    } else {
-      if (attrs.variants.length > this.max.variantCount) {
-        addError('variants',
-          `You have more than the maximum allowable amount of ${this.max.variantCount} choices.`);
-      } else if (attrs.variants.length < 2) {
-        addError('variants', app.polyglot.t('variantOptionModelErrors.atLeast2Variants'));
-      }
-
-      attrs.variants.forEach(variant => {
-        if (variant.length > this.max.variantItemLength) {
-          addError('variants', app.polyglot.t('variantOptionModelErrors.variantTooLong', {
-            variant,
-            maxLength: this.max.variantItemLength,
-          }));
-        }
-      });
+    if (attrs.variants.length > this.max.variantCount) {
+      addError('variants',
+        `You have more than the maximum allowable amount of ${this.max.variantCount} choices.`);
+    } else if (attrs.variants.length < 2) {
+      addError('variants', app.polyglot.t('variantOptionModelErrors.atLeast2Variants'));
     }
+
+    errObj = this.mergeInNestedErrors(errObj);
 
     if (Object.keys(errObj).length) return errObj;
 
