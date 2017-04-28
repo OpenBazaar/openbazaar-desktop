@@ -53,7 +53,10 @@
       </section>
       <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
       <section class="contentBox padLg clrP clrBr clrSh3 js-shipping">
-        <h2 class="h4 required"><%= ob.polyT('purchase.shippingTitle') %></h2>
+        <div class="flexVCent">
+          <h2 class="h4 required flexExpand"><%= ob.polyT('purchase.shippingTitle') %></h2>
+          <a class="clrTEm txU tx5b js-newAddress"><%= ob.polyT('purchase.newAddress') %></a>
+        </div>
         <div class="js-shippingWrapper"></div>
       </section>
       <% } %>

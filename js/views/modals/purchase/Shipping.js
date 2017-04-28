@@ -3,6 +3,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Listing from '../../../models/listing/Listing';
+import ShippingOptions from './ShippingOptions';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -33,8 +34,11 @@ export default class extends BaseModal {
   }
 
   render() {
+    console.log(app.settings.get('shippingAddresses').toJSON());
+    console.log(this.model.get('shippingOptions').toJSON());
     loadTemplate('modals/purchase/shipping.html', t => {
       this.$el.html(t({
+
       }));
     });
 

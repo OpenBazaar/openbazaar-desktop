@@ -9,6 +9,7 @@ import Item from '../../../models/purchase/Item';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
+import { launchSettingsModal } from '../../../utils/modalManager';
 
 
 export default class extends BaseModal {
@@ -75,6 +76,7 @@ export default class extends BaseModal {
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-confirmPayConfirm': 'clickConfirmBtn',
       'click .js-confirmPayCancel': 'closeConfirmPay',
+      'click .js-newAddress': 'clickNewAddress',
       ...super.events(),
     };
   }
@@ -124,6 +126,10 @@ export default class extends BaseModal {
 
   changeQuantityInput(e) {
     this.order.get('items').at(0).set('quantity', $(e.target).val());
+  }
+
+  clickNewAddress() {
+    launchSettingsModal({ initTab: 'Addresses' });
   }
 
   clickPayBtn() {

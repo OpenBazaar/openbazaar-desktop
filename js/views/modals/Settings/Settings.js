@@ -30,6 +30,8 @@ export default class extends BaseModal {
       Moderation,
     };
 
+    this.initTab = this.tabViews.hasOwnProperty(opts.initTab) ? opts.initTab : 'General';
+
     this.listenTo(app.router, 'will-route', () => {
       this.close(true);
       this.remove();
@@ -80,7 +82,7 @@ export default class extends BaseModal {
 
       this.$tabContent = this.$('.js-tabContent');
 
-      this.selectTab(this.$('.js-tab[data-tab="General"]'));
+      this.selectTab(this.$(`.js-tab[data-tab="${this.initTab}"]`));
     });
 
     return this;
