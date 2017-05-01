@@ -318,21 +318,18 @@ export default class extends BaseModal {
       selectedVariants.push(variant);
     });
 
-    if (this.purchaseModal) {
-      // if the purchase modal somehow exists and is triggered again, move it to the top
-      this.purchaseModal.bringToTop();
-    } else {
-      this.purchaseModal = new Purchase({
-        listing: this.model,
-        variants: selectedVariants,
-        vendor: this.vendor,
-        removeOnClose: true,
-      })
-        .render()
-        .open();
+    if (this.purchaseModal) this.purchaseModale.remove();
 
-      this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
-    }
+    this.purchaseModal = new Purchase({
+      listing: this.model,
+      variants: selectedVariants,
+      vendor: this.vendor,
+      removeOnClose: true,
+    })
+      .render()
+      .open();
+
+    this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
   }
 
   get shipsFreeToMe() {
@@ -393,6 +390,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.editModal) this.editModal.remove();
+    if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     super.remove();
   }

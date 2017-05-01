@@ -150,7 +150,6 @@ export default class extends baseVw {
         ...opts,
       });
       this.listenTo(newModView, 'changeModerator', (data) => {
-        this.trigger('changeModerator', data);
         // if only one moderator should be selected, deselect the other moderators
         if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
       });
@@ -163,6 +162,16 @@ export default class extends baseVw {
         newModView.changeSelectState('selected');
       }
     }
+  }
+
+  get selectedIDs() {
+    const IDs = [];
+    this.modCards.forEach((mod) => {
+      if (mod.cardState === 'selected') {
+        IDs.push(mod.model.id);
+      }
+    });
+    return IDs;
   }
 
   deselectOthers(guid = '') {
