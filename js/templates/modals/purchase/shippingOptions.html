@@ -2,10 +2,10 @@
   <div class="flexColRows boxList border borderStacked clrP clrBr">
     <% ob.filteredShipping.forEach((option, i) => { %>
       <% option.services.forEach((service, j) => { %>
-        <div class="pad">
-          <div class="btnRadio">
+        <div>
+          <div class="btnRadio width100">
             <input type="radio" id="<%= `${i}${j}` %>" <% if (i===0 && j === 0) print('checked') %> name="shippingOption">
-            <label for="<%= `${i}${j}` %>" class="flex gutterH">
+            <label for="<%= `${i}${j}` %>" class="flex gutterH pad">
               <div>
                 <div class="tx5 rowSm txB"><%= service.name %></div>
                 <div class="tx5b clrT2 txUnb">
