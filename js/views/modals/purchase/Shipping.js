@@ -14,20 +14,11 @@ export default class extends BaseModal {
     if (!this.model || !(this.model instanceof Listing)) {
       throw new Error('Please provide a listing model');
     }
-
-    this.selectIndex = options.selectIndex || 0;
-
     this.shippingOptions = this.createChild(ShippingOptions, {
       model: this.model,
     });
 
-    this.listenTo(app.settings.get('shippingAddresses'), 'update',
-      (cl, updateOpts) => {
-        if (updateOpts.changes.added.length ||
-          updateOpts.changes.removed.length) {
-          this.render();
-        }
-      });
+    this.listenTo(app.settings.get('shippingAddresses'), 'update', () => this.render());
   }
 
   className() {
@@ -41,27 +32,25 @@ export default class extends BaseModal {
   }
 
   changeShippingAddress(e) {
-    this.selectIndex = $(e.target).val();
+    this.shippingOptions.countryCode = $(e.target).val();
     this.shippingOptions.render();
   }
 
   render() {
+    const userAddresses = app.settings.get('shippingAddresses');
+
     loadTemplate('modals/purchase/shipping.html', t => {
       this.$el.html(t({
-        userAddresses: app.settings.get('shippingAddresses').toJSON(),
-        selectIndex: this.selectIndex,
+        userAddresses: userAddresses.toJSON(),
       }));
     });
-
     this.$('#shippingAddress').select2({
       // disables the search box
       minimumResultsForSearch: Infinity,
     });
 
-    const cCode = app.settings.get('shippingAddresses').at(this.selectIndex).get('country');
-    this.shippingOptions.countryCode = cCode;
-
-    if (app.settings.get('shippingAddresses').length) {
+    if (userAddresses.length) {
+      this.shippingOptions.countryCode = userAddresses.at(0).get('country');
       this.$('.js-shippingOptionsWrapper').html(this.shippingOptions.render().el);
     }
 
