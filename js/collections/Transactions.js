@@ -48,13 +48,17 @@ export default class extends Collection {
   }
 
   // temporary to test pagination with dummy data
-  fetch2() {
+  fetch() {
     const deferred = $.Deferred();
+    const queryTotal = 16;
+    const perPage = 5;
 
     setTimeout(() => {
       const models = [];
+      const remaining = queryTotal - this.length > perPage ?
+        perPage : queryTotal - this.length;
 
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < remaining; i++) {
         const md = new Transaction({
           ...this.rawPurchase,
           orderId: `${this.length + i + 1}---${this.rawPurchase.orderId.slice(5)}`,
@@ -63,7 +67,7 @@ export default class extends Collection {
       }
 
       this.add(models);
-      deferred.resolve();
+      deferred.resolve({ queryCount: queryTotal });
     }, 1000);
 
     return deferred.promise();
@@ -71,5 +75,9 @@ export default class extends Collection {
 
   modelId(attrs) {
     return attrs.orderId;
+  }
+
+  parse(response) {
+    return response[this.type];
   }
 }

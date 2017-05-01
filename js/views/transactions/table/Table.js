@@ -68,6 +68,7 @@ export default class extends baseVw {
     };
     this.views = [];
     this.curPage = 1;
+    this.queryTotal = null;
 
     this.listenTo(this.collection, 'update', this.onCollectionUpdate);
 
@@ -193,7 +194,7 @@ export default class extends baseVw {
   }
 
   get transactionsPerPage() {
-    return 20;
+    return 5;
   }
 
   fetchTransactions(page = this.curPage) {
@@ -201,8 +202,8 @@ export default class extends baseVw {
       throw new Error('Please provide a page number to fetch.');
     }
 
-    if (page <= 0) {
-      throw new Error('Please provide a page number greater than or equal to 1.');
+    if (page < 1) {
+      throw new Error('Please provide a page number greater than zero.');
     }
 
     if (this.transactionsFetch) this.transactionsFetch.abort();
@@ -213,20 +214,18 @@ export default class extends baseVw {
 
     let havePage = false;
 
-    if (page > 1) {
-      if (this.collection.length > (page - 1) * this.transactionsPerPage) {
-        // we already have the page
-        havePage = true;
-        getContentFrame()[0].scrollTop = 0;
-        this.render();
-      } else {
-        if (this.collection.length < (page - 1) * this.transactionsPerPage) {
-          // You cannot fetch a page unless you have it's previous page. The api
-          // requires the ID of the last transaction in the previous page.
-          throw new Error('Cannot fetch page. Do no have the previous pages.');
-        } else {
-          fetchParams.offsetId = this.collection.at(this.collection.length - 1).id;
-        }
+    if (this.collection.length > (page - 1) * this.transactionsPerPage) {
+      // we already have the page
+      havePage = true;
+      getContentFrame()[0].scrollTop = 0;
+      this.render();
+    } else {
+      if (this.collection.length < (page - 1) * this.transactionsPerPage) {
+        // You cannot fetch a page unless you have its previous page. The api
+        // requires the ID of the last transaction in the previous page.
+        throw new Error('Cannot fetch page. Do no have the previous pages.');
+      } else if (this.collection.length) {
+        fetchParams.offsetId = this.collection.at(this.collection.length - 1).id;
       }
     }
 
@@ -251,8 +250,11 @@ export default class extends baseVw {
         fetchFailed: true,
         fetchError,
       });
-    }).done(() => {
+    }).done((data) => {
       if (this.isRemoved()) return;
+      if (page === 1) {
+        this.queryTotal = data.queryCount;
+      }
 
       this.setState({
         isFetching: false,
@@ -328,12 +330,19 @@ export default class extends baseVw {
     this.indexRowViews();
     this.$('.js-transactionsTable').append(transactionsFrag);
 
+    const onLastPage = this.curPage > this.collection.length / this.transactionsPerPage;
+    let end = this.curPage * this.transactionsPerPage;
+
+    if (onLastPage) {
+      end = this.collection.length;
+    }
+
     if (this.pageControls) this.pageControls.remove();
     this.pageControls = this.createChild(PageControls, {
       initialState: {
         start: startIndex + 1,
-        end: startIndex + this.transactionsPerPage,
-        total: 350,
+        end,
+        total: this.queryTotal,
       },
     });
     this.listenTo(this.pageControls, 'clickNext', this.onClickNextPage);
