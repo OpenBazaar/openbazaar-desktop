@@ -825,7 +825,8 @@
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
-      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded."
+      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
+      "orderError": "Your order can not be processed due to the following errors."
     }
   },
   "moderators": {

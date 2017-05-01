@@ -14,7 +14,6 @@ export default class extends BaseModal {
     if (!this.model || !(this.model instanceof Listing)) {
       throw new Error('Please provide a listing model');
     }
-    this.countryCode = app.settings.get('shippingAddresses').at(0).get('country');
     this.shippingOptions = this.createChild(ShippingOptions, {
       model: this.model,
     });
@@ -33,7 +32,9 @@ export default class extends BaseModal {
   }
 
   changeShippingAddress(e) {
-    const code = $(e.target).val();
+    const index = $(e.target).val();
+    this.selectedAddress = app.settings.get('shippingAddresses').at(index);
+    const code = this.selectedAddress.get('country');
     // if an address with the same country is chosen, don't re-render the options
     if (code !== this.countryCode) {
       this.countryCode = code;
@@ -56,7 +57,8 @@ export default class extends BaseModal {
     });
 
     if (userAddresses.length) {
-      this.shippingOptions.countryCode = this.countryCode;
+      this.selectedAddress = userAddresses.at(0);
+      this.shippingOptions.countryCode = this.selectedAddress.get('country');
       this.$('.js-shippingOptionsWrapper').html(this.shippingOptions.render().el);
     }
 

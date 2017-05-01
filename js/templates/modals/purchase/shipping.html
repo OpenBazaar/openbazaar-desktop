@@ -7,8 +7,8 @@
 <div class="row">
   <% if (ob.userAddresses.length) { %>
   <select id="shippingAddress">
-    <% ob.userAddresses.forEach((a) => { %>
-    <option value="<%= a.country %>">
+    <% ob.userAddresses.forEach((a, i) => { %>
+    <option value="<%= i %>">
       <% let part1 = `${a.name}`;
          part1 += a.addressLineOne ? ` ${a.addressLineOne}` : '';
          let part2 = a.addressLineTwo ? ` ${a.addressLineTwo}` : '';

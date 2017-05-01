@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -21,7 +22,15 @@ export default class extends BaseModal {
 
   events() {
     return {
+      'click .js-shippingOption': 'changeShippingOption',
     };
+  }
+
+  changeShippingOption(e) {
+    const option = $(e.target);
+    const name = option.attr('data-name');
+    const service = option.attr('data-service');
+    this.selectedOption = { name, service };
   }
 
   get countryCode() {
@@ -35,6 +44,10 @@ export default class extends BaseModal {
   render() {
     const filteredShipping = this.model.get('shippingOptions').toJSON().filter((option) =>
       option.regions.indexOf(this.countryCode) !== -1);
+
+    const name = filteredShipping[0].name;
+    const service = filteredShipping[0].services[0].name;
+    this.selectedOption = { name, service };
 
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({

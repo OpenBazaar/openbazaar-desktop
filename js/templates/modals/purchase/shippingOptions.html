@@ -4,7 +4,13 @@
       <% option.services.forEach((service, j) => { %>
         <div>
           <div class="btnRadio width100">
-            <input type="radio" id="<%= `${i}${j}` %>" <% if (i===0 && j === 0) print('checked') %> name="shippingOption">
+            <input type="radio"
+                   class="js-shippingOption"
+                   id="<%= `${i}${j}` %>"
+                   <% if (i===0 && j === 0) print('checked') %>
+                   data-name="<%= option.name %>"
+                   data-service="<%= service.name %>"
+                   name="shippingOption">
             <label for="<%= `${i}${j}` %>" class="flex gutterH pad">
               <div>
                 <div class="tx5 rowSm txB"><%= service.name %></div>
