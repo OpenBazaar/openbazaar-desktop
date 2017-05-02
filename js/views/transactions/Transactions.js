@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import app from '../../app';
 import { capitalize } from '../../utils/string';
+import { abbrNum } from '../../utils/';
 import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
 import baseVw from '../baseVw';
@@ -26,6 +27,17 @@ export default class extends baseVw {
     };
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
+
+    this.listenTo(this.purchasesCol, 'request', (md, xhr) => {
+      xhr.done(data => {
+        this.$purchasesTabCount.html(abbrNum(data.totalCount));
+      });
+    });
+
+    if (opts.initialTab !== 'purchases') {
+      // fetch so we get the count for the tabhead
+      this.purchasesCol.fetch();
+    }
   }
 
   className() {
@@ -102,12 +114,18 @@ export default class extends baseVw {
     return view;
   }
 
+  get $purchasesTabCount() {
+    return this._$purchasesTabCount ||
+      (this._$purchasesTabCount = this.$('.js-purchasesTabCount'));
+  }
+
   render() {
     loadTemplate('transactions/transactions.html', (t) => {
       this.$el.html(t({}));
     });
 
     this.$tabContent = this.$('.js-tabContent');
+    this._$purchasesTabCount = null;
 
     if (this.miniProfile) this.miniProfile.remove();
     this.miniProfile = this.createChild(MiniProfile, {
