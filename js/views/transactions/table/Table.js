@@ -78,6 +78,7 @@ export default class extends baseVw {
       this.listenTo(this.socket, 'message', this.onSocketMessage);
     }
 
+    // This will kick off our initial fetch.
     this.filterParams = opts.initialFilterParams;
   }
 

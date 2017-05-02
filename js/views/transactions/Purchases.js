@@ -26,6 +26,25 @@ export default class extends baseVw {
     // this.acceptPosts = {};
     this.cancelPosts = {};
     this.filter = { ...opts.defaultFilter };
+
+    this.listenTo(this.collection, 'request', (cl, xhr) => {
+      setTimeout(() => {
+        if (this.purchasesTable && this.purchasesTable.curPage === 1) {
+          this.$queryTotalLine.empty();
+
+          xhr.done(data => {
+            const countPurchases =
+              `<span class="txB">
+                ${app.polyglot.t('transactions.purchases.countPurchases',
+                  { smart_count: data.queryCount })}
+               </span>`;
+            this.$queryTotalLine.html(
+              app.polyglot.t('transactions.purchases.countPurchasesFound', { countPurchases })
+            );
+          });
+        }
+      });
+    });
   }
 
   className() {
@@ -237,9 +256,6 @@ export default class extends baseVw {
         this.purchasesTable = this.createChild(TransactionsTable, {
           type: 'purchases',
           collection: this.collection,
-          initialState: {
-            isFetching: true,
-          },
           cancelOrder: this.cancelOrder.bind(this),
           cancelingOrder: this.cancelingOrder.bind(this),
           initialFilterParams: this.filter,

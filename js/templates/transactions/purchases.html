@@ -6,10 +6,6 @@
 
 <%= ob.filtersHtml %>
 
-<div class="row js-queryTotalLine">
-<%= ob.polyT('transactions.purchases.countPurchasesFound', {
-  countPurchases: `<span class="txB">${ob.polyT('transactions.purchases.countPurchases', { smart_count: 3 })}</span>`
-}) %>
-</div>
+<div class="row js-queryTotalLine"></div>
 
 <div class="js-purchasesTableContainer"></div>
