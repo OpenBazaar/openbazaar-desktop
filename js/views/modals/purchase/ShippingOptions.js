@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import app from '../../../app';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -52,6 +53,8 @@ export default class extends BaseModal {
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({
         filteredShipping,
+        displayCurrency: app.settings.get('localCurrency'),
+        ...this.model.toJSON(),
       }));
     });
 
