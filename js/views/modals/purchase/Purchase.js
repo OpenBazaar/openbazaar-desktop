@@ -149,22 +149,13 @@ export default class extends BaseModal {
 
   purchaseListing() {
     // set the address
-    const sAdd = this.shipping.selectedAddress;
-    const shipTo = sAdd.get('name');
-    const address =
-            `${sAdd.get('addressLineOne')} ${sAdd.get('addressLineTwo')} ${sAdd.get('company')}`;
-    const city = sAdd.get('city');
-    const state = sAdd.get('state');
-    const postalCode = sAdd.get('postalCode');
-    const countryCode = sAdd.get('country');
-    const addressNotes = sAdd.get('addressNotes');
-    this.order.set({ shipTo, address, city, state, postalCode, countryCode, addressNotes });
+    this.order.addAddress(this.shipping.selectedAddress);
     // set the moderator
     this.order.set('moderator', this.moderators.selectedIDs[0]);
     // set the shipping option
     const oShipping = this.order.get('items').at(0).get('shipping');
     const sOption = this.shipping.shippingOptions.selectedOption;
-    oShipping.set({ name: '', service: sOption.service });
+    oShipping.set({ name: sOption.name, service: sOption.service });
 
     this.order.set({}, { validate: true });
 

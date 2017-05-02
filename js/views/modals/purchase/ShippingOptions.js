@@ -9,7 +9,7 @@ export default class extends BaseModal {
     super(options);
     this.options = options;
 
-    this.countryCode = options.countryCode || '';
+    this._countryCode = options.countryCode || '';
 
     if (!this.model || !(this.model instanceof Listing)) {
       throw new Error('Please provide a listing model');
