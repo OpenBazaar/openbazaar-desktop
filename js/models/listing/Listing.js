@@ -136,7 +136,7 @@ export default class extends BaseModel {
           app.getServerUrl(`ob/listing/${slug}`);
       } else {
         options.url = options.url ||
-          app.getServerUrl(`ipns/${this.guid}/listings/${slug}.json`);
+          app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
       }
     } else {
       options.url = options.url || app.getServerUrl('ob/listing/');

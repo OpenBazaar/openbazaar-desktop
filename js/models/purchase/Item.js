@@ -7,10 +7,7 @@ export default class extends BaseModel {
       listingHash: '',
       quantity: 0,
       options: new Options(),
-      shipping: {
-        name: '',
-        service: '',
-      },
+      shipping: {},
       memo: '',
       coupons: [], // just the coupon codes
     };

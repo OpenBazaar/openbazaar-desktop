@@ -2,13 +2,13 @@ import $ from 'jquery';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
-import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import PopInMessage from '../../PopInMessage';
-import Moderators from './moderators';
+import Moderators from './Moderators';
+import Shipping from './Shipping';
 
 
 export default class extends BaseModal {
@@ -31,7 +31,7 @@ export default class extends BaseModal {
        and add them to the order as items here.
     */
     const item = new Item({
-      listingHash: this.listing.hash,
+      listingHash: this.listing.get('hash'),
       quantity: 1,
     });
     if (options.variants) item.get('options').add(options.variants);
@@ -42,7 +42,7 @@ export default class extends BaseModal {
     const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
 
 
-    this.moderators = new Moderators({
+    this.moderators = this.createChild(Moderators, {
       moderatorIDs: this.listing.get('moderators') || [],
       fetchErrorTitle,
       fetchErrorMsg,
@@ -53,19 +53,11 @@ export default class extends BaseModal {
       selectFirst: true,
     });
 
-    this.listenTo(this.moderators, 'changeModerator', ((data) => this.changeModerator(data)));
-
-    this.countryData = getTranslatedCountries(app.settings.get('language'))
-        .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
-
-    this.listenTo(app.settings.get('shippingAddresses'), 'update',
-        (cl, updateOpts) => {
-          if (updateOpts.changes.added.length ||
-              updateOpts.changes.removed.length) {
-            // update the shipping section with the changed address information
-            // TODO: add shipping code here
-          }
-        });
+    if (this.listing.get('shippingOptions').length) {
+      this.shipping = this.createChild(Shipping, {
+        model: this.listing,
+      });
+    }
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -81,6 +73,8 @@ export default class extends BaseModal {
       'click .js-payBtn': 'clickPayBtn',
       'click .js-pendingBtn': 'clickPendingBtn',
       'change #purchaseQuantity': 'changeQuantityInput',
+      'click .js-confirmPayConfirm': 'clickConfirmBtn',
+      'click .js-confirmPayCancel': 'closeConfirmPay',
       ...super.events(),
     };
   }
@@ -128,28 +122,37 @@ export default class extends BaseModal {
     }
   }
 
-  changeModerator(data) {
-    if (data.selected) {
-      this.order.set('moderator', data.guid);
-    } else if (data.guid === this.order.get('moderator')) {
-      // the current moderator was deselected
-      this.order.set('moderator', '');
-    }
-  }
-
   changeQuantityInput(e) {
-    console.log(e);
-    // use a data attribute of the listingHash to associate this with the right item
-  }
-
-  changeQuantity(quantity, listingHash) {
-    // change the quantity of the item
-    console.log(quantity);
-    console.log(listingHash);
+    this.order.get('items').at(0).set('quantity', $(e.target).val());
   }
 
   clickPayBtn() {
-    console.log(this.order.attributes);
+    this.$confirmPay.removeClass('hide');
+  }
+
+  clickConfirmBtn() {
+    // confirm the purchase
+    this.purchaseListing();
+  }
+
+  closeConfirmPay() {
+    this.$confirmPay.addClass('hide');
+  }
+
+  purchaseListing() {
+    // set the moderator
+    this.order.set('moderator', this.moderators.selectedIDs[0]);
+
+    $.post({
+      url: app.getServerUrl('ob/purchase'),
+      data: JSON.stringify(this.order.toJSON()),
+    })
+      .done((data) => {
+        console.log(data);
+      })
+      .fail((data) => {
+        console.log(data);
+      });
   }
 
   clickPendingBtn() {
@@ -186,6 +189,11 @@ export default class extends BaseModal {
         (this._$closeBtn = this.$('.js-closeBtn'));
   }
 
+  get $confirmPay() {
+    return this._$confirmPay ||
+      (this._$confirmPay = this.$('.js-confirmPay'));
+  }
+
   remove() {
     super.remove();
   }
@@ -212,12 +220,16 @@ export default class extends BaseModal {
       this._$payBtn = null;
       this._$pendingBtn = null;
       this._$closeBtn = null;
+      this._$confirmPay = null;
 
       this.$purchaseModerated = this.$('#purchaseModerated');
 
       // add the moderators section content
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
+
+      // add the shipping section if needed
+      if (this.shipping) this.$('.js-shippingWrapper').append(this.shipping.render().el);
     });
 
     return this;

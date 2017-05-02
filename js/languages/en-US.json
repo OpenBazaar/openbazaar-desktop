@@ -806,6 +806,8 @@
     "shippingTitle": "Shipping",
     "paymentTypeTitle": "Payment Type",
     "moderatorTitle": "Moderator",
+    "shippingTitle": "Shipping",
+    "newAddress": "New Address",
     "informationTitle": "Additional Information",
     "pay": "PAY",
     "pending": "Pending…",
@@ -815,6 +817,12 @@
     "moderatedPayment": "Moderated Payment",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
+    "confirmPayment": {
+      "title": "Everything look good?",
+      "msg": "If yes, please proceed to the final step.",
+      "confirm": "Yes",
+      "cancel": "Cancel"
+    },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded."
