@@ -48,7 +48,7 @@ export default class extends Collection {
   }
 
   // temporary to test pagination with dummy data
-  fetch() {
+  fetch2() {
     const deferred = $.Deferred();
     const queryTotal = 16;
     const perPage = 5;
@@ -78,6 +78,6 @@ export default class extends Collection {
   }
 
   parse(response) {
-    return response[this.type];
+    return response[this.type] || [];
   }
 }

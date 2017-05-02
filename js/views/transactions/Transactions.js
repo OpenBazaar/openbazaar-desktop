@@ -25,17 +25,6 @@ export default class extends baseVw {
       cases: Cases,
     };
 
-    this.defaultPurchasesFilter = {
-      purchasing: false,
-      ready: true,
-      fulfilled: true,
-      refunded: true,
-      disputeOpen: true,
-      disputePending: true,
-      disputeClosed: true,
-      completed: true,
-    };
-
     this.purchasesCol = new Transactions([], { type: 'purchases' });
   }
 
@@ -108,7 +97,6 @@ export default class extends baseVw {
   createPurchasesTabView() {
     const view = this.createChild(Purchases, {
       collection: this.purchasesCol,
-      defaultFilter: this.defaultPurchasesFilter,
     });
 
     return view;

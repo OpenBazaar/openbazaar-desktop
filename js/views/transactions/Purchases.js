@@ -6,28 +6,60 @@ import TransactionsTable from './table/Table';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
+    const opts = {
+      defaultFilter: {
+        search: '',
+        sort: 'date-desc',
+        state: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      },
+      ...options,
+    };
+
+    super(opts);
 
     if (!this.collection) {
       throw new Error('Please provide a purchases collection.');
     }
 
-    if (!options.defaultFilter) {
-      throw new Error('Please provide a default filter.');
-    }
-
-    this.options = options || {};
+    this.options = opts || {};
     // todo: move to sale
     // this.acceptPosts = {};
     this.cancelPosts = {};
-    this.filter = { ...options.defaultFilter };
+    this.filter = { ...opts.defaultFilter };
   }
 
   className() {
     return 'purchases tx5';
   }
 
-  // Will move to Sale.js later
+  events() {
+    return {
+      'change .filter input': 'onChangeFilter',
+      'keyup .js-searchInput': 'onKeyUpSearch',
+    };
+  }
+
+  onChangeFilter() {
+    let state = [];
+    this.filter.state = this.$filterCheckboxes.filter(':checked')
+      .each((index, checkbox) => {
+        state = state.concat($(checkbox).data('state'));
+      });
+    this.filter.state = state;
+    this.purchasesTable.filterParams = this.filter;
+  }
+
+  onKeyUpSearch(e) {
+    // wait until they stop typing
+    clearTimeout(this.searchKeyUpTimer);
+
+    this.searchKeyUpTimer = setTimeout(() => {
+      this.filter.search = e.target.value;
+      this.purchasesTable.filterParams = this.filter;
+    }, 150);
+  }
+
+  // Will move to Sales.js later
   // acceptingOrder(orderId) {
   //   return this.acceptPosts[orderId] || false;
   // }
@@ -89,70 +121,132 @@ export default class extends baseVw {
     return cancelPost;
   }
 
+  get $queryTotalLine() {
+    return this._$queryTotalLine ||
+      (this._$queryTotalLine = this.$('.js-queryTotalLine'));
+  }
+
+  get filterTemplateData() {
+    return [
+      {
+        id: 'filterPurchasing',
+        text: app.polyglot.t('transactions.filters.purchasing'),
+        checked: this.filter.state.indexOf(0) > -1 ||
+          this.filter.state.indexOf(1) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[0, 1]',
+        },
+      },
+      {
+        id: 'filterReady',
+        text: app.polyglot.t('transactions.filters.ready'),
+        checked: this.filter.state.indexOf(2) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[2]',
+        },
+      },
+      {
+        id: 'filterFulfilled',
+        text: app.polyglot.t('transactions.filters.fulfilled'),
+        checked: this.filter.state.indexOf(3) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[3]',
+        },
+      },
+      {
+        id: 'filterRefunded',
+        text: app.polyglot.t('transactions.filters.refunded'),
+        checked: this.filter.state.indexOf(8) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[8]',
+        },
+      },
+      {
+        id: 'filterDisputeOpen',
+        text: app.polyglot.t('transactions.filters.disputeOpen'),
+        checked: this.filter.state.indexOf(5) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[5]',
+        },
+      },
+      {
+        id: 'filterDisputePending',
+        text: app.polyglot.t('transactions.filters.disputePending'),
+        checked: this.filter.state.indexOf(6) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[6]',
+        },
+      },
+      {
+        id: 'filterDisputeClosed',
+        text: app.polyglot.t('transactions.filters.disputeClosed'),
+        checked: this.filter.state.indexOf(7) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[7]',
+        },
+      },
+      {
+        id: 'filterCompleted',
+        text: app.polyglot.t('transactions.filters.completed'),
+        checked: this.filter.state.indexOf(4) > -1 ||
+          this.filter.state.indexOf(9) > -1 ||
+          this.filter.state.indexOf(10) > -1,
+        className: 'filter',
+        attrs: {
+          'data-state': '[4, 9, 10]',
+        },
+      },
+    ];
+  }
+
+  get $filterCheckboxes() {
+    return this._$filterCheckboxes ||
+      (this._$filterCheckboxes = this.$('.filter input'));
+  }
+
   remove() {
     // todo: move to sales
     // Object.keys(this.acceptPosts, post => post.abort());
     Object.keys(this.cancelPosts, post => post.abort());
+    clearTimeout(this.searchKeyUpTimer);
     super.remove();
   }
 
   render() {
     loadTemplate('transactions/filters.html', (filterT) => {
       const filtersHtml = filterT({
-        filters: [
-          {
-            id: 'filterFulfilled',
-            text: app.polyglot.t('transactions.filters.purchasing'),
-          },
-          {
-            id: 'filterReady',
-            text: app.polyglot.t('transactions.filters.ready'),
-          },
-          {
-            id: 'filterFulfilled',
-            text: app.polyglot.t('transactions.filters.fulfilled'),
-          },
-          {
-            id: 'filterRefunded',
-            text: app.polyglot.t('transactions.filters.refunded'),
-          },
-          {
-            id: 'filterDisputeOpen',
-            text: app.polyglot.t('transactions.filters.disputeOpen'),
-          },
-          {
-            id: 'filterDisputePending',
-            text: app.polyglot.t('transactions.filters.disputePending'),
-          },
-          {
-            id: 'filterDisputeClosed',
-            text: app.polyglot.t('transactions.filters.disputeClosed'),
-          },
-          {
-            id: 'filterCompleted',
-            text: app.polyglot.t('transactions.filters.completed'),
-          },
-        ],
+        filters: this.filterTemplateData,
       });
 
       loadTemplate('transactions/purchases.html', (t) => {
         this.$el.html(t({
           filtersHtml,
+          searchTerm: this.filter.search,
         }));
-      });
 
-      if (this.purchasesTable) this.purchasesTable.remove();
-      this.purchasesTable = this.createChild(TransactionsTable, {
-        type: 'purchases',
-        collection: this.collection,
-        initialState: {
-          isFetching: true,
-        },
-        cancelOrder: this.cancelOrder.bind(this),
-        cancelingOrder: this.cancelingOrder.bind(this),
+        this._$filterCheckboxes = null;
+
+        if (this.purchasesTable) this.purchasesTable.remove();
+        this.purchasesTable = this.createChild(TransactionsTable, {
+          type: 'purchases',
+          collection: this.collection,
+          initialState: {
+            isFetching: true,
+          },
+          cancelOrder: this.cancelOrder.bind(this),
+          cancelingOrder: this.cancelingOrder.bind(this),
+          initialFilterParams: this.filter,
+        });
+        this.$('.js-purchasesTableContainer').html(this.purchasesTable.render().el);
+        this.listenTo(this.purchasesTable, 'retryFetchClick', () => this.fetchPurchases());
       });
-      this.$('.js-purchasesTableContainer').html(this.purchasesTable.render().el);
-      this.listenTo(this.purchasesTable, 'retryFetchClick', () => this.fetchPurchases());
     });
 
     return this;

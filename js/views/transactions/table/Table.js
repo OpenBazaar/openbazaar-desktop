@@ -24,6 +24,7 @@ export default class extends baseVw {
         fetchError: '',
       },
       type: 'sales',
+      initialFilterParams: {},
       ...options,
     };
 
@@ -77,7 +78,7 @@ export default class extends baseVw {
       this.listenTo(this.socket, 'message', this.onSocketMessage);
     }
 
-    this.fetchTransactions();
+    this.filterParams = opts.initialFilterParams;
   }
 
   className() {
@@ -140,13 +141,11 @@ export default class extends baseVw {
   }
 
   onClickNextPage() {
-    this.curPage++;
-    this.fetchTransactions();
+    this.fetchTransactions(this.curPage += 1);
   }
 
   onClickPrevPage() {
-    this.curPage--;
-    this.fetchTransactions();
+    this.fetchTransactions(this.curPage -= 1);
   }
 
   getAvatars(models = []) {
@@ -197,7 +196,19 @@ export default class extends baseVw {
     return 5;
   }
 
-  fetchTransactions(page = this.curPage) {
+  get filterParams() {
+    return this._filterParams || {};
+  }
+
+  set filterParams(filterParams = {}) {
+    if (!_.isEqual(filterParams, this._filterParams)) {
+      this._filterParams = JSON.parse(JSON.stringify(filterParams)); // deep clone
+      this.collection.reset();
+      this.fetchTransactions(1, filterParams);
+    }
+  }
+
+  fetchTransactions(page = this.curPage, filterParams = this.filterParams) {
     if (typeof page !== 'number') {
       throw new Error('Please provide a page number to fetch.');
     }
@@ -206,10 +217,17 @@ export default class extends baseVw {
       throw new Error('Please provide a page number greater than zero.');
     }
 
+    this.curPage = page;
+    this.filterParams = filterParams;
+
     if (this.transactionsFetch) this.transactionsFetch.abort();
 
     const fetchParams = {
       limit: this.transactionsPerPage,
+      ...filterParams,
+      // filterParams state is stored as an array of state integer. Here we'll convert
+      // to what the server expects which is a comma seperated string of integers.
+      state: filterParams.state && filterParams.state.join(',') || '',
     };
 
     let havePage = false;

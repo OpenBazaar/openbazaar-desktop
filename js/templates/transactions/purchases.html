@@ -1,12 +1,12 @@
 <h2 class="tabHeading txUnb"><%= ob.polyT('transactions.purchases.heading') %></h2>
 <div class="searchWrapper rowMd">
   <input type="text" class="ctrl clrP clrBr clrSh2 js-searchInput"
-         placeholder="<%= ob.polyT('transactions.placeholderSearch') %>">
+         placeholder="<%= ob.polyT('transactions.placeholderSearch') %>" value="<%= ob.searchTerm %>">
 </div>
 
 <%= ob.filtersHtml %>
 
-<div class="row">
+<div class="row js-queryTotalLine">
 <%= ob.polyT('transactions.purchases.countPurchasesFound', {
   countPurchases: `<span class="txB">${ob.polyT('transactions.purchases.countPurchases', { smart_count: 3 })}</span>`
 }) %>
