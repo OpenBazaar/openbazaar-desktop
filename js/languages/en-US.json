@@ -834,13 +834,13 @@
   "transactions": {
     "sales": {
       "heading": "Sales",
-      "countSales": "%{smart_count} sale |||| %{smart_count} sales",
-      "countSalesFound": "%{countSales} found"
+      "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
+      "countTransactionsFound": "%{countTransactions} found"
     },
     "purchases": {
       "heading": "Purchases",
-      "countPurchases": "%{smart_count} purchases |||| %{smart_count} purchases",
-      "countPurchasesFound": "%{countPurchases} found",
+      "countTransactions": "%{smart_count} purchases |||| %{smart_count} purchases",
+      "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
       "failedCancelHeading": "There was an error canceling the order."
