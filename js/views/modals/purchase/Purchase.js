@@ -12,8 +12,6 @@ import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import { launchSettingsModal } from '../../../utils/modalManager';
-import { openSimpleMessage } from '../SimpleMessage';
-
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -69,7 +67,6 @@ export default class extends BaseModal {
         this.updateShippingOption(opts);
       }));
     }
-
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
   }
@@ -195,7 +192,6 @@ export default class extends BaseModal {
     } else {
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
-        console.log(domKey)
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
         container = container.length ? container : this.$errors;
