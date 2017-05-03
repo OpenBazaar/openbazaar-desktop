@@ -17,12 +17,12 @@ export default class extends BaseModel {
 
     if (!attrs.name || attrs.name === 'undefined') {
       // this error should never normally appear to the user
-      addError('optionName', 'The option must have a name');
+      addError('name', 'The option must have a name');
     }
 
     if (!attrs.value || attrs.value === 'undefined') {
       // this error should never normally appear to the user
-      addError('optionValue', 'The option must have a value');
+      addError('value', 'The option must have a value');
     }
 
     if (Object.keys(errObj).length) return errObj;

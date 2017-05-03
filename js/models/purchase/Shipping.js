@@ -17,12 +17,12 @@ export default class extends BaseModel {
 
     if (!attrs.name || attrs.name === 'undefined') {
       // this error should never normally appear to the user
-      addError('shippingName', 'The shipping must have a name');
+      addError('name', 'The shipping must have a name');
     }
 
     if (!attrs.service || attrs.service === 'undefined') {
       // this error should never normally appear to the user
-      addError('shippingService', 'The shipping must have a service');
+      addError('service', 'The shipping must have a service');
     }
 
     if (Object.keys(errObj).length) return errObj;

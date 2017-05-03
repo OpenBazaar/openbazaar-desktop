@@ -44,7 +44,7 @@ export default class extends BaseModel {
     };
 
     if (!attrs.items.length) {
-      addError('item', app.polyglot.t('orderModelErrors.noItems'));
+      addError('items.quantity', app.polyglot.t('orderModelErrors.noItems'));
     }
 
     if (Object.keys(errObj).length) return errObj;

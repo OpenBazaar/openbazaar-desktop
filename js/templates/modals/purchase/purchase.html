@@ -8,7 +8,7 @@
     <div class="padSm gutterHSm overflowAuto margRSm flexVCent">
       <a class="clrBr2 clrSh1 discTn flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendor.avatar) %>"></a>
       <p class="txUnl tx3 clamp"><%= ob.vendor.name %></p>
-      <a class="link flexNoShrink tx6 js-goToStore"><% print(ob.polyT('purchase.returnToListing')) %></a>
+      <a class="link flexNoShrink tx6 js-goToListing"><% print(ob.polyT('purchase.returnToListing')) %></a>
     </div>
   </div>
   <% } %>
@@ -19,6 +19,8 @@
     <div class="flexColRow gutterVMd">
       <% // to support multiple items in a purchase, loop this section %>
       <section class="contentBox pad clrP clrBr clrSh3">
+        <div class="js-errors"></div>
+        <div class="js-items-quantity-errors"></div>
         <div class="flexVCent gutterH">
           <div class="thumb" style="<%= ob.getListingBgImage(ob.listing.item.images[0]) %>"></div>
           <div class="flexExpand">
@@ -53,6 +55,7 @@
       </section>
       <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
       <section class="contentBox padLg clrP clrBr clrSh3 js-shipping">
+        <div class="js-shipping-errors"></div>
         <div class="js-shippingWrapper"></div>
       </section>
       <% } %>
@@ -96,38 +99,50 @@
   </div>
   <div class="col3">
     <section class="contentBox pad clrP clrBr clrSh3">
-      <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn">
-        <%= ob.polyT('purchase.pay') %>
-      </button>
-      <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph hide js-pendingBtn">
-        <%= ob.polyT('purchase.pending') %>
-      </button>
-      <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph hide js-closeBtn">
-        <%= ob.polyT('purchase.close') %>
-      </button>
-      <% // confirmation box %>
-      <div id="confirmPay" class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 hide js-confirmPay">
-        <div class="flexColRows gutterVSm padLg">
-          <h3>
-            <%= ob.polyT('purchase.confirmPayment.title') %>
-          </h3>
-          <p class="tx5">
-            <%= ob.polyT('purchase.confirmPayment.msg') %>
-          </p>
-        </div>
-        <hr class="unleaded clrBr" />
-        <div class="flexHRight flexVCent gutterHLg pad tx5">
-          <a class="js-confirmPayCancel">
-            <%= ob.polyT('purchase.confirmPayment.cancel') %>
-          </a>
-          <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmPayConfirm">
-            <%= ob.polyT('purchase.confirmPayment.confirm') %>
-          </a>
+      <div class="posR">
+        <% const initPay = ob.listing.shippingOptions && ob.listing.shippingOptions.length ? 'disabled' : '' %>
+        <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn <% print(initPay) %>">
+          <%= ob.polyT('purchase.pay') %>
+        </button>
+        <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph hide js-pendingBtn">
+          <%= ob.polyT('purchase.pending') %>
+        </button>
+        <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph hide js-closeBtn">
+          <%= ob.polyT('purchase.close') %>
+        </button>
+        <% // confirmation box %>
+        <div id="confirmPay" class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 hide js-confirmPay">
+          <div class="flexColRows gutterVSm padLg">
+            <h3>
+              <%= ob.polyT('purchase.confirmPayment.title') %>
+            </h3>
+            <p class="tx5">
+              <%= ob.polyT('purchase.confirmPayment.msg') %>
+            </p>
+          </div>
+          <hr class="unleaded clrBr" />
+          <div class="flexHRight flexVCent gutterHLg pad tx5">
+            <a class="js-confirmPayCancel">
+              <%= ob.polyT('purchase.confirmPayment.cancel') %>
+            </a>
+            <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmPayConfirm">
+              <%= ob.polyT('purchase.confirmPayment.confirm') %>
+            </a>
+          </div>
         </div>
       </div>
-    </section>
-    <section class="receipt">
-      <% // this will be a separate view tied to the order model %>
+      <div class="padSm txSm txCtr clrT2">
+        <span class="js-payNote"><%= ob.polyT('purchase.payNote') %></span>
+        <span class="hide js-pendingNote"><%= ob.polyT('purchase.payNote') %></span>
+        <span class="hide js-closeNote"><%= ob.polyT('purchase.payNote') %></span>
+      </div>
+      <div class="js-receipt"></div>
+      <% if (hasModerators) { %>
+        <hr class="clrBr js-moderatorNote">
+        <div class="padSm txSm txCtr clrT2 js-moderatorNote">
+          <%= ob.polyT('purchase.moderatorNote') %>
+        </div>
+      <% } %>
     </section>
   </div>
 </div>

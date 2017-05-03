@@ -41,6 +41,10 @@ export default class extends BaseModel {
       addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
     }
 
+    if (attrs.quantity < 1) {
+      addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBePositive'));
+    }
+
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;

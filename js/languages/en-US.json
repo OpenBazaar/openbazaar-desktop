@@ -810,8 +810,12 @@
     "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
     "pay": "PAY",
+    "payNote": "Clicking pay will advance you to the final step.",
     "pending": "Pending…",
+    "pendingNotes": "Plese fund the order to complete your transaction.",
     "close": "close",
+    "closeNote": "Your payment has been sent to the vendor.",
+    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
@@ -823,10 +827,17 @@
       "confirm": "Yes",
       "cancel": "Cancel"
     },
+    "receipt": {
+      "summary": "Order Summary",
+      "listing": "Listing (%{quantity} )",
+      "shipping": "Shipping",
+      "total": "Total"
+    },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
-      "orderError": "Your order can not be processed due to the following errors."
+      "orderError": "Your order can not be processed due to the following errors.",
+      "missingAddress": "You must choose a shipping address to complete your purchase."
     }
   },
   "moderators": {
@@ -909,7 +920,8 @@
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
     "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
     "provideQuantity": "Please provide a quantity.",
-    "provideNumericQuantity": "Please provide the quantity as a number."
+    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "quantityMustBePositive": "The quantity must be more than zero."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",

@@ -18,6 +18,9 @@ export default class extends BaseModal {
       model: this.model,
     });
 
+    this.listenTo(this.shippingOptions, 'selected', ((opts) => {
+      this.trigger('shippingOptionSelected', opts);
+    }));
     this.listenTo(app.settings.get('shippingAddresses'), 'update', () => this.render());
   }
 
@@ -60,6 +63,8 @@ export default class extends BaseModal {
       this.selectedAddress = userAddresses.at(0);
       this.shippingOptions.countryCode = this.selectedAddress.get('country');
       this.$('.js-shippingOptionsWrapper').html(this.shippingOptions.render().el);
+    } else {
+      this.selectedAddress = null;
     }
 
     return this;

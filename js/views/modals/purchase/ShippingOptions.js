@@ -31,7 +31,7 @@ export default class extends BaseModal {
     const option = $(e.target);
     const name = option.attr('data-name');
     const service = option.attr('data-service');
-    this.selectedOption = { name, service };
+    this.trigger('selected', { name, service });
   }
 
   get countryCode() {
@@ -48,7 +48,7 @@ export default class extends BaseModal {
 
     const name = filteredShipping[0].name;
     const service = filteredShipping[0].services[0].name;
-    this.selectedOption = { name, service };
+    this.trigger('selected', { name, service });
 
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({
