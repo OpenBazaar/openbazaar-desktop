@@ -59,8 +59,8 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-acceptOrder': 'onClickAcceptOrder',
-      'click .js-cancelOrder': 'onClickCancelOrder',
       'click .js-rejectOrder': 'onClickRejectOrder',
+      'click .js-cancelOrder': 'onClickCancelOrder',
       'click .js-userCol': 'onClickUserColLink',
       click: 'onRowClick',
     };
@@ -71,13 +71,13 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
-  onClickCancelOrder(e) {
-    this.trigger('clickCancelOrder', { view: this });
+  onClickRejectOrder(e) {
+    this.trigger('clickRejectOrder', { view: this });
     e.stopPropagation();
   }
 
-  onClickRejectOrder(e) {
-    this.trigger('clickRejectOrder', { view: this });
+  onClickCancelOrder(e) {
+    this.trigger('clickCancelOrder', { view: this });
     e.stopPropagation();
   }
 

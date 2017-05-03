@@ -32,6 +32,42 @@ export default class extends baseVw {
       throw new Error('Please provide a valid type.');
     }
 
+    if (typeof opts.acceptingOrder !== 'function') {
+      // The function should accept an orderId and return a promise if it
+      // is in the process of being accepted, otherwise false.
+      throw new Error('Please provide a function to determine if a given order is in the process ' +
+        'of being accepted.');
+    }
+
+    if (typeof opts.acceptOrder !== 'function') {
+      // The function should accept an orderId and return a promise.
+      throw new Error('Please provide a function to accept an order.');
+    }
+
+    if (typeof opts.rejectingOrder !== 'function') {
+      // The function should accept an orderId and return a promise if it
+      // is in the process of being rejected, otherwise false.
+      throw new Error('Please provide a function to determine if a given order is in the process ' +
+        'of being rejected.');
+    }
+
+    if (typeof opts.rejectOrder !== 'function') {
+      // The function should accept an orderId and return a promise.
+      throw new Error('Please provide a function to reject an order.');
+    }
+
+    if (typeof opts.cancelingOrder !== 'function') {
+      // The function should accept an orderId and return a promise if it
+      // is in the process of being canceled, otherwise false.
+      throw new Error('Please provide a function to determine if a given order is in the process ' +
+        'of being canceled.');
+    }
+
+    if (typeof opts.cancelOrder !== 'function') {
+      // The function should accept an orderId and return a promise.
+      throw new Error('Please provide a function to cancel an order.');
+    }
+
     super(opts);
 
     if (!this.collection) {
@@ -72,19 +108,88 @@ export default class extends baseVw {
     this.fetchTransactions();
   }
 
-  onClickAcceptOrder() {
-    // this is needed for sales
+  onClickAcceptOrder(e) {
+    this.options.acceptOrder(e.view.model.id)
+      .always(() => {
+        const view = this.indexedViews.byOrder[e.view.model.id];
+
+        if (view) {
+          view.setState({
+            acceptOrderInProgress: false,
+          });
+        }
+      })
+      .done(() => {
+        const view = this.indexedViews.byOrder[e.view.model.id];
+
+        if (view) {
+          view.model
+            .set('state', 'CONFIRMED');
+        }
+      })
+      .fail((xhr) => {
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('transactions.sales.failedAcceptHeading'),
+          failReason
+        );
+      });
+
+    e.view.setState({
+      acceptOrderInProgress: true,
+    });
+  }
+
+  onClickRejectOrder(e) {
+    this.options.rejectOrder(e.view.model.id)
+      .always(() => {
+        const view = this.indexedViews.byOrder[e.view.model.id];
+
+        if (view) {
+          view.setState({
+            rejectOrderInProgress: false,
+          });
+        }
+      })
+      .done(() => {
+        const view = this.indexedViews.byOrder[e.view.model.id];
+
+        if (view) {
+          view.model
+            .set('state', 'REJECTED');
+        }
+      })
+      .fail((xhr) => {
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('transactions.sales.failedRejectHeading'),
+          failReason
+        );
+      });
+
+    e.view.setState({
+      rejectOrderInProgress: true,
+    });
   }
 
   onClickCancelOrder(e) {
     this.options.cancelOrder(e.view.model.id)
       .always(() => {
-        e.view.setState({
-          cancelOrderInProgress: false,
-        });
+        const view = this.indexedViews.byOrder[e.view.model.id];
+
+        if (view) {
+          view.setState({
+            cancelOrderInProgress: false,
+          });
+        }
       })
       .done(() => {
-        e.view.model.set('state', 'CANCELED');
+        const view = this.indexedViews.byOrder[e.view.model.id];
+
+        if (view) {
+          view.model
+            .set('state', 'CANCELED');
+        }
       })
       .fail((xhr) => {
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
@@ -144,11 +249,15 @@ export default class extends baseVw {
         this.listenTo(this.socket, 'message', (e) => {
           if (e.jsonData.id === data.id) {
             if (this.type === 'purchases') {
-              this.indexedViews[e.jsonData.peerId].setState({
-                vendorAvatarHashes: e.jsonData.profile.avatarHashes,
-              });
-              this.indexedViews[e.jsonData.peerId].model
+              this.indexedViews.byUser[e.jsonData.peerId]
+                .setState({
+                  vendorAvatarHashes: e.jsonData.profile.avatarHashes,
+                });
+              this.indexedViews.byUser[e.jsonData.peerId]
+                .model
                 .set('vendorHandle', e.jsonData.profile.handle);
+            } else {
+              // handle Sales, Cases
             }
           }
         });
@@ -158,14 +267,25 @@ export default class extends baseVw {
 
   /*
    * Index the Row Views by Vendor and/or Buyer ID so avatar hashes
-   * received via the socket can be correctly applied to them.
+   * received via the socket can be correctly applied to them. Aditionally,
+   * indexes by orderId.
    */
   indexRowViews() {
-    this.indexedViews = {};
+    this.indexedViews = {
+      byUser: {},
+      byOrder: {},
+    };
     this.views.forEach(view => {
       if (this.type === 'purchases') {
-        this.indexedViews[view.model.get('vendorId')] = view;
+        this.indexedViews.byUser[view.model.get('vendorId')] = view;
+      } else if (this.type === 'sale') {
+        this.indexedViews.byUser[view.model.get('buyerId')] = view;
+      } else {
+        this.indexedViews.byUser[view.model.get('vendorId')] = view;
+        this.indexedViews.byUser[view.model.get('buyerId')] = view;
       }
+
+      this.indexedViews.byOrder[view.model.id] = view;
     });
   }
 
@@ -312,12 +432,15 @@ export default class extends baseVw {
         const view = this.createChild(Row, {
           model: transaction,
           type: this.type,
-          acceptOrderInProgress: false,
-          rejectOrderInProgress: false,
-          cancelOrderInProgress: false,
+          initialState: {
+            acceptOrderInProgress: this.options.acceptingOrder(transaction.id),
+            rejectOrderInProgress: this.options.rejectingOrder(transaction.id),
+            cancelOrderInProgress: this.options.cancelingOrder(transaction.id),
+          },
         });
 
         this.listenTo(view, 'clickAcceptOrder', this.onClickAcceptOrder);
+        this.listenTo(view, 'clickRejectOrder', this.onClickRejectOrder);
         this.listenTo(view, 'clickCancelOrder', this.onClickCancelOrder);
         this.listenTo(view, 'clickRow', this.onClickRow);
 

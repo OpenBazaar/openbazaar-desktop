@@ -836,7 +836,9 @@
       "heading": "Sales",
       "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
       "countTransactionsFound": "%{countTransactions} found",
-      "noResults": "No sales found"
+      "noResults": "No sales found",
+      "failedAcceptHeading": "There was an error accepting the order.",
+      "failedRejectHeading": "There was an error rejecting the order."
     },
     "purchases": {
       "heading": "Purchases",
@@ -875,7 +877,8 @@
         "funded": "Funded",
         "fulfilled": "Fulfilled",
         "decided": "Decided",
-        "canceled": "Canceled"
+        "canceled": "Canceled",
+        "rejected": "Rejected"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
