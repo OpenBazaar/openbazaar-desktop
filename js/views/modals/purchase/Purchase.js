@@ -12,6 +12,8 @@ import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import { launchSettingsModal } from '../../../utils/modalManager';
+import { openSimpleMessage } from '../SimpleMessage';
+
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -187,7 +189,10 @@ export default class extends BaseModal {
           console.log(data);
         })
         .fail((data) => {
-          console.log(data);
+          const response = data && data.responseText || '';
+          const errMsg = response ? JSON.parse(response).reason : '';
+          const errTitle = app.polyglot.t('purchase.errors.orderError');
+          openSimpleMessage(errTitle, errMsg);
         });
     } else {
       Object.keys(this.order.validationError).forEach(errKey => {
