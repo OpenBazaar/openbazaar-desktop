@@ -25,11 +25,6 @@ export default class extends BaseModal {
     return 'receipt flexColRows gutterVSm';
   }
 
-  events() {
-    return {
-    };
-  }
-
   get prices() {
     // create an array of price objects that matches the items in the order
     const prices = [];
