@@ -14,6 +14,8 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         acceptOrderInProgress: false,
+        rejectOrderInProgress: false,
+        cancelOrderInProgress: false,
       },
       type: 'sales',
       ...options,
@@ -58,6 +60,7 @@ export default class extends baseVw {
     return {
       'click .js-acceptOrder': 'onClickAcceptOrder',
       'click .js-cancelOrder': 'onClickCancelOrder',
+      'click .js-rejectOrder': 'onClickRejectOrder',
       'click .js-userCol': 'onClickUserColLink',
       click: 'onRowClick',
     };
@@ -70,6 +73,11 @@ export default class extends baseVw {
 
   onClickCancelOrder(e) {
     this.trigger('clickCancelOrder', { view: this });
+    e.stopPropagation();
+  }
+
+  onClickRejectOrder(e) {
+    this.trigger('clickRejectOrder', { view: this });
     e.stopPropagation();
   }
 

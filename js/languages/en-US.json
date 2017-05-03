@@ -835,7 +835,8 @@
     "sales": {
       "heading": "Sales",
       "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
-      "countTransactionsFound": "%{countTransactions} found"
+      "countTransactionsFound": "%{countTransactions} found",
+      "noResults": "No sales found"
     },
     "purchases": {
       "heading": "Purchases",

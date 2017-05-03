@@ -209,7 +209,6 @@ export default class extends baseVw {
           initialFilterParams: this.filter,
         });
         this.$('.js-tableContainer').html(this.table.render().el);
-        this.listenTo(this.table, 'retryFetchClick', () => this.fetchPurchases());
       });
     });
 

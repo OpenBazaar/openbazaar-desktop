@@ -85,6 +85,7 @@
 
           &.listingCol {
             max-width: 163px;
+            min-width: 120px;
 
             .thumb {
               width: 33px;
@@ -133,7 +134,8 @@
           }
 
           &.dateCol {
-            min-width: 148px;
+            min-width: 143px;
+            max-width: 143px;
           }
         }
 

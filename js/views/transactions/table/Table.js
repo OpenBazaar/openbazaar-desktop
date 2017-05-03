@@ -32,30 +32,6 @@ export default class extends baseVw {
       throw new Error('Please provide a valid type.');
     }
 
-    if (opts.type === 'sales' && typeof opts.acceptingOrder !== 'function') {
-      // The function should accept an orderId and return a promise if it
-      // is in the process of being accepted, otherwise false.
-      throw new Error('Please provide a function to determine if a given order is in the process ' +
-        'of being accepted.');
-    }
-
-    if (opts.type === 'sales' && typeof opts.acceptOrder !== 'function') {
-      // The function should accept an orderId and return a promise.
-      throw new Error('Please provide a function to accept an order.');
-    }
-
-    if (opts.type === 'purchases' && typeof opts.cancelingOrder !== 'function') {
-      // The function should accept an orderId and return a promise if it
-      // is in the process of being canceled, otherwise false.
-      throw new Error('Please provide a function to determine if a given order is in the process ' +
-        'of being canceled.');
-    }
-
-    if (opts.type === 'purchases' && typeof opts.cancelOrder !== 'function') {
-      // The function should accept an orderId and return a promise.
-      throw new Error('Please provide a function to cancel an order.');
-    }
-
     super(opts);
 
     if (!this.collection) {
@@ -93,7 +69,7 @@ export default class extends baseVw {
   }
 
   onClickRetryFetch() {
-    this.trigger('retryFetchClick');
+    this.fetchTransactions();
   }
 
   onClickAcceptOrder() {
@@ -336,6 +312,9 @@ export default class extends baseVw {
         const view = this.createChild(Row, {
           model: transaction,
           type: this.type,
+          acceptOrderInProgress: false,
+          rejectOrderInProgress: false,
+          cancelOrderInProgress: false,
         });
 
         this.listenTo(view, 'clickAcceptOrder', this.onClickAcceptOrder);
