@@ -80,12 +80,13 @@
           word-break: break-word;
 
           &.orderCol {
-            max-width: 100px;
+            min-width: 88px;
+            max-width: 88px;
           }
 
           &.listingCol {
-            max-width: 163px;
-            min-width: 120px;
+            max-width: 145px;
+            min-width: 145px;
 
             .thumb {
               width: 33px;
@@ -95,8 +96,8 @@
           }
 
           &.userCol {
-            max-width: 110px;
-            min-width: 110px;
+            max-width: 125px;
+            min-width: 125px;
 
             .avatar {
               display: inline-block;
@@ -115,16 +116,19 @@
               height: 20px;
               text-align: center;
               font-weight: bold;
-              padding-top: 2px;           
+              padding-top: 3px;
+              font-size: $tx6;           
             }
           }
 
           &.priceCol {
-            max-width: 163px;
-            min-width: 143px;
+            max-width: 165px;
+            min-width: 165px;
           }
 
           &.statusCol {
+            min-width: 130px;
+            max-width: 130px;
             line-height: 2em;
 
             .btnAcceptOrder {
