@@ -200,7 +200,7 @@ export default class extends BaseModal {
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
         container = container.length ? container : this.$errors;
-        this.insertError(this.order.validationError[errKey]);
+        this.insertErrors(container, this.order.validationError[errKey]);
       });
     }
   }
