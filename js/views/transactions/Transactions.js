@@ -6,10 +6,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
-// import Purchases from './Purchases';
 import Tab from './Tab';
-// import Sales from './Sales';
-// import Cases from './Cases';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -21,11 +18,6 @@ export default class extends baseVw {
     super(opts);
     this._tab = opts.initialTab;
     this.tabViewCache = {};
-    // this.tabViews = {
-    //   purchases: Purchases,
-    //   sales: Sales,
-    //   cases: Cases,
-    // };
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
 
