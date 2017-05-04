@@ -52,7 +52,7 @@
     <a class="handle noOverflow clrT" href="#<%= userId %>"><%= userHandle ? `@${userHandle}` : userId %></a>
     <div class="flexHRight">
       <% if (ob.unreadChatMessages) { %>
-        <span class="unreadBadge discSm clrE1 clrBrEmph1 clrTOnEmph"><%= ob.unreadChatMessages %></span>
+        <span class="unreadBadge discSm clrE1 clrBrEmph1 clrTOnEmph"><%= ob.unreadChatMessages > 99 ? '…' : ob.unreadChatMessages %></span>
       <% } %>
     </div>
   </div>
