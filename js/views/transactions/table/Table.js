@@ -6,7 +6,6 @@ import app from '../../../app';
 import $ from 'jquery';
 import _ from 'underscore';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
-import { getSocket } from '../../../utils/serverConnect';
 import { getContentFrame } from '../../../utils/selectors';
 import Order from '../../../models/order/Order';
 import baseVw from '../../baseVw';
@@ -68,6 +67,10 @@ export default class extends baseVw {
       throw new Error('Please provide a function to cancel an order.');
     }
 
+    if (typeof opts.getProfiles !== 'function') {
+      throw new Error('Please provide a function to retreive profiles.');
+    }
+
     super(opts);
 
     if (!this.collection) {
@@ -82,13 +85,6 @@ export default class extends baseVw {
     this.views = [];
     this.curPage = 1;
     this.queryTotal = null;
-
-    this.listenTo(this.collection, 'update', this.onCollectionUpdate);
-
-    this.socket = getSocket();
-    if (this.socket) {
-      this.listenTo(this.socket, 'message', this.onSocketMessage);
-    }
 
     // This will kick off our initial fetch.
     this.filterParams = opts.initialFilterParams;
@@ -111,21 +107,19 @@ export default class extends baseVw {
   onClickAcceptOrder(e) {
     this.options.acceptOrder(e.view.model.id)
       .always(() => {
-        const view = this.indexedViews.byOrder[e.view.model.id];
-
-        if (view) {
-          view.setState({
-            acceptOrderInProgress: false,
+        this.indexedViews.byOrder[e.view.model.id]
+          .forEach(view => {
+            view.setState({
+              acceptOrderInProgress: false,
+            });
           });
-        }
       })
       .done(() => {
-        const view = this.indexedViews.byOrder[e.view.model.id];
-
-        if (view) {
-          view.model
-            .set('state', 'CONFIRMED');
-        }
+        this.indexedViews.byOrder[e.view.model.id]
+          .forEach(view => {
+            view.model
+              .set('state', 'CONFIRMED');
+          });
       })
       .fail((xhr) => {
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
@@ -143,21 +137,19 @@ export default class extends baseVw {
   onClickRejectOrder(e) {
     this.options.rejectOrder(e.view.model.id)
       .always(() => {
-        const view = this.indexedViews.byOrder[e.view.model.id];
-
-        if (view) {
-          view.setState({
-            rejectOrderInProgress: false,
+        this.indexedViews.byOrder[e.view.model.id]
+          .forEach(view => {
+            view.setState({
+              rejectOrderInProgress: false,
+            });
           });
-        }
       })
       .done(() => {
-        const view = this.indexedViews.byOrder[e.view.model.id];
-
-        if (view) {
-          view.model
-            .set('state', 'REJECTED');
-        }
+        this.indexedViews.byOrder[e.view.model.id]
+          .forEach(view => {
+            view.model
+              .set('state', 'REJECTED');
+          });
       })
       .fail((xhr) => {
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
@@ -175,21 +167,19 @@ export default class extends baseVw {
   onClickCancelOrder(e) {
     this.options.cancelOrder(e.view.model.id)
       .always(() => {
-        const view = this.indexedViews.byOrder[e.view.model.id];
-
-        if (view) {
-          view.setState({
-            cancelOrderInProgress: false,
+        this.indexedViews.byOrder[e.view.model.id]
+          .forEach(view => {
+            view.setState({
+              cancelOrderInProgress: false,
+            });
           });
-        }
       })
       .done(() => {
-        const view = this.indexedViews.byOrder[e.view.model.id];
-
-        if (view) {
-          view.model
-            .set('state', 'CANCELED');
-        }
+        this.indexedViews.byOrder[e.view.model.id]
+          .forEach(view => {
+            view.model
+              .set('state', 'CANCELED');
+          });
       })
       .fail((xhr) => {
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
@@ -202,10 +192,6 @@ export default class extends baseVw {
     e.view.setState({
       cancelOrderInProgress: true,
     });
-  }
-
-  onCollectionUpdate(cl, opts) {
-    this.getAvatars(opts.changes.added || {});
   }
 
   onClickRow(e) {
@@ -234,6 +220,43 @@ export default class extends baseVw {
     const profilesToFetch = [];
 
     models.forEach(md => {
+      const vendorId = md.get('vendorId');
+      const buyerId = md.get('buyerId');
+
+      if (vendorId) {
+        profilesToFetch.push(vendorId);
+      }
+
+      if (buyerId) {
+        profilesToFetch.push(buyerId);
+      }
+    });
+
+    if (profilesToFetch.length) {
+      this.options.getProfiles(profilesToFetch)
+        .forEach(profilePromise => {
+          profilePromise.done(profile => {
+            const vendorViews = this.indexedViews.byVendor[profile.peerID] || [];
+            const buyerViews = this.indexedViews.byBuyer[profile.peerID] || [];
+
+            vendorViews.forEach(view => {
+              view.setState({ vendorAvatarHashes: profile.avatarHashes });
+              view.model.set({ vendorHandle: profile.handle });
+            });
+
+            buyerViews.forEach(view => {
+              view.setState({ buyerAvatarHashes: profile.avatarHashes });
+              view.model.set({ buyerHandle: profile.handle });
+            });
+          });
+        });
+    }
+  }
+
+  getAvatars2(models = []) {
+    const profilesToFetch = [];
+
+    models.forEach(md => {
       if (this.type === 'purchases') {
         profilesToFetch.push(md.get('vendorId'));
       }
@@ -250,12 +273,14 @@ export default class extends baseVw {
           if (e.jsonData.id === data.id) {
             if (this.type === 'purchases') {
               this.indexedViews.byUser[e.jsonData.peerId]
-                .setState({
-                  vendorAvatarHashes: e.jsonData.profile.avatarHashes,
+                .forEach(view => {
+                  view.setState({
+                    vendorAvatarHashes: e.jsonData.profile.avatarHashes,
+                  });
+
+                  view.model
+                    .set('vendorHandle', e.jsonData.profile.handle);
                 });
-              this.indexedViews.byUser[e.jsonData.peerId]
-                .model
-                .set('vendorHandle', e.jsonData.profile.handle);
             } else {
               // handle Sales, Cases
             }
@@ -266,26 +291,33 @@ export default class extends baseVw {
   }
 
   /*
-   * Index the Row Views by Vendor and/or Buyer ID so avatar hashes
-   * received via the socket can be correctly applied to them. Aditionally,
-   * indexes by orderId.
+   * Index the Row Views by Vendor and/or Buyer ID as well as orderID
+   * so they could be easily retreived by the respective identifier.
    */
   indexRowViews() {
     this.indexedViews = {
-      byUser: {},
+      byVendor: {},
+      byBuyer: {},
       byOrder: {},
     };
+
     this.views.forEach(view => {
-      if (this.type === 'purchases') {
-        this.indexedViews.byUser[view.model.get('vendorId')] = view;
-      } else if (this.type === 'sale') {
-        this.indexedViews.byUser[view.model.get('buyerId')] = view;
-      } else {
-        this.indexedViews.byUser[view.model.get('vendorId')] = view;
-        this.indexedViews.byUser[view.model.get('buyerId')] = view;
+      const vendorId = view.model.get('vendorId');
+      const buyerId = view.model.get('buyerId');
+
+      if (vendorId) {
+        this.indexedViews.byVendor[vendorId] =
+          this.indexedViews.byVendor[vendorId] || [];
+        this.indexedViews.byVendor[vendorId].push(view);
+      } else if (buyerId) {
+        this.indexedViews.byBuyer[buyerId] =
+          this.indexedViews.byBuyer[buyerId] || [];
+        this.indexedViews.byBuyer[buyerId].push(view);
       }
 
-      this.indexedViews.byOrder[view.model.id] = view;
+      this.indexedViews.byOrder[view.model.id] =
+        this.indexedViews.byOrder[view.model.id] || [];
+      this.indexedViews.byOrder[view.model.id].push(view);
     });
   }
 
@@ -424,10 +456,11 @@ export default class extends baseVw {
     this.views = [];
     this.indexedViews = {};
     const transactionsFrag = document.createDocumentFragment();
+    const transToRender = this.collection
+      .slice(startIndex, startIndex + this.transactionsPerPage);
     // The collection contains all pages we've fetched, but we'll slice it and
     // only render the current page.
-    this.collection
-      .slice(startIndex, startIndex + this.transactionsPerPage)
+    transToRender
       .forEach(transaction => {
         const view = this.createChild(Row, {
           model: transaction,
@@ -449,6 +482,7 @@ export default class extends baseVw {
       });
 
     this.indexRowViews();
+    this.getAvatars(transToRender); // get avatars after indexRowViews()
     this.$('.js-transactionsTable').append(transactionsFrag);
 
     const onLastPage = this.curPage > this.collection.length / this.transactionsPerPage;

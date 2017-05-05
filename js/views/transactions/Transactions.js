@@ -2,6 +2,7 @@ import $ from 'jquery';
 import app from '../../app';
 import { capitalize } from '../../utils/string';
 import { abbrNum } from '../../utils/';
+import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
 import baseVw from '../baseVw';
@@ -18,6 +19,8 @@ export default class extends baseVw {
     super(opts);
     this._tab = opts.initialTab;
     this.tabViewCache = {};
+    this.profileDeferreds = {};
+    this.profilePosts = [];
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
 
@@ -44,6 +47,8 @@ export default class extends baseVw {
       // fetch so we get the count for the tabhead
       this.salesCol.fetch();
     }
+
+    this.socket = getSocket();
   }
 
   className() {
@@ -200,6 +205,7 @@ export default class extends baseVw {
       collection: this.purchasesCol,
       type: 'purchases',
       filterConfig: this.salesPurchasesFilterConfig,
+      getProfiles: this.getProfiles.bind(this),
     });
 
     return view;
@@ -210,9 +216,46 @@ export default class extends baseVw {
       collection: this.salesCol,
       type: 'sales',
       filterConfig: this.salesPurchasesFilterConfig,
+      getProfiles: this.getProfiles.bind(this),
     });
 
     return view;
+  }
+
+  getProfiles(peerIds = []) {
+    const promises = [];
+    const profilesToFetch = [];
+
+    peerIds.forEach(id => {
+      if (!this.profileDeferreds[id]) {
+        const deferred = $.Deferred();
+        this.profileDeferreds[id] = deferred;
+        profilesToFetch.push(id);
+      }
+
+      promises.push(this.profileDeferreds[id].promise());
+    });
+
+    if (profilesToFetch.length) {
+      const post = $.post({
+        url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
+        data: JSON.stringify(profilesToFetch),
+        dataType: 'json',
+        contentType: 'application/json',
+      }).done((data) => {
+        if (this.socket) {
+          this.listenTo(this.socket, 'message', (e) => {
+            if (e.jsonData.id === data.id) {
+              this.profileDeferreds[e.jsonData.peerId].resolve(e.jsonData.profile);
+            }
+          });
+        }
+      });
+
+      this.profilePosts.push(post);
+    }
+
+    return promises;
   }
 
   get $purchasesTabCount() {
@@ -223,6 +266,11 @@ export default class extends baseVw {
   get $salesTabCount() {
     return this._$salesTabCount ||
       (this._$salesTabCount = this.$('.js-salesTabCount'));
+  }
+
+  remove() {
+    this.profilePosts.forEach(post => post.abort());
+    super.remove();
   }
 
   render() {
