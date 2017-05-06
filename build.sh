@@ -61,6 +61,9 @@ case "$TRAVIS_OS_NAME" in
     echo 'Install npm packages for Linux'
     npm install --save-dev electron-installer-debian --silent
 
+    # Ensure fakeroot is installed
+    sudo apt-get install fakeroot
+
     # Retrieve Latest Server Binaries
     sudo apt-get install jq
     cd temp/
