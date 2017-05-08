@@ -21,12 +21,12 @@
     </div>
   </div>
   <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxTop clrBr clrP clrT hide">
-    <div class="tx3 txB rowSm">Are you sure?</div>
-    <p>Once it's deleted, it's gone forever.</p>
+    <div class="tx3 txB rowSm"><%= ob.polyT('listingDetail.confirmDelete.title') %></div>
+    <p><%= ob.polyT('listingDetail.confirmDelete.body') %></p>
     <hr class="clrBr row" />
     <div class="flexHRight flexVCent gutterHLg buttonBar">
-      <a class="js-deleteConfirmCancel">Cancel</a>
-      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed">Yes, Delete</a>
+      <a class="js-deleteConfirmCancel"><%= ob.polyT('listingDetail.confirmDelete.btnCancel') %></a>
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingDetail.confirmDelete.btnConfirm') %></a>
     </div>
   </div>  
   <% } %>
