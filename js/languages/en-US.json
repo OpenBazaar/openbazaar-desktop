@@ -842,7 +842,7 @@
     },
     "purchases": {
       "heading": "Purchases",
-      "countTransactions": "%{smart_count} purchases |||| %{smart_count} purchases",
+      "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
