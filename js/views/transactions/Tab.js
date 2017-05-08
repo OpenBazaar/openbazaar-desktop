@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../../app';
+import '../../lib/select2';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import TransactionsTable from './table/Table';
@@ -9,8 +10,8 @@ export default class extends baseVw {
     const opts = {
       defaultFilter: {
         search: '',
-        sort: 'date-desc',
-        state: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        sortBy: 'UNREAD',
+        states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
       },
       ...options,
     };
@@ -72,16 +73,17 @@ export default class extends baseVw {
     return {
       'change .filter input': 'onChangeFilter',
       'keyup .js-searchInput': 'onKeyUpSearch',
+      'change .js-sortBySelect': 'onChangeSortBy',
     };
   }
 
   onChangeFilter() {
-    let state = [];
+    let states = [];
     this.$filterCheckboxes.filter(':checked')
       .each((index, checkbox) => {
-        state = state.concat($(checkbox).data('state'));
+        states = states.concat($(checkbox).data('state'));
       });
-    this.filter.state = state;
+    this.filter.states = states;
     this.table.filterParams = this.filter;
   }
 
@@ -95,6 +97,12 @@ export default class extends baseVw {
     }, 150);
   }
 
+  onChangeSortBy(e) {
+    this.table.filterParams = {
+      ...this.filter,
+      sortBy: e.target.value,
+    };
+  }
 
   cancelingOrder(orderId) {
     return this.cancelPosts[orderId] || false;
@@ -195,10 +203,15 @@ export default class extends baseVw {
         this.$el.html(t({
           type: this.type,
           filtersHtml,
-          searchTerm: this.filter.search,
+          filter: this.filter,
         }));
 
         this._$filterCheckboxes = null;
+
+        this.$('.js-sortBySelect').select2({
+          minimumResultsForSearch: -1,
+          dropdownParent: this.$('.js-sortBySelectDropdownContainer'),
+        });
 
         if (this.table) this.table.remove();
         this.table = this.createChild(TransactionsTable, {

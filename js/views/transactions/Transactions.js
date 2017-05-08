@@ -69,8 +69,8 @@ export default class extends baseVw {
   get salesPurchasesDefaultFilter() {
     return {
       search: '',
-      sort: 'date-desc',
-      state: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      sortBy: 'UNREAD',
+      states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
     };
   }
 
@@ -79,8 +79,8 @@ export default class extends baseVw {
       {
         id: 'filterPurchasing',
         text: app.polyglot.t('transactions.filters.purchasing'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(0) > -1 ||
-          this.salesPurchasesDefaultFilter.state.indexOf(1) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(0) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(1) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[0, 1]',
@@ -89,7 +89,7 @@ export default class extends baseVw {
       {
         id: 'filterReady',
         text: app.polyglot.t('transactions.filters.ready'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(2) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[2]',
@@ -98,7 +98,7 @@ export default class extends baseVw {
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(3) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[3]',
@@ -107,7 +107,7 @@ export default class extends baseVw {
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(8) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[8]',
@@ -116,7 +116,7 @@ export default class extends baseVw {
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(5) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[5]',
@@ -125,7 +125,7 @@ export default class extends baseVw {
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(6) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[6]',
@@ -134,7 +134,7 @@ export default class extends baseVw {
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(7) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[7]',
@@ -143,9 +143,9 @@ export default class extends baseVw {
       {
         id: 'filterCompleted',
         text: app.polyglot.t('transactions.filters.completed'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(4) > -1 ||
-          this.salesPurchasesDefaultFilter.state.indexOf(9) > -1 ||
-          this.salesPurchasesDefaultFilter.state.indexOf(10) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
         attrs: {
           'data-state': '[4, 9, 10]',
@@ -204,6 +204,7 @@ export default class extends baseVw {
     const view = this.createChild(Tab, {
       collection: this.purchasesCol,
       type: 'purchases',
+      defaultFilter: this.salesPurchasesDefaultFilter,
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });
@@ -215,6 +216,7 @@ export default class extends baseVw {
     const view = this.createChild(Tab, {
       collection: this.salesCol,
       type: 'sales',
+      defaultFilter: this.salesPurchasesDefaultFilter,
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });

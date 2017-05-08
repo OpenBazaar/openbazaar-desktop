@@ -253,43 +253,6 @@ export default class extends baseVw {
     }
   }
 
-  getAvatars2(models = []) {
-    const profilesToFetch = [];
-
-    models.forEach(md => {
-      if (this.type === 'purchases') {
-        profilesToFetch.push(md.get('vendorId'));
-      }
-    });
-
-    this.avatarPost = $.post({
-      url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
-      data: JSON.stringify(profilesToFetch),
-      dataType: 'json',
-      contentType: 'application/json',
-    }).done((data) => {
-      if (this.socket) {
-        this.listenTo(this.socket, 'message', (e) => {
-          if (e.jsonData.id === data.id) {
-            if (this.type === 'purchases') {
-              this.indexedViews.byUser[e.jsonData.peerId]
-                .forEach(view => {
-                  view.setState({
-                    vendorAvatarHashes: e.jsonData.profile.avatarHashes,
-                  });
-
-                  view.model
-                    .set('vendorHandle', e.jsonData.profile.handle);
-                });
-            } else {
-              // handle Sales, Cases
-            }
-          }
-        });
-      }
-    });
-  }
-
   /*
    * Index the Row Views by Vendor and/or Buyer ID as well as orderID
    * so they could be easily retreived by the respective identifier.
@@ -354,9 +317,8 @@ export default class extends baseVw {
     const fetchParams = {
       limit: this.transactionsPerPage,
       ...filterParams,
-      // filterParams state is stored as an array of state integer. Here we'll convert
-      // to what the server expects which is a comma seperated string of integers.
-      state: filterParams.state && filterParams.state.join(',') || '',
+      sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) !== -1,
+      sortByRead: filterParams.sortBy === 'UNREAD',
     };
 
     let havePage = false;
