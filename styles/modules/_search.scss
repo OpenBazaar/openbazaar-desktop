@@ -28,8 +28,9 @@
 
       &.loadError {
         // if the logo fails to load, hide it and show the default
-        background-image: url(../../imgs/defaultSearch.png);
-        background-size: cover;
+        background-image: url(../../imgs/emojis/72X72/1f50d.png);
+        background-repeat: no-repeat;
+        background-size: 16px 16px;
         background-position: center;
 
         img {
@@ -82,23 +83,15 @@
 
     &.loading .loadingSearch {
       display: flex;
-    }
 
-    .pageControlsWrapper {
-      overflow: auto;
-
-      .pageControls .pageNext {
-        @include disabled;
+      .spinner {
+        position: absolute;
+        top: 150px;
       }
-    }
 
-    &.morePages .pageControlsWrapper .pageControls .pageNext {
-      pointer-events: auto;
-      opacity: 1;
-    }
-
-    &.firstPage .pageControlsWrapper .pageControls .pagePrev {
-      @include disabled;
+      .listingsGrid {
+        display: none;
+      }
     }
   }
 }

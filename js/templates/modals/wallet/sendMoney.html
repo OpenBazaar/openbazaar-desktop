@@ -45,7 +45,7 @@
     <%= ob.processingButton({
       className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
       btnText: ob.polyT('wallet.sendMoney.sendBtn')
-    }) %>    
+    }) %>
   </div>
 </form>
 <div class="js-sendConfirm confirmBox sendConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.sendConfirmOn) print('hide') %>">

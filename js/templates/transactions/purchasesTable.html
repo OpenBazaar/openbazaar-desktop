@@ -1,0 +1,24 @@
+<% if (ob.isFetching) { %>
+  <div class="center">
+    <%= ob.spinner({ className: 'spinnerMd' }) %>
+  </div>
+<% } else if (ob.fetchFailed) { %>
+  <div class="center txCtr tx4">
+    <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>"><%= ob.polyT('transactions.purchases.unableToObtainPurchases') %></div>
+    <% if (ob.fetchError) { %>
+      <div class="row"><%= ob.fetchError %></div>
+    <% } %>
+    <a class="btn clrP clrBr clrSh2 js-retryFetch"><%= ob.polyT('transactions.purchases.btnRetry') %></a>
+  </div>
+<% } else { %>
+  <% console.log('the count is: ' + ob.purchaseCount); %>
+  <%
+    if (ob.purchaseCount) {
+      print(ob.transactionsTable);
+    } else {
+  %>
+    <div class="contentBox clrP clrBr noResultsWrap">
+      <div class="txB center"><%= ob.polyT('transactions.purchases.noResults') %></div>
+    </div>
+  <% } %>
+<% } %>

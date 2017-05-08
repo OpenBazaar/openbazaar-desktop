@@ -1,0 +1,51 @@
+<%
+  /*
+    pass in the following data structure:
+
+    {
+      className: 'top-level-class', // optional
+      maxPerRow: 3, // optional, deafult is 4
+      filters: [
+        {
+          className: 'filterFulfilled', // optional
+          id: 'filterFulfilled',
+          text: 'Fulfilled',
+          checked: true,
+          attrs: {
+            // This corresponds to the transaction server state that the
+            // filter is correlated with.
+            data-state: '[0, 1]',
+          },
+        },
+        ...
+      ]
+    }
+  */
+%>
+
+<%
+  const rows = ob.splitIntoRows(ob.filters, ob.maxPerRow || 4);
+%>
+
+<div class="filters rowHg <%= ob.className %>">
+  <% rows.forEach(row => { %>
+  <div class="flex gutterH gutterV">
+    <%
+      row.forEach(filter => {
+        let attrs = '';
+
+        if (filter.attrs) {
+          Object.keys(filter.attrs)
+            .forEach(key => attrs += ` ${key}="${filter.attrs[key]}"`);
+        }
+    %>
+    <div class="col3">
+      <div class="filter clrP clrBr <%= filter.className %>">
+        <input type="checkbox" id="<%= filter.id %>" <% if (filter.checked) print('checked') %> <%= attrs %>>
+        <label class="tx5b" for="<%= filter.id %>"><%= filter.text %></label>
+      </div>
+    </div>    
+    <% }) %>
+  </div>
+  <% }) %>
+</div>

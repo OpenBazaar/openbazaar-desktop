@@ -4,6 +4,7 @@ import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import ListingCard from '../ListingCard';
 import UserCard from '../UserCard';
+import PageControls from '../components/PageControls';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 
@@ -18,8 +19,6 @@ export default class extends baseVw {
       throw new Error('Please provide a search provider URL.');
     }
 
-    this.total = this.options.total || 0;
-    this.morePages = !!this.options.morePages;
     this.serverPage = this.options.serverPage || 0;
     this.pageSize = this.options.pageSize || 12;
 
@@ -32,13 +31,6 @@ export default class extends baseVw {
 
   className() {
     return 'searchResults flexColRow gutterV';
-  }
-
-  events() {
-    return {
-      'click .js-pageNext': 'clickPageNext',
-      'click .js-pagePrev': 'clickPagePrev',
-    };
   }
 
   createCardView(model) {
@@ -74,10 +66,6 @@ export default class extends baseVw {
     if (total) {
       start = end >= this.pageSize ? end - this.pageSize + 1 : 1;
     }
-    this.morePages = models.morePages;
-    // set the classes that control the page states
-    this.$el.toggleClass('morePages', this.morePages)
-        .toggleClass('firstPage', start < 2);
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -92,12 +80,11 @@ export default class extends baseVw {
     if (total < 1) noResults.appendTo(resultsFrag);
 
     this.$resultsGrid.html(resultsFrag);
-    // update the pagination text
-    this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
+    // update the page controls
+    // this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
+    this.pageControls.setState({ start, end, total });
     // hide the loading spinner
     this.$el.removeClass('loading');
-    // let the parent view know a new page has been loaded
-    this.trigger('pageLoaded');
     // move focus to the first result
     this.$resultsGrid.find('.listingCard').filter(':first').focus();
   }
@@ -109,6 +96,7 @@ export default class extends baseVw {
     params.set('p', page);
     params.set('ps', size);
     const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
+    this.trigger('loadingPage');
 
     // if page exists, reuse it
     if (this.pageCollections[page]) {
@@ -141,17 +129,13 @@ export default class extends baseVw {
   }
 
   clickPagePrev() {
-    if (this.serverPage > 0) {
-      this.serverPage--;
-      this.loadPage();
-    }
+    this.serverPage--;
+    this.loadPage(this.serverPage);
   }
 
   clickPageNext() {
-    if (this.morePages) {
-      this.serverPage++;
-      this.loadPage();
-    }
+    this.serverPage++;
+    this.loadPage(this.serverPage);
   }
 
   remove() {
@@ -168,6 +152,13 @@ export default class extends baseVw {
       this.$displayText = this.$('.js-displayingText');
       this.cardViews.forEach(vw => vw.remove());
       this.cardViews = [];
+
+      if (this.pageControls) this.pageControls.remove();
+      this.pageControls = this.createChild(PageControls);
+      this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);
+      this.listenTo(this.pageControls, 'clickPrev', this.clickPagePrev);
+      this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
+
       this.loadPage();
     });
     this.firstRender = false;
