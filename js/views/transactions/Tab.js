@@ -77,7 +77,7 @@ export default class extends baseVw {
 
   onChangeFilter() {
     let state = [];
-    this.filter.state = this.$filterCheckboxes.filter(':checked')
+    this.$filterCheckboxes.filter(':checked')
       .each((index, checkbox) => {
         state = state.concat($(checkbox).data('state'));
       });

@@ -27,7 +27,8 @@
 <td class="clrBr dateCol"><%= ob.moment(ob.timestamp).format('l LT') %></td>
 <td class="clrBr listingCol">
   <div class="flexVCent gutterHSm">
-    <span class="thumb" style="background-image: url(http://localhost:4002/ipfs/Qmc2R67eBoY7u7Y5oV7yjVy8ivTxhVi443yJXr1dkbQhLo), url('../imgs/defaultItem.png')"></span>
+    <% const imageHashes = { small: ob.thumbnail, tiny: thumbnail } %>
+    <span class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></span>
     <span class="noOverflow"><%= ob.title %></span>
   </div>
 </td>
