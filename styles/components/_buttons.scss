@@ -141,6 +141,16 @@
   background: none;
 }
 
+.btnTxtOnly {
+  @extend .btnTxt;
+  height: auto;
+  display: inline;
+  font-size: inherit;
+  vertical-align: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+}
+
 .iconBtn {
   //this button has only an icon in it
   @extend .btn;

@@ -11,6 +11,7 @@ import PopInMessage from '../../PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
+import Coupons from './Coupons';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import { openSimpleMessage } from '../SimpleMessage';
 
@@ -69,6 +70,15 @@ export default class extends BaseModal {
         this.updateShippingOption(opts);
       }));
     }
+
+    console.log(this.listing.toJSON());
+
+    this.coupons = this.createChild(Coupons, {
+      coupons: this.listing.get('coupons'),
+    });
+
+    this.listenTo(this.coupons, 'changeCoupons', () => this.changeCoupons());
+
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
   }
@@ -87,6 +97,8 @@ export default class extends BaseModal {
       'click .js-confirmPayConfirm': 'clickConfirmBtn',
       'click .js-confirmPayCancel': 'closeConfirmPay',
       'click .js-newAddress': 'clickNewAddress',
+      'click .js-applyCoupon': 'clickApplyCoupon',
+      'keyup #couponCode': 'onKeyUpCouponCode',
       ...super.events(),
     };
   }
@@ -152,6 +164,21 @@ export default class extends BaseModal {
     this.$payBtn.removeClass('disabled');
   }
 
+  clickApplyCoupon() {
+    this.coupons.addCode(this.$couponField.val());
+  }
+
+  onKeyUpCouponCode(e) {
+    if (e.which === 13) {
+      this.coupons.addCode(this.$couponField.val());
+    }
+  }
+
+  changeCoupons() {
+    this.receipt.coupons = this.coupons.couponHashes;
+    this.order.get('items').at(0).set('coupons', this.coupons.couponCodes);
+  }
+
   clickPayBtn() {
     this.$confirmPay.removeClass('hide');
   }
@@ -200,7 +227,7 @@ export default class extends BaseModal {
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
         container = container.length ? container : this.$errors;
-        this.insertError(this.order.validationError[errKey]);
+        this.insertErrors(container, this.order.validationError[errKey]);
       });
     }
   }
@@ -267,6 +294,11 @@ export default class extends BaseModal {
       (this._$errors = this.$('.js-errors'));
   }
 
+  get $couponField() {
+    return this._$couponField ||
+      (this._$couponField = this.$('#couponCode'));
+  }
+
   remove() {
     super.remove();
   }
@@ -294,18 +326,22 @@ export default class extends BaseModal {
       this._$confirmPay = null;
       this._$shippingErrors = null;
       this._$errors = null;
+      this._$couponField = null;
 
       this.$purchaseModerated = this.$('#purchaseModerated');
 
       // add the moderators section content
-      this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
+      this.$('.js-moderatorsWrapper').html(this.moderators.render().el);
       this.moderators.getModeratorsByID();
 
       // add the shipping section if needed
-      if (this.shipping) this.$('.js-shippingWrapper').append(this.shipping.render().el);
+      if (this.shipping) this.$('.js-shippingWrapper').html(this.shipping.render().el);
 
       // add the receipt section
-      this.$('.js-receipt').append(this.receipt.render().el);
+      this.$('.js-receiptWrapper').html(this.receipt.render().el);
+
+      // add the coupons
+      this.$('.js-couponsWrapper').html(this.coupons.render().el);
     });
 
     return this;

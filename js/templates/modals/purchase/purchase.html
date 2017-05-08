@@ -94,6 +94,48 @@
           <%= ob.polyT('purchase.informationTitle') %>
           <span class="clrT2 txUnb tx5b"><%= ob.polyT('purchase.optional') %></span>
         </h2>
+        <div class="flexRow gutterH">
+          <div class="col6">
+            <div class="rowTn">
+              <label for="emailAddress" class="tx5">
+                <%= ob.polyT('purchase.emailAddress') %>
+              </label>
+            </div>
+            <div>
+              <input
+                  class="btnHeight clrBr clrP"
+                  type="text"
+                  id="emailAddress"
+                  name="addressNotes"
+                  placeholder="<%= ob.polyT('purchase.emailPlaceholder') %>"
+                  value="<%= ob.addressNotes %>">
+            </div>
+            <div>
+              <span class="txSm clrT2"><%= ob.polyT('purchase.emailNote') %></span>
+            </div>
+          </div>
+          <div class="col6">
+            <div class="rowTn">
+              <label for="couponCode" class="tx5">
+                <%= ob.polyT('purchase.couponCode') %>
+                <i class="ion-ios-information-outline js-couponInfo"></i>
+              </label>
+            </div>
+            <div class="flex gutterH rowTn">
+              <input
+                  class="btnHeight clrBr clrP"
+                  type="text"
+                  id="couponCode"
+                  name="couponCode">
+              <button class="btn clrP clrBr js-applyCoupon">
+                <%= ob.polyT('purchase.applyCode') %>
+              </button>
+            </div>
+            <div class="js-couponsWrapper">
+              <% // coupons are inserted here after they are added by the user. %>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   </div>
@@ -136,7 +178,7 @@
         <span class="hide js-pendingNote"><%= ob.polyT('purchase.payNote') %></span>
         <span class="hide js-closeNote"><%= ob.polyT('purchase.payNote') %></span>
       </div>
-      <div class="js-receipt"></div>
+      <div class="js-receiptWrapper"></div>
       <% if (hasModerators) { %>
         <hr class="clrBr js-moderatorNote">
         <div class="padSm txSm txCtr clrT2 js-moderatorNote">
