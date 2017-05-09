@@ -55,16 +55,10 @@ export default class extends BaseVw {
     }
   }
 
-  updateViewerFollowing(viaAPI = false) {
+  updateViewerFollowing() {
     /* if the viewer is unfollowed or followed, update the following list */
     if (this.followType === 'Following' && !this.options.ownPage) {
-      let isFollowingYou;
-      if (viaAPI) {
-        // get via isFollowingMe API when it is ready
-        console.log('update via API');
-      } else {
-        isFollowingYou = followsYou(this.model.id);
-      }
+      const isFollowingYou = followsYou(this.model.id);
       // if this page has followed the viewer add them
       if (isFollowingYou) {
         this.followCol.unshift({ guid: app.profile.id });

@@ -49,8 +49,7 @@ export default class extends BaseModal {
   }
 
   messageClick() {
-    // TODO: wire this in after chat is working
-    console.log('Message button clicked');
+    app.chat.openConversation(this.model.id);
   }
 
   followClick() {
@@ -89,6 +88,8 @@ export default class extends BaseModal {
         followedByYou: this.followedByYou,
         displayCurrency: app.settings.get('localCurrency'),
         ownMod: app.settings.get('storeModerators').indexOf(this.model.id) !== -1,
+        purchase: this.options.purchase,
+        cardState: this.options.cardState,
         ...this.model.toJSON(),
       }));
       super.render();

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../app';
 import { formatCurrency, convertAndFormatCurrency } from './currency';
 import {
-  isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage,
+  isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
@@ -12,17 +12,22 @@ export function polyT(...args) {
 }
 
 export function parseEmojis(text, className = '', attrs = {}) {
-  const twemojiHtml = twemoji.parse(text,
-      icon => (`../imgs/emojis/72X72/${icon}.png`));
-  const $twemojiHtml = $(twemojiHtml);
+  const parsed = twemoji.parse(text,
+    icon => (`../imgs/emojis/72X72/${icon}.png`));
+  const $parsed = $(`<div>${parsed}</div>`);
 
-  $twemojiHtml.attr('class', className);
-  Object.keys(attrs)
-    .forEach(attr => {
-      $twemojiHtml.attr(attr, attrs[attr]);
+  $parsed.find('img')
+    .each((index, img) => {
+      const $img = $(img);
+      $img.addClass(`emoji ${className}`);
+
+      Object.keys(attrs)
+        .forEach(attr => {
+          $img.attr(attr, attrs[attr]);
+        });
     });
 
-  return $twemojiHtml[0].outerHTML;
+  return $parsed.html();
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);
@@ -38,5 +43,7 @@ export { isLargeWidth };
 export { isSmallHeight };
 
 export { getAvatarBgImage };
+
+export { getListingBgImage };
 
 export { upToFixed };

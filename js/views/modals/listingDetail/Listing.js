@@ -8,6 +8,7 @@ import { getAvatarBgImage } from '../../../utils/responsive';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
+import Purchase from '../purchase/Purchase';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
@@ -101,6 +102,7 @@ export default class extends BaseModal {
       'click .js-photoPrev': 'onClickPhotoPrev',
       'click .js-photoNext': 'onClickPhotoNext',
       'click .js-goToStore': 'onClickGoToStore',
+      'click .js-purchaseBtn': 'startPurchase',
       ...super.events(),
     };
   }
@@ -307,6 +309,29 @@ export default class extends BaseModal {
     });
   }
 
+  startPurchase() {
+    const selectedVariants = [];
+    this.variantSelects.each((i, select) => {
+      const variant = {};
+      variant.name = $(select).attr('name');
+      variant.value = $(select).val();
+      selectedVariants.push(variant);
+    });
+
+    if (this.purchaseModal) this.purchaseModale.remove();
+
+    this.purchaseModal = new Purchase({
+      listing: this.model,
+      variants: selectedVariants,
+      vendor: this.vendor,
+      removeOnClose: true,
+    })
+      .render()
+      .open();
+
+    this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
+  }
+
   get shipsFreeToMe() {
     return this._shipsFreeToMe;
   }
@@ -365,6 +390,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.editModal) this.editModal.remove();
+    if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     super.remove();
   }
@@ -401,8 +427,12 @@ export default class extends BaseModal {
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
-      // commented out until variants are available
-      // this.$('.js-variantSelect').select2();
+      this.variantSelects = this.$('.js-variantSelect');
+
+      this.variantSelects.select2({
+        // disables the search box
+        minimumResultsForSearch: Infinity,
+      });
 
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);

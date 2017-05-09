@@ -31,7 +31,7 @@
       <h2 class="txUnb"><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></h2>
     </div>
     <div class="flex gutterHLg">
-      <div>
+      <div class="mainImageWrapper">
         <div class="mainImage clrBr js-gotoPhotos"
         <% if (ob.item.images.length) { %>
           style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
@@ -48,20 +48,21 @@
       <div class="flexExpand">
         <div class="buyBox clrP clrBr">
           <div class="flexColRows flexHCent gutterV">
-            <!-- this will loop through each variant, just placeholder code for formatting-->
-            <!-- commented out until variants exist
-            <div class="flexVCent gutterHLg">
-              <div class="h5 txUnl">Size</div>
-              <div class="flexExpand">
-                <select class="js-variantSelect" name="">
-                  <option>some option 1</option>
-                  <option>some option 2</option>
-                  <option>some option 3</option>
-                </select>
+            <% ob.item.options.forEach((item) => { %>
+              <div class="flexVCent gutterHLg">
+                <div class="col4 h5 txUnl wordBreak"><%= item.name %></div>
+                <div class="col8">
+                  <select class="js-variantSelect" name="<%= item.name %>">
+                    <% item.variants.forEach((variant) => { %>
+                      <option value="<%= variant.name %>"><%= variant.name %></option>
+                    <% }); %>
+                  </select>
+                </div>
               </div>
-            </div>
-            -->
-            <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph"><%= ob.polyT('listingDetail.buyNow') %></button>
+            <% }); %>
+            <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn">
+              <%= ob.polyT('listingDetail.buyNow') %>
+            </button>
             <div class="flexHCent gutterH">
               <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
               <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->

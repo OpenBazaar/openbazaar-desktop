@@ -3,15 +3,44 @@
 
   .moderatorCardInner {
     padding: $padMd;
-  }
 
-  .moderatorCardMiddle {
-    flex-grow: 1;
-    overflow: hidden;
-    font-size: $tx5b;
+    .moderatorCardMiddle {
+      flex-grow: 1;
+      overflow: hidden;
+      font-size: $tx5b;
 
-    .moreLink {
-      float: right;
+      .moreLink {
+        float: right;
+      }
+    }
+
+    .selectBtn {
+
+      width: 76px;
+
+      .showIfSelected {
+        display: none;
+      }
+
+      &[data-state='selected'] .showIfSelected {
+        display: inline;
+      }
+
+      .showIfDeselected {
+        display: none;
+      }
+
+      &[data-state='deselected'] .showIfDeselected {
+        display: inline;
+      }
+
+      .showIfUnselected {
+        display: none;
+      }
+
+      &[data-state='unselected'] .showIfUnselected {
+        display: inline;
+      }
     }
   }
 
@@ -19,34 +48,5 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
     margin: 0 $padMd;
-  }
-
-  .selectBtn {
-
-    width: 76px;
-
-    .showIfView {
-      display: none;
-    }
-
-    &[data-state='view'] .showIfView {
-      display: inline;
-    }
-
-    .showIfSelected {
-      display: none;
-    }
-
-    &[data-state='selected'] .showIfSelected {
-      display: inline;
-    }
-
-    .showIfDeselected {
-      display: none;
-    }
-
-    &[data-state='deselected'] .showIfDeselected {
-      display: inline;
-    }
   }
 }

@@ -159,7 +159,9 @@
     "view": "View",
     "FIXED": "%{amount}**",
     "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**"
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "failed": "The information for this moderator failed to load.",
+    "invalid": "This user is not currently a moderator."
   },
   "moderatorDetails": {
     "messageButton": "Message",
@@ -425,7 +427,7 @@
         "saving": "Saving store settings...",
         "done": "Store settings saved.",
         "fail": "Saving the store settings failed.",
-        "error": "There was an error saving your store settings. \n %{errMsg}"
+        "error": "There was an error saving your store settings."
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
@@ -555,7 +557,7 @@
     "receiveMoney": {
       "title": "Receive Money",
       "needBitcoin": "Need Bitcoin?",
-      "btnCancel": "Cancel"      
+      "btnCancel": "Cancel"
     },
     "sendMoney": {
       "toLabel": "To",
@@ -571,7 +573,7 @@
         "body": "Double check that the address and amount are correct.",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
-      }      
+      }
     },
     "transactions": {
       "header": "Transactions",
@@ -793,6 +795,39 @@
       "emptyData": "No valid data was returned from %{provider}."
     }
   },
+  "purchase": {
+    "refreshPurchase": "Refresh",
+    "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
+    "returnToListing": "Return To Listing",
+    "optional": "optional",
+    "shippingTitle": "Shipping",
+    "paymentTypeTitle": "Payment Type",
+    "moderatorTitle": "Moderator",
+    "shippingTitle": "Shipping",
+    "newAddress": "New Address",
+    "informationTitle": "Additional Information",
+    "pay": "PAY",
+    "pending": "Pending…",
+    "close": "close",
+    "quantity": "Quantity",
+    "useShapeShift": "Or use ShapeShift in the next step",
+    "moderatedPayment": "Moderated Payment",
+    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
+    "chooseModerator": "Choose This Moderator",
+    "confirmPayment": {
+      "title": "Everything look good?",
+      "msg": "If yes, please proceed to the final step.",
+      "confirm": "Yes",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "moderatorsTitle": "Moderator Data Failted to Load",
+      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded."
+    }
+  },
+  "moderators": {
+    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
+  },
   "transactions": {
     "sales": {
       "heading": "Sales"
@@ -926,13 +961,18 @@
   "variantModelErrors": {
     "provideName": "Please provide a title.",
     "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
-  },  
+  },
   "spendModelErrors": {
     "provideAddress": "Please provide an address.",
     "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
     "provideAmountNumber": "Please provide an amount as a number.",
     "amountGreaterThanZero": "The amount must be greater than zero.",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+  },
+  "orderModelErrors": {
+    "mustHaveQuantity": "The quantity must be 1 or more",
+    "quantityMustBeNumber": "The quantity must be a valid number",
+    "noItems": "You must make at least one purchase."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

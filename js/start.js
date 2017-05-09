@@ -76,6 +76,11 @@ app.localSettings.on('change:language', (localSettings, lang) => {
   .open();
 });
 
+window.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+  ipcRenderer.send('contextmenu-click');
+}, false);
+
 // Instantiating our Server Configs collection now since the page nav
 // utilizes it. We'll fetch it later on.
 app.serverConfigs = new ServerConfigs();
@@ -431,7 +436,14 @@ function start() {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
-        location.hash = location.hash || app.profile.id;
+
+        // When starting the app the route is set to empty. We'll change that to be the
+        // user's profile.
+        if (!location.hash) {
+          const href = location.href.replace(/(javascript:|#).*$/, '');
+          location.replace(`${href}#${app.profile.id}`);
+        }
+
         Backbone.history.start();
 
         // load chat

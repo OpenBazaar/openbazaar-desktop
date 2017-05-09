@@ -34,3 +34,23 @@ export function getAvatarBgImage(avatarHashes = {}, defaultAvatar = '../imgs/def
   return bgImageProperty;
 }
 
+export function getListingBgImage(imageHashes = {}, defaultListing = '../imgs/defaultItem.png') {
+  let imageHash = '';
+  let bgImageProperty = '';
+
+  if (isHiRez() && imageHashes.small) {
+    imageHash = imageHashes.small;
+  } else if (imageHashes.tiny) {
+    imageHash = imageHashes.tiny;
+  }
+
+  if (imageHash) {
+    bgImageProperty = `background-image: url(${app.getServerUrl(`ipfs/${imageHash}`)})` +
+        `, url(${defaultListing})`;
+  } else {
+    bgImageProperty = `background-image: url(${defaultListing})`;
+  }
+
+  return bgImageProperty;
+}
+
