@@ -6,8 +6,11 @@
 
 <%= ob.filtersHtml %>
 
-<div class="flexVCent row">
-  <div class="flexNoShrink js-queryTotalLine"></div>
+<div class="flexVCent row gutterH">
+  <div class="flexNoShrink gutterHSm js-queryTotalWrapper hide">
+    <span class="flexNoShrink js-queryTotalLine"></span>
+    <a class="js-resetQuery <% ob.currentFilterIsDefault && print('hide') %>"><%= ob.polyT(`transactions.resetFilters`) %></a>
+  </div>
   <div class="tx6 flexVCent">
     <label class="clrT2 marginLAuto margRSm"><%= ob.polyT('transactions.sort.label') %></label>
     <select class="tx6 select2Small js-sortBySelect" style="width: 150px">

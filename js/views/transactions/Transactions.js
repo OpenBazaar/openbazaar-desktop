@@ -203,6 +203,9 @@ export default class extends baseVw {
     const view = this.createChild(Tab, {
       collection: this.purchasesCol,
       type: 'purchases',
+      defaultFilter: {
+        ...this.salesPurchasesDefaultFilter,
+      },
       initialFilter: {
         ...this.salesPurchasesDefaultFilter,
         ...this.filterUrlParams,
@@ -218,6 +221,9 @@ export default class extends baseVw {
     const view = this.createChild(Tab, {
       collection: this.salesCol,
       type: 'sales',
+      defaultFilter: {
+        ...this.salesPurchasesDefaultFilter,
+      },
       initialFilter: {
         ...this.salesPurchasesDefaultFilter,
         ...this.filterUrlParams,

@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../app';
 import '../../lib/select2';
@@ -8,13 +9,15 @@ import TransactionsTable from './table/Table';
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
-      initialFilter: {
+      defaultFilter: {
         search: '',
         sortBy: 'UNREAD',
         states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
       },
       ...options,
     };
+
+    opts.initialFilter = opts.initialFilter || { ...opts.defaultFilter };
 
     super(opts);
 
@@ -42,23 +45,27 @@ export default class extends baseVw {
     this.acceptPosts = {};
     this.rejectPosts = {};
     this.cancelPosts = {};
-    this.filter = { ...opts.initialFilter };
+    this._filter = { ...opts.initialFilter };
 
     this.listenTo(this.collection, 'request', (cl, xhr) => {
+      if (this.table) {
+        this.$queryTotalWrapper.addClass('hide');
+      }
+
       setTimeout(() => {
         if (this.table) {
-          this.$queryTotalLine.empty();
-
           xhr.done(data => {
             const count =
               `<span class="txB">
                 ${app.polyglot.t(`transactions.${this.type}.countTransactions`,
                   { smart_count: data.queryCount })}
                </span>`;
-            this.$queryTotalLine.html(
-              app.polyglot.t(`transactions.${this.type}.countTransactionsFound`,
-                { countTransactions: count })
-            );
+            this.$queryTotalWrapper.find('.js-queryTotalLine')
+              .html(
+                app.polyglot.t(`transactions.${this.type}.countTransactionsFound`,
+                  { countTransactions: count })
+              );
+            this.$queryTotalWrapper.removeClass('hide');
           });
         }
       });
@@ -74,6 +81,7 @@ export default class extends baseVw {
       'change .filter input': 'onChangeFilter',
       'keyup .js-searchInput': 'onKeyUpSearch',
       'change .js-sortBySelect': 'onChangeSortBy',
+      'click .js-resetQuery': 'onClickResetQuery',
     };
   }
 
@@ -83,8 +91,29 @@ export default class extends baseVw {
       .each((index, checkbox) => {
         states = states.concat($(checkbox).data('state'));
       });
-    this.filter.states = states;
-    this.table.filterParams = this.filter;
+    // this.filter.states = states;
+    // this.table.filterParams = this.filter;
+
+    this.filter = {
+      ...this.filter,
+      states,
+    };
+  }
+
+  get filter() {
+    return this._filter;
+  }
+
+  set filter(filter = {}) {
+    if (!_.isEqual(filter, this._filter)) {
+      this._filter = { ...filter };
+
+      if (this.table) {
+        this.table.filterParams = filter;
+      }
+
+      this.$resetQuery.toggleClass('hide', this.currentFilterIsDefault());
+    }
   }
 
   onKeyUpSearch(e) {
@@ -92,13 +121,21 @@ export default class extends baseVw {
     clearTimeout(this.searchKeyUpTimer);
 
     this.searchKeyUpTimer = setTimeout(() => {
-      this.filter.search = e.target.value;
-      this.table.filterParams = this.filter;
+      // this.filter.search = e.target.value;
+      // this.table.filterParams = this.filter;
+      this.filter = {
+        ...this.filter,
+        search: e.target.value,
+      };
     }, 200);
   }
 
   onChangeSortBy(e) {
-    this.table.filterParams = {
+    // this.table.filterParams = {
+    //   ...this.filter,
+    //   sortBy: e.target.value,
+    // };
+    this.filter = {
       ...this.filter,
       sortBy: e.target.value,
     };
@@ -108,6 +145,12 @@ export default class extends baseVw {
     if (typeof this.table.onAttach === 'function') {
       this.table.onAttach.call(this.table);
     }
+  }
+
+  onClickResetQuery() {
+    this.filter = { ...this.options.defaultFilter };
+    this.render();
+    // this.table.filterParams = this.filter;
   }
 
   cancelingOrder(orderId) {
@@ -206,14 +249,23 @@ export default class extends baseVw {
     return checkedConfig;
   }
 
-  get $queryTotalLine() {
-    return this._$queryTotalLine ||
-      (this._$queryTotalLine = this.$('.js-queryTotalLine'));
+  currentFilterIsDefault() {
+    return _.isEqual(this.options.defaultFilter, this.filter);
+  }
+
+  get $queryTotalWrapper() {
+    return this._$queryTotalWrapper ||
+      (this._$queryTotalWrapper = this.$('.js-queryTotalWrapper'));
   }
 
   get $filterCheckboxes() {
     return this._$filterCheckboxes ||
       (this._$filterCheckboxes = this.$('.filter input'));
+  }
+
+  get $resetQuery() {
+    return this._$resetQuery ||
+      (this._$resetQuery = this.$('.js-resetQuery'));
   }
 
   remove() {
@@ -235,9 +287,12 @@ export default class extends baseVw {
           type: this.type,
           filtersHtml,
           filter: this.filter,
+          currentFilterIsDefault: this.currentFilterIsDefault(),
         }));
 
         this._$filterCheckboxes = null;
+        this._$queryTotalWrapper = null;
+        this._$resetQuery = null;
 
         this.$('.js-sortBySelect').select2({
           minimumResultsForSearch: -1,

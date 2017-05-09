@@ -869,6 +869,7 @@
       "dateDesc": "Oldest"
     },
     "placeholderSearch": "Search by Order #, Title or Vendor",
+    "resetFilters": "Reset filters",
     "transactionsTable": {
       "headers": {
         "orderId": "Order ID",

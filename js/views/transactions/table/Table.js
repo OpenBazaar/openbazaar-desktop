@@ -364,12 +364,12 @@ export default class extends baseVw {
 
     if (havePage) return;
 
-    this.purchasesFetch = this.collection.fetch({
+    this.transactionsFetch = this.collection.fetch({
       data: fetchParams,
       remove: false,
     });
 
-    this.purchasesFetch.fail((jqXhr) => {
+    this.transactionsFetch.fail((jqXhr) => {
       if (jqXhr.statusText === 'abort') return;
 
       let fetchError = '';
@@ -383,8 +383,8 @@ export default class extends baseVw {
         fetchFailed: true,
         fetchError,
       });
-    }).done((data) => {
-      if (this.isRemoved()) return;
+    }).done((data, textStatus, jqXhr) => {
+      if (jqXhr.statusText === 'abort') return;
 
       this.queryTotal = data.queryCount;
 
