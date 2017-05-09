@@ -46,7 +46,7 @@ export default class extends baseVw {
 
     this.listenTo(this.collection, 'request', (cl, xhr) => {
       setTimeout(() => {
-        if (this.table && this.table.curPage === 1) {
+        if (this.table) {
           this.$queryTotalLine.empty();
 
           xhr.done(data => {

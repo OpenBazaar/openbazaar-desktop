@@ -385,9 +385,8 @@ export default class extends baseVw {
       });
     }).done((data) => {
       if (this.isRemoved()) return;
-      if (page === 1) {
-        this.queryTotal = data.queryCount;
-      }
+
+      this.queryTotal = data.queryCount;
 
       this.setState({
         isFetching: false,
@@ -468,7 +467,7 @@ export default class extends baseVw {
       });
 
     this.indexRowViews();
-    this.getAvatars(transToRender); // get avatars after indexRowViews()
+    this.getAvatars(transToRender); // be sure to get avatars *after* indexRowViews()
     this.$('.js-transactionsTable').append(transactionsFrag);
 
     const onLastPage = this.curPage > this.collection.length / this.transactionsPerPage;
