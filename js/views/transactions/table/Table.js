@@ -289,7 +289,7 @@ export default class extends baseVw {
   }
 
   get transactionsPerPage() {
-    return 5;
+    return 20;
   }
 
   get filterParams() {
@@ -343,6 +343,7 @@ export default class extends baseVw {
       ...filterParams,
       sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) !== -1,
       sortByRead: filterParams.sortBy === 'UNREAD',
+      exclude: this.collection.map(md => md.id),
     };
 
     let havePage = false;

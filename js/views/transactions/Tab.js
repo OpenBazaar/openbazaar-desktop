@@ -91,8 +91,6 @@ export default class extends baseVw {
       .each((index, checkbox) => {
         states = states.concat($(checkbox).data('state'));
       });
-    // this.filter.states = states;
-    // this.table.filterParams = this.filter;
 
     this.filter = {
       ...this.filter,
@@ -121,8 +119,6 @@ export default class extends baseVw {
     clearTimeout(this.searchKeyUpTimer);
 
     this.searchKeyUpTimer = setTimeout(() => {
-      // this.filter.search = e.target.value;
-      // this.table.filterParams = this.filter;
       this.filter = {
         ...this.filter,
         search: e.target.value,
@@ -131,10 +127,6 @@ export default class extends baseVw {
   }
 
   onChangeSortBy(e) {
-    // this.table.filterParams = {
-    //   ...this.filter,
-    //   sortBy: e.target.value,
-    // };
     this.filter = {
       ...this.filter,
       sortBy: e.target.value,
@@ -150,7 +142,6 @@ export default class extends baseVw {
   onClickResetQuery() {
     this.filter = { ...this.options.defaultFilter };
     this.render();
-    // this.table.filterParams = this.filter;
   }
 
   cancelingOrder(orderId) {
