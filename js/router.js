@@ -60,7 +60,15 @@ export default class ObRouter extends Router {
 
   setAddressBarText() {
     const route = this.standardizedRoute();
-    app.pageNav.setAddressBar(route.startsWith('ob://') ? route : `ob://${route}`);
+    let displayRoute;
+
+    if (!route) {
+      displayRoute = '';
+    } else {
+      displayRoute = route.startsWith('ob://') ? route : `ob://${route}`;
+    }
+
+    app.pageNav.setAddressBar(displayRoute);
   }
 
   execute(callback, args) {
