@@ -1,0 +1,116 @@
+<%
+  // Pass in a type of 'sales', 'purchases' or 'cases'
+%>
+
+<% var type = ob.type || 'sales' %>
+
+<%
+  var types = ['sales', 'purchases', 'cases'];
+
+  if (types.indexOf(ob.type) === -1) {
+    throw new Error('The type must be one of ${types}');
+  }
+
+  if (!ob.userCurrency) {
+    throw new Error('Please provide the users local currency.');
+  }
+
+  if (!ob.moment) {
+    throw new Error('Please pass in the moment library.');
+  }
+%>
+
+<td class="clrBr orderCol noOverflow">
+  <div class="unreadBorder clrE1"></div>
+  <%= ob.orderId %>
+</td>
+<td class="clrBr dateCol"><%= ob.moment(ob.timestamp).format('l LT') %></td>
+<td class="clrBr listingCol">
+  <div class="flexVCent gutterHSm">
+    <% const imageHashes = { small: ob.thumbnail, tiny: ob.thumbnail } %>
+    <span class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></span>
+    <span class="noOverflow"><%= ob.title %></span>
+  </div>
+</td>
+<td class="clrBr userCol js-userCol">
+  <div class="flexVCent gutterHSm">
+    <%
+      let avatarHashes = {};
+      let userHandle;
+      let userId;
+
+      if (ob.type === 'sales') {
+        avatarHashes = ob.buyerAvatarHashes || {};
+        userHandle = ob.buyerHandle;
+        userId = ob.buyerId;
+      } else if (ob.type === 'purchases') {
+        avatarHashes = ob.vendorAvatarHashes || {};
+        userHandle = ob.vendorHandle;
+        userId = ob.vendorId;
+      }
+    %>
+    <a class="avatar discSm clrBr2 clrSh1 flexNoShrink" href="#<%= userId %>" style="<%= ob.getAvatarBgImage(avatarHashes) %>"></a>
+    <a class="handle noOverflow clrT" href="#<%= userId %>"><%= userHandle ? `@${userHandle}` : userId %></a>
+    <div class="flexHRight">
+      <% if (ob.unreadChatMessages) { %>
+        <span class="unreadBadge discSm clrE1 clrBrEmph1 clrTOnEmph"><%= ob.unreadChatMessages > 99 ? '…' : ob.unreadChatMessages %></span>
+      <% } %>
+    </div>
+  </div>
+</td>
+<td class="clrBr priceCol">
+  <%
+    var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useBtcSymbol: false });
+
+    if (ob.userCurrency === 'BTC') {
+      print(btcPrice);
+    } else {
+        print(
+          ob.polyT('transactions.transactionsTable.fiatBtcPairing', {
+            fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
+              ob.userCurrency, { useBtcSymbol: false }),
+            btcAmount: btcPrice,
+          })
+        );
+    }
+  %>
+</td>
+<td class="clrBr gutterH statusCol">
+  <%
+    if (ob.state === 'PENDING') {
+      if (ob.type === 'sales') {
+        if (ob.rejectOrderInProgress) {
+      %>
+        <span class="posR">
+          <% // including invisible reject link to properly space the spinner %>
+          <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+          <%= ob.spinner({ className: 'spinnerSm center' }) %>
+        </span>
+      <%          
+          } else {
+      %>
+        <a class="txU tx6 js-rejectOrder"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+      <%  } %>
+        <%= ob.processingButton({
+          className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''}`,
+          btnText: ob.polyT('transactions.transactionsTable.btnAccept')
+        }) %>
+    <% } else {
+        if (ob.cancelOrderInProgress) {
+    %>
+        <span class="posR">
+          <% // including invisible cancel link to properly space the spinner %>
+          <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
+          <%= ob.spinner({ className: 'spinnerSm center' }) %>
+        </span>
+    <%          
+        } else {
+    %>
+      <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
+    <%  }
+      }
+    } else {
+      print(ob.polyT(`transactions.transactionsTable.status.${ob.state.toLowerCase()}`));
+    }
+  %>
+</td>

@@ -784,7 +784,6 @@
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
-    "displaying": "Displaying <b>%{start}-%{end} of %{total}</b>",
     "sortBy": "Sort by",
     "changeProvider": "Change Default Search Provider",
     "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
@@ -794,6 +793,10 @@
       "searchFailReason": "The search provider returned the following message: %{error}",
       "emptyData": "No valid data was returned from %{provider}."
     }
+  },
+  "pageControls": {
+    "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
+    "displaying": "Displaying %{displayingCounts}"
   },
   "purchase": {
     "refreshPurchase": "Refresh",
@@ -830,13 +833,58 @@
   },
   "transactions": {
     "sales": {
-      "heading": "Sales"
+      "heading": "Sales",
+      "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
+      "countTransactionsFound": "%{countTransactions} found",
+      "noResults": "No sales found",
+      "failedAcceptHeading": "There was an error accepting the order.",
+      "failedRejectHeading": "There was an error rejecting the order."
     },
     "purchases": {
-      "heading": "Purchases"
+      "heading": "Purchases",
+      "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
+      "countTransactionsFound": "%{countTransactions} found",
+      "unableToFetch": "Unable to obtain your purchases.",
+      "noResults": "No purchases found",
+      "failedCancelHeading": "There was an error canceling the order."
     },
     "cases": {
       "heading": "Cases"
+    },
+    "filters": {
+      "purchasing": "Purchasing",
+      "ready": "Ready To Process",
+      "fulfilled": "Fulfilled",
+      "refunded": "Refunded",
+      "disputeOpen": "Dispute Open",
+      "disputePending": "Dispute Pending",
+      "disputeClosed": "Dispute Closed",
+      "completed": "Completed"
+    },
+    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "transactionsTable": {
+      "headers": {
+        "orderId": "Order ID",
+        "date": "Date",
+        "listing": "Listing",
+        "buyer": "Buyer",
+        "vendor": "Vendor",
+        "total": "Total",
+        "status": "Status"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "funded": "Funded",
+        "fulfilled": "Fulfilled",
+        "decided": "Decided",
+        "canceled": "Canceled",
+        "rejected": "Rejected"
+      },
+      "btnReject": "Reject",
+      "btnAccept": "Accept",
+      "btnCancel": "Cancel",
+      "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+      "btnRetryFetch": "Retry"
     }
   },
   "exchangeRatesSyncer": {

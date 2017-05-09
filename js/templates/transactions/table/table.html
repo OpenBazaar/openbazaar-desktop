@@ -1,0 +1,55 @@
+<%
+  // Pass in a type of 'sales', 'purchases' or 'cases'
+%>
+
+<% var type = ob.type || 'sales' %>
+
+<%
+  var types = ['sales', 'purchases', 'cases'];
+
+  if (types.indexOf(ob.type) === -1) {
+    throw new Error('The type must be one of ${types}');
+  }
+%>
+
+<% if (ob.isFetching) { %>
+  <div class="center">
+    <%= ob.spinner({ className: 'spinnerMd' }) %>
+  </div>
+<% } else if (ob.fetchFailed) { %>
+  <div class="center txCtr tx4">
+    <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>"><%= ob.polyT(`transactions.${ob.type}.unableToFetch`) %></div>
+    <% if (ob.fetchError) { %>
+      <div class="row"><%= ob.fetchError %></div>
+    <% } %>
+    <a class="btn clrP clrBr clrSh2 js-retryFetch"><%= ob.polyT(`transactions.transactionsTable.btnRetryFetch`) %></a>
+  </div>
+<% } else { %>
+  <%
+    if (ob.transactions.length) {
+  %>
+  <table class="js-transactionsTable transactionsTable clrBr clrP row">
+    <tr>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.orderId') %></th>
+      <th class="clrBr">
+        <a class="js-dateHeader dateHeader clrT"><%= ob.polyT('transactions.transactionsTable.headers.date') %><div class="sortIcon hide"></div></a>
+      </th>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.listing') %></th>
+      <% if (ob.type === 'sales') { %>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.buyer') %></th>
+      <% } else { %>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.vendor') %></th>
+      <% } %>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.total') %></th>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.status') %></th>
+    </tr>
+  <table>
+  <div class="js-pageControlsContainer"></div>
+  <%
+    } else {
+  %>
+    <div class="contentBox clrP clrBr noResultsWrap">
+      <div class="txB center"><%= ob.polyT(`transactions.${ob.type}.noResults`) %></div>
+    </div>
+  <% } %>
+<% } %>

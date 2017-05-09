@@ -5,5 +5,176 @@
     .tabHeading {
       font-size: 3rem;
     }
+
+    .filters {
+      .filter {
+        border-width: 1px;
+        border-style: solid;
+        padding: 6px 10px 10px;
+
+        input[type=checkbox] {
+          &:checked {
+            font-weight: bold;
+
+            & + label {
+              font-weight: bold;              
+            }
+          }
+        }
+      }
+    }
+
+    // reused for sales, purchases and cases
+    .transactionsTableWrap {
+      position: relative;
+      min-height: 200px;
+
+      .noResultsWrap {
+        height: 135px;
+      }
+
+      .transactionsTable {
+        border-spacing: 0;
+        border-collapse: collapse;
+        width: 100%;
+        
+        th {
+          text-align: left;
+
+          .dateHeader {
+            text-decoration: none;
+
+            .sortIcon {
+              width: 10px;
+              height: 12px;
+              position: relative;
+              display: inline-block;
+              margin-left: 5px;
+              top: 1px;
+
+              &::after, &::before {
+                content: '';
+                width: 0;
+                height: 0;
+                border-style: solid;
+                position: absolute;
+              }
+
+              &::after {
+                top: 0;
+                border-width: 0 5px 5px 5px;
+              }
+
+              &::before {
+                bottom: 0;
+                border-width: 5px 5px 0 5px;
+              }
+            }          
+          }
+        }
+
+        td, th {
+          border-width: 1px;
+          border-style: solid;
+          padding: 8px 10px;
+          word-break: break-word;
+
+          &.orderCol {
+            min-width: 88px;
+            max-width: 88px;
+          }
+
+          &.listingCol {
+            max-width: 145px;
+            min-width: 145px;
+
+            .thumb {
+              width: 33px;
+              height: 33px;
+              flex-shrink: 0;
+            }
+          }
+
+          &.userCol {
+            max-width: 125px;
+            min-width: 125px;
+
+            .avatar {
+              display: inline-block;
+              width: 25px;
+              height: 25px;
+            }
+
+            .handle {
+              max-width: 73px;
+              min-width: 73px;
+            }
+
+            .unreadBadge {
+              float: right;
+              width: 20px;
+              height: 20px;
+              text-align: center;
+              font-weight: bold;
+              padding-top: 3px;
+              font-size: $tx6;           
+            }
+          }
+
+          &.priceCol {
+            max-width: 165px;
+            min-width: 165px;
+          }
+
+          &.statusCol {
+            min-width: 130px;
+            max-width: 130px;
+            line-height: 2em;
+
+            .btnAcceptOrder {
+              padding: 0 10px;
+              font-size: $tx6;
+            }
+          }
+
+          &.dateCol {
+            min-width: 143px;
+            max-width: 143px;
+          }
+        }
+
+        tr {
+          cursor: pointer;
+
+          .unreadBorder {
+            display: none;
+          }
+
+          &.unread {
+            font-weight: bold;
+
+            .statusCol {
+              font-weight: normal;
+            }
+
+            .unreadBorder {
+              display: block;
+            }
+          }
+        }
+
+        td:first-child {
+          position: relative;
+
+          .unreadBorder {
+            width: 5px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+          }
+        }
+      }
+    }
   }
 }
