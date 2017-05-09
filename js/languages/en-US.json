@@ -640,7 +640,13 @@
     "localPickup": "This option is for local pickup only.",
     "allCountries": "Any Country",
     "returnToStore": "Return to store",
-    "goToStore": "Go to store"
+    "goToStore": "Go to store",
+    "confirmDelete": {
+      "title": "Are you sure?",
+      "body": "Once it's deleted, it's gone forever.",
+      "btnCancel": "Cancel",
+      "btnConfirm": "Yes, Delete"
+    }
   },
   "listingCard": {
     "btnDetails": "Details",
