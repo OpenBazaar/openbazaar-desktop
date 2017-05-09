@@ -442,7 +442,7 @@ export default class extends baseVw {
       });
 
       $.post({
-        url: app.getServerUrl('ob/fetchprofiles?async=true'),
+        url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
         data: JSON.stringify(profilesToFetch),
         dataType: 'json',
         contentType: 'application/json',

@@ -4,7 +4,7 @@
 %>
 
 <div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!ob.valid) print('disabled'); if(!loaded) print('disabled');%>">
-  <div>
+  <div class="flexNoShrink">
     <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
   </div>
   <div class="moderatorCardMiddle">
@@ -39,7 +39,7 @@
       </div>
     <% } %>
   </div>
-  <div>
+  <div class="flexNoShrink">
     <% if (ob.valid) { %>
       <div class="flexColRows gutterV">
         <button class="btn clrP clrBr selectBtn js-viewBtn">
