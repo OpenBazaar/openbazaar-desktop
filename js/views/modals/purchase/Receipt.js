@@ -1,10 +1,10 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseModal from '../BaseModal';
+import BaseView from '../../baseVw';
 import Order from '../../../models/purchase/Order';
 import Listing from '../../../models/listing/Listing';
 
-export default class extends BaseModal {
+export default class extends BaseView {
   constructor(options = {}) {
     super(options);
     this.options = options;
