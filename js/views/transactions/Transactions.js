@@ -144,6 +144,11 @@ export default class extends baseVw {
       ...options,
     };
 
+    if (targ === 'cases') {
+      alert('Cases are coming soon.');
+      return;
+    }
+
     if (!this[`create${capitalize(targ)}TabView`]) {
       throw new Error(`${targ} is not a valid tab.`);
     }

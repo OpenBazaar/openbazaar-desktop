@@ -216,8 +216,17 @@ export default class ObRouter extends Router {
   }
 
   transactions(tab) {
+    if (tab && ['sales', 'cases', 'purchases'].indexOf(tab) === -1) {
+      this.pageNotFound();
+      return;
+    }
+
+    if (!tab) {
+      this.navigate('transactions/sales');
+    }
+
     this.loadPage(
-      new Transactions({ initialTab: tab || 'purchases' }).render()
+      new Transactions({ initialTab: tab || 'sales' }).render()
     );
   }
 
