@@ -216,6 +216,10 @@ export default class extends baseVw {
     this.fetchTransactions(this.curPage -= 1);
   }
 
+  onAttach() {
+    this.setFilterOnRoute();
+  }
+
   getAvatars(models = []) {
     const profilesToFetch = [];
 
@@ -300,6 +304,25 @@ export default class extends baseVw {
     }
   }
 
+  setFilterOnRoute(filter = this.filterParams) {
+    const queryFilter = {
+      ...filter,
+      // Joining with dashes instead of commas because commas
+      // look really bizarre when encode in a query string.
+      states: filter.states.join('-'),
+    };
+
+    if (queryFilter.search === '') {
+      delete queryFilter.search;
+    }
+
+    let baseRoute = location.hash.split('?')[0];
+    baseRoute = baseRoute.startsWith('#ob://') ?
+      baseRoute.slice(6) : baseRoute.slice(1);
+
+    app.router.navigate(`${baseRoute}?${$.param(queryFilter)}`, { replace: true });
+  }
+
   fetchTransactions(page = this.curPage, filterParams = this.filterParams) {
     if (typeof page !== 'number') {
       throw new Error('Please provide a page number to fetch.');
@@ -311,6 +334,7 @@ export default class extends baseVw {
 
     this.curPage = page;
     this.filterParams = filterParams;
+    this.setFilterOnRoute();
 
     if (this.transactionsFetch) this.transactionsFetch.abort();
 

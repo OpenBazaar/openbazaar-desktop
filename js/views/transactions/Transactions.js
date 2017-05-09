@@ -82,63 +82,49 @@ export default class extends baseVw {
         checked: this.salesPurchasesDefaultFilter.states.indexOf(0) > -1 ||
           this.salesPurchasesDefaultFilter.states.indexOf(1) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[0, 1]',
-        },
+        targetState: [0, 1],
       },
       {
         id: 'filterReady',
         text: app.polyglot.t('transactions.filters.ready'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[2]',
-        },
+        targetState: [2],
       },
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[3]',
-        },
+        targetState: [3],
       },
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[8]',
-        },
+        targetState: [8],
       },
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[5]',
-        },
+        targetState: [5],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[6]',
-        },
+        targetState: [6],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[7]',
-        },
+        targetState: [7],
       },
       {
         id: 'filterCompleted',
@@ -147,9 +133,7 @@ export default class extends baseVw {
           this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
           this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[4, 9, 10]',
-        },
+        targetState: [4, 9, 10],
       },
     ];
   }
@@ -168,20 +152,8 @@ export default class extends baseVw {
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
       if (opts.addTabToHistory) {
-        // subRoute is anything after the tab in the route, which is something
-        // we want to maintain, e.g:
-        // transactions/<tab>/<slug>/<blah>
-        // the subRoute is '/<slug>/<blah>'
-        const curRoute = location.hash.startsWith('#ob://') ?
-          location.hash.slice(6) : location.hash.slice(1);
-
-        const subRoute = curRoute
-          .split('/')
-          .slice(2)
-          .join('/');
-
         // add tab to history
-        app.router.navigate(`transactions/${targ}${subRoute ? `/${subRoute}` : ''}`);
+        app.router.navigate(`transactions/${targ}`);
       }
 
       this.$('.js-tab').removeClass('clrT active');
@@ -196,15 +168,40 @@ export default class extends baseVw {
       }
 
       this.$tabContent.append(tabView.$el);
+
+      if (typeof tabView.onAttach === 'function') {
+        tabView.onAttach.call(tabView);
+      }
+
       this.currentTabView = tabView;
     }
+  }
+
+  get filterUrlParams() {
+    const parsed = {};
+    const params = new URLSearchParams(location.hash.split('?')[1] || '');
+
+    for (const pair of params.entries()) {
+      parsed[pair[0]] = pair[1];
+    }
+
+    if (parsed.states) {
+      parsed.states = parsed.states
+        .split('-')
+        .map(strIndex => parseInt(strIndex, 10));
+    }
+
+    return parsed;
   }
 
   createPurchasesTabView() {
     const view = this.createChild(Tab, {
       collection: this.purchasesCol,
       type: 'purchases',
-      defaultFilter: this.salesPurchasesDefaultFilter,
+      initialFilter: {
+        ...this.salesPurchasesDefaultFilter,
+        ...this.filterUrlParams,
+      },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });
@@ -216,7 +213,10 @@ export default class extends baseVw {
     const view = this.createChild(Tab, {
       collection: this.salesCol,
       type: 'sales',
-      defaultFilter: this.salesPurchasesDefaultFilter,
+      initialFilter: {
+        ...this.salesPurchasesDefaultFilter,
+        ...this.filterUrlParams,
+      },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });
@@ -290,7 +290,7 @@ export default class extends baseVw {
     this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
 
     this.selectTab(this._tab, {
-      updateHistory: false,
+      addTabToHistory: false,
     });
 
     return this;

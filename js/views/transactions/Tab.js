@@ -8,7 +8,7 @@ import TransactionsTable from './table/Table';
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
-      defaultFilter: {
+      initialFilter: {
         search: '',
         sortBy: 'UNREAD',
         states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -42,7 +42,7 @@ export default class extends baseVw {
     this.acceptPosts = {};
     this.rejectPosts = {};
     this.cancelPosts = {};
-    this.filter = { ...opts.defaultFilter };
+    this.filter = { ...opts.initialFilter };
 
     this.listenTo(this.collection, 'request', (cl, xhr) => {
       setTimeout(() => {
@@ -94,7 +94,7 @@ export default class extends baseVw {
     this.searchKeyUpTimer = setTimeout(() => {
       this.filter.search = e.target.value;
       this.table.filterParams = this.filter;
-    }, 150);
+    }, 200);
   }
 
   onChangeSortBy(e) {
@@ -102,6 +102,12 @@ export default class extends baseVw {
       ...this.filter,
       sortBy: e.target.value,
     };
+  }
+
+  onAttach() {
+    if (typeof this.table.onAttach === 'function') {
+      this.table.onAttach.call(this.table);
+    }
   }
 
   cancelingOrder(orderId) {
@@ -175,6 +181,31 @@ export default class extends baseVw {
     return this.confirmOrder(orderId, true);
   }
 
+  /*
+   * Based on the provided list of checkedStates, this function
+   * will return a filterConfig list with the checked value set for each
+   * filter.
+   */
+  setCheckedFilters(filterConfig = [], checkedStates = []) {
+    const checkedConfig = [];
+
+    filterConfig.forEach((filter, index) => {
+      if (!filter.targetState || !filter.targetState.length) {
+        throw new Error(`Filter at index ${index} needs a tragetState ` +
+          'provided as an array.');
+      }
+
+      filter.targetState.forEach(targetState => {
+        checkedConfig[index] = {
+          ...filterConfig[index],
+          checked: checkedStates.indexOf(targetState) > -1,
+        };
+      });
+    });
+
+    return checkedConfig;
+  }
+
   get $queryTotalLine() {
     return this._$queryTotalLine ||
       (this._$queryTotalLine = this.$('.js-queryTotalLine'));
@@ -196,7 +227,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('transactions/filters.html', (filterT) => {
       const filtersHtml = filterT({
-        filters: this.filterConfig,
+        filters: this.setCheckedFilters(this.filterConfig, this.filter.states),
       });
 
       loadTemplate('transactions/tab.html', (t) => {
