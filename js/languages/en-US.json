@@ -814,6 +814,9 @@
     "moderatorTitle": "Moderator",
     "shippingTitle": "Shipping",
     "newAddress": "New Address",
+    "serviceDetails": "%{price} — %{delivery}",
+    "noAddresses": "You don't have any saved addresses.",
+    "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
     "pay": "PAY",
     "pending": "Pending…",
@@ -831,7 +834,8 @@
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
-      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded."
+      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
+      "orderError": "Your order can not be processed due to the following errors."
     }
   },
   "moderators": {

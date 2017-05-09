@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
@@ -9,6 +10,8 @@ import Item from '../../../models/purchase/Item';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
+import { launchSettingsModal } from '../../../utils/modalManager';
+import { openSimpleMessage } from '../SimpleMessage';
 
 
 export default class extends BaseModal {
@@ -75,6 +78,7 @@ export default class extends BaseModal {
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-confirmPayConfirm': 'clickConfirmBtn',
       'click .js-confirmPayCancel': 'closeConfirmPay',
+      'click .js-newAddress': 'clickNewAddress',
       ...super.events(),
     };
   }
@@ -126,6 +130,10 @@ export default class extends BaseModal {
     this.order.get('items').at(0).set('quantity', $(e.target).val());
   }
 
+  clickNewAddress() {
+    launchSettingsModal({ initTab: 'Addresses' });
+  }
+
   clickPayBtn() {
     this.$confirmPay.removeClass('hide');
   }
@@ -140,19 +148,37 @@ export default class extends BaseModal {
   }
 
   purchaseListing() {
+    // set the address
+    this.order.addAddress(this.shipping.selectedAddress);
     // set the moderator
     this.order.set('moderator', this.moderators.selectedIDs[0]);
+    // set the shipping option
+    const oShipping = this.order.get('items').at(0).get('shipping');
+    const sOption = this.shipping.shippingOptions.selectedOption;
+    oShipping.set({ name: sOption.name, service: sOption.service });
 
-    $.post({
-      url: app.getServerUrl('ob/purchase'),
-      data: JSON.stringify(this.order.toJSON()),
-    })
-      .done((data) => {
-        console.log(data);
+    this.order.set({}, { validate: true });
+
+    if (!this.order.validationError) {
+      $.post({
+        url: app.getServerUrl('ob/purchase'),
+        data: JSON.stringify(this.order.toJSON()),
       })
-      .fail((data) => {
-        console.log(data);
+        .done((data) => {
+          console.log(data);
+        })
+        .fail((data) => {
+          console.log(data);
+        });
+    } else {
+      let errMsg = '';
+      _.each(this.order.validationError, (obj) => {
+        obj.forEach((error) => {
+          errMsg += `${error}<br>`;
+        });
       });
+      openSimpleMessage(app.polyglot.t('purchase.errors.orderError'), errMsg);
+    }
   }
 
   clickPendingBtn() {

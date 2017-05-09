@@ -23,8 +23,21 @@ export default class extends BaseModel {
     };
   }
 
+  addAddress(sAddr) {
+    // this will convert and set an address from the settings
+    const shipTo = sAddr.get('name');
+    const address =
+      `${sAddr.get('addressLineOne')} ${sAddr.get('addressLineTwo')} ${sAddr.get('company')}`;
+    const city = sAddr.get('city');
+    const state = sAddr.get('state');
+    const postalCode = sAddr.get('postalCode');
+    const countryCode = sAddr.get('country');
+    const addressNotes = sAddr.get('addressNotes');
+    this.set({ shipTo, address, city, state, postalCode, countryCode, addressNotes });
+  }
+
   validate(attrs) {
-    const errObj = {};
+    const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
@@ -34,19 +47,7 @@ export default class extends BaseModel {
       addError('item', app.polyglot.t('orderModelErrors.noItems'));
     }
 
-    if (attrs.items.length) {
-      attrs.items.forEach((item) => {
-        const quantity = item.get('quantity');
-
-        if (!quantity || quantity === 'undefined') {
-          addError('quantity', app.polyglot.t('orderModelErrors.mustHaveQuantity'));
-        }
-
-        if (typeof quantity !== 'number') {
-          addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
-        }
-      });
-    }
+    if (Object.keys(errObj).length) return errObj;
 
     return undefined;
   }

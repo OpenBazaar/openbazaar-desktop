@@ -4,7 +4,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       name: '',
-      value: '',
+      service: '',
     };
   }
 
@@ -17,12 +17,12 @@ export default class extends BaseModel {
 
     if (!attrs.name || attrs.name === 'undefined') {
       // this error should never normally appear to the user
-      addError('optionName', 'The option must have a name');
+      addError('shippingName', 'The shipping must have a name');
     }
 
-    if (!attrs.value || attrs.value === 'undefined') {
+    if (!attrs.service || attrs.service === 'undefined') {
       // this error should never normally appear to the user
-      addError('optionValue', 'The option must have a value');
+      addError('shippingService', 'The shipping must have a service');
     }
 
     if (Object.keys(errObj).length) return errObj;
