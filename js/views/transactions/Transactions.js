@@ -23,12 +23,7 @@ export default class extends baseVw {
     this.profilePosts = [];
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
-
-    this.listenTo(this.purchasesCol, 'request', (md, xhr) => {
-      xhr.done(data => {
-        this.$purchasesTabCount.html(abbrNum(data.totalCount));
-      });
-    });
+    this.syncTabHeadCount(this.purchasesCol, () => this.$purchasesTabCount);
 
     if (opts.initialTab !== 'purchases') {
       // fetch so we get the count for the tabhead
@@ -36,12 +31,7 @@ export default class extends baseVw {
     }
 
     this.salesCol = new Transactions([], { type: 'sales' });
-
-    this.listenTo(this.salesCol, 'request', (md, xhr) => {
-      xhr.done(data => {
-        this.$salesTabCount.html(abbrNum(data.totalCount));
-      });
-    });
+    this.syncTabHeadCount(this.salesCol, () => this.$salesTabCount);
 
     if (opts.initialTab !== 'sales') {
       // fetch so we get the count for the tabhead
@@ -64,6 +54,35 @@ export default class extends baseVw {
   onTabClick(e) {
     const targ = $(e.target).closest('.js-tab');
     this.selectTab(targ.attr('data-tab'));
+  }
+
+  syncTabHeadCount(cl, getCountEl) {
+    if (typeof getCountEl !== 'function') {
+      throw new Error('Please provide a function that returns a jQuery element ' +
+        'containing the tab head count to update.');
+    }
+
+    let count;
+
+    this.listenTo(cl, 'request', (md, xhr) => {
+      xhr.done(data => {
+        let updateCount = false;
+
+        if (typeof count === 'number') {
+          if (data.queryCount > count) {
+            updateCount = true;
+          }
+        } else {
+          updateCount = true;
+        }
+
+        if (updateCount) {
+          count = data.queryCount;
+          getCountEl.call(this)
+            .html(abbrNum(data.queryCount));
+        }
+      });
+    });
   }
 
   get salesPurchasesDefaultFilter() {
