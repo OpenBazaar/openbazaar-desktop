@@ -850,7 +850,10 @@
       "failedCancelHeading": "There was an error canceling the order."
     },
     "cases": {
-      "heading": "Cases"
+      "heading": "Cases",
+      "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
+      "countTransactionsFound": "%{countTransactions} found",
+      "noResults": "No cases found"
     },
     "filters": {
       "purchasing": "Purchasing",
@@ -881,10 +884,15 @@
         "status": "Status"
       },
       "status": {
+        "pending": "Pending",
         "confirmed": "Confirmed",
         "funded": "Funded",
         "fulfilled": "Fulfilled",
+        "complete": "Complete",
+        "disputed": "Disputed",
         "decided": "Decided",
+        "resolved": "Resolved",
+        "refunded": "Refunded",
         "canceled": "Canceled",
         "rejected": "Rejected"
       },

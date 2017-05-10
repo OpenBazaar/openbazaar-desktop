@@ -143,9 +143,11 @@
           }
         }
 
-        tr {
+        td {
           cursor: pointer;
+        }
 
+        tr {
           .unreadBorder {
             display: none;
           }

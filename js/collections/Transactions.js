@@ -1,7 +1,8 @@
 // used for sales, purchases and cases
 import app from '../app';
 import { Collection } from 'backbone';
-import Transaction from '../models/Transaction';
+import Transaction from '../models/transaction/Transaction';
+import Case from '../models/transaction/Case';
 import $ from 'jquery';
 
 export default class extends Collection {
@@ -21,8 +22,13 @@ export default class extends Collection {
     this.type = opts.type;
   }
 
-  model(attrs, options) {
-    return new Transaction(attrs, options);
+  model(attrs) {
+    const Md = attrs.caseId ? Case : Transaction;
+    return new Md(attrs, { parse: true });
+  }
+
+  modelId(attrs) {
+    return this.type === 'cases' ? attrs.caseId : attrs.orderId;
   }
 
   url() {
@@ -81,10 +87,6 @@ export default class extends Collection {
       ...options,
       data: JSON.stringify(options.data || {}),
     });
-  }
-
-  modelId(attrs) {
-    return attrs.orderId;
   }
 
   parse(response) {

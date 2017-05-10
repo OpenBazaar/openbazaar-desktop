@@ -195,10 +195,15 @@ export default class extends baseVw {
   }
 
   onClickRow(e) {
-    const order = new Order({
-      orderId: e.view.model.id,
-    });
+    let type = 'sale';
 
+    if (this.type === 'purchases') {
+      type = 'purchase';
+    } else if (this.type === 'cases') {
+      type = 'case';
+    }
+
+    const order = new Order({ id: e.view.model.id }, { type });
     const orderDetail = new OrderDetail({
       model: order,
       removeOnClose: true,
@@ -276,7 +281,9 @@ export default class extends baseVw {
         this.indexedViews.byVendor[vendorId] =
           this.indexedViews.byVendor[vendorId] || [];
         this.indexedViews.byVendor[vendorId].push(view);
-      } else if (buyerId) {
+      }
+
+      if (buyerId) {
         this.indexedViews.byBuyer[buyerId] =
           this.indexedViews.byBuyer[buyerId] || [];
         this.indexedViews.byBuyer[buyerId].push(view);

@@ -97,6 +97,7 @@ export default class extends BaseModal {
   render() {
     loadTemplate('modals/orderDetail.html', t => {
       this.$el.html(t({
+        id: this.model.id,
         ...this._state,
         ...this.model.toJSON(),
       }));
