@@ -28,8 +28,8 @@
 <td class="clrBr listingCol">
   <div class="flexVCent gutterHSm">
     <% const imageHashes = { small: ob.thumbnail, tiny: ob.thumbnail } %>
-    <span class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></span>
-    <span class="noOverflow"><%= ob.title %></span>
+    <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></a>
+    <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="noOverflow clrT"><%= ob.title %></a>
   </div>
 </td>
 <td class="clrBr userCol js-userCol">

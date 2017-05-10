@@ -216,6 +216,10 @@ export default class extends baseVw {
     this.fetchTransactions(this.curPage -= 1);
   }
 
+  onAttach() {
+    this.setFilterOnRoute();
+  }
+
   getAvatars(models = []) {
     const profilesToFetch = [];
 
@@ -253,43 +257,6 @@ export default class extends baseVw {
     }
   }
 
-  getAvatars2(models = []) {
-    const profilesToFetch = [];
-
-    models.forEach(md => {
-      if (this.type === 'purchases') {
-        profilesToFetch.push(md.get('vendorId'));
-      }
-    });
-
-    this.avatarPost = $.post({
-      url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
-      data: JSON.stringify(profilesToFetch),
-      dataType: 'json',
-      contentType: 'application/json',
-    }).done((data) => {
-      if (this.socket) {
-        this.listenTo(this.socket, 'message', (e) => {
-          if (e.jsonData.id === data.id) {
-            if (this.type === 'purchases') {
-              this.indexedViews.byUser[e.jsonData.peerId]
-                .forEach(view => {
-                  view.setState({
-                    vendorAvatarHashes: e.jsonData.profile.avatarHashes,
-                  });
-
-                  view.model
-                    .set('vendorHandle', e.jsonData.profile.handle);
-                });
-            } else {
-              // handle Sales, Cases
-            }
-          }
-        });
-      }
-    });
-  }
-
   /*
    * Index the Row Views by Vendor and/or Buyer ID as well as orderID
    * so they could be easily retreived by the respective identifier.
@@ -322,7 +289,7 @@ export default class extends baseVw {
   }
 
   get transactionsPerPage() {
-    return 5;
+    return 20;
   }
 
   get filterParams() {
@@ -337,6 +304,25 @@ export default class extends baseVw {
     }
   }
 
+  setFilterOnRoute(filter = this.filterParams) {
+    const queryFilter = {
+      ...filter,
+      // Joining with dashes instead of commas because commas
+      // look really bizarre when encode in a query string.
+      states: filter.states.join('-'),
+    };
+
+    if (queryFilter.search === '') {
+      delete queryFilter.search;
+    }
+
+    let baseRoute = location.hash.split('?')[0];
+    baseRoute = baseRoute.startsWith('#ob://') ?
+      baseRoute.slice(6) : baseRoute.slice(1);
+
+    app.router.navigate(`${baseRoute}?${$.param(queryFilter)}`, { replace: true });
+  }
+
   fetchTransactions(page = this.curPage, filterParams = this.filterParams) {
     if (typeof page !== 'number') {
       throw new Error('Please provide a page number to fetch.');
@@ -348,15 +334,16 @@ export default class extends baseVw {
 
     this.curPage = page;
     this.filterParams = filterParams;
+    this.setFilterOnRoute();
 
     if (this.transactionsFetch) this.transactionsFetch.abort();
 
     const fetchParams = {
       limit: this.transactionsPerPage,
       ...filterParams,
-      // filterParams state is stored as an array of state integer. Here we'll convert
-      // to what the server expects which is a comma seperated string of integers.
-      state: filterParams.state && filterParams.state.join(',') || '',
+      sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) !== -1,
+      sortByRead: filterParams.sortBy === 'UNREAD',
+      exclude: this.collection.map(md => md.id),
     };
 
     let havePage = false;
@@ -378,12 +365,12 @@ export default class extends baseVw {
 
     if (havePage) return;
 
-    this.purchasesFetch = this.collection.fetch({
+    this.transactionsFetch = this.collection.fetch({
       data: fetchParams,
       remove: false,
     });
 
-    this.purchasesFetch.fail((jqXhr) => {
+    this.transactionsFetch.fail((jqXhr) => {
       if (jqXhr.statusText === 'abort') return;
 
       let fetchError = '';
@@ -397,11 +384,10 @@ export default class extends baseVw {
         fetchFailed: true,
         fetchError,
       });
-    }).done((data) => {
-      if (this.isRemoved()) return;
-      if (page === 1) {
-        this.queryTotal = data.queryCount;
-      }
+    }).done((data, textStatus, jqXhr) => {
+      if (jqXhr.statusText === 'abort') return;
+
+      this.queryTotal = data.queryCount;
 
       this.setState({
         isFetching: false,
@@ -482,7 +468,7 @@ export default class extends baseVw {
       });
 
     this.indexRowViews();
-    this.getAvatars(transToRender); // get avatars after indexRowViews()
+    this.getAvatars(transToRender); // be sure to get avatars *after* indexRowViews()
     this.$('.js-transactionsTable').append(transactionsFrag);
 
     const onLastPage = this.curPage > this.collection.length / this.transactionsPerPage;

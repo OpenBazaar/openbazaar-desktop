@@ -73,6 +73,16 @@ export default class extends Collection {
     return deferred.promise();
   }
 
+  fetch(options = {}) {
+    return super.fetch({
+      type: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
+      ...options,
+      data: JSON.stringify(options.data || {}),
+    });
+  }
+
   modelId(attrs) {
     return attrs.orderId;
   }

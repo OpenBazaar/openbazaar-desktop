@@ -118,6 +118,7 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         userCurrency: app.settings.get('localCurrency'),
         moment,
+        vendorId: this.type === 'sales' ? app.profile.id : this.model.get('vendorId'),
       }));
     });
 

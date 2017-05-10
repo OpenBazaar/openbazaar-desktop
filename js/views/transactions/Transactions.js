@@ -23,12 +23,7 @@ export default class extends baseVw {
     this.profilePosts = [];
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
-
-    this.listenTo(this.purchasesCol, 'request', (md, xhr) => {
-      xhr.done(data => {
-        this.$purchasesTabCount.html(abbrNum(data.totalCount));
-      });
-    });
+    this.syncTabHeadCount(this.purchasesCol, () => this.$purchasesTabCount);
 
     if (opts.initialTab !== 'purchases') {
       // fetch so we get the count for the tabhead
@@ -36,12 +31,7 @@ export default class extends baseVw {
     }
 
     this.salesCol = new Transactions([], { type: 'sales' });
-
-    this.listenTo(this.salesCol, 'request', (md, xhr) => {
-      xhr.done(data => {
-        this.$salesTabCount.html(abbrNum(data.totalCount));
-      });
-    });
+    this.syncTabHeadCount(this.salesCol, () => this.$salesTabCount);
 
     if (opts.initialTab !== 'sales') {
       // fetch so we get the count for the tabhead
@@ -66,11 +56,40 @@ export default class extends baseVw {
     this.selectTab(targ.attr('data-tab'));
   }
 
+  syncTabHeadCount(cl, getCountEl) {
+    if (typeof getCountEl !== 'function') {
+      throw new Error('Please provide a function that returns a jQuery element ' +
+        'containing the tab head count to update.');
+    }
+
+    let count;
+
+    this.listenTo(cl, 'request', (md, xhr) => {
+      xhr.done(data => {
+        let updateCount = false;
+
+        if (typeof count === 'number') {
+          if (data.queryCount > count) {
+            updateCount = true;
+          }
+        } else {
+          updateCount = true;
+        }
+
+        if (updateCount) {
+          count = data.queryCount;
+          getCountEl.call(this)
+            .html(abbrNum(data.queryCount));
+        }
+      });
+    });
+  }
+
   get salesPurchasesDefaultFilter() {
     return {
       search: '',
-      sort: 'date-desc',
-      state: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      sortBy: 'UNREAD',
+      states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
     };
   }
 
@@ -79,77 +98,61 @@ export default class extends baseVw {
       {
         id: 'filterPurchasing',
         text: app.polyglot.t('transactions.filters.purchasing'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(0) > -1 ||
-          this.salesPurchasesDefaultFilter.state.indexOf(1) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(0) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(1) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[0, 1]',
-        },
+        targetState: [0, 1],
       },
       {
         id: 'filterReady',
         text: app.polyglot.t('transactions.filters.ready'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(2) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[2]',
-        },
+        targetState: [2],
       },
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(3) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[3]',
-        },
+        targetState: [3],
       },
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(8) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[8]',
-        },
+        targetState: [8],
       },
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(5) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[5]',
-        },
+        targetState: [5],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(6) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[6]',
-        },
+        targetState: [6],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(7) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[7]',
-        },
+        targetState: [7],
       },
       {
         id: 'filterCompleted',
         text: app.polyglot.t('transactions.filters.completed'),
-        checked: this.salesPurchasesDefaultFilter.state.indexOf(4) > -1 ||
-          this.salesPurchasesDefaultFilter.state.indexOf(9) > -1 ||
-          this.salesPurchasesDefaultFilter.state.indexOf(10) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
-        attrs: {
-          'data-state': '[4, 9, 10]',
-        },
+        targetState: [4, 9, 10],
       },
     ];
   }
@@ -160,6 +163,11 @@ export default class extends baseVw {
       ...options,
     };
 
+    if (targ === 'cases') {
+      alert('Cases are coming soon.');
+      return;
+    }
+
     if (!this[`create${capitalize(targ)}TabView`]) {
       throw new Error(`${targ} is not a valid tab.`);
     }
@@ -168,20 +176,8 @@ export default class extends baseVw {
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
       if (opts.addTabToHistory) {
-        // subRoute is anything after the tab in the route, which is something
-        // we want to maintain, e.g:
-        // transactions/<tab>/<slug>/<blah>
-        // the subRoute is '/<slug>/<blah>'
-        const curRoute = location.hash.startsWith('#ob://') ?
-          location.hash.slice(6) : location.hash.slice(1);
-
-        const subRoute = curRoute
-          .split('/')
-          .slice(2)
-          .join('/');
-
         // add tab to history
-        app.router.navigate(`transactions/${targ}${subRoute ? `/${subRoute}` : ''}`);
+        app.router.navigate(`transactions/${targ}`);
       }
 
       this.$('.js-tab').removeClass('clrT active');
@@ -196,14 +192,43 @@ export default class extends baseVw {
       }
 
       this.$tabContent.append(tabView.$el);
+
+      if (typeof tabView.onAttach === 'function') {
+        tabView.onAttach.call(tabView);
+      }
+
       this.currentTabView = tabView;
     }
+  }
+
+  get filterUrlParams() {
+    const parsed = {};
+    const params = new URLSearchParams(location.hash.split('?')[1] || '');
+
+    for (const pair of params.entries()) {
+      parsed[pair[0]] = pair[1];
+    }
+
+    if (parsed.states) {
+      parsed.states = parsed.states
+        .split('-')
+        .map(strIndex => parseInt(strIndex, 10));
+    }
+
+    return parsed;
   }
 
   createPurchasesTabView() {
     const view = this.createChild(Tab, {
       collection: this.purchasesCol,
       type: 'purchases',
+      defaultFilter: {
+        ...this.salesPurchasesDefaultFilter,
+      },
+      initialFilter: {
+        ...this.salesPurchasesDefaultFilter,
+        ...this.filterUrlParams,
+      },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });
@@ -215,6 +240,13 @@ export default class extends baseVw {
     const view = this.createChild(Tab, {
       collection: this.salesCol,
       type: 'sales',
+      defaultFilter: {
+        ...this.salesPurchasesDefaultFilter,
+      },
+      initialFilter: {
+        ...this.salesPurchasesDefaultFilter,
+        ...this.filterUrlParams,
+      },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });
@@ -288,7 +320,7 @@ export default class extends baseVw {
     this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
 
     this.selectTab(this._tab, {
-      updateHistory: false,
+      addTabToHistory: false,
     });
 
     return this;

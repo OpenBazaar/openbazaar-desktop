@@ -1,5 +1,7 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../app';
+import '../../lib/select2';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import TransactionsTable from './table/Table';
@@ -9,11 +11,13 @@ export default class extends baseVw {
     const opts = {
       defaultFilter: {
         search: '',
-        sort: 'date-desc',
-        state: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        sortBy: 'UNREAD',
+        states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
       },
       ...options,
     };
+
+    opts.initialFilter = opts.initialFilter || { ...opts.defaultFilter };
 
     super(opts);
 
@@ -41,23 +45,27 @@ export default class extends baseVw {
     this.acceptPosts = {};
     this.rejectPosts = {};
     this.cancelPosts = {};
-    this.filter = { ...opts.defaultFilter };
+    this._filter = { ...opts.initialFilter };
 
     this.listenTo(this.collection, 'request', (cl, xhr) => {
-      setTimeout(() => {
-        if (this.table && this.table.curPage === 1) {
-          this.$queryTotalLine.empty();
+      if (this.table) {
+        this.$queryTotalWrapper.addClass('hide');
+      }
 
+      setTimeout(() => {
+        if (this.table) {
           xhr.done(data => {
             const count =
               `<span class="txB">
                 ${app.polyglot.t(`transactions.${this.type}.countTransactions`,
                   { smart_count: data.queryCount })}
                </span>`;
-            this.$queryTotalLine.html(
-              app.polyglot.t(`transactions.${this.type}.countTransactionsFound`,
-                { countTransactions: count })
-            );
+            this.$queryTotalWrapper.find('.js-queryTotalLine')
+              .html(
+                app.polyglot.t(`transactions.${this.type}.countTransactionsFound`,
+                  { countTransactions: count })
+              );
+            this.$queryTotalWrapper.removeClass('hide');
           });
         }
       });
@@ -72,17 +80,38 @@ export default class extends baseVw {
     return {
       'change .filter input': 'onChangeFilter',
       'keyup .js-searchInput': 'onKeyUpSearch',
+      'change .js-sortBySelect': 'onChangeSortBy',
+      'click .js-resetQuery': 'onClickResetQuery',
     };
   }
 
   onChangeFilter() {
-    let state = [];
+    let states = [];
     this.$filterCheckboxes.filter(':checked')
       .each((index, checkbox) => {
-        state = state.concat($(checkbox).data('state'));
+        states = states.concat($(checkbox).data('state'));
       });
-    this.filter.state = state;
-    this.table.filterParams = this.filter;
+
+    this.filter = {
+      ...this.filter,
+      states,
+    };
+  }
+
+  get filter() {
+    return this._filter;
+  }
+
+  set filter(filter = {}) {
+    if (!_.isEqual(filter, this._filter)) {
+      this._filter = { ...filter };
+
+      if (this.table) {
+        this.table.filterParams = filter;
+      }
+
+      this.$resetQuery.toggleClass('hide', this.currentFilterIsDefault());
+    }
   }
 
   onKeyUpSearch(e) {
@@ -90,11 +119,30 @@ export default class extends baseVw {
     clearTimeout(this.searchKeyUpTimer);
 
     this.searchKeyUpTimer = setTimeout(() => {
-      this.filter.search = e.target.value;
-      this.table.filterParams = this.filter;
-    }, 150);
+      this.filter = {
+        ...this.filter,
+        search: e.target.value,
+      };
+    }, 200);
   }
 
+  onChangeSortBy(e) {
+    this.filter = {
+      ...this.filter,
+      sortBy: e.target.value,
+    };
+  }
+
+  onAttach() {
+    if (typeof this.table.onAttach === 'function') {
+      this.table.onAttach.call(this.table);
+    }
+  }
+
+  onClickResetQuery() {
+    this.filter = { ...this.options.defaultFilter };
+    this.render();
+  }
 
   cancelingOrder(orderId) {
     return this.cancelPosts[orderId] || false;
@@ -167,14 +215,48 @@ export default class extends baseVw {
     return this.confirmOrder(orderId, true);
   }
 
-  get $queryTotalLine() {
-    return this._$queryTotalLine ||
-      (this._$queryTotalLine = this.$('.js-queryTotalLine'));
+  /*
+   * Based on the provided list of checkedStates, this function
+   * will return a filterConfig list with the checked value set for each
+   * filter.
+   */
+  setCheckedFilters(filterConfig = [], checkedStates = []) {
+    const checkedConfig = [];
+
+    filterConfig.forEach((filter, index) => {
+      if (!filter.targetState || !filter.targetState.length) {
+        throw new Error(`Filter at index ${index} needs a tragetState ` +
+          'provided as an array.');
+      }
+
+      filter.targetState.forEach(targetState => {
+        checkedConfig[index] = {
+          ...filterConfig[index],
+          checked: checkedStates.indexOf(targetState) > -1,
+        };
+      });
+    });
+
+    return checkedConfig;
+  }
+
+  currentFilterIsDefault() {
+    return _.isEqual(this.options.defaultFilter, this.filter);
+  }
+
+  get $queryTotalWrapper() {
+    return this._$queryTotalWrapper ||
+      (this._$queryTotalWrapper = this.$('.js-queryTotalWrapper'));
   }
 
   get $filterCheckboxes() {
     return this._$filterCheckboxes ||
       (this._$filterCheckboxes = this.$('.filter input'));
+  }
+
+  get $resetQuery() {
+    return this._$resetQuery ||
+      (this._$resetQuery = this.$('.js-resetQuery'));
   }
 
   remove() {
@@ -188,17 +270,25 @@ export default class extends baseVw {
   render() {
     loadTemplate('transactions/filters.html', (filterT) => {
       const filtersHtml = filterT({
-        filters: this.filterConfig,
+        filters: this.setCheckedFilters(this.filterConfig, this.filter.states),
       });
 
       loadTemplate('transactions/tab.html', (t) => {
         this.$el.html(t({
           type: this.type,
           filtersHtml,
-          searchTerm: this.filter.search,
+          filter: this.filter,
+          currentFilterIsDefault: this.currentFilterIsDefault(),
         }));
 
         this._$filterCheckboxes = null;
+        this._$queryTotalWrapper = null;
+        this._$resetQuery = null;
+
+        this.$('.js-sortBySelect').select2({
+          minimumResultsForSearch: -1,
+          dropdownParent: this.$('.js-sortBySelectDropdownContainer'),
+        });
 
         if (this.table) this.table.remove();
         this.table = this.createChild(TransactionsTable, {

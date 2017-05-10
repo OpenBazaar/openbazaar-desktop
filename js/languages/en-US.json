@@ -842,6 +842,7 @@
       "heading": "Sales",
       "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
       "countTransactionsFound": "%{countTransactions} found",
+      "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
       "failedAcceptHeading": "There was an error accepting the order.",
       "failedRejectHeading": "There was an error rejecting the order."
@@ -867,7 +868,14 @@
       "disputeClosed": "Dispute Closed",
       "completed": "Completed"
     },
+    "sort": {
+      "label": "Sort By",
+      "unread": "Unread",
+      "dateAsc": "Newest",
+      "dateDesc": "Oldest"
+    },
     "placeholderSearch": "Search by Order #, Title or Vendor",
+    "resetFilters": "Reset filters",
     "transactionsTable": {
       "headers": {
         "orderId": "Order ID",
