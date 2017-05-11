@@ -206,3 +206,18 @@ export function setTimeagoInterval(timestamp, cb, _timeouts = []) {
     },
   };
 }
+
+/*
+ * Will turn a url encode query string into a JS object. The opposite of
+ * $.param().
+ */
+export function deparam(queryStr = '') {
+  const parsed = {};
+  const params = new URLSearchParams(queryStr);
+
+  for (const pair of params.entries()) {
+    parsed[pair[0]] = pair[1];
+  }
+
+  return parsed;
+}

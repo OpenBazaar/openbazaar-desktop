@@ -1,13 +1,15 @@
 import $ from 'jquery';
 import app from '../../app';
 import { capitalize } from '../../utils/string';
-import { abbrNum } from '../../utils/';
+import { abbrNum, deparam } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
+import Order from '../../models/order/Order';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Tab from './Tab';
+import OrderDetail from '../modals/orderDetail/OrderDetail';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -21,6 +23,16 @@ export default class extends baseVw {
     this.tabViewCache = {};
     this.profileDeferreds = {};
     this.profilePosts = [];
+
+    const params = new URLSearchParams(location.hash.split('?')[1] || '');
+    const orderId = params.get('orderId');
+    const caseId = params.get('caseId');
+
+    if (orderId || caseId) {
+      // cut off the trailing 's' from the tab
+      const type = this._tab.slice(0, this._tab.length - 1);
+      this.openOrder(orderId || caseId, type);
+    }
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
     this.syncTabHeadCount(this.purchasesCol, () => this.$purchasesTabCount);
@@ -91,6 +103,59 @@ export default class extends baseVw {
         }
       });
     });
+  }
+
+  /**
+   * This function is also passed into the Tab and Table views. They will
+   * be affected should you change the signature or return value.
+   */
+  openOrder(id, type = 'sale', options = {}) {
+    const opts = {
+      modalOptions: {
+        ...options.modalOptions || {},
+      },
+      addToRoute: true,
+    };
+
+    if (['sale', 'purchase', 'case'].indexOf(type) === -1) {
+      throw new Error('Please provide a valid type.');
+    }
+
+    const order = new Order({ id }, { type });
+    const orderDetail = new OrderDetail({
+      model: order,
+      removeOnClose: true,
+      ...opts.modalOptions,
+    });
+
+    orderDetail.render().open();
+
+    if (opts.addToRoute) {
+      // add the order / case id to the url
+      const params = deparam(location.hash.split('?')[1] || '');
+      delete params.orderId;
+      delete params.caseId;
+      params[type === 'case' ? 'caseId' : 'orderId'] = id;
+      app.router.navigate(`${location.hash.split('?')[0]}?${$.param(params)}`);
+    }
+
+    // remove it from the url on close of the modal
+    const onClose = () => {
+      const params = deparam(location.hash.split('?')[1] || '');
+      delete params.orderId;
+      delete params.caseId;
+      app.router.navigate(`${location.hash.split('?')[0]}?${$.param(params)}`);
+    };
+
+    this.listenTo(orderDetail, 'close', onClose);
+
+    // Do not alter the url if the user is routing to a new route. The
+    // user has already altered the url.
+    this.listenTo(app.router, 'will-route', () => {
+      this.stopListening(orderDetail, 'close', onClose);
+    });
+
+    return orderDetail;
   }
 
   get salesPurchasesDefaultFilter() {
@@ -239,20 +304,15 @@ export default class extends baseVw {
   }
 
   get filterUrlParams() {
-    const parsed = {};
-    const params = new URLSearchParams(location.hash.split('?')[1] || '');
+    const params = deparam(location.hash.split('?')[1] || '');
 
-    for (const pair of params.entries()) {
-      parsed[pair[0]] = pair[1];
-    }
-
-    if (parsed.states) {
-      parsed.states = parsed.states
+    if (params.states) {
+      params.states = params.states
         .split('-')
         .map(strIndex => parseInt(strIndex, 10));
     }
 
-    return parsed;
+    return params;
   }
 
   createPurchasesTabView() {
@@ -268,6 +328,7 @@ export default class extends baseVw {
       },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
+      openOrder: this.openOrder.bind(this),
     });
 
     return view;
@@ -286,6 +347,7 @@ export default class extends baseVw {
       },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
+      openOrder: this.openOrder.bind(this),
     });
 
     return view;
@@ -304,6 +366,7 @@ export default class extends baseVw {
       },
       filterConfig: this.casesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
+      openOrder: this.openOrder.bind(this),
     });
 
     return view;

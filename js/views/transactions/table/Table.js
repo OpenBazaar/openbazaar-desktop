@@ -7,10 +7,8 @@ import $ from 'jquery';
 import _ from 'underscore';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { getContentFrame } from '../../../utils/selectors';
-import Order from '../../../models/order/Order';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
-import OrderDetail from '../../modals/orderDetail/OrderDetail';
 import Row from './Row';
 import PageControls from '../../components/PageControls';
 
@@ -69,6 +67,10 @@ export default class extends baseVw {
 
     if (typeof opts.getProfiles !== 'function') {
       throw new Error('Please provide a function to retreive profiles.');
+    }
+
+    if (typeof opts.openOrder !== 'function') {
+      throw new Error('Please provide a function to open the order detail modal.');
     }
 
     super(opts);
@@ -203,14 +205,8 @@ export default class extends baseVw {
       type = 'case';
     }
 
-    const order = new Order({ id: e.view.model.id }, { type });
-    const orderDetail = new OrderDetail({
-      model: order,
-      removeOnClose: true,
-    });
-
+    const orderDetail = this.options.openOrder(e.view.model.id, type);
     this.listenTo(orderDetail.model, 'sync', () => (e.view.model.set('read', true)));
-    orderDetail.render().open();
   }
 
   onClickNextPage() {
