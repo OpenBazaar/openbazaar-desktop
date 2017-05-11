@@ -2,10 +2,10 @@ import $ from 'jquery';
 import app from '../../../app';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseModal from '../BaseModal';
+import baseView from '../../baseVw';
 import Listing from '../../../models/listing/Listing';
 
-export default class extends BaseModal {
+export default class extends baseView {
   constructor(options = {}) {
     super(options);
     this.options = options;
@@ -46,9 +46,14 @@ export default class extends BaseModal {
     const filteredShipping = this.model.get('shippingOptions').toJSON().filter((option) =>
       option.regions.indexOf(this.countryCode) !== -1);
 
-    const name = filteredShipping[0].name;
-    const service = filteredShipping[0].services[0].name;
-    this.trigger('selected', { name, service });
+    if (filteredShipping.length) {
+      const name = filteredShipping[0].name;
+      const service = filteredShipping[0].services[0].name;
+      this.trigger('selected', { name, service });
+    } else {
+      // if no valid option is available, set it to blank
+      this.trigger('selected', { name: '', service: '' });
+    }
 
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({

@@ -5,6 +5,7 @@ import Items from '../../collections/purchase/Items';
 export default class extends BaseModel {
   defaults() {
     return {
+      // if the listing is not physical, the address and shipping attributes should be blank
       shipTo: '',
       address: '',
       city: '',

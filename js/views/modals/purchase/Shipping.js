@@ -2,11 +2,11 @@ import $ from 'jquery';
 import '../../../lib/select2';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseModal from '../BaseModal';
+import baseView from '../../baseVw';
 import Listing from '../../../models/listing/Listing';
 import ShippingOptions from './ShippingOptions';
 
-export default class extends BaseModal {
+export default class extends baseView {
   constructor(options = {}) {
     super(options);
     this.options = options;

@@ -46,9 +46,9 @@ export default class extends BaseModel {
         attrs.status = 'UNCONFIRMED';
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) > stuckTime) {
         attrs.status = 'STUCK';
-      } else if (confirmations > 0 && confirmations <= 6) {
+      } else if (confirmations > 0 && confirmations <= 5) {
         attrs.status = 'PENDING';
-      } else if (confirmations > 6) {
+      } else if (confirmations > 5) {
         attrs.status = 'CONFIRMED';
       }
 

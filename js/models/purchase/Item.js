@@ -6,6 +6,8 @@ import app from '../../app';
 export default class extends BaseModel {
   defaults() {
     return {
+      // the options sub model is optional
+      // if the listing is not physical, the shipping sub model should have blank values
       listingHash: '',
       quantity: 0,
       options: new Options(),
@@ -33,16 +35,12 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (!attrs.quantity || attrs.quantity === 'undefined') {
+    if (attrs.quantity === 'undefined') {
       addError('quantity', app.polyglot.t('orderModelErrors.mustHaveQuantity'));
-    }
-
-    if (typeof attrs.quantity !== 'number') {
+    } else if (typeof attrs.quantity !== 'number') {
       addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
-    }
-
-    if (attrs.quantity < 1) {
-      addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBePositive'));
+    } else if (attrs.quantity < 1) {
+      addError('quantity', app.polyglot.t('orderModelErrors.noItems'));
     }
 
     if (Object.keys(errObj).length) return errObj;
