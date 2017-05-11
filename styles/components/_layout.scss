@@ -284,6 +284,11 @@
   padding: $padLg;
 }
 
+.padHg,
+.padHgKids > * {
+  padding: $padHg;
+}
+
 .padGi,
 .padGiKids > * {
   padding: $padGi;

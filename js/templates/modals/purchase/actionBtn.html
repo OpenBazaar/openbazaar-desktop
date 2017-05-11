@@ -1,0 +1,47 @@
+<div class="posR">
+  <% if (ob.state === 'pay' || ob.state === 'confirm') { %>
+    <% const initPay = ob.listing.shippingOptions && ob.listing.shippingOptions.length ? 'disabled' : ''; %>
+    <%= ob.processingButton({
+      className: `btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn ${initPay}`,
+      btnText: ob.polyT('purchase.pay')
+    }) %>
+  <% } else if (ob.state ==='pending') { %>
+    <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-pendingBtn">
+      <%= ob.polyT('purchase.pending') %>
+    </button>
+  <% } else if (ob.state ==='close') { %>
+    <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-closeBtn">
+      <%= ob.polyT('purchase.close') %>
+    </button>
+  <% } %>
+  <% if (ob.state === 'confirm') { %>
+    <div id="confirmPay" class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 js-confirmPay">
+      <div class="flexColRows gutterVSm padLg">
+        <h3>
+          <%= ob.polyT('purchase.confirmPayment.title') %>
+        </h3>
+        <p class="tx5">
+          <%= ob.polyT('purchase.confirmPayment.msg') %>
+        </p>
+      </div>
+      <hr class="unleaded clrBr" />
+      <div class="flexHRight flexVCent gutterHLg pad tx5">
+        <a class="js-confirmPayCancel">
+          <%= ob.polyT('purchase.confirmPayment.cancel') %>
+        </a>
+        <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmPayConfirm">
+          <%= ob.polyT('purchase.confirmPayment.confirm') %>
+        </a>
+      </div>
+    </div>
+  <% } %>
+</div>
+<div class="padSm txSm txCtr clrT2">
+  <% if (ob.state === 'pay' || ob.state === 'confirm') { %>
+    <span class="js-payNote"><%= ob.polyT('purchase.payNote') %></span>
+  <% } else if (ob.state ==='pending') { %>
+    <span class="js-pendingNote"><%= ob.polyT('purchase.pendingNote') %></span>
+  <% } else if (ob.state ==='close') { %>
+    <span class="js-closeNote"><%= ob.polyT('purchase.closeNote') %></span>
+  <% } %>
+</div>

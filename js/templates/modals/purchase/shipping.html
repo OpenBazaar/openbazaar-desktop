@@ -1,1 +1,36 @@
-Shipping
+<div class="flexVCent">
+  <h2 class="h4 required flexExpand"><%= ob.polyT('purchase.shippingTitle') %></h2>
+  <% if (ob.userAddresses.length) { %>
+    <a class="clrTEm txU tx5b js-newAddress"><%= ob.polyT('purchase.newAddress') %></a>
+  <% } %>
+</div>
+<div class="row">
+  <% if (ob.userAddresses.length) { %>
+  <select id="shippingAddress">
+    <% ob.userAddresses.forEach((a, i) => { %>
+    <option value="<%= i %>">
+      <% let part1 = `${a.name}`;
+         part1 += a.addressLineOne ? ` ${a.addressLineOne}` : '';
+         let part2 = a.addressLineTwo ? ` ${a.addressLineTwo}` : '';
+         part2 += a.company ? `, ${a.company},` : '';
+         part2 += a.city ? ` ${a.city}` : '';
+         let part3 = a.state || a.postalCode ? ',' : '';
+         part3 += a.state ? ` ${a.state}` : '';
+         part3 += a.postalCode ? ` ${a.postalCode}` : '';
+      %>
+      <%= `${part1}${part2}${part3}` %>
+    </option>
+    <% }); %>
+  </select>
+  <% } else { %>
+    <div class="padGi txCtr">
+      <div class="txB row">
+        <%= ob.polyT('purchase.noAddresses') %>
+      </div>
+      <button class="btn clrP clrBr js-newAddress">
+        <%= ob.polyT('purchase.newAddress') %>
+      </button>
+    </div>
+  <% } %>
+</div>
+<div class="js-shippingOptionsWrapper"></div>

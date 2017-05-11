@@ -6,14 +6,19 @@ import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
+import Listing from '../../../models/listing/Listing';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
+import Receipt from './Receipt';
+import ActionBtn from './ActionBtn';
+import { launchSettingsModal } from '../../../utils/modalManager';
+import { openSimpleMessage } from '../SimpleMessage';
 
 
 export default class extends BaseModal {
   constructor(options = {}) {
-    if (!options.listing) {
+    if (!options.listing || !(options.listing instanceof Listing)) {
       throw new Error('Please provide a listing model');
     }
 
@@ -23,6 +28,7 @@ export default class extends BaseModal {
 
     super(options);
     this.options = options;
+    this.state = { phase: 'pay' };
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
@@ -38,27 +44,6 @@ export default class extends BaseModal {
     // add the item to the order.
     this.order.get('items').add(item);
 
-    const fetchErrorTitle = app.polyglot.t('purchase.errors.moderatorsTitle');
-    const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
-
-
-    this.moderators = this.createChild(Moderators, {
-      moderatorIDs: this.listing.get('moderators') || [],
-      fetchErrorTitle,
-      fetchErrorMsg,
-      purchase: true,
-      cardState: 'unselected',
-      notSelected: 'unselected',
-      singleSelect: true,
-      selectFirst: true,
-    });
-
-    if (this.listing.get('shippingOptions').length) {
-      this.shipping = this.createChild(Shipping, {
-        model: this.listing,
-      });
-    }
-
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
   }
@@ -69,12 +54,10 @@ export default class extends BaseModal {
 
   events() {
     return {
+      'click .js-goToListing': 'close',
       'click #purchaseModerated': 'clickModerated',
-      'click .js-payBtn': 'clickPayBtn',
-      'click .js-pendingBtn': 'clickPendingBtn',
       'change #purchaseQuantity': 'changeQuantityInput',
-      'click .js-confirmPayConfirm': 'clickConfirmBtn',
-      'click .js-confirmPayCancel': 'closeConfirmPay',
+      'click .js-newAddress': 'clickNewAddress',
       ...super.events(),
     };
   }
@@ -105,6 +88,7 @@ export default class extends BaseModal {
   clickModerated(e) {
     const checked = $(e.target).prop('checked');
     this.$moderatorSection.toggleClass('hide', !checked);
+    this.$moderatorNote.toggleClass('hide', !checked);
 
     if (checked && this._oldMod) {
       // re-select the previously selected moderator, if any
@@ -123,40 +107,88 @@ export default class extends BaseModal {
   }
 
   changeQuantityInput(e) {
-    this.order.get('items').at(0).set('quantity', $(e.target).val());
+    this.order.get('items').at(0).set(this.getFormData($(e.target)));
   }
 
-  clickPayBtn() {
-    this.$confirmPay.removeClass('hide');
+  clickNewAddress() {
+    launchSettingsModal({ initTab: 'Addresses' });
   }
 
-  clickConfirmBtn() {
-    // confirm the purchase
-    this.purchaseListing();
-  }
-
-  closeConfirmPay() {
-    this.$confirmPay.addClass('hide');
+  updateShippingOption(opts) {
+    // set the shipping option
+    const oShipping = this.order.get('items').at(0).get('shipping');
+    oShipping.set({ name: opts.name, service: opts.service });
+    this.actionBtn.render();
   }
 
   purchaseListing() {
-    // set the moderator
-    this.order.set('moderator', this.moderators.selectedIDs[0]);
+    // clear any old errors
+    const allErrContainers = this.$('div[class $="-errors"]');
+    allErrContainers.html('');
+    let shippingError = false;
 
-    $.post({
-      url: app.getServerUrl('ob/purchase'),
-      data: JSON.stringify(this.order.toJSON()),
-    })
-      .done((data) => {
-        console.log(data);
-      })
-      .fail((data) => {
-        console.log(data);
+    // if the listing has shipping, and a shipping option has been selected, set it
+    if (this.listing.get('shippingOptions') && this.listing.get('shippingOptions').length) {
+      if (this.shipping.selectedAddress && !!this.order.get('items').at(0).get('shipping')
+          .get('name')) {
+        // set the address
+        this.order.addAddress(this.shipping.selectedAddress);
+      } else {
+        this.insertErrors(this.$shippingErrors, [app.polyglot.t('purchase.errors.missingAddress')]);
+        shippingError = true;
+      }
+    }
+
+    // set the moderator
+    this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
+
+    // cancel any existing order
+    if (this.orderSubmit) this.orderSubmit.abort();
+
+    if (!this.order.validationError) {
+      if (!shippingError) {
+        this.orderSubmit = $.post({
+          url: app.getServerUrl('ob/purchase'),
+          data: JSON.stringify(this.order.toJSON()),
+          dataType: 'json',
+          contentType: 'application/json',
+        })
+          .done((data) => {
+            this.state.phase = 'pending';
+            this.actionBtn.render();
+            console.log(data);
+          })
+          .fail((jqXHR) => {
+            if (jqXHR.statusText === 'abort') return;
+            const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
+            const errTitle = app.polyglot.t('purchase.errors.orderError');
+            openSimpleMessage(errTitle, errMsg);
+            this.state.phase = 'pay';
+            this.actionBtn.render();
+          });
+      } else {
+        this.state.phase = 'pay';
+        this.actionBtn.render();
+      }
+    } else {
+      Object.keys(this.order.validationError).forEach(errKey => {
+        const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
+        let container = this.$(`.js-${domKey}-errors`);
+        // if no container exists, use the generic container
+        container = container.length ? container : this.$errors;
+        this.insertErrors(container, this.order.validationError[errKey]);
       });
+      this.state.phase = 'pay';
+      this.actionBtn.render();
+    }
   }
 
-  clickPendingBtn() {
-    console.log('clicked the pending button');
+  insertErrors(container, errors = []) {
+    loadTemplate('formError.html', t => {
+      container.html(t({
+        errors,
+      }));
+    });
   }
 
   get $popInMessages() {
@@ -174,14 +206,9 @@ export default class extends BaseModal {
         (this._$moderatorSection = this.$('.js-moderator'));
   }
 
-  get $payBtn() {
-    return this._$payBtn ||
-        (this._$payBtn = this.$('.js-payBtn'));
-  }
-
-  get $pendingBtn() {
-    return this._$pendingBtn ||
-        (this._$pendingBtn = this.$('.js-pendingBtn'));
+  get $moderatorNote() {
+    return this._$moderatorNote ||
+      (this._$moderatorNote = this.$('.js-moderatorNote'));
   }
 
   get $closeBtn() {
@@ -189,12 +216,18 @@ export default class extends BaseModal {
         (this._$closeBtn = this.$('.js-closeBtn'));
   }
 
-  get $confirmPay() {
-    return this._$confirmPay ||
-      (this._$confirmPay = this.$('.js-confirmPay'));
+  get $shippingErrors() {
+    return this._$shipingErrors ||
+      (this._$shippingErrors = this.$('.js-shipping-errors'));
+  }
+
+  get $errors() {
+    return this._$errors ||
+      (this._$errors = this.$('.js-errors'));
   }
 
   remove() {
+    if (this.orderSubmit) this.orderSubmit.abort();
     super.remove();
   }
 
@@ -208,8 +241,6 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         displayCurrency: app.settings.get('localCurrency'),
-        countryData: this.countryData, // not used yet
-        defaultCountry: this.defaultCountry, // not used yet
       }));
 
       super.render();
@@ -217,19 +248,62 @@ export default class extends BaseModal {
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
       this._$moderatorSection = null;
-      this._$payBtn = null;
-      this._$pendingBtn = null;
       this._$closeBtn = null;
-      this._$confirmPay = null;
+      this._$shippingErrors = null;
+      this._$errors = null;
 
       this.$purchaseModerated = this.$('#purchaseModerated');
 
+      // remove old view if any on render
+      if (this.actionBtn) this.actionBtn.remove();
+      // add the action button
+      this.actionBtn = this.createChild(ActionBtn, {
+        state: this.state,
+        listing: this.listing,
+      });
+      this.listenTo(this.actionBtn, 'purchase', (() => this.purchaseListing()));
+      this.$('.js-actionBtn').append(this.actionBtn.render().el);
+
+      // remove old view if any on render
+      if (this.receipt) this.receipt.remove();
+      // add the receipt section
+      this.receipt = this.createChild(Receipt, {
+        model: this.order,
+        listing: this.listing,
+      });
+      this.$('.js-receipt').append(this.receipt.render().el);
+
+      const fetchErrorTitle = app.polyglot.t('purchase.errors.moderatorsTitle');
+      const fetchErrorMsg = app.polyglot.t('purchase.errors.moderatorsMsg');
+
+      // remove old view if any on render
+      if (this.moderators) this.moderators.remove();
       // add the moderators section content
+      this.moderators = this.createChild(Moderators, {
+        moderatorIDs: this.listing.get('moderators') || [],
+        fetchErrorTitle,
+        fetchErrorMsg,
+        purchase: true,
+        cardState: 'unselected',
+        notSelected: 'unselected',
+        singleSelect: true,
+        selectFirst: true,
+      });
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
 
       // add the shipping section if needed
-      if (this.shipping) this.$('.js-shippingWrapper').append(this.shipping.render().el);
+      if (this.listing.get('shippingOptions').length) {
+        // remove old view if any on render
+        if (this.shipping) this.shipping.remove();
+        this.shipping = this.createChild(Shipping, {
+          model: this.listing,
+        });
+        this.listenTo(this.shipping, 'shippingOptionSelected', ((opts) => {
+          this.updateShippingOption(opts);
+        }));
+        this.$('.js-shippingWrapper').append(this.shipping.render().el);
+      }
     });
 
     return this;
