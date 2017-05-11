@@ -142,9 +142,12 @@ export default class extends BaseModal {
     // set the moderator
     this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
 
+    // cancel any existing order
+    if (this.orderSubmit) this.orderSubmit.abort();
+
     if (!this.order.validationError) {
       if (!shippingError) {
-        $.post({
+        this.orderSubmit = $.post({
           url: app.getServerUrl('ob/purchase'),
           data: JSON.stringify(this.order.toJSON()),
           dataType: 'json',
@@ -156,7 +159,8 @@ export default class extends BaseModal {
             console.log(data);
           })
           .fail((jqXHR) => {
-            const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
+            if (jqXHR.statusText === 'abort') return;
+            const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
             this.state.phase = 'pay';
@@ -223,6 +227,7 @@ export default class extends BaseModal {
   }
 
   remove() {
+    if (this.orderSubmit) this.orderSubmit.abort();
     super.remove();
   }
 
