@@ -113,7 +113,7 @@
           className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''}`,
           btnText: ob.polyT('transactions.transactionsTable.btnAccept')
         }) %>
-    <% } else {
+    <% } else if (!ob.moderated) {
         if (ob.cancelOrderInProgress) {
     %>
         <span class="posR">
@@ -126,9 +126,11 @@
     %>
       <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
     <%  }
+      } else {
+        print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
       }
     } else {
-      print(ob.polyT(`transactions.transactionsTable.status.${ob.state.toLowerCase()}`));
+      print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
     }
   %>
 </td>

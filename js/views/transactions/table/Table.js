@@ -118,7 +118,7 @@ export default class extends baseVw {
         this.indexedViews.byOrder[e.view.model.id]
           .forEach(view => {
             view.model
-              .set('state', 'CONFIRMED');
+              .set('state', 'AWAITING_FULFILLMENT');
           });
       })
       .fail((xhr) => {
@@ -148,7 +148,7 @@ export default class extends baseVw {
         this.indexedViews.byOrder[e.view.model.id]
           .forEach(view => {
             view.model
-              .set('state', 'REJECTED');
+              .set('state', 'DECLINED');
           });
       })
       .fail((xhr) => {
