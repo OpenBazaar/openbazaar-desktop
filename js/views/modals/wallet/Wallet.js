@@ -3,7 +3,7 @@ import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import Transaction from '../../../models/wallet/Transaction';
-import Transactions from '../../../collections/Transactions';
+import Transactions from '../../../collections/WalletTransactions';
 import BaseModal from '../BaseModal';
 import BTCTicker from '../../BTCTicker';
 import Stats from './Stats';

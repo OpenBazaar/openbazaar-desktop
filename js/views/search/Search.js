@@ -160,7 +160,7 @@ export default class extends baseVw {
     this.$resultsWrapper.html(resultsView.render().el);
 
     this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
-    this.listenTo(resultsView, 'pageLoaded', () => this.scrollToTop());
+    this.listenTo(resultsView, 'loadingPage', () => this.scrollToTop());
   }
 
   clickSearchBtn() {
