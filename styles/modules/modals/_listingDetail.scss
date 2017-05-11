@@ -1,4 +1,13 @@
 .listingDetail {
+  .topControls {
+    position: relative;
+    
+    .deleteConfirm {
+      right: -46px;
+      top: 50px;
+    }
+  }
+
   .modalContent {
     .storeOwnerAvatar {
       width: 24px;
