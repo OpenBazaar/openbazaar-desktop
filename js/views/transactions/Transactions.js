@@ -246,11 +246,17 @@ export default class extends baseVw {
       parsed[pair[0]] = pair[1];
     }
 
-    if (parsed.states) {
-      parsed.states = parsed.states
-        .split('-')
-        .map(strIndex => parseInt(strIndex, 10));
-    }
+    parsed.states = parsed.states || '';
+    const statesArray = [];
+    parsed.states
+      .split('-')
+      .forEach(strIndex => {
+        const parsedInt = parseInt(strIndex, 10);
+        if (!isNaN(parsedInt)) {
+          statesArray.push(parsedInt);
+        }
+      });
+    parsed.states = statesArray;
 
     return parsed;
   }
