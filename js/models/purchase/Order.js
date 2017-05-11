@@ -3,6 +3,11 @@ import app from '../../app';
 import Items from '../../collections/purchase/Items';
 
 export default class extends BaseModel {
+  constructor(attrs, options = {}) {
+    super(attrs, options);
+    this.shippable = options.shippable || false;
+  }
+
   defaults() {
     return {
       // if the listing is not physical, the address and shipping attributes should be blank
@@ -48,6 +53,10 @@ export default class extends BaseModel {
 
     if (!attrs.items.length) {
       addError('items.quantity', app.polyglot.t('orderModelErrors.noItems'));
+    }
+
+    if (this.shippable && !attrs.shipTo && !attrs.countryCode) {
+      addError('shippable', app.polyglot.t('orderModelErrors.missingAddress'));
     }
 
     if (Object.keys(errObj).length) return errObj;

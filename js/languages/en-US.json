@@ -849,7 +849,7 @@
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
-      "missingAddress": "You must choose a shipping address to complete your purchase."
+      "missingAddress": "Please choose a valid shipping address."
     }
   },
   "moderators": {
@@ -1000,7 +1000,9 @@
   "orderModelErrors": {
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeNumber": "The quantity must be a valid number",
-    "noItems": "You must make at least one purchase."
+    "noItems": "You must make at least one purchase.",
+    "missingAddress": "Please choose a valid shipping address.",
+    "missingShippingOption": "Please choose a valid shipping option."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

@@ -33,14 +33,25 @@ export default class extends BaseModal {
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
-    this.order = new Order();
+
+    const shippingOptions = this.listing.get('shippingOptions');
+    const shippable = !!(shippingOptions && shippingOptions.length);
+    this.order = new Order(
+      {},
+      {
+        shippable,
+      });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
     */
-    const item = new Item({
-      listingHash: this.listing.get('hash'),
-      quantity: 1,
-    });
+    const item = new Item(
+      {
+        listingHash: this.listing.get('hash'),
+        quantity: 1,
+      },
+      {
+        shippable,
+      });
     if (options.variants) item.get('options').add(options.variants);
     // add the item to the order.
     this.order.get('items').add(item);
@@ -144,8 +155,8 @@ export default class extends BaseModal {
 
   updateShippingOption(opts) {
     // set the shipping option
-    const oShipping = this.order.get('items').at(0).get('shipping');
-    oShipping.set({ name: opts.name, service: opts.service });
+    this.order.get('items').at(0).get('shipping')
+      .set({ name: opts.name, service: opts.service });
     this.actionBtn.render();
   }
 
@@ -153,47 +164,34 @@ export default class extends BaseModal {
     // clear any old errors
     const allErrContainers = this.$('div[class $="-errors"]');
     allErrContainers.html('');
-    let shippingError = false;
 
-    // if the listing has shipping, and a shipping option has been selected, set it
-    if (this.listing.get('shippingOptions') && this.listing.get('shippingOptions').length) {
-      if (this.shipping.selectedAddress && !!this.order.get('items').at(0).get('shipping')
-          .get('name')) {
-        // set the address
-        this.order.addAddress(this.shipping.selectedAddress);
-      } else {
-        this.insertErrors(this.$shippingErrors, [app.polyglot.t('purchase.errors.missingAddress')]);
-        shippingError = true;
-      }
+    // set the shipping address if the listing is shippable
+    if (this.shipping && this.shipping.selectedAddress) {
+      this.order.addAddress(this.shipping.selectedAddress);
     }
 
     // set the moderator
     this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
 
     if (!this.order.validationError) {
-      if (!shippingError) {
-        $.post({
-          url: app.getServerUrl('ob/purchase'),
-          data: JSON.stringify(this.order.toJSON()),
-          dataType: 'json',
-          contentType: 'application/json',
+      $.post({
+        url: app.getServerUrl('ob/purchase'),
+        data: JSON.stringify(this.order.toJSON()),
+        dataType: 'json',
+        contentType: 'application/json',
+      })
+        .done((data) => {
+          this.state.phase = 'pending';
+          this.actionBtn.render();
+          console.log(data);
         })
-          .done((data) => {
-            this.state.phase = 'pending';
-            this.actionBtn.render();
-            console.log(data);
-          })
-          .fail((jqXHR) => {
-            const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
-            const errTitle = app.polyglot.t('purchase.errors.orderError');
-            openSimpleMessage(errTitle, errMsg);
-            this.state.phase = 'pay';
-            this.actionBtn.render();
-          });
-      } else {
-        this.state.phase = 'pay';
-        this.actionBtn.render();
-      }
+        .fail((jqXHR) => {
+          const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
+          const errTitle = app.polyglot.t('purchase.errors.orderError');
+          openSimpleMessage(errTitle, errMsg);
+          this.state.phase = 'pay';
+          this.actionBtn.render();
+        });
     } else {
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');

@@ -4,6 +4,11 @@ import Shipping from './Shipping';
 import app from '../../app';
 
 export default class extends BaseModel {
+  constructor(attrs, options = {}) {
+    super(attrs, options);
+    this.shippable = options.shippable || false;
+  }
+
   defaults() {
     return {
       // the options sub model is optional
@@ -41,6 +46,10 @@ export default class extends BaseModel {
       addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
     } else if (attrs.quantity < 1) {
       addError('quantity', app.polyglot.t('orderModelErrors.noItems'));
+    }
+
+    if (this.shippable && (!attrs.shipping.get('name') || !attrs.shipping.get('service'))) {
+      addError('shippable', app.polyglot.t('orderModelErrors.missingShippingOption'));
     }
 
     if (Object.keys(errObj).length) return errObj;
