@@ -61,6 +61,8 @@ export default class extends BaseModal {
       'click .js-newAddress': 'clickNewAddress',
       'click .js-applyCoupon': 'clickApplyCoupon',
       'keyup #couponCode': 'onKeyUpCouponCode',
+      'blur #emailAddress': 'blurEmailAddress',
+      'blur #memo': 'blurMemo',
       ...super.events(),
     };
   }
@@ -125,6 +127,14 @@ export default class extends BaseModal {
     if (e.which === 13) {
       this.coupons.addCode(this.$couponField.val());
     }
+  }
+
+  blurEmailAddress(e) {
+    this.order.set('alternateContactInfo', $(e.target).val());
+  }
+
+  blurMemo(e) {
+    this.order.set('memo', $(e.target).val());
   }
 
   changeCoupons() {
@@ -259,6 +269,7 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         displayCurrency: app.settings.get('localCurrency'),
+        ...this.order.toJSON(),
       }));
 
       super.render();

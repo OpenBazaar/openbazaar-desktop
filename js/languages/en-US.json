@@ -818,6 +818,8 @@
     "codeError": "\"%{code}\" is not a valid code",
     "codeDuplicate": "You can only add \"%{code}\" once",
     "removeCode": "remove",
+    "memo": "Memo",
+    "memoPlaceholder": "Provide additional details for the vendor here (optional).",
     "pay": "PAY >",
     "payNote": "Clicking pay will advance you to the final step.",
     "pending": "Pending…",

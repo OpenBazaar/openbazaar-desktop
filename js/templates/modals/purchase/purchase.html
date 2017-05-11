@@ -94,7 +94,7 @@
           <%= ob.polyT('purchase.informationTitle') %>
           <span class="clrT2 txUnb tx5b"><%= ob.polyT('purchase.optional') %></span>
         </h2>
-        <div class="flexRow gutterH">
+        <div class="flexRow gutterH row">
           <div class="col6">
             <div class="rowTn">
               <label for="emailAddress" class="tx5">
@@ -103,12 +103,12 @@
             </div>
             <div>
               <input
-                  class="btnHeight clrBr clrP"
+                  class="btnHeight clrBr clrP js-purchaseField"
                   type="text"
                   id="emailAddress"
-                  name="addressNotes"
+                  name="alternateContactInfo"
                   placeholder="<%= ob.polyT('purchase.emailPlaceholder') %>"
-                  value="<%= ob.addressNotes %>">
+                  value="<%= ob.alternateContactInfo %>">
             </div>
             <div>
               <span class="txSm clrT2"><%= ob.polyT('purchase.emailNote') %></span>
@@ -121,7 +121,7 @@
                 <i class="ion-ios-information-outline js-couponInfo"></i>
               </label>
             </div>
-            <div class="flex gutterH rowTn">
+            <div class="flex gutterH row">
               <input
                   class="btnHeight clrBr clrP"
                   type="text"
@@ -136,6 +136,20 @@
             </div>
           </div>
         </div>
+        <hr class="clrBr rowTn">
+        <div class="rowTn">
+          <label for="memo" class="tx5">
+            <%= ob.polyT('purchase.memo') %>
+          </label>
+        </div>
+        <% console.log(ob) %>
+        <textarea
+            class="clrBr clrP js-purchaseField"
+            id="memo"
+            name="memo"
+            maxlength="5000"
+            rows="6"
+            placeholder="<%= ob.polyT('purchase.memoPlaceholder') %>"><%= ob.memo %></textarea>
       </section>
     </div>
   </div>
