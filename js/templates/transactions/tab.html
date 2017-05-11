@@ -1,0 +1,25 @@
+<h2 class="tabHeading txUnb"><%= ob.polyT(`transactions.${ob.type}.heading`) %></h2>
+<div class="searchWrapper rowMd">
+  <input type="text" class="ctrl clrP clrBr clrSh2 js-searchInput"
+         placeholder="<%= ob.polyT('transactions.placeholderSearch') %>" value="<%= ob.filter.search %>">
+</div>
+
+<%= ob.filtersHtml %>
+
+<div class="flexVCent row gutterH">
+  <div class="flexNoShrink gutterHSm js-queryTotalWrapper hide">
+    <span class="flexNoShrink js-queryTotalLine"></span>
+    <a class="js-resetQuery <% ob.currentFilterIsDefault && print('hide') %>"><%= ob.polyT(`transactions.resetFilters`) %></a>
+  </div>
+  <div class="tx6 flexVCent">
+    <label class="clrT2 marginLAuto margRSm"><%= ob.polyT('transactions.sort.label') %></label>
+    <select class="tx6 select2Small js-sortBySelect" style="width: 150px">
+      <option value="UNREAD" <% if (ob.filter.sortBy === 'UNREAD') print('selected') %>><%= ob.polyT('transactions.sort.unread') %></option>
+      <option value="DATE_ASC" <% if (ob.filter.sortBy === 'DATE_ASC') print('selected') %>><%= ob.polyT('transactions.sort.dateAsc') %></option>
+      <option value="DATE_DESC" <% if (ob.filter.sortBy === 'DATE_DESC') print('selected') %>><%= ob.polyT('transactions.sort.dateDesc') %></option>
+    </select>
+    <div class="select2Small js-sortBySelectDropdownContainer"></div>
+  </div>
+</div>
+
+<div class="js-tableContainer"></div>

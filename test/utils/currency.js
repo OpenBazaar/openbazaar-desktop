@@ -164,7 +164,7 @@ describe('the currency utility module', () => {
         .equal('฿523.12');
       expect(cur.formatCurrency(523.12345678, 'BTC'))
         .to
-        .equal('฿523.12345678');
+        .equal('฿523.123457');
     });
 
     it('properly localizes a BTC amount with the correct bitcoin units', () => {
@@ -259,7 +259,7 @@ describe('the currency utility module', () => {
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'USD', 'BTC', { locale: 'en-US' }))
           .to
-          .equal('฿0.66613376');
+          .equal('฿0.666134');
       });
 
       it('which will convert between BTC and a fiat currency properly localize' +

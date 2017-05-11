@@ -85,6 +85,9 @@ export default class extends BaseModal {
       this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
+
+    this.boundDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundDocClick);
   }
 
   className() {
@@ -95,6 +98,9 @@ export default class extends BaseModal {
     return {
       'click .js-editListing': 'onClickEditListing',
       'click .js-deleteListing': 'onClickDeleteListing',
+      'click .js-deleteConfirmed': 'onClickConfirmedDelete',
+      'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
+      'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
       'click .js-gotoPhotos': 'onClickGotoPhotos',
       'click .js-freeShippingLabel': 'onClickFreeShippingLabel',
       'change #shippingDestinations': 'onSetShippingDestination',
@@ -105,6 +111,10 @@ export default class extends BaseModal {
       'click .js-purchaseBtn': 'startPurchase',
       ...super.events(),
     };
+  }
+
+  onDocumentClick() {
+    this.$deleteConfirmedBox.addClass('hide');
   }
 
   onClickEditListing() {
@@ -135,6 +145,17 @@ export default class extends BaseModal {
   }
 
   onClickDeleteListing() {
+    this.$deleteConfirmedBox.removeClass('hide');
+    // don't bubble to the document click handler
+    return false;
+  }
+
+  onClickDeleteConfirmBox() {
+    // don't bubble to the document click handler
+    return false;
+  }
+
+  onClickConfirmedDelete() {
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
 
     this.destroyRequest = this.model.destroy({ wait: true });
@@ -153,6 +174,10 @@ export default class extends BaseModal {
         }
       });
     }
+  }
+
+  onClickConfirmCancel() {
+    this.$deleteConfirmedBox.addClass('hide');
   }
 
   onClickGotoPhotos() {
@@ -388,10 +413,16 @@ export default class extends BaseModal {
       (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
   }
 
+  get $deleteConfirmedBox() {
+    return this._$deleteConfirmedBox ||
+      (this._$deleteConfirmedBox = this.$('.js-deleteConfirmedBox'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
+    $(document).off(null, this.boundDocClick);
     super.remove();
   }
 
@@ -424,6 +455,7 @@ export default class extends BaseModal {
       this._$photoRadioBtns = null;
       this._$shippingSection = null;
       this._$storeOwnerAvatar = null;
+      this._$deleteConfirmedBox = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
