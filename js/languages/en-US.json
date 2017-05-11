@@ -829,7 +829,7 @@
     },
     "receipt": {
       "summary": "Order Summary",
-      "listing": "Listing (%{quantity} )",
+      "listing": "Listing (%{quantity})",
       "shipping": "Shipping",
       "total": "Total"
     },
