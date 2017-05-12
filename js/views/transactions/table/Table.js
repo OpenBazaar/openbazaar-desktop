@@ -27,9 +27,6 @@ export default class extends baseVw {
       ...options,
     };
 
-    console.log('howdy');
-    window.howdy = opts.initialFilterParams;
-
     if (types.indexOf(opts.type) === -1) {
       throw new Error('Please provide a valid type.');
     }
