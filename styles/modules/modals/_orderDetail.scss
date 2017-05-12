@@ -2,11 +2,23 @@
   .returnBox {
     max-width: 905px;
     text-decoration: none;
+    padding: $padSm;
 
     .avatar {
       width: 24px;
       height: 24px;
       float: left;
+    }
+  }
+
+  .featuredProfile {
+    text-align: center;
+    padding: $padMd;
+
+    .avatar {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 7px;
     }
   }
 

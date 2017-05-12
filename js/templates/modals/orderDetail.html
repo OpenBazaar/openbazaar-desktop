@@ -15,12 +15,31 @@
 </div>
 
 <div class="flex gutterH">
-  <div class="tabColumn contentBox padMd clrP clrBr clrSh3">
-    <h1 class="h4 txUp clrT"><%= ob.polyT('tabMenuHeading') %></h1>
-    <div class="boxList tx4 clrTx1Br">
-      <a class="js-tab tab clrT row active" data-tab="Story"><%= ob.polyT('orderDetail.navMenu.summary') %></a>
-      <a class="js-tab tab row" data-tab="Contributors"><%= ob.polyT('orderDetail.navMenu.discussion') %></a>
-      <a class="js-tab tab row" data-tab="Donations"><%= ob.polyT('orderDetail.navMenu.contract') %></a>
+  <div class="tabColumn gutterV">
+    <div class="contentBox clrP clrBr clrSh3 tx4 featuredProfile">
+      <%
+        let featuredProfileAvatarHashes = {
+          small: 'QmZFEVRW8FR1TUNAY6JSLNFcjdpkc7mFiswejZiTQB9a4L',
+          medium: 'QmQuwNio67TPj9D4NgvA3ur38hWNJpRmSh5AWxVKzKYs2z',
+        };
+        let featuredProfileAvatarStyle = ob.getAvatarBgImage(featuredProfileAvatarHashes,
+          {
+            standardSize: 'small',
+            responsiveSize: 'medium',
+            sugar: true,
+          });
+      %>
+      <div style="<%= featuredProfileAvatarStyle %>" class="avatar clrBr2 clrSh1 disc"></div>
+      <div class="txB">Milly Vanilli</div>
+      <div class="clrT2 tx5">Vancouver, BC</div>
+    </div>
+    <div class="contentBox padMd clrP clrBr clrSh3">
+      <h1 class="h4 txUp clrT"><%= ob.polyT('tabMenuHeading') %></h1>
+      <div class="boxList tx4 clrTx1Br">
+        <a class="js-tab tab clrT row active" data-tab="Story"><%= ob.polyT('orderDetail.navMenu.summary') %></a>
+        <a class="js-tab tab row" data-tab="Contributors"><%= ob.polyT('orderDetail.navMenu.discussion') %></a>
+        <a class="js-tab tab row" data-tab="Donations"><%= ob.polyT('orderDetail.navMenu.contract') %></a>
+      </div>
     </div>
   </div>
   <div class="flexExpand posR">

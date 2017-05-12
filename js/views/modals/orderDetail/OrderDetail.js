@@ -113,6 +113,7 @@ export default class extends BaseModal {
         ...this.model.toJSON(),
         ownProfile: app.profile.toJSON(),
         returnText: this.options.returnText,
+        type: this.type,
       }));
       super.render();
     });
