@@ -6,6 +6,7 @@ import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
 import Order from '../../models/order/Order';
+import Case from '../../models/order/Case';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Tab from './Tab';
@@ -117,14 +118,18 @@ export default class extends baseVw {
       addToRoute: true,
     };
 
-    if (['sale', 'purchase', 'case'].indexOf(type) === -1) {
-      throw new Error('Please provide a valid type.');
+    let model;
+
+    if (type !== 'case') {
+      model = new Order({ orderId: id }, { type });
+    } else {
+      model = new Case({ caseId: id });
     }
 
-    const order = new Order({ id }, { type });
     const orderDetail = new OrderDetail({
-      model: order,
+      model,
       removeOnClose: true,
+      returnText: app.polyglot.t(`transactions.${type}s.returnToFromOrder`),
       ...opts.modalOptions,
     });
 

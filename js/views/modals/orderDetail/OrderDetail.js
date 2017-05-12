@@ -1,5 +1,7 @@
+import app from '../../../app';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
+import Case from '../../../models/order/Case';
 import BaseModal from '../BaseModal';
 
 export default class extends BaseModal {
@@ -25,13 +27,14 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} modalScrollPage modalMedium orderDetail`;
+    return `${super.className()} modalScrollPage tabbedModal orderDetail`;
   }
 
   events() {
     return {
       'click .js-toggleSendReceive': 'onClickToggleSendReceive',
       'click .js-retryFetch': 'onClickRetryFetch',
+      'click .js-returnBox': 'onClickReturnBox',
       ...super.events(),
     };
   }
@@ -69,6 +72,14 @@ export default class extends BaseModal {
     this.model.fetch();
   }
 
+  onClickReturnBox() {
+    this.close();
+  }
+
+  get type() {
+    return this.model instanceof Case ? 'case' : this.model.type;
+  }
+
   getState() {
     return this._state;
   }
@@ -100,6 +111,8 @@ export default class extends BaseModal {
         id: this.model.id,
         ...this._state,
         ...this.model.toJSON(),
+        ownProfile: app.profile.toJSON(),
+        returnText: this.options.returnText,
       }));
       super.render();
     });

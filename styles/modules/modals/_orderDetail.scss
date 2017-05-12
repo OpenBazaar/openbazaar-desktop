@@ -1,4 +1,15 @@
 .orderDetail {
+  .returnBox {
+    max-width: 905px;
+    text-decoration: none;
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      float: left;
+    }
+  }
+
   .mainContent {
     min-height: 300px;
   }

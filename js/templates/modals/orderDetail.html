@@ -1,23 +1,51 @@
-<div class="topControls flex"></div>
-
-<div class="contentBox mainContent padMd clrP clrBr clrSh3">
-  Order: <%= ob.id %>
-  <br />
-  <% if (ob.isFetching) { %>
-    <div class="center">
-      <%= ob.spinner({ className: 'spinnerMd' }) %>
-    </div>
-  <% } else if (ob.fetchFailed) { %>
-    <div class="center txCtr tx4">
-      <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to fetch order.</div>
-      <% if (ob.fetchError) { %>
-        <div class="row"><%= ob.fetchError %></div>
-      <% } %>
-      <a class="btn clrP clrBr clrSh2 js-retryFetch">Retry</a>
-    </div>
-  <% } else { %>
-    <div class="center txCtr" style="line-height: 1em">
-      <div class="ion-alert-circled" style="display: block;font-size: 96px;"></div>Under Construction
-    </div>    
+<div class="topControls flex">
+  <%
+    // This is something found at the top of multip modals. Would be nice to make this into a template
+    // and componentize the css.
+  %>
+  <% if (ob.returnText) { %>
+  <div class="contentBox clrP clrSh3 clrBr clrT">
+    <a class="padSm gutterHSm overflowAuto margRSm flexVCent returnBox js-returnBox">
+      <span class="clrBr2 clrSh1 disc avatar flexNoShrink" style="<%= ob.getAvatarBgImage(ob.ownProfile.avatarHashes) %>"></span>
+      <span class="txUnl tx3 clamp clrT name"><%= ob.ownProfile.name %></span>
+      <span class="txU flexNoShrink tx6"><%= ob.returnText %></span>
+    </a>
+  </div>
   <% } %>
+</div>
+
+<div class="flex gutterH">
+  <div class="tabColumn contentBox padMd clrP clrBr clrSh3">
+    <h1 class="h4 txUp clrT"><%= ob.polyT('tabMenuHeading') %></h1>
+    <div class="boxList tx4 clrTx1Br">
+      <a class="js-tab tab clrT row active" data-tab="Story"><%= ob.polyT('orderDetail.navMenu.summary') %></a>
+      <a class="js-tab tab row" data-tab="Contributors"><%= ob.polyT('orderDetail.navMenu.discussion') %></a>
+      <a class="js-tab tab row" data-tab="Donations"><%= ob.polyT('orderDetail.navMenu.contract') %></a>
+    </div>
+  </div>
+  <div class="flexExpand posR">
+    <div class="js-tabContent tabContent">
+      <div class="contentBox padMd clrP clrBr clrSh3 mainContent">
+        <div class="txCtr txB tx4 padLg"><%= ob.polyT('orderDetail.orderNumber', { orderId: ob.id }) %></div>
+        <hr class="clrBr" />
+        <% if (ob.isFetching) { %>
+          <div class="center">
+            <%= ob.spinner({ className: 'spinnerMd' }) %>
+          </div>
+        <% } else if (ob.fetchFailed) { %>
+          <div class="center txCtr tx4">
+            <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to fetch order.</div>
+            <% if (ob.fetchError) { %>
+              <div class="row"><%= ob.fetchError %></div>
+            <% } %>
+            <a class="btn clrP clrBr clrSh2 js-retryFetch">Retry</a>
+          </div>
+        <% } else { %>
+          <div class="center txCtr" style="line-height: 1em">
+            <div class="ion-alert-circled" style="display: block;font-size: 96px;"></div>Under Construction
+          </div>    
+        <% } %>
+      </div>
+    </div>
+  </div>  
 </div>
