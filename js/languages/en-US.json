@@ -871,7 +871,10 @@
       "failedCancelHeading": "There was an error canceling the order."
     },
     "cases": {
-      "heading": "Cases"
+      "heading": "Cases",
+      "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
+      "countTransactionsFound": "%{countTransactions} found",
+      "noResults": "No cases found"
     },
     "filters": {
       "purchasing": "Purchasing",
@@ -902,12 +905,19 @@
         "status": "Status"
       },
       "status": {
-        "confirmed": "Confirmed",
-        "funded": "Funded",
-        "fulfilled": "Fulfilled",
-        "decided": "Decided",
-        "canceled": "Canceled",
-        "rejected": "Rejected"
+        "PENDING": "Pending",
+        "AWAITING_PAYMENT": "Awaiting Payment",
+        "AWAITING_PICKUP": "Awaiting Pickup",
+        "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
+        "PARTIALLY_FULFILLED": "Partially Fulfilled",
+        "FULFILLED": "Fulfilled",
+        "COMPLETED": "Complete",
+        "CANCELED": "Canceled",
+        "DECLINED": "Declined",
+        "REFUNDED": "Refunded",
+        "DISPUTED": "Disputed",
+        "DECIDED": "Decided",
+        "RESOLVED": "Resolved"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
