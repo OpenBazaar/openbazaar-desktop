@@ -271,6 +271,7 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         displayCurrency: app.settings.get('localCurrency'),
+        phase: this.state.phase,
         ...this.order.toJSON(),
       }));
 

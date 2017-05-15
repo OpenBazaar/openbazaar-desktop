@@ -81,7 +81,7 @@ export default class extends baseView {
   render() {
     loadTemplate('modals/purchase/actionBtn.html', t => {
       this.$el.html(t({
-        state: this.state.phase,
+        phase: this.state.phase,
         listing: this.options.listing,
       }));
 
