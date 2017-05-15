@@ -88,8 +88,8 @@ export default class extends BaseModal {
   }
 
   couponDiscount(coupon) {
-    const percDis = coupon.get('percentDiscount') || 0;
-    const pricDis = coupon.get('priceDiscount') || 0;
+    const percDis = coupon && coupon.get('percentDiscount') || 0;
+    const pricDis = coupon && coupon.get('priceDiscount') || 0;
     return (this.listingPrice * percDis * 0.01) + pricDis;
   }
 

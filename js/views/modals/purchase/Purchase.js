@@ -132,11 +132,13 @@ export default class extends BaseModal {
 
   clickApplyCoupon() {
     this.coupons.addCode(this.$couponField.val());
+    this.$couponField.val('');
   }
 
   onKeyUpCouponCode(e) {
     if (e.which === 13) {
       this.coupons.addCode(this.$couponField.val());
+      this.$couponField.val('');
     }
   }
 
