@@ -14,6 +14,7 @@
   .featuredProfile {
     text-align: center;
     padding: $padMd;
+    min-height: 143px;
 
     .avatar {
       width: 70px;
@@ -28,7 +29,28 @@
     }
   }
 
+  .tabHeads {
+    .unreadBadge {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      font-weight: bold;
+      padding-top: 3px;
+      font-size: $tx6;
+      margin-left: 5px;
+    }
+  }
+
   .mainContent {
     min-height: 300px;
+
+    .fetchBox {
+      position: absolute;
+      top: 90px;
+      bottom: $padMd;
+      left: 0;
+      right: 0;
+    }
   }
 }

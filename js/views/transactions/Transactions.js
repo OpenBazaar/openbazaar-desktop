@@ -130,6 +130,7 @@ export default class extends baseVw {
       model,
       removeOnClose: true,
       returnText: app.polyglot.t(`transactions.${type}s.returnToFromOrder`),
+      getProfiles: this.getProfiles.bind(this),
       ...opts.modalOptions,
     });
 

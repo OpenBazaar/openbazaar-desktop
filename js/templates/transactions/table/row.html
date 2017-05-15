@@ -26,7 +26,7 @@
 </td>
 <td class="clrBr dateCol"><%= ob.moment(ob.timestamp).format('l LT') %></td>
 <% if (ob.type !== 'cases') { %>
-<td class="clrBr listingCol">
+<td class="clrBr listingCol js-listingCol">
   <div class="flexVCent gutterHSm">
     <% const imageHashes = { small: ob.thumbnail, tiny: ob.thumbnail } %>
     <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></a>
