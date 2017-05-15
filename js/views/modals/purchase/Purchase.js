@@ -173,6 +173,9 @@ export default class extends BaseModal {
     // set the moderator
     this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
 
+    // cancel any existing order
+    if (this.orderSubmit) this.orderSubmit.abort();
+
     if (!this.order.validationError) {
       $.post({
         url: app.getServerUrl('ob/purchase'),
@@ -254,6 +257,7 @@ export default class extends BaseModal {
   }
 
   remove() {
+    if (this.orderSubmit) this.orderSubmit.abort();
     super.remove();
   }
 

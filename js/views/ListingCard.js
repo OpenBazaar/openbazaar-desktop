@@ -30,7 +30,7 @@ export default class extends baseVw {
       this.ownerGuid = opts.profile.id;
     } else if (this.model.get('vendor')) {
       // If a vendor object is available (part of proposed search API), please pass it in.
-      this.ownerGuid = this.model.get('vendor').guid;
+      this.ownerGuid = this.model.get('vendor').peerID;
     } else {
       // Otherwise please provide a boolean indicating ownListing.
       this.ownerGuid = opts.ownerGuid;

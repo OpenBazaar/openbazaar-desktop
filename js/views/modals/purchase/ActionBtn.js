@@ -16,7 +16,8 @@ export default class extends baseView {
     this.options = options;
     this.state = options.state;
 
-    $(document).on('click', this.onDocumentClick.bind(this));
+    this.boundOnDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
   }
 
   className() {
@@ -73,7 +74,7 @@ export default class extends baseView {
   }
 
   remove() {
-    $(document).off('click', this.onDocumentClick);
+    $(document).off('click', this.boundOnDocClick);
     super.remove();
   }
 

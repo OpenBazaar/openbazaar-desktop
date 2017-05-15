@@ -38,6 +38,14 @@ export default class extends baseVw {
       this.salesCol.fetch();
     }
 
+    this.casesCol = new Transactions([], { type: 'cases' });
+    this.syncTabHeadCount(this.casesCol, () => this.$casesTabCount);
+
+    if (opts.initialTab !== 'cases') {
+      // fetch so we get the count for the tabhead
+      this.casesCol.fetch();
+    }
+
     this.socket = getSocket();
   }
 
@@ -89,7 +97,7 @@ export default class extends baseVw {
     return {
       search: '',
       sortBy: 'UNREAD',
-      states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      states: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     };
   }
 
@@ -108,22 +116,65 @@ export default class extends baseVw {
         text: app.polyglot.t('transactions.filters.ready'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
         className: 'filter',
-        targetState: [2],
+        targetState: [2, 3, 4],
       },
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
-        targetState: [3],
+        targetState: [5],
       },
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
-        targetState: [8],
+        targetState: [9],
       },
+      {
+        id: 'filterDisputeOpen',
+        text: app.polyglot.t('transactions.filters.disputeOpen'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
+        className: 'filter',
+        targetState: [10],
+      },
+      {
+        id: 'filterDisputePending',
+        text: app.polyglot.t('transactions.filters.disputePending'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
+        className: 'filter',
+        targetState: [11],
+      },
+      {
+        id: 'filterDisputeClosed',
+        text: app.polyglot.t('transactions.filters.disputeClosed'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
+        className: 'filter',
+        targetState: [12],
+      },
+      {
+        id: 'filterCompleted',
+        text: app.polyglot.t('transactions.filters.completed'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
+        className: 'filter',
+        targetState: [6, 7, 8],
+      },
+    ];
+  }
+
+  get casesDefaultFilter() {
+    return {
+      search: '',
+      sortBy: 'UNREAD',
+      states: [5, 6, 7],
+    };
+  }
+
+  get casesFilterConfig() {
+    return [
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
@@ -145,15 +196,6 @@ export default class extends baseVw {
         className: 'filter',
         targetState: [7],
       },
-      {
-        id: 'filterCompleted',
-        text: app.polyglot.t('transactions.filters.completed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
-        className: 'filter',
-        targetState: [4, 9, 10],
-      },
     ];
   }
 
@@ -162,11 +204,6 @@ export default class extends baseVw {
       addTabToHistory: true,
       ...options,
     };
-
-    if (targ === 'cases') {
-      alert('Cases are coming soon.');
-      return;
-    }
 
     if (!this[`create${capitalize(targ)}TabView`]) {
       throw new Error(`${targ} is not a valid tab.`);
@@ -210,9 +247,18 @@ export default class extends baseVw {
     }
 
     if (parsed.states) {
-      parsed.states = parsed.states
+      const statesArray = [];
+      parsed.states
         .split('-')
-        .map(strIndex => parseInt(strIndex, 10));
+        .forEach(strIndex => {
+          const parsedInt = parseInt(strIndex, 10);
+          if (!isNaN(parsedInt)) {
+            statesArray.push(parsedInt);
+          }
+        });
+      parsed.states = statesArray;
+    } else {
+      delete parsed.states;
     }
 
     return parsed;
@@ -248,6 +294,24 @@ export default class extends baseVw {
         ...this.filterUrlParams,
       },
       filterConfig: this.salesPurchasesFilterConfig,
+      getProfiles: this.getProfiles.bind(this),
+    });
+
+    return view;
+  }
+
+  createCasesTabView() {
+    const view = this.createChild(Tab, {
+      collection: this.casesCol,
+      type: 'cases',
+      defaultFilter: {
+        ...this.casesDefaultFilter,
+      },
+      initialFilter: {
+        ...this.casesDefaultFilter,
+        ...this.filterUrlParams,
+      },
+      filterConfig: this.casesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
     });
 
@@ -300,6 +364,11 @@ export default class extends baseVw {
       (this._$salesTabCount = this.$('.js-salesTabCount'));
   }
 
+  get $casesTabCount() {
+    return this._$casesTabCount ||
+      (this._$casesTabCount = this.$('.js-casesTabCount'));
+  }
+
   remove() {
     this.profilePosts.forEach(post => post.abort());
     super.remove();
@@ -312,6 +381,8 @@ export default class extends baseVw {
 
     this.$tabContent = this.$('.js-tabContent');
     this._$purchasesTabCount = null;
+    this._$salesTabCount = null;
+    this._$casesTabCount = null;
 
     if (this.miniProfile) this.miniProfile.remove();
     this.miniProfile = this.createChild(MiniProfile, {

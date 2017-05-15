@@ -118,7 +118,7 @@ export default class extends baseVw {
         this.indexedViews.byOrder[e.view.model.id]
           .forEach(view => {
             view.model
-              .set('state', 'CONFIRMED');
+              .set('state', 'AWAITING_FULFILLMENT');
           });
       })
       .fail((xhr) => {
@@ -148,7 +148,7 @@ export default class extends baseVw {
         this.indexedViews.byOrder[e.view.model.id]
           .forEach(view => {
             view.model
-              .set('state', 'REJECTED');
+              .set('state', 'DECLINED');
           });
       })
       .fail((xhr) => {
@@ -195,10 +195,15 @@ export default class extends baseVw {
   }
 
   onClickRow(e) {
-    const order = new Order({
-      orderId: e.view.model.id,
-    });
+    let type = 'sale';
 
+    if (this.type === 'purchases') {
+      type = 'purchase';
+    } else if (this.type === 'cases') {
+      type = 'case';
+    }
+
+    const order = new Order({ id: e.view.model.id }, { type });
     const orderDetail = new OrderDetail({
       model: order,
       removeOnClose: true,
@@ -276,7 +281,9 @@ export default class extends baseVw {
         this.indexedViews.byVendor[vendorId] =
           this.indexedViews.byVendor[vendorId] || [];
         this.indexedViews.byVendor[vendorId].push(view);
-      } else if (buyerId) {
+      }
+
+      if (buyerId) {
         this.indexedViews.byBuyer[buyerId] =
           this.indexedViews.byBuyer[buyerId] || [];
         this.indexedViews.byBuyer[buyerId].push(view);
@@ -309,8 +316,12 @@ export default class extends baseVw {
       ...filter,
       // Joining with dashes instead of commas because commas
       // look really bizarre when encode in a query string.
-      states: filter.states.join('-'),
+      states: Array.isArray(filter.states) ? filter.states.join('-') : '',
     };
+
+    if (!queryFilter.states) {
+      delete queryFilter.states;
+    }
 
     if (queryFilter.search === '') {
       delete queryFilter.search;

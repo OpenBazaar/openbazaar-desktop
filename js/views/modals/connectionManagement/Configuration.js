@@ -17,7 +17,8 @@ export default class extends baseVw {
     };
 
     this.listenTo(this.model, 'change', () => this.render());
-    $(document).on('click', this.onDocumentClick.bind(this));
+    this.boundOnDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
   }
 
   className() {
@@ -107,7 +108,7 @@ export default class extends baseVw {
   }
 
   remove() {
-    $(document).off('click', this.onDocumentClick);
+    $(document).off('click', this.boundOnDocClick);
     super.remove();
   }
 

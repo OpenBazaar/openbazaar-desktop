@@ -153,7 +153,7 @@ export function formatCurrency(amount, currency, options) {
     // out with the appropriate Bitcoin symbol
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: 0,
-      maximumFractionDigits: 6,
+      maximumFractionDigits: 8,
     }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
 
     let btcUnit = opts.btcUnit;

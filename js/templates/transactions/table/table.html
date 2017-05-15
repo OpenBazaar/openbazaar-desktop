@@ -34,11 +34,16 @@
       <th class="clrBr">
         <a class="js-dateHeader dateHeader clrT"><%= ob.polyT('transactions.transactionsTable.headers.date') %><div class="sortIcon hide"></div></a>
       </th>
+      <% if (ob.type !== 'cases') { %>
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.listing') %></th>
+      <% } %>
       <% if (ob.type === 'sales') { %>
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.buyer') %></th>
       <% } else { %>
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.vendor') %></th>
+      <% } %>
+      <% if (ob.type === 'cases') { %>
+      <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.buyer') %></th>
       <% } %>
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.total') %></th>
       <th class="clrBr"><%= ob.polyT('transactions.transactionsTable.headers.status') %></th>

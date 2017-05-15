@@ -85,8 +85,8 @@
           }
 
           &.listingCol {
-            max-width: 145px;
-            min-width: 145px;
+            max-width: 142px;
+            min-width: 142px;
 
             .thumb {
               width: 33px;
@@ -129,7 +129,6 @@
           &.statusCol {
             min-width: 130px;
             max-width: 130px;
-            line-height: 2em;
 
             .btnAcceptOrder {
               padding: 0 10px;
@@ -143,9 +142,11 @@
           }
         }
 
-        tr {
+        td {
           cursor: pointer;
+        }
 
+        tr {
           .unreadBorder {
             display: none;
           }

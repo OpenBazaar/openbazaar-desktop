@@ -1,8 +1,8 @@
 // used for sales, purchases and cases
 import app from '../app';
 import { Collection } from 'backbone';
-import Transaction from '../models/Transaction';
-import $ from 'jquery';
+import Transaction from '../models/transaction/Transaction';
+import Case from '../models/transaction/Case';
 
 export default class extends Collection {
   constructor(models = [], options = {}) {
@@ -21,56 +21,17 @@ export default class extends Collection {
     this.type = opts.type;
   }
 
-  model(attrs, options) {
-    return new Transaction(attrs, options);
+  model(attrs) {
+    const Md = attrs.caseId ? Case : Transaction;
+    return new Md(attrs, { parse: true });
+  }
+
+  modelId(attrs) {
+    return this.type === 'cases' ? attrs.caseId : attrs.orderId;
   }
 
   url() {
     return app.getServerUrl(`ob/${this.type}`);
-  }
-
-  // temporary to test pagination with dummy data
-  get rawPurchase() {
-    return {
-      orderId: 'QmRLMNcmb7SXz3zrYZM6zuvSvhHSnyuxnAi4EAxZBpnQdD',
-      read: true,
-      shippingAddress: '1500 W. Taylor',
-      shippingName: 'Big Papi',
-      state: 'CONFIRMED',
-      thumbnail: 'QmdEqHjwWNzoTEjTuRy8ykLM2zpgW8mDbmJDJS9nN89eT1',
-      timestamp: '2017-04-25T09:28:20-07:00',
-      title: 'try again',
-      total: 156606,
-      unreadChatMessages: 0,
-      vendorHandle: '',
-      vendorId: 'QmbSYKcypVVZNVQ4tqgG6oE8kNBapjgoU5676fBp62hcWE',
-    };
-  }
-
-  // temporary to test pagination with dummy data
-  fetch2() {
-    const deferred = $.Deferred();
-    const queryTotal = 16;
-    const perPage = 5;
-
-    setTimeout(() => {
-      const models = [];
-      const remaining = queryTotal - this.length > perPage ?
-        perPage : queryTotal - this.length;
-
-      for (let i = 0; i < remaining; i++) {
-        const md = new Transaction({
-          ...this.rawPurchase,
-          orderId: `${this.length + i + 1}---${this.rawPurchase.orderId.slice(5)}`,
-        }, { parse: true });
-        models.push(md);
-      }
-
-      this.add(models);
-      deferred.resolve({ queryCount: queryTotal });
-    }, 1000);
-
-    return deferred.promise();
   }
 
   fetch(options = {}) {
@@ -81,10 +42,6 @@ export default class extends Collection {
       ...options,
       data: JSON.stringify(options.data || {}),
     });
-  }
-
-  modelId(attrs) {
-    return attrs.orderId;
   }
 
   parse(response) {
