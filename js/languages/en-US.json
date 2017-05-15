@@ -806,6 +806,7 @@
   },
   "purchase": {
     "refreshPurchase": "Refresh",
+    "purchaseDataChangedPopin": "The data for this listing has changed. %{refreshLink}",
     "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
     "returnToListing": "Return To Listing",
     "optional": "optional",
@@ -824,8 +825,9 @@
     "couponCode": "Coupon Code",
     "applyCode": "Apply",
     "code": "\"%{code}\" applied to order",
-    "codeError": "\"%{code}\" is not a valid code",
+    "codeInvalid": "\"%{code}\" is not a valid code",
     "codeDuplicate": "You can only add \"%{code}\" once",
+    "codeExcessive": "You cannot apply a discount of more than 100% of the listing's price.",
     "removeCode": "remove",
     "memo": "Memo",
     "memoPlaceholder": "Provide additional details for the vendor here (optional).",

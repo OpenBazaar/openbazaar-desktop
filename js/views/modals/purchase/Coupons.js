@@ -8,10 +8,16 @@ export default class extends BaseModal {
     super(options);
     this.options = options;
 
+    if (!options.listingPrice) {
+      throw new Error('Please provide a price for the listing.');
+    }
+
     this.couponCodes = [];
     this.couponHashes = [];
-    this.listingHashes = options.coupons.pluck('hash');
-    this.invalidCode = '';
+    this.listingPrice = options.listingPrice;
+    this.totalDiscount = 0;
+    this.coupons = options.coupons;
+    this.invalidCode = {};
   }
 
   className() {
@@ -51,28 +57,47 @@ export default class extends BaseModal {
       const buf = new Buffer(hash, 'hex');
       const encoded = multihashes.encode(buf, 'sha2-256');
       const hashedCode = multihashes.toB58String(encoded);
+      const coupon = this.findCoupon(hashedCode, code);
+      const discount = this.couponDiscount(coupon);
+      this.invalidCode = null;
 
-      if (this.listingHashes.indexOf(hashedCode) !== -1 && this.couponCodes.indexOf(code) === -1) {
-        this.couponCodes.push(code);
-        this.couponHashes.push(hashedCode);
-        this.invalidCode = '';
-        this.duplicateCode = '';
-        this.trigger('changeCoupons');
-      } else if (this.couponCodes.indexOf(code) !== -1) {
-        this.invalidCode = '';
-        this.duplicateCode = code;
+      if (coupon) {
+        // don't add duplicate coupons
+        if (this.couponCodes.indexOf(code) !== -1) {
+          this.invalidCode = { type: 'Duplicate', code };
+          // don't add if the total discount is more than the price of the listing
+        } else if (this.totalDiscount + discount < this.listingPrice) {
+          this.totalDiscount += discount;
+          this.couponCodes.push(code);
+          this.couponHashes.push(hashedCode);
+          this.trigger('changeCoupons');
+        } else {
+          this.invalidCode = { type: 'Excessive', code };
+        }
       } else {
-        this.invalidCode = code;
-        this.duplicateCode = '';
+        this.invalidCode = { type: 'Invalid', code };
       }
       this.render();
     });
+  }
+
+  findCoupon(hashedCode, code) {
+    let coupon = this.coupons.findWhere({ hash: hashedCode });
+    coupon = coupon || this.coupons.findWhere({ title: code });
+    return coupon;
+  }
+
+  couponDiscount(coupon) {
+    const percDis = coupon.get('percentDiscount') || 0;
+    const pricDis = coupon.get('priceDiscount') || 0;
+    return (this.listingPrice * percDis * 0.01) + pricDis;
   }
 
   removeCode(code) {
     const index = this.couponCodes.indexOf(code);
     this.couponCodes.splice(index, 1);
     this.couponHashes.splice(index, 1);
+    this.totalDiscount -= this.couponDiscount(this.findCoupon('', code));
     this.trigger('changeCoupons');
     this.render();
   }
@@ -86,7 +111,6 @@ export default class extends BaseModal {
       this.$el.html(t({
         couponCodes: this.couponCodes,
         invalidCode: this.invalidCode,
-        duplicateCode: this.duplicateCode,
       }));
     });
 

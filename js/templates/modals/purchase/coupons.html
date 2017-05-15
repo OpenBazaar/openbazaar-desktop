@@ -1,20 +1,15 @@
 <% if (ob.invalidCode) { %>
   <div class="txSm rowTn flex">
     <span class="clrTErr">
-      <%= ob.polyT('purchase.codeError', { code: ob.invalidCode }) %>
+      <%= ob.polyT(`purchase.code${ob.invalidCode.type}`, { code: ob.invalidCode.code }) %>
     </span>
   </div>
-<% } %>
-<% if (ob.duplicateCode) { %>
-<div class="txSm rowTn">
-  <span class="clrTErr">
-    <%= ob.polyT('purchase.codeDuplicate', { code: ob.duplicateCode }) %>
-  </span>
-</div>
 <% } %>
 <% ob.couponCodes.forEach(code => { %>
   <div class="txSm rowTn flex">
     <span class="clrTEm"><%= ob.polyT('purchase.code', { code }) %></span>
-    <button class="btnTxtOnly js-remove"><%= ob.polyT('purchase.removeCode') %></button>
+    <button class="btnTxtOnly js-remove" data-code="<%= code %>">
+      <%= ob.polyT('purchase.removeCode') %>
+    </button>
   </div>
 <% }); %>

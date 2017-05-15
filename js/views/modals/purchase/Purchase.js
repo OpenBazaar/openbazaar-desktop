@@ -86,7 +86,7 @@ export default class extends BaseModal {
         `<a class="js-refresh">${app.polyglot.t('purchase.refreshPurchase')}</a>`;
 
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('listingDetail.listingDataChangedPopin',
+        messageText: app.polyglot.t('purchase.purchaseDataChangedPopin',
             { refreshLink }),
       });
 
@@ -306,6 +306,7 @@ export default class extends BaseModal {
       // add the coupons
       this.coupons = this.createChild(Coupons, {
         coupons: this.listing.get('coupons'),
+        listingPrice: this.listing.get('item').get('price'),
       });
 
       this.listenTo(this.coupons, 'changeCoupons', () => this.changeCoupons());

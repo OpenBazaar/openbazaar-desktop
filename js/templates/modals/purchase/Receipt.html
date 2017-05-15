@@ -15,6 +15,8 @@
     });
     itemTotal += shippingPrice;
     total += itemTotal * item.quantity;
+    // don't allow coupons to make the total negative
+    total = total > 0 ? total : 0;
 %>
   <div class="flexRow">
     <span class="col5">
