@@ -8,6 +8,8 @@ import Profile from '../../../models/profile/Profile';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './Summary';
+import Discussion from './Discussion';
+import Contract from './Contract';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -25,7 +27,6 @@ export default class extends BaseModal {
     this._tab = opts.initialTab;
     this.options = opts;
     this.tabViewCache = {};
-    this.featuredProfileMd = new Profile();
 
     if (!this.model) {
       throw new Error('Please provide an Order model.');
@@ -93,8 +94,11 @@ export default class extends BaseModal {
     this.featuredProfileFetch =
       this.options.getProfiles(['Qmai9U7856XKgDSvMFExPbQufcsc4ksG779VyG4Md5dn4J'])[0]
         .done(profile => {
-          this.featuredProfileMd.set(profile);
-          this.featuredProfile.setState({ isFetching: false });
+          this.featuredProfileMd = new Profile(profile);
+          this.featuredProfile.setModel(this.featuredProfileMd);
+          this.featuredProfile.setState({
+            isFetching: false,
+          });
         });
   }
 
@@ -136,12 +140,7 @@ export default class extends BaseModal {
     return this;
   }
 
-  selectTab(targ, options = {}) {
-    const opts = {
-      addTabToHistory: true,
-      ...options,
-    };
-
+  selectTab(targ) {
     if (!this[`create${capitalize(targ)}TabView`]) {
       throw new Error(`${targ} is not a valid tab.`);
     }
@@ -149,11 +148,6 @@ export default class extends BaseModal {
     let tabView = this.tabViewCache[targ];
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      if (opts.addTabToHistory) {
-        // add tab to history
-        app.router.navigate(`transactions/${targ}`);
-      }
-
       this.$('.js-tab').removeClass('clrT active');
       this.$(`.js-tab[data-tab="${targ}"]`).addClass('clrT active');
 
@@ -183,12 +177,27 @@ export default class extends BaseModal {
     return view;
   }
 
+  createDiscussionTabView() {
+    const view = this.createChild(Discussion, {
+      model: this.model,
+    });
+
+    return view;
+  }
+
+  createContractTabView() {
+    const view = this.createChild(Contract, {
+      model: this.model,
+    });
+
+    return view;
+  }
+
   render() {
     loadTemplate('modals/orderDetail/orderDetail.html', t => {
       const state = this.getState();
 
       this.$el.html(t({
-        id: this.model.id,
         ...state,
         ...this.model.toJSON(),
         ownProfile: app.profile.toJSON(),
@@ -201,18 +210,15 @@ export default class extends BaseModal {
 
       if (this.featuredProfile) this.featuredProfile.remove();
       this.featuredProfile = this.createChild(ProfileBox, {
-        model: this.featuredProfileMd,
+        model: this.featuredProfileMd || null,
         initialState: {
-          isFetching: !this.featuredProfileFetch ||
-            this.featuredProfileFetch.state() === 'pending',
+          isFetching: this.featuredProfileFetch && this.featuredProfileFetch.state() === 'pending',
         },
       });
       this.$('.js-featuredProfile').html(this.featuredProfile.render().el);
 
       if (!state.isFetching && !state.fetchError) {
-        this.selectTab(this._tab, {
-          addTabToHistory: false,
-        });
+        this.selectTab(this._tab);
       }
     });
 

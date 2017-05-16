@@ -36,21 +36,15 @@
   </div>
   <div class="flexExpand posR">
     <div class="contentBox padMd clrP clrBr clrSh3 mainContent">
-      <div class="txCtr txB tx4 padLg"><%= ob.polyT('orderDetail.orderNumber', { orderId: ob.id }) %></div>
-      <hr class="clrBr" />
       <% if (ob.isFetching) { %>
-        <div class="fetchBox">
-          <div class="center"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
-        </div>
+        <div class="center"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
       <% } else if (ob.fetchFailed) { %>
-        <div class="fetchBox">
-          <div class="center txCtr tx4">
-            <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to fetch order.</div>
-            <% if (ob.fetchError) { %>
-              <div class="row"><%= ob.fetchError %></div>
-            <% } %>
-            <a class="btn clrP clrBr clrSh2 js-retryFetch">Retry</a>
-          </div>
+        <div class="center txCtr tx4">
+          <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to fetch order.</div>
+          <% if (ob.fetchError) { %>
+            <div class="row"><%= ob.fetchError %></div>
+          <% } %>
+          <a class="btn clrP clrBr clrSh2 js-retryFetch">Retry</a>
         </div>
       <% } else { %>
         <div class="tabContent js-tabContent">

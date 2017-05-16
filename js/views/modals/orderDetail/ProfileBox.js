@@ -15,15 +15,11 @@ export default class extends BaseVw {
     super(opts);
     this.options = opts;
 
-    if (!this.model) {
-      throw new Error('Please provide a Profile model.');
-    }
+    if (this.model) this.setModel(this.model);
 
     this._state = {
       ...opts.initialState || {},
     };
-
-    this.listenTo(this.model, 'change', () => this.render());
   }
 
   className() {
@@ -35,6 +31,12 @@ export default class extends BaseVw {
   //     'click .js-toggleSendReceive': 'onClickToggleSendReceive',
   //   };
   // }
+
+  setModel(md) {
+    if (this.model) this.stopListening(this.model);
+    this.listenTo(md, 'change', () => this.render());
+    this.model = md;
+  }
 
   getState() {
     return this._state;
@@ -61,7 +63,7 @@ export default class extends BaseVw {
     loadTemplate('modals/orderDetail/profileBox.html', t => {
       this.$el.html(t({
         ...this._state,
-        ...this.model.toJSON(),
+        ...this.model && this.model.toJSON() || {},
       }));
     });
 

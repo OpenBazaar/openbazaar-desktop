@@ -2,7 +2,7 @@
   <div class="center">
     <%= ob.spinner({ className: 'spinnerMd' }) %>
   </div>
-<% } else { %>
+<% } else if (ob.name) { %>
   <%
     let featuredProfileAvatarStyle = ob.getAvatarBgImage(ob.avatarHashes,
       {

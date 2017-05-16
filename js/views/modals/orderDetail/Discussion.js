@@ -17,7 +17,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'summaryTab';
+    return 'discussionTab';
   }
 
   events() {
@@ -27,13 +27,12 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/orderDetail/summary.html', t => {
+    loadTemplate('modals/orderDetail/discussion.html', t => {
       this.$el.html(t({
-        id: this.model.id,
         ...this.model.toJSON(),
       }));
 
-      this._$filterCheckboxes = null;
+      // this._$filterCheckboxes = null;
     });
 
     return this;
