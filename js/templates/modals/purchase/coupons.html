@@ -1,4 +1,4 @@
-<% if (ob.invalidCode) { %>
+<% if (ob.invalidCode && ob.invalidCode.type && ob.invalidCode.code) { %>
   <div class="txSm rowTn flex">
     <span class="clrTErr">
       <%= ob.polyT(`purchase.code${ob.invalidCode.type}`, { code: ob.invalidCode.code }) %>

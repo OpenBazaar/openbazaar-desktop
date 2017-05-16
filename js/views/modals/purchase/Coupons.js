@@ -83,13 +83,13 @@ export default class extends BaseModal {
 
   findCoupon(hashedCode, code) {
     let coupon = this.coupons.findWhere({ hash: hashedCode });
-    coupon = coupon || this.coupons.findWhere({ title: code });
+    coupon = coupon || this.coupons.findWhere({ discountCode: code });
     return coupon;
   }
 
   couponDiscount(coupon) {
-    const percDis = coupon.get('percentDiscount') || 0;
-    const pricDis = coupon.get('priceDiscount') || 0;
+    const percDis = coupon && coupon.get('percentDiscount') || 0;
+    const pricDis = coupon && coupon.get('priceDiscount') || 0;
     return (this.listingPrice * percDis * 0.01) + pricDis;
   }
 

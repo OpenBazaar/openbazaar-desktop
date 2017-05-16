@@ -7,12 +7,15 @@ import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
+import Purchase from '../../../models/purchase/Purchase';
 import PopInMessage from '../../PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
+import Pending from './Pending';
+import Complete from './Complete';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import { openSimpleMessage } from '../SimpleMessage';
 
@@ -55,6 +58,9 @@ export default class extends BaseModal {
     if (options.variants) item.get('options').add(options.variants);
     // add the item to the order.
     this.order.get('items').add(item);
+
+    // create an empty purchase model
+    this.purchase = new Purchase();
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -132,11 +138,13 @@ export default class extends BaseModal {
 
   clickApplyCoupon() {
     this.coupons.addCode(this.$couponField.val());
+    this.$couponField.val('');
   }
 
   onKeyUpCouponCode(e) {
     if (e.which === 13) {
       this.coupons.addCode(this.$couponField.val());
+      this.$couponField.val('');
     }
   }
 
@@ -186,7 +194,10 @@ export default class extends BaseModal {
         .done((data) => {
           this.state.phase = 'pending';
           this.actionBtn.render();
+          this.$el.attr('data-phase', 'pending');
           console.log(data);
+          this.purchase.set(data);
+          this.pending.render();
         })
         .fail((jqXHR) => {
           const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
@@ -271,7 +282,6 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         displayCurrency: app.settings.get('localCurrency'),
-        phase: this.state.phase,
         ...this.order.toJSON(),
       }));
 
@@ -315,7 +325,7 @@ export default class extends BaseModal {
       });
 
       this.listenTo(this.coupons, 'changeCoupons', () => this.changeCoupons());
-      this.$('.js-couponsWrapper').html(this.coupons.render().el);
+      this.$('.js-couponsWrapper').append(this.coupons.render().el);
 
       // remove old view if any on render
       if (this.moderators) this.moderators.remove();
@@ -345,6 +355,20 @@ export default class extends BaseModal {
         }));
         this.$('.js-shippingWrapper').append(this.shipping.render().el);
       }
+
+      // remove old view if any on render
+      if (this.pending) this.pending.remove();
+      // add the pending view
+      this.pending = this.createChild(Pending, {
+        model: this.purchase,
+      });
+      this.$('.js-pending').append(this.pending.render().el);
+
+      // remove old view if any on render
+      if (this.complete) this.complete.remove();
+      // add the complete view
+      this.complete = this.createChild(Complete);
+      this.$('.js-complete').append(this.complete.render().el);
     });
 
     return this;

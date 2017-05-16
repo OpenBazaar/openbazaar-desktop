@@ -13,4 +13,38 @@
     top: calc(100% + #{$padSm});
     left: -$bar;
   }
+
+  .showIfPending,
+  .showIfClose {
+    display: none;
+  }
+
+  &[data-phase='pending'] {
+    .showIfPay {
+      display: none;
+    }
+    .showIfPending {
+      display: block;
+    }
+  }
+
+  &[data-phase='close'] {
+    .showIfPay {
+      display: none;
+    }
+    .showIfClose {
+      display: none;
+    }
+  }
+
+  .pending {
+    .QR {
+      display: block;
+
+      img {
+        width: 240px;
+        height: 240px;
+      }
+    }
+  }
 }

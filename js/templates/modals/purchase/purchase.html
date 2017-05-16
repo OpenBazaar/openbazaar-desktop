@@ -31,23 +31,21 @@
               <% }); %>
             </div>
           </div>
-          <% if (ob.phase === 'pay' || ob.phase === 'confirm') { %>
-            <div>
-              <div class="flexVCent gutterHSm">
-                <label class="flexNoShrink" for="purchaseQuantity">
-                  <%= ob.polyT('purchase.quantity') %>
-                </label>
-                <input
-                    class="clrBr clrP"
-                    type="text"
-                    id="purchaseQuantity"
-                    size="1"
-                    name="quantity"
-                    value="1"
-                    data-var-type="number">
-              </div>
+          <div class="showIfPay">
+            <div class="flexVCent gutterHSm">
+              <label class="flexNoShrink" for="purchaseQuantity">
+                <%= ob.polyT('purchase.quantity') %>
+              </label>
+              <input
+                  class="clrBr clrP"
+                  type="text"
+                  id="purchaseQuantity"
+                  size="1"
+                  name="quantity"
+                  value="1"
+                  data-var-type="number">
             </div>
-          <% } %>
+          </div>
           <div class="pad">
             <b>
               <%= ob.convertAndFormatCurrency(ob.listing.item.price, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
@@ -55,115 +53,107 @@
           </div>
         </div>
       </section>
-      <% console.log(ob) %>
-      <% if (ob.phase === 'pay' || ob.phase === 'confirm') { %>
-        <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
-          <section class="contentBox padLg clrP clrBr clrSh3 js-shipping">
-            <div class="js-shipping-errors"></div>
-            <div class="js-shippingWrapper"></div>
-          </section>
-        <% } %>
-        <section class="contentBox padLg clrP clrBr clrSh3">
-          <div class="flexColRows gutterVSm">
-            <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
-            <div class="contentBox pad clrP clrBr flexVCent">
-              <i class="btcIcon margRSm" style="background-image: url('../imgs/btcIcon128.png');"></i>
-              <div class="flexExpand">
-                <%= ob.polyT('currencies.BTC') %>
-              </div>
-              <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
-              <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
-            </div>
-            <% if (hasModerators) { %>
-              <input
-                  type="checkbox"
-                  name="moderated"
-                  checked
-                  id="purchaseModerated">
-              <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
-              <p class="clrT2 tx6">
-                <%= ob.polyT('purchase.moderationDisclaimer') %>
-              </p>
-            <% } %>
-          </div>
-        </section>
-        <% if (hasModerators) { %>
-          <section class="contentBox padLg clrP clrBr clrSh3 js-moderator">
-            <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
-            <div class="js-moderatorsWrapper"></div>
-          </section>
-        <% } %>
-        <section class="contentBox padLg clrP clrBr clrSh3">
-          <h2 class="h4">
-            <%= ob.polyT('purchase.informationTitle') %>
-            <span class="clrT2 txUnb tx5b"><%= ob.polyT('purchase.optional') %></span>
-          </h2>
-          <div class="flexRow gutterH row">
-            <div class="col6">
-              <div class="rowTn">
-                <label for="emailAddress" class="tx5">
-                  <%= ob.polyT('purchase.emailAddress') %>
-                </label>
-              </div>
-              <div>
-                <input
-                    class="btnHeight clrBr clrP js-purchaseField"
-                    type="text"
-                    id="emailAddress"
-                    name="alternateContactInfo"
-                    placeholder="<%= ob.polyT('purchase.emailPlaceholder') %>"
-                    value="<%= ob.alternateContactInfo %>">
-              </div>
-              <div>
-                <span class="txSm clrT2"><%= ob.polyT('purchase.emailNote') %></span>
-              </div>
-            </div>
-            <div class="col6">
-              <div class="rowTn">
-                <label for="couponCode" class="tx5">
-                  <%= ob.polyT('purchase.couponCode') %>
-                  <i class="ion-ios-information-outline js-couponInfo"></i>
-                </label>
-              </div>
-              <div class="flex gutterH row">
-                <input
-                    class="btnHeight clrBr clrP"
-                    type="text"
-                    id="couponCode"
-                    name="couponCode">
-                <button class="btn clrP clrBr js-applyCoupon">
-                  <%= ob.polyT('purchase.applyCode') %>
-                </button>
-              </div>
-              <div class="js-couponsWrapper">
-                <% // coupons are inserted here after they are added by the user. %>
-              </div>
-            </div>
-          </div>
-          <hr class="clrBr rowTn">
-          <div class="rowTn">
-            <label for="memo" class="tx5">
-              <%= ob.polyT('purchase.memo') %>
-            </label>
-          </div>
-          <% console.log(ob) %>
-          <textarea
-              class="clrBr clrP js-purchaseField"
-              id="memo"
-              name="memo"
-              maxlength="5000"
-              rows="6"
-              placeholder="<%= ob.polyT('purchase.memoPlaceholder') %>"><%= ob.memo %></textarea>
-        </section>
-      <% } else if (ob.phase === 'pending') { %>
-        <section class="contentBox padLg clrP clrBr clrSh3">
-          pending
-        </section>
-      <% } else if (ob.phase === 'close') { %>
-        <section class="contentBox padLg clrP clrBr clrSh3">
-          close
+      <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
+        <section class="contentBox padLg clrP clrBr clrSh3 showIfPay js-shipping">
+          <div class="js-shipping-errors"></div>
+          <div class="js-shippingWrapper"></div>
         </section>
       <% } %>
+      <section class="contentBox padLg clrP clrBr clrSh3 showIfPay">
+        <div class="flexColRows gutterVSm">
+          <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
+          <div class="contentBox pad clrP clrBr flexVCent">
+            <i class="btcIcon margRSm" style="background-image: url('../imgs/btcIcon128.png');"></i>
+            <div class="flexExpand">
+              <%= ob.polyT('currencies.BTC') %>
+            </div>
+            <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
+            <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
+          </div>
+          <% if (hasModerators) { %>
+            <input
+                type="checkbox"
+                name="moderated"
+                checked
+                id="purchaseModerated">
+            <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
+            <p class="clrT2 tx6">
+              <%= ob.polyT('purchase.moderationDisclaimer') %>
+            </p>
+          <% } %>
+        </div>
+      </section>
+      <% if (hasModerators) { %>
+        <section class="contentBox padLg clrP clrBr clrSh3 showIfPay js-moderator">
+          <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
+          <div class="js-moderatorsWrapper"></div>
+        </section>
+      <% } %>
+      <section class="contentBox padLg clrP clrBr clrSh3 showIfPay">
+        <h2 class="h4">
+          <%= ob.polyT('purchase.informationTitle') %>
+          <span class="clrT2 txUnb tx5b"><%= ob.polyT('purchase.optional') %></span>
+        </h2>
+        <div class="flexRow gutterH row">
+          <div class="col6">
+            <div class="rowTn">
+              <label for="emailAddress" class="tx5">
+                <%= ob.polyT('purchase.emailAddress') %>
+              </label>
+            </div>
+            <div>
+              <input
+                  class="btnHeight clrBr clrP js-purchaseField"
+                  type="text"
+                  id="emailAddress"
+                  name="alternateContactInfo"
+                  placeholder="<%= ob.polyT('purchase.emailPlaceholder') %>"
+                  value="<%= ob.alternateContactInfo %>">
+            </div>
+            <div>
+              <span class="txSm clrT2"><%= ob.polyT('purchase.emailNote') %></span>
+            </div>
+          </div>
+          <div class="col6">
+            <div class="rowTn">
+              <label for="couponCode" class="tx5">
+                <%= ob.polyT('purchase.couponCode') %>
+                <i class="ion-ios-information-outline js-couponInfo"></i>
+              </label>
+            </div>
+            <div class="flex gutterH row">
+              <input
+                  class="btnHeight clrBr clrP"
+                  type="text"
+                  id="couponCode"
+                  name="couponCode">
+              <button class="btn clrP clrBr js-applyCoupon">
+                <%= ob.polyT('purchase.applyCode') %>
+              </button>
+            </div>
+            <div class="js-couponsWrapper">
+              <% // coupons are inserted here after they are added by the user. %>
+            </div>
+          </div>
+        </div>
+        <hr class="clrBr rowTn">
+        <div class="rowTn">
+          <label for="memo" class="tx5">
+            <%= ob.polyT('purchase.memo') %>
+          </label>
+        </div>
+        <textarea
+            class="clrBr clrP js-purchaseField"
+            id="memo"
+            name="memo"
+            maxlength="5000"
+            rows="6"
+            placeholder="<%= ob.polyT('purchase.memoPlaceholder') %>"><%= ob.memo %></textarea>
+      </section>
+      <section class="contentBox padLg clrP clrBr clrSh3 showIfPending js-pending">
+      </section>
+      <section class="contentBox padLg clrP clrBr clrSh3 showIfClose js-complete">
+      </section>
     </div>
   </div>
   <div class="col3">

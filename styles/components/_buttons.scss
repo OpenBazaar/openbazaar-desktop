@@ -87,6 +87,15 @@
     border-width: 0;
     @include disabled;
   }
+
+  .icon {
+    // use this for icons that are inline in a button in front of text
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 0.5em;
+    display: inline-flex;
+    align-content: center;
+  }
 }
 
 .btnRadio {
@@ -149,6 +158,7 @@
   vertical-align: inherit;
   align-items: inherit;
   justify-content: inherit;
+  padding: 0;
 }
 
 .iconBtn {

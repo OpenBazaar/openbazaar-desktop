@@ -59,7 +59,7 @@ export default class extends baseView {
   }
 
   clickPendingBtn() {
-    this.state.phase = 'close';
+    this.state.phase = 'complete';
     this.render();
   }
 
