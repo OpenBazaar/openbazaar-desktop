@@ -92,7 +92,7 @@ export default class extends baseVw {
   }
 
   handleFailedConnection(eventName, e) {
-    let links = `<a href="https://github.com/OpenBazaar/openbazaar-desktop/blob/server-connect-ui/docs/connectionIssues.md">${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`;
+    let links = `<a href="https://github.com/OpenBazaar/openbazaar-desktop/blob/master/docs/connectionIssues.md">${app.polyglot.t('connectionManagement.statusBar.needHelpLink')}</a>`;
     let msg = '';
 
     if (localServer) {
