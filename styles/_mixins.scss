@@ -87,11 +87,11 @@
   }
 
   input[type="checkbox"] + label:before {
-    color: $col2;
+    border-color: $col1;
   }
 
-  input[type="checkbox"]:checked + label:before {
-    color: $col1;
+  input[type="checkbox"] + label:after {
+    border-color: $col1;
   }
 
   .tab.active {
