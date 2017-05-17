@@ -256,11 +256,6 @@ export default class extends BaseModal {
       (this._$moderatorNote = this.$('.js-moderatorNote'));
   }
 
-  get $moderatedErrors() {
-    return this._$moderatedErrors ||
-      (this._$moderatedErrors = this.$('.js-moderated-errors'));
-  }
-
   get $closeBtn() {
     return this._$closeBtn ||
         (this._$closeBtn = this.$('.js-closeBtn'));
@@ -304,7 +299,6 @@ export default class extends BaseModal {
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
       this._$moderatorSection = null;
-      this._$moderatedErrors = null;
       this._$closeBtn = null;
       this._$shippingErrors = null;
       this._$errors = null;
