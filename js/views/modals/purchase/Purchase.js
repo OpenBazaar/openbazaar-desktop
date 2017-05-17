@@ -72,7 +72,7 @@ export default class extends BaseModal {
       'click #purchaseModerated': 'clickModerated',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
-      'click .js-applyCoupon': 'clickApplyCoupon',
+      'click .js-applyCoupon': 'applyCoupon',
       'keyup #couponCode': 'onKeyUpCouponCode',
       'blur #emailAddress': 'blurEmailAddress',
       'blur #memo': 'blurMemo',
@@ -133,7 +133,7 @@ export default class extends BaseModal {
     launchSettingsModal({ initTab: 'Addresses' });
   }
 
-  clickApplyCoupon() {
+  applyCoupon() {
     const code = this.coupons.addCode(this.$couponField.val());
     code.then(result => {
       // if the result is valid, clear the input field
@@ -145,7 +145,7 @@ export default class extends BaseModal {
 
   onKeyUpCouponCode(e) {
     if (e.which === 13) {
-      this.clickApplyCoupon();
+      this.applyCoupon();
     }
   }
 
