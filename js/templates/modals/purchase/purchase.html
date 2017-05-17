@@ -70,6 +70,7 @@
             <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
             <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
           </div>
+          <div class="js-moderated-errors"></div>
           <% if (hasModerators) { %>
             <input
                 type="checkbox"
@@ -136,7 +137,7 @@
             </div>
           </div>
         </div>
-        <hr class="clrBr rowTn">
+        <hr class="clrBr row">
         <div class="rowTn">
           <label for="memo" class="tx5">
             <%= ob.polyT('purchase.memo') %>
