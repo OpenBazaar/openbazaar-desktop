@@ -7,6 +7,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
 import Order from '../../models/order/Order';
 import Case from '../../models/order/Case';
+import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Tab from './Tab';
@@ -378,6 +379,7 @@ export default class extends baseVw {
     return view;
   }
 
+  // todo: this guy is getting passed around a good amount. Doc it up, yo!
   getProfiles(peerIds = []) {
     const promises = [];
     const profilesToFetch = [];
@@ -402,7 +404,7 @@ export default class extends baseVw {
         if (this.socket) {
           this.listenTo(this.socket, 'message', (e) => {
             if (e.jsonData.id === data.id) {
-              this.profileDeferreds[e.jsonData.peerId].resolve(e.jsonData.profile);
+              this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile));
             }
           });
         }

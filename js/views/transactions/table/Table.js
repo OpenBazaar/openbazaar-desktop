@@ -241,17 +241,18 @@ export default class extends baseVw {
       this.options.getProfiles(profilesToFetch)
         .forEach(profilePromise => {
           profilePromise.done(profile => {
-            const vendorViews = this.indexedViews.byVendor[profile.peerID] || [];
-            const buyerViews = this.indexedViews.byBuyer[profile.peerID] || [];
+            const flatProfile = profile.toJSON();
+            const vendorViews = this.indexedViews.byVendor[flatProfile.peerID] || [];
+            const buyerViews = this.indexedViews.byBuyer[flatProfile.peerID] || [];
 
             vendorViews.forEach(view => {
-              view.setState({ vendorAvatarHashes: profile.avatarHashes });
-              view.model.set({ vendorHandle: profile.handle });
+              view.setState({ vendorAvatarHashes: flatProfile.avatarHashes });
+              view.model.set({ vendorHandle: flatProfile.handle });
             });
 
             buyerViews.forEach(view => {
-              view.setState({ buyerAvatarHashes: profile.avatarHashes });
-              view.model.set({ buyerHandle: profile.handle });
+              view.setState({ buyerAvatarHashes: flatProfile.avatarHashes });
+              view.model.set({ buyerHandle: flatProfile.handle });
             });
           });
         });

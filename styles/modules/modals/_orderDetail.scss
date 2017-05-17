@@ -45,4 +45,126 @@
   .mainContent {
     min-height: 300px;
   }
+
+  .summaryTab, .contractTab {
+    padding: $padMd;
+  }
+
+  .discussionTab {
+    position: relative;
+    overflow: hidden;
+
+    &.loadingMessages {
+      .spinner {
+        display: block;
+      }
+
+      &.noMessages {
+        .spinner {
+          @include center();
+          width: 55px;
+          height: 55px;
+        }
+
+        .messagesFetchError {
+          @include center();
+        }
+      }
+    }
+
+    &.noMessages {
+      .messagesFetchError {
+        @include center();
+        margin: 0;
+      }
+    }
+
+    &.isTyping {
+      .typingIndicator {
+        transform: translate(50%, 0);
+      }
+    }
+
+    .convoMessagesWindow {
+      padding: $padLg;
+      overflow-x: hidden;
+      overflow-y: auto;
+      max-height: 500px;
+
+      .spinner {
+        display: none;
+        margin: 0 auto;
+        padding: $pad;
+      }
+
+      .messagesFetchError {
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+
+      .chatConvoMessages {
+        padding: 10px 0;
+
+        .convoMessage {
+          .msgContentBox {
+            padding: 5px 7px;
+            margin-top: 3px;
+            display: inline-block;
+            max-width: 186px;
+            line-height: 14px;
+            text-align: left;
+
+            & > span {
+              word-break: break-word;
+            }
+
+            img {
+              max-width: 100%;
+            }
+          }
+
+          .timestampLine {
+            position: absolute;
+          }
+        }
+      }
+    }
+
+    .typingIndicator {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -110%);
+      border-style: solid;
+      border-width: 1px;
+      border-top-width: 0;
+      max-width: 190px;
+      z-index: 1;
+      padding: $padSm $pad;
+      transition: transform 0.3s ease;
+
+      .typingUsername {
+        max-width: 121px;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    .convoFooter {
+      border-top-style: solid;
+      border-top-width: 1px;
+      padding: $pad;
+
+      textarea {
+        border-width: 0;
+
+        &::-webkit-scrollbar-thumb {
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+      }
+    }    
+  }
 }
