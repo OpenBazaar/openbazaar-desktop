@@ -938,7 +938,9 @@
       "roleVendor": "vendor",
       "roleBuyer": "buyer",
       "roleModerator": "moderator",
-      "timeLineAndRole": "%{timeFromNow} (%{role})"
+      "timeLineAndRole": "%{timeFromNow} (%{role})",
+      "isTyping": "%{user} is typing...",
+      "areTyping": "%{user1} and %{user2} are typing..."
     }
   },
   "exchangeRatesSyncer": {

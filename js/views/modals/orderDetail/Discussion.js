@@ -30,6 +30,9 @@ export default class extends baseVw {
     this.buyer = options.buyer;
     this.vendor = options.vendor;
     this.moderator = options.moderator;
+    this.buyer.isTyping = false;
+    this.vendor.isTyping = false;
+    if (this.moderator) this.moderator.isTyping = false;
 
     this.messages = new ChatMessages([]);
     this.listenTo(this.messages, 'request', this.onMessagesRequest);
@@ -165,7 +168,7 @@ export default class extends baseVw {
     // second.
     if (!this.lastTypingSentAt || (Date.now() - this.lastTypingSentAt) >= 1000) {
       const typingMessage = new ChatMessage({
-        peerIds: this.sendToIds,
+        peerIds: this.getChatters().map(chatter => chatter.id),
         subject: this.model.id,
         message: '',
       });
@@ -218,9 +221,11 @@ export default class extends baseVw {
   }
 
   onSocketMessage(e) {
-    if (e.jsonData.message &&
-      e.jsonData.message.subject === this.subject &&
-      e.jsonData.message.peerId === this.guid) {
+    if (e.jsonData.message && e.jsonData.message.subject !== this.model.id) return;
+    if (e.jsonData.messageTyping && e.jsonData.messageTyping.subject !== this.model.id) return;
+    if (e.jsonData.messageRead && e.jsonData.messageRead.subject !== this.model.id) return;
+
+    if (e.jsonData.message) {
       // incoming chat message
       const message = new ChatMessage({
         ...e.jsonData.message,
@@ -235,15 +240,12 @@ export default class extends baseVw {
 
       // We'll consider them to be done typing if an acutal message came
       // in. If they re-start typing, we'll get another socket messsage.
-      this.hideTypingIndicator();
-    } else if (e.jsonData.messageTyping &&
-      e.jsonData.messageTyping.subject === this.subject &&
-      e.jsonData.messageTyping.peerId === this.guid) {
+      // this.hideTypingIndicator();
+    } else if (e.jsonData.messageTyping) {
       // Conversant is typing...
       this.showTypingIndicator();
-    } else if (e.jsonData.messageRead &&
-      e.jsonData.messageRead.subject === this.subject &&
-      e.jsonData.messageRead.peerId === this.guid) {
+    } else if (e.jsonData.messageRead) {
+      console.log('the message was indeed read');
       // Conversant read your message
       if (this.convoMessages) {
         const model = this.messages.get(e.jsonData.messageRead.messageId);
@@ -257,40 +259,40 @@ export default class extends baseVw {
     }
   }
 
+  get typingExpires() {
+    return 3000;
+  }
+
+  setTyping(id) {
+    if (!id) {
+      throw new Error('Please provide an id.');
+    }
+
+    const chatters = this.getChatters();
+    const chatterIndex = chatters.indexOf(id);
+
+    if (chatterIndex !== -1) {
+      chatters[chatterIndex] = true;
+      clearTimeout(chatters[chatterIndex].typingTimeout);
+      chatters[chatterIndex].typingTimeout = setTimeout(
+        () => (chatters[chatterIndex] = false),
+        this.typingExpires);
+      this.showTypingIndicator();
+    }
+  }
+
   showTypingIndicator() {
     clearTimeout(this.typingTimeout);
+    this.setTypingIndicator();
     this.$el.addClass('isTyping');
     this.typingTimeout = setTimeout(
       () => (this.hideTypingIndicator()),
-      3000);
+      this.typingExpires);
   }
 
   hideTypingIndicator() {
     clearTimeout(this.typingTimeout);
     this.$el.removeClass('isTyping');
-  }
-
-  /**
-   * Returns the peerIds of the other participants in
-   * the conversation (other than you).
-   */
-  get sendToIds() {
-    const ids = [];
-
-    if (this.moderator && this.model.state === 'DISPUTED' &&
-      this.moderator.id !== app.profile.id) {
-      ids.push(this.moderator.id);
-    }
-
-    if (this.buyer.id !== app.profile.id) {
-      ids.push(this.buyer.id);
-    }
-
-    if (this.vendor.id !== app.profile.id) {
-      ids.push(this.vendor.id);
-    }
-
-    return ids;
   }
 
   sendMessage(msg) {
@@ -317,7 +319,7 @@ export default class extends baseVw {
     }
 
     const chatMessage = new ChatMessage({
-      peerIds: this.sendToIds,
+      peerIds: this.getChatters().map(chatter => chatter.id),
       subject: this.model.id,
       message,
     });
@@ -385,21 +387,72 @@ export default class extends baseVw {
   }
 
   markConvoAsRead() {
-    const queryString = this.subject ? `/?subject=${this.subject}` : '';
-    $.post(app.getServerUrl(`ob/markchatasread/${this.guid}${queryString}`));
-    this.trigger('convoMarkedAsRead');
+    // const queryString = this.subject ? `/?subject=${this.model.id}` : '';
+    // $.post(app.getServerUrl(`ob/markchatasread/${this.vendor.id}${queryString}`));
+    // this.trigger('convoMarkedAsRead');
+  }
+
+  getChatters(includeSelf = false) {
+    let chatters = [
+      this.buyer,
+      this.vendor,
+    ];
+
+    if (this.moderator) chatters.push(this.moderator);
+
+    if (!includeSelf) {
+      chatters = chatters.filter(chatter => chatter.id !== app.profile.id);
+    }
+
+    return chatters;
   }
 
   getTypingIndicatorContent() {
-    let name = this.guid;
+    const chatters = [
+      this.buyer,
+      this.vendor,
+    ];
 
-    if (this.profile) {
-      const handle = this.profile.get('handle');
-      if (handle) name = `@${handle}`;
+    if (this.moderator) chatters.push(this.moderator);
+
+    let typingText = '';
+
+    const typers = this.getChatters().filter(chatter => chatter.isTyping);
+    const names = [];
+
+    typers.forEach(typer => {
+      if (typers.length === 1) {
+        if (typer.profile.state === 'resolved') {
+          typer.profile.done(profile => {
+            const handle = profile.get('handle');
+            names.push(`${handle ? `@${handle}` : profile.id}`);
+          });
+        } else {
+          names.push(typer.id);
+        }
+      }
+    });
+
+    if (names.length === 1) {
+      typingText = app.polyglot.t('orderDetail.discussionTab.isTyping', { user: name[0] });
+    } else if (names.length === 2) {
+      typingText = app.polyglot.t('orderDetail.discussionTab.areTyping', {
+        user1: name[0],
+        user2: name[1],
+      });
     }
 
-    const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
-    return app.polyglot.t('chat.conversation.typingIndicator', { user: usernameHtml });
+    return typingText;
+
+    // let name = this.guid;
+
+    // if (this.profile) {
+    //   const handle = this.profile.get('handle');
+    //   if (handle) name = `@${handle}`;
+    // }
+
+    // const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
+    // return app.polyglot.t('chat.conversation.typingIndicator', { user: usernameHtml });
   }
 
   setTypingIndicator() {

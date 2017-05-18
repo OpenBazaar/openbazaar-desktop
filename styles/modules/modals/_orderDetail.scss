@@ -159,13 +159,13 @@
       border-style: solid;
       border-width: 1px;
       border-top-width: 0;
-      max-width: 190px;
+      // max-width: 190px;
       z-index: 1;
       padding: $padSm $pad;
       transition: transform 0.3s ease;
 
       .typingUsername {
-        max-width: 121px;
+        // max-width: 121px;
         display: inline-block;
         vertical-align: middle;
       }
