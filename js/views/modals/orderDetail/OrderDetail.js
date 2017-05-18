@@ -271,6 +271,7 @@ export default class extends BaseModal {
         id: this.vendorId,
         profile: this.vendorProfile,
       },
+      model: this.model,
     };
 
     if (this.moderatorId) {

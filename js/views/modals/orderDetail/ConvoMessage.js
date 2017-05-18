@@ -27,7 +27,7 @@ export default class extends BaseVw {
     this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
       const timeAgo = moment(this.model.get('timestamp')).fromNow();
       if (timeAgo !== this.renderedTimeAgo) this.render();
-    }); 
+    });
   }
 
   className() {
@@ -58,7 +58,7 @@ export default class extends BaseVw {
   remove() {
     this.timeAgoInterval.cancel();
     super.remove();
-  }  
+  }
 
   render() {
     let message = this.model.get('message');

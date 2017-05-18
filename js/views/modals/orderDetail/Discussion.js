@@ -17,6 +17,10 @@ export default class extends baseVw {
 
     // todo: validate that valid buyer and vendor were passed in.
 
+    if (!options.model) {
+      throw new Error('Please provide an order / case model.');
+    }
+
     super(options);
     this.options = options;
     this.showLoadMessagesError = false;
@@ -53,7 +57,8 @@ export default class extends baseVw {
     return {
       'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
       'keyup .js-inputMessage': 'onKeyUpMessageInput',
-      'blur .js-inputMessage': 'onBlurMessageInput',
+      'keydown .js-inputMessage': 'onKeyDownMessageInput',
+      'click .js-btnSend': 'onClickSend',
     };
   }
 
@@ -154,12 +159,14 @@ export default class extends baseVw {
   }
 
   onKeyUpMessageInput(e) {
+    this.$btnSend.toggleClass('disabled', !e.target.value);
+
     // Send an empty message to indicate "typing...", but no more than 1 every
     // second.
     if (!this.lastTypingSentAt || (Date.now() - this.lastTypingSentAt) >= 1000) {
       const typingMessage = new ChatMessage({
-        peerId: this.guid,
-        subject: this.subject,
+        peerIds: this.sendToIds,
+        subject: this.model.id,
         message: '',
       });
 
@@ -170,56 +177,26 @@ export default class extends baseVw {
       } else {
         // Developer error - this shouldn't happen.
         console.error('There was an error saving the chat message.');
-        console.dir(saveTypingMessage);
+        console.dir(typingMessage.validationError);
       }
     }
 
     // Send actual chat message if the Enter key was pressed
-    if (e.which !== 13) return;
+    if (e.shiftKey || e.which !== 13) return;
 
-    let message = e.target.value.trim();
-    if (!message) return;
-    this.lastTypingSentAt = null;
-
-    // Convert any emoji placeholder (e.g :smiling_face:) into
-    // emoji unicode characters.
-    const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
-    const matches = message.match(emojiPlaceholderRegEx, 'g');
-
-    if (matches) {
-      matches.forEach(match => {
-        const emoji = getEmojiByName(match);
-
-        if (emoji && emoji.char) {
-          message = message.replace(match, emoji.char);
-        }
-      });
-    }
-
-    const chatMessage = new ChatMessage({
-      peerId: this.guid,
-      subject: this.subject,
-      message,
-    });
-
-    const save = chatMessage.save();
-
-    if (save) {
-      // At least for now, ignoring any server failures and optimistically adding the new
-      // message to the UI. Odds are really low of server failure and repurcussions minimal.
-      this.messages.push(chatMessage);
-      // this.trigger('newOutgoingMessage', { model: chatMessage });
-    } else {
-      // Developer error - this shouldn't happen.
-      console.error('There was an error saving the chat message.');
-      console.dir(save);
-    }
-
+    const message = e.target.value.trim();
+    if (message) this.sendMessage(message);
     $(e.target).val('');
+    e.preventDefault();
   }
 
-  onBlurMessageInput(e) {
-    this.lastMessageInputCursorPos = e.target.selectionStart;
+  onKeyDownMessageInput(e) {
+    if (!e.shiftKey && e.which === 13) e.preventDefault();
+  }
+
+  onClickSend() {
+    const message = this.$inputMessage.value();
+    if (message) this.sendMessage(message);
   }
 
   onScroll(e) {
@@ -293,8 +270,80 @@ export default class extends baseVw {
     this.$el.removeClass('isTyping');
   }
 
+  /**
+   * Returns the peerIds of the other participants in
+   * the conversation (other than you).
+   */
+  get sendToIds() {
+    const ids = [];
+
+    if (this.moderator && this.model.state === 'DISPUTED' &&
+      this.moderator.id !== app.profile.id) {
+      ids.push(this.moderator.id);
+    }
+
+    if (this.buyer.id !== app.profile.id) {
+      ids.push(this.buyer.id);
+    }
+
+    if (this.vendor.id !== app.profile.id) {
+      ids.push(this.vendor.id);
+    }
+
+    return ids;
+  }
+
+  sendMessage(msg) {
+    if (!msg) {
+      throw new Error('Please provide a message to send.');
+    }
+
+    let message = msg;
+    this.lastTypingSentAt = null;
+
+    // Convert any emoji placeholder (e.g :smiling_face:) into
+    // emoji unicode characters.
+    const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
+    const matches = message.match(emojiPlaceholderRegEx, 'g');
+
+    if (matches) {
+      matches.forEach(match => {
+        const emoji = getEmojiByName(match);
+
+        if (emoji && emoji.char) {
+          message = message.replace(match, emoji.char);
+        }
+      });
+    }
+
+    const chatMessage = new ChatMessage({
+      peerIds: this.sendToIds,
+      subject: this.model.id,
+      message,
+    });
+
+    const save = chatMessage.save();
+    let messageSent = true;
+
+    if (save) {
+      // At least for now, ignoring any server failures and optimistically adding the new
+      // message to the UI. Odds are really low of server failure and repurcussions minimal.
+      this.messages.push(chatMessage);
+    } else {
+      // Developer error - this shouldn't happen.
+      console.error('There was an error saving the chat message.');
+      console.dir(chatMessage.validationError);
+      messageSent = false;
+    }
+
+    return messageSent;
+  }
+
   fetchMessages(offsetId, limit = this.messagesPerPage) {
-    const params = { limit };
+    const params = {
+      limit,
+      subject: this.model.id,
+    };
 
     this.lastFetchMessagesArgs = [offsetId, limit];
     if (offsetId) params.offsetId = offsetId;
@@ -384,9 +433,14 @@ export default class extends baseVw {
       (this._$convoMessagesWindow = this.$('.js-convoMessagesWindow'));
   }
 
-  get $messageInput() {
-    return this._$messageInput ||
-      (this._$messageInput = this.$('.js-inputMessage'));
+  get $btnSend() {
+    return this._$btnSend ||
+      (this._$btnSend = this.$('.js-btnSend'));
+  }
+
+  get $inputMessage() {
+    return this._$inputMessage ||
+      (this._$inputMessage = this.$('.js-inputMessage'));
   }
 
   render() {
@@ -403,7 +457,8 @@ export default class extends baseVw {
       this._$loadMessagesError = null;
       this._$convoMessagesWindow = null;
       this._$typingIndicator = null;
-      this._$messageInput = null;
+      this._$btnSend = null;
+      this._$msgInput = null;
 
       if (this.ConvoMessages) this.ConvoMessages.remove();
       this.convoMessages = new ConvoMessages({

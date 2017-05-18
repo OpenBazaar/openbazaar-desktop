@@ -16,6 +16,10 @@ export default class extends BaseModel {
     return 'messageId';
   }
 
+  get isGroupChatMessage() {
+    return !!this.get('peerIds');
+  }
+
   static get max() {
     return {
       subjectLength: 500,
@@ -24,7 +28,7 @@ export default class extends BaseModel {
   }
 
   url() {
-    return app.getServerUrl('ob/chat/');
+    return app.getServerUrl(`ob/${this.isGroupChatMessage ? 'groupchat' : 'chat'}/`);
   }
 
   validate(attrs) {
@@ -36,12 +40,20 @@ export default class extends BaseModel {
 
     const max = this.constructor.max;
 
-    if (!attrs.peerId) {
-      addError('peerId', 'The peerId is required');
+    if (!this.isGroupChatMessage) {
+      if (!attrs.peerId) {
+        addError('peerId', 'The peerId is required');
+      }
+    } else if (!Array.isArray(attrs.peerIds) || !attrs.peerIds.length) {
+      addError('peerIds', 'peerIds must be provided as an array.');
     }
 
-    if (attrs.subject.length > max.subjectLength) {
+    if (attrs.subject !== undefined && typeof attrs.subject !== 'string') {
+      addError('subject', 'If providing a subject, it must be provided as a string.');
+    } else if (attrs.subject.length > max.subjectLength) {
       addError('subject', `The subject exceeds the max length of ${max.subjectLength}`);
+    } else if (this.isGroupChatMessage && !attrs.subject) {
+      addError('subject', 'A subject is required for a group chat message.');
     }
 
     if (attrs.message.length > max.messageLength) {
@@ -57,7 +69,9 @@ export default class extends BaseModel {
     options.attrs = options.attrs || model.toJSON(options);
 
     if (method === 'create') {
-      options.attrs.timestamp = moment(Date.now()).format();
+      const timestamp = moment(Date.now()).format();
+      options.attrs.timestamp = timestamp;
+      this.set('timestamp', timestamp);
     }
 
     return super.sync(method, model, options);
