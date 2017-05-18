@@ -933,6 +933,12 @@
       "summary": "Summary",
       "discussion": "Discussion",
       "contract": "Contract (JSON)"
+    },
+    "discussionTab": {
+      "roleVendor": "vendor",
+      "roleBuyer": "buyer",
+      "roleModerator": "moderator",
+      "timeLineAndRole": "%{timeFromNow} (%{role})"
     }
   },
   "exchangeRatesSyncer": {

@@ -55,27 +55,33 @@
     overflow: hidden;
 
     &.loadingMessages {
-      .spinner {
-        display: block;
-      }
-
-      &.noMessages {
+      .convoMessagesWindow {
         .spinner {
-          @include center();
+          display: block;
           width: 55px;
           height: 55px;
         }
+      }
 
-        .messagesFetchError {
-          @include center();
+      &.noMessages {
+        .convoMessagesWindow {
+          .spinner {
+            @include center();
+          }
+
+          .messagesFetchError {
+            @include center();
+          }
         }
       }
     }
 
     &.noMessages {
-      .messagesFetchError {
-        @include center();
-        margin: 0;
+      .convoMessagesWindow {
+        .messagesFetchError {
+          @include center();
+          margin: 0;
+        }
       }
     }
 
@@ -89,7 +95,8 @@
       padding: $padLg;
       overflow-x: hidden;
       overflow-y: auto;
-      max-height: 500px;
+      max-height: 375px;
+      min-height: 375px;
 
       .spinner {
         display: none;
@@ -107,12 +114,13 @@
 
         .convoMessage {
           .msgContentBox {
-            padding: 5px 7px;
+            padding: 13px;
             margin-top: 3px;
             display: inline-block;
             max-width: 186px;
             line-height: 14px;
             text-align: left;
+            position: relative;
 
             & > span {
               word-break: break-word;
@@ -121,10 +129,24 @@
             img {
               max-width: 100%;
             }
+
+            &.read {
+              &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 4px;
+                // colored by theme
+              }
+            }
           }
 
-          .timestampLine {
-            position: absolute;
+          .avatar {
+            width: 45px;
+            height: 45px;
+            margin-top: 2px;
           }
         }
       }
@@ -156,6 +178,7 @@
 
       textarea {
         border-width: 0;
+        height: 90px;
 
         &::-webkit-scrollbar-thumb {
           background-color: transparent;
@@ -164,6 +187,10 @@
         &::-webkit-scrollbar-track {
           background-color: transparent;
         }
+      }
+
+      .btnSend {
+        width: 125px;
       }
     }    
   }

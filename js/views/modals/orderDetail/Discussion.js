@@ -7,7 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import ChatMessages from '../../../collections/ChatMessages';
 import ChatMessage from '../../../models/chat/ChatMessage';
 import baseVw from '../../baseVw';
-// import ConvoMessages from './ConvoMessages';
+import ConvoMessages from './ConvoMessages';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -23,6 +23,9 @@ export default class extends baseVw {
     this.fetching = false;
     this.fetchedAllMessages = false;
     this.ignoreScroll = false;
+    this.buyer = options.buyer;
+    this.vendor = options.vendor;
+    this.moderator = options.moderator;
 
     this.messages = new ChatMessages([]);
     this.listenTo(this.messages, 'request', this.onMessagesRequest);
@@ -402,15 +405,15 @@ export default class extends baseVw {
       this._$typingIndicator = null;
       this._$messageInput = null;
 
-      // if (this.ConvoMessages) this.ConvoMessages.remove();
-
-      // this.convoMessages = new ConvoMessages({
-      //   collection: this.messages,
-      //   $scrollContainer: this.$convoMessagesWindow,
-      //   profile: this.profile,
-      // });
-
-      // this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
+      if (this.ConvoMessages) this.ConvoMessages.remove();
+      this.convoMessages = new ConvoMessages({
+        collection: this.messages,
+        $scrollContainer: this.$convoMessagesWindow,
+        buyer: this.buyer,
+        vendor: this.vendor,
+        moderator: this.moderator,
+      });
+      this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
       this.throttleScrollHandler();
     });
 
