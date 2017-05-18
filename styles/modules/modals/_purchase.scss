@@ -46,5 +46,13 @@
         height: 240px;
       }
     }
+
+    .confirmBox {
+      top: calc(100% + #{$pad});
+    }
+
+    .copyNotification {
+      top: -0.6em
+    }
   }
 }

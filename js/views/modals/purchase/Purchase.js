@@ -213,7 +213,7 @@ export default class extends BaseModal {
             this.actionBtn.render();
             this.$el.attr('data-phase', 'pending');
             console.log(data);
-            this.purchase.set(data);
+            this.purchase.set(this.purchase.parse(data));
             this.pending.render();
           })
           .fail((jqXHR) => {

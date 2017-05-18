@@ -5,18 +5,30 @@
   <div class="col7">
     <div class="flexVCent">
       <div class="flexExpand">
-        <span class="h1">
-          <% const amount = ob.amount ? ob.convertAndFormatCurrency(ob.amount, 'btc', ob.displayCurrency) : 0 %>
-          <%= ob.polyT('purchase.pendingSection.pay', { amount }) %>
-        </span>
-        <button class="btnTxtOnly clrTEm js-copyAmount">
-          <span class="txUnb"><%= ob.polyT('purchase.pendingSection.copy') %></span>
-        </button>
+        <div class="rowSm">
+          <span class="h1">
+            <% const amount = ob.amount ? ob.convertAndFormatCurrency(ob.amount, 'BTC', 'BTC') : 0 %>
+            <%= ob.polyT('purchase.pendingSection.pay', { amount }) %>
+          </span>
+          <span class="posR">
+            <button class="btnTxtOnly clrTEm js-copyAmount">
+              <span class="txUnb"><%= ob.polyT('purchase.pendingSection.copy') %></span>
+            </button>
+            <div class="js-copyAmountNotification copyNotification clrT clrBr clrP">
+              <%= ob.polyT('purchase.pendingSection.copied') %>
+            </div>
+          </span>
+        </div>
         <div class="tx5 rowMd">
           <%= ob.polyT('purchase.pendingSection.to', { address: ob.paymentAddress }) %>
-          <button class="btnTxtOnly clrTEm js-copyAddress">
-            <span class="txUnb"><%= ob.polyT('purchase.pendingSection.copy') %></span>
-          </button>
+          <span class="posR">
+            <button class="btnTxtOnly clrTEm js-copyAddress">
+              <span class="txUnb"><%= ob.polyT('purchase.pendingSection.copy') %></span>
+            </button>
+            <div class="js-copyAddressNotification copyNotification clrT clrBr clrP">
+              <%= ob.polyT('purchase.pendingSection.copied') %>
+            </div>
+          </span>
         </div>
         <div class="flexRow gutterH">
           <div class="col6">

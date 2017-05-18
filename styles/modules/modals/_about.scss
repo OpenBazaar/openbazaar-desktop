@@ -19,28 +19,5 @@
   .singleLine {
     white-space: pre;
   }
-
-  .copyNotification {
-    font-weight: bold;
-    font-size: $baseFontSize;
-    margin-left: $padMd;
-    padding: $padSm;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 3px;
-    position: absolute;
-    top: 0;
-    left: 100%;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s;
-  }
-
-  .copyNotification.active {
-    opacity: 1;
-    pointer-events: auto;
-
-
-  }
 }
 

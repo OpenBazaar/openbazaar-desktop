@@ -3,6 +3,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 import qr from 'qr-encode';
+import { clipboard } from 'electron';
 
 
 export default class extends BaseVw {
@@ -28,6 +29,8 @@ export default class extends BaseVw {
       'click .js-confirmWalletCancel': 'clickWalletCancel',
       'click .js-confirmWalletConfirm': 'clickWalletConfirm',
       'click .js-payFromAlt': 'clickPayFromAlt',
+      'click .js-copyAmount': 'copyAmount',
+      'click .js-copyAddress': 'copyAddress',
     };
   }
 
@@ -54,9 +57,41 @@ export default class extends BaseVw {
 
   }
 
+  copyAmount() {
+    clipboard.writeText(String(this.model.get('amount')));
+
+    this.$copyAmountNotification.addClass('active');
+    if (this.hideCopyAmountTimer) {
+      clearTimeout(this.hideCopyAmountTimer);
+    }
+    this.hideCopyAmountTimer = setTimeout(
+      () => this.$copyAmountNotification.removeClass('active'), 3000);
+  }
+
+  copyAddress() {
+    clipboard.writeText(String(this.model.get('paymentAddress')));
+
+    this.$copyAddressNotification.addClass('active');
+    if (this.hideCopyAddressTimer) {
+      clearTimeout(this.hideCopyAddressTimer);
+    }
+    this.hideCopyAddressTimer = setTimeout(
+      () => this.$copyAddressNotification.removeClass('active'), 3000);
+  }
+
   get $confirmWallet() {
     return this._$confirmWallet ||
       (this._$confirmWallet = this.$('.js-confirmWallet'));
+  }
+
+  get $copyAmountNotification() {
+    return this._$copyAmountNotification ||
+      (this._$copyAmountNotification = this.$('.js-copyAmountNotification'));
+  }
+
+  get $copyAddressNotification() {
+    return this._$copyAddressNotification ||
+      (this._$copyAddressNotification = this.$('.js-copyAddressNotification'));
   }
 
   render() {
@@ -72,6 +107,8 @@ export default class extends BaseVw {
       });
 
       this._$confirmWallet = null;
+      this._$copyAmountNotification = null;
+      this._$copyAddressNotification = null;
     });
 
     return this;

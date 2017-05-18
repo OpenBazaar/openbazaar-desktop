@@ -854,6 +854,7 @@
     "pendingSection": {
       "pay": "Pay: %{amount}",
       "copy": "Copy",
+      "copied": "Copied to Clipboard",
       "to": "To: %{address}",
       "payFromWallet": "Pay from wallet",
       "payWithAlt": "Pay with altcoins",
