@@ -825,9 +825,11 @@
     "couponCode": "Coupon Code",
     "applyCode": "Apply",
     "code": "\"%{code}\" applied to order",
-    "codeInvalid": "\"%{code}\" is not a valid code",
-    "codeDuplicate": "You can only add \"%{code}\" once",
-    "codeExcessive": "You cannot apply a discount of more than 100% of the listing's price.",
+    "codeErrors": {
+      "invalid": "\"%{code}\" is not a valid code",
+      "duplicate": "You can only add \"%{code}\" once",
+      "excessive": "You cannot apply a discount of more than 100% of the listing's price."
+    },
     "removeCode": "remove",
     "memo": "Memo",
     "memoPlaceholder": "Provide additional details for the vendor here (optional).",
@@ -879,7 +881,8 @@
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
-      "missingAddress": "Please choose a valid shipping address."
+      "ownIDTitle": "This is Your Own Listing",
+      "ownIDMsg": "You cannot purchase a listing that belongs to you."
     }
   },
   "moderators": {
@@ -1095,7 +1098,8 @@
     "quantityMustBeNumber": "The quantity must be a valid number",
     "noItems": "You must make at least one purchase.",
     "missingAddress": "Please choose a valid shipping address.",
-    "missingShippingOption": "Please choose a valid shipping option."
+    "missingShippingOption": "Please choose a valid shipping option.",
+    "needsModerator": "You must select a moderator to make a Moderated Payment."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

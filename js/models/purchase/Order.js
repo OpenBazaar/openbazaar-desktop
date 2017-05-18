@@ -6,6 +6,7 @@ export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
     this.shippable = options.shippable || false;
+    this.moderated = options.moderated || false;
   }
 
   defaults() {
@@ -57,6 +58,10 @@ export default class extends BaseModel {
 
     if (this.shippable && !attrs.shipTo && !attrs.countryCode) {
       addError('shippable', app.polyglot.t('orderModelErrors.missingAddress'));
+    }
+
+    if (this.moderated && !attrs.moderator && attrs.moderator !== undefined) {
+      addError('moderated', app.polyglot.t('orderModelErrors.needsModerator'));
     }
 
     if (Object.keys(errObj).length) return errObj;

@@ -17,7 +17,7 @@ export default class extends BaseModal {
     this.listingPrice = options.listingPrice;
     this.totalDiscount = 0;
     this.coupons = options.coupons;
-    this.invalidCode = {};
+    this.codeResult = {};
   }
 
   className() {
@@ -53,38 +53,38 @@ export default class extends BaseModal {
 
 
   addCode(code) {
-    this.sha256(code).then(hash => {
+    return this.sha256(code).then(hash => {
       const buf = new Buffer(hash, 'hex');
       const encoded = multihashes.encode(buf, 'sha2-256');
       const hashedCode = multihashes.toB58String(encoded);
       const coupon = this.findCoupon(hashedCode, code);
       const discount = this.couponDiscount(coupon);
-      this.invalidCode = null;
+      this.codeResult = { type: 'valid', code };
 
       if (coupon) {
         // don't add duplicate coupons
         if (this.couponCodes.indexOf(code) !== -1) {
-          this.invalidCode = { type: 'Duplicate', code };
+          this.codeResult = { type: 'duplicate', code };
           // don't add if the total discount is more than the price of the listing
         } else if (this.totalDiscount + discount < this.listingPrice) {
           this.totalDiscount += discount;
           this.couponCodes.push(code);
           this.couponHashes.push(hashedCode);
-          this.trigger('changeCoupons');
+          this.trigger('changeCoupons', this.couponHashes, this.couponCodes);
         } else {
-          this.invalidCode = { type: 'Excessive', code };
+          this.codeResult = { type: 'excessive', code };
         }
       } else {
-        this.invalidCode = { type: 'Invalid', code };
+        this.codeResult = { type: 'invalid', code };
       }
       this.render();
+      return this.codeResult;
     });
   }
 
   findCoupon(hashedCode, code) {
-    let coupon = this.coupons.findWhere({ hash: hashedCode });
-    coupon = coupon || this.coupons.findWhere({ discountCode: code });
-    return coupon;
+    return this.coupons.findWhere({ hash: hashedCode }) ||
+      this.coupons.findWhere({ discountCode: code });
   }
 
   couponDiscount(coupon) {
@@ -98,7 +98,7 @@ export default class extends BaseModal {
     this.couponCodes.splice(index, 1);
     this.couponHashes.splice(index, 1);
     this.totalDiscount -= this.couponDiscount(this.findCoupon('', code));
-    this.trigger('changeCoupons');
+    this.trigger('changeCoupons', this.couponHashes, this.couponCodes);
     this.render();
   }
 
@@ -110,7 +110,7 @@ export default class extends BaseModal {
     loadTemplate('modals/purchase/coupons.html', t => {
       this.$el.html(t({
         couponCodes: this.couponCodes,
-        invalidCode: this.invalidCode,
+        codeResult: this.codeResult,
       }));
     });
 

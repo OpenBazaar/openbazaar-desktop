@@ -30,10 +30,11 @@ export default class extends BaseView {
     return this._coupons;
   }
 
-  set coupons(hashes) {
+  set coupons(hashesAndCodes) {
     // when we implement multiple items, the coupons should go into an array that mirrors the itmes
+    // if this is the user's own listing, the listing object only has the codes
     const filteredCoupons = this.options.listing.get('coupons').filter((coupon) =>
-      hashes.indexOf(coupon.get('hash')) !== -1);
+    hashesAndCodes.indexOf(coupon.get('hash') || coupon.get('discountCode')) !== -1);
     this._coupons = filteredCoupons.map(coupon => coupon.toJSON());
   }
 

@@ -36,6 +36,7 @@ export default class extends BaseModal {
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
+    this.ownPeerID = options.listing.get('vendorID').peerID === app.profile.id;
 
     const shippingOptions = this.listing.get('shippingOptions');
     const shippable = !!(shippingOptions && shippingOptions.length);
@@ -43,6 +44,7 @@ export default class extends BaseModal {
       {},
       {
         shippable,
+        moderated: true,
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
@@ -76,7 +78,7 @@ export default class extends BaseModal {
       'click #purchaseModerated': 'clickModerated',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
-      'click .js-applyCoupon': 'clickApplyCoupon',
+      'click .js-applyCoupon': 'applyCoupon',
       'keyup #couponCode': 'onKeyUpCouponCode',
       'blur #emailAddress': 'blurEmailAddress',
       'blur #memo': 'blurMemo',
@@ -111,6 +113,7 @@ export default class extends BaseModal {
     const checked = $(e.target).prop('checked');
     this.$moderatorSection.toggleClass('hide', !checked);
     this.$moderatorNote.toggleClass('hide', !checked);
+    this.order.moderated = checked;
 
     if (checked && this._oldMod) {
       // re-select the previously selected moderator, if any
@@ -136,15 +139,19 @@ export default class extends BaseModal {
     launchSettingsModal({ initTab: 'Addresses' });
   }
 
-  clickApplyCoupon() {
-    this.coupons.addCode(this.$couponField.val());
-    this.$couponField.val('');
+  applyCoupon() {
+    const code = this.coupons.addCode(this.$couponField.val());
+    code.then(result => {
+      // if the result is valid, clear the input field
+      if (result.type === 'valid') {
+        this.$couponField.val('');
+      }
+    });
   }
 
   onKeyUpCouponCode(e) {
     if (e.which === 13) {
-      this.coupons.addCode(this.$couponField.val());
-      this.$couponField.val('');
+      this.applyCoupon();
     }
   }
 
@@ -156,9 +163,11 @@ export default class extends BaseModal {
     this.order.set('memo', $(e.target).val());
   }
 
-  changeCoupons() {
-    this.receipt.coupons = this.coupons.couponHashes;
-    this.order.get('items').at(0).set('coupons', this.coupons.couponCodes);
+  changeCoupons(hashes, codes) {
+    // combine the codes and hashes so the receipt can check both.
+    // if this is the user's own listing they will have codes instead of hashes
+    this.receipt.coupons = hashes.concat(codes);
+    this.order.get('items').at(0).set('coupons', codes);
   }
 
   updateShippingOption(opts) {
@@ -171,7 +180,7 @@ export default class extends BaseModal {
   purchaseListing() {
     // clear any old errors
     const allErrContainers = this.$('div[class $="-errors"]');
-    allErrContainers.html('');
+    allErrContainers.each((i, container) => $(container).html(''));
 
     // set the shipping address if the listing is shippable
     if (this.shipping && this.shipping.selectedAddress) {
@@ -185,27 +194,36 @@ export default class extends BaseModal {
     if (this.orderSubmit) this.orderSubmit.abort();
 
     if (!this.order.validationError) {
-      $.post({
-        url: app.getServerUrl('ob/purchase'),
-        data: JSON.stringify(this.order.toJSON()),
-        dataType: 'json',
-        contentType: 'application/json',
-      })
-        .done((data) => {
-          this.state.phase = 'pending';
-          this.actionBtn.render();
-          this.$el.attr('data-phase', 'pending');
-          console.log(data);
-          this.purchase.set(data);
-          this.pending.render();
+      if (this.ownPeerID) {
+        // don't allow a seller to buy their own items
+        const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
+        const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
+        openSimpleMessage(errTitle, errMsg);
+        this.state.phase = 'pay';
+        this.actionBtn.render();
+      } else {
+        $.post({
+          url: app.getServerUrl('ob/purchase'),
+          data: JSON.stringify(this.order.toJSON()),
+          dataType: 'json',
+          contentType: 'application/json',
         })
-        .fail((jqXHR) => {
-          const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
-          const errTitle = app.polyglot.t('purchase.errors.orderError');
-          openSimpleMessage(errTitle, errMsg);
-          this.state.phase = 'pay';
-          this.actionBtn.render();
-        });
+          .done((data) => {
+            this.state.phase = 'pending';
+            this.actionBtn.render();
+            this.$el.attr('data-phase', 'pending');
+            console.log(data);
+            this.purchase.set(data);
+            this.pending.render();
+          })
+          .fail((jqXHR) => {
+            const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
+            const errTitle = app.polyglot.t('purchase.errors.orderError');
+            openSimpleMessage(errTitle, errMsg);
+            this.state.phase = 'pay';
+            this.actionBtn.render();
+          });
+      }
     } else {
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
@@ -324,8 +342,9 @@ export default class extends BaseModal {
         listingPrice: this.listing.get('item').get('price'),
       });
 
-      this.listenTo(this.coupons, 'changeCoupons', () => this.changeCoupons());
-      this.$('.js-couponsWrapper').append(this.coupons.render().el);
+      this.listenTo(this.coupons, 'changeCoupons',
+        (hashes, codes) => this.changeCoupons(hashes, codes));
+      this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
       // remove old view if any on render
       if (this.moderators) this.moderators.remove();
