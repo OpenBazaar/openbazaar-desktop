@@ -35,7 +35,7 @@ export default class extends BaseModal {
       const avatarHashes = opts.profile.get('avatarHashes');
 
       this.vendor = {
-        guid: opts.profile.id,
+        peerID: opts.profile.id,
         name: opts.profile.get('name'),
         handle: opts.profile.get('handle'),
         avatar: {
