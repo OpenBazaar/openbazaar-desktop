@@ -191,7 +191,7 @@ export default class extends BaseModal {
       if (this.vendor.handle) {
         location.hash = `#@${this.vendor.handle}/store`;
       } else {
-        location.hash = `#${this.vendor.guid}/store`;
+        location.hash = `#${this.vendor.peerID}/store`;
       }
     }
   }
