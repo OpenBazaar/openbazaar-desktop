@@ -107,6 +107,7 @@ export default class extends baseVw {
       'click .js-retryLoadMessage': 'onClickRetryLoadMessage',
       'click .js-deleteConversation': 'onClickDeleteConvo',
       'keyup .js-inputMessage': 'onKeyUpMessageInput',
+      'keydown .js-inputMessage': 'onKeyDownMessageInput',
       'blur .js-inputMessage': 'onBlurMessageInput',
       'click .js-emojiMenuTrigger': 'onClickEmojiMenuTrigger',
     };
@@ -236,6 +237,10 @@ export default class extends baseVw {
     this.fetchMessages(...this.lastFetchMessagesArgs);
   }
 
+  onKeyDownMessageInput(e) {
+    if (!e.shiftKey && e.which === 13) e.preventDefault();
+  }
+
   onKeyUpMessageInput(e) {
     // Send an empty message to indicate "typing...", but no more than 1 every
     // second.
@@ -258,7 +263,7 @@ export default class extends baseVw {
     }
 
     // Send actual chat message if the Enter key was pressed
-    if (e.which !== 13) return;
+    if (e.shiftKey || e.which !== 13) return;
 
     let message = e.target.value.trim();
     if (!message) return;
