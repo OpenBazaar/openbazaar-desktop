@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import app from '../../../app';
+import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
 import { getEmojiByName } from '../../../data/emojis';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -40,6 +41,11 @@ export default class extends baseVw {
     this.listenTo(this.messages, 'update', this.onMessagesUpdate);
     this.listenTo(this.messages, 'error', this.onMessagesFetchError);
     this.fetchMessages();
+
+    this.listenTo(this.model, 'change:state', () => {
+      this.checkIfModCanChat();
+      this.setMessageInputPlaceholder();
+    });
 
     const socket = getSocket();
 
@@ -168,7 +174,7 @@ export default class extends baseVw {
     // second.
     if (!this.lastTypingSentAt || (Date.now() - this.lastTypingSentAt) >= 1000) {
       const typingMessage = new ChatMessage({
-        peerIds: this.getChatters().map(chatter => chatter.id),
+        peerIds: this.sendToIds,
         subject: this.model.id,
         message: '',
       });
@@ -198,7 +204,7 @@ export default class extends baseVw {
   }
 
   onClickSend() {
-    const message = this.$inputMessage.value();
+    const message = this.$inputMessage.val();
     if (message) this.sendMessage(message);
   }
 
@@ -243,19 +249,21 @@ export default class extends baseVw {
       // this.hideTypingIndicator();
     } else if (e.jsonData.messageTyping) {
       // Conversant is typing...
-      this.showTypingIndicator();
+      this.setTyping(e.jsonData.messageTyping.peerId);
     } else if (e.jsonData.messageRead) {
-      console.log('the message was indeed read');
+      // Not using this for now since there are technical / UX complications for marking
+      // a message as read when in a group chat (which user read it?).
+
       // Conversant read your message
-      if (this.convoMessages) {
-        const model = this.messages.get(e.jsonData.messageRead.messageId);
+      // if (this.convoMessages) {
+      //   const model = this.messages.get(e.jsonData.messageRead.messageId);
 
-        if (model) {
-          model.set('read', true);
-        }
+      //   if (model) {
+      //     model.set('read', true);
+      //   }
 
-        this.convoMessages.markMessageAsRead(e.jsonData.messageRead.messageId);
-      }
+      //   this.convoMessages.markMessageAsRead(e.jsonData.messageRead.messageId);
+      // }
     }
   }
 
@@ -269,30 +277,49 @@ export default class extends baseVw {
     }
 
     const chatters = this.getChatters();
-    const chatterIndex = chatters.indexOf(id);
+    const typer = chatters.find(chatter => chatter.id === id);
 
-    if (chatterIndex !== -1) {
-      chatters[chatterIndex] = true;
-      clearTimeout(chatters[chatterIndex].typingTimeout);
-      chatters[chatterIndex].typingTimeout = setTimeout(
-        () => (chatters[chatterIndex] = false),
+    if (typer) {
+      typer.isTyping = true;
+      clearTimeout(typer.typingTimeout);
+      typer.typingTimeout = setTimeout(
+        () => (typer.isTyping = false),
         this.typingExpires);
       this.showTypingIndicator();
     }
   }
 
   showTypingIndicator() {
-    clearTimeout(this.typingTimeout);
+    clearTimeout(this.showTypingTimeout);
     this.setTypingIndicator();
     this.$el.addClass('isTyping');
-    this.typingTimeout = setTimeout(
+    this.showTypingTimeout = setTimeout(
       () => (this.hideTypingIndicator()),
       this.typingExpires);
   }
 
   hideTypingIndicator() {
-    clearTimeout(this.typingTimeout);
+    clearTimeout(this.showTypingTimeout);
     this.$el.removeClass('isTyping');
+  }
+
+  /**
+   * Returns the peerIds that chat messages should be sent to.
+   */
+  get sendToIds() {
+    return this.getChatters()
+      .filter(chatter => {
+        // only include the moderator if the order is under
+        // an active dispute
+        let include = true;
+
+        if (chatter.role === 'moderator' &&
+          this.model.get('state') !== 'DISPUTED') {
+          include = false;
+        }
+
+        return include;
+      }).map(chatter => chatter.id);
   }
 
   sendMessage(msg) {
@@ -319,7 +346,7 @@ export default class extends baseVw {
     }
 
     const chatMessage = new ChatMessage({
-      peerIds: this.getChatters().map(chatter => chatter.id),
+      peerIds: this.sendToIds,
       subject: this.model.id,
       message,
     });
@@ -393,66 +420,51 @@ export default class extends baseVw {
   }
 
   getChatters(includeSelf = false) {
-    let chatters = [
-      this.buyer,
-      this.vendor,
-    ];
+    if (!this._chatters) {
+      this._chatters = [
+        {
+          ...this.buyer,
+          role: 'buyer',
+        },
+        {
+          ...this.vendor,
+          role: 'vendor',
+        },
+      ];
 
-    if (this.moderator) chatters.push(this.moderator);
+      if (this.moderator) {
+        this._chatters.push({
+          ...this.moderator,
+          role: 'moderator',
+        });
+      }
+    }
+
+    let chatters = this._chatters;
 
     if (!includeSelf) {
-      chatters = chatters.filter(chatter => chatter.id !== app.profile.id);
+      chatters = this._chatters.filter(chatter => chatter.id !== app.profile.id);
     }
 
     return chatters;
   }
 
   getTypingIndicatorContent() {
-    const chatters = [
-      this.buyer,
-      this.vendor,
-    ];
-
-    if (this.moderator) chatters.push(this.moderator);
-
     let typingText = '';
-
     const typers = this.getChatters().filter(chatter => chatter.isTyping);
-    const names = [];
-
-    typers.forEach(typer => {
-      if (typers.length === 1) {
-        if (typer.profile.state === 'resolved') {
-          typer.profile.done(profile => {
-            const handle = profile.get('handle');
-            names.push(`${handle ? `@${handle}` : profile.id}`);
-          });
-        } else {
-          names.push(typer.id);
-        }
-      }
-    });
+    const names = typers.map(typer =>
+       app.polyglot.t(`orderDetail.discussionTab.role${capitalize(typer.role)}`));
 
     if (names.length === 1) {
-      typingText = app.polyglot.t('orderDetail.discussionTab.isTyping', { user: name[0] });
+      typingText = app.polyglot.t('orderDetail.discussionTab.isTyping', { userRole: names[0] });
     } else if (names.length === 2) {
       typingText = app.polyglot.t('orderDetail.discussionTab.areTyping', {
-        user1: name[0],
-        user2: name[1],
+        userRole1: names[0],
+        userRole2: names[1],
       });
     }
 
     return typingText;
-
-    // let name = this.guid;
-
-    // if (this.profile) {
-    //   const handle = this.profile.get('handle');
-    //   if (handle) name = `@${handle}`;
-    // }
-
-    // const usernameHtml = `<span class="typingUsername noOverflow">${name}</span>`;
-    // return app.polyglot.t('chat.conversation.typingIndicator', { user: usernameHtml });
   }
 
   setTypingIndicator() {
@@ -496,6 +508,32 @@ export default class extends baseVw {
       (this._$inputMessage = this.$('.js-inputMessage'));
   }
 
+  get $convoFooter() {
+    return this._$convoFooter ||
+      (this._$convoFooter = this.$('.js-convoFooter'));
+  }
+
+  checkIfModCanChat() {
+    if (this.moderator && this.moderator.id === app.profile.id &&
+      this.model.get('state') === 'RESOLVED') {
+      // If this is the moderator looking at the order and the mod has
+      // already made a decision, the mod cannot send any more chat messages.
+      this.$convoFooter.addClass('preventModChat');
+    }
+  }
+
+  setMessageInputPlaceholder() {
+    if (this.moderator && this.moderator.id === app.profile.id) return;
+
+    if (this.model.get('state') === 'DECIDED' ||
+      this.model.get('state') === 'RESOLVED') {
+      // If the mod has made a decision, indicator to the vendor / buyer
+      // that they will no longer recieve new chat message.
+      this.$inputMessage[0].placeholder =
+        app.polyglot.t('orderDetail.discussionTab.enterMessageNoMoreModPlaceholder');
+    }
+  }
+
   render() {
     loadTemplate('modals/orderDetail/discussion.html', (t) => {
       this.$el.html(t({
@@ -503,6 +541,7 @@ export default class extends baseVw {
         typingIndicator: this.getTypingIndicatorContent(),
         maxMessageLength: ChatMessage.max.messageLength,
         ownProfile: app.profile.toJSON(),
+        canModChat: this.footerClass,
       }));
 
       this._$subMenu = null;
@@ -512,8 +551,9 @@ export default class extends baseVw {
       this._$typingIndicator = null;
       this._$btnSend = null;
       this._$msgInput = null;
+      this._$convoFooter = null;
 
-      if (this.ConvoMessages) this.ConvoMessages.remove();
+      if (this.convoMessages) this.ConvoMessages.remove();
       this.convoMessages = new ConvoMessages({
         collection: this.messages,
         $scrollContainer: this.$convoMessagesWindow,
@@ -522,7 +562,10 @@ export default class extends baseVw {
         moderator: this.moderator,
       });
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
+
       this.throttleScrollHandler();
+      this.checkIfModCanChat();
+      this.setMessageInputPlaceholder();
     });
 
     return this;

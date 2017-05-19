@@ -26,12 +26,6 @@ export default class extends BaseVw {
     return 'profileBox';
   }
 
-  // events() {
-  //   return {
-  //     'click .js-toggleSendReceive': 'onClickToggleSendReceive',
-  //   };
-  // }
-
   setModel(md) {
     if (this.model) this.stopListening(this.model);
     this.listenTo(md, 'change', () => this.render());

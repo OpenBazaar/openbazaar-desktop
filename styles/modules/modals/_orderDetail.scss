@@ -87,7 +87,7 @@
 
     &.isTyping {
       .typingIndicator {
-        transform: translate(50%, 0);
+        transform: translate(-50%, 0);
       }
     }
 
@@ -191,6 +191,25 @@
 
       .btnSend {
         width: 125px;
+      }
+
+      .msgModUnableToChat {
+        display: none;
+      }
+
+      &.preventModChat {
+        textarea {
+          display: none;
+        }
+
+        .btnSend {
+          @include disabled;
+        }
+
+        .msgModUnableToChat {
+          padding: $pad;
+          display: block;
+        }        
       }
     }    
   }

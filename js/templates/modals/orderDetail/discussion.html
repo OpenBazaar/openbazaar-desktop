@@ -1,21 +1,19 @@
-<div class="typingIndicator txBase noOverflow clrBr clrP clrT2 clrSh1 js-typingIndicator"><%= ob.typingIndicator %></div>
+<div class="typingIndicator tx5 noOverflow clrBr clrP clrT2 clrSh1 js-typingIndicator"><%= ob.typingIndicator %></div>
 <div class="convoMessagesWindow tx6 js-convoMessagesWindow">
   <%= ob.spinner() %>
   <%
-    const retryLink = `<a class="js-retryLoadMessage">${ob.polyT('chat.conversation.retryLink')}</a>`;
-    const loadMessagesError = ob.polyT('chat.conversation.loadMessagesError', { retryLink: retryLink });
+    const retryLink = `<a class="js-retryLoadMessage">${ob.polyT('orderDetail.discussionTab.retryLink')}</a>`;
+    const loadMessagesError = ob.polyT('orderDetail.discussionTab.loadMessagesError', { retryLink: retryLink });
   %>
   <div class="clrTErr messagesFetchError js-loadMessagesError <% if (!ob.showLoadMessagesError) print('hide') %>"><%= loadMessagesError %></div>
-  <div class="js-convoMessagesContainer">
-    <% for (var i = 0; i < 500; i++) { %>
-      Welcome to the meatballs: <%= i %><br />
-    <% } %>
-  </div>
+  <div class="js-convoMessagesContainer"></div>
 </div>
-<div class="clrBr clrP flex gutterHSm convoFooter">
+
+<div class="clrBr clrP flex gutterHSm convoFooter js-convoFooter">
   <div class="avatar clrBr2 clrSh1 disc" style="<%= ob.getAvatarBgImage(ob.ownProfile.avatarHashes) %>"></div>
   <div class="flexExpand">
     <textarea class="clrP tx5 js-inputMessage" placeholder="<%= ob.polyT('chat.conversation.messageInputPlaceholder') %>" maxlength="<%= ob.maxMessageLength %>" rows="1"></textarea>
+    <div class="msgModUnableToChat clrT2"><%= ob.polyT('orderDetail.discussionTab.modCannotChat') %></div>
   </div>
   <div>
     <button class="btn clrBAttGrad clrBrDec1 clrTOnEmph btnSend js-btnSend disabled">Send</button>  
