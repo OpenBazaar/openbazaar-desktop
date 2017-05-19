@@ -36,31 +36,21 @@
 <% } %>
 <%
   const userCols = [];
-  let buyerData;
-  let vendorData;
-
-  if (ob.type !== 'purchases') {
-    buyerData = {
-      avatarHashes: ob.buyerAvatarHashes || {},
-      userHandle: ob.buyerHandle,
-      userId: ob.buyerId,
-    };
-  }
 
   if (ob.type !== 'sales') {
-    vendorData = {
+    userCols.push({
       avatarHashes: ob.vendorAvatarHashes || {},
       userHandle: ob.vendorHandle,
       userId: ob.vendorId,
-    };
+    });
   }
 
   if (ob.type !== 'purchases') {
-    userCols.push(buyerData);
-  }
-
-  if (ob.type !== 'sales') {
-    userCols.push(vendorData);
+    userCols.push({
+      avatarHashes: ob.buyerAvatarHashes || {},
+      userHandle: ob.buyerHandle,
+      userId: ob.buyerId,
+    });
   }
 %>
 <% userCols.forEach((user, index) => { %>

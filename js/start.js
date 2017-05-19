@@ -194,8 +194,8 @@ function isOnboardingNeeded() {
     .done(() => {
       onboardingNeededDeferred.resolve(false);
     })
-    .fail((xhr) => {
-      const jqXhr = xhr.length ? xhr[0] : xhr;
+    .fail((xhr, e) => {
+      const jqXhr = xhr && xhr.length ? xhr[0] : xhr || e;
 
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({

@@ -313,8 +313,12 @@ export default class extends baseVw {
       ...filter,
       // Joining with dashes instead of commas because commas
       // look really bizarre when encode in a query string.
-      states: filter.states.join('-'),
+      states: Array.isArray(filter.states) ? filter.states.join('-') : '',
     };
+
+    if (!queryFilter.states) {
+      delete queryFilter.states;
+    }
 
     if (queryFilter.search === '') {
       delete queryFilter.search;

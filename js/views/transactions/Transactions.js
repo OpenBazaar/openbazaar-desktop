@@ -169,7 +169,7 @@ export default class extends baseVw {
     return {
       search: '',
       sortBy: 'UNREAD',
-      states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      states: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     };
   }
 
@@ -188,42 +188,42 @@ export default class extends baseVw {
         text: app.polyglot.t('transactions.filters.ready'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
         className: 'filter',
-        targetState: [2],
+        targetState: [2, 3, 4],
       },
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
-        targetState: [3],
+        targetState: [5],
       },
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
-        targetState: [8],
+        targetState: [9],
       },
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
         className: 'filter',
-        targetState: [5],
+        targetState: [10],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
         className: 'filter',
-        targetState: [6],
+        targetState: [11],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
         className: 'filter',
-        targetState: [7],
+        targetState: [12],
       },
       {
         id: 'filterCompleted',
@@ -232,7 +232,7 @@ export default class extends baseVw {
           this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
           this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
-        targetState: [4, 9, 10],
+        targetState: [6, 7, 8],
       },
     ];
   }
@@ -316,7 +316,10 @@ export default class extends baseVw {
     if (params.states) {
       params.states = params.states
         .split('-')
-        .map(strIndex => parseInt(strIndex, 10));
+        .map(strIndex => parseInt(strIndex, 10))
+        .filter(state => !isNaN(state));
+    } else {
+      delete params.states;
     }
 
     return params;
