@@ -943,7 +943,7 @@
       "areTyping": "%{userRole1} and %{userRole2} are typing...",
       "enterMessagePlaceholder": "Enter message...",
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
-      "modCannotChat": "You have issued a decision, and cannot send further messages.",
+      "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
       "retryLink": "retry"      
     }
