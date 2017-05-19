@@ -30,8 +30,17 @@
   }
 
   .tabHeads {
+    .moo {
+      // background-color: orange;
+      // display: block;
+    }
+
     .unreadBadge {
       display: inline-block;
+      // position: absolute;
+      // right: -5px;
+      // top: 0;
+      // transform: translate(100%, 1px);
       width: 20px;
       height: 20px;
       text-align: center;
@@ -39,6 +48,13 @@
       padding-top: 3px;
       font-size: $tx6;
       margin-left: 5px;
+
+      &:empty {
+        opacity: 0;
+        // needed so position of the badge is consistent with the non-empty
+        // version and there's no jump as you toggle between the two
+        vertical-align: top;
+      }
     }
   }
 

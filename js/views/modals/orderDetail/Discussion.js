@@ -17,6 +17,7 @@ export default class extends baseVw {
     }
 
     // todo: validate that valid buyer and vendor were passed in.
+    // todo: validate amActiveTab
 
     if (!options.model) {
       throw new Error('Please provide an order / case model.');
@@ -99,9 +100,13 @@ export default class extends baseVw {
       this.firstSyncComplete = true;
       this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
 
-      if (this.isOpen) {
-        this.markConvoAsRead();
-      }
+      if (this.options.amActiveTab()) this.markConvoAsRead();
+    }
+  }
+
+  onAttach() {
+    if (this.firstSyncComplete) {
+      this.markConvoAsRead();
     }
   }
 
@@ -239,14 +244,27 @@ export default class extends baseVw {
       });
 
       this.messages.push(message);
-
-      if (this.isOpen) {
-        this.markConvoAsRead();
-      }
+      if (this.options.amActiveTab()) this.markConvoAsRead();
 
       // We'll consider them to be done typing if an acutal message came
       // in. If they re-start typing, we'll get another socket messsage.
-      // this.hideTypingIndicator();
+      const messageSender = this.getChatters()
+        .find(chatter => chatter.id === e.jsonData.message.peerId);
+
+      if (messageSender) {
+        messageSender.isTyping = false;
+
+        // if no one else is typing, we'll hide the indicator
+        const typers = this.getChatters()
+          .filter(chatter => chatter.isTyping);
+
+        if (!typers.length) {
+          this.hideTypingIndicator();
+        } else {
+          // update it so it doesn show the message sender as typing
+          this.setTypingIndicator();
+        }
+      }
     } else if (e.jsonData.messageTyping) {
       // Conversant is typing...
       this.setTyping(e.jsonData.messageTyping.peerId);
@@ -414,9 +432,8 @@ export default class extends baseVw {
   }
 
   markConvoAsRead() {
-    // const queryString = this.subject ? `/?subject=${this.model.id}` : '';
-    // $.post(app.getServerUrl(`ob/markchatasread/${this.vendor.id}${queryString}`));
-    // this.trigger('convoMarkedAsRead');
+    $.post(app.getServerUrl(`ob/markchatasread/?subject=${this.model.id}`));
+    this.trigger('convoMarkedAsRead');
   }
 
   getChatters(includeSelf = false) {

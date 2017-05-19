@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
+import { getSocket } from '../../../utils/serverConnect';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
-import Profile from '../../../models/profile/Profile';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './Summary';
@@ -42,7 +42,15 @@ export default class extends BaseModal {
 
     this.listenTo(this.model, 'request', this.onOrderRequest);
     this.listenToOnce(this.model, 'sync', this.onFirstOrderSync);
+    this.listenTo(this.model, 'change:unreadChatMessages',
+      () => this.setUnreadChatMessagesBadge());
     this.model.fetch();
+
+    const socket = getSocket();
+
+    if (socket) {
+      this.listenTo(socket, 'message', this.onSocketMessage);
+    }
   }
 
   className() {
@@ -120,6 +128,15 @@ export default class extends BaseModal {
   onTabClick(e) {
     const targ = $(e.target).closest('.js-tab');
     this.selectTab(targ.attr('data-tab'));
+  }
+
+  onSocketMessage(e) {
+    if (e.jsonData.message &&
+       e.jsonData.message.subject === this.model.id &&
+       this.activeTab !== 'discussion') {
+      const count = this.model.get('unreadChatMessages');
+      this.model.set('unreadChatMessages', count + 1);
+    }
   }
 
   get type() {
@@ -202,6 +219,10 @@ export default class extends BaseModal {
     return this._getParticipantProfile('moderator');
   }
 
+  get activeTab() {
+    return this._tab;
+  }
+
   getState() {
     return this._state;
   }
@@ -228,6 +249,7 @@ export default class extends BaseModal {
       throw new Error(`${targ} is not a valid tab.`);
     }
 
+    this._tab = targ;
     let tabView = this.tabViewCache[targ];
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
@@ -261,6 +283,7 @@ export default class extends BaseModal {
   }
 
   createDiscussionTabView() {
+    const amActiveTab = () => (this.activeTab === 'discussion');
     const viewData = {
       orderId: this.model.id,
       buyer: {
@@ -272,6 +295,7 @@ export default class extends BaseModal {
         profile: this.vendorProfile,
       },
       model: this.model,
+      amActiveTab: amActiveTab.bind(this),
     };
 
     if (this.moderatorId) {
@@ -282,6 +306,7 @@ export default class extends BaseModal {
     }
 
     const view = this.createChild(Discussion, viewData);
+    this.listenTo(view, 'convoMarkedAsRead', () => this.model.set('unreadChatMessages', 0));
 
     return view;
   }
@@ -294,6 +319,22 @@ export default class extends BaseModal {
     return view;
   }
 
+  setUnreadChatMessagesBadge() {
+    this.$unreadChatMessagesBadge.text(this.getUnreadChatMessagesText());
+  }
+
+  getUnreadChatMessagesText() {
+    let count = this.model.get('unreadChatMessages');
+    count = count > 0 ? count : '';
+    count = count > 99 ? '…' : count;
+    return count;
+  }
+
+  get $unreadChatMessagesBadge() {
+    return this._$unreadChatMessagesBadge ||
+      (this._$unreadChatMessagesBadge = this.$('.js-unreadChatMessagesBadge'));
+  }
+
   render() {
     loadTemplate('modals/orderDetail/orderDetail.html', t => {
       const state = this.getState();
@@ -304,10 +345,12 @@ export default class extends BaseModal {
         ownProfile: app.profile.toJSON(),
         returnText: this.options.returnText,
         type: this.type,
+        getUnreadChatMessagesText: this.getUnreadChatMessagesText.bind(this),
       }));
       super.render();
 
       this.$tabContent = this.$('.js-tabContent');
+      this._$unreadChatMessagesBadge = null;
 
       if (this.featuredProfile) this.featuredProfile.remove();
       this.featuredProfile = this.createChild(ProfileBox, {
@@ -319,7 +362,7 @@ export default class extends BaseModal {
       this.$('.js-featuredProfile').html(this.featuredProfile.render().el);
 
       if (!state.isFetching && !state.fetchError) {
-        this.selectTab(this._tab);
+        this.selectTab(this.activeTab);
       }
     });
 
