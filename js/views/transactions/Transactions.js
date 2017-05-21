@@ -25,6 +25,7 @@ export default class extends baseVw {
     this.tabViewCache = {};
     this.profileDeferreds = {};
     this.profilePosts = [];
+    this.openedOrderModal = null;
 
     const params = new URLSearchParams(location.hash.split('?')[1] || '');
     const orderId = params.get('orderId');
@@ -33,7 +34,12 @@ export default class extends baseVw {
     if (orderId || caseId) {
       // cut off the trailing 's' from the tab
       const type = this._tab.slice(0, this._tab.length - 1);
-      this.openOrder(orderId || caseId, type);
+
+      // If we're opening an order model on init, then we'll
+      // need to pass it in to the Tab view. It may need to bind event
+      // handlers to it.
+      this.openedOrderModal = this.openOrder(orderId || caseId, type);
+      this.listenTo(this.openedOrderModal, 'close', () => (this.openedOrderModal = null));
     }
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
@@ -339,6 +345,7 @@ export default class extends baseVw {
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
       openOrder: this.openOrder.bind(this),
+      openedOrderModal: this.openedOrderModal,
     });
 
     return view;
@@ -358,6 +365,7 @@ export default class extends baseVw {
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
       openOrder: this.openOrder.bind(this),
+      openedOrderModal: this.openedOrderModal,
     });
 
     return view;
@@ -377,12 +385,21 @@ export default class extends baseVw {
       filterConfig: this.casesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
       openOrder: this.openOrder.bind(this),
+      openedOrderModal: this.openedOrderModal,
     });
 
     return view;
   }
 
-  // todo: this guy is getting passed around a good amount. Doc it up, yo!
+  /**
+   * This function will fetch a list of profiles via the profiles api utilizing
+   * the async and usecache flags. It will return a list of promises that will
+   * each resolve when their respective profile arrives via socket.
+   * @param {Array} peerIds List of peerId for whose profiles to fetch.
+   * @returns {Array} An array of promises corresponding to the array of passed
+   * in peerIds. Each promise will resolve when it's respective profile is received
+   * via the socket. A profile model will be passed in the resolve handler.
+   */
   getProfiles(peerIds = []) {
     const promises = [];
     const profilesToFetch = [];

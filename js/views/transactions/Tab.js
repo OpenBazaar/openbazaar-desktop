@@ -307,6 +307,7 @@ export default class extends baseVw {
           initialFilterParams: this.filter,
           getProfiles: this.options.getProfiles,
           openOrder: this.options.openOrder,
+          openedOrderModal: this.options.openedOrderModal,
         });
         this.$('.js-tableContainer').html(this.table.render().el);
       });

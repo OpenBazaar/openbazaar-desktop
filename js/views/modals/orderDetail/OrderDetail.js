@@ -306,7 +306,10 @@ export default class extends BaseModal {
     }
 
     const view = this.createChild(Discussion, viewData);
-    this.listenTo(view, 'convoMarkedAsRead', () => this.model.set('unreadChatMessages', 0));
+    this.listenTo(view, 'convoMarkedAsRead', () => {
+      this.model.set('unreadChatMessages', 0);
+      this.trigger('convoMarkedAsRead');
+    });
 
     return view;
   }

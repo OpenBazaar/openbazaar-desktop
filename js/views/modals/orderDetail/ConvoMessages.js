@@ -13,7 +13,36 @@ export default class extends BaseVw {
       throw new Error('Please provide the DOM element that handles scrolling for this view.');
     }
 
-    // todo: validate that valid buyer and vendor were passed in.
+    const isValidParticipantObject = (participant) => {
+      let isValid = true;
+      if (!participant.id) isValid = false;
+      if (!participant.profile || !participant.profile.then) return false;
+      return isValid;
+    };
+
+    const getInvalidParticpantError = (type = '') =>
+      (`The ${type} object is not valid. It should have an id ` +
+        'as well as a profile promise that resolves with a profile model.');
+
+    if (!options.buyer) {
+      throw new Error('Please provide a buyer object.');
+    }
+
+    if (!options.vendor) {
+      throw new Error('Please provide a vendor object.');
+    }
+
+    if (!isValidParticipantObject(options.buyer)) {
+      throw new Error(getInvalidParticpantError('buyer'));
+    }
+
+    if (!isValidParticipantObject(options.vendor)) {
+      throw new Error(getInvalidParticpantError('vendor'));
+    }
+
+    if (options.moderator && !isValidParticipantObject(options.moderator)) {
+      throw new Error(getInvalidParticpantError('moderator'));
+    }
 
     super(options);
     this.options = options;
