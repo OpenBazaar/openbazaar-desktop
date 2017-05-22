@@ -41,7 +41,7 @@ export default class extends BaseModal {
       {},
       {
         shippable,
-        moderated: true,
+        moderated: !!this.listing.moderators && this.listing.moderators.length,
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
