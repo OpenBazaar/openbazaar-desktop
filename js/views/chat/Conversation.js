@@ -241,32 +241,21 @@ export default class extends baseVw {
     if (!e.shiftKey && e.which === 13) e.preventDefault();
   }
 
-  onKeyUpMessageInput(e) {
-    // Send an empty message to indicate "typing...", but no more than 1 every
-    // second.
-    if (!this.lastTypingSentAt || (Date.now() - this.lastTypingSentAt) >= 1000) {
-      const typingMessage = new ChatMessage({
-        peerId: this.guid,
-        subject: this.subject,
-        message: '',
-      });
+  /**
+   * This handler should be called any time a chat message has been sent to the
+   * server.
+   */
+  onMessageSent(chatMessage) {
+    this.messages.push(chatMessage);
+    this.trigger('newOutgoingMessage', { model: chatMessage });
+  }
 
-      const saveTypingMessage = typingMessage.save();
-
-      if (saveTypingMessage) {
-        this.lastTypingSentAt = Date.now();
-      } else {
-        // Developer error - this shouldn't happen.
-        console.error('There was an error saving the chat message.');
-        console.dir(saveTypingMessage);
-      }
+  sendMessage(msg) {
+    if (!msg) {
+      throw new Error('Please provide a message to send.');
     }
 
-    // Send actual chat message if the Enter key was pressed
-    if (e.shiftKey || e.which !== 13) return;
-
-    let message = e.target.value.trim();
-    if (!message) return;
+    let message = msg;
     this.lastTypingSentAt = null;
 
     // Convert any emoji placeholder (e.g :smiling_face:) into
@@ -295,14 +284,40 @@ export default class extends baseVw {
     if (save) {
       // At least for now, ignoring any server failures and optimistically adding the new
       // message to the UI. Odds are really low of server failure and repurcussions minimal.
-      this.messages.push(chatMessage);
-      this.trigger('newOutgoingMessage', { model: chatMessage });
+      this.onMessageSent(chatMessage);
     } else {
       // Developer error - this shouldn't happen.
       console.error('There was an error saving the chat message.');
-      console.dir(save);
+      console.dir(chatMessage.validationError);
+    }
+  }
+
+  onKeyUpMessageInput(e) {
+    // Send an empty message to indicate "typing...", but no more than 1 every
+    // second.
+    if (!this.lastTypingSentAt || (Date.now() - this.lastTypingSentAt) >= 1000) {
+      const typingMessage = new ChatMessage({
+        peerId: this.guid,
+        subject: this.subject,
+        message: '',
+      });
+
+      const saveTypingMessage = typingMessage.save();
+
+      if (saveTypingMessage) {
+        this.lastTypingSentAt = Date.now();
+      } else {
+        // Developer error - this shouldn't happen.
+        console.error('There was an error saving the chat message.');
+        console.dir(saveTypingMessage);
+      }
     }
 
+    // Send actual chat message if the Enter key was pressed
+    if (e.shiftKey || e.which !== 13) return;
+
+    const message = e.target.value.trim();
+    if (message) this.sendMessage(message);
     $(e.target).val('');
   }
 
