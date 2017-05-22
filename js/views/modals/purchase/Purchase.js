@@ -206,7 +206,8 @@ export default class extends BaseModal {
             console.log(data);
           })
           .fail((jqXHR) => {
-            const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
+            if (jqXHR.statusText === 'abort') return;
+            const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
             this.state.phase = 'pay';
@@ -304,9 +305,7 @@ export default class extends BaseModal {
 
       this.$purchaseModerated = this.$('#purchaseModerated');
 
-      // remove old view if any on render
       if (this.actionBtn) this.actionBtn.remove();
-      // add the action button
       this.actionBtn = this.createChild(ActionBtn, {
         state: this.state,
         listing: this.listing,
@@ -314,18 +313,14 @@ export default class extends BaseModal {
       this.listenTo(this.actionBtn, 'purchase', (() => this.purchaseListing()));
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
-      // remove old view if any on render
       if (this.receipt) this.receipt.remove();
-      // add the receipt section
       this.receipt = this.createChild(Receipt, {
         model: this.order,
         listing: this.listing,
       });
       this.$('.js-receipt').append(this.receipt.render().el);
 
-      // remove old view if any on render
       if (this.coupons) this.coupons.remove();
-      // add the coupons
       this.coupons = this.createChild(Coupons, {
         coupons: this.listing.get('coupons'),
         listingPrice: this.listing.get('item').get('price'),
@@ -335,9 +330,7 @@ export default class extends BaseModal {
         (hashes, codes) => this.changeCoupons(hashes, codes));
       this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
-      // remove old view if any on render
       if (this.moderators) this.moderators.remove();
-      // add the moderators section content
       this.moderators = this.createChild(Moderators, {
         moderatorIDs: this.listing.get('moderators') || [],
         fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
@@ -351,9 +344,7 @@ export default class extends BaseModal {
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
 
-      // add the shipping section if needed
       if (this.listing.get('shippingOptions').length) {
-        // remove old view if any on render
         if (this.shipping) this.shipping.remove();
         this.shipping = this.createChild(Shipping, {
           model: this.listing,
