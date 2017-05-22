@@ -17,22 +17,30 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'discussionTab';
+    return 'contractTab';
   }
 
   events() {
     return {
-      // 'change .filter input': 'onChangeFilter',
+      'click .js-backToSummary': 'onClickBackToSummary',
+      'click .renderjson a': 'onClickRenderjsonLink',
     };
+  }
+
+  onClickBackToSummary() {
+    this.trigger('clickBackToSummary');
+  }
+
+  onClickRenderjsonLink() {
+    return false;
   }
 
   render() {
     loadTemplate('modals/orderDetail/contract.html', t => {
-      this.$el.html(t({
-        ...this.model.toJSON(),
-      }));
-
-      // this._$filterCheckboxes = null;
+      this.$el.html(t());
+      const renderjsonHtml =
+        window.renderjson.set_show_to_level(1)(this.model.get('unparsedContract'));
+      this.$('.js-contractContainer').append(renderjsonHtml);
     });
 
     return this;

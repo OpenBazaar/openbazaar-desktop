@@ -1,4 +1,5 @@
 import BaseModel from '../BaseModel';
+import Contract from './Contract';
 import app from '../../app';
 
 export default class extends BaseModel {
@@ -24,5 +25,21 @@ export default class extends BaseModel {
 
   get idAttribute() {
     return 'orderId';
+  }
+
+  get nested() {
+    return {
+      contract: Contract,
+    };
+  }
+
+  parse(response = {}) {
+    if (response.contract) {
+      // Since we modify the data on parse (particularly in some nested models),
+      // we'll store the original contract here.
+      response.unparsedContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
+    }
+
+    return response;
   }
 }

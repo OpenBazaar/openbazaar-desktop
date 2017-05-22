@@ -166,13 +166,11 @@
       border-style: solid;
       border-width: 1px;
       border-top-width: 0;
-      // max-width: 190px;
       z-index: 1;
       padding: $padSm $pad;
       transition: transform 0.3s ease;
 
       .typingUsername {
-        // max-width: 121px;
         display: inline-block;
         vertical-align: middle;
       }
@@ -219,5 +217,22 @@
         }        
       }
     }    
+  }
+
+  .contractTab {
+    .backToSummaryWrap {
+      position: absolute;
+      max-width: 250px;
+      left: $padLg;
+    }
+
+    .renderjson {
+      padding: $pad;
+      overflow: auto;
+
+      .key {
+        font-weight: bold;
+      }
+    }
   }
 }
