@@ -44,7 +44,7 @@ export default class extends BaseModal {
       {},
       {
         shippable,
-        moderated: true,
+        moderated: !!this.listing.moderators && this.listing.moderators.length,
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
@@ -212,7 +212,6 @@ export default class extends BaseModal {
             this.state.phase = 'pending';
             this.actionBtn.render();
             this.$el.attr('data-phase', 'pending');
-            console.log(data);
             this.purchase.set(this.purchase.parse(data));
             this.pending.render();
           })
@@ -243,6 +242,13 @@ export default class extends BaseModal {
         errors,
       }));
     });
+  }
+
+  completePurchase(data) {
+    this.state.phase = 'complete';
+    this.actionBtn.render();
+    this.$el.attr('data-phase', 'complete');
+    console.log(data);
   }
 
   get $popInMessages() {
@@ -381,6 +387,7 @@ export default class extends BaseModal {
       this.pending = this.createChild(Pending, {
         model: this.purchase,
       });
+      this.listenTo(this.pending, 'walletPaymentComplete', (data => this.completePurchase(data)));
       this.$('.js-pending').append(this.pending.render().el);
 
       // remove old view if any on render

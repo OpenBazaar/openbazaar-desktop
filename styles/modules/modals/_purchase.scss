@@ -15,7 +15,7 @@
   }
 
   .showIfPending,
-  .showIfClose {
+  .showIfComplete {
     display: none;
   }
 
@@ -28,11 +28,11 @@
     }
   }
 
-  &[data-phase='close'] {
+  &[data-phase='complete'] {
     .showIfPay {
       display: none;
     }
-    .showIfClose {
+    .showIfComplete {
       display: none;
     }
   }

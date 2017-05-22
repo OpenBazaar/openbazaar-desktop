@@ -828,7 +828,7 @@
     "codeErrors": {
       "invalid": "\"%{code}\" is not a valid code",
       "duplicate": "You can only add \"%{code}\" once",
-      "excessive": "You cannot apply a discount of more than 100% of the listing's price."
+      "excessive": "You cannot apply discounts that total 100% or more."
     },
     "removeCode": "remove",
     "memo": "Memo",
@@ -852,7 +852,7 @@
       "cancel": "Cancel"
     },
     "pendingSection": {
-      "pay": "Pay: %{amount}",
+      "pay": "Pay: %{amountBTC}",
       "copy": "Copy",
       "copied": "Copied to Clipboard",
       "to": "To: %{address}",
@@ -865,10 +865,15 @@
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
         "title": "Are you sure?",
-        "msg": "Pay %{amount} to the vendor",
+        "payBTC": "Pay %{amountBTC} to the vendor",
+        "payFiat": "Pay %{amountFiat} (%{amountBTC}) to the vendor",
         "cancel": "Cancel",
         "confirm": "Yes, Pay",
-        "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase."
+        "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
+        "insufficientFundsTitle": "Insufficient Funds",
+        "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
+        "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
+        "insufficientFundsNote": "*%{amount} plus an estimated fee of %{fee}"
       }
     },
     "receipt": {
@@ -883,7 +888,8 @@
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
       "ownIDTitle": "This is Your Own Listing",
-      "ownIDMsg": "You cannot purchase a listing that belongs to you."
+      "ownIDMsg": "You cannot purchase a listing that belongs to you.",
+      "paymentFaied": "The Payment Could Not Be Completed"
     }
   },
   "moderators": {

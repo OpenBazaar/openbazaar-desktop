@@ -1,0 +1,48 @@
+<% const requiredTotal = ob.fee ? Number(ob.amount) + Number(ob.fee) : 0;
+   const funds = ob.confirmedAmount;
+   const fundsBTC = funds ? ob.convertAndFormatCurrency(funds, 'BTC', 'BTC') : 0
+   // if the user has more funds than the required total, the fundGap is negative
+   const fundGap = requiredTotal - funds;
+   const fundGapBTC = fundGap ? ob.convertAndFormatCurrency(fundGap, 'BTC', 'BTC') : 0
+   const feeBTC = ob.fee ? ob.convertAndFormatCurrency(ob.fee, 'BTC', 'BTC') : 0;
+%>
+
+<div class="flexColRows gutterVSm padLg">
+  <h3>
+    <% if (requiredTotal && fundGap <= 0) { %>
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.title') %>
+    <% } else { %>
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsTitle') %>
+    <% } %>
+  </h3>
+  <p class="tx5">
+    <% const amountFiat = ob.amount ? ob.convertAndFormatCurrency(ob.amount, 'BTC', ob.displayCurrency) : 0;
+       const msg = ob.displayCurrency === 'BTC' ? 'payBTC' : 'payFiat';
+
+    if (requiredTotal && fundGap <= 0) { %>
+      <%= ob.polyT(`purchase.pendingSection.confirmWallet.${msg}`, { amountBTC: ob.amountBTC, amountFiat }) %>
+    <% } else { %>
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg1', { funds: fundsBTC }) %>
+    </p>
+    <p class="txSm">
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg2', { fundGap: fundGapBTC }) %>
+    <% } %>
+  </p>
+  <% if (requiredTotal && fundGap > 0) { %>
+    <p class="txSm clrT2">
+      <i>
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsNote', { amount: ob.amountBTC, fee: feeBTC }) %>
+      </i>
+    </p>
+  <% } %>
+</div>
+<hr class="unleaded clrBr" />
+<div class="flexHRight flexVCent gutterHLg pad tx5">
+  <a class="js-confirmWalletCancel">
+    <%= ob.polyT('purchase.pendingSection.confirmWallet.cancel') %>
+  </a>
+  <%= ob.processingButton({
+  className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmWalletConfirm',
+  btnText: ob.polyT('purchase.pendingSection.confirmWallet.confirm')
+  }) %>
+</div>
