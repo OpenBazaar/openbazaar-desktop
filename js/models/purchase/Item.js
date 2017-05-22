@@ -42,7 +42,7 @@ export default class extends BaseModel {
 
     if (attrs.quantity === 'undefined') {
       addError('quantity', app.polyglot.t('orderModelErrors.mustHaveQuantity'));
-    } else if (typeof attrs.quantity !== 'number') {
+    } else if (!Number.isInteger(attrs.quantity)) {
       addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
     } else if (attrs.quantity < 1) {
       addError('quantity', app.polyglot.t('orderModelErrors.noItems'));
