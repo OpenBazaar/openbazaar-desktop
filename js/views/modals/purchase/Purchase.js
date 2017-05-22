@@ -36,8 +36,6 @@ export default class extends BaseModal {
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
-    this.ownPeerID = options.listing.get('vendorID').peerID === app.profile.id;
-
     const shippingOptions = this.listing.get('shippingOptions');
     const shippable = !!(shippingOptions && shippingOptions.length);
     this.order = new Order(
@@ -194,7 +192,7 @@ export default class extends BaseModal {
     if (this.orderSubmit) this.orderSubmit.abort();
 
     if (!this.order.validationError) {
-      if (this.ownPeerID) {
+      if (this.listing.isOwnListing) {
         // don't allow a seller to buy their own items
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
@@ -216,7 +214,8 @@ export default class extends BaseModal {
             this.pending.render();
           })
           .fail((jqXHR) => {
-            const errMsg = jqXHR.responseJSON ? jqXHR.responseJSON.reason : '';
+            if (jqXHR.statusText === 'abort') return;
+            const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
             this.state.phase = 'pay';
@@ -321,9 +320,7 @@ export default class extends BaseModal {
 
       this.$purchaseModerated = this.$('#purchaseModerated');
 
-      // remove old view if any on render
       if (this.actionBtn) this.actionBtn.remove();
-      // add the action button
       this.actionBtn = this.createChild(ActionBtn, {
         state: this.state,
         listing: this.listing,
@@ -331,18 +328,14 @@ export default class extends BaseModal {
       this.listenTo(this.actionBtn, 'purchase', (() => this.purchaseListing()));
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
-      // remove old view if any on render
       if (this.receipt) this.receipt.remove();
-      // add the receipt section
       this.receipt = this.createChild(Receipt, {
         model: this.order,
         listing: this.listing,
       });
       this.$('.js-receipt').append(this.receipt.render().el);
 
-      // remove old view if any on render
       if (this.coupons) this.coupons.remove();
-      // add the coupons
       this.coupons = this.createChild(Coupons, {
         coupons: this.listing.get('coupons'),
         listingPrice: this.listing.get('item').get('price'),
@@ -352,9 +345,7 @@ export default class extends BaseModal {
         (hashes, codes) => this.changeCoupons(hashes, codes));
       this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
-      // remove old view if any on render
       if (this.moderators) this.moderators.remove();
-      // add the moderators section content
       this.moderators = this.createChild(Moderators, {
         moderatorIDs: this.listing.get('moderators') || [],
         fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
@@ -368,9 +359,7 @@ export default class extends BaseModal {
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
 
-      // add the shipping section if needed
       if (this.listing.get('shippingOptions').length) {
-        // remove old view if any on render
         if (this.shipping) this.shipping.remove();
         this.shipping = this.createChild(Shipping, {
           model: this.listing,

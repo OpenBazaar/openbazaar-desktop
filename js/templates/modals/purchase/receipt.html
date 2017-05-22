@@ -1,9 +1,11 @@
 <hr class="clrBr">
 <b><%= ob.polyT('purchase.receipt.summary') %></b>
-<% let total = 0; %>
-<% ob.items.forEach((item, i) => {
+<%
+  let total = 0;
+  ob.items.forEach((item, i) => {
     const basePrice = ob.prices[i].price;
     const shippingPrice = ob.prices[i].sPrice;
+    const quantity = Number.isInteger(item.quantity) ? item.quantity : 1;
     let itemTotal = basePrice;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
@@ -14,16 +16,16 @@
       }
     });
     itemTotal += shippingPrice;
-    total += itemTotal * item.quantity;
+    total += itemTotal * quantity;
     // don't allow coupons to make the total negative
     total = total > 0 ? total : 0;
 %>
   <div class="flexRow">
     <span class="col5">
-      <%= ob.polyT('purchase.receipt.listing', { quantity: item.quantity }) %>
+      <%= ob.polyT('purchase.receipt.listing', { quantity }) %>
     </span>
     <b class="col7">
-      <%= ob.convertAndFormatCurrency(basePrice * item.quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+      <%= ob.convertAndFormatCurrency(basePrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
     </b>
   </div>
   <% ob.coupons.forEach((coupon) => { %>
@@ -35,7 +37,7 @@
         <% if (coupon.percentDiscount) {
              print(`-${coupon.percentDiscount}%`);
         } else if (coupon.priceDiscount) {
-          print(`-${ob.convertAndFormatCurrency(Number(coupon.priceDiscount * item.quantity), ob.listing.metadata.pricingCurrency, ob.displayCurrency)}`);
+          print(`-${ob.convertAndFormatCurrency(Number(coupon.priceDiscount * quantity), ob.listing.metadata.pricingCurrency, ob.displayCurrency)}`);
         } %>
       </b>
     </div>
@@ -47,7 +49,7 @@
         <%= ob.polyT('purchase.receipt.shipping') %>
       </span>
       <b class="col7">
-        <%= ob.convertAndFormatCurrency(shippingPrice * item.quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+        <%= ob.convertAndFormatCurrency(shippingPrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
       </b>
     </div>
   <% } %>

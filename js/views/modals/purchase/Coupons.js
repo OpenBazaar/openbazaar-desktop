@@ -99,6 +99,7 @@ export default class extends BaseModal {
     this.couponHashes.splice(index, 1);
     this.totalDiscount -= this.couponDiscount(this.findCoupon('', code));
     this.trigger('changeCoupons', this.couponHashes, this.couponCodes);
+    this.codeResult = { type: 'valid', code };
     this.render();
   }
 
