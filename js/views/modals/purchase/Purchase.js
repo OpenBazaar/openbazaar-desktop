@@ -33,8 +33,6 @@ export default class extends BaseModal {
     this.listing = options.listing;
     this.variants = options.variants;
     this.vendor = options.vendor;
-    this.ownPeerID = options.listing.get('vendorID').peerID === app.profile.id;
-
     const shippingOptions = this.listing.get('shippingOptions');
     const shippable = !!(shippingOptions && shippingOptions.length);
     this.order = new Order(
@@ -188,7 +186,7 @@ export default class extends BaseModal {
     if (this.orderSubmit) this.orderSubmit.abort();
 
     if (!this.order.validationError) {
-      if (this.ownPeerID) {
+      if (this.listing.isOwnListing) {
         // don't allow a seller to buy their own items
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
