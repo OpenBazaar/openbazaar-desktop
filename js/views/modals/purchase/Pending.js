@@ -1,15 +1,15 @@
 import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import { convertAndFormatCurrency } from '../../../utils/currency';
+import { convertAndFormatCurrency, integerToDecimal } from '../../../utils/currency';
+import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
-import ConfirmWallet from './confirmWallet';
+import ConfirmWallet from './ConfirmWallet';
 import qr from 'qr-encode';
-import { clipboard } from 'electron';
+import { clipboard, remote } from 'electron';
 import Purchase from '../../../models/purchase/Purchase';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
-
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -22,6 +22,23 @@ export default class extends BaseVw {
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
+
+    const serverSocket = getSocket();
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', e => {
+        console.log(e.jsonData)
+        // listen for a payment socket message, to react to payments from all sources
+        if (e.jsonData.notification && e.jsonData.notification.payment) {
+          const payment = e.jsonData.notification.payment;
+          console.log(payment);
+          console.log(integerToDecimal(payment.fundingTotal, true));
+          if (integerToDecimal(payment.fundingTotal, true) >= this.model.get('amount') &&
+            payment.orderId === this.model.get('orderId')) {
+            this.trigger('walletPaymentComplete');
+          }
+        }
+      });
+    }
   }
 
   className() {
@@ -60,42 +77,43 @@ export default class extends BaseVw {
       amount: this.model.get('amount'),
       currency: 'BTC',
     })
-      .done(data => {
-        this.trigger('walletPaymentComplete', data);
-      })
       .fail(jqXhr => {
         openSimpleMessage(app.polyglot.t('purchase.errors.paymentFailed'),
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
       })
       .always(() => {
         this.$confirmWalletConfirm.removeClass('processing');
+        this.$confirmWallet.addClass('hide');
       });
   }
 
   clickPayFromAlt() {
-
+    const amount = this.model.get('amount');
+    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.payURL}&amp;output=BTC&apiKey=407531b0fa5d84a3c0d335c54d1ae7d5939f05b45aa90cf4d5dcfdca22c4be13f68a24a0d5ce6f1bbc5bd51b3cc0bc8a165254d29af6b8fb377d85287b747d41&amount=${amount}`;
+    const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
+    shapeshiftWin.loadURL(shapeshiftURL);
   }
 
   copyAmount() {
     clipboard.writeText(String(this.model.get('amount')));
 
-    this.$copyAmountNotification.addClass('active');
+    this.$copyAmount.addClass('active');
     if (this.hideCopyAmountTimer) {
       clearTimeout(this.hideCopyAmountTimer);
     }
     this.hideCopyAmountTimer = setTimeout(
-      () => this.$copyAmountNotification.removeClass('active'), 3000);
+      () => this.$copyAmount.removeClass('active'), 3000);
   }
 
   copyAddress() {
     clipboard.writeText(String(this.model.get('paymentAddress')));
 
-    this.$copyAddressNotification.addClass('active');
+    this.$copyAddress.addClass('active');
     if (this.hideCopyAddressTimer) {
       clearTimeout(this.hideCopyAddressTimer);
     }
     this.hideCopyAddressTimer = setTimeout(
-      () => this.$copyAddressNotification.removeClass('active'), 3000);
+      () => this.$copyAddress.removeClass('active'), 3000);
   }
 
   get $confirmWallet() {
@@ -103,14 +121,14 @@ export default class extends BaseVw {
       (this._$confirmWallet = this.$('.js-confirmWallet'));
   }
 
-  get $copyAmountNotification() {
-    return this._$copyAmountNotification ||
-      (this._$copyAmountNotification = this.$('.js-copyAmountNotification'));
+  get $copyAmount() {
+    return this._$copyAmount ||
+      (this._$copyAmount = this.$('.js-copyAmount'));
   }
 
-  get $copyAddressNotification() {
-    return this._$copyAddressNotification ||
-      (this._$copyAddressNotification = this.$('.js-copyAddressNotification'));
+  get $copyAddress() {
+    return this._$copyAddress ||
+      (this._$copyAddress = this.$('.js-copyAddress'));
   }
 
   get $confirmWalletConfirm() {
@@ -122,7 +140,7 @@ export default class extends BaseVw {
     const displayCurrency = app.settings.get('localCurrency');
     const amount = this.model.get('amount');
     const amountBTC = amount ? convertAndFormatCurrency(amount, 'BTC', 'BTC') : 0;
-    
+
     loadTemplate('modals/purchase/pending.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
@@ -137,8 +155,8 @@ export default class extends BaseVw {
       });
 
       this._$confirmWallet = null;
-      this._$copyAmountNotification = null;
-      this._$copyAddressNotification = null;
+      this._$copyAmount = null;
+      this._$copyAddress = null;
       this._$confirmWalletConfirm = null;
 
       // remove old view if any on render

@@ -237,6 +237,36 @@
   }
 }
 
+.flipBtn {
+  // use for a button that should slow new text when active
+  // the flippable elements are positioned on top of each other.
+  position: relative;
+
+  .unFlipped,
+  .flipped {
+    transition: opacity 1s;
+  }
+
+  .unFlipped {
+    opacity: 1;
+    position: absolute;
+  }
+
+  .flipped {
+    opacity: 0;
+  }
+
+  &.active {
+    .unFlipped {
+      opacity: 0;
+    }
+
+    .flipped {
+      opacity: 1;
+    }
+  }
+}
+
 .searchWrapper {
   //div around a search input
   position: relative;

@@ -9,25 +9,17 @@
           <span class="h1">
             <%= ob.polyT('purchase.pendingSection.pay', { amountBTC: ob.amountBTC }) %>
           </span>
-          <span class="posR">
-            <button class="btnTxtOnly clrTEm js-copyAmount">
-              <span class="txUnb"><%= ob.polyT('purchase.pendingSection.copy') %></span>
-            </button>
-            <div class="js-copyAmountNotification copyNotification clrT clrBr clrP">
-              <%= ob.polyT('purchase.pendingSection.copied') %>
-            </div>
-          </span>
+          <button class="btnTxtOnly txUnb flipBtn js-copyAmount">
+            <span class="clrTEm unFlipped"><%= ob.polyT('purchase.pendingSection.copy') %></span>
+            <span class="flipped"><%= ob.polyT('purchase.pendingSection.copied') %></span>
+          </button>
         </div>
         <div class="tx5 rowMd">
           <%= ob.polyT('purchase.pendingSection.to', { address: ob.paymentAddress }) %>
-          <span class="posR">
-            <button class="btnTxtOnly clrTEm js-copyAddress">
-              <span class="txUnb"><%= ob.polyT('purchase.pendingSection.copy') %></span>
-            </button>
-            <div class="js-copyAddressNotification copyNotification clrT clrBr clrP">
-              <%= ob.polyT('purchase.pendingSection.copied') %>
-            </div>
-          </span>
+          <button class="btnTxtOnly txUnb flipBtn js-copyAddress">
+            <span class="clrTEm unFlipped"><%= ob.polyT('purchase.pendingSection.copy') %></span>
+            <span class="flipped"><%= ob.polyT('purchase.pendingSection.copied') %></span>
+          </button>
         </div>
         <div class="flexRow gutterH">
           <div class="col6">

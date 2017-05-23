@@ -113,6 +113,15 @@
   //fill the disc with any background image
   background-position: center;
   background-size: cover;
+  // align the content
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // size the icon if one is present
+  i {
+    font-size: calc(#{$thumb} * 0.6)
+  }
 }
 
 .discSm {
@@ -125,6 +134,12 @@
   @extend .disc;
   width: $thumbTn;
   height: $thumbTn;
+}
+
+.discLg {
+  @extend .disc;
+  width: $thumbLg;
+  height: $thumbLg,
 }
 
 .thumb {

@@ -10,7 +10,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'close';
+    return 'complete pad';
   }
 
   events() {

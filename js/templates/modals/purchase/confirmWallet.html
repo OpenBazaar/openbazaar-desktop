@@ -41,8 +41,10 @@
   <a class="js-confirmWalletCancel">
     <%= ob.polyT('purchase.pendingSection.confirmWallet.cancel') %>
   </a>
-  <%= ob.processingButton({
-  className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmWalletConfirm',
-  btnText: ob.polyT('purchase.pendingSection.confirmWallet.confirm')
-  }) %>
+  <% if (requiredTotal && fundGap <= 0) { %>
+    <%= ob.processingButton({
+    className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmWalletConfirm',
+    btnText: ob.polyT('purchase.pendingSection.confirmWallet.confirm')
+    }) %>
+  <% } %>
 </div>
