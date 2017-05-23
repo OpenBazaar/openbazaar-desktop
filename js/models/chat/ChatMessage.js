@@ -57,7 +57,9 @@ export default class extends BaseModel {
     options.attrs = options.attrs || model.toJSON(options);
 
     if (method === 'create') {
-      options.attrs.timestamp = moment(Date.now()).format();
+      const timestamp = moment(Date.now()).format();
+      options.attrs.timestamp = timestamp;
+      this.set('timestamp', timestamp);
     }
 
     return super.sync(method, model, options);

@@ -300,7 +300,7 @@ export default class extends baseVw {
     } else {
       // Developer error - this shouldn't happen.
       console.error('There was an error saving the chat message.');
-      console.dir(save);
+      console.dir(chatMessage.validationError);
     }
 
     $(e.target).val('');
