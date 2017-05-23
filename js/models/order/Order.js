@@ -37,7 +37,7 @@ export default class extends BaseModel {
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
-      response.unparsedContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
+      response.rawContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
     }
 
     return response;
