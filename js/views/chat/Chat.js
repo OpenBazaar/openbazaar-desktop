@@ -148,22 +148,20 @@ export default class extends baseVw {
         peerId: msg.peerId,
         lastMessage: msg.message,
         timestamp: msg.timestamp,
-        outgoing: false,
-        unread: 1,
+        outgoing: msg.outgoing || false,
+        unread: msg.outgoing ? 0 : 1,
       };
-
-      if (this.conversation && this.conversation.guid === msg.peerId &&
-        this.conversation.isOpen) {
-        chatHeadData.unread = 0;
-      }
+      const isConvoOpen = this.conversation && this.conversation.guid === msg.peerId &&
+        this.conversation.isOpen;
 
       if (chatHead) {
-        if (!(this.conversation && this.conversation.guid === msg.peerId &&
-          this.conversation.isOpen)) {
-          chatHeadData.unread = chatHead.get('unread') + 1;
+        if (!msg.outgoing) {
+          chatHeadData.unread = isConvoOpen ? 0 : chatHead.get('unread') + 1;
+          // Remove any existing chat head so we could put it back in at the top.
+          this.collection.remove(chatHead);
+        } else {
+          chatHeadData.unread = chatHead.get('unread');
         }
-
-        this.collection.remove(chatHead);
       }
 
       this.collection.add(chatHeadData, {
