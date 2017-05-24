@@ -1,0 +1,115 @@
+$circleSize: 22px;
+$trackHeight: 8px;
+$borderWidth: 1px;
+
+.stateProgressBar {
+  margin-top: 50px;
+  padding-bottom: 50px;
+  padding-left: 30px;
+  padding-right: 25px;
+  font-size: $tx6;
+
+  .stateSection {
+    position: relative;
+    float: left;
+    height: $circleSize;
+
+    .stateCircle {
+      width: $circleSize;
+      height: $circleSize;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: $borderWidth;
+      border-style: solid;
+
+      .ion-ios-checkmark-empty {
+        @include center;
+        font-size: $tx1;
+        display: none;
+      }
+    }
+
+    .stateTrack {
+      border-width: $borderWidth;
+      border-style: solid;
+      border-left: 0;
+      border-right: 0;
+      height: $trackHeight;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+    }
+
+    .stateCircleBorderFillIn {
+      position: absolute;
+      height: $trackHeight;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: $circleSize + $borderWidth + $borderWidth;
+    }
+
+    .stateLabel {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 205%);
+    }
+
+    &.active {
+      .stateCircle {
+        .ion-ios-checkmark-empty {
+          display: inline;
+        }        
+      }
+
+      .stateCircleBorderFillIn {
+        display: none;
+      }
+
+      .stateLabel {
+        font-weight: bold;
+      }
+    }
+
+    &:first-child {
+      .stateCircle {
+        left: 0;
+        transform: translateX(-50%);
+      }
+
+      .stateLabel {
+        left: 0;
+        transform: translate(-$circleSize / 2, 205%);
+      }
+
+      .stateCircleBorderFillIn {
+        left: 0;
+        transform: translate(0, -50%);
+      }
+    }
+
+    &:last-child {
+      .stateCircle {
+        left: auto;
+        right: 0;
+        transform: translateX(50%);
+      }
+
+      .stateLabel {
+        left: auto;
+        right: 0;
+        transform: translate($circleSize / 2, 205%);
+      }
+
+      .stateCircleBorderFillIn {
+        left: auto;
+        right: 0;
+        transform: translate(0%, -50%);
+      }      
+    }    
+  }
+}
