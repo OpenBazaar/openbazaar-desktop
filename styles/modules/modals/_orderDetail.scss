@@ -102,8 +102,7 @@
       padding: $padLg;
       overflow-x: hidden;
       overflow-y: auto;
-      max-height: 375px;
-      min-height: 375px;
+      height: 375px;
 
       .spinner {
         display: none;
@@ -124,7 +123,7 @@
             padding: 13px;
             margin-top: 3px;
             display: inline-block;
-            max-width: 186px;
+            max-width: 547px;
             line-height: 14px;
             text-align: left;
             position: relative;
@@ -166,13 +165,11 @@
       border-style: solid;
       border-width: 1px;
       border-top-width: 0;
-      // max-width: 190px;
       z-index: 1;
       padding: $padSm $pad;
       transition: transform 0.3s ease;
 
       .typingUsername {
-        // max-width: 121px;
         display: inline-block;
         vertical-align: middle;
       }
