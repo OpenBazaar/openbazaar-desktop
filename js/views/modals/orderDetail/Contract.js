@@ -38,13 +38,16 @@ export default class extends BaseVw {
 
   render() {
     const isCase = this.model.get('buyerOpened') !== undefined;
+    const vendorContractErrors = this.model.get('vendorContractValidationErrors');
+    const buyerContractErrors = this.model.get('buyerContractValidationErrors');
     const templateData = {
       capitalize,
       buyerOpened: this.model.get('buyerOpened'),
       isCase,
-      // temorarily hard-coded pending server set-up issues.
-      vendorContractVerified: true,
-      buyerContractVerified: true,
+      vendorContractVerified: !vendorContractErrors ||
+        (Array.isArray(vendorContractErrors) && !vendorContractErrors.length),
+      buyerContractVerified: !buyerContractErrors ||
+        (Array.isArray(buyerContractErrors) && !buyerContractErrors.length),
     };
     let contract;
     let buyerContract;
