@@ -1,0 +1,84 @@
+<%
+  let heading;
+
+  if (ob.paymentNumber > 1) {
+    heading = ob.polyT('orderDetail.summaryTab.payment.paymentHeading', {
+      paymentNumber: ob.paymentNumber,
+    });    
+  } else {
+    heading = ob.polyT('orderDetail.summaryTab.payment.firstPaymentHeading');
+  }
+%>
+<h2 class="inline tx4 margRTn"><%= heading %></h2>
+<span class="clrT2 tx5 hide">May 19, 2017 5:40 PM</span>
+<div>
+  <div class="flex gutterHSm clrT">
+    <div class="statusIconCol <%= ob.paidInFull ? 'clrTEm' : 'clrTErr' %>"><span class="<%= ob.paidInFull ? 'ion-ios-checkmark-empty' : 'ion-ios-close-empty' %>"></span></div>
+    <div class="flexExpand tx5">
+      <%
+        let priceFrag = ob.convertAndFormatCurrency(ob.value,
+          'BTC', ob.userCurrency, { useBtcSymbol: false });
+
+        if (ob.userCurrency !== 'BTC') {
+          priceFrag = ob.polyT('orderDetail.summaryTab.payment.fiatBtcPairing', {
+            fiatAmount: priceFrag,
+            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+          });
+        }
+
+        let infoLine = '';
+
+        if (ob.payee) {
+          infoLine = ob.polyT('orderDetail.summaryTab.payment.amountTo', {
+            fiatBtcPairing: priceFrag,
+            payeeName: ob.payee,
+          });
+        } else {
+          infoLine = priceFrag;
+        }
+      %>
+      <div class="rowTn txB"><%= infoLine %></div>
+      <div class="flex gutterH clrT2">
+        <div class="" style="flex-shrink: 0">4 confirmations</div>
+        <div class="" style="flex-shrink: 0;max-width: 80px">
+          <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
+        </div>
+        <% 
+          let subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
+
+          if (ob.amountShort) {
+            subText = ob.showAmountShort ?
+              ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
+                amountShort: ob.amountShort,
+              }) :
+              ob.polyT('orderDetail.summaryTab.payment.underpaid');
+          }
+        %>
+        <div>
+          <div class="noOverflow <%= ob.amountShort ? 'clrTErr' : 'clrTEm' %>"><%= subText %></div>
+        </div>
+      </div>
+    </div>
+    <% if (ob.showActionButtons) { %>
+    <div class="col">
+      <div class="flexHRight">
+        <div class="btnStrip">
+          <% if (ob.refundOrderInProgress) { %>
+            <span class="posR">
+              <% // including invisible cancel link to properly space the spinner %>
+              <a class="txU invisible"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+              <%= ob.spinner({ className: 'spinnerSm center' }) %>
+            </span>
+          <% } else { %>
+            <a class="txU js-refundlOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+          <%  } %>
+          <%= ob.processingButton({
+            className: `btn clrP clrBr clrSh2 js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
+            btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
+          }) %>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>

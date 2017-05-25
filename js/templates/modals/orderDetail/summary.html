@@ -1,7 +1,7 @@
 <div class="flexHCent padLg">
   <div class="posR">
-    <div class="clrT2 hide copiedToClipboard js-copiedToClipboard">Copied to clipboard</div>
-    <span class="txB tx4"><%= ob.polyT('orderDetail.summaryTab.orderNumber', { orderId: ob.id }) %></span>
+    <div class="clrT2 hide copiedToClipboard js-copiedToClipboard">Copied to clipboard (translate me)</div>
+    <h1 class="inline tx4"><%= ob.polyT('orderDetail.summaryTab.orderNumber', { orderId: ob.id }) %></h1>
     <a class="js-copyOrderId clrTEm tx5"><%= ob.polyT('orderDetail.summaryTab.copyLink') %></a>
   </div>
 </div>
@@ -9,3 +9,5 @@
 <hr class="clrBr rowLg" />
 <div class="js-statusProgressBarContainer statusProgressBarContainer"></div>
 <hr class="clrBr rowLg" />
+
+<div class="js-paymentWrap"></div>

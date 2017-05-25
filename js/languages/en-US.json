@@ -957,7 +957,18 @@
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",      
-      "copyLink": "Copy"
+      "copyLink": "Copy",
+      "payment": {
+        "firstPaymentHeading": "Payment Details",
+        "paymentHeading": "Payment Details #%{paymentNumber}",
+        "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+        "amountTo": "%{fiatBtcPairing} to %{payeeName}",
+        "paidInFull": "Paid In Full",
+        "underpaid": "Underpaid",
+        "underpaidAmountShort": "Underpaid (%{amountShort} required)",
+        "refundBtn": "Refund",
+        "acceptBtn": "Accept"
+      }
     }
   },
   "exchangeRatesSyncer": {
