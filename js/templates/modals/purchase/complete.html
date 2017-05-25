@@ -1,5 +1,24 @@
-<div class="flexColRows flexHCent gutterV">
-  <div class="discLg border clrE1 clrBrDec1">
-    <i class="ion-checkmark clrTEm"></i>
+<div class="flexColRows txCtr">
+  <div class="flexRow rowHg">
+    <div class="col2"></div>
+    <div class="col8">
+      <div class="flexHCent">
+        <div class="discLg border clrE1 clrBrDec1">
+          <i class="ion-checkmark clrTOnEmph"></i>
+        </div>
+      </div>
+      <h4><%= ob.polyT('purchase.completeSection.paymentSent') %></h4>
+      <% const link = `<a href="#transactions/purchases">${ob.polyT('purchase.completeSection.purchases')}</a>`; %>
+      <p>
+        <%= ob.polyT('purchase.completeSection.progressMessage', { link }) %>
+      </p>
+      <p class="tx5b clrT2">
+        <%= ob.polyT('purchase.completeSection.estimatedProcessing', { time: ob.processingTime }) %>
+      </p>
+    </div>
+    <div class="col2"></div>
   </div>
+  <hr class="clrBr rowHg">
+  <h5><%= ob.polyT('purchase.completeSection.vendorMessage') %></h5>
+
 </div>

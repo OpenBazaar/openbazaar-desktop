@@ -876,6 +876,16 @@
         "insufficientFundsNote": "*%{amount} plus an estimated fee of %{fee}"
       }
     },
+    "completeSection": {
+      "paymentSent": "Payment Sent!",
+      "purchases": "Purchases",
+      "progressMessage": "Thank you for your purchase! If you’d like to check the status of your order, view your %{link} page.",
+      "estimatedProcessing": "Estimated Processing Time: %{time}",
+      "noData": "Not Specified ",
+      "vendorMessage": "Message for Vendor (optional)",
+      "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
+      "send": "Send"
+    },
     "receipt": {
       "summary": "Order Summary",
       "listing": "Listing (%{quantity})",

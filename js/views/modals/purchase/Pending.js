@@ -26,12 +26,9 @@ export default class extends BaseVw {
     const serverSocket = getSocket();
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
-        console.log(e.jsonData)
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.payment) {
           const payment = e.jsonData.notification.payment;
-          console.log(payment);
-          console.log(integerToDecimal(payment.fundingTotal, true));
           if (integerToDecimal(payment.fundingTotal, true) >= this.model.get('amount') &&
             payment.orderId === this.model.get('orderId')) {
             this.trigger('walletPaymentComplete');
@@ -42,7 +39,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'pending pad';
+    return 'pending';
   }
 
   events() {

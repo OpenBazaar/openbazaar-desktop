@@ -54,12 +54,12 @@
         </div>
       </section>
       <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
-        <section class="contentBox padLg clrP clrBr clrSh3 showIfPay js-shipping">
+        <section class="contentBox padMd clrP clrBr clrSh3 showIfPay js-shipping">
           <div class="js-shipping-errors"></div>
           <div class="js-shippingWrapper"></div>
         </section>
       <% } %>
-      <section class="contentBox padLg clrP clrBr clrSh3 showIfPay">
+      <section class="contentBox padMd clrP clrBr clrSh3 showIfPay">
         <div class="flexColRows gutterVSm">
           <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
           <div class="contentBox pad clrP clrBr flexVCent">
@@ -85,12 +85,12 @@
         </div>
       </section>
       <% if (hasModerators) { %>
-        <section class="contentBox padLg clrP clrBr clrSh3 showIfPay js-moderator">
+        <section class="contentBox padMd clrP clrBr clrSh3 showIfPay js-moderator">
           <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
           <div class="js-moderatorsWrapper"></div>
         </section>
       <% } %>
-      <section class="contentBox padLg clrP clrBr clrSh3 showIfPay">
+      <section class="contentBox padMd clrP clrBr clrSh3 showIfPay">
         <h2 class="h4">
           <%= ob.polyT('purchase.informationTitle') %>
           <span class="clrT2 txUnb tx5b"><%= ob.polyT('purchase.optional') %></span>
@@ -151,9 +151,9 @@
             rows="6"
             placeholder="<%= ob.polyT('purchase.memoPlaceholder') %>"><%= ob.memo %></textarea>
       </section>
-      <section class="contentBox padLg clrP clrBr clrSh3 showIfPending js-pending">
+      <section class="contentBox padMd clrP clrBr clrSh3 showIfPending js-pending">
       </section>
-      <section class="contentBox padLg clrP clrBr clrSh3 showIfComplete js-complete">
+      <section class="contentBox padMd clrP clrBr clrSh3 showIfComplete js-complete">
       </section>
     </div>
   </div>

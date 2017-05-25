@@ -10,7 +10,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'complete pad';
+    return 'complete';
   }
 
   events() {
@@ -20,9 +20,12 @@ export default class extends BaseVw {
   }
 
   render() {
+    const processingTime = this.options.processingTime ||
+      app.polyglot.t('purchase.completeSection.noData');
     loadTemplate('modals/purchase/complete.html', t => {
       this.$el.html(t({
         displayCurrency: app.settings.get('localCurrency'),
+        processingTime,
       }));
     });
 

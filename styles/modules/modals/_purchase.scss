@@ -14,26 +14,27 @@
     left: -$bar;
   }
 
+  .showIfPay,
   .showIfPending,
   .showIfComplete {
     display: none;
   }
 
-  &[data-phase='pending'] {
+  &[data-phase='pay'] {
     .showIfPay {
-      display: none;
+      display: block;
     }
+  }
+
+  &[data-phase='pending'] {
     .showIfPending {
       display: block;
     }
   }
 
   &[data-phase='complete'] {
-    .showIfPay {
-      display: none;
-    }
     .showIfComplete {
-      display: none;
+      display: block;
     }
   }
 

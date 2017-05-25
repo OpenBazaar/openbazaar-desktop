@@ -70,6 +70,10 @@ export default class extends BaseModal {
     return `${super.className()} purchase modalScrollPage`;
   }
 
+  attributes() {
+    return { 'data-phase': 'pay' };
+  }
+
   events() {
     return {
       'click .js-goToListing': 'close',
@@ -175,6 +179,14 @@ export default class extends BaseModal {
     this.actionBtn.render();
   }
 
+  updatePageState(state) {
+    if (this._state !== state) {
+      this._state = state;
+      this.state.phase = state;
+      this.$el.attr('data-phase', state);
+    }
+  }
+
   purchaseListing() {
     // clear any old errors
     const allErrContainers = this.$('div[class $="-errors"]');
@@ -197,7 +209,7 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        this.state.phase = 'pay';
+        this.updatePageState('pay');
         this.actionBtn.render();
       } else {
         $.post({
@@ -207,9 +219,8 @@ export default class extends BaseModal {
           contentType: 'application/json',
         })
           .done((data) => {
-            this.state.phase = 'pending';
+            this.updatePageState('pending');
             this.actionBtn.render();
-            this.$el.attr('data-phase', 'pending');
             this.purchase.set(this.purchase.parse(data));
             this.pending.render();
           })
@@ -218,7 +229,7 @@ export default class extends BaseModal {
             const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
-            this.state.phase = 'pay';
+            this.updatePageState('pay');
             this.actionBtn.render();
           });
       }
@@ -230,7 +241,7 @@ export default class extends BaseModal {
         container = container.length ? container : this.$errors;
         this.insertErrors(container, this.order.validationError[errKey]);
       });
-      this.state.phase = 'pay';
+      this.updatePageState('pay');
       this.actionBtn.render();
     }
   }
@@ -244,9 +255,8 @@ export default class extends BaseModal {
   }
 
   completePurchase(data) {
-    this.state.phase = 'complete';
+    this.updatePageState('complete');
     this.actionBtn.render();
-    this.$el.attr('data-phase', 'complete');
     console.log(data);
   }
 
@@ -382,7 +392,9 @@ export default class extends BaseModal {
       // remove old view if any on render
       if (this.complete) this.complete.remove();
       // add the complete view
-      this.complete = this.createChild(Complete);
+      this.complete = this.createChild(Complete, {
+        processingTime: this.listing.get('item').processingTime,
+      });
       this.$('.js-complete').append(this.complete.render().el);
     });
 
