@@ -8,6 +8,7 @@ export default class extends BaseView {
   constructor(options = {}) {
     super(options);
     this.options = options;
+    this._coupons = [];
 
     if (!this.model || !(this.model instanceof Order)) {
       throw new Error('Please provide an order model');
@@ -23,6 +24,18 @@ export default class extends BaseView {
 
   className() {
     return 'receipt flexColRows gutterVSm';
+  }
+
+  get coupons() {
+    return this._coupons;
+  }
+
+  set coupons(hashesAndCodes) {
+    // when we implement multiple items, the coupons should go into an array that mirrors the itmes
+    // if this is the user's own listing, the listing object only has the codes
+    const filteredCoupons = this.options.listing.get('coupons').filter((coupon) =>
+    hashesAndCodes.indexOf(coupon.get('hash') || coupon.get('discountCode')) !== -1);
+    this._coupons = filteredCoupons.map(coupon => coupon.toJSON());
   }
 
   get prices() {
@@ -45,6 +58,7 @@ export default class extends BaseView {
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
         listing: this.options.listing.toJSON(),
+        coupons: this.coupons,
         displayCurrency: app.settings.get('localCurrency'),
         prices: this.prices,
         ...this.model.toJSON(),

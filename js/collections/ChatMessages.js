@@ -4,10 +4,6 @@ import ChatMessage from '../models/chat/ChatMessage';
 
 export default class extends Collection {
   constructor(models = [], options = {}) {
-    if (!options.guid) {
-      throw new Error('Please provide a guid of the other person in the conversation.');
-    }
-
     super(models, options);
     this.guid = options.guid;
   }
@@ -25,6 +21,8 @@ export default class extends Collection {
   }
 
   url() {
-    return app.getServerUrl(`ob/chatmessages/${this.guid}`);
+    let url = app.getServerUrl('ob/chatmessages');
+    if (this.guid) url += `/${this.guid}`;
+    return url;
   }
 }

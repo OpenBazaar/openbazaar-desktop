@@ -344,6 +344,16 @@ input[type=range][class~="clrS"] {
   }
 }
 
+.orderDetail {
+  .discussionTab {
+    .convoMessage {
+      .msgContentBox.read::after {
+        background-color: $emphasis1;
+      }
+    }
+  }
+}
+
 .sortIcon {
   &::after, &::before {
     border-color: transparent;
