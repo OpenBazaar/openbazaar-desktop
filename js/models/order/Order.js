@@ -8,7 +8,7 @@ export default class extends BaseModel {
       ...options,
     };
 
-    const types = ['sale', 'purchase', 'case'];
+    const types = ['sale', 'purchase'];
 
     if (types.indexOf(opts.type) === -1) {
       throw new Error(`Type needs to be one of ${types}.`);
@@ -19,6 +19,10 @@ export default class extends BaseModel {
   }
 
   url() {
-    return app.getServerUrl(`ob/${this.type === 'case' ? 'case' : 'order'}/${this.id}`);
+    return app.getServerUrl(`ob/order/${this.id}`);
+  }
+
+  get idAttribute() {
+    return 'orderId';
   }
 }

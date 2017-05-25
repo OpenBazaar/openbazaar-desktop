@@ -10,6 +10,7 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
+  "tabMenuHeading": "MENU",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -188,9 +189,6 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Check for Update",
-    "menu": {
-      "sectionHeader": "MENU"
-    },
     "donationsTab": {
       "linkText": "Donations",
       "sectionHeader": "Donations",
@@ -913,7 +911,8 @@
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
       "failedAcceptHeading": "There was an error accepting the order.",
-      "failedRejectHeading": "There was an error rejecting the order."
+      "failedRejectHeading": "There was an error rejecting the order.",
+      "returnToFromOrder": "Return to sales"
     },
     "purchases": {
       "heading": "Purchases",
@@ -921,13 +920,15 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
-      "failedCancelHeading": "There was an error canceling the order."
+      "failedCancelHeading": "There was an error canceling the order.",
+      "returnToFromOrder": "Return to purchases"
     },
     "cases": {
       "heading": "Cases",
       "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
       "countTransactionsFound": "%{countTransactions} found",
-      "noResults": "No cases found"
+      "noResults": "No cases found",
+      "returnToFromOrder": "Return to cases"
     },
     "filters": {
       "purchasing": "Purchasing",
@@ -977,6 +978,27 @@
       "btnCancel": "Cancel",
       "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
       "btnRetryFetch": "Retry"
+    }
+  },
+  "orderDetail": {
+    "orderNumber": "Order #: %{orderId}",
+    "navMenu": {
+      "summary": "Summary",
+      "discussion": "Discussion",
+      "contract": "Contract (JSON)"
+    },
+    "discussionTab": {
+      "roleVendor": "vendor",
+      "roleBuyer": "buyer",
+      "roleModerator": "moderator",
+      "timeLineAndRole": "%{timeFromNow} (%{role})",
+      "isTyping": "%{userRole} is typing...",
+      "areTyping": "%{userRole1} and %{userRole2} are typing...",
+      "enterMessagePlaceholder": "Enter message...",
+      "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
+      "modCannotChat": "You have issued a decision and cannot send further messages.",
+      "loadMessagesError": "There was an error loading the messages. %{retryLink}",
+      "retryLink": "retry"      
     }
   },
   "exchangeRatesSyncer": {
