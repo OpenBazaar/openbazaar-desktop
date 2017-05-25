@@ -388,7 +388,7 @@ input[type=range][class~="clrS"] {
   .stateSection {
     .stateCircle {
       background-color: $primary;
-      border-color: $color3;
+      border-color: $border;
 
       .ion-ios-checkmark-empty {
         color: $primary;
@@ -397,7 +397,7 @@ input[type=range][class~="clrS"] {
 
     .stateTrack {
       background-color: $primary;
-      border-color: $color3;
+      border-color: $border;
     }
 
     .stateCircleBorderFillIn {
@@ -406,7 +406,7 @@ input[type=range][class~="clrS"] {
 
     &.active {
       .stateCircle, .stateTrack {
-        background-color: $color3;
+        background-color: $text;
       }
     }
   }

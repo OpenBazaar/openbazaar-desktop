@@ -1,4 +1,5 @@
 import BaseVw from '../../baseVw';
+import StateProgressBar from './StateProgressBar';
 import loadTemplate from '../../../utils/loadTemplate';
 
 export default class extends BaseVw {
@@ -33,7 +34,15 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
       }));
 
-      this._$filterCheckboxes = null;
+      // this._$filterCheckboxes = null;
+
+      this.stateProgressBar = this.createChild(StateProgressBar, {
+        initialState: {
+          states: ['Paid', 'Accepted', 'Fulfilled', 'Complete'],
+          currentState: 1,
+        },
+      });
+      this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
     });
 
     return this;

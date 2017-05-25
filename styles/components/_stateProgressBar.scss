@@ -3,10 +3,6 @@ $trackHeight: 8px;
 $borderWidth: 1px;
 
 .stateProgressBar {
-  margin-top: 50px;
-  padding-bottom: 50px;
-  padding-left: 30px;
-  padding-right: 25px;
   font-size: $tx6;
 
   .stateSection {
@@ -59,8 +55,23 @@ $borderWidth: 1px;
       transform: translate(-50%, 205%);
     }
 
+    .disputeOpenedBadge {
+      position: absolute;
+      top: 50%;
+      transform: translate(50%, -50%);
+      right: 0;
+      border-style: solid;
+      border-width: 1px;
+      border-radius: 50%;
+      font-size: 16px;
+      padding: 5px;
+      z-index: 1;
+    }
+
     &.active {
       .stateCircle {
+        border-color: transparent;
+
         .ion-ios-checkmark-empty {
           display: inline;
         }        
