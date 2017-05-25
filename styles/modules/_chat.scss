@@ -224,6 +224,8 @@
   &.loadingMessages {
     .spinner {
       display: block;
+      width: 35px;
+      height: 35px;
     }
 
     &.noMessages {

@@ -10,6 +10,7 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
+  "tabMenuHeading": "MENU",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -188,9 +189,6 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Check for Update",
-    "menu": {
-      "sectionHeader": "MENU"
-    },
     "donationsTab": {
       "linkText": "Donations",
       "sectionHeader": "Donations",
@@ -806,6 +804,7 @@
   },
   "purchase": {
     "refreshPurchase": "Refresh",
+    "purchaseDataChangedPopin": "The data for this listing has changed. %{refreshLink}",
     "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
     "returnToListing": "Return To Listing",
     "optional": "optional",
@@ -818,6 +817,20 @@
     "noAddresses": "You don't have any saved addresses.",
     "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
+    "emailAddress": "Email Address",
+    "emailPlaceholder": "name@email.com",
+    "emailNote": "An alternate way to reach you.",
+    "couponCode": "Coupon Code",
+    "applyCode": "Apply",
+    "code": "\"%{code}\" applied to order",
+    "codeErrors": {
+      "invalid": "\"%{code}\" is not a valid code",
+      "duplicate": "You can only add \"%{code}\" once",
+      "excessive": "You cannot apply a discount of more than 100% of the listing's price."
+    },
+    "removeCode": "remove",
+    "memo": "Memo",
+    "memoPlaceholder": "Provide additional details for the vendor here (optional).",
     "pay": "PAY >",
     "payNote": "Clicking pay will advance you to the final step.",
     "pending": "Pending…",
@@ -839,6 +852,7 @@
     "receipt": {
       "summary": "Order Summary",
       "listing": "Listing (%{quantity})",
+      "coupon": "Coupon",
       "shipping": "Shipping",
       "total": "Total"
     },
@@ -846,7 +860,8 @@
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
-      "missingAddress": "You must choose a shipping address to complete your purchase."
+      "ownIDTitle": "This is Your Own Listing",
+      "ownIDMsg": "You cannot purchase a listing that belongs to you."
     }
   },
   "moderators": {
@@ -860,7 +875,8 @@
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
       "failedAcceptHeading": "There was an error accepting the order.",
-      "failedRejectHeading": "There was an error rejecting the order."
+      "failedRejectHeading": "There was an error rejecting the order.",
+      "returnToFromOrder": "Return to sales"
     },
     "purchases": {
       "heading": "Purchases",
@@ -868,13 +884,15 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
-      "failedCancelHeading": "There was an error canceling the order."
+      "failedCancelHeading": "There was an error canceling the order.",
+      "returnToFromOrder": "Return to purchases"
     },
     "cases": {
       "heading": "Cases",
       "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
       "countTransactionsFound": "%{countTransactions} found",
-      "noResults": "No cases found"
+      "noResults": "No cases found",
+      "returnToFromOrder": "Return to cases"
     },
     "filters": {
       "purchasing": "Purchasing",
@@ -924,6 +942,27 @@
       "btnCancel": "Cancel",
       "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
       "btnRetryFetch": "Retry"
+    }
+  },
+  "orderDetail": {
+    "orderNumber": "Order #: %{orderId}",
+    "navMenu": {
+      "summary": "Summary",
+      "discussion": "Discussion",
+      "contract": "Contract (JSON)"
+    },
+    "discussionTab": {
+      "roleVendor": "vendor",
+      "roleBuyer": "buyer",
+      "roleModerator": "moderator",
+      "timeLineAndRole": "%{timeFromNow} (%{role})",
+      "isTyping": "%{userRole} is typing...",
+      "areTyping": "%{userRole1} and %{userRole2} are typing...",
+      "enterMessagePlaceholder": "Enter message...",
+      "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
+      "modCannotChat": "You have issued a decision and cannot send further messages.",
+      "loadMessagesError": "There was an error loading the messages. %{retryLink}",
+      "retryLink": "retry"      
     }
   },
   "exchangeRatesSyncer": {
@@ -1060,7 +1099,10 @@
   "orderModelErrors": {
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeNumber": "The quantity must be a valid number",
-    "noItems": "You must make at least one purchase."
+    "noItems": "You must make at least one purchase.",
+    "missingAddress": "Please choose a valid shipping address.",
+    "missingShippingOption": "Please choose a valid shipping option.",
+    "needsModerator": "You must select a moderator to make a Moderated Payment."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
