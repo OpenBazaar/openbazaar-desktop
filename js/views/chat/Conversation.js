@@ -43,7 +43,7 @@ export default class extends baseVw {
     this.options = opts;
     this._guid = this.options.guid;
     this._isOpen = false;
-    this._isEmojiMenu = false;
+    this._isEmojiMenuOpen = false;
     this.subject = '';
     this.showLoadMessagesError = false;
     this.fetching = false;

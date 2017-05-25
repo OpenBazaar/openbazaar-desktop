@@ -14,43 +14,47 @@ export function isSmallHeight() {
   return window.matchMedia('(max-height: 700px)').matches;
 }
 
-export function getAvatarBgImage(avatarHashes = {}, defaultAvatar = '../imgs/defaultAvatar.png') {
-  let avatarHash = '';
+function getBackgroundImage(imageHashes = {}, standardSize, responsiveSize, defaultUrl) {
+  let imageHash = '';
   let bgImageProperty = '';
 
-  if (isHiRez() && avatarHashes.small) {
-    avatarHash = avatarHashes.small;
-  } else if (avatarHashes.tiny) {
-    avatarHash = avatarHashes.tiny;
+  if (isHiRez() && imageHashes[responsiveSize]) {
+    imageHash = imageHashes[responsiveSize];
+  } else if (imageHashes[standardSize]) {
+    imageHash = imageHashes[standardSize];
   }
 
-  if (avatarHash) {
-    bgImageProperty = `background-image: url(${app.getServerUrl(`ipfs/${avatarHash}`)})` +
-      `, url(${defaultAvatar})`;
+  if (imageHash) {
+    bgImageProperty = `background-image: url(${app.getServerUrl(`ipfs/${imageHash}`)})` +
+      `, url(${defaultUrl})`;
   } else {
-    bgImageProperty = `background-image: url(${defaultAvatar})`;
+    bgImageProperty = `background-image: url(${defaultUrl})`;
   }
 
   return bgImageProperty;
 }
 
-export function getListingBgImage(imageHashes = {}, defaultListing = '../imgs/defaultItem.png') {
-  let imageHash = '';
-  let bgImageProperty = '';
+export function getAvatarBgImage(avatarHashes = {}, options = {}) {
+  const opts = {
+    standardSize: 'tiny',
+    responsiveSize: 'small',
+    defaultUrl: '../imgs/defaultAvatar.png',
+    ...options,
+  };
 
-  if (isHiRez() && imageHashes.small) {
-    imageHash = imageHashes.small;
-  } else if (imageHashes.tiny) {
-    imageHash = imageHashes.tiny;
-  }
+  return getBackgroundImage(avatarHashes, opts.standardSize, opts.responsiveSize,
+    opts.defaultUrl);
+}
 
-  if (imageHash) {
-    bgImageProperty = `background-image: url(${app.getServerUrl(`ipfs/${imageHash}`)})` +
-        `, url(${defaultListing})`;
-  } else {
-    bgImageProperty = `background-image: url(${defaultListing})`;
-  }
+export function getListingBgImage(imageHashes = {}, options = {}) {
+  const opts = {
+    standardSize: 'tiny',
+    responsiveSize: 'small',
+    defaultUrl: '../imgs/defaultItem.png',
+    ...options,
+  };
 
-  return bgImageProperty;
+  return getBackgroundImage(imageHashes, opts.standardSize, opts.responsiveSize,
+    opts.defaultUrl);
 }
 

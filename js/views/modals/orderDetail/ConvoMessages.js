@@ -1,9 +1,9 @@
 import $ from 'jquery';
-import app from '../../app';
-import baseVw from '../baseVw';
+import app from '../../../app';
+import BaseVw from '../../baseVw';
 import ConvoMessage from './ConvoMessage';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     if (!options.collection) {
       throw new Error('Please provide a chat messages collection.');
@@ -13,10 +13,43 @@ export default class extends baseVw {
       throw new Error('Please provide the DOM element that handles scrolling for this view.');
     }
 
+    const isValidParticipantObject = (participant) => {
+      let isValid = true;
+      if (!participant.id) isValid = false;
+      if (!participant.profile || !participant.profile.then) return false;
+      return isValid;
+    };
+
+    const getInvalidParticpantError = (type = '') =>
+      (`The ${type} object is not valid. It should have an id ` +
+        'as well as a profile promise that resolves with a profile model.');
+
+    if (!options.buyer) {
+      throw new Error('Please provide a buyer object.');
+    }
+
+    if (!options.vendor) {
+      throw new Error('Please provide a vendor object.');
+    }
+
+    if (!isValidParticipantObject(options.buyer)) {
+      throw new Error(getInvalidParticpantError('buyer'));
+    }
+
+    if (!isValidParticipantObject(options.vendor)) {
+      throw new Error(getInvalidParticpantError('vendor'));
+    }
+
+    if (options.moderator && !isValidParticipantObject(options.moderator)) {
+      throw new Error(getInvalidParticpantError('moderator'));
+    }
+
     super(options);
     this.options = options;
-    // Profile of person you are conversing with
-    this.profile = options.profile;
+    this.buyer = options.buyer;
+    this.vendor = options.vendor;
+    this.moderator = options.moderator;
+
     this.$scrollContainer = options.$scrollContainer;
     this.convoMessages = [];
 
@@ -27,22 +60,6 @@ export default class extends baseVw {
     return 'chatConvoMessages';
   }
 
-  /**
-   * Set the profile of the person you are conversing with.
-   */
-  setProfile(profile) {
-    if (!profile) {
-      throw new Error('Please provide a Profile model of the person you are conversing with.');
-    }
-
-    this.profile = profile;
-    this.render();
-  }
-
-  /**
-   * Not using this for now since there are technical / UX complications for marking
-   * a message as read when in a group chat (who read it?).
-   */
   markMessageAsRead(id) {
     if (!id) {
       throw new Error('Please provide an id.');
@@ -75,11 +92,23 @@ export default class extends baseVw {
 
     const initialState = {};
 
+    let participant = this.buyer;
+    initialState.role = 'buyer';
+    let peerId = model.get('peerId');
+
     if (model.get('outgoing')) {
       initialState.avatarHashes = app.profile.get('avatarHashes').toJSON();
-    } else if (this.profile) {
-      initialState.avatarHashes = this.profile.get('avatarHashes').toJSON();
+      peerId = app.profile.id;
     }
+
+    if (peerId === this.vendor.id) {
+      participant = this.vendor;
+      initialState.role = 'vendor';
+    } else if (this.moderator && model.get('peerId') === this.moderator.id) {
+      participant = this.moderator;
+      initialState.role = 'moderator';
+    }
+
 
     const convoMessage = this.createChild(ConvoMessage, {
       ...options,
@@ -89,6 +118,16 @@ export default class extends baseVw {
         ...initialState,
       },
     });
+
+    if (!model.get('outgoing')) {
+      participant.profile.done(profileMd => {
+        if (!convoMessage.isRemoved()) {
+          convoMessage.setState({
+            avatarHashes: profileMd.get('avatarHashes').toJSON(),
+          });
+        }
+      });
+    }
 
     this.convoMessages.push(convoMessage);
 

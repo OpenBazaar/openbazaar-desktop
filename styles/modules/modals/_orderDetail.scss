@@ -1,5 +1,220 @@
 .orderDetail {
+  .returnBox {
+    max-width: 905px;
+    text-decoration: none;
+    padding: $padSm;
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      float: left;
+    }
+  }
+
+  .featuredProfile {
+    text-align: center;
+    padding: $padMd;
+    min-height: 143px;
+
+    .avatar {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 7px;
+    }
+  }
+
+  .mainCtaWrap {
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .tabHeads {
+    .unreadBadge {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      font-weight: bold;
+      padding-top: 3px;
+      font-size: $tx6;
+      margin-left: 5px;
+
+      &:empty {
+        opacity: 0;
+        // needed so position of the badge is consistent with the non-empty
+        // version and there's no jump as you toggle between the two
+        vertical-align: top;
+      }
+    }
+  }
+
   .mainContent {
     min-height: 300px;
+  }
+
+  .summaryTab, .contractTab {
+    padding: $padMd;
+  }
+
+  .discussionTab {
+    position: relative;
+    overflow: hidden;
+
+    &.loadingMessages {
+      .convoMessagesWindow {
+        .spinner {
+          display: block;
+          width: 55px;
+          height: 55px;
+        }
+      }
+
+      &.noMessages {
+        .convoMessagesWindow {
+          .spinner {
+            @include center();
+          }
+
+          .messagesFetchError {
+            @include center();
+          }
+        }
+      }
+    }
+
+    &.noMessages {
+      .convoMessagesWindow {
+        .messagesFetchError {
+          @include center();
+          margin: 0;
+        }
+      }
+    }
+
+    &.isTyping {
+      .typingIndicator {
+        transform: translate(-50%, 0);
+      }
+    }
+
+    .convoMessagesWindow {
+      padding: $padLg;
+      overflow-x: hidden;
+      overflow-y: auto;
+      height: 375px;
+
+      .spinner {
+        display: none;
+        margin: 0 auto;
+        padding: $pad;
+      }
+
+      .messagesFetchError {
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+
+      .chatConvoMessages {
+        padding: 10px 0;
+
+        .convoMessage {
+          .msgContentBox {
+            padding: 13px;
+            margin-top: 3px;
+            display: inline-block;
+            max-width: 547px;
+            line-height: 14px;
+            text-align: left;
+            position: relative;
+
+            & > span {
+              word-break: break-word;
+            }
+
+            img {
+              max-width: 100%;
+            }
+
+            &.read {
+              &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 4px;
+                // colored by theme
+              }
+            }
+          }
+
+          .avatar {
+            width: 45px;
+            height: 45px;
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+
+    .typingIndicator {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -110%);
+      border-style: solid;
+      border-width: 1px;
+      border-top-width: 0;
+      z-index: 1;
+      padding: $padSm $pad;
+      transition: transform 0.3s ease;
+
+      .typingUsername {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+
+    .convoFooter {
+      border-top-style: solid;
+      border-top-width: 1px;
+      padding: $pad;
+
+      textarea {
+        border-width: 0;
+        height: 90px;
+
+        &::-webkit-scrollbar-thumb {
+          background-color: transparent;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: transparent;
+        }
+      }
+
+      .btnSend {
+        width: 125px;
+      }
+
+      .msgModUnableToChat {
+        display: none;
+      }
+
+      &.preventModChat {
+        textarea {
+          display: none;
+        }
+
+        .btnSend {
+          @include disabled;
+        }
+
+        .msgModUnableToChat {
+          padding: $pad;
+          display: block;
+        }        
+      }
+    }    
   }
 }

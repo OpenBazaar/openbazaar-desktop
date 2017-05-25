@@ -39,6 +39,10 @@ export default class extends baseVw {
       throw new Error('Please provide a function to retreive profiles.');
     }
 
+    if (typeof opts.openOrder !== 'function') {
+      throw new Error('Please provide a function to open the order detail modal.');
+    }
+
     this.options = opts || {};
     this.type = opts.type;
     this.filterConfig = opts.filterConfig;
@@ -302,6 +306,8 @@ export default class extends baseVw {
           rejectOrder: this.rejectOrder.bind(this),
           initialFilterParams: this.filter,
           getProfiles: this.options.getProfiles,
+          openOrder: this.options.openOrder,
+          openedOrderModal: this.options.openedOrderModal,
         });
         this.$('.js-tableContainer').html(this.table.render().el);
       });
