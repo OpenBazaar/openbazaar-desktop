@@ -1,4 +1,11 @@
-<div class="txCtr txB tx4 padLg"><%= ob.polyT('orderDetail.orderNumber', { orderId: ob.id }) %></div>
+<div class="flexHCent padLg">
+  <div class="posR">
+    <div class="clrT2 hide copiedToClipboard js-copiedToClipboard">Copied to clipboard</div>
+    <span class="txB tx4"><%= ob.polyT('orderDetail.summaryTab.orderNumber', { orderId: ob.id }) %></span>
+    <a class="js-copyOrderId clrTEm tx5"><%= ob.polyT('orderDetail.summaryTab.copyLink') %></a>
+  </div>
+</div>
+</div>
 <hr class="clrBr rowLg" />
 <div class="js-statusProgressBarContainer statusProgressBarContainer"></div>
 <hr class="clrBr rowLg" />

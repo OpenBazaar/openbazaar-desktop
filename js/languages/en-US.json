@@ -928,7 +928,6 @@
     }
   },
   "orderDetail": {
-    "orderNumber": "Order #: %{orderId}",
     "navMenu": {
       "summary": "Summary",
       "discussion": "Discussion",
@@ -957,6 +956,10 @@
       "vendorContractNotAuthentic": "The vendor's contract signature does not match. It has likely been forged.",
       "buyerContractHeading": "Buyer Contract:",
       "vendorContractHeading": "Vendor Contract:"
+    },
+    "summaryTab": {
+      "orderNumber": "Order #: %{orderId}",      
+      "copyLink": "Copy"
     }
   },
   "exchangeRatesSyncer": {

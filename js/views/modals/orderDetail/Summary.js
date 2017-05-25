@@ -1,3 +1,5 @@
+import { clipboard } from 'electron';
+import '../../../utils/velocity';
 import BaseVw from '../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -23,8 +25,29 @@ export default class extends BaseVw {
 
   events() {
     return {
-      // 'change .filter input': 'onChangeFilter',
+      'click .js-copyOrderId': 'onClickCopyOrderId',
     };
+  }
+
+  onClickCopyOrderId() {
+    clipboard.writeText(this.model.id);
+    this.$copiedToClipboard
+      .velocity('stop')
+      .velocity('fadeIn', {
+        complete: () => {
+          this.$copiedToClipboard
+            .velocity('fadeOut', { delay: 1000 });
+        },
+      });
+  }
+
+  get $copiedToClipboard() {
+    return this._$copiedToClipboard ||
+      (this._$copiedToClipboard = this.$('.js-copiedToClipboard'));
+  }
+
+  remove() {
+    super.remove();
   }
 
   render() {
@@ -34,7 +57,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
       }));
 
-      // this._$filterCheckboxes = null;
+      this._$copiedToClipboard = null;
 
       this.stateProgressBar = this.createChild(StateProgressBar, {
         initialState: {
