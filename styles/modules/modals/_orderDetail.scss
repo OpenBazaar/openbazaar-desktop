@@ -237,6 +237,11 @@
   }
 
   .summaryTab {
+    h2 {
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+
     .statusProgressBarContainer {
       padding: 10px 20px;
       height: 50px;
@@ -245,6 +250,28 @@
     .copiedToClipboard {
       position: absolute;
       transform: translateY(-100%);
+    }
+
+    .payment {
+      .statusIconCol {
+        text-align: center;
+        flex-shrink: 0;
+
+        span {
+          width: 35px;
+          height: 35px;
+          display: inline-block;
+          border-radius: 50%;
+          border-style: solid;
+          border-width: 1px;
+          font-size: 30px;
+
+          &.ion-ios-checkmark-empty {
+            font-size: 36px;
+            line-height: 1;
+          }
+        }
+      }
     }
   }
 }

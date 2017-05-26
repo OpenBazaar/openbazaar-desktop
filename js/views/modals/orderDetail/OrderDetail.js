@@ -7,7 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
-import Summary from './Summary';
+import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
 

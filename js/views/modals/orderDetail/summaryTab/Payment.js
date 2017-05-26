@@ -1,7 +1,8 @@
 import _ from 'underscore';
-import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
-import BaseVw from '../../baseVw';
+import app from '../../../../app';
+import { abbrNum } from '../../../../utils';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -48,10 +49,11 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/orderDetail/payment.html', (t) => {
+    loadTemplate('modals/orderDetail/summaryTab/payment.html', (t) => {
       this.$el.html(t({
         ...this._state,
         ...this.model.toJSON(),
+        abbrNum,
       }));
     });
 

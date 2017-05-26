@@ -1,6 +1,6 @@
 import _ from 'underscore';
-import loadTemplate from '../../../utils/loadTemplate';
-import BaseVw from '../../baseVw';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -73,7 +73,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/orderDetail/stateProgressBar.html', (t) => {
+    loadTemplate('modals/orderDetail/summaryTab/stateProgressBar.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));

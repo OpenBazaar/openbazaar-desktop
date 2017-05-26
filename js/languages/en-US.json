@@ -18,10 +18,10 @@
     "snapchat": "Snapchat"
   },
   "abbreviatedNumbers": {
-    "thousand": "%{number} k",
-    "million": "%{number} m",
-    "billion": "%{number} b",
-    "trillion": "%{number} t"
+    "thousand": "%{number}k",
+    "million": "%{number}m",
+    "billion": "%{number}b",
+    "trillion": "%{number}t"
   },
   "connectedPeersPage": {
     "heading": "Connected Peers",
@@ -139,7 +139,7 @@
       },
       "categoryFilter": {
         "heading": "Category",
-        "showMore": "%{smart_count} more… |||| %{smart_count} more…",
+        "showMore": "%{971count} more… |||| %{smart_count} more…",
         "showLess": "less"
       }
     },
@@ -967,7 +967,9 @@
         "underpaid": "Underpaid",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "refundBtn": "Refund",
-        "acceptBtn": "Accept"
+        "acceptBtn": "Accept",
+        "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
+        "veryManyConfirmationsCount": "%{countText} confirmations"
       }
     }
   },

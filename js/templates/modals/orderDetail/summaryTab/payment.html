@@ -4,16 +4,16 @@
   if (ob.paymentNumber > 1) {
     heading = ob.polyT('orderDetail.summaryTab.payment.paymentHeading', {
       paymentNumber: ob.paymentNumber,
-    });    
+    });
   } else {
     heading = ob.polyT('orderDetail.summaryTab.payment.firstPaymentHeading');
   }
 %>
-<h2 class="inline tx4 margRTn"><%= heading %></h2>
-<span class="clrT2 tx5 hide">May 19, 2017 5:40 PM</span>
-<div>
-  <div class="flex gutterHSm clrT">
-    <div class="statusIconCol <%= ob.paidInFull ? 'clrTEm' : 'clrTErr' %>"><span class="<%= ob.paidInFull ? 'ion-ios-checkmark-empty' : 'ion-ios-close-empty' %>"></span></div>
+<h2 class="tx4 margRTn"><%= heading %></h2>
+<span class="clrT2 tx5b hide">May 19, 2017 5:40 PM</span>
+<div class="border clrBr padMd">
+  <div class="flex gutterH clrT">
+    <div class="statusIconCol <%= ob.amountShort ? 'clrTErr' : 'clrTEm' %>"><span class="clrBr <%= ob.amountShort ? 'ion-ios-close-empty' : 'ion-ios-checkmark-empty' %>"></span></div>
     <div class="flexExpand tx5">
       <%
         let priceFrag = ob.convertAndFormatCurrency(ob.value,
@@ -39,7 +39,20 @@
       %>
       <div class="rowTn txB"><%= infoLine %></div>
       <div class="flex gutterH clrT2">
-        <div class="" style="flex-shrink: 0">4 confirmations</div>
+        <%
+          let confirmationsText;
+          
+          if (ob.confirmations < 10000) {
+            confirmationsText = ob.polyT('orderDetail.summaryTab.payment.confirmationsCount', {
+              smart_count: ob.confirmations,
+            });
+          } else {
+            confirmationsText = ob.polyT('orderDetail.summaryTab.payment.veryManyConfirmationsCount', {
+              countText: ob.abbrNum(ob.confirmations),
+            });          
+          }
+        %>
+        <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
         <div class="" style="flex-shrink: 0;max-width: 80px">
           <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
         </div>
@@ -61,22 +74,20 @@
     </div>
     <% if (ob.showActionButtons) { %>
     <div class="col">
-      <div class="flexHRight">
-        <div class="btnStrip">
-          <% if (ob.refundOrderInProgress) { %>
-            <span class="posR">
-              <% // including invisible cancel link to properly space the spinner %>
-              <a class="txU invisible"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
-              <%= ob.spinner({ className: 'spinnerSm center' }) %>
-            </span>
-          <% } else { %>
-            <a class="txU js-refundlOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
-          <%  } %>
-          <%= ob.processingButton({
-            className: `btn clrP clrBr clrSh2 js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
-            btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
-          }) %>
-        </div>
+      <div class="flexVCent gutterHLg">
+        <% if (ob.refundOrderInProgress) { %>
+          <span class="posR">
+            <% // including invisible cancel link to properly space the spinner %>
+            <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+            <%= ob.spinner({ className: 'spinnerSm center' }) %>
+          </span>
+        <% } else { %>
+          <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+        <%  } %>
+        <%= ob.processingButton({
+          className: `btn clrP clrBr clrSh2 tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
+          btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
+        }) %>
       </div>
     </div>
     <% } %>
