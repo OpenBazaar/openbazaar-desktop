@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -41,14 +42,26 @@ export default class extends BaseView {
   get prices() {
     // create an array of price objects that matches the items in the order
     const prices = [];
-    this.model.get('items').forEach((item) => {
+    this.model.get('items').forEach(item => {
       const priceObj = {};
       const sName = item.get('shipping').get('name');
       const sService = item.get('shipping').get('service');
       const sOpt = this.options.listing.get('shippingOptions').findWhere({ name: sName });
+      // determine which skus match the chosen options
+      const variantCombo = [];
+      item.get('options').forEach((option, i) => {
+        const variants = this.options.listing.get('item').get('options').at(i)
+          .get('variants')
+          .toJSON();
+        const variantIndex = variants.findIndex(variant => variant.name === option.get('value'));
+        variantCombo.push(variantIndex);
+      });
+      const sku = this.options.listing.get('item').get('skus').find(v =>
+        _.isEqual(v.get('variantCombo'), variantCombo));
 
       priceObj.price = this.options.listing.get('item').get('price');
       priceObj.sPrice = sOpt ? sOpt.get('services').findWhere({ name: sService }).get('price') : 0;
+      priceObj.vPrice = sku ? sku.get('surcharge') : 0;
       prices.push(priceObj);
     });
     return prices;

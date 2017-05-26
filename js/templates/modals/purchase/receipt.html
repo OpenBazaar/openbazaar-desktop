@@ -5,6 +5,7 @@
   ob.items.forEach((item, i) => {
     const basePrice = ob.prices[i].price;
     const shippingPrice = ob.prices[i].sPrice;
+    const surcharge = ob.prices[i].vPrice;
     const quantity = Number.isInteger(item.quantity) ? item.quantity : 1;
     let itemTotal = basePrice;
     ob.coupons.forEach((coupon) => {
@@ -15,7 +16,7 @@
         itemTotal -= coupon.priceDiscount;
       }
     });
-    itemTotal += shippingPrice;
+    itemTotal = itemTotal + shippingPrice + surcharge;
     total += itemTotal * quantity;
     // don't allow coupons to make the total negative
     total = total > 0 ? total : 0;
@@ -42,7 +43,16 @@
       </b>
     </div>
   <% }); %>
-  <% // when multiple listings are implemented, check the listing in the array here %>
+  <% if (ob.listing.item.options && ob.listing.item.options.length) { %>
+  <div class="flexRow">
+        <span class="col5">
+          <%= ob.polyT('purchase.receipt.options') %>
+        </span>
+    <b class="col7">
+      <%= ob.convertAndFormatCurrency(surcharge * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+    </b>
+  </div>
+  <% } %>
   <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
     <div class="flexRow">
       <span class="col5">

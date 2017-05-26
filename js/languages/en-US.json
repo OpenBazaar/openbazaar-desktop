@@ -891,6 +891,7 @@
       "listing": "Listing (%{quantity})",
       "coupon": "Coupon",
       "shipping": "Shipping",
+      "options": "Options",
       "total": "Total"
     },
     "errors": {
