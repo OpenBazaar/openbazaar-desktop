@@ -7,6 +7,7 @@ import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payment from './Payment';
 import AcceptedEvent from './AcceptedEvent';
+import OrderDetails from './OrderDetails';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -139,12 +140,29 @@ export default class extends BaseVw {
       });
       this.$('.js-acceptedWrap').html(this.acceptedEvent.render().el);
 
+      const buyerOpened = this.model.get('buyerOpened');
+      let contract;
+
+      if (typeof buyerOpened === 'undefined') {
+        contract = this.model.get('contract');
+      } else {
+        // it's a mod looking at a case
+        contract = this.model.get(buyerOpened ? 'buyerContract' : 'vendorContract');
+      }
+
       this.vendor.getProfile()
           .done(profile => {
             this.acceptedEvent.setState({
               avatarHashes: profile.get('avatarHashes').toJSON(),
             });
           });
+
+      if (this.orderDetails) this.orderDetails.remove();
+      this.orderDetails = this.createChild(OrderDetails, {
+        model: contract.get('vendorListings').at(0),
+        timestamp: contract.get('buyerOrder').timestamp,
+      });
+      this.$('.js-orderDetailsWrap').html(this.orderDetails.render().el);
     });
 
     return this;

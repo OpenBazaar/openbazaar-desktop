@@ -1,0 +1,61 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.heading') %></h2>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<div class="border clrBr padMd">
+  <div class="flex gutterH clrT">
+    <div class="listingThumbCol" style="<%= ob.getAvatarBgImage(ob.item.images[0]) %>"></div>
+    <div class="flexExpand tx5">
+      <div class="txB <% if (ob.description) print('rowTn') %>"><%= ob.item.title %></div>
+      <% if (ob.description) { %>
+      <div class=""><%= ob.description %></div>
+      <% } %>
+      <hr class="clrBr" />
+      <div class="flexRow">
+        <%
+          let shipping = {
+            "shipTo": "Brian Hoffman",
+            "address": "169 E. Harvey",
+            "city": "Des Plaines",
+            "state": "IL",
+            "postalCode": "60016",
+            "country": "UNITED_STATES",
+            "addressNotes": ""
+          };
+
+          const addressLine3 = `${shipping.city ? shipping.city : ''}${shipping.state ? ` ${shipping.state}` : ''}${shipping.country ? ` ${shipping.country}` : ''}`;
+          const addressParts = [shipping.address, shipping.city, shipping.state, shipping.postalCode, shipping.country]
+            .map(addressPart => {
+              return addressPart.replace('/r', '')
+                .replace('/n', '')
+                .replace(/\s/g, '+');
+            });
+          const mapUrl = `https://www.google.com/maps/place/${addressParts.join(',')}`;
+        %>
+        <% if (shipping) { %>
+        <div class="col4 gutterVTn">
+          <div class="txB">Ship to</div>
+          <div><%= shipping.shipTo %></div>
+          <% if (shipping.address) { %>
+          <div><%= shipping.address %></div>
+          <% } %>
+          <% if (addressLine3) { %>
+          <div><%= addressLine3 %></div>
+          <% } %>
+          <% if (shipping.addressNotes) { %>
+          <div><%= shipping.addressNotes %></div>
+          <% } %>
+          <div>
+            <a class="js-copyAddress clrTEm">Copy</a>
+            <a class="js-viewAddressOnMap clrTEm" href="<%= mapUrl %>">View on map</a>
+          </div>
+        </div>
+        <% } %>
+        <div class="col4">
+          <div>Shoo</div>
+        </div>
+        <div class="col4">
+          <div>Chicken</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

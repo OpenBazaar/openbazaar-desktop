@@ -976,10 +976,13 @@
         "orderAccepted": "Order Accepted",
         "vendorCanFulfill": "You received the order and can fulfill it whenever you're ready.",
         "vendorFulfilled": "You have fulfilled the order.",
-        "buyerOrderAccepted": "The vendor has received your order and will fulfill it soon.",
+        "buyerOrderAccepted": "Thank you for your purchase!",
         "buyerOrderFulfilled": "The vendor has fulfilled the order.",
         "refundBtn": "Refund",
         "fulfillBtn": "Fulfill Order"
+      },
+      "orderDetails": {
+        "heading": "Order Details"
       }
     }
   },
