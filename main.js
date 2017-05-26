@@ -25,11 +25,13 @@ if (argv.userData) {
 let mainWindow;
 let trayMenu;
 let closeConfirmed = false;
+
 const version = app.getVersion();
 const feedURL = `https://updates2.openbazaar.org:5001/update/${process.platform}/${version}`;
 global.serverLog = '';
 
 const handleStartupEvent = function () {
+  // noinspection ES6ModulesDependencies
   if (process.platform !== 'win32') {
     return false;
   }
