@@ -101,11 +101,11 @@ export default class extends BaseModal {
 
     if (this.type === 'case') {
       this.featuredProfileFetch =
-        this.model.get('buyerOpened') ? this.buyerProfile : this.vendorProfile;
+        this.model.get('buyerOpened') ? this.getBuyerProfile() : this.getVendorProfile();
     } else if (this.type === 'sale') {
-      this.featuredProfileFetch = this.buyerProfile;
+      this.featuredProfileFetch = this.getBuyerProfile();
     } else {
-      this.featuredProfileFetch = this.vendorProfile;
+      this.featuredProfileFetch = this.getVendorProfile();
     }
 
     this.featuredProfileFetch.done(profile => {
@@ -200,21 +200,21 @@ export default class extends BaseModal {
   /**
    * Returns a promise that resolves with the buyer's Profile model.
    */
-  get buyerProfile() {
+  getBuyerProfile() {
     return this._getParticipantProfile('buyer');
   }
 
   /**
    * Returns a promise that resolves with the vendor's Profile model.
    */
-  get vendorProfile() {
+  getVendorProfile() {
     return this._getParticipantProfile('vendor');
   }
 
   /**
    * Returns a promise that resolves with the moderator's Profile model.
    */
-  get moderatorProfile() {
+  getModeratorProfile() {
     return this._getParticipantProfile('moderator');
   }
 
@@ -276,6 +276,10 @@ export default class extends BaseModal {
   createSummaryTabView() {
     const view = this.createChild(Summary, {
       model: this.model,
+      vendor: {
+        id: this.vendorId,
+        getProfile: this.getVendorProfile.bind(this),
+      },
     });
 
     return view;
@@ -287,11 +291,11 @@ export default class extends BaseModal {
       orderId: this.model.id,
       buyer: {
         id: this.buyerId,
-        profile: this.buyerProfile,
+        getProfile: this.getBuyerProfile.bind(this),
       },
       vendor: {
         id: this.vendorId,
-        profile: this.vendorProfile,
+        getProfile: this.getVendorProfile.bind(this),
       },
       model: this.model,
       amActiveTab: amActiveTab.bind(this),
@@ -300,7 +304,7 @@ export default class extends BaseModal {
     if (this.moderatorId) {
       viewData.moderator = {
         id: this.moderatorId,
-        profile: this.moderatorProfile,
+        getProfile: this.getModeratorProfile.bind(this),
       };
     }
 

@@ -970,6 +970,16 @@
         "acceptBtn": "Accept",
         "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
         "veryManyConfirmationsCount": "%{countText} confirmations"
+      },
+      "accepted": {
+        "heading": "Accepted",
+        "orderAccepted": "Order Accepted",
+        "vendorCanFulfill": "You received the order and can fulfill it whenever you're ready.",
+        "vendorFulfilled": "You have fulfilled the order.",
+        "buyerOrderAccepted": "The vendor has received your order and will fulfill it soon.",
+        "buyerOrderFulfilled": "The vendor has fulfilled the order.",
+        "refundBtn": "Refund",
+        "fulfillBtn": "Fulfill Order"
       }
     }
   },

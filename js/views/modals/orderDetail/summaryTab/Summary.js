@@ -6,6 +6,7 @@ import { Model } from 'backbone';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payment from './Payment';
+import AcceptedEvent from './AcceptedEvent';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -19,7 +20,28 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
+    const isValidParticipantObject = (participant) => {
+      let isValid = true;
+      if (!participant.id) isValid = false;
+      if (typeof participant.getProfile !== 'function') isValid = false;
+      return isValid;
+    };
+
+    const getInvalidParticpantError = (type = '') =>
+      (`The ${type} object is not valid. It should have an id ` +
+        'as well as a getProfile function that returns a promise that ' +
+        'resolves with a profile model.');
+
+    if (!opts.vendor) {
+      throw new Error('Please provide a vendor object.');
+    }
+
+    if (!isValidParticipantObject(options.vendor)) {
+      throw new Error(getInvalidParticpantError('vendor'));
+    }
+
     this.options = opts || {};
+    this.vendor = opts.vendor;
   }
 
   className() {
@@ -104,6 +126,25 @@ export default class extends BaseVw {
         },
       });
       this.$('.js-paymentWrap2').html(this.payment2.render().el);
+
+      if (this.acceptedEvent) this.acceptedEvent.remove();
+      this.acceptedEvent = this.createChild(AcceptedEvent, {
+        model: new Model({
+          timestamp: '2017-05-26T17:53:40.719697497Z',
+        }),
+        initialState: {
+          infoText: 'You received the order and can fulfill it whenevery you\'re ready.',
+          showActionButtons: true,
+        },
+      });
+      this.$('.js-acceptedWrap').html(this.acceptedEvent.render().el);
+
+      this.vendor.getProfile()
+          .done(profile => {
+            this.acceptedEvent.setState({
+              avatarHashes: profile.get('avatarHashes').toJSON(),
+            });
+          });
     });
 
     return this;

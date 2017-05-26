@@ -1,0 +1,31 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.accepted.heading') %></h2>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+
+<div class="border clrBr padMd">
+  <div class="flex gutterH clrT">
+    <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></span></div>
+    <div class="flexExpand tx5">
+      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.accepted.orderAccepted') %></div>
+      <div class="flex gutterH clrT2"><%= ob.infoText %></div>
+    </div>
+    <% if (ob.showActionButtons) { %>
+    <div class="col">
+      <div class="flexVCent gutterHLg">
+        <% if (ob.refundOrderInProgress) { %>
+          <span class="posR">
+            <% // including invisible cancel link to properly space the spinner %>
+            <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.accepted.refundBtn') %></a>
+            <%= ob.spinner({ className: 'spinnerSm center' }) %>
+          </span>
+        <% } else { %>
+          <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.accepted.refundBtn') %></a>
+        <%  } %>
+        <%= ob.processingButton({
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-fulfillOrder ${ob.fulfillInProgress ? 'processing' : ''}`,
+          btnText: ob.polyT('orderDetail.summaryTab.accepted.fulfillBtn')
+        }) %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>

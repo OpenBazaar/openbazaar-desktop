@@ -10,7 +10,9 @@
   }
 %>
 <h2 class="tx4 margRTn"><%= heading %></h2>
-<span class="clrT2 tx5b hide">May 19, 2017 5:40 PM</span>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
 <div class="border clrBr padMd">
   <div class="flex gutterH clrT">
     <div class="statusIconCol <%= ob.amountShort ? 'clrTErr' : 'clrTEm' %>"><span class="clrBr <%= ob.amountShort ? 'ion-ios-close-empty' : 'ion-ios-checkmark-empty' %>"></span></div>
@@ -85,7 +87,7 @@
           <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
         <%  } %>
         <%= ob.processingButton({
-          className: `btn clrP clrBr clrSh2 tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
           btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
         }) %>
       </div>

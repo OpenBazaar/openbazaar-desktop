@@ -1,7 +1,5 @@
 import _ from 'underscore';
 import moment from 'moment';
-import app from '../../../../app';
-import { abbrNum } from '../../../../utils';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -14,18 +12,18 @@ export default class extends BaseVw {
     }
 
     this._state = {
-      paymentNumber: 1,
-      amountShort: 0,
-      showAmountShort: false,
-      payee: '',
-      userCurrency: app.settings.get('localCurrency') || 'BTC',
+      infoText: '',
       showActionButtons: false,
+      avatarHashes: {},
+      refundConfirmOn: false,
+      refundOrderInProgress: false,
+      fulfillInProgress: false,
       ...options.initialState || {},
     };
   }
 
   className() {
-    return 'payment';
+    return 'acceptedEvent';
   }
 
   getState() {
@@ -50,11 +48,10 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/orderDetail/summaryTab/payment.html', (t) => {
+    loadTemplate('modals/orderDetail/summaryTab/acceptedEvent.html', (t) => {
       this.$el.html(t({
         ...this._state,
         ...this.model.toJSON(),
-        abbrNum,
         moment,
       }));
     });
