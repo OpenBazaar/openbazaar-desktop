@@ -31,7 +31,7 @@ export default class extends BaseVw {
           const payment = e.jsonData.notification.payment;
           if (integerToDecimal(payment.fundingTotal, true) >= this.model.get('amount') &&
             payment.orderId === this.model.get('orderId')) {
-            this.trigger('walletPaymentComplete');
+            this.trigger('walletPaymentComplete', payment);
           }
         }
       });

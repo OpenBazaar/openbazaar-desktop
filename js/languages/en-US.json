@@ -882,6 +882,8 @@
       "noData": "Not Specified ",
       "vendorMessage": "Message for Vendor (optional)",
       "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
+      "vendorMessageLink": "discussion section of the order details",
+      "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
       "send": "Send"
     },
     "receipt": {
@@ -998,7 +1000,7 @@
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
       "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
-      "retryLink": "retry"      
+      "retryLink": "retry"
     }
   },
   "exchangeRatesSyncer": {

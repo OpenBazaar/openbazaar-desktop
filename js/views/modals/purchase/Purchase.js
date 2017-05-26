@@ -255,9 +255,10 @@ export default class extends BaseModal {
   }
 
   completePurchase(data) {
+    this.complete.orderID = data.orderId;
+    this.complete.render();
     this.updatePageState('complete');
     this.actionBtn.render();
-    console.log(data);
   }
 
   get $popInMessages() {
@@ -336,6 +337,7 @@ export default class extends BaseModal {
         listing: this.listing,
       });
       this.listenTo(this.actionBtn, 'purchase', (() => this.purchaseListing()));
+      this.listenTo(this.actionBtn, 'close', (() => this.close()));
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
       if (this.receipt) this.receipt.remove();
@@ -393,7 +395,8 @@ export default class extends BaseModal {
       if (this.complete) this.complete.remove();
       // add the complete view
       this.complete = this.createChild(Complete, {
-        processingTime: this.listing.get('item').processingTime,
+        listing: this.listing,
+        vendor: this.vendor,
       });
       this.$('.js-complete').append(this.complete.render().el);
     });

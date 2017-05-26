@@ -56,4 +56,17 @@
       top: -0.6em
     }
   }
+
+  .complete {
+    .message {
+      border-style: solid;
+      border-width: 1px;
+      padding: $pad;
+      margin-bottom: $pad;
+
+      textarea {
+        border: none;
+      }
+    }
+  }
 }
