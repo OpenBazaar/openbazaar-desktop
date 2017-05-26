@@ -25,13 +25,17 @@
           <div class="thumb" style="<%= ob.getListingBgImage(ob.listing.item.images[0]) %>"></div>
           <div class="flexExpand">
             <div class="flexCol gutterVTn">
-              <b><%= ob.listing.item.title %></b>
+              <div class="width100 noOverflow">
+                <b><%= ob.listing.item.title %></b>
+              </div>
               <% ob.variants.forEach((variant) => { %>
-                <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
+                <div class="width100 noOverflow">
+                  <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
+                </div>
               <% }); %>
             </div>
           </div>
-          <div class="showIfPay">
+          <div class="showIfPay flexNoShrink">
             <div class="flexVCent gutterHSm">
               <label class="flexNoShrink" for="purchaseQuantity">
                 <%= ob.polyT('purchase.quantity') %>
@@ -46,7 +50,7 @@
                   data-var-type="number">
             </div>
           </div>
-          <div class="pad">
+          <div class="pad flexNoShrink">
             <b>
               <%= ob.convertAndFormatCurrency(ob.listing.item.price, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
             </b>
