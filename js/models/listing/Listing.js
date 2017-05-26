@@ -167,13 +167,6 @@ export default class extends BaseModel {
               options.attrs.metadata.pricingCurrency === 'BTC');
           }
         });
-
-        options.attrs.coupons.forEach(coupon => {
-          if (typeof coupon.priceDiscount === 'number') {
-            coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
-              options.attrs.metadata.pricingCurrency === 'BTC');
-          }
-        });
         // END - convert price fields
 
         // If providing a quanitity and / or productID on the Item and not
