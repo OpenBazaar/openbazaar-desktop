@@ -21,6 +21,18 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
+    const buyerOpened = this.model.get('buyerOpened');
+    let contract;
+
+    if (typeof buyerOpened === 'undefined') {
+      contract = this.model.get('contract');
+    } else {
+      // it's a mod looking at a case
+      contract = this.model.get(buyerOpened ? 'buyerContract' : 'vendorContract');
+    }
+
+    this.contract = contract;
+
     const isValidParticipantObject = (participant) => {
       let isValid = true;
       if (!participant.id) isValid = false;
@@ -41,8 +53,19 @@ export default class extends BaseVw {
       throw new Error(getInvalidParticpantError('vendor'));
     }
 
+    if (this.contract.get('buyerOrder').payment.moderator) {
+      if (!options.moderator) {
+        throw new Error('Please provide a moderator object.');
+      }
+
+      if (!isValidParticipantObject(options.moderator)) {
+        throw new Error(getInvalidParticpantError('moderator'));
+      }
+    }
+
     this.options = opts || {};
     this.vendor = opts.vendor;
+    this.moderator = opts.moderator;
   }
 
   className() {
@@ -140,16 +163,6 @@ export default class extends BaseVw {
       });
       this.$('.js-acceptedWrap').html(this.acceptedEvent.render().el);
 
-      const buyerOpened = this.model.get('buyerOpened');
-      let contract;
-
-      if (typeof buyerOpened === 'undefined') {
-        contract = this.model.get('contract');
-      } else {
-        // it's a mod looking at a case
-        contract = this.model.get(buyerOpened ? 'buyerContract' : 'vendorContract');
-      }
-
       this.vendor.getProfile()
           .done(profile => {
             this.acceptedEvent.setState({
@@ -159,8 +172,8 @@ export default class extends BaseVw {
 
       if (this.orderDetails) this.orderDetails.remove();
       this.orderDetails = this.createChild(OrderDetails, {
-        model: contract.get('vendorListings').at(0),
-        timestamp: contract.get('buyerOrder').timestamp,
+        model: this.contract,
+        moderator: this.moderator,
       });
       this.$('.js-orderDetailsWrap').html(this.orderDetails.render().el);
     });

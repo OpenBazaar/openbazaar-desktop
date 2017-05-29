@@ -22,7 +22,7 @@
           'BTC', ob.userCurrency, { useBtcSymbol: false });
 
         if (ob.userCurrency !== 'BTC') {
-          priceFrag = ob.polyT('orderDetail.summaryTab.payment.fiatBtcPairing', {
+          priceFrag = ob.polyT('fiatBtcPairing', {
             fiatAmount: priceFrag,
             btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
           });

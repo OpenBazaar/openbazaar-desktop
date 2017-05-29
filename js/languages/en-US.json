@@ -11,6 +11,9 @@
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "tabMenuHeading": "MENU",
+  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "copiedToClipboard": "Copied to clipboard",
+  "copiedToClipboardShort": "Copied",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -108,7 +111,6 @@
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
-    "guidCopied": "Copied to Clipboard",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
@@ -194,9 +196,7 @@
       "sectionHeader": "Donations",
       "btnCopyAddress": "Copy Address",
       "btnOpenInWallet" : "Open in Wallet",
-      "notifyCopied": "Copied",
       "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "copied": "Copied",
       "unableToOpenInWallet": {
         "title": "Unable to open in wallet",
         "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
@@ -576,7 +576,6 @@
     "transactions": {
       "header": "Transactions",
       "transaction": {
-        "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
         "outgoingText": "%{fiatBtcPairing} to %{address}",
         "incomingText": "%{fiatBtcPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
@@ -940,7 +939,6 @@
       "btnReject": "Reject",
       "btnAccept": "Accept",
       "btnCancel": "Cancel",
-      "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
       "btnRetryFetch": "Retry"
     }
   },
@@ -978,7 +976,6 @@
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
-        "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
         "amountTo": "%{fiatBtcPairing} to %{payeeName}",
         "paidInFull": "Paid In Full",
         "underpaid": "Underpaid",
@@ -999,7 +996,13 @@
         "fulfillBtn": "Fulfill Order"
       },
       "orderDetails": {
-        "heading": "Order Details"
+        "heading": "Order Details",
+        "notApplicable": "n/a",
+        "shipToHeading": "Ship to",
+        "couponHeading": "Coupons",
+        "quantityHeading": "Quantity",
+        "totalHeading": "Total",
+        "moderatorHeading": "Moderator"
       }
     }
   },
@@ -1010,9 +1013,7 @@
     "fetchingRatesFailStatusMsgRetryLink": "retry"
   },
   "debugLog": {
-    "copiedToClipboard": "Copied to clipboard",
     "copyToClipboard": "Copy to clipboard"
-
   },
   "profileModelErrors": {
     "provideName": "You must provide a name.",

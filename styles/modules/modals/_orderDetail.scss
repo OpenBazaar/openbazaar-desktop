@@ -282,9 +282,24 @@
     }
 
     .orderDetails {
+      position: relative;
+
       .listingThumbCol {
         width: 42px;
         height: 42px;
+      }
+
+      hr {
+        margin-top: 13px;
+        margin-bottom: 13px;
+      }
+
+      .orderDetailsCopiedToClipboard {
+        position: absolute;
+        // right: $padSm;
+        // top: 5px;
+        transform: translateY(-2px);
+        font-size: $tx6;
       }
     }
   }

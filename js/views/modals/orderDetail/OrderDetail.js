@@ -153,9 +153,6 @@ export default class extends BaseModal {
           this.model.get('vendorContract');
       }
 
-      // For now using flat model data. Once we start on the summary
-      // tab, the Order Detail model will likely be built up with
-      // more nested models and collections.
       const contractJSON = contract.toJSON();
 
       this._participantIds = {
@@ -274,13 +271,22 @@ export default class extends BaseModal {
   }
 
   createSummaryTabView() {
-    const view = this.createChild(Summary, {
+    const viewData = {
       model: this.model,
       vendor: {
         id: this.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
-    });
+    };
+
+    if (this.moderatorId) {
+      viewData.moderator = {
+        id: this.moderatorId,
+        getProfile: this.getModeratorProfile.bind(this),
+      };
+    }
+
+    const view = this.createChild(Summary, viewData);
 
     return view;
   }

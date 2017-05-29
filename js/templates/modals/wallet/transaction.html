@@ -27,7 +27,7 @@
       }
 
       if (ob.userCurrency !== 'BTC') {
-        priceFrag = ob.polyT('wallet.transactions.transaction.fiatBtcPairing', {
+        priceFrag = ob.polyT('fiatBtcPairing', {
           fiatAmount: priceFrag,
           btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
         });
@@ -102,7 +102,7 @@
         ob.userCurrency, { useBtcSymbol: false });
         
       if (ob.userCurrency !== 'BTC') {
-        estimatedFeeCombo = ob.polyT('wallet.transactions.transaction.fiatBtcPairing', {
+        estimatedFeeCombo = ob.polyT('fiatBtcPairing', {
           fiatAmount: estimatedFeeCombo,
           btcAmount: ob.formatCurrency(estimatedFee, 'BTC', { useBtcSymbol: false }),
         });

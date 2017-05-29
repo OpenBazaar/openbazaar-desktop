@@ -74,7 +74,7 @@
       print(btcPrice);
     } else {
         print(
-          ob.polyT('transactions.transactionsTable.fiatBtcPairing', {
+          ob.polyT('fiatBtcPairing', {
             fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
               ob.userCurrency, { useBtcSymbol: false }),
             btcAmount: btcPrice,
