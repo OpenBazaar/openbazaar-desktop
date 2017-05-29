@@ -208,7 +208,7 @@ export function setTimeagoInterval(timestamp, cb, _timeouts = []) {
 }
 
 /*
- * Will turn a url encode query string into a JS object. The opposite of
+ * Will turn a url encoded query string into a JS object. The opposite of
  * $.param().
  */
 export function deparam(queryStr = '') {

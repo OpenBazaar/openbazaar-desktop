@@ -38,7 +38,7 @@ export default class extends baseVw {
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
       vendor.avatar = vendor.avatarHashes;
-      const listingBaseUrl = `${vendor.handle || vendor.guid}/store/`;
+      const listingBaseUrl = `${vendor.handle || vendor.peerID}/store/`;
       const options = {
         listingBaseUrl,
         model,

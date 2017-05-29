@@ -27,9 +27,9 @@ export default class extends baseVw {
     this.profilePosts = [];
     this.openedOrderModal = null;
 
-    const params = new URLSearchParams(location.hash.split('?')[1] || '');
-    const orderId = params.get('orderId');
-    const caseId = params.get('caseId');
+    const params = deparam(location.hash.split('?')[1] || '');
+    const orderId = params.orderId;
+    const caseId = params.caseId;
 
     if (orderId || caseId) {
       // cut off the trailing 's' from the tab

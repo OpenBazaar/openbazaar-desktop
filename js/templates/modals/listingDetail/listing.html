@@ -28,7 +28,7 @@
       <a class="js-deleteConfirmCancel"><%= ob.polyT('listingDetail.confirmDelete.btnCancel') %></a>
       <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingDetail.confirmDelete.btnConfirm') %></a>
     </div>
-  </div>  
+  </div>
   <% } %>
 </div>
 
@@ -59,7 +59,7 @@
           <div class="flexColRows flexHCent gutterV">
             <% ob.item.options.forEach((item) => { %>
               <div class="flexVCent gutterHLg">
-                <div class="col4 h5 txUnl wordBreak"><%= item.name %></div>
+                <div class="col4 h5 txUnl"><%= item.name %></div>
                 <div class="col8">
                   <select class="js-variantSelect" name="<%= item.name %>">
                     <% item.variants.forEach((variant) => { %>
