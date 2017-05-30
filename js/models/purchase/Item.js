@@ -49,7 +49,7 @@ export default class extends BaseModel {
     }
 
     if (this.shippable && (!attrs.shipping.get('name') || !attrs.shipping.get('service'))) {
-      addError('shippable', app.polyglot.t('orderModelErrors.missingShippingOption'));
+      addError('shipping', app.polyglot.t('orderModelErrors.missingShippingOption'));
     }
 
     if (Object.keys(errObj).length) return errObj;
