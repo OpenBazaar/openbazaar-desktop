@@ -1,0 +1,9 @@
+<% if (ob.peerId) { %>
+  <%
+    let modLink =
+      `<a class="clrTEm" href="#${ob.peerId}">${ob.handle || `${ob.peerId.slice(0, 8)}…`}</a>`;
+  %>
+  <div><%= ob.name %><% print(modLink ? ` ${modLink}` : '') %></div>
+<% } else { %>
+  <%= ob.polyT('orderDetail.summaryTab.orderDetails.notApplicable') %>
+<% } %>

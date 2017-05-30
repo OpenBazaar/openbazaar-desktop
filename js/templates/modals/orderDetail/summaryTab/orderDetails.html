@@ -68,8 +68,8 @@
               clipboardAddress = clipboardAddress.join('\n');
             %>  
             <div class="gutterH">
-              <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>">Copy (translate)</a>
-              <a class="clrTEm" href="<%= mapUrl %>">View on map (translate)</a>
+              <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
+              <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
             </div>
             <% } else { %>
               <%= ob.polyT('orderDetail.summaryTab.orderDetails.notApplicable') %>
@@ -86,15 +86,7 @@
             <% } %>            
           </div>
           <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.moderatorHeading') %></div>
-          <% if (ob.moderator) { %>
-            <%
-              let modLink =
-                `<a class="clrTEm" href="#${ob.moderator.peerID}">${ob.moderator.handle || `${ob.moderator.peerID.slice(0, 8)}…`}</a>`;
-            %>
-            <div><%= ob.moderator.name %><% print(modLink ? ` ${modLink}` : '') %></div>
-          <% } else { %>
-            <%= ob.polyT('orderDetail.summaryTab.orderDetails.notApplicable') %>
-          <% } %>
+          <div class="js-moderatorContainer"></div>
         </div>
         <div class="col4">
           <div class="row">

@@ -1002,7 +1002,9 @@
         "couponHeading": "Coupons",
         "quantityHeading": "Quantity",
         "totalHeading": "Total",
-        "moderatorHeading": "Moderator"
+        "moderatorHeading": "Moderator",
+        "copyAddress": "Copy",
+        "viewOnMap": "View on map"
       }
     }
   },

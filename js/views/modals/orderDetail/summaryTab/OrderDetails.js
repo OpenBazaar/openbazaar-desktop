@@ -6,6 +6,7 @@ import { convertAndFormatCurrency } from '../../../../utils/currency';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
+import Moderator from './OrderDetailsModerator';
 import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
@@ -84,13 +85,29 @@ export default class extends BaseVw {
 
       this._$copiedToClipboard = null;
 
+      const moderatorState = {};
+
+      if (this.options.moderator) {
+        moderatorState.peerId = this.options.moderator.id;
+      }
+
+      if (this.moderatorVw) this.moderatorVw.remove();
+      this.moderatorVw = this.createChild(Moderator, {
+        initialState: moderatorState,
+      });
+
       if (!this.modProfile && this.options.moderator) {
         this.options.moderator.getProfile()
           .done((modProfile) => {
             this.modProfile = modProfile;
-            this.render();
+            this.moderatorVw.setState({
+              name: modProfile.get('name'),
+              handle: modProfile.get('handle'),
+            });
           });
       }
+
+      this.$('.js-moderatorContainer').html(this.moderatorVw.render().el);
     });
 
     return this;
