@@ -350,6 +350,7 @@ export default class extends BaseModal {
       variants: selectedVariants,
       vendor: this.vendor,
       removeOnClose: true,
+      showCloseButton: false,
     })
       .render()
       .open();

@@ -69,4 +69,15 @@
       }
     }
   }
+
+  .sidebar {
+    position: fixed;
+    width: 234px;
+
+    .closeBtn {
+      position: absolute;
+      right: -1px;
+      top: -42px;
+    }
+  }
 }
