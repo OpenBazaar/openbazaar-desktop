@@ -21,13 +21,11 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
-    const buyerOpened = this.model.get('buyerOpened');
     let contract;
 
-    if (typeof buyerOpened === 'undefined') {
+    if (!this.isCase()) {
       contract = this.model.get('contract');
     } else {
-      // it's a mod looking at a case
       contract = this.model.get(buyerOpened ? 'buyerContract' : 'vendorContract');
     }
 
@@ -90,9 +88,61 @@ export default class extends BaseVw {
       });
   }
 
+  isCase() {
+    return typeof this.model.get('buyerOpened') !== 'undefined';
+  }
+
   get $copiedToClipboard() {
     return this._$copiedToClipboard ||
       (this._$copiedToClipboard = this.$('.js-copiedToClipboard'));
+  }
+
+  get progressBarState() {
+    const orderState = this.model.get('state');
+    const state = {
+      states: [
+        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.paid'),
+        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.accepted'),
+        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.fulfilled'),
+        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.complete'),
+      ],
+    };
+
+    if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
+      orderState === 'RESOLVED') {
+      if (!this.isCase()) {
+        state.states = [
+          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.disputed'),
+          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.decided'),
+          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.resolved'),
+          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.complete'),
+        ];
+      } else {
+        state.states = [
+          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.disputed'),
+          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.complete'),
+        ];
+      }
+    } else {
+      switch (orderState) {
+        case 'PENDING':
+          state.currentState = 1;
+          break;
+        case 'AWAITING_FULFILLMENT' || 'PARTIALLY_FULFILLED':
+          state.currentState = 2;
+          break;
+        case 'AWAITING_PICKUP' || 'FULFILLED':
+          state.currentState = 3;
+          break;
+        case 'COMPLETED':
+          state.currentState = 4;
+          break;
+        default:
+          state.currentState = 0;
+      }
+    }
+
+    return state;
   }
 
   remove() {
