@@ -12,7 +12,7 @@ export default class extends baseVw {
       defaultFilter: {
         search: '',
         sortBy: 'UNREAD',
-        states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        states: [],
       },
       ...options,
     };
@@ -37,6 +37,10 @@ export default class extends baseVw {
 
     if (typeof opts.getProfiles !== 'function') {
       throw new Error('Please provide a function to retreive profiles.');
+    }
+
+    if (typeof opts.openOrder !== 'function') {
+      throw new Error('Please provide a function to open the order detail modal.');
     }
 
     this.options = opts || {};
@@ -302,6 +306,8 @@ export default class extends baseVw {
           rejectOrder: this.rejectOrder.bind(this),
           initialFilterParams: this.filter,
           getProfiles: this.options.getProfiles,
+          openOrder: this.options.openOrder,
+          openedOrderModal: this.options.openedOrderModal,
         });
         this.$('.js-tableContainer').html(this.table.render().el);
       });

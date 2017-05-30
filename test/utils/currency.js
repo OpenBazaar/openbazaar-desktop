@@ -164,7 +164,7 @@ describe('the currency utility module', () => {
         .equal('฿523.12');
       expect(cur.formatCurrency(523.12345678, 'BTC'))
         .to
-        .equal('฿523.123457');
+        .equal('฿523.12345678');
     });
 
     it('properly localizes a BTC amount with the correct bitcoin units', () => {
@@ -248,21 +248,21 @@ describe('the currency utility module', () => {
     });
 
     describe('like convertAndFormatCurrency', () => {
-      it('which will convert between two fiat currencies properly localize' +
+      it('which will convert between two fiat currencies properly localize ' +
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'USD', 'PLN', { locale: 'en-US' }))
           .to
           .equal('PLN2,097.31');
       });
 
-      it('which will convert between a fiat currency and BTC and properly localize' +
+      it('which will convert between a fiat currency and BTC and properly localize ' +
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'USD', 'BTC', { locale: 'en-US' }))
           .to
-          .equal('฿0.666134');
+          .equal('฿0.66613376');
       });
 
-      it('which will convert between BTC and a fiat currency properly localize' +
+      it('which will convert between BTC and a fiat currency properly localize ' +
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'BTC', 'USD', { locale: 'en-US' }))
           .to

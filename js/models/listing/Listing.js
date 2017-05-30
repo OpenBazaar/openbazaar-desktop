@@ -106,7 +106,7 @@ export default class extends BaseModel {
     attrs.coupons.forEach(coupon => {
       const priceDiscount = coupon.get('priceDiscount');
 
-      if (typeof priceDiscount !== 'undefined' && priceDiscount > attrs.item.get('price')) {
+      if (typeof priceDiscount !== 'undefined' && priceDiscount >= attrs.item.get('price')) {
         addError(`coupons[${coupon.cid}].priceDiscount`,
           app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
       }

@@ -257,7 +257,7 @@ describe('the Listing model', () => {
       coupons: [
         {
           discountCode: Date.now() + Math.random(),
-          priceDiscount: 500, // should not fail validation
+          priceDiscount: 499.99, // should not fail validation
         },
         {
           discountCode: Date.now() + Math.random(),

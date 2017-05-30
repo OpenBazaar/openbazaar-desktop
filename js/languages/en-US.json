@@ -10,6 +10,7 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
+  "tabMenuHeading": "MENU",
   "properNames": {
     "twitter": "Twitter",
     "facebook": "Facebook",
@@ -188,9 +189,6 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Check for Update",
-    "menu": {
-      "sectionHeader": "MENU"
-    },
     "donationsTab": {
       "linkText": "Donations",
       "sectionHeader": "Donations",
@@ -806,6 +804,7 @@
   },
   "purchase": {
     "refreshPurchase": "Refresh",
+    "purchaseDataChangedPopin": "The data for this listing has changed. %{refreshLink}",
     "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
     "returnToListing": "Return To Listing",
     "optional": "optional",
@@ -814,10 +813,31 @@
     "moderatorTitle": "Moderator",
     "shippingTitle": "Shipping",
     "newAddress": "New Address",
+    "serviceDetails": "%{price} — %{delivery}",
+    "noAddresses": "You don't have any saved addresses.",
+    "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
-    "pay": "PAY",
+    "emailAddress": "Email Address",
+    "emailPlaceholder": "name@email.com",
+    "emailNote": "An alternate way to reach you.",
+    "couponCode": "Coupon Code",
+    "applyCode": "Apply",
+    "code": "\"%{code}\" applied to order",
+    "codeErrors": {
+      "invalid": "\"%{code}\" is not a valid code",
+      "duplicate": "You can only add \"%{code}\" once",
+      "excessive": "You cannot apply a discount of more than 100% of the listing's price."
+    },
+    "removeCode": "remove",
+    "memo": "Memo",
+    "memoPlaceholder": "Provide additional details for the vendor here (optional).",
+    "pay": "PAY >",
+    "payNote": "Clicking pay will advance you to the final step.",
     "pending": "Pending…",
+    "pendingNote": "Plese fund the order to complete your transaction.",
     "close": "close",
+    "closeNote": "Your payment has been sent to the vendor.",
+    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
@@ -829,9 +849,19 @@
       "confirm": "Yes",
       "cancel": "Cancel"
     },
+    "receipt": {
+      "summary": "Order Summary",
+      "listing": "Listing (%{quantity})",
+      "coupon": "Coupon",
+      "shipping": "Shipping",
+      "total": "Total"
+    },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
-      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded."
+      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
+      "orderError": "Your order can not be processed due to the following errors.",
+      "ownIDTitle": "This is Your Own Listing",
+      "ownIDMsg": "You cannot purchase a listing that belongs to you."
     }
   },
   "moderators": {
@@ -845,7 +875,8 @@
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
       "failedAcceptHeading": "There was an error accepting the order.",
-      "failedRejectHeading": "There was an error rejecting the order."
+      "failedRejectHeading": "There was an error rejecting the order.",
+      "returnToFromOrder": "Return to sales"
     },
     "purchases": {
       "heading": "Purchases",
@@ -853,10 +884,15 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
-      "failedCancelHeading": "There was an error canceling the order."
+      "failedCancelHeading": "There was an error canceling the order.",
+      "returnToFromOrder": "Return to purchases"
     },
     "cases": {
-      "heading": "Cases"
+      "heading": "Cases",
+      "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
+      "countTransactionsFound": "%{countTransactions} found",
+      "noResults": "No cases found",
+      "returnToFromOrder": "Return to cases"
     },
     "filters": {
       "purchasing": "Purchasing",
@@ -887,18 +923,46 @@
         "status": "Status"
       },
       "status": {
-        "confirmed": "Confirmed",
-        "funded": "Funded",
-        "fulfilled": "Fulfilled",
-        "decided": "Decided",
-        "canceled": "Canceled",
-        "rejected": "Rejected"
+        "PENDING": "Pending",
+        "AWAITING_PAYMENT": "Awaiting Payment",
+        "AWAITING_PICKUP": "Awaiting Pickup",
+        "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
+        "PARTIALLY_FULFILLED": "Partially Fulfilled",
+        "FULFILLED": "Fulfilled",
+        "COMPLETED": "Complete",
+        "CANCELED": "Canceled",
+        "DECLINED": "Declined",
+        "REFUNDED": "Refunded",
+        "DISPUTED": "Disputed",
+        "DECIDED": "Decided",
+        "RESOLVED": "Resolved"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
       "btnCancel": "Cancel",
       "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
       "btnRetryFetch": "Retry"
+    }
+  },
+  "orderDetail": {
+    "orderNumber": "Order #: %{orderId}",
+    "navMenu": {
+      "summary": "Summary",
+      "discussion": "Discussion",
+      "contract": "Contract (JSON)"
+    },
+    "discussionTab": {
+      "roleVendor": "vendor",
+      "roleBuyer": "buyer",
+      "roleModerator": "moderator",
+      "timeLineAndRole": "%{timeFromNow} (%{role})",
+      "isTyping": "%{userRole} is typing...",
+      "areTyping": "%{userRole1} and %{userRole2} are typing...",
+      "enterMessagePlaceholder": "Enter message...",
+      "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
+      "modCannotChat": "You have issued a decision and cannot send further messages.",
+      "loadMessagesError": "There was an error loading the messages. %{retryLink}",
+      "retryLink": "retry"      
     }
   },
   "exchangeRatesSyncer": {
@@ -952,7 +1016,7 @@
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot exceeed the listing price."
+    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -967,13 +1031,14 @@
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
     "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
     "provideQuantity": "Please provide a quantity.",
-    "provideNumericQuantity": "Please provide the quantity as a number."
+    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "quantityMustBePositive": "The quantity must be more than zero."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
     "provideDiscountAmount": "Please provide a discount value.",
     "percentageLow": "The percentage value must be greater than zero.",
-    "percentageHigh": "You cannot set a percentage above 100%" ,
+    "percentageHigh": "You cannot set a percentage above or equal to 100%" ,
     "priceLow": "The price must be geater than zero.",
     "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
@@ -1034,7 +1099,10 @@
   "orderModelErrors": {
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeNumber": "The quantity must be a valid number",
-    "noItems": "You must make at least one purchase."
+    "noItems": "You must make at least one purchase.",
+    "missingAddress": "Please choose a valid shipping address.",
+    "missingShippingOption": "Please choose a valid shipping option.",
+    "needsModerator": "You must select a moderator to make a Moderated Payment."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

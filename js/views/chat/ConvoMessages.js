@@ -39,6 +39,10 @@ export default class extends baseVw {
     this.render();
   }
 
+  /**
+   * Not using this for now since there are technical / UX complications for marking
+   * a message as read when in a group chat (who read it?).
+   */
   markMessageAsRead(id) {
     if (!id) {
       throw new Error('Please provide an id.');

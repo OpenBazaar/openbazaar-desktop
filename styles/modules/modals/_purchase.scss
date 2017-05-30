@@ -10,7 +10,7 @@
 
   #confirmPay {
     padding: 0;
-    top: 100%;
-    left: -50px;
+    top: calc(100% + #{$padSm});
+    left: -$bar;
   }
 }

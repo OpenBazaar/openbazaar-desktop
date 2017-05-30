@@ -1,13 +1,17 @@
 import $ from 'jquery';
 import app from '../../app';
 import { capitalize } from '../../utils/string';
-import { abbrNum } from '../../utils/';
+import { abbrNum, deparam } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
+import Order from '../../models/order/Order';
+import Case from '../../models/order/Case';
+import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Tab from './Tab';
+import OrderDetail from '../modals/orderDetail/OrderDetail';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -21,6 +25,22 @@ export default class extends baseVw {
     this.tabViewCache = {};
     this.profileDeferreds = {};
     this.profilePosts = [];
+    this.openedOrderModal = null;
+
+    const params = deparam(location.hash.split('?')[1] || '');
+    const orderId = params.orderId;
+    const caseId = params.caseId;
+
+    if (orderId || caseId) {
+      // cut off the trailing 's' from the tab
+      const type = this._tab.slice(0, this._tab.length - 1);
+
+      // If we're opening an order model on init, then we'll
+      // need to pass it in to the Tab view. It may need to bind event
+      // handlers to it.
+      this.openedOrderModal = this.openOrder(orderId || caseId, type);
+      this.listenTo(this.openedOrderModal, 'close', () => (this.openedOrderModal = null));
+    }
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
     this.syncTabHeadCount(this.purchasesCol, () => this.$purchasesTabCount);
@@ -36,6 +56,14 @@ export default class extends baseVw {
     if (opts.initialTab !== 'sales') {
       // fetch so we get the count for the tabhead
       this.salesCol.fetch();
+    }
+
+    this.casesCol = new Transactions([], { type: 'cases' });
+    this.syncTabHeadCount(this.casesCol, () => this.$casesTabCount);
+
+    if (opts.initialTab !== 'cases') {
+      // fetch so we get the count for the tabhead
+      this.casesCol.fetch();
     }
 
     this.socket = getSocket();
@@ -85,11 +113,69 @@ export default class extends baseVw {
     });
   }
 
+  /**
+   * This function is also passed into the Tab and Table views. They will
+   * be affected should you change the signature or return value.
+   */
+  openOrder(id, type = 'sale', options = {}) {
+    const opts = {
+      modalOptions: {
+        ...options.modalOptions || {},
+      },
+      addToRoute: true,
+    };
+
+    let model;
+
+    if (type !== 'case') {
+      model = new Order({ orderId: id }, { type });
+    } else {
+      model = new Case({ caseId: id });
+    }
+
+    const orderDetail = new OrderDetail({
+      model,
+      removeOnClose: true,
+      returnText: app.polyglot.t(`transactions.${type}s.returnToFromOrder`),
+      getProfiles: this.getProfiles.bind(this),
+      ...opts.modalOptions,
+    });
+
+    orderDetail.render().open();
+
+    if (opts.addToRoute) {
+      // add the order / case id to the url
+      const params = deparam(location.hash.split('?')[1] || '');
+      delete params.orderId;
+      delete params.caseId;
+      params[type === 'case' ? 'caseId' : 'orderId'] = id;
+      app.router.navigate(`${location.hash.split('?')[0]}?${$.param(params)}`);
+    }
+
+    // remove it from the url on close of the modal
+    const onClose = () => {
+      const params = deparam(location.hash.split('?')[1] || '');
+      delete params.orderId;
+      delete params.caseId;
+      app.router.navigate(`${location.hash.split('?')[0]}?${$.param(params)}`);
+    };
+
+    this.listenTo(orderDetail, 'close', onClose);
+
+    // Do not alter the url if the user is routing to a new route. The
+    // user has already altered the url.
+    this.listenTo(app.router, 'will-route', () => {
+      this.stopListening(orderDetail, 'close', onClose);
+    });
+
+    return orderDetail;
+  }
+
   get salesPurchasesDefaultFilter() {
     return {
       search: '',
       sortBy: 'UNREAD',
-      states: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+      states: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     };
   }
 
@@ -108,22 +194,65 @@ export default class extends baseVw {
         text: app.polyglot.t('transactions.filters.ready'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
         className: 'filter',
-        targetState: [2],
+        targetState: [2, 3, 4],
       },
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
-        targetState: [3],
+        targetState: [5],
       },
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
-        targetState: [8],
+        targetState: [9],
       },
+      {
+        id: 'filterDisputeOpen',
+        text: app.polyglot.t('transactions.filters.disputeOpen'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
+        className: 'filter',
+        targetState: [10],
+      },
+      {
+        id: 'filterDisputePending',
+        text: app.polyglot.t('transactions.filters.disputePending'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
+        className: 'filter',
+        targetState: [11],
+      },
+      {
+        id: 'filterDisputeClosed',
+        text: app.polyglot.t('transactions.filters.disputeClosed'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
+        className: 'filter',
+        targetState: [12],
+      },
+      {
+        id: 'filterCompleted',
+        text: app.polyglot.t('transactions.filters.completed'),
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
+        className: 'filter',
+        targetState: [6, 7, 8],
+      },
+    ];
+  }
+
+  get casesDefaultFilter() {
+    return {
+      search: '',
+      sortBy: 'UNREAD',
+      states: [5, 6, 7],
+    };
+  }
+
+  get casesFilterConfig() {
+    return [
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
@@ -145,15 +274,6 @@ export default class extends baseVw {
         className: 'filter',
         targetState: [7],
       },
-      {
-        id: 'filterCompleted',
-        text: app.polyglot.t('transactions.filters.completed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
-        className: 'filter',
-        targetState: [4, 9, 10],
-      },
     ];
   }
 
@@ -162,11 +282,6 @@ export default class extends baseVw {
       addTabToHistory: true,
       ...options,
     };
-
-    if (targ === 'cases') {
-      alert('Cases are coming soon.');
-      return;
-    }
 
     if (!this[`create${capitalize(targ)}TabView`]) {
       throw new Error(`${targ} is not a valid tab.`);
@@ -202,20 +317,18 @@ export default class extends baseVw {
   }
 
   get filterUrlParams() {
-    const parsed = {};
-    const params = new URLSearchParams(location.hash.split('?')[1] || '');
+    const params = deparam(location.hash.split('?')[1] || '');
 
-    for (const pair of params.entries()) {
-      parsed[pair[0]] = pair[1];
-    }
-
-    if (parsed.states) {
-      parsed.states = parsed.states
+    if (params.states) {
+      params.states = params.states
         .split('-')
-        .map(strIndex => parseInt(strIndex, 10));
+        .map(strIndex => parseInt(strIndex, 10))
+        .filter(state => !isNaN(state));
+    } else {
+      delete params.states;
     }
 
-    return parsed;
+    return params;
   }
 
   createPurchasesTabView() {
@@ -231,6 +344,8 @@ export default class extends baseVw {
       },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
+      openOrder: this.openOrder.bind(this),
+      openedOrderModal: this.openedOrderModal,
     });
 
     return view;
@@ -249,11 +364,42 @@ export default class extends baseVw {
       },
       filterConfig: this.salesPurchasesFilterConfig,
       getProfiles: this.getProfiles.bind(this),
+      openOrder: this.openOrder.bind(this),
+      openedOrderModal: this.openedOrderModal,
     });
 
     return view;
   }
 
+  createCasesTabView() {
+    const view = this.createChild(Tab, {
+      collection: this.casesCol,
+      type: 'cases',
+      defaultFilter: {
+        ...this.casesDefaultFilter,
+      },
+      initialFilter: {
+        ...this.casesDefaultFilter,
+        ...this.filterUrlParams,
+      },
+      filterConfig: this.casesFilterConfig,
+      getProfiles: this.getProfiles.bind(this),
+      openOrder: this.openOrder.bind(this),
+      openedOrderModal: this.openedOrderModal,
+    });
+
+    return view;
+  }
+
+  /**
+   * This function will fetch a list of profiles via the profiles api utilizing
+   * the async and usecache flags. It will return a list of promises that will
+   * each resolve when their respective profile arrives via socket.
+   * @param {Array} peerIds List of peerId for whose profiles to fetch.
+   * @returns {Array} An array of promises corresponding to the array of passed
+   * in peerIds. Each promise will resolve when it's respective profile is received
+   * via the socket. A profile model will be passed in the resolve handler.
+   */
   getProfiles(peerIds = []) {
     const promises = [];
     const profilesToFetch = [];
@@ -278,7 +424,7 @@ export default class extends baseVw {
         if (this.socket) {
           this.listenTo(this.socket, 'message', (e) => {
             if (e.jsonData.id === data.id) {
-              this.profileDeferreds[e.jsonData.peerId].resolve(e.jsonData.profile);
+              this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile));
             }
           });
         }
@@ -300,6 +446,11 @@ export default class extends baseVw {
       (this._$salesTabCount = this.$('.js-salesTabCount'));
   }
 
+  get $casesTabCount() {
+    return this._$casesTabCount ||
+      (this._$casesTabCount = this.$('.js-casesTabCount'));
+  }
+
   remove() {
     this.profilePosts.forEach(post => post.abort());
     super.remove();
@@ -312,6 +463,8 @@ export default class extends baseVw {
 
     this.$tabContent = this.$('.js-tabContent');
     this._$purchasesTabCount = null;
+    this._$salesTabCount = null;
+    this._$casesTabCount = null;
 
     if (this.miniProfile) this.miniProfile.remove();
     this.miniProfile = this.createChild(MiniProfile, {

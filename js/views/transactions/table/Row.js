@@ -61,7 +61,8 @@ export default class extends baseVw {
       'click .js-acceptOrder': 'onClickAcceptOrder',
       'click .js-rejectOrder': 'onClickRejectOrder',
       'click .js-cancelOrder': 'onClickCancelOrder',
-      'click .js-userCol': 'onClickUserColLink',
+      'click .js-userCol a': 'onClickUserColLink',
+      'click .js-listingCol a': 'onClickListingColLink',
       click: 'onRowClick',
     };
   }
@@ -82,6 +83,10 @@ export default class extends baseVw {
   }
 
   onClickUserColLink(e) {
+    e.stopPropagation();
+  }
+
+  onClickListingColLink(e) {
     e.stopPropagation();
   }
 

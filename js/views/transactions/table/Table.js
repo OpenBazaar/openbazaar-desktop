@@ -7,10 +7,9 @@ import $ from 'jquery';
 import _ from 'underscore';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { getContentFrame } from '../../../utils/selectors';
-import Order from '../../../models/order/Order';
+import { getSocket } from '../../../utils/serverConnect';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
-import OrderDetail from '../../modals/orderDetail/OrderDetail';
 import Row from './Row';
 import PageControls from '../../components/PageControls';
 
@@ -71,6 +70,10 @@ export default class extends baseVw {
       throw new Error('Please provide a function to retreive profiles.');
     }
 
+    if (typeof opts.openOrder !== 'function') {
+      throw new Error('Please provide a function to open the order detail modal.');
+    }
+
     super(opts);
 
     if (!this.collection) {
@@ -88,6 +91,16 @@ export default class extends baseVw {
 
     // This will kick off our initial fetch.
     this.filterParams = opts.initialFilterParams;
+
+    const socket = getSocket();
+
+    if (socket) {
+      this.listenTo(socket, 'message', this.onSocketMessage);
+    }
+
+    if (this.options.openedOrderModal) {
+      this.bindOrderDetailEvents(this.options.openedOrderModal);
+    }
   }
 
   className() {
@@ -98,6 +111,22 @@ export default class extends baseVw {
     return {
       'click .js-retryFetch': 'onClickRetryFetch',
     };
+  }
+
+  onSocketMessage(e) {
+    if (e.jsonData.message) {
+      // If a chat message comes in for a transaction in our list,
+      // we'll update the unread count.
+      const transaction = this.collection.get(e.jsonData.message.subject);
+
+      if (transaction) {
+        const count = transaction.get('unreadChatMessages');
+        transaction.set({
+          unreadChatMessages: count + 1,
+          read: false,
+        });
+      }
+    }
   }
 
   onClickRetryFetch() {
@@ -118,7 +147,7 @@ export default class extends baseVw {
         this.indexedViews.byOrder[e.view.model.id]
           .forEach(view => {
             view.model
-              .set('state', 'CONFIRMED');
+              .set('state', 'AWAITING_FULFILLMENT');
           });
       })
       .fail((xhr) => {
@@ -148,7 +177,7 @@ export default class extends baseVw {
         this.indexedViews.byOrder[e.view.model.id]
           .forEach(view => {
             view.model
-              .set('state', 'REJECTED');
+              .set('state', 'DECLINED');
           });
       })
       .fail((xhr) => {
@@ -195,17 +224,37 @@ export default class extends baseVw {
   }
 
   onClickRow(e) {
-    const order = new Order({
-      orderId: e.view.model.id,
+    let type = 'sale';
+
+    if (this.type === 'purchases') {
+      type = 'purchase';
+    } else if (this.type === 'cases') {
+      type = 'case';
+    }
+
+    const orderDetail = this.options.openOrder(e.view.model.id, type);
+    this.bindOrderDetailEvents(orderDetail);
+  }
+
+  bindOrderDetailEvents(orderDetail) {
+    this.listenTo(orderDetail.model, 'sync', () => {
+      const transaction = this.collection.get(orderDetail.model.id);
+
+      if (transaction) {
+        transaction.set('read', true);
+      }
     });
 
-    const orderDetail = new OrderDetail({
-      model: order,
-      removeOnClose: true,
-    });
+    this.listenTo(orderDetail, 'convoMarkedAsRead', () => {
+      const transaction = this.collection.get(orderDetail.model.id);
 
-    this.listenTo(orderDetail.model, 'sync', () => (e.view.model.set('read', true)));
-    orderDetail.render().open();
+      if (transaction) {
+        transaction.set({
+          unreadChatMessages: 0,
+          read: true,
+        });
+      }
+    });
   }
 
   onClickNextPage() {
@@ -240,17 +289,18 @@ export default class extends baseVw {
       this.options.getProfiles(profilesToFetch)
         .forEach(profilePromise => {
           profilePromise.done(profile => {
-            const vendorViews = this.indexedViews.byVendor[profile.peerID] || [];
-            const buyerViews = this.indexedViews.byBuyer[profile.peerID] || [];
+            const flatProfile = profile.toJSON();
+            const vendorViews = this.indexedViews.byVendor[flatProfile.peerID] || [];
+            const buyerViews = this.indexedViews.byBuyer[flatProfile.peerID] || [];
 
             vendorViews.forEach(view => {
-              view.setState({ vendorAvatarHashes: profile.avatarHashes });
-              view.model.set({ vendorHandle: profile.handle });
+              view.setState({ vendorAvatarHashes: flatProfile.avatarHashes });
+              view.model.set({ vendorHandle: flatProfile.handle });
             });
 
             buyerViews.forEach(view => {
-              view.setState({ buyerAvatarHashes: profile.avatarHashes });
-              view.model.set({ buyerHandle: profile.handle });
+              view.setState({ buyerAvatarHashes: flatProfile.avatarHashes });
+              view.model.set({ buyerHandle: flatProfile.handle });
             });
           });
         });
@@ -276,7 +326,9 @@ export default class extends baseVw {
         this.indexedViews.byVendor[vendorId] =
           this.indexedViews.byVendor[vendorId] || [];
         this.indexedViews.byVendor[vendorId].push(view);
-      } else if (buyerId) {
+      }
+
+      if (buyerId) {
         this.indexedViews.byBuyer[buyerId] =
           this.indexedViews.byBuyer[buyerId] || [];
         this.indexedViews.byBuyer[buyerId].push(view);
@@ -309,8 +361,12 @@ export default class extends baseVw {
       ...filter,
       // Joining with dashes instead of commas because commas
       // look really bizarre when encode in a query string.
-      states: filter.states.join('-'),
+      states: Array.isArray(filter.states) ? filter.states.join('-') : '',
     };
+
+    if (!queryFilter.states) {
+      delete queryFilter.states;
+    }
 
     if (queryFilter.search === '') {
       delete queryFilter.search;
@@ -341,11 +397,12 @@ export default class extends baseVw {
     const fetchParams = {
       limit: this.transactionsPerPage,
       ...filterParams,
-      sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) !== -1,
+      sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) === -1,
       sortByRead: filterParams.sortBy === 'UNREAD',
       exclude: this.collection.map(md => md.id),
     };
 
+    delete fetchParams.sortBy;
     let havePage = false;
 
     if (this.collection.length > (page - 1) * this.transactionsPerPage) {
