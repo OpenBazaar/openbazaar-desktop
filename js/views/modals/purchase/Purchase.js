@@ -348,14 +348,18 @@ export default class extends BaseModal {
       this.$('.js-receipt').append(this.receipt.render().el);
 
       if (this.coupons) this.coupons.remove();
-      this.coupons = this.createChild(Coupons, {
-        coupons: this.listing.get('coupons'),
-        listingPrice: this.listing.get('item').get('price'),
-      });
+      const couponList = this.listing.get('coupons');
+      if (couponList) {
+        this.coupons = this.createChild(Coupons, {
+          coupons: couponList,
+          listingPrice: this.listing.get('item').get('price'),
+        });
 
-      this.listenTo(this.coupons, 'changeCoupons',
-        (hashes, codes) => this.changeCoupons(hashes, codes));
-      this.$('.js-couponsWrapper').html(this.coupons.render().el);
+        this.listenTo(this.coupons, 'changeCoupons',
+          (hashes, codes) => this.changeCoupons(hashes, codes));
+        this.$('.js-couponsWrapper').html(this.coupons.render().el);
+
+      }
 
       if (this.moderators) this.moderators.remove();
       this.moderators = this.createChild(Moderators, {
