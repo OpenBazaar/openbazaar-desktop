@@ -138,14 +138,15 @@ export default class extends BaseVw {
     const amount = this.model.get('amount');
     const amountBTC = amount ? convertAndFormatCurrency(amount, 'BTC', 'BTC') : 0;
 
+    const btcURL = `bitcoin:${this.model.get('paymentAddress')}?amount=${amount}`;
+
     loadTemplate('modals/purchase/pending.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
           displayCurrency,
           amount,
           amountBTC,
-          qrDataUri: qr(`bitcoin:${this.options.paymentAddress}`,
-            { type: 6, size: 5, level: 'Q' }),
+          qrDataUri: qr(btcURL, { type: 6, size: 5, level: 'Q' }),
           walletIconTmpl,
           ...this.model.toJSON(),
         }));
