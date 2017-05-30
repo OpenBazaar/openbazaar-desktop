@@ -1143,13 +1143,13 @@ export default class extends BaseModal {
 
       Object.keys(this.model.validationError || {})
         .forEach(errKey => {
-          if (errKey.startsWith('listing.coupons[')) {
-            couponErrors[errKey.slice(errKey.indexOf('.') + 1)] =
+          if (errKey.startsWith('coupons[')) {
+            couponErrors[errKey] =
               this.model.validationError[errKey];
           }
         });
 
-      this.couponsView = new Coupons({
+      this.couponsView = this.createChild(Coupons, {
         collection: this.coupons,
         maxCouponCount: this.model.max.couponCount,
         couponErrors,

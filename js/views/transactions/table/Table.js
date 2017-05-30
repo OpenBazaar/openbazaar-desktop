@@ -397,11 +397,12 @@ export default class extends baseVw {
     const fetchParams = {
       limit: this.transactionsPerPage,
       ...filterParams,
-      sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) !== -1,
+      sortByAscending: ['UNREAD', 'DATE_ASC'].indexOf(filterParams.sortBy) === -1,
       sortByRead: filterParams.sortBy === 'UNREAD',
       exclude: this.collection.map(md => md.id),
     };
 
+    delete fetchParams.sortBy;
     let havePage = false;
 
     if (this.collection.length > (page - 1) * this.transactionsPerPage) {
