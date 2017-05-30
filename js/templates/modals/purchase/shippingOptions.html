@@ -1,6 +1,7 @@
 <% if (ob.filteredShipping.length) { %>
   <div class="flexColRows boxList border borderStacked clrP clrBr">
-    <% ob.filteredShipping.forEach((option, i) => { %>
+    <% ob.filteredShipping.forEach((option, i) => {
+       option.services = _.sortBy(option.services, 'price'); %>
       <% option.services.forEach((service, j) => { %>
         <div>
           <div class="btnRadio width100">
@@ -13,7 +14,7 @@
                    name="shippingOption">
             <label for="<%= `${i}${j}` %>" class="flex gutterH pad">
               <div>
-                <div class="tx5 rowSm txB"><%= service.name %></div>
+                <div class="tx5 rowSm txB"><%= option.name %>: <%= service.name %></div>
                 <div class="tx5b clrT2 txUnb">
                   <% const price = ob.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
                   <%= ob.polyT('purchase.serviceDetails', { price, delivery: service.estimatedDelivery }) %>
