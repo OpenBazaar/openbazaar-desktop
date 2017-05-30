@@ -354,11 +354,9 @@ export default class extends BaseModal {
           coupons: couponList,
           listingPrice: this.listing.get('item').get('price'),
         });
-
         this.listenTo(this.coupons, 'changeCoupons',
           (hashes, codes) => this.changeCoupons(hashes, codes));
         this.$('.js-couponsWrapper').html(this.coupons.render().el);
-
       }
 
       if (this.moderators) this.moderators.remove();
