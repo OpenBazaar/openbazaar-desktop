@@ -86,7 +86,7 @@ export default class extends BaseVw {
 
   clickPayFromAlt() {
     const amount = this.model.get('amount');
-    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.payURL}&amp;output=BTC&apiKey=407531b0fa5d84a3c0d335c54d1ae7d5939f05b45aa90cf4d5dcfdca22c4be13f68a24a0d5ce6f1bbc5bd51b3cc0bc8a165254d29af6b8fb377d85287b747d41&amount=${amount}`;
+    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.payURL}&amp;output=BTC&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812&amount=${amount}`;
     const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
     shapeshiftWin.loadURL(shapeshiftURL);
   }
