@@ -1005,6 +1005,7 @@
           "declined": "Declined",
           "refunded": "Refunded",
           "decided": "Decided",
+          "resolved": "Resolved",
           "disputed": "Disputed"
         },
         "heading": "Order Details",

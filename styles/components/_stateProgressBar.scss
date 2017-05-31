@@ -52,7 +52,7 @@ $borderWidth: 1px;
     .stateLabel {
       position: absolute;
       left: 50%;
-      transform: translate(-50%, 205%);
+      transform: translate(-50%, 215%);
     }
 
     .disputeOpenedBadge {
@@ -94,7 +94,7 @@ $borderWidth: 1px;
 
       .stateLabel {
         left: 0;
-        transform: translate(-$circleSize / 2, 205%);
+        transform: translate(-$circleSize / 2, 215%);
       }
 
       .stateCircleBorderFillIn {
@@ -113,7 +113,7 @@ $borderWidth: 1px;
       .stateLabel {
         left: auto;
         right: 0;
-        transform: translate($circleSize / 2, 205%);
+        transform: translate($circleSize / 2, 215%);
       }
 
       .stateCircleBorderFillIn {

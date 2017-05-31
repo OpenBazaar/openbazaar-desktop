@@ -26,7 +26,9 @@ export default class extends BaseVw {
     if (!this.isCase()) {
       contract = this.model.get('contract');
     } else {
-      contract = this.model.get(buyerOpened ? 'buyerContract' : 'vendorContract');
+      contract = this.model.get('buyerOpened') ?
+        this.model.get('buyerContract') :
+        this.model.get('vendorContract');
     }
 
     this.contract = contract;
@@ -64,6 +66,9 @@ export default class extends BaseVw {
     this.options = opts || {};
     this.vendor = opts.vendor;
     this.moderator = opts.moderator;
+
+    this.listenTo(this.model, 'change:state',
+      () => this.stateProgressBar.setState(this.progressBarState));
   }
 
   className() {
@@ -101,27 +106,55 @@ export default class extends BaseVw {
     const orderState = this.model.get('state');
     const state = {
       states: [
-        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.paid'),
-        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.accepted'),
-        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.fulfilled'),
-        app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.complete'),
+        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.paid'),
+        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.accepted'),
+        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.fulfilled'),
+        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete'),
       ],
     };
 
+    // TODO: add in completed check with determination of whether a dispute
+    // had been opened.
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED') {
       if (!this.isCase()) {
         state.states = [
-          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.disputed'),
-          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.decided'),
-          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.resolved'),
-          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.complete'),
+          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
+          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.decided'),
+          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.resolved'),
+          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete'),
         ];
+
+        switch (orderState) {
+          case 'DECIDED':
+            state.currentState = 1;
+            state.disputeState = 0;
+            break;
+          case 'RESOLVED':
+            state.currentState = 2;
+            state.disputeState = 0;
+            break;
+          case 'COMPLETE':
+            state.currentState = 3;
+            state.disputeState = 0;
+            break;
+          default:
+            state.currentState = 1;
+            state.disputeState = 1;
+        }
       } else {
         state.states = [
-          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.disputed'),
-          app.polyglot.t('orderDetail.discussionTab.summaryTab.orderDetails.complete'),
+          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
+          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete'),
         ];
+
+        switch (orderState) {
+          case 'RESOLVED':
+            state.currentState = 2;
+            break;
+          default:
+            state.currentState = 1;
+        }
       }
     } else {
       switch (orderState) {
@@ -160,10 +193,7 @@ export default class extends BaseVw {
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
       this.stateProgressBar = this.createChild(StateProgressBar, {
-        initialState: {
-          states: ['Paid', 'Accepted', 'Fulfilled', 'Complete'],
-          currentState: 1,
-        },
+        initialState: this.progressBarState,
       });
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
 
