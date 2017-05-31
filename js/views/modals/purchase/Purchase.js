@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
@@ -14,7 +15,7 @@ import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
-import Pending from './Pending';
+import Payment from './Payment';
 import Complete from './Complete';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -387,7 +388,7 @@ export default class extends BaseModal {
       // remove old view if any on render
       if (this.pending) this.pending.remove();
       // add the pending view
-      this.pending = this.createChild(Pending, {
+      this.pending = this.createChild(Payment, {
         model: this.purchase,
       });
       this.listenTo(this.pending, 'walletPaymentComplete', (data => this.completePurchase(data)));
