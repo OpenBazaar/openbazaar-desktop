@@ -182,14 +182,39 @@ export default class extends BaseVw {
     super.remove();
   }
 
+  get balanceRemaining() {
+    if (this.isCase()) {
+      throw new Error('Cases do not have any transaction data.');
+    }
+
+    let balanceRemaining = 0;
+
+    if (this.model.get('state') === 'AWAITING_PAYMENT') {
+      const orderPrice = this.contract.get('vendorListings')
+        .at(0)
+        .get('item')
+        .get('price');
+      const totalPaid = this.model.get('transactions')
+        .reduce((total, transaction) => (total + transaction.value), 0);
+      balanceRemaining = orderPrice - totalPaid;
+    }
+
+    return balanceRemaining;
+  }
+
   render() {
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
       this.$el.html(t({
         id: this.model.id,
+        balanceRemaining: this.balanceRemaining,
         ...this.model.toJSON(),
       }));
 
       this._$copiedToClipboard = null;
+
+      if (!this.balanceRemaining) {
+        this.$('.js-payForOrderWrap').addClass('hide');
+      }
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
       this.stateProgressBar = this.createChild(StateProgressBar, {

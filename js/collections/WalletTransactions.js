@@ -16,6 +16,8 @@ export default class extends Collection {
   }
 
   parse(response) {
+    console.log('billy beamer');
+    window.billy = response;
     response.transactions = response.transactions || [];
     return response.transactions;
   }

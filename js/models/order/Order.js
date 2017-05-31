@@ -1,5 +1,6 @@
 import BaseModel from '../BaseModel';
 import Contract from './Contract';
+import Transactions from '../../collections/order/Transactions';
 import app from '../../app';
 
 export default class extends BaseModel {
@@ -30,6 +31,7 @@ export default class extends BaseModel {
   get nested() {
     return {
       contract: Contract,
+      transactions: Transactions,
     };
   }
 

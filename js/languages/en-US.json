@@ -1017,6 +1017,9 @@
         "moderatorHeading": "Moderator",
         "copyAddress": "Copy",
         "viewOnMap": "View on map"
+      },
+      "payForOrder": {
+        "heading": "Pay for your order"
       }
     }
   },
