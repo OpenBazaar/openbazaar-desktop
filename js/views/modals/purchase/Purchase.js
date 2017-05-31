@@ -39,11 +39,16 @@ export default class extends BaseModal {
     this.vendor = options.vendor;
     const shippingOptions = this.listing.get('shippingOptions');
     const shippable = !!(shippingOptions && shippingOptions.length);
+
+    const moderatorIDs = this.listing.get('moderators') || [];
+    const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
+    this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
+
     this.order = new Order(
       {},
       {
         shippable,
-        moderated: !!this.listing.moderators && this.listing.moderators.length,
+        moderated: !!this.moderatorIDs && this.moderatorIDs.length,
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
@@ -362,7 +367,7 @@ export default class extends BaseModal {
 
       if (this.moderators) this.moderators.remove();
       this.moderators = this.createChild(Moderators, {
-        moderatorIDs: this.listing.get('moderators') || [],
+        moderatorIDs: this.moderatorIDs,
         fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
         fetchErrorMsg: app.polyglot.t('purchase.errors.moderatorsMsg'),
         purchase: true,
