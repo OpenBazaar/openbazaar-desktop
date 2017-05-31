@@ -3,6 +3,12 @@ import app from '../../app';
 import Items from '../../collections/purchase/Items';
 
 export default class extends BaseModel {
+  constructor(attrs, options = {}) {
+    super(attrs, options);
+    this.shippable = options.shippable || false;
+    this.moderated = options.moderated || false;
+  }
+
   defaults() {
     return {
       // if the listing is not physical, the address and shipping attributes should be blank
@@ -15,6 +21,8 @@ export default class extends BaseModel {
       addressNotes: '',
       moderator: '',
       items: new Items(),
+      memo: '',
+      alternateContactInfo: '',
     };
   }
 
@@ -46,6 +54,14 @@ export default class extends BaseModel {
 
     if (!attrs.items.length) {
       addError('items.quantity', app.polyglot.t('orderModelErrors.noItems'));
+    }
+
+    if (this.shippable && !attrs.shipTo && !attrs.countryCode) {
+      addError('shippable', app.polyglot.t('orderModelErrors.missingAddress'));
+    }
+
+    if (this.moderated && !attrs.moderator && attrs.moderator !== undefined) {
+      addError('moderated', app.polyglot.t('orderModelErrors.needsModerator'));
     }
 
     if (Object.keys(errObj).length) return errObj;

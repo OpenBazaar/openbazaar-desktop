@@ -119,6 +119,14 @@ export default class extends BaseModel {
       response.colors = this.standardizeColorFields(response.colors);
     }
 
+    if (response.avatarHashes === null) {
+      delete response.avatarHashes;
+    }
+
+    if (response.headerHashes === null) {
+      delete response.headerHashes;
+    }
+
     return response;
   }
 
@@ -139,6 +147,22 @@ export default class extends BaseModel {
         delete options.attrs.stats.ratingCount;
         delete options.attrs.stats.averageRating;
       }
+
+      const images = [options.attrs.avatarHashes, options.attrs.headerHashes];
+      images.forEach(imageHashes => {
+        if (typeof imageHashes === 'object') {
+          // If the image models are still in their default state (all images hashes as empty
+          // strings), we won't send over the image to the server, since it will fail validation.
+          if (Object.keys(imageHashes).filter(key => imageHashes[key] === '').length ===
+            Object.keys(imageHashes).length) {
+            if (imageHashes === options.attrs.avatarHashes) {
+              delete options.attrs.avatarHashes;
+            } else {
+              delete options.attrs.headerHashes;
+            }
+          }
+        }
+      });
 
       if (method !== 'delete') {
         // convert the amount field
