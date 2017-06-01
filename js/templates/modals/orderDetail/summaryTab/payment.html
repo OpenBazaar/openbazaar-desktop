@@ -73,22 +73,29 @@
         </div>
       </div>
     </div>
-    <% if (ob.showActionButtons) { %>
+    <% if (ob.showRefundButton || ob.showAcceptButton) { %>
     <div class="col">
       <div class="flexVCent gutterHLg">
-        <% if (ob.refundOrderInProgress) { %>
-          <span class="posR">
-            <% // including invisible cancel link to properly space the spinner %>
-            <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
-            <%= ob.spinner({ className: 'spinnerSm center' }) %>
-          </span>
+        <% if (ob.showRefundButton) { %>
+          <% if (ob.refundOrderInProgress) { %>
+            <span class="posR">
+              <% // including invisible cancel link to properly space the spinner %>
+              <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+              <%= ob.spinner({ className: 'spinnerSm center' }) %>
+            </span>
+          <% } else { %>
+            <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+          <%  } %>
+        <% } %>
+        <% if (ob.showAcceptButton) { %>
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
+            btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
+          }) %>
         <% } else { %>
-          <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
-        <%  } %>
-        <%= ob.processingButton({
-          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
-          btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
-        }) %>
+          <% // invisible button to give a proper height so the refund is vertically centered if alone %>
+          <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b invisible" style="width: 1px;padding: 0"><%= ob.polyT('orderDetail.summaryTab.payment.acceptBtn') %></a>
+        <% } %>
       </div>
     </div>
     <% } %>

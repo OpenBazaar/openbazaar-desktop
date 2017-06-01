@@ -26,6 +26,11 @@ export default class extends baseVw {
         'by the current user.');
     }
 
+    if (typeof options.isOrderConfirmable !== 'function') {
+      throw new Error('Please provide a function that returns whether this order can be ' +
+        'confirmed by the current user.');
+    }
+
     const isValidParticipantObject = (participant) => {
       let isValid = true;
       if (!participant.id) isValid = false;
@@ -86,16 +91,14 @@ export default class extends baseVw {
       const paidSoFar = this.collection.models
         .slice(0, index + 1)
         .reduce((total, model) => total + model.get('value'), 0);
-      const isMostRecentPayment = index === 0;
-      console.log(index);
-      console.log(this.options.isOrderRefundable());
-      console.log('===========');
+      const isMostRecentPayment = index === this.collection.length - 1;
       const paymentView = this.createPayment(payment, {
         initialState: {
           paymentNumber: index + 1,
           balanceRemaining,
           amountShort: this.options.orderPrice - paidSoFar,
-          showActionButtons: isMostRecentPayment && this.options.isOrderRefundable(),
+          showRefundButton: isMostRecentPayment && this.options.isOrderRefundable(),
+          showAcceptButton: isMostRecentPayment && this.options.isOrderConfirmable(),
         },
       });
       $(paymentsContainer).prepend(paymentView.render().el);

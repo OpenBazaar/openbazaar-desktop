@@ -12,13 +12,12 @@
 
 <div class="js-acceptedWrap rowLg hide"></div>
 <div class="js-paymentsWrap"></div>
-<% if (!ob.isCase) { %>
+<% if (ob.shouldShowPayForOrderSection) { %>
 <div class="js-payForOrderWrap rowLg">
   <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.payForOrder.heading') %></h2>
   <div class="border clrBr padMd">
     <p class="clrTErr">Section under construction</p>
-    <% const paymentAddress = ob.contract.buyerOrder.payment.address %>
-    <p><%= paymentAddress ? `<span class="txB">${paymentAddress}</span>` : 'Your order' %> needs to be funded with <span class="txB"><%= ob.upToFixed(ob.balanceRemaining, 8) %> BTC</span>.</p>
+    <p><span class="txB"><%= ob.paymentAddress %></span> needs to be funded with <span class="txB"><%= ob.upToFixed(ob.balanceRemaining, 8) %> BTC</span>.</p>
   </div>
 </div>
 <% } %>

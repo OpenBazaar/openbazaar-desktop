@@ -19,7 +19,8 @@ export default class extends BaseVw {
       balanceRemaining: 0,
       payee: '',
       userCurrency: app.settings.get('localCurrency') || 'BTC',
-      showActionButtons: false,
+      showRefundButton: false,
+      showAcceptButton: false,
       ...options.initialState || {},
     };
   }

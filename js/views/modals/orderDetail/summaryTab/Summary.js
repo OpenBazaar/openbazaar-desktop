@@ -68,18 +68,34 @@ export default class extends BaseVw {
     this.vendor = opts.vendor;
     this.moderator = opts.moderator;
 
-    this.listenTo(this.model, 'change:state',
-      () => this.stateProgressBar.setState(this.progressBarState));
+    this.listenTo(this.model, 'change:state', () => {
+      this.stateProgressBar.setState(this.progressBarState);
+      if (this.payments) this.payments.render();
+    });
+
+    if (!this.isCase()) {
+      this.listenTo(this.model.get('transactions'), 'update', () => {
+        this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
+      });
+    }
 
     const serverSocket = getSocket();
 
     if (serverSocket) {
       serverSocket.on('message', e => {
-        if (e.jsonData.notification && e.jsonData.notification.payment &&
-          e.jsonData.notification.payment.orderId === this.model.id) {
-          // A payment has come in for the order. Let's refetch our model so we have the
-          // data for the new transaction and can show it in the UI.
-          this.model.fetch();
+        if (e.jsonData.notification) {
+          if (e.jsonData.notification.payment &&
+            e.jsonData.notification.payment.orderId === this.model.id) {
+            // A payment has come in for the order. Let's refetch our model so we have the
+            // data for the new transaction and can show it in the UI. As of now, the buyer
+            // only gets these notifications and this is the only way to be aware of
+            // partial payments in realtime.
+            this.model.fetch();
+          } else if (e.jsonData.notification.order &&
+            e.jsonData.notification.order.orderId === this.model.id) {
+            // A notification the vendor will get when an order has been fully funded
+            this.model.fetch();
+          }
         }
       });
     }
@@ -227,21 +243,43 @@ export default class extends BaseVw {
     return isRefundable;
   }
 
+  shouldShowPayForOrderSection() {
+    let bool = false;
+
+    if (!this.isCase() && this.vendor.id !== app.profile.id &&
+      this.balanceRemaining > 0) {
+      bool = true;
+    }
+
+    return bool;
+  }
+
+  get paymentAddress() {
+    const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
+
+    return vendorOrderConfirmation && vendorOrderConfirmation.paymentAddress ||
+      this.contract.get('buyerOrder').payment.address;
+  }
+
   remove() {
     super.remove();
   }
 
   render() {
-    const balanceRemaining = this.getBalanceRemaining();
+    const templateData = {
+      id: this.model.id,
+      shouldShowPayForOrderSection: this.shouldShowPayForOrderSection(),
+      ...this.model.toJSON(),
+    };
+
+
+    if (this.shouldShowPayForOrderSection) {
+      templateData.balanceRemaining = this.getBalanceRemaining();
+      templateData.paymentAddress = this.paymentAddress;
+    }
 
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
-      this.$el.html(t({
-        id: this.model.id,
-        balanceRemaining,
-        isCase: this.isCase(),
-        ...this.model.toJSON(),
-      }));
-
+      this.$el.html(t(templateData));
       this._$copiedToClipboard = null;
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
@@ -258,12 +296,10 @@ export default class extends BaseVw {
           getOrderBalanceRemaining: this.getBalanceRemaining.bind(this),
           vendor: this.vendor,
           isOrderRefundable: this.isOrderRefundable.bind(this),
+          isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
+            this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });
         this.$('.js-paymentsWrap').html(this.payments.render().el);
-      }
-
-      if (!balanceRemaining) {
-        this.$('.js-payForOrderWrap').addClass('hide');
       }
 
       if (this.acceptedEvent) this.acceptedEvent.remove();
