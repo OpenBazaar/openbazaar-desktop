@@ -900,7 +900,7 @@
       "orderError": "Your order can not be processed due to the following errors.",
       "ownIDTitle": "This is Your Own Listing",
       "ownIDMsg": "You cannot purchase a listing that belongs to you.",
-      "paymentFaied": "The Payment Could Not Be Completed"
+      "paymentFailed": "The Payment Could Not Be Completed"
     }
   },
   "moderators": {
