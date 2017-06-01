@@ -16,7 +16,7 @@ export default class extends BaseVw {
     this._state = {
       paymentNumber: 1,
       amountShort: 0,
-      showAmountShort: false,
+      balanceRemaining: 0,
       payee: '',
       userCurrency: app.settings.get('localCurrency') || 'BTC',
       showActionButtons: false,
@@ -25,7 +25,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'payment';
+    return 'payment rowLg';
   }
 
   getState() {

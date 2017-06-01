@@ -2,10 +2,11 @@ import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
+import { getSocket } from '../../../../utils/serverConnect';
 import { Model } from 'backbone';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
-import Payment from './Payment';
+import Payments from './Payments';
 import AcceptedEvent from './AcceptedEvent';
 import OrderDetails from './OrderDetails';
 
@@ -69,6 +70,19 @@ export default class extends BaseVw {
 
     this.listenTo(this.model, 'change:state',
       () => this.stateProgressBar.setState(this.progressBarState));
+
+    const serverSocket = getSocket();
+
+    if (serverSocket) {
+      serverSocket.on('message', e => {
+        if (e.jsonData.notification && e.jsonData.notification.payment &&
+          e.jsonData.notification.payment.orderId === this.model.id) {
+          // A payment has come in for the order. Let's refetch our model so we have the
+          // data for the new transaction and can show it in the UI.
+          this.model.fetch();
+        }
+      });
+    }
   }
 
   className() {
@@ -178,11 +192,11 @@ export default class extends BaseVw {
     return state;
   }
 
-  remove() {
-    super.remove();
+  get orderPriceBtc() {
+    return this.contract.get('buyerOrder').payment.amount;
   }
 
-  get balanceRemaining() {
+  getBalanceRemaining() {
     if (this.isCase()) {
       throw new Error('Cases do not have any transaction data.');
     }
@@ -190,31 +204,45 @@ export default class extends BaseVw {
     let balanceRemaining = 0;
 
     if (this.model.get('state') === 'AWAITING_PAYMENT') {
-      const orderPrice = this.contract.get('vendorListings')
-        .at(0)
-        .get('item')
-        .get('price');
       const totalPaid = this.model.get('transactions')
-        .reduce((total, transaction) => (total + transaction.value), 0);
-      balanceRemaining = orderPrice - totalPaid;
+        .reduce((total, transaction) => total + transaction.get('value'), 0);
+      balanceRemaining = this.orderPriceBtc - totalPaid;
     }
 
     return balanceRemaining;
   }
 
+  /**
+   * Returns a boolean indicating whether this order in its current state
+   * is refundable by the current user.
+   */
+  isOrderRefundable() {
+    let isRefundable = false;
+
+    if (!this.isCase() && this.vendor.id === app.profile.id) {
+      const refundableStates = ['AWAITING_FULFILLMENT', 'PARTIALLY_FULFILLED', 'DISPUTED'];
+      if (refundableStates.indexOf(this.model.get('state') !== -1)) isRefundable = true;
+    }
+
+    return isRefundable;
+  }
+
+  remove() {
+    super.remove();
+  }
+
   render() {
+    const balanceRemaining = this.getBalanceRemaining();
+
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
       this.$el.html(t({
         id: this.model.id,
-        balanceRemaining: this.balanceRemaining,
+        balanceRemaining,
+        isCase: this.isCase(),
         ...this.model.toJSON(),
       }));
 
       this._$copiedToClipboard = null;
-
-      if (!this.balanceRemaining) {
-        this.$('.js-payForOrderWrap').addClass('hide');
-      }
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
       this.stateProgressBar = this.createChild(StateProgressBar, {
@@ -222,39 +250,21 @@ export default class extends BaseVw {
       });
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
 
-      if (this.payment) this.payment.remove();
-      this.payment = this.createChild(Payment, {
-        model: new Model({
-          txid: '6d2cf390834a5578fdfe2bd2d2469992cce7d7c6656122ff78b968f62e2c41a4',
-          value: 0.000623,
-          confirmations: 3537,
-        }),
-        initialState: {
-          paymentNumber: 2,
-          amountShort: 0,
-          showAmountShort: false,
-          payee: app.profile.get('name'),
-          showActionButtons: false,
-        },
-      });
-      this.$('.js-paymentWrap').html(this.payment.render().el);
+      if (!this.isCase()) {
+        if (this.payments) this.payments.remove();
+        this.payments = this.createChild(Payments, {
+          collection: this.model.get('transactions'),
+          orderPrice: this.orderPriceBtc,
+          getOrderBalanceRemaining: this.getBalanceRemaining.bind(this),
+          vendor: this.vendor,
+          isOrderRefundable: this.isOrderRefundable.bind(this),
+        });
+        this.$('.js-paymentsWrap').html(this.payments.render().el);
+      }
 
-      if (this.payment2) this.payment2.remove();
-      this.payment2 = this.createChild(Payment, {
-        model: new Model({
-          txid: '6d2cf390834a5578fdfe2bd2d2469992cce7d7c6656122ff78b968f62e2c41a4',
-          value: 0.00583,
-          confirmations: 4967856,
-        }),
-        initialState: {
-          paymentNumber: 1,
-          amountShort: 0.00032,
-          showAmountShort: true,
-          payee: app.profile.get('name'),
-          showActionButtons: true,
-        },
-      });
-      this.$('.js-paymentWrap2').html(this.payment2.render().el);
+      if (!balanceRemaining) {
+        this.$('.js-payForOrderWrap').addClass('hide');
+      }
 
       if (this.acceptedEvent) this.acceptedEvent.remove();
       this.acceptedEvent = this.createChild(AcceptedEvent, {

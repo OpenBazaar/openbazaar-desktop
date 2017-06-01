@@ -1,5 +1,5 @@
 import BaseModel from '../BaseModel';
-import Listings from '../../collections/OrderListings';
+import Listings from '../../collections/order/Listings';
 
 export default class extends BaseModel {
   get nested() {

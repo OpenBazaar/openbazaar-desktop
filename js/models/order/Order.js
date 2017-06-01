@@ -1,3 +1,4 @@
+import { integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Contract from './Contract';
 import Transactions from '../../collections/order/Transactions';
@@ -40,6 +41,10 @@ export default class extends BaseModel {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
       response.rawContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
+
+      // convert price fields
+      response.contract.buyerOrder.payment.amount =
+        integerToDecimal(response.contract.buyerOrder.payment.amount, true);
     }
 
     return response;

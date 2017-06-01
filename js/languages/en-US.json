@@ -978,7 +978,6 @@
         "paymentHeading": "Payment Details #%{paymentNumber}",
         "amountTo": "%{fiatBtcPairing} to %{payeeName}",
         "paidInFull": "Paid In Full",
-        "underpaid": "Underpaid",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "refundBtn": "Refund",
         "acceptBtn": "Accept",
