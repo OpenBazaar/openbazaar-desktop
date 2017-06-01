@@ -377,3 +377,9 @@ input[type=range][class~="clrS"] {
     }
   }
 }
+
+.renderjson {
+  a.disclosure {
+    color: $text;
+  }
+}

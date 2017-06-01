@@ -247,7 +247,7 @@ export default class extends baseVw {
     return {
       search: '',
       sortBy: 'UNREAD',
-      states: [5, 6, 7],
+      states: [10, 11, 12],
     };
   }
 
@@ -258,21 +258,21 @@ export default class extends baseVw {
         text: app.polyglot.t('transactions.filters.disputeOpen'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
         className: 'filter',
-        targetState: [5],
+        targetState: [10],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
         className: 'filter',
-        targetState: [6],
+        targetState: [11],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
         className: 'filter',
-        targetState: [7],
+        targetState: [12],
       },
     ];
   }

@@ -217,4 +217,21 @@
       }
     }    
   }
+
+  .contractTab {
+    .backToSummaryWrap {
+      position: absolute;
+      max-width: 250px;
+      left: $padLg;
+    }
+
+    .renderjson {
+      padding: $pad;
+      overflow: auto;
+
+      .key {
+        font-weight: bold;
+      }
+    }
+  }
 }
