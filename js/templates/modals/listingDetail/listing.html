@@ -73,8 +73,8 @@
               <%= ob.polyT('listingDetail.buyNow') %>
             </button>
             <div class="flexHCent gutterH">
-              <!--<div class="ion-star"> X.X</div>--><!-- placeholder until reviews exist -->
-              <!--<div class="ion-chatbubble"> X.X</div>--><!-- placeholder until reviews exist -->
+              <div class="tx6 js-rating"></div>
+              <div class="tx6 js-ratingTotal"></div>
               <% if(ob.shipsFreeToMe) { %>
               <div class="txCtr">
                 <a class="clrE1 clrTOnEmph phraseBox txNoUnd js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
@@ -130,12 +130,10 @@
     </div>
   <% } %>
 
-<!-- Reviews and attachments are not yet available -->
+<div class="js-reviews"></div>
+
+<!-- Attachments are not yet available -->
 <!--
-  <div class="contentBox padLg clrP clrBr clrSh3">
-    <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
-    Placeholder for Reviews
-  </div>
 
   <div class="contentBox padLg clrP clrBr clrSh3">
     <h2 class="txUnb"><%= ob.polyT('listingDetail.attachments') %></h2>

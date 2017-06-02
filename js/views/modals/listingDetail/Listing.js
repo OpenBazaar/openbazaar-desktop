@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import twemoji from 'twemoji';
 import '../../../lib/select2';
 import is from 'is_js';
 import '../../../utils/velocity';
@@ -9,6 +10,7 @@ import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import Purchase from '../purchase/Purchase';
+import Reviews from './Reviews';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
@@ -86,6 +88,10 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
+    // get the ratings data, if any
+    $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
+      .always(data => this.onRatings(data));
+
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
   }
@@ -115,6 +121,27 @@ export default class extends BaseModal {
 
   onDocumentClick() {
     this.$deleteConfirmedBox.addClass('hide');
+  }
+
+  onRatings(data = {}) {
+    const ratingText = twemoji.parse(`⭐ ${data.average || 0}`,
+      icon => (`../imgs/emojis/72X72/${icon}.png`));
+
+    const ratingTotalText = twemoji.parse(`💬 ${data.count || 0}`,
+      icon => (`../imgs/emojis/72X72/${icon}.png`));
+
+    this.$rating.html(ratingText);
+    this.$ratingTotal.html(ratingTotalText);
+
+    if (this.reviews) this.reviews.remove();
+
+    if (data.hasOwnProperty('average')) {
+      this.reviews = this.createChild(Reviews, {
+        async: true,
+        ...data,
+      });
+      this.$reviews.append(this.reviews.render().$el);
+    }
   }
 
   onClickEditListing() {
@@ -419,6 +446,16 @@ export default class extends BaseModal {
       (this._$deleteConfirmedBox = this.$('.js-deleteConfirmedBox'));
   }
 
+  get $rating() {
+    return this._$rating ||
+      (this._$rating = this.$('.js-rating'));
+  }
+
+  get $ratingTotal() {
+    return this._$ratingTotal ||
+      (this._$ratingTotal = this.$('.js-ratingTotal'));
+  }
+
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.purchaseModal) this.purchaseModal.remove();
@@ -457,6 +494,8 @@ export default class extends BaseModal {
       this._$shippingSection = null;
       this._$storeOwnerAvatar = null;
       this._$deleteConfirmedBox = null;
+      this._$rating = null;
+      this._$ratingTotal = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
@@ -471,6 +510,7 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
+      this.$reviews = this.$('.js-reviews');
     });
 
     return this;
