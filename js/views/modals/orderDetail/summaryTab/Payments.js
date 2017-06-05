@@ -5,7 +5,6 @@ import Payment from './Payment';
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
-      storeName: '',
       ...options,
     };
 
@@ -49,6 +48,14 @@ export default class extends baseVw {
 
     if (!isValidParticipantObject(options.vendor)) {
       throw new Error(getInvalidParticpantError('vendor'));
+    }
+
+    if (!opts.buyer) {
+      throw new Error('Please provide a buyer object.');
+    }
+
+    if (!isValidParticipantObject(options.buyer)) {
+      throw new Error(getInvalidParticpantError('buyer'));
     }
 
     super(opts);
@@ -109,6 +116,13 @@ export default class extends baseVw {
         .done(profile => {
           this.payments.forEach(payment => payment.setState({ payee: profile.get('name') || '' }));
         });
+
+      // Any refunds will need the buyer name.
+      // this.collection.models
+      //   .filter(payment => payment.get('value') < 0).length)
+        
+
+      // }
     }
 
     this.$el.empty()

@@ -295,6 +295,7 @@ export default class extends BaseVw {
           orderPrice: this.orderPriceBtc,
           getOrderBalanceRemaining: this.getBalanceRemaining.bind(this),
           vendor: this.vendor,
+          buyer: this.buyer,
           isOrderRefundable: this.isOrderRefundable.bind(this),
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
