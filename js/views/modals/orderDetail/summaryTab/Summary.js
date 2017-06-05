@@ -4,6 +4,7 @@ import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import { Model } from 'backbone';
+import Transactions from '../../../../collections/Transactions';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
@@ -68,16 +69,18 @@ export default class extends BaseVw {
     this.vendor = opts.vendor;
     this.moderator = opts.moderator;
 
-    this.listenTo(this.model, 'change:state', () => {
-      this.stateProgressBar.setState(this.progressBarState);
-      if (this.payments) this.payments.render();
-    });
+    // this.listenTo(this.model, 'change:state', () => {
+    //   this.stateProgressBar.setState(this.progressBarState);
+    //   if (this.payments) this.payments.render();
+    // });
 
-    if (!this.isCase()) {
-      this.listenTo(this.model.get('transactions'), 'update', () => {
-        this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
-      });
-    }
+    // if (!this.isCase()) {
+    //   this.listenTo(this.model.get('transactions'), 'update', () => {
+    //     this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
+    //   });
+    // }
+
+    this.listenTo(this.model, 'change', () => this.render());
 
     const serverSocket = getSocket();
 
@@ -186,6 +189,14 @@ export default class extends BaseVw {
             state.currentState = 1;
         }
       }
+    } else if (orderState === 'DECLINED' || orderState === 'CANCELED' ||
+      orderState === 'REFUNDED') {
+      state.states = [
+        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.paid'),
+        app.polyglot.t(
+          `orderDetail.summaryTab.orderDetails.progressBarStates.${orderState.toLowerCase()}`),
+      ];
+      state.currentState = 2;
     } else {
       switch (orderState) {
         case 'PENDING':
@@ -290,10 +301,18 @@ export default class extends BaseVw {
 
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();
+        // Filter out any negative payments (money moving from the multisig to the vendor)
+        // other than a refund (which would be the last negative payment when the order
+        // state is CANCELED or REFUNDED).
+        const collection = new Transactions(
+          this.model.get('transactions')
+            .filter((payment, index) => payment.get('value') > 0 || index === 0)
+        );
+
         this.payments = this.createChild(Payments, {
-          collection: this.model.get('transactions'),
+          collection,
           orderPrice: this.orderPriceBtc,
-          getOrderBalanceRemaining: this.getBalanceRemaining.bind(this),
+          // getOrderBalanceRemaining: this.getBalanceRemaining.bind(this),
           vendor: this.vendor,
           buyer: this.buyer,
           isOrderRefundable: this.isOrderRefundable.bind(this),
