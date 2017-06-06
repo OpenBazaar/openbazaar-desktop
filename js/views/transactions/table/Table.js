@@ -5,9 +5,17 @@
 import app from '../../../app';
 import $ from 'jquery';
 import _ from 'underscore';
-import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { getContentFrame } from '../../../utils/selectors';
 import { getSocket } from '../../../utils/serverConnect';
+import {
+  acceptingOrder,
+  acceptOrder,
+  rejectingOrder,
+  rejectOrder,
+  cancelingOrder,
+  cancelOrder,
+  events as orderEvents,
+} from '../../../utils/order';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import Row from './Row';
@@ -28,42 +36,6 @@ export default class extends baseVw {
 
     if (types.indexOf(opts.type) === -1) {
       throw new Error('Please provide a valid type.');
-    }
-
-    if (typeof opts.acceptingOrder !== 'function') {
-      // The function should accept an orderId and return a promise if it
-      // is in the process of being accepted, otherwise false.
-      throw new Error('Please provide a function to determine if a given order is in the process ' +
-        'of being accepted.');
-    }
-
-    if (typeof opts.acceptOrder !== 'function') {
-      // The function should accept an orderId and return a promise.
-      throw new Error('Please provide a function to accept an order.');
-    }
-
-    if (typeof opts.rejectingOrder !== 'function') {
-      // The function should accept an orderId and return a promise if it
-      // is in the process of being rejected, otherwise false.
-      throw new Error('Please provide a function to determine if a given order is in the process ' +
-        'of being rejected.');
-    }
-
-    if (typeof opts.rejectOrder !== 'function') {
-      // The function should accept an orderId and return a promise.
-      throw new Error('Please provide a function to reject an order.');
-    }
-
-    if (typeof opts.cancelingOrder !== 'function') {
-      // The function should accept an orderId and return a promise if it
-      // is in the process of being canceled, otherwise false.
-      throw new Error('Please provide a function to determine if a given order is in the process ' +
-        'of being canceled.');
-    }
-
-    if (typeof opts.cancelOrder !== 'function') {
-      // The function should accept an orderId and return a promise.
-      throw new Error('Please provide a function to cancel an order.');
     }
 
     if (typeof opts.getProfiles !== 'function') {
@@ -101,6 +73,19 @@ export default class extends baseVw {
     if (this.options.openedOrderModal) {
       this.bindOrderDetailEvents(this.options.openedOrderModal);
     }
+
+    this.listenTo(orderEvents, 'rejectingOrder', this.onRejectingOrder);
+    this.listenTo(orderEvents, 'rejectOrderComplete, rejectOrderFail',
+      this.onRejectOrderAlways);
+    this.listenTo(orderEvents, 'rejectOrderComplete', this.onRejectOrderComplete);
+    this.listenTo(orderEvents, 'acceptingOrder', this.onAcceptingOrder);
+    this.listenTo(orderEvents, 'acceptOrderComplete, acceptOrderFail',
+      this.onAcceptOrderAlways);
+    this.listenTo(orderEvents, 'acceptOrderComplete', this.onAcceptOrderComplete);
+    this.listenTo(orderEvents, 'cancelingOrder', this.onCancelingOrder);
+    this.listenTo(orderEvents, 'cancelOrderComplete, cancelOrderFail',
+      this.onCancelOrderAlways);
+    this.listenTo(orderEvents, 'cancelOrderComplete', this.onCancelOrderComplete);
   }
 
   className() {
@@ -133,94 +118,94 @@ export default class extends baseVw {
     this.fetchTransactions();
   }
 
-  onClickAcceptOrder(e) {
-    this.options.acceptOrder(e.view.model.id)
-      .always(() => {
-        this.indexedViews.byOrder[e.view.model.id]
-          .forEach(view => {
-            view.setState({
-              acceptOrderInProgress: false,
-            });
-          });
-      })
-      .done(() => {
-        this.indexedViews.byOrder[e.view.model.id]
-          .forEach(view => {
-            view.model
-              .set('state', 'AWAITING_FULFILLMENT');
-          });
-      })
-      .fail((xhr) => {
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('transactions.sales.failedAcceptHeading'),
-          failReason
-        );
-      });
-
-    e.view.setState({
-      acceptOrderInProgress: true,
-    });
+  onClickRejectOrder(e) {
+    rejectOrder(e.view.model.id);
   }
 
-  onClickRejectOrder(e) {
-    this.options.rejectOrder(e.view.model.id)
-      .always(() => {
-        this.indexedViews.byOrder[e.view.model.id]
-          .forEach(view => {
-            view.setState({
-              rejectOrderInProgress: false,
-            });
-          });
-      })
-      .done(() => {
-        this.indexedViews.byOrder[e.view.model.id]
-          .forEach(view => {
-            view.model
-              .set('state', 'DECLINED');
-          });
-      })
-      .fail((xhr) => {
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('transactions.sales.failedRejectHeading'),
-          failReason
-        );
+  onRejectingOrder(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.setState({
+          rejectOrderInProgress: true,
+        });
       });
+  }
 
-    e.view.setState({
-      rejectOrderInProgress: true,
-    });
+  onRejectOrderAlways(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.setState({
+          rejectOrderInProgress: false,
+        });
+      });
+  }
+
+  onRejectOrderComplete(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.model
+          .set('state', 'DECLINED');
+      });
+  }
+
+  onClickAcceptOrder(e) {
+    acceptOrder(e.view.model.id);
+  }
+
+  onAcceptingOrder(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.setState({
+          acceptOrderInProgress: true,
+        });
+      });
+  }
+
+  onAcceptOrderAlways(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.setState({
+          acceptOrderInProgress: false,
+        });
+      });
+  }
+
+  onAcceptOrderComplete(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.model
+          .set('state', 'AWAITING_FULFILLMENT');
+      });
   }
 
   onClickCancelOrder(e) {
-    this.options.cancelOrder(e.view.model.id)
-      .always(() => {
-        this.indexedViews.byOrder[e.view.model.id]
-          .forEach(view => {
-            view.setState({
-              cancelOrderInProgress: false,
-            });
-          });
-      })
-      .done(() => {
-        this.indexedViews.byOrder[e.view.model.id]
-          .forEach(view => {
-            view.model
-              .set('state', 'CANCELED');
-          });
-      })
-      .fail((xhr) => {
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('transactions.purchases.failedCancelHeading'),
-          failReason
-        );
-      });
+    cancelOrder(e.view.model.id);
+  }
 
-    e.view.setState({
-      cancelOrderInProgress: true,
-    });
+  onCancelingOrder(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.setState({
+          cancelOrderInProgress: true,
+        });
+      });
+  }
+
+  onCancelOrderAlways(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.setState({
+          cancelOrderInProgress: false,
+        });
+      });
+  }
+
+  onCancelOrderComplete(e) {
+    this.indexedViews.byOrder[e.id]
+      .forEach(view => {
+        view.model
+          .set('state', 'CANCELED');
+      });
   }
 
   onClickRow(e) {
@@ -509,9 +494,9 @@ export default class extends baseVw {
           model: transaction,
           type: this.type,
           initialState: {
-            acceptOrderInProgress: this.options.acceptingOrder(transaction.id),
-            rejectOrderInProgress: this.options.rejectingOrder(transaction.id),
-            cancelOrderInProgress: this.options.cancelingOrder(transaction.id),
+            acceptOrderInProgress: acceptingOrder(transaction.id),
+            rejectOrderInProgress: rejectingOrder(transaction.id),
+            cancelOrderInProgress: cancelingOrder(transaction.id),
           },
         });
 

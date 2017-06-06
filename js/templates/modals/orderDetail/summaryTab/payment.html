@@ -14,7 +14,7 @@
 <span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
 <% } %>
 <div class="border clrBr padMd">
-  <div class="flex gutterH clrT">
+  <div class="flexVCent gutterH clrT">
     <div class="statusIconCol <%= ob.amountShort > 0 ? 'clrTErr' : 'clrTEm' %>"><span class="clrBr <%= ob.amountShort > 0 ? 'ion-ios-close-empty' : 'ion-ios-checkmark-empty' %>"></span></div>
     <div class="flexExpand tx5">
       <%
@@ -73,28 +73,35 @@
         </div>
       </div>
     </div>
-    <% if (ob.showRefundButton || ob.showAcceptButton) { %>
+    <% if (ob.showAcceptRejectButtons || ob.showCancelButton) { %>
     <div class="col">
       <div class="flexVCent gutterHLg">
-        <% if (ob.showRefundButton) { %>
-          <% if (ob.refundOrderInProgress) { %>
+        <% if (ob.showAcceptRejectButtons) { %>
+          <div class="flexVCent gutterHLg">
+            <% if (ob.rejectOrderInProgress) { %>
+              <span class="posR">
+                <% // including invisible cancel link to properly space the spinner %>
+                <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+                <%= ob.spinner({ className: 'spinnerSm center' }) %>
+              </span>
+            <% } else { %>
+              <a class="txU tx6 js-rejectOrder <% if (ob.rejectConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+            <%  } %>
+            <%= ob.processingButton({
+              className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
+              btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
+            }) %>
+          </div>
+        <% } else if (ob.showCancelButton) { %>
+          <% if (ob.cancelOrderInProgress) { %>
             <span class="posR">
               <% // including invisible cancel link to properly space the spinner %>
-              <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+              <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
               <%= ob.spinner({ className: 'spinnerSm center' }) %>
             </span>
           <% } else { %>
-            <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.refundBtn') %></a>
+            <a class="txU tx6 js-cancelOrder <% if (ob.cancelConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
           <%  } %>
-        <% } %>
-        <% if (ob.showAcceptButton) { %>
-          <%= ob.processingButton({
-            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
-            btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
-          }) %>
-        <% } else { %>
-          <% // invisible button to give a proper height so the refund is vertically centered if alone %>
-          <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b invisible" style="width: 1px;padding: 0"><%= ob.polyT('orderDetail.summaryTab.payment.acceptBtn') %></a>
         <% } %>
       </div>
     </div>

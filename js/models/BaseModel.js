@@ -127,7 +127,12 @@ export default class extends Model {
             if (nestedData instanceof NestedClass) {
               attrs[nestedKey] = nestedData;
             } else if (nestedInstance) {
-              nestedInstance.set(nestedData, { parse: true });
+              if (nestedInstance instanceof Model) {
+                nestedInstance.set(nestedInstance.parse(nestedData));
+              } else {
+                nestedInstance.set(nestedData, { parse: true });
+              }
+
               delete attrs[nestedKey];
             } else {
               attrs[nestedKey] = new NestedClass(nestedData, { parse: true });

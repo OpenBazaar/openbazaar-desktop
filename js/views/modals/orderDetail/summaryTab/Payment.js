@@ -20,8 +20,8 @@ export default class extends BaseVw {
       payee: '',
       buyerName: '',
       userCurrency: app.settings.get('localCurrency') || 'BTC',
-      showRefundButton: false,
-      showAcceptButton: false,
+      showAcceptRejectButtons: false,
+      showCancelButton: false,
       ...options.initialState || {},
     };
   }

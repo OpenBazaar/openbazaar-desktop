@@ -97,10 +97,10 @@
       <%          
           } else {
       %>
-        <a class="txU tx6 js-rejectOrder"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+        <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
       <%  } %>
         <%= ob.processingButton({
-          className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''}`,
+          className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
           btnText: ob.polyT('transactions.transactionsTable.btnAccept')
         }) %>
     <% } else if (!ob.moderated) {

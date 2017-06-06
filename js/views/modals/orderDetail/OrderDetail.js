@@ -277,6 +277,10 @@ export default class extends BaseModal {
         id: this.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
+      buyer: {
+        id: this.buyerId,
+        getProfile: this.getBuyerProfile.bind(this),
+      },
     };
 
     if (this.moderatorId) {

@@ -16,12 +16,8 @@ export default class extends baseVw {
       throw new Error('Please provide the price of the order.');
     }
 
-    // if (typeof options.getOrderBalanceRemaining !== 'function') {
-    //   throw new Error('Please provide a function that returns the balance remaining on the order.');
-    // }
-
-    if (typeof options.isOrderRefundable !== 'function') {
-      throw new Error('Please provide a function that returns whether this order can be refunded ' +
+    if (typeof options.isOrderCancelable !== 'function') {
+      throw new Error('Please provide a function that returns whether this order can be canceled ' +
         'by the current user.');
     }
 
@@ -54,7 +50,7 @@ export default class extends baseVw {
     this.options = opts;
     this.payments = [];
 
-    // this.listenTo(this.collection, 'update', this.render);
+    this.listenTo(this.collection, 'update', () => this.render());
   }
 
   className() {
@@ -81,7 +77,6 @@ export default class extends baseVw {
 
   render() {
     const paymentsContainer = document.createDocumentFragment();
-    // const balanceRemaining = this.options.getOrderBalanceRemaining();
 
     this.payments.forEach(payment => (payment.remove()));
     this.payments = [];
@@ -94,10 +89,9 @@ export default class extends baseVw {
       const paymentView = this.createPayment(payment, {
         initialState: {
           paymentNumber: index + 1,
-          // balanceRemaining,
           amountShort: this.options.orderPrice - paidSoFar,
-          showRefundButton: isMostRecentPayment && this.options.isOrderRefundable(),
-          showAcceptButton: isMostRecentPayment && this.options.isOrderConfirmable(),
+          showAcceptRejectButtons: isMostRecentPayment && this.options.isOrderConfirmable(),
+          showCancelButton: isMostRecentPayment && this.options.isOrderCancelable(),
         },
       });
       $(paymentsContainer).prepend(paymentView.render().el);
@@ -108,13 +102,6 @@ export default class extends baseVw {
         .done(profile => {
           this.payments.forEach(payment => payment.setState({ payee: profile.get('name') || '' }));
         });
-
-      // Any refunds will need the buyer name.
-      // this.collection.models
-      //   .filter(payment => payment.get('value') < 0).length)
-        
-
-      // }
     }
 
     this.$el.empty()

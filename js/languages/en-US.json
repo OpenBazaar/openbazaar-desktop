@@ -873,8 +873,6 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
-      "failedAcceptHeading": "There was an error accepting the order.",
-      "failedRejectHeading": "There was an error rejecting the order.",
       "returnToFromOrder": "Return to sales"
     },
     "purchases": {
@@ -883,7 +881,6 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
-      "failedCancelHeading": "There was an error canceling the order.",
       "returnToFromOrder": "Return to purchases"
     },
     "cases": {
@@ -979,7 +976,8 @@
         "amountTo": "%{fiatBtcPairing} to %{payeeName}",
         "paidInFull": "Paid In Full",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
-        "refundBtn": "Refund",
+        "cancelBtn": "Cancel",
+        "rejectBtn": "Reject",
         "acceptBtn": "Accept",
         "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
         "veryManyConfirmationsCount": "%{countText} confirmations"
@@ -1021,6 +1019,11 @@
         "heading": "Pay for your order"
       }
     }
+  },
+  "orderUtil": {
+    "failedAcceptHeading": "There was an error accepting the order.",
+    "failedRejectHeading": "There was an error rejecting the order.",
+    "failedCancelHeading": "There was an error canceling the order."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

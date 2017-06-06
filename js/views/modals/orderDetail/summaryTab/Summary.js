@@ -55,6 +55,14 @@ export default class extends BaseVw {
       throw new Error(getInvalidParticpantError('vendor'));
     }
 
+    if (!opts.buyer) {
+      throw new Error('Please provide a buyer object.');
+    }
+
+    if (!isValidParticipantObject(options.buyer)) {
+      throw new Error(getInvalidParticpantError('buyer'));
+    }
+
     if (this.contract.get('buyerOrder').payment.moderator) {
       if (!options.moderator) {
         throw new Error('Please provide a moderator object.');
@@ -67,20 +75,23 @@ export default class extends BaseVw {
 
     this.options = opts || {};
     this.vendor = opts.vendor;
+    this.buyer = opts.buyer;
     this.moderator = opts.moderator;
 
-    // this.listenTo(this.model, 'change:state', () => {
-    //   this.stateProgressBar.setState(this.progressBarState);
-    //   if (this.payments) this.payments.render();
-    // });
+    this.listenTo(this.model, 'change:state', () => {
+      this.stateProgressBar.setState(this.progressBarState);
+      if (this.payments) this.payments.render();
+    });
 
-    // if (!this.isCase()) {
-    //   this.listenTo(this.model.get('transactions'), 'update', () => {
-    //     this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
-    //   });
-    // }
+    if (!this.isCase()) {
+      this.listenTo(this.model.get('transactions'), 'update', () => {
+        this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
 
-    this.listenTo(this.model, 'change', () => this.render());
+        if (this.payments) {
+          this.payments.collection.set(this.paymentsCollection.models);
+        }
+      });
+    }
 
     const serverSocket = getSocket();
 
@@ -116,6 +127,7 @@ export default class extends BaseVw {
 
   onClickCopyOrderId() {
     clipboard.writeText(this.model.id);
+    this.copiedToClipboardAnimatingIn = true;
     this.$copiedToClipboard
       .velocity('stop')
       .velocity('fadeIn', {
@@ -243,22 +255,22 @@ export default class extends BaseVw {
    * Returns a boolean indicating whether this order in its current state
    * is refundable by the current user.
    */
-  isOrderRefundable() {
-    let isRefundable = false;
+  // isOrderRefundable() {
+  //   let isRefundable = false;
 
-    if (!this.isCase() && this.vendor.id === app.profile.id) {
-      const refundableStates = ['AWAITING_FULFILLMENT', 'PARTIALLY_FULFILLED', 'DISPUTED'];
-      if (refundableStates.indexOf(this.model.get('state') !== -1)) isRefundable = true;
-    }
+  //   if (!this.isCase() && this.vendor.id === app.profile.id) {
+  //     const refundableStates = ['AWAITING_FULFILLMENT', 'PARTIALLY_FULFILLED', 'DISPUTED'];
+  //     if (refundableStates.indexOf(this.model.get('state') !== -1)) isRefundable = true;
+  //   }
 
-    return isRefundable;
-  }
+  //   return isRefundable;
+  // }
 
   shouldShowPayForOrderSection() {
     let bool = false;
 
     if (!this.isCase() && this.vendor.id !== app.profile.id &&
-      this.balanceRemaining > 0) {
+      this.getBalanceRemaining() > 0) {
       bool = true;
     }
 
@@ -270,6 +282,23 @@ export default class extends BaseVw {
 
     return vendorOrderConfirmation && vendorOrderConfirmation.paymentAddress ||
       this.contract.get('buyerOrder').payment.address;
+  }
+
+  /**
+   * Returns a mnodified version of the transactions collections from the Order model
+   * by filtering out any negative payments (money moving from the multisig to the vendor)
+   * other than a refund (which would be the last negative payment when the order
+   * state is CANCELED or REFUNDED).
+   */
+  get paymentsCollection() {
+    if (this.isCase()) {
+      throw new Error('Transaction data is not available for cases.');
+    }
+
+    return new Transactions(
+      this.model.get('transactions')
+        .filter((payment, index) => payment.get('value') > 0 || index === 0)
+    );
   }
 
   remove() {
@@ -301,21 +330,13 @@ export default class extends BaseVw {
 
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();
-        // Filter out any negative payments (money moving from the multisig to the vendor)
-        // other than a refund (which would be the last negative payment when the order
-        // state is CANCELED or REFUNDED).
-        const collection = new Transactions(
-          this.model.get('transactions')
-            .filter((payment, index) => payment.get('value') > 0 || index === 0)
-        );
-
         this.payments = this.createChild(Payments, {
-          collection,
+          collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
-          // getOrderBalanceRemaining: this.getBalanceRemaining.bind(this),
           vendor: this.vendor,
           buyer: this.buyer,
-          isOrderRefundable: this.isOrderRefundable.bind(this),
+          isOrderCancelable: () => this.model.get('state') === 'PENDING' &&
+            !this.moderator && this.buyer.id === app.profile.id,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });
