@@ -85,7 +85,7 @@ export default class extends BaseVw {
     });
 
     if (!this.isCase()) {
-      this.listenTo(this.model.get('transactions'), 'update', () => {
+      this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
         this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
 
         if (this.payments) {
@@ -94,7 +94,13 @@ export default class extends BaseVw {
       });
     }
 
-    this.listenTo(orderEvents, 'cancelOrderComplete', () => this.model.set('state', 'CANCELED'));
+    this.listenTo(orderEvents, 'cancelOrderComplete', () => {
+      this.model.set('state', 'CANCELED');
+
+      // we'll refetch so our translation list is updated with
+      // the money returned to the buyer
+      this.model.fetch();
+    });
 
     const serverSocket = getSocket();
 
@@ -288,10 +294,8 @@ export default class extends BaseVw {
   }
 
   /**
-   * Returns a mnodified version of the transactions collections from the Order model
-   * by filtering out any negative payments (money moving from the multisig to the vendor)
-   * other than a refund (which would be the last negative payment when the order
-   * state is CANCELED or REFUNDED).
+   * Returns a modified version of the transactions from the Order model by filtering out
+   * any negative payments (money moving from the multisig to the vendor).
    */
   get paymentsCollection() {
     if (this.isCase()) {
@@ -299,9 +303,9 @@ export default class extends BaseVw {
     }
 
     return new Transactions(
-      this.model.get('transactions')
-        .filter((payment, index) => payment.get('value') > 0 || index === 0)
-    );
+      this.model.get('paymentAddressTransactions')
+        .filter(payment => (payment.get('value') > 0))
+      );
   }
 
   remove() {

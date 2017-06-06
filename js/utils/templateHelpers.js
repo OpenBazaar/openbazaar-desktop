@@ -6,7 +6,7 @@ import {
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
-import { splitIntoRows } from './';
+import { splitIntoRows, getBlockChainTxUrl } from './';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -50,3 +50,5 @@ export { getListingBgImage };
 export { upToFixed };
 
 export { splitIntoRows };
+
+export { getBlockChainTxUrl };

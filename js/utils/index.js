@@ -221,3 +221,13 @@ export function deparam(queryStr = '') {
 
   return parsed;
 }
+
+export function getBlockChainTxUrl(txid, isTestnet) {
+  let url = `https://blockchain.info/tx/${txid}`;
+
+  if (isTestnet) {
+    url = `https://testnet.blockexplorer.com/tx/${txid}`;
+  }
+
+  return url;
+}

@@ -974,6 +974,8 @@
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
         "amountTo": "%{fiatBtcPairing} to %{payeeName}",
+        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
+        "refunded": "%{fiatBtcPairing} refunded",
         "paidInFull": "Paid In Full",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "cancelBtn": "Cancel",

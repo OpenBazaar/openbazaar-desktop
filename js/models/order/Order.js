@@ -2,6 +2,7 @@ import { integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Contract from './Contract';
 import Transactions from '../../collections/order/Transactions';
+import Transaction from '../../models/order/Transaction';
 import app from '../../app';
 
 export default class extends BaseModel {
@@ -32,7 +33,8 @@ export default class extends BaseModel {
   get nested() {
     return {
       contract: Contract,
-      transactions: Transactions,
+      paymentAddressTransactions: Transactions,
+      refundAddressTransaction: Transaction,
     };
   }
 

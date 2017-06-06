@@ -74,14 +74,7 @@
   <div class="col">
     <div class="flexHRight">
       <div class="btnStrip">
-        <%
-          let blockChainUrl = `https://blockchain.info/tx/${ob.txid}`;
-
-          if (ob.isTestnet) {
-            blockChainUrl = `https://testnet.blockexplorer.com/tx/${ob.txid}`;          
-          }
-        %>
-        <a class="btn clrP clrBr clrSh2" href="<%= blockChainUrl %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
+        <a class="btn clrP clrBr clrSh2" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
         <% if (ob.canBumpFee && ob.status === 'STUCK') { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
