@@ -1,4 +1,13 @@
 import $ from 'jquery';
+import {
+  // acceptingOrder,
+  // acceptOrder,
+  // rejectingOrder,
+  // rejectOrder,
+  cancelingOrder,
+  cancelOrder,
+  events as orderEvents,
+} from '../../../../utils/order';
 import baseVw from '../../../baseVw';
 import Payment from './Payment';
 
@@ -7,6 +16,10 @@ export default class extends baseVw {
     const opts = {
       ...options,
     };
+
+    if (!options.orderId) {
+      throw new Error('Please provide the order id.');
+    }
 
     if (!options.collection) {
       throw new Error('Please provide a transactions collection.');
@@ -48,13 +61,40 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
+    this.orderId = this.options.orderId;
     this.payments = [];
 
     this.listenTo(this.collection, 'update', () => this.render());
+    this.listenTo(orderEvents, 'cancelingOrder', this.onCancelingOrder);
+    this.listenTo(orderEvents, 'cancelOrderComplete, cancelOrderFail',
+      this.onCancelOrderAlways);
+    this.listenTo(orderEvents, 'cancelOrderComplete', this.onCancelOrderComplete);
   }
 
   className() {
     return 'payments';
+  }
+
+  onCancelClick() {
+    cancelOrder(this.orderId);
+  }
+
+  onCancelingOrder(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ cancelInProgress: true });
+    }
+  }
+
+  onCancelOrderAlways(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ cancelInProgress: false });
+    }
+  }
+
+  onCancelOrderComplete(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ showCancelButton: false });
+    }
   }
 
   createPayment(model, options = {}) {
@@ -70,6 +110,7 @@ export default class extends baseVw {
       },
     });
 
+    this.listenTo(payment, 'cancelClick', this.onCancelClick);
     this.payments.push(payment);
 
     return payment;
@@ -92,6 +133,7 @@ export default class extends baseVw {
           amountShort: this.options.orderPrice - paidSoFar,
           showAcceptRejectButtons: isMostRecentPayment && this.options.isOrderConfirmable(),
           showCancelButton: isMostRecentPayment && this.options.isOrderCancelable(),
+          cancelInProgress: cancelingOrder(this.orderId),
         },
       });
       $(paymentsContainer).prepend(paymentView.render().el);

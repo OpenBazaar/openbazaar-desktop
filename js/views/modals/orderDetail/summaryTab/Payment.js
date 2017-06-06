@@ -22,12 +22,25 @@ export default class extends BaseVw {
       userCurrency: app.settings.get('localCurrency') || 'BTC',
       showAcceptRejectButtons: false,
       showCancelButton: false,
+      acceptInProgress: false,
+      rejectInProgress: false,
+      cancelInProgress: false,
       ...options.initialState || {},
     };
   }
 
   className() {
     return 'payment rowLg';
+  }
+
+  events() {
+    return {
+      'click .js-cancelOrder': 'onClickCancelOrder',
+    };
+  }
+
+  onClickCancelOrder() {
+    this.trigger('cancelClick', { view: this });
   }
 
   getState() {

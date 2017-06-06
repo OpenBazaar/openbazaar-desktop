@@ -78,29 +78,29 @@
       <div class="flexVCent gutterHLg">
         <% if (ob.showAcceptRejectButtons) { %>
           <div class="flexVCent gutterHLg">
-            <% if (ob.rejectOrderInProgress) { %>
+            <% if (ob.rejectInProgress) { %>
               <span class="posR">
                 <% // including invisible cancel link to properly space the spinner %>
                 <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
                 <%= ob.spinner({ className: 'spinnerSm center' }) %>
               </span>
             <% } else { %>
-              <a class="txU tx6 js-rejectOrder <% if (ob.rejectConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+              <a class="txU tx6 js-rejectOrder <% if (ob.acceptInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
             <%  } %>
             <%= ob.processingButton({
-              className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''}`,
+              className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''} ${ob.rejectInProgress ? 'disabled' : ''}`,
               btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
             }) %>
           </div>
         <% } else if (ob.showCancelButton) { %>
-          <% if (ob.cancelOrderInProgress) { %>
+          <% if (ob.cancelInProgress) { %>
             <span class="posR">
               <% // including invisible cancel link to properly space the spinner %>
               <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
               <%= ob.spinner({ className: 'spinnerSm center' }) %>
             </span>
           <% } else { %>
-            <a class="txU tx6 js-cancelOrder <% if (ob.cancelConfirmOn) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
+            <a class="txU tx6 js-cancelOrder"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
           <%  } %>
         <% } %>
       </div>

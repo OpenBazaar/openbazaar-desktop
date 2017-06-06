@@ -3,6 +3,7 @@ import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
+import { events as orderEvents } from '../../../../utils/order';
 import { Model } from 'backbone';
 import Transactions from '../../../../collections/Transactions';
 import BaseVw from '../../../baseVw';
@@ -92,6 +93,8 @@ export default class extends BaseVw {
         }
       });
     }
+
+    this.listenTo(orderEvents, 'cancelOrderComplete', () => this.model.set('state', 'CANCELED'));
 
     const serverSocket = getSocket();
 
@@ -331,6 +334,7 @@ export default class extends BaseVw {
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();
         this.payments = this.createChild(Payments, {
+          orderId: this.model.id,
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
