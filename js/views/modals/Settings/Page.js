@@ -46,12 +46,12 @@ export default class extends baseVw {
   /** Handles when a hex color code is entered by updating color picker. */
   handleColorCodeEntered(event) {
     const colorPickerId = $(event.target).data('color-picker-id');
-    const $colorPicker = $(`${colorPickerId}`);
+    const $colorPicker = this.getCachedElement(colorPickerId);
     const newHexColorCode = event.target.value;
 
     // If the text passes a basic RegExp for a valid 6 digit hex value,
     // update the color picker's color.
-    if (/[0-9A-F]{6}/i.test(newHexColorCode)) {
+    if (/^#([0-9a-f]{6})$/i.test(newHexColorCode)) {
       $colorPicker.val(newHexColorCode);
     }
   }
@@ -59,10 +59,31 @@ export default class extends baseVw {
   /** Handles when a color is chosen from the color picker by updating hex color code text. */
   handleColorChosen(event) {
     const hexInputId = $(event.target).data('hex-input-id');
-    const $hexInputEl = $(`${hexInputId}`);
+    const $hexInput = this.getCachedElement(hexInputId);
     const newColor = event.target.value;
 
-    $hexInputEl.val(newColor);
+    $hexInput.val(newColor);
+  }
+
+  /** Returns a given jquery Element or a locally cached version in this view for optimization. */
+  getCachedElement(elementId) {
+    let element;
+
+    // Ensure we have our cached elements map.
+    if (!this._cachedElementMap) {
+      this._cachedElementMap = new Map();
+    }
+
+    // If the cache has the element, we shall use it.
+    if (this._cachedElementMap.has(elementId)) {
+      element =  this._cachedElementMap.get(elementId);
+    } else {
+      // The cache does not not have the element, therefore query with jQuery and cache it.
+      element = $(elementId);
+      this._cachedElementMap.set(elementId, element);
+    }
+
+    return element;
   }
 
   avatarRotate(direction) {
