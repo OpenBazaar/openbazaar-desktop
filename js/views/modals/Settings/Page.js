@@ -30,7 +30,39 @@ export default class extends baseVw {
       'click .js-avatarRight': 'avatarRightClick',
       'click .js-headerLeft': 'headerLeftClick',
       'click .js-headerRight': 'headerRightClick',
+      'change .js-primaryColorPicker': 'handleColorChosen',
+      'change .js-secondaryColorPicker': 'handleColorChosen',
+      'change .js-textColorPicker': 'handleColorChosen',
+      'change .js-highlightColorPicker': 'handleColorChosen',
+      'change .js-highlightTextColorPicker': 'handleColorChosen',
+      'change .js-primaryColorCode': 'handleColorCodeEntered',
+      'change .js-secondaryColorCode': 'handleColorCodeEntered',
+      'change .js-textColorCode': 'handleColorCodeEntered',
+      'change .js-highlightColorCode': 'handleColorCodeEntered',
+      'change .js-textHightlightColorCode': 'handleColorCodeEntered',
     };
+  }
+
+  /** Handles when a hex color code is entered by updating color picker. */
+  handleColorCodeEntered(event) {
+    var colorPickerId = $(event.target).data('color-picker-id'),
+        $colorPicker = $("#" + colorPickerId),
+        newHexColorCode = event.target.value;
+    
+    // If the text passes a basic RegExp for a valid 6 digit hex value, update the color picker's color.
+    if (/[0-9A-F]{6}/i.test(newHexColorCode)) {
+      $colorPicker.val(newHexColorCode);
+    } 
+
+  }
+
+  /** Handles when a color is chosen from the color picker by updating hex color code text. */
+  handleColorChosen(event) {
+    var hexInputId = $(event.target).data('hex-input-id'),
+        $hexInputEl = $("#" + hexInputId),
+        newColor = event.target.value;
+    
+    $hexInputEl.val(newColor);
   }
 
   avatarRotate(direction) {
@@ -240,7 +272,7 @@ export default class extends baseVw {
       installRichEditor(this.$('#settingsAbout'), {
         topLevelClass: 'clrBr',
       });
-
+      
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');
