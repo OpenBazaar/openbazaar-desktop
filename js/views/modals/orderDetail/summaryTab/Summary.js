@@ -4,12 +4,11 @@ import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import { events as orderEvents } from '../../../../utils/order';
-import { Model } from 'backbone';
 import Transactions from '../../../../collections/Transactions';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
-import AcceptedEvent from './AcceptedEvent';
+import Accepted from './Accepted';
 import OrderDetails from './OrderDetails';
 
 export default class extends BaseVw {
@@ -231,10 +230,12 @@ export default class extends BaseVw {
         case 'PENDING':
           state.currentState = 1;
           break;
-        case 'AWAITING_FULFILLMENT' || 'PARTIALLY_FULFILLED':
+        case 'PARTIALLY_FULFILLED':
+        case 'AWAITING_FULFILLMENT':
           state.currentState = 2;
           break;
-        case 'AWAITING_PICKUP' || 'FULFILLED':
+        case 'FULFILLED':
+        case 'AWAITING_PICKUP':
           state.currentState = 3;
           break;
         case 'COMPLETED':
@@ -294,6 +295,17 @@ export default class extends BaseVw {
     return bool;
   }
 
+  shouldShowAcceptedSection() {
+    let bool = false;
+
+    // Show the accepted section if the order has been accepted and its fully funded.
+    if (this.contract.get('vendorOrderConfirmation') && this.getBalanceRemaining() <= 0) {
+      bool = true;
+    }
+
+    return bool;
+  }
+
   get paymentAddress() {
     const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
 
@@ -314,6 +326,74 @@ export default class extends BaseVw {
       this.model.get('paymentAddressTransactions')
         .filter(payment => (payment.get('value') > 0))
       );
+  }
+
+  // isOrderFulfilled() {
+  //   return this.model.get('state') === 'FULFILLED' ||
+  //     this.model.get('vendorOrderFulfillment');
+  // }
+
+  appendAcceptedView() {
+    const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
+
+    if (!vendorOrderConfirmation) {
+      throw new Error('Unable to create the accepted view because the vendorOrderConfirmation ' +
+        'data object has not been set.');
+    }
+
+    const orderState = this.model.get('state');
+    const isVendor = this.vendor.id === app.profile.id;
+    const canFulfill = isVendor && [
+      'AWAITING_FULFILLMENT',
+      'PARTIALLY_FULFILLED',
+    ].indexOf(orderState) > -1;
+    const initialState = {
+      timestamp: vendorOrderConfirmation.timestamp,
+      showRefundButton: isVendor && [
+        'AWAITING_FULFILLMENT',
+        'PARTIALLY_FULFILLED',
+        'DISPUTED',
+      ].indexOf(orderState) > -1,
+      showFulfillButton: canFulfill,
+    };
+
+    if (!this.isCase()) {
+      if (isVendor) {
+        // vendor looking at the order
+        if (canFulfill) {
+          initialState.infoText =
+            app.polyglot.t('orderDetail.summaryTab.accepted.vendorCanFulfill');
+        } else {
+          initialState.infoText =
+            app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived');
+        }
+      } else {
+        // buyer looking at the order
+        initialState.infoText =
+          app.polyglot.t('orderDetail.summaryTab.accepted.buyerOrderAccepted');
+      }
+    } else {
+      // mod looking at the order
+      initialState.infoText =
+        app.polyglot.t('orderDetail.summaryTab.accepted.modOrderAccepted');
+    }
+
+    if (this.accepted) this.accepted.remove();
+    this.accepted = this.createChild(Accepted, { initialState });
+
+    this.vendor.getProfile()
+        .done(profile => {
+          this.accepted.setState({
+            avatarHashes: profile.get('avatarHashes').toJSON(),
+          });
+        });
+
+    this.$subSections.append(this.accepted.render().el);
+  }
+
+  get $subSections() {
+    return this._$subSections ||
+      (this._$subSections = this.$('.js-subSections'));
   }
 
   remove() {
@@ -343,6 +423,13 @@ export default class extends BaseVw {
       });
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
 
+      if (this.orderDetails) this.orderDetails.remove();
+      this.orderDetails = this.createChild(OrderDetails, {
+        model: this.contract,
+        moderator: this.moderator,
+      });
+      this.$('.js-orderDetailsWrap').html(this.orderDetails.render().el);
+
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();
         this.payments = this.createChild(Payments, {
@@ -359,31 +446,7 @@ export default class extends BaseVw {
         this.$('.js-paymentsWrap').html(this.payments.render().el);
       }
 
-      if (this.acceptedEvent) this.acceptedEvent.remove();
-      this.acceptedEvent = this.createChild(AcceptedEvent, {
-        model: new Model({
-          timestamp: '2017-05-26T17:53:40.719697497Z',
-        }),
-        initialState: {
-          infoText: 'You received the order and can fulfill it whenevery you\'re ready.',
-          showActionButtons: true,
-        },
-      });
-      this.$('.js-acceptedWrap').html(this.acceptedEvent.render().el);
-
-      this.vendor.getProfile()
-          .done(profile => {
-            this.acceptedEvent.setState({
-              avatarHashes: profile.get('avatarHashes').toJSON(),
-            });
-          });
-
-      if (this.orderDetails) this.orderDetails.remove();
-      this.orderDetails = this.createChild(OrderDetails, {
-        model: this.contract,
-        moderator: this.moderator,
-      });
-      this.$('.js-orderDetailsWrap').html(this.orderDetails.render().el);
+      if (this.shouldShowAcceptedSection()) this.appendAcceptedView();
     });
 
     return this;

@@ -988,9 +988,9 @@
         "heading": "Accepted",
         "orderAccepted": "Order Accepted",
         "vendorCanFulfill": "You received the order and can fulfill it whenever you're ready.",
-        "vendorFulfilled": "You have fulfilled the order.",
+        "vendorReceived": "You received the order.",
         "buyerOrderAccepted": "Thank you for your purchase!",
-        "buyerOrderFulfilled": "The vendor has fulfilled the order.",
+        "modOrderAccepted": "The vendor order has accepted the order.",
         "refundBtn": "Refund",
         "fulfillBtn": "Fulfill Order"
       },
