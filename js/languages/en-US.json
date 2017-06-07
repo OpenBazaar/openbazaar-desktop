@@ -644,6 +644,21 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
+    },
+    "review": {
+      "title": "%{time} by %{name}",
+      "overall": "Overall",
+      "speed": "Delivery Speed",
+      "description": "Matched Description",
+      "service": "Customer Service",
+      "quality": "Quality",
+      "loadMore": "Load More",
+      "noReviews": "This listing does not have any reviews yet.",
+      "showMore": "…Show More",
+      "showLess": "…Show Less"
+    },
+    "errors": {
+      "fetchReviews": "Reviews could not be loaded due to an error."
     }
   },
   "listingCard": {
@@ -811,7 +826,6 @@
     "shippingTitle": "Shipping",
     "paymentTypeTitle": "Payment Type",
     "moderatorTitle": "Moderator",
-    "shippingTitle": "Shipping",
     "newAddress": "New Address",
     "serviceDetails": "%{price} — %{delivery}",
     "noAddresses": "You don't have any saved addresses.",

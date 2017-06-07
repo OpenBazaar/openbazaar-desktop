@@ -1,1 +1,53 @@
-A review
+<%
+const starRating = function(rating) {
+  let stars = '';
+  for(let i = 0; i < 5; i++) {
+    const fade = i >= rating ? 'fade' : '';
+    const star = ob.parseEmojis('⭐', fade);
+    stars += star;
+  }
+  return stars;
+}
+%>
+
+<div class="flexRow gutterHLg">
+  <div class="col8">
+    <% if (ob.buyerID) { %>
+      <div class="row">
+        <% const nameLink = `<a class="clrT txU" href="${ob.buyerID.peerID}">${ob.buyerName}</a>`; %>
+        <b><%= ob.polyT('listingDetail.review.title', { time: ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a'), name: nameLink }) %></b>
+      </div>
+    <% } %>
+    <div class="reviewTextWrapper js-reviewTextWrapper">
+      <p class="reviewText js-reviewText"><%= ob.review %></p>
+    </div>
+  </div>
+  <div class="col4">
+    <table class="ratings">
+      <tr>
+        <td><b><%= ob.polyT('listingDetail.review.overall') %></b></td>
+        <td>
+          <% print(starRating(ob.overall)) %>
+        </td>
+      </tr>
+      <tr>
+        <td><%= ob.polyT('listingDetail.review.quality') %></td>
+        <td><% print(starRating(ob.quality)) %></td>
+      </tr>
+      <tr>
+        <td><%= ob.polyT('listingDetail.review.speed') %></td>
+        <td><% print(starRating(ob.deliverySpeed)) %></td>
+      </tr>
+      <tr>
+        <td><%= ob.polyT('listingDetail.review.description') %></td>
+        <td><% print(starRating(ob.description)) %></td>
+      </tr>
+      <tr>
+        <td><%= ob.polyT('listingDetail.review.service') %></td>
+        <td><% print(starRating(ob.customerService)) %></td>
+      </tr>
+    </table>
+
+  </div>
+</div>
+

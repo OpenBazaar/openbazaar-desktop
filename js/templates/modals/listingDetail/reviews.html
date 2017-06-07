@@ -1,5 +1,17 @@
 <div class="contentBox padLg clrP clrBr clrSh3">
   <h2 class="txUnb"><%= ob.polyT('listingDetail.reviews') %></h2>
-  <div class="clrTErr txB js-error"></div>
+  <% if (ob.reviewsLength) { %>
   <div class="js-reviewWrapper"></div>
+  <div class="clrTErr txB txCtr js-errors"></div>
+  <div class="flexHCent loadMore clrBr js-loadMore">
+    <%= ob.processingButton({
+    className: 'btn clrP clrBr js-loadMoreBtn',
+    btnText: ob.polyT('listingDetail.review.loadMore')
+    }) %>
+  </div>
+  <% } else { %>
+    <div>
+      <%= ob.polyT('listingDetail.review.noReviews') %>
+    </div>
+  <% } %>
 </div>

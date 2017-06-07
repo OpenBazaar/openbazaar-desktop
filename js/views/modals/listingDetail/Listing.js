@@ -88,10 +88,6 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
-    // get the ratings data, if any
-    $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
-      .always(data => this.onRatings(data));
-
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
   }
@@ -115,6 +111,7 @@ export default class extends BaseModal {
       'click .js-photoNext': 'onClickPhotoNext',
       'click .js-goToStore': 'onClickGoToStore',
       'click .js-purchaseBtn': 'startPurchase',
+      'click .js-rating': 'clickRating',
       ...super.events(),
     };
   }
@@ -130,18 +127,15 @@ export default class extends BaseModal {
     const ratingTotalText = twemoji.parse(`💬 ${data.count || 0}`,
       icon => (`../imgs/emojis/72X72/${icon}.png`));
 
-    this.$rating.html(ratingText);
-    this.$ratingTotal.html(ratingTotalText);
+    this.$rating.html(`${ratingText} &nbsp; ${ratingTotalText}`);
 
     if (this.reviews) this.reviews.remove();
 
-    if (data.hasOwnProperty('average')) {
-      this.reviews = this.createChild(Reviews, {
-        async: true,
-        ...data,
-      });
-      this.$reviews.append(this.reviews.render().$el);
-    }
+    this.reviews = this.createChild(Reviews, {
+      async: true,
+      ...data,
+    });
+    this.$reviews.append(this.reviews.render().$el);
   }
 
   onClickEditListing() {
@@ -225,6 +219,20 @@ export default class extends BaseModal {
 
   gotoPhotos() {
     this.$photoSection.velocity(
+      'scroll',
+      {
+        duration: 500,
+        easing: 'easeOutSine',
+        container: this.$el,
+      });
+  }
+
+  clickRating() {
+    this.gotoReviews();
+  }
+
+  gotoReviews() {
+    this.$reviews.velocity(
       'scroll',
       {
         duration: 500,
@@ -451,11 +459,6 @@ export default class extends BaseModal {
       (this._$rating = this.$('.js-rating'));
   }
 
-  get $ratingTotal() {
-    return this._$ratingTotal ||
-      (this._$ratingTotal = this.$('.js-ratingTotal'));
-  }
-
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.purchaseModal) this.purchaseModal.remove();
@@ -495,7 +498,6 @@ export default class extends BaseModal {
       this._$storeOwnerAvatar = null;
       this._$deleteConfirmedBox = null;
       this._$rating = null;
-      this._$ratingTotal = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
@@ -511,6 +513,10 @@ export default class extends BaseModal {
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
       this.$reviews = this.$('.js-reviews');
+
+      // get the ratings data, if any
+      $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
+        .always(data => this.onRatings(data));
     });
 
     return this;
