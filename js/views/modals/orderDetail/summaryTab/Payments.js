@@ -193,14 +193,6 @@ export default class extends baseVw {
         },
       });
 
-      if (payment.get('value') < 0) {
-        // the buyer name is needed for a refund
-        this.options.buyer.getProfile()
-          .done(profile => {
-            paymentView.setState({ buyerName: profile.get('name') });
-          });
-      }
-
       $(paymentsContainer).prepend(paymentView.render().el);
     });
 

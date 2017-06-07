@@ -990,6 +990,13 @@
           "btnConfirm": "Yes, Reject"
         }
       },
+      "refund": {
+        "heading": "Refunded",
+        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
+        "refunded": "%{fiatBtcPairing} refunded",
+        "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
+        "veryManyConfirmationsCount": "%{countText} confirmations"
+      },
       "accepted": {
         "heading": "Accepted",
         "orderAccepted": "Order Accepted",

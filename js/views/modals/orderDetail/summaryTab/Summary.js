@@ -9,6 +9,7 @@ import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
 import Accepted from './Accepted';
+import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
 
 export default class extends BaseVw {
@@ -113,8 +114,11 @@ export default class extends BaseVw {
 
     this.listenTo(orderEvents, 'rejectOrderComplete', () => {
       this.model.set('state', 'DECLINED');
-      // we'll refetch so our transaction list is updated with
-      // the money returned to the buyer
+
+      // We'll refetch so our transaction list is updated with
+      // the money returned to the buyer. However, that doesn't
+      // show up immidiatally. We'll put in a timeout to give the server
+      // a little time
       this.model.fetch();
     });
 
@@ -395,6 +399,47 @@ export default class extends BaseVw {
     this.$subSections.append(this.accepted.render().el);
   }
 
+  appendRefundView() {
+    const refundMd = this.model.get('refundAddressTransaction');
+
+    if (!refundMd) {
+      throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +
+        'data object has not been set.');
+    }
+
+    if (this.refunded) this.refunded.remove();
+    this.refunded = this.createChild(Refunded, { model: refundMd });
+    this.buyer.getProfile()
+      .done(profile => this.refunded.setState({ buyerName: profile.get('name') }));
+    this.$subSections.append(this.refunded.render().el);
+  }
+
+  /**
+   * Will render sub-sections in order based on their timestamp. Exempt from
+   * this are the Order Details, Payment Details and Accepted sections which
+   * are always first and in a specific order.
+   */
+  renderSubSections() {
+    const sections = [];
+
+    if (this.model.get('refundAddressTransaction')) {
+      sections.push({
+        function: this.appendRefundView,
+        timestamp:
+          (new Date(this.model.get('refundAddressTransaction').timestamp)).getTime(),
+      });
+    }
+
+    sections.sort((a, b) => (a.timestamp - b.timestamp))
+      .forEach(section => {
+        if (typeof section.function === 'function') {
+          section.function.call(this);
+        } else {
+          throw new Error('Unable to add sub section. It doesn\'t have a creation function.');
+        }
+      });
+  }
+
   get $subSections() {
     return this._$subSections ||
       (this._$subSections = this.$('.js-subSections'));
@@ -441,7 +486,6 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
-          buyer: this.buyer,
           isOrderCancelable: () => this.model.get('state') === 'PENDING' &&
             !this.moderator && this.buyer.id === app.profile.id,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
@@ -451,6 +495,7 @@ export default class extends BaseVw {
       }
 
       if (this.shouldShowAcceptedSection()) this.appendAcceptedView();
+      this.renderSubSections();
     });
 
     return this;

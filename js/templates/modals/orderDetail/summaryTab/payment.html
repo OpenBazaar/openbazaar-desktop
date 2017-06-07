@@ -8,8 +8,6 @@
   } else {
     heading = ob.polyT('orderDetail.summaryTab.payment.firstPaymentHeading');
   }
-
-  const isRefund = ob.value < 0;
 %>
 <h2 class="tx4 margRTn"><%= heading %></h2>
 <% if (ob.timestamp) { %>
@@ -18,7 +16,6 @@
 <div class="border clrBr padMd">
   <div class="flexVCent gutterH clrT">
     <%
-      const value = ob.value < 0 ? ob.value * -1 : ob.value;
       let statusIconClass = 'clrTEm'; // full payment
       let statusIcon = 'ion-ios-checkmark-empty'; // full payment
       
@@ -26,42 +23,31 @@
         statusIconClass = 'clrTErr';
         statusIcon = 'ion-ios-close-empty';
       }
-
-      if (isRefund) { // refund
-        statusIconClass = 'clrT';
-        statusIcon = 'ion-ios-rewind';
-      }
     %>
     <div class="statusIconCol <%= statusIconClass %>"><span class="clrBr <%= statusIcon %>"></span></div>
     <div class="flexExpand tx5">
       <%
-        let priceFrag = ob.convertAndFormatCurrency(value,
+        let priceFrag = ob.convertAndFormatCurrency(ob.value,
           'BTC', ob.userCurrency, { useBtcSymbol: false });
 
         if (ob.userCurrency !== 'BTC') {
           priceFrag = ob.polyT('fiatBtcPairing', {
             fiatAmount: priceFrag,
-            btcAmount: ob.formatCurrency(value, 'BTC', { useBtcSymbol: false }),
+            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
           });
         }
 
         let infoLine = '';
 
-        if ((!isRefund && ob.payee) || (isRefund && ob.buyerName)) {
-          infoLine = ob.polyT(`orderDetail.summaryTab.payment.${ isRefund ? 'refundedTo' : 'amountTo' }`, {
+        if (ob.payee) {
+          infoLine = ob.polyT(`orderDetail.summaryTab.payment.amountTo`, {
             fiatBtcPairing: priceFrag,
-            payeeName: isRefund ? ob.buyerName : ob.payee,
+            payeeName: ob.payee,
           });
         } else {
-          // payee or, in the case of a refund, the buyeName have not been set yet. They'll be
-          // set when the relevant profile is returned asynchronously
-          if (isRefund) {
-            infoLine = ob.polyT(`orderDetail.summaryTab.payment.refunded`, {
-              fiatBtcPairing: priceFrag,
-            });
-          } else {
-            infoLine = priceFrag;
-          }
+          // payee has not been set yet. It'll be set when the relevant profile is returned
+          // asynchronously
+          infoLine = priceFrag;
         }
       %>
       <div class="rowTn txB"><%= infoLine %></div>
@@ -86,15 +72,13 @@
         <% 
           let subText = '';
 
-          if (!isRefund) {
-            subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
+          subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
 
-            if (ob.amountShort > 0) {
-              subText =
-                ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
-                  amountShort: ob.upToFixed(ob.amountShort, 8),
-                });
-            }
+          if (ob.amountShort > 0) {
+            subText =
+              ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
+                amountShort: ob.upToFixed(ob.amountShort, 8),
+              });
           }
         %>
         <div>

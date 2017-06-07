@@ -251,7 +251,7 @@
       transform: translateY(-100%);
     }
 
-    .payment {
+    .payment, .refunded {
       .statusIconCol {
         text-align: center;
         flex-shrink: 0;
