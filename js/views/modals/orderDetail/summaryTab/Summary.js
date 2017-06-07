@@ -82,8 +82,10 @@ export default class extends BaseVw {
     this.listenTo(this.model, 'change:state', () => {
       this.stateProgressBar.setState(this.progressBarState);
       if (this.payments) this.payments.render();
-      if (!this.accepted && this.shouldShowAcceptedSection()) {
-        this.appendAcceptedView();
+      if (this.shouldShowAcceptedSection()) {
+        if (!this.accepted) this.appendAcceptedView();
+      } else {
+        if (this.accepted) this.accepted.remove();
       }
     });
 
@@ -95,14 +97,12 @@ export default class extends BaseVw {
           this.payments.collection.set(this.paymentsCollection.models);
         }
       });
-    }
 
-    if (!this.isCase()) {
-      this.listenTo(this.model, 'change:refundAddressTransaction', () => {
-        if (this.payments) {
-          this.payments.collection.set(this.paymentsCollection.models);
-        }
-      });
+      this.listenTo(this.model, 'change:refundAddressTransaction',
+        () => this.appendRefundView());
+
+      this.listenTo(this.contract, 'change:vendorOrderConfirmation',
+        () => this.appendAcceptedView());
     }
 
     this.listenTo(orderEvents, 'cancelOrderComplete', () => {
@@ -124,9 +124,8 @@ export default class extends BaseVw {
       this.model.set('state', 'DECLINED');
 
       // We'll refetch so our transaction list is updated with
-      // the money returned to the buyer. However, that doesn't
-      // show up immidiatally. We'll put in a timeout to give the server
-      // a little time
+      // the money returned to the buyer (if they're online). If they're
+      // not online the refund shows up when the buyer comes back online.
       this.model.fetch();
     });
 
@@ -145,6 +144,14 @@ export default class extends BaseVw {
           } else if (e.jsonData.notification.order &&
             e.jsonData.notification.order.orderId === this.model.id) {
             // A notification the vendor will get when an order has been fully funded
+            this.model.fetch();
+          } else if (e.jsonData.notification.orderCancel &&
+            e.jsonData.notification.orderCancel.orderId === this.model.id) {
+            // A notification the buyer will get when the vendor has rejected an offline order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.orderConfirmation &&
+            e.jsonData.notification.orderConfirmation.orderId === this.model.id) {
+            // A notification the buyer will get when the vendor has accepted an offline order.
             this.model.fetch();
           }
         }
@@ -291,14 +298,7 @@ export default class extends BaseVw {
   }
 
   shouldShowPayForOrderSection() {
-    let bool = false;
-
-    if (!this.isCase() && this.vendor.id !== app.profile.id &&
-      this.getBalanceRemaining() > 0) {
-      bool = true;
-    }
-
-    return bool;
+    return this.buyer.id !== app.profile.id && this.getBalanceRemaining() > 0;
   }
 
   shouldShowAcceptedSection() {
