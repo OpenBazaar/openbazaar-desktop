@@ -97,6 +97,14 @@ export default class extends BaseVw {
       });
     }
 
+    if (!this.isCase()) {
+      this.listenTo(this.model.get('refundAddressTransaction'), 'change', () => {
+        if (this.payments) {
+          this.payments.collection.set(this.paymentsCollection.models);
+        }
+      });
+    }
+
     this.listenTo(orderEvents, 'cancelOrderComplete', () => {
       this.model.set('state', 'CANCELED');
       // we'll refetch so our transaction list is updated with
@@ -281,21 +289,6 @@ export default class extends BaseVw {
 
     return balanceRemaining;
   }
-
-  /**
-   * Returns a boolean indicating whether this order in its current state
-   * is refundable by the current user.
-   */
-  // isOrderRefundable() {
-  //   let isRefundable = false;
-
-  //   if (!this.isCase() && this.vendor.id === app.profile.id) {
-  //     const refundableStates = ['AWAITING_FULFILLMENT', 'PARTIALLY_FULFILLED', 'DISPUTED'];
-  //     if (refundableStates.indexOf(this.model.get('state') !== -1)) isRefundable = true;
-  //   }
-
-  //   return isRefundable;
-  // }
 
   shouldShowPayForOrderSection() {
     let bool = false;
