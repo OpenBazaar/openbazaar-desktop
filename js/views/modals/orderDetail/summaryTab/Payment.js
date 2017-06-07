@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
 import app from '../../../../app';
@@ -25,8 +26,12 @@ export default class extends BaseVw {
       acceptInProgress: false,
       rejectInProgress: false,
       cancelInProgress: false,
+      rejectConfirmOn: false,
       ...options.initialState || {},
     };
+
+    this.boundOnDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
   }
 
   className() {
@@ -37,6 +42,10 @@ export default class extends BaseVw {
     return {
       'click .js-cancelOrder': 'onClickCancelOrder',
       'click .js-acceptOrder': 'onClickAcceptOrder',
+      'click .js-rejectOrder': 'onClickRejectOrder',
+      'click .js-rejectConfirmed': 'onClickRejectConfirmed',
+      'click .js-rejectConfirm': 'onClickRejectConfirmBox',
+      'click .js-rejectConfirmCancel': 'onClickRejectConfirmCancel',
     };
   }
 
@@ -46,6 +55,30 @@ export default class extends BaseVw {
 
   onClickAcceptOrder() {
     this.trigger('acceptClick', { view: this });
+  }
+
+  onClickRejectConfirmed() {
+    this.trigger('confirmedRejectClick', { view: this });
+    this.setState({ rejectConfirmOn: false });
+  }
+
+  onClickRejectOrder() {
+    this.setState({ rejectConfirmOn: true });
+    return false;
+  }
+
+  onClickRejectConfirmBox() {
+    // ensure event doesn't bubble so onDocumentClick doesn't
+    // close the confirmBox.
+    return false;
+  }
+
+  onClickRejectConfirmCancel() {
+    this.setState({ rejectConfirmOn: false });
+  }
+
+  onDocumentClick() {
+    this.setState({ rejectConfirmOn: false });
   }
 
   getState() {

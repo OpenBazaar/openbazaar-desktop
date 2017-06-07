@@ -114,7 +114,18 @@
                 <%= ob.spinner({ className: 'spinnerSm center' }) %>
               </span>
             <% } else { %>
-              <a class="txU tx6 js-rejectOrder <% if (ob.acceptInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+              <div class="posR">
+                <a class="txU tx6 js-rejectOrder <% if (ob.acceptInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+                <div class="js-rejectConfirm confirmBox rejectConfirm tx5 arrowBoxTop clrBr clrP clrT <% if (!ob.rejectConfirmOn) print('hide') %>">
+                  <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.title') %></div>
+                  <p><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.body') %></p>
+                  <hr class="clrBr row" />
+                  <div class="flexHRight flexVCent gutterHLg buttonBar">
+                    <a class="js-rejectConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.btnCancel') %></a>
+                    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-rejectConfirmed"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.btnConfirm') %></a>
+                  </div>
+                </div>                
+              </div>
             <%  } %>
             <%= ob.processingButton({
               className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''} ${ob.rejectInProgress ? 'disabled' : ''}`,

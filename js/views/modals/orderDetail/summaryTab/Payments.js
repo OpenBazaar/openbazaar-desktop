@@ -2,8 +2,8 @@ import $ from 'jquery';
 import {
   acceptingOrder,
   acceptOrder,
-  // rejectingOrder,
-  // rejectOrder,
+  rejectingOrder,
+  rejectOrder,
   cancelingOrder,
   cancelOrder,
   events as orderEvents,
@@ -73,6 +73,10 @@ export default class extends baseVw {
     this.listenTo(orderEvents, 'acceptOrderComplete, acceptOrderFail',
       this.onAcceptOrderAlways);
     this.listenTo(orderEvents, 'acceptOrderComplete', this.onAcceptOrderComplete);
+    this.listenTo(orderEvents, 'rejectingOrder', this.onRejectingOrder);
+    this.listenTo(orderEvents, 'rejectOrderComplete, rejectOrderFail',
+      this.onRejectOrderAlways);
+    this.listenTo(orderEvents, 'rejectOrderComplete', this.onRejectOrderComplete);
   }
 
   className() {
@@ -123,6 +127,28 @@ export default class extends baseVw {
     }
   }
 
+  onRejectClick() {
+    rejectOrder(this.orderId);
+  }
+
+  onRejectingOrder(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ rejectInProgress: true });
+    }
+  }
+
+  onRejectOrderAlways(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ rejectInProgress: false });
+    }
+  }
+
+  onRejectOrderComplete(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ showRejectButton: false });
+    }
+  }
+
   createPayment(model, options = {}) {
     if (!model) {
       throw new Error('Please provide a model.');
@@ -138,6 +164,7 @@ export default class extends baseVw {
 
     this.listenTo(payment, 'cancelClick', this.onCancelClick);
     this.listenTo(payment, 'acceptClick', this.onAcceptClick);
+    this.listenTo(payment, 'confirmedRejectClick', this.onRejectClick);
     this.payments.push(payment);
 
     return payment;
@@ -161,6 +188,8 @@ export default class extends baseVw {
           showAcceptRejectButtons: isMostRecentPayment && this.options.isOrderConfirmable(),
           showCancelButton: isMostRecentPayment && this.options.isOrderCancelable(),
           cancelInProgress: cancelingOrder(this.orderId),
+          acceptInProgress: acceptingOrder(this.orderId),
+          rejectInProgress: rejectingOrder(this.orderId),
         },
       });
 

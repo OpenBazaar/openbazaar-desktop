@@ -982,7 +982,13 @@
         "rejectBtn": "Reject",
         "acceptBtn": "Accept",
         "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
-        "veryManyConfirmationsCount": "%{countText} confirmations"
+        "veryManyConfirmationsCount": "%{countText} confirmations",
+        "rejectConfirm": {
+          "title": "Are you sure?",
+          "body": "The original amount in bitcoin will be returned to the buyer",
+          "btnCancel": "Cancel",
+          "btnConfirm": "Yes, Reject"
+        }
       },
       "accepted": {
         "heading": "Accepted",

@@ -123,29 +123,32 @@ export default class extends baseVw {
   }
 
   onRejectingOrder(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.setState({
-          rejectOrderInProgress: true,
-        });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.setState({
+        rejectOrderInProgress: true,
       });
+    }
   }
 
   onRejectOrderAlways(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.setState({
-          rejectOrderInProgress: false,
-        });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.setState({
+        rejectOrderInProgress: false,
       });
+    }
   }
 
   onRejectOrderComplete(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.model
-          .set('state', 'DECLINED');
-      });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.model
+        .set('state', 'DECLINED');
+    }
   }
 
   onClickAcceptOrder(e) {
@@ -153,29 +156,32 @@ export default class extends baseVw {
   }
 
   onAcceptingOrder(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.setState({
-          acceptOrderInProgress: true,
-        });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.setState({
+        acceptOrderInProgress: true,
       });
+    }
   }
 
   onAcceptOrderAlways(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.setState({
-          acceptOrderInProgress: false,
-        });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.setState({
+        acceptOrderInProgress: false,
       });
+    }
   }
 
   onAcceptOrderComplete(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.model
-          .set('state', 'AWAITING_FULFILLMENT');
-      });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.model
+        .set('state', 'AWAITING_FULFILLMENT');
+    }
   }
 
   onClickCancelOrder(e) {
@@ -183,29 +189,32 @@ export default class extends baseVw {
   }
 
   onCancelingOrder(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.setState({
-          cancelOrderInProgress: true,
-        });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.setState({
+        cancelOrderInProgress: true,
       });
+    }
   }
 
   onCancelOrderAlways(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.setState({
-          cancelOrderInProgress: false,
-        });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.setState({
+        cancelOrderInProgress: false,
       });
+    }
   }
 
   onCancelOrderComplete(e) {
-    this.indexedViews.byOrder[e.id]
-      .forEach(view => {
-        view.model
-          .set('state', 'CANCELED');
-      });
+    const view = this.indexedViews.byOrder[e.id];
+
+    if (view) {
+      view.model
+        .set('state', 'CANCELED');
+    }
   }
 
   onClickRow(e) {
@@ -319,9 +328,7 @@ export default class extends baseVw {
         this.indexedViews.byBuyer[buyerId].push(view);
       }
 
-      this.indexedViews.byOrder[view.model.id] =
-        this.indexedViews.byOrder[view.model.id] || [];
-      this.indexedViews.byOrder[view.model.id].push(view);
+      this.indexedViews.byOrder[view.model.id] = view;
     });
   }
 

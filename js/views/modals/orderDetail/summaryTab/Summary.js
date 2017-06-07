@@ -81,6 +81,9 @@ export default class extends BaseVw {
     this.listenTo(this.model, 'change:state', () => {
       this.stateProgressBar.setState(this.progressBarState);
       if (this.payments) this.payments.render();
+      if (!this.accepted && this.shouldShowAcceptedSection()) {
+        this.appendAcceptedView();
+      }
     });
 
     if (!this.isCase()) {
@@ -95,8 +98,7 @@ export default class extends BaseVw {
 
     this.listenTo(orderEvents, 'cancelOrderComplete', () => {
       this.model.set('state', 'CANCELED');
-
-      // we'll refetch so our translation list is updated with
+      // we'll refetch so our transaction list is updated with
       // the money returned to the buyer
       this.model.fetch();
     });
@@ -109,6 +111,13 @@ export default class extends BaseVw {
       this.model.fetch();
     });
 
+    this.listenTo(orderEvents, 'rejectOrderComplete', () => {
+      this.model.set('state', 'DECLINED');
+      // we'll refetch so our transaction list is updated with
+      // the money returned to the buyer
+      this.model.fetch();
+    });
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -116,10 +125,10 @@ export default class extends BaseVw {
         if (e.jsonData.notification) {
           if (e.jsonData.notification.payment &&
             e.jsonData.notification.payment.orderId === this.model.id) {
-            // A payment has come in for the order. Let's refetch our model so we have the
-            // data for the new transaction and can show it in the UI. As of now, the buyer
-            // only gets these notifications and this is the only way to be aware of
-            // partial payments in realtime.
+            // A notification for the buyer that a payment has come in for the order. Let's refetch
+            // our model so we have the data for the new transaction and can show it in the UI.
+            // As of now, the buyer only gets these notifications and this is the only way to be
+            // aware of partial payments in realtime.
             this.model.fetch();
           } else if (e.jsonData.notification.order &&
             e.jsonData.notification.order.orderId === this.model.id) {
@@ -327,11 +336,6 @@ export default class extends BaseVw {
         .filter(payment => (payment.get('value') > 0))
       );
   }
-
-  // isOrderFulfilled() {
-  //   return this.model.get('state') === 'FULFILLED' ||
-  //     this.model.get('vendorOrderFulfillment');
-  // }
 
   appendAcceptedView() {
     const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
