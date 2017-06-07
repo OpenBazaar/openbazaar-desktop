@@ -98,7 +98,7 @@ export default class extends BaseVw {
     }
 
     if (!this.isCase()) {
-      this.listenTo(this.model.get('refundAddressTransaction'), 'change', () => {
+      this.listenTo(this.model, 'change:refundAddressTransaction', () => {
         if (this.payments) {
           this.payments.collection.set(this.paymentsCollection.models);
         }
