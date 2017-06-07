@@ -36,11 +36,16 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-cancelOrder': 'onClickCancelOrder',
+      'click .js-acceptOrder': 'onClickAcceptOrder',
     };
   }
 
   onClickCancelOrder() {
     this.trigger('cancelClick', { view: this });
+  }
+
+  onClickAcceptOrder() {
+    this.trigger('acceptClick', { view: this });
   }
 
   getState() {

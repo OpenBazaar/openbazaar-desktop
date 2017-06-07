@@ -102,6 +102,14 @@ export default class extends BaseVw {
       this.model.fetch();
     });
 
+    this.listenTo(orderEvents, 'acceptOrderComplete', () => {
+      // todo: factor in AWAITING_PICKUP
+      this.model.set('state', 'AWAITING_FULFILLMENT');
+
+      // we'll refetch so we get our vendorOrderConfirmation object
+      this.model.fetch();
+    });
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -252,7 +260,7 @@ export default class extends BaseVw {
     let balanceRemaining = 0;
 
     if (this.model.get('state') === 'AWAITING_PAYMENT') {
-      const totalPaid = this.model.get('transactions')
+      const totalPaid = this.paymentsCollection
         .reduce((total, transaction) => total + transaction.get('value'), 0);
       balanceRemaining = this.orderPriceBtc - totalPaid;
     }

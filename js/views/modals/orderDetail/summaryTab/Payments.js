@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import {
-  // acceptingOrder,
-  // acceptOrder,
+  acceptingOrder,
+  acceptOrder,
   // rejectingOrder,
   // rejectOrder,
   cancelingOrder,
@@ -68,7 +68,11 @@ export default class extends baseVw {
     this.listenTo(orderEvents, 'cancelingOrder', this.onCancelingOrder);
     this.listenTo(orderEvents, 'cancelOrderComplete, cancelOrderFail',
       this.onCancelOrderAlways);
-    this.listenTo(orderEvents, 'cancelOrderComplete', this.onCancelOrderComplete);
+    this.listenTo(orderEvents, 'cancelOrderComplete', this.onAcceptOrderComplete);
+    this.listenTo(orderEvents, 'acceptingOrder', this.onAcceptingOrder);
+    this.listenTo(orderEvents, 'acceptOrderComplete, acceptOrderFail',
+      this.onAcceptOrderAlways);
+    this.listenTo(orderEvents, 'acceptOrderComplete', this.onAcceptOrderComplete);
   }
 
   className() {
@@ -97,6 +101,28 @@ export default class extends baseVw {
     }
   }
 
+  onAcceptClick() {
+    acceptOrder(this.orderId);
+  }
+
+  onAcceptingOrder(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ acceptInProgress: true });
+    }
+  }
+
+  onAcceptOrderAlways(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ acceptInProgress: false });
+    }
+  }
+
+  onAcceptOrderComplete(e) {
+    if (e.id === this.orderId) {
+      this.payments[this.payments.length - 1].setState({ showAcceptButton: false });
+    }
+  }
+
   createPayment(model, options = {}) {
     if (!model) {
       throw new Error('Please provide a model.');
@@ -111,6 +137,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(payment, 'cancelClick', this.onCancelClick);
+    this.listenTo(payment, 'acceptClick', this.onAcceptClick);
     this.payments.push(payment);
 
     return payment;
