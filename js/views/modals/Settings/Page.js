@@ -30,16 +30,8 @@ export default class extends baseVw {
       'click .js-avatarRight': 'avatarRightClick',
       'click .js-headerLeft': 'headerLeftClick',
       'click .js-headerRight': 'headerRightClick',
-      'change .js-primaryColorPicker': 'handleColorChosen',
-      'change .js-secondaryColorPicker': 'handleColorChosen',
-      'change .js-textColorPicker': 'handleColorChosen',
-      'change .js-highlightColorPicker': 'handleColorChosen',
-      'change .js-highlightTextColorPicker': 'handleColorChosen',
-      'change .js-primaryColorCode': 'handleColorCodeEntered',
-      'change .js-secondaryColorCode': 'handleColorCodeEntered',
-      'change .js-textColorCode': 'handleColorCodeEntered',
-      'change .js-highlightColorCode': 'handleColorCodeEntered',
-      'change .js-textHightlightColorCode': 'handleColorCodeEntered',
+      'change .js-colorPicker': 'handleColorChosen',
+      'change .js-colorCode': 'handleColorCodeEntered',
     };
   }
 
