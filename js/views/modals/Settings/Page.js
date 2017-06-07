@@ -45,23 +45,23 @@ export default class extends baseVw {
 
   /** Handles when a hex color code is entered by updating color picker. */
   handleColorCodeEntered(event) {
-    const colorPickerId = $(event.target).data('color-picker-id');
-    const $colorPicker = $(`${colorPickerId}`);
-    const newHexColorCode = event.target.value;
-
-    // If the text passes a basic RegExp for a valid 6 digit hex value,
-    // update the color picker's color.
+    var colorPickerId = $(event.target).data('color-picker-id'),
+        $colorPicker = $("#" + colorPickerId),
+        newHexColorCode = event.target.value;
+    
+    // If the text passes a basic RegExp for a valid 6 digit hex value, update the color picker's color.
     if (/[0-9A-F]{6}/i.test(newHexColorCode)) {
       $colorPicker.val(newHexColorCode);
-    }
+    } 
+
   }
 
   /** Handles when a color is chosen from the color picker by updating hex color code text. */
   handleColorChosen(event) {
-    const hexInputId = $(event.target).data('hex-input-id');
-    const $hexInputEl = $(`${hexInputId}`);
-    const newColor = event.target.value;
-
+    var hexInputId = $(event.target).data('hex-input-id'),
+        $hexInputEl = $("#" + hexInputId),
+        newColor = event.target.value;
+    
     $hexInputEl.val(newColor);
   }
 
@@ -272,7 +272,7 @@ export default class extends baseVw {
       installRichEditor(this.$('#settingsAbout'), {
         topLevelClass: 'clrBr',
       });
-
+      
       const avatarPrev = this.$('.js-avatarPreview');
       const avatarInpt = this.$('#avatarInput');
       this.avatarCropper = this.$('#avatarCropper');
