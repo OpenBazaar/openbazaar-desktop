@@ -141,7 +141,7 @@
       },
       "categoryFilter": {
         "heading": "Category",
-        "showMore": "%{971count} more… |||| %{smart_count} more…",
+        "showMore": "%{smart_count} more… |||| %{smart_count} more…",
         "showLess": "less"
       }
     },
