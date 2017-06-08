@@ -5,7 +5,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
 import Collection from '../../../collections/listing/Reviews';
-import ReviewMd from '../../../models/listing/Review';
 import Review from './Review';
 import 'trunk8';
 
@@ -93,10 +92,6 @@ export default class extends BaseVw {
   }
 
   addReview(model) {
-    if (!model || !model instanceof ReviewMd) {
-      throw new Error('Please provide a valid Review model.');
-    }
-
     const newReview = new Review({ model });
     const newRevieEl = newReview.render().$el;
     const btnTxt = app.polyglot.t('listingDetail.review.showMore');

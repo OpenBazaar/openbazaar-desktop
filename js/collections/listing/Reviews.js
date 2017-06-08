@@ -1,5 +1,5 @@
 import { Collection } from 'backbone';
-import Review from '../../models/listing/Review';
+import BaseModel from '../../models/BaseModel';
 
 
 export default class extends Collection {
@@ -11,7 +11,7 @@ export default class extends Collection {
   }
 
   model(attrs, options) {
-    return new Review({
+    return new BaseModel({
       ...attrs,
     }, options);
   }
