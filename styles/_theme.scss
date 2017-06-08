@@ -129,10 +129,6 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis2);
 }
 
-.clrTWhite {
-  color: #ffffff;
-}
-
 .clrBr {
   @include borderColor($border, $border3);
 }
@@ -373,7 +369,7 @@ input[type=range][class~="clrS"] {
 
   &.ascending {
     &::after {
-      border-bottom-color: $text2;      
+      border-bottom-color: $text2;
     }
 
     &::before {
