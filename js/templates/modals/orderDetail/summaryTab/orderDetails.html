@@ -1,3 +1,4 @@
+<% console.log('boom'); window.boom = ob %>
 <%
   if (ob.order.shipping) {
     var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;
@@ -47,7 +48,7 @@
       <div class="flexRow gutterH">
         <div class="col4 gutterVTn">
           <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shipToHeading') %></div>
-          <% if (ob.order.shipping) { %>
+          <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
             <div><%= ob.order.shipping.shipTo %></div>
             <% if (ob.order.shipping.address) { %>
             <div><%= ob.order.shipping.address %></div>
