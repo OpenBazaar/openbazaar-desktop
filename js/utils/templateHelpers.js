@@ -7,7 +7,7 @@ import {
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
 import {
-  splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl
+  splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
 } from './';
 
 export function polyT(...args) {
