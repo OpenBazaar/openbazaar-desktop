@@ -91,7 +91,9 @@ export default class extends BaseVw {
 
     if (!this.isCase()) {
       this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
-        this.$('.js-payForOrderWrap').toggleClass('hide', !this.shouldShowPayForOrderSection);
+        if (!this.shouldShowPayForOrderSection()) {
+          this.$('.js-payForOrderWrap').remove();
+        }
 
         if (this.payments) {
           this.payments.collection.set(this.paymentsCollection.models);
@@ -298,7 +300,7 @@ export default class extends BaseVw {
   }
 
   shouldShowPayForOrderSection() {
-    return this.buyer.id !== app.profile.id && this.getBalanceRemaining() > 0;
+    return this.buyer.id === app.profile.id && this.getBalanceRemaining() > 0;
   }
 
   shouldShowAcceptedSection() {
@@ -449,8 +451,7 @@ export default class extends BaseVw {
       ...this.model.toJSON(),
     };
 
-
-    if (this.shouldShowPayForOrderSection) {
+    if (this.shouldShowPayForOrderSection()) {
       templateData.balanceRemaining = this.getBalanceRemaining();
       templateData.paymentAddress = this.paymentAddress;
     }
