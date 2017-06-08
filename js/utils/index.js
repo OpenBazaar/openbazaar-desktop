@@ -222,12 +222,16 @@ export function deparam(queryStr = '') {
   return parsed;
 }
 
+export function getBlockChainBaseUrl(isTestnet = false) {
+  return isTestnet ?
+    'https://testnet.blockexplorer.com/' :
+    'https://blockchain.info/';
+}
+
 export function getBlockChainTxUrl(txid, isTestnet) {
-  let url = `https://blockchain.info/tx/${txid}`;
+  return `${getBlockChainBaseUrl(isTestnet)}tx/${txid}`;
+}
 
-  if (isTestnet) {
-    url = `https://testnet.blockexplorer.com/tx/${txid}`;
-  }
-
-  return url;
+export function getBlockChainAddressUrl(address, isTestnet) {
+  return `${getBlockChainBaseUrl(isTestnet)}address/${address}`;
 }

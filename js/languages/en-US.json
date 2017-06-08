@@ -988,7 +988,8 @@
           "body": "The original amount in bitcoin will be returned to the buyer",
           "btnCancel": "Cancel",
           "btnConfirm": "Yes, Reject"
-        }
+        },
+        "viewPaymentDetails": "View payment details %{icon}"
       },
       "refund": {
         "heading": "Refunded",

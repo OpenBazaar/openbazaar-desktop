@@ -448,12 +448,14 @@ export default class extends BaseVw {
     const templateData = {
       id: this.model.id,
       shouldShowPayForOrderSection: this.shouldShowPayForOrderSection(),
+      isCase: this.isCase(),
+      paymentAddress: this.paymentAddress,
+      isTestnet: app.testnet,
       ...this.model.toJSON(),
     };
 
     if (this.shouldShowPayForOrderSection()) {
       templateData.balanceRemaining = this.getBalanceRemaining();
-      templateData.paymentAddress = this.paymentAddress;
     }
 
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
