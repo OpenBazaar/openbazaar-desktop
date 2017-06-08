@@ -188,6 +188,13 @@ export default class extends BaseModel {
           if (Object.keys(dummySku).length) {
             options.attrs.item.skus = [dummySku];
           }
+        } else {
+          options.attrs.item.skus.forEach(sku => {
+            if (typeof sku.surcharge === 'number') {
+              sku.surcharge = decimalToInteger(sku.surcharge,
+                options.attrs.metadata.pricingCurrency === 'BTC');
+            }
+          });
         }
 
         delete options.attrs.item.productID;
@@ -304,7 +311,6 @@ export default class extends BaseModel {
           }
         });
       }
-      // END - convert price fields
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
       // and productID moved to be attributes of the Item model
@@ -316,16 +322,25 @@ export default class extends BaseModel {
         parsedResponse.item.productID = dummySku.productID;
       }
 
-      // If a sku quantity is set to less than 0, we'll set the
-      // infinite inventory flag.
       if (parsedResponse.item && parsedResponse.item.skus) {
         parsedResponse.item.skus.forEach(sku => {
+          // If a sku quantity is set to less than 0, we'll set the
+          // infinite inventory flag.
           if (sku.quantity < 0) {
             sku.infiniteInventory = true;
           } else {
             sku.infiniteInventory = false;
           }
+          // convert the surcharge
+          const surcharge = sku.surcharge;
+          const isBtc = parsedResponse.metadata &&
+            parsedResponse.metadata.pricingCurrency === 'BTC';
+
+          if (surcharge) {
+            sku.surcharge = integerToDecimal(surcharge, isBtc);
+          }
         });
+        // END - convert price fields
       }
     }
 
