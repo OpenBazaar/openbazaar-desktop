@@ -130,7 +130,7 @@ export default class extends Model {
               nestedInstance.set(nestedData);
               delete attrs[nestedKey];
             } else {
-              attrs[nestedKey] = new NestedClass(nestedData);
+              attrs[nestedKey] = new NestedClass(nestedData, { parse: true });
             }
           }
         });

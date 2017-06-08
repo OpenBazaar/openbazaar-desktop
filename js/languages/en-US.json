@@ -963,6 +963,15 @@
       "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
       "retryLink": "retry"      
+    },
+    "contractTab": {
+      "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
+      "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
+      "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
+      "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
+      "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
+      "buyerContractHeading": "Buyer Contract:",
+      "vendorContractHeading": "Vendor Contract:"
     }
   },
   "exchangeRatesSyncer": {

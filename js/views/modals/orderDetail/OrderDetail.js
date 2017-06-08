@@ -145,24 +145,23 @@ export default class extends BaseModal {
 
   get participantIds() {
     if (!this._participantIds) {
-      // For now using flat model data. Once we start on the summary
-      // tab, the Order Detail model will likely be built up with
-      // nested models and collections.
-      const modelData = this.model.toJSON();
-      let contract = modelData.contract;
+      let contract = this.model.get('contract');
 
       if (this.type === 'case') {
-        contract = modelData.buyerContract;
-
-        if (!modelData.buyerOpened) {
-          contract = modelData.vendorContract;
-        }
+        contract = this.model.get('buyerOpened') ?
+          this.model.get('buyerContract') :
+          this.model.get('vendorContract');
       }
 
+      // For now using flat model data. Once we start on the summary
+      // tab, the Order Detail model will likely be built up with
+      // more nested models and collections.
+      const contractJSON = contract.toJSON();
+
       this._participantIds = {
-        buyer: contract.buyerOrder.buyerID.peerID,
-        vendor: contract.vendorListings[0].vendorID.peerID,
-        moderator: contract.buyerOrder.payment.moderator,
+        buyer: contractJSON.buyerOrder.buyerID.peerID,
+        vendor: contractJSON.vendorListings[0].vendorID.peerID,
+        moderator: contractJSON.buyerOrder.payment.moderator,
       };
     }
 
@@ -319,6 +318,7 @@ export default class extends BaseModal {
       model: this.model,
     });
 
+    this.listenTo(view, 'clickBackToSummary', () => this.selectTab('summary'));
     return view;
   }
 
