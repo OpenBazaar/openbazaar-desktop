@@ -57,6 +57,12 @@
     padding: $padMd;
   }
 
+  .backToSummaryWrap {
+    position: absolute;
+    max-width: 250px;
+    left: $padLg;
+  }  
+
   .discussionTab {
     position: relative;
     overflow: hidden;
@@ -219,12 +225,6 @@
   }
 
   .contractTab {
-    .backToSummaryWrap {
-      position: absolute;
-      max-width: 250px;
-      left: $padLg;
-    }
-
     .renderjson {
       padding: $pad;
       overflow: auto;
@@ -307,6 +307,13 @@
         transform: translateY(-2px);
         font-size: $tx6;
       }
+    }
+  }
+
+  .fulfillOrderTab {
+    hr {
+      margin-left: $padLg;
+      margin-right: $padLg;
     }
   }
 }

@@ -1,4 +1,3 @@
-<% console.log('boom'); window.boom = ob %>
 <%
   if (ob.order.shipping) {
     var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;

@@ -5,11 +5,13 @@ import { getSocket } from '../../../utils/serverConnect';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
+import { Model } from 'backbone';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
+import FulfillOrder from './FulfillOrder';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -19,7 +21,8 @@ export default class extends BaseModal {
         fetchFailed: false,
         fetchError: '',
       },
-      initialTab: 'summary',
+      // initialTab: 'summary',
+      initialTab: 'fulfillOrder',
       ...options,
     };
 
@@ -333,6 +336,14 @@ export default class extends BaseModal {
     });
 
     this.listenTo(view, 'clickBackToSummary', () => this.selectTab('summary'));
+    return view;
+  }
+
+  createFulfillOrderTabView() {
+    const view = this.createChild(FulfillOrder, {
+      model: new Model(),
+    });
+
     return view;
   }
 

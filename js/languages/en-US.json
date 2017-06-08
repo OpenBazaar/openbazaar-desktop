@@ -945,6 +945,7 @@
       "discussion": "Discussion",
       "contract": "Contract (JSON)"
     },
+    "backToSummary": "Back to summary",
     "discussionTab": {
       "roleVendor": "vendor",
       "roleBuyer": "buyer",
@@ -959,6 +960,7 @@
       "retryLink": "retry"      
     },
     "contractTab": {
+      "heading": "Contract (JSON)",
       "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
       "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
       "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
@@ -1034,6 +1036,9 @@
       "payForOrder": {
         "heading": "Pay for your order"
       }
+    },
+    "fulfillOrderTab": {
+      "heading": "Fulfill Order"
     }
   },
   "orderUtil": {

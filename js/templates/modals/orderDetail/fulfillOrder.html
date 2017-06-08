@@ -1,0 +1,27 @@
+<div class="padLg flexVCent">
+  <div class="backToSummaryWrap">
+    <a class="js-backToSummary clrTEm txU"><%= ob.polyT(`orderDetail.backToSummary`) %></a>
+  </div>
+  <div class="txCtr txB tx3 flexExpand"><%= ob.polyT(`orderDetail.fulfillOrderTab.heading`) %></div>
+</div>
+<hr class="clrBr rowMd" />
+<form class="padKids padStack pad clrP clrBr">
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="shippingCarrier" class="required">Shipping Carrier</label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors.physicalDeliveryShipper) print(ob.formErrorTmpl({ errors: ob.errors.physicalDeliveryShipper })) %>
+      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="shippingCarrier" value="<%= ob.physicalDeliveryShipper %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderName') %>" />
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="shippingCarrier" class="required">Shipping Carrier</label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors.physicalDeliveryShipper) print(ob.formErrorTmpl({ errors: ob.errors.physicalDeliveryShipper })) %>
+      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="shippingCarrier" value="<%= ob.physicalDeliveryShipper %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderName') %>" />
+    </div>
+  </div>  
+</form>
