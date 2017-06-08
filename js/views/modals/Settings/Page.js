@@ -37,7 +37,7 @@ export default class extends baseVw {
 
   /** Handles when a hex color code is entered by updating color picker. */
   handleColorCodeEntered(event) {
-    const colorPickerId = $(event.target).data('color-picker-id');
+    const colorPickerId = this.$(event.target).data('color-picker-id');
     const $colorPicker = this.getCachedElement(colorPickerId);
     const newHexColorCode = event.target.value;
 
@@ -50,32 +50,11 @@ export default class extends baseVw {
 
   /** Handles when a color is chosen from the color picker by updating hex color code text. */
   handleColorChosen(event) {
-    const hexInputId = $(event.target).data('hex-input-id');
+    const hexInputId = this.$(event.target).data('hex-input-id');
     const $hexInput = this.getCachedElement(hexInputId);
     const newColor = event.target.value;
 
     $hexInput.val(newColor);
-  }
-
-  /** Returns a given jquery Element or a locally cached version in this view for optimization. */
-  getCachedElement(elementId) {
-    let element;
-
-    // Ensure we have our cached elements map.
-    if (!this._cachedElementMap) {
-      this._cachedElementMap = new Map();
-    }
-
-    // If the cache has the element, we shall use it.
-    if (this._cachedElementMap.has(elementId)) {
-      element =  this._cachedElementMap.get(elementId);
-    } else {
-      // The cache does not not have the element, therefore query with jQuery and cache it.
-      element = $(elementId);
-      this._cachedElementMap.set(elementId, element);
-    }
-
-    return element;
   }
 
   avatarRotate(direction) {
@@ -247,6 +226,8 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+
     let avatarURI = false;
     let headerURI = false;
 
