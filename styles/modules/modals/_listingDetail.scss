@@ -191,8 +191,9 @@
           .reviewTextWrapper .reviewText {
             line-height: 1.6; // hack to make sure 6 lines works right for trunk8
 
-            button {
-              padding-left: 1em;
+            .trunkLink {
+              font-weight: 400;
+              text-decoration: underline;
             }
           }
 

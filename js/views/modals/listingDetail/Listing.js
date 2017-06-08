@@ -121,7 +121,7 @@ export default class extends BaseModal {
   }
 
   onRatings(data = {}) {
-    const ratingText = twemoji.parse(`⭐ ${data.average || 0}`,
+    const ratingText = twemoji.parse(`⭐ ${data.average.toFixed(1) || 0}`,
       icon => (`../imgs/emojis/72X72/${icon}.png`));
 
     const ratingTotalText = twemoji.parse(`💬 ${data.count || 0}`,

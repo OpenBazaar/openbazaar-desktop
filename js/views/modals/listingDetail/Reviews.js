@@ -105,7 +105,7 @@ export default class extends BaseVw {
     this.$reviewWrapper.append(newRevieEl);
     // truncate any review text that is too long
     newRevieEl.find('.js-reviewText').trunk8({
-      fill: `<button class="btnTxtOnly js-showMore">${btnTxt}</button>`,
+      fill: `… <button class="btnTxtOnly trunkLink js-showMore">${btnTxt}</button>`,
       lines: truncLines,
     });
   }

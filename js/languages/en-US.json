@@ -654,8 +654,8 @@
       "quality": "Quality",
       "loadMore": "Load More",
       "noReviews": "This listing does not have any reviews yet.",
-      "showMore": "…Show More",
-      "showLess": "…Show Less"
+      "showMore": "Show More",
+      "showLess": "Show Less"
     },
     "errors": {
       "fetchReviews": "Reviews could not be loaded due to an error."
