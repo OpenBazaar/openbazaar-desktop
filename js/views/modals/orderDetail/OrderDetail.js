@@ -5,7 +5,7 @@ import { getSocket } from '../../../utils/serverConnect';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
-import { Model } from 'backbone';
+import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
@@ -339,9 +339,20 @@ export default class extends BaseModal {
     return view;
   }
 
+  // This should not be called on a Case.
   createFulfillOrderTabView() {
+    // const contractType = this.model.get('contract')
+    //   .get('vendorListings')
+    //   .at(0)
+    //   .get('metadata')
+    //   .get('contractType');
+
+    // const contractType = 'PHYSICAL_GOOD';
+    const contractType = 'DIGITAL_GOOD';
+
     const view = this.createChild(FulfillOrder, {
-      model: new Model(),
+      model: new OrderFulfillment({}, { contractType }),
+      contractType,
     });
 
     return view;

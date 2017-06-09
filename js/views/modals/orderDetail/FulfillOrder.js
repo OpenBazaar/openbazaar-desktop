@@ -10,41 +10,48 @@ export default class extends BaseVw {
       throw new Error('Please provide an OrderFulfillment model.');
     }
 
-    this._state = {
-      contractType: 'PHYSICAL_GOOD',
-      ...options.initialState || {},
-    };
+    if (!options.contractType) {
+      throw new Error('Please provide the contract type.');
+    }
+
+    this.contractType = options.contractType;
+
+    // this._state = {
+    //   contractType: 'PHYSICAL_GOOD',
+    //   ...options.initialState || {},
+    // };
   }
 
   className() {
     return 'fulfillOrderTab';
   }
 
-  getState() {
-    return this._state;
-  }
+  // getState() {
+  //   return this._state;
+  // }
 
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
+  // setState(state, replace = false, renderOnChange = true) {
+  //   let newState;
 
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
+  //   if (replace) {
+  //     this._state = {};
+  //   } else {
+  //     newState = _.extend({}, this._state, state);
+  //   }
 
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
+  //   if (renderOnChange && !_.isEqual(this._state, newState)) {
+  //     this._state = newState;
+  //     this.render();
+  //   }
 
-    return this;
-  }
+  //   return this;
+  // }
 
   render() {
     loadTemplate('modals/orderDetail/fulfillOrder.html', (t) => {
       this.$el.html(t({
-        ...this._state,
+        // ...this._state,
+        contractType: this.contractType,
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
       }));

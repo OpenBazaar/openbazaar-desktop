@@ -6,22 +6,43 @@
 </div>
 <hr class="clrBr rowMd" />
 <form class="padKids padStack pad clrP clrBr">
+  <% if (ob.contractType === 'PHYSICAL_GOOD') { %>
   <div class="flexRow gutterH">
     <div class="col3">
-      <label for="shippingCarrier" class="required">Shipping Carrier</label>
+      <label for="shippingCarrier" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierLabel`) %></label>
     </div>
     <div class="col7">
-      <% if (ob.errors.physicalDeliveryShipper) print(ob.formErrorTmpl({ errors: ob.errors.physicalDeliveryShipper })) %>
-      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="shippingCarrier" value="<%= ob.physicalDeliveryShipper %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderName') %>" />
+      <% if (ob.errors['physicalDelivery.shipper']) print(ob.formErrorTmpl({ errors: ob.errors['physicalDelivery.shipper'] })) %>
+      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="shippingCarrier" value="<%= ob.physicalDelivery.shipper %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierPlaceholder`) %>" />
     </div>
   </div>
   <div class="flexRow gutterH">
     <div class="col3">
-      <label for="shippingCarrier" class="required">Shipping Carrier</label>
+      <label for="password" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.trackingLabel`) %></label>
     </div>
     <div class="col7">
-      <% if (ob.errors.physicalDeliveryShipper) print(ob.formErrorTmpl({ errors: ob.errors.physicalDeliveryShipper })) %>
-      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="shippingCarrier" value="<%= ob.physicalDeliveryShipper %>" placeholder="<%= ob.polyT('settings.addressesTab.placeholderName') %>" />
+      <% if (ob.errors['physicalDelivery.trackingNumber']) print(ob.formErrorTmpl({ errors: ob.errors['physicalDelivery.trackingNumber'] })) %>
+      <input type="text" class="clrBr clrSh2" name="physicalDelivery.trackingNumber" id="password" value="<%= ob.physicalDelivery.trackingNumber %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.trackingPlaceholder`) %>" />
     </div>
-  </div>  
+  </div>
+  <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="fileUrl" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.fileUrlLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['digitalDelivery.url']) print(ob.formErrorTmpl({ errors: ob.errors['digitalDelivery.url'] })) %>
+      <input type="text" class="clrBr clrSh2" name="digitalDelivery.url" id="fileUrl" value="<%= ob.digitalDelivery.url %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.fileUrlPlaceholder`) %>" />
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="password" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.passwordLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['digitalDelivery.password']) print(ob.formErrorTmpl({ errors: ob.errors['digitalDelivery.password'] })) %>
+      <input type="text" class="clrBr clrSh2" name="digitalDelivery.password" id="fileUrl" value="<%= ob.digitalDelivery.password %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.passwordPlaceholder`) %>" />
+    </div>
+  </div>
+  <% } %>
 </form>

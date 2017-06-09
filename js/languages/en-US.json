@@ -1038,7 +1038,15 @@
       }
     },
     "fulfillOrderTab": {
-      "heading": "Fulfill Order"
+      "heading": "Fulfill Order",
+      "shippingCarrierLabel": "Shipping Carrier",
+      "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
+      "trackingLabel": "Tracking #",
+      "trackingPlaceholder": "optional",
+      "fileUrlLabel": "File URL",
+      "fileUrlPlaceholder": "Link to file(s)",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Password to file (optional)"
     }
   },
   "orderUtil": {
@@ -1182,6 +1190,10 @@
     "missingAddress": "Please choose a valid shipping address.",
     "missingShippingOption": "Please choose a valid shipping option.",
     "needsModerator": "You must select a moderator to make a Moderated Payment."
+  },
+  "orderFulfillmentModelErrors": {
+    "provideShipper": "Please provide a shipping carrier.",
+    "provideUrl": "Please provide a file url."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
