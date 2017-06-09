@@ -252,26 +252,6 @@
     }
 
     .payment, .refunded {
-      .statusIconCol {
-        text-align: center;
-        flex-shrink: 0;
-
-        span {
-          width: 35px;
-          height: 35px;
-          display: inline-block;
-          border-radius: 50%;
-          border-style: solid;
-          border-width: 1px;
-          font-size: 30px;
-
-          &.ion-ios-checkmark-empty {
-            font-size: 36px;
-            line-height: 1;
-          }
-        }
-      }
-
       .rejectConfirm {
         left: 50%;
         transform: translateX(-50%);
@@ -279,12 +259,42 @@
       }
     }
 
-    .acceptedEvent {
-      .avatarCol {
-        flex-shrink: 0;
+    .statusIconCol {
+      text-align: center;
+      flex-shrink: 0;
+
+      span {
         width: 35px;
         height: 35px;
+        display: inline-block;
+        border-radius: 50%;
+        border-style: solid;
+        border-width: 1px;
+        font-size: 30px;
+
+        &.ion-ios-checkmark-empty {
+          font-size: 36px;
+          line-height: 1;
+        }
+
+        &.ion-cube {
+          font-size: 17px;
+
+          &::before {
+            padding-top: 8px;
+          }
+        }
       }
+    }    
+
+    .avatarCol {
+      flex-shrink: 0;
+      width: 35px;
+      height: 35px;
+      border-width: 2px;
+      border-style: solid;
+      width: 38px;
+      height: 38px;        
     }
 
     .orderDetails {
@@ -302,8 +312,6 @@
 
       .orderDetailsCopiedToClipboard {
         position: absolute;
-        // right: $padSm;
-        // top: 5px;
         transform: translateY(-2px);
         font-size: $tx6;
       }
@@ -314,6 +322,10 @@
     hr {
       margin-left: $padLg;
       margin-right: $padLg;
+    }
+    
+    .buttonBar {
+      padding: $padMd $padLg $padLg;
     }
   }
 }

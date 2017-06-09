@@ -1,0 +1,35 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.heading') %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+
+<div class="border clrBr padMd">
+  <% if (ob.contractType === 'PHYSICAL_GOOD') { %>
+  <div class="flex gutterH clrT">
+    <%
+      let statusIcon = 'ion-ios-folder';
+      let statusIconClass = 'clrT';
+
+      if (ob.contractType === 'PHYSICAL_GOOD') {
+        statusIcon = 'ion-cube';
+      } else if (ob.contractType === 'SERVICE') {
+        statusIcon = 'ion-ios-body';
+      }
+
+      const physicalDelivery = ob.physicalDelivery && ob.physicalDelivery[0] || {};
+    %>
+    <div class="statusIconCol"><span class="clrBr ion-cube"></span></div>
+    <div class="flexExpand tx5">
+      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.shippedByLabel') %> <span><%= physicalDelivery.shipper %></span></div>
+      <div class="rowHg">
+        <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.trackingNumberLabel') %></span> <%= physicalDelivery.trackingNumber || ob.polyT('orderDetail.summaryTab.notApplicable') %>
+        <% if (physicalDelivery.trackingNumber) { %>
+        <a class="clrTEm js-copyTrackingNumber"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
+  <% } else if (ob.contractType === 'SERVICE') { %>
+  <% } %>
+</div>

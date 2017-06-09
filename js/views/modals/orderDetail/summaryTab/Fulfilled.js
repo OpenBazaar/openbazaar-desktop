@@ -7,31 +7,27 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
 
+    if (!options.dataObject) {
+      throw new Error('Please provide a vendorOrderFulfillment data object.');
+    }
+
     this._state = {
-      infoText: '',
-      showRefundButton: false,
-      showFulfillButton: false,
-      avatarHashes: {},
-      refundConfirmOn: false,
-      refundOrderInProgress: false,
-      fulfillInProgress: false,
+      contractType: 'PHYSICAL_GOOD',
       ...options.initialState || {},
     };
+
+    this.dataObject = options.dataObject;
   }
 
   className() {
-    return 'acceptedEvent rowLg';
+    return 'fulfilledEvent rowLg';
   }
 
-  events() {
-    return {
-      'click .js-fulfillOrder': 'onClickFulfillOrder',
-    };
-  }
-
-  onClickFulfillOrder() {
-    this.trigger('clickFulfillOrder');
-  }
+  // events() {
+  //   return {
+  //     'click .js-fulfillOrder': 'onClickFulfillOrder',
+  //   };
+  // }
 
   getState() {
     return this._state;
@@ -55,9 +51,10 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/orderDetail/summaryTab/accepted.html', (t) => {
+    loadTemplate('modals/orderDetail/summaryTab/fulfilled.html', (t) => {
       this.$el.html(t({
         ...this._state,
+        ...this.dataObject || {},
         moment,
       }));
     });
