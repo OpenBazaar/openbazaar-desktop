@@ -30,7 +30,31 @@ export default class extends baseVw {
       'click .js-avatarRight': 'avatarRightClick',
       'click .js-headerLeft': 'headerLeftClick',
       'click .js-headerRight': 'headerRightClick',
+      'change .js-colorPicker': 'handleColorChosen',
+      'change .js-colorCode': 'handleColorCodeEntered',
     };
+  }
+
+  /** Handles when a hex color code is entered by updating color picker. */
+  handleColorCodeEntered(event) {
+    const colorPickerId = this.$(event.target).data('color-picker-id');
+    const $colorPicker = this.getCachedElement(colorPickerId);
+    const newHexColorCode = event.target.value;
+
+    // If the text passes a basic RegExp for a valid 6 digit hex value,
+    // update the color picker's color.
+    if (/^#([0-9a-f]{6})$/i.test(newHexColorCode)) {
+      $colorPicker.val(newHexColorCode);
+    }
+  }
+
+  /** Handles when a color is chosen from the color picker by updating hex color code text. */
+  handleColorChosen(event) {
+    const hexInputId = this.$(event.target).data('hex-input-id');
+    const $hexInput = this.getCachedElement(hexInputId);
+    const newColor = event.target.value;
+
+    $hexInput.val(newColor);
   }
 
   avatarRotate(direction) {
@@ -202,6 +226,8 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+
     let avatarURI = false;
     let headerURI = false;
 
