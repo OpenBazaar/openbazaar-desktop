@@ -383,3 +383,31 @@ input[type=range][class~="clrS"] {
     color: $text;
   }
 }
+
+.stateProgressBar {
+  .stateSection {
+    .stateCircle {
+      background-color: $primary;
+      border-color: $border;
+
+      .ion-ios-checkmark-empty {
+        color: $primary;
+      }
+    }
+
+    .stateTrack {
+      background-color: $primary;
+      border-color: $border;
+    }
+
+    .stateCircleBorderFillIn {
+      background-color: $primary;
+    }
+
+    &.active {
+      .stateCircle, .stateTrack {
+        background-color: $text;
+      }
+    }
+  }
+}

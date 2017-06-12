@@ -429,6 +429,11 @@
   }
 }
 
+.gutterVTn > * {
+  @extend .gutterVFlush;
+  margin-bottom: $padTn;
+}
+
 .gutterVSm > * {
   @extend .gutterVFlush;
   margin-bottom: $padSm;

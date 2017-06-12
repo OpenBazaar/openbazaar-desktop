@@ -234,4 +234,79 @@
       }
     }
   }
+
+  .summaryTab {
+    h2 {
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+
+    .statusProgressBarContainer {
+      padding: 10px 20px;
+      height: 50px;
+    }
+
+    .copiedToClipboard {
+      position: absolute;
+      transform: translateY(-100%);
+    }
+
+    .payment, .refunded {
+      .statusIconCol {
+        text-align: center;
+        flex-shrink: 0;
+
+        span {
+          width: 35px;
+          height: 35px;
+          display: inline-block;
+          border-radius: 50%;
+          border-style: solid;
+          border-width: 1px;
+          font-size: 30px;
+
+          &.ion-ios-checkmark-empty {
+            font-size: 36px;
+            line-height: 1;
+          }
+        }
+      }
+
+      .rejectConfirm {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 39px;
+      }
+    }
+
+    .acceptedEvent {
+      .avatarCol {
+        flex-shrink: 0;
+        width: 35px;
+        height: 35px;
+      }
+    }
+
+    .orderDetails {
+      position: relative;
+
+      .listingThumbCol {
+        width: 42px;
+        height: 42px;
+      }
+
+      hr {
+        margin-top: 13px;
+        margin-bottom: 13px;
+      }
+
+      .orderDetailsCopiedToClipboard {
+        position: absolute;
+        // right: $padSm;
+        // top: 5px;
+        transform: translateY(-2px);
+        font-size: $tx6;
+      }
+    }
+  }
 }

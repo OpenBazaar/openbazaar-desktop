@@ -6,7 +6,9 @@ import {
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
-import { splitIntoRows } from './';
+import {
+  splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
+} from './';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -33,20 +35,17 @@ export function parseEmojis(text, className = '', attrs = {}) {
 
 export const getServerUrl = app.getServerUrl.bind(app);
 
-export { formatCurrency };
-
-export { convertAndFormatCurrency };
-
-export { isHiRez };
-
-export { isLargeWidth };
-
-export { isSmallHeight };
-
-export { getAvatarBgImage };
-
-export { getListingBgImage };
-
-export { upToFixed };
-
-export { splitIntoRows };
+export {
+  formatCurrency,
+  convertAndFormatCurrency,
+  isHiRez,
+  isLargeWidth,
+  isSmallHeight,
+  getAvatarBgImage,
+  getListingBgImage,
+  upToFixed,
+  splitIntoRows,
+  getBlockChainBaseUrl,
+  getBlockChainTxUrl,
+  getBlockChainAddressUrl,
+};
