@@ -338,7 +338,7 @@
         "helperServerAddress": "Use Gmail, Yahoo, anything",
         "helperNewEmail": "Create an email address at %{helperGmailLink}",
         "helperUsername": "Your email address",
-        "helperPassword": "Encrypted and saved privately in your database",
+        "helperPassword": "Saved privately in your database",
         "helperSendFrom": "The email address to send from",
         "helperSendTo": "The email address to send to",
         "helperGmailLink": "Gmail"
@@ -956,7 +956,7 @@
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
       "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
-      "retryLink": "retry"      
+      "retryLink": "retry"
     },
     "contractTab": {
       "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
@@ -968,7 +968,7 @@
       "vendorContractHeading": "Vendor Contract:"
     },
     "summaryTab": {
-      "orderNumber": "Order #: %{orderId}",      
+      "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "payment": {
         "firstPaymentHeading": "Payment Details",
