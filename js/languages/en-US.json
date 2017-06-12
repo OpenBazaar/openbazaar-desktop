@@ -88,6 +88,8 @@
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
+    "createListing": "Create Listing",
+    "block": "Block",
     "about": "About",
     "aboutEmpty": "About is empty…",
     "follow": "Follow",
@@ -123,6 +125,8 @@
       "sortBy": "Sort By",
       "countListings": "%{smart_count} listing |||| %{smart_count} listings",
       "countListingsFound": "%{countListings} found",
+      "inactive": "Your store is currently inactive and hidden from the public. %{link}",
+      "inactiveLink": "Change",
       "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
       "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
       "popinRefreshLink": "refresh",
@@ -962,7 +966,7 @@
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
       "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
-      "retryLink": "retry"      
+      "retryLink": "retry"
     },
     "contractTab": {
       "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",

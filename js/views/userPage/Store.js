@@ -7,6 +7,7 @@ import app from '../../app';
 import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
 import { convertCurrency, NoExchangeRateDataError } from '../../utils/currency';
+import { launchSettingsModal } from '../../utils/modalManager';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import { events as listingEvents } from '../../models/listing/';
@@ -63,6 +64,7 @@ export default class extends BaseVw {
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
     this.listenTo(app.settings, 'change:localCurrency', () => (this.showDataChangedMessage()));
+    this.listenTo(app.profile, 'change:vendor', () => (this.showDataChangedMessage()));
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => (this.showDataChangedMessage()));
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
@@ -93,6 +95,7 @@ export default class extends BaseVw {
       'change .js-sortBySelect': 'onChangeSortBy',
       'click .js-toggleListGridView': 'onClickToggleListGridView',
       'click .js-clearSearch': 'onClickClearSearch',
+      'click .js-activateStore': 'onClickActivateStore',
     };
   }
 
@@ -195,6 +198,10 @@ export default class extends BaseVw {
 
   onClickToggleListGridView() {
     this.listingsViewType = this.listingsViewType === 'list' ? 'grid' : 'list';
+  }
+
+  onClickActivateStore() {
+    launchSettingsModal({ initTab: 'Store' });
   }
 
   get listingsViewType() {
@@ -534,6 +541,7 @@ export default class extends BaseVw {
 
     loadTemplate('userPage/store.html', (t) => {
       this.$el.html(t({
+        ...this.model.toJSON(),
         isFetching,
         fetchFailed,
         fetchFailReason: this.fetchFailed && this.fetch.responseText || '',
