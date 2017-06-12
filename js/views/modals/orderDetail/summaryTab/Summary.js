@@ -149,7 +149,7 @@ export default class extends BaseVw {
     });
 
     this.listenTo(this.contract, 'change:vendorOrderFulfillment',
-      () => this.appendFulfilledView());
+      () => this.renderFulfilledView());
 
     const serverSocket = getSocket();
 
