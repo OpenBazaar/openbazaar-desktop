@@ -1009,14 +1009,24 @@
         "buyerOrderAccepted": "Thank you for your purchase!",
         "modOrderAccepted": "The vendor order has accepted the order.",
         "refundBtn": "Refund",
-        "fulfillBtn": "Fulfill Order"
+        "fulfillBtn": "Fulfill Order",
+        "refundConfirm": {
+          "title": "Are you sure?",
+          "body": "The original amount in bitcoin will be returned to the buyer",
+          "btnCancel": "Cancel",
+          "btnConfirm": "Yes, Refund"
+        }
       },
       "fulfilled": {
         "heading": "Fulfilled",
         "shippedByLabel": "Order Shipped via:",
         "trackingNumberLabel": "Tracking #:",
         "noteFromLabel": "Note from %{store}:",
-        "copyLink": "Copy"
+        "copyLink": "Copy",
+        "digitalReadyForDlHeading": "Digital files are ready for download!",
+        "digitalReadyForDlText": "The files have been delivered. DOwnload when you're ready.",
+        "urlLabel": "File URL",
+        "passwordLabel": "Password"
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1065,7 +1075,8 @@
     "failedAcceptHeading": "There was an error accepting the order.",
     "failedRejectHeading": "There was an error rejecting the order.",
     "failedCancelHeading": "There was an error canceling the order.",
-    "failedFulfillHeading": "There was an error fulfilling the order."
+    "failedFulfillHeading": "There was an error fulfilling the order.",
+    "failedRefundHeading": "There was an error refunding the order."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

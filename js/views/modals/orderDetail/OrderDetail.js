@@ -347,11 +347,7 @@ export default class extends BaseModal {
 
   // This should not be called on a Case.
   createFulfillOrderTabView() {
-    const contractType = this.model.get('contract')
-      .get('vendorListings')
-      .at(0)
-      .get('metadata')
-      .get('contractType');
+    const contractType = this.model.get('contract').type;
 
     const model = new OrderFulfillment({ orderId: this.model.id },
       { contractType });

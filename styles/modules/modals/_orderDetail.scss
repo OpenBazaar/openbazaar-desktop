@@ -284,6 +284,22 @@
             padding-top: 8px;
           }
         }
+
+        &.ion-ios-folder {
+          font-size: 15px;
+
+          &::before {
+            padding-top: 9px;
+          }
+        }
+
+        &.ion-ios-body {
+          font-size: 20px;
+
+          &::before {
+            padding-top: 7px;
+          }          
+        }
       }
     }    
 
@@ -314,6 +330,14 @@
         position: absolute;
         transform: translateY(-2px);
         font-size: $tx6;
+      }
+    }
+
+    .acceptedEvent {
+      .refundConfirm {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 39px;        
       }
     }
   }

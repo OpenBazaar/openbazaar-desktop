@@ -12,6 +12,7 @@ const acceptPosts = {};
 const rejectPosts = {};
 const cancelPosts = {};
 const fulfillPosts = {};
+const refundPosts = {};
 
 function confirmOrder(orderId, reject = false) {
   if (!orderId) {
@@ -191,6 +192,57 @@ export function fulfillOrder(contractType = 'PHYSICAL_GOOD', data = {}) {
   }
 
   events.trigger('fulfillingOrder', {
+    id: orderId,
+    xhr: post,
+  });
+
+  return post;
+}
+
+export function refundingOrder(orderId) {
+  return refundPosts[orderId] || false;
+}
+
+export function refundOrder(orderId) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  let post = refundPosts[orderId];
+
+  if (!post) {
+    post = $.post({
+      url: app.getServerUrl('ob/refund'),
+      data: JSON.stringify({
+        orderId,
+      }),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).always(() => {
+      delete refundPosts[orderId];
+    }).done(() => {
+      events.trigger('refundOrderComplete', {
+        id: orderId,
+        xhr: post,
+      });
+    })
+    .fail(xhr => {
+      events.trigger('refundOrderFail', {
+        id: orderId,
+        xhr: post,
+      });
+
+      const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+      openSimpleMessage(
+        app.polyglot.t('orderUtil.failedRefundHeading'),
+        failReason
+      );
+    });
+
+    refundPosts[orderId] = post;
+  }
+
+  events.trigger('refundingOrder', {
     id: orderId,
     xhr: post,
   });

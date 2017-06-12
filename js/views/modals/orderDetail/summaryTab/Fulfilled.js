@@ -1,5 +1,8 @@
+import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
+import { clipboard } from 'electron';
+import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -13,6 +16,7 @@ export default class extends BaseVw {
 
     this._state = {
       contractType: 'PHYSICAL_GOOD',
+      showPassword: false,
       ...options.initialState || {},
     };
 
@@ -23,11 +27,28 @@ export default class extends BaseVw {
     return 'fulfilledEvent rowLg';
   }
 
-  // events() {
-  //   return {
-  //     'click .js-fulfillOrder': 'onClickFulfillOrder',
-  //   };
-  // }
+  events() {
+    return {
+      'click .js-copyTrackingNumber': 'onClickCopyTrackingNumber',
+    };
+  }
+
+  onClickCopyTrackingNumber() {
+    clipboard.writeText(this.dataObject.physicalDelivery[0].trackingNumber);
+    this.$trackingCopiedToClipboard
+      .velocity('stop')
+      .velocity('fadeIn', {
+        complete: () => {
+          this.$trackingCopiedToClipboard
+            .velocity('fadeOut', { delay: 1000 });
+        },
+      });
+  }
+
+  get $trackingCopiedToClipboard() {
+    return this._$copiedToClipboard ||
+      (this._$copiedToClipboard = this.$('.js-trackingCopiedToClipboard'));
+  }
 
   getState() {
     return this._state;
@@ -57,6 +78,8 @@ export default class extends BaseVw {
         ...this.dataObject || {},
         moment,
       }));
+
+      this._$copiedToClipboard = null;
     });
 
     return this;

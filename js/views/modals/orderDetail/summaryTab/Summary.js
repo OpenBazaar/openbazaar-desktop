@@ -4,7 +4,6 @@ import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import {
-  fulfillingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
@@ -135,21 +134,16 @@ export default class extends BaseVw {
     this.listenTo(this.contract, 'change:vendorOrderConfirmation',
       () => this.renderAcceptedView());
 
-    this.listenTo(orderEvents, 'fulfillingOrder', e => {
-      if (e.id === this.model.id && this.accepted) {
-        this.accepted.setState({ fulfillInProgress: true });
-      }
-    });
-
-    this.listenTo(orderEvents, 'fulfillOrderComplete, fulfillOrderFail', e => {
-      if (e.id === this.model.id && this.accepted) {
-        this.accepted.setState({ fulfillInProgress: false });
-      }
-    });
-
     this.listenTo(orderEvents, 'fulfillOrderComplete', e => {
       if (e.id === this.model.id && this.accepted) {
-        this.model.setState('FULFILLED');
+        this.model.set('state', 'FULFILLED');
+        this.model.fetch();
+      }
+    });
+
+    this.listenTo(orderEvents, 'refundOrderComplete', e => {
+      if (e.id === this.model.id) {
+        this.model.setState('state', 'REFUNDED');
         this.model.fetch();
       }
     });
@@ -392,7 +386,6 @@ export default class extends BaseVw {
         if (canFulfill) {
           initialState.infoText =
             app.polyglot.t('orderDetail.summaryTab.accepted.vendorCanFulfill');
-          initialState.fulfillInProgress = fulfillingOrder(this.model.id);
         } else {
           initialState.infoText =
             app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived');
@@ -409,7 +402,10 @@ export default class extends BaseVw {
     }
 
     if (this.accepted) this.accepted.remove();
-    this.accepted = this.createChild(Accepted, { initialState });
+    this.accepted = this.createChild(Accepted, {
+      orderId: this.model.id,
+      initialState,
+    });
     this.listenTo(this.accepted, 'clickFulfillOrder',
       () => this.trigger('clickFulfillOrder'));
 
@@ -447,7 +443,18 @@ export default class extends BaseVw {
     }
 
     if (this.fulfilled) this.fulfilled.remove();
-    this.fulfilled = this.createChild(Fulfilled, { dataObject: data[0] });
+    this.fulfilled = this.createChild(Fulfilled, {
+      dataObject: data[0],
+      initialState: {
+        contractType: this.contract.type,
+        showPassword: this.moderator && this.moderator.id !== app.profile.id || true,
+      },
+    });
+
+    this.vendor.getProfile()
+      .done(profile =>
+        this.fulfilled.setState({ storeName: profile.get('name') }));
+
     this.$subSections.prepend(this.fulfilled.render().el);
   }
 
