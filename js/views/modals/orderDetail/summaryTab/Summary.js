@@ -179,6 +179,10 @@ export default class extends BaseVw {
             e.jsonData.notification.refund.orderId === this.model.id) {
             // A notification the buyer will get when the vendor has refunded their order.
             this.model.fetch();
+          } else if (e.jsonData.notification.orderFulfillment &&
+            e.jsonData.notification.orderFulfillment.orderId === this.model.id) {
+            // A notification the buyer will get when the vendor has fulfilled their order.
+            this.model.fetch();
           }
         }
       });
