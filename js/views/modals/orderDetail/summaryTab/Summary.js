@@ -143,7 +143,7 @@ export default class extends BaseVw {
 
     this.listenTo(orderEvents, 'refundOrderComplete', e => {
       if (e.id === this.model.id) {
-        this.model.setState('state', 'REFUNDED');
+        this.model.set('state', 'REFUNDED');
         this.model.fetch();
       }
     });
@@ -174,6 +174,10 @@ export default class extends BaseVw {
           } else if (e.jsonData.notification.orderConfirmation &&
             e.jsonData.notification.orderConfirmation.orderId === this.model.id) {
             // A notification the buyer will get when the vendor has accepted an offline order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.refund &&
+            e.jsonData.notification.refund.orderId === this.model.id) {
+            // A notification the buyer will get when the vendor has refunded their order.
             this.model.fetch();
           }
         }

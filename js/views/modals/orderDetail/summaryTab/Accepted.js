@@ -34,7 +34,7 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(orderEvents, 'fulfillOrderComplete, fulfillOrderFail', e => {
+    this.listenTo(orderEvents, 'fulfillOrderComplete fulfillOrderFail', e => {
       if (e.id === this.orderId) {
         this.setState({ fulfillInProgress: false });
       }
@@ -46,7 +46,7 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(orderEvents, 'refundOrderComplete, refundOrderFail', e => {
+    this.listenTo(orderEvents, 'refundOrderComplete refundOrderFail', e => {
       if (e.id === this.orderId) {
         this.setState({ refundOrderInProgress: false });
       }
