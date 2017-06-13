@@ -108,7 +108,7 @@
       <hr class="clrBr" />
       <div class="gutterVTn">
         <div class="txB">Memo</div>
-        <div><%= item.memo ? item.memo : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+        <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
       </div>
     </div>
   </div>

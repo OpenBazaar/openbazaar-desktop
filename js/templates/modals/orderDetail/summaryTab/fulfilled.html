@@ -29,7 +29,7 @@
         <% } %>
       </div>
       <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
-      <div><%= ob.note || ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+      <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
     </div>
   </div>
   <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
@@ -48,6 +48,8 @@
       <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.passwordLabel') %></div>
       <div><%= ob.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div> 
       <% } %>
+      <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
+      <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>      
     </div>
   </div>
   <% } else if (ob.contractType === 'SERVICE') { %>
@@ -55,7 +57,7 @@
     <div class="statusIconCol clrT"><span class="clrBr ion-ios-body"></span></div>
     <div class="flexExpand tx5">
       <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
-      <div><%= ob.note || ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+      <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
     </div>
   </div>  
   <% } %>
