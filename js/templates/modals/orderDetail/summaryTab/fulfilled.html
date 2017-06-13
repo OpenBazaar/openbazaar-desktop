@@ -6,18 +6,7 @@
 <div class="border clrBr padMd">
   <% if (ob.contractType === 'PHYSICAL_GOOD') { %>
   <div class="flex gutterH clrT">
-    <%
-      let statusIcon = 'ion-ios-folder';
-      let statusIconClass = 'clrT';
-
-      if (ob.contractType === 'PHYSICAL_GOOD') {
-        statusIcon = 'ion-cube';
-      } else if (ob.contractType === 'SERVICE') {
-        statusIcon = 'ion-ios-body';
-      }
-
-      const physicalDelivery = ob.physicalDelivery && ob.physicalDelivery[0] || {};
-    %>
+    <% const physicalDelivery = ob.physicalDelivery && ob.physicalDelivery[0] || {}; %>
     <div class="statusIconCol"><span class="clrBr ion-cube"></span></div>
     <div class="flexExpand tx5">
       <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.shippedByLabel') %> <span><%= physicalDelivery.shipper %></span></div>
@@ -33,6 +22,7 @@
     </div>
   </div>
   <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
+  <% const digitalDelivery = ob.digitalDelivery && ob.digitalDelivery[0] || {}; %>  
   <div class="flex gutterH clrT">
     <div class="statusIconCol clrT"><span class="clrBr ion-ios-folder"></span></div>
     <div class="flexExpand tx5">
@@ -42,11 +32,11 @@
       </div>
       <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.urlLabel') %></div>
       <div class="<% if (ob.showPassword) print('row') %>">
-        <a class="clrTEm" href="<%= ob.url %>" data-open-external><%= ob.url %></a>
+        <a class="clrTEm" href="<%= digitalDelivery.url %>" data-open-external><%= digitalDelivery.url %></a>
       </div>
       <% if (ob.showPassword) { %>
       <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.passwordLabel') %></div>
-      <div><%= ob.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div> 
+      <div class="row"><%= digitalDelivery.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div> 
       <% } %>
       <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
       <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>      
