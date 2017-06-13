@@ -141,8 +141,10 @@ export default class extends BaseModal {
 
   onNoValidModerators() {
     this.$purchaseModerated.prop('checked', false);
+    this.$moderatedOption.addClass('disabled');
     this.$moderatorSection.addClass('hide');
-    this.$moderatorNote.removeClass('hide');
+    this.$moderatorNote.addClass('hide');
+    this.$noValidModerators.removeClass('hide');
     this.order.set('moderator', '');
   }
 
@@ -284,6 +286,16 @@ export default class extends BaseModal {
         (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
   }
 
+  get $moderatedOption() {
+    return this._$moderatedOption ||
+      (this._$moderatedOption = this.$('.js-moderatedOption'));
+  }
+
+  get $noValidModerators() {
+    return this._$noValidModerators ||
+      (this._$noValidModerators = this.$('.js-noValidModerators'));
+  }
+
   get $moderatorSection() {
     return this._$moderatorSection ||
         (this._$moderatorSection = this.$('.js-moderator'));
@@ -300,7 +312,7 @@ export default class extends BaseModal {
   }
 
   get $shippingErrors() {
-    return this._$shipingErrors ||
+    return this._$shippingErrors ||
       (this._$shippingErrors = this.$('.js-shipping-errors'));
   }
 
@@ -336,6 +348,8 @@ export default class extends BaseModal {
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
+      this._$moderatedOption = null;
+      this._$noValidModerators = null;
       this._$moderatorSection = null;
       this._$closeBtn = null;
       this._$shippingErrors = null;

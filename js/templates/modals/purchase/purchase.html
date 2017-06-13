@@ -76,14 +76,19 @@
           </div>
           <div class="js-moderated-errors"></div>
           <% if (hasModerators) { %>
-            <input
-                type="checkbox"
-                name="moderated"
-                checked
-                id="purchaseModerated">
-            <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
-            <p class="clrT2 tx6">
-              <%= ob.polyT('purchase.moderationDisclaimer') %>
+            <div class="js-moderatedOption">
+              <input
+                  type="checkbox"
+                  name="moderated"
+                  checked
+                  id="purchaseModerated">
+              <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
+              <p class="clrT2 tx6">
+                <%= ob.polyT('purchase.moderationDisclaimer') %>
+              </p>
+            </div>
+            <p class="clrTErr hide js-noValidModerators">
+              <%= ob.polyT('purchase.noValidModerators') %>
             </p>
           <% } %>
         </div>
