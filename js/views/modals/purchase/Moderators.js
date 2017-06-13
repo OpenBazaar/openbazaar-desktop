@@ -133,6 +133,10 @@ export default class extends baseVw {
       // all ids have been fetced
       this.$moderatorsWrapper.removeClass('processing');
       this.$moderatorsStatus.addClass('hide').text('');
+      // check if no loaded moderators are valid
+      if (!this.moderatorsCol.filter(mod => mod.isModerator).length) {
+        this.trigger('noValidModerators');
+      }
     } else {
       this.$moderatorsStatus.text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: nfYet, total: this.fetchingMods.length }));

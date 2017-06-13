@@ -139,6 +139,13 @@ export default class extends BaseModal {
     }
   }
 
+  onNoValidModerators() {
+    this.$purchaseModerated.prop('checked', false);
+    this.$moderatorSection.addClass('hide');
+    this.$moderatorNote.removeClass('hide');
+    this.order.set('moderator', '');
+  }
+
   changeQuantityInput(e) {
     this.order.get('items').at(0).set(this.getFormData($(e.target)));
   }
@@ -376,6 +383,7 @@ export default class extends BaseModal {
         singleSelect: true,
         selectFirst: true,
       });
+      this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
 
