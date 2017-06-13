@@ -82,13 +82,21 @@ export default class extends BaseVw {
     this.buyer = opts.buyer;
     this.moderator = opts.moderator;
 
-    this.listenTo(this.model, 'change:state', () => {
+    this.listenTo(this.model, 'change:state', (md, state) => {
       this.stateProgressBar.setState(this.progressBarState);
       if (this.payments) this.payments.render();
       if (this.shouldShowAcceptedSection()) {
         if (!this.accepted) this.renderAcceptedView();
       } else {
         if (this.accepted) this.accepted.remove();
+      }
+
+      if (state === 'REFUNDED' && this.accepted) {
+        this.accepted.setState({
+          showRefundButton: false,
+          showFulfillButton: false,
+          infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
+        });
       }
     });
 

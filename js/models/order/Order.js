@@ -51,13 +51,6 @@ export default class extends BaseModel {
 
     response.paymentAddressTransactions = response.paymentAddressTransactions || [];
 
-    if (response.refundAddressTransaction && !response.refundAddressTransaction.txid) {
-      // Before an actual refund is present, the refundAddressTransaction is set with
-      // some dummy values. We'll just clear it out in that case since the lack of
-      // that object is a clearer indicator that there is no refund.
-      delete response.refundAddressTransaction;
-    }
-
     return response;
   }
 }
