@@ -8,6 +8,7 @@ import ConfirmWallet from './ConfirmWallet';
 import qr from 'qr-encode';
 import { clipboard, remote } from 'electron';
 import Purchase from '../../../models/purchase/Purchase';
+import Order from '../../../models/purchase/Order';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 
@@ -15,6 +16,10 @@ export default class extends BaseVw {
   constructor(options = {}) {
     if (!options.model || !options.model instanceof Purchase) {
       throw new Error('Please provide a purchase model.');
+    }
+
+    if (!options.order || !options.model instanceof Order) {
+      throw new Error('Please provide an order model.');
     }
 
     super(options);
@@ -140,7 +145,7 @@ export default class extends BaseVw {
 
     const btcURL = `bitcoin:${this.model.get('paymentAddress')}?amount=${amount}`;
 
-    loadTemplate('modals/purchase/pending.html', (t) => {
+    loadTemplate('modals/purchase/payment.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
           displayCurrency,
@@ -148,6 +153,7 @@ export default class extends BaseVw {
           amountBTC,
           qrDataUri: qr(btcURL, { type: 6, size: 5, level: 'Q' }),
           walletIconTmpl,
+          moderator: this.options.order.get('moderator'),
           ...this.model.toJSON(),
         }));
       });

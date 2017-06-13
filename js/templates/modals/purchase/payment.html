@@ -42,13 +42,15 @@
   </div>
 </div>
 <div class="tx6 clrT2">
-  <% const link = `<a href="https://blog.openbazaar.org/openbazaar-user-tutorial/">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
+  <% const link = `<a class="clrTEm" href="https://www.openbazaar.org/bitcoin">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
   <p><%= ob.polyT('purchase.pendingSection.note1', { link }) %></p>
+  <% if (ob.moderator) { %>
   <p>
     <%= ob.polyT('purchase.pendingSection.note2') %>
     <br>
     <%= ob.polyT('purchase.pendingSection.note3') %>
   </p>
+  <% } %>
   <p><%= ob.polyT('purchase.pendingSection.note4') %></p>
 </div>
 

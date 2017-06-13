@@ -858,8 +858,8 @@
       "payFromWallet": "Pay from wallet",
       "payWithAlt": "Pay with altcoins",
       "note1": "If you need help getting started with Bitcoin, please read %{link}.",
-      "note1Link": "Getting Started With Bitcoin on OpenBazaar.org",
-      "note2": "Your payment will be held securly in escrow for 30 days. If any issues arise, you’ll have 30 days to open a dispute.",
+      "note1Link": "Need Bitcoin? on OpenBazaar.org",
+      "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
       "note3": "*The moderator service fee only applies if a dispute is opened.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
