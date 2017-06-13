@@ -369,7 +369,7 @@ input[type=range][class~="clrS"] {
 
   &.ascending {
     &::after {
-      border-bottom-color: $text2;      
+      border-bottom-color: $text2;
     }
 
     &::before {

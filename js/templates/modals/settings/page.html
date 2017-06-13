@@ -204,12 +204,15 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperPrimaryColor') %></div>
           </div>
           <div class="col1">
-            <div class="previewBox clrBr" style="background-color: <%= ob.colors.primary %>;"></div>
+              <input class="colorPicker clrBr js-colorPicker" id="primaryColorPicker"
+                     data-hex-input-id="#settingsPrimaryColor" type="color" value="<%= ob.colors.primary %>"
+                     placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>">
           </div>
           <div class="col2">
             <% if (ob.errors['colors.primary']) print(ob.formErrorTmpl({ errors: ob.errors['colors.primary'] })) %>
-            <input type="text" class="clrBr clrSh2" name="colors.primary" id="settingsPrimaryColor"
-                   value="<%= ob.colors.primary %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>">
+            <input type="text" class="clrBr clrSh2 js-colorCode" name="colors.primary" id="settingsPrimaryColor"
+                   value="<%= ob.colors.primary %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderPrimaryColor') %>"
+                   data-color-picker-id="#primaryColorPicker">
           </div>
         </div>
         <div class="flexRow gutterH">
@@ -218,12 +221,15 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperSecondaryColor') %></div>
           </div>
           <div class="col1">
-            <div class="previewBox clrBr" style="background-color: <%= ob.colors.secondary %>;"></div>
+            <input class="colorPicker clrBr js-colorPicker" id="secondaryColorPicker"
+                     data-hex-input-id="#settingsSecondaryColor" type="color" value="<%= ob.colors.secondary %>"
+                     placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>">
           </div>
           <div class="col2">
             <% if (ob.errors['colors.secondary']) print(ob.formErrorTmpl({ errors: ob.errors['colors.secondary'] })) %>
-            <input type="text" class="clrBr clrSh2" name="colors.secondary" id="settingsSecondaryColor"
-                   value="<%= ob.colors.secondary %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>">
+            <input type="text" class="clrBr clrSh2 js-colorCode" name="colors.secondary" id="settingsSecondaryColor"
+                   value="<%= ob.colors.secondary %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderSecondaryColor') %>"
+                   data-color-picker-id="#secondaryColorPicker">
           </div>
         </div>
         <div class="flexRow gutterH">
@@ -232,12 +238,15 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperTextColor') %></div>
           </div>
           <div class="col1">
-            <div class="previewBox clrBr" style="background-color: <%= ob.colors.text %>;"></div>
+            <input class="colorPicker clrBr js-colorPicker" id="textColorPicker"
+                     data-hex-input-id="#settingsTextColor" type="color" value="<%= ob.colors.text %>"
+                     placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>">
           </div>
           <div class="col2">
             <% if (ob.errors['colors.text']) print(ob.formErrorTmpl({ errors: ob.errors['colors.text'] })) %>
-            <input type="text" class="clrBr clrSh2" name="colors.text" id="settingsTextColor"
-                   value="<%= ob.colors.text %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>">
+            <input type="text" class="clrBr clrSh2 js-colorCode" name="colors.text" id="settingsTextColor"
+                   value="<%= ob.colors.text %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderTextColor') %>"
+                   data-color-picker-id="#textColorPicker">
           </div>
         </div>
         <div class="flexRow gutterH">
@@ -246,12 +255,15 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightColor') %></div>
           </div>
           <div class="col1">
-            <div class="previewBox clrBr" style="background-color: <%= ob.colors.highlight %>;"></div>
+            <input class="colorPicker clrBr js-colorPicker" id="highlightColorPicker"
+                     data-hex-input-id="#settingsHighlightColor" type="color" value="<%= ob.colors.highlight %>"
+                     placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
           </div>
           <div class="col2">
             <% if (ob.errors['colors.highlight']) print(ob.formErrorTmpl({ errors: ob.errors['colors.highlight'] })) %>
-            <input type="text" class="clrBr clrSh2" name="colors.highlight" id="settingsHighlightColor"
-                   value="<%= ob.colors.highlight %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightColor') %>">
+            <input type="text" class="clrBr clrSh2 js-colorCode" name="colors.highlight" id="settingsHighlightColor"
+                   value="<%= ob.colors.highlight %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightColor') %>"
+                   data-color-picker-id="#highlightColorPicker">
           </div>
         </div>
         <div class="flexRow gutterH">
@@ -260,12 +272,15 @@
             <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperHighlightTextColor') %></div>
           </div>
           <div class="col1">
-            <div class="previewBox clrBr" style="background-color: <%= ob.colors.highlightText %>;"></div>
+            <input class="colorPicker clrBr js-colorPicker" id="highlightTextColorPicker"
+                     data-hex-input-id="#settingsHighlightTextColor" type="color" value="<%= ob.colors.highlightText %>"
+                     placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
           </div>
           <div class="col2">
             <% if (ob.errors['color.highlightText']) print(ob.formErrorTmpl({ errors: ob.errors['color.highlightText'] })) %>
-            <input type="text" class="clrBr clrSh2" name="colors.highlightText" id="settingsHighlightTextColor"
-                   value="<%= ob.colors.highlightText %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>">
+            <input type="text" class="clrBr clrSh2 js-colorCode" name="colors.highlightText" id="settingsHighlightTextColor"
+                   value="<%= ob.colors.highlightText %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderHighlightTextColor') %>"
+                   data-color-picker-id="#highlightTextColorPicker">
           </div>
         </div>
       </form>

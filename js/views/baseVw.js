@@ -38,8 +38,8 @@ export default class baseVw extends View {
   getFormData(selector) {
     const $formFields = selector instanceof $ ?
       selector : this.$(selector ||
-        `select[name], input[name], 
-        textarea[name]:not([class*="trumbowyg"]), 
+        `select[name], input[name],
+        textarea[name]:not([class*="trumbowyg"]),
         div[contenteditable][name]`
       );
     const data = {};
@@ -148,6 +148,51 @@ export default class baseVw extends View {
     }
 
     super.delegateEvents();
+  }
+
+  /**
+   * Returns a given jQuery Element or a locally cached version for optimization.
+   * NOTE: Ensure that child views call super.render() in their render function to clear the cache
+   *       since the DOM elements in the cache will then be stale references.
+   * @param {selector} string - The jQuery selector for the Element.
+   *
+   * @return {element} JQuery The element(s) found in the View's Dom or the View's Cache
+   */
+  getCachedElement(selector) {
+    let element;
+
+    // Ensure we have our cached elements map.
+    if (!this._cachedElementMap) {
+      this._cachedElementMap = new Map();
+    }
+
+    // If the cache has the element, we shall use it.
+    if (this._cachedElementMap.has(selector)) {
+      element = this._cachedElementMap.get(selector);
+    } else {
+      // The cache does not not have the element, therefore query with jQuery and cache it.
+      element = this.$(selector);
+      this._cachedElementMap.set(selector, element);
+    }
+
+    return element;
+  }
+
+  /** Clears the cached elements map. */
+  clearCachedElementMap() {
+     // Clear the cache map.
+    if (this._cachedElementMap) {
+      this._cachedElementMap.clear();
+    }
+  }
+
+  /** It is necessary to call super.render() in child views' render methods if using
+   *  getCachedElement()
+   *  @param {this} Render requires this to be returned.
+   */
+  render() {
+    this.clearCachedElementMap();
+    return this;
   }
 
   // Will call the remove method of any child views.

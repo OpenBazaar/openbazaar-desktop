@@ -1,5 +1,5 @@
 <%
-  if (ob.order.shipping) {
+  if (ob.order.shipping && ob.order.shipping.country !== 'NA') {
     var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;
     var addressLine4 = ob.getCountryByDataName(ob.order.shipping.country).translatedName;
     let addressParts = [];
