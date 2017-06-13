@@ -1,0 +1,42 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.completeOrder.heading') %></h2>
+<div class="border clrBr padMd">
+  <div class="flex">
+    <div class="col8">
+      <div class="row">
+        <div class="flexVCent">
+          <label class="txB tx5 required flexNoShrink" for="completeOrderReview">Written Review</label>
+          <div class="flexHRight">
+            <span class="clrT2 tx6">5000 chars. max</span>
+          </div>
+        </div>
+      </div>
+      <textarea rows="8" name="review" class="clrBr clrP clrSh2 rowMd" id="completeOrderReview" placeholder="Write your review here…"><%= ob.review %></textarea>
+      <div class="flexVCent gutterH">
+        <%= ob.processingButton({
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-completeOrder`,
+          btnText: 'Complete Order',
+        }) %>
+        <div class="gutterHSm">
+          <input
+              type="checkbox"
+              name="moderated"
+              id="purchaseModerated"
+              class="centerLabel">
+          <label for="purchaseModerated" class="clrT2 tx5b">Include my name (seen publicly)</label>
+        </div>
+      </div>
+    </div>
+    <div class="col4">
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />      
+    </div>
+  </div>
+</div>

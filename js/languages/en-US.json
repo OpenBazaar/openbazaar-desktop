@@ -1028,6 +1028,9 @@
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
+      "completeOrder": {
+        "heading": "Complete Order"
+      },
       "orderDetails": {
         "progressBarStates": {
           "paid": "Paid",
@@ -1220,6 +1223,9 @@
     "provideUrl": "Please provide a file url.",
     "invalidUrl": "Please provide a valid url."
   },
+  "orderCompletionModelErrors": {
+    "provideReview": "Please provide a review."
+  },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

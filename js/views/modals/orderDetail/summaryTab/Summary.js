@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
@@ -7,6 +8,7 @@ import {
   events as orderEvents,
 } from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
+import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
@@ -14,6 +16,7 @@ import Accepted from './Accepted';
 import Fulfilled from './Fulfilled';
 import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
+import CompleteOrderForm from './CompleteOrderForm';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -471,7 +474,20 @@ export default class extends BaseVw {
       .done(profile =>
         this.fulfilled.setState({ storeName: profile.get('name') }));
 
-    this.$subSections.prepend(this.fulfilled.render().el);
+    const sections = document.createDocumentFragment();
+    const $sections = $(sections).append(this.fulfilled.render().el);
+
+    // If the order is not complete and this is the buyer, we'll
+    // render a complete order form.
+    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1) {
+      this.completeOrderForm = this.createChild(CompleteOrderForm, {
+        model: new OrderCompletion(),
+      });
+
+      $sections.prepend(this.completeOrderForm.render().el);
+    }
+
+    this.$subSections.prepend($sections);
   }
 
   /**
