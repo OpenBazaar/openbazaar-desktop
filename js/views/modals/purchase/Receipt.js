@@ -24,7 +24,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'receipt flexColRows gutterVSm';
+    return 'receipt flexColRows gutterVSm tx5b';
   }
 
   get coupons() {

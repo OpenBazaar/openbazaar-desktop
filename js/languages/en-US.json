@@ -899,8 +899,8 @@
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
-      "ownIDTitle": "This is Your Own Listing",
-      "ownIDMsg": "You cannot purchase a listing that belongs to you.",
+      "ownIDTitle": "You Can't Purchase Your Own Listings",
+      "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed"
     }
   },

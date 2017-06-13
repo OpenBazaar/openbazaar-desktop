@@ -356,6 +356,7 @@ export default class extends BaseModal {
       .open();
 
     this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
+    this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
   }
 
   get shipsFreeToMe() {

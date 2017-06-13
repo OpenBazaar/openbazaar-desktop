@@ -83,6 +83,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-goToListing': 'close',
+      'click .js-close': 'clickClose',
       'click #purchaseModerated': 'clickModerated',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
@@ -115,6 +116,11 @@ export default class extends BaseModal {
 
       this.$popInMessages.append(this.dataChangePopIn.render().el);
     }
+  }
+
+  clickClose() {
+    this.trigger('closeBtnPressed');
+    this.close();
   }
 
   clickModerated(e) {
