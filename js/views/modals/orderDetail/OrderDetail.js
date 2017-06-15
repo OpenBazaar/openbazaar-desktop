@@ -7,7 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
-import Summary from './Summary';
+import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
 
@@ -101,11 +101,11 @@ export default class extends BaseModal {
 
     if (this.type === 'case') {
       this.featuredProfileFetch =
-        this.model.get('buyerOpened') ? this.buyerProfile : this.vendorProfile;
+        this.model.get('buyerOpened') ? this.getBuyerProfile() : this.getVendorProfile();
     } else if (this.type === 'sale') {
-      this.featuredProfileFetch = this.buyerProfile;
+      this.featuredProfileFetch = this.getBuyerProfile();
     } else {
-      this.featuredProfileFetch = this.vendorProfile;
+      this.featuredProfileFetch = this.getVendorProfile();
     }
 
     this.featuredProfileFetch.done(profile => {
@@ -145,24 +145,20 @@ export default class extends BaseModal {
 
   get participantIds() {
     if (!this._participantIds) {
-      // For now using flat model data. Once we start on the summary
-      // tab, the Order Detail model will likely be built up with
-      // nested models and collections.
-      const modelData = this.model.toJSON();
-      let contract = modelData.contract;
+      let contract = this.model.get('contract');
 
       if (this.type === 'case') {
-        contract = modelData.buyerContract;
-
-        if (!modelData.buyerOpened) {
-          contract = modelData.vendorContract;
-        }
+        contract = this.model.get('buyerOpened') ?
+          this.model.get('buyerContract') :
+          this.model.get('vendorContract');
       }
 
+      const contractJSON = contract.toJSON();
+
       this._participantIds = {
-        buyer: contract.buyerOrder.buyerID.peerID,
-        vendor: contract.vendorListings[0].vendorID.peerID,
-        moderator: contract.buyerOrder.payment.moderator,
+        buyer: contractJSON.buyerOrder.buyerID.peerID,
+        vendor: contractJSON.vendorListings[0].vendorID.peerID,
+        moderator: contractJSON.buyerOrder.payment.moderator,
       };
     }
 
@@ -201,21 +197,21 @@ export default class extends BaseModal {
   /**
    * Returns a promise that resolves with the buyer's Profile model.
    */
-  get buyerProfile() {
+  getBuyerProfile() {
     return this._getParticipantProfile('buyer');
   }
 
   /**
    * Returns a promise that resolves with the vendor's Profile model.
    */
-  get vendorProfile() {
+  getVendorProfile() {
     return this._getParticipantProfile('vendor');
   }
 
   /**
    * Returns a promise that resolves with the moderator's Profile model.
    */
-  get moderatorProfile() {
+  getModeratorProfile() {
     return this._getParticipantProfile('moderator');
   }
 
@@ -275,9 +271,26 @@ export default class extends BaseModal {
   }
 
   createSummaryTabView() {
-    const view = this.createChild(Summary, {
+    const viewData = {
       model: this.model,
-    });
+      vendor: {
+        id: this.vendorId,
+        getProfile: this.getVendorProfile.bind(this),
+      },
+      buyer: {
+        id: this.buyerId,
+        getProfile: this.getBuyerProfile.bind(this),
+      },
+    };
+
+    if (this.moderatorId) {
+      viewData.moderator = {
+        id: this.moderatorId,
+        getProfile: this.getModeratorProfile.bind(this),
+      };
+    }
+
+    const view = this.createChild(Summary, viewData);
 
     return view;
   }
@@ -288,11 +301,11 @@ export default class extends BaseModal {
       orderId: this.model.id,
       buyer: {
         id: this.buyerId,
-        profile: this.buyerProfile,
+        getProfile: this.getBuyerProfile.bind(this),
       },
       vendor: {
         id: this.vendorId,
-        profile: this.vendorProfile,
+        getProfile: this.getVendorProfile.bind(this),
       },
       model: this.model,
       amActiveTab: amActiveTab.bind(this),
@@ -301,7 +314,7 @@ export default class extends BaseModal {
     if (this.moderatorId) {
       viewData.moderator = {
         id: this.moderatorId,
-        profile: this.moderatorProfile,
+        getProfile: this.getModeratorProfile.bind(this),
       };
     }
 
@@ -319,6 +332,7 @@ export default class extends BaseModal {
       model: this.model,
     });
 
+    this.listenTo(view, 'clickBackToSummary', () => this.selectTab('summary'));
     return view;
   }
 

@@ -19,6 +19,10 @@
 
     .pageControls {
       padding: 268px 0 40px 0;
+
+      .tabTitle {
+        color: #fff; // this text is always white, regardless of the theme
+      }
     }
 
     .informationList {

@@ -46,9 +46,6 @@ export default class extends baseVw {
     this.options = opts || {};
     this.type = opts.type;
     this.filterConfig = opts.filterConfig;
-    this.acceptPosts = {};
-    this.rejectPosts = {};
-    this.cancelPosts = {};
     this._filter = { ...opts.initialFilter };
 
     this.listenTo(this.collection, 'request', (cl, xhr) => {
@@ -148,77 +145,6 @@ export default class extends baseVw {
     this.render();
   }
 
-  cancelingOrder(orderId) {
-    return this.cancelPosts[orderId] || false;
-  }
-
-  cancelOrder(orderId) {
-    if (!orderId) {
-      throw new Error('Please provide an orderId');
-    }
-
-    if (this.cancelPosts[orderId]) {
-      return this.cancelPosts[orderId];
-    }
-
-    const cancelPost = $.post({
-      url: app.getServerUrl('ob/ordercancel'),
-      data: JSON.stringify({
-        orderId,
-      }),
-      dataType: 'json',
-      contentType: 'application/json',
-    }).always(() => {
-      delete this.cancelPosts[orderId];
-    });
-
-    this.cancelPosts[orderId] = cancelPost;
-
-    return cancelPost;
-  }
-
-  confirmOrder(orderId, reject = false) {
-    if (!orderId) {
-      throw new Error('Please provide an orderId');
-    }
-
-    let post = this[`${reject ? 'reject' : 'accept'}Posts`][orderId];
-
-    if (!post) {
-      post = $.post({
-        url: app.getServerUrl('ob/orderconfirmation'),
-        data: JSON.stringify({
-          orderId,
-          reject,
-        }),
-        dataType: 'json',
-        contentType: 'application/json',
-      }).always(() => {
-        delete this[`${reject ? 'reject' : 'accept'}Posts`][orderId];
-      });
-
-      this[`${reject ? 'reject' : 'accept'}Posts`][orderId] = post;
-    }
-
-    return post;
-  }
-
-  acceptingOrder(orderId) {
-    return this.acceptPosts[orderId] || false;
-  }
-
-  acceptOrder(orderId) {
-    return this.confirmOrder(orderId);
-  }
-
-  rejectingOrder(orderId) {
-    return this.rejectPosts[orderId] || false;
-  }
-
-  rejectOrder(orderId) {
-    return this.confirmOrder(orderId, true);
-  }
-
   /*
    * Based on the provided list of checkedStates, this function
    * will return a filterConfig list with the checked value set for each
@@ -264,9 +190,6 @@ export default class extends baseVw {
   }
 
   remove() {
-    Object.keys(this.acceptPosts, post => post.abort());
-    Object.keys(this.rejectPosts, post => post.abort());
-    Object.keys(this.cancelPosts, post => post.abort());
     clearTimeout(this.searchKeyUpTimer);
     super.remove();
   }
@@ -298,12 +221,6 @@ export default class extends baseVw {
         this.table = this.createChild(TransactionsTable, {
           type: this.type,
           collection: this.collection,
-          cancelOrder: this.cancelOrder.bind(this),
-          cancelingOrder: this.cancelingOrder.bind(this),
-          acceptingOrder: this.acceptingOrder.bind(this),
-          acceptOrder: this.acceptOrder.bind(this),
-          rejectingOrder: this.rejectingOrder.bind(this),
-          rejectOrder: this.rejectOrder.bind(this),
           initialFilterParams: this.filter,
           getProfiles: this.options.getProfiles,
           openOrder: this.options.openOrder,

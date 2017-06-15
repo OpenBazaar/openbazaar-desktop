@@ -44,27 +44,18 @@ export default class extends baseVw {
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
     this.syncTabHeadCount(this.purchasesCol, () => this.$purchasesTabCount);
-
-    if (opts.initialTab !== 'purchases') {
-      // fetch so we get the count for the tabhead
-      this.purchasesCol.fetch();
-    }
+    // fetch so we get the count for the tabhead
+    this.purchasesCol.fetch();
 
     this.salesCol = new Transactions([], { type: 'sales' });
     this.syncTabHeadCount(this.salesCol, () => this.$salesTabCount);
-
-    if (opts.initialTab !== 'sales') {
-      // fetch so we get the count for the tabhead
-      this.salesCol.fetch();
-    }
+    // fetch so we get the count for the tabhead
+    this.salesCol.fetch();
 
     this.casesCol = new Transactions([], { type: 'cases' });
     this.syncTabHeadCount(this.casesCol, () => this.$casesTabCount);
-
-    if (opts.initialTab !== 'cases') {
-      // fetch so we get the count for the tabhead
-      this.casesCol.fetch();
-    }
+    // fetch so we get the count for the tabhead
+    this.casesCol.fetch();
 
     this.socket = getSocket();
   }
@@ -247,7 +238,7 @@ export default class extends baseVw {
     return {
       search: '',
       sortBy: 'UNREAD',
-      states: [5, 6, 7],
+      states: [10, 11, 12],
     };
   }
 
@@ -258,21 +249,21 @@ export default class extends baseVw {
         text: app.polyglot.t('transactions.filters.disputeOpen'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
         className: 'filter',
-        targetState: [5],
+        targetState: [10],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
         className: 'filter',
-        targetState: [6],
+        targetState: [11],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
         className: 'filter',
-        targetState: [7],
+        targetState: [12],
       },
     ];
   }

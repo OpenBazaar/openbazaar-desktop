@@ -369,11 +369,45 @@ input[type=range][class~="clrS"] {
 
   &.ascending {
     &::after {
-      border-bottom-color: $text2;      
+      border-bottom-color: $text2;
     }
 
     &::before {
       border-top-color: $text;
+    }
+  }
+}
+
+.renderjson {
+  a.disclosure {
+    color: $text;
+  }
+}
+
+.stateProgressBar {
+  .stateSection {
+    .stateCircle {
+      background-color: $primary;
+      border-color: $border;
+
+      .ion-ios-checkmark-empty {
+        color: $primary;
+      }
+    }
+
+    .stateTrack {
+      background-color: $primary;
+      border-color: $border;
+    }
+
+    .stateCircleBorderFillIn {
+      background-color: $primary;
+    }
+
+    &.active {
+      .stateCircle, .stateTrack {
+        background-color: $text;
+      }
     }
   }
 }

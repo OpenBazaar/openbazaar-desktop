@@ -1,4 +1,8 @@
+import { integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
+import Contract from './Contract';
+import Transactions from '../../collections/order/Transactions';
+import Transaction from '../../models/order/Transaction';
 import app from '../../app';
 
 export default class extends BaseModel {
@@ -24,5 +28,36 @@ export default class extends BaseModel {
 
   get idAttribute() {
     return 'orderId';
+  }
+
+  get nested() {
+    return {
+      contract: Contract,
+      paymentAddressTransactions: Transactions,
+      refundAddressTransaction: Transaction,
+    };
+  }
+
+  parse(response = {}) {
+    if (response.contract) {
+      // Since we modify the data on parse (particularly in some nested models),
+      // we'll store the original contract here.
+      response.rawContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
+
+      // convert price fields
+      response.contract.buyerOrder.payment.amount =
+        integerToDecimal(response.contract.buyerOrder.payment.amount, true);
+    }
+
+    response.paymentAddressTransactions = response.paymentAddressTransactions || [];
+
+    if (response.refundAddressTransaction && !response.refundAddressTransaction.txid) {
+      // Before an actual refund is present, the refundAddressTransaction is set with
+      // some dummy values. We'll just clear it out in that case since the lack of
+      // that object is a clearer indicator that there is no refund.
+      delete response.refundAddressTransaction;
+    }
+
+    return response;
   }
 }
