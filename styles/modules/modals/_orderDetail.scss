@@ -344,8 +344,6 @@
     .orderCompleteEvent, .completeOrderForm {
       .ratingsCol {
         .ratingStrip {
-          pointer-events: none;
-          
           .ratingIcon {
             font-size: 22px;
           }
@@ -353,6 +351,14 @@
           .ratingNumbers {
             font-size: 13px;
           }
+        }
+      }
+    }
+
+    .orderCompleteEvent {
+      .ratingStrip {
+        .ratingIcon {
+          pointer-events: none;
         }
       }
     }

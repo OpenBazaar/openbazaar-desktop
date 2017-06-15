@@ -165,10 +165,18 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(this.contract, 'change:vendorOrderFulfillment',
-      () => this.renderFulfilledView());
+    this.listenTo(this.contract, 'change:vendorOrderFulfillment', () => {
+      // For some reason the order state still reflects the order state at the
+      // time this event handler is called even though it is triggered by fetch
+      // which brings the updated order state in its payload. Weird... maybe
+      // backbone doesn't update the model until the field specific change handlers
+      // are called...? Anyways... the timeout below fixeds the issue.
+      setTimeout(() => {
+        this.renderFulfilledView();
+      });
+    });
 
-    this.listenTo(this.contract, 'change:buyerOrderConfirmation',
+    this.listenTo(this.contract, 'change:buyerOrderCompletion',
       () => this.renderOrderCompleteView());
 
     this.listenTo(orderEvents, 'completeOrderComplete', e => {
@@ -209,6 +217,10 @@ export default class extends BaseVw {
           } else if (e.jsonData.notification.orderFulfillment &&
             e.jsonData.notification.orderFulfillment.orderId === this.model.id) {
             // A notification the buyer will get when the vendor has fulfilled their order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.orderCompletion &&
+            e.jsonData.notification.orderCompletion.orderId === this.model.id) {
+            // A notification the vendor will get when the buyer has completed an order.
             this.model.fetch();
           }
         }
@@ -492,6 +504,8 @@ export default class extends BaseVw {
 
     const sections = document.createDocumentFragment();
     const $sections = $(sections).append(this.fulfilled.render().el);
+
+    console.log(`renderin fulfilled: ${this.model.get('state')}`);
 
     // If the order is not complete and this is the buyer, we'll
     // render a complete order form.
