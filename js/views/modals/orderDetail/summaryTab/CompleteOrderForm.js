@@ -34,11 +34,11 @@ export default class extends BaseVw {
     }
 
     this.listenTo(orderEvents, 'completingOrder', () => {
-      this.getCachedElement('.js-completeOrder').addClass('processing');
+      this.getCachedEl('.js-completeOrder').addClass('processing');
     });
 
     this.listenTo(orderEvents, 'completeOrderComplete completeOrderFail', () => {
-      this.getCachedElement('.js-completeOrder').removeClass('processing');
+      this.getCachedEl('.js-completeOrder').removeClass('processing');
     });
   }
 
