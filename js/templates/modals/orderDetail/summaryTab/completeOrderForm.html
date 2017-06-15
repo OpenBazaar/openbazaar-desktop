@@ -1,19 +1,18 @@
 <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.completeOrder.heading') %></h2>
 <div class="border clrBr padMd">
-  <div class="flex">
+  <div class="flex gutterHLg">
     <div class="col8">
-      <div class="row">
-        <div class="flexVCent">
-          <label class="txB tx5 required flexNoShrink" for="completeOrderReview">Written Review</label>
-          <div class="flexHRight">
-            <span class="clrT2 tx6">5000 chars. max</span>
-          </div>
+      <div class="flexVBase rowSm">
+        <label class="txB tx5 required flexNoShrink" for="completeOrderReview">Written Review</label>
+        <div class="flexHRight">
+          <span class="clrT2 tx6">5000 chars. max</span>
         </div>
       </div>
+      <% if (ob.errors.review) print(ob.formErrorTmpl({ errors: ob.errors.review })) %>
       <textarea rows="8" name="review" class="clrBr clrP clrSh2 rowMd" id="completeOrderReview" placeholder="Write your review here…"><%= ob.review %></textarea>
       <div class="flexVCent gutterH">
         <%= ob.processingButton({
-          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-completeOrder`,
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-completeOrder ${ob.isCompleting ? 'processing' : ''}`,
           btnText: 'Complete Order',
         }) %>
         <div class="gutterHSm">
@@ -26,17 +25,32 @@
         </div>
       </div>
     </div>
-    <div class="col4">
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />      
+    <div class="col4 ratingsCol">
+      <div class="row">
+        <div class="txB tx5">Overall</div>
+        <% if (ob.errors.overall) print(ob.formErrorTmpl({ errors: ob.errors.overall })) %>
+        <div class="ratingsContainer" data-rating-type="overall"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5">Quality</div>
+        <% if (ob.errors.quality) print(ob.formErrorTmpl({ errors: ob.errors.quality })) %>
+        <div class="ratingsContainer" data-rating-type="quality"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5">As Advertised</div>
+        <% if (ob.errors.description) print(ob.formErrorTmpl({ errors: ob.errors.description })) %>
+        <div class="ratingsContainer" data-rating-type="description"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5">Delivery</div>
+        <% if (ob.errors.deliverySpeed) print(ob.formErrorTmpl({ errors: ob.errors.deliverySpeed })) %>
+        <div class="ratingsContainer" data-rating-type="deliverySpeed"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5">Service</div>
+        <% if (ob.errors.customerService) print(ob.formErrorTmpl({ errors: ob.errors.customerService })) %>
+        <div class="ratingsContainer" data-rating-type="customerService"></div>
+      </div>
     </div>
   </div>
 </div>

@@ -340,6 +340,29 @@
         top: 39px;        
       }
     }
+
+    .completeOrderForm {
+      .ratingsCol {
+        .ratingStrip {
+          .ratingIcon {
+            font-size: 22px;
+          }
+
+          .ratingNumbers {
+            font-size: 13px;
+          }
+        }
+
+        .errorList {
+          margin-top: $padTn;
+          margin-bottom: 0;
+
+          li:last-child {
+            margin-bottom: 0;
+          }
+        }        
+      }
+    }
   }
 
   .fulfillOrderTab {

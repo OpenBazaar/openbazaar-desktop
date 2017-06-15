@@ -1079,7 +1079,8 @@
     "failedRejectHeading": "There was an error rejecting the order.",
     "failedCancelHeading": "There was an error canceling the order.",
     "failedFulfillHeading": "There was an error fulfilling the order.",
-    "failedRefundHeading": "There was an error refunding the order."
+    "failedRefundHeading": "There was an error refunding the order.",
+    "failedCompleteHeading": "There was an error completing the order."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
@@ -1224,7 +1225,8 @@
     "invalidUrl": "Please provide a valid url."
   },
   "orderCompletionModelErrors": {
-    "provideReview": "Please provide a review."
+    "provideReview": "Please provide a review.",
+    "provideRating": "Please select a rating."
   },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

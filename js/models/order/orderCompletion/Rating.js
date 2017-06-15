@@ -27,7 +27,6 @@ export default class extends BaseModel {
     const constraints = this.constraints;
 
     if (typeof attrs.anonymous !== 'boolean') {
-      // addError('title', app.polyglot.t('itemModelErrors.provideTitle'));
       addError('anonymous', 'anonymous must be a boolean.');
     }
 
@@ -49,9 +48,9 @@ export default class extends BaseModel {
     ];
 
     ratingFields.forEach(ratingField => {
-      if (typeof attrs[ratingField] === undefined) {
+      if (typeof attrs[ratingField] === 'undefined') {
         addError(ratingField,
-          `Please provide an ${ratingField} rating.`);
+          app.polyglot.t('orderCompletionModelErrors.provideRating'));
       } else if (typeof attrs[ratingField] !== 'number') {
         addError(ratingField,
           `${ratingField} must be provided as a number.`);

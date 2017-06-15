@@ -11,6 +11,12 @@ export default class extends BaseModel {
     return 'orderId';
   }
 
+  get defaults() {
+    return {
+      ratings: new Ratings(),
+    };
+  }
+
   get nested() {
     return {
       ratings: Ratings,

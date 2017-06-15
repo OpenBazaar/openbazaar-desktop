@@ -5,6 +5,7 @@ import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import {
+  completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
@@ -479,9 +480,14 @@ export default class extends BaseVw {
 
     // If the order is not complete and this is the buyer, we'll
     // render a complete order form.
-    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1) {
+    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
+      this.buyer.id === app.profile.id) {
+      const completingObject = completingOrder(this.model.id);
+      const model = completingObject ?
+        completingObject.model : new OrderCompletion({ orderId: this.model.id });
+      if (this.completeOrderForm) this.completeOrderForm.remove();
       this.completeOrderForm = this.createChild(CompleteOrderForm, {
-        model: new OrderCompletion(),
+        model,
       });
 
       $sections.prepend(this.completeOrderForm.render().el);

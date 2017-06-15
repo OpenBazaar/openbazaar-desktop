@@ -3,6 +3,7 @@ import app from '../app';
 import { Events } from 'backbone';
 import OrderFulfillment from '../models/order/orderFulfillment/OrderFulfillment';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
+import OrderCompletion from '../models/order/orderCompletion/OrderCompletion';
 
 const events = {
   ...Events,
@@ -13,6 +14,7 @@ const rejectPosts = {};
 const cancelPosts = {};
 const fulfillPosts = {};
 const refundPosts = {};
+const completePosts = {};
 
 function confirmOrder(orderId, reject = false) {
   if (!orderId) {
@@ -64,12 +66,12 @@ function confirmOrder(orderId, reject = false) {
     } else {
       acceptPosts[orderId] = post;
     }
-  }
 
-  events.trigger(`${reject ? 'rejecting' : 'accepting'}Order`, {
-    id: orderId,
-    xhr: post,
-  });
+    events.trigger(`${reject ? 'rejecting' : 'accepting'}Order`, {
+      id: orderId,
+      xhr: post,
+    });
+  }
 
   return post;
 }
@@ -133,12 +135,11 @@ export function cancelOrder(orderId) {
     });
 
     cancelPosts[orderId] = post;
+    events.trigger('cancelingOrder', {
+      id: orderId,
+      xhr: post,
+    });
   }
-
-  events.trigger('cancelingOrder', {
-    id: orderId,
-    xhr: post,
-  });
 
   return post;
 }
@@ -188,13 +189,12 @@ export function fulfillOrder(contractType = 'PHYSICAL_GOOD', data = {}) {
       });
 
       fulfillPosts[orderId] = post;
+      events.trigger('fulfillingOrder', {
+        id: orderId,
+        xhr: post,
+      });
     }
   }
-
-  events.trigger('fulfillingOrder', {
-    id: orderId,
-    xhr: post,
-  });
 
   return post;
 }
@@ -240,12 +240,72 @@ export function refundOrder(orderId) {
     });
 
     refundPosts[orderId] = post;
+    events.trigger('refundingOrder', {
+      id: orderId,
+      xhr: post,
+    });
   }
 
-  events.trigger('refundingOrder', {
-    id: orderId,
-    xhr: post,
-  });
-
   return post;
+}
+
+/**
+ * If the order with the given id is in the process of being completed, this method
+ * will return an object containing the post xhr and the model that's being save.
+ */
+export function completingOrder(orderId) {
+  return completePosts[orderId] || false;
+}
+
+export function completeOrder(orderId, data = {}) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  const completeObject = completePosts[orderId];
+
+  if (!completeObject) {
+    const model = new OrderCompletion(data);
+    const save = model.save();
+
+    if (!save) {
+      Object.keys(model.validationError)
+        .forEach(errorKey => {
+          throw new Error(`${errorKey}: ${model.validationError[errorKey][0]}`);
+        });
+    } else {
+      save.always(() => {
+        delete completePosts[orderId];
+      }).done(() => {
+        events.trigger('completeOrderComplete', {
+          id: orderId,
+          xhr: save,
+        });
+      })
+      .fail(xhr => {
+        events.trigger('completeOrderFail', {
+          id: orderId,
+          xhr: save,
+        });
+
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('orderUtil.failedCompleteHeading'),
+          failReason
+        );
+      });
+
+      completePosts[orderId] = {
+        xhr: save,
+        model,
+      };
+    }
+
+    events.trigger('completingOrder', {
+      id: orderId,
+      xhr: save,
+    });
+  }
+
+  return completePosts[orderId].xhr;
 }
