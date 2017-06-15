@@ -1087,6 +1087,18 @@
       "noteHelperTextDigital": "The buyer will receive a notification containing the file information",
       "btnCancel": "Cancel",
       "btnSubmit": "Submit"
+    },
+    "disputeOrderTab": {
+      "heading": "Dispute Order",
+      "moderatorLabel": "Moderator",
+      "reasonLabel": "Reason",
+      "reasonPlaceholder": "Please explain your reason for opening a dispute…",
+      "reasonHelperText": "Opening a dispute will notify and invite the moderator into the order to help resolve any conflicts",
+      "btnCancel": "Cancel",
+      "btnSubmit": "Submit"
+    },
+    "actionBar": {
+      "disputeOrderBtn": "Dispute Order"
     }
   },
   "orderUtil": {

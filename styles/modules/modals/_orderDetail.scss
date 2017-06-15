@@ -5,8 +5,8 @@
     padding: $padSm;
 
     .avatar {
-      width: 24px;
-      height: 24px;
+      width: $thumbTn;
+      height: $thumbTn;
       float: left;
     }
   }
@@ -377,14 +377,21 @@
     }
   }
 
-  .fulfillOrderTab {
+  .fulfillOrderTab, .disputeOrderTab {
     hr {
       margin-left: $padLg;
       margin-right: $padLg;
     }
-    
+
     .buttonBar {
       padding: $padMd $padLg $padLg;
     }
+  }
+
+  .disputeOrderTab {
+    .avatar {
+      width: $thumbTn;
+      height: $thumbTn;
+    }    
   }
 }

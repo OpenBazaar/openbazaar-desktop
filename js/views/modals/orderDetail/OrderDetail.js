@@ -7,12 +7,15 @@ import { events as orderEvents } from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
+import DisputeOrder from '../../../models/order/DisputeOrder';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
 import FulfillOrder from './FulfillOrder';
+import DisputeOrderTab from './DisputeOrder';
+import ActionBar from './ActionBar.js';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -22,7 +25,8 @@ export default class extends BaseModal {
         fetchFailed: false,
         fetchError: '',
       },
-      initialTab: 'summary',
+      // initialTab: 'summary',
+      initialTab: 'disputeOrder',
       ...options,
     };
 
@@ -49,6 +53,11 @@ export default class extends BaseModal {
       () => this.setUnreadChatMessagesBadge());
     this.listenTo(orderEvents, 'fulfillOrderComplete', () => {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
+    });
+    this.listenTo(this.model, 'change:state', () => {
+      if (this.actionBar) {
+        this.actionBar.setState(this.actionBarButtonState);
+      }
     });
 
     const socket = getSocket();
@@ -362,6 +371,21 @@ export default class extends BaseModal {
     return view;
   }
 
+  createDisputeOrderTabView() {
+    const contractType = this.model.get('contract').type;
+
+    const model = new DisputeOrder({ orderId: this.model.id });
+
+    const view = this.createChild(DisputeOrderTab, {
+      model,
+      contractType,
+    });
+
+    this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
+
+    return view;
+  }
+
   setUnreadChatMessagesBadge() {
     this.$unreadChatMessagesBadge.text(this.getUnreadChatMessagesText());
   }
@@ -371,6 +395,27 @@ export default class extends BaseModal {
     count = count > 0 ? count : '';
     count = count > 99 ? '…' : count;
     return count;
+  }
+
+  /**
+   * Returns whether different action bar buttons should be displayed or not
+   * based upon the order state.
+   */
+  get actionBarButtonState() {
+    const orderState = this.model.get('state');
+    let showDisputeOrderButton = false;
+
+    if (this.buyerId === app.profile.id) {
+      showDisputeOrderButton = this.moderatorId &&
+        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
+    } else if (this.vendorId === app.profile.id) {
+      showDisputeOrderButton = this.moderatorId &&
+        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
+    }
+
+    return {
+      showDisputeOrderButton,
+    };
   }
 
   get $unreadChatMessagesBadge() {
@@ -406,6 +451,13 @@ export default class extends BaseModal {
 
       if (!state.isFetching && !state.fetchError) {
         this.selectTab(this.activeTab);
+
+        if (this.actionBar) this.actionBar.remove();
+        this.actionBar = this.createChild(ActionBar, {
+          orderId: this.model.id,
+          initialState: this.actionBarButtonState,
+        });
+        this.$('.js-actionBarContainer').html(this.actionBar.render().el);
       }
     });
 
