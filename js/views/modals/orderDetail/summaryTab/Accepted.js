@@ -52,15 +52,6 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(orderEvents, 'fulfillOrderComplete refundOrderComplete', e => {
-      if (e.id === this.orderId) {
-        this.setState({
-          showRefundButton: false,
-          showFulfillButton: false,
-        });
-      }
-    });
-
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
   }

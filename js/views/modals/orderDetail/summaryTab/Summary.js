@@ -91,7 +91,7 @@ export default class extends BaseVw {
         if (this.accepted) this.accepted.remove();
       }
 
-      if (state === 'REFUNDED' && this.accepted) {
+      if (state === 'REFUNDED' || state === 'FULFILLED' && this.accepted) {
         this.accepted.setState({
           showRefundButton: false,
           showFulfillButton: false,
