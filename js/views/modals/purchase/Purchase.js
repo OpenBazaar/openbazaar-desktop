@@ -196,7 +196,7 @@ export default class extends BaseModal {
   updateShippingOption(opts) {
     // set the shipping option
     this.order.get('items').at(0).get('shipping')
-      .set({ name: opts.name, service: opts.service });
+      .set(opts);
     this.actionBtn.render();
   }
 

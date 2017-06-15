@@ -3,10 +3,18 @@ import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 import ChatMessage from '../../../models/chat/ChatMessage';
 import { getEmojiByName } from '../../../data/emojis';
+import Listing from '../../../models/listing/Listing';
 
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    if (!options.listing || !(options.listing instanceof Listing)) {
+      throw new Error('Please provide a listing model');
+    }
+
+    if (!options.vendor) {
+      throw new Error('Please provide a vendor object');
+    }
     super(options);
     this.options = options;
 
@@ -14,7 +22,6 @@ export default class extends BaseVw {
       app.polyglot.t('purchase.completeSection.noData');
     this.vendorPeerID = this.options.listing.get('vendorID').peerID;
     this.orderID = ''; // supplied by pending.js when the order is paid for
-    this.state = 'pendingPayment';
   }
 
   className() {
@@ -24,7 +31,7 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-goToListing': 'close',
-      'keyup #messageInput': 'keyUpMessageInput',
+      'keydown #messageInput': 'keyDownMessageInput',
       'click .js-send': 'sendMessageInput',
     };
   }
@@ -79,12 +86,13 @@ export default class extends BaseVw {
     this.$messageInput.val('');
   }
 
-  keyUpMessageInput(e) {
+  keyDownMessageInput(e) {
     this.$send.toggleClass('disabled', !e.target.value);
     this.$messageSent.addClass('hide');
 
     // if the key pressed is not enter, do nothing
     if (e.shiftKey || e.which !== 13) return;
+    e.preventDefault();
     this.sendMessageInput();
     e.preventDefault();
   }
@@ -109,7 +117,6 @@ export default class extends BaseVw {
       this.$el.html(t({
         displayCurrency: app.settings.get('localCurrency'),
         processingTime: this.processingTime,
-        state: this.state,
         maxMessageLength: ChatMessage.max.messageLength,
         ownProfile: app.profile.toJSON(),
         orderID: this.orderID,

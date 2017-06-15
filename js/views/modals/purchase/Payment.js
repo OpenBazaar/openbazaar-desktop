@@ -84,6 +84,7 @@ export default class extends BaseVw {
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
       })
       .always(() => {
+        if (this.isRemoved()) return;
         this.$confirmWalletConfirm.removeClass('processing');
         this.$confirmWallet.addClass('hide');
       });
@@ -136,6 +137,11 @@ export default class extends BaseVw {
   get $confirmWalletConfirm() {
     return this._$confirmWalletConfirm ||
       (this._$confirmWalletConfirm = this.$('.js-confirmWalletConfirm'));
+  }
+
+  remove() {
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
   }
 
   render() {

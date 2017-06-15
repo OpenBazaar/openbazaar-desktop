@@ -4,7 +4,6 @@ export default class extends BaseModel {
   defaults() {
     return {
       name: '',
-      service: '',
     };
   }
 }

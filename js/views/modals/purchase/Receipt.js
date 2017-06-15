@@ -44,9 +44,11 @@ export default class extends BaseView {
     const prices = [];
     this.model.get('items').forEach(item => {
       const priceObj = {};
-      const sName = item.get('shipping').get('name');
-      const sService = item.get('shipping').get('service');
+      const shipping = item.get('shipping');
+      const sName = shipping.get('name');
+      const sService = shipping.get('service');
       const sOpt = this.options.listing.get('shippingOptions').findWhere({ name: sName });
+      const sOptService = sOpt ? sOpt.get('services').findWhere({ name: sService }) : '';
       // determine which skus match the chosen options
       const variantCombo = [];
       item.get('options').forEach((option, i) => {
@@ -60,7 +62,7 @@ export default class extends BaseView {
         _.isEqual(v.get('variantCombo'), variantCombo));
 
       priceObj.price = this.options.listing.get('item').get('price');
-      priceObj.sPrice = sOpt ? sOpt.get('services').findWhere({ name: sService }).get('price') : 0;
+      priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
       priceObj.vPrice = sku ? sku.get('surcharge') : 0;
       prices.push(priceObj);
     });

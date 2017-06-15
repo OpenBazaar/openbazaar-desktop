@@ -29,9 +29,12 @@ export default class extends baseView {
 
   changeShippingOption(e) {
     const option = $(e.target);
-    const name = option.attr('data-name');
-    const service = option.attr('data-service');
-    this.trigger('selected', { name, service });
+    const sOpts = {};
+    sOpts.name = option.attr('data-name');
+    if (option.attr('data-type') !== 'LOCAL_PICKUP') {
+      sOpts.service = option.attr('data-service');
+    }
+    this.trigger('selected', sOpts);
   }
 
   get countryCode() {
@@ -43,13 +46,16 @@ export default class extends baseView {
   }
 
   render() {
-    const filteredShipping = this.model.get('shippingOptions').toJSON().filter((option) =>
-      option.regions.indexOf(this.countryCode) !== -1);
+    const shippingOptions = this.model.get('shippingOptions').toJSON().filter((option) =>
+    option.regions.indexOf(this.countryCode) !== -1);
 
-    if (filteredShipping.length) {
-      const name = filteredShipping[0].name;
-      const service = filteredShipping[0].services[0].name;
-      this.trigger('selected', { name, service });
+    if (shippingOptions.length) {
+      const sOpts = {};
+      sOpts.name = shippingOptions[0].name;
+      if (shippingOptions[0].type !== 'LOCAL_PICKUP') {
+        sOpts.service = shippingOptions[0].service.name;
+      }
+      this.trigger('selected', sOpts);
     } else {
       // if no valid option is available, set it to blank
       this.trigger('selected', { name: '', service: '' });
@@ -57,7 +63,7 @@ export default class extends baseView {
 
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({
-        filteredShipping,
+        shippingOptions,
         displayCurrency: app.settings.get('localCurrency'),
         ...this.model.toJSON(),
       }));

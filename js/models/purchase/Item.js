@@ -48,7 +48,7 @@ export default class extends BaseModel {
       addError('quantity', app.polyglot.t('orderModelErrors.noItems'));
     }
 
-    if (this.shippable && (!attrs.shipping.get('name') || !attrs.shipping.get('service'))) {
+    if (this.shippable && (!attrs.shipping.get('name'))) {
       addError('shipping', app.polyglot.t('orderModelErrors.missingShippingOption'));
     }
 
