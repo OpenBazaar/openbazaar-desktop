@@ -18,6 +18,7 @@ import Fulfilled from './Fulfilled';
 import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
 import CompleteOrderForm from './CompleteOrderForm';
+import OrderComplete from './OrderComplete';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -95,12 +96,16 @@ export default class extends BaseVw {
         if (this.accepted) this.accepted.remove();
       }
 
-      if (state === 'REFUNDED' && this.accepted) {
+      if (state === 'REFUNDED' || state === 'FULFILLED' && this.accepted) {
         this.accepted.setState({
           showRefundButton: false,
           showFulfillButton: false,
           infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
         });
+      }
+
+      if (state === 'COMPLETED' && this.completeOrderForm) {
+        this.completeOrderForm.remove();
       }
     });
 
@@ -147,7 +152,7 @@ export default class extends BaseVw {
       () => this.renderAcceptedView());
 
     this.listenTo(orderEvents, 'fulfillOrderComplete', e => {
-      if (e.id === this.model.id && this.accepted) {
+      if (e.id === this.model.id) {
         this.model.set('state', 'FULFILLED');
         this.model.fetch();
       }
@@ -162,6 +167,16 @@ export default class extends BaseVw {
 
     this.listenTo(this.contract, 'change:vendorOrderFulfillment',
       () => this.renderFulfilledView());
+
+    this.listenTo(this.contract, 'change:buyerOrderConfirmation',
+      () => this.renderOrderCompleteView());
+
+    this.listenTo(orderEvents, 'completeOrderComplete', e => {
+      if (e.id === this.model.id && this.accepted) {
+        this.model.set('state', 'COMPLETED');
+        this.model.fetch();
+      }
+    });
 
     const serverSocket = getSocket();
 
@@ -497,6 +512,25 @@ export default class extends BaseVw {
     this.$subSections.prepend($sections);
   }
 
+  renderOrderCompleteView() {
+    const data = this.contract.get('buyerOrderCompletion');
+
+    if (!data) {
+      throw new Error('Unable to create the Order Complete view because the buyerOrderCompletion ' +
+        'data object has not been set.');
+    }
+
+    if (this.orderComplete) this.orderComplete.remove();
+    this.orderComplete = this.createChild(OrderComplete, {
+      dataObject: data,
+    });
+
+    this.buyer.getProfile()
+      .done(profile =>
+        this.orderComplete.setState({ buyerName: profile.get('name') }));
+    this.$subSections.prepend(this.orderComplete.render().el);
+  }
+
   /**
    * Will render sub-sections in order based on their timestamp. Exempt from
    * this are the Order Details, Payment Details and Accepted sections which
@@ -518,6 +552,14 @@ export default class extends BaseVw {
         function: this.renderFulfilledView,
         timestamp:
           (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)).getTime(),
+      });
+    }
+
+    if (this.contract.get('buyerOrderCompletion')) {
+      sections.push({
+        function: this.renderOrderCompleteView,
+        timestamp:
+          (new Date(this.contract.get('buyerOrderCompletion').timestamp)).getTime(),
       });
     }
 

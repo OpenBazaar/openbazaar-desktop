@@ -341,9 +341,11 @@
       }
     }
 
-    .completeOrderForm {
+    .orderCompleteEvent, .completeOrderForm {
       .ratingsCol {
         .ratingStrip {
+          pointer-events: none;
+          
           .ratingIcon {
             font-size: 22px;
           }
@@ -352,7 +354,11 @@
             font-size: 13px;
           }
         }
+      }
+    }
 
+    .completeOrderForm {
+      .ratingsCol {
         .errorList {
           margin-top: $padTn;
           margin-bottom: 0;

@@ -1028,17 +1028,23 @@
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
-      "completeOrder": {
+      "ratingLabels": {
+        "overall": "Overall",
+        "quality": "Quality",
+        "asAdvertised": "As Advertised",
+        "delivery": "Delivery",
+        "service": "Service"
+      },
+      "completeOrderForm": {
         "heading": "Complete Order",
         "maxReviewChars": "%{max} chars. max",
         "reviewLabel": "Written Review",
         "anonCheckLabel": "Include my name (seen publicly)",
-        "btnCompleteOrder": "Complete Order",
-        "ratingOverallLabel": "Overall",
-        "ratingQualityLabel": "Quality",
-        "ratingAsAdvertisedLabel": "As Advertised",
-        "ratingDeliveryLabel": "Delivery",
-        "ratingServiceLabel": "Service"
+        "btnCompleteOrder": "Complete Order"
+      },
+      "orderComplete": {
+        "heading": "Order Complete",
+        "reviewLabel": "%{name}'s Review:"
       },
       "orderDetails": {
         "progressBarStates": {
