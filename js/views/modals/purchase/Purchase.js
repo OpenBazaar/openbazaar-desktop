@@ -282,6 +282,36 @@ export default class extends BaseModal {
     this.actionBtn.render();
   }
 
+  get prices() {
+    // create an array of price objects that matches the items in the order
+    const prices = [];
+    this.order.get('items').forEach(item => {
+      const priceObj = {};
+      const shipping = item.get('shipping');
+      const sName = shipping.get('name');
+      const sService = shipping.get('service');
+      const sOpt = this.listing.get('shippingOptions').findWhere({ name: sName });
+      const sOptService = sOpt ? sOpt.get('services').findWhere({ name: sService }) : '';
+      // determine which skus match the chosen options
+      const variantCombo = [];
+      item.get('options').forEach((option, i) => {
+        const variants = this.listing.get('item').get('options').at(i)
+          .get('variants')
+          .toJSON();
+        const variantIndex = variants.findIndex(variant => variant.name === option.get('value'));
+        variantCombo.push(variantIndex);
+      });
+      const sku = this.listing.get('item').get('skus').find(v =>
+        _.isEqual(v.get('variantCombo'), variantCombo));
+
+      priceObj.price = this.listing.get('item').get('price');
+      priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
+      priceObj.vPrice = sku ? sku.get('surcharge') : 0;
+      prices.push(priceObj);
+    });
+    return prices;
+  }
+
   get $popInMessages() {
     return this._$popInMessages ||
         (this._$popInMessages = this.$('.js-popInMessages'));
@@ -346,6 +376,7 @@ export default class extends BaseModal {
         vendor: this.vendor,
         variants: this.variants,
         items: this.order.get('items').toJSON(),
+        prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         ...this.order.toJSON(),
       }));
@@ -377,6 +408,7 @@ export default class extends BaseModal {
       this.receipt = this.createChild(Receipt, {
         model: this.order,
         listing: this.listing,
+        prices: this.prices,
       });
       this.$('.js-receipt').append(this.receipt.render().el);
 

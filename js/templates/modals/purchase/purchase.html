@@ -1,4 +1,8 @@
-<% const hasModerators = !!ob.listing.moderators && ob.listing.moderators.length %>
+<%
+const hasModerators = !!ob.listing.moderators && ob.listing.moderators.length
+// when multiple listings are supported, the prices array will have one price object for each
+const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+%>
 
 <div class="popInMessageHolder js-popInMessages"></div>
 
@@ -28,7 +32,7 @@
               <div class="width100 noOverflow">
                 <b><%= ob.listing.item.title %></b>
               </div>
-              <% ob.variants.forEach((variant) => { %>
+              <% ob.variants.forEach(variant => { %>
                 <div class="width100 noOverflow">
                   <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
                 </div>
@@ -52,7 +56,7 @@
           </div>
           <div class="pad flexNoShrink">
             <b>
-              <%= ob.convertAndFormatCurrency(ob.listing.item.price, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+              <%= ob.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
             </b>
           </div>
         </div>
