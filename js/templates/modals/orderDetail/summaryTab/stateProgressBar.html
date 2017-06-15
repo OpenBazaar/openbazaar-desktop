@@ -1,0 +1,19 @@
+<% ob.states.forEach((state, index) => {
+     let width = index === 0 || index === ob.states.length - 1 ?
+       0.5 / (ob.states.length - 1) : 1 / (ob.states.length - 1);
+     width = width * 100;
+%>
+  <div class="stateSection <% if (index < ob.currentState) print('active') %>" style="width: <%= width %>%">
+    <div class="stateTrack"></div>
+    <div class="stateCircle">
+      <span class="ion-ios-checkmark-empty"></span>
+    </div>
+    <div class="stateCircleBorderFillIn"></div>
+    <div class="stateLabel"><%= state %></div>
+    <% if (ob.disputeState === index + 1) { %>
+    <div class="disputeOpenedBadge clrBr clrP">
+      <span class="ion-alert-circled clrTErr"></span>
+    </div>
+    <% } %>
+  </div>
+<% }); %>

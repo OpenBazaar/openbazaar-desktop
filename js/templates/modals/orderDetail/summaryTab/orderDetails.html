@@ -1,0 +1,115 @@
+<%
+  if (ob.order.shipping && ob.order.shipping.country !== 'NA') {
+    var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;
+    var addressLine4 = ob.getCountryByDataName(ob.order.shipping.country).translatedName;
+    let addressParts = [];
+
+    if (ob.order.shipping.address) addressParts.push(ob.order.shipping.address);
+    if (ob.order.shipping.city) addressParts.push(ob.order.shipping.city);
+    if (ob.order.shipping.postalCode) addressParts.push(ob.order.shipping.postalCode);
+    if (ob.order.shipping.country) addressParts.push(ob.order.shipping.country);
+
+    addressParts
+      .map(addressPart => {
+        return addressPart.replace('/r', '')
+          .replace('/n', '')
+          .replace(/\s/g, '+');
+      });
+    var mapUrl = `https://www.google.com/maps/place/${addressParts.join(',')}`;
+  }
+
+  // For now we're only supporting one item per order, so we'll hard-code a reference to the
+  // first item.
+  var item = ob.order.items[0];
+
+  var priceText = ob.convertAndFormatCurrency(ob.listing.item.price,
+    ob.listing.metadata.pricingCurrency, ob.userCurrency, { useBtcSymbol: false });
+
+  if (ob.userCurrency !== 'BTC') {
+    priceText = ob.polyT('fiatBtcPairing', {
+      fiatAmount: priceText,
+      btcAmount: ob.convertAndFormatCurrency(ob.listing.item.price,
+        ob.listing.metadata.pricingCurrency, 'BTC', { useBtcSymbol: false }),
+    });
+  }
+%>
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.heading') %></h2>
+<span class="clrT2 tx5b"><%= ob.moment(ob.order.timestamp).format('lll') %></span>
+<div class="border clrBr padMd">
+  <div class="flex gutterH clrT">
+    <div class="listingThumbCol" style="<%= ob.getAvatarBgImage(ob.listing.item.images[0]) %>"></div>
+    <div class="flexExpand tx5">
+      <div class="txB <% if (ob.description) print('rowTn') %>"><%= ob.listing.item.title %></div>
+      <% if (item.options && item.options.length) { %>
+        <div><%= item.options.map(option => `${option.name}:&nbsp;${option.value}`).join(',&nbsp;') %></div>
+      <% } %>
+      <hr class="clrBr" />
+      <div class="flexRow gutterH">
+        <div class="col4 gutterVTn">
+          <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shipToHeading') %></div>
+          <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
+            <div><%= ob.order.shipping.shipTo %></div>
+            <% if (ob.order.shipping.address) { %>
+            <div><%= ob.order.shipping.address %></div>
+            <% } %>
+            <% if (addressLine3) { %>
+            <div><%= addressLine3 %></div>
+            <% } %>
+            <div><%= addressLine4 %></div>
+            <% if (ob.order.shipping.addressNotes) { %>
+            <div><%= ob.order.shipping.addressNotes %></div>
+            <% } %>
+            <%
+              let clipboardAddress = [ob.order.shipping.shipTo];
+
+              if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
+              if (addressLine3) clipboardAddress.push(addressLine3);
+              if (addressLine4) clipboardAddress.push(addressLine4);
+              clipboardAddress = clipboardAddress.join('\n');
+            %>  
+            <div class="gutterH">
+              <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
+              <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
+            </div>
+            <% } else { %>
+              <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+            <% } %>
+            <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
+        </div>
+        <div class="col8">
+          <div class="row">
+            <div class="flexRow gutterH row">
+              <div class="col6">
+                <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.couponHeading') %></div>
+                <% if (item.couponCodes && item.couponCodes.length) { %>
+                  <div><%= item.couponCodes.join(', ') %></div>
+                <% } else { %>
+                  <div><%= ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+                <% } %>              
+              </div>
+              <div class="col6">
+                <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
+                <div><%= item.quantity %></div>
+              </div>
+            </div>
+            <div class="flexRow gutterH row">
+              <div class="col6">
+                <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.moderatorHeading') %></div>
+                <div class="js-moderatorContainer"></div>
+              </div>
+              <div class="col6">
+                <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
+                <div><%= priceText %></div>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+      <hr class="clrBr" />
+      <div class="gutterVTn">
+        <div class="txB">Memo</div>
+        <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+      </div>
+    </div>
+  </div>
+</div>

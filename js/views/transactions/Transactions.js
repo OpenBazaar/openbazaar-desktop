@@ -44,27 +44,18 @@ export default class extends baseVw {
 
     this.purchasesCol = new Transactions([], { type: 'purchases' });
     this.syncTabHeadCount(this.purchasesCol, () => this.$purchasesTabCount);
-
-    if (opts.initialTab !== 'purchases') {
-      // fetch so we get the count for the tabhead
-      this.purchasesCol.fetch();
-    }
+    // fetch so we get the count for the tabhead
+    this.purchasesCol.fetch();
 
     this.salesCol = new Transactions([], { type: 'sales' });
     this.syncTabHeadCount(this.salesCol, () => this.$salesTabCount);
-
-    if (opts.initialTab !== 'sales') {
-      // fetch so we get the count for the tabhead
-      this.salesCol.fetch();
-    }
+    // fetch so we get the count for the tabhead
+    this.salesCol.fetch();
 
     this.casesCol = new Transactions([], { type: 'cases' });
     this.syncTabHeadCount(this.casesCol, () => this.$casesTabCount);
-
-    if (opts.initialTab !== 'cases') {
-      // fetch so we get the count for the tabhead
-      this.casesCol.fetch();
-    }
+    // fetch so we get the count for the tabhead
+    this.casesCol.fetch();
 
     this.socket = getSocket();
   }
