@@ -28,4 +28,12 @@ export default class extends BaseModel {
     if (Object.keys(errObj).length) return errObj;
     return undefined;
   }
+
+  sync(method, model, options) {
+    if (method === 'create' || method === 'update') {
+      options.type = 'POST';
+    }
+
+    return super.sync(method, model, options);
+  }
 }

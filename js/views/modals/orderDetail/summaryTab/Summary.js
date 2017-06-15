@@ -488,6 +488,7 @@ export default class extends BaseVw {
       if (this.completeOrderForm) this.completeOrderForm.remove();
       this.completeOrderForm = this.createChild(CompleteOrderForm, {
         model,
+        slug: this.contract.get('vendorListings').at(0).get('slug'),
       });
 
       $sections.prepend(this.completeOrderForm.render().el);

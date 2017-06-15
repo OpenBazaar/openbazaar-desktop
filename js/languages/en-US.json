@@ -1029,7 +1029,16 @@
         "passwordLabel": "Password"
       },
       "completeOrder": {
-        "heading": "Complete Order"
+        "heading": "Complete Order",
+        "maxReviewChars": "%{max} chars. max",
+        "reviewLabel": "Written Review",
+        "anonCheckLabel": "Include my name (seen publicly)",
+        "btnCompleteOrder": "Complete Order",
+        "ratingOverallLabel": "Overall",
+        "ratingQualityLabel": "Quality",
+        "ratingAsAdvertisedLabel": "As Advertised",
+        "ratingDeliveryLabel": "Delivery",
+        "ratingServiceLabel": "Service"
       },
       "orderDetails": {
         "progressBarStates": {

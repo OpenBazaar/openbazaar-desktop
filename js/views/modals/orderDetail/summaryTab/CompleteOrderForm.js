@@ -17,7 +17,12 @@ export default class extends BaseVw {
       throw new Error('Please provide an OrderCompletion model.');
     }
 
+    if (!options.slug) {
+      throw new Error('Please provide the listing slug.');
+    }
+
     this.ratingStrips = {};
+    this.slug = options.slug;
 
     const ratings = this.model.get('ratings');
 
@@ -35,9 +40,6 @@ export default class extends BaseVw {
     this.listenTo(orderEvents, 'completeOrderComplete completeOrderFail', () => {
       this.getCachedElement('.js-completeOrder').removeClass('processing');
     });
-
-    console.log('hippo');
-    window.hippo = this.model;
   }
 
   className() {
@@ -50,22 +52,18 @@ export default class extends BaseVw {
     };
   }
 
-  // get $trackingCopiedToClipboard() {
-  //   return this._$copiedToClipboard ||
-  //     (this._$copiedToClipboard = this.$('.js-trackingCopiedToClipboard'));
-  // }
-
-
   onClickCompleteOrder() {
     const data = {
       ...this.getFormData(),
       // If a rating is not set, the RatingStrip view will return 0. We'll
-      // send undefined in that case since it gives us a more
+      // send undefined in that case since it gives us the error message we
+      // prefer.
       overall: this.ratingStrips.overall.rating || undefined,
       quality: this.ratingStrips.quality.rating || undefined,
       description: this.ratingStrips.description.rating || undefined,
       deliverySpeed: this.ratingStrips.deliverySpeed.rating || undefined,
       customerService: this.ratingStrips.customerService.rating || undefined,
+      slug: this.slug,
     };
 
     this.rating.set(data);
@@ -81,14 +79,15 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     loadTemplate('modals/orderDetail/summaryTab/completeOrderForm.html', (t) => {
       this.$el.html(t({
         ...this.rating.toJSON(),
         errors: this.rating.validationError || {},
         isCompleting: !!completingOrder(this.model.id),
+        constraints: this.rating.constraints || {},
       }));
-
-      // this._$copiedToClipboard = null;
 
       this.$('.ratingsContainer').each((index, element) => {
         const $el = $(element);
@@ -102,7 +101,7 @@ export default class extends BaseVw {
         if (this.ratingStrips[type]) this.ratingStrips[type].remove();
         this.ratingStrips[type] = this.createChild(RatingsStrip, {
           initialState: {
-            curRating: this.model.get(type) || 0,
+            curRating: this.rating.get(type) || 0,
           },
         });
 

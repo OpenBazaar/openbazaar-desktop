@@ -12,7 +12,7 @@ export default class extends BaseModel {
     return {
       minRatingValue: 1,
       maxRatingValue: 5,
-      maxReviewCharacters: 30000,
+      maxReviewCharacters: 3000,
     };
   }
 
