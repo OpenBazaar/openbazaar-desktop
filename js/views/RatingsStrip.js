@@ -24,8 +24,6 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-ratingIcon': 'onClickRatingIcon',
-      // 'mouseover .js-ratingIcon': 'onMouseOverRatingIcon',
-      // 'mouseout .js-ratingIcon': 'onMouseOutRatingIcon',
     };
   }
 
@@ -37,14 +35,6 @@ export default class extends BaseVw {
     const totalIcons = this.getState().maxRating;
     this.setState({ curRating: totalIcons - $(e.target).index() });
   }
-
-  // onMouseOverRatingIcon(e) {
-  //   this.setState({ hoverIndex: $(e.target).index() + 1 });
-  // }
-
-  // onMouseOutRatingIcon(e) {
-  //   this.setState({ hoverIndex: 0 });
-  // }
 
   get rating() {
     return this.getState().curRating;

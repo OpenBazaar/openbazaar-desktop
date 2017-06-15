@@ -13,12 +13,6 @@ export default class extends BaseVw {
       throw new Error('Please provide a buyerOrderCompletion data object.');
     }
 
-    // this._state = {
-    //   buyerName: 'PHYSICAL_GOOD',
-    //   showPassword: false,
-    //   ...options.initialState || {},
-    // };
-
     this.dataObject = options.dataObject;
     this.ratingStrips = {};
   }
@@ -26,12 +20,6 @@ export default class extends BaseVw {
   className() {
     return 'orderCompleteEvent rowLg';
   }
-
-  // events() {
-  //   return {
-  //     'click .js-copyTrackingNumber': 'onClickCopyTrackingNumber',
-  //   };
-  // }
 
   getState() {
     return this._state;
@@ -55,8 +43,6 @@ export default class extends BaseVw {
   }
 
   render() {
-    console.log('moo');
-    window.moo = this;
     const rating = this.dataObject.ratings[0].ratingData;
     loadTemplate('modals/orderDetail/summaryTab/orderComplete.html', (t) => {
       this.$el.html(t({
