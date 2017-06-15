@@ -19,9 +19,16 @@ export function fixLinuxZoomIssue() {
   }
 }
 
+/**
+ * For most cases, this handler will be able to identify an external link because
+ * it will be prefaced with an "external" protocol (e.g. http, ftp). An exception
+ * to this is any user based url (e.g. www.espn.com). In that case, add a
+ * 'data-open-external' attribute to the url to force it to be opened externally.
+ */
 export function handleLinks() {
   $(document).on('click', 'a:not([data-bypass])', (e) => {
     const $a = $(e.target).closest('a');
+    const openExternally = $a.data('openExternal') !== undefined;
     let href = $a.attr('href');
 
     // Anchor without href is likely being handled programatically.
@@ -30,12 +37,12 @@ export function handleLinks() {
     const link = document.createElement('a');
     link.setAttribute('href', href);
 
-    if (link.protocol !== location.protocol) {
-      // external link
-      if (link.protocol === 'ob2:') {
-        Backbone.history.navigate(href.slice(6), true);
+    if (link.protocol !== location.protocol || openExternally) {
+      if (link.protocol === 'ob:' && !openExternally) {
+        Backbone.history.navigate(href.slice(5), true);
       } else {
-        shell.openExternal(href);
+        // external link
+        shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
       }
     } else {
       if (!href.startsWith('#')) {

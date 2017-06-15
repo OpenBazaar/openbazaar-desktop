@@ -1,8 +1,8 @@
 <div class="padLg flexVCent">
   <div class="backToSummaryWrap">
-    <a class="js-backToSummary clrTEm txU">Back to summary</a>
+    <a class="js-backToSummary clrTEm txU"><%= ob.polyT(`orderDetail.backToSummary`) %></a>
   </div>
-  <div class="txCtr txB tx3 flexExpand">Contract (JSON)</div>
+  <div class="txCtr txB tx3 flexExpand"><%= ob.polyT(`orderDetail.contractTab.heading`) %></div>
 </div>
 <hr class="clrBr rowMd" />
 <% if (!ob.isCase) { %>

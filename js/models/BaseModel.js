@@ -103,7 +103,7 @@ export default class extends Model {
 
     if (typeof key === 'object') {
       attrs = key;
-      opts = val;
+      opts = val || {};
     } else {
       (attrs = {})[key] = val;
     }
@@ -111,7 +111,7 @@ export default class extends Model {
     const previousAttrs = this.toJSON();
 
     // todo: will it break things if we unset a nested attribute?
-    if (!options.unset) {
+    if (!opts.unset) {
       // let's work off of a clone since we modify attrs
       attrs = JSON.parse(JSON.stringify(attrs));
 
@@ -238,8 +238,10 @@ export default class extends Model {
       this.set(JSON.parse(JSON.stringify(this.lastSyncedAttrs)));
     } else {
       this.clear();
-      this.set(this.defaults || {});
+      this.set(_.result(this, 'defaults', {}));
     }
+
+    this.validationError = null;
   }
 
   clone() {

@@ -8,6 +8,13 @@ export default class extends BaseModel {
     };
   }
 
+  get type() {
+    return this.get('vendorListings')
+      .at(0)
+      .get('metadata')
+      .get('contractType');
+  }
+
   parse(response) {
     return {
       ...response,
