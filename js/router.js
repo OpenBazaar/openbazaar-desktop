@@ -263,40 +263,26 @@ export default class ObRouter extends Router {
 
   userNotFound(user) {
     this.loadPage(
-      new TemplateOnly({
-        template: 'error-pages/userNotFound.html',
-        user,
-      }).render()
+      new TemplateOnly({template: 'error-pages/userNotFound.html'}).render({ user })
     );
   }
 
   pageNotFound(page) {
     this.loadPage(
       new TemplateOnly({
-        template: 'error-pages/pageNotFound.html',
-        page,
-      }).render()
+        template: 'error-pages/pageNotFound.html'}).render({ page })
     );
   }
 
   pathNotFound(path, page, link) {
     this.loadPage(
-      new TemplateOnly({
-        template: 'error-pages/pathNotFound.html',
-        path,
-        page,
-        link,
-      }).render()
+      new TemplateOnly({template: 'error-pages/pathNotFound.html'}).render({ path, page, link })
     );
   }
 
   listingNotFound(listing, link) {
     this.loadPage(
-      new TemplateOnly({
-        template: 'error-pages/listingNotFound.html',
-        listing,
-        link,
-      }).render()
+      new TemplateOnly({template: 'error-pages/listingNotFound.html'}).render({ listing, link })
     );
   }
 
@@ -318,10 +304,7 @@ export default class ObRouter extends Router {
       }
 
       this.loadPage(
-        new TemplateOnly({
-          template: 'error-pages/genericError.html',
-          content,
-        }).render()
+        new TemplateOnly({template: 'error-pages/genericError.html'}).render(content)
       );
     }
   }
