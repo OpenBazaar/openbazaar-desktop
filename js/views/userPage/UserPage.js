@@ -23,10 +23,7 @@ export default class extends baseVw {
     this.ownPage = this.model.id === app.profile.id;
 
     this.state = options.state || 'store';
-    if (this.state === 'store' && !this.ownPage && !this.model.get('vendor')) {
-      this.state = 'home';
-      app.router.navigate(`${this.model.id}/home`, { replace: true });
-    }
+
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 

@@ -109,7 +109,7 @@ export default class ObRouter extends Router {
     getGuid(handle).done((guid) => {
       this.user(guid, ...args);
     }).fail(() => {
-      this.userNotFound();
+      this.userNotFound(handle);
     });
   }
 
@@ -145,17 +145,12 @@ export default class ObRouter extends Router {
   }
 
   user(guid, state, ...args) {
-    const pageState = state || 'store';
+    let pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
 
-    if (!state) {
-      this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-        replace: true,
-      });
-    }
-
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
-      this.pageNotFound();
+      this.pathNotFound(`${pageState}${deepRouteParts ? deepRouteParts.join('/') : ''}`,
+        guid, `${guid}/home`);
       return;
     }
 
@@ -193,13 +188,23 @@ export default class ObRouter extends Router {
     this.once('will-route', onWillRoute);
 
     $.whenAll(profileFetch, listingFetch).done(() => {
-      this.loadPage(
-        new UserPage({
-          model: profile,
-          state: pageState,
-          listing,
-        }).render()
-      );
+      if (state === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
+        this.pathNotFound(`store${deepRouteParts ? deepRouteParts.join('/') : ''}`, guid, `${guid}/home`);
+      } else {
+        if (!state) {
+          pageState =  (!profile.get('vendor') && guid !== app.profile.id) ? 'home' : 'store';
+          this.navigate(`${guid}/${pageState}${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+            replace: true,
+          });
+        }
+        this.loadPage(
+          new UserPage({
+            model: profile,
+            state: pageState,
+            listing,
+          }).render()
+        );
+      }
     }).fail(() => {
       if (profileFetch.statusText === 'abort' ||
         profileFetch.statusText === 'abort') return;
@@ -207,9 +212,9 @@ export default class ObRouter extends Router {
       // todo: If really not found (404), route to
       // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
-        this.userNotFound();
+        this.userNotFound(guid);
       } else if (listingFetch.state() === 'rejected') {
-        this.listingNotFound();
+        this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
       }
     })
       .always(() => (this.off(null, onWillRoute)));
@@ -217,7 +222,7 @@ export default class ObRouter extends Router {
 
   transactions(tab) {
     if (tab && ['sales', 'cases', 'purchases'].indexOf(tab) === -1) {
-      this.pageNotFound();
+      this.pathNotFound(tab, 'transactions', `transactions`);
       return;
     }
 
@@ -256,42 +261,67 @@ export default class ObRouter extends Router {
     );
   }
 
-  userNotFound() {
+  userNotFound(user) {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/userNotFound.html' }).render()
+      new TemplateOnly({
+        template: 'error-pages/userNotFound.html',
+        user,
+      }).render()
     );
   }
 
-  pageNotFound() {
+  pageNotFound(page) {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/pageNotFound.html' }).render()
+      new TemplateOnly({
+        template: 'error-pages/pageNotFound.html',
+        page,
+      }).render()
     );
   }
 
-  listingNotFound() {
+  pathNotFound(path, page, link) {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render()
+      new TemplateOnly({
+        template: 'error-pages/pathNotFound.html',
+        path,
+        page,
+        link,
+      }).render()
     );
   }
 
-  listingError(failedXhr) {
+  listingNotFound(listing, link) {
+    this.loadPage(
+      new TemplateOnly({
+        template: 'error-pages/listingNotFound.html',
+        listing,
+        link,
+      }).render()
+    );
+  }
+
+  listingError(failedXhr, listing, store) {
     if (!failedXhr) {
       throw new Error('Please provide the failed Xhr request');
     }
 
     if (failedXhr.status === 404) {
-      this.listingNotFound();
+      this.listingNotFound(listing, store);
     } else {
-      let content = '<p>There was an error retreiving the listing.</p>';
+      const link = `<a href="${store}">${app.polyglot.t('errorPage.listingNotFoundLink')}</a>`;
+      let content = app.polyglot.t('errorPage.listingNotFoundMsg', { listing, link });
 
       if (failedXhr.responseText) {
         const reason = failedXhr.responseJSON && failedXhr.responseJSON.reason ||
           failedXhr.responseText;
-        content += `<p>${reason}</p>`;
+        content += `\n\n${reason}`;
       }
 
       this.loadPage(
-        new TemplateOnly({ template: 'error-pages/genericError.html' }).render({ content })
+        new TemplateOnly({
+          template: 'error-pages/genericError.html',
+          content,
+        }).render()
       );
     }
   }

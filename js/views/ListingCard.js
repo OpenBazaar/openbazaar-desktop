@@ -158,7 +158,7 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail((xhr) => {
-          app.router.listingError(xhr);
+          app.router.listingError(xhr, this.model.get('slug'), this.options.listingBaseUrl);
         });
     }
   }

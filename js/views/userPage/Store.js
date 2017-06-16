@@ -60,11 +60,12 @@ export default class extends BaseVw {
       });
 
       this.listenTo(listingEvents, 'destroy', () => (this.showDataChangedMessage()));
+      // if the user changes their vendor setting, toggle the warning
+      this.listenTo(app.profile, 'change:vendor', () => (this.toggleInactiveWarning()));
     }
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
     this.listenTo(app.settings, 'change:localCurrency', () => (this.showDataChangedMessage()));
-    this.listenTo(app.profile, 'change:vendor', () => (this.showDataChangedMessage()));
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => (this.showDataChangedMessage()));
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update',
@@ -102,6 +103,10 @@ export default class extends BaseVw {
   onFilterFreeShippingChange(e) {
     this.filter.freeShipping = $(e.target).is(':checked');
     this.renderListings(this.filteredCollection());
+  }
+
+  toggleInactiveWarning() {
+    this.$inactiveWarning.toggleClass('hide', app.settings.get('vendor'));
   }
 
   onShipsToSelectChange(e) {
@@ -526,6 +531,11 @@ export default class extends BaseVw {
       (this._$popInMessages = this.$('.js-popInMessages'));
   }
 
+  get $inactiveWarning() {
+    return this._$inactiveWarning ||
+      (this._$inactiveWarning = this.$('.js-inactiveWarning'));
+  }
+
   remove() {
     getContentFrame().off('scroll', this.storeListingsScrollHandler);
     super.remove();
@@ -559,6 +569,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$popInMessages = null;
+    this._$inactiveWarning = null;
     this._$noResults = null;
 
     this.$sortBy.select2({

@@ -19,7 +19,10 @@ export default class extends baseVw {
 
   render(context = {}) {
     loadTemplate(this.options.template, (t) => {
-      this.$el.html(t(context));
+      this.$el.html(t({
+        ...this.options,
+        context
+      }));
     });
 
     return this;
