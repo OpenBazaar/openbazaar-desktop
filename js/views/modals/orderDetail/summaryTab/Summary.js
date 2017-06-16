@@ -187,6 +187,18 @@ export default class extends BaseVw {
       }
     });
 
+    this.listenTo(orderEvents, 'openDisputeComplete', e => {
+      if (e.id === this.model.id) {
+        this.model.set('state', 'DISPUTED');
+        this.model.fetch();
+      }
+    });
+
+    if (!this.isCase()) {
+      this.listenTo(this.contract, 'change:dispute',
+        () => this.renderDisputeStartedView());
+    }
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -272,10 +284,9 @@ export default class extends BaseVw {
       ],
     };
 
-    // TODO: add in completed check with determination of whether a dispute
-    // had been opened.
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
-      orderState === 'RESOLVED') {
+      orderState === 'RESOLVED' ||
+      (orderState === 'COMPLETED' && this.model.get('dispute') !== undefined)) {
       if (!this.isCase()) {
         state.states = [
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
@@ -567,7 +578,7 @@ export default class extends BaseVw {
 
     // this is only set on the Case.
     const buyerOpened = this.model.get('buyerOpened');
-    if (typeof buyerOpened !== undefined) {
+    if (typeof buyerOpened !== 'undefined') {
       const disputeOpener = buyerOpened ? this.buyer : this.vendor;
       disputeOpener.getProfile()
         .done(profile =>

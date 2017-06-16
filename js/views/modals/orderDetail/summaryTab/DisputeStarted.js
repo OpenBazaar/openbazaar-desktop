@@ -1,12 +1,5 @@
-// import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
-// import {
-//   fulfillingOrder,
-//   refundingOrder,
-//   refundOrder,
-//   events as orderEvents,
-// } from '../../../../utils/order';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -22,18 +15,6 @@ export default class extends BaseVw {
       resolveInProgress: false,
       ...options.initialState || {},
     };
-
-    // this.listenTo(orderEvents, 'fulfillingOrder', e => {
-    //   if (e.id === this.orderId) {
-    //     this.setState({ fulfillInProgress: true });
-    //   }
-    // });
-
-    // this.listenTo(orderEvents, 'fulfillOrderComplete fulfillOrderFail', e => {
-    //   if (e.id === this.orderId) {
-    //     this.setState({ fulfillInProgress: false });
-    //   }
-    // });
   }
 
   className() {
@@ -77,7 +58,6 @@ export default class extends BaseVw {
       this.$el.html(t({
         ...this._state,
         moment,
-        // resolveInProgress: fulfillingOrder(this.orderId),
       }));
     });
 
