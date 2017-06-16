@@ -379,6 +379,10 @@ export default class extends BaseModal {
     const view = this.createChild(DisputeOrderTab, {
       model,
       contractType,
+      moderator: {
+        id: this.moderatorId,
+        getProfile: this.getModeratorProfile.bind(this),
+      },
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));

@@ -251,7 +251,7 @@ export function refundOrder(orderId) {
 
 /**
  * If the order with the given id is in the process of being completed, this method
- * will return an object containing the post xhr and the model that's being save.
+ * will return an object containing the post xhr and the data that's being saved.
  */
 export function completingOrder(orderId) {
   return completePosts[orderId] || false;
@@ -262,9 +262,7 @@ export function completeOrder(orderId, data = {}) {
     throw new Error('Please provide an orderId');
   }
 
-  const completeObject = completePosts[orderId];
-
-  if (!completeObject) {
+  if (!completePosts[orderId]) {
     const model = new OrderCompletion(data);
     const save = model.save();
 
@@ -297,7 +295,7 @@ export function completeOrder(orderId, data = {}) {
 
       completePosts[orderId] = {
         xhr: save,
-        model,
+        data: model.toJSON(),
       };
     }
 

@@ -6,7 +6,7 @@ import { convertAndFormatCurrency } from '../../../../utils/currency';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
-import Moderator from './OrderDetailsModerator';
+import ModFragment from '../ModFragment';
 import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
@@ -29,7 +29,7 @@ export default class extends BaseVw {
         'as well as a getProfile function that returns a promise that ' +
         'resolves with a profile model.');
 
-    if (this.model.get('buyerOrder').payment.moderator) {
+    if (this.isModerated()) {
       if (!options.moderator) {
         throw new Error('Please provide a moderator object.');
       }
@@ -37,6 +37,12 @@ export default class extends BaseVw {
       if (!isValidParticipantObject(options.moderator)) {
         throw new Error(getInvalidParticpantError('moderator'));
       }
+
+      options.moderator.getProfile()
+        .done((modProfile) => {
+          this.modProfile = modProfile;
+          if (this.moderatorVw) this.moderatorVw.setState({ ...modProfile.toJSON() });
+        });
     }
 
     this.options = options;
@@ -66,6 +72,10 @@ export default class extends BaseVw {
       });
   }
 
+  isModerated() {
+    return !!this.model.get('buyerOrder').payment.moderator;
+  }
+
   get $copiedToClipboard() {
     return this._$copiedToClipboard ||
       (this._$copiedToClipboard = this.$('.js-orderDetailsCopiedToClipboard'));
@@ -80,34 +90,24 @@ export default class extends BaseVw {
         convertAndFormatCurrency,
         userCurrency: app.settings.get('localCurrency'),
         moment,
-        moderator: this.modProfile && this.modProfile.toJSON() || null,
+        isModerated: this.isModerated(),
       }));
 
       this._$copiedToClipboard = null;
 
-      const moderatorState = {};
+      if (this.isModerated()) {
+        const moderatorState = {
+          peerId: this.options.moderator.id,
+          ...(this.modProfile && this.modProfile.toJSON() || {}),
+        };
 
-      if (this.options.moderator) {
-        moderatorState.peerId = this.options.moderator.id;
+        if (this.moderatorVw) this.moderatorVw.remove();
+        this.moderatorVw = this.createChild(ModFragment, {
+          initialState: moderatorState,
+        });
+
+        this.$('.js-moderatorContainer').html(this.moderatorVw.render().el);
       }
-
-      if (this.moderatorVw) this.moderatorVw.remove();
-      this.moderatorVw = this.createChild(Moderator, {
-        initialState: moderatorState,
-      });
-
-      if (!this.modProfile && this.options.moderator) {
-        this.options.moderator.getProfile()
-          .done((modProfile) => {
-            this.modProfile = modProfile;
-            this.moderatorVw.setState({
-              name: modProfile.get('name'),
-              handle: modProfile.get('handle'),
-            });
-          });
-      }
-
-      this.$('.js-moderatorContainer').html(this.moderatorVw.render().el);
     });
 
     return this;

@@ -11,11 +11,7 @@
       <div for="fulfillOrderNote"><%= ob.polyT(`orderDetail.disputeOrderTab.moderatorLabel`) %></div>
     </div>
     <div class="col7">
-      <% ob.moderator = {}; ob.moderator.avatarHashes = {} %>
-      <div class="flexVCent gutterHSm">
-        <div class="avatar clrBr2 clrSh1 disc" style="<%= ob.getAvatarBgImage(ob.moderator.avatarHashes) %>"></div>
-        <div>Mod God <a class="clrTEm" href="<%= ob.moderator.moo %>">@modgod27</a></div>
-      </div>
+      <div class="js-modContainer"></div>
     </div>
   </div>
   <div class="flexRow gutterH rowHg">

@@ -510,8 +510,8 @@ export default class extends BaseVw {
     if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
       this.buyer.id === app.profile.id) {
       const completingObject = completingOrder(this.model.id);
-      const model = completingObject ?
-        completingObject.model : new OrderCompletion({ orderId: this.model.id });
+      const model = new OrderCompletion(
+        completingObject ? completingObject.data : { orderId: this.model.id });
       if (this.completeOrderForm) this.completeOrderForm.remove();
       this.completeOrderForm = this.createChild(CompleteOrderForm, {
         model,

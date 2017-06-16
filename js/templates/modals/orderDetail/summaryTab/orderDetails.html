@@ -95,7 +95,11 @@
             <div class="flexRow gutterH row">
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.moderatorHeading') %></div>
-                <div class="js-moderatorContainer"></div>
+                <% if (ob.isModerated) { %>
+                  <div class="js-moderatorContainer"></div>
+                <% } else { %>
+                  <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+                <% } %>
               </div>
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
