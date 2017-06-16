@@ -1,0 +1,27 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputeStarted.heading') %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+
+<div class="border clrBr padMd">
+  <div class="flexVCent gutterH clrT">
+    <div class="statusIconCol"><span class="clrBr ion-alert-circled"></span></div>
+    <div class="flexExpand tx5">
+      <%
+        let introLine = ob.disputerName ?
+          ob.polyT('orderDetail.summaryTab.disputeStarted.partyIsDisputing', { name: ob.disputerName }) :
+          ob.polyT('orderDetail.summaryTab.disputeStarted.genericIsDisputed');
+      %>
+      <div class="rowTn txB"><%= introLine %></div>
+      <div class="flex gutterH clrT2"><%= ob.claim %></div>
+    </div>
+    <div class="col">
+      <% if (ob.showResolveButton) { %>
+        <%= ob.processingButton({
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute ${ob.resolveInProgress ? 'processing' : ''}`,
+          btnText: ob.polyT('orderDetail.summaryTab.disputeStarted.resolveBtn')
+        }) %>
+      <% } %>  
+    </div>
+  </div>
+</div>

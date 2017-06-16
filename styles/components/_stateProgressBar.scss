@@ -64,8 +64,14 @@ $borderWidth: 1px;
       border-width: 1px;
       border-radius: 50%;
       font-size: 16px;
-      padding: 5px;
       z-index: 1;
+      width: 25px;
+      height: 25px;
+      text-align: center;
+
+      .ion-alert-circled::before {
+        padding-top: 3px;
+      }
     }
 
     &.active {

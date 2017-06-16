@@ -298,7 +298,15 @@
 
           &::before {
             padding-top: 7px;
-          }          
+          }
+        }
+
+        &.ion-alert-circled {
+          font-size: 17px;
+
+          &::before {
+            padding-top: 8px;
+          }
         }
       }
     }    

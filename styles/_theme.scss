@@ -418,4 +418,10 @@ input[type=range][class~="clrS"] {
       color: #64452c;
     }
   }
+
+  .disputeOpenedBadge, .statusIconCol {
+    .ion-alert-circled {
+      color: #ed732a;
+    }
+  }
 }

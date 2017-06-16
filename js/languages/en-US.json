@@ -1046,6 +1046,12 @@
         "heading": "Order Complete",
         "reviewLabel": "%{name}'s Review:"
       },
+      "disputeStarted": {
+        "heading": "Dispute Started",
+        "partyIsDisputing": "%{name} is disputing the order:",
+        "resolveBtn": "Resolve Dispute",
+        "genericIsDisputed": "The order is being disputed:"
+      },
       "orderDetails": {
         "progressBarStates": {
           "paid": "Paid",

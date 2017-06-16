@@ -19,6 +19,7 @@ import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
 import CompleteOrderForm from './CompleteOrderForm';
 import OrderComplete from './OrderComplete';
+import DisputeStarted from './DisputeStarted';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -374,7 +375,8 @@ export default class extends BaseVw {
     let bool = false;
 
     // Show the accepted section if the order has been accepted and its fully funded.
-    if (this.contract.get('vendorOrderConfirmation') && this.getBalanceRemaining() <= 0) {
+    if (this.contract.get('vendorOrderConfirmation')
+      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
       bool = true;
     }
 
@@ -543,6 +545,38 @@ export default class extends BaseVw {
     this.$subSections.prepend(this.orderComplete.render().el);
   }
 
+  renderDisputeStartedView() {
+    const data = this.isCase() ? {
+      timestamp: this.model.get('timestamp'),
+      claim: this.model.get('claim'),
+    } : this.contract.get('dispute');
+
+    if (!data) {
+      throw new Error('Unable to create the Dispute Started view because the dispute ' +
+        'data object has not been set.');
+    }
+
+    if (this.disputeStarted) this.disputeStarted.remove();
+    this.disputeStarted = this.createChild(DisputeStarted, {
+      initialState: {
+        ...data,
+        showResolveButton: this.model.get('state') === 'DISPUTED' &&
+          this.moderator.id === app.profile.id,
+      },
+    });
+
+    // this is only set on the Case.
+    const buyerOpened = this.model.get('buyerOpened');
+    if (typeof buyerOpened !== undefined) {
+      const disputeOpener = buyerOpened ? this.buyer : this.vendor;
+      disputeOpener.getProfile()
+        .done(profile =>
+          this.disputeStarted.setState({ disputerName: profile.get('name') }));
+    }
+
+    this.$subSections.prepend(this.disputeStarted.render().el);
+  }
+
   /**
    * Will render sub-sections in order based on their timestamp. Exempt from
    * this are the Order Details, Payment Details and Accepted sections which
@@ -572,6 +606,18 @@ export default class extends BaseVw {
         function: this.renderOrderCompleteView,
         timestamp:
           (new Date(this.contract.get('buyerOrderCompletion').timestamp)).getTime(),
+      });
+    }
+
+    if (this.contract.get('dispute') || this.isCase()) {
+      const timestamp = this.isCase() ?
+        this.model.get('timestamp') :
+        this.contract.get('dispute').timestamp;
+
+      sections.push({
+        function: this.renderDisputeStartedView,
+        timestamp:
+          (new Date(timestamp)).getTime(),
       });
     }
 
