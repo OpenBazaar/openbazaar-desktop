@@ -14,7 +14,8 @@ import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
 import FulfillOrder from './FulfillOrder';
-import DisputeOrderTab from './DisputeOrder';
+import DisputeOrder from './DisputeOrder';
+import ResolveDispute from './ResolveDispute';
 import ActionBar from './ActionBar.js';
 
 export default class extends BaseModal {
@@ -25,7 +26,8 @@ export default class extends BaseModal {
         fetchFailed: false,
         fetchError: '',
       },
-      initialTab: 'summary',
+      // initialTab: 'summary',
+      initialTab: 'resolveDispute',
       ...options,
     };
 
@@ -378,13 +380,29 @@ export default class extends BaseModal {
 
     const model = new OrderDispute({ orderId: this.model.id });
 
-    const view = this.createChild(DisputeOrderTab, {
+    const view = this.createChild(DisputeOrder, {
       model,
       contractType,
       moderator: {
         id: this.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       },
+    });
+
+    this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
+
+    return view;
+  }
+
+  createResolveDisputeTabView() {
+    const model = new OrderDispute({ orderId: this.model.id });
+
+    const view = this.createChild(ResolveDispute, {
+      model,
+      // moderator: {
+      //   id: this.moderatorId,
+      //   getProfile: this.getModeratorProfile.bind(this),
+      // },
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));

@@ -1,0 +1,35 @@
+<div class="padLg flexVCent">
+  <div class="backToSummaryWrap">
+    <a class="js-backToSummary clrTEm txU"><%= ob.polyT(`orderDetail.backToSummary`) %></a>
+  </div>
+  <div class="txCtr txB tx3 flexExpand"><%= ob.polyT(`orderDetail.resolveDisputeTab.heading`) %></div>
+</div>
+<hr class="clrBr rowMd" />
+<form class="padKids padStack pad clrP clrBr js-fulfillForm">
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="fulfillOrderShippingCarrier" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['physicalDelivery.shipper']) print(ob.formErrorTmpl({ errors: ob.errors['physicalDelivery.shipper'] })) %>
+      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="fulfillOrderShippingCarrier" value="" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierPlaceholder`) %>" />
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="fulfillOrderTrackingNumber"><%= ob.polyT(`orderDetail.fulfillOrderTab.trackingLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['physicalDelivery.trackingNumber']) print(ob.formErrorTmpl({ errors: ob.errors['physicalDelivery.trackingNumber'] })) %>
+      <input type="text" class="clrBr clrSh2" name="physicalDelivery.trackingNumber" id="fulfillOrderTrackingNumber" value="" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.trackingPlaceholder`) %>" />
+    </div>
+  </div>
+</form>
+<hr class="clrBr" />
+<div class="buttonBar flexHRight flexVCent gutterHLg">
+  <a class="js-cancel <% if (ob.fulfillingOrder) print('disabled') %>"><%= ob.polyT(`orderDetail.fulfillOrderTab.btnCancel`) %></a>
+  <%= ob.processingButton({
+    className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.fulfillingOrder ? 'processing' : ''}`,
+    btnText: ob.polyT(`orderDetail.fulfillOrderTab.btnSubmit`),
+  }) %>
+</div>

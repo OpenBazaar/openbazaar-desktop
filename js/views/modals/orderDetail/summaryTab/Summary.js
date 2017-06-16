@@ -235,6 +235,12 @@ export default class extends BaseVw {
             e.jsonData.notification.orderCompletion.orderId === this.model.id) {
             // A notification the vendor will get when the buyer has completed an order.
             this.model.fetch();
+          } else if (e.jsonData.notification.disputeOpen &&
+            e.jsonData.notification.disputeOpen.orderId === this.model.id) {
+            // When a party opens a dispute the mod and the other party will get this
+            // notification
+            console.log('what what');
+            this.model.fetch();
           }
         }
       });

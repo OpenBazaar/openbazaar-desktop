@@ -1050,7 +1050,8 @@
         "heading": "Dispute Started",
         "partyIsDisputing": "%{name} is disputing the order:",
         "resolveBtn": "Resolve Dispute",
-        "genericIsDisputed": "The order is being disputed:"
+        "genericIsDisputed": "The order is being disputed:",
+        "noReasonProvided": "No reason was provided."
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1094,6 +1095,9 @@
       "btnCancel": "Cancel",
       "btnSubmit": "Submit"
     },
+    "resolveDisputeTab": {
+      "heading": "Resolve Dispute"
+    },    
     "disputeOrderTab": {
       "heading": "Dispute Order",
       "moderatorLabel": "Moderator",
