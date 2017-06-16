@@ -7,7 +7,7 @@ import { events as orderEvents } from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
-import DisputeOrder from '../../../models/order/DisputeOrder';
+import OrderDispute from '../../../models/order/OrderDispute';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
@@ -25,8 +25,7 @@ export default class extends BaseModal {
         fetchFailed: false,
         fetchError: '',
       },
-      // initialTab: 'summary',
-      initialTab: 'disputeOrder',
+      initialTab: 'summary',
       ...options,
     };
 
@@ -58,6 +57,9 @@ export default class extends BaseModal {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
+    });
+    this.listenTo(orderEvents, 'openDisputeComplete', () => {
+      if (this.activeTab === 'disputeOrder') this.selectTab('summary');
     });
 
     const socket = getSocket();
@@ -374,7 +376,7 @@ export default class extends BaseModal {
   createDisputeOrderTabView() {
     const contractType = this.model.get('contract').type;
 
-    const model = new DisputeOrder({ orderId: this.model.id });
+    const model = new OrderDispute({ orderId: this.model.id });
 
     const view = this.createChild(DisputeOrderTab, {
       model,
@@ -462,6 +464,7 @@ export default class extends BaseModal {
           initialState: this.actionBarButtonState,
         });
         this.$('.js-actionBarContainer').html(this.actionBar.render().el);
+        this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
       }
     });
 

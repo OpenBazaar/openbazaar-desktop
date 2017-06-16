@@ -197,37 +197,37 @@ export default class extends baseVw {
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(9) > -1,
         className: 'filter',
         targetState: [9],
       },
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
         targetState: [10],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(11) > -1,
         className: 'filter',
         targetState: [11],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(12) > -1,
         className: 'filter',
         targetState: [12],
       },
       {
         id: 'filterCompleted',
         text: app.polyglot.t('transactions.filters.completed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(4) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(9) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(7) > -1 ||
+          this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
         className: 'filter',
         targetState: [6, 7, 8],
       },
@@ -247,21 +247,21 @@ export default class extends baseVw {
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(5) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
         targetState: [10],
       },
       {
         id: 'filterDisputePending',
         text: app.polyglot.t('transactions.filters.disputePending'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(11) > -1,
         className: 'filter',
         targetState: [11],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(7) > -1,
+        checked: this.salesPurchasesDefaultFilter.states.indexOf(12) > -1,
         className: 'filter',
         targetState: [12],
       },

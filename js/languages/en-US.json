@@ -1107,7 +1107,8 @@
     "failedCancelHeading": "There was an error canceling the order.",
     "failedFulfillHeading": "There was an error fulfilling the order.",
     "failedRefundHeading": "There was an error refunding the order.",
-    "failedCompleteHeading": "There was an error completing the order."
+    "failedCompleteHeading": "There was an error completing the order.",
+    "failedOpenDisputeHeading": "There was an error completing the order."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

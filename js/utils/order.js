@@ -4,6 +4,7 @@ import { Events } from 'backbone';
 import OrderFulfillment from '../models/order/orderFulfillment/OrderFulfillment';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import OrderCompletion from '../models/order/orderCompletion/OrderCompletion';
+import OrderDispute from '../models/order/OrderDispute';
 
 const events = {
   ...Events,
@@ -15,6 +16,7 @@ const cancelPosts = {};
 const fulfillPosts = {};
 const refundPosts = {};
 const completePosts = {};
+const openDisputePosts = {};
 
 function confirmOrder(orderId, reject = false) {
   if (!orderId) {
@@ -306,4 +308,64 @@ export function completeOrder(orderId, data = {}) {
   }
 
   return completePosts[orderId].xhr;
+}
+
+/**
+ * If the order with the given id is in the process of a dispute being opened,
+ * this method will return an object containing the post xhr and the data
+ * that's being saved.
+ */
+export function openingDispute(orderId) {
+  return openDisputePosts[orderId] || false;
+}
+
+export function openDispute(orderId, data = {}) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  if (!openDisputePosts[orderId]) {
+    const model = new OrderDispute(data);
+    const save = model.save();
+
+    if (!save) {
+      Object.keys(model.validationError)
+        .forEach(errorKey => {
+          throw new Error(`${errorKey}: ${model.validationError[errorKey][0]}`);
+        });
+    } else {
+      save.always(() => {
+        delete openDisputePosts[orderId];
+      }).done(() => {
+        events.trigger('openDisputeComplete', {
+          id: orderId,
+          xhr: save,
+        });
+      })
+      .fail(xhr => {
+        events.trigger('openDisputeFail', {
+          id: orderId,
+          xhr: save,
+        });
+
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('orderUtil.failedOpenDisputeHeading'),
+          failReason
+        );
+      });
+
+      openDisputePosts[orderId] = {
+        xhr: save,
+        data: model.toJSON(),
+      };
+    }
+
+    events.trigger('openingDisputeOrder', {
+      id: orderId,
+      xhr: save,
+    });
+  }
+
+  return openDisputePosts[orderId].xhr;
 }

@@ -27,9 +27,9 @@
 </form>
 <hr class="clrBr" />
 <div class="buttonBar flexHRight flexVCent gutterHLg">
-  <a class="js-cancel <% if (ob.fulfillingOrder) print('disabled') %>"><%= ob.polyT(`orderDetail.fulfillOrderTab.btnCancel`) %></a>
+  <a class="js-cancel <% if (ob.openingDispute) print('disabled') %>"><%= ob.polyT(`orderDetail.fulfillOrderTab.btnCancel`) %></a>
   <%= ob.processingButton({
-    className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.fulfillingOrder ? 'processing' : ''}`,
+    className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.openingDispute ? 'processing' : ''}`,
     btnText: ob.polyT(`orderDetail.fulfillOrderTab.btnSubmit`),
   }) %>
 </div>

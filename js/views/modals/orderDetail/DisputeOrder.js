@@ -1,8 +1,8 @@
-// import {
-//   fulfillingOrder,
-//   fulfillOrder,
-//   events as orderEvents,
-// } from '../../../utils/order';
+import {
+  openingDispute,
+  openDispute,
+  events as orderEvents,
+} from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 import ModFragment from './ModFragment';
@@ -43,9 +43,9 @@ export default class extends BaseVw {
 
     this.options = options;
 
-    // this.listenTo(orderEvents, 'fulfillingOrder', this.onFulfillingOrder);
-    // this.listenTo(orderEvents, 'fulfillOrderComplete, fulfillOrderFail',
-    //   this.onFulfillOrderAlways);
+    this.listenTo(orderEvents, 'openingDispute', this.onOpeningDispute);
+    this.listenTo(orderEvents, 'openDisputeComplete, openDisputeFail',
+      this.onOpenDisputeAlways);
   }
 
   className() {
@@ -79,7 +79,7 @@ export default class extends BaseVw {
     this.model.set({}, { validate: true });
 
     if (!this.model.validationError) {
-      // fulfillOrder(this.model.id, this.model.toJSON());
+      openDispute(this.model.id, this.model.toJSON());
     }
 
     this.render();
@@ -87,26 +87,28 @@ export default class extends BaseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
-  // onFulfillingOrder(e) {
-  //   if (e.id === this.model.id) {
-  //     this.$btnSubmit.addClass('processing');
-  //     this.$btnCancel.addClass('disabled');
-  //   }
-  // }
+  onOpeningDisputeOrder(e) {
+    if (e.id === this.model.id) {
+      this.getCachedEl('.js-submit').addClass('processing');
+      this.getCachedEl('.js-cancel').addClass('disabled');
+    }
+  }
 
-  // onFulfillOrderAlways(e) {
-  //   if (e.id === this.model.id) {
-  //     this.$btnSubmit.removeClass('processing');
-  //     this.$btnCancel.removeClass('disabled');
-  //   }
-  // }
+  onOpenDisputeAlways(e) {
+    if (e.id === this.model.id) {
+      this.getCachedEl('.js-submit').removeClass('processing');
+      this.getCachedEl('.js-cancel').removeClass('disabled');
+    }
+  }
 
   render() {
+    super.render();
+
     loadTemplate('modals/orderDetail/disputeOrder.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
-        // fulfillingOrder: fulfillingOrder(this.model.id),
+        openingDispute: !!openingDispute(this.model.id),
       }));
 
       const moderatorState = {

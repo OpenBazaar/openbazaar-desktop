@@ -1,10 +1,8 @@
 import _ from 'underscore';
 // import {
-//   fulfillingOrder,
-//   refundingOrder,
-//   refundOrder,
+//   openingDispute,
 //   events as orderEvents,
-// } from '../../../../utils/order';
+// } from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 
@@ -29,8 +27,12 @@ export default class extends BaseVw {
 
   events() {
     return {
-      // 'click .js-fulfillOrder': 'onClickFulfillOrder',
+      'click .js-openDispute': 'onClickOpenDispute',
     };
+  }
+
+  onClickOpenDispute() {
+    this.trigger('clickOpenDispute');
   }
 
   getState() {
@@ -58,7 +60,6 @@ export default class extends BaseVw {
     loadTemplate('modals/orderDetail/actionBar.html', (t) => {
       this.$el.html(t({
         ...this._state,
-        // disputeOrderInProgress: fulfillingOrder(this.orderId),
       }));
     });
 
