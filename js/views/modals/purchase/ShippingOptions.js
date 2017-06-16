@@ -47,13 +47,13 @@ export default class extends baseView {
 
   render() {
     const shippingOptions = this.model.get('shippingOptions').toJSON().filter((option) =>
-    option.regions.indexOf(this.countryCode) !== -1);
+    option.regions.indexOf(this.countryCode) !== -1 || option.regions.indexOf('ALL') !== -1);
 
     if (shippingOptions.length) {
       const sOpts = {};
       sOpts.name = shippingOptions[0].name;
       if (shippingOptions[0].type !== 'LOCAL_PICKUP') {
-        sOpts.service = shippingOptions[0].service.name;
+        sOpts.service = shippingOptions[0].services[0].name;
       }
       this.trigger('selected', sOpts);
     } else {
