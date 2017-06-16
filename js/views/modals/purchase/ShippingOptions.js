@@ -44,7 +44,7 @@ export default class extends baseView {
 
   render() {
     const filteredShipping = this.model.get('shippingOptions').toJSON().filter((option) =>
-      option.regions.indexOf(this.countryCode) !== -1);
+      option.regions.indexOf(this.countryCode) !== -1 || option.regions.indexOf('ALL') !== -1);
 
     if (filteredShipping.length) {
       const name = filteredShipping[0].name;
