@@ -23,11 +23,7 @@ import DisputeStarted from './DisputeStarted';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const opts = {
-      ...options,
-    };
-
-    super(opts);
+    super(options);
 
     if (!this.model) {
       throw new Error('Please provide a model.');
@@ -57,7 +53,7 @@ export default class extends BaseVw {
         'as well as a getProfile function that returns a promise that ' +
         'resolves with a profile model.');
 
-    if (!opts.vendor) {
+    if (!options.vendor) {
       throw new Error('Please provide a vendor object.');
     }
 
@@ -65,7 +61,7 @@ export default class extends BaseVw {
       throw new Error(getInvalidParticpantError('vendor'));
     }
 
-    if (!opts.buyer) {
+    if (!options.buyer) {
       throw new Error('Please provide a buyer object.');
     }
 
@@ -83,10 +79,10 @@ export default class extends BaseVw {
       }
     }
 
-    this.options = opts || {};
-    this.vendor = opts.vendor;
-    this.buyer = opts.buyer;
-    this.moderator = opts.moderator;
+    this.options = options || {};
+    this.vendor = options.vendor;
+    this.buyer = options.buyer;
+    this.moderator = options.moderator;
 
     this.listenTo(this.model, 'change:state', (md, state) => {
       this.stateProgressBar.setState(this.progressBarState);
@@ -239,7 +235,6 @@ export default class extends BaseVw {
             e.jsonData.notification.disputeOpen.orderId === this.model.id) {
             // When a party opens a dispute the mod and the other party will get this
             // notification
-            console.log('what what');
             this.model.fetch();
           }
         }
@@ -590,6 +585,9 @@ export default class extends BaseVw {
         .done(profile =>
           this.disputeStarted.setState({ disputerName: profile.get('name') }));
     }
+
+    this.listenTo(this.disputeStarted, 'clickResolveDispute',
+      () => this.trigger('clickResolveDispute'));
 
     this.$subSections.prepend(this.disputeStarted.render().el);
   }

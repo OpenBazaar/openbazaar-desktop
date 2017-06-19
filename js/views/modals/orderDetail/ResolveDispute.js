@@ -10,9 +10,37 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
 
-    // if (!this.model) {
-    //   throw new Error('Please provide an OrderFulfillment model.');
-    // }
+    if (!this.model) {
+      throw new Error('Please provide an OrderFulfillment model.');
+    }
+
+    const isValidParticipantObject = (participant) => {
+      let isValid = true;
+      if (!participant.id) isValid = false;
+      if (typeof participant.getProfile !== 'function') isValid = false;
+      return isValid;
+    };
+
+    const getInvalidParticpantError = (type = '') =>
+      (`The ${type} object is not valid. It should have an id ` +
+        'as well as a getProfile function that returns a promise that ' +
+        'resolves with a profile model.');
+
+    if (!options.vendor) {
+      throw new Error('Please provide a vendor object.');
+    }
+
+    if (!isValidParticipantObject(options.vendor)) {
+      throw new Error(getInvalidParticpantError('vendor'));
+    }
+
+    if (!options.buyer) {
+      throw new Error('Please provide a buyer object.');
+    }
+
+    if (!isValidParticipantObject(options.buyer)) {
+      throw new Error(getInvalidParticpantError('buyer'));
+    }
 
     // this.listenTo(orderEvents, 'fulfillingOrder', this.onFulfillingOrder);
     // this.listenTo(orderEvents, 'fulfillOrderComplete, fulfillOrderFail',

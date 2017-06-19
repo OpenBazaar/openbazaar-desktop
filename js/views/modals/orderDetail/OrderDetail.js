@@ -26,8 +26,7 @@ export default class extends BaseModal {
         fetchFailed: false,
         fetchError: '',
       },
-      // initialTab: 'summary',
-      initialTab: 'resolveDispute',
+      initialTab: 'summary',
       ...options,
     };
 
@@ -313,6 +312,8 @@ export default class extends BaseModal {
     const view = this.createChild(Summary, viewData);
     this.listenTo(view, 'clickFulfillOrder',
       () => this.selectTab('fulfillOrder'));
+    this.listenTo(view, 'clickResolveDispute',
+      () => this.selectTab('resolveDispute'));
 
     return view;
   }
@@ -399,10 +400,14 @@ export default class extends BaseModal {
 
     const view = this.createChild(ResolveDispute, {
       model,
-      // moderator: {
-      //   id: this.moderatorId,
-      //   getProfile: this.getModeratorProfile.bind(this),
-      // },
+      vendor: {
+        id: this.vendorId,
+        getProfile: this.getVendorProfile.bind(this),
+      },
+      buyer: {
+        id: this.buyerId,
+        getProfile: this.getBuyerProfile.bind(this),
+      },
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));

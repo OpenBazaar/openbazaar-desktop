@@ -23,13 +23,12 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-fulfillOrder': 'onClickFulfillOrder',
+      'click .js-resolveDispute': 'onClickResolveDispute',
     };
   }
 
-  onClickRefundConfirmed() {
-    this.setState({ refundConfirmOn: false });
-    // refundOrder(this.orderId);
+  onClickResolveDispute() {
+    this.trigger('clickResolveDispute');
   }
 
   getState() {

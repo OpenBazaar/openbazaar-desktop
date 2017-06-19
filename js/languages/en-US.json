@@ -1096,7 +1096,13 @@
       "btnSubmit": "Submit"
     },
     "resolveDisputeTab": {
-      "heading": "Resolve Dispute"
+      "heading": "Resolve Dispute",
+      "buyerAmountLabel": "Buyer Amount",
+      "vendorAmountLabel": "Vendor Amount",
+      "commentLabel": "Comment",
+      "commentPlaceholder": "Explain your decision...",
+      "btnCancel": "Cancel",
+      "btnSubmit": "Submit"      
     },    
     "disputeOrderTab": {
       "heading": "Dispute Order",

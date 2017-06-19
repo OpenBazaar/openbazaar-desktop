@@ -8,28 +8,39 @@
 <form class="padKids padStack pad clrP clrBr js-fulfillForm">
   <div class="flexRow gutterH">
     <div class="col3">
-      <label for="fulfillOrderShippingCarrier" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierLabel`) %></label>
+      <label for="resolveDisputeBuyerAmount" class="required"><%= ob.polyT(`orderDetail.resolveDisputeTab.buyerAmountLabel`) %></label>
+      <div class="js-buyerDetailsContainer"></div>
     </div>
-    <div class="col7">
-      <% if (ob.errors['physicalDelivery.shipper']) print(ob.formErrorTmpl({ errors: ob.errors['physicalDelivery.shipper'] })) %>
-      <input type="text" class="clrBr clrSh2" name="physicalDelivery.shipper" id="fulfillOrderShippingCarrier" value="" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierPlaceholder`) %>" />
+    <div class="col4">
+      <% if (ob.errors['buyerPercentage']) print(ob.formErrorTmpl({ errors: ob.errors['buyerPercentage'] })) %>
+      <input type="text" class="clrBr clrSh2" name="buyerPercentage" id="resolveDisputeBuyerAmount" value="<%= ob.buyerPercentage %>" placeholder="" />
     </div>
   </div>
   <div class="flexRow gutterH">
     <div class="col3">
-      <label for="fulfillOrderTrackingNumber"><%= ob.polyT(`orderDetail.fulfillOrderTab.trackingLabel`) %></label>
+      <label for="resolveDisputeVendorAmount" class="required"><%= ob.polyT(`orderDetail.resolveDisputeTab.vendorAmountLabel`) %></label>
+      <div class="js-vendorDetailsContainer"></div>
     </div>
-    <div class="col7">
-      <% if (ob.errors['physicalDelivery.trackingNumber']) print(ob.formErrorTmpl({ errors: ob.errors['physicalDelivery.trackingNumber'] })) %>
-      <input type="text" class="clrBr clrSh2" name="physicalDelivery.trackingNumber" id="fulfillOrderTrackingNumber" value="" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.trackingPlaceholder`) %>" />
+    <div class="col4">
+      <% if (ob.errors['vendorPercentage']) print(ob.formErrorTmpl({ errors: ob.errors['vendorPercentage'] })) %>
+      <input type="text" class="clrBr clrSh2" name="vendorPercentage" id="resolveDisputeVendorAmount" value="<%= ob.vendorPercentage %>" placeholder="" />
     </div>
   </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="resolveDisputeComment" class="required"><%= ob.polyT(`orderDetail.resolveDisputeTab.commentLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['resolution']) print(ob.formErrorTmpl({ errors: ob.errors['resolution'] })) %>
+      <textarea rows="6" name="resolution" class="clrBr clrP clrSh2" id="resolveDisputeComment" placeholder="<%= ob.polyT(`orderDetail.resolveDisputeTab.commentPlaceholder`) %>"><%= ob.resolution %></textarea>
+    </div>
+  </div>  
 </form>
 <hr class="clrBr" />
 <div class="buttonBar flexHRight flexVCent gutterHLg">
-  <a class="js-cancel <% if (ob.fulfillingOrder) print('disabled') %>"><%= ob.polyT(`orderDetail.fulfillOrderTab.btnCancel`) %></a>
+  <a class="js-cancel <% if (ob.resolvingDispute) print('disabled') %>"><%= ob.polyT(`orderDetail.resolveDisputeTab.btnCancel`) %></a>
   <%= ob.processingButton({
-    className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.fulfillingOrder ? 'processing' : ''}`,
-    btnText: ob.polyT(`orderDetail.fulfillOrderTab.btnSubmit`),
+    className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.resolvingDispute ? 'processing' : ''}`,
+    btnText: ob.polyT(`orderDetail.resolveDisputeTab.btnSubmit`),
   }) %>
 </div>
