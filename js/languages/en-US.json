@@ -1231,10 +1231,7 @@
     "listingNotFoundLink": "Click here to browse the other listings in this store.",
     "listingNotFoundMsg": "%{listing} could not be found.",
     "pageNotFoundTitle": "This Page Could Not Be Found",
-    "pageNotFoundMsg": "\"%{page}\" can not be loaded. Make sure you are using the correct url.",
-    "pathNotFoundTitle": "This Part of the Page Could Not Be Loaded",
-    "pathNotFoundLink": "Click here to go back to the main page.",
-    "pathNotFoundMsg": "The \"%{path}\" path for \"%{page}\" does not appear to be valid.",
+    "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
     "genericErrorTitle": "There Was An Error"
   },
   "bitcoinCurrencyUnits": {

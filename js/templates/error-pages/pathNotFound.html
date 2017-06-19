@@ -1,9 +1,0 @@
-<div class="tx5">
-  <h1 class="txCtr"><%= ob.polyT('errorPage.pathNotFoundTitle') %></h1>
-  <% if (ob.path && ob.page) { %>
-  <p class="txCtr"><%= ob.polyT('errorPage.pathNotFoundMsg', { path: ob.path, page: ob.page }) %></p>
-  <% } %>
-  <% if (ob.link) { %>
-  <p class="txCtr"><a href="<%= ob.link %>"><%= ob.polyT('errorPage.pathNotFoundLink') %></a></p>
-  <% } %>
-</div>

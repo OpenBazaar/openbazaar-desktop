@@ -149,8 +149,7 @@ export default class ObRouter extends Router {
     const deepRouteParts = args.filter(arg => arg !== null);
 
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
-      this.pathNotFound(`${pageState}${deepRouteParts ? deepRouteParts.join('/') : ''}`,
-        guid, `${guid}/home`);
+      this.pageNotFound();
       return;
     }
 
@@ -189,7 +188,7 @@ export default class ObRouter extends Router {
 
     $.whenAll(profileFetch, listingFetch).done(() => {
       if (state === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
-        this.pathNotFound(`store${deepRouteParts ? deepRouteParts.join('/') : ''}`, guid, `${guid}/home`);
+        this.pageNotFound();
       } else {
         if (!state) {
           pageState =  (!profile.get('vendor') && guid !== app.profile.id) ? 'home' : 'store';
@@ -222,7 +221,7 @@ export default class ObRouter extends Router {
 
   transactions(tab) {
     if (tab && ['sales', 'cases', 'purchases'].indexOf(tab) === -1) {
-      this.pathNotFound(tab, 'transactions', `transactions`);
+      this.pageNotFound();
       return;
     }
 
@@ -267,16 +266,10 @@ export default class ObRouter extends Router {
     );
   }
 
-  pageNotFound(page) {
+  pageNotFound() {
     this.loadPage(
       new TemplateOnly({
-        template: 'error-pages/pageNotFound.html'}).render({ page })
-    );
-  }
-
-  pathNotFound(path, page, link) {
-    this.loadPage(
-      new TemplateOnly({template: 'error-pages/pathNotFound.html'}).render({ path, page, link })
+        template: 'error-pages/pageNotFound.html'}).render()
     );
   }
 
