@@ -1232,7 +1232,9 @@
     "listingNotFoundMsg": "%{listing} could not be found.",
     "pageNotFoundTitle": "This Page Could Not Be Found",
     "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
-    "genericErrorTitle": "There Was An Error"
+    "genericErrorTitle": "There Was An Error",
+    "listingErrorTitle": "Unable To Fetch Listing",
+    "listingErrorMsg": "There was an error fetching listing %{listing}"
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
