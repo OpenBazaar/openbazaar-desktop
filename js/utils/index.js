@@ -19,21 +19,18 @@ export function getGuid(handle, resolver) {
   url = url.charAt(url.length - 1) !== '/' ? `${url}/` : url;
   url += handle;
 
-  // $.get(url).done((data) => {
-  //   if (data && data[handle] && data[handle].profile && data[handle].profile.account) {
-  //     const account = data[handle].profile.account.filter(
-  //       (accountObject) => accountObject.service === 'openbazaar');
+  $.get(url).done((data) => {
+    if (data && data[handle] && data[handle].profile && data[handle].profile.account) {
+      const account = data[handle].profile.account.filter(
+        (accountObject) => accountObject.service === 'openbazaar');
 
-  //     deferred.resolve(account[0].identifier);
-  //   } else {
-  //     deferred.reject();
-  //   }
-  // }).fail(() => {
-  //   deferred.reject();
-  // });
-
-  // deferred.resolve('QmahazHBv98h4Tye4qY7V7fueygpcrYoC3qRyUjGxuhJHU');
-  deferred.resolve('QmQB3VZZa4ZovzFP7mj6MqUjdLxAjoGqrs7N5uQ3j6yqEb');
+      deferred.resolve(account[0].identifier);
+    } else {
+      deferred.reject();
+    }
+  }).fail(() => {
+    deferred.reject();
+  });
 
   return deferred.promise();
 }
