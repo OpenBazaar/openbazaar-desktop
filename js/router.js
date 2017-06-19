@@ -145,8 +145,14 @@ export default class ObRouter extends Router {
   }
 
   user(guid, state, ...args) {
-    let pageState = state || 'store';
+    const pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
+
+    if (!state) {
+      this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+        replace: true,
+      });
+    }
 
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
       this.pageNotFound();
@@ -187,23 +193,29 @@ export default class ObRouter extends Router {
     this.once('will-route', onWillRoute);
 
     $.whenAll(profileFetch, listingFetch).done(() => {
-      if (state === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
-        this.pageNotFound();
-      } else {
-        if (!state) {
-          pageState = (!profile.get('vendor') && guid !== app.profile.id) ? 'home' : 'store';
-          this.navigate(`${guid}/${pageState}${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-            replace: true,
-          });
+      if (pageState === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
+        // the user does not have an active store and this is not our own node
+        if (state) {
+          // You've explicitly tried to navigate to the store tab. Since it's not
+          // available, we'll re-route to page-not-found
+          this.pageNotFound();
+          return;
         }
-        this.loadPage(
-          new UserPage({
-            model: profile,
-            state: pageState,
-            listing,
-          }).render()
-        );
+
+        // You've attempted to find a user with no particular tab. Since store is not available
+        // we'll take you to the home tab.
+        this.navigate(`${guid}/home${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true,
+        });
       }
+
+      this.loadPage(
+        new UserPage({
+          model: profile,
+          state: pageState,
+          listing,
+        }).render()
+      );
     }).fail(() => {
       if (profileFetch.statusText === 'abort' ||
         profileFetch.statusText === 'abort') return;
@@ -213,6 +225,7 @@ export default class ObRouter extends Router {
       if (profileFetch.state() === 'rejected') {
         this.userNotFound(guid);
       } else if (listingFetch.state() === 'rejected') {
+        // this.listingError(listingFetch, listing.get('slug'), `#${guid}/store`)
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
       }
     })
@@ -268,7 +281,9 @@ export default class ObRouter extends Router {
 
   pageNotFound() {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/pageNotFound.html' }).render()
+      new TemplateOnly({
+        template: 'error-pages/pageNotFound.html',
+      }).render()
     );
   }
 
@@ -278,25 +293,29 @@ export default class ObRouter extends Router {
     );
   }
 
-  listingError(failedXhr, listing, store) {
+  listingError(failedXhr, listing, storeUrl) {
     if (!failedXhr) {
       throw new Error('Please provide the failed Xhr request');
     }
 
     if (failedXhr.status === 404) {
-      this.listingNotFound(listing, store);
+      this.listingNotFound(listing, storeUrl);
     } else {
-      const link = `<a href="${store}">${app.polyglot.t('errorPage.listingNotFoundLink')}</a>`;
-      let content = app.polyglot.t('errorPage.listingNotFoundMsg', { listing, link });
+      let failErr = '';
 
       if (failedXhr.responseText) {
         const reason = failedXhr.responseJSON && failedXhr.responseJSON.reason ||
           failedXhr.responseText;
-        content += `\n\n${reason}`;
+        failErr += `\n\n${reason}`;
       }
 
       this.loadPage(
-        new TemplateOnly({ template: 'error-pages/genericError.html' }).render(content)
+        new TemplateOnly({ template: 'error-pages/listingError.html' })
+          .render({
+            listing,
+            storeUrl,
+            failErr,
+          })
       );
     }
   }
