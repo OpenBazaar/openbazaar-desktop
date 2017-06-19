@@ -191,7 +191,7 @@ export default class ObRouter extends Router {
         this.pageNotFound();
       } else {
         if (!state) {
-          pageState =  (!profile.get('vendor') && guid !== app.profile.id) ? 'home' : 'store';
+          pageState = (!profile.get('vendor') && guid !== app.profile.id) ? 'home' : 'store';
           this.navigate(`${guid}/${pageState}${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
             replace: true,
           });
@@ -262,20 +262,19 @@ export default class ObRouter extends Router {
 
   userNotFound(user) {
     this.loadPage(
-      new TemplateOnly({template: 'error-pages/userNotFound.html'}).render({ user })
+      new TemplateOnly({ template: 'error-pages/userNotFound.html' }).render({ user })
     );
   }
 
   pageNotFound() {
     this.loadPage(
-      new TemplateOnly({
-        template: 'error-pages/pageNotFound.html'}).render()
+      new TemplateOnly({ template: 'error-pages/pageNotFound.html' }).render()
     );
   }
 
   listingNotFound(listing, link) {
     this.loadPage(
-      new TemplateOnly({template: 'error-pages/listingNotFound.html'}).render({ listing, link })
+      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render({ listing, link })
     );
   }
 
@@ -297,7 +296,7 @@ export default class ObRouter extends Router {
       }
 
       this.loadPage(
-        new TemplateOnly({template: 'error-pages/genericError.html'}).render(content)
+        new TemplateOnly({ template: 'error-pages/genericError.html' }).render(content)
       );
     }
   }
