@@ -505,8 +505,6 @@ export default class extends BaseVw {
     const sections = document.createDocumentFragment();
     const $sections = $(sections).append(this.fulfilled.render().el);
 
-    console.log(`renderin fulfilled: ${this.model.get('state')}`);
-
     // If the order is not complete and this is the buyer, we'll
     // render a complete order form.
     if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
