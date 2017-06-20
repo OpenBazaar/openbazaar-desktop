@@ -37,7 +37,9 @@
   <div class="contentBox padLg clrP clrBr clrSh3">
     <div class="flex">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
-      <h2 class="txUnb"><%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %></h2>
+      <h2 class="txUnb js-price">
+        <%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+      </h2>
     </div>
     <div class="flex gutterHLg">
       <div class="mainImageWrapper">

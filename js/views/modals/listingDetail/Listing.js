@@ -1,10 +1,12 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import '../../../lib/select2';
 import is from 'is_js';
 import '../../../utils/velocity';
 import 'jquery-zoom';
 import app from '../../../app';
 import { getAvatarBgImage } from '../../../utils/responsive';
+import { convertAndFormatCurrency } from '../../../utils/currency';
 import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -12,6 +14,7 @@ import Purchase from '../purchase/Purchase';
 import { events as listingEvents } from '../../../models/listing/';
 import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -28,6 +31,7 @@ export default class extends BaseModal {
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
+    this.totalPrice = this.model.get('item').get('price');
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -109,6 +113,7 @@ export default class extends BaseModal {
       'click .js-photoNext': 'onClickPhotoNext',
       'click .js-goToStore': 'onClickGoToStore',
       'click .js-purchaseBtn': 'startPurchase',
+      'change .js-variantSelect': 'onChangeVariantSelect',
       ...super.events(),
     };
   }
@@ -288,6 +293,29 @@ export default class extends BaseModal {
       });
   }
 
+  onChangeVariantSelect() {
+    this.adjustPriceBySku();
+  }
+
+  adjustPriceBySku() {
+    const variantCombo = [];
+    // assemble a combo of the indexes of the selected variants
+    this.variantSelects.each((i, select) => {
+      variantCombo.push($(select).prop('selectedIndex'));
+    });
+    // each sku has a code that matches the selected variant index combos
+    const sku = this.model.get('item').get('skus').find(v =>
+      _.isEqual(v.get('variantCombo'), variantCombo));
+    const surcharge = sku ? sku.get('surcharge') : 0;
+    const _totalPrice = this.model.get('item').get('price') + surcharge;
+    if (_totalPrice !== this.totalPrice) {
+      this.totalPrice = _totalPrice;
+      const adjPrice = convertAndFormatCurrency(this.totalPrice,
+        this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
+      this.getCachedElement('.js-price').text(adjPrice);
+    }
+  }
+
   showDataChangedMessage() {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
@@ -335,6 +363,12 @@ export default class extends BaseModal {
   }
 
   startPurchase() {
+    if (this.totalPrice <= 0) {
+      openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+        app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
+      return;
+    }
+
     const selectedVariants = [];
     this.variantSelects.each((i, select) => {
       const variant = {};
@@ -429,6 +463,7 @@ export default class extends BaseModal {
   }
 
   render() {
+    super.render();
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
     loadTemplate('modals/listingDetail/listing.html', t => {
@@ -472,6 +507,7 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
+      this.adjustPriceBySku();
     });
 
     return this;

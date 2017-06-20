@@ -643,6 +643,10 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
+    },
+    "errors": {
+      "noPurchaseTitle": "This Listing Can't Be Purchased",
+      "zeroPriceMsg": "You cannot make a purchase with a price of zero or less."
     }
   },
   "listingCard": {
