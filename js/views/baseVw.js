@@ -158,7 +158,7 @@ export default class baseVw extends View {
    *
    * @return {element} JQuery The element(s) found in the View's Dom or the View's Cache
    */
-  getCachedElement(selector) {
+  getCachedEl(selector) {
     let element;
 
     // Ensure we have our cached elements map.
@@ -187,7 +187,7 @@ export default class baseVw extends View {
   }
 
   /** It is necessary to call super.render() in child views' render methods if using
-   *  getCachedElement()
+   *  getCachedEl()
    *  @param {this} Render requires this to be returned.
    */
   render() {

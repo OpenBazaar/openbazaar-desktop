@@ -11,7 +11,6 @@
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
       } else if (coupon.priceDiscount) {
-        console.log(coupon.priceDiscount);
         itemTotal -= coupon.priceDiscount;
       }
     });

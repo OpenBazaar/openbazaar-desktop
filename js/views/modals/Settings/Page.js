@@ -38,7 +38,7 @@ export default class extends baseVw {
   /** Handles when a hex color code is entered by updating color picker. */
   handleColorCodeEntered(event) {
     const colorPickerId = this.$(event.target).data('color-picker-id');
-    const $colorPicker = this.getCachedElement(colorPickerId);
+    const $colorPicker = this.getCachedEl(colorPickerId);
     const newHexColorCode = event.target.value;
 
     // If the text passes a basic RegExp for a valid 6 digit hex value,
@@ -51,7 +51,7 @@ export default class extends baseVw {
   /** Handles when a color is chosen from the color picker by updating hex color code text. */
   handleColorChosen(event) {
     const hexInputId = this.$(event.target).data('hex-input-id');
-    const $hexInput = this.getCachedElement(hexInputId);
+    const $hexInput = this.getCachedEl(hexInputId);
     const newColor = event.target.value;
 
     $hexInput.val(newColor);

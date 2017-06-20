@@ -79,5 +79,4 @@ export default class extends BaseModel {
 
     return super.sync(method, model, options);
   }
-
 }

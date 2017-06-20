@@ -1,12 +1,15 @@
+import $ from 'jquery';
 import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import {
+  completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
+import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
@@ -14,6 +17,8 @@ import Accepted from './Accepted';
 import Fulfilled from './Fulfilled';
 import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
+import CompleteOrderForm from './CompleteOrderForm';
+import OrderComplete from './OrderComplete';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -98,6 +103,10 @@ export default class extends BaseVw {
           infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
         });
       }
+
+      if (state === 'COMPLETED' && this.completeOrderForm) {
+        this.completeOrderForm.remove();
+      }
     });
 
     if (!this.isCase()) {
@@ -143,7 +152,7 @@ export default class extends BaseVw {
       () => this.renderAcceptedView());
 
     this.listenTo(orderEvents, 'fulfillOrderComplete', e => {
-      if (e.id === this.model.id && this.accepted) {
+      if (e.id === this.model.id) {
         this.model.set('state', 'FULFILLED');
         this.model.fetch();
       }
@@ -156,8 +165,26 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(this.contract, 'change:vendorOrderFulfillment',
-      () => this.renderFulfilledView());
+    this.listenTo(this.contract, 'change:vendorOrderFulfillment', () => {
+      // For some reason the order state still reflects the order state at the
+      // time this event handler is called even though it is triggered by fetch
+      // which brings the updated order state in its payload. Weird... maybe
+      // backbone doesn't update the model until the field specific change handlers
+      // are called...? Anyways... the timeout below fixeds the issue.
+      setTimeout(() => {
+        this.renderFulfilledView();
+      });
+    });
+
+    this.listenTo(this.contract, 'change:buyerOrderCompletion',
+      () => this.renderOrderCompleteView());
+
+    this.listenTo(orderEvents, 'completeOrderComplete', e => {
+      if (e.id === this.model.id && this.accepted) {
+        this.model.set('state', 'COMPLETED');
+        this.model.fetch();
+      }
+    });
 
     const serverSocket = getSocket();
 
@@ -190,6 +217,10 @@ export default class extends BaseVw {
           } else if (e.jsonData.notification.orderFulfillment &&
             e.jsonData.notification.orderFulfillment.orderId === this.model.id) {
             // A notification the buyer will get when the vendor has fulfilled their order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.orderCompletion &&
+            e.jsonData.notification.orderCompletion.orderId === this.model.id) {
+            // A notification the vendor will get when the buyer has completed an order.
             this.model.fetch();
           }
         }
@@ -471,7 +502,45 @@ export default class extends BaseVw {
       .done(profile =>
         this.fulfilled.setState({ storeName: profile.get('name') }));
 
-    this.$subSections.prepend(this.fulfilled.render().el);
+    const sections = document.createDocumentFragment();
+    const $sections = $(sections).append(this.fulfilled.render().el);
+
+    // If the order is not complete and this is the buyer, we'll
+    // render a complete order form.
+    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
+      this.buyer.id === app.profile.id) {
+      const completingObject = completingOrder(this.model.id);
+      const model = completingObject ?
+        completingObject.model : new OrderCompletion({ orderId: this.model.id });
+      if (this.completeOrderForm) this.completeOrderForm.remove();
+      this.completeOrderForm = this.createChild(CompleteOrderForm, {
+        model,
+        slug: this.contract.get('vendorListings').at(0).get('slug'),
+      });
+
+      $sections.prepend(this.completeOrderForm.render().el);
+    }
+
+    this.$subSections.prepend($sections);
+  }
+
+  renderOrderCompleteView() {
+    const data = this.contract.get('buyerOrderCompletion');
+
+    if (!data) {
+      throw new Error('Unable to create the Order Complete view because the buyerOrderCompletion ' +
+        'data object has not been set.');
+    }
+
+    if (this.orderComplete) this.orderComplete.remove();
+    this.orderComplete = this.createChild(OrderComplete, {
+      dataObject: data,
+    });
+
+    this.buyer.getProfile()
+      .done(profile =>
+        this.orderComplete.setState({ buyerName: profile.get('name') }));
+    this.$subSections.prepend(this.orderComplete.render().el);
   }
 
   /**
@@ -495,6 +564,14 @@ export default class extends BaseVw {
         function: this.renderFulfilledView,
         timestamp:
           (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)).getTime(),
+      });
+    }
+
+    if (this.contract.get('buyerOrderCompletion')) {
+      sections.push({
+        function: this.renderOrderCompleteView,
+        timestamp:
+          (new Date(this.contract.get('buyerOrderCompletion').timestamp)).getTime(),
       });
     }
 
