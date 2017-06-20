@@ -3,12 +3,15 @@ import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
-import { events as orderEvents } from '../../../../utils/order';
+import {
+  events as orderEvents,
+} from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
 import Accepted from './Accepted';
+import Fulfilled from './Fulfilled';
 import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
 
@@ -79,13 +82,21 @@ export default class extends BaseVw {
     this.buyer = opts.buyer;
     this.moderator = opts.moderator;
 
-    this.listenTo(this.model, 'change:state', () => {
+    this.listenTo(this.model, 'change:state', (md, state) => {
       this.stateProgressBar.setState(this.progressBarState);
       if (this.payments) this.payments.render();
       if (this.shouldShowAcceptedSection()) {
-        if (!this.accepted) this.appendAcceptedView();
+        if (!this.accepted) this.renderAcceptedView();
       } else {
         if (this.accepted) this.accepted.remove();
+      }
+
+      if (state === 'REFUNDED' || state === 'FULFILLED' && this.accepted) {
+        this.accepted.setState({
+          showRefundButton: false,
+          showFulfillButton: false,
+          infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
+        });
       }
     });
 
@@ -101,10 +112,7 @@ export default class extends BaseVw {
       });
 
       this.listenTo(this.model, 'change:refundAddressTransaction',
-        () => this.appendRefundView());
-
-      this.listenTo(this.contract, 'change:vendorOrderConfirmation',
-        () => this.appendAcceptedView());
+        () => this.renderRefundView());
     }
 
     this.listenTo(orderEvents, 'cancelOrderComplete', () => {
@@ -131,6 +139,26 @@ export default class extends BaseVw {
       this.model.fetch();
     });
 
+    this.listenTo(this.contract, 'change:vendorOrderConfirmation',
+      () => this.renderAcceptedView());
+
+    this.listenTo(orderEvents, 'fulfillOrderComplete', e => {
+      if (e.id === this.model.id && this.accepted) {
+        this.model.set('state', 'FULFILLED');
+        this.model.fetch();
+      }
+    });
+
+    this.listenTo(orderEvents, 'refundOrderComplete', e => {
+      if (e.id === this.model.id) {
+        this.model.set('state', 'REFUNDED');
+        this.model.fetch();
+      }
+    });
+
+    this.listenTo(this.contract, 'change:vendorOrderFulfillment',
+      () => this.renderFulfilledView());
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -154,6 +182,14 @@ export default class extends BaseVw {
           } else if (e.jsonData.notification.orderConfirmation &&
             e.jsonData.notification.orderConfirmation.orderId === this.model.id) {
             // A notification the buyer will get when the vendor has accepted an offline order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.refund &&
+            e.jsonData.notification.refund.orderId === this.model.id) {
+            // A notification the buyer will get when the vendor has refunded their order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.orderFulfillment &&
+            e.jsonData.notification.orderFulfillment.orderId === this.model.id) {
+            // A notification the buyer will get when the vendor has fulfilled their order.
             this.model.fetch();
           }
         }
@@ -336,7 +372,7 @@ export default class extends BaseVw {
       );
   }
 
-  appendAcceptedView() {
+  renderAcceptedView() {
     const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
 
     if (!vendorOrderConfirmation) {
@@ -382,7 +418,12 @@ export default class extends BaseVw {
     }
 
     if (this.accepted) this.accepted.remove();
-    this.accepted = this.createChild(Accepted, { initialState });
+    this.accepted = this.createChild(Accepted, {
+      orderId: this.model.id,
+      initialState,
+    });
+    this.listenTo(this.accepted, 'clickFulfillOrder',
+      () => this.trigger('clickFulfillOrder'));
 
     this.vendor.getProfile()
         .done(profile => {
@@ -391,10 +432,10 @@ export default class extends BaseVw {
           });
         });
 
-    this.$subSections.append(this.accepted.render().el);
+    this.$subSections.prepend(this.accepted.render().el);
   }
 
-  appendRefundView() {
+  renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
 
     if (!refundMd) {
@@ -406,7 +447,31 @@ export default class extends BaseVw {
     this.refunded = this.createChild(Refunded, { model: refundMd });
     this.buyer.getProfile()
       .done(profile => this.refunded.setState({ buyerName: profile.get('name') }));
-    this.$subSections.append(this.refunded.render().el);
+    this.$subSections.prepend(this.refunded.render().el);
+  }
+
+  renderFulfilledView() {
+    const data = this.contract.get('vendorOrderFulfillment');
+
+    if (!data) {
+      throw new Error('Unable to create the fulfilled view because the vendorOrderFulfillment ' +
+        'data object has not been set.');
+    }
+
+    if (this.fulfilled) this.fulfilled.remove();
+    this.fulfilled = this.createChild(Fulfilled, {
+      dataObject: data[0],
+      initialState: {
+        contractType: this.contract.type,
+        showPassword: this.moderator && this.moderator.id !== app.profile.id || true,
+      },
+    });
+
+    this.vendor.getProfile()
+      .done(profile =>
+        this.fulfilled.setState({ storeName: profile.get('name') }));
+
+    this.$subSections.prepend(this.fulfilled.render().el);
   }
 
   /**
@@ -419,9 +484,17 @@ export default class extends BaseVw {
 
     if (this.model.get('refundAddressTransaction')) {
       sections.push({
-        function: this.appendRefundView,
+        function: this.renderRefundView,
         timestamp:
           (new Date(this.model.get('refundAddressTransaction').timestamp)).getTime(),
+      });
+    }
+
+    if (this.contract.get('vendorOrderFulfillment')) {
+      sections.push({
+        function: this.renderFulfilledView,
+        timestamp:
+          (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)).getTime(),
       });
     }
 
@@ -490,7 +563,7 @@ export default class extends BaseVw {
         this.$('.js-paymentsWrap').html(this.payments.render().el);
       }
 
-      if (this.shouldShowAcceptedSection()) this.appendAcceptedView();
+      if (this.shouldShowAcceptedSection()) this.renderAcceptedView();
       this.renderSubSections();
     });
 

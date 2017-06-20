@@ -15,12 +15,25 @@
         <% if (ob.showRefundButton) { %>
           <% if (ob.refundOrderInProgress) { %>
             <span class="posR">
-              <% // including invisible cancel link to properly space the spinner %>
+              <% // including invisible refund link to properly space the spinner %>
               <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.accepted.refundBtn') %></a>
               <%= ob.spinner({ className: 'spinnerSm center' }) %>
             </span>
           <% } else { %>
-            <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %> <% if (ob.fulfillInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.accepted.refundBtn') %></a>
+            <div class="posR">
+              <a class="txU tx6 js-refundOrder <% if (ob.refundConfirmOn) print('disabled') %> <% if (ob.fulfillInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.accepted.refundBtn') %></a>
+              <% if (ob.refundConfirmOn) { %>
+              <div class="js-refundConfirm confirmBox refundConfirm tx5 arrowBoxTop clrBr clrP clrT">
+                <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.title') %></div>
+                <p><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.body') %></p>
+                <hr class="clrBr row" />
+                <div class="flexHRight flexVCent gutterHLg buttonBar">
+                  <a class="js-refundConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.btnCancel') %></a>
+                  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-refundConfirmed"><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.btnConfirm') %></a>
+                </div>
+              </div>
+              <% } %>
+            </div>
           <%  } %>
         <%  } %>
         <% if (ob.showFulfillButton) { %>

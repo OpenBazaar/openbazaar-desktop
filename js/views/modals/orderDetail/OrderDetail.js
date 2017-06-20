@@ -1,15 +1,18 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import _ from 'underscore';
+import { events as orderEvents } from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
+import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
+import FulfillOrder from './FulfillOrder';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -44,13 +47,17 @@ export default class extends BaseModal {
     this.listenToOnce(this.model, 'sync', this.onFirstOrderSync);
     this.listenTo(this.model, 'change:unreadChatMessages',
       () => this.setUnreadChatMessagesBadge());
-    this.model.fetch();
+    this.listenTo(orderEvents, 'fulfillOrderComplete', () => {
+      if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
+    });
 
     const socket = getSocket();
 
     if (socket) {
       this.listenTo(socket, 'message', this.onSocketMessage);
     }
+
+    this.model.fetch();
   }
 
   className() {
@@ -291,6 +298,8 @@ export default class extends BaseModal {
     }
 
     const view = this.createChild(Summary, viewData);
+    this.listenTo(view, 'clickFulfillOrder',
+      () => this.selectTab('fulfillOrder'));
 
     return view;
   }
@@ -333,6 +342,23 @@ export default class extends BaseModal {
     });
 
     this.listenTo(view, 'clickBackToSummary', () => this.selectTab('summary'));
+    return view;
+  }
+
+  // This should not be called on a Case.
+  createFulfillOrderTabView() {
+    const contractType = this.model.get('contract').type;
+
+    const model = new OrderFulfillment({ orderId: this.model.id },
+      { contractType });
+
+    const view = this.createChild(FulfillOrder, {
+      model,
+      contractType,
+    });
+
+    this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
+
     return view;
   }
 

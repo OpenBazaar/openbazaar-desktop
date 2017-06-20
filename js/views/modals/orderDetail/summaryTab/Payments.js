@@ -70,11 +70,11 @@ export default class extends baseVw {
       this.onCancelOrderAlways);
     this.listenTo(orderEvents, 'cancelOrderComplete', this.onAcceptOrderComplete);
     this.listenTo(orderEvents, 'acceptingOrder', this.onAcceptingOrder);
-    this.listenTo(orderEvents, 'acceptOrderComplete, acceptOrderFail',
+    this.listenTo(orderEvents, 'acceptOrderComplete acceptOrderFail',
       this.onAcceptOrderAlways);
     this.listenTo(orderEvents, 'acceptOrderComplete', this.onAcceptOrderComplete);
     this.listenTo(orderEvents, 'rejectingOrder', this.onRejectingOrder);
-    this.listenTo(orderEvents, 'rejectOrderComplete, rejectOrderFail',
+    this.listenTo(orderEvents, 'rejectOrderComplete rejectOrderFail',
       this.onRejectOrderAlways);
     this.listenTo(orderEvents, 'rejectOrderComplete', this.onRejectOrderComplete);
   }

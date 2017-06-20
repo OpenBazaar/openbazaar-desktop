@@ -1,0 +1,54 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.heading') %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+
+<div class="border clrBr padMd">
+  <% if (ob.contractType === 'PHYSICAL_GOOD') { %>
+  <div class="flex gutterH clrT">
+    <% const physicalDelivery = ob.physicalDelivery && ob.physicalDelivery[0] || {}; %>
+    <div class="statusIconCol"><span class="clrBr ion-cube"></span></div>
+    <div class="flexExpand tx5">
+      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.shippedByLabel') %> <span><%= physicalDelivery.shipper %></span></div>
+      <div class="row">
+        <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.trackingNumberLabel') %></span> <%= physicalDelivery.trackingNumber || ob.polyT('orderDetail.summaryTab.notApplicable') %>
+        <% if (physicalDelivery.trackingNumber) { %>
+        <a class="clrTEm js-copyTrackingNumber"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
+        <a class="hide js-trackingCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></a>
+        <% } %>
+      </div>
+      <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
+      <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+    </div>
+  </div>
+  <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
+  <% const digitalDelivery = ob.digitalDelivery && ob.digitalDelivery[0] || {}; %>  
+  <div class="flex gutterH clrT">
+    <div class="statusIconCol clrT"><span class="clrBr ion-ios-folder"></span></div>
+    <div class="flexExpand tx5">
+      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.digitalReadyForDlHeading') %></div>
+      <div class="row">
+      <%= ob.polyT('orderDetail.summaryTab.fulfilled.digitalReadyForDlText') %>
+      </div>
+      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.urlLabel') %></div>
+      <div class="<% if (ob.showPassword) print('row') %>">
+        <a class="clrTEm" href="<%= digitalDelivery.url %>" data-open-external><%= digitalDelivery.url %></a>
+      </div>
+      <% if (ob.showPassword) { %>
+      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.passwordLabel') %></div>
+      <div class="row"><%= digitalDelivery.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div> 
+      <% } %>
+      <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
+      <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>      
+    </div>
+  </div>
+  <% } else if (ob.contractType === 'SERVICE') { %>
+  <div class="flex gutterH clrT">
+    <div class="statusIconCol clrT"><span class="clrBr ion-ios-body"></span></div>
+    <div class="flexExpand tx5">
+      <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
+      <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+    </div>
+  </div>  
+  <% } %>
+</div>
