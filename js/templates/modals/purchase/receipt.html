@@ -12,7 +12,6 @@
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
       } else if (coupon.priceDiscount) {
-        console.log(coupon.priceDiscount);
         itemTotal -= coupon.priceDiscount;
       }
     });
@@ -73,4 +72,3 @@
     <%= ob.convertAndFormatCurrency(total, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
   </b>
 </div>
-

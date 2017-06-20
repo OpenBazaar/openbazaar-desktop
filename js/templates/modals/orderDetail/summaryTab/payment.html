@@ -1,0 +1,134 @@
+<%
+  let heading;
+
+  if (ob.paymentNumber > 1) {
+    heading = ob.polyT('orderDetail.summaryTab.payment.paymentHeading', {
+      paymentNumber: ob.paymentNumber,
+    });
+  } else {
+    heading = ob.polyT('orderDetail.summaryTab.payment.firstPaymentHeading');
+  }
+%>
+<h2 class="tx4 margRTn"><%= heading %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+<div class="border clrBr padMd">
+  <div class="flexVCent gutterH clrT">
+    <%
+      let statusIconClass = 'clrTEm'; // full payment
+      let statusIcon = 'ion-ios-checkmark-empty'; // full payment
+      
+      if (ob.amountShort > 0) {  // partial payment
+        statusIconClass = 'clrTErr';
+        statusIcon = 'ion-ios-close-empty';
+      }
+    %>
+    <div class="statusIconCol <%= statusIconClass %>"><span class="clrBr <%= statusIcon %>"></span></div>
+    <div class="flexExpand tx5">
+      <%
+        let priceFrag = ob.convertAndFormatCurrency(ob.value,
+          'BTC', ob.userCurrency, { useBtcSymbol: false });
+
+        if (ob.userCurrency !== 'BTC') {
+          priceFrag = ob.polyT('fiatBtcPairing', {
+            fiatAmount: priceFrag,
+            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+          });
+        }
+
+        let infoLine = '';
+
+        if (ob.payee) {
+          infoLine = ob.polyT(`orderDetail.summaryTab.payment.amountTo`, {
+            fiatBtcPairing: priceFrag,
+            payeeName: ob.payee,
+          });
+        } else {
+          // payee has not been set yet. It'll be set when the relevant profile is returned
+          // asynchronously
+          infoLine = priceFrag;
+        }
+      %>
+      <div class="rowTn txB"><%= infoLine %></div>
+      <div class="flex gutterH clrT2">
+        <%
+          let confirmationsText;
+          
+          if (ob.confirmations < 10000) {
+            confirmationsText = ob.polyT('orderDetail.summaryTab.payment.confirmationsCount', {
+              smart_count: ob.confirmations,
+            });
+          } else {
+            confirmationsText = ob.polyT('orderDetail.summaryTab.payment.veryManyConfirmationsCount', {
+              countText: ob.abbrNum(ob.confirmations),
+            });          
+          }
+        %>
+        <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
+        <div class="" style="flex-shrink: 0;max-width: 80px">
+          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
+        </div>
+        <% 
+          let subText = '';
+
+          subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
+
+          if (ob.amountShort > 0) {
+            subText =
+              ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
+                amountShort: ob.upToFixed(ob.amountShort, 8),
+              });
+          }
+        %>
+        <div>
+          <div class="noOverflow <%= ob.amountShort > 0 ? 'clrTErr' : 'clrTEm' %>"><%= subText %></div>
+        </div>
+      </div>
+    </div>
+    <% if (ob.showAcceptRejectButtons || ob.showCancelButton) { %>
+    <div class="col">
+      <div class="flexVCent gutterHLg">
+        <% if (ob.showAcceptRejectButtons) { %>
+          <div class="flexVCent gutterHLg">
+            <% if (ob.rejectInProgress) { %>
+              <span class="posR">
+                <% // including invisible cancel link to properly space the spinner %>
+                <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+                <%= ob.spinner({ className: 'spinnerSm center' }) %>
+              </span>
+            <% } else { %>
+              <div class="posR">
+                <a class="txU tx6 js-rejectOrder <% if (ob.acceptInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
+                <div class="js-rejectConfirm confirmBox rejectConfirm tx5 arrowBoxTop clrBr clrP clrT <% if (!ob.rejectConfirmOn) print('hide') %>">
+                  <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.title') %></div>
+                  <p><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.body') %></p>
+                  <hr class="clrBr row" />
+                  <div class="flexHRight flexVCent gutterHLg buttonBar">
+                    <a class="js-rejectConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.btnCancel') %></a>
+                    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-rejectConfirmed"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.btnConfirm') %></a>
+                  </div>
+                </div>
+              </div>
+            <%  } %>
+            <%= ob.processingButton({
+              className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptOrder ${ob.acceptInProgress ? 'processing' : ''} ${ob.rejectInProgress ? 'disabled' : ''}`,
+              btnText: ob.polyT('orderDetail.summaryTab.payment.acceptBtn')
+            }) %>
+          </div>
+        <% } else if (ob.showCancelButton) { %>
+          <% if (ob.cancelInProgress) { %>
+            <span class="posR">
+              <% // including invisible cancel link to properly space the spinner %>
+              <a class="txU tx6 invisible"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
+              <%= ob.spinner({ className: 'spinnerSm center' }) %>
+            </span>
+          <% } else { %>
+            <a class="txU tx6 js-cancelOrder"><%= ob.polyT('orderDetail.summaryTab.payment.cancelBtn') %></a>
+          <%  } %>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>

@@ -265,6 +265,7 @@ export default class extends BaseModel {
     if (parsedResponse) {
       // set the hash
       parsedResponse.hash = response.hash;
+
       // convert price fields
       if (parsedResponse.item) {
         const price = parsedResponse.item.price;

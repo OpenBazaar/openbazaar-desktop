@@ -1,0 +1,55 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.refund.heading') %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+<div class="border clrBr padMd">
+  <div class="flexVCent gutterH clrT">
+    <div class="statusIconCol clrT"><span class="clrBr ion-ios-rewind"></span></div>
+    <div class="flexExpand tx5">
+      <%
+        let priceFrag = ob.convertAndFormatCurrency(ob.value,
+          'BTC', ob.userCurrency, { useBtcSymbol: false });
+
+        if (ob.userCurrency !== 'BTC') {
+          priceFrag = ob.polyT('fiatBtcPairing', {
+            fiatAmount: priceFrag,
+            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+          });
+        }
+
+        let infoLine = '';
+
+        if (ob.buyerName) {
+          infoLine = ob.polyT(`orderDetail.summaryTab.payment.refundedTo`, {
+            fiatBtcPairing: priceFrag,
+            payeeName: ob.buyerName,
+          });
+        } else {
+          infoLine = ob.polyT(`orderDetail.summaryTab.payment.refunded`, {
+            fiatBtcPairing: priceFrag,
+          });        
+        }
+      %>
+      <div class="rowTn txB"><%= infoLine %></div>
+      <div class="flex gutterH clrT2">
+        <%
+          let confirmationsText;
+          
+          if (ob.confirmations < 10000) {
+            confirmationsText = ob.polyT('orderDetail.summaryTab.payment.confirmationsCount', {
+              smart_count: ob.confirmations,
+            });
+          } else {
+            confirmationsText = ob.polyT('orderDetail.summaryTab.payment.veryManyConfirmationsCount', {
+              countText: ob.abbrNum(ob.confirmations),
+            });          
+          }
+        %>
+        <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
+        <div class="" style="flex-shrink: 0;max-width: 80px">
+          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

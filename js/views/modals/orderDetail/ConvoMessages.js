@@ -16,13 +16,14 @@ export default class extends BaseVw {
     const isValidParticipantObject = (participant) => {
       let isValid = true;
       if (!participant.id) isValid = false;
-      if (!participant.profile || !participant.profile.then) return false;
+      if (typeof participant.getProfile !== 'function') isValid = false;
       return isValid;
     };
 
     const getInvalidParticpantError = (type = '') =>
       (`The ${type} object is not valid. It should have an id ` +
-        'as well as a profile promise that resolves with a profile model.');
+        'as well as a getProfile function that returns a promise that ' +
+        'resolves with a profile model.');
 
     if (!options.buyer) {
       throw new Error('Please provide a buyer object.');
@@ -120,7 +121,7 @@ export default class extends BaseVw {
     });
 
     if (!model.get('outgoing')) {
-      participant.profile.done(profileMd => {
+      participant.getProfile().done(profileMd => {
         if (!convoMessage.isRemoved()) {
           convoMessage.setState({
             avatarHashes: profileMd.get('avatarHashes').toJSON(),

@@ -221,3 +221,17 @@ export function deparam(queryStr = '') {
 
   return parsed;
 }
+
+export function getBlockChainBaseUrl(isTestnet = false) {
+  return isTestnet ?
+    'https://testnet.blockexplorer.com/' :
+    'https://blockchain.info/';
+}
+
+export function getBlockChainTxUrl(txid, isTestnet) {
+  return `${getBlockChainBaseUrl(isTestnet)}tx/${txid}`;
+}
+
+export function getBlockChainAddressUrl(address, isTestnet) {
+  return `${getBlockChainBaseUrl(isTestnet)}address/${address}`;
+}

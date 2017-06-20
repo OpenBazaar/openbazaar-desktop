@@ -58,3 +58,26 @@
   opacity: 1;
   pointer-events: auto;
 }
+
+.ratingStrip {
+  .ratingIcons {
+    display: inline-flex;
+    flex-direction: row-reverse;
+
+    .ratingIcon {
+      opacity: 0.4;
+
+      &.selected {
+        opacity: 1;
+      }
+
+      &:hover {
+        opacity: 1;
+
+        & ~ * {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
