@@ -1028,6 +1028,24 @@
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
+      "ratingLabels": {
+        "overall": "Overall",
+        "quality": "Quality",
+        "asAdvertised": "As Advertised",
+        "delivery": "Delivery",
+        "service": "Service"
+      },
+      "completeOrderForm": {
+        "heading": "Complete Order",
+        "maxReviewChars": "%{max} chars. max",
+        "reviewLabel": "Written Review",
+        "anonCheckLabel": "Include my name (seen publicly)",
+        "btnCompleteOrder": "Complete Order"
+      },
+      "orderComplete": {
+        "heading": "Order Complete",
+        "reviewLabel": "%{name}'s Review:"
+      },
       "orderDetails": {
         "progressBarStates": {
           "paid": "Paid",
@@ -1076,7 +1094,8 @@
     "failedRejectHeading": "There was an error rejecting the order.",
     "failedCancelHeading": "There was an error canceling the order.",
     "failedFulfillHeading": "There was an error fulfilling the order.",
-    "failedRefundHeading": "There was an error refunding the order."
+    "failedRefundHeading": "There was an error refunding the order.",
+    "failedCompleteHeading": "There was an error completing the order."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
@@ -1220,6 +1239,10 @@
     "provideUrl": "Please provide a file url.",
     "invalidUrl": "Please provide a valid url."
   },
+  "orderCompletionModelErrors": {
+    "provideReview": "Please provide a review.",
+    "provideRating": "Please select a rating."
+  },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
