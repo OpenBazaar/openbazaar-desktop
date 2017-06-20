@@ -4,6 +4,16 @@
 %>
 
 <div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!ob.valid) print('disabled'); if(!loaded) print('disabled');%>">
+  <% if (ob.radioStyle) { %>
+    <div class="flexNoShrink">
+      <div class="btnRadio">
+        <% const act = ob.cardState === 'selected' ? 'active' : 'inactive'; %>
+        <% // the card state may be set on render or set on the fly by the view %>
+        <div tabindex="0" class="fauxRadioBtn js-selectBtn <%= act %>" data-state="<%= ob.cardState %>">
+        </div>
+      </div>
+    </div>
+  <% } %>
   <div class="flexNoShrink">
     <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
   </div>
@@ -45,11 +55,13 @@
         <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
           <%= ob.polyT('moderatorCard.view') %>
         </button>
-        <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
-          <i class="ion-checkmark showIfSelected clrTEmph1"></i>
-          <i class="ion-close showIfDeselected clrTErr"></i>
-          <i class="ion-checkmark showIfUnselected clrTEmph1Disabled"></i>
-        </button>
+        <% if (!ob.radioStyle) { %>
+          <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
+            <i class="ion-checkmark showIfSelected clrTEmph1"></i>
+            <i class="ion-close showIfDeselected clrTErr"></i>
+            <i class="ion-checkmark showIfUnselected clrTEmph1Disabled"></i>
+          </button>
+        <% } %>
       </div>
     <% } %>
   </div>

@@ -151,6 +151,7 @@ export default class extends BaseModal {
     this.$moderatorSection.addClass('hide');
     this.$moderatorNote.addClass('hide');
     this.$noValidModerators.removeClass('hide');
+    this.order.moderated = false;
     this.order.set('moderator', '');
   }
 
@@ -413,16 +414,13 @@ export default class extends BaseModal {
       this.$('.js-receipt').append(this.receipt.render().el);
 
       if (this.coupons) this.coupons.remove();
-      const couponList = this.listing.get('coupons');
-      if (couponList) {
-        this.coupons = this.createChild(Coupons, {
-          coupons: couponList,
-          listingPrice: this.listing.get('item').get('price'),
-        });
-        this.listenTo(this.coupons, 'changeCoupons',
-          (hashes, codes) => this.changeCoupons(hashes, codes));
-        this.$('.js-couponsWrapper').html(this.coupons.render().el);
-      }
+      this.coupons = this.createChild(Coupons, {
+        coupons: this.listing.get('coupons'),
+        listingPrice: this.listing.get('item').get('price'),
+      });
+      this.listenTo(this.coupons, 'changeCoupons',
+        (hashes, codes) => this.changeCoupons(hashes, codes));
+      this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
       if (this.moderators) this.moderators.remove();
       this.moderators = this.createChild(Moderators, {
@@ -434,6 +432,7 @@ export default class extends BaseModal {
         notSelected: 'unselected',
         singleSelect: true,
         selectFirst: true,
+        radioStyle: true,
       });
       this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);

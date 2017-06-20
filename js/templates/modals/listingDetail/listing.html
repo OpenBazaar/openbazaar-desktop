@@ -88,7 +88,7 @@
             <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
           </div>
           <% if (ob.item.condition) { %>
-            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition}`)}</b>` }) %></div>
+            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`)}</b>` }) %></div>
           <% } %>
         </div>
         <hr class="rowLg">

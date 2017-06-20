@@ -56,6 +56,7 @@
                   <li><i class="ion-alert-circled"></i><span class="js-errorText"></span> </li>
                 </ul>
                 <div class="contentBox boxProcessingFaded modBox clrBr clrP <% if (ob.originalMods) print('hasMods ') %>js-modListSelected">
+                  <div class="js-modListSelectedInner"></div>
                   <%= ob.spinner() %>
                   <div class="noModsAdded js-noModsAdded">
                     <div class="txCtr">
@@ -84,6 +85,7 @@
               </div>
               <div>
                 <div class="contentBox boxProcessingFaded modBox modBoxByID clrBr clrP js-modListByID"><!-- unhide when adding moderator-->
+                  <div class="js-modListByIDInner"></div>
                   <%= ob.spinner() %>
                 </div>
               </div>
@@ -94,6 +96,7 @@
               <div>
                 <h5><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
                 <div class="contentBox boxProcessingFaded modBox clrBr clrP js-modListAvailable">
+                  <div class="js-modListAvailableInner"></div>
                   <%= ob.spinner() %>
                   <div class="noModsAdded js-noModsAdded">
                     <button class="btn clrP clrBr hideOnProcessing js-browseMods">

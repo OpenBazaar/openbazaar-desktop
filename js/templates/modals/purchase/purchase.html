@@ -129,27 +129,25 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             </div>
           </div>
           <div class="col6">
-            <% if (ob.listing.coupons && ob.listing.coupons.length) { %>
-              <div class="rowTn">
-                <label for="couponCode" class="tx5">
-                  <%= ob.polyT('purchase.couponCode') %>
-                  <i class="ion-ios-information-outline js-couponInfo"></i>
-                </label>
-              </div>
-              <div class="flex gutterH row">
-                <input
-                    class="btnHeight clrBr clrP"
-                    type="text"
-                    id="couponCode"
-                    name="couponCode">
-                <button class="btn clrP clrBr clrSh2 js-applyCoupon">
-                  <%= ob.polyT('purchase.applyCode') %>
-                </button>
-              </div>
-              <div class="js-couponsWrapper">
-                <% // coupons are inserted here after they are added by the user. %>
-              </div>
-            <% } %>
+            <div class="rowTn">
+              <label for="couponCode" class="tx5">
+                <%= ob.polyT('purchase.couponCode') %>
+                <i class="ion-ios-information-outline js-couponInfo"></i>
+              </label>
+            </div>
+            <div class="flex gutterH row">
+              <input
+                  class="btnHeight clrBr clrP"
+                  type="text"
+                  id="couponCode"
+                  name="couponCode">
+              <button class="btn clrP clrBr clrSh2 js-applyCoupon">
+                <%= ob.polyT('purchase.applyCode') %>
+              </button>
+            </div>
+            <div class="js-couponsWrapper">
+              <% // coupons are inserted here after they are added by the user. %>
+            </div>
           </div>
         </div>
         <hr class="clrBr row">

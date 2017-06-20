@@ -28,6 +28,7 @@ export default class extends baseVw {
       purchase: false,
       singleSelect: false,
       selectFirst: false,
+      radioStyle: false,
       // defaults will be overwritten by passed in options
       ...options,
     };
@@ -151,6 +152,7 @@ export default class extends baseVw {
         purchase: this.options.purchase,
         notSelected: this.options.notSelected,
         cardState,
+        radioStyle: this.options.radioStyle,
         ...opts,
       });
       this.listenTo(newModView, 'changeModerator', (data) => {
