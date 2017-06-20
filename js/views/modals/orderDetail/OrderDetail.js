@@ -3,11 +3,15 @@ import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { events as orderEvents } from '../../../utils/order';
+import {
+  resolvingDispute,
+  events as orderEvents,
+} from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
 import OrderDispute from '../../../models/order/OrderDispute';
+import ResolveDisputeMd from '../../../models/order/ResolveDispute';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
@@ -51,16 +55,23 @@ export default class extends BaseModal {
     this.listenToOnce(this.model, 'sync', this.onFirstOrderSync);
     this.listenTo(this.model, 'change:unreadChatMessages',
       () => this.setUnreadChatMessagesBadge());
+
     this.listenTo(orderEvents, 'fulfillOrderComplete', () => {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
     });
+
     this.listenTo(this.model, 'change:state', () => {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
     });
+
     this.listenTo(orderEvents, 'openDisputeComplete', () => {
       if (this.activeTab === 'disputeOrder') this.selectTab('summary');
+    });
+
+    this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
+      if (this.activeTab === 'resolveDispute') this.selectTab('summary');
     });
 
     const socket = getSocket();
@@ -396,8 +407,19 @@ export default class extends BaseModal {
   }
 
   createResolveDisputeTabView() {
-    const model = new OrderDispute({ orderId: this.model.id });
+    let modelAttrs = { orderId: this.model.id };
+    const isResolvingDispute = resolvingDispute(this.model.id);
 
+    // If this order is in the process of the dispute being resolved, we'll
+    // populate the model with the data that was posted to the server.
+    if (isResolvingDispute) {
+      modelAttrs = {
+        ...modelAttrs,
+        ...isResolvingDispute.data,
+      };
+    }
+
+    const model = new ResolveDisputeMd(modelAttrs);
     const view = this.createChild(ResolveDispute, {
       model,
       vendor: {

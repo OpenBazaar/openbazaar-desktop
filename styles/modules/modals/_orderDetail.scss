@@ -396,10 +396,47 @@
     }
   }
 
-  .disputeOrderTab {
+  .disputeOrderTab, .resolveDisputeTab {
     .avatar {
       width: $thumbTn;
       height: $thumbTn;
     }    
+  }
+
+  .resolveDisputeTab {
+    .resolveConfirm {
+      bottom: 45px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .inputBuyerAmountWrap, .inputVendorAmountWrap {
+      position: relative;
+      max-width: 175px;
+
+      &::after {
+        content: '%';
+        position: absolute;
+        right: 15px;
+        top: 20px;
+        transform: translateY(-50%);
+      }
+
+      input {
+        padding-left: 45px;
+        padding-right: 40px;
+      }
+
+      .avatar {
+        position: absolute;
+        top: 10px;
+        left: 13px;
+      }
+    }
+
+    label[for=resolveDisputeBuyerAmount],
+    label[for=resolveDisputeVendorAmount] {
+      line-height: 2rem;
+    }
   }
 }

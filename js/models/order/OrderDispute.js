@@ -2,10 +2,6 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
-  // constructor(attrs = {}, options = {}) {
-  //   super(attrs, options);
-  // }
-
   defaults() {
     return {
       claim: '',
@@ -19,12 +15,6 @@ export default class extends BaseModel {
   get idAttribute() {
     return 'orderId';
   }
-
-  // validate() {
-  //   const errObj = this.mergeInNestedErrors();
-  //   if (Object.keys(errObj).length) return errObj;
-  //   return undefined;
-  // }
 
   sync(method, model, options) {
     if (method === 'create' || method === 'update') {

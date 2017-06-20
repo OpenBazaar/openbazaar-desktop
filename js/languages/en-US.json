@@ -1102,7 +1102,13 @@
       "commentLabel": "Comment",
       "commentPlaceholder": "Explain your decision...",
       "btnCancel": "Cancel",
-      "btnSubmit": "Submit"      
+      "btnSubmit": "Submit",
+      "resolveConfirm": {
+        "title": "Are you sure?",
+        "body": "Please double check everything looks good",
+        "btnCancel": "Cancel",
+        "btnSubmit": "Submit"
+      }
     },    
     "disputeOrderTab": {
       "heading": "Dispute Order",
@@ -1124,7 +1130,8 @@
     "failedFulfillHeading": "There was an error fulfilling the order.",
     "failedRefundHeading": "There was an error refunding the order.",
     "failedCompleteHeading": "There was an error completing the order.",
-    "failedOpenDisputeHeading": "There was an error completing the order."
+    "failedOpenDisputeHeading": "There was an error completing the order.",
+    "failedResolveHeading": "There was an error resolving the order."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
@@ -1271,6 +1278,14 @@
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
+  },
+  "resolveDisputeModelErrors": {
+    "provideAmount": "Please provide an amount.",
+    "percentageOutOfRange": "The amount must be between 0 and 100.",
+    "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
+    "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
+    "provideResolution": "Please explain your decision."
   },  
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

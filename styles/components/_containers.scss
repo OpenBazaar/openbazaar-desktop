@@ -271,6 +271,17 @@
   }
 }
 
+.arrowBoxBottom {
+  @extend .arrowBox;
+
+  &::before {
+    bottom: 1px;
+    left: 50%;
+    transform: translate(-25%, 50%) rotate(-135deg);
+    -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
+  }
+}
+
 .toolTip {
   position: relative;
   cursor: pointer;

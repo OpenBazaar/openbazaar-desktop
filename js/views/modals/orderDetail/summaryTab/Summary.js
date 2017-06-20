@@ -193,6 +193,16 @@ export default class extends BaseVw {
     if (!this.isCase()) {
       this.listenTo(this.contract, 'change:dispute',
         () => this.renderDisputeStartedView());
+    } else {
+      // this.listenTo(this.contract, 'change:dispute',
+      //   () => this.renderDisputeStartedView());
+
+      this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
+        if (e.id === this.model.id) {
+          this.model.set('state', 'RESOLVED');
+          this.model.fetch();
+        }
+      });
     }
 
     const serverSocket = getSocket();
@@ -590,6 +600,39 @@ export default class extends BaseVw {
       () => this.trigger('clickResolveDispute'));
 
     this.$subSections.prepend(this.disputeStarted.render().el);
+  }
+
+  renderDisputePayoutView() {
+    const data = this.isCase() ? this.model.get('resolution') :
+      this.contract.get('disputeResolution');
+
+    if (!data) {
+      throw new Error('Unable to create the Dispute Payout view because the resolution ' +
+        'data object has not been set.');
+    }
+
+    if (this.disputePayout) this.disputePayout.remove();
+    this.disputePayout = this.createChild(DisputePayout, {
+      initialState: {
+        ...data,
+        showAcceptButton: !this.isCase() && this.model.get('state') === 'DECIDED' &&
+          data.proposedBy !== app.profile.id,
+      },
+    });
+
+    ['buyer', 'vendor', 'moderator'].forEach(type => {
+      this[type].getProfile().done(profile => {
+        const state = {};
+        state[`${type}Name`] = profile.get('name');
+        state[`${type}AvatarHashes`] = profile.get('avatarHashes');
+        this.disputePayout.setState(state);
+      });
+    });
+
+    this.listenTo(this.disputeStarted, 'clickResolveDispute',
+      () => this.trigger('clickResolveDispute'));
+
+    this.$subSections.prepend(this.disputePayout.render().el);
   }
 
   /**

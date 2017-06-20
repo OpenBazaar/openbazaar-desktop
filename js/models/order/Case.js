@@ -40,6 +40,15 @@ export default class extends BaseModel {
       // convert price fields
       response.vendorContract.buyerOrder.payment.amount =
         integerToDecimal(response.vendorContract.buyerOrder.payment.amount, true);
+
+      // if (response.resolution) {
+      //   response.resolution.payout.buyerOutput.amount =
+      //     integerToDecimal(response.resolution.payout.buyerOutput.amount, true);
+      //   response.resolution.buyerOutput.amount =
+      //     integerToDecimal(response.resolution.payout.vendorOutput.amount, true);
+      //   response.resolution.buyerOutput.amount =
+      //     integerToDecimal(response.resolution.payout.moderatorOutput.amount, true);
+      // }
     }
 
     return response;

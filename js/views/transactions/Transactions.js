@@ -415,7 +415,8 @@ export default class extends baseVw {
         if (this.socket) {
           this.listenTo(this.socket, 'message', (e) => {
             if (e.jsonData.id === data.id) {
-              this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile));
+              this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile,
+                { parse: true }));
             }
           });
         }
