@@ -1500,7 +1500,10 @@ export function getCountryByDataName(dataName) {
     throw new Error('Please provide a dataName.');
   }
 
-  return getIndexedCountries()[dataName];
+  return {
+    ...getIndexedCountries()[dataName],
+    translatedName: app.polyglot.t(`countries.${dataName}`),
+  };
 }
 
 function getTranslatedCountries(lang, sort = true) {

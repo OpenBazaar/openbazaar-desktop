@@ -28,13 +28,14 @@ export default class extends baseVw {
     const isValidParticipantObject = (participant) => {
       let isValid = true;
       if (!participant.id) isValid = false;
-      if (!participant.profile || !participant.profile.then) return false;
+      if (typeof participant.getProfile !== 'function') isValid = false;
       return isValid;
     };
 
     const getInvalidParticpantError = (type = '') =>
       (`The ${type} object is not valid. It should have an id ` +
-        'as well as a profile promise that resolves with a profile model.');
+        'as well as a getProfile function that returns a promise that ' +
+        'resolves with a profile model.');
 
     if (!options.buyer) {
       throw new Error('Please provide a buyer object.');

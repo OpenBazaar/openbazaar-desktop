@@ -1,11 +1,18 @@
 import BaseModel from '../BaseModel';
-import Listings from '../../collections/OrderListings';
+import Listings from '../../collections/order/Listings';
 
 export default class extends BaseModel {
   get nested() {
     return {
       vendorListings: Listings,
     };
+  }
+
+  get type() {
+    return this.get('vendorListings')
+      .at(0)
+      .get('metadata')
+      .get('contractType');
   }
 
   parse(response) {

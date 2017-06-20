@@ -57,6 +57,12 @@
     padding: $padMd;
   }
 
+  .backToSummaryWrap {
+    position: absolute;
+    max-width: 250px;
+    left: $padLg;
+  }  
+
   .discussionTab {
     position: relative;
     overflow: hidden;
@@ -219,12 +225,6 @@
   }
 
   .contractTab {
-    .backToSummaryWrap {
-      position: absolute;
-      max-width: 250px;
-      left: $padLg;
-    }
-
     .renderjson {
       padding: $pad;
       overflow: auto;
@@ -232,6 +232,124 @@
       .key {
         font-weight: bold;
       }
+    }
+  }
+
+  .summaryTab {
+    h2 {
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+
+    .statusProgressBarContainer {
+      padding: 10px 20px;
+      height: 50px;
+    }
+
+    .copiedToClipboard {
+      position: absolute;
+      transform: translateY(-100%);
+    }
+
+    .payment, .refunded {
+      .rejectConfirm {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 39px;
+      }
+    }
+
+    .statusIconCol {
+      text-align: center;
+      flex-shrink: 0;
+
+      span {
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        border-radius: 50%;
+        border-style: solid;
+        border-width: 1px;
+        font-size: 30px;
+
+        &.ion-ios-checkmark-empty {
+          font-size: 36px;
+          line-height: 1;
+        }
+
+        &.ion-cube {
+          font-size: 17px;
+
+          &::before {
+            padding-top: 8px;
+          }
+        }
+
+        &.ion-ios-folder {
+          font-size: 15px;
+
+          &::before {
+            padding-top: 9px;
+          }
+        }
+
+        &.ion-ios-body {
+          font-size: 20px;
+
+          &::before {
+            padding-top: 7px;
+          }          
+        }
+      }
+    }    
+
+    .avatarCol {
+      flex-shrink: 0;
+      width: 35px;
+      height: 35px;
+      border-width: 2px;
+      border-style: solid;
+      width: 38px;
+      height: 38px;        
+    }
+
+    .orderDetails {
+      position: relative;
+
+      .listingThumbCol {
+        width: 42px;
+        height: 42px;
+      }
+
+      hr {
+        margin-top: 13px;
+        margin-bottom: 13px;
+      }
+
+      .orderDetailsCopiedToClipboard {
+        position: absolute;
+        transform: translateY(-2px);
+        font-size: $tx6;
+      }
+    }
+
+    .acceptedEvent {
+      .refundConfirm {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 39px;        
+      }
+    }
+  }
+
+  .fulfillOrderTab {
+    hr {
+      margin-left: $padLg;
+      margin-right: $padLg;
+    }
+    
+    .buttonBar {
+      padding: $padMd $padLg $padLg;
     }
   }
 }

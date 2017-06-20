@@ -129,10 +129,6 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis2);
 }
 
-.clrTWhite {
-  color: #ffffff;
-}
-
 .clrBr {
   @include borderColor($border, $border3);
 }
@@ -373,7 +369,7 @@ input[type=range][class~="clrS"] {
 
   &.ascending {
     &::after {
-      border-bottom-color: $text2;      
+      border-bottom-color: $text2;
     }
 
     &::before {
@@ -385,5 +381,41 @@ input[type=range][class~="clrS"] {
 .renderjson {
   a.disclosure {
     color: $text;
+  }
+}
+
+.stateProgressBar {
+  .stateSection {
+    .stateCircle {
+      background-color: $primary;
+      border-color: $border;
+
+      .ion-ios-checkmark-empty {
+        color: $primary;
+      }
+    }
+
+    .stateTrack {
+      background-color: $primary;
+      border-color: $border;
+    }
+
+    .stateCircleBorderFillIn {
+      background-color: $primary;
+    }
+
+    &.active {
+      .stateCircle, .stateTrack {
+        background-color: $text;
+      }
+    }
+  }
+}
+
+.orderDetail {
+  .fulfilledEvent {
+    .ion-cube {
+      color: #64452c;
+    }
   }
 }
