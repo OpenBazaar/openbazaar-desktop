@@ -214,6 +214,15 @@ export default class extends BaseModal {
     const allErrContainers = this.$('div[class $="-errors"]');
     allErrContainers.each((i, container) => $(container).html(''));
 
+    // don't allow a zero price purchase
+    const priceObj = this.prices[0];
+    if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
+      this.insertErrors(this.$errors, [app.polyglot.t('purchase.errors.zeroPrice')]);
+      this.updatePageState('pay');
+      this.actionBtn.render();
+      return;
+    }
+
     // set the shipping address if the listing is shippable
     if (this.shipping && this.shipping.selectedAddress) {
       this.order.addAddress(this.shipping.selectedAddress);
