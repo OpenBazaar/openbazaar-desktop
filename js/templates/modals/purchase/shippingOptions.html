@@ -1,6 +1,6 @@
-<% if (ob.shippingOptions.length) { %>
+<% if (ob.validShippingOptions.length) { %>
   <div class="flexColRows boxList border borderStacked clrP clrBr">
-    <% ob.shippingOptions.forEach((option, i) => {
+    <% ob.validShippingOptions.forEach((option, i) => {
       if (option.type === 'LOCAL_PICKUP') {
         option.services[0] = { name: ob.polyT('purchase.localPickup'), price: 0 };
       }

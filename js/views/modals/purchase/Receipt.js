@@ -22,6 +22,8 @@ export default class extends BaseView {
       throw new Error('Please provide the prices array');
     }
 
+    this.prices = options.prices;
+
     this.listenTo(this.model.get('items').at(0), 'change', () => this.render());
     this.listenTo(this.model.get('items').at(0).get('shipping'), 'change', () => this.render());
   }
@@ -48,7 +50,7 @@ export default class extends BaseView {
         listing: this.options.listing.toJSON(),
         coupons: this.coupons,
         displayCurrency: app.settings.get('localCurrency'),
-        prices: this.options.prices,
+        prices: this.prices,
         ...this.model.toJSON(),
       }));
     });

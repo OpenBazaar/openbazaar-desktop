@@ -199,6 +199,8 @@ export default class extends BaseModal {
     this.order.get('items').at(0).get('shipping')
       .set(opts);
     this.actionBtn.render();
+    this.receipt.prices = this.prices;
+    this.receipt.render();
   }
 
   updatePageState(state) {
