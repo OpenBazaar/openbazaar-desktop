@@ -195,15 +195,15 @@ export default class extends BaseVw {
       this.listenTo(this.contract, 'change:dispute',
         () => this.renderDisputeStartedView());
     } else {
-      // this.listenTo(this.contract, 'change:dispute',
-      //   () => this.renderDisputeStartedView());
-
       this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
         if (e.id === this.model.id) {
           this.model.set('state', 'RESOLVED');
           this.model.fetch();
         }
       });
+
+      this.listenTo(this.model, 'change:resolution',
+        () => this.renderDisputePayoutView());
     }
 
     const serverSocket = getSocket();
@@ -246,6 +246,11 @@ export default class extends BaseVw {
             e.jsonData.notification.disputeOpen.orderId === this.model.id) {
             // When a party opens a dispute the mod and the other party will get this
             // notification
+            this.model.fetch();
+          } else if (e.jsonData.notification.disputeClose &&
+            e.jsonData.notification.disputeClose.orderId === this.model.id) {
+            // Notification to the vendor and buyer when a mod has made a decision
+            // on an open dispute.
             this.model.fetch();
           }
         }

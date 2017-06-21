@@ -1,7 +1,18 @@
 <%
-  ob.payout.buyerOutput.amount = 0.1;
-  ob.payout.vendorOutput.amount = 0.05;
-  ob.payout.moderatorOutput.amount = 0.0001;
+  ob.payout.buyerOutput = {
+    ...ob.payout.buyerOutput || {},
+    amount: 0.1,
+  };
+  
+  ob.payout.vendorOutput = {
+    ...ob.payout.vendorOutput || {},
+    amount: 0.05,
+  };
+  
+  ob.payout.moderatorOutput = {
+    ...ob.payout.moderatorOutput || {},
+    amount: 0.0001,
+  };
 
   let priceLines = {};
 
