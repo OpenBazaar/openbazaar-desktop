@@ -7,6 +7,7 @@
   ob.payout.moderatorOutput.amount = 0.0001;
 
   let priceLines = {};
+  let partyHeadings = {};  
 
   ['buyer', 'vendor', 'moderator'].forEach(type => {
     priceLines[type] = ob.convertAndFormatCurrency(ob.payout[`${type}Output`].amount,
@@ -18,6 +19,10 @@
         btcAmount: ob.formatCurrency(ob.payout[`${type}Output`].amount, 'BTC', { useBtcSymbol: false }),
       });
     }
+
+    partyHeadings[type] = ob[`${type}Name`] ?
+      ob.polyT(`orderDetail.summaryTab.disputePayout.${type}HeadingWithName`, { name: ob[`${type}Name`] }) :
+        ob.polyT(`orderDetail.summaryTab.disputePayout.${type}Heading`);
   });
 %>
 <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputePayout.heading') %></h2>
@@ -26,26 +31,26 @@
 <% } %>
 
 <div class="border clrBr padMd">
-  <div class="flex">
+  <div class="flexRow row">
     <div class="col8 gutterV">
       <div class="flex gutterH clrT">
-        <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></span></div>
+        <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></div>
         <div class="flexExpand tx5">
-          <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.disputePayout.buyerHeading', { name: ob.buyerName }) %></div>
+          <div class="rowTn txB"><%= partyHeadings.buyer %></div>
           <div class="flex gutterH clrT2"><%= priceLines.buyer %></div>
         </div>
       </div>
       <div class="flex gutterH clrT">
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></span></div>
         <div class="flexExpand tx5">
-          <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.disputePayout.vendorHeading', { name: ob.vendorName }) %></div>
+          <div class="rowTn txB"><%= partyHeadings.vendor %></div>
           <div class="flex gutterH clrT2"><%= priceLines.vendor %></div>
         </div>
       </div>
       <div class="flex gutterH clrT">
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.moderatorAvatarHashes) %>"></span></div>
         <div class="flexExpand tx5">
-          <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.disputePayout.modHeading', { name: ob.moderatorName }) %></div>
+          <div class="rowTn txB"><%= partyHeadings.moderator %></div>
           <div class="flex gutterH clrT2"><%= priceLines.moderator %></div>
         </div>
       </div>
@@ -64,12 +69,25 @@
           <p><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.body') %></p>
           <hr class="clrBr row" />
           <div class="flexHRight flexVCent gutterHLg buttonBar">
-            <a class="js-refundConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.btnCancel') %></a>
+            <a class="js-acceptPayoutConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.btnCancel') %></a>
             <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-acceptPayoutConfirmed"><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.btnConfirm') %></a>
           </div>
         </div>
         <% } %>
       </div>
+    </div>
+  </div>
+  <div class="flex gutterH clrT2">
+    <!-- avatar col is just a spacer here -->
+    <div class="avatarCol disc invisible flexNoShrink"></div>
+    <div class="flexExpand tx5">
+      <%
+        const noteFromHeading = ob.moderatorName ?
+          ob.polyT('orderDetail.summaryTab.disputePayout.noteFromHeadingWithName', { name: ob.moderatorName }) :
+          ob.polyT('orderDetail.summaryTab.disputePayout.noteFromHeading');
+      %>
+      <div class="rowTn"><%= noteFromHeading %></div>
+      <div class="flex gutterH clrT2"><%= ob.resolution %></div>
     </div>
   </div>
 </div>

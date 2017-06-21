@@ -194,6 +194,24 @@ export default class extends BaseVw {
     if (!this.isCase()) {
       this.listenTo(this.contract, 'change:dispute',
         () => this.renderDisputeStartedView());
+
+      this.listenTo(this.contract, 'change:disputeResolution', () => {
+        // Only render the dispute payout the first time we receive it
+        // (it changes from undefined to an object with data). It shouldn't
+        // be changing after that, but for some reason it is.
+        if (!this.contract.previous('disputeResolution')) {
+          // The timeout is needed in the handler so the updated
+          // order state is available.
+          setTimeout(() => this.renderDisputePayoutView());
+        }
+      });
+
+      this.listenTo(orderEvents, 'acceptPayoutComplete', e => {
+        if (e.id === this.model.id) {
+          this.model.set('state', 'RESOLVED');
+          this.model.fetch();
+        }
+      });
     } else {
       this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
         if (e.id === this.model.id) {
@@ -314,15 +332,15 @@ export default class extends BaseVw {
 
         switch (orderState) {
           case 'DECIDED':
-            state.currentState = 1;
-            state.disputeState = 0;
-            break;
-          case 'RESOLVED':
             state.currentState = 2;
             state.disputeState = 0;
             break;
-          case 'COMPLETE':
+          case 'RESOLVED':
             state.currentState = 3;
+            state.disputeState = 0;
+            break;
+          case 'COMPLETE':
+            state.currentState = 4;
             state.disputeState = 0;
             break;
           default:

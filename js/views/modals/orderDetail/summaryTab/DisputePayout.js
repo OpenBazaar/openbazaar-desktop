@@ -117,7 +117,6 @@ export default class extends BaseVw {
       this.$el.html(t({
         ...this._state,
         moment,
-        showAcceptButton: true,
         acceptInProgress: acceptingPayout(this.orderId),
       }));
     });

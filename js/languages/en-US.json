@@ -1055,10 +1055,14 @@
       },
       "disputePayout": {
         "heading": "Dispute Payout",
-        "buyerHeading": "%{name} (buyer)",
-        "vendorHeading": "%{name} (vendor)",
-        "modHeading": "%{name} (moderator)",
-        "noteFromHeading": "Note from %{name}:",
+        "buyerHeading": "Buyer",
+        "buyerHeadingWithName": "%{name} (buyer)",
+        "vendorHeading": "Vendor",
+        "vendorHeadingWithName": "%{name} (vendor)",
+        "moderatorHeading": "Moderator",
+        "moderatorHeadingWithName": "%{name} (moderator)",
+        "noteFromHeading": "Note from moderator:",
+        "noteFromHeadingWithName": "Note from %{name}:",
         "btnAcceptPayout": "Accept Payout",
         "acceptPayoutConfirm": {
           "title": "Are you sure?",

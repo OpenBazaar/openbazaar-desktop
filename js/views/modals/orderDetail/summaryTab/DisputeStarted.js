@@ -1,5 +1,8 @@
 import _ from 'underscore';
 import moment from 'moment';
+import {
+  events as orderEvents,
+} from '../../../../utils/order';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -11,9 +14,14 @@ export default class extends BaseVw {
       disputerName: '',
       claim: '',
       showResolveButton: true,
-      resolveInProgress: false,
       ...options.initialState || {},
     };
+
+    this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
+      this.setState({
+        showResolveButton: false,
+      });
+    });
   }
 
   className() {
