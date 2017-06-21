@@ -238,7 +238,7 @@ export default class extends baseVw {
     return {
       search: '',
       sortBy: 'UNREAD',
-      states: [10, 11, 12],
+      states: [10, 12],
     };
   }
 
@@ -250,13 +250,6 @@ export default class extends baseVw {
         checked: this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
         className: 'filter',
         targetState: [10],
-      },
-      {
-        id: 'filterDisputePending',
-        text: app.polyglot.t('transactions.filters.disputePending'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(11) > -1,
-        className: 'filter',
-        targetState: [11],
       },
       {
         id: 'filterDisputeClosed',
