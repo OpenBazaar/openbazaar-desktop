@@ -103,6 +103,7 @@ export default class extends BaseVw {
           initialState: {
             curRating: this.rating.get(type) || 0,
           },
+          clickable: true,
         });
 
         $el.append(this.ratingStrips[type].render().el);

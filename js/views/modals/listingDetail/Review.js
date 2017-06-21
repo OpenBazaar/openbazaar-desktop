@@ -2,12 +2,15 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
+import RatingsStrip from '../../RatingsStrip';
 import moment from 'moment';
 import 'trunk8';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+
+    this.ratingStrips = {};
   }
 
   className() {
@@ -38,6 +41,25 @@ export default class extends baseVw {
         moment,
         ...this.model.toJSON(),
       }));
+
+      this.$('.ratingsContainer').each((index, element) => {
+        const $el = $(element);
+        const type = $el.data('ratingType');
+
+        if (!type) {
+          throw new Error('Unable to render the ratings strips because it\'s container does not ' +
+            'specify a type.');
+        }
+
+        if (this.ratingStrips[type]) this.ratingStrips[type].remove();
+        this.ratingStrips[type] = this.createChild(RatingsStrip, {
+          initialState: {
+            curRating: this.model.get(type) || 0,
+          },
+        });
+
+        $el.append(this.ratingStrips[type].render().el);
+      });
     });
 
     return this;

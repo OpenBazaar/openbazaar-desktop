@@ -646,11 +646,6 @@
     },
     "review": {
       "title": "%{time} by %{name}",
-      "overall": "Overall",
-      "speed": "Delivery Speed",
-      "description": "Matched Description",
-      "service": "Customer Service",
-      "quality": "Quality",
       "loadMore": "Load More",
       "noReviews": "This listing does not have any reviews yet.",
       "showMore": "Show More",
@@ -1081,13 +1076,6 @@
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
-      "ratingLabels": {
-        "overall": "Overall",
-        "quality": "Quality",
-        "asAdvertised": "As Advertised",
-        "delivery": "Delivery",
-        "service": "Service"
-      },
       "completeOrderForm": {
         "heading": "Complete Order",
         "maxReviewChars": "%{max} chars. max",
@@ -1295,6 +1283,13 @@
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
+  },
+  "ratingLabels": {
+    "overall": "Overall",
+    "quality": "Quality",
+    "asAdvertised": "As Advertised",
+    "delivery": "Delivery",
+    "service": "Service"
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

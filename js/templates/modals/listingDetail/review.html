@@ -25,26 +25,24 @@ const starRating = function(rating) {
   <div class="col4">
     <table class="ratings">
       <tr>
-        <td><b><%= ob.polyT('listingDetail.review.overall') %></b></td>
-        <td>
-          <% print(starRating(ob.overall)) %>
-        </td>
+        <td><b><%= ob.polyT('ratingLabels.overall') %></b></td>
+        <td class="ratingsContainer" data-rating-type="overall"></td>
       </tr>
       <tr>
-        <td><%= ob.polyT('listingDetail.review.quality') %></td>
-        <td><% print(starRating(ob.quality)) %></td>
+        <td><%= ob.polyT('ratingLabels.quality') %></td>
+        <td class="ratingsContainer" data-rating-type="quality"></td>
       </tr>
       <tr>
-        <td><%= ob.polyT('listingDetail.review.speed') %></td>
-        <td><% print(starRating(ob.deliverySpeed)) %></td>
+        <td><%= ob.polyT('ratingLabels.asAdvertised') %></td>
+        <td class="ratingsContainer" data-rating-type="description"></td>
       </tr>
       <tr>
-        <td><%= ob.polyT('listingDetail.review.description') %></td>
-        <td><% print(starRating(ob.description)) %></td>
+        <td><%= ob.polyT('ratingLabels.delivery') %></td>
+        <td class="ratingsContainer" data-rating-type="deliverySpeed"></td>
       </tr>
       <tr>
-        <td><%= ob.polyT('listingDetail.review.service') %></td>
-        <td><% print(starRating(ob.customerService)) %></td>
+        <td><%= ob.polyT('ratingLabels.service') %></td>
+        <td class="ratingsContainer" data-rating-type="customerService"></td>
       </tr>
     </table>
 

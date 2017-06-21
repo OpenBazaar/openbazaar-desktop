@@ -4,10 +4,13 @@
       // Important!!! In order to simulate a previous sibling selector in
       // CSS and hover all the previos icons on hover, the icons are
       // displayed in reverse order via flex-direction. This requires index
-      // calculations to be computed from the end.    
+      // calculations to be computed from the end.
       const selected = ob.curRating >= ob.maxRating - i;
   %>
-  <a class="ion-star ratingIcon js-ratingIcon <%= ob.iconClrClass %> <% if (selected) print('selected') %>"></a>
+  <!--<a class="ion-star ratingIcon js-ratingIcon <%= ob.iconClrClass %> <% if (selected) print('selected') %>"></a>-->
+  <a class="ratingIcon js-ratingIcon  <% if (selected) print('selected') %> <% if (ob.clickable) print('clickable') %>">
+    <%= ob.parseEmojis('⭐', ob.iconClrClass) %>
+  </a>
   <% } %>
 </div>
 <span class="ratingNumbers <%= ob.numberClrClass %>">(<%= ob.curRating %>/<%= ob.maxRating %>)</span>

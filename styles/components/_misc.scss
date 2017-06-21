@@ -66,6 +66,11 @@
 
     .ratingIcon {
       opacity: 0.4;
+      pointer-events: none;
+
+      &.clickable {
+        pointer-events: auto;
+      }
 
       &.selected {
         opacity: 1;
@@ -80,4 +85,18 @@
       }
     }
   }
+}
+
+.orderCompleteEvent {
+  .ratingStrip {
+    .ratingIcon {
+      pointer-events: none;
+    }
+  }
+}
+
+.emoji {
+  height: 1em;
+  width: 1em;
+  margin-right: 0.3em;
 }
