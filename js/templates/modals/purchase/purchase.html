@@ -1,4 +1,8 @@
-<% const hasModerators = !!ob.listing.moderators && ob.listing.moderators.length %>
+<%
+const hasModerators = !!ob.listing.moderators && ob.listing.moderators.length
+// when multiple listings are supported, the prices array will have one price object for each
+const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+%>
 
 <div class="popInMessageHolder js-popInMessages"></div>
 
@@ -16,7 +20,7 @@
 
 <div class="flexRow gutterH">
   <div class="col9">
-    <div class="flexColRow gutterVMd">
+    <div class="flexColRow gutterV">
       <% // to support multiple items in a purchase, loop this section %>
       <section class="contentBox pad clrP clrBr clrSh3">
         <div class="js-errors"></div>
@@ -28,7 +32,7 @@
               <div class="width100 noOverflow">
                 <b><%= ob.listing.item.title %></b>
               </div>
-              <% ob.variants.forEach((variant) => { %>
+              <% ob.variants.forEach(variant => { %>
                 <div class="width100 noOverflow">
                   <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
                 </div>
@@ -52,7 +56,7 @@
           </div>
           <div class="pad flexNoShrink">
             <b>
-              <%= ob.convertAndFormatCurrency(ob.listing.item.price, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+              <%= ob.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
             </b>
           </div>
         </div>
@@ -76,14 +80,19 @@
           </div>
           <div class="js-moderated-errors"></div>
           <% if (hasModerators) { %>
-            <input
-                type="checkbox"
-                name="moderated"
-                checked
-                id="purchaseModerated">
-            <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
-            <p class="clrT2 tx6">
-              <%= ob.polyT('purchase.moderationDisclaimer') %>
+            <div class="js-moderatedOption">
+              <input
+                  type="checkbox"
+                  name="moderated"
+                  checked
+                  id="purchaseModerated">
+              <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
+              <p class="clrT2 tx6">
+                <%= ob.polyT('purchase.moderationDisclaimer') %>
+              </p>
+            </div>
+            <p class="clrTErr hide js-noValidModerators">
+              <%= ob.polyT('purchase.noValidModerators') %>
             </p>
           <% } %>
         </div>
@@ -120,27 +129,25 @@
             </div>
           </div>
           <div class="col6">
-            <% if (ob.listing.coupons && ob.listing.coupons.length) { %>
-              <div class="rowTn">
-                <label for="couponCode" class="tx5">
-                  <%= ob.polyT('purchase.couponCode') %>
-                  <i class="ion-ios-information-outline js-couponInfo"></i>
-                </label>
-              </div>
-              <div class="flex gutterH row">
-                <input
-                    class="btnHeight clrBr clrP"
-                    type="text"
-                    id="couponCode"
-                    name="couponCode">
-                <button class="btn clrP clrBr js-applyCoupon">
-                  <%= ob.polyT('purchase.applyCode') %>
-                </button>
-              </div>
-              <div class="js-couponsWrapper">
-                <% // coupons are inserted here after they are added by the user. %>
-              </div>
-            <% } %>
+            <div class="rowTn">
+              <label for="couponCode" class="tx5">
+                <%= ob.polyT('purchase.couponCode') %>
+                <i class="ion-ios-information-outline js-couponInfo"></i>
+              </label>
+            </div>
+            <div class="flex gutterH row">
+              <input
+                  class="btnHeight clrBr clrP"
+                  type="text"
+                  id="couponCode"
+                  name="couponCode">
+              <button class="btn clrP clrBr clrSh2 js-applyCoupon">
+                <%= ob.polyT('purchase.applyCode') %>
+              </button>
+            </div>
+            <div class="js-couponsWrapper">
+              <% // coupons are inserted here after they are added by the user. %>
+            </div>
           </div>
         </div>
         <hr class="clrBr row">
@@ -165,7 +172,7 @@
   </div>
   <div class="col3">
     <section class="contentBox pad clrP clrBr clrSh3 sidebar">
-      <i class="jsModalClose cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3 closeBtn"></i>
+      <i class="js-close cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3 closeBtn"></i>
       <div class="js-actionBtn"></div>
       <div class="js-receipt"></div>
       <% if (hasModerators) { %>

@@ -8,6 +8,7 @@ import ConfirmWallet from './ConfirmWallet';
 import qr from 'qr-encode';
 import { clipboard, remote } from 'electron';
 import Purchase from '../../../models/purchase/Purchase';
+import Order from '../../../models/purchase/Order';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 
@@ -15,6 +16,10 @@ export default class extends BaseVw {
   constructor(options = {}) {
     if (!options.model || !options.model instanceof Purchase) {
       throw new Error('Please provide a purchase model.');
+    }
+
+    if (!options.order || !options.model instanceof Order) {
+      throw new Error('Please provide an order model.');
     }
 
     super(options);
@@ -79,6 +84,7 @@ export default class extends BaseVw {
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
       })
       .always(() => {
+        if (this.isRemoved()) return;
         this.$confirmWalletConfirm.removeClass('processing');
         this.$confirmWallet.addClass('hide');
       });
@@ -133,6 +139,11 @@ export default class extends BaseVw {
       (this._$confirmWalletConfirm = this.$('.js-confirmWalletConfirm'));
   }
 
+  remove() {
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
+  }
+
   render() {
     const displayCurrency = app.settings.get('localCurrency');
     const amount = this.model.get('amount');
@@ -140,15 +151,16 @@ export default class extends BaseVw {
 
     const btcURL = `bitcoin:${this.model.get('paymentAddress')}?amount=${amount}`;
 
-    loadTemplate('modals/purchase/pending.html', (t) => {
+    loadTemplate('modals/purchase/payment.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
+          ...this.model.toJSON(),
           displayCurrency,
           amount,
           amountBTC,
           qrDataUri: qr(btcURL, { type: 6, size: 5, level: 'Q' }),
           walletIconTmpl,
-          ...this.model.toJSON(),
+          moderator: this.options.order.get('moderator'),
         }));
       });
 

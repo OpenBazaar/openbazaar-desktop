@@ -83,6 +83,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-goToListing': 'close',
+      'click .js-close': 'clickClose',
       'click #purchaseModerated': 'clickModerated',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
@@ -117,6 +118,11 @@ export default class extends BaseModal {
     }
   }
 
+  clickClose() {
+    this.trigger('closeBtnPressed');
+    this.close();
+  }
+
   clickModerated(e) {
     const checked = $(e.target).prop('checked');
     this.$moderatorSection.toggleClass('hide', !checked);
@@ -137,6 +143,16 @@ export default class extends BaseModal {
       this.moderators.deselectOthers();
       this.order.set('moderator', '');
     }
+  }
+
+  onNoValidModerators() {
+    this.$purchaseModerated.prop('checked', false);
+    this.$moderatedOption.addClass('disabled');
+    this.$moderatorSection.addClass('hide');
+    this.$moderatorNote.addClass('hide');
+    this.$noValidModerators.removeClass('hide');
+    this.order.moderated = false;
+    this.order.set('moderator', '');
   }
 
   changeQuantityInput(e) {
@@ -181,8 +197,10 @@ export default class extends BaseModal {
   updateShippingOption(opts) {
     // set the shipping option
     this.order.get('items').at(0).get('shipping')
-      .set({ name: opts.name, service: opts.service });
+      .set(opts);
     this.actionBtn.render();
+    this.receipt.prices = this.prices;
+    this.receipt.render();
   }
 
   updatePageState(state) {
@@ -197,6 +215,15 @@ export default class extends BaseModal {
     // clear any old errors
     const allErrContainers = this.$('div[class $="-errors"]');
     allErrContainers.each((i, container) => $(container).html(''));
+
+    // don't allow a zero price purchase
+    const priceObj = this.prices[0];
+    if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
+      this.insertErrors(this.$errors, [app.polyglot.t('purchase.errors.zeroPrice')]);
+      this.updatePageState('pay');
+      this.actionBtn.render();
+      return;
+    }
 
     // set the shipping address if the listing is shippable
     if (this.shipping && this.shipping.selectedAddress) {
@@ -228,7 +255,7 @@ export default class extends BaseModal {
             this.updatePageState('pending');
             this.actionBtn.render();
             this.purchase.set(this.purchase.parse(data));
-            this.pending.render();
+            this.payment.render();
           })
           .fail((jqXHR) => {
             if (jqXHR.statusText === 'abort') return;
@@ -267,6 +294,36 @@ export default class extends BaseModal {
     this.actionBtn.render();
   }
 
+  get prices() {
+    // create an array of price objects that matches the items in the order
+    const prices = [];
+    this.order.get('items').forEach(item => {
+      const priceObj = {};
+      const shipping = item.get('shipping');
+      const sName = shipping.get('name');
+      const sService = shipping.get('service');
+      const sOpt = this.listing.get('shippingOptions').findWhere({ name: sName });
+      const sOptService = sOpt ? sOpt.get('services').findWhere({ name: sService }) : '';
+      // determine which skus match the chosen options
+      const variantCombo = [];
+      item.get('options').forEach((option, i) => {
+        const variants = this.listing.get('item').get('options').at(i)
+          .get('variants')
+          .toJSON();
+        const variantIndex = variants.findIndex(variant => variant.name === option.get('value'));
+        variantCombo.push(variantIndex);
+      });
+      const sku = this.listing.get('item').get('skus').find(v =>
+        _.isEqual(v.get('variantCombo'), variantCombo));
+
+      priceObj.price = this.listing.get('item').get('price');
+      priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
+      priceObj.vPrice = sku ? sku.get('surcharge') : 0;
+      prices.push(priceObj);
+    });
+    return prices;
+  }
+
   get $popInMessages() {
     return this._$popInMessages ||
         (this._$popInMessages = this.$('.js-popInMessages'));
@@ -275,6 +332,16 @@ export default class extends BaseModal {
   get $storeOwnerAvatar() {
     return this._$storeOwnerAvatar ||
         (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
+  }
+
+  get $moderatedOption() {
+    return this._$moderatedOption ||
+      (this._$moderatedOption = this.$('.js-moderatedOption'));
+  }
+
+  get $noValidModerators() {
+    return this._$noValidModerators ||
+      (this._$noValidModerators = this.$('.js-noValidModerators'));
   }
 
   get $moderatorSection() {
@@ -293,7 +360,7 @@ export default class extends BaseModal {
   }
 
   get $shippingErrors() {
-    return this._$shipingErrors ||
+    return this._$shippingErrors ||
       (this._$shippingErrors = this.$('.js-shipping-errors'));
   }
 
@@ -317,18 +384,21 @@ export default class extends BaseModal {
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
+        ...this.order.toJSON(),
         listing: this.listing.toJSON(),
         vendor: this.vendor,
         variants: this.variants,
         items: this.order.get('items').toJSON(),
+        prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
-        ...this.order.toJSON(),
       }));
 
       super.render();
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
+      this._$moderatedOption = null;
+      this._$noValidModerators = null;
       this._$moderatorSection = null;
       this._$closeBtn = null;
       this._$shippingErrors = null;
@@ -350,20 +420,18 @@ export default class extends BaseModal {
       this.receipt = this.createChild(Receipt, {
         model: this.order,
         listing: this.listing,
+        prices: this.prices,
       });
       this.$('.js-receipt').append(this.receipt.render().el);
 
       if (this.coupons) this.coupons.remove();
-      const couponList = this.listing.get('coupons');
-      if (couponList) {
-        this.coupons = this.createChild(Coupons, {
-          coupons: couponList,
-          listingPrice: this.listing.get('item').get('price'),
-        });
-        this.listenTo(this.coupons, 'changeCoupons',
-          (hashes, codes) => this.changeCoupons(hashes, codes));
-        this.$('.js-couponsWrapper').html(this.coupons.render().el);
-      }
+      this.coupons = this.createChild(Coupons, {
+        coupons: this.listing.get('coupons'),
+        listingPrice: this.listing.get('item').get('price'),
+      });
+      this.listenTo(this.coupons, 'changeCoupons',
+        (hashes, codes) => this.changeCoupons(hashes, codes));
+      this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
       if (this.moderators) this.moderators.remove();
       this.moderators = this.createChild(Moderators, {
@@ -375,7 +443,9 @@ export default class extends BaseModal {
         notSelected: 'unselected',
         singleSelect: true,
         selectFirst: true,
+        radioStyle: true,
       });
+      this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
       this.moderators.getModeratorsByID();
 
@@ -391,13 +461,14 @@ export default class extends BaseModal {
       }
 
       // remove old view if any on render
-      if (this.pending) this.pending.remove();
+      if (this.payment) this.payment.remove();
       // add the pending view
-      this.pending = this.createChild(Payment, {
+      this.payment = this.createChild(Payment, {
         model: this.purchase,
+        order: this.order,
       });
-      this.listenTo(this.pending, 'walletPaymentComplete', (data => this.completePurchase(data)));
-      this.$('.js-pending').append(this.pending.render().el);
+      this.listenTo(this.payment, 'walletPaymentComplete', (data => this.completePurchase(data)));
+      this.$('.js-pending').append(this.payment.render().el);
 
       // remove old view if any on render
       if (this.complete) this.complete.remove();

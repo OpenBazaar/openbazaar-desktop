@@ -145,9 +145,9 @@
           }
         }
 
-        &:nth-child(-n+2) {
+        &:first-child {
 
-          // always show the first 2
+          // always show the first one
           .moderatorCardSeperator {
             display: block;
           }

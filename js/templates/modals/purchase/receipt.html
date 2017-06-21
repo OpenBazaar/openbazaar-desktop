@@ -21,19 +21,19 @@
     total = total > 0 ? total : 0;
 %>
   <div class="flexRow">
-    <span class="col5">
+    <span class="flexExpand">
       <%= ob.polyT('purchase.receipt.listing', { quantity }) %>
     </span>
-    <b class="col7">
+    <b class="flexNoShrink">
       <%= ob.convertAndFormatCurrency(basePrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
     </b>
   </div>
   <% ob.coupons.forEach((coupon) => { %>
     <div class="flexRow">
-      <span class="col5">
+      <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.coupon') %>
       </span>
-      <b class="col7">
+      <b class="flexNoShrink">
         <% if (coupon.percentDiscount) {
              print(`-${coupon.percentDiscount}%`);
         } else if (coupon.priceDiscount) {
@@ -44,20 +44,20 @@
   <% }); %>
   <% if (ob.listing.item.options && ob.listing.item.options.length) { %>
   <div class="flexRow">
-        <span class="col5">
+        <span class="flexExpand">
           <%= ob.polyT('purchase.receipt.options') %>
         </span>
-    <b class="col7">
+    <b class="flexNoShrink">
       <%= ob.convertAndFormatCurrency(surcharge * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
     </b>
   </div>
   <% } %>
   <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
     <div class="flexRow">
-      <span class="col5">
+      <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.shipping') %>
       </span>
-      <b class="col7">
+      <b class="flexNoShrink">
         <%= ob.convertAndFormatCurrency(shippingPrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
       </b>
     </div>
@@ -65,10 +65,10 @@
 <% }); %>
 <hr class="clrBr">
 <div class="flexRow">
-  <span class="col5">
+  <span class="flexExpand">
     <%= ob.polyT('purchase.receipt.total') %>
   </span>
-  <b class="col7">
+  <b class="flexNoShrink">
     <%= ob.convertAndFormatCurrency(total, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
   </b>
 </div>

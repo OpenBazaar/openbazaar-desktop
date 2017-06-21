@@ -1,19 +1,22 @@
 import $ from 'jquery';
-import twemoji from 'twemoji';
-import '../../../lib/select2';
-import is from 'is_js';
-import '../../../utils/velocity';
+import _ from 'underscore';
 import 'jquery-zoom';
+import twemoji from 'twemoji';
+import is from 'is_js';
 import app from '../../../app';
+import '../../../lib/select2';
+import '../../../utils/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import { getTranslatedCountries } from '../../../data/countries';
+import { convertAndFormatCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
+import { getTranslatedCountries } from '../../../data/countries';
+import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Reviews from './Reviews';
 import { events as listingEvents } from '../../../models/listing/';
-import BaseModal from '../BaseModal';
 import PopInMessage from '../../PopInMessage';
+import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -30,6 +33,7 @@ export default class extends BaseModal {
     this.options = opts;
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
+    this.totalPrice = this.model.get('item').get('price');
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -112,6 +116,7 @@ export default class extends BaseModal {
       'click .js-goToStore': 'onClickGoToStore',
       'click .js-purchaseBtn': 'startPurchase',
       'click .js-rating': 'clickRating',
+      'change .js-variantSelect': 'onChangeVariantSelect',
       ...super.events(),
     };
   }
@@ -323,6 +328,29 @@ export default class extends BaseModal {
       });
   }
 
+  onChangeVariantSelect() {
+    this.adjustPriceBySku();
+  }
+
+  adjustPriceBySku() {
+    const variantCombo = [];
+    // assemble a combo of the indexes of the selected variants
+    this.variantSelects.each((i, select) => {
+      variantCombo.push($(select).prop('selectedIndex'));
+    });
+    // each sku has a code that matches the selected variant index combos
+    const sku = this.model.get('item').get('skus').find(v =>
+      _.isEqual(v.get('variantCombo'), variantCombo));
+    const surcharge = sku ? sku.get('surcharge') : 0;
+    const _totalPrice = this.model.get('item').get('price') + surcharge;
+    if (_totalPrice !== this.totalPrice) {
+      this.totalPrice = _totalPrice;
+      const adjPrice = convertAndFormatCurrency(this.totalPrice,
+        this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
+      this.getCachedElement('.js-price').text(adjPrice);
+    }
+  }
+
   showDataChangedMessage() {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
@@ -370,6 +398,12 @@ export default class extends BaseModal {
   }
 
   startPurchase() {
+    if (this.totalPrice <= 0) {
+      openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+        app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
+      return;
+    }
+
     const selectedVariants = [];
     this.variantSelects.each((i, select) => {
       const variant = {};
@@ -391,6 +425,7 @@ export default class extends BaseModal {
       .open();
 
     this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
+    this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
   }
 
   get shipsFreeToMe() {
@@ -468,6 +503,7 @@ export default class extends BaseModal {
   }
 
   render() {
+    super.render();
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
     loadTemplate('modals/listingDetail/listing.html', t => {
@@ -512,6 +548,7 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
+      this.adjustPriceBySku();
       this.$reviews = this.$('.js-reviews');
 
       // get the ratings data, if any

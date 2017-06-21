@@ -653,6 +653,8 @@
     },
     "errors": {
       "fetchReviews": "Reviews could not be loaded due to an error."
+      "noPurchaseTitle": "This Listing Can't Be Purchased",
+      "zeroPriceMsg": "You cannot make a purchase with a price of zero or less."
     }
   },
   "listingCard": {
@@ -822,6 +824,7 @@
     "moderatorTitle": "Moderator",
     "newAddress": "New Address",
     "serviceDetails": "%{price} — %{delivery}",
+    "localPickup": "Local Pickup",
     "noAddresses": "You don't have any saved addresses.",
     "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
@@ -849,6 +852,7 @@
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
+    "noValidModerators": "No valid moderators are available for this order.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
@@ -865,8 +869,8 @@
       "payFromWallet": "Pay from wallet",
       "payWithAlt": "Pay with altcoins",
       "note1": "If you need help getting started with Bitcoin, please read %{link}.",
-      "note1Link": "Getting Started With Bitcoin on OpenBazaar.org",
-      "note2": "Your payment will be held securly in escrow for 30 days. If any issues arise, you’ll have 30 days to open a dispute.",
+      "note1Link": "Need Bitcoin? on OpenBazaar.org",
+      "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
       "note3": "*The moderator service fee only applies if a dispute is opened.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
@@ -906,9 +910,10 @@
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
-      "ownIDTitle": "This is Your Own Listing",
-      "ownIDMsg": "You cannot purchase a listing that belongs to you.",
-      "paymentFaied": "The Payment Could Not Be Completed"
+      "ownIDTitle": "You Can't Purchase Your Own Listings",
+      "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
+      "paymentFailed": "The Payment Could Not Be Completed",
+      "zeroPrice": "You cannot purchase a listing with a total price of zero."
     }
   },
   "moderators": {
