@@ -20,6 +20,7 @@ import OrderDetails from './OrderDetails';
 import CompleteOrderForm from './CompleteOrderForm';
 import OrderComplete from './OrderComplete';
 import DisputeStarted from './DisputeStarted';
+import DisputePayout from './DisputePayout';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -613,10 +614,10 @@ export default class extends BaseVw {
 
     if (this.disputePayout) this.disputePayout.remove();
     this.disputePayout = this.createChild(DisputePayout, {
+      orderId: this.model.id,
       initialState: {
         ...data,
-        showAcceptButton: !this.isCase() && this.model.get('state') === 'DECIDED' &&
-          data.proposedBy !== app.profile.id,
+        showAcceptButton: !this.isCase() && this.model.get('state') === 'DECIDED',
       },
     });
 
@@ -624,7 +625,7 @@ export default class extends BaseVw {
       this[type].getProfile().done(profile => {
         const state = {};
         state[`${type}Name`] = profile.get('name');
-        state[`${type}AvatarHashes`] = profile.get('avatarHashes');
+        state[`${type}AvatarHashes`] = profile.get('avatarHashes').toJSON();
         this.disputePayout.setState(state);
       });
     });
@@ -647,7 +648,7 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderRefundView,
         timestamp:
-          (new Date(this.model.get('refundAddressTransaction').timestamp)).getTime(),
+          (new Date(this.model.get('refundAddressTransaction').timestamp)),
       });
     }
 
@@ -655,7 +656,7 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderFulfilledView,
         timestamp:
-          (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)).getTime(),
+          (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)),
       });
     }
 
@@ -663,7 +664,7 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderOrderCompleteView,
         timestamp:
-          (new Date(this.contract.get('buyerOrderCompletion').timestamp)).getTime(),
+          (new Date(this.contract.get('buyerOrderCompletion').timestamp)),
       });
     }
 
@@ -675,7 +676,20 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderDisputeStartedView,
         timestamp:
-          (new Date(timestamp)).getTime(),
+          (new Date(timestamp)),
+      });
+    }
+
+    if (this.contract.get('disputeResolution') ||
+      (this.isCase() && this.model.get('resolution'))) {
+      const timestamp = this.isCase() ?
+        this.model.get('resolution').timestamp :
+        this.contract.get('disputeResolution').timestamp;
+
+      sections.push({
+        function: this.renderDisputePayoutView,
+        timestamp:
+          (new Date(timestamp)),
       });
     }
 

@@ -313,12 +313,10 @@
 
     .avatarCol {
       flex-shrink: 0;
-      width: 35px;
-      height: 35px;
+      width: 38px;
+      height: 38px;
       border-width: 2px;
       border-style: solid;
-      width: 38px;
-      height: 38px;        
     }
 
     .orderDetails {
@@ -345,7 +343,7 @@
       .refundConfirm {
         left: 50%;
         transform: translateX(-50%);
-        top: 39px;        
+        top: 39px;
       }
     }
 
@@ -381,6 +379,19 @@
             margin-bottom: 0;
           }
         }        
+      }
+    }
+
+    .disputePayoutEvent {
+      .avatarCol {
+        position: relative;
+        top: -2px;
+      }
+
+      .acceptPayoutConfirm {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 45px;
       }
     }
   }

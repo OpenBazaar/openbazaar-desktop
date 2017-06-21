@@ -1,0 +1,72 @@
+<%
+  ob.payout.buyerOutput.amount = 0.1;
+  ob.payout.vendorOutput.amount = 0.05;
+  ob.payout.moderatorOutput.amount = 0.0001;
+
+  let priceLines = {};
+
+  ['buyer', 'vendor', 'moderator'].forEach(type => {
+    priceLines[type] = ob.convertAndFormatCurrency(ob.payout[`${type}Output`].amount,
+      'BTC', ob.userCurrency, { useBtcSymbol: false });
+
+    if (ob.userCurrency !== 'BTC') {
+      priceLines[type] = ob.polyT('fiatBtcPairing', {
+        fiatAmount: priceLines[type],
+        btcAmount: ob.formatCurrency(ob.payout[`${type}Output`].amount, 'BTC', { useBtcSymbol: false }),
+      });
+    }
+  });
+%>
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputePayout.heading') %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+
+<div class="border clrBr padMd">
+  <div class="flex">
+    <div class="col8 gutterV">
+      <div class="flex gutterH clrT">
+        <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></span></div>
+        <div class="flexExpand tx5">
+          <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.disputePayout.buyerHeading', { name: ob.buyerName }) %></div>
+          <div class="flex gutterH clrT2"><%= priceLines.buyer %></div>
+        </div>
+      </div>
+      <div class="flex gutterH clrT">
+        <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></span></div>
+        <div class="flexExpand tx5">
+          <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.disputePayout.vendorHeading', { name: ob.vendorName }) %></div>
+          <div class="flex gutterH clrT2"><%= priceLines.vendor %></div>
+        </div>
+      </div>
+      <div class="flex gutterH clrT">
+        <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.moderatorAvatarHashes) %>"></span></div>
+        <div class="flexExpand tx5">
+          <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.disputePayout.modHeading', { name: ob.moderatorName }) %></div>
+          <div class="flex gutterH clrT2"><%= priceLines.moderator %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col4 flexHRight">
+      <div class="posR">
+        <% if (ob.showAcceptButton) { %>
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-acceptPayout ${ob.acceptInProgress ? 'processing' : ''} ${ob.acceptConfirmOn ? 'disabled' : '' }`,
+            btnText: ob.polyT('orderDetail.summaryTab.disputePayout.btnAcceptPayout')
+          }) %>
+        <% } %>
+        <% if (ob.acceptConfirmOn) { %>
+        <div class="js-acceptPayoutConfirmBox confirmBox acceptPayoutConfirm tx5 arrowBoxTop clrBr clrP clrT">
+          <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.title') %></div>
+          <p><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.body') %></p>
+          <hr class="clrBr row" />
+          <div class="flexHRight flexVCent gutterHLg buttonBar">
+            <a class="js-refundConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.btnCancel') %></a>
+            <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-acceptPayoutConfirmed"><%= ob.polyT('orderDetail.summaryTab.disputePayout.acceptPayoutConfirm.btnConfirm') %></a>
+          </div>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,6 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
 
-    this.orderId = options.orderId;
     this._state = {
       disputerName: '',
       claim: '',

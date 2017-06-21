@@ -19,6 +19,7 @@ const refundPosts = {};
 const completePosts = {};
 const openDisputePosts = {};
 const resolvePosts = {};
+const acceptPayoutPosts = {};
 
 function confirmOrder(orderId, reject = false) {
   if (!orderId) {
@@ -430,4 +431,54 @@ export function resolveDispute(orderId, data = {}) {
   }
 
   return resolvePosts[orderId].xhr;
+}
+
+export function acceptingPayout(orderId) {
+  return acceptPayoutPosts[orderId] || false;
+}
+
+export function acceptPayout(orderId) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  let post = acceptPayoutPosts[orderId];
+
+  if (!post) {
+    post = $.post({
+      url: app.getServerUrl('ob/releasefunds'),
+      data: JSON.stringify({
+        orderId,
+      }),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).always(() => {
+      delete acceptPayoutPosts[orderId];
+    }).done(() => {
+      events.trigger('acceptPayoutComplete', {
+        id: orderId,
+        xhr: post,
+      });
+    })
+    .fail(xhr => {
+      events.trigger('acceptPayoutFail', {
+        id: orderId,
+        xhr: post,
+      });
+
+      const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+      openSimpleMessage(
+        app.polyglot.t('orderUtil.failedAcceptPayoutHeading'),
+        failReason
+      );
+    });
+
+    acceptPayoutPosts[orderId] = post;
+    events.trigger('acceptingPayout', {
+      id: orderId,
+      xhr: post,
+    });
+  }
+
+  return post;
 }
