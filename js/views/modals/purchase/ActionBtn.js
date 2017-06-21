@@ -30,6 +30,7 @@ export default class extends baseView {
       'click .js-pendingBtn': 'clickPendingBtn',
       'click .js-confirmPayConfirm': 'clickConfirmBtn',
       'click .js-confirmPayCancel': 'closeConfirmPay',
+      'click .js-closeBtn': 'clickCloseBtn',
     };
   }
 
@@ -59,8 +60,12 @@ export default class extends baseView {
   }
 
   clickPendingBtn() {
-    this.state.phase = 'close';
+    this.state.phase = 'complete';
     this.render();
+  }
+
+  clickCloseBtn() {
+    this.trigger('close');
   }
 
   get $payBtn() {
@@ -81,7 +86,7 @@ export default class extends baseView {
   render() {
     loadTemplate('modals/purchase/actionBtn.html', t => {
       this.$el.html(t({
-        state: this.state.phase,
+        phase: this.state.phase,
         listing: this.options.listing,
       }));
 

@@ -28,6 +28,7 @@ export default class extends baseVw {
       purchase: false,
       singleSelect: false,
       selectFirst: false,
+      radioStyle: false,
       // defaults will be overwritten by passed in options
       ...options,
     };
@@ -133,6 +134,10 @@ export default class extends baseVw {
       // all ids have been fetced
       this.$moderatorsWrapper.removeClass('processing');
       this.$moderatorsStatus.addClass('hide').text('');
+      // check if no loaded moderators are valid
+      if (!this.moderatorsCol.filter(mod => mod.isModerator).length) {
+        this.trigger('noValidModerators');
+      }
     } else {
       this.$moderatorsStatus.text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: nfYet, total: this.fetchingMods.length }));
@@ -147,6 +152,7 @@ export default class extends baseVw {
         purchase: this.options.purchase,
         notSelected: this.options.notSelected,
         cardState,
+        radioStyle: this.options.radioStyle,
         ...opts,
       });
       this.listenTo(newModView, 'changeModerator', (data) => {

@@ -69,6 +69,7 @@ export default class extends BaseVw {
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,
+        radioStyle: this.options.radioStyle || false,
         ...this.model.toJSON(),
       }));
 

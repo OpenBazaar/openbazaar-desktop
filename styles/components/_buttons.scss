@@ -87,6 +87,15 @@
     border-width: 0;
     @include disabled;
   }
+
+  .icon {
+    // use this for icons that are inline in a button in front of text
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 0.5em;
+    display: inline-flex;
+    align-content: center;
+  }
 }
 
 .btnRadio {
@@ -98,36 +107,39 @@
 
   input[type="radio"] {
     display: none;
+  }
 
-    & + label {
+  input[type="radio"] + label:hover,
+  .fauxRadioBtn {
+    cursor: inherit;
+  }
 
-      &:hover {
-        cursor: inherit;
-      }
+  input[type="radio"] + label:before,
+  .fauxRadioBtn {
+    content: '';
+    display: inline-block;
+    box-sizing: border-box;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    vertical-align: middle;
+    position: relative;
+    top: 0.05em;
+    margin-right: 0.4em;
+    margin-left: -0.25em;
+    //background color is assigned by the theme
 
-      &:before {
-        content: '';
-        display: inline-block;
-        box-sizing: border-box;
-        width: 1em;
-        height: 1em;
-        border-radius: 50%;
-        border-width: 1px;
-        border-style: solid;
-        vertical-align: middle;
-        position: relative;
-        top: 0.05em;
-        margin-right: 0.4em;
-        margin-left: -0.25em;
-        //background color is assigned by the theme
-
-        &:hover {
-          cursor: inherit;
-        }
-      }
+    &:hover {
+      cursor: inherit;
     }
 
     //checked state is set by the theme
+  }
+
+  .fauxRadioBtn:focus {
+    outline: none;
   }
 
   input[type="checkbox"] {
@@ -149,6 +161,7 @@
   vertical-align: inherit;
   align-items: inherit;
   justify-content: inherit;
+  padding: 0;
 }
 
 .iconBtn {
@@ -224,6 +237,36 @@
 
   &.open {
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+.flipBtn {
+  // use for a button that should slow new text when active
+  // the flippable elements are positioned on top of each other.
+  position: relative;
+
+  .unFlipped,
+  .flipped {
+    transition: opacity 1s;
+  }
+
+  .unFlipped {
+    opacity: 1;
+    position: absolute;
+  }
+
+  .flipped {
+    opacity: 0;
+  }
+
+  &.active {
+    .unFlipped {
+      opacity: 0;
+    }
+
+    .flipped {
+      opacity: 1;
+    }
   }
 }
 
