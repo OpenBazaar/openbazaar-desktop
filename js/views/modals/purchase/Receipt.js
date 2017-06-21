@@ -47,11 +47,11 @@ export default class extends BaseView {
   render() {
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
+        ...this.model.toJSON(),
         listing: this.options.listing.toJSON(),
         coupons: this.coupons,
         displayCurrency: app.settings.get('localCurrency'),
         prices: this.prices,
-        ...this.model.toJSON(),
       }));
     });
 

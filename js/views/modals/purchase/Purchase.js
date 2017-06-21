@@ -384,13 +384,13 @@ export default class extends BaseModal {
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
+        ...this.order.toJSON(),
         listing: this.listing.toJSON(),
         vendor: this.vendor,
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
-        ...this.order.toJSON(),
       }));
 
       super.render();

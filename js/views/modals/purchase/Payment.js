@@ -154,13 +154,13 @@ export default class extends BaseVw {
     loadTemplate('modals/purchase/payment.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
+          ...this.model.toJSON(),
           displayCurrency,
           amount,
           amountBTC,
           qrDataUri: qr(btcURL, { type: 6, size: 5, level: 'Q' }),
           walletIconTmpl,
           moderator: this.options.order.get('moderator'),
-          ...this.model.toJSON(),
         }));
       });
 

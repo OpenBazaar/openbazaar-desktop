@@ -63,9 +63,9 @@ export default class extends baseView {
 
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({
+        ...this.model.toJSON(),
         validShippingOptions,
         displayCurrency: app.settings.get('localCurrency'),
-        ...this.model.toJSON(),
       }));
     });
 
