@@ -18,7 +18,7 @@ export default class extends baseView {
       model: this.model,
     });
 
-    this.listenTo(this.shippingOptions, 'selected', ((opts) => {
+    this.listenTo(this.shippingOptions, 'shippingOptionSelected', ((opts) => {
       this.trigger('shippingOptionSelected', opts);
     }));
     this.listenTo(app.settings.get('shippingAddresses'), 'update', () => this.render());
