@@ -13,7 +13,7 @@ export default class extends BaseVw {
       hoverIndex: 0,
       iconClrClass: '',
       numberClrClass: 'clrT2',
-      clickable: options.clickable || false,
+      clickable: false,
       ...options.initialState || {},
     };
   }

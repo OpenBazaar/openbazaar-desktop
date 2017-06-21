@@ -102,8 +102,8 @@ export default class extends BaseVw {
         this.ratingStrips[type] = this.createChild(RatingsStrip, {
           initialState: {
             curRating: this.rating.get(type) || 0,
+            clickable: true,
           },
-          clickable: true,
         });
 
         $el.append(this.ratingStrips[type].render().el);
