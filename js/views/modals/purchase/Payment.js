@@ -1,3 +1,8 @@
+/*
+  This view is also used by the Order Detail overlay. If you make any changes, please
+  ensure they are compatible with both the Purchase and Order Detail flows.
+*/
+
 import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -48,11 +53,11 @@ export default class extends BaseVw {
             const amount = integerToDecimal(payment.fundingTotal, true);
             if (amount >= this.balanceRemaining) {
               this.trigger('walletPaymentComplete', payment);
+            } else {
+              // Ensure the resulting balance has a maximum of 8 decimal places with not
+              // trailing zeros.
+              this.balanceRemaining = parseFloat((this.balanceRemaining - amount).toFixed(8));
             }
-
-            // Ensure the result balance has a maximum of 8 decimal places with not
-            // trailing zeros.
-            this.balanceRemaining = parseFloat((this.balanceRemaining - amount).toFixed(8));
           }
         }
       });

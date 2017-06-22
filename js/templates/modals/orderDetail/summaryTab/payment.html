@@ -70,9 +70,7 @@
           <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
         </div>
         <% 
-          let subText = '';
-
-          subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
+          let subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
 
           if (ob.amountShort > 0) {
             subText =

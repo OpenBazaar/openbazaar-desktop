@@ -394,6 +394,12 @@
         top: 45px;
       }
     }
+
+    .payForOrderWrap {
+      &:empty {
+        display: none;
+      }
+    }
   }
 
   .fulfillOrderTab, .disputeOrderTab, .resolveDisputeTab {

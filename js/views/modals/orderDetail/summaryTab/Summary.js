@@ -20,6 +20,7 @@ import CompleteOrderForm from './CompleteOrderForm';
 import OrderComplete from './OrderComplete';
 import DisputeStarted from './DisputeStarted';
 import DisputePayout from './DisputePayout';
+import PayForOrder from '../../../modals/purchase/Payment';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -117,8 +118,9 @@ export default class extends BaseVw {
 
     if (!this.isCase()) {
       this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
-        if (!this.shouldShowPayForOrderSection()) {
-          this.$('.js-payForOrderWrap').remove();
+        if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
+          this.payForOrder.remove();
+          this.payForOrder = null;
         }
 
         if (this.payments) {
@@ -428,7 +430,8 @@ export default class extends BaseVw {
       balanceRemaining = this.orderPriceBtc - totalPaid;
     }
 
-    return balanceRemaining;
+    // round to 8 decimal places
+    return Math.round(balanceRemaining * 100000000) / 100000000;
   }
 
   shouldShowPayForOrderSection() {
@@ -684,6 +687,19 @@ export default class extends BaseVw {
     this.$subSections.prepend(this.disputePayout.render().el);
   }
 
+  renderPayForOrder() {
+    if (this.payForOrder) this.payForOrder.remove();
+
+    this.payForOrder = this.createChild(PayForOrder, {
+      balanceRemaining: this.getBalanceRemaining(),
+      paymentAddress: this.paymentAddress,
+      orderId: this.model.id,
+      isModerated: !!this.moderator,
+    });
+
+    this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
+  }
+
   /**
    * Will render sub-sections in order based on their timestamp. Exempt from
    * this are the Order Details, Payment Details and Accepted sections which
@@ -761,21 +777,13 @@ export default class extends BaseVw {
   }
 
   render() {
-    const templateData = {
-      id: this.model.id,
-      shouldShowPayForOrderSection: this.shouldShowPayForOrderSection(),
-      isCase: this.isCase(),
-      paymentAddress: this.paymentAddress,
-      isTestnet: app.testnet,
-      ...this.model.toJSON(),
-    };
-
-    if (this.shouldShowPayForOrderSection()) {
-      templateData.balanceRemaining = this.getBalanceRemaining();
-    }
-
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
-      this.$el.html(t(templateData));
+      this.$el.html(t({
+        id: this.model.id,
+        isCase: this.isCase(),
+        isTestnet: app.testnet,
+        ...this.model.toJSON(),
+      }));
       this._$copiedToClipboard = null;
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
@@ -790,6 +798,10 @@ export default class extends BaseVw {
         moderator: this.moderator,
       });
       this.$('.js-orderDetailsWrap').html(this.orderDetails.render().el);
+
+      if (this.shouldShowPayForOrderSection()) {
+        this.renderPayForOrder();
+      }
 
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();

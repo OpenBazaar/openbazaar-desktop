@@ -177,9 +177,11 @@ export default class extends baseVw {
     this.payments = [];
 
     this.collection.models.forEach((payment, index) => {
-      const paidSoFar = this.collection.models
+      let paidSoFar = this.collection.models
         .slice(0, index + 1)
         .reduce((total, model) => total + model.get('value'), 0);
+      // round to 8 decimal places
+      paidSoFar = Math.round(paidSoFar * 100000000) / 100000000;
       const isMostRecentPayment = index === this.collection.length - 1;
       const paymentView = this.createPayment(payment, {
         initialState: {
