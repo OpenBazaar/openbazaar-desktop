@@ -652,7 +652,7 @@
       "showLess": "Show Less"
     },
     "errors": {
-      "fetchReviews": "Reviews could not be loaded due to an error."
+      "fetchReviews": "Reviews could not be loaded due to an error.",
       "noPurchaseTitle": "This Listing Can't Be Purchased",
       "zeroPriceMsg": "You cannot make a purchase with a price of zero or less."
     }
