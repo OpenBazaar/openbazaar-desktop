@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
@@ -105,6 +104,11 @@ export default class extends BaseVw {
       if (state === 'COMPLETED' && this.completeOrderForm) {
         this.completeOrderForm.remove();
       }
+
+      if (this.completeOrderForm &&
+        ['FULFILLED', 'RESOLVED'].indexOf(state) === -1) {
+        this.completeOrderForm.remove();
+      }
     });
 
     if (!this.isCase()) {
@@ -203,6 +207,16 @@ export default class extends BaseVw {
           // The timeout is needed in the handler so the updated
           // order state is available.
           setTimeout(() => this.renderDisputePayoutView());
+        } else {
+          // NOTE!!!!!!!
+          // NOTE!!!!!!!
+          // NOTE!!!!!!!
+          // Temporarily putting this here. Once the server issue is
+          // fixed and a disputeClosed event comes, then this should
+          // go in the change handler of that event.
+          if (this.buyer.id === app.profile.id) {
+            this.renderCompleteOrderForm();
+          }
         }
       });
 
@@ -529,6 +543,25 @@ export default class extends BaseVw {
     this.$subSections.prepend(this.refunded.render().el);
   }
 
+  renderCompleteOrderForm() {
+    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
+      this.buyer.id === app.profile.id) {
+      throw new Error('The complete order form should only be showed for the buyer and ' +
+        'when the order is in a state of FULFILLED or REOLVED');
+    }
+
+    const completingObject = completingOrder(this.model.id);
+    const model = new OrderCompletion(
+      completingObject ? completingObject.data : { orderId: this.model.id });
+    if (this.completeOrderForm) this.completeOrderForm.remove();
+    this.completeOrderForm = this.createChild(CompleteOrderForm, {
+      model,
+      slug: this.contract.get('vendorListings').at(0).get('slug'),
+    });
+
+    this.$subSections.prepend(this.completeOrderForm.render().el);
+  }
+
   renderFulfilledView() {
     const data = this.contract.get('vendorOrderFulfillment');
 
@@ -550,26 +583,14 @@ export default class extends BaseVw {
       .done(profile =>
         this.fulfilled.setState({ storeName: profile.get('name') }));
 
-    const sections = document.createDocumentFragment();
-    const $sections = $(sections).append(this.fulfilled.render().el);
+    this.$subSections.prepend(this.fulfilled.render().el);
 
     // If the order is not complete and this is the buyer, we'll
     // render a complete order form.
     if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
       this.buyer.id === app.profile.id) {
-      const completingObject = completingOrder(this.model.id);
-      const model = new OrderCompletion(
-        completingObject ? completingObject.data : { orderId: this.model.id });
-      if (this.completeOrderForm) this.completeOrderForm.remove();
-      this.completeOrderForm = this.createChild(CompleteOrderForm, {
-        model,
-        slug: this.contract.get('vendorListings').at(0).get('slug'),
-      });
-
-      $sections.prepend(this.completeOrderForm.render().el);
+      this.renderCompleteOrderForm();
     }
-
-    this.$subSections.prepend($sections);
   }
 
   renderOrderCompleteView() {
