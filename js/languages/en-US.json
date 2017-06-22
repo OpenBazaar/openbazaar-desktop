@@ -1024,7 +1024,7 @@
         "noteFromLabel": "Note from %{store}:",
         "copyLink": "Copy",
         "digitalReadyForDlHeading": "Digital files are ready for download!",
-        "digitalReadyForDlText": "The files have been delivered. DOwnload when you're ready.",
+        "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },

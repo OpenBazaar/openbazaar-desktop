@@ -1,8 +1,4 @@
 import _ from 'underscore';
-// import {
-//   openingDispute,
-//   events as orderEvents,
-// } from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 
