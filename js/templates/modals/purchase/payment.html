@@ -1,14 +1,12 @@
 <div class="flexRow gutterH pad rowMd">
   <div class="col5">
-    <a class="QR js-purchaseQRCode"><img src="<%= ob.qrDataUri %>"></a>
+    <a class="QR js-purchaseQRCode"><img class="js-qrCodeImg" src="<%= ob.qrDataUri %>"></a>
   </div>
   <div class="col7">
     <div class="flexVCent">
       <div class="flexExpand">
         <div class="rowSm">
-          <span class="h1">
-            <%= ob.polyT('purchase.pendingSection.pay', { amountBTC: ob.amountBTC }) %>
-          </span>
+          <span class="h1 js-amountDueLine"><%= ob.amountDueLine %></span>
           <button class="btnTxtOnly txUnb flipBtn js-copyAmount">
             <span class="clrTEm unFlipped"><%= ob.polyT('purchase.pendingSection.copy') %></span>
             <span class="flipped"><%= ob.polyT('purchase.pendingSection.copied') %></span>
@@ -44,7 +42,7 @@
 <div class="tx6 clrT2">
   <% const link = `<a class="clrTEm" href="https://www.openbazaar.org/bitcoin">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
   <p><%= ob.polyT('purchase.pendingSection.note1', { link }) %></p>
-  <% if (ob.moderator) { %>
+  <% if (ob.isModerated) { %>
   <p>
     <%= ob.polyT('purchase.pendingSection.note2') %>
     <br>
