@@ -57,7 +57,7 @@ export default class extends BaseModel {
     }
 
     if (this.shippable && !attrs.shipTo && !attrs.countryCode) {
-      addError('shippable', app.polyglot.t('orderModelErrors.missingAddress'));
+      addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
     }
 
     if (this.moderated && !attrs.moderator && attrs.moderator !== undefined) {
