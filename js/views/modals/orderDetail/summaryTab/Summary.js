@@ -93,21 +93,25 @@ export default class extends BaseVw {
         if (this.accepted) this.accepted.remove();
       }
 
-      if (state === 'REFUNDED' || state === 'FULFILLED' && this.accepted) {
-        this.accepted.setState({
-          showRefundButton: false,
+      if (
+        ['REFUNDED', 'FULFILLED', 'DISPUTED', 'DECIDED', 'RESOLVED', 'COMPLETE'].indexOf(state) > -1
+        && this.accepted) {
+        const acceptedState = {
           showFulfillButton: false,
           infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
-        });
-      }
+        };
 
-      if (state === 'COMPLETED' && this.completeOrderForm) {
-        this.completeOrderForm.remove();
+        if (state !== 'DISPUTED') {
+          acceptedState.showRefundButton = false;
+        }
+
+        this.accepted.setState(acceptedState);
       }
 
       if (this.completeOrderForm &&
-        ['FULFILLED', 'RESOLVED'].indexOf(state) === -1) {
+        ['FULFILLED', 'RESOLVED'].indexOf(state) > -1) {
         this.completeOrderForm.remove();
+        this.completeOrderForm = null;
       }
     });
 
@@ -544,9 +548,9 @@ export default class extends BaseVw {
   }
 
   renderCompleteOrderForm() {
-    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
-      this.buyer.id === app.profile.id) {
-      throw new Error('The complete order form should only be showed for the buyer and ' +
+    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) === -1 ||
+      this.buyer.id !== app.profile.id) {
+      throw new Error('The complete order form should only be shown for the buyer and ' +
         'when the order is in a state of FULFILLED or REOLVED');
     }
 
