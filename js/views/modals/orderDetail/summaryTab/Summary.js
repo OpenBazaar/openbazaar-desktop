@@ -389,6 +389,7 @@ export default class extends BaseVw {
           `orderDetail.summaryTab.orderDetails.progressBarStates.${orderState.toLowerCase()}`),
       ];
       state.currentState = 2;
+      state.disputeState = 0;
     } else {
       switch (orderState) {
         case 'PENDING':
