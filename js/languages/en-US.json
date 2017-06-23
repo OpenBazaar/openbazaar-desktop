@@ -600,7 +600,6 @@
     "PHYSICAL_GOOD": "Physical Good",
     "DIGITAL_GOOD": "Digital Good",
     "SERVICE": "Service",
-    "CROWD_FUND": "Crowd fund"
   },
   "conditionTypes": {
     "NEW": "New",
