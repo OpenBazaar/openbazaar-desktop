@@ -159,6 +159,24 @@ export default class extends baseVw {
       this.stopListening(orderDetail, 'close', onClose);
     });
 
+    // On any changes to the order / case detail model state, we'll update the
+    // state in the correponding model in the respective collection driving
+    // the transaction table.
+    this.listenTo(model, 'change:state', (md, state) => {
+      let col = this.purchasesCol;
+
+      if (type === 'sale') {
+        col = this.salesCol;
+      } else if (type === 'case') {
+        col = this.casesCol;
+      }
+
+      const collectionMd = col.get(model.id);
+      if (collectionMd) {
+        collectionMd.set('state', state);
+      }
+    });
+
     return orderDetail;
   }
 
