@@ -1,0 +1,32 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.orderComplete.heading') %></h2>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<div class="border clrBr padMd">
+  <div class="flex gutterHLg">
+    <div class="col9">
+      <div class="txB tx5 flexNoShrink rowTn"><%= ob.polyT('orderDetail.summaryTab.orderComplete.reviewLabel', { name: ob.buyerName }) %></div>
+      <div class="tx5"><%= ob.parseEmojis(ob.review) %></div>
+    </div>
+    <div class="col3 ratingsCol">
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.overall') %></div>
+        <div class="ratingsContainer" data-rating-type="overall"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.quality') %></div>
+        <div class="ratingsContainer" data-rating-type="quality"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.asAdvertised') %></div>
+        <div class="ratingsContainer" data-rating-type="description"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.delivery') %></div>
+        <div class="ratingsContainer" data-rating-type="deliverySpeed"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.service') %></div>
+        <div class="ratingsContainer" data-rating-type="customerService"></div>
+      </div>
+    </div>
+  </div>
+</div>

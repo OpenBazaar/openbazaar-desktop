@@ -1,0 +1,43 @@
+<div class="flexColRows">
+  <div class="flexRow pad rowMd txCtr">
+    <div class="col2"></div>
+    <div class="col8">
+      <div class="flexHCent row">
+        <div class="discLg border clrE1 clrBrDec1">
+          <i class="ion-checkmark clrTOnEmph"></i>
+        </div>
+      </div>
+      <h4><%= ob.polyT('purchase.completeSection.paymentSent') %></h4>
+      <% const link = `<a href="#transactions/purchases?orderId=${ob.orderID}">${ob.polyT('purchase.completeSection.purchases')}</a>`; %>
+      <p>
+        <%= ob.polyT('purchase.completeSection.progressMessage', { link }) %>
+      </p>
+      <p class="tx5b clrT2">
+        <%= ob.polyT('purchase.completeSection.estimatedProcessing', { time: ob.processingTime }) %>
+      </p>
+    </div>
+    <div class="col2"></div>
+  </div>
+  <hr class="clrBr rowHg">
+  <h5><%= ob.polyT('purchase.completeSection.vendorMessage') %></h5>
+  <div class="clrBr clrP flex gutterHSm message js-message">
+    <div class="avatar clrBr2 clrSh1 disc" style="<%= ob.getAvatarBgImage(ob.ownProfile.avatarHashes) %>"></div>
+    <div class="flexExpand">
+      <textarea
+          id="messageInput"
+          class="clrP tx5"
+          placeholder="<%= ob.polyT('purchase.completeSection.vendorMessagePlaceholder') %>"
+          maxlength="<%= ob.maxMessageLength %>"
+          rows="5"></textarea>
+    </div>
+  </div>
+  <div class="flex gutterH">
+    <% const orderLink = `<a class="txU" href="#transactions/purchases?orderId=${ob.orderID}">${ob.polyT('purchase.completeSection.vendorMessageLink')}</a>`; %>
+    <div class="flexExpand tx5 clrTEm">
+      <span class="hide js-messageSent">
+        <%= ob.polyT('purchase.completeSection.vendorMessageSent', { name: ob.vendorName, orderLink }) %>
+      </span>
+    </div>
+    <button class="btn floR clrP clrBr clrSh2 js-send disabled">Send</button>
+  </div>
+</div>

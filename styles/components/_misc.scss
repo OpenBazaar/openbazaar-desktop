@@ -36,6 +36,48 @@
 
 .shapeShiftIcon {
   @extend .btcIcon;
-  background-color: #000;
-  border-radius: 4px;
+}
+
+.copyNotification {
+  font-weight: bold;
+  font-size: $baseFontSize;
+  margin-left: $padMd;
+  padding: $padSm;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+.copyNotification.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ratingStrip {
+  .ratingIcons {
+    display: inline-flex;
+    flex-direction: row-reverse;
+
+    .ratingIcon {
+      opacity: 0.4;
+
+      &.selected {
+        opacity: 1;
+      }
+
+      &:hover {
+        opacity: 1;
+
+        & ~ * {
+          opacity: 1;
+        }
+      }
+    }
+  }
 }

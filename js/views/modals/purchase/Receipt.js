@@ -18,12 +18,18 @@ export default class extends BaseView {
       throw new Error('Please provide a listing model');
     }
 
+    if (!options.prices) {
+      throw new Error('Please provide the prices array');
+    }
+
+    this.prices = options.prices;
+
     this.listenTo(this.model.get('items').at(0), 'change', () => this.render());
     this.listenTo(this.model.get('items').at(0).get('shipping'), 'change', () => this.render());
   }
 
   className() {
-    return 'receipt flexColRows gutterVSm';
+    return 'receipt flexColRows gutterVSm tx5b';
   }
 
   get coupons() {
@@ -38,30 +44,14 @@ export default class extends BaseView {
     this._coupons = filteredCoupons.map(coupon => coupon.toJSON());
   }
 
-  get prices() {
-    // create an array of price objects that matches the items in the order
-    const prices = [];
-    this.model.get('items').forEach((item) => {
-      const priceObj = {};
-      const sName = item.get('shipping').get('name');
-      const sService = item.get('shipping').get('service');
-      const sOpt = this.options.listing.get('shippingOptions').findWhere({ name: sName });
-
-      priceObj.price = this.options.listing.get('item').get('price');
-      priceObj.sPrice = sOpt ? sOpt.get('services').findWhere({ name: sService }).get('price') : 0;
-      prices.push(priceObj);
-    });
-    return prices;
-  }
-
   render() {
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
+        ...this.model.toJSON(),
         listing: this.options.listing.toJSON(),
         coupons: this.coupons,
         displayCurrency: app.settings.get('localCurrency'),
         prices: this.prices,
-        ...this.model.toJSON(),
       }));
     });
 

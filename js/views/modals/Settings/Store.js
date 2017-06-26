@@ -49,7 +49,7 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.modsSelected, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListSelected, {
+      this.addModToList(model, collection, this.$modListSelectedInner, {
         cardState: 'selected',
         notSelected: 'deselected',
       });
@@ -71,7 +71,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsByID, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListByID, {
+      this.addModToList(model, collection, this.$modListByIDInner, {
         cardState: 'unselected',
         notSelected: 'unselected',
       });
@@ -91,7 +91,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(this.modsAvailable, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListAvailable, {
+      this.addModToList(model, collection, this.$modListAvailableInner, {
         cardState: 'unselected',
         notSelected: 'unselected',
       });
@@ -140,7 +140,7 @@ export default class extends baseVw {
 
     // if DOM is available, set DOM state
     if (target) {
-      target.toggleClass('hasMods', !!collection.length);
+      target.parent().toggleClass('hasMods', !!collection.length);
     }
 
     if (model) {
@@ -385,14 +385,29 @@ export default class extends baseVw {
       (this._$modListSelected = this.$('.js-modListSelected'));
   }
 
+  get $modListSelectedInner() {
+    return this._$modListSelectedInner ||
+      (this._$modListSelectedInner = this.$('.js-modListSelectedInner'));
+  }
+
   get $modListByID() {
     return this._$modListByID ||
       (this._$modListByID = this.$('.js-modListByID'));
   }
 
+  get $modListByIDInner() {
+    return this._$modListByIDInner ||
+      (this._$modListByIDInner = this.$('.js-modListByIDInner'));
+  }
+
   get $modListAvailable() {
     return this._$modListAvailable ||
       (this._$modListAvailable = this.$('.js-modListAvailable'));
+  }
+
+  get $modListAvailableInner() {
+    return this._$modListAvailableInner ||
+      (this._$modListAvailableInner = this.$('.js-modListAvailableInner'));
   }
 
   get $submitModByIDInput() {
@@ -460,6 +475,9 @@ export default class extends baseVw {
       this._$modListSelected = null;
       this._$modListByID = null;
       this._$modListAvailable = null;
+      this._$modListSelectedInner = null;
+      this._$modListByIDInner = null;
+      this._$modListAvailableInner = null;
       this._$submitModByIDInput = null;
       this._$submitModByID = null;
       this._$submitModByIDInputError = null;
@@ -471,7 +489,7 @@ export default class extends baseVw {
 
       // if mods are already available, add them now
       this.modsSelected.each((mod) => {
-        this.addModToList(mod, this.modsSelected, this.$modListSelected, {
+        this.addModToList(mod, this.modsSelected, this.$modListSelectedInner, {
           cardState: 'selected',
           notSelected: 'deselected',
         });
@@ -479,7 +497,7 @@ export default class extends baseVw {
       if (this.modsSelected.notFetchedYet.length) this.$modListSelected.addClass('processing');
 
       this.modsByID.each((mod) => {
-        this.addModToList(mod, this.modsByID, this.$modListByID, {
+        this.addModToList(mod, this.modsByID, this.$modListByIDInner, {
           cardState: 'unselected',
           notSelected: 'unselected',
         });
@@ -487,7 +505,7 @@ export default class extends baseVw {
       if (this.modsByID.notFetchedYet.length) this.$modListByID.addClass('processing');
 
       this.modsAvailable.each((mod) => {
-        this.addModToList(mod, this.modsAvailable, this.$modListAvailable, {
+        this.addModToList(mod, this.modsAvailable, this.$modListAvailableInner, {
           cardState: 'unselected',
           notSelected: 'unselected',
         });

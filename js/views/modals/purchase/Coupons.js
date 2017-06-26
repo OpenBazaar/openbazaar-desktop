@@ -8,8 +8,8 @@ export default class extends BaseModal {
     super(options);
     this.options = options;
 
-    if (!options.listingPrice) {
-      throw new Error('Please provide a price for the listing.');
+    if (typeof options.listingPrice !== 'number') {
+      throw new Error('Please provide a numerical price for the listing.');
     }
 
     this.couponCodes = [];

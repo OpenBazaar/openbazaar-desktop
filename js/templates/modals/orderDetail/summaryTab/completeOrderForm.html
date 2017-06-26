@@ -1,0 +1,58 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.completeOrderForm.heading') %></h2>
+<div class="border clrBr padMd">
+  <div class="flex gutterHLg">
+    <div class="col9">
+      <div class="flexVBase rowSm">
+        <label class="txB tx5 required flexNoShrink" for="completeOrderReview"><%= ob.polyT('orderDetail.summaryTab.completeOrderForm.reviewLabel') %></label>
+        <div class="flexHRight">
+          <span class="clrT2 tx6"><%= ob.polyT('orderDetail.summaryTab.completeOrderForm.maxReviewChars', { max: ob.constraints.maxReviewCharacters }) %></span>
+        </div>
+      </div>
+      <% if (ob.errors.review) print(ob.formErrorTmpl({ errors: ob.errors.review })) %>
+      <textarea rows="8" name="review" class="clrBr clrP clrSh2 rowMd" id="completeOrderReview" placeholder="Write your review here…" maxlength="<%= ob.constraints.maxReviewCharacters %>"><%= ob.review %></textarea>
+      <div class="flexVCent gutterH">
+        <%= ob.processingButton({
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-completeOrder ${ob.isCompleting ? 'processing' : ''}`,
+          btnText: ob.polyT('orderDetail.summaryTab.completeOrderForm.btnCompleteOrder'),
+        }) %>
+        <div class="gutterHSm">
+          <% if (ob.errors.anonymous) print(ob.formErrorTmpl({ errors: ob.errors.anonymous })) %>
+          <input
+              type="checkbox"
+              name="anonymous"
+              id="completeOrderAnon"
+              class="centerLabel"
+              <% if (ob.anonymous) print('checked') %>>
+          <label for="completeOrderAnon" class="clrT2 tx5b"><%= ob.polyT('orderDetail.summaryTab.completeOrderForm.anonCheckLabel') %></label>
+        </div>
+      </div>
+    </div>
+    <div class="col3 ratingsCol">
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.overall') %></div>
+        <% if (ob.errors.overall) print(ob.formErrorTmpl({ errors: ob.errors.overall })) %>
+        <div class="ratingsContainer" data-rating-type="overall"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.quality') %></div>
+        <% if (ob.errors.quality) print(ob.formErrorTmpl({ errors: ob.errors.quality })) %>
+        <div class="ratingsContainer" data-rating-type="quality"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.asAdvertised') %></div>
+        <% if (ob.errors.description) print(ob.formErrorTmpl({ errors: ob.errors.description })) %>
+        <div class="ratingsContainer" data-rating-type="description"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.delivery') %></div>
+        <% if (ob.errors.deliverySpeed) print(ob.formErrorTmpl({ errors: ob.errors.deliverySpeed })) %>
+        <div class="ratingsContainer" data-rating-type="deliverySpeed"></div>
+      </div>
+      <div class="row">
+        <div class="txB tx5"><%= ob.polyT('orderDetail.summaryTab.ratingLabels.service') %></div>
+        <% if (ob.errors.customerService) print(ob.formErrorTmpl({ errors: ob.errors.customerService })) %>
+        <div class="ratingsContainer" data-rating-type="customerService"></div>
+      </div>
+    </div>
+  </div>
+</div>
