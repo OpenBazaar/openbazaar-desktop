@@ -1,3 +1,6 @@
-<div class="pad">
-  <h1>User not found</h1>
+<div class="tx5">
+  <h1 class="txCtr"><%= ob.polyT('errorPage.userNotFoundTitle') %></h1>
+  <% if (ob.user) { %>
+    <p class="txCtr"><%= ob.polyT('errorPage.userNotFoundMsg', { user: ob.user }) %></p>
+  <% } %>
 </div>

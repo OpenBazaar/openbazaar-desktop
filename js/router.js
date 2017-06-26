@@ -109,7 +109,7 @@ export default class ObRouter extends Router {
     getGuid(handle).done((guid) => {
       this.user(guid, ...args);
     }).fail(() => {
-      this.userNotFound();
+      this.userNotFound(handle);
     });
   }
 
@@ -193,6 +193,22 @@ export default class ObRouter extends Router {
     this.once('will-route', onWillRoute);
 
     $.whenAll(profileFetch, listingFetch).done(() => {
+      if (pageState === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
+        // the user does not have an active store and this is not our own node
+        if (state) {
+          // You've explicitly tried to navigate to the store tab. Since it's not
+          // available, we'll re-route to page-not-found
+          this.pageNotFound();
+          return;
+        }
+
+        // You've attempted to find a user with no particular tab. Since store is not available
+        // we'll take you to the home tab.
+        this.navigate(`${guid}/home${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true,
+        });
+      }
+
       this.loadPage(
         new UserPage({
           model: profile,
@@ -207,9 +223,10 @@ export default class ObRouter extends Router {
       // todo: If really not found (404), route to
       // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
-        this.userNotFound();
+        this.userNotFound(guid);
       } else if (listingFetch.state() === 'rejected') {
-        this.listingNotFound();
+        // this.listingError(listingFetch, listing.get('slug'), `#${guid}/store`)
+        this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
       }
     })
       .always(() => (this.off(null, onWillRoute)));
@@ -256,42 +273,49 @@ export default class ObRouter extends Router {
     );
   }
 
-  userNotFound() {
+  userNotFound(user) {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/userNotFound.html' }).render()
+      new TemplateOnly({ template: 'error-pages/userNotFound.html' }).render({ user })
     );
   }
 
   pageNotFound() {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/pageNotFound.html' }).render()
+      new TemplateOnly({
+        template: 'error-pages/pageNotFound.html',
+      }).render()
     );
   }
 
-  listingNotFound() {
+  listingNotFound(listing, link) {
     this.loadPage(
-      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render()
+      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render({ listing, link })
     );
   }
 
-  listingError(failedXhr) {
+  listingError(failedXhr, listing, storeUrl) {
     if (!failedXhr) {
       throw new Error('Please provide the failed Xhr request');
     }
 
     if (failedXhr.status === 404) {
-      this.listingNotFound();
+      this.listingNotFound(listing, storeUrl);
     } else {
-      let content = '<p>There was an error retreiving the listing.</p>';
+      let failErr = '';
 
       if (failedXhr.responseText) {
         const reason = failedXhr.responseJSON && failedXhr.responseJSON.reason ||
           failedXhr.responseText;
-        content += `<p>${reason}</p>`;
+        failErr += `\n\n${reason}`;
       }
 
       this.loadPage(
-        new TemplateOnly({ template: 'error-pages/genericError.html' }).render({ content })
+        new TemplateOnly({ template: 'error-pages/listingError.html' })
+          .render({
+            listing,
+            storeUrl,
+            failErr,
+          })
       );
     }
   }

@@ -68,6 +68,10 @@
           </div>
         </div>
       </div>
+        <div class="contentBox row pad clrP clrBr js-inactiveWarning <% if (ob.vendor) print('hide') %>">
+          <% const inactiveLink = `<button class="btnTxtOnly txU txUnb clrT2 js-activateStore">${ob.polyT('userPage.store.inactiveLink')}</button>`; %>
+          <span class="tx5"><%= ob.parseEmojis('🔒') %> <%= ob.polyT('userPage.store.inactive', { link: inactiveLink }) %></span>
+        </div>
       <div class="js-listingsContainer"></div>
       <div class="txCtr padGi clrP clrSh2 clrBr tx4 contentBox js-noResults hide">
         <p><%= ob.polyT('userPage.store.noListingsFound') %></p>
