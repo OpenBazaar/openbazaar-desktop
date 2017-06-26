@@ -599,7 +599,7 @@
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
     "DIGITAL_GOOD": "Digital Good",
-    "SERVICE": "Service",
+    "SERVICE": "Service"
   },
   "conditionTypes": {
     "NEW": "New",
