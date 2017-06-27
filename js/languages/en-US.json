@@ -113,6 +113,7 @@
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
+    "getFollowingError": "There was an error when determining if this user follows you.",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
@@ -1303,7 +1304,7 @@
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
-  },  
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

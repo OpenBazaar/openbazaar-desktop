@@ -3,6 +3,7 @@ import userShort from '../UserCard';
 import app from '../../app';
 import Follows from '../../collections/Followers';
 import { followedByYou, followsYou } from '../../utils/follow';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -18,17 +19,14 @@ export default class extends BaseVw {
       });
       this.followCol.fetch().done(() => {
         this[`updateViewer${this.followType}`](true);
-        this.render();
       });
 
       this.listenTo(app.ownFollowing, 'update', () => {
         this.updateViewerFollowers();
-        this.render();
       });
 
       this.listenTo(app.ownFollowers, 'update', () => {
         this.updateViewerFollowing();
-        this.render();
       });
     } else {
       this.followCol = app[`own${this.followType}`];
@@ -53,24 +51,46 @@ export default class extends BaseVw {
         this.followCol.remove(app.profile.id); // remove by id
       }
     }
+    this.render();
   }
 
   updateViewerFollowing() {
     /* if the viewer is unfollowed or followed, update the following list */
     if (this.followType === 'Following' && !this.options.ownPage) {
-      const isFollowingYou = followsYou(this.model.id);
-      // if this page has followed the viewer add them
-      if (isFollowingYou) {
-        this.followCol.unshift({ guid: app.profile.id });
-        // if this page has unfollowed the viewer remove them
-      } else if (!isFollowingYou) {
-        this.followCol.remove(app.profile.id); // remove by id
-      }
+      if (this.followsYou) this.followsYou.abort;
+
+      this.followsYou = followsYou(this.model.id)
+        .done(data => {
+          if(data.followsMe) {
+            // if this page has followed the viewer add them
+            this.followCol.unshift({ guid: app.profile.id });
+          } else {
+            this.followCol.remove(app.profile.id);
+          }
+        })
+        .fail(jqXhr => {
+          // this should normally never result in an error
+          if (jqXhr.statusText === 'abort') return;
+
+          const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+          openSimpleMessage(
+            app.polyglot.t('userPage.getFollowingError'),
+            failReason
+          );
+        })
+        .always(() => {
+        this.render();
+      });
     }
   }
 
   className() {
     return 'userPageFollow flexRow';
+  }
+
+  remove() {
+    if (this.followsYou) this.followsYou.abort();
+    super.remove();
   }
 
   render() {
