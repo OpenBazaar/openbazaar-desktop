@@ -794,8 +794,6 @@ export default class extends BaseVw {
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
 
       if (this.orderDetails) this.orderDetails.remove();
-      console.log('sizzle');
-      window.sizzle = this.contract;
       this.orderDetails = this.createChild(OrderDetails, {
         model: this.contract,
         moderator: this.moderator,
