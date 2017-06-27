@@ -56,7 +56,10 @@ export default class extends BaseModel {
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
 
+        // Temporary to account for server bug:
         // https://github.com/OpenBazaar/openbazaar-go/issues/548
+        // Sometimes the payment amounts are coming back as enormously inflated strings.
+        // For now, we'll just make them dummy values.
         if (typeof response.contract.disputeResolution.payout.buyerOutput.amount === 'string') {
           response.contract.disputeResolution.payout.buyerOutput.amount = 25000;
         }
