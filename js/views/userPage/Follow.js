@@ -57,11 +57,11 @@ export default class extends BaseVw {
   updateViewerFollowing() {
     /* if the viewer is unfollowed or followed, update the following list */
     if (this.followType === 'Following' && !this.options.ownPage) {
-      if (this.followsYou) this.followsYou.abort;
+      if (this.followsYou) this.followsYou.abort();
 
       this.followsYou = followsYou(this.model.id)
         .done(data => {
-          if(data.followsMe) {
+          if (data.followsMe) {
             // if this page has followed the viewer add them
             this.followCol.unshift({ guid: app.profile.id });
           } else {
@@ -79,8 +79,8 @@ export default class extends BaseVw {
           );
         })
         .always(() => {
-        this.render();
-      });
+          this.render();
+        });
     }
   }
 
