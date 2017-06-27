@@ -48,15 +48,21 @@ export default class extends BaseModel {
       response.contract.buyerOrder.payment.amount =
         integerToDecimal(response.contract.buyerOrder.payment.amount, true);
 
-      // if (response.contract.disputeResolution) {
-      //   response.contract.disputeResolution.payout.buyerOutput.amount =
-      //     integerToDecimal(response.contract.disputeResolution.payout.buyerOutput.amount, true);
-      //   response.contract.disputeResolution.payout.buyerOutput.amount =
-      //     integerToDecimal(response.contract.disputeResolution.payout.vendorOutput.amount, true);
-      //   response.contract.disputeResolution.payout.buyerOutput.amount =
-      //     integerToDecimal(response.contract.disputeResolution.payout.moderatorOutput.amount,
-      //     true);
-      // }
+      if (response.contract.disputeResolution) {
+        response.contract.disputeResolution.payout.buyerOutput =
+          response.contract.disputeResolution.payout.buyerOutput || {};
+        response.contract.disputeResolution.payout.vendorOutput =
+          response.contract.disputeResolution.payout.vendorOutput || {};
+        response.contract.disputeResolution.payout.moderatorOutput =
+          response.contract.disputeResolution.payout.moderatorOutput || {};
+
+        response.contract.disputeResolution.payout.buyerOutput.amount =
+          integerToDecimal(response.contract.disputeResolution.payout.buyerOutput.amount, true);
+        response.contract.disputeResolution.payout.vendorOutput.amount =
+          integerToDecimal(response.contract.disputeResolution.payout.vendorOutput.amount, true);
+        response.contract.disputeResolution.payout.moderatorOutput.amount =
+          integerToDecimal(response.contract.disputeResolution.payout.moderatorOutput.amount, true);
+      }
     }
 
     response.paymentAddressTransactions = response.paymentAddressTransactions || [];

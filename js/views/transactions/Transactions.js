@@ -425,6 +425,7 @@ export default class extends baseVw {
       }).done((data) => {
         if (this.socket) {
           this.listenTo(this.socket, 'message', (e) => {
+            if (!e.jsonData.peerId) return;
             if (e.jsonData.id === data.id) {
               this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile,
                 { parse: true }));
