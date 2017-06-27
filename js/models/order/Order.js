@@ -54,7 +54,8 @@ export default class extends BaseModel {
       //   response.contract.disputeResolution.payout.buyerOutput.amount =
       //     integerToDecimal(response.contract.disputeResolution.payout.vendorOutput.amount, true);
       //   response.contract.disputeResolution.payout.buyerOutput.amount =
-      //     integerToDecimal(response.contract.disputeResolution.payout.moderatorOutput.amount, true);
+      //     integerToDecimal(response.contract.disputeResolution.payout.moderatorOutput.amount,
+      //     true);
       // }
     }
 
