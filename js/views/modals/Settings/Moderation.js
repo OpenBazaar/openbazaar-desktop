@@ -36,7 +36,7 @@ export default class extends baseVw {
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({
         moderator: this.profile.get('moderator'),
-        modInfo: this.profile.get('moderatorInfo').toJSON(),
+        moderatorInfo: this.profile.get('moderatorInfo').toJSON(),
       });
     });
   }
