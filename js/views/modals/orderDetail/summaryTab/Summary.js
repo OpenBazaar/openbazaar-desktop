@@ -20,6 +20,7 @@ import CompleteOrderForm from './CompleteOrderForm';
 import OrderComplete from './OrderComplete';
 import DisputeStarted from './DisputeStarted';
 import DisputePayout from './DisputePayout';
+import DisputeAcceptance from './DisputeAcceptance';
 import PayForOrder from '../../../modals/purchase/Payment';
 
 export default class extends BaseVw {
@@ -114,6 +115,10 @@ export default class extends BaseVw {
         this.completeOrderForm.remove();
         this.completeOrderForm = null;
       }
+
+          // if (this.buyer.id === app.profile.id) {
+          //   this.renderCompleteOrderForm();
+          // }      
     });
 
     if (!this.isCase()) {
@@ -213,16 +218,6 @@ export default class extends BaseVw {
           // The timeout is needed in the handler so the updated
           // order state is available.
           setTimeout(() => this.renderDisputePayoutView());
-        } else {
-          // NOTE!!!!!!!
-          // NOTE!!!!!!!
-          // NOTE!!!!!!!
-          // Temporarily putting this here. Once the server issue is
-          // fixed and a disputeClosed event comes, then this should
-          // go in the change handler of that event.
-          if (this.buyer.id === app.profile.id) {
-            this.renderCompleteOrderForm();
-          }
         }
       });
 
@@ -701,6 +696,36 @@ export default class extends BaseVw {
     this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
   }
 
+  renderDisputeAcceptanceView() {
+    const data = this.contract.get('disputeAcceptance');
+
+    if (!data) {
+      throw new Error('Unable to create the Dispute Acceptance view because the ' +
+        'disputeAcceptance data object has not been set.');
+    }
+
+    const closer = data.closedBy ===
+      this.buyer.id ? this.buyer : this.vendor;
+
+    if (this.disputeAcceptance) this.disputeAcceptance.remove();
+    this.disputeAcceptance = this.createChild(DisputeAcceptance, {
+      dataObject: data,
+      initialState: {
+        acceptedByBuyer: closer.id === this.buyer.id,
+        buyerViewing: app.profile.id === this.buyer.id,
+      },
+    });
+
+    closer.getProfile()
+      .done(profile =>
+        this.disputeAcceptance.setState({
+          closerName: profile.get('name'),
+          closerAvatarHashes: profile.get('avatarHashes').toJSON(),
+        }));
+
+    this.$subSections.prepend(this.disputeAcceptance.render().el);
+  }
+
   /**
    * Will render sub-sections in order based on their timestamp. Exempt from
    * this are the Order Details, Payment Details and Accepted sections which
@@ -755,6 +780,14 @@ export default class extends BaseVw {
         function: this.renderDisputePayoutView,
         timestamp:
           (new Date(timestamp)),
+      });
+    }
+
+    if (this.contract.get('disputeAcceptance')) {
+      sections.push({
+        function: this.renderDisputeAcceptanceView,
+        timestamp:
+          (new Date(this.contract.get('disputeAcceptance').timestamp)),
       });
     }
 

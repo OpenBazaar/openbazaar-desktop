@@ -1115,6 +1115,14 @@
           "btnConfirm": "Yes, Accept"
         }
       },
+      "disputeAcceptance": {
+        "heading": "Dispute Closed",
+        "genericBuyerAcceptedPayout": "The buyer accepted the dispute payout",
+        "genericVendorAcceptedPayout": "The vendor accepted the dispute payout",
+        "userAcceptedPayout": "%{name} accepted the dispute payout",
+        "orderCompleteWhenYouReview": "The order will be complete when you leave a review.",
+        "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review."
+      },
       "orderDetails": {
         "progressBarStates": {
           "paid": "Paid",

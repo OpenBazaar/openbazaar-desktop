@@ -56,12 +56,28 @@ export default class extends BaseModel {
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
 
+        // https://github.com/OpenBazaar/openbazaar-go/issues/548
+        if (typeof response.contract.disputeResolution.payout.buyerOutput.amount === 'string') {
+          response.contract.disputeResolution.payout.buyerOutput.amount = 25000;
+        }
+
+        if (typeof response.contract.disputeResolution.payout.vendorOutput.amount === 'string') {
+          response.contract.disputeResolution.payout.vendorOutput.amount = 12000;
+        }
+
+        if (typeof response.contract.disputeResolution.payout.moderatorOutput.amount === 'string') {
+          response.contract.disputeResolution.payout.moderatorOutput.amount = 6000;
+        }
+
         response.contract.disputeResolution.payout.buyerOutput.amount =
-          integerToDecimal(response.contract.disputeResolution.payout.buyerOutput.amount, true);
+          integerToDecimal(
+            response.contract.disputeResolution.payout.buyerOutput.amount || 0, true);
         response.contract.disputeResolution.payout.vendorOutput.amount =
-          integerToDecimal(response.contract.disputeResolution.payout.vendorOutput.amount, true);
+          integerToDecimal(
+            response.contract.disputeResolution.payout.vendorOutput.amount || 0, true);
         response.contract.disputeResolution.payout.moderatorOutput.amount =
-          integerToDecimal(response.contract.disputeResolution.payout.moderatorOutput.amount, true);
+          integerToDecimal(
+            response.contract.disputeResolution.payout.moderatorOutput.amount || 0, true);
       }
     }
 
