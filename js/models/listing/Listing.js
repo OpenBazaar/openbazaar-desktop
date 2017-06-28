@@ -139,7 +139,6 @@ export default class extends BaseModel {
           app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
       }
     } else {
-
       if (method !== 'delete') {
         options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
