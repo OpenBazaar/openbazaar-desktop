@@ -111,14 +111,10 @@ export default class extends BaseVw {
       }
 
       if (this.completeOrderForm &&
-        ['FULFILLED', 'RESOLVED'].indexOf(state) > -1) {
+        ['FULFILLED', 'RESOLVED'].indexOf(state) === -1) {
         this.completeOrderForm.remove();
         this.completeOrderForm = null;
       }
-
-          // if (this.buyer.id === app.profile.id) {
-          //   this.renderCompleteOrderForm();
-          // }      
     });
 
     if (!this.isCase()) {
@@ -227,6 +223,9 @@ export default class extends BaseVw {
           this.model.fetch();
         }
       });
+
+      this.listenTo(this.contract, 'change:disputeAcceptance',
+        () => this.renderDisputeAcceptanceView());
     } else {
       this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
         if (e.id === this.model.id) {
@@ -237,9 +236,6 @@ export default class extends BaseVw {
 
       this.listenTo(this.model, 'change:resolution',
         () => this.renderDisputePayoutView());
-
-      this.listenTo(this.model, 'change:disputeAcceptance',
-        () => this.renderDisputeAcceptanceView());
     }
 
     const serverSocket = getSocket();
