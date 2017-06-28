@@ -35,10 +35,7 @@ export default class extends BaseModel {
     let returnSync = 'will-set-later';
 
     if (method === 'delete') {
-      options.url = options.url || app.getServerUrl('ob/listing/');
-      options.data = JSON.stringify({
-        slug: this.get('slug'),
-      });
+      options.url = options.url || app.getServerUrl(`ob/listing/${this.guid}/${this.get('slug')}`);
     }
 
     returnSync = super.sync(method, model, options);

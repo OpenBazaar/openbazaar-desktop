@@ -139,9 +139,9 @@ export default class extends BaseModel {
           app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
       }
     } else {
-      options.url = options.url || app.getServerUrl('ob/listing/');
 
       if (method !== 'delete') {
+        options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
         options.attrs = options.attrs || this.toJSON();
 
@@ -213,9 +213,8 @@ export default class extends BaseModel {
         // remove the hash
         delete options.attrs.hash;
       } else {
-        options.data = JSON.stringify({
-          slug: this.get('slug'),
-        });
+        options.url = options.url ||
+          app.getServerUrl(`ob/listing/${this.guid}/${this.get('slug')}`);
       }
     }
 
