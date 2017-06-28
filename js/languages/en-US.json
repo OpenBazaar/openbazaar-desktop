@@ -91,6 +91,8 @@
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
+    "createListing": "Create Listing",
+    "block": "Block",
     "about": "About",
     "aboutEmpty": "About is empty…",
     "follow": "Follow",
@@ -125,6 +127,8 @@
       "sortBy": "Sort By",
       "countListings": "%{smart_count} listing |||| %{smart_count} listings",
       "countListingsFound": "%{countListings} found",
+      "inactive": "Your store is currently inactive and hidden from the public. %{link}",
+      "inactiveLink": "Change",
       "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
       "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
       "popinRefreshLink": "refresh",
@@ -1285,6 +1289,18 @@
     "provideShipper": "Please provide a shipping carrier.",
     "provideUrl": "Please provide a file url.",
     "invalidUrl": "Please provide a valid url."
+  },
+  "errorPage": {
+    "userNotFoundTitle": "This User Could Not Be Found",
+    "userNotFoundMsg": "%{user} was not found on the network. Make sure you have the correct handle or peerID.",
+    "listingNotFoundTitle": "This Listing Could Not Be Found",
+    "listingNotFoundLink": "Click here to browse the other listings in this store.",
+    "listingNotFoundMsg": "%{listing} could not be found.",
+    "pageNotFoundTitle": "This Page Could Not Be Found",
+    "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
+    "genericErrorTitle": "There Was An Error",
+    "listingErrorTitle": "Unable To Fetch Listing",
+    "listingErrorMsg": "There was an error fetching listing %{listing}"
   },
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",

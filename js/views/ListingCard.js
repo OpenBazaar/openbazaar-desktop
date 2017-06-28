@@ -32,7 +32,7 @@ export default class extends baseVw {
       // If a vendor object is available (part of proposed search API), please pass it in.
       this.ownerGuid = this.model.get('vendor').peerID;
     } else {
-      // Otherwise please provide a boolean indicating ownListing.
+      // Otherwise please provide the store owner's guid.
       this.ownerGuid = opts.ownerGuid;
     }
 
@@ -158,7 +158,7 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail((xhr) => {
-          app.router.listingError(xhr);
+          app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
     }
   }
