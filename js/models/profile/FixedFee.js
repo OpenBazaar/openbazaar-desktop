@@ -6,7 +6,7 @@ import is from 'is_js';
 export default class extends BaseModel {
   defaults() {
     return {
-      currencyCode: 'BTC',
+      currencyCode: '',
       amount: 0,
     };
   }
