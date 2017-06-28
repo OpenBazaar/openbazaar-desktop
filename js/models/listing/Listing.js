@@ -139,7 +139,6 @@ export default class extends BaseModel {
           app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
       }
     } else {
-
       if (method !== 'delete') {
         options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
@@ -228,11 +227,12 @@ export default class extends BaseModel {
     if (method === 'create' || method === 'update') {
       const attrsBeforeSync = this.lastSyncedAttrs;
 
-      returnSync.done(() => {
+      returnSync.done(data => {
         const hasChanged = () => (!_.isEqual(attrsBeforeSync, this.toJSON()));
 
-        // todo: Put in a changedAttrs function that includes
-        // which attrs have changed.
+        if (data.slug) {
+          this.set('slug', data.slug);
+        }
 
         listingEvents.trigger('saved', this, {
           ...eventOpts,

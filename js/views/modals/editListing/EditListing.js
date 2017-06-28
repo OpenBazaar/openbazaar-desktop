@@ -673,6 +673,7 @@ export default class extends BaseModal {
         type: 'message',
         duration: 99999999999999,
       }).on('clickViewListing', () => {
+        console.log('I need the slug n.o.w');
         const url = `#${app.profile.id}/store/${this.model.get('slug')}`;
 
         // This couldn't have been a simple href because that URL may already be the
