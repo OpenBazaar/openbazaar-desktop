@@ -237,6 +237,9 @@ export default class extends BaseVw {
 
       this.listenTo(this.model, 'change:resolution',
         () => this.renderDisputePayoutView());
+
+      this.listenTo(this.model, 'change:disputeAcceptance',
+        () => this.renderDisputeAcceptanceView());
     }
 
     const serverSocket = getSocket();
@@ -547,12 +550,6 @@ export default class extends BaseVw {
   }
 
   renderCompleteOrderForm() {
-    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) === -1 ||
-      this.buyer.id !== app.profile.id) {
-      throw new Error('The complete order form should only be shown for the buyer and ' +
-        'when the order is in a state of FULFILLED or REOLVED');
-    }
-
     const completingObject = completingOrder(this.model.id);
     const model = new OrderCompletion(
       completingObject ? completingObject.data : { orderId: this.model.id });
@@ -588,10 +585,7 @@ export default class extends BaseVw {
 
     this.$subSections.prepend(this.fulfilled.render().el);
 
-    // If the order is not complete and this is the buyer, we'll
-    // render a complete order form.
-    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
-      this.buyer.id === app.profile.id) {
+    if (this.model.get('state') === 'FULFILLED' && this.buyer.id === app.profile.id) {
       this.renderCompleteOrderForm();
     }
   }
@@ -724,6 +718,10 @@ export default class extends BaseVw {
         }));
 
     this.$subSections.prepend(this.disputeAcceptance.render().el);
+
+    if (this.model.get('state') === 'RESOLVED' && this.buyer.id === app.profile.id) {
+      this.renderCompleteOrderForm();
+    }
   }
 
   /**
