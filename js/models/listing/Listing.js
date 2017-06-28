@@ -214,7 +214,7 @@ export default class extends BaseModel {
         delete options.attrs.hash;
       } else {
         options.url = options.url ||
-          app.getServerUrl(`ob/listing/${this.guid}/${this.get('slug')}`);
+          app.getServerUrl(`ob/listing/${this.get('slug')}`);
       }
     }
 
