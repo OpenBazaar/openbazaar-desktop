@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import 'jquery-zoom';
-import twemoji from 'twemoji';
 import is from 'is_js';
 import app from '../../../app';
 import '../../../lib/select2';
@@ -13,6 +12,7 @@ import { launchEditListingModal } from '../../../utils/modalManager';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
+import Rating from './Rating';
 import Reviews from './Reviews';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage from '../../PopInMessage';
@@ -92,6 +92,29 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
+    this.rating = this.createChild(Rating);
+
+    // get the ratings data, if any
+    this.ratingsFetch =
+      $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
+        .done(data => this.onRatings(data))
+        .fail((jqXhr) => {
+          if (jqXhr.statusText === 'abort') return;
+          // if there are no ratings, no response is returned.
+          if (jqXhr.status === 200) {
+            this.onRatings();
+            return;
+          }
+          const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+          openSimpleMessage(
+            app.polyglot.t('listingDetail.errors.fetchRatings'),
+            failReason);
+        });
+
+    this.reviews = this.createChild(Reviews, {
+      async: true,
+    });
+
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
   }
@@ -126,21 +149,11 @@ export default class extends BaseModal {
   }
 
   onRatings(data = {}) {
-    const ratingText = twemoji.parse(`⭐ ${data.average.toFixed(1) || 0}`,
-      icon => (`../imgs/emojis/72X72/${icon}.png`));
-
-    const ratingTotalText = twemoji.parse(`💬 ${data.count || 0}`,
-      icon => (`../imgs/emojis/72X72/${icon}.png`));
-
-    this.$rating.html(`${ratingText} &nbsp; ${ratingTotalText}`);
-
-    if (this.reviews) this.reviews.remove();
-
-    this.reviews = this.createChild(Reviews, {
-      async: true,
-      ...data,
-    });
-    this.$reviews.append(this.reviews.render().$el);
+    this.rating.averageRating = data.average ? data.average.toFixed(2) : 0;
+    this.rating.ratingCount = data.count || 0;
+    this.rating.render();
+    this.reviews.reviewIDs = data.ratings || [];
+    this.reviews.render();
   }
 
   onClickEditListing() {
@@ -489,21 +502,16 @@ export default class extends BaseModal {
       (this._$deleteConfirmedBox = this.$('.js-deleteConfirmedBox'));
   }
 
-  get $rating() {
-    return this._$rating ||
-      (this._$rating = this.$('.js-rating'));
-  }
-
   remove() {
     if (this.editModal) this.editModal.remove();
     if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
+    if (this.ratingsFetch) this.ratingsFetch.abort();
     $(document).off(null, this.boundDocClick);
     super.remove();
   }
 
   render() {
-    super.render();
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
     loadTemplate('modals/listingDetail/listing.html', t => {
@@ -522,6 +530,10 @@ export default class extends BaseModal {
 
       super.render();
 
+      this.$('.js-rating').append(this.rating.render().$el);
+      this.$reviews = this.$('.js-reviews');
+      this.$reviews.append(this.reviews.render().$el);
+
       this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;
       this._$shipsFreeBanner = null;
@@ -533,7 +545,6 @@ export default class extends BaseModal {
       this._$shippingSection = null;
       this._$storeOwnerAvatar = null;
       this._$deleteConfirmedBox = null;
-      this._$rating = null;
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
@@ -549,11 +560,6 @@ export default class extends BaseModal {
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
       this.adjustPriceBySku();
-      this.$reviews = this.$('.js-reviews');
-
-      // get the ratings data, if any
-      $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
-        .always(data => this.onRatings(data));
     });
 
     return this;

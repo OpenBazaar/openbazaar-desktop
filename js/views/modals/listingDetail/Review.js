@@ -28,7 +28,7 @@ export default class extends baseVw {
     // the show more button is added by the parent view when it applies trunk8 to the text
     const btnTxt = app.polyglot.t('listingDetail.review.showLess');
     $(e.target).parent().trunk8('revert')
-      .append(`… <button class="btnTxtOnly trunkLink js-showLess">${btnTxt}</button>`);
+      .append(`&nbsp; <button class="btnTxtOnly trunkLink js-showLess">${btnTxt}</button>`);
   }
 
   clickShowLess(e) {

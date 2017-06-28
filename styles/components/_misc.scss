@@ -87,16 +87,12 @@
   }
 }
 
-.orderCompleteEvent {
-  .ratingStrip {
-    .ratingIcon {
-      pointer-events: none;
-    }
-  }
-}
-
 .emoji {
   height: 1em;
   width: 1em;
   margin-right: 0.3em;
+
+  &.fade {
+    opacity: .35;
+  }
 }

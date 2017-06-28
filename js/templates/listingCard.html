@@ -17,11 +17,9 @@
     </div>
     <div class="flex">
       <div class="flexExpand tx5b">
-        <%= ob.parseEmojis('⭐') %>
-        <%= ob.averageRating %>
-        &nbsp;
-        <%= ob.parseEmojis('💬') %>
-        <%= ob.ratingCount %>
+        <% const ratingCount = ob.ratingCount !== undefined ? ` (${ob.ratingCount})` : '';
+           const averageRating = ob.averageRating ? ob.averageRating.toFixed(2) : 0;
+           print(`${ob.parseEmojis('⭐')} ${averageRating}${ratingCount}`) %>
       </div>
       <div class="txB">
         <%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %>

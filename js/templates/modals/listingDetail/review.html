@@ -1,23 +1,15 @@
-<%
-const starRating = function(rating) {
-  let stars = '';
-  for(let i = 0; i < 5; i++) {
-    const fade = i >= rating ? 'fade' : '';
-    const star = ob.parseEmojis('⭐', fade);
-    stars += star;
-  }
-  return stars;
-}
-%>
-
 <div class="flexRow gutterHLg">
   <div class="col8">
-    <% if (ob.buyerID) { %>
+
       <div class="row">
+        <% if (ob.buyerID) { %>
         <% const nameLink = `<a class="clrT txU" href="${ob.buyerID.peerID}">${ob.buyerName}</a>`; %>
         <b><%= ob.polyT('listingDetail.review.title', { time: ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a'), name: nameLink }) %></b>
+        <% } else { %>
+        <b><%= ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a') %></b>
+        <% } %>
       </div>
-    <% } %>
+
     <div class="reviewTextWrapper js-reviewTextWrapper">
       <p class="reviewText js-reviewText"><%= ob.review %></p>
     </div>
