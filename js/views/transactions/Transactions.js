@@ -422,11 +422,12 @@ export default class extends baseVw {
         data: JSON.stringify(profilesToFetch),
         dataType: 'json',
         contentType: 'application/json',
-      }).done((data) => {
+      }).done(() => {
         if (this.socket) {
           this.listenTo(this.socket, 'message', (e) => {
-            if (!e.jsonData.peerId) return;
-            if (e.jsonData.id === data.id) {
+            // if (!e.jsonData.peerId) return;
+
+            if (this.profileDeferreds[e.jsonData.peerId]) {
               this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile,
                 { parse: true }));
             }
