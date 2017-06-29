@@ -6,6 +6,8 @@ import { followedByYou, followUnfollow } from '../../utils/follow';
 import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
+import { launchEditListingModal, launchSettingsModal } from '../../utils/modalManager';
+import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import MiniProfile from '../MiniProfile';
 import Home from './Home';
@@ -18,11 +20,12 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
+    this.ownPage = this.model.id === app.profile.id;
+
     this.state = options.state || 'store';
+
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
-
-    this.ownPage = this.model.id === app.profile.id;
 
     if (!this.ownPage) {
       this.followedByYou = followedByYou(this.model.id);
@@ -48,31 +51,45 @@ export default class extends baseVw {
 
   events() {
     return {
-      'click .js-tab': 'tabClick',
-      'click .js-followBtn': 'followClick',
-      'click .js-messageBtn': 'messageClick',
-      'click .js-moreBtn': 'moreClick',
+      'click .js-tab': 'clickTab',
+      'click .js-followBtn': 'clickFollow',
+      'click .js-messageBtn': 'clickMessage',
+      'click .js-moreBtn': 'clickMore',
+      'click .js-customize': 'clickCustomize',
+      'click .js-createListing': 'clickCreateListing',
     };
   }
 
-  tabClick(e) {
+  clickTab(e) {
     const targ = $(e.target).closest('.js-tab');
     this.setState(targ.attr('data-tab'));
   }
 
-  followClick() {
+  clickFollow() {
     const type = this.followedByYou ? 'unfollow' : 'follow';
 
     followUnfollow(this.model.id, type);
   }
 
-  messageClick() {
+  clickMessage() {
     // activate the chat message
     app.chat.openConversation(this.model.id);
   }
 
-  moreClick() {
+  clickMore() {
     this.$moreableBtns.toggleClass('hide');
+  }
+
+  clickCustomize() {
+    launchSettingsModal({ initTab: 'Page' });
+  }
+
+  clickCreateListing() {
+    const listingModel = new Listing({}, { guid: app.profile.id });
+
+    launchEditListingModal({
+      model: listingModel,
+    });
   }
 
   updateHeader() {

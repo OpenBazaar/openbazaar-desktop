@@ -7,6 +7,7 @@ import app from '../../app';
 import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
 import { convertCurrency, NoExchangeRateDataError } from '../../utils/currency';
+import { launchSettingsModal } from '../../utils/modalManager';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import { events as listingEvents } from '../../models/listing/';
@@ -59,6 +60,8 @@ export default class extends BaseVw {
       });
 
       this.listenTo(listingEvents, 'destroy', () => (this.showDataChangedMessage()));
+      // if the user changes their vendor setting, toggle the warning
+      this.listenTo(app.profile, 'change:vendor', () => (this.toggleInactiveWarning()));
     }
 
     this.listenTo(app.settings, 'change:country', () => (this.showShippingChangedMessage()));
@@ -93,12 +96,17 @@ export default class extends BaseVw {
       'change .js-sortBySelect': 'onChangeSortBy',
       'click .js-toggleListGridView': 'onClickToggleListGridView',
       'click .js-clearSearch': 'onClickClearSearch',
+      'click .js-activateStore': 'onClickActivateStore',
     };
   }
 
   onFilterFreeShippingChange(e) {
     this.filter.freeShipping = $(e.target).is(':checked');
     this.renderListings(this.filteredCollection());
+  }
+
+  toggleInactiveWarning() {
+    this.$inactiveWarning.toggleClass('hide', app.settings.get('vendor'));
   }
 
   onShipsToSelectChange(e) {
@@ -195,6 +203,10 @@ export default class extends BaseVw {
 
   onClickToggleListGridView() {
     this.listingsViewType = this.listingsViewType === 'list' ? 'grid' : 'list';
+  }
+
+  onClickActivateStore() {
+    launchSettingsModal({ initTab: 'Store' });
   }
 
   get listingsViewType() {
@@ -519,6 +531,11 @@ export default class extends BaseVw {
       (this._$popInMessages = this.$('.js-popInMessages'));
   }
 
+  get $inactiveWarning() {
+    return this._$inactiveWarning ||
+      (this._$inactiveWarning = this.$('.js-inactiveWarning'));
+  }
+
   remove() {
     getContentFrame().off('scroll', this.storeListingsScrollHandler);
     super.remove();
@@ -534,6 +551,7 @@ export default class extends BaseVw {
 
     loadTemplate('userPage/store.html', (t) => {
       this.$el.html(t({
+        ...this.model.toJSON(),
         isFetching,
         fetchFailed,
         fetchFailReason: this.fetchFailed && this.fetch.responseText || '',
@@ -551,6 +569,7 @@ export default class extends BaseVw {
     this._$catFilterContainer = null;
     this._$listingCount = null;
     this._$popInMessages = null;
+    this._$inactiveWarning = null;
     this._$noResults = null;
 
     this.$sortBy.select2({
