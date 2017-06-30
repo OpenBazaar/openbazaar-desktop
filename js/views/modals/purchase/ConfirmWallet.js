@@ -18,7 +18,8 @@ export default class extends BaseVw {
     this.listenTo(app.walletBalance, 'change:confirmed', () => this.render());
 
     // fetch the estimated fee and rerender when it returns
-    this.fetchEstimatedFee = $.get(app.getServerUrl('wallet/estimatefee/?feeLevel=NORMAL'))
+    const feeLevel = app.localSettings.get('defaultTransactionFee').toUpperCase();
+    this.fetchEstimatedFee = $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${feeLevel}`))
       .done(data => {
         if (this.isRemoved()) return;
         this.fee = integerToDecimal(data, true);
