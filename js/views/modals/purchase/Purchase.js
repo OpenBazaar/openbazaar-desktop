@@ -51,8 +51,8 @@ export default class extends BaseModal {
         moderated: !!this.moderatorIDs && this.moderatorIDs.length,
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
-       and add them to the order as items here.
-    */
+     and add them to the order as items here.
+     */
     const item = new Item(
       {
         listingHash: this.listing.get('hash'),
@@ -104,7 +104,7 @@ export default class extends BaseModal {
 
       this.dataChangePopIn = this.createChild(PopInMessage, {
         messageText: app.polyglot.t('purchase.purchaseDataChangedPopin',
-            { refreshLink }),
+          { refreshLink }),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
@@ -252,10 +252,18 @@ export default class extends BaseModal {
           contentType: 'application/json',
         })
           .done((data) => {
-            this.updatePageState('pending');
             this.actionBtn.render();
             this.purchase.set(this.purchase.parse(data));
-            this.payment.render();
+            this.payment = this.createChild(Payment, {
+              balanceRemaining: this.purchase.get('amount'),
+              paymentAddress: this.purchase.get('paymentAddress'),
+              orderId: this.purchase.get('orderId'),
+              isModerated: !!this.order.get('moderator'),
+            });
+            this.listenTo(this.payment, 'walletPaymentComplete',
+              (pmtCompleteData => this.completePurchase(pmtCompleteData)));
+            this.$('.js-pending').append(this.payment.render().el);
+            this.updatePageState('pending');
           })
           .fail((jqXHR) => {
             if (jqXHR.statusText === 'abort') return;
@@ -326,12 +334,12 @@ export default class extends BaseModal {
 
   get $popInMessages() {
     return this._$popInMessages ||
-        (this._$popInMessages = this.$('.js-popInMessages'));
+      (this._$popInMessages = this.$('.js-popInMessages'));
   }
 
   get $storeOwnerAvatar() {
     return this._$storeOwnerAvatar ||
-        (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
+      (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
   }
 
   get $moderatedOption() {
@@ -346,7 +354,7 @@ export default class extends BaseModal {
 
   get $moderatorSection() {
     return this._$moderatorSection ||
-        (this._$moderatorSection = this.$('.js-moderator'));
+      (this._$moderatorSection = this.$('.js-moderator'));
   }
 
   get $moderatorNote() {
@@ -356,7 +364,7 @@ export default class extends BaseModal {
 
   get $closeBtn() {
     return this._$closeBtn ||
-        (this._$closeBtn = this.$('.js-closeBtn'));
+      (this._$closeBtn = this.$('.js-closeBtn'));
   }
 
   get $shippingErrors() {
@@ -462,13 +470,7 @@ export default class extends BaseModal {
 
       // remove old view if any on render
       if (this.payment) this.payment.remove();
-      // add the pending view
-      this.payment = this.createChild(Payment, {
-        model: this.purchase,
-        order: this.order,
-      });
-      this.listenTo(this.payment, 'walletPaymentComplete', (data => this.completePurchase(data)));
-      this.$('.js-pending').append(this.payment.render().el);
+      // pending view will be added once the purchase goes through
 
       // remove old view if any on render
       if (this.complete) this.complete.remove();
