@@ -1,4 +1,5 @@
 <div class="posR">
+  <% console.log(ob) %>
   <% if (ob.phase === 'pay' || ob.phase === 'confirm') { %>
     <% const initPay = ob.listing.shippingOptions && ob.listing.shippingOptions.length ? 'disabled' : ''; %>
     <%= ob.processingButton({
