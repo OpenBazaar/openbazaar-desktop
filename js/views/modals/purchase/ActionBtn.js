@@ -27,7 +27,6 @@ export default class extends baseView {
   events() {
     return {
       'click .js-payBtn': 'clickPayBtn',
-      'click .js-pendingBtn': 'clickPendingBtn',
       'click .js-confirmPayConfirm': 'clickConfirmBtn',
       'click .js-confirmPayCancel': 'closeConfirmPay',
       'click .js-closeBtn': 'clickCloseBtn',
@@ -56,11 +55,6 @@ export default class extends baseView {
 
   closeConfirmPay() {
     this.state.phase = 'pay';
-    this.render();
-  }
-
-  clickPendingBtn() {
-    this.state.phase = 'complete';
     this.render();
   }
 

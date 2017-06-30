@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -8,6 +9,12 @@ export default class extends BaseVw {
   constructor(options = {}) {
     if (!options.displayCurrency) {
       throw new Error('Please provide a display currency.');
+    }
+
+    if (typeof options.amount !== 'number' &&
+      typeof options.amount !== 'function') {
+      throw new Error('The amount should be provided as a number or a function ' +
+        'that returns one.');
     }
 
     super(options);
@@ -49,6 +56,10 @@ export default class extends BaseVw {
     this.trigger('walletConfirm');
   }
 
+  get amount() {
+    return _.result(this.options, 'amount');
+  }
+
   remove() {
     this.fetchEstimatedFee.abort();
     super.remove();
@@ -58,8 +69,7 @@ export default class extends BaseVw {
     loadTemplate('modals/purchase/confirmWallet.html', (t) => {
       this.$el.html(t({
         displayCurrency: this.options.displayCurrency,
-        amount: this.options.amount,
-        amountBTC: this.options.amountBTC,
+        amount: this.amount,
         confirmedAmount: app.walletBalance.get('confirmed'),
         fee: this.fee,
       }));
