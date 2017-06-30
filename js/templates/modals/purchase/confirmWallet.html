@@ -1,39 +1,39 @@
 <% const requiredTotal = ob.fee ? Number(ob.amount) + Number(ob.fee) : 0;
-   const funds = ob.confirmedAmount;
-   const fundsBTC = funds ? ob.convertAndFormatCurrency(funds, 'BTC', 'BTC') : 0
-   // if the user has more funds than the required total, the fundGap is negative
-   const fundGap = requiredTotal - funds;
-   const fundGapBTC = fundGap ? ob.convertAndFormatCurrency(fundGap, 'BTC', 'BTC') : 0
-   const feeBTC = ob.fee ? ob.convertAndFormatCurrency(ob.fee, 'BTC', 'BTC') : 0;
+const funds = ob.confirmedAmount;
+const fundsBTC = funds ? ob.convertAndFormatCurrency(funds, 'BTC', 'BTC') : 0
+// if the user has more funds than the required total, the fundGap is negative
+const fundGap = requiredTotal - funds;
+const fundGapBTC = fundGap ? ob.convertAndFormatCurrency(fundGap, 'BTC', 'BTC') : 0
+const feeBTC = ob.fee ? ob.convertAndFormatCurrency(ob.fee, 'BTC', 'BTC') : 0;
 %>
 
 <div class="flexColRows gutterVSm padLg">
   <h3>
     <% if (requiredTotal && fundGap <= 0) { %>
-      <%= ob.polyT('purchase.pendingSection.confirmWallet.title') %>
+    <%= ob.polyT('purchase.pendingSection.confirmWallet.title') %>
     <% } else { %>
-      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsTitle') %>
+    <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsTitle') %>
     <% } %>
   </h3>
   <p class="tx5">
     <% const amountFiat = ob.amount ? ob.convertAndFormatCurrency(ob.amount, 'BTC', ob.displayCurrency) : 0;
-       const msg = ob.displayCurrency === 'BTC' ? 'payBTC' : 'payFiat';
+    const msg = ob.displayCurrency === 'BTC' ? 'payBTC' : 'payFiat';
 
     if (requiredTotal && fundGap <= 0) { %>
-      <%= ob.polyT(`purchase.pendingSection.confirmWallet.${msg}`, { amountBTC: ob.amountBTC, amountFiat }) %>
+    <%= ob.polyT(`purchase.pendingSection.confirmWallet.${msg}`, { amountBTC: ob.formatCurrency(ob.amount, 'BTC'), amountFiat }) %>
     <% } else { %>
-      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg1', { funds: fundsBTC }) %>
-    </p>
-    <p class="txSm">
-      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg2', { fundGap: fundGapBTC }) %>
+    <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg1', { funds: fundsBTC }) %>
+  </p>
+  <p class="txSm">
+    <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg2', { fundGap: fundGapBTC }) %>
     <% } %>
   </p>
   <% if (requiredTotal && fundGap > 0) { %>
-    <p class="txSm clrT2">
-      <i>
-      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsNote', { amount: ob.amountBTC, fee: feeBTC }) %>
-      </i>
-    </p>
+  <p class="txSm clrT2">
+    <i>
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsNote', { amount: ob.formatCurrency(ob.amount, 'BTC'), fee: feeBTC }) %>
+    </i>
+  </p>
   <% } %>
 </div>
 <hr class="unleaded clrBr" />
@@ -42,9 +42,9 @@
     <%= ob.polyT('purchase.pendingSection.confirmWallet.cancel') %>
   </a>
   <% if (requiredTotal && fundGap <= 0) { %>
-    <%= ob.processingButton({
-    className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmWalletConfirm',
-    btnText: ob.polyT('purchase.pendingSection.confirmWallet.confirm')
-    }) %>
+  <%= ob.processingButton({
+  className: 'btn clrBAttGrad clrBrDec1 clrTOnEmph js-confirmWalletConfirm',
+  btnText: ob.polyT('purchase.pendingSection.confirmWallet.confirm')
+  }) %>
   <% } %>
 </div>

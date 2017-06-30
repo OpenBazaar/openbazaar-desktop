@@ -70,6 +70,12 @@
     }
   }
 
+  .actionBtn {
+    .pendingBtn {
+      pointer-events: none;
+    }
+  }
+
   .sidebar {
     position: fixed;
     width: 234px;

@@ -1,14 +1,16 @@
-<div class="flexRow gutterH pad rowMd">
-  <div class="col5">
-    <a class="QR js-purchaseQRCode"><img src="<%= ob.qrDataUri %>"></a>
+<!--
+  This view is used by both the Purch and Order detail flows. When making changes, please ensure
+  they play nice with both areas.
+-->
+<div class="flexRow gutterHLg pad rowMd">
+  <div>
+    <a class="QR js-purchaseQRCode"><img class="js-qrCodeImg" src="<%= ob.qrDataUri %>"></a>
   </div>
-  <div class="col7">
+  <div class="flexExpand">
     <div class="flexVCent">
       <div class="flexExpand">
         <div class="rowSm">
-          <span class="h1">
-            <%= ob.polyT('purchase.pendingSection.pay', { amountBTC: ob.amountBTC }) %>
-          </span>
+          <span class="h1 js-amountDueLine"><%= ob.amountDueLine %></span>
           <button class="btnTxtOnly txUnb flipBtn js-copyAmount">
             <span class="clrTEm unFlipped"><%= ob.polyT('purchase.pendingSection.copy') %></span>
             <span class="flipped"><%= ob.polyT('purchase.pendingSection.copied') %></span>
@@ -44,7 +46,7 @@
 <div class="tx6 clrT2">
   <% const link = `<a class="clrTEm" href="https://www.openbazaar.org/bitcoin">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
   <p><%= ob.polyT('purchase.pendingSection.note1', { link }) %></p>
-  <% if (ob.moderator) { %>
+  <% if (ob.isModerated) { %>
   <p>
     <%= ob.polyT('purchase.pendingSection.note2') %>
     <br>
