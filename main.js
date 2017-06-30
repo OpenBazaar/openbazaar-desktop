@@ -432,11 +432,15 @@ function createWindow() {
     title: 'OpenBazaar',
     frame: false,
     icon: 'imgs/openbazaar-icon.png',
-    //titleBarStyle: 'hidden',
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/.tmp/index.html`);
+
+  mainWindow.webContents.session.setProxy({
+    proxyRules: 'socks5://127.0.0.1:9150',
+    proxyBypassRules: '<local>',
+  }, () => {});
 
   // Open the DevTools.
   if (process.env.NODE_ENV === 'development') {
