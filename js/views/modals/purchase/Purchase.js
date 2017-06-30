@@ -252,6 +252,7 @@ export default class extends BaseModal {
           contentType: 'application/json',
         })
           .done((data) => {
+            this.updatePageState('pending');
             this.actionBtn.render();
             this.purchase.set(this.purchase.parse(data));
             this.payment = this.createChild(Payment, {
@@ -263,7 +264,6 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            this.updatePageState('pending');
           })
           .fail((jqXHR) => {
             if (jqXHR.statusText === 'abort') return;
