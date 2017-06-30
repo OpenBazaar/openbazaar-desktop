@@ -372,14 +372,18 @@ export default class extends BaseModal {
 
   // This should not be called on a Case.
   createFulfillOrderTabView() {
-    const contractType = this.model.get('contract').type;
+    const contract = this.model.get('contract');
 
     const model = new OrderFulfillment({ orderId: this.model.id },
-      { contractType });
+      {
+        contractType: contract.type,
+        isLocalPickup: contract.isLocalPickup,
+      });
 
     const view = this.createChild(FulfillOrder, {
       model,
-      contractType,
+      contractType: contract.type,
+      isLocalPickup: contract.isLocalPickup,
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));

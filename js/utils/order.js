@@ -153,7 +153,7 @@ export function fulfillingOrder(orderId) {
   return fulfillPosts[orderId] || false;
 }
 
-export function fulfillOrder(contractType = 'PHYSICAL_GOOD', data = {}) {
+export function fulfillOrder(contractType = 'PHYSICAL_GOOD', isLocalPickup = false, data = {}) {
   if (!data || !data.orderId) {
     throw new Error('An orderId must be provided with the data.');
   }
@@ -163,7 +163,7 @@ export function fulfillOrder(contractType = 'PHYSICAL_GOOD', data = {}) {
   let post = fulfillPosts[orderId];
 
   if (!post) {
-    const model = new OrderFulfillment(data, { contractType });
+    const model = new OrderFulfillment(data, { contractType, isLocalPickup });
     post = model.save();
 
     if (!post) {
