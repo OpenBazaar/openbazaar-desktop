@@ -15,10 +15,6 @@ export default class extends BaseModel {
       .get('contractType');
   }
 
-  get orderTotal() {
-    return 99;
-  }
-
   parse(response) {
     return {
       ...response,

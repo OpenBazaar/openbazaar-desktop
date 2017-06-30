@@ -9,6 +9,7 @@ import {
 } from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
 import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
+import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
@@ -43,42 +44,11 @@ export default class extends BaseVw {
 
     this.contract = contract;
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
-
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
-    if (!options.vendor) {
-      throw new Error('Please provide a vendor object.');
-    }
-
-    if (!isValidParticipantObject(options.vendor)) {
-      throw new Error(getInvalidParticpantError('vendor'));
-    }
-
-    if (!options.buyer) {
-      throw new Error('Please provide a buyer object.');
-    }
-
-    if (!isValidParticipantObject(options.buyer)) {
-      throw new Error(getInvalidParticpantError('buyer'));
-    }
+    checkValidParticipantObject(options.buyer, 'buyer');
+    checkValidParticipantObject(options.vendor, 'vendor');
 
     if (this.contract.get('buyerOrder').payment.moderator) {
-      if (!options.moderator) {
-        throw new Error('Please provide a moderator object.');
-      }
-
-      if (!isValidParticipantObject(options.moderator)) {
-        throw new Error(getInvalidParticpantError('moderator'));
-      }
+      checkValidParticipantObject(options.moderator, 'moderator');
     }
 
     this.options = options || {};

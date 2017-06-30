@@ -7,6 +7,7 @@ import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import ModFragment from '../ModFragment';
+import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
@@ -17,26 +18,8 @@ export default class extends BaseVw {
       throw new Error('Please provide a Contract model.');
     }
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
-
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
     if (this.isModerated()) {
-      if (!options.moderator) {
-        throw new Error('Please provide a moderator object.');
-      }
-
-      if (!isValidParticipantObject(options.moderator)) {
-        throw new Error(getInvalidParticpantError('moderator'));
-      }
+      checkValidParticipantObject(options.moderator, 'moderator');
 
       options.moderator.getProfile()
         .done((modProfile) => {

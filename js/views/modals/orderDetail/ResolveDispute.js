@@ -5,6 +5,7 @@ import {
   resolveDispute,
   events as orderEvents,
 } from '../../../utils/order';
+import { checkValidParticipantObject } from './OrderDetail.js';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 
@@ -16,33 +17,8 @@ export default class extends BaseVw {
       throw new Error('Please provide an OrderFulfillment model.');
     }
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
-
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
-    if (!options.vendor) {
-      throw new Error('Please provide a vendor object.');
-    }
-
-    if (!isValidParticipantObject(options.vendor)) {
-      throw new Error(getInvalidParticpantError('vendor'));
-    }
-
-    if (!options.buyer) {
-      throw new Error('Please provide a buyer object.');
-    }
-
-    if (!isValidParticipantObject(options.buyer)) {
-      throw new Error(getInvalidParticpantError('buyer'));
-    }
+    checkValidParticipantObject(options.buyer, 'buyer');
+    checkValidParticipantObject(options.vendor, 'vendor');
 
     options.buyer.getProfile().done(profile => {
       this.buyerProfile = profile;
@@ -143,6 +119,11 @@ export default class extends BaseVw {
       this.getCachedEl('.js-submit').removeClass('processing');
       this.getCachedEl('.js-cancel').removeClass('disabled');
     }
+  }
+
+  remove() {
+    $(document).off(null, this.boundOnDocClick);
+    super.remove();
   }
 
   render() {
