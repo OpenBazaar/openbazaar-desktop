@@ -145,14 +145,8 @@ export default class ObRouter extends Router {
   }
 
   user(guid, state, ...args) {
-    const pageState = state || 'store';
+    let pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
-
-    if (!state) {
-      this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-        replace: true,
-      });
-    }
 
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
       this.pageNotFound();
@@ -205,6 +199,13 @@ export default class ObRouter extends Router {
         // You've attempted to find a user with no particular tab. Since store is not available
         // we'll take you to the home tab.
         this.navigate(`${guid}/home${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true, trigger: true
+        });
+        return;
+      }
+
+      if (!state) {
+        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
           replace: true,
         });
       }
@@ -227,6 +228,10 @@ export default class ObRouter extends Router {
       } else if (listingFetch.state() === 'rejected') {
         // this.listingError(listingFetch, listing.get('slug'), `#${guid}/store`)
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
+      } else if (!state) {
+        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true,
+        });
       }
     })
       .always(() => (this.off(null, onWillRoute)));
