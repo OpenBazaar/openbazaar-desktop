@@ -199,7 +199,8 @@ export default class ObRouter extends Router {
         // You've attempted to find a user with no particular tab. Since store is not available
         // we'll take you to the home tab.
         this.navigate(`${guid}/home${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-          replace: true, trigger: true
+          replace: true,
+          trigger: true,
         });
         return;
       }
