@@ -320,7 +320,7 @@
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
-      "helperDefaultFee": "Average is recommended. High may clear faster.",
+      "helperDefaultFee": "High is recommended for the fastest transactions",
       "helperServerManagement": "Switch and manage server connections",
       "helperServerPeers": "Peers you're connected to",
       "smtp": {
@@ -1303,7 +1303,7 @@
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
-  },  
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
