@@ -100,8 +100,8 @@ export default class extends BaseModal {
         .done(data => this.onRatings(data))
         .fail((jqXhr) => {
           if (jqXhr.statusText === 'abort') return;
-          // if there are no ratings, no response is returned.
-          if (jqXhr.status === 200) {
+          // if there are no ratings, no response or a 404 is returned.
+          if (jqXhr.status === 200 || jqXhr.status === 404) {
             this.onRatings();
             return;
           }

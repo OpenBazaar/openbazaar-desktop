@@ -651,7 +651,7 @@
     "review": {
       "title": "%{time} by %{name}",
       "loadMore": "Load More",
-      "noReviews": "This listing does not have any reviews yet.",
+      "noReviews": "No reviews were found for this listing.",
       "showMore": "Show More",
       "showLess": "Show Less"
     },
