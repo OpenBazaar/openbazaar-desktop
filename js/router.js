@@ -221,6 +221,12 @@ export default class ObRouter extends Router {
       if (profileFetch.statusText === 'abort' ||
         profileFetch.statusText === 'abort') return;
 
+      if (!state) {
+        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true,
+        });
+      }
+
       // todo: If really not found (404), route to
       // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
@@ -228,10 +234,6 @@ export default class ObRouter extends Router {
       } else if (listingFetch.state() === 'rejected') {
         // this.listingError(listingFetch, listing.get('slug'), `#${guid}/store`)
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
-      } else if (!state) {
-        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-          replace: true,
-        });
       }
     })
       .always(() => (this.off(null, onWillRoute)));
