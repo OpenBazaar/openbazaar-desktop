@@ -145,7 +145,7 @@ export default class ObRouter extends Router {
   }
 
   user(guid, state, ...args) {
-    let pageState = state || 'store';
+    const pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
 
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
