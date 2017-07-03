@@ -100,11 +100,6 @@ export default class extends BaseModal {
         .done(data => this.onRatings(data))
         .fail((jqXhr) => {
           if (jqXhr.statusText === 'abort') return;
-          // if there are no ratings, no response is returned.
-          if (jqXhr.status === 200) {
-            this.onRatings();
-            return;
-          }
           const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
           openSimpleMessage(
             app.polyglot.t('listingDetail.errors.fetchRatings'),
@@ -148,11 +143,12 @@ export default class extends BaseModal {
     this.$deleteConfirmedBox.addClass('hide');
   }
 
-  onRatings(data = {}) {
-    this.rating.averageRating = data.average ? data.average.toFixed(2) : 0;
-    this.rating.ratingCount = data.count || 0;
+  onRatings(data) {
+    const pData = data || {};
+    this.rating.averageRating = pData.average ? pData.average.toFixed(2) : 0;
+    this.rating.ratingCount = pData.count || 0;
     this.rating.render();
-    this.reviews.reviewIDs = data.ratings || [];
+    this.reviews.reviewIDs = pData.ratings || [];
     this.reviews.render();
   }
 
