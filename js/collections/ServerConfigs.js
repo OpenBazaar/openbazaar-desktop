@@ -21,6 +21,14 @@ export default class extends Collection {
     this.on('sync', () => this.bindActiveServerChangeHandler());
   }
 
+  /**
+   * The "default" config is the configuration that is associated with the built-in
+   * server in the bundled app.
+   */
+  get defaultConfig() {
+    return this.findWhere({ default: true });
+  }
+
   get activeServer() {
     return this.get(this._activeId);
   }

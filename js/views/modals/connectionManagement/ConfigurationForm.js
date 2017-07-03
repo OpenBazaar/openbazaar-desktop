@@ -5,11 +5,19 @@ import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
+    const opts = {
+      showConfigureTorMessage: false,
+      ...options,
+    };
+
+    super(opts);
 
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
+
+    console.log(`fat willy says ${opts.showConfigureTorMessage}`);
+    this.showConfigureTorMessage = opts.showConfigureTorMessage;
 
     this.title = this.model.isNew() ?
       app.polyglot.t('connectionManagement.configurationForm.tabName') :
@@ -99,6 +107,7 @@ export default class extends baseVw {
         errors: this.model.validationError || {},
         isRemote: !this.model.isLocalServer(),
         title: this.title,
+        showConfigureTorMessage: this.showConfigureTorMessage,
       }));
 
       this._$formFields = null;

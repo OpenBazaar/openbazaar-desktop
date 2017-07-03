@@ -36,7 +36,7 @@ export default class LocalServer {
     return this._isStopping;
   }
 
-  start() {
+  start(commandLineArgs = []) {
     if (this.pendingStop) {
       this.pendingStop.once('exit', this.startAfterStop);
       const debugInfo = 'Attempt to start server while an existing one' +
@@ -52,12 +52,16 @@ export default class LocalServer {
     console.log('Starting local server.');
 
     this.serverSubProcess =
-      childProcess.spawn(this.serverPath + this.serverFilename, ['start', '-t'], {
-        detach: false,
-        cwd: this.serverPath,
-      });
+      childProcess.spawn(this.serverPath + this.serverFilename,
+        ['start', '-t', ...commandLineArgs], {
+          detach: false,
+          cwd: this.serverPath,
+        });
 
-    this.serverSubProcess.stdout.once('data', () => this.trigger('start'));
+    this.serverSubProcess.stdout.once('data', () => {
+      console.log('ROUND and ROUND we GO Yo');
+      this.trigger('start');
+    });
     this.serverSubProcess.stdout.on('data', buf => this.obServerLog(`${buf}`));
 
     this.serverSubProcess.on('error', err => {
@@ -126,6 +130,80 @@ export default class LocalServer {
     }
   }
 
+  getServerStatus(commandLineArgs = []) {
+    const processId = (new Date().getTime()).toString(36); // generate unique id
+    this.log('Starting local server in status mode.');
+    console.log('Starting local server in status mode.');
+
+    const subProcess =
+      childProcess.spawn(this.serverPath + this.serverFilename,
+        ['status', ...commandLineArgs], {
+          detach: false,
+          cwd: this.serverPath,
+        });
+
+    subProcess.stdout.on('data', buf => this.obServerStatusLog(`${buf}`));
+
+    subProcess.on('error', err => {
+      const errOutput = `Starting local server in status mode produced an error: ${err}`;
+
+      fs.appendFile(this.errorLogPath, errOutput, (appendFileErr) => {
+        if (appendFileErr) {
+          console.log(`Unable to write to the error log: ${err}`);
+        }
+      });
+
+      this.log(errOutput);
+    });
+
+    subProcess.stderr.on('data', buf => {
+      fs.appendFile(this.errorLogPath, `[OB-SERVER-STATUS] ${String(buf)}`, (err) => {
+        if (err) {
+          console.log(`Unable to write to the error log: ${err}`);
+        }
+      });
+
+      this.obServerStatusLog(`${buf}`, 'STDERR', true);
+    });
+
+    subProcess.on('exit', (code, signal) => {
+      let logMsg;
+
+      if (code !== null) {
+        let encrypted = false;
+        let torAvailable = false;
+        logMsg = `Local server status mode exited with code: ${code}`;
+
+        if (code === 1) {
+          this.trigger('getServerStatusFail', { id: processId });
+        } else if (code === 30) {
+          encrypted = true;
+        } else if (code === 31) {
+          encrypted = true;
+          torAvailable = true;
+        } else if (code === 21 || code === 11) {
+          torAvailable = true;
+        }
+
+        this.trigger('getServerStatusSuccess', {
+          id: processId,
+          torAvailable,
+          encrypted,
+        });
+      } else {
+        logMsg = `Local server status mode exited at request of signal: ${signal}.`;
+        this.trigger('getServerStatusFail', { id: processId });
+      }
+
+      console.log(logMsg);
+      this.log(logMsg, 'EXIT');
+    });
+
+    subProcess.unref();
+
+    return processId;
+  }
+
   get debugLog() {
     return this._debugLog;
   }
@@ -145,16 +223,20 @@ export default class LocalServer {
     this._log(msg);
   }
 
-  obServerLog(msg, type = 'STDOUT') {
+  obServerLog(msg, type = 'STDOUT', serverType = '[OB-SERVER]') {
     if (typeof msg !== 'string') {
       throw new Error('Please provide a message.');
     }
 
     if (!msg) return;
-    console.log(msg);
+    // console.log(msg);
 
     const msgPreface = type ? `[${type}] ` : '';
     msg.split(EOL).forEach(splitMsg =>
-      this._log(`${msgPreface}${splitMsg}`, '[OB-SERVER]'));
+      this._log(`${msgPreface}${splitMsg}`, serverType));
+  }
+
+  obServerStatusLog(msg, type = 'STDOUT') {
+    this.obServerLog(msg, type, '[OB-SERVER-STATUS]');
   }
 }

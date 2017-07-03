@@ -775,3 +775,9 @@ serverConnectEvents.on('connected', (connectedEvent) => {
 
 // initialize our listing delete handler
 listingDeleteHandler();
+
+console.log('debug');
+window.debug = launchDebugLogModal;
+
+console.log('localServer');
+window.localServer = remote.getGlobal('localServer');

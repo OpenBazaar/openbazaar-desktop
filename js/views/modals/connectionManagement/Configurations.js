@@ -113,6 +113,13 @@ export default class extends baseVw {
       this.$statusBarOuterWrap.addClass('hide');
       this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
       return;
+    } else if (e.reason === 'tor-not-configured') {
+      this.$statusBarOuterWrap.addClass('hide');
+      this.trigger('editConfig', {
+        model: this.collection.defaultConfig,
+        showConfigureTorMessage: true,
+      });
+      return;
     } else if (eventName === 'disconnect') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorConnectionLost', {
         serverName: e.server.get('name'),
@@ -145,17 +152,7 @@ export default class extends baseVw {
 
   onConfigConnectClick(e) {
     const serverConfig = this.collection.at(this.configViews.indexOf(e.view));
-    serverConnect(serverConfig, {
-      // Unlike the start-up sequence, the assumption is that at this point
-      // any server is already up and running, so we'll only try to connect
-      // once. If it fails, the user can retry.
-      //
-      // We'll also give a quite high attempt time before giving up to account
-      // for edge case really slow servers / machines. The user will have the option
-      // to cancel the attempt if it's taking longer than they think it should.
-      attempts: 1,
-      maxAttemptTime: 20 * 1000,
-    });
+    serverConnect(serverConfig);
   }
 
   getConfigVw(id) {
