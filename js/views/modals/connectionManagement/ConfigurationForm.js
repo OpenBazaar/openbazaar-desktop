@@ -16,7 +16,6 @@ export default class extends baseVw {
       throw new Error('Please provide a model.');
     }
 
-    console.log(`fat willy says ${opts.showConfigureTorMessage}`);
     this.showConfigureTorMessage = opts.showConfigureTorMessage;
 
     this.title = this.model.isNew() ?
@@ -118,7 +117,13 @@ export default class extends baseVw {
 
       if (!this.rendered) {
         this.rendered = true;
-        setTimeout(() => this.$('.js-inputName').focus());
+        setTimeout(() => {
+          if (!this.showConfigureTorMessage) {
+            this.$('.js-inputName').focus();
+          } else {
+            // todo todo todo : focus the Tor - bore check box
+          }
+        });
       }
     });
 

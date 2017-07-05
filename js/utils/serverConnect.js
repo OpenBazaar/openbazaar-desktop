@@ -322,16 +322,12 @@ export default function connect(server, options = {}) {
         const getServerStatusId = localServer.getServerStatus();
 
         localServer.on('getServerStatusSuccess', data => {
-          console.log(`the ids are ${getServerStatusId} - ${data.id}`);
           if (data.id === getServerStatusId) {
             if (data.torAvailable && !server.get('useTor')) {
-              console.log('trick');
               innerConnectDeferred.reject('tor-not-configured');
             } else if (!data.torAvailable && server.get('useTor')) {
-              console.log('willy');
               // show error that you must uncheck tor
             } else {
-              console.log('diddier');
               onTorChecked();
             }
           }
@@ -384,7 +380,6 @@ export default function connect(server, options = {}) {
       .progress((status, data = {}) => notify({ status, ...data }))
       .done((status, data = {}) => resolve({ status, ...data }))
       .fail((status, data = {}) => {
-        console.log(`I have the failed with the ${status}`);
         if (attempt === opts.attempts || status === 'authentication-failed' ||
           status === 'outer-connect-attempt-canceled' ||
           status === 'tor-not-configured') {

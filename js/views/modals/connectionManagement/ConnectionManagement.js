@@ -81,10 +81,7 @@ export default class extends BaseModal {
     let tabView = this.tabViewCache[tabViewName];
     data.viewOptions = data.viewOptions || {};
 
-    if (!$tabTarg && !data.configFormModel) {
-      // The prescence of data.configFormModel indicates we are showing the config form
-      // in Edit mode and in that case there is no $tabTarg we want to highlight with
-      // an active class.
+    if (!$tabTarg && !(tabViewName === 'ConfigForm' && data.viewOptions.model)) {
       $tabs = this.$('.js-tab');
       $tabTarg = $tabs.filter(`[data-tab=${tabViewName}]`);
     }

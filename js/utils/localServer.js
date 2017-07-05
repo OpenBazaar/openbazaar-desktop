@@ -59,7 +59,6 @@ export default class LocalServer {
         });
 
     this.serverSubProcess.stdout.once('data', () => {
-      console.log('ROUND and ROUND we GO Yo');
       this.trigger('start');
     });
     this.serverSubProcess.stdout.on('data', buf => this.obServerLog(`${buf}`));
