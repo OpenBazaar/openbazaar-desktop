@@ -20,9 +20,9 @@ export default class extends BaseModel {
     // set them in defaults, so if the model is reset, they'll
     // be restored properly.
     if (options.contractType === 'DIGITAL_GOOD') {
-      attrs.digitalDelivery = new DigitalDelivery();
+      attrs.digitalDelivery = new DigitalDelivery(attrs.digitalDelivery || {});
     } else if (options.contractType === 'PHYSICAL_GOOD' && !options.isLocalPickup) {
-      attrs.physicalDelivery = new PhysicalDelivery();
+      attrs.physicalDelivery = new PhysicalDelivery(attrs.physicalDelivery || {});
     }
 
     super(attrs, options);

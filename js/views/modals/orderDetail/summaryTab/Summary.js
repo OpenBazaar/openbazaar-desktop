@@ -542,6 +542,7 @@ export default class extends BaseVw {
       initialState: {
         contractType: this.contract.type,
         showPassword: this.moderator && this.moderator.id !== app.profile.id || true,
+        isLocalPickup: this.contract.isLocalPickup,
       },
     });
 

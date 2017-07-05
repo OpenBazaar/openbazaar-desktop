@@ -61,10 +61,7 @@ export default class extends BaseVw {
     this.model.set({}, { validate: true });
 
     if (!this.model.validationError) {
-      fulfillOrder(this.contractType, this.isLocalPickup, {
-        ...this.model.toJSON(),
-        orderId: this.model.id,
-      });
+      fulfillOrder(this.contractType, this.isLocalPickup, this.model.toJSON());
     }
 
     this.render();
