@@ -4,6 +4,8 @@ import { Events } from 'backbone';
 import OrderFulfillment from '../models/order/orderFulfillment/OrderFulfillment';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import OrderCompletion from '../models/order/orderCompletion/OrderCompletion';
+import OrderDispute from '../models/order/OrderDispute';
+import ResolveDispute from '../models/order/ResolveDispute';
 
 const events = {
   ...Events,
@@ -15,6 +17,9 @@ const cancelPosts = {};
 const fulfillPosts = {};
 const refundPosts = {};
 const completePosts = {};
+const openDisputePosts = {};
+const resolvePosts = {};
+const acceptPayoutPosts = {};
 
 function confirmOrder(orderId, reject = false) {
   if (!orderId) {
@@ -148,7 +153,7 @@ export function fulfillingOrder(orderId) {
   return fulfillPosts[orderId] || false;
 }
 
-export function fulfillOrder(contractType = 'PHYSICAL_GOOD', data = {}) {
+export function fulfillOrder(contractType = 'PHYSICAL_GOOD', isLocalPickup = false, data = {}) {
   if (!data || !data.orderId) {
     throw new Error('An orderId must be provided with the data.');
   }
@@ -158,7 +163,7 @@ export function fulfillOrder(contractType = 'PHYSICAL_GOOD', data = {}) {
   let post = fulfillPosts[orderId];
 
   if (!post) {
-    const model = new OrderFulfillment(data, { contractType });
+    const model = new OrderFulfillment(data, { contractType, isLocalPickup });
     post = model.save();
 
     if (!post) {
@@ -251,7 +256,7 @@ export function refundOrder(orderId) {
 
 /**
  * If the order with the given id is in the process of being completed, this method
- * will return an object containing the post xhr and the model that's being save.
+ * will return an object containing the post xhr and the data that's being saved.
  */
 export function completingOrder(orderId) {
   return completePosts[orderId] || false;
@@ -262,9 +267,7 @@ export function completeOrder(orderId, data = {}) {
     throw new Error('Please provide an orderId');
   }
 
-  const completeObject = completePosts[orderId];
-
-  if (!completeObject) {
+  if (!completePosts[orderId]) {
     const model = new OrderCompletion(data);
     const save = model.save();
 
@@ -297,7 +300,7 @@ export function completeOrder(orderId, data = {}) {
 
       completePosts[orderId] = {
         xhr: save,
-        model,
+        data: model.toJSON(),
       };
     }
 
@@ -308,4 +311,174 @@ export function completeOrder(orderId, data = {}) {
   }
 
   return completePosts[orderId].xhr;
+}
+
+/**
+ * If the order with the given id is in the process of a dispute being opened,
+ * this method will return an object containing the post xhr and the data
+ * that's being saved.
+ */
+export function openingDispute(orderId) {
+  return openDisputePosts[orderId] || false;
+}
+
+export function openDispute(orderId, data = {}) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  if (!openDisputePosts[orderId]) {
+    const model = new OrderDispute(data);
+    const save = model.save();
+
+    if (!save) {
+      Object.keys(model.validationError)
+        .forEach(errorKey => {
+          throw new Error(`${errorKey}: ${model.validationError[errorKey][0]}`);
+        });
+    } else {
+      save.always(() => {
+        delete openDisputePosts[orderId];
+      }).done(() => {
+        events.trigger('openDisputeComplete', {
+          id: orderId,
+          xhr: save,
+        });
+      })
+      .fail(xhr => {
+        events.trigger('openDisputeFail', {
+          id: orderId,
+          xhr: save,
+        });
+
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('orderUtil.failedOpenDisputeHeading'),
+          failReason
+        );
+      });
+
+      openDisputePosts[orderId] = {
+        xhr: save,
+        data: model.toJSON(),
+      };
+    }
+
+    events.trigger('openingDisputeOrder', {
+      id: orderId,
+      xhr: save,
+    });
+  }
+
+  return openDisputePosts[orderId].xhr;
+}
+
+/**
+ * If the order with the given id is in the process of its dispute being resolved,
+ * this method will return an object containing the post xhr and the data that's
+ * being saved.
+ */
+export function resolvingDispute(orderId) {
+  return resolvePosts[orderId] || false;
+}
+
+export function resolveDispute(orderId, data = {}) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  if (!resolvePosts[orderId]) {
+    const model = new ResolveDispute(data);
+    const save = model.save();
+
+    if (!save) {
+      Object.keys(model.validationError)
+        .forEach(errorKey => {
+          throw new Error(`${errorKey}: ${model.validationError[errorKey][0]}`);
+        });
+    } else {
+      save.always(() => {
+        delete resolvePosts[orderId];
+      }).done(() => {
+        events.trigger('resolveDisputeComplete', {
+          id: orderId,
+          xhr: save,
+        });
+      })
+      .fail(xhr => {
+        events.trigger('resolveDisputeFail', {
+          id: orderId,
+          xhr: save,
+        });
+
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('orderUtil.failedResolveHeading'),
+          failReason
+        );
+      });
+
+      resolvePosts[orderId] = {
+        xhr: save,
+        data: model.toJSON(),
+      };
+    }
+
+    events.trigger('resolvingDispute', {
+      id: orderId,
+      xhr: save,
+    });
+  }
+
+  return resolvePosts[orderId].xhr;
+}
+
+export function acceptingPayout(orderId) {
+  return acceptPayoutPosts[orderId] || false;
+}
+
+export function acceptPayout(orderId) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  let post = acceptPayoutPosts[orderId];
+
+  if (!post) {
+    post = $.post({
+      url: app.getServerUrl('ob/releasefunds'),
+      data: JSON.stringify({
+        orderId,
+      }),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).always(() => {
+      delete acceptPayoutPosts[orderId];
+    }).done(() => {
+      events.trigger('acceptPayoutComplete', {
+        id: orderId,
+        xhr: post,
+      });
+    })
+    .fail(xhr => {
+      events.trigger('acceptPayoutFail', {
+        id: orderId,
+        xhr: post,
+      });
+
+      const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+      openSimpleMessage(
+        app.polyglot.t('orderUtil.failedAcceptPayoutHeading'),
+        failReason
+      );
+    });
+
+    acceptPayoutPosts[orderId] = post;
+    events.trigger('acceptingPayout', {
+      id: orderId,
+      xhr: post,
+    });
+  }
+
+  return post;
 }

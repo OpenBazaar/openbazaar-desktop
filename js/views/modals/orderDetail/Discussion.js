@@ -7,6 +7,7 @@ import { getEmojiByName } from '../../../data/emojis';
 import loadTemplate from '../../../utils/loadTemplate';
 import ChatMessages from '../../../collections/ChatMessages';
 import ChatMessage from '../../../models/chat/ChatMessage';
+import { checkValidParticipantObject } from './OrderDetail.js';
 import baseVw from '../../baseVw';
 import ConvoMessages from './ConvoMessages';
 
@@ -25,36 +26,11 @@ export default class extends baseVw {
         'indicating whether Discussion is the active tab.');
     }
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
+    checkValidParticipantObject(options.buyer, 'buyer');
+    checkValidParticipantObject(options.vendor, 'vendor');
 
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
-    if (!options.buyer) {
-      throw new Error('Please provide a buyer object.');
-    }
-
-    if (!options.vendor) {
-      throw new Error('Please provide a vendor object.');
-    }
-
-    if (!isValidParticipantObject(options.buyer)) {
-      throw new Error(getInvalidParticpantError('buyer'));
-    }
-
-    if (!isValidParticipantObject(options.vendor)) {
-      throw new Error(getInvalidParticpantError('vendor'));
-    }
-
-    if (options.moderator && !isValidParticipantObject(options.moderator)) {
-      throw new Error(getInvalidParticpantError('moderator'));
+    if (options.moderator) {
+      checkValidParticipantObject(options.moderator, 'moderator');
     }
 
     super(options);

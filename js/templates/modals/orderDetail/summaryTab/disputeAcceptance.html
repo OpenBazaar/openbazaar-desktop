@@ -1,0 +1,31 @@
+<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputeAcceptance.heading') %></h2>
+<% if (ob.timestamp) { %>
+<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+<% } %>
+
+<div class="border clrBr padMd">
+  <div class="flexVCent gutterH clrT">
+    <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.closerAvatarHashes) %>"></span></div>
+    <div class="flexExpand tx5">
+      <%
+        let introLine;
+
+        if (ob.closerName) {
+          introLine = ob.polyT('orderDetail.summaryTab.disputeAcceptance.userAcceptedPayout', {
+            name: ob.closerName,
+          });
+        } else {
+          introLine = ob.acceptedByBuyer ?
+            ob.polyT('orderDetail.summaryTab.disputeAcceptance.genericBuyerAcceptedPayout') :
+            ob.polyT('orderDetail.summaryTab.disputeAcceptance.genericVendorAcceptedPayout');
+        }
+
+        const subText = ob.buyerViewing ?
+          ob.polyT('orderDetail.summaryTab.disputeAcceptance.orderCompleteWhenYouReview') :
+          ob.polyT('orderDetail.summaryTab.disputeAcceptance.orderCompleteWhenBuyerReviews');
+      %>
+      <div class="rowTn txB"><%= introLine %></div>
+      <div class="flex gutterH clrT2"><%= subText %></div>
+    </div>
+  </div>
+</div>

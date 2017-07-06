@@ -15,6 +15,17 @@ export default class extends BaseModel {
       .get('contractType');
   }
 
+  get isLocalPickup() {
+    const buyerOrder = this.get('buyerOrder');
+
+    if (buyerOrder && buyerOrder.items && buyerOrder.items[0] &&
+      buyerOrder.items[0].shippingOption) {
+      return buyerOrder.items[0].shippingOption.service === '';
+    }
+
+    return false;
+  }
+
   parse(response) {
     return {
       ...response,

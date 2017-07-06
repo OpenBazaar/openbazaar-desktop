@@ -53,8 +53,11 @@ export default class extends BaseVw {
   }
 
   onClickCompleteOrder() {
+    const formData = this.getFormData();
+
     const data = {
-      ...this.getFormData(),
+      ...formData,
+      anonymous: !formData.anonymous,
       // If a rating is not set, the RatingStrip view will return 0. We'll
       // send undefined in that case since it gives us the error message we
       // prefer.
