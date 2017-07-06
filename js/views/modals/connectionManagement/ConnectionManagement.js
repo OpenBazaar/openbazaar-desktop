@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import app from '../../../app';
-import serverConnect, { getCurrentConnection } from '../../../utils/serverConnect';
+import serverConnect from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import ServerConfig from '../../../models/ServerConfig';
 import BaseModal from '../BaseModal';
