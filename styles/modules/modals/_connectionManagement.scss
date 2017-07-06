@@ -83,4 +83,15 @@
       }
     }
   }
+
+  .configurationForm {
+    .configureTorMessage {
+      margin-top: 15px;
+      padding-left: 33px;
+      background-image: url(../../imgs/icon-tor.png);
+      background-position: 10px 12px;
+      background-size: 15px auto;
+      background-repeat: no-repeat;
+    }
+  }  
 }

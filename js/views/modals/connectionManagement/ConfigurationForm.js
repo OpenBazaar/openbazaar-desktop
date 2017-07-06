@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../../app';
 import openSimpleMessage from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -17,6 +18,7 @@ export default class extends baseVw {
     }
 
     this.showConfigureTorMessage = opts.showConfigureTorMessage;
+    this._lastSavedAttrs = this.model.toJSON();
 
     this.title = this.model.isNew() ?
       app.polyglot.t('connectionManagement.configurationForm.tabName') :
@@ -29,7 +31,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'newConfiguration';
+    return 'configurationForm';
   }
 
   events() {
@@ -46,15 +48,28 @@ export default class extends baseVw {
 
   onSaveClick() {
     this.model.set(this.getFormData(this.$formFields));
+    const hasChanged = !_.isEqual(this.model.toJSON(), this._lastSavedAttrs);
 
-    const save = this.model.save();
+    if (hasChanged) {
+      const save = this.model.save();
 
-    if (save) {
-      save.done(() => this.trigger('saved', { view: this }))
-        .fail(() => {
+      if (save) {
+        save.done(() => {
+          this._lastSavedAttrs = this.model.toJSON();
+          this.trigger('saved', {
+            view: this,
+            hasChanged,
+          });
+        }).fail(() => {
           // since we're saving to localStorage this really shouldn't happen
           openSimpleMessage('Unable to save server configuration');
         });
+      }
+    } else {
+      this.trigger('saved', {
+        view: this,
+        hasChanged,
+      });
     }
 
     this.render();

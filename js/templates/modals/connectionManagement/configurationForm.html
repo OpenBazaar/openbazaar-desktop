@@ -11,9 +11,8 @@
   <hr class="clrBr <% if (!ob.default) print('rowLg') %>" />
 
   <% if (ob.showConfigureTorMessage) { %>
-  <div class="border clrBr pad flex">
-    <div> --- Hi --- </div>
-    <div>Welcome to the jungle, we need Tor configured. We got everything you wanted and we don't know the names.</div>
+  <div class="border clrBr3 padMd flex configureTorMessage">
+    <%= ob.polyT('connectionManagement.configurationForm.configureTorMessage') %>
   </div>
   <% } %>
 
@@ -98,8 +97,9 @@
         <label><%= ob.polyT('connectionManagement.configurationForm.torLabel') %></label>
       </div>
       <div class="col9">
+        <% console.log('hippo'); window.hippo = ob %>
         <% if (ob.errors.useTor) print(ob.formErrorTmpl({ errors: ob.errors.useTor })) %>
-        <input type="checkbox" id="serverConfigUseTor" <% if (ob.useTor) print('checked') %>" />
+        <input type="checkbox" id="serverConfigUseTor" name="useTor" <% if (ob.useTor) print('checked') %> />
         <label for="serverConfigUseTor"><%= ob.polyT('connectionManagement.configurationForm.useTor') %></label>
       </div>
     </div>

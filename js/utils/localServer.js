@@ -223,7 +223,7 @@ export default class LocalServer {
 
     subProcess.unref();
 
-    return processId;
+    return subProcess.pid;
   }
 
   get debugLog() {

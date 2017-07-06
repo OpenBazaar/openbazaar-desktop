@@ -122,6 +122,8 @@ function authenticate(server) {
   return promise;
 }
 
+let _localServerStartHandlers = [];
+
 /**
  * Called to establish a connection with a server. This involves ensuring the
  * local server is running, if attempting to connect to the Default
@@ -163,10 +165,10 @@ export default function connect(server, options = {}) {
   app.serverConfigs.activeServer = server;
   const curCon = getCurrentConnection();
 
-  if (curCon && curCon.server.id === server.id &&
-    (curCon.status === 'connected' || curCon.status === 'connecting')) {
-    throw new Error('You are already connected or connecting to the given server');
-  }
+  // if (curCon && curCon.server.id === server.id &&
+  //   (curCon.status === 'connected' || curCon.status === 'connecting')) {
+  //   throw new Error('You are already connected or connecting to the given server');
+  // }
 
   log(`[${server.id.slice(0, 8)}] Will attempt to connect to server "${server.get('name')}"` +
     ` at ${server.get('serverIp')}.`);
@@ -292,11 +294,13 @@ export default function connect(server, options = {}) {
       throw new Error('The default configuration should only be used on the bundled app.');
     }
 
+    innerConnectDeferred.notify('connecting');
+
     // This flag means that we want the server to be running in a certain tor mode
     // (tor on or tor off), buts it's already running in the opposite mode.
     const serverRunningIncompatibleWithTor = server.get('default') &&
-      localServer.isRunning && server.get('useTor') !==
-        localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1;
+      localServer.isRunning && (server.get('useTor') !==
+        (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
 
     if (serverRunningIncompatibleWithTor) {
       // The idea is you will probably be starting the server with multiple attempts. So
@@ -312,8 +316,6 @@ export default function connect(server, options = {}) {
         innerConnectDeferred.notify('starting-local-server');
 
         const onLocalServerStart = () => {
-          innerConnectDeferred.notify('connecting');
-
           socketConnectAttempt = socketConnect(socket)
             .done(() => {
               innerConnectDeferred.resolve('connected');
@@ -333,9 +335,8 @@ export default function connect(server, options = {}) {
         // Remove any previous start handlers that this module may have bound. Not
         // removing them all, because other modules bind to 'start' and we don't
         // want to remove their handlers.
-        this._localServerStartHandlers = this._localServerStartHandlers || [];
-        this._localServerStartHandlers.forEach(handler => localServer.off('start', handler));
-        this._localServerStartHandlers = [onLocalServerStart];
+        _localServerStartHandlers.forEach(handler => localServer.off('start', handler));
+        _localServerStartHandlers = [onLocalServerStart];
 
         localServer.on('start', () => onLocalServerStart());
       };
@@ -348,10 +349,13 @@ export default function connect(server, options = {}) {
         localServer.on('getServerStatusSuccess', data => {
           if (data.pid === getServerStatusPid) {
             if (data.torAvailable && !server.get('useTor')) {
+              console.log('boom');
               innerConnectDeferred.reject('tor-not-configured');
             } else if (!data.torAvailable && server.get('useTor')) {
+              console.log('bam');
               // show error that you must uncheck tor
             } else {
+              console.log('bizzle');
               onTorChecked();
             }
           }
@@ -365,8 +369,6 @@ export default function connect(server, options = {}) {
         });
       }
     } else {
-      innerConnectDeferred.notify('connecting');
-
       socketConnectAttempt = socketConnect(socket)
         .done(() => {
           if (server.needsAuthentication()) {

@@ -115,6 +115,7 @@ export default class extends baseVw {
       return;
     } else if (e.reason === 'tor-not-configured') {
       this.$statusBarOuterWrap.addClass('hide');
+      this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
       this.trigger('editConfig', {
         model: this.collection.defaultConfig,
         showConfigureTorMessage: true,

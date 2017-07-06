@@ -546,7 +546,10 @@
       "placeholderPassword": "The password to your server",
       "placeholderPort": "The port to your server",
       "torLabel": "Tor",
-      "useTor": "Use Tor"
+      "useTor": "Use Tor",
+      "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting.",
+      "torProxyLabel": "Tor SOCKS5 proxy",
+      "torProxyPlaceholder": "socks5://127.0.0.1:9150"
     }
   },
   "wallet": {
