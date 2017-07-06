@@ -63,7 +63,7 @@ export default class extends Model {
 
     if (!this.feeLevels.includes(attrs.defaultTransactionFee)) {
       const levels = this.feeLevels.join(', ').toLowerCase();
-      addError('defaultTransactionFee', app.polyglot.t('localStorageModelErrors.transactionFee',
+      addError('defaultTransactionFee', app.polyglot.t('localSettingsModelErrors.transactionFee',
         { levels }));
     }
 
@@ -72,7 +72,7 @@ export default class extends Model {
     }
 
     if (is.not.url(attrs.searchProvider)) {
-      addError('searchProvider', app.polyglot.t('localStorageModelErrors.searchProvider'));
+      addError('searchProvider', app.polyglot.t('localSettingsModelErrors.searchProvider'));
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;

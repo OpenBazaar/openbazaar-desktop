@@ -1362,7 +1362,7 @@
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
   },
-  "localStorageModelErrors": {
+  "localSettingsModelErrors": {
     "searchProvider": "This is not a valid url for a search provider",
     "transactionFee": "You must choose one of %{levels}."
   },
