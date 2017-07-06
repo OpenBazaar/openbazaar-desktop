@@ -101,6 +101,11 @@ export default class extends BaseVw {
     return this;
   }
 
+  remove() {
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
+  }
+
   render() {
     loadTemplate('modals/orderDetail/summaryTab/payment.html', (t) => {
       this.$el.html(t({

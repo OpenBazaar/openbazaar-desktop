@@ -3,16 +3,24 @@ import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { events as orderEvents } from '../../../utils/order';
+import {
+  resolvingDispute,
+  events as orderEvents,
+} from '../../../utils/order';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
+import OrderDispute from '../../../models/order/OrderDispute';
+import ResolveDisputeMd from '../../../models/order/ResolveDispute';
 import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
 import Contract from './Contract';
 import FulfillOrder from './FulfillOrder';
+import DisputeOrder from './DisputeOrder';
+import ResolveDispute from './ResolveDispute';
+import ActionBar from './ActionBar.js';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -47,8 +55,23 @@ export default class extends BaseModal {
     this.listenToOnce(this.model, 'sync', this.onFirstOrderSync);
     this.listenTo(this.model, 'change:unreadChatMessages',
       () => this.setUnreadChatMessagesBadge());
+
     this.listenTo(orderEvents, 'fulfillOrderComplete', () => {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
+    });
+
+    this.listenTo(this.model, 'change:state', () => {
+      if (this.actionBar) {
+        this.actionBar.setState(this.actionBarButtonState);
+      }
+    });
+
+    this.listenTo(orderEvents, 'openDisputeComplete', () => {
+      if (this.activeTab === 'disputeOrder') this.selectTab('summary');
+    });
+
+    this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
+      if (this.activeTab === 'resolveDispute') this.selectTab('summary');
     });
 
     const socket = getSocket();
@@ -300,6 +323,8 @@ export default class extends BaseModal {
     const view = this.createChild(Summary, viewData);
     this.listenTo(view, 'clickFulfillOrder',
       () => this.selectTab('fulfillOrder'));
+    this.listenTo(view, 'clickResolveDispute',
+      () => this.selectTab('resolveDispute'));
 
     return view;
   }
@@ -347,14 +372,68 @@ export default class extends BaseModal {
 
   // This should not be called on a Case.
   createFulfillOrderTabView() {
-    const contractType = this.model.get('contract').type;
+    const contract = this.model.get('contract');
 
     const model = new OrderFulfillment({ orderId: this.model.id },
-      { contractType });
+      {
+        contractType: contract.type,
+        isLocalPickup: contract.isLocalPickup,
+      });
 
     const view = this.createChild(FulfillOrder, {
       model,
+      contractType: contract.type,
+      isLocalPickup: contract.isLocalPickup,
+    });
+
+    this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
+
+    return view;
+  }
+
+  createDisputeOrderTabView() {
+    const contractType = this.model.get('contract').type;
+
+    const model = new OrderDispute({ orderId: this.model.id });
+
+    const view = this.createChild(DisputeOrder, {
+      model,
       contractType,
+      moderator: {
+        id: this.moderatorId,
+        getProfile: this.getModeratorProfile.bind(this),
+      },
+    });
+
+    this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
+
+    return view;
+  }
+
+  createResolveDisputeTabView() {
+    let modelAttrs = { orderId: this.model.id };
+    const isResolvingDispute = resolvingDispute(this.model.id);
+
+    // If this order is in the process of the dispute being resolved, we'll
+    // populate the model with the data that was posted to the server.
+    if (isResolvingDispute) {
+      modelAttrs = {
+        ...modelAttrs,
+        ...isResolvingDispute.data,
+      };
+    }
+
+    const model = new ResolveDisputeMd(modelAttrs);
+    const view = this.createChild(ResolveDispute, {
+      model,
+      vendor: {
+        id: this.vendorId,
+        getProfile: this.getVendorProfile.bind(this),
+      },
+      buyer: {
+        id: this.buyerId,
+        getProfile: this.getBuyerProfile.bind(this),
+      },
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
@@ -371,6 +450,27 @@ export default class extends BaseModal {
     count = count > 0 ? count : '';
     count = count > 99 ? '…' : count;
     return count;
+  }
+
+  /**
+   * Returns whether different action bar buttons should be displayed or not
+   * based upon the order state.
+   */
+  get actionBarButtonState() {
+    const orderState = this.model.get('state');
+    let showDisputeOrderButton = false;
+
+    if (this.buyerId === app.profile.id) {
+      showDisputeOrderButton = this.moderatorId &&
+        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
+    } else if (this.vendorId === app.profile.id) {
+      showDisputeOrderButton = this.moderatorId &&
+        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
+    }
+
+    return {
+      showDisputeOrderButton,
+    };
   }
 
   get $unreadChatMessagesBadge() {
@@ -406,9 +506,33 @@ export default class extends BaseModal {
 
       if (!state.isFetching && !state.fetchError) {
         this.selectTab(this.activeTab);
+
+        if (this.actionBar) this.actionBar.remove();
+        this.actionBar = this.createChild(ActionBar, {
+          orderId: this.model.id,
+          initialState: this.actionBarButtonState,
+        });
+        this.$('.js-actionBarContainer').html(this.actionBar.render().el);
+        this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
       }
     });
 
     return this;
+  }
+}
+
+export function checkValidParticipantObject(participant, type) {
+  if (typeof participant !== 'object') {
+    throw new Error(`Please provide a participant object for the ${type}.`);
+  }
+
+  if (typeof type !== 'string') {
+    throw new Error('Please provide the participant type as a string.');
+  }
+
+  if (!participant.id || typeof participant.getProfile !== 'function') {
+    throw new Error(`The ${type} object is not valid. It should have an id ` +
+      'as well as a getProfile function that returns a promise that ' +
+      'resolves with a profile model.');
   }
 }

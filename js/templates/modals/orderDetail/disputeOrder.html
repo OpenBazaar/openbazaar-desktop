@@ -1,0 +1,35 @@
+<div class="padLg flexVCent">
+  <div class="backToSummaryWrap">
+    <a class="js-backToSummary clrTEm txU"><%= ob.polyT(`orderDetail.backToSummary`) %></a>
+  </div>
+  <div class="txCtr txB tx3 flexExpand"><%= ob.polyT(`orderDetail.disputeOrderTab.heading`) %></div>
+</div>
+<hr class="clrBr rowMd" />
+<form class="padKids padStack pad clrP clrBr js-fulfillForm">
+  <div class="flexRow gutterH row">
+    <div class="col3">
+      <div for="fulfillOrderNote"><%= ob.polyT(`orderDetail.disputeOrderTab.moderatorLabel`) %></div>
+    </div>
+    <div class="col7">
+      <div class="js-modContainer"></div>
+    </div>
+  </div>
+  <div class="flexRow gutterH rowHg">
+    <div class="col3">
+      <label for="fulfillOrderNote"><%= ob.polyT(`orderDetail.disputeOrderTab.reasonLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['claim']) print(ob.formErrorTmpl({ errors: ob.errors['claim'] })) %>
+    <textarea rows="6" name="claim" class="clrBr clrP clrSh2" id="fulfillOrderNote" placeholder="<%= ob.polyT(`orderDetail.disputeOrderTab.reasonPlaceholder`) %>"><%= ob.claim %></textarea>
+    <div class="clrT2 txSm"><%= ob.polyT(`orderDetail.disputeOrderTab.reasonHelperText`) %></div>
+    </div>
+  </div>
+</form>
+<hr class="clrBr" />
+<div class="buttonBar flexHRight flexVCent gutterHLg">
+  <a class="js-cancel <% if (ob.openingDispute) print('disabled') %>"><%= ob.polyT(`orderDetail.fulfillOrderTab.btnCancel`) %></a>
+  <%= ob.processingButton({
+    className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.openingDispute ? 'processing' : ''}`,
+    btnText: ob.polyT(`orderDetail.fulfillOrderTab.btnSubmit`),
+  }) %>
+</div>
