@@ -25,7 +25,8 @@ export default class LocalServer {
     this._isRunning = false;
     this._isStopping = false;
     this._debugLog = '';
-    this.startAfterStop = () => this.start();
+    this._lastStartCommandLineArgs = [];
+    this.startAfterStop = (...args) => this.start(...args);
   }
 
   get isRunning() {
@@ -36,24 +37,45 @@ export default class LocalServer {
     return this._isStopping;
   }
 
+  /**
+   * The command line args that the server was last started with. Will default to an
+   * empty array if the server has never been started this session. This only applies
+   * to the server being started via start(), not the server being started in status
+   * mode (via getServerStatus()).
+   */
+  get lastStartCommandLineArgs() {
+    return this._lastStartCommandLineArgs;
+  }
+
   start(commandLineArgs = []) {
     if (this.pendingStop) {
-      this.pendingStop.once('exit', this.startAfterStop);
+      this._lastStartCommandLineArgs = commandLineArgs;
+      this.pendingStop.once('exit', () => this.startAfterStop(commandLineArgs));
       const debugInfo = 'Attempt to start server while an existing one' +
         ' is the process of shutting down. Will start after shut down is complete.';
       this.log(debugInfo);
       return;
     }
 
-    if (this.isRunning) return;
+    if (this.isRunning) {
+      if (_.isEqual(commandLineArgs, this._lastStartCommandLineArgs)) {
+        return;
+      }
+
+      throw new Error('A server is already running with different command line options. Please ' +
+        'stop that server before staring a new one.');
+    }
+
     this._isRunning = true;
+    const serverStartArgs = ['start', '-t', ...commandLineArgs];
 
-    this.log('Starting local server.');
-    console.log('Starting local server.');
+    this.log(`Starting local server via '${serverStartArgs.join(' ')}'.`);
+    console.log(`Starting local server via '${serverStartArgs.join(' ')}'.`);
 
+    this._lastStartCommandLineArgs = commandLineArgs;
     this.serverSubProcess =
       childProcess.spawn(this.serverPath + this.serverFilename,
-        ['start', '-t', ...commandLineArgs], {
+        serverStartArgs, {
           detach: false,
           cwd: this.serverPath,
         });
@@ -102,6 +124,8 @@ export default class LocalServer {
     });
 
     this.serverSubProcess.unref();
+
+    return;
   }
 
   stop() {
@@ -130,7 +154,6 @@ export default class LocalServer {
   }
 
   getServerStatus(commandLineArgs = []) {
-    const processId = (new Date().getTime()).toString(36); // generate unique id
     this.log('Starting local server in status mode.');
     console.log('Starting local server in status mode.');
 
@@ -174,7 +197,7 @@ export default class LocalServer {
         logMsg = `Local server status mode exited with code: ${code}`;
 
         if (code === 1) {
-          this.trigger('getServerStatusFail', { id: processId });
+          this.trigger('getServerStatusFail', { pid: subProcess.pid });
         } else if (code === 30) {
           encrypted = true;
         } else if (code === 31) {
@@ -185,13 +208,13 @@ export default class LocalServer {
         }
 
         this.trigger('getServerStatusSuccess', {
-          id: processId,
+          pid: subProcess.pid,
           torAvailable,
           encrypted,
         });
       } else {
         logMsg = `Local server status mode exited at request of signal: ${signal}.`;
-        this.trigger('getServerStatusFail', { id: processId });
+        this.trigger('getServerStatusFail', { pid: subProcess.pid });
       }
 
       console.log(logMsg);

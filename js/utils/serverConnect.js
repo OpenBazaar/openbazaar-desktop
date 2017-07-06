@@ -292,7 +292,22 @@ export default function connect(server, options = {}) {
       throw new Error('The default configuration should only be used on the bundled app.');
     }
 
-    if (server.get('default') && (!localServer.isRunning || localServer.isStopping)) {
+    // This flag means that we want the server to be running in a certain tor mode
+    // (tor on or tor off), buts it's already running in the opposite mode.
+    const serverRunningIncompatibleWithTor = server.get('default') &&
+      localServer.isRunning && server.get('useTor') !==
+        localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1;
+
+    if (serverRunningIncompatibleWithTor) {
+      // The idea is you will probably be starting the server with multiple attempts. So
+      // if we stop the server now, on a subsequent attempt we'll re-start it in the
+      // desired mode.
+      localServer.stop();
+      innerConnectDeferred.reject('incompatible-tor-mode');
+    }
+
+    if (server.get('default') &&
+      (!localServer.isRunning || localServer.isStopping)) {
       const onTorChecked = () => {
         innerConnectDeferred.notify('starting-local-server');
 
@@ -311,18 +326,27 @@ export default function connect(server, options = {}) {
             });
         };
 
-        localServer.on('start', onLocalServerStart);
-        localServer.on('exit', () => localServer.off('start', onLocalServerStart));
-        localServer.start();
+        const commandLineArgs = [];
+        if (server.get('useTor')) commandLineArgs.push('--tor');
+        localServer.start(commandLineArgs);
+
+        // Remove any previous start handlers that this module may have bound. Not
+        // removing them all, because other modules bind to 'start' and we don't
+        // want to remove their handlers.
+        this._localServerStartHandlers = this._localServerStartHandlers || [];
+        this._localServerStartHandlers.forEach(handler => localServer.off('start', handler));
+        this._localServerStartHandlers = [onLocalServerStart];
+
+        localServer.on('start', () => onLocalServerStart());
       };
 
       if (server.get('confirmedTorOptOut') && !server.get('useTor')) {
         onTorChecked();
       } else {
-        const getServerStatusId = localServer.getServerStatus();
+        const getServerStatusPid = localServer.getServerStatus();
 
         localServer.on('getServerStatusSuccess', data => {
-          if (data.id === getServerStatusId) {
+          if (data.pid === getServerStatusPid) {
             if (data.torAvailable && !server.get('useTor')) {
               innerConnectDeferred.reject('tor-not-configured');
             } else if (!data.torAvailable && server.get('useTor')) {
@@ -334,7 +358,7 @@ export default function connect(server, options = {}) {
         });
 
         localServer.on('getServerStatusFail', data => {
-          if (data.id === getServerStatusId) {
+          if (data.pid === getServerStatusPid) {
             // todo todo TODO = should this really be canceled?
             innerConnectDeferred.reject('canceled');
           }

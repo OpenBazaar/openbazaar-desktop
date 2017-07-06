@@ -85,6 +85,9 @@ window.addEventListener('contextmenu', (e) => {
 // utilizes it. We'll fetch it later on.
 app.serverConfigs = new ServerConfigs();
 
+console.log('sizzle');
+window.sizzle = app.serverConfigs;
+
 app.pageNav = new PageNav({
   serverConfigs: app.serverConfigs,
 });

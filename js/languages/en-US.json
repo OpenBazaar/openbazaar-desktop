@@ -503,7 +503,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Local Bundled Server",
+    "defaultServerName": "Built-in Server",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
@@ -544,7 +544,9 @@
       "placeholderServerIp": "The IP to your server (or localhost)",
       "placeholderUsername": "The username to your server",
       "placeholderPassword": "The password to your server",
-      "placeholderPort": "The port to your server"
+      "placeholderPort": "The port to your server",
+      "torLabel": "Tor",
+      "useTor": "Use Tor"
     }
   },
   "wallet": {
