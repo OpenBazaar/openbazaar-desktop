@@ -287,108 +287,112 @@ export default function connect(server, options = {}) {
       if (socketConnectAttempt) socketConnectAttempt.cancel();
     };
 
-    if (server.get('default') && !localServer) {
-      // This should never happen to normal users. The only way it would is if you are a dev
-      // and mucking with localStorage and / or fudging the source for the app to masquerade
-      // as a bundled app.
-      throw new Error('The default configuration should only be used on the bundled app.');
-    }
+    // Putting a timeout, because we want to return the promise before sending any
+    // progress (i.e. notify()) events.
+    setTimeout(() => {
+      if (server.get('default') && !localServer) {
+        // This should never happen to normal users. The only way it would is if you are a dev
+        // and mucking with localStorage and / or fudging the source for the app to masquerade
+        // as a bundled app.
+        throw new Error('The default configuration should only be used on the bundled app.');
+      }
 
-    innerConnectDeferred.notify('connecting');
+      innerConnectDeferred.notify('connecting');
 
-    // This flag means that we want the server to be running in a certain tor mode
-    // (tor on or tor off), buts it's already running in the opposite mode.
-    const serverRunningIncompatibleWithTor = server.get('default') &&
-      localServer.isRunning && (server.get('useTor') !==
-        (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
+      // This flag means that we want the server to be running in a certain tor mode
+      // (tor on or tor off), buts it's already running in the opposite mode.
+      const serverRunningIncompatibleWithTor = server.get('default') &&
+        localServer.isRunning && (server.get('useTor') !==
+          (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
 
-    if (serverRunningIncompatibleWithTor) {
-      // The idea is you will probably be starting the server with multiple attempts. So
-      // if we stop the server now, on a subsequent attempt we'll re-start it in the
-      // desired mode.
-      localServer.stop();
-      innerConnectDeferred.reject('incompatible-tor-mode');
-    }
+      if (serverRunningIncompatibleWithTor) {
+        // The idea is you will probably be starting the server with multiple attempts. So
+        // if we stop the server now, on a subsequent attempt we'll re-start it in the
+        // desired mode.
+        localServer.stop();
+        innerConnectDeferred.reject('incompatible-tor-mode');
+      }
 
-    if (server.get('default') &&
-      (!localServer.isRunning || localServer.isStopping)) {
-      const onTorChecked = () => {
-        innerConnectDeferred.notify('starting-local-server');
+      if (server.get('default') &&
+        (!localServer.isRunning || localServer.isStopping)) {
+        const onTorChecked = () => {
+          innerConnectDeferred.notify('starting-local-server');
 
-        const onLocalServerStart = () => {
-          socketConnectAttempt = socketConnect(socket)
-            .done(() => {
-              innerConnectDeferred.resolve('connected');
-            }).fail((reason, e) => {
-              if (reason === 'canceled') {
-                innerConnectDeferred.reject('canceled');
-              } else {
-                innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
-              }
-            });
+          const onLocalServerStart = () => {
+            socketConnectAttempt = socketConnect(socket)
+              .done(() => {
+                innerConnectDeferred.resolve('connected');
+              }).fail((reason, e) => {
+                if (reason === 'canceled') {
+                  innerConnectDeferred.reject('canceled');
+                } else {
+                  innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+                }
+              });
+          };
+
+          const commandLineArgs = [];
+          if (server.get('useTor')) commandLineArgs.push('--tor');
+          localServer.start(commandLineArgs);
+
+          // Remove any previous start handlers that this module may have bound. Not
+          // removing them all, because other modules bind to 'start' and we don't
+          // want to remove their handlers.
+          _localServerStartHandlers.forEach(handler => localServer.off('start', handler));
+          _localServerStartHandlers = [onLocalServerStart];
+
+          localServer.on('start', () => onLocalServerStart());
         };
 
-        const commandLineArgs = [];
-        if (server.get('useTor')) commandLineArgs.push('--tor');
-        localServer.start(commandLineArgs);
+        if (server.get('confirmedTor') && !server.get('useTor')) {
+          onTorChecked();
+        } else {
+          const getServerStatusPid = localServer.getServerStatus();
 
-        // Remove any previous start handlers that this module may have bound. Not
-        // removing them all, because other modules bind to 'start' and we don't
-        // want to remove their handlers.
-        _localServerStartHandlers.forEach(handler => localServer.off('start', handler));
-        _localServerStartHandlers = [onLocalServerStart];
-
-        localServer.on('start', () => onLocalServerStart());
-      };
-
-      if (server.get('confirmedTorOptOut') && !server.get('useTor')) {
-        onTorChecked();
-      } else {
-        const getServerStatusPid = localServer.getServerStatus();
-
-        localServer.on('getServerStatusSuccess', data => {
-          if (data.pid === getServerStatusPid) {
-            if (data.torAvailable && !server.get('useTor')) {
-              console.log('boom');
-              innerConnectDeferred.reject('tor-not-configured');
-            } else if (!data.torAvailable && server.get('useTor')) {
-              console.log('bam');
-              // show error that you must uncheck tor
-            } else {
-              console.log('bizzle');
-              onTorChecked();
+          localServer.on('getServerStatusSuccess', data => {
+            if (data.pid === getServerStatusPid) {
+              if (data.torAvailable && !server.get('useTor')) {
+                console.log('boom');
+                innerConnectDeferred.reject('tor-not-configured');
+              } else if (!data.torAvailable && server.get('useTor')) {
+                console.log('bam');
+                // show error that you must uncheck tor
+              } else {
+                console.log('bizzle');
+                onTorChecked();
+              }
             }
-          }
-        });
+          });
 
-        localServer.on('getServerStatusFail', data => {
-          if (data.pid === getServerStatusPid) {
-            // todo todo TODO = should this really be canceled?
-            innerConnectDeferred.reject('canceled');
-          }
-        });
+          localServer.on('getServerStatusFail', data => {
+            if (data.pid === getServerStatusPid) {
+              // todo todo TODO = should this really be canceled?
+              innerConnectDeferred.reject('canceled');
+            }
+          });
+        }
+      } else {
+        socketConnectAttempt = socketConnect(socket)
+          .done(() => {
+            if (server.needsAuthentication()) {
+              innerConnectDeferred.notify('authenticating');
+              authenticate(server)
+                .done(() => innerConnectDeferred.resolve('connected'))
+                .fail((reason, e) => {
+                  innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
+                });
+            } else {
+              innerConnectDeferred.resolve('connected');
+            }
+          }).fail((reason, e) => {
+            if (reason === 'canceled') {
+              innerConnectDeferred.reject('canceled');
+            } else {
+              innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+            }
+          });
       }
-    } else {
-      socketConnectAttempt = socketConnect(socket)
-        .done(() => {
-          if (server.needsAuthentication()) {
-            innerConnectDeferred.notify('authenticating');
-            authenticate(server)
-              .done(() => innerConnectDeferred.resolve('connected'))
-              .fail((reason, e) => {
-                innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
-              });
-          } else {
-            innerConnectDeferred.resolve('connected');
-          }
-        }).fail((reason, e) => {
-          if (reason === 'canceled') {
-            innerConnectDeferred.reject('canceled');
-          } else {
-            innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
-          }
-        });
-    }
+    });
 
     const promise = innerConnectDeferred.promise();
     promise.cancel = connectCancel;

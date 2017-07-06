@@ -88,6 +88,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnNew': 'onNewClick',
+      'click .js-configureTorEditConfig': 'onConfigureTorEditClick',
     };
   }
 
@@ -114,13 +115,22 @@ export default class extends baseVw {
       this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
       return;
     } else if (e.reason === 'tor-not-configured') {
-      this.$statusBarOuterWrap.addClass('hide');
-      this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
-      this.trigger('editConfig', {
-        model: this.collection.defaultConfig,
-        showConfigureTorMessage: true,
+      msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotConfigured', {
+        serverName: e.server.get('name'),
+        editLink: '<a class="js-configureTorEditConfig">' +
+          `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
+        links,
       });
-      return;
+
+      if (!this.$el.is(':visible')) {
+        // If the connection modal is not open, we'll open up the configuration form. The modal
+        // will be opened shortly upon the connection failure. If the user already had the modal
+        // open, we won't auto send them to the config form, since it may interrup something else
+        // they may be doing.
+        this.trigger('editConfig', {
+          model: this.collection.defaultConfig,
+        });
+      }
     } else if (eventName === 'disconnect') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorConnectionLost', {
         serverName: e.server.get('name'),
@@ -149,6 +159,12 @@ export default class extends baseVw {
 
   onNewClick() {
     this.trigger('newClick');
+  }
+
+  onConfigureTorEditClick() {
+    this.trigger('editConfig', {
+      model: this.collection.defaultConfig,
+    });
   }
 
   onConfigConnectClick(e) {

@@ -97,7 +97,6 @@
         <label><%= ob.polyT('connectionManagement.configurationForm.torLabel') %></label>
       </div>
       <div class="col9">
-        <% console.log('hippo'); window.hippo = ob %>
         <% if (ob.errors.useTor) print(ob.formErrorTmpl({ errors: ob.errors.useTor })) %>
         <input type="checkbox" id="serverConfigUseTor" name="useTor" <% if (ob.useTor) print('checked') %> />
         <label for="serverConfigUseTor"><%= ob.polyT('connectionManagement.configurationForm.useTor') %></label>

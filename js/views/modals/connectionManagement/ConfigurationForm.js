@@ -1,23 +1,29 @@
-import _ from 'underscore';
 import app from '../../../app';
 import openSimpleMessage from '../SimpleMessage';
+import { getCurrentConnection } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
-      showConfigureTorMessage: false,
       ...options,
     };
 
     super(opts);
 
-    if (!this.model) {
+    if (!opts.model) {
       throw new Error('Please provide a model.');
     }
 
-    this.showConfigureTorMessage = opts.showConfigureTorMessage;
+    const curConn = getCurrentConnection();
+    this.showConfigureTorMessage = false;
+
+    if (curConn && curConn.server && curConn.server.id === options.model.id &&
+      curConn.reason === 'tor-not-configured') {
+      this.showConfigureTorMessage = true;
+    }
+
     this._lastSavedAttrs = this.model.toJSON();
 
     this.title = this.model.isNew() ?
@@ -47,28 +53,21 @@ export default class extends baseVw {
   }
 
   onSaveClick() {
-    this.model.set(this.getFormData(this.$formFields));
-    const hasChanged = !_.isEqual(this.model.toJSON(), this._lastSavedAttrs);
+    const formData = this.getFormData(this.$formFields);
+    this.model.set({
+      ...this.getFormData(this.$formFields),
+      confirmedTor: this.model.get('confirmedTor') || formData.useTor ||
+        this.showConfigureTorMessage,
+    });
+    const save = this.model.save();
 
-    if (hasChanged) {
-      const save = this.model.save();
-
-      if (save) {
-        save.done(() => {
-          this._lastSavedAttrs = this.model.toJSON();
-          this.trigger('saved', {
-            view: this,
-            hasChanged,
-          });
-        }).fail(() => {
-          // since we're saving to localStorage this really shouldn't happen
-          openSimpleMessage('Unable to save server configuration');
-        });
-      }
-    } else {
-      this.trigger('saved', {
-        view: this,
-        hasChanged,
+    if (save) {
+      save.done(() => {
+        this._lastSavedAttrs = this.model.toJSON();
+        this.trigger('saved', { view: this });
+      }).fail(() => {
+        // since we're saving to localStorage this really shouldn't happen
+        openSimpleMessage('Unable to save server configuration');
       });
     }
 

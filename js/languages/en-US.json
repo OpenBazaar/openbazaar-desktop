@@ -507,10 +507,12 @@
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
-      "viewLocalServerDebugLogLink": "View Server Debug Log",
+      "viewLocalServerDebugLogLink": "Debug Log",
       "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "editLink": "edit",
+      "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "cancelConnAttempt": "Cancel",
       "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
     },
@@ -547,7 +549,7 @@
       "placeholderPort": "The port to your server",
       "torLabel": "Tor",
       "useTor": "Use Tor",
-      "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting.",
+      "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting. Click Save to confirm your decision.",
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "socks5://127.0.0.1:9150"
     }

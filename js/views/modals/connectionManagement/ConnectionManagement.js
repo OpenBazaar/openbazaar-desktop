@@ -66,21 +66,10 @@ export default class extends BaseModal {
 
     const configForm = new ConfigurationForm({ ...viewOptions });
     this.listenTo(configForm, 'cancel', () => this.selectTab('Configurations'));
-    this.listenTo(configForm, 'saved', e => {
+    this.listenTo(configForm, 'saved', () => {
       this.selectTab('Configurations');
-
-      if (e.hasChanged) {
-        app.serverConfigs.add(configForm.model, { merge: true });
-      }
-
-      const curConn = getCurrentConnection();
-
-      // If we're not connected to the saved server -or- the save resulted in a
-      // change of the config, we'll connect.
-      if (!(curConn && curConn.server && curConn.server.id === configForm.model.id) ||
-        e.hasChanged) {
-        serverConnect(configForm.model);
-      }
+      app.serverConfigs.add(configForm.model, { merge: true });
+      serverConnect(configForm.model);
     });
 
     return configForm;

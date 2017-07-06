@@ -18,7 +18,7 @@ export default class extends BaseModel {
       SSL: false,
       default: false,
       useTor: false,
-      confirmedTorOptOut: false,
+      confirmedTor: false,
       torProxy: 'socks5://127.0.0.1:9150',
     };
   }
