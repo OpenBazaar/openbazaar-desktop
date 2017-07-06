@@ -466,7 +466,12 @@
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
-    "socialAccounts": "Social Accounts",
+    "socialAccounts": {
+      "accountLabel": "Social Account",
+      "accountPlaceholder": "Facebook",
+      "linkPlaceholder": "http://facebook.com/",
+      "add": "Add additional"
+    },
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
     "coverPhoto": "Cover Photo",
@@ -1164,6 +1169,7 @@
     "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
+    "tooManySocialAccounts": "You cannot have more than %{max} social accounts",
     "duplicateSocialAccount": "You already have a social account of this type."
   },
   "socialAccountModelErrors": {

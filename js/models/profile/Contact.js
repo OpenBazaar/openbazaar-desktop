@@ -19,6 +19,10 @@ export default class extends BaseModel {
     };
   }
 
+  get maxSocialAccounts() {
+    return 30;
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -39,18 +43,21 @@ export default class extends BaseModel {
     // used to give errors on dupes of the same type
     const groupedByType = socialAccounts.groupBy('type');
 
+    if (attrs.social.length > this.maxSocialAccounts) {
+      addError('socialAccounts',
+        app.polyglot('contactModelErrors.tooManySocialAccounts', { max: this.maxSocialAccounts }));
+    }
+
     socialAccounts.forEach((socialMd) => {
       const socialAttrs = socialMd.attributes;
 
       // if there are dupes of the same type, give an error to all
       // dupes after the first one
-      if (socialAttrs.type !== 'other' && groupedByType[socialAttrs.type].length > 1 &&
+      if (groupedByType[socialAttrs.type].length > 1 &&
         groupedByType[socialAttrs.type].indexOf(socialMd) > 0) {
         addError(`social[${socialMd.cid}].type`,
           app.polyglot.t('contactModelErrors.duplicateSocialAccount'));
       }
-
-      // todo: dont allow multiple others with the same username.
     });
 
     if (Object.keys(errObj).length) return errObj;

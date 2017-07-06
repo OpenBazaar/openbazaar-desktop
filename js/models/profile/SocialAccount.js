@@ -5,22 +5,13 @@ import BaseModel from '../BaseModel';
 export default class extends BaseModel {
   defaults() {
     return {
-      type: 'facebook',
+      type: '',
       username: '',
     };
   }
 
   get idAttribute() {
     return '_clientID';
-  }
-
-  get socialTypes() {
-    return [
-      'facebook',
-      'twitter',
-      'instagram',
-      'other',
-    ];
   }
 
   validate(attrs) {
@@ -36,8 +27,6 @@ export default class extends BaseModel {
 
     if (is.not.string(attrs.type)) {
       addError('type', 'Please provide a type.');
-    } else if (this.socialTypes.indexOf(attrs.type) === -1) {
-      addError('type', 'Type must be one of the required types.');
     }
 
     if (Object.keys(errObj).length) return errObj;

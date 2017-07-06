@@ -159,6 +159,9 @@
             <input type="text" class="clrBr clrSh2" name="contactInfo.email" id="settingsEmail" value="<%= ob.contactInfo.email %>" placeholder="<%= ob.polyT('settings.pageTab.placeholderEmail') %>">
           </div>
         </div>
+        <div class="js-socialAccounts">
+          <% if (ob.errors['contactInfo.social']) print(ob.formErrorTmpl({ errors: ob.errors['contactInfo.social'] })) %>
+        </div>
       </form>
     </div>
   </div>

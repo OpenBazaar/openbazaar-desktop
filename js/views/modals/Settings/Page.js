@@ -6,6 +6,7 @@ import '../../../lib/whenAll.jquery';
 import { openSimpleMessage } from '../SimpleMessage';
 import 'cropit';
 import { installRichEditor } from '../../../utils/trumbowyg';
+import SocialAccounts from './SocialAccounts';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -21,6 +22,10 @@ export default class extends baseVw {
 
     this.profile = app.profile.clone();
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
+
+    this.socialAccounts = this.createChild(SocialAccounts, {
+      collection: this.profile.get('contactInfo').get('social'),
+    });
   }
 
   events() {
@@ -346,6 +351,8 @@ export default class extends baseVw {
             app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
         }
       }, 0);
+
+      this.$('.js-socialAccounts').append(this.socialAccounts.render().el);
     });
 
     return this;
