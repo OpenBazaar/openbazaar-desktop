@@ -18,7 +18,7 @@ export default class extends Model {
       windowControlStyle: remote.process.platform === 'darwin' ? 'mac' : 'win',
       showAdvancedVisualEffects: true,
       saveTransactionMetadata: true,
-      defaultTransactionFee: 'high',
+      defaultTransactionFee: 'PRIORITY',
       language: 'en-US',
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
@@ -35,7 +35,11 @@ export default class extends Model {
   }
 
   get feeLevels() {
-    return ['low', 'medium', 'high'];
+    return [
+      'PRIORITY',
+      'NORMAL',
+      'ECONOMIC',
+    ];
   }
 
   get bitcoinUnits() {
@@ -58,8 +62,9 @@ export default class extends Model {
     }
 
     if (!this.feeLevels.includes(attrs.defaultTransactionFee)) {
-      addError('defaultTransactionFee',
-        `Default transaction fee needs to be one of ${this.feeLevels}.`);
+      const levels = this.feeLevels.join(', ').toLowerCase();
+      addError('defaultTransactionFee', app.polyglot.t('localStorageModelErrors.transactionFee',
+        { levels }));
     }
 
     if (!this.bitcoinUnits.includes(attrs.bitcoinUnit)) {
@@ -67,7 +72,7 @@ export default class extends Model {
     }
 
     if (is.not.url(attrs.searchProvider)) {
-      addError('searchProvider', app.polyglot.t('settings.generalTab.searchProviderError'));
+      addError('searchProvider', app.polyglot.t('localStorageModelErrors.searchProvider'));
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;
