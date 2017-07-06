@@ -22,7 +22,8 @@
               name="anonymous"
               id="completeOrderAnon"
               class="centerLabel"
-              <% if (ob.anonymous) print('checked') %>>
+              data-var-type="boolean"
+              <% if (!ob.anonymous) print('checked') %>>
           <label for="completeOrderAnon" class="clrT2 tx5b"><%= ob.polyT('orderDetail.summaryTab.completeOrderForm.anonCheckLabel') %></label>
         </div>
       </div>
