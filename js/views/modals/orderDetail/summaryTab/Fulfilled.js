@@ -15,7 +15,7 @@ export default class extends BaseVw {
 
     this._state = {
       contractType: 'PHYSICAL_GOOD',
-      isLocalPickup: true,
+      isLocalPickup: false,
       showPassword: false,
       ...options.initialState || {},
     };
