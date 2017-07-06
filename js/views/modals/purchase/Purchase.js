@@ -255,7 +255,15 @@ export default class extends BaseModal {
             this.updatePageState('pending');
             this.actionBtn.render();
             this.purchase.set(this.purchase.parse(data));
-            this.payment.render();
+            this.payment = this.createChild(Payment, {
+              balanceRemaining: this.purchase.get('amount'),
+              paymentAddress: this.purchase.get('paymentAddress'),
+              orderId: this.purchase.get('orderId'),
+              isModerated: !!this.order.get('moderator'),
+            });
+            this.listenTo(this.payment, 'walletPaymentComplete',
+              (pmtCompleteData => this.completePurchase(pmtCompleteData)));
+            this.$('.js-pending').append(this.payment.render().el);
           })
           .fail((jqXHR) => {
             if (jqXHR.statusText === 'abort') return;
@@ -462,13 +470,7 @@ export default class extends BaseModal {
 
       // remove old view if any on render
       if (this.payment) this.payment.remove();
-      // add the pending view
-      this.payment = this.createChild(Payment, {
-        model: this.purchase,
-        order: this.order,
-      });
-      this.listenTo(this.payment, 'walletPaymentComplete', (data => this.completePurchase(data)));
-      this.$('.js-pending').append(this.payment.render().el);
+      // pending view will be added once the purchase goes through
 
       // remove old view if any on render
       if (this.complete) this.complete.remove();

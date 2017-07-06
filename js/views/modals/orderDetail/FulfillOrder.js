@@ -18,7 +18,13 @@ export default class extends BaseVw {
       throw new Error('Please provide the contract type.');
     }
 
+    if (typeof options.isLocalPickup !== 'boolean') {
+      throw new Error('Please provide a boolean indicating whether the item is to ' +
+        'be picked up locally.');
+    }
+
     this.contractType = options.contractType;
+    this.isLocalPickup = options.isLocalPickup;
     this.listenTo(orderEvents, 'fulfillingOrder', this.onFulfillingOrder);
     this.listenTo(orderEvents, 'fulfillOrderComplete, fulfillOrderFail',
       this.onFulfillOrderAlways);
@@ -55,7 +61,7 @@ export default class extends BaseVw {
     this.model.set({}, { validate: true });
 
     if (!this.model.validationError) {
-      fulfillOrder(this.model.id, this.model.toJSON());
+      fulfillOrder(this.contractType, this.isLocalPickup, this.model.toJSON());
     }
 
     this.render();
@@ -91,6 +97,7 @@ export default class extends BaseVw {
     loadTemplate('modals/orderDetail/fulfillOrder.html', (t) => {
       this.$el.html(t({
         contractType: this.contractType,
+        isLocalPickup: this.isLocalPickup,
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         fulfillingOrder: fulfillingOrder(this.model.id),

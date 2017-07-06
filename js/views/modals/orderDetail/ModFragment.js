@@ -1,15 +1,15 @@
 import _ from 'underscore';
-import loadTemplate from '../../../../utils/loadTemplate';
-import BaseVw from '../../../baseVw';
+import loadTemplate from '../../../utils/loadTemplate';
+import BaseVw from '../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
 
-    if (this.model) this.setModel(this.model);
-
     this._state = {
+      maxPeerIdLength: 8,
+      showAvatar: false,
       ...options.initialState || {},
     };
   }
@@ -36,7 +36,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/orderDetail/summaryTab/orderDetailsModerator.html', t => {
+    loadTemplate('modals/orderDetail/modFragment.html', t => {
       this.$el.html(t({
         ...this._state,
       }));

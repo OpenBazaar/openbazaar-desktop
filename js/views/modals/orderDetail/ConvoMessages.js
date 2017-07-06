@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../../../app';
+import { checkValidParticipantObject } from './OrderDetail.js';
 import BaseVw from '../../baseVw';
 import ConvoMessage from './ConvoMessage';
 
@@ -13,36 +14,11 @@ export default class extends BaseVw {
       throw new Error('Please provide the DOM element that handles scrolling for this view.');
     }
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
+    checkValidParticipantObject(options.buyer, 'buyer');
+    checkValidParticipantObject(options.vendor, 'vendor');
 
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
-    if (!options.buyer) {
-      throw new Error('Please provide a buyer object.');
-    }
-
-    if (!options.vendor) {
-      throw new Error('Please provide a vendor object.');
-    }
-
-    if (!isValidParticipantObject(options.buyer)) {
-      throw new Error(getInvalidParticpantError('buyer'));
-    }
-
-    if (!isValidParticipantObject(options.vendor)) {
-      throw new Error(getInvalidParticpantError('vendor'));
-    }
-
-    if (options.moderator && !isValidParticipantObject(options.moderator)) {
-      throw new Error(getInvalidParticpantError('moderator'));
+    if (options.moderator) {
+      checkValidParticipantObject(options.moderator, 'moderator');
     }
 
     super(options);

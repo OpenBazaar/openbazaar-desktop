@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
@@ -10,6 +9,7 @@ import {
 } from '../../../../utils/order';
 import Transactions from '../../../../collections/Transactions';
 import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
+import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
 import StateProgressBar from './StateProgressBar';
 import Payments from './Payments';
@@ -19,14 +19,14 @@ import Refunded from './Refunded';
 import OrderDetails from './OrderDetails';
 import CompleteOrderForm from './CompleteOrderForm';
 import OrderComplete from './OrderComplete';
+import DisputeStarted from './DisputeStarted';
+import DisputePayout from './DisputePayout';
+import DisputeAcceptance from './DisputeAcceptance';
+import PayForOrder from '../../../modals/purchase/Payment';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const opts = {
-      ...options,
-    };
-
-    super(opts);
+    super(options);
 
     if (!this.model) {
       throw new Error('Please provide a model.');
@@ -44,48 +44,17 @@ export default class extends BaseVw {
 
     this.contract = contract;
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
-
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
-    if (!opts.vendor) {
-      throw new Error('Please provide a vendor object.');
-    }
-
-    if (!isValidParticipantObject(options.vendor)) {
-      throw new Error(getInvalidParticpantError('vendor'));
-    }
-
-    if (!opts.buyer) {
-      throw new Error('Please provide a buyer object.');
-    }
-
-    if (!isValidParticipantObject(options.buyer)) {
-      throw new Error(getInvalidParticpantError('buyer'));
-    }
+    checkValidParticipantObject(options.buyer, 'buyer');
+    checkValidParticipantObject(options.vendor, 'vendor');
 
     if (this.contract.get('buyerOrder').payment.moderator) {
-      if (!options.moderator) {
-        throw new Error('Please provide a moderator object.');
-      }
-
-      if (!isValidParticipantObject(options.moderator)) {
-        throw new Error(getInvalidParticpantError('moderator'));
-      }
+      checkValidParticipantObject(options.moderator, 'moderator');
     }
 
-    this.options = opts || {};
-    this.vendor = opts.vendor;
-    this.buyer = opts.buyer;
-    this.moderator = opts.moderator;
+    this.options = options || {};
+    this.vendor = options.vendor;
+    this.buyer = options.buyer;
+    this.moderator = options.moderator;
 
     this.listenTo(this.model, 'change:state', (md, state) => {
       this.stateProgressBar.setState(this.progressBarState);
@@ -96,23 +65,33 @@ export default class extends BaseVw {
         if (this.accepted) this.accepted.remove();
       }
 
-      if (state === 'REFUNDED' || state === 'FULFILLED' && this.accepted) {
-        this.accepted.setState({
-          showRefundButton: false,
+      if (
+        ['REFUNDED', 'FULFILLED', 'DISPUTED', 'DECIDED', 'RESOLVED', 'COMPLETE'].indexOf(state) > -1
+        && this.accepted) {
+        const acceptedState = {
           showFulfillButton: false,
           infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
-        });
+        };
+
+        if (state !== 'DISPUTED') {
+          acceptedState.showRefundButton = false;
+        }
+
+        this.accepted.setState(acceptedState);
       }
 
-      if (state === 'COMPLETED' && this.completeOrderForm) {
+      if (this.completeOrderForm &&
+        ['FULFILLED', 'RESOLVED'].indexOf(state) === -1) {
         this.completeOrderForm.remove();
+        this.completeOrderForm = null;
       }
     });
 
     if (!this.isCase()) {
       this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
-        if (!this.shouldShowPayForOrderSection()) {
-          this.$('.js-payForOrderWrap').remove();
+        if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
+          this.payForOrder.remove();
+          this.payForOrder = null;
         }
 
         if (this.payments) {
@@ -186,6 +165,49 @@ export default class extends BaseVw {
       }
     });
 
+    this.listenTo(orderEvents, 'openDisputeComplete', e => {
+      if (e.id === this.model.id) {
+        this.model.set('state', 'DISPUTED');
+        this.model.fetch();
+      }
+    });
+
+    if (!this.isCase()) {
+      this.listenTo(this.contract, 'change:dispute',
+        () => this.renderDisputeStartedView());
+
+      this.listenTo(this.contract, 'change:disputeResolution', () => {
+        // Only render the dispute payout the first time we receive it
+        // (it changes from undefined to an object with data). It shouldn't
+        // be changing after that, but for some reason it is.
+        if (!this.contract.previous('disputeResolution')) {
+          // The timeout is needed in the handler so the updated
+          // order state is available.
+          setTimeout(() => this.renderDisputePayoutView());
+        }
+      });
+
+      this.listenTo(orderEvents, 'acceptPayoutComplete', e => {
+        if (e.id === this.model.id) {
+          this.model.set('state', 'RESOLVED');
+          this.model.fetch();
+        }
+      });
+
+      this.listenTo(this.contract, 'change:disputeAcceptance',
+        () => this.renderDisputeAcceptanceView());
+    } else {
+      this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
+        if (e.id === this.model.id) {
+          this.model.set('state', 'RESOLVED');
+          this.model.fetch();
+        }
+      });
+
+      this.listenTo(this.model, 'change:resolution',
+        () => this.renderDisputePayoutView());
+    }
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -221,6 +243,16 @@ export default class extends BaseVw {
           } else if (e.jsonData.notification.orderCompletion &&
             e.jsonData.notification.orderCompletion.orderId === this.model.id) {
             // A notification the vendor will get when the buyer has completed an order.
+            this.model.fetch();
+          } else if (e.jsonData.notification.disputeOpen &&
+            e.jsonData.notification.disputeOpen.orderId === this.model.id) {
+            // When a party opens a dispute the mod and the other party will get this
+            // notification
+            this.model.fetch();
+          } else if (e.jsonData.notification.disputeClose &&
+            e.jsonData.notification.disputeClose.orderId === this.model.id) {
+            // Notification to the vendor and buyer when a mod has made a decision
+            // on an open dispute.
             this.model.fetch();
           }
         }
@@ -271,10 +303,9 @@ export default class extends BaseVw {
       ],
     };
 
-    // TODO: add in completed check with determination of whether a dispute
-    // had been opened.
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
-      orderState === 'RESOLVED') {
+      orderState === 'RESOLVED' ||
+      (orderState === 'COMPLETED' && this.model.get('dispute') !== undefined)) {
       if (!this.isCase()) {
         state.states = [
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
@@ -285,15 +316,15 @@ export default class extends BaseVw {
 
         switch (orderState) {
           case 'DECIDED':
-            state.currentState = 1;
-            state.disputeState = 0;
-            break;
-          case 'RESOLVED':
             state.currentState = 2;
             state.disputeState = 0;
             break;
-          case 'COMPLETE':
+          case 'RESOLVED':
             state.currentState = 3;
+            state.disputeState = 0;
+            break;
+          case 'COMPLETE':
+            state.currentState = 4;
             state.disputeState = 0;
             break;
           default:
@@ -322,6 +353,7 @@ export default class extends BaseVw {
           `orderDetail.summaryTab.orderDetails.progressBarStates.${orderState.toLowerCase()}`),
       ];
       state.currentState = 2;
+      state.disputeState = 0;
     } else {
       switch (orderState) {
         case 'PENDING':
@@ -363,7 +395,8 @@ export default class extends BaseVw {
       balanceRemaining = this.orderPriceBtc - totalPaid;
     }
 
-    return balanceRemaining;
+    // round to 8 decimal places
+    return Math.round(balanceRemaining * 100000000) / 100000000;
   }
 
   shouldShowPayForOrderSection() {
@@ -374,7 +407,8 @@ export default class extends BaseVw {
     let bool = false;
 
     // Show the accepted section if the order has been accepted and its fully funded.
-    if (this.contract.get('vendorOrderConfirmation') && this.getBalanceRemaining() <= 0) {
+    if (this.contract.get('vendorOrderConfirmation')
+      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
       bool = true;
     }
 
@@ -481,6 +515,19 @@ export default class extends BaseVw {
     this.$subSections.prepend(this.refunded.render().el);
   }
 
+  renderCompleteOrderForm() {
+    const completingObject = completingOrder(this.model.id);
+    const model = new OrderCompletion(
+      completingObject ? completingObject.data : { orderId: this.model.id });
+    if (this.completeOrderForm) this.completeOrderForm.remove();
+    this.completeOrderForm = this.createChild(CompleteOrderForm, {
+      model,
+      slug: this.contract.get('vendorListings').at(0).get('slug'),
+    });
+
+    this.$subSections.prepend(this.completeOrderForm.render().el);
+  }
+
   renderFulfilledView() {
     const data = this.contract.get('vendorOrderFulfillment');
 
@@ -495,6 +542,7 @@ export default class extends BaseVw {
       initialState: {
         contractType: this.contract.type,
         showPassword: this.moderator && this.moderator.id !== app.profile.id || true,
+        isLocalPickup: this.contract.isLocalPickup,
       },
     });
 
@@ -502,26 +550,11 @@ export default class extends BaseVw {
       .done(profile =>
         this.fulfilled.setState({ storeName: profile.get('name') }));
 
-    const sections = document.createDocumentFragment();
-    const $sections = $(sections).append(this.fulfilled.render().el);
+    this.$subSections.prepend(this.fulfilled.render().el);
 
-    // If the order is not complete and this is the buyer, we'll
-    // render a complete order form.
-    if (['FULFILLED', 'RESOLVED'].indexOf(this.model.get('state')) > -1 &&
-      this.buyer.id === app.profile.id) {
-      const completingObject = completingOrder(this.model.id);
-      const model = completingObject ?
-        completingObject.model : new OrderCompletion({ orderId: this.model.id });
-      if (this.completeOrderForm) this.completeOrderForm.remove();
-      this.completeOrderForm = this.createChild(CompleteOrderForm, {
-        model,
-        slug: this.contract.get('vendorListings').at(0).get('slug'),
-      });
-
-      $sections.prepend(this.completeOrderForm.render().el);
+    if (this.model.get('state') === 'FULFILLED' && this.buyer.id === app.profile.id) {
+      this.renderCompleteOrderForm();
     }
-
-    this.$subSections.prepend($sections);
   }
 
   renderOrderCompleteView() {
@@ -543,6 +576,121 @@ export default class extends BaseVw {
     this.$subSections.prepend(this.orderComplete.render().el);
   }
 
+  renderDisputeStartedView() {
+    const data = this.isCase() ? {
+      timestamp: this.model.get('timestamp'),
+      claim: this.model.get('claim'),
+    } : this.contract.get('dispute');
+
+    if (!data) {
+      throw new Error('Unable to create the Dispute Started view because the dispute ' +
+        'data object has not been set.');
+    }
+
+    if (this.disputeStarted) this.disputeStarted.remove();
+    this.disputeStarted = this.createChild(DisputeStarted, {
+      initialState: {
+        ...data,
+        showResolveButton: this.model.get('state') === 'DISPUTED' &&
+          this.moderator.id === app.profile.id,
+      },
+    });
+
+    // this is only set on the Case.
+    const buyerOpened = this.model.get('buyerOpened');
+    if (typeof buyerOpened !== 'undefined') {
+      const disputeOpener = buyerOpened ? this.buyer : this.vendor;
+      disputeOpener.getProfile()
+        .done(profile =>
+          this.disputeStarted.setState({ disputerName: profile.get('name') }));
+    }
+
+    this.listenTo(this.disputeStarted, 'clickResolveDispute',
+      () => this.trigger('clickResolveDispute'));
+
+    this.$subSections.prepend(this.disputeStarted.render().el);
+  }
+
+  renderDisputePayoutView() {
+    const data = this.isCase() ? this.model.get('resolution') :
+      this.contract.get('disputeResolution');
+
+    if (!data) {
+      throw new Error('Unable to create the Dispute Payout view because the resolution ' +
+        'data object has not been set.');
+    }
+
+    if (this.disputePayout) this.disputePayout.remove();
+    this.disputePayout = this.createChild(DisputePayout, {
+      orderId: this.model.id,
+      initialState: {
+        ...data,
+        showAcceptButton: !this.isCase() && this.model.get('state') === 'DECIDED',
+      },
+    });
+
+    ['buyer', 'vendor', 'moderator'].forEach(type => {
+      this[type].getProfile().done(profile => {
+        const state = {};
+        state[`${type}Name`] = profile.get('name');
+        state[`${type}AvatarHashes`] = profile.get('avatarHashes').toJSON();
+        this.disputePayout.setState(state);
+      });
+    });
+
+    this.listenTo(this.disputeStarted, 'clickResolveDispute',
+      () => this.trigger('clickResolveDispute'));
+
+    this.$subSections.prepend(this.disputePayout.render().el);
+  }
+
+  renderPayForOrder() {
+    if (this.payForOrder) this.payForOrder.remove();
+
+    this.payForOrder = this.createChild(PayForOrder, {
+      balanceRemaining: this.getBalanceRemaining(),
+      paymentAddress: this.paymentAddress,
+      orderId: this.model.id,
+      isModerated: !!this.moderator,
+    });
+
+    this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
+  }
+
+  renderDisputeAcceptanceView() {
+    const data = this.contract.get('disputeAcceptance');
+
+    if (!data) {
+      throw new Error('Unable to create the Dispute Acceptance view because the ' +
+        'disputeAcceptance data object has not been set.');
+    }
+
+    const closer = data.closedBy ===
+      this.buyer.id ? this.buyer : this.vendor;
+
+    if (this.disputeAcceptance) this.disputeAcceptance.remove();
+    this.disputeAcceptance = this.createChild(DisputeAcceptance, {
+      dataObject: data,
+      initialState: {
+        acceptedByBuyer: closer.id === this.buyer.id,
+        buyerViewing: app.profile.id === this.buyer.id,
+      },
+    });
+
+    closer.getProfile()
+      .done(profile =>
+        this.disputeAcceptance.setState({
+          closerName: profile.get('name'),
+          closerAvatarHashes: profile.get('avatarHashes').toJSON(),
+        }));
+
+    this.$subSections.prepend(this.disputeAcceptance.render().el);
+
+    if (this.model.get('state') === 'RESOLVED' && this.buyer.id === app.profile.id) {
+      this.renderCompleteOrderForm();
+    }
+  }
+
   /**
    * Will render sub-sections in order based on their timestamp. Exempt from
    * this are the Order Details, Payment Details and Accepted sections which
@@ -555,7 +703,7 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderRefundView,
         timestamp:
-          (new Date(this.model.get('refundAddressTransaction').timestamp)).getTime(),
+          (new Date(this.model.get('refundAddressTransaction').timestamp)),
       });
     }
 
@@ -563,7 +711,7 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderFulfilledView,
         timestamp:
-          (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)).getTime(),
+          (new Date(this.contract.get('vendorOrderFulfillment')[0].timestamp)),
       });
     }
 
@@ -571,7 +719,40 @@ export default class extends BaseVw {
       sections.push({
         function: this.renderOrderCompleteView,
         timestamp:
-          (new Date(this.contract.get('buyerOrderCompletion').timestamp)).getTime(),
+          (new Date(this.contract.get('buyerOrderCompletion').timestamp)),
+      });
+    }
+
+    if (this.contract.get('dispute') || this.isCase()) {
+      const timestamp = this.isCase() ?
+        this.model.get('timestamp') :
+        this.contract.get('dispute').timestamp;
+
+      sections.push({
+        function: this.renderDisputeStartedView,
+        timestamp:
+          (new Date(timestamp)),
+      });
+    }
+
+    if (this.contract.get('disputeResolution') ||
+      (this.isCase() && this.model.get('resolution'))) {
+      const timestamp = this.isCase() ?
+        this.model.get('resolution').timestamp :
+        this.contract.get('disputeResolution').timestamp;
+
+      sections.push({
+        function: this.renderDisputePayoutView,
+        timestamp:
+          (new Date(timestamp)),
+      });
+    }
+
+    if (this.contract.get('disputeAcceptance')) {
+      sections.push({
+        function: this.renderDisputeAcceptanceView,
+        timestamp:
+          (new Date(this.contract.get('disputeAcceptance').timestamp)),
       });
     }
 
@@ -595,21 +776,13 @@ export default class extends BaseVw {
   }
 
   render() {
-    const templateData = {
-      id: this.model.id,
-      shouldShowPayForOrderSection: this.shouldShowPayForOrderSection(),
-      isCase: this.isCase(),
-      paymentAddress: this.paymentAddress,
-      isTestnet: app.testnet,
-      ...this.model.toJSON(),
-    };
-
-    if (this.shouldShowPayForOrderSection()) {
-      templateData.balanceRemaining = this.getBalanceRemaining();
-    }
-
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
-      this.$el.html(t(templateData));
+      this.$el.html(t({
+        id: this.model.id,
+        isCase: this.isCase(),
+        isTestnet: app.testnet,
+        ...this.model.toJSON(),
+      }));
       this._$copiedToClipboard = null;
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
@@ -624,6 +797,10 @@ export default class extends BaseVw {
         moderator: this.moderator,
       });
       this.$('.js-orderDetailsWrap').html(this.orderDetails.render().el);
+
+      if (this.shouldShowPayForOrderSection()) {
+        this.renderPayForOrder();
+      }
 
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();

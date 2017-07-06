@@ -22,14 +22,14 @@
   // first item.
   var item = ob.order.items[0];
 
-  var priceText = ob.convertAndFormatCurrency(ob.listing.item.price,
-    ob.listing.metadata.pricingCurrency, ob.userCurrency, { useBtcSymbol: false });
+  var priceText = ob.formatCurrency(ob.order.payment.amount, 'BTC',
+     { useBtcSymbol: false });
 
   if (ob.userCurrency !== 'BTC') {
     priceText = ob.polyT('fiatBtcPairing', {
-      fiatAmount: priceText,
-      btcAmount: ob.convertAndFormatCurrency(ob.listing.item.price,
-        ob.listing.metadata.pricingCurrency, 'BTC', { useBtcSymbol: false }),
+      fiatAmount: ob.convertAndFormatCurrency(ob.order.payment.amount, 'BTC',
+        ob.userCurrency),
+      btcAmount: priceText,
     });
   }
 %>
@@ -95,7 +95,11 @@
             <div class="flexRow gutterH row">
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.moderatorHeading') %></div>
-                <div class="js-moderatorContainer"></div>
+                <% if (ob.isModerated) { %>
+                  <div class="js-moderatorContainer"></div>
+                <% } else { %>
+                  <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+                <% } %>
               </div>
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
