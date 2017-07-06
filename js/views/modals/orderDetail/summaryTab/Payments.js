@@ -8,6 +8,7 @@ import {
   cancelOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { checkValidParticipantObject } from '../OrderDetail.js';
 import baseVw from '../../../baseVw';
 import Payment from './Payment';
 
@@ -39,25 +40,7 @@ export default class extends baseVw {
         'confirmed by the current user.');
     }
 
-    const isValidParticipantObject = (participant) => {
-      let isValid = true;
-      if (!participant.id) isValid = false;
-      if (typeof participant.getProfile !== 'function') isValid = false;
-      return isValid;
-    };
-
-    const getInvalidParticpantError = (type = '') =>
-      (`The ${type} object is not valid. It should have an id ` +
-        'as well as a getProfile function that returns a promise that ' +
-        'resolves with a profile model.');
-
-    if (!opts.vendor) {
-      throw new Error('Please provide a vendor object.');
-    }
-
-    if (!isValidParticipantObject(options.vendor)) {
-      throw new Error(getInvalidParticpantError('vendor'));
-    }
+    checkValidParticipantObject(options.vendor, 'vendor');
 
     super(opts);
     this.options = opts;
@@ -177,9 +160,11 @@ export default class extends baseVw {
     this.payments = [];
 
     this.collection.models.forEach((payment, index) => {
-      const paidSoFar = this.collection.models
+      let paidSoFar = this.collection.models
         .slice(0, index + 1)
         .reduce((total, model) => total + model.get('value'), 0);
+      // round to 8 decimal places
+      paidSoFar = Math.round(paidSoFar * 100000000) / 100000000;
       const isMostRecentPayment = index === this.collection.length - 1;
       const paymentView = this.createPayment(payment, {
         initialState: {
