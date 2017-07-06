@@ -320,7 +320,7 @@
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
-      "helperDefaultFee": "Average is recommended. High may clear faster.",
+      "helperDefaultFee": "High is recommended for the fastest transactions",
       "helperServerManagement": "Switch and manage server connections",
       "helperServerPeers": "Peers you're connected to",
       "smtp": {
@@ -1180,7 +1180,7 @@
         "btnCancel": "Cancel",
         "btnSubmit": "Submit"
       }
-    },    
+    },
     "disputeOrderTab": {
       "heading": "Dispute Order",
       "moderatorLabel": "Moderator",
@@ -1370,7 +1370,7 @@
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."
-  },  
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
