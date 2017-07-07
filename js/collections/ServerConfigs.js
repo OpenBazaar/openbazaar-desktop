@@ -29,6 +29,11 @@ export default class extends Collection {
     return this.findWhere({ default: true });
   }
 
+  /**
+   * The "active" server is the server we are currently connected to or if we're not
+   * connected to any server, it's the last server we were connected to. When the app is
+   * re-started, a connection will automatically be attempted to this server.
+   */
   get activeServer() {
     return this.get(this._activeId);
   }

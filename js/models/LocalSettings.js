@@ -23,6 +23,7 @@ export default class extends Model {
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
       searchProvider: 'https://search.ob1.io/search/listings',
+      dontShowTorExternalLinkWarning: false,
     };
   }
 
@@ -68,6 +69,11 @@ export default class extends Model {
 
     if (is.not.url(attrs.searchProvider)) {
       addError('searchProvider', app.polyglot.t('settings.generalTab.searchProviderError'));
+    }
+
+    if (typeof attrs.dontShowTorExternalLinkWarning !== 'boolean') {
+      addError('dontShowTorExternalLinkWarning',
+        'dontShowTorExternalLinkWarning must be provided as a boolean.');
     }
 
     if (Object.keys(errObj).length && errObj) return errObj;
