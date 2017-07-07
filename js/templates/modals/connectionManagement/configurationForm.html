@@ -102,6 +102,24 @@
         <label for="serverConfigUseTor"><%= ob.polyT('connectionManagement.configurationForm.useTor') %></label>
       </div>
     </div>
+    <div class="js-torProxyRow <% if (!ob.useTor) print('hide') %>">
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('connectionManagement.configurationForm.torProxyLabel') %></label>
+        </div>
+        <div class="col9">
+          <% if (ob.errors.torProxy) print(ob.formErrorTmpl({ errors: ob.errors.torProxy })) %>
+          <input type="text" class="clrBr clrSh2 required" name="torProxy" id="serverConfigTorProxy" value="<%= ob.torProxy %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.torProxyPlaceholder') %>">
+          <% if (!ob.default) { %>
+          <div class="clrT2 txSm padSm">
+            <%= ob.polyT('connectionManagement.configurationForm.torServerWarning', {
+              warning: `<span class="txB">${ob.polyT('connectionManagement.configurationForm.warning')}</span>`,
+            }) %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
   </form>
 
   <hr class="clrBr" />

@@ -1,11 +1,12 @@
 import { EOL } from 'os';
 import { remote, ipcRenderer } from 'electron';
 import _ from 'underscore';
-import app from '../app';
-import ServerConfig from '../models/ServerConfig';
-import Socket from '../utils/Socket';
 import $ from 'jquery';
 import { Events } from 'backbone';
+import Socket from '../utils/Socket';
+import { guid } from './';
+import app from '../app';
+import ServerConfig from '../models/ServerConfig';
 
 /*
   The module is used to establish a connection with a server as well as monitor
@@ -165,12 +166,11 @@ export default function connect(server, options = {}) {
   app.serverConfigs.activeServer = server;
   const curCon = getCurrentConnection();
 
-  // if (curCon && curCon.server.id === server.id &&
-  //   (curCon.status === 'connected' || curCon.status === 'connecting')) {
-  //   throw new Error('You are already connected or connecting to the given server');
-  // }
+  const innerLog = (msg = '') => {
+    log(`[${server.id.slice(0, 8)}] ${msg}`);
+  };
 
-  log(`[${server.id.slice(0, 8)}] Will attempt to connect to server "${server.get('name')}"` +
+  innerLog(`Will attempt to connect to server "${server.get('name')}"` +
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
@@ -287,18 +287,9 @@ export default function connect(server, options = {}) {
       if (socketConnectAttempt) socketConnectAttempt.cancel();
     };
 
-    // Putting a timeout, because we want to return the promise before sending any
-    // progress (i.e. notify()) events.
-    setTimeout(() => {
-      if (server.get('default') && !localServer) {
-        // This should never happen to normal users. The only way it would is if you are a dev
-        // and mucking with localStorage and / or fudging the source for the app to masquerade
-        // as a bundled app.
-        throw new Error('The default configuration should only be used on the bundled app.');
-      }
-
-      innerConnectDeferred.notify('connecting');
-
+    // This is called when either the client Tor proxy has been set or once we've determined
+    // it's not needed.
+    const onClientTorProxyChecked = () => {
       // This flag means that we want the server to be running in a certain tor mode
       // (tor on or tor off), buts it's already running in the opposite mode.
       const serverRunningIncompatibleWithTor = server.get('default') &&
@@ -316,8 +307,6 @@ export default function connect(server, options = {}) {
       if (server.get('default') &&
         (!localServer.isRunning || localServer.isStopping)) {
         const onTorChecked = () => {
-          innerConnectDeferred.notify('starting-local-server');
-
           const onLocalServerStart = () => {
             socketConnectAttempt = socketConnect(socket)
               .done(() => {
@@ -333,6 +322,7 @@ export default function connect(server, options = {}) {
 
           const commandLineArgs = [];
           if (server.get('useTor')) commandLineArgs.push('--tor');
+          innerConnectDeferred.notify('starting-local-server');
           localServer.start(commandLineArgs);
 
           // Remove any previous start handlers that this module may have bound. Not
@@ -391,6 +381,43 @@ export default function connect(server, options = {}) {
               innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
             }
           });
+      }
+    };
+
+    // Putting a timeout, because we want to return the promise before sending any
+    // progress (i.e. notify()) events.
+    setTimeout(() => {
+      if (server.get('default') && !localServer) {
+        // This should never happen to normal users. The only way it would is if you are a dev
+        // and mucking with localStorage and / or fudging the source for the app to masquerade
+        // as a bundled app.
+        throw new Error('The default configuration should only be used on the bundled app.');
+      }
+
+      innerConnectDeferred.notify('connecting');
+
+      if (server.get('useTor')) {
+        innerConnectDeferred.notify('setting-tor-proxy');
+        innerLog(`Activating a proxy at socks5://${server.get('torProxy')}`);
+        const setProxyId = guid();
+        ipcRenderer.send('set-proxy', setProxyId, `socks5://${server.get('torProxy')}`);
+        ipcRenderer.on('proxy-set', (e, id) => {
+          if (id === setProxyId) {
+            innerConnectDeferred.notify('tor-proxy-set');
+            onClientTorProxyChecked();
+          }
+        });
+      } else {
+        innerConnectDeferred.notify('clearing-tor-proxy');
+        innerLog('Clearing any proxy that may be set.');
+        const setProxyId = guid();
+        ipcRenderer.send('set-proxy', setProxyId, '');
+        ipcRenderer.on('proxy-set', (e, id) => {
+          if (id === setProxyId) {
+            innerConnectDeferred.notify('tor-proxy-cleared');
+            onClientTorProxyChecked();
+          }
+        });
       }
     });
 
@@ -456,29 +483,27 @@ export default function connect(server, options = {}) {
 
   // wire in some logging
   deferred.progress(e => {
-    log(`[${server.id.slice(0, 8)}] Status is "${e.status}" for connect attempt` +
+    innerLog(`Status is "${e.status}" for connect attempt` +
       ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
   }).done((e) => {
-    log(`[${server.id.slice(0, 8)}] Connected to "${e.server.get('name')}"`);
+    innerLog(`Connected to "${e.server.get('name')}"`);
 
     e.socket.on('close', () => {
-      const logMsg = `[${e.server.id.slice(0, 8)}] Disconnected from ` +
-        `"${e.server.get('name')}"`;
-      log(logMsg);
+      innerLog(`Disconnected from "${e.server.get('name')}"`);
     });
   }).fail((e) => {
-    log(`[${server.id.slice(0, 8)}] Failed to connect to "${e.server.get('name')}"`);
-    log(` ====> Reason: ${e.status}`);
+    innerLog(`Failed to connect to "${e.server.get('name')}"`);
+    innerLog(`====> Reason: ${e.status}`);
 
     if (e.socketCloseEvent) {
-      log(` ====> Code: ${e.socketCloseEvent.code}`);
+      innerLog(`====> Code: ${e.socketCloseEvent.code}`);
       if (e.socketCloseEvent.reason) log(`Reason: ${e.socketCloseEvent.reason}`);
     } else if (e.failedAuthEvent) {
-      log(` ====> Status: ${e.failedAuthEvent.status}`);
-      log(` ====> Status text: ${e.failedAuthEvent.statusText}`);
+      innerLog(`====> Status: ${e.failedAuthEvent.status}`);
+      innerLog(`====> Status text: ${e.failedAuthEvent.statusText}`);
 
       if (e.failedAuthEvent.responseText) {
-        log(` ====> Response text: ${e.failedAuthEvent.responseText}`);
+        innerLog(`====> Response text: ${e.failedAuthEvent.responseText}`);
       }
     }
   });

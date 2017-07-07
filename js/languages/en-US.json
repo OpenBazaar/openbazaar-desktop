@@ -551,7 +551,9 @@
       "useTor": "Use Tor",
       "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting. Click Save to confirm your decision.",
       "torProxyLabel": "Tor SOCKS5 proxy",
-      "torProxyPlaceholder": "socks5://127.0.0.1:9150"
+      "torProxyPlaceholder": "127.0.0.1:9150",
+      "warning": "Warning:",
+      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
     }
   },
   "wallet": {
@@ -1189,6 +1191,13 @@
       "caseOffIfEmpty": "Please fill out all settings if you turn notifications on."
     }
   },
+  "serverConfigModelErrors": {
+    "provideValue": "Please provide a value.",
+    "invalidIp": "This does not appear to be a valid IP address.",
+    "providePortAsNumber": "Please provide a port as a number.",
+    "provideValidPortRange": "Please provide a number between 0 and 65535.",
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+  },  
   "errors": {
     "saveError": "There was an error saving your data.",
     "badResult": "The server returned an error."

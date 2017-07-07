@@ -439,10 +439,17 @@ function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/.tmp/index.html`);
 
-  mainWindow.webContents.session.setProxy({
-    proxyRules: 'socks5://127.0.0.1:9150',
-    proxyBypassRules: '<local>',
-  }, () => {});
+  ipcMain.on('set-proxy', (e, id, socks5Setting = '') => {
+    if (!id) {
+      throw new Error('Please provide an id that will be passed back with the "proxy-set" ' +
+        'event.');
+    }
+
+    mainWindow.webContents.session.setProxy({
+      proxyRules: socks5Setting,
+      proxyBypassRules: '<local>',
+    }, () => mainWindow.webContents.send('proxy-set', id));
+  });
 
   // Open the DevTools.
   if (process.env.NODE_ENV === 'development') {

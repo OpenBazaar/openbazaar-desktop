@@ -45,6 +45,7 @@ export default class extends baseVw {
       'click .js-cancel': 'onCancelClick',
       'click .js-save': 'onSaveClick',
       'change #serverConfigServerIp': 'onChangeServerIp',
+      'change [name=useTor]': 'onChangeUseTor',
     };
   }
 
@@ -86,6 +87,11 @@ export default class extends baseVw {
       this.$radioSslOn[0].checked = true;
       this.$btnStripSsl.addClass('disabled');
     }
+  }
+
+  onChangeUseTor(e) {
+    this.getCachedEl('.js-torProxyRow')
+      .toggleClass('hide', !e.target.checked);
   }
 
   get $formFields() {
