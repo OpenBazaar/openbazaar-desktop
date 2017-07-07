@@ -25,6 +25,7 @@ export default class extends baseVw {
 
     this.socialAccounts = this.createChild(SocialAccounts, {
       collection: this.profile.get('contactInfo').get('social'),
+      maxAccounts: this.profile.get('contactInfo').maxSocialAccounts,
     });
   }
 

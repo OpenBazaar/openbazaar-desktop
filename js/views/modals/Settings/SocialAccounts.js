@@ -9,12 +9,17 @@ export default class extends BaseView {
       throw new Error('Please provide a collection.');
     }
 
+    if (!options.maxAccounts) {
+      throw new Error('Please provide a maximum number of accounts.');
+    }
+
     super({
       className: 'socialAccounts gutterV',
       ...options,
     });
     this.options = options;
     this.accountViews = [];
+    this.maxAccounts = options.maxAccounts;
 
     this.listenTo(this.collection, 'add', (md) => {
       const view = this.createAccountView(md);
@@ -22,22 +27,33 @@ export default class extends BaseView {
       this.$socialWrapper.append(view.render().el);
 
       this.accountViews.push(view);
-
-      if (this.collection.length >= this.options.maxCouponCount) {
-        this.$addAccount.addClass('hide');
-      }
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
       (this.accountViews.splice(removeOpts.index, 1)[0]).remove();
 
-      if (this.collection.length < this.options.maxCouponCount) {
-        this.$addAccount.removeClass('hide');
+      if (this.collection.length < this.maxAccounts) {
+        this.hideAddBtn(false);
+      }
+
+      // if the last account is removed, replace it with a blank one
+      if (this.collection.length === 0) {
+        this.addFirstAccount();
       }
     });
 
-    // if the collection is empty, add a blank account to the form
-    if (this.collection.length === 0) this.collection.add({ type: '', username: '' });
+    // if the collection is empty on construction, add a blank account to the form
+    if (this.collection.length === 0) {
+      this.addFirstAccount();
+    }
+  }
+
+  addFirstAccount() {
+    this.collection.add(new SocialAccountMd());
+    this.hideAddBtn(false);
+    this.accountViews[0]
+      .$('input[name=type]')
+      .focus();
   }
 
   events() {
@@ -46,8 +62,16 @@ export default class extends BaseView {
     };
   }
 
+  hideAddBtn(bool) {
+    this.$addAccount.toggleClass('hide', bool);
+  }
+
   onClickAddAccount() {
-    this.collection.add(new SocialAccountMd());
+    const data = this.accountViews[this.accountViews.length - 1].getFormData();
+    // don't add another blank account unless the previous is complete
+    if (data.type && data.username) {
+      this.collection.add(new SocialAccountMd());
+    }
     this.accountViews[this.accountViews.length - 1]
       .$('input[name=type]')
       .focus();
@@ -60,6 +84,7 @@ export default class extends BaseView {
   createAccountView(model, options = {}) {
     const accountErrors = {};
 
+    // TODO: show length errors
     if (this.options.accountErrors) {
       Object.keys(this.options.accountErrors)
         .forEach(errKey => {
@@ -75,6 +100,14 @@ export default class extends BaseView {
       accountErrors,
       ...options,
     });
+
+    this.listenTo(view, 'remove-click', () => {
+      this.collection.remove(view.model);
+    });
+
+    if (this.collection.length >= this.maxAccounts) {
+      this.hideAddBtn(true);
+    }
 
     return view;
   }
