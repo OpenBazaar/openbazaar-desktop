@@ -78,6 +78,21 @@
     }
   }
 
+  &.torIndicatorOn {
+    .searchWrapper::after {
+      content: '';
+      background-image: url(../../imgs/icon-tor.png);
+      background-repeat: no-repeat;
+      background-size: 13px auto;
+      background-position: center;
+      position: absolute;
+      top: -2px;
+      right: 7px;
+      width: 16px;
+      height: 100%;
+    }
+  }
+
   .windowControls {
     display: flex;
     align-items: center;

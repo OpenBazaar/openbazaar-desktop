@@ -108,7 +108,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         abbrNum,
         moment,
-        isTestnet: app.testnet,
+        isTestnet: app.serverConfig.testnet,
       }));
     });
 

@@ -600,7 +600,7 @@ export default class extends BaseVw {
       shouldShowPayForOrderSection: this.shouldShowPayForOrderSection(),
       isCase: this.isCase(),
       paymentAddress: this.paymentAddress,
-      isTestnet: app.testnet,
+      isTestnet: app.serverConfig.testnet,
       ...this.model.toJSON(),
     };
 
