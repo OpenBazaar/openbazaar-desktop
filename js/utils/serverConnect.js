@@ -342,13 +342,10 @@ export default function connect(server, options = {}) {
           localServer.on('getServerStatusSuccess', data => {
             if (data.pid === getServerStatusPid) {
               if (data.torAvailable && !server.get('useTor')) {
-                console.log('boom');
                 innerConnectDeferred.reject('tor-not-configured');
               } else if (!data.torAvailable && server.get('useTor')) {
-                console.log('bam');
-                // show error that you must uncheck tor
+                innerConnectDeferred.reject('tor-not-available');
               } else {
-                console.log('bizzle');
                 onTorChecked();
               }
             }
@@ -356,8 +353,7 @@ export default function connect(server, options = {}) {
 
           localServer.on('getServerStatusFail', data => {
             if (data.pid === getServerStatusPid) {
-              // todo todo TODO = should this really be canceled?
-              innerConnectDeferred.reject('canceled');
+              innerConnectDeferred.reject('unable-to-get-server-status');
             }
           });
         }
@@ -439,7 +435,8 @@ export default function connect(server, options = {}) {
       .fail((status, data = {}) => {
         if (attempt === opts.attempts || status === 'authentication-failed' ||
           status === 'outer-connect-attempt-canceled' ||
-          status === 'tor-not-configured') {
+          status === 'tor-not-configured' ||
+          status === 'tor-not-available') {
           let reason;
 
           if (status === 'socket-connect-failed') {

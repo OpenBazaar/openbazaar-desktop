@@ -18,10 +18,14 @@ export default class extends baseVw {
 
     const curConn = getCurrentConnection();
     this.showConfigureTorMessage = false;
+    this.showTorUnavailableMessage = false;
 
-    if (curConn && curConn.server && curConn.server.id === options.model.id &&
-      curConn.reason === 'tor-not-configured') {
-      this.showConfigureTorMessage = true;
+    if (curConn && curConn.server && curConn.server.id === options.model.id) {
+      if (curConn.reason === 'tor-not-configured') {
+        this.showConfigureTorMessage = true;
+      } else if (curConn.reason === 'tor-not-available') {
+        this.showTorUnavailableMessage = true;
+      }
     }
 
     this._lastSavedAttrs = this.model.toJSON();
@@ -127,6 +131,7 @@ export default class extends baseVw {
         isRemote: !this.model.isLocalServer(),
         title: this.title,
         showConfigureTorMessage: this.showConfigureTorMessage,
+        showTorUnavailableMessage: this.showTorUnavailableMessage,
       }));
 
       this._$formFields = null;
@@ -138,10 +143,8 @@ export default class extends baseVw {
       if (!this.rendered) {
         this.rendered = true;
         setTimeout(() => {
-          if (!this.showConfigureTorMessage) {
-            this.$('.js-inputName').focus();
-          } else {
-            // todo todo todo : focus the Tor - bore check box
+          if (!this.showConfigureTorMessage && !this.showTorUnavailableMessage) {
+            this.getCachedEl('.js-inputName').focus();
           }
         });
       }

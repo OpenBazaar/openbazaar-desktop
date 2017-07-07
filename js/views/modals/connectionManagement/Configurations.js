@@ -88,7 +88,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnNew': 'onNewClick',
-      'click .js-configureTorEditConfig': 'onConfigureTorEditClick',
+      'click .js-editDefaultConfig': 'onClickEditDefaultConfig',
     };
   }
 
@@ -117,7 +117,7 @@ export default class extends baseVw {
     } else if (e.reason === 'tor-not-configured') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotConfigured', {
         serverName: e.server.get('name'),
-        editLink: '<a class="js-configureTorEditConfig">' +
+        editLink: '<a class="js-editDefaultConfig">' +
           `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
         links,
       });
@@ -125,7 +125,24 @@ export default class extends baseVw {
       if (!this.$el.is(':visible')) {
         // If the connection modal is not open, we'll open up the configuration form. The modal
         // will be opened shortly upon the connection failure. If the user already had the modal
-        // open, we won't auto send them to the config form, since it may interrup something else
+        // open, we won't auto send them to the config form, since it may interrupt something else
+        // they may be doing.
+        this.trigger('editConfig', {
+          model: this.collection.defaultConfig,
+        });
+      }
+    } else if (e.reason === 'tor-not-available') {
+      msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotAvailable', {
+        serverName: e.server.get('name'),
+        editLink: '<a class="js-editDefaultConfig">' +
+          `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
+        links,
+      });
+
+      if (!this.$el.is(':visible')) {
+        // If the connection modal is not open, we'll open up the configuration form. The modal
+        // will be opened shortly upon the connection failure. If the user already had the modal
+        // open, we won't auto send them to the config form, since it may interrupt something else
         // they may be doing.
         this.trigger('editConfig', {
           model: this.collection.defaultConfig,
@@ -161,7 +178,7 @@ export default class extends baseVw {
     this.trigger('newClick');
   }
 
-  onConfigureTorEditClick() {
+  onClickEditDefaultConfig() {
     this.trigger('editConfig', {
       model: this.collection.defaultConfig,
     });

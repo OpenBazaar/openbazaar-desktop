@@ -11,10 +11,16 @@
   <hr class="clrBr <% if (!ob.default) print('rowLg') %>" />
 
   <% if (ob.showConfigureTorMessage) { %>
-  <div class="border clrBr3 padMd flex configureTorMessage">
+  <div class="border clrBr3 padMd flex torMessage">
     <%= ob.polyT('connectionManagement.configurationForm.configureTorMessage') %>
   </div>
   <% } %>
+
+  <% if (ob.showTorUnavailableMessage) { %>
+  <div class="border clrBrError clrTErr padMd flex torMessage">
+    <%= ob.polyT('connectionManagement.configurationForm.torNotAvailableMessage') %>
+  </div>
+  <% } %>  
 
   <form class="padMdKids padStack">
   <% if (!ob.default) { %>

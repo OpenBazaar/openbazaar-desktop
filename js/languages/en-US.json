@@ -513,6 +513,7 @@
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
       "editLink": "edit",
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
+      "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Cancel",
       "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
     },
@@ -550,6 +551,7 @@
       "torLabel": "Tor",
       "useTor": "Use Tor",
       "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting. Click Save to confirm your decision.",
+      "torNotAvailableMessage": "Tor was not detected. If you would like to proceed without Tor, uncheck \"Use Tor\" below and click Save. Otherwise start up Tor and then retry connecting.",
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
       "warning": "Warning:",
