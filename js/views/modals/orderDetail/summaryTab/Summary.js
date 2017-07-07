@@ -234,7 +234,7 @@ export default class extends BaseVw {
       // Sent to the moderator when the other party sends their copy of the contract
       'disputeUpdate',
       // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
-      'disputeClose'
+      'disputeClose',
     ];
 
     if (serverSocket) {
