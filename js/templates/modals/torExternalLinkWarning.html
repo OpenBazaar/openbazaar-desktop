@@ -2,23 +2,20 @@
 
 <div class="contentBox padMd clrP clrBr clrSh3">
   <section>
-    <h1 class="txCtr h3 pad">Warning</h1>
+    <h1 class="txCtr h3 pad"><%= ob.polyT('torExternalLinkWarning.heading') %></h1>
     <hr class="clrBr rowHg" />
-    <p>
-      You're attempting to visit an external link in your default web browser. If your default web browser is not
-      set to Tor, you may be exposing your IP address.
-    </p>
+    <p><%= ob.polyT('torExternalLinkWarning.body') %></p>
     <div class="contentBox pad clrS clrBr row"><%= ob.url %></div>
-    <p class="rowHg">Are you sure you want to proceed?</p>
+    <p class="rowHg"><%= ob.polyT('torExternalLinkWarning.areYouSureToProceed') %></p>
     <hr class="clrBr row" />
     <div class="flexVCent">
       <div class="flexNoShrink tx5">
         <input type="checkbox" class="centerLabel" id="dontShowTorExternalLinkWarning">
-        <label for="dontShowTorExternalLinkWarning">Do not show this warning again</label>
+        <label for="dontShowTorExternalLinkWarning"><%= ob.polyT('torExternalLinkWarning.doNotShowAgain') %></label>
       </div>
       <div class="flexExpand flexHRight flexVCent gutterHMd">
-        <a class="clrT2 js-cancel">Cancel</a>
-        <button class="btn clrP clrBr js-confirm">Yes, proceed</button>
+        <a class="clrT2 js-cancel"><%= ob.polyT('torExternalLinkWarning.btnCancel') %></a>
+        <button class="btn clrP clrBr js-confirm"><%= ob.polyT('torExternalLinkWarning.btnProceed') %></button>
       </div>
     </div>
   </section>

@@ -21,6 +21,7 @@ export default class extends BaseModel {
       useTor: false,
       confirmedTor: false,
       torProxy: '127.0.0.1:9150',
+      dontShowTorExternalLinkWarning: false,
     };
   }
 

@@ -558,6 +558,14 @@
       "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
     }
   },
+  "torExternalLinkWarning": {
+    "heading": "Warning",
+    "body": "You're attempting to visit an external link in your default web browser. If your default web browser is not set to Tor, you may be exposing your IP address.",
+    "areYouSureToProceed": "Are you sure you want to proceed?",
+    "doNotShowAgain": "Do not show this warning again",
+    "btnCancel": "Cancel",
+    "btnProceed": "Yes, proceed"
+  },
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
