@@ -312,7 +312,7 @@ export default class extends BaseModal {
       this.totalPrice = _totalPrice;
       const adjPrice = convertAndFormatCurrency(this.totalPrice,
         this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
-      this.getCachedElement('.js-price').text(adjPrice);
+      this.getCachedEl('.js-price').text(adjPrice);
     }
   }
 

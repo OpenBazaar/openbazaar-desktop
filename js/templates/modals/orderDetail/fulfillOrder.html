@@ -6,7 +6,7 @@
 </div>
 <hr class="clrBr rowMd" />
 <form class="padKids padStack pad clrP clrBr js-fulfillForm">
-  <% if (ob.contractType === 'PHYSICAL_GOOD') { %>
+  <% if (ob.contractType === 'PHYSICAL_GOOD' && !ob.isLocalPickup) { %>
   <div class="flexRow gutterH">
     <div class="col3">
       <label for="fulfillOrderShippingCarrier" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.shippingCarrierLabel`) %></label>

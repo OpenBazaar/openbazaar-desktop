@@ -20,7 +20,7 @@
        const msg = ob.displayCurrency === 'BTC' ? 'payBTC' : 'payFiat';
 
     if (requiredTotal && fundGap <= 0) { %>
-      <%= ob.polyT(`purchase.pendingSection.confirmWallet.${msg}`, { amountBTC: ob.amountBTC, amountFiat }) %>
+      <%= ob.polyT(`purchase.pendingSection.confirmWallet.${msg}`, { amountBTC: ob.formatCurrency(ob.amount, 'BTC'), amountFiat }) %>
     <% } else { %>
       <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsMsg1', { funds: fundsBTC }) %>
     </p>
@@ -31,7 +31,7 @@
   <% if (requiredTotal && fundGap > 0) { %>
     <p class="txSm clrT2">
       <i>
-      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsNote', { amount: ob.amountBTC, fee: feeBTC }) %>
+      <%= ob.polyT('purchase.pendingSection.confirmWallet.insufficientFundsNote', { amount: ob.formatCurrency(ob.amount, 'BTC'), fee: feeBTC }) %>
       </i>
     </p>
   <% } %>

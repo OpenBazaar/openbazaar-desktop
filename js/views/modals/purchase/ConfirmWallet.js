@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -10,6 +11,12 @@ export default class extends BaseVw {
       throw new Error('Please provide a display currency.');
     }
 
+    if (typeof options.amount !== 'number' &&
+      typeof options.amount !== 'function') {
+      throw new Error('The amount should be provided as a number or a function ' +
+        'that returns one.');
+    }
+
     super(options);
     this.options = options;
     this.fee = false;
@@ -18,7 +25,8 @@ export default class extends BaseVw {
     this.listenTo(app.walletBalance, 'change:confirmed', () => this.render());
 
     // fetch the estimated fee and rerender when it returns
-    this.fetchEstimatedFee = $.get(app.getServerUrl('wallet/estimatefee/?feeLevel=NORMAL'))
+    const feeLevel = app.localSettings.get('defaultTransactionFee').toUpperCase();
+    this.fetchEstimatedFee = $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${feeLevel}`))
       .done(data => {
         if (this.isRemoved()) return;
         this.fee = integerToDecimal(data, true);
@@ -49,6 +57,10 @@ export default class extends BaseVw {
     this.trigger('walletConfirm');
   }
 
+  get amount() {
+    return _.result(this.options, 'amount');
+  }
+
   remove() {
     this.fetchEstimatedFee.abort();
     super.remove();
@@ -58,8 +70,7 @@ export default class extends BaseVw {
     loadTemplate('modals/purchase/confirmWallet.html', (t) => {
       this.$el.html(t({
         displayCurrency: this.options.displayCurrency,
-        amount: this.options.amount,
-        amountBTC: this.options.amountBTC,
+        amount: this.amount,
         confirmedAmount: app.walletBalance.get('confirmed'),
         fee: this.fee,
       }));

@@ -17,7 +17,6 @@ export default class extends BaseModel {
       'PHYSICAL_GOOD',
       'DIGITAL_GOOD',
       'SERVICE',
-      'CROWD_FUND',
     ];
   }
 
