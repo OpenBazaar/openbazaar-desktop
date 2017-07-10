@@ -47,12 +47,11 @@ export default class extends BaseVw {
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         // listen for a payment socket message, to react to payments from all sources
-        if (e.jsonData.notification && e.jsonData.notification.payment) {
-          const payment = e.jsonData.notification.payment;
-          if (payment.orderId === this.orderId) {
-            const amount = integerToDecimal(payment.fundingTotal, true);
+        if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
+          if (e.jsonData.notification.orderId === this.orderId) {
+            const amount = integerToDecimal(e.jsonData.notification.fundingTotal, true);
             if (amount >= this.balanceRemaining) {
-              this.trigger('walletPaymentComplete', payment);
+              this.trigger('walletPaymentComplete', e.jsonData.notification);
             } else {
               // Ensure the resulting balance has a maximum of 8 decimal places with not
               // trailing zeros.
