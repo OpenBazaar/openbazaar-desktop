@@ -113,6 +113,7 @@
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
+    "getFollowingError": "There was an error when determining if this user follows you.",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
@@ -261,8 +262,7 @@
       "statusSaveFailed": "Unable to save general settings.",
       "saveErrorAlertTitle": "Unable to save general settings",
       "searchProvider": "Search Provider",
-      "restoreDefaultProvider": "Restore default",
-      "searchProviderError": "This is not a valid url for a search provider"
+      "restoreDefaultProvider": "Restore default"
     },
     "pageTab": {
       "helperAbout": "Displays on your Home page",
@@ -320,7 +320,7 @@
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
-      "helperDefaultFee": "High is recommended for the fastest transactions",
+      "helperDefaultFee": "Priority is recommended for the fastest transactions",
       "helperServerManagement": "Switch and manage server connections",
       "helperServerPeers": "Peers you're connected to",
       "smtp": {
@@ -358,9 +358,9 @@
         "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
         "defaultFee": "Bitcoin Fee",
-        "low": "Low",
-        "medium": "Average",
-        "high": "High"
+        "low": "Economic",
+        "medium": "Normal",
+        "high": "Priority"
       },
       "appearance": {
         "sectionName": "Appearance",
@@ -1180,7 +1180,7 @@
         "btnCancel": "Cancel",
         "btnSubmit": "Submit"
       }
-    },    
+    },
     "disputeOrderTab": {
       "heading": "Dispute Order",
       "moderatorLabel": "Moderator",
@@ -1363,6 +1363,10 @@
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
   },
+  "localSettingsModelErrors": {
+    "searchProvider": "This is not a valid url for a search provider",
+    "transactionFee": "You must choose one of %{levels}."
+  },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",
     "percentageOutOfRange": "The amount must be between 0 and 100.",
@@ -1370,7 +1374,7 @@
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."
-  },  
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

@@ -209,50 +209,38 @@ export default class extends BaseVw {
     }
 
     const serverSocket = getSocket();
+    const notificationTypes = [
+      // A notification for the buyer that a payment has come in for the order. Let's refetch
+      // our model so we have the data for the new transaction and can show it in the UI.
+      // As of now, the buyer only gets these notifications and this is the only way to be
+      // aware of partial payments in realtime.
+      'payment',
+      // A notification the vendor will get when an offline order has been canceled
+      'cancel',
+      // A notification the vendor will get when an order has been fully funded
+      'order',
+      // A notification the buyer will get when the vendor has rejected an offline order.
+      'declined',
+      // A notification the buyer will get when the vendor has accepted an offline order.
+      'orderConfirmation',
+      // A notification the buyer will get when the vendor has refunded their order.
+      'refund',
+      // A notification the buyer will get when the vendor has fulfilled their order.
+      'fulfillment',
+      // A notification the vendor will get when the buyer has completed an order.
+      'orderComplete',
+      // When a party opens a dispute the mod and the other party will get this notification
+      'disputeOpen',
+      // Sent to the moderator when the other party sends their copy of the contract
+      'disputeUpdate',
+      // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
+      'disputeClose',
+    ];
 
     if (serverSocket) {
       serverSocket.on('message', e => {
-        if (e.jsonData.notification) {
-          if (e.jsonData.notification.payment &&
-            e.jsonData.notification.payment.orderId === this.model.id) {
-            // A notification for the buyer that a payment has come in for the order. Let's refetch
-            // our model so we have the data for the new transaction and can show it in the UI.
-            // As of now, the buyer only gets these notifications and this is the only way to be
-            // aware of partial payments in realtime.
-            this.model.fetch();
-          } else if (e.jsonData.notification.order &&
-            e.jsonData.notification.order.orderId === this.model.id) {
-            // A notification the vendor will get when an order has been fully funded
-            this.model.fetch();
-          } else if (e.jsonData.notification.orderCancel &&
-            e.jsonData.notification.orderCancel.orderId === this.model.id) {
-            // A notification the buyer will get when the vendor has rejected an offline order.
-            this.model.fetch();
-          } else if (e.jsonData.notification.orderConfirmation &&
-            e.jsonData.notification.orderConfirmation.orderId === this.model.id) {
-            // A notification the buyer will get when the vendor has accepted an offline order.
-            this.model.fetch();
-          } else if (e.jsonData.notification.refund &&
-            e.jsonData.notification.refund.orderId === this.model.id) {
-            // A notification the buyer will get when the vendor has refunded their order.
-            this.model.fetch();
-          } else if (e.jsonData.notification.orderFulfillment &&
-            e.jsonData.notification.orderFulfillment.orderId === this.model.id) {
-            // A notification the buyer will get when the vendor has fulfilled their order.
-            this.model.fetch();
-          } else if (e.jsonData.notification.orderCompletion &&
-            e.jsonData.notification.orderCompletion.orderId === this.model.id) {
-            // A notification the vendor will get when the buyer has completed an order.
-            this.model.fetch();
-          } else if (e.jsonData.notification.disputeOpen &&
-            e.jsonData.notification.disputeOpen.orderId === this.model.id) {
-            // When a party opens a dispute the mod and the other party will get this
-            // notification
-            this.model.fetch();
-          } else if (e.jsonData.notification.disputeClose &&
-            e.jsonData.notification.disputeClose.orderId === this.model.id) {
-            // Notification to the vendor and buyer when a mod has made a decision
-            // on an open dispute.
+        if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {
+          if (notificationTypes.indexOf(e.jsonData.notification.type) > -1) {
             this.model.fetch();
           }
         }

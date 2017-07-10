@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import app from '../../../app';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -50,6 +51,14 @@ export default class extends baseView {
     option.regions.indexOf(this.countryCode) !== -1 || option.regions.indexOf('ALL') !== -1);
 
     if (validShippingOptions.length) {
+      validShippingOptions.forEach(option => {
+        if (option.type === 'LOCAL_PICKUP') {
+          // local pickup options need a name and price
+          option.services[0] = { name: app.polyglot.t('purchase.localPickup'), price: 0 };
+        }
+        option.services = _.sortBy(option.services, 'price');
+      });
+
       const sOpts = {};
       sOpts.name = validShippingOptions[0].name;
       if (validShippingOptions[0].type !== 'LOCAL_PICKUP') {
