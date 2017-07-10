@@ -274,7 +274,7 @@ export default function connect(server, options = {}) {
 
   if (curCon) {
     if (curCon.cancel) curCon.cancel();
-    if (curCon.socket) curCon.socket.close();
+    disconnect();
   }
 
   socket = new Socket(server.socketUrl);
@@ -509,6 +509,14 @@ export default function connect(server, options = {}) {
   promise.cancel = cancel;
 
   return promise;
+}
+
+/**
+ * If we're currently connected to a server, this method will disconnect the connection.
+ */
+export function disconnect() {
+  const curCon = getCurrentConnection();
+  if (curCon && curCon.socket) curCon.socket.close();
 }
 
 ipcRenderer.send('server-connect-ready');

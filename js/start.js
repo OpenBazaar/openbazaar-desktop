@@ -499,9 +499,6 @@ function connectToServer() {
   const server = app.serverConfigs.activeServer;
   let connectAttempt = null;
 
-  console.log('sugar');
-  window.sugar = server;
-
   startupLoadingModal
     .setState({
       msg: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {

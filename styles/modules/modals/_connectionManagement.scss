@@ -58,10 +58,12 @@
       position: relative;
       height: 37px;
 
-      .btnConnectCancel {
+      .btnConnectCancel, .btnDisconnect {
         width: 140px;
         padding-left: 0;
         padding-right: 0;
+        text-align: center;
+        word-break: break-word;
       }
 
       &.failedConnectAttempt {

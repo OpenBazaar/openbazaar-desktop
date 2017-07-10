@@ -28,6 +28,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnConnect': 'onConnectClick',
+      'click .js-btnDisconnect': 'onDisconnectClick',
       'click .js-btnCancel': 'onCancelClick',
       'click .js-btnEdit': 'onEditClick',
       'click .js-btnDelete': 'onDeleteClick',
@@ -46,6 +47,10 @@ export default class extends baseVw {
 
   onConnectClick() {
     this.trigger('connectClick', { view: this });
+  }
+
+  onDisconnectClick() {
+    this.trigger('disconnectClick', { view: this });
   }
 
   onCancelClick() {

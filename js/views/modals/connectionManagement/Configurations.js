@@ -2,7 +2,11 @@ import { remote } from 'electron';
 import app from '../../../app';
 import
   serverConnect,
-  { getCurrentConnection, events as serverConnectEvents } from '../../../utils/serverConnect';
+  {
+    getCurrentConnection,
+    events as serverConnectEvents,
+    disconnect as serverDisconnect,
+  } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Configuration from './Configuration';
@@ -189,6 +193,10 @@ export default class extends baseVw {
     serverConnect(serverConfig);
   }
 
+  onConfigDisconnectClick() {
+    serverDisconnect();
+  }
+
   getConfigVw(id) {
     return this.configViews.filter(configVw => configVw.model.id === id)[0];
   }
@@ -219,6 +227,7 @@ export default class extends baseVw {
 
     const configVw = this.createChild(Configuration, opts);
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
+    this.listenTo(configVw, 'disconnectClick', this.onConfigDisconnectClick);
     this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
     this.listenTo(configVw, 'editClick', e => this.trigger('editConfig', { model: e.view.model }));
 

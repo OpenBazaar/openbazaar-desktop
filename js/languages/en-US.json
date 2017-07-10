@@ -524,6 +524,7 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
+      "btnDisconnect": "Disconnect",
       "statusConnected": "Connected",
       "deleteConfirm": {
         "heading": "Are you sure?",
