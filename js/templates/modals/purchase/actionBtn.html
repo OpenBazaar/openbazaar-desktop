@@ -6,9 +6,9 @@
       btnText: ob.polyT('purchase.pay')
     }) %>
   <% } else if (ob.phase ==='pending') { %>
-    <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-pendingBtn">
+    <div class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph pendingBtn">
       <%= ob.polyT('purchase.pending') %>
-    </button>
+    </div>
   <% } else if (ob.phase ==='complete') { %>
     <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-closeBtn">
       <%= ob.polyT('purchase.close') %>

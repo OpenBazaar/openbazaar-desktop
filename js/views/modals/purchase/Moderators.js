@@ -59,7 +59,8 @@ export default class extends baseVw {
   getModeratorsByID(IDs = this.options.moderatorIDs) {
     const op = this.options;
     const includeString = op.include ? `&include=${op.include}` : '';
-    const url = app.getServerUrl(`ob/${op.apiPath}?async=${op.async}${includeString}`);
+    const urlString = `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
+    const url = app.getServerUrl(urlString);
 
     this.notFetchedYet = IDs;
     this.fetchingMods = IDs;

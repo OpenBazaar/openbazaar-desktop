@@ -1,10 +1,6 @@
 <% if (ob.validShippingOptions.length) { %>
   <div class="flexColRows boxList border borderStacked clrP clrBr">
     <% ob.validShippingOptions.forEach((option, i) => {
-      if (option.type === 'LOCAL_PICKUP') {
-        option.services[0] = { name: ob.polyT('purchase.localPickup'), price: 0 };
-      }
-      option.services = _.sortBy(option.services, 'price');
       option.services.forEach((service, j) => { %>
         <div>
           <div class="btnRadio width100">

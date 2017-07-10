@@ -1181,7 +1181,7 @@
         "btnCancel": "Cancel",
         "btnSubmit": "Submit"
       }
-    },    
+    },
     "disputeOrderTab": {
       "heading": "Dispute Order",
       "moderatorLabel": "Moderator",
@@ -1371,7 +1371,7 @@
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."
-  },  
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
