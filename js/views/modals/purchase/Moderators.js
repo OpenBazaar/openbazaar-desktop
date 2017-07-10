@@ -92,10 +92,13 @@ export default class extends baseVw {
                       this.moderatorsCol.add(eventData.profile);
                     }
                   } else if (eventData.id === socketID) {
-                    // don't add random profiles that are not moderators
-                    if (this.options.method === 'GET' && eventData.profile.moderator &&
-                    eventData.profile.moderatorInfo || this.options.method === 'POST') {
+                    // don't add profiles that are not moderators. The ID list may have peerIDs
+                    // that are out of date, and are no longer moderators.
+                    if (eventData.profile.moderator && eventData.profile.moderatorInfo) {
                       this.moderatorsCol.add(eventData.profile);
+                    } else {
+                      // remove the invalid moderator from the notFetched list
+                      this.removeNotFetched(eventData.peerId);
                     }
                   }
                 });
@@ -134,8 +137,8 @@ export default class extends baseVw {
       // all ids have been fetced
       this.$moderatorsWrapper.removeClass('processing');
       this.$moderatorsStatus.addClass('hide').text('');
-      // check if no loaded moderators are valid
-      if (!this.moderatorsCol.filter(mod => mod.isModerator).length) {
+      // check if none of the loaded moderators are valid
+      if (!this.moderatorsCol.length) {
         this.trigger('noValidModerators');
       }
     } else {
@@ -162,8 +165,8 @@ export default class extends baseVw {
       this.$moderatorsWrapper.append(newModView.render().$el);
       this.removeNotFetched(model.id);
       this.modCards.push(newModView);
-      // if required, select the first valid moderator
-      if (this.options.selectFirst && !this.firstSelected && model.isModerator) {
+      // if required, select the first  moderator
+      if (this.options.selectFirst && !this.firstSelected) {
         this.firstSelected = true;
         newModView.changeSelectState('selected');
       }
