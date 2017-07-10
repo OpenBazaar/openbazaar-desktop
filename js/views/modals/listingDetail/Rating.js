@@ -5,8 +5,8 @@ export default class extends BaseView {
   constructor(options = {}) {
     super(options);
 
-    this.averageRating = '';
-    this.ratingCount = '';
+    this.averageRating = options.averageRating || 0;
+    this.ratingCount = options.ratingCount || 0;
   }
 
   render() {
