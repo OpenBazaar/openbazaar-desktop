@@ -1,18 +1,20 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import '../../../lib/select2';
-import is from 'is_js';
-import '../../../utils/velocity';
 import 'jquery-zoom';
+import is from 'is_js';
 import app from '../../../app';
+import '../../../lib/select2';
+import '../../../utils/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import { convertAndFormatCurrency } from '../../../utils/currency';
-import { getTranslatedCountries } from '../../../data/countries';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
-import Purchase from '../purchase/Purchase';
-import { events as listingEvents } from '../../../models/listing/';
+import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
+import Purchase from '../purchase/Purchase';
+import Rating from './Rating';
+import Reviews from './Reviews';
+import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage from '../../PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
 
@@ -90,6 +92,24 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
+    this.rating = this.createChild(Rating);
+
+    // get the ratings data, if any
+    this.ratingsFetch =
+      $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
+        .done(data => this.onRatings(data))
+        .fail((jqXhr) => {
+          if (jqXhr.statusText === 'abort') return;
+          const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+          openSimpleMessage(
+            app.polyglot.t('listingDetail.errors.fetchRatings'),
+            failReason);
+        });
+
+    this.reviews = this.createChild(Reviews, {
+      async: true,
+    });
+
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
   }
@@ -113,6 +133,7 @@ export default class extends BaseModal {
       'click .js-photoNext': 'onClickPhotoNext',
       'click .js-goToStore': 'onClickGoToStore',
       'click .js-purchaseBtn': 'startPurchase',
+      'click .js-rating': 'clickRating',
       'change .js-variantSelect': 'onChangeVariantSelect',
       ...super.events(),
     };
@@ -120,6 +141,15 @@ export default class extends BaseModal {
 
   onDocumentClick() {
     this.$deleteConfirmedBox.addClass('hide');
+  }
+
+  onRatings(data) {
+    const pData = data || {};
+    this.rating.averageRating = pData.average;
+    this.rating.ratingCount = pData.count;
+    this.rating.render();
+    this.reviews.reviewIDs = pData.ratings || [];
+    this.reviews.render();
   }
 
   onClickEditListing() {
@@ -203,6 +233,20 @@ export default class extends BaseModal {
 
   gotoPhotos() {
     this.$photoSection.velocity(
+      'scroll',
+      {
+        duration: 500,
+        easing: 'easeOutSine',
+        container: this.$el,
+      });
+  }
+
+  clickRating() {
+    this.gotoReviews();
+  }
+
+  gotoReviews() {
+    this.$reviews.velocity(
       'scroll',
       {
         duration: 500,
@@ -458,12 +502,12 @@ export default class extends BaseModal {
     if (this.editModal) this.editModal.remove();
     if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
+    if (this.ratingsFetch) this.ratingsFetch.abort();
     $(document).off(null, this.boundDocClick);
     super.remove();
   }
 
   render() {
-    super.render();
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
     loadTemplate('modals/listingDetail/listing.html', t => {
@@ -481,6 +525,10 @@ export default class extends BaseModal {
       }));
 
       super.render();
+
+      this.$('.js-rating').append(this.rating.render().$el);
+      this.$reviews = this.$('.js-reviews');
+      this.$reviews.append(this.reviews.render().$el);
 
       this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;
