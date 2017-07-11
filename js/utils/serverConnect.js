@@ -132,6 +132,7 @@ export function disconnect() {
 }
 
 let _localServerStartHandlers = [];
+let _proxySetHandlers = [];
 let boundServerConfigRemove = false;
 
 /**
@@ -418,24 +419,34 @@ export default function connect(server, options = {}) {
         innerConnectDeferred.notify('setting-tor-proxy');
         innerLog(`Activating a proxy at socks5://${server.get('torProxy')}`);
         const setProxyId = guid();
-        ipcRenderer.send('set-proxy', setProxyId, `socks5://${server.get('torProxy')}`);
-        ipcRenderer.on('proxy-set', (e, id) => {
+
+        const onProxySet = (e, id) => {
           if (id === setProxyId) {
             innerConnectDeferred.notify('tor-proxy-set');
             onClientTorProxyChecked();
           }
-        });
+        };
+
+        ipcRenderer.send('set-proxy', setProxyId, `socks5://${server.get('torProxy')}`);
+        _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
+        ipcRenderer.on('proxy-set', onProxySet);
+        _proxySetHandlers = [onProxySet];
       } else {
         innerConnectDeferred.notify('clearing-tor-proxy');
         innerLog('Clearing any proxy that may be set.');
         const setProxyId = guid();
         ipcRenderer.send('set-proxy', setProxyId, '');
-        ipcRenderer.on('proxy-set', (e, id) => {
+
+        const onProxySet = (e, id) => {
           if (id === setProxyId) {
             innerConnectDeferred.notify('tor-proxy-cleared');
             onClientTorProxyChecked();
           }
-        });
+        };
+
+        _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
+        ipcRenderer.on('proxy-set', onProxySet);
+        _proxySetHandlers = [onProxySet];
       }
     });
 
