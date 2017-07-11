@@ -9,6 +9,7 @@ import fs from 'fs';
 import childProcess from 'child_process';
 import urlparse from 'url-parse';
 import _ from 'underscore';
+import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 
@@ -102,6 +103,8 @@ if (isBundledApp()) {
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
     // will be explained in the module.
   });
+
+  global.authCookie = guid();
 }
 
 crashReporter.start({
@@ -560,7 +563,8 @@ ipcMain.on('close-confirmed', () => {
   if (mainWindow) mainWindow.close();
 });
 
-// If appropriate, add in Basic Auth headers to each request.
+// If appropriate, add in Basic Auth headers to each request. If connecting to
+// the built-in server, we'll add in the auth token.
 ipcMain.on('active-server-set', (e, server) => {
   const filter = {
     urls: [`${server.httpUrl}*`, `${server.socketUrl}*`],
@@ -573,6 +577,10 @@ ipcMain.on('active-server-set', (e, server) => {
 
       details.requestHeaders.Authorization =
         `Basic ${new Buffer(`${un}:${pw}`).toString('base64')}`;
+    }
+
+    if (global.authCookie && server.default) {
+      details.requestHeaders.Cookie = `OpenBazaar_Auth_Cookie=${global.authCookie}silly`;
     }
 
     callback({ cancel: false, requestHeaders: details.requestHeaders });

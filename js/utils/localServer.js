@@ -47,6 +47,14 @@ export default class LocalServer {
     return this._lastStartCommandLineArgs;
   }
 
+  /**
+   * Merges in the auth cookie to the passed in command line arguments array.
+   */
+  buildCommandLineArgs(commandLineArgs = []) {
+    const authCookie = global.authCookie;
+    return authCookie ? commandLineArgs.concat(['-c', authCookie]) : commandLineArgs;
+  }
+
   start(commandLineArgs = []) {
     if (this.pendingStop) {
       this._lastStartCommandLineArgs = commandLineArgs;
@@ -63,11 +71,16 @@ export default class LocalServer {
       }
 
       throw new Error('A server is already running with different command line options. Please ' +
-        'stop that server before staring a new one.');
+        'stop that server before starting a new one.');
     }
 
     this._isRunning = true;
-    const serverStartArgs = ['start', '-t', ...commandLineArgs];
+    let serverStartArgs = ['start', '-t', ...commandLineArgs];
+
+    // wire in our auth cookie
+    if (global.authCookie) {
+      serverStartArgs = serverStartArgs.concat(['-c', global.authCookie]);
+    }
 
     this.log(`Starting local server via '${serverStartArgs.join(' ')}'.`);
     console.log(`Starting local server via '${serverStartArgs.join(' ')}'.`);
@@ -251,7 +264,7 @@ export default class LocalServer {
     }
 
     if (!msg) return;
-    // console.log(msg);
+    console.log(msg);
 
     const msgPreface = type ? `[${type}] ` : '';
     msg.split(EOL).forEach(splitMsg =>

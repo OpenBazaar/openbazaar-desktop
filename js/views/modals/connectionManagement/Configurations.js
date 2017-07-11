@@ -127,12 +127,23 @@ export default class extends baseVw {
     }
 
     if (e.reason === 'authentication-failed') {
-      msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
-        serverName: e.server.get('name'),
-        errorPreface: '<span class="txB">' +
-          `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
-        links,
-      });
+      if (e.server.get('default')) {
+        // If the default server fails with an auth issue, it's because the cookie token is
+        // invalid. This should never happen and must be a dev error.
+        msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailedBuiltInServer', {
+          serverName: e.server.get('name'),
+          errorPreface: '<span class="txB">' +
+            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+          links,
+        });
+      } else {
+        msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
+          serverName: e.server.get('name'),
+          errorPreface: '<span class="txB">' +
+            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+          links,
+        });
+      }
     } else if (e.reason === 'canceled') {
       this.$statusBarOuterWrap.addClass('hide');
       this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));

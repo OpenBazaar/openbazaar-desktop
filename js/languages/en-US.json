@@ -511,6 +511,7 @@
       "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The auth cookie is invalid. %{links}",
       "editLink": "edit",
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",

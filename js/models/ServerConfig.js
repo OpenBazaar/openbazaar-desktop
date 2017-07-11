@@ -133,7 +133,7 @@ export default class extends BaseModel {
   needsAuthentication() {
     let needsAuth = false;
 
-    if (!this.isLocalServer()) {
+    if (!this.isLocalServer() || this.get('default')) {
       needsAuth = true;
     } else {
       if (this.get('username') || this.get('password')) {

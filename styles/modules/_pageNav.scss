@@ -73,7 +73,8 @@
   &.notNavigable {
     .iconBtn,
     .addressBar,
-    .navListBtn {
+    .navListBtn,
+    .searchWrapper::after {
       @include disabled;
     }
   }
