@@ -71,6 +71,10 @@ export default class extends baseVw {
 
       this.pendingDisconnectServerId = null;
 
+      // If the disconnect is from a removed configuration (e.g. the user
+      // deleted the config), we'll do nothing.
+      if (!app.serverConfigs.get(e.server.id)) return;
+
       // If we lost a connection, but another one is in progress,
       // we'll do nothing. Otherwise, we'll show a "lost connection"
       // state for the disconnected connection.

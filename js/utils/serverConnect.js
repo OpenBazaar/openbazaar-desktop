@@ -123,7 +123,16 @@ function authenticate(server) {
   return promise;
 }
 
+/**
+ * If we're currently connected to a server, this method will disconnect the connection.
+ */
+export function disconnect() {
+  const curCon = getCurrentConnection();
+  if (curCon && curCon.socket) curCon.socket.close();
+}
+
 let _localServerStartHandlers = [];
+let boundServerConfigRemove = false;
 
 /**
  * Called to establish a connection with a server. This involves ensuring the
@@ -161,6 +170,19 @@ let _localServerStartHandlers = [];
 export default function connect(server, options = {}) {
   if (!server instanceof ServerConfig) {
     throw new Error('Please provide a server as a ServerConfig instance.');
+  }
+
+  if (!boundServerConfigRemove) {
+    boundServerConfigRemove = true;
+
+    // If the config for the server we are connected to is removed, we'll
+    // disconnect from the server.
+    app.serverConfigs.on('remove', md => {
+      const curCon = getCurrentConnection();
+      if (curCon && curCon.server && curCon.server.id === md.id) {
+        disconnect();
+      }
+    });
   }
 
   app.serverConfigs.activeServer = server;
@@ -509,14 +531,6 @@ export default function connect(server, options = {}) {
   promise.cancel = cancel;
 
   return promise;
-}
-
-/**
- * If we're currently connected to a server, this method will disconnect the connection.
- */
-export function disconnect() {
-  const curCon = getCurrentConnection();
-  if (curCon && curCon.socket) curCon.socket.close();
 }
 
 ipcRenderer.send('server-connect-ready');
