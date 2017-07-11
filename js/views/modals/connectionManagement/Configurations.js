@@ -24,6 +24,7 @@ export default class extends baseVw {
     super(options);
     this.configViews = [];
     this.emptyConfigs = !!this.collection.length;
+    this.pendingDisconnectServerId = null;
 
     this.listenTo(this.collection, 'update', cl => {
       const prevEmptyConfigs = this.emptyConfigs;
@@ -55,6 +56,20 @@ export default class extends baseVw {
 
     this.listenTo(serverConnectEvents, 'disconnect', e => {
       const curConn = getCurrentConnection();
+
+      // If the disconnect was at the users request (ie.
+      // they pressed the Disconnect button), we'll just
+      // change the button state.
+      if (this.pendingDisconnectServerId === e.server.id) {
+        this.pendingDisconnectServerId = null;
+        let disconnectedServer =
+          this.configViews.filter(vw => vw.model.id === e.server.id);
+        disconnectedServer = disconnectedServer && disconnectedServer[0];
+        if (disconnectedServer) disconnectedServer.setState({ status: 'not-connected' });
+        return;
+      }
+
+      this.pendingDisconnectServerId = null;
 
       // If we lost a connection, but another one is in progress,
       // we'll do nothing. Otherwise, we'll show a "lost connection"
@@ -193,8 +208,9 @@ export default class extends baseVw {
     serverConnect(serverConfig);
   }
 
-  onConfigDisconnectClick() {
+  onConfigDisconnectClick(e) {
     serverDisconnect();
+    this.pendingDisconnectServerId = e.view.model.id;
   }
 
   getConfigVw(id) {
