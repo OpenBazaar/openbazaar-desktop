@@ -5,8 +5,8 @@
     padding: $padSm;
 
     .avatar {
-      width: 24px;
-      height: 24px;
+      width: $thumbTn;
+      height: $thumbTn;
       float: left;
     }
   }
@@ -61,7 +61,7 @@
     position: absolute;
     max-width: 250px;
     left: $padLg;
-  }  
+  }
 
   .discussionTab {
     position: relative;
@@ -219,9 +219,9 @@
         .msgModUnableToChat {
           padding: $pad;
           display: block;
-        }        
+        }
       }
-    }    
+    }
   }
 
   .contractTab {
@@ -298,19 +298,25 @@
 
           &::before {
             padding-top: 7px;
-          }          
+          }
+        }
+
+        &.ion-alert-circled {
+          font-size: 17px;
+
+          &::before {
+            padding-top: 8px;
+          }
         }
       }
-    }    
+    }
 
     .avatarCol {
       flex-shrink: 0;
-      width: 35px;
-      height: 35px;
+      width: 38px;
+      height: 38px;
       border-width: 2px;
       border-style: solid;
-      width: 38px;
-      height: 38px;        
     }
 
     .orderDetails {
@@ -337,28 +343,25 @@
       .refundConfirm {
         left: 50%;
         transform: translateX(-50%);
-        top: 39px;        
+        top: 39px;
       }
     }
 
     .orderCompleteEvent, .completeOrderForm {
       .ratingsCol {
         .ratingStrip {
-          .ratingIcon {
-            font-size: 22px;
+          .ratingsIcons {
+            vertical-align: middle;
+            .ratingIcon {
+              .emoji {
+                font-size: 19px;
+                margin-right: 0.1em;
+              }
+            }
           }
-
           .ratingNumbers {
             font-size: 13px;
           }
-        }
-      }
-    }
-
-    .orderCompleteEvent {
-      .ratingStrip {
-        .ratingIcon {
-          pointer-events: none;
         }
       }
     }
@@ -367,24 +370,88 @@
       .ratingsCol {
         .errorList {
           margin-top: $padTn;
-          margin-bottom: 0;
+          margin-bottom: 2px;
+          font-size: $tx5b;
 
           li:last-child {
             margin-bottom: 0;
           }
-        }        
+        }
+      }
+    }
+
+    .disputePayoutEvent {
+      .avatarCol {
+        position: relative;
+        top: -2px;
+      }
+
+      .acceptPayoutConfirm {
+        left: 50%;
+        transform: translateX(-50%);
+        top: 45px;
+      }
+    }
+
+    .payForOrderWrap {
+      &:empty {
+        display: none;
       }
     }
   }
 
-  .fulfillOrderTab {
+  .fulfillOrderTab, .disputeOrderTab, .resolveDisputeTab {
     hr {
       margin-left: $padLg;
       margin-right: $padLg;
     }
-    
+
     .buttonBar {
       padding: $padMd $padLg $padLg;
+    }
+  }
+
+  .disputeOrderTab, .resolveDisputeTab {
+    .avatar {
+      width: $thumbTn;
+      height: $thumbTn;
+    }
+  }
+
+  .resolveDisputeTab {
+    .resolveConfirm {
+      bottom: 45px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .inputBuyerAmountWrap, .inputVendorAmountWrap {
+      position: relative;
+      max-width: 175px;
+
+      &::after {
+        content: '%';
+        position: absolute;
+        right: 15px;
+        top: 20px;
+        transform: translateY(-50%);
+      }
+
+      input {
+        padding-left: 45px;
+        padding-right: 40px;
+      }
+
+      .avatar {
+        position: absolute;
+        top: 10px;
+        left: 13px;
+      }
+    }
+
+    label[for=resolveDisputeBuyerAmount],
+    label[for=resolveDisputeVendorAmount] {
+      line-height: 2rem;
     }
   }
 }

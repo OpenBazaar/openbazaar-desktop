@@ -1,7 +1,7 @@
 .listingDetail {
   .topControls {
     position: relative;
-    
+
     .deleteConfirm {
       right: -46px;
       top: 50px;
@@ -159,6 +159,49 @@
 
           input[type="radio"]:checked + label {
             box-shadow: 0 0 0 2px rgba(0,0,0,0.5), inset 0 0 0 3px rgba(256, 256, 256, 1);;
+          }
+        }
+      }
+
+      .rating {
+        cursor: pointer;
+      }
+
+      .reviews {
+
+        .loadMore {
+          padding-top:$padLg;
+          margin-top: $padLg;
+          border-top-style: solid;
+          border-top-width: 1px;
+        }
+
+        .review {
+          padding-bottom:$padLg;
+          margin-bottom: $padLg;
+          border-bottom-style: solid;
+          border-bottom-width: 1px;
+
+          &:last-child {
+            border: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+
+          .reviewTextWrapper .reviewText {
+            line-height: 1.6; // hack to make sure 6 lines works right for trunk8
+
+            .trunkLink {
+              font-weight: 400;
+              text-decoration: underline;
+            }
+          }
+
+          .ratings {
+            td {
+              width: 50%;
+              padding-bottom: $padSm;
+            }
           }
         }
       }

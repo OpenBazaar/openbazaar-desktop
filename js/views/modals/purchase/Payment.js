@@ -1,29 +1,44 @@
+/*
+  This view is also used by the Order Detail overlay. If you make any changes, please
+  ensure they are compatible with both the Purchase and Order Detail flows.
+*/
+
 import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import { convertAndFormatCurrency, integerToDecimal } from '../../../utils/currency';
+import { formatCurrency, integerToDecimal } from '../../../utils/currency';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
 import ConfirmWallet from './ConfirmWallet';
 import qr from 'qr-encode';
 import { clipboard, remote } from 'electron';
-import Purchase from '../../../models/purchase/Purchase';
-import Order from '../../../models/purchase/Order';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    if (!options.model || !options.model instanceof Purchase) {
-      throw new Error('Please provide a purchase model.');
+    if (typeof options.balanceRemaining !== 'number') {
+      throw new Error('Please provide the balance remaining in BTC as a number.');
     }
 
-    if (!options.order || !options.model instanceof Order) {
-      throw new Error('Please provide an order model.');
+    if (!options.paymentAddress) {
+      throw new Error('Please provide the payment address.');
+    }
+
+    if (!options.orderId) {
+      throw new Error('Please provide an orderId.');
+    }
+
+    if (typeof options.isModerated !== 'boolean') {
+      throw new Error('Please provide a boolean indicating whether the order is moderated.');
     }
 
     super(options);
     this.options = options;
+    this._balanceRemaining = options.balanceRemaining;
+    this.paymentAddress = options.paymentAddress;
+    this.orderId = options.orderId;
+    this.isModerated = options.isModerated;
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
@@ -32,15 +47,33 @@ export default class extends BaseVw {
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         // listen for a payment socket message, to react to payments from all sources
-        if (e.jsonData.notification && e.jsonData.notification.payment) {
-          const payment = e.jsonData.notification.payment;
-          if (integerToDecimal(payment.fundingTotal, true) >= this.model.get('amount') &&
-            payment.orderId === this.model.get('orderId')) {
-            this.trigger('walletPaymentComplete', payment);
+        if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
+          if (e.jsonData.notification.orderId === this.orderId) {
+            const amount = integerToDecimal(e.jsonData.notification.fundingTotal, true);
+            if (amount >= this.balanceRemaining) {
+              this.trigger('walletPaymentComplete', e.jsonData.notification);
+            } else {
+              // Ensure the resulting balance has a maximum of 8 decimal places with not
+              // trailing zeros.
+              this.balanceRemaining = parseFloat((this.balanceRemaining - amount).toFixed(8));
+            }
           }
         }
       });
     }
+  }
+
+  set balanceRemaining(amount) {
+    if (amount !== this._balanceRemaining) {
+      this._balanceRemaining = amount;
+      this.confirmWallet.render();
+      this.$amountDueLine.html(this.amountDueLine);
+      this.$qrCodeImg.attr('src', this.qrDataUri);
+    }
+  }
+
+  get balanceRemaining() {
+    return this._balanceRemaining;
   }
 
   className() {
@@ -75,8 +108,8 @@ export default class extends BaseVw {
     this.$confirmWalletConfirm.addClass('processing');
 
     spend({
-      address: this.model.get('paymentAddress'),
-      amount: this.model.get('amount'),
+      address: this.paymentAddress,
+      amount: this.balanceRemaining,
       currency: 'BTC',
     })
       .fail(jqXhr => {
@@ -91,14 +124,14 @@ export default class extends BaseVw {
   }
 
   clickPayFromAlt() {
-    const amount = this.model.get('amount');
+    const amount = this.balanceRemaining;
     const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.payURL}&amp;output=BTC&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812&amount=${amount}`;
     const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
     shapeshiftWin.loadURL(shapeshiftURL);
   }
 
   copyAmount() {
-    clipboard.writeText(String(this.model.get('amount')));
+    clipboard.writeText(String(this.balanceRemaining));
 
     this.$copyAmount.addClass('active');
     if (this.hideCopyAmountTimer) {
@@ -109,7 +142,7 @@ export default class extends BaseVw {
   }
 
   copyAddress() {
-    clipboard.writeText(String(this.model.get('paymentAddress')));
+    clipboard.writeText(String(this.paymentAddress));
 
     this.$copyAddress.addClass('active');
     if (this.hideCopyAddressTimer) {
@@ -117,6 +150,16 @@ export default class extends BaseVw {
     }
     this.hideCopyAddressTimer = setTimeout(
       () => this.$copyAddress.removeClass('active'), 3000);
+  }
+
+  get amountDueLine() {
+    return app.polyglot.t('purchase.pendingSection.pay',
+      { amountBTC: formatCurrency(this.balanceRemaining, 'BTC') });
+  }
+
+  get qrDataUri() {
+    const btcURL = `bitcoin:${this.paymentAddress}?amount=${this.balanceRemaining}`;
+    return qr(btcURL, { type: 6, size: 5, level: 'Q' });
   }
 
   get $confirmWallet() {
@@ -139,6 +182,16 @@ export default class extends BaseVw {
       (this._$confirmWalletConfirm = this.$('.js-confirmWalletConfirm'));
   }
 
+  get $amountDueLine() {
+    return this._$amountDueLine ||
+      (this._$amountDueLine = this.$('.js-amountDueLine'));
+  }
+
+  get $qrCodeImg() {
+    return this._$qrCodeImg ||
+      (this._$qrCodeImg = this.$('.js-qrCodeImg'));
+  }
+
   remove() {
     $(document).off('click', this.boundOnDocClick);
     super.remove();
@@ -146,21 +199,16 @@ export default class extends BaseVw {
 
   render() {
     const displayCurrency = app.settings.get('localCurrency');
-    const amount = this.model.get('amount');
-    const amountBTC = amount ? convertAndFormatCurrency(amount, 'BTC', 'BTC') : 0;
-
-    const btcURL = `bitcoin:${this.model.get('paymentAddress')}?amount=${amount}`;
 
     loadTemplate('modals/purchase/payment.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
-          ...this.model.toJSON(),
           displayCurrency,
-          amount,
-          amountBTC,
-          qrDataUri: qr(btcURL, { type: 6, size: 5, level: 'Q' }),
+          amountDueLine: this.amountDueLine,
+          paymentAddress: this.paymentAddress,
+          qrDataUri: this.qrDataUri,
           walletIconTmpl,
-          moderator: this.options.order.get('moderator'),
+          isModerated: this.isModerated,
         }));
       });
 
@@ -168,14 +216,15 @@ export default class extends BaseVw {
       this._$copyAmount = null;
       this._$copyAddress = null;
       this._$confirmWalletConfirm = null;
+      this._$amountDueLine = null;
+      this._$qrCodeImg = null;
 
       // remove old view if any on render
       if (this.confirmWallet) this.confirmWallet.remove();
       // add the confirmWallet view
       this.confirmWallet = this.createChild(ConfirmWallet, {
         displayCurrency,
-        amount,
-        amountBTC,
+        amount: () => this.balanceRemaining,
       });
       this.listenTo(this.confirmWallet, 'walletCancel', () => this.walletCancel());
       this.listenTo(this.confirmWallet, 'walletConfirm', () => this.walletConfirm());

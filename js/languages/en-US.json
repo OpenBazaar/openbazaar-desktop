@@ -113,6 +113,7 @@
     "noFollowing": "%{name} is Not Following Anyone Yet",
     "noOwnFollowers": "You Don't Have Any Followers Yet",
     "noOwnFollowing": "You Aren't Following Anyone Yet",
+    "getFollowingError": "There was an error when determining if this user follows you.",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
@@ -261,8 +262,7 @@
       "statusSaveFailed": "Unable to save general settings.",
       "saveErrorAlertTitle": "Unable to save general settings",
       "searchProvider": "Search Provider",
-      "restoreDefaultProvider": "Restore default",
-      "searchProviderError": "This is not a valid url for a search provider"
+      "restoreDefaultProvider": "Restore default"
     },
     "pageTab": {
       "helperAbout": "Displays on your Home page",
@@ -320,7 +320,7 @@
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
-      "helperDefaultFee": "Average is recommended. High may clear faster.",
+      "helperDefaultFee": "Priority is recommended for the fastest transactions",
       "helperServerManagement": "Switch and manage server connections",
       "helperServerPeers": "Peers you're connected to",
       "smtp": {
@@ -358,9 +358,9 @@
         "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
         "defaultFee": "Bitcoin Fee",
-        "low": "Low",
-        "medium": "Average",
-        "high": "High"
+        "low": "Economic",
+        "medium": "Normal",
+        "high": "Priority"
       },
       "appearance": {
         "sectionName": "Appearance",
@@ -624,8 +624,7 @@
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
     "DIGITAL_GOOD": "Digital Good",
-    "SERVICE": "Service",
-    "CROWD_FUND": "Crowd fund"
+    "SERVICE": "Service"
   },
   "conditionTypes": {
     "NEW": "New",
@@ -669,7 +668,16 @@
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
     },
+    "review": {
+      "title": "%{time} by %{name}",
+      "loadMore": "Load More",
+      "noReviews": "No reviews were found for this listing.",
+      "showMore": "Show More",
+      "showLess": "Show Less"
+    },
     "errors": {
+      "fetchRatings": "Ratings Could Not Be Loaded.",
+      "fetchReviews": "Reviews could not be loaded.",
       "noPurchaseTitle": "This Listing Can't Be Purchased",
       "zeroPriceMsg": "You cannot make a purchase with a price of zero or less."
     }
@@ -1094,16 +1102,9 @@
         "noteFromLabel": "Note from %{store}:",
         "copyLink": "Copy",
         "digitalReadyForDlHeading": "Digital files are ready for download!",
-        "digitalReadyForDlText": "The files have been delivered. DOwnload when you're ready.",
+        "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
         "urlLabel": "File URL",
         "passwordLabel": "Password"
-      },
-      "ratingLabels": {
-        "overall": "Overall",
-        "quality": "Quality",
-        "asAdvertised": "As Advertised",
-        "delivery": "Delivery",
-        "service": "Service"
       },
       "completeOrderForm": {
         "heading": "Complete Order",
@@ -1115,6 +1116,39 @@
       "orderComplete": {
         "heading": "Order Complete",
         "reviewLabel": "%{name}'s Review:"
+      },
+      "disputeStarted": {
+        "heading": "Dispute Started",
+        "partyIsDisputing": "%{name} is disputing the order:",
+        "resolveBtn": "Resolve Dispute",
+        "genericIsDisputed": "The order is being disputed:",
+        "noReasonProvided": "No reason was provided."
+      },
+      "disputePayout": {
+        "heading": "Dispute Payout",
+        "buyerHeading": "Buyer",
+        "buyerHeadingWithName": "%{name} (buyer)",
+        "vendorHeading": "Vendor",
+        "vendorHeadingWithName": "%{name} (vendor)",
+        "moderatorHeading": "Moderator",
+        "moderatorHeadingWithName": "%{name} (moderator)",
+        "noteFromHeading": "Note from moderator:",
+        "noteFromHeadingWithName": "Note from %{name}:",
+        "btnAcceptPayout": "Accept Payout",
+        "acceptPayoutConfirm": {
+          "title": "Are you sure?",
+          "body": "Once accepted, the payout will process immediately",
+          "btnCancel": "Cancel",
+          "btnConfirm": "Yes, Accept"
+        }
+      },
+      "disputeAcceptance": {
+        "heading": "Dispute Closed",
+        "genericBuyerAcceptedPayout": "The buyer accepted the dispute payout",
+        "genericVendorAcceptedPayout": "The vendor accepted the dispute payout",
+        "userAcceptedPayout": "%{name} accepted the dispute payout",
+        "orderCompleteWhenYouReview": "The order will be complete when you leave a review.",
+        "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review."
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1137,9 +1171,6 @@
         "moderatorHeading": "Moderator",
         "copyAddress": "Copy",
         "viewOnMap": "View on map"
-      },
-      "payForOrder": {
-        "heading": "Pay for your order"
       }
     },
     "fulfillOrderTab": {
@@ -1157,6 +1188,33 @@
       "noteHelperTextDigital": "The buyer will receive a notification containing the file information",
       "btnCancel": "Cancel",
       "btnSubmit": "Submit"
+    },
+    "resolveDisputeTab": {
+      "heading": "Resolve Dispute",
+      "buyerAmountLabel": "Buyer Amount",
+      "vendorAmountLabel": "Vendor Amount",
+      "commentLabel": "Comment",
+      "commentPlaceholder": "Explain your decision...",
+      "btnCancel": "Cancel",
+      "btnSubmit": "Submit",
+      "resolveConfirm": {
+        "title": "Are you sure?",
+        "body": "Please double check everything looks good",
+        "btnCancel": "Cancel",
+        "btnSubmit": "Submit"
+      }
+    },
+    "disputeOrderTab": {
+      "heading": "Dispute Order",
+      "moderatorLabel": "Moderator",
+      "reasonLabel": "Reason",
+      "reasonPlaceholder": "Please explain your reason for opening a dispute…",
+      "reasonHelperText": "Opening a dispute will notify and invite the moderator into the order to help resolve any conflicts",
+      "btnCancel": "Cancel",
+      "btnSubmit": "Submit"
+    },
+    "actionBar": {
+      "disputeOrderBtn": "Dispute Order"
     }
   },
   "orderUtil": {
@@ -1165,7 +1223,10 @@
     "failedCancelHeading": "There was an error canceling the order.",
     "failedFulfillHeading": "There was an error fulfilling the order.",
     "failedRefundHeading": "There was an error refunding the order.",
-    "failedCompleteHeading": "There was an error completing the order."
+    "failedCompleteHeading": "There was an error completing the order.",
+    "failedOpenDisputeHeading": "There was an error completing the order.",
+    "failedResolveHeading": "There was an error resolving the order.",
+    "failedAcceptPayoutHeading": "There was an error accepting the payout."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
@@ -1331,7 +1392,26 @@
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
-  },  
+  },
+  "ratingLabels": {
+    "overall": "Overall",
+    "quality": "Quality",
+    "asAdvertised": "As Advertised",
+    "delivery": "Delivery",
+    "service": "Service"
+  },
+  "localSettingsModelErrors": {
+    "searchProvider": "This is not a valid url for a search provider",
+    "transactionFee": "You must choose one of %{levels}."
+  },
+  "resolveDisputeModelErrors": {
+    "provideAmount": "Please provide an amount.",
+    "percentageOutOfRange": "The amount must be between 0 and 100.",
+    "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
+    "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
+    "provideResolution": "Please explain your decision."
+  },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",

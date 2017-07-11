@@ -40,6 +40,38 @@ export default class extends BaseModel {
       // convert price fields
       response.vendorContract.buyerOrder.payment.amount =
         integerToDecimal(response.vendorContract.buyerOrder.payment.amount, true);
+
+      if (response.resolution) {
+        response.resolution.payout.buyerOutput =
+          response.resolution.payout.buyerOutput || {};
+        response.resolution.payout.vendorOutput =
+          response.resolution.payout.vendorOutput || {};
+        response.resolution.payout.moderatorOutput =
+          response.resolution.payout.moderatorOutput || {};
+
+        // Temporary to account for server bug:
+        // https://github.com/OpenBazaar/openbazaar-go/issues/548
+        // Sometimes the payment amounts are coming back as enormously inflated strings.
+        // For now, we'll just make them dummy values.
+        if (typeof response.resolution.payout.buyerOutput.amount === 'string') {
+          response.resolution.payout.buyerOutput.amount = 25000;
+        }
+
+        if (typeof response.resolution.payout.vendorOutput.amount === 'string') {
+          response.resolution.payout.vendorOutput.amount = 12000;
+        }
+
+        if (typeof response.resolution.payout.moderatorOutput.amount === 'string') {
+          response.resolution.payout.moderatorOutput.amount = 6000;
+        }
+
+        response.resolution.payout.buyerOutput.amount =
+          integerToDecimal(response.resolution.payout.buyerOutput.amount || 0, true);
+        response.resolution.payout.vendorOutput.amount =
+          integerToDecimal(response.resolution.payout.vendorOutput.amount || 0, true);
+        response.resolution.payout.moderatorOutput.amount =
+          integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0, true);
+      }
     }
 
     return response;

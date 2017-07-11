@@ -8,12 +8,6 @@ form {
     -webkit-user-select: none;
     display: flex;
     align-items: center;
-
-    .emoji {
-      height: 1em;
-      width: 1em;
-      margin-right: 0.3em;
-    }
   }
 }
 
@@ -80,6 +74,10 @@ textarea,
     line-height: $buttonHeight;
     height: $buttonHeight;
   }
+}
+
+.trumbowyg-editor {
+  line-height: 1.2em;
 }
 
 //input[type="number"].noSpin::-webkit-outer-spin-button,

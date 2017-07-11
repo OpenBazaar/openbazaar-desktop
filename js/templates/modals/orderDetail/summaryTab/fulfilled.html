@@ -9,14 +9,16 @@
     <% const physicalDelivery = ob.physicalDelivery && ob.physicalDelivery[0] || {}; %>
     <div class="statusIconCol"><span class="clrBr ion-cube"></span></div>
     <div class="flexExpand tx5">
-      <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.shippedByLabel') %> <span><%= physicalDelivery.shipper %></span></div>
-      <div class="row">
-        <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.trackingNumberLabel') %></span> <%= physicalDelivery.trackingNumber || ob.polyT('orderDetail.summaryTab.notApplicable') %>
-        <% if (physicalDelivery.trackingNumber) { %>
-        <a class="clrTEm js-copyTrackingNumber"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
-        <a class="hide js-trackingCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></a>
-        <% } %>
-      </div>
+      <% if (!ob.isLocalPickup) { %>
+        <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.shippedByLabel') %> <span><%= physicalDelivery.shipper %></span></div>
+        <div class="row">
+          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.trackingNumberLabel') %></span> <%= physicalDelivery.trackingNumber || ob.polyT('orderDetail.summaryTab.notApplicable') %>
+          <% if (physicalDelivery.trackingNumber) { %>
+          <a class="clrTEm js-copyTrackingNumber"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
+          <a class="hide js-trackingCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></a>
+          <% } %>
+        </div>
+      <% } %>
       <div class="rowTn"><%= ob.polyT('orderDetail.summaryTab.fulfilled.noteFromLabel', { store: ob.storeName }) %></div>
       <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
     </div>

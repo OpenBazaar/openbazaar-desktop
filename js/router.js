@@ -148,12 +148,6 @@ export default class ObRouter extends Router {
     const pageState = state || 'store';
     const deepRouteParts = args.filter(arg => arg !== null);
 
-    if (!state) {
-      this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-        replace: true,
-      });
-    }
-
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
       this.pageNotFound();
       return;
@@ -206,6 +200,14 @@ export default class ObRouter extends Router {
         // we'll take you to the home tab.
         this.navigate(`${guid}/home${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
           replace: true,
+          trigger: true,
+        });
+        return;
+      }
+
+      if (!state) {
+        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true,
         });
       }
 
@@ -219,6 +221,12 @@ export default class ObRouter extends Router {
     }).fail(() => {
       if (profileFetch.statusText === 'abort' ||
         profileFetch.statusText === 'abort') return;
+
+      if (!state) {
+        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+          replace: true,
+        });
+      }
 
       // todo: If really not found (404), route to
       // not found page, otherwise display error.

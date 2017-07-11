@@ -111,34 +111,35 @@
               <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperDefaultFee') %></div>
             </div>
             <div class="col9">
+              <% if (ob.errors['defaultTransactionFee']) print(ob.formErrorTmpl({ errors: ob.errors['defaultTransactionFee'] })) %>
               <div class="btnRadio clrBr">
                 <input type="radio"
                        data-persistence-location="local"
                        name="defaultTransactionFee"
-                       value="low"
+                       value="ECONOMIC"
                        id="defaultTransactionFeeLow"
                        data-var-type="string"
-                <% if(ob.defaultTransactionFee == "low") { %>checked<% } %>>
+                <% if(ob.defaultTransactionFee == "ECONOMIC") { %>checked<% } %>>
                 <label for="defaultTransactionFeeLow"><%= ob.polyT('settings.advancedTab.transaction.low') %></label>
               </div>
               <div class="btnRadio clrBr">
                 <input type="radio"
                        data-persistence-location="local"
                        name="defaultTransactionFee"
-                       value="medium"
+                       value="NORMAL"
                        id="defaultTransactionFeeMedium"
                        data-var-type="string"
-                <% if(ob.defaultTransactionFee == "medium") { %>checked<% } %>>
+                <% if(ob.defaultTransactionFee == "NORMAL") { %>checked<% } %>>
                 <label for="defaultTransactionFeeMedium"><%= ob.polyT('settings.advancedTab.transaction.medium') %></label>
               </div>
               <div class="btnRadio clrBr">
                 <input type="radio"
                        data-persistence-location="local"
                        name="defaultTransactionFee"
-                       value="high"
+                       value="PRIORITY"
                        id="defaultTransactionFeeHigh"
                        data-var-type="string"
-                <% if(ob.defaultTransactionFee == "high") { %>checked<% } %>>
+                <% if(ob.defaultTransactionFee == "PRIORITY") { %>checked<% } %>>
                 <label for="defaultTransactionFeeHigh"><%= ob.polyT('settings.advancedTab.transaction.high') %></label>
               </div>
             </div>

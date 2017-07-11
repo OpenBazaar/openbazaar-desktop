@@ -773,10 +773,10 @@ serverConnectEvents.on('connected', (connectedEvent) => {
   connectedEvent.socket.on('message', (e) => {
     if (e.jsonData) {
       if (e.jsonData.notification) {
-        if (e.jsonData.notification.follow) {
-          app.ownFollowers.unshift({ guid: e.jsonData.notification.follow });
-        } else if (e.jsonData.notification.unfollow) {
-          app.ownFollowers.remove(e.jsonData.notification.unfollow); // remove by id
+        if (e.jsonData.notification.type === 'follow') {
+          app.ownFollowers.unshift({ guid: e.jsonData.notification.peerId });
+        } else if (e.jsonData.notification.type === 'unfollow') {
+          app.ownFollowers.remove(e.jsonData.notification.peerId); // remove by id
         }
       }
     }

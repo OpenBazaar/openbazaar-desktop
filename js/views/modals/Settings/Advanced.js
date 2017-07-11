@@ -48,7 +48,8 @@ export default class extends baseVw {
   }
 
   save() {
-    this.localSettings.set(this.getFormData(this.$localFields), { validate: true });
+    this.localSettings.set(this.getFormData(this.$localFields));
+    this.localSettings.set({}, { validate: true });
 
     const serverFormData = this.getFormData();
     this.settings.set(serverFormData, { validate: true });
@@ -116,7 +117,10 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/settings/advanced.html', (t) => {
       this.$el.html(t({
-        errors: this.settings.validationError || {},
+        errors: {
+          ...(this.settings.validationError || {}),
+          ...(this.localSettings.validationError || {}),
+        },
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));

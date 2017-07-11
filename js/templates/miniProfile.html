@@ -11,6 +11,11 @@
       <% if (ob.followsYou) { %>
       <span><%= ob.parseEmojis('👥', '', { style: 'width: 10px' }) %> <%= ob.polyT('userPage.followsYou') %></span>
       <% } %>
+      <span>
+        <% const ratingCount = ob.stats.ratingCount !== 'undefined' ? ob.stats.ratingCount : 0;
+        const averageRating = ob.stats.averageRating ? ob.stats.averageRating.toFixed(2) : 0;
+        print(`${ob.parseEmojis('⭐')}${averageRating} (${ratingCount})`) %>
+      </span>
     </div>
   </div>
 </div>
