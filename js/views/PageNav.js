@@ -45,7 +45,7 @@ export default class extends View {
     }
 
     opts.className = 'pageNav';
-    if (opts.navigable) opts.className += ' notNavigable';
+    if (!opts.navigable) opts.className += ' notNavigable';
     if (opts.torIndicatorOn) opts.className += ' torIndicatorOn';
     super(opts);
     this.options = opts;
