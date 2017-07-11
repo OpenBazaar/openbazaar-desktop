@@ -47,14 +47,6 @@ export default class LocalServer {
     return this._lastStartCommandLineArgs;
   }
 
-  /**
-   * Merges in the auth cookie to the passed in command line arguments array.
-   */
-  buildCommandLineArgs(commandLineArgs = []) {
-    const authCookie = global.authCookie;
-    return authCookie ? commandLineArgs.concat(['-c', authCookie]) : commandLineArgs;
-  }
-
   start(commandLineArgs = []) {
     if (this.pendingStop) {
       this._lastStartCommandLineArgs = commandLineArgs;

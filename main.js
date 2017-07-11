@@ -579,7 +579,7 @@ ipcMain.on('active-server-set', (e, server) => {
     }
 
     if (global.authCookie && server.default) {
-      details.requestHeaders.Cookie = `OpenBazaar_Auth_Cookie=${global.authCookie}silly`;
+      details.requestHeaders.Cookie = `OpenBazaar_Auth_Cookie=${global.authCookie}`;
     }
 
     callback({ cancel: false, requestHeaders: details.requestHeaders });
