@@ -33,6 +33,7 @@ import { launchDebugLogModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
+import Onboarding from './views/modals/onboarding/Onboarding';
 
 fixLinuxZoomIssue();
 
@@ -235,78 +236,13 @@ function isOnboardingNeeded() {
 }
 
 const onboardDeferred = $.Deferred();
-let profileSaveUsePut = false;
 
 function onboard() {
-  // for now we'll just manually save the profile and settings
-  // model with their defaults.
-  let profileSave;
-  let settingsSave;
-
-  if (!Object.keys(app.profile.lastSyncedAttrs).length) {
-    profileSave = app.profile.save({}, {
-      type: profileSaveUsePut ? 'PUT' : 'POST',
-    });
-
-    if (!profileSave) {
-      throw new Error('Client side validation failed on your new Profile model.' +
-        'Ensure your defaults are valid.');
-    }
-  }
-
-  if (!Object.keys(app.settings.lastSyncedAttrs).length) {
-    settingsSave = app.settings.save({}, {
-      type: 'POST',
-    });
-
-    if (!settingsSave) {
-      throw new Error('Client side validation failed on your new Settings model.' +
-        'Ensure your defaults are valid.');
-    }
-  }
-
-  $.when(profileSave, settingsSave).done(() => {
-    onboardDeferred.resolve(true);
-  }).fail((jqXhr) => {
-    if (jqXhr === profileSave && jqXhr.responseJSON &&
-      jqXhr.responseJSON.reason === 'Profile already exists. Use PUT.') {
-      // todo: when this server bug is fixed, we shouldn't have to do this
-      // extra request to use PUT.
-      // https://github.com/OpenBazaar/openbazaar-go/issues/53
-      profileSaveUsePut = true;
-    }
-
-    const retryOnboardingSaveDialog = new Dialog({
-      title: app.polyglot.t('startUp.dialogs.retryOnboardingSave.title', {
-        type: jqXhr === profileSave ? 'profile' : 'settings',
-      }),
-      message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-      buttons: [
-        {
-          text: app.polyglot.t('startUp.dialogs.btnRetry'),
-          fragment: 'retry',
-        },
-        {
-          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
-          fragment: 'manageConnections',
-        },
-      ],
-      dismissOnOverlayClick: false,
-      dismissOnEscPress: false,
-      showCloseButton: false,
-    }).on('click-retry', () => {
-      retryOnboardingSaveDialog.close();
-
-      // slight of hand to ensure the loading modal has a chance to at
-      // least briefly show before another potential failure
-      setTimeout(() => {
-        onboard();
-      }, 300);
-    }).on('click-manageConnections', () =>
-          app.connectionManagmentModal.open())
+  new Onboarding()
     .render()
     .open();
-  });
+
+  // onboardDeferred.resolve();
 
   return onboardDeferred.promise();
 }
@@ -393,7 +329,7 @@ const onboardIfNeededDeferred = $.Deferred();
 
 function onboardIfNeeded() {
   isOnboardingNeeded().done((onboardingNeeded) => {
-    if (onboardingNeeded) {
+    if (onboardingNeeded || true) {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
