@@ -48,7 +48,7 @@ button,
 }
 
 .clrS {
-  background-color: $secondary;
+  background-color: #f0f0f0;
 
   input[type="radio"] + label:before,
   .fauxRadioBtn {
@@ -331,7 +331,7 @@ input[type=range][class~="clrS"] {
 }
 
 .chatOpen #appFrame #chatContainer {
-  background-color: $primaryGhost;
+  background-color: $primary;
   border-color: $border4;
 }
 
