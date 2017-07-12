@@ -1,13 +1,17 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import { setDeepValue } from '../utils/object';
 import { View } from 'backbone';
 
 export default class baseVw extends View {
-  constructor(options) {
+  constructor(options = {}) {
     super(options);
     this._childViews = [];
     this._unregisterFromParent = true;
     this._removed = false;
+    this._state = {
+      ...options.initialState || {},
+    };
   }
 
   /**
@@ -178,7 +182,9 @@ export default class baseVw extends View {
     return element;
   }
 
-  /** Clears the cached elements map. */
+  /**
+   * Clears the cached elements map.
+   */
   clearCachedElementMap() {
      // Clear the cache map.
     if (this._cachedElementMap) {
@@ -186,9 +192,50 @@ export default class baseVw extends View {
     }
   }
 
-  /** It is necessary to call super.render() in child views' render methods if using
-   *  getCachedEl()
-   *  @param {this} Render requires this to be returned.
+  /**
+   * Returns this view's state object.
+   */
+  getState() {
+    return this._state;
+  }
+
+  /**
+   * Sets this view's state object.
+   * @param {object} state - The new state data. By default, this is merged into
+   *   the existing state. To replace the state use the replace option.
+   * @param {object} options
+   * @param {boolean} [options.renderOnChange = true] - If true, will re-render the view
+   *   if the resulting state changes.
+   * @param {boolean} [options.replace = false] - If true, will replace the entire state
+   *   with the given state. Otherwise, the given state will be merged in.
+   * @return {object} The create child view instance.
+   */
+  setState(state, options = {}) {
+    const opts = {
+      renderOnChange: true,
+      replace: false,
+      ...options,
+    };
+    let newState;
+
+    if (opts.replace) {
+      this._state = {};
+    } else {
+      newState = _.extend({}, this._state, state);
+    }
+
+    if (opts.renderOnChange && !_.isEqual(this._state, newState)) {
+      this._state = newState;
+      this.render();
+    }
+
+    return this;
+  }
+
+  /**
+   * It is necessary to call super.render() in child views' render methods if using
+   * getCachedEl()
+   * @return {object} Render requires this to be returned.
    */
   render() {
     this.clearCachedElementMap();

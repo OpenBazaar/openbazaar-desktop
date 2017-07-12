@@ -26,7 +26,11 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/onboarding/onboarding.html', t => {
-      this.$el.html(t({}));
+      loadTemplate('brandingBox.html', brandingBoxT => {
+        this.$el.html(t({
+          brandingBoxT,
+        }));
+      });
     });
     super.render();
 
