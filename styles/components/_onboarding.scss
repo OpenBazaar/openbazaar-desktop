@@ -1,5 +1,27 @@
 .onboarding {
   .modalContent {
     width: $modalContentInnerMedium;
+
+    .introScreen {
+      .mainContent {
+        height: 300px;
+
+        .btcIcon {
+          position: relative;
+          top: 2px;
+        }
+
+        .headline {
+          font-size: 3.6rem;
+        }
+
+        .btnGetStarted {
+          font-size: 1.8rem;
+          min-width: 275px;
+          height: 52px;
+          text-transform: uppercase;
+        }
+      }
+    }
   }
 }

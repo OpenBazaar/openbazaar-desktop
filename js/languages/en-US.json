@@ -813,6 +813,12 @@
       "emptyData": "No valid data was returned from %{provider}."
     }
   },
+  "onboarding": {
+    "introScreen": {
+      "connectionLbl": "Connection:",
+      "btnChange": "Change"
+    }
+  },
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
     "displaying": "Displaying %{displayingCounts}"

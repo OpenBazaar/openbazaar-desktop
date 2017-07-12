@@ -1,10 +1,44 @@
-<section class="contentBox padMd clrP clrBr clrSh3">
-  <div class="flexVCent gutterH">
-    <div class="flexExpand"><%= ob.brandingBoxT() %></div>
-    <div><span class="txB">Connection:</span> Yo Mamma</div>
-    <div>
-      <button class="btn clrP">Change</button>
-    </div>
+<section class="contentBox padMd clrP clrBr clrSh3 <%= `${ob.screen}Screen` %>">
+  <div class="flexVCent gutterH posR">
+    <div class="<% if (ob.screen === 'intro') print('flexExpand') %>"><%= ob.brandingBoxT() %></div>
+    <% if (ob.screen === 'intro') { %>
+      <% if (ob.curConn && ob.curConn.server) { %>
+        <% const serverName = ob.curConn.server.get('name') || ''; %>
+        <div><span class="txB"><%= ob.polyT('onboarding.introScreen.connectionLbl') %></span> <%= serverName %></div>
+        <div>
+          <button class="btn clrP js-changeServer"><%= ob.polyT('onboarding.introScreen.btnChange') %></button>
+        </div>
+      <% } %>
+    <% } else if (ob.screen === 'info') { %>
+      <div class="flexExpand txB tx3">
+        <div class="center">Set Your Information</div>
+      </div>
+      <div class="clrT2">1 of 2</div>
+    <% } %>
   </div>
   <hr class="clrBr" />
+  <% if (ob.screen === 'intro') { %>
+  <div class="mainContent flexCent">
+    <div>
+      <div class="txCtr rowSm">
+        <span class="txUp txB clrT2">A free marketplace. No fees. No restrictions. Earn Bitcoin</span><i class="btcIcon margRTn"></i>
+      </div>
+      <div class="headline clrT txCtr rowHg">Buy and Sell Freely</div>
+      <div class="txCtr">
+        <button class="btnGetStarted btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-getStarted">Get Started<span class="ion-chevron-right margL"></span></button>
+      </div>
+    </div>
+  </div>
+  <% } %>
+  <% if (ob.screen !== 'intro') { %>
+  <hr class="clrBr" />
+  <div class="flexVCent">
+    <div class="flexExpand">
+      <button class="btn clrP js-navBack">Back</button>
+    </div>
+    <div>
+      <button class="btn clrP js-navNext">Next</button>
+    </div>
+  </div>
+  <% } %>
 </section>
