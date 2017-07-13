@@ -99,7 +99,7 @@ export default class extends BaseModal {
         this.$tabContent = this.$('.js-tabContent .contentBox');
         this.selectTab(this.currentTabName);
         this.$('.js-btcTicker').append(this.btcTicker.$el);
-      });      
+      });
     });
 
     return this;
