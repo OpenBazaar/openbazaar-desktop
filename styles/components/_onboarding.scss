@@ -23,5 +23,17 @@
         }
       }
     }
+
+    .infoScreen {
+      form {
+        width: 375px;
+        margin: 0 auto;
+        padding: $padMd 0;
+      }
+
+      label {
+        line-height: 2.75rem;
+      }
+    }
   }
 }

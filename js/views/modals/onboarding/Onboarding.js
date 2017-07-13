@@ -45,8 +45,6 @@ export default class extends BaseModal {
   onClickNavBack() {
     const curScreen = this.getState().screen;
 
-    console.log(`navin back to: ${this.screens[this.screens.indexOf(curScreen) - 1]}`);
-
     this.setState({
       screen: this.screens[this.screens.indexOf(curScreen) - 1],
     });
@@ -59,6 +57,10 @@ export default class extends BaseModal {
           brandingBoxT,
           ...this.getState(),
           curConn: getCurrentConnection(),
+          errors: {},
+          max: {},
+          countryList: [],
+          currencyList: [],
         }));
       });
     });

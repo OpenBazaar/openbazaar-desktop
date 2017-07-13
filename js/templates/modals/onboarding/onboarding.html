@@ -13,7 +13,7 @@
       <div class="flexExpand txB tx3">
         <div class="center">Set Your Information</div>
       </div>
-      <div class="clrT2">1 of 2</div>
+      <div class="clrT2 txB">1 of 2</div>
     <% } %>
   </div>
   <hr class="clrBr" />
@@ -29,9 +29,54 @@
       </div>
     </div>
   </div>
+  <% } else if (ob.screen === 'info') { %>
+    <form class="padStack">
+      <div class="row">
+        <label for="onboardingName" class="required"><%= ob.polyT('onboarding.infoScreen.nameLbl') %></label>
+        <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
+        <input type="text" class="clrBr clrSh2" name="name" id="onboardingName" value="<%= ob.name %>" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderName') %>">        
+      </div>
+      <div class="row">
+        <div class="flexVBase">
+          <label for="onboardingDescription" class="flexExpand"><%= ob.polyT('onboarding.infoScreen.descriptionLbl') %></label>
+          <div class="clrT2 tx6"><%= ob.polyT('onboarding.infoScreen.descriptionHelper', { count: ob.max.shortDescription || '-blah-' }) %></div>
+        </div>
+        <% if (ob.errors.shortDescription) print(ob.formErrorTmpl({ errors: ob.errors.shortDescription })) %>
+        <textarea rows="3" maxlength="ob.max.shortDescription" name="shortDescription" id="settingsShortDescription"
+                  class="clrBr clrSh2" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderDescription') %>"><%= ob.shortDescription %></textarea>
+      </div>
+      <div class="row">
+        <label><%= ob.polyT('onboarding.infoScreen.avatarLbl') %></label>
+        <div class="border clrBr pad">
+          <br />
+          <br />
+          <br />
+        </div>
+      </div>
+      <div class="row">
+        <label for="onboardingCountry" class="required"><%= ob.polyT('onboarding.infoScreen.countryLbl') %></label>
+          <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
+          <select id="onboardingCountry" name="country" class="clrSh2">
+            <% ob.countryList.forEach((country) => { %>
+            <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
+            <% }); %>
+            <option value="US" selected>United Sizzle</option>
+          </select>
+      </div>
+      <div class="row">
+        <label for="onboardingCurrency" class="required"><%= ob.polyT('onboarding.infoScreen.currencyLbl') %></label>
+          <% if (ob.errors.currency) print(ob.formErrorTmpl({ errors: ob.errors.currency })) %>
+          <select id="onboardingCurrency" name="currency" class="clrSh2">
+            <% ob.currencyList.forEach((currency) => { %>
+            <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
+            <% }); %>
+            <option value="USD" selected>United States Dolla Bill Yall</option>
+          </select>
+      </div>
+    </form>
   <% } %>
   <% if (ob.screen !== 'intro') { %>
-  <hr class="clrBr" />
+  <hr class="clrBr row" />
   <div class="flexVCent">
     <div class="flexExpand">
       <button class="btn clrP js-navBack">Back</button>

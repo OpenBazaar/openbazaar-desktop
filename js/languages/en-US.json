@@ -817,6 +817,16 @@
     "introScreen": {
       "connectionLbl": "Connection:",
       "btnChange": "Change"
+    },
+    "infoScreen": {
+      "nameLbl": "Name",
+      "placeholderName": "Set your name",
+      "descriptionLbl": "Description",
+      "descriptionHelper": "(%{count} char max)",
+      "placeholderDescription": "Say something interesting…",
+      "avatarLbl": "Avatar",
+      "countryLbl": "Country",
+      "currencyLbl": "Currency"
     }
   },
   "pageControls": {
