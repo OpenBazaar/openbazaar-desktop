@@ -1,6 +1,8 @@
 .onboarding {
   .modalContent {
-    width: $modalContentInnerMedium;
+    .mainContent {
+      padding: $pad 0;      
+    }
 
     .introScreen {
       .mainContent {
@@ -28,7 +30,6 @@
       form {
         width: 375px;
         margin: 0 auto;
-        padding: $padMd 0;
       }
 
       label {

@@ -22,7 +22,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} onboarding modalTop`;
+    return `${super.className()} onboarding modalScrollPage modalMedium`;
   }
 
   events() {
@@ -30,6 +30,7 @@ export default class extends BaseModal {
       'click .js-changeServer': 'onClickChangeServer',
       'click .js-getStarted': 'onClickGetStarted',
       'click .js-navBack': 'onClickNavBack',
+      'click .js-navNext': 'onClickNavNext',
       ...super.events(),
     };
   }
@@ -47,6 +48,14 @@ export default class extends BaseModal {
 
     this.setState({
       screen: this.screens[this.screens.indexOf(curScreen) - 1],
+    });
+  }
+
+  onClickNavNext() {
+    const curScreen = this.getState().screen;
+
+    this.setState({
+      screen: this.screens[this.screens.indexOf(curScreen) + 1],
     });
   }
 
