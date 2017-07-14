@@ -56,8 +56,10 @@
         <% } %>
         <% ob.contactInfo.social.forEach(function(account) { %>
           <div class="listItem">
-            <div><%= ob.polyT('properNames[account.type]') %></div>
-            <div class="clrT2"><%= account.username %></div>
+            <div><%= account.type %></div>
+            <div class="clrT2">
+              <% print(ob.is.url(account.username) ? `<a href="${account.username}">${account.username}</a>` : account.username) %>
+            </div>
           </div>
         <% }); %>
       <% } %>

@@ -14,12 +14,6 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
-  "properNames": {
-    "twitter": "Twitter",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "snapchat": "Snapchat"
-  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -469,8 +463,9 @@
     "socialAccounts": {
       "accountLabel": "Social Account",
       "accountPlaceholder": "Facebook",
-      "linkPlaceholder": "http://facebook.com/",
-      "add": "Add additional"
+      "usernamePlaceholder": "Handle or Link to Page",
+      "add": "Add additional",
+      "limitError": "You can't add more than %{max} social accounts."
     },
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
@@ -1231,10 +1226,11 @@
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
     "tooManySocialAccounts": "You cannot have more than %{max} social accounts",
-    "duplicateSocialAccount": "You already have a social account of this type."
+    "duplicateSocialAccount": "You can't add the same social account twice."
   },
   "socialAccountModelErrors": {
-    "provideUsername": "Please provide a username."
+    "provideUsername": "Please provide a handle or link.",
+    "provideType": "Please provide a type (Facebook, Twitter, etc.)."
   },
   "smtpModelErrors": {
     "username": {

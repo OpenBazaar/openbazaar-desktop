@@ -12,7 +12,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'socialAccount flexRow gutterH';
+    return 'socialAccount';
   }
 
   events() {
@@ -44,10 +44,7 @@ export default class extends BaseView {
     loadTemplate('modals/settings/socialAccount.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        errors: {
-          ...(this.model.validationError || {}),
-          ...(this.options.accountErrors || {}),
-        },
+        errors: this.model.validationError || {},
       }));
 
       this._$formFields = null;

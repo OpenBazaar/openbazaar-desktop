@@ -10,10 +10,6 @@ export default class extends BaseModel {
     };
   }
 
-  get idAttribute() {
-    return '_clientID';
-  }
-
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -25,8 +21,18 @@ export default class extends BaseModel {
       addError('username', app.polyglot.t('socialAccountModelErrors.provideUsername'));
     }
 
-    if (is.not.string(attrs.type)) {
-      addError('type', 'Please provide a type.');
+    if (is.not.string(attrs.type) || !attrs.type.length) {
+      addError('type', app.polyglot.t('socialAccountModelErrors.provideType'));
+    }
+
+    if (this.collection) {
+      const duplicateModels = this.collection.where({ type: attrs.type, username: attrs.username });
+
+      // If the model is not blank, make sure there are no duplicates
+      if (attrs.type && attrs.username &&
+        duplicateModels.length > 1 && duplicateModels[0] !== this) {
+        addError('duplicate', app.polyglot.t('contactModelErrors.duplicateSocialAccount'));
+      }
     }
 
     if (Object.keys(errObj).length) return errObj;

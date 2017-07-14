@@ -9,6 +9,7 @@ import twemoji from 'twemoji';
 import {
   splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
 } from './';
+import is from 'is_js';
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -48,4 +49,5 @@ export {
   getBlockChainBaseUrl,
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
+  is,
 };

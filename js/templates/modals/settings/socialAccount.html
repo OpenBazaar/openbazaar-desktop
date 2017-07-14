@@ -1,11 +1,20 @@
-<div class="col4">
+<div>
+  <% console.log(ob) %>
+  <% console.log(ob.errors) %>
   <% if (ob.errors['type']) print(ob.formErrorTmpl({ errors: ob.errors['type'] })) %>
-  <input type="text" class="clrBr clrSh2" name="type" value="<%= ob.type %>" placeholder="<%= ob.polyT('settings.socialAccounts.accountPlaceholder') %>">
-</div>
-<div class="col4">
   <% if (ob.errors['username']) print(ob.formErrorTmpl({ errors: ob.errors['username'] })) %>
-  <input type="text" class="clrBr clrSh2" name="username" value="<%= ob.username %>" placeholder="<%= ob.polyT('settings.socialAccounts.linkPlaceholder') %>">
+  <% if (ob.errors['duplicate']) print(ob.formErrorTmpl({ errors: ob.errors['duplicate'] })) %>
 </div>
-<div class="col4">
-  <button class="iconBtn form ion-android-close clrS clrBr js-deleteAccount"></button>
+<div class="posR">
+  <div class="flexRow gutterH">
+    <div class="col6">
+      <input type="text" class="clrBr clrSh2" name="type" value="<%= ob.type %>" placeholder="<%= ob.polyT('settings.socialAccounts.accountPlaceholder') %>">
+    </div>
+    <div class="col6">
+      <input type="text" class="clrBr clrSh2" name="username" value="<%= ob.username %>" placeholder="<%= ob.polyT('settings.socialAccounts.usernamePlaceholder') %>">
+    </div>
+  </div>
+  <div class="deleteAccountWrapper margL">
+    <button class="iconBtn form ion-trash-b clrP clrBr js-deleteAccount"></button>
+  </div>
 </div>

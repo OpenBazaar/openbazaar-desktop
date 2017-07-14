@@ -149,6 +149,9 @@ export default class extends baseVw {
   save() {
     const formData = this.getFormData();
 
+    // set the model data for the social accounts
+    this.socialAccounts.setCollectionData();
+
     this.profile.set(formData);
 
     const save = this.profile.save();

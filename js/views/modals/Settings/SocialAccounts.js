@@ -24,36 +24,20 @@ export default class extends BaseView {
     this.listenTo(this.collection, 'add', (md) => {
       const view = this.createAccountView(md);
 
-      this.$socialWrapper.append(view.render().el);
+      this.getCachedEl('.js-socialWrapper').append(view.render().el);
 
       this.accountViews.push(view);
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
       (this.accountViews.splice(removeOpts.index, 1)[0]).remove();
-
-      if (this.collection.length < this.maxAccounts) {
-        this.hideAddBtn(false);
-      }
-
-      // if the last account is removed, replace it with a blank one
-      if (this.collection.length === 0) {
-        this.addFirstAccount();
-      }
+      this.showLimitErr(false);
     });
 
     // if the collection is empty on construction, add a blank account to the form
     if (this.collection.length === 0) {
-      this.addFirstAccount();
+      this.addBlankAccount();
     }
-  }
-
-  addFirstAccount() {
-    this.collection.add(new SocialAccountMd());
-    this.hideAddBtn(false);
-    this.accountViews[0]
-      .$('input[name=type]')
-      .focus();
   }
 
   events() {
@@ -62,76 +46,76 @@ export default class extends BaseView {
     };
   }
 
-  hideAddBtn(bool) {
-    this.$addAccount.toggleClass('hide', bool);
-  }
-
-  onClickAddAccount() {
-    const data = this.accountViews[this.accountViews.length - 1].getFormData();
-    // don't add another blank account unless the previous is complete
-    if (data.type && data.username) {
-      this.collection.add(new SocialAccountMd());
-    }
-    this.accountViews[this.accountViews.length - 1]
+  addBlankAccount() {
+    this.collection.add(new SocialAccountMd());
+    const index = this.accountViews.length ? this.accountViews.length - 1 : 0;
+    this.accountViews[index]
       .$('input[name=type]')
       .focus();
   }
+
+  showLimitErr(show) {
+    if (show !== this._showLimitErr) {
+      this._showLimitErr = show;
+      this.getCachedEl('.js-limitErr').toggleClass('hide', !show);
+    }
+  }
+
+  onClickAddAccount() {
+    // don't add a blank acount if the maximum has been reached
+    if (this.accountViews.length >= this.maxAccounts) {
+      this.showLimitErr(true);
+    } else {
+      this.addBlankAccount();
+    }
+  }
+
 
   setCollectionData() {
     this.accountViews.forEach(account => account.setModelData());
   }
 
   createAccountView(model, options = {}) {
-    const accountErrors = {};
-
-    // TODO: show length errors
-    if (this.options.accountErrors) {
-      Object.keys(this.options.accountErrors)
-        .forEach(errKey => {
-          if (errKey.startsWith(`socialAccounts[${model.cid}]`)) {
-            accountErrors[errKey.slice(errKey.indexOf('.') + 1)] =
-              this.options.accountErrors[errKey];
-          }
-        });
-    }
-
     const view = this.createChild(SocialAccount, {
       model,
-      accountErrors,
       ...options,
     });
 
     this.listenTo(view, 'remove-click', () => {
       this.collection.remove(view.model);
+      // if the last account is removed, replace it with a blank one
+      if (this.collection.length === 0) {
+        this.addBlankAccount();
+      }
     });
-
-    if (this.collection.length >= this.maxAccounts) {
-      this.hideAddBtn(true);
-    }
 
     return view;
   }
 
   get $socialWrapper() {
     return this._$socialWrapper ||
-      (this._$socialWrapper =
-        this.$('.js-socialWrapper'));
+      (this._$socialWrapper = this.$('.js-socialWrapper'));
+  }
+
+  get $limitErr() {
+    return this._$limitErr ||
+      (this._$limitErr = this.$('.js-limitErr'));
   }
 
   get $addAccount() {
     return this._$addAccount ||
-      (this._$addAccount =
-        this.$('.js-addAccount'));
+      (this._$addAccount = this.$('.js-addAccount'));
   }
 
   render() {
+    super.render();
     loadTemplate('modals/settings/socialAccounts.html', t => {
       this.$el.html(t({
-        accounts: this.collection.toJSON(),
-        maxCouponCount: this.options.maxCouponCount,
+        max: this.maxAccounts,
       }));
 
       this._$socialWrapper = null;
+      this._$limitErr = null;
       this._$addAccount = null;
 
       this.accountViews.forEach(account => account.remove());
@@ -144,7 +128,7 @@ export default class extends BaseView {
         view.render().$el.appendTo(accountFrag);
       });
 
-      this.$socialWrapper.append(accountFrag);
+      this.getCachedEl('.js-socialWrapper').append(accountFrag);
     });
 
     return this;

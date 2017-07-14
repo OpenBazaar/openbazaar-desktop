@@ -1,17 +1,22 @@
-<div class="flexRow">
+<div class="flexRow gutterH">
   <div class="col3">
     <label><%= ob.polyT('settings.socialAccounts.accountLabel') %></label>
     <div class="clrT2 txSm"><%= ob.polyT('settings.pageTab.helperAbout') %></div>
   </div>
-  <div class="col9">
+  <div class="col6">
     <div class="gutterV gutterVFlush js-socialWrapper"></div>
   </div>
 </div>
 <div class="flexRow gutterH">
   <div class="col3"></div>
-  <div class="col9">
-    <button class="btnTxtOnly txU txUnb js-addAccount">
-      <%= ob.polyT('settings.socialAccounts.add') %>
-    </button>
+  <div class="col6">
+    <div class="flexCol">
+      <ul class="unstyled errorList hide js-limitErr">
+        <li><i class="ion-alert-circled"></i><%= ob.polyT('settings.socialAccounts.limitError', { max: ob.max }) %></li>
+      </ul>
+      <button class="btnTxtOnly txU txUnb js-addAccount">
+        <%= ob.polyT('settings.socialAccounts.add') %>
+      </button>
+    </div>
   </div>
 </div>
