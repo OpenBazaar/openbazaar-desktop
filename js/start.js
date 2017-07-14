@@ -413,9 +413,9 @@ function addDoorbell() {
       peerID: app.profile.id,
       vendor: app.profile.get('vendor'),
       contactInfo: app.profile.get('contactInfo'),
-    }
+    },
   };
-  (function(w, d, t) {
+  (function (w, d, t) {
     let hasLoaded = false;
     function l() {
       if (hasLoaded) {
@@ -423,11 +423,12 @@ function addDoorbell() {
       }
       hasLoaded = true;
       window.doorbellOptions.windowLoaded = true;
-      let g = d.createElement(t);
+      const g = d.createElement(t);
       g.id = 'doorbellScript';
       g.type = 'text/javascript';
       g.async = true;
-      g.src = 'https://embed.doorbell.io/button/4990?t='+(new Date().getTime());(d.getElementsByTagName('head')[0]||d.getElementsByTagName('body')[0]).appendChild(g);
+      g.src = `https://embed.doorbell.io/button/4990?t='${(new Date().getTime())}`;
+      (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(g);
     }
     if (w.attachEvent) {
       w.attachEvent('onload', l);
