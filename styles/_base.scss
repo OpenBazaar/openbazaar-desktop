@@ -308,6 +308,12 @@ svg {
     white-space: nowrap; /* 1 */
   }
 
+  .TODO {
+    // put this class on elements that are not complete.
+    // this is used instead of visuallyHidden to make it clear it is in progress.
+    @extend .visuallyHidden;
+  }
+
   .disabled {
     @include disabled;
   }
