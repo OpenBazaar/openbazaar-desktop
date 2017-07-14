@@ -826,7 +826,8 @@
       "placeholderDescription": "Say something interesting…",
       "avatarLbl": "Avatar",
       "countryLbl": "Country",
-      "currencyLbl": "Currency"
+      "currencyLbl": "Currency",
+      "changeAvatarLbl": "Change Avatar"
     }
   },
   "pageControls": {

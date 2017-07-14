@@ -238,7 +238,9 @@ function isOnboardingNeeded() {
 const onboardDeferred = $.Deferred();
 
 function onboard() {
-  new Onboarding()
+  new Onboarding({
+
+  })
     .render()
     .open();
 

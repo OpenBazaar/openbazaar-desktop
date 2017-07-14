@@ -39,45 +39,63 @@
       <form class="padStack">
         <div class="row">
           <label for="onboardingName" class="required"><%= ob.polyT('onboarding.infoScreen.nameLbl') %></label>
-          <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
-          <input type="text" class="clrBr clrSh2" name="name" id="onboardingName" value="<%= ob.name %>" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderName') %>">        
+          <% if (ob.profileErrors.name) print(ob.formErrorTmpl({ errors: ob.profileErrors.name })) %>
+          <input type="text" class="clrBr clrSh2" name="name" id="onboardingName" value="<%= ob.profile.name %>" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderName') %>" data-model="profile">
         </div>
         <div class="row">
           <div class="flexVBase">
-            <label for="onboardingDescription" class="flexExpand"><%= ob.polyT('onboarding.infoScreen.descriptionLbl') %></label>
-            <div class="clrT2 tx6"><%= ob.polyT('onboarding.infoScreen.descriptionHelper', { count: ob.max.shortDescription || '-blah-' }) %></div>
+            <label for="onboardingShortDescription" class="flexExpand"><%= ob.polyT('onboarding.infoScreen.descriptionLbl') %></label>
+            <div class="clrT2 tx6"><%= ob.polyT('onboarding.infoScreen.descriptionHelper', { count: ob.profileConstraints.shortDescription || '-blah-' }) %></div>
           </div>
-          <% if (ob.errors.shortDescription) print(ob.formErrorTmpl({ errors: ob.errors.shortDescription })) %>
-          <textarea rows="3" maxlength="ob.max.shortDescription" name="shortDescription" id="settingsShortDescription"
-                    class="clrBr clrSh2" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderDescription') %>"><%= ob.shortDescription %></textarea>
+          <% if (ob.profileErrors.shortDescription) print(ob.formErrorTmpl({ errors: ob.profileErrors.shortDescription })) %>
+          <textarea rows="3" maxlength="ob.profileConstraints.shortDescription" name="shortDescription" id="onboardingShortDescription"
+                    class="clrBr clrSh2" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderDescription') %>"
+                    data-model="profile"><%= ob.profile.shortDescription %></textarea>
         </div>
         <div class="row">
           <label><%= ob.polyT('onboarding.infoScreen.avatarLbl') %></label>
           <div class="border clrBr pad">
-            <br />
-            <br />
-            <br />
+            <div class="flexRow flexVCent gutterH" id="avatarCropper">
+              <div class="contentBox avatarPreview clrP clrBr2 clrSh1 flexNoShrink js-avatarPreview"></div>
+              <div class="flexNoShrink">
+                <div class="flexColRows gutterVTn avatarCropControls">
+                  <div>
+                    <div class="flex gutterH">
+                      <button class="iconBtn ion-reply flexExpand clrP clrBr clrSh2 disabled avatarLeft js-avatarLeft"></button>
+                      <button class="iconBtn ion-forward flexExpand clrP clrBr clrSh2 disabled avatarRight js-avatarRight"></button>
+                    </div>
+                  </div>
+                  <div class="posR">
+                    <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" value=0 />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input type="file" id="avatarInput" class="cropit-image-input invisible posA" tabindex="-1" />
+                <button for="avatarInput" class="btn clrP clrBr clrSh2 tx6 js-changeAvatar">
+                  <%= ob.polyT('onboarding.infoScreen.changeAvatarLbl') %>
+                </button>
+              </div>              
+            </div>
           </div>
         </div>
         <div class="row">
           <label for="onboardingCountry" class="required"><%= ob.polyT('onboarding.infoScreen.countryLbl') %></label>
-            <% if (ob.errors.country) print(ob.formErrorTmpl({ errors: ob.errors.country })) %>
-            <select id="onboardingCountry" name="country" class="clrSh2">
-              <% ob.countryList.forEach((country) => { %>
-              <option value="<%= country.dataName %>" <% if (country.dataName == ob.country) print('selected') %>><%= country.name %></option>
-              <% }); %>
-              <option value="US" selected>United Sizzle</option>
-            </select>
+          <% if (ob.settingsErrors.country) print(ob.formErrorTmpl({ errors: ob.settingsErrors.country })) %>
+          <select id="onboardingCountry" name="country" class="clrSh2" data-model="settings">
+            <% ob.countryList.forEach((country) => { %>
+            <option value="<%= country.dataName %>" <% if (country.dataName == ob.settings.country) print('selected') %>><%= country.name %></option>
+            <% }); %>
+          </select>
         </div>
         <div class="row">
           <label for="onboardingCurrency" class="required"><%= ob.polyT('onboarding.infoScreen.currencyLbl') %></label>
-            <% if (ob.errors.currency) print(ob.formErrorTmpl({ errors: ob.errors.currency })) %>
-            <select id="onboardingCurrency" name="currency" class="clrSh2">
-              <% ob.currencyList.forEach((currency) => { %>
-              <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
-              <% }); %>
-              <option value="USD" selected>United States Dolla Bill Yall</option>
-            </select>
+          <% if (ob.settingsErrors.currency) print(ob.formErrorTmpl({ errors: ob.settingsErrors.currency })) %>
+          <select id="onboardingCurrency" name="localCurrency" class="clrSh2" data-model="settings">
+            <% ob.currencyList.forEach((currency) => { %>
+            <option value="<%= currency.code %>" <% if (currency.code == ob.settings.localCurrency) print('selected') %>><%= currency.name %></option>
+            <% }); %>
+          </select>
         </div>
       </form>
     <% } else if (ob.screen === 'tos') { %>
