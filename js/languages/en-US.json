@@ -814,9 +814,13 @@
     }
   },
   "onboarding": {
+    "pageOfPage": "%{startPage} of %{totalPages}",
     "introScreen": {
       "connectionLbl": "Connection:",
-      "btnChange": "Change"
+      "btnChange": "Change",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn Bitcoin",
+      "tagLine": "Buy and Sell Freely",
+      "btnGetStarted": "Get Started"
     },
     "infoScreen": {
       "nameLbl": "Name",
@@ -827,7 +831,11 @@
       "avatarLbl": "Avatar",
       "countryLbl": "Country",
       "currencyLbl": "Currency",
-      "changeAvatarLbl": "Change Avatar"
+      "changeAvatarLbl": "Change Avatar",
+      "heading": "Set Your Information"
+    },
+    "tosScreen": {
+      "heading": "Terms of Service"
     }
   },
   "pageControls": {
@@ -1236,7 +1244,8 @@
   "profileModelErrors": {
     "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
-    "locationTooLong": "The location exceeds the maximum allowable length."
+    "locationTooLong": "The location exceeds the maximum allowable length.",
+    "shortDescriptionTooLong": "The short description cannot exceed %{count} characters."
   },
   "contactModelErrors": {
     "provideUsername": "Please provide a username.",

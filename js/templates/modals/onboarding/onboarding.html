@@ -11,14 +11,14 @@
       <% } %>
     <% } else if (ob.screen === 'info') { %>
       <div class="flexExpand txB tx3">
-        <div class="center">Set Your Information</div>
+        <div class="center"><%= ob.polyT('onboarding.infoScreen.heading') %></div>
       </div>
-      <div class="clrT2 txB">1 of 2</div>
+      <div class="clrT2 txB"><%= ob.polyT('onboarding.pageOfPage', { startPage: 1, totalPages: 2 }) %></div>
     <% } else if (ob.screen === 'tos') { %>
       <div class="flexExpand txB tx3">
-        <div class="center">Terms of Service</div>
+        <div class="center"><%= ob.polyT('onboarding.tosScreen.heading') %></div>
       </div>
-      <div class="clrT2 txB">2 of 2</div>
+      <div class="clrT2 txB"><%= ob.polyT('onboarding.pageOfPage', { startPage: 2, totalPages: 2 }) %></div>
     <% } %>
   </div>
   <hr class="clrBr" />
@@ -27,11 +27,11 @@
     <div class="flexCent">
       <div>
         <div class="txCtr rowSm">
-          <span class="txUp txB clrT2">A free marketplace. No fees. No restrictions. Earn Bitcoin</span><i class="btcIcon margRTn"></i>
+          <span class="txUp txB clrT2"><%= ob.polyT('onboarding.introScreen.introLine') %></span><i class="btcIcon margRTn"></i>
         </div>
-        <div class="headline clrT txCtr rowHg">Buy and Sell Freely</div>
+        <div class="headline clrT txCtr rowHg"><%= ob.polyT('onboarding.introScreen.tagLine') %></div>
         <div class="txCtr">
-          <button class="btnGetStarted btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-getStarted">Get Started<span class="ion-chevron-right margL"></span></button>
+          <button class="btnGetStarted btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-getStarted"><%= ob.polyT('onboarding.introScreen.btnGetStarted') %><span class="ion-chevron-right margL"></span></button>
         </div>
       </div>
     </div>
@@ -45,16 +45,16 @@
         <div class="row">
           <div class="flexVBase">
             <label for="onboardingShortDescription" class="flexExpand"><%= ob.polyT('onboarding.infoScreen.descriptionLbl') %></label>
-            <div class="clrT2 tx6"><%= ob.polyT('onboarding.infoScreen.descriptionHelper', { count: ob.profileConstraints.shortDescription || '-blah-' }) %></div>
+            <div class="clrT2 tx6"><%= ob.polyT('onboarding.infoScreen.descriptionHelper', { count: ob.profileConstraints.shortDescriptionLength }) %></div>
           </div>
           <% if (ob.profileErrors.shortDescription) print(ob.formErrorTmpl({ errors: ob.profileErrors.shortDescription })) %>
-          <textarea rows="3" maxlength="ob.profileConstraints.shortDescription" name="shortDescription" id="onboardingShortDescription"
+          <textarea rows="3" maxlength="<%= ob.profileConstraints.shortDescriptionLength %>" name="shortDescription" id="onboardingShortDescription"
                     class="clrBr clrSh2" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderDescription') %>"
                     data-model="profile"><%= ob.profile.shortDescription %></textarea>
         </div>
         <div class="row">
           <label><%= ob.polyT('onboarding.infoScreen.avatarLbl') %></label>
-          <div class="border clrBr pad">
+          <div class="border clrBr pad avatarCropperWrap">
             <div class="flexRow flexVCent gutterH" id="avatarCropper">
               <div class="contentBox avatarPreview clrP clrBr2 clrSh1 flexNoShrink js-avatarPreview"></div>
               <div class="flexNoShrink">
@@ -123,7 +123,11 @@
       <button class="btn clrP js-navBack">Back</button>
     </div>
     <div>
+      <% if (ob.screen !== 'tos') { %>
       <button class="btn clrP js-navNext">Next</button>
+      <% } else { %>
+      <button class="btn clrP js-tosAgree">I Agree</button>
+      <% } %>
     </div>
   </div>
   <% } %>

@@ -32,13 +32,22 @@
         margin: 0 auto;
 
         .select2 {
-          // EXPLAIN Yo Selfless
+          // without this the select2 dropdowns exceed the width of the form on re-render
           width: 375px !important;
+        }
+
+        #onboardingCountry, #onboardingCurrency  {
+          height: 40px;
+          opacity: 0;
         }
       }
 
       label {
         line-height: 2.75rem;
+      }
+
+      .avatarCropperWrap {
+        height: 55px;
       }
 
       #avatarCropper {
@@ -56,14 +65,10 @@
             background-size: cover;
 
             img[style] {
-              // EXPLAIN Yo Selfless
+              // without this the avatar preview doesn't honor the border radius
               will-change: auto !important;
             }
           }
-
-          // .cropit-image-zoom-input:disabled {
-          //   opacity: 0; // make unseen but keep it in place for layout
-          // }
         }
 
         .avatarCropControls {

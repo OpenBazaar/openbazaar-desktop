@@ -91,6 +91,17 @@ export default class extends BaseModal {
     this.avatarRotate(1);
   }
 
+  setState(state, options = {}) {
+    // const curState = this.getState();
+
+    if (state.screen && state.screen !== 'info') {
+      // store model from form
+    }
+
+    super.setState(state, options);
+  }
+
+
   avatarRotate(direction) {
     if (this.$avatarCropper.cropit('imageSrc')) {
       this.$avatarCropper.cropit(direction > 0 ? 'rotateCW' : 'rotateCCW');
@@ -134,10 +145,10 @@ export default class extends BaseModal {
         }));
 
         if (state.screen === 'info') {
-          // this.$('#onboardingCountry').select2();
-          this.getCachedEl('#onboardingCurrency').select2();
-
           setTimeout(() => {
+            this.getCachedEl('#onboardingCountry').select2();
+            this.getCachedEl('#onboardingCurrency').select2();
+
             this.$avatarCropper = this.getCachedEl('#avatarCropper').cropit({
               $preview: this.getCachedEl('.js-avatarPreview'),
               $fileInput: this.getCachedEl('#avatarInput'),
