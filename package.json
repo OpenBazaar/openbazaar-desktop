@@ -50,6 +50,7 @@
     "eslint-plugin-react": "^5.2.2",
     "grunt": "^1.0.1",
     "grunt-electron-installer": "^2.1.0",
+    "electron-winstaller": "2.5.2",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
     "node-sass": "^3.13.0",
