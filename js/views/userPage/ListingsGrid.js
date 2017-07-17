@@ -81,9 +81,9 @@ export default class extends BaseVw {
     if (this.options.listingBaseUrl) {
       listingBaseUrl = this.options.listingBaseUrl;
     } else if (model.get('vendor')) {
-      listingBaseUrl = `${model.get('vendor').handle || model.get('vendor').peerID}/store/`;
+      listingBaseUrl = `@${model.get('vendor').handle || model.get('vendor').peerID}/store/`;
     } else if (this.options.storeOwnerProfile) {
-      listingBaseUrl = `${this.options.storeOwnerProfile.get('handle') ||
+      listingBaseUrl = `@${this.options.storeOwnerProfile.get('handle') ||
         this.options.storeOwnerProfile.id}/store/`;
     }
 

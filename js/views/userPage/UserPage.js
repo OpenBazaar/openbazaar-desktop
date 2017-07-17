@@ -164,6 +164,8 @@ export default class extends baseVw {
       ...options,
     };
 
+    const listingBaseUrl = `@${this.model.get('handle')}` || this.model.id;
+
     if (!this.tabViews[capitalize(targ)] && targ !== 'following' && targ !== 'followers') {
       throw new Error(`${targ} is not a valid tab.`);
     }
@@ -172,6 +174,7 @@ export default class extends baseVw {
     const tabOptions = {
       ownPage: this.ownPage,
       model: this.model,
+      listingBaseUrl,
       ...opts,
     };
 
@@ -193,8 +196,8 @@ export default class extends baseVw {
           .join('/');
 
         // add tab to history
-        app.router.navigate(`${this.model.id}/${targ.toLowerCase()}` +
-          `${subRoute ? `/${subRoute}` : ''}`);
+        app.router.navigate(`${listingBaseUrl}/${targ.toLowerCase()}` +
+          `${subRoute ? `/${subRoute}` : ''}`, { replace: true });
       }
 
       this.$('.js-tab').removeClass('clrT active');
