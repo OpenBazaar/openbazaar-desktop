@@ -9,6 +9,7 @@ import fs from 'fs';
 import childProcess from 'child_process';
 import urlparse from 'url-parse';
 import _ from 'underscore';
+import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 
@@ -86,8 +87,8 @@ if (handleStartupEvent()) {
 
 const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
-      'openbazaard' : 'openbazaard.exe';
-const isBundledApp = _.once(() => fs.existsSync(serverPath + path.sep + serverFilename));
+  'openbazaard' : 'openbazaard.exe';
+const isBundledApp = _.once(() => fs.existsSync(serverPath + serverFilename));
 global.isBundledApp = isBundledApp;
 let localServer;
 
@@ -100,6 +101,8 @@ if (isBundledApp()) {
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
     // will be explained in the module.
   });
+
+  global.authCookie = guid();
 }
 
 crashReporter.start({
@@ -432,11 +435,22 @@ function createWindow() {
     title: 'OpenBazaar',
     frame: false,
     icon: 'imgs/openbazaar-icon.png',
-    //titleBarStyle: 'hidden',
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/.tmp/index.html`);
+
+  ipcMain.on('set-proxy', (e, id, socks5Setting = '') => {
+    if (!id) {
+      throw new Error('Please provide an id that will be passed back with the "proxy-set" ' +
+        'event.');
+    }
+
+    mainWindow.webContents.session.setProxy({
+      proxyRules: socks5Setting,
+      proxyBypassRules: '<local>',
+    }, () => mainWindow.webContents.send('proxy-set', id));
+  });
 
   // Open the DevTools.
   if (process.env.NODE_ENV === 'development') {
@@ -547,7 +561,8 @@ ipcMain.on('close-confirmed', () => {
   if (mainWindow) mainWindow.close();
 });
 
-// If appropriate, add in Basic Auth headers to each request.
+// If appropriate, add in Basic Auth headers to each request. If connecting to
+// the built-in server, we'll add in the auth token.
 ipcMain.on('active-server-set', (e, server) => {
   const filter = {
     urls: [`${server.httpUrl}*`, `${server.socketUrl}*`],
@@ -560,6 +575,10 @@ ipcMain.on('active-server-set', (e, server) => {
 
       details.requestHeaders.Authorization =
         `Basic ${new Buffer(`${un}:${pw}`).toString('base64')}`;
+    }
+
+    if (global.authCookie && server.default) {
+      details.requestHeaders.Cookie = `OpenBazaar_Auth_Cookie=${global.authCookie}`;
     }
 
     callback({ cancel: false, requestHeaders: details.requestHeaders });

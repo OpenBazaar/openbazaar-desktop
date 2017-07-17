@@ -1,7 +1,10 @@
 <div class="topControls flex">
   <div class="btnStrip clrSh3">
     <% if (ob.returnText) { %>
-    <a class="btn clrP clrBr clrT js-return"><%= ob.returnText %></a>
+    <a class="btn clrP clrBr clrT js-return">
+      <span class="ion-chevron-left margRSm"></span>
+      <%= ob.returnText %>
+    </a>
     <% } %>
   </div>
 </div>

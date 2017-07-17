@@ -1,11 +1,12 @@
 import { EOL } from 'os';
 import { remote, ipcRenderer } from 'electron';
 import _ from 'underscore';
-import app from '../app';
-import ServerConfig from '../models/ServerConfig';
-import Socket from '../utils/Socket';
 import $ from 'jquery';
 import { Events } from 'backbone';
+import Socket from '../utils/Socket';
+import { guid } from './';
+import app from '../app';
+import ServerConfig from '../models/ServerConfig';
 
 /*
   The module is used to establish a connection with a server as well as monitor
@@ -123,6 +124,18 @@ function authenticate(server) {
 }
 
 /**
+ * If we're currently connected to a server, this method will disconnect the connection.
+ */
+export function disconnect() {
+  const curCon = getCurrentConnection();
+  if (curCon && curCon.socket) curCon.socket.close();
+}
+
+let _localServerStartHandlers = [];
+let _proxySetHandlers = [];
+let boundServerConfigRemove = false;
+
+/**
  * Called to establish a connection with a server. This involves ensuring the
  * local server is running, if attempting to connect to the Default
  * (i.e. local bundled) connection. It also involves opening a websocket connection
@@ -136,11 +149,12 @@ function authenticate(server) {
  * @param {number} [options.attempts=2] - The number of connection attempts to make. During
  *   the initial connection process (e.g. at startup), it is useful to have multiple attempts
  *   since the server may still be in the process of starting up.
- * @param {number} [options.timeoutBetweenAttempts=2000] - Number of milliseconds to wait
- *   after an unsuccessful connection attempt before starting the next one. If a server is
- *   is down, in most cases the failure will be instant, so it is important to have a timeout
- *   inbetween connection attempts, otherwise they will all happen in a fraction of a second,
- *   never giving a server a chance to startup.
+ * @param {number} [options.minAttemptSpacing=3000] - The minimum number of milliseconds it
+ *   should take from the start of one connection attempt until the start of the second on.
+ *   This is very important because if a server is is down, in most cases the failure will
+ *   be instant, if you don't enforce spacing all the attempts will happen in a fraction
+ *   of a second, never giving a server a chance to startup. (Please note this governs the
+ *   minimum spacing. The max is governed by maxAttemptTime)
  * @param {number} [options.maxAttemptTime=5000] - The maximum amount of milliseconds before
  *   giving up on a connection attempt (and moving on to the next one if there is one) and
  *   considering it a failure. This is particularly important if you are attempting to connect
@@ -160,23 +174,33 @@ export default function connect(server, options = {}) {
     throw new Error('Please provide a server as a ServerConfig instance.');
   }
 
+  if (!boundServerConfigRemove) {
+    boundServerConfigRemove = true;
+
+    // If the config for the server we are connected to is removed, we'll
+    // disconnect from the server.
+    app.serverConfigs.on('remove', md => {
+      const curCon = getCurrentConnection();
+      if (curCon && curCon.server && curCon.server.id === md.id) {
+        disconnect();
+      }
+    });
+  }
+
   app.serverConfigs.activeServer = server;
   const curCon = getCurrentConnection();
 
-  if (curCon && curCon.server.id === server.id &&
-    (curCon.status === 'connected' || curCon.status === 'connecting')) {
-    throw new Error('You are already connected or connecting to the given server');
-  }
+  const innerLog = (msg = '') => {
+    log(`[${server.id.slice(0, 8)}] ${msg}`);
+  };
 
-  log(`[${server.id.slice(0, 8)}] Will attempt to connect to server "${server.get('name')}"` +
+  innerLog(`Will attempt to connect to server "${server.get('name')}"` +
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 5,
-    timeoutBetweenAttempts: 2000,
+    attempts: 7,
+    minAttemptSpacing: 3000,
     maxAttemptTime: 5000,
-    // todo: work this one in
-    restartDefaultServerOnFirstAttempt: true,
     ...options,
   };
 
@@ -274,7 +298,7 @@ export default function connect(server, options = {}) {
 
   if (curCon) {
     if (curCon.cancel) curCon.cancel();
-    if (curCon.socket) curCon.socket.close();
+    disconnect();
   }
 
   socket = new Socket(server.socketUrl);
@@ -287,24 +311,89 @@ export default function connect(server, options = {}) {
       if (socketConnectAttempt) socketConnectAttempt.cancel();
     };
 
-    if (server.get('default') && !localServer) {
-      // This should never happen to normal users. The only way it would is if you are a dev
-      // and mucking with localStorage and / or fudging the source for the app to masquerade
-      // as a bundled app.
-      throw new Error('The default configuration should only be used on the bundled app.');
-    }
+    // This is called when either the client Tor proxy has been set or once we've determined
+    // it's not needed.
+    const onClientTorProxyChecked = () => {
+      // This flag means that we want the server to be running in a certain tor mode
+      // (tor on or tor off), buts it's already running in the opposite mode.
+      const serverRunningIncompatibleWithTor = server.get('default') &&
+        localServer.isRunning && (server.get('useTor') !==
+          (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
 
-    if (server.get('default') && !localServer.isRunning && !localServer.isStopping) {
-      // If we're connecting to the bundled server and the local server is not
-      // running or in the process of stopping, we'll start it.
-      innerConnectDeferred.notify('starting-local-server');
+      if (serverRunningIncompatibleWithTor) {
+        // The idea is you will probably be starting the server with multiple attempts. So
+        // if we stop the server now, on a subsequent attempt we'll re-start it in the
+        // desired mode.
+        localServer.stop();
+        innerConnectDeferred.reject('incompatible-tor-mode');
+      }
 
-      localServer.on('start', () => {
-        innerConnectDeferred.notify('connecting');
+      if (server.get('default') &&
+        (!localServer.isRunning || localServer.isStopping)) {
+        const onTorChecked = () => {
+          const onLocalServerStart = () => {
+            socketConnectAttempt = socketConnect(socket)
+              .done(() => {
+                innerConnectDeferred.resolve('connected');
+              }).fail((reason, e) => {
+                if (reason === 'canceled') {
+                  innerConnectDeferred.reject('canceled');
+                } else {
+                  innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+                }
+              });
+          };
 
+          const commandLineArgs = [];
+          if (server.get('useTor')) commandLineArgs.push('--tor');
+          innerConnectDeferred.notify('starting-local-server');
+          localServer.start(commandLineArgs);
+
+          // Remove any previous start handlers that this module may have bound. Not
+          // removing them all, because other modules bind to 'start' and we don't
+          // want to remove their handlers.
+          _localServerStartHandlers.forEach(handler => localServer.off('start', handler));
+          _localServerStartHandlers = [onLocalServerStart];
+
+          localServer.on('start', () => onLocalServerStart());
+        };
+
+        if (server.get('confirmedTor') && !server.get('useTor')) {
+          onTorChecked();
+        } else {
+          const getServerStatusPid = localServer.getServerStatus();
+
+          localServer.on('getServerStatusSuccess', data => {
+            if (data.pid === getServerStatusPid) {
+              if (data.torAvailable && !server.get('useTor')) {
+                innerConnectDeferred.reject('tor-not-configured');
+              } else if (!data.torAvailable && server.get('useTor')) {
+                innerConnectDeferred.reject('tor-not-available');
+              } else {
+                onTorChecked();
+              }
+            }
+          });
+
+          localServer.on('getServerStatusFail', data => {
+            if (data.pid === getServerStatusPid) {
+              innerConnectDeferred.reject('unable-to-get-server-status');
+            }
+          });
+        }
+      } else {
         socketConnectAttempt = socketConnect(socket)
           .done(() => {
-            innerConnectDeferred.resolve('connected');
+            if (server.needsAuthentication()) {
+              innerConnectDeferred.notify('authenticating');
+              authenticate(server)
+                .done(() => innerConnectDeferred.resolve('connected'))
+                .fail((reason, e) => {
+                  innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
+                });
+            } else {
+              innerConnectDeferred.resolve('connected');
+            }
           }).fail((reason, e) => {
             if (reason === 'canceled') {
               innerConnectDeferred.reject('canceled');
@@ -312,32 +401,55 @@ export default function connect(server, options = {}) {
               innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
             }
           });
-      });
+      }
+    };
 
-      localServer.start();
-    } else {
+    // Putting a timeout, because we want to return the promise before sending any
+    // progress (i.e. notify()) events.
+    setTimeout(() => {
+      if (server.get('default') && !localServer) {
+        // This should never happen to normal users. The only way it would is if you are a dev
+        // and mucking with localStorage and / or fudging the source for the app to masquerade
+        // as a bundled app.
+        throw new Error('The default configuration should only be used on the bundled app.');
+      }
+
       innerConnectDeferred.notify('connecting');
 
-      socketConnectAttempt = socketConnect(socket)
-        .done(() => {
-          if (server.needsAuthentication()) {
-            innerConnectDeferred.notify('authenticating');
-            authenticate(server)
-              .done(() => innerConnectDeferred.resolve('connected'))
-              .fail((reason, e) => {
-                innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
-              });
-          } else {
-            innerConnectDeferred.resolve('connected');
+      if (server.get('useTor')) {
+        innerConnectDeferred.notify('setting-tor-proxy');
+        innerLog(`Activating a proxy at socks5://${server.get('torProxy')}`);
+        const setProxyId = guid();
+
+        const onProxySet = (e, id) => {
+          if (id === setProxyId) {
+            innerConnectDeferred.notify('tor-proxy-set');
+            onClientTorProxyChecked();
           }
-        }).fail((reason, e) => {
-          if (reason === 'canceled') {
-            innerConnectDeferred.reject('canceled');
-          } else {
-            innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+        };
+
+        ipcRenderer.send('set-proxy', setProxyId, `socks5://${server.get('torProxy')}`);
+        _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
+        ipcRenderer.on('proxy-set', onProxySet);
+        _proxySetHandlers = [onProxySet];
+      } else {
+        innerConnectDeferred.notify('clearing-tor-proxy');
+        innerLog('Clearing any proxy that may be set.');
+        const setProxyId = guid();
+        ipcRenderer.send('set-proxy', setProxyId, '');
+
+        const onProxySet = (e, id) => {
+          if (id === setProxyId) {
+            innerConnectDeferred.notify('tor-proxy-cleared');
+            onClientTorProxyChecked();
           }
-        });
-    }
+        };
+
+        _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
+        ipcRenderer.on('proxy-set', onProxySet);
+        _proxySetHandlers = [onProxySet];
+      }
+    });
 
     const promise = innerConnectDeferred.promise();
     promise.cancel = connectCancel;
@@ -356,7 +468,9 @@ export default function connect(server, options = {}) {
       .done((status, data = {}) => resolve({ status, ...data }))
       .fail((status, data = {}) => {
         if (attempt === opts.attempts || status === 'authentication-failed' ||
-          status === 'outer-connect-attempt-canceled') {
+          status === 'outer-connect-attempt-canceled' ||
+          status === 'tor-not-configured' ||
+          status === 'tor-not-available') {
           let reason;
 
           if (status === 'socket-connect-failed') {
@@ -372,7 +486,7 @@ export default function connect(server, options = {}) {
             ...data,
           });
         } else {
-          const delay = opts.timeoutBetweenAttempts - (Date.now() - connectAttemptStartTime);
+          const delay = opts.minAttemptSpacing - (Date.now() - connectAttemptStartTime);
 
           nextAttemptTimeout = setTimeout(() => {
             attempt += 1;
@@ -400,29 +514,27 @@ export default function connect(server, options = {}) {
 
   // wire in some logging
   deferred.progress(e => {
-    log(`[${server.id.slice(0, 8)}] Status is "${e.status}" for connect attempt` +
+    innerLog(`Status is "${e.status}" for connect attempt` +
       ` ${e.connectAttempt} of ${e.totalConnectAttempts}.`);
   }).done((e) => {
-    log(`[${server.id.slice(0, 8)}] Connected to "${e.server.get('name')}"`);
+    innerLog(`Connected to "${e.server.get('name')}"`);
 
     e.socket.on('close', () => {
-      const logMsg = `[${e.server.id.slice(0, 8)}] Disconnected from ` +
-        `"${e.server.get('name')}"`;
-      log(logMsg);
+      innerLog(`Disconnected from "${e.server.get('name')}"`);
     });
   }).fail((e) => {
-    log(`[${server.id.slice(0, 8)}] Failed to connect to "${e.server.get('name')}"`);
-    log(` ====> Reason: ${e.status}`);
+    innerLog(`Failed to connect to "${e.server.get('name')}"`);
+    innerLog(`====> Reason: ${e.status}`);
 
     if (e.socketCloseEvent) {
-      log(` ====> Code: ${e.socketCloseEvent.code}`);
+      innerLog(`====> Code: ${e.socketCloseEvent.code}`);
       if (e.socketCloseEvent.reason) log(`Reason: ${e.socketCloseEvent.reason}`);
     } else if (e.failedAuthEvent) {
-      log(` ====> Status: ${e.failedAuthEvent.status}`);
-      log(` ====> Status text: ${e.failedAuthEvent.statusText}`);
+      innerLog(`====> Status: ${e.failedAuthEvent.status}`);
+      innerLog(`====> Status text: ${e.failedAuthEvent.statusText}`);
 
       if (e.failedAuthEvent.responseText) {
-        log(` ====> Response text: ${e.failedAuthEvent.responseText}`);
+        innerLog(`====> Response text: ${e.failedAuthEvent.responseText}`);
       }
     }
   });

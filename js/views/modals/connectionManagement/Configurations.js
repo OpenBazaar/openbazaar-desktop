@@ -2,7 +2,11 @@ import { remote } from 'electron';
 import app from '../../../app';
 import
   serverConnect,
-  { getCurrentConnection, events as serverConnectEvents } from '../../../utils/serverConnect';
+  {
+    getCurrentConnection,
+    events as serverConnectEvents,
+    disconnect as serverDisconnect,
+  } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Configuration from './Configuration';
@@ -20,6 +24,7 @@ export default class extends baseVw {
     super(options);
     this.configViews = [];
     this.emptyConfigs = !!this.collection.length;
+    this.pendingDisconnectServerId = null;
 
     this.listenTo(this.collection, 'update', cl => {
       const prevEmptyConfigs = this.emptyConfigs;
@@ -51,6 +56,24 @@ export default class extends baseVw {
 
     this.listenTo(serverConnectEvents, 'disconnect', e => {
       const curConn = getCurrentConnection();
+
+      // If the disconnect was at the users request (ie.
+      // they pressed the Disconnect button), we'll just
+      // change the button state.
+      if (this.pendingDisconnectServerId === e.server.id) {
+        this.pendingDisconnectServerId = null;
+        let disconnectedServer =
+          this.configViews.filter(vw => vw.model.id === e.server.id);
+        disconnectedServer = disconnectedServer && disconnectedServer[0];
+        if (disconnectedServer) disconnectedServer.setState({ status: 'not-connected' });
+        return;
+      }
+
+      this.pendingDisconnectServerId = null;
+
+      // If the disconnect is from a removed configuration (e.g. the user
+      // deleted the config), we'll do nothing.
+      if (!app.serverConfigs.get(e.server.id)) return;
 
       // If we lost a connection, but another one is in progress,
       // we'll do nothing. Otherwise, we'll show a "lost connection"
@@ -88,6 +111,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnNew': 'onNewClick',
+      'click .js-editDefaultConfig': 'onClickEditDefaultConfig',
     };
   }
 
@@ -103,16 +127,61 @@ export default class extends baseVw {
     }
 
     if (e.reason === 'authentication-failed') {
-      msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
-        serverName: e.server.get('name'),
-        errorPreface: '<span class="txB">' +
-          `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
-        links,
-      });
+      if (e.server.get('default')) {
+        // If the default server fails with an auth issue, it's because the cookie token is
+        // invalid. This should never happen and must be a dev error.
+        msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailedBuiltInServer', {
+          serverName: e.server.get('name'),
+          errorPreface: '<span class="txB">' +
+            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+          links,
+        });
+      } else {
+        msg = app.polyglot.t('connectionManagement.statusBar.errorAuthFailed', {
+          serverName: e.server.get('name'),
+          errorPreface: '<span class="txB">' +
+            `${app.polyglot.t('connectionManagement.statusBar.errorPreface')}</span>`,
+          links,
+        });
+      }
     } else if (e.reason === 'canceled') {
       this.$statusBarOuterWrap.addClass('hide');
       this.configViews.forEach(configVw => configVw.setState({ status: 'not-connected' }));
       return;
+    } else if (e.reason === 'tor-not-configured') {
+      msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotConfigured', {
+        serverName: e.server.get('name'),
+        editLink: '<a class="js-editDefaultConfig">' +
+          `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
+        links,
+      });
+
+      if (!this.$el.is(':visible')) {
+        // If the connection modal is not open, we'll open up the configuration form. The modal
+        // will be opened shortly upon the connection failure. If the user already had the modal
+        // open, we won't auto send them to the config form, since it may interrupt something else
+        // they may be doing.
+        this.trigger('editConfig', {
+          model: this.collection.defaultConfig,
+        });
+      }
+    } else if (e.reason === 'tor-not-available') {
+      msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotAvailable', {
+        serverName: e.server.get('name'),
+        editLink: '<a class="js-editDefaultConfig">' +
+          `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
+        links,
+      });
+
+      if (!this.$el.is(':visible')) {
+        // If the connection modal is not open, we'll open up the configuration form. The modal
+        // will be opened shortly upon the connection failure. If the user already had the modal
+        // open, we won't auto send them to the config form, since it may interrupt something else
+        // they may be doing.
+        this.trigger('editConfig', {
+          model: this.collection.defaultConfig,
+        });
+      }
     } else if (eventName === 'disconnect') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorConnectionLost', {
         serverName: e.server.get('name'),
@@ -143,19 +212,20 @@ export default class extends baseVw {
     this.trigger('newClick');
   }
 
+  onClickEditDefaultConfig() {
+    this.trigger('editConfig', {
+      model: this.collection.defaultConfig,
+    });
+  }
+
   onConfigConnectClick(e) {
     const serverConfig = this.collection.at(this.configViews.indexOf(e.view));
-    serverConnect(serverConfig, {
-      // Unlike the start-up sequence, the assumption is that at this point
-      // any server is already up and running, so we'll only try to connect
-      // once. If it fails, the user can retry.
-      //
-      // We'll also give a quite high attempt time before giving up to account
-      // for edge case really slow servers / machines. The user will have the option
-      // to cancel the attempt if it's taking longer than they think it should.
-      attempts: 1,
-      maxAttemptTime: 20 * 1000,
-    });
+    serverConnect(serverConfig);
+  }
+
+  onConfigDisconnectClick(e) {
+    serverDisconnect();
+    this.pendingDisconnectServerId = e.view.model.id;
   }
 
   getConfigVw(id) {
@@ -188,6 +258,7 @@ export default class extends baseVw {
 
     const configVw = this.createChild(Configuration, opts);
     this.listenTo(configVw, 'connectClick', this.onConfigConnectClick);
+    this.listenTo(configVw, 'disconnectClick', this.onConfigDisconnectClick);
     this.listenTo(configVw, 'cancelClick', () => this.cancelConnAttempt());
     this.listenTo(configVw, 'editClick', e => this.trigger('editConfig', { model: e.view.model }));
 

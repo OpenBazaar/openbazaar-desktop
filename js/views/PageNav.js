@@ -44,7 +44,9 @@ export default class extends View {
       throw new Error('Please provide a Server Configs collection');
     }
 
-    opts.className = `pageNav ${opts.navigable ? '' : 'notNavigable'}`;
+    opts.className = 'pageNav';
+    if (!opts.navigable) opts.className += ' notNavigable';
+    if (opts.torIndicatorOn) opts.className += ' torIndicatorOn';
     super(opts);
     this.options = opts;
     this.addressBarText = '';
@@ -63,6 +65,7 @@ export default class extends View {
     this.listenTo(serverConnectEvents, 'disconnected', () => {
       this.$connectedServerName.text(app.polyglot.t('pageNav.notConnectedMenuItem'))
         .removeClass('txB');
+      this.torIndicatorOn = false;
     });
   }
 
@@ -81,6 +84,17 @@ export default class extends View {
       } else {
         this.$el.addClass('notNavigable');
       }
+    }
+  }
+
+  get torIndicatorOn() {
+    return this.options.torIndicatorOn;
+  }
+
+  set torIndicatorOn(bool) {
+    if (this.options.torIndicatorOn !== bool) {
+      this.options.torIndicatorOn = bool;
+      this.$el.toggleClass('torIndicatorOn', bool);
     }
   }
 
@@ -276,7 +290,7 @@ export default class extends View {
         this.$el.html(t({
           addressBarText: this.addressBarText,
           connectedServer,
-          testnet: app.testnet,
+          testnet: app.serverConfig.testnet,
           walletIconTmpl,
           ...(app.profile && app.profile.toJSON() || {}),
         }));

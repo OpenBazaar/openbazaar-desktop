@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         description: 'OpenBazaar 2',
         version: grunt.option('obversion') || '',
         title: 'OpenBazaar',
-        iconUrl: 'https://openbazaar.org/downloads/icon.ico',
+        iconUrl: 'https://www.openbazaar.org/wp-content/uploads/2017/07/windows-icon.ico',
         setupIcon: 'imgs/windows-icon.ico',
         skipUpdateIcon: true,
         loadingGif: 'imgs/windows-loading.gif',
