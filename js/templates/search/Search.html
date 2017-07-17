@@ -84,7 +84,12 @@
               <div class="col4">
                 <select id="sortBy" class="js-sortBy">
                   <% _.each(ob.sortBy, function(val, key) {
-                  const selected = val.selected ? 'selected' : '';
+                  let selected = '';
+                  if (ob.sortBySelected) {
+                    selected = key === ob.sortBySelected ? 'selected' : '';
+                  } else {
+                    selected = val.default === true ? 'selected' : '';
+                  }
                   print(`<option value="${key}" ${selected}>${val.label}</option>`);
                   }); %>
                 </select>
