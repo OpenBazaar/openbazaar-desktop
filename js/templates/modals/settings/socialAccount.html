@@ -1,6 +1,4 @@
 <div>
-  <% console.log(ob) %>
-  <% console.log(ob.errors) %>
   <% if (ob.errors['type']) print(ob.formErrorTmpl({ errors: ob.errors['type'] })) %>
   <% if (ob.errors['username']) print(ob.formErrorTmpl({ errors: ob.errors['username'] })) %>
   <% if (ob.errors['duplicate']) print(ob.formErrorTmpl({ errors: ob.errors['duplicate'] })) %>

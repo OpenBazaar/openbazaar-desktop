@@ -25,7 +25,7 @@ export default class extends BaseView {
     this.trigger('remove-click', { view: this });
   }
 
-  getFormData(fields = this.$formFields) {
+  getFormData(fields = this.getCachedEl('input[name]')) {
     return super.getFormData(fields);
   }
 
@@ -34,22 +34,14 @@ export default class extends BaseView {
     this.model.set(this.getFormData());
   }
 
-  get $formFields() {
-    return this._$formFields ||
-      (this._$formFields =
-        this.$('input[name]'));
-  }
-
   render() {
+    super.render();
     loadTemplate('modals/settings/socialAccount.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
       }));
-
-      this._$formFields = null;
     });
-
     return this;
   }
 }

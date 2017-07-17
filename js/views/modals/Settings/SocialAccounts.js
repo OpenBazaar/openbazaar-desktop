@@ -23,15 +23,13 @@ export default class extends BaseView {
 
     this.listenTo(this.collection, 'add', (md) => {
       const view = this.createAccountView(md);
-
       this.getCachedEl('.js-socialWrapper').append(view.render().el);
-
       this.accountViews.push(view);
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
       (this.accountViews.splice(removeOpts.index, 1)[0]).remove();
-      this.showLimitErr(false);
+      this.showLimitErr(this.accountViews.length >= this.maxAccounts);
     });
 
     // if the collection is empty on construction, add a blank account to the form
@@ -70,7 +68,6 @@ export default class extends BaseView {
     }
   }
 
-
   setCollectionData() {
     this.accountViews.forEach(account => account.setModelData());
   }
@@ -92,31 +89,12 @@ export default class extends BaseView {
     return view;
   }
 
-  get $socialWrapper() {
-    return this._$socialWrapper ||
-      (this._$socialWrapper = this.$('.js-socialWrapper'));
-  }
-
-  get $limitErr() {
-    return this._$limitErr ||
-      (this._$limitErr = this.$('.js-limitErr'));
-  }
-
-  get $addAccount() {
-    return this._$addAccount ||
-      (this._$addAccount = this.$('.js-addAccount'));
-  }
-
   render() {
     super.render();
     loadTemplate('modals/settings/socialAccounts.html', t => {
       this.$el.html(t({
         max: this.maxAccounts,
       }));
-
-      this._$socialWrapper = null;
-      this._$limitErr = null;
-      this._$addAccount = null;
 
       this.accountViews.forEach(account => account.remove());
       this.accountViews = [];
