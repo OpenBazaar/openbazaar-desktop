@@ -82,8 +82,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    super.render();
-
+    this.clearCachedElementMap();
     loadTemplate('modals/orderDetail/summaryTab/completeOrderForm.html', (t) => {
       this.$el.html(t({
         ...this.rating.toJSON(),

@@ -156,8 +156,8 @@ export default class baseVw extends View {
 
   /**
    * Returns a given jQuery Element or a locally cached version for optimization.
-   * NOTE: Ensure that child views call super.render() in their render function to clear the cache
-   *       since the DOM elements in the cache will then be stale references.
+   * NOTE: Ensure that child views call this.clearCachedElementMap() in their render function
+   *       to clear the cache since the DOM elements in the cache will then be stale references.
    * @param {selector} string - The jQuery selector for the Element.
    *
    * @return {element} JQuery The element(s) found in the View's Dom or the View's Cache
@@ -183,7 +183,8 @@ export default class baseVw extends View {
   }
 
   /**
-   * Clears the cached elements map.
+   * Clears the cached elements map. This should be called from your render
+   * function (likely at the top).
    */
   clearCachedElementMap() {
      // Clear the cache map.
@@ -229,16 +230,6 @@ export default class baseVw extends View {
       this.render();
     }
 
-    return this;
-  }
-
-  /**
-   * It is necessary to call super.render() in child views' render methods if using
-   * getCachedEl()
-   * @return {object} Render requires this to be returned.
-   */
-  render() {
-    this.clearCachedElementMap();
     return this;
   }
 

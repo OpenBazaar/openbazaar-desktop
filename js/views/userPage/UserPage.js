@@ -244,6 +244,7 @@ export default class extends baseVw {
   }
 
   render() {
+    this.clearCachedElementMap();
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),

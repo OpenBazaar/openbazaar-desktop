@@ -85,8 +85,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    super.render();
-
+    this.clearCachedElementMap();
     loadTemplate('modals/orderDetail/disputeOrder.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),

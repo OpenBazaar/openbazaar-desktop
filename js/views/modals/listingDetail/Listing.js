@@ -508,6 +508,7 @@ export default class extends BaseModal {
   }
 
   render() {
+    this.clearCachedElementMap();
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
     loadTemplate('modals/listingDetail/listing.html', t => {
