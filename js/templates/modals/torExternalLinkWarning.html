@@ -1,0 +1,22 @@
+<div class="topControls flex"></div>
+
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <section>
+    <h1 class="txCtr h3 pad"><%= ob.polyT('torExternalLinkWarning.heading') %></h1>
+    <hr class="clrBr rowHg" />
+    <p><%= ob.polyT('torExternalLinkWarning.body') %></p>
+    <div class="contentBox pad clrS clrBr row"><%= ob.url %></div>
+    <p class="rowHg"><%= ob.polyT('torExternalLinkWarning.areYouSureToProceed') %></p>
+    <hr class="clrBr row" />
+    <div class="flexVCent">
+      <div class="flexNoShrink tx5">
+        <input type="checkbox" class="centerLabel" id="dontShowTorExternalLinkWarning">
+        <label for="dontShowTorExternalLinkWarning"><%= ob.polyT('torExternalLinkWarning.doNotShowAgain') %></label>
+      </div>
+      <div class="flexExpand flexHRight flexVCent gutterHMd">
+        <a class="clrT2 js-cancel"><%= ob.polyT('torExternalLinkWarning.btnCancel') %></a>
+        <button class="btn clrP clrBr js-confirm"><%= ob.polyT('torExternalLinkWarning.btnProceed') %></button>
+      </div>
+    </div>
+  </section>
+</div>

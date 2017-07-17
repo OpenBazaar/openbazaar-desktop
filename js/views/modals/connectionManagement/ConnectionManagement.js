@@ -53,23 +53,23 @@ export default class extends BaseModal {
     });
 
     this.listenTo(configTab, 'editConfig',
-      e => this.selectTab('ConfigForm', { configFormModel: e.model }));
+      e => this.selectTab('ConfigForm', { viewOptions: e || {} }));
     this.listenTo(configTab, 'newClick', () => this.selectTab('ConfigForm'));
 
     return configTab;
   }
 
-  createConfigurationFormView(model) {
-    if (!model) {
+  createConfigurationFormView(viewOptions = {}) {
+    if (!viewOptions.model) {
       throw new Error('Please provide a server config model.');
     }
 
-    const configForm = new ConfigurationForm({ model });
+    const configForm = new ConfigurationForm({ ...viewOptions });
     this.listenTo(configForm, 'cancel', () => this.selectTab('Configurations'));
     this.listenTo(configForm, 'saved', () => {
-      app.serverConfigs.add(configForm.model, { merge: true });
       this.selectTab('Configurations');
-      serverConnect(configForm.model, { attempts: 2 });
+      app.serverConfigs.add(configForm.model, { merge: true });
+      serverConnect(configForm.model);
     });
 
     return configForm;
@@ -79,11 +79,9 @@ export default class extends BaseModal {
     let $tabTarg = data.targ;
     let $tabs = null;
     let tabView = this.tabViewCache[tabViewName];
+    data.viewOptions = data.viewOptions || {};
 
-    if (!$tabTarg && !data.configFormModel) {
-      // The prescence of data.configFormModel indicates we are showing the config form
-      // in Edit mode and in that case there is no $tabTarg we want to highlight with
-      // an active class.
+    if (!$tabTarg && !(tabViewName === 'ConfigForm' && data.viewOptions.model)) {
       $tabs = this.$('.js-tab');
       $tabTarg = $tabs.filter(`[data-tab=${tabViewName}]`);
     }
@@ -97,12 +95,15 @@ export default class extends BaseModal {
       if (tabViewName === 'ConfigForm') {
         // we won't cache the Config Form tab and we'll manage it ourselves
         this.currentTabView =
-          this.createConfigurationFormView(data.configFormModel || new ServerConfig());
+          this.createConfigurationFormView({
+            ...data.viewOptions,
+            model: data.viewOptions.model || new ServerConfig(),
+          });
         this.$tabContent.append(this.currentTabView.render().el);
       } else {
         if (!tabView) {
           if (this[`create${tabViewName}TabView`]) {
-            tabView = this[`create${tabViewName}TabView`].apply(this);
+            tabView = this[`create${tabViewName}TabView`].apply(this, [data.viewOptions || {}]);
           } else {
             tabView = this.createChild(this.tabViews[tabViewName]);
           }

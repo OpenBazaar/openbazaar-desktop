@@ -29,6 +29,10 @@
         .connectFailed {
           border-left-width: 4px;
           border-left-style: solid;
+
+          .statusMsg {
+            padding-right: 10px; 
+          }          
         }
 
         .connectingMsg {
@@ -54,10 +58,12 @@
       position: relative;
       height: 37px;
 
-      .btnConnectCancel {
+      .btnConnectCancel, .btnDisconnect {
         width: 140px;
         padding-left: 0;
         padding-right: 0;
+        text-align: center;
+        word-break: break-word;
       }
 
       &.failedConnectAttempt {
@@ -83,4 +89,15 @@
       }
     }
   }
+
+  .configurationForm {
+    .torMessage {
+      margin-top: 15px;
+      padding-left: 33px;
+      background-image: url(../../imgs/icon-tor.png);
+      background-position: 10px 12px;
+      background-size: 15px auto;
+      background-repeat: no-repeat;
+    }
+  }  
 }

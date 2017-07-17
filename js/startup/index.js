@@ -3,8 +3,10 @@
 
 import { screen, shell } from 'electron';
 import $ from 'jquery';
-import Backbone from 'backbone';
 import { getBody } from '../utils/selectors';
+import app from '../app';
+import Backbone from 'backbone';
+import TorExternalLinkWarning from '../views/modals/TorExternalLinkWarning';
 
 export function fixLinuxZoomIssue() {
   // fix zoom issue on Linux hiDPI
@@ -42,7 +44,24 @@ export function handleLinks() {
         Backbone.history.navigate(href.slice(5), true);
       } else {
         // external link
-        shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
+        const activeServer = app.serverConfigs.activeServer;
+        const localSettings = app.localSettings;
+        const warningOptedOut = app.localSettings &&
+          localSettings.get('dontShowTorExternalLinkWarning');
+
+        if (activeServer && activeServer.get('useTor') && !warningOptedOut) {
+          const warningModal = new TorExternalLinkWarning({ url: href })
+            .render()
+            .open();
+
+          warningModal.on('cancelClick', () => warningModal.close());
+          warningModal.on('confirmClick', () => {
+            shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
+            warningModal.close();
+          });
+        } else {
+          shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
+        }
       }
     } else {
       if (!href.startsWith('#')) {

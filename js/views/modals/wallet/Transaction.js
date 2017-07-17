@@ -186,7 +186,7 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         userCurrency: app.settings.get('localCurrency'),
         timeAgo: this.renderedTimeAgo,
-        isTestnet: !!app.testnet,
+        isTestnet: !!app.serverConfig.testnet,
         ...this._state,
       }));
     });

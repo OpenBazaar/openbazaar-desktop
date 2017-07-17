@@ -10,6 +10,7 @@ import ServerConfig from './models/ServerConfig';
 import serverConnect, {
   events as serverConnectEvents,
   getSocket,
+  getCurrentConnection,
 } from './utils/serverConnect';
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
@@ -353,8 +354,17 @@ function start() {
     app.profile = new Profile({ peerID: data.peerID });
 
     app.settings = new Settings();
-    // If the server is running testnet, set that here
-    app.testnet = data.testnet; // placeholder for later when we need this data for purchases
+
+    // This is the server config as returned by ob/config. It has nothing to do with
+    // app.serverConfigs which is a collection of server configuration data related
+    // to connecting with a server. The latter is stored in local storage.
+    app.serverConfig = data || {};
+
+    const curConn = getCurrentConnection();
+
+    if (curConn && curConn.status !== 'disconnected') {
+      app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
+    }
 
     // We'll default our server language to whatever is stored locally.
     app.settings.set('language', app.localSettings.get('language'));
