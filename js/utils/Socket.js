@@ -62,14 +62,26 @@ export default class {
   }
 
   close(...args) {
-    this._socket.close(...args);
+    if (this._socket) {
+      this._socket.close(...args);
+    }
   }
 
   send(...args) {
+    if (!this._socket) {
+      throw new Error('The socket is not connected. Please connect() first ' +
+        'before sending.');
+    }
+
     this._socket.send(...args);
   }
 
   get readyState() {
+    if (!this._socket) {
+      throw new Error('There is no ready state because the socket has never had a connection ' +
+        'attempt. Please connect() first,');
+    }
+
     return this._socket.readyState;
   }
 }
