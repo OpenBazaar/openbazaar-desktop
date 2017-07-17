@@ -7,6 +7,7 @@ import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
 import { launchEditListingModal, launchSettingsModal } from '../../utils/modalManager';
+import { getCurrentConnection } from '../../utils/serverConnect';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import MiniProfile from '../MiniProfile';
@@ -43,6 +44,12 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
+
+    this.curConn = getCurrentConnection();
+
+    if (this.curConn && this.curConn.server) {
+      this.showStoreWelcomeCallout = !this.curConn.server.get('dismissedStoreWelcome');
+    }
   }
 
   className() {
@@ -57,6 +64,7 @@ export default class extends baseVw {
       'click .js-moreBtn': 'clickMore',
       'click .js-customize': 'clickCustomize',
       'click .js-createListing': 'clickCreateListing',
+      'click .js-closeStoreWelcomeCallout': 'clickCloseStoreWelcomeCallout',
     };
   }
 
@@ -90,6 +98,13 @@ export default class extends baseVw {
     launchEditListingModal({
       model: listingModel,
     });
+  }
+
+  clickCloseStoreWelcomeCallout() {
+    if (this.curConn && this.curConn.server) {
+      this.curConn.server.save({ dismissedStoreWelcome: true });
+      this.getCachedEl('.js-storeWelcomeCallout').remove();
+    }
   }
 
   updateHeader() {
@@ -234,6 +249,7 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         followed: this.followedByYou,
         ownPage: this.ownPage,
+        showStoreWelcomeCallout: this.showStoreWelcomeCallout,
       }));
 
       this.$tabContent = this.$('.js-tabContent');

@@ -101,14 +101,6 @@ export default class extends BaseVw {
     }
   }
 
-  showDiscoverCallout() {
-    this.getCachedEl('.js-discoverCallout').removeClass('hide');
-  }
-
-  hideDiscoverCallout() {
-    this.getCachedEl('.js-discoverCallout').addClass('hide');
-  }
-
   navBackClick() {
     window.history.back();
   }
@@ -176,7 +168,7 @@ export default class extends BaseVw {
       connectedServer.server.save({ dismissedDiscoverCallout: true });
     }
 
-    this.hideDiscoverCallout();
+    this.getCachedEl('.js-discoverCallout').remove();
   }
 
   onMouseEnterConnectedServerListItem() {
