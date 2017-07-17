@@ -73,8 +73,32 @@
   &.notNavigable {
     .iconBtn,
     .addressBar,
-    .navListBtn {
+    .navListBtn,
+    .searchWrapper::after {
       @include disabled;
+    }
+  }
+
+  .searchWrapper {
+    .torIndicator {
+      display: none;
+      background-image: url(../../imgs/icon-tor.png);
+      background-repeat: no-repeat;
+      background-size: 13px auto;
+      background-position: center;
+      position: absolute;
+      top: -2px;
+      right: 7px;
+      width: 16px;
+      height: 100%;      
+    }
+  }
+
+  &.torIndicatorOn {
+    .searchWrapper {
+      .torIndicator {
+        display: block;
+      }
     }
   }
 
