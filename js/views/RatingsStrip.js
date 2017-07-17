@@ -11,8 +11,9 @@ export default class extends BaseVw {
       curRating: 0,
       maxRating: 5,
       hoverIndex: 0,
-      iconClrClass: 'clrTEm',
+      iconClrClass: '',
       numberClrClass: 'clrT2',
+      clickable: false,
       ...options.initialState || {},
     };
   }
@@ -33,7 +34,7 @@ export default class extends BaseVw {
     // displayed in reverse order via flex-direction. This requires index
     // calculations to be computed from the end.
     const totalIcons = this.getState().maxRating;
-    this.setState({ curRating: totalIcons - $(e.target).index() });
+    this.setState({ curRating: totalIcons - $(e.target).closest('.js-ratingIcon').index() });
   }
 
   get rating() {

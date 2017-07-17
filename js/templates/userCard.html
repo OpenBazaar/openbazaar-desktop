@@ -47,11 +47,13 @@
         </p>
       </div>
       <div class="flex gutterH contentBottom">
-        <div class="col8">
+        <div class="flexExpand">
           <span class="clrT2 clamp">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>
-        <div class="col4 tx6">
-          stars here (xx)
+        <div class="tx6">
+          <% const ratingCount = ob.stats.ratingCount !== 'undefined' ? ob.stats.ratingCount : 0;
+          const averageRating = ob.stats.averageRating ? ob.stats.averageRating.toFixed(2) : 0;
+          print(`${ob.parseEmojis('⭐')} ${averageRating} (${ratingCount})`) %>
         </div>
       </div>
     <% } else if (ob.loading) { %>

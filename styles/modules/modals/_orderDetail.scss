@@ -61,7 +61,7 @@
     position: absolute;
     max-width: 250px;
     left: $padLg;
-  }  
+  }
 
   .discussionTab {
     position: relative;
@@ -219,9 +219,9 @@
         .msgModUnableToChat {
           padding: $pad;
           display: block;
-        }        
+        }
       }
-    }    
+    }
   }
 
   .contractTab {
@@ -309,7 +309,7 @@
           }
         }
       }
-    }    
+    }
 
     .avatarCol {
       flex-shrink: 0;
@@ -350,21 +350,18 @@
     .orderCompleteEvent, .completeOrderForm {
       .ratingsCol {
         .ratingStrip {
-          .ratingIcon {
-            font-size: 22px;
+          .ratingsIcons {
+            vertical-align: middle;
+            .ratingIcon {
+              .emoji {
+                font-size: 19px;
+                margin-right: 0.1em;
+              }
+            }
           }
-
           .ratingNumbers {
             font-size: 13px;
           }
-        }
-      }
-    }
-
-    .orderCompleteEvent {
-      .ratingStrip {
-        .ratingIcon {
-          pointer-events: none;
         }
       }
     }
@@ -373,12 +370,13 @@
       .ratingsCol {
         .errorList {
           margin-top: $padTn;
-          margin-bottom: 0;
+          margin-bottom: 2px;
+          font-size: $tx5b;
 
           li:last-child {
             margin-bottom: 0;
           }
-        }        
+        }
       }
     }
 
@@ -417,7 +415,7 @@
     .avatar {
       width: $thumbTn;
       height: $thumbTn;
-    }    
+    }
   }
 
   .resolveDisputeTab {

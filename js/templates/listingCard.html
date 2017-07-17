@@ -12,9 +12,18 @@
       <% } %>
   </div>
   <div class="pad overflowAuto clrBr borderTop">
-    <a class="clrT clamp"><%= ob.title %></a>
-    <div>
-      <span class="txB floR"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
+    <div class="rowSm">
+      <a class="clrT clamp"><%= ob.title %></a>
+    </div>
+    <div class="flex">
+      <div class="flexExpand tx5b">
+        <% const ratingCount = ob.ratingCount !== 'undefined' ? ob.ratingCount : 0;
+        const averageRating = ob.averageRating ? ob.averageRating.toFixed(2) : 0;
+        print(`${ob.parseEmojis('⭐')}${averageRating} (${ratingCount})`) %>
+      </div>
+      <div class="txB">
+        <%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %>
+      </div>
     </div>
   </div>
   <div class="listingIcons">
@@ -43,11 +52,13 @@
         <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
       </div>
       <div class="flexExpand">
-        <div>
+        <div class="rowTn">
           <a class="clrT txU clamp3"><%= ob.title %></a>
         </div>
-        <div>
-          <% // rating icon + number of reviews, coming soon... %>
+        <div class="tx5b">
+          <% const ratingCount = ob.ratingCount !== 'undefined' ? ob.ratingCount : 0;
+          const averageRating = ob.averageRating ? ob.averageRating.toFixed(2) : 0;
+          print(`${ob.parseEmojis('⭐')}${averageRating} (${ratingCount})`) %>
         </div>
       </div>
       <% if (ob.shipsFreeToMe) { %>

@@ -647,7 +647,16 @@
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
     },
+    "review": {
+      "title": "%{time} by %{name}",
+      "loadMore": "Load More",
+      "noReviews": "No reviews were found for this listing.",
+      "showMore": "Show More",
+      "showLess": "Show Less"
+    },
     "errors": {
+      "fetchRatings": "Ratings Could Not Be Loaded.",
+      "fetchReviews": "Reviews could not be loaded.",
       "noPurchaseTitle": "This Listing Can't Be Purchased",
       "zeroPriceMsg": "You cannot make a purchase with a price of zero or less."
     }
@@ -1076,13 +1085,6 @@
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
-      "ratingLabels": {
-        "overall": "Overall",
-        "quality": "Quality",
-        "asAdvertised": "As Advertised",
-        "delivery": "Delivery",
-        "service": "Service"
-      },
       "completeOrderForm": {
         "heading": "Complete Order",
         "maxReviewChars": "%{max} chars. max",
@@ -1362,6 +1364,13 @@
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
     "provideRating": "Please select a rating."
+  },
+  "ratingLabels": {
+    "overall": "Overall",
+    "quality": "Quality",
+    "asAdvertised": "As Advertised",
+    "delivery": "Delivery",
+    "service": "Service"
   },
   "localSettingsModelErrors": {
     "searchProvider": "This is not a valid url for a search provider",
