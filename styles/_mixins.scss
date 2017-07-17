@@ -159,7 +159,7 @@
   textarea,
   button,
   .trumbowyg div[contenteditable]{
-    &:focus {
+    &:focus:not(.disabled) {
       border-color: $col2;
     }
   }

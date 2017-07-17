@@ -2,15 +2,28 @@
   <div class="flexVCent" style="height: 35px">
     <div class="col4">
       <!-- OB branding comming soon... -->
-    </div>  
+    </div>
     <div class="col4">
       <h2 class="h3 clrT txUnl txCtr"><%= ob.title %></h2>
     </div>
     <div class="col4"></div>
   </div>
-  <hr class="clrBr rowLg" />
+  <hr class="clrBr <% if (!ob.default) print('rowLg') %>" />
+
+  <% if (ob.showConfigureTorMessage) { %>
+  <div class="border clrBr3 padMd flex torMessage">
+    <%= ob.polyT('connectionManagement.configurationForm.configureTorMessage') %>
+  </div>
+  <% } %>
+
+  <% if (ob.showTorUnavailableMessage) { %>
+  <div class="border clrBrError clrTErr padMd flex torMessage">
+    <%= ob.polyT('connectionManagement.configurationForm.torNotAvailableMessage') %>
+  </div>
+  <% } %>  
 
   <form class="padMdKids padStack">
+  <% if (!ob.default) { %>
     <div class="flexRow">
       <div class="col3">
         <label for="serverConfigName" class="required"><%= ob.polyT('connectionManagement.configurationForm.name') %></label>
@@ -74,7 +87,7 @@
           </div>
         </div>
       </div>
-    </div>    
+    </div>
     <div class="flexRow">
       <div class="col3">
         <label for="serverConfigPort" class="required"><%= ob.polyT('connectionManagement.configurationForm.port') %></label>
@@ -83,7 +96,36 @@
       <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>
         <input type="text" class="clrBr clrSh2" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPort') %>">
       </div>
-    </div>    
+    </div>
+    <% } %>     
+    <div class="flexRow">
+      <div class="col3">
+        <label><%= ob.polyT('connectionManagement.configurationForm.torLabel') %></label>
+      </div>
+      <div class="col9">
+        <% if (ob.errors.useTor) print(ob.formErrorTmpl({ errors: ob.errors.useTor })) %>
+        <input type="checkbox" id="serverConfigUseTor" name="useTor" <% if (ob.useTor) print('checked') %> />
+        <label for="serverConfigUseTor"><%= ob.polyT('connectionManagement.configurationForm.useTor') %></label>
+      </div>
+    </div>
+    <div class="js-torProxyRow <% if (!ob.useTor) print('hide') %>">
+      <div class="flexRow">
+        <div class="col3">
+          <label><%= ob.polyT('connectionManagement.configurationForm.torProxyLabel') %></label>
+        </div>
+        <div class="col9">
+          <% if (ob.errors.torProxy) print(ob.formErrorTmpl({ errors: ob.errors.torProxy })) %>
+          <input type="text" class="clrBr clrSh2 required" name="torProxy" id="serverConfigTorProxy" value="<%= ob.torProxy %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.torProxyPlaceholder') %>">
+          <% if (!ob.default) { %>
+          <div class="clrT2 txSm padSm">
+            <%= ob.polyT('connectionManagement.configurationForm.torServerWarning', {
+              warning: `<span class="txB">${ob.polyT('connectionManagement.configurationForm.warning')}</span>`,
+            }) %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
   </form>
 
   <hr class="clrBr" />

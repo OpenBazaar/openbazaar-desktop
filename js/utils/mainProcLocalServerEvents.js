@@ -1,6 +1,16 @@
+/**
+ * When binding event to localServer module from the main (main.js) process, it is critical
+ * you use the functions from this module. The reason is that the "browser" part of the app
+ * binds to those events, but when the app is refreshed those handlers are lost. If the
+ * binding is not cleared from the Local Server module, then when any of those events are
+ * triggered, the app will crash. There's no easy way to just clear the handlers bound from
+ * the "browser" part of the app, so on an app refresh, we clear all the handlers. But, you will
+ * likely want the ones bound from main.js to still be active. So, if you bind them via this module,
+ * the module will keep track of those handlers and make sure to re-bind them after they've been
+ * unbound.
+ */
+
 import { ipcMain } from 'electron';
-// todo: doc me up
-// todo: unit test
 
 let localServerEvents = {};
 

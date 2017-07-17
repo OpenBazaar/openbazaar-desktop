@@ -66,7 +66,8 @@
     }
   },
   "pageNav": {
-    "notConnectedMenuItem": "Not Connected"
+    "notConnectedMenuItem": "Not Connected",
+    "torOnTooltip": "Tor active"
   },
   "chat": {
     "fetchingConversations": "Retrieving your chat conversations…",
@@ -503,14 +504,18 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Local Bundled Server",
+    "defaultServerName": "Built-in Server",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
-      "viewLocalServerDebugLogLink": "View Server Debug Log",
+      "viewLocalServerDebugLogLink": "Debug Log",
       "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The auth cookie is invalid. %{links}",
+      "editLink": "edit",
+      "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
+      "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Cancel",
       "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
     },
@@ -521,6 +526,7 @@
       "btnCancel": "Cancel",
       "btnRetry": "Retry",
       "btnConnect": "Connect",
+      "btnDisconnect": "Disconnect",
       "statusConnected": "Connected",
       "deleteConfirm": {
         "heading": "Are you sure?",
@@ -544,8 +550,24 @@
       "placeholderServerIp": "The IP to your server (or localhost)",
       "placeholderUsername": "The username to your server",
       "placeholderPassword": "The password to your server",
-      "placeholderPort": "The port to your server"
+      "placeholderPort": "The port to your server",
+      "torLabel": "Tor",
+      "useTor": "Use Tor",
+      "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting. Click Save to confirm your decision.",
+      "torNotAvailableMessage": "Tor was not detected. If you would like to proceed without Tor, uncheck \"Use Tor\" below and click Save. Otherwise start up Tor and then retry connecting.",
+      "torProxyLabel": "Tor SOCKS5 proxy",
+      "torProxyPlaceholder": "127.0.0.1:9150",
+      "warning": "Warning:",
+      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
     }
+  },
+  "torExternalLinkWarning": {
+    "heading": "Warning",
+    "body": "You're attempting to visit an external link in your default web browser. If your default web browser is not set to Tor, you may be exposing your IP address.",
+    "areYouSureToProceed": "Are you sure you want to proceed?",
+    "doNotShowAgain": "Do not show this warning again",
+    "btnCancel": "Cancel",
+    "btnProceed": "Yes, proceed"
   },
   "wallet": {
     "title": "Wallet",
@@ -1243,6 +1265,13 @@
       "caseOffIfEmpty": "Please fill out all settings if you turn notifications on."
     }
   },
+  "serverConfigModelErrors": {
+    "provideValue": "Please provide a value.",
+    "invalidIp": "This does not appear to be a valid IP address.",
+    "providePortAsNumber": "Please provide a port as a number.",
+    "provideValidPortRange": "Please provide a number between 0 and 65535.",
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+  },  
   "errors": {
     "saveError": "There was an error saving your data.",
     "badResult": "The server returned an error."

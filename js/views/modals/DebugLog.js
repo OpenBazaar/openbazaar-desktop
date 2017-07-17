@@ -30,13 +30,6 @@ export default class extends BaseModal {
     ipcRenderer.on('server-log', this.onServerConnectLog.bind(this));
   }
 
-  get closeClickTargets() {
-    return [
-      ...this.$closeClickTargets.get(),
-      ...super.closeClickTargets,
-    ];
-  }
-
   get maxDebugLines() {
     return 5000;
   }
@@ -74,11 +67,6 @@ export default class extends BaseModal {
       (this._$copiedConfirm = this.$('.js-copiedConfirm'));
   }
 
-  get $closeClickTargets() {
-    return this._$closeClickTargets ||
-      (this._$closeClickTargets = this.$('.js-closeClickTarget'));
-  }
-
   remove() {
     ipcRenderer.removeListener('server-log', this.onServerConnectLog);
     super.remove();
@@ -94,7 +82,6 @@ export default class extends BaseModal {
 
       this._$debugLog = null;
       this._$copiedConfirm = null;
-      this._$closeClickTargets = null;
     });
 
     return this;
