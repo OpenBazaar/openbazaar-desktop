@@ -14,6 +14,7 @@ import serverConnect, {
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
+import { addFeedback } from './utils/feedback';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -404,45 +405,6 @@ function onboardIfNeeded() {
   return onboardIfNeededDeferred.promise();
 }
 
-function addDoorbell() {
-  window.doorbellOptions = {
-    appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
-    name: app.profile.get('name'),
-    email: app.profile.get('contactInfo').email,
-    properties: {
-      peerID: app.profile.id,
-      vendor: app.profile.get('vendor'),
-      contactInfo: app.profile.get('contactInfo'),
-    },
-  };
-  (function (w, d, t) {
-    let hasLoaded = false;
-    function l() {
-      if (hasLoaded) {
-        return;
-      }
-      hasLoaded = true;
-      window.doorbellOptions.windowLoaded = true;
-      const g = d.createElement(t);
-      g.id = 'doorbellScript';
-      g.type = 'text/javascript';
-      g.async = true;
-      g.src = `https://embed.doorbell.io/button/4990?t='${(new Date().getTime())}`;
-      (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(g);
-    }
-    if (w.attachEvent) {
-      w.attachEvent('onload', l);
-    } else if (w.addEventListener) {
-      w.addEventListener('load', l, false);
-    } else {
-      l();
-    }
-    if (d.readyState === 'complete') {
-      l();
-    }
-  }(window, document, 'script'));
-}
-
  // let's start our flow - do we need onboarding?,
  // fetching app-wide models...
 function start() {
@@ -470,13 +432,12 @@ function start() {
 
     app.walletBalance = new WalletBalance();
 
-    addDoorbell();
-
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
+        addFeedback();
 
         // When starting the app the route is set to empty. We'll change that to be the
         // user's profile.
