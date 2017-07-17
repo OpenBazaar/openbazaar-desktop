@@ -815,6 +815,9 @@
   },
   "onboarding": {
     "pageOfPage": "%{startPage} of %{totalPages}",
+    "profileFailedSaveTitle": "Unable To Save Your Profile",
+    "settingsFailedSaveTitle": "Unable To Save Your Settings",
+    "settingsFailedSaveAvatar": "Unable To Save Your Avatar",
     "introScreen": {
       "connectionLbl": "Connection:",
       "btnChange": "Change",

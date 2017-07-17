@@ -238,13 +238,17 @@ function isOnboardingNeeded() {
 const onboardDeferred = $.Deferred();
 
 function onboard() {
-  new Onboarding({
+  const onboarding = new Onboarding({
 
   })
     .render()
     .open();
 
-  // onboardDeferred.resolve();
+  onboarding.on('onboarding-complete', () => {
+    location.hash = `${app.profile.id}/home`;
+    onboardDeferred.resolve();
+    onboarding.remove();
+  });
 
   return onboardDeferred.promise();
 }
@@ -331,7 +335,7 @@ const onboardIfNeededDeferred = $.Deferred();
 
 function onboardIfNeeded() {
   isOnboardingNeeded().done((onboardingNeeded) => {
-    if (onboardingNeeded || true) {
+    if (onboardingNeeded) {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {

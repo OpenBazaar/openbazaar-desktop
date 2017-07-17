@@ -1,11 +1,11 @@
+import $ from 'jquery';
 import 'cropit';
 import '../../../lib/select2';
 import app from '../../../app';
 import { getCurrentConnection } from '../../../utils/serverConnect';
-// import Settings from '../../../models/Settings';
-// import Profile from '../../../models/profile/Profile';
 import { getTranslatedCountries } from '../../../data/countries';
 import { getTranslatedCurrencies } from '../../../data/currencies';
+import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 
@@ -16,24 +16,17 @@ export default class extends BaseModal {
       showCloseButton: false,
       initialState: {
         screen: 'intro',
-        screen: 'info',
+        saveInProgress: false,
         ...options.initialState,
       },
       ...options,
     };
 
-    // if (!(options.profile instanceof Profile)) {
-    //   throw new Error('Please provide our own Profile model.');
-    // }
-
-    // if (!(options.settings instanceof Settings)) {
-    //   throw new Error('Please provide our own Settings model.');
-    // }
-
     super(opts);
     this.options = opts;
     this.screens = ['intro', 'info', 'tos'];
     this.lastAvatarImageRotate = 0;
+    this.avatarChanged = false;
     this.countryList = getTranslatedCountries(app.settings.get('language'));
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
   }
@@ -51,6 +44,7 @@ export default class extends BaseModal {
       'click .js-avatarLeft': 'onAvatarLeftClick',
       'click .js-avatarRight': 'onAvatarRightClick',
       'click .js-changeAvatar': 'onClickChangeAvatar',
+      'click .js-tosAgree': 'onClickTosAgree',
       ...super.events(),
     };
   }
@@ -65,18 +59,36 @@ export default class extends BaseModal {
 
   onClickNavBack() {
     const curScreen = this.getState().screen;
+    const newScreen = this.screens[this.screens.indexOf(curScreen) - 1];
+
+    if (curScreen === 'info') {
+      this.setModelsFromForm();
+    }
 
     this.setState({
-      screen: this.screens[this.screens.indexOf(curScreen) - 1],
+      screen: newScreen,
     });
   }
 
   onClickNavNext() {
     const curScreen = this.getState().screen;
+    const newScreen = this.screens[this.screens.indexOf(curScreen) + 1];
 
-    this.setState({
-      screen: this.screens[this.screens.indexOf(curScreen) + 1],
-    });
+    if (curScreen === 'info') {
+      this.setModelsFromForm();
+
+      if (newScreen === 'tos') {
+        app.profile.set({}, { validate: true });
+        app.settings.set({}, { validate: true });
+
+        if (app.settings.validationError || app.profile.validationError) {
+          this.render();
+          return;
+        }
+      }
+    }
+
+    this.setState({ screen: newScreen });
   }
 
   onClickChangeAvatar() {
@@ -91,16 +103,75 @@ export default class extends BaseModal {
     this.avatarRotate(1);
   }
 
-  setState(state, options = {}) {
-    // const curState = this.getState();
+  onClickTosAgree() {
+    this.setState({ saveInProgress: true });
 
-    if (state.screen && state.screen !== 'info') {
-      // store model from form
+    const profileSave = app.profile.save({}, {
+      type:
+        Object.keys(app.profile.lastSyncedAttrs).length ?
+          'PUT' : 'POST',
+    });
+
+    const settingsSave = app.settings.save({}, {
+      type:
+        Object.keys(app.settings.lastSyncedAttrs).length ?
+          'PUT' : 'POST',
+    });
+
+    const saves = [profileSave, settingsSave];
+
+    if (this.avatarChanged) {
+      const avatarSave = this.saveAvatar()
+        .done(avatarData => app.profile.set('avatarHashes', avatarData));
+      saves.push(avatarSave);
     }
 
-    super.setState(state, options);
+    $.when(...saves).done(() => {
+      this.trigger('onboarding-complete');
+    }).fail((jqXhr) => {
+      let title;
+
+      if (jqXhr === profileSave) {
+        title = app.polyglot.t('onboarding.profileFailedSaveTitle');
+      } else if (jqXhr === settingsSave) {
+        title = app.polyglot.t('onboarding.settingsFailedSaveTitle');
+      } else {
+        title = app.polyglot.t('onboarding.settingsFailedSaveAvatar');
+      }
+
+      openSimpleMessage(title, jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
+    })
+    .always(() => {
+      this.setState({ saveInProgress: false });
+    });
   }
 
+  setModelsFromForm() {
+    const $settingsFields = this.getCachedEl('select[data-model=settings], ' +
+      'input[data-model=settings], textarea[data-model=settings]');
+    app.settings.set(this.getFormData($settingsFields));
+    const $profileFields = this.getCachedEl('select[data-model=profile], ' +
+      'input[data-model=profile], textarea[data-model=profile]');
+    app.profile.set(this.getFormData($profileFields));
+  }
+
+  saveAvatar() {
+    if (!this.avatarExport) {
+      throw new Error('Unable to save the avatar because the export ' +
+        'data is not available');
+    }
+
+    const avatarData = JSON.stringify(
+      { avatar: this.avatarExport.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
+
+    return $.ajax({
+      type: 'POST',
+      url: app.getServerUrl('ob/avatar/'),
+      contentType: 'application/json; charset=utf-8',
+      data: avatarData,
+      dataType: 'json',
+    });
+  }
 
   avatarRotate(direction) {
     if (this.$avatarCropper.cropit('imageSrc')) {
@@ -122,6 +193,11 @@ export default class extends BaseModal {
     if (this.$avatarCropper) {
       this.lastAvatarZoom = this.$avatarCropper.cropit('zoom');
       this.lastAvatarImageSrc = this.$avatarCropper.cropit('imageSrc');
+      this.avatarExport = this.$avatarCropper.cropit('export', {
+        type: 'image/jpeg',
+        quality: 1,
+        originalSize: true,
+      });
       this.$avatarCropper = null;
     }
 
@@ -169,6 +245,7 @@ export default class extends BaseModal {
                 this.lastAvatarImageRotate = 0;
                 this.lastAvatarImageSrc = '';
                 this.lastAvatarZoom = 0;
+                this.avatarChanged = true;
               },
               onFileReaderError: (data) => {
                 console.log('file reader error');

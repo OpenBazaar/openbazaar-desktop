@@ -124,9 +124,12 @@
     </div>
     <div>
       <% if (ob.screen !== 'tos') { %>
-      <button class="btn clrP js-navNext">Next</button>
+        <button class="btn clrP js-navNext">Next</button>
       <% } else { %>
-      <button class="btn clrP js-tosAgree">I Agree</button>
+        <%= ob.processingButton({
+          className: `btn clrP js-tosAgree ${ob.saveInProgress ? 'processing' : ''}`,
+          btnText: 'I Agree'
+        }) %>
       <% } %>
     </div>
   </div>
