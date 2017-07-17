@@ -1,7 +1,8 @@
 import { remote } from 'electron';
 import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
-import Backbone, { View } from 'backbone';
+import Backbone from 'backbone';
+import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
@@ -13,7 +14,7 @@ import {
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 
-export default class extends View {
+export default class extends BaseVw {
   constructor(options) {
     const opts = {
       events: {
@@ -60,12 +61,14 @@ export default class extends View {
     this.listenTo(serverConnectEvents, 'connected', e => {
       this.$connectedServerName.text(e.server.get('name'))
         .addClass('txB');
+      this.listenTo(app.router, 'route:search', this.onRouteSearch);
     });
 
     this.listenTo(serverConnectEvents, 'disconnected', () => {
       this.$connectedServerName.text(app.polyglot.t('pageNav.notConnectedMenuItem'))
         .removeClass('txB');
       this.torIndicatorOn = false;
+      this.stopListening(app.router, null, this.onRouteSearch);
     });
   }
 
@@ -96,6 +99,14 @@ export default class extends View {
       this.options.torIndicatorOn = bool;
       this.$el.toggleClass('torIndicatorOn', bool);
     }
+  }
+
+  showDiscoverCallout() {
+    this.getCachedEl('.js-discoverCallout').removeClass('hide');
+  }
+
+  hideDiscoverCallout() {
+    this.getCachedEl('.js-discoverCallout').addClass('hide');
   }
 
   navBackClick() {
@@ -156,6 +167,16 @@ export default class extends View {
       remote.getCurrentWindow().maximize();
       // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Restore'));
     }
+  }
+
+  onRouteSearch() {
+    const connectedServer = getCurrentConnection();
+
+    if (connectedServer && connectedServer.server) {
+      connectedServer.server.save({ dismissedDiscoverCallout: true });
+    }
+
+    this.hideDiscoverCallout();
   }
 
   onMouseEnterConnectedServerListItem() {
@@ -285,6 +306,12 @@ export default class extends View {
       connectedServer = null;
     }
 
+    let showDiscoverCallout = false;
+
+    if (connectedServer && !connectedServer.dismissedDiscoverCallout) {
+      showDiscoverCallout = true;
+    }
+
     loadTemplate('pageNav.html', (t) => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
         this.$el.html(t({
@@ -292,6 +319,7 @@ export default class extends View {
           connectedServer,
           testnet: app.serverConfig.testnet,
           walletIconTmpl,
+          showDiscoverCallout,
           ...(app.profile && app.profile.toJSON() || {}),
         }));
       });

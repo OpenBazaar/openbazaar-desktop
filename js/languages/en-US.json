@@ -67,7 +67,9 @@
   },
   "pageNav": {
     "notConnectedMenuItem": "Not Connected",
-    "torOnTooltip": "Tor active"
+    "torOnTooltip": "Tor active",
+    "discoverCalloutTitle": "Discover",
+    "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar"
   },
   "chat": {
     "fetchingConversations": "Retrieving your chat conversations…",
@@ -117,6 +119,9 @@
     "getFollowingError": "There was an error when determining if this user follows you.",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "storeWelcomeCalloutTitle": "Welcome to your store!",
+    "storeWelcomeCalloutBody": "Your OpenBazaar store is now live on the network. Get started by creating some listings or customizing your page.",
+    "storeWelcomeCalloutBtnClose": "Close",
     "store": {
       "retryStoreFetch": "Retry",
       "unableToFetchListings": "Unable to retrieve your listings",
