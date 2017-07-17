@@ -80,7 +80,7 @@ export default class extends BaseModel {
         if (split.length !== 2) {
           valid = false;
         } else {
-          if (!is.ip(valid[0])) {
+          if (!is.ip(split[0])) {
             valid = false;
           } else if (!is.within(parseInt(split[1], 10), -1, 65536)) {
             valid = false;

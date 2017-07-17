@@ -306,14 +306,20 @@
     content: attr(data-tip);
     transform: translateX(-50%);
     font-size: $tx5b;
-    line-height:1.4;
+    line-height: 1.4;
     font-weight: 400;
     white-space: normal;
     width: 255px;
     box-sizing: border-box;
-    padding: $padHg;
+    padding: $padLg;
     top: 100%;
     margin-top: 8px;
+  }
+
+  &.toolTipNarrow {
+    &:before {
+      width: 125px;
+    }
   }
 
   &:after {

@@ -79,9 +79,9 @@
     }
   }
 
-  &.torIndicatorOn {
-    .searchWrapper::after {
-      content: '';
+  .searchWrapper {
+    .torIndicator {
+      display: none;
       background-image: url(../../imgs/icon-tor.png);
       background-repeat: no-repeat;
       background-size: 13px auto;
@@ -90,7 +90,15 @@
       top: -2px;
       right: 7px;
       width: 16px;
-      height: 100%;
+      height: 100%;      
+    }
+  }
+
+  &.torIndicatorOn {
+    .searchWrapper {
+      .torIndicator {
+        display: block;
+      }
     }
   }
 
