@@ -81,10 +81,6 @@ export default class extends BaseVw {
     if (this.options.listingBaseUrl) {
       listingBaseUrl = this.options.listingBaseUrl;
     } else if (model.get('vendor')) {
-      model.set('vendor', {
-        ...model.get('vendor'),
-        handle: 'limber',
-      });
       const base = model.get('vendor').handle ?
         `@${model.get('vendor').handle}` : model.get('vendor').peerID;
       listingBaseUrl = `${base}/store/`;
