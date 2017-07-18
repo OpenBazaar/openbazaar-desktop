@@ -1,19 +1,35 @@
 import app from '../app';
 
+const setFeedback = function () {
+  const profile = app.profile ? app.profile.toJSON() : {};
+  const contactInfo = profile.contactInfo || {};
+
+  window.doorbellOptions = {
+    appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
+    name: profile.name,
+    email: contactInfo.email,
+    properties: {
+      peerID: profile.peerID,
+      vendor: profile.vendor,
+      contactInfo,
+    },
+  };
+};
+
+/*
+ * Sets the options for the feedback tool
+ */
+
+export function setFeedbackOptions() {
+  setFeedback();
+}
+
 /*
  * Adds the feedback tool to the page.
  */
 export function addFeedback() {
-  window.doorbellOptions = {
-    appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
-    name: app.profile.get('name'),
-    email: app.profile.get('contactInfo').email,
-    properties: {
-      peerID: app.profile.id,
-      vendor: app.profile.get('vendor'),
-      contactInfo: app.profile.get('contactInfo'),
-    },
-  };
+  if (!window.doorbellOptions) setFeedback();
+
   (function (w, d, t) {
     let hasLoaded = false;
     function l() {

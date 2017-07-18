@@ -14,7 +14,7 @@ import serverConnect, {
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
-import { addFeedback } from './utils/feedback';
+import { setFeedbackOptions, addFeedback } from './utils/feedback';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -117,6 +117,8 @@ app.loadingModal = new LoadingModal({
 handleLinks();
 
 const fetchConfigDeferred = $.Deferred();
+
+addFeedback();
 
 function fetchConfig() {
   $.get(app.getServerUrl('ob/config')).done((...args) => {
@@ -437,7 +439,7 @@ function start() {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
-        addFeedback();
+        setFeedbackOptions();
 
         // When starting the app the route is set to empty. We'll change that to be the
         // user's profile.
