@@ -116,9 +116,10 @@ app.loadingModal = new LoadingModal({
 
 handleLinks();
 
-const fetchConfigDeferred = $.Deferred();
-
+// add the feedback mechanism
 addFeedback();
+
+const fetchConfigDeferred = $.Deferred();
 
 function fetchConfig() {
   $.get(app.getServerUrl('ob/config')).done((...args) => {
@@ -439,6 +440,7 @@ function start() {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
+        // set the profile data for the feedback mechanism
         setFeedbackOptions();
 
         // When starting the app the route is set to empty. We'll change that to be the
