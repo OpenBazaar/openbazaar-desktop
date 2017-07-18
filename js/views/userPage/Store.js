@@ -479,7 +479,6 @@ export default class extends BaseVw {
         collection: storeListingsCol,
         storeOwnerProfile: this.model,
         viewType: this.listingsViewType,
-        listingBaseUrl: this.options.listingBaseUrl,
       });
 
       getContentFrame().on('scroll', this.storeListingsScrollHandler);
