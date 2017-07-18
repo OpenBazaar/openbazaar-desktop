@@ -46,7 +46,6 @@ export default class extends BaseModal {
   }
 
   render() {
-    this.clearCachedElementMap();
     loadTemplate('modals/TorExternalLinkWarning.html', t => {
       this.$el.html(t({
         // debugLog: this.debugLog,

@@ -764,7 +764,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    this.clearCachedElementMap();
+    super.render();
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
       this.$el.html(t({
         id: this.model.id,

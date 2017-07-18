@@ -220,6 +220,8 @@ export default class extends BaseModal {
           currencyList: this.currencyList,
         }));
 
+        super.render();
+
         if (state.screen === 'info') {
           setTimeout(() => {
             this.getCachedEl('#onboardingCountry').select2();
@@ -263,7 +265,6 @@ export default class extends BaseModal {
         }
       });
     });
-    super.render();
 
     return this;
   }

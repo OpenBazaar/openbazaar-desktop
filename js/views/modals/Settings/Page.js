@@ -226,7 +226,7 @@ export default class extends baseVw {
   }
 
   render() {
-    this.clearCachedElementMap();
+    super.render();
 
     let avatarURI = false;
     let headerURI = false;

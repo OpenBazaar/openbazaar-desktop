@@ -124,8 +124,7 @@ export default class extends baseVw {
   }
 
   render() {
-    this.clearCachedElementMap();
-
+    super.render();
     loadTemplate('modals/connectionManagement/configurationForm.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
