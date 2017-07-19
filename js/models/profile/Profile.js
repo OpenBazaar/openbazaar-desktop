@@ -83,7 +83,7 @@ export default class extends BaseModel {
 
     if (typeof attrs.shortDescription !== 'string') {
       addError('shortDescription', 'The shortDescription must be provided as a string.');
-    } else if (attrs.shortDescriptio > this.max.shortDescriptionLength) {
+    } else if (attrs.shortDescription > this.max.shortDescriptionLength) {
       addError('shortDescription',
         app.polyglot.t('profileModelErrors.shortDescriptionTooLong',
           { count: this.max.shortDescriptionLength }));

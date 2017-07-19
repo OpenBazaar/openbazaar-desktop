@@ -1,7 +1,7 @@
 .onboarding {
   .modalContent {
     .mainContent {
-      padding: $pad 0;      
+      padding: $pad 0;
     }
 
     .introScreen {
@@ -11,6 +11,7 @@
         .btcIcon {
           position: relative;
           top: 2px;
+          left: 1px;
         }
 
         .headline {
@@ -30,11 +31,6 @@
       form {
         width: 375px;
         margin: 0 auto;
-
-        .select2 {
-          // without this the select2 dropdowns exceed the width of the form on re-render
-          width: 375px !important;
-        }
 
         #onboardingCountry, #onboardingCurrency  {
           height: 40px;
