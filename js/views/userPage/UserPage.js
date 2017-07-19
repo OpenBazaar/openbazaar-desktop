@@ -43,6 +43,7 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
+    // this.listenTo(this.model, 'change:handle', this.onHandleChange);
   }
 
   className() {
@@ -59,6 +60,10 @@ export default class extends baseVw {
       'click .js-createListing': 'clickCreateListing',
     };
   }
+
+  // onHandleChange() {
+  //   this.updateRouteWithHandle();
+  // }
 
   clickTab(e) {
     const targ = $(e.target).closest('.js-tab');
@@ -103,13 +108,13 @@ export default class extends baseVw {
     }
   }
 
-  setState(state, options = {}) {
-    if (!state) {
-      throw new Error('Please provide a state.');
-    }
-
-    this.state = state;
-    this.selectTab(state, options);
+  /**
+   * Will update the route to include the user's handle, if available.
+   */
+  updateRouteWithHandle() {
+    const route = location.hash.slice(1);
+    const base = this.model.get('handle') ? `@${this.model.get('handle')}` : this.model.id;
+    app.router.navigateUser(`${base}/${route.split('/').slice(1).join('/')}`, this.model.id);
   }
 
   createFollowersTabView(opts = {}) {
@@ -146,9 +151,18 @@ export default class extends baseVw {
     });
   }
 
+  setState(state, options = {}) {
+    if (!state) {
+      throw new Error('Please provide a state.');
+    }
+
+    this.state = state;
+    this.selectTab(state, options);
+  }
+
   selectTab(targ, options = {}) {
     const opts = {
-      replaceRoute: false,
+      addTabToHistory: true,
       ...options,
     };
 
@@ -164,27 +178,18 @@ export default class extends baseVw {
     };
 
     // delete any opts that the tab view(s) wouldn't need
-    delete tabOptions.replaceRoute;
+    delete tabOptions.addTabToHistory;
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
       this.$tabTitle.text(capitalize(targ));
 
-      // subRoute is anything after the tab in the route, which is something
-      // we want to maintain, e.g:
-      // <guid>/<tab>/<slug>/<blah>
-      // the subRoute is '/<slug>/<blah>'
-      const subRoute = location.hash
-        .slice(1)
-        .split('/')
-        .slice(2)
-        .join('/');
+      if (opts.addTabToHistory) {
+        const listingBaseUrl = this.model.get('handle') ?
+          `@${this.model.get('handle')}` : this.model.id;
 
-      const listingBaseUrl = this.model.get('handle') ?
-        `@${this.model.get('handle')}` : this.model.id;
-
-      // add tab to history
-      app.router.navigate(`${listingBaseUrl}/${targ.toLowerCase()}` +
-        `${subRoute ? `/${subRoute}` : ''}`, { replace: opts.replaceRoute });
+        // add tab to history
+        app.router.navigateUser(`${listingBaseUrl}/${targ.toLowerCase()}`, this.model.id);
+      }
 
       this.$('.js-tab').removeClass('clrT active');
       this.$(`.js-tab[data-tab="${targ}"]`).addClass('clrT active');
@@ -241,9 +246,10 @@ export default class extends baseVw {
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {
-        replaceRoute: true,
+        addTabToHistory: false,
         listing: this.options.listing,
       });
+      // this.updateRouteWithHandle();
     });
 
     return this;

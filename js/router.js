@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { Router } from 'backbone';
-import { getGuid } from './utils';
+import { getGuid, isMultihash } from './utils';
 import { getPageContainer } from './utils/selectors';
 import './lib/whenAll.jquery';
 import app from './app';
@@ -16,6 +16,7 @@ export default class ObRouter extends Router {
   constructor(options = {}) {
     super(options);
     this.options = options;
+    this.guidHandleMap = new Map();
 
     const routes = [
       [/^(?:ob:\/\/)@([^\/]+)[\/]?([^\/]*)[\/]?([^\/]*)[\/]?([^\/]*)\/?$/, 'userViaHandle'],
@@ -38,9 +39,51 @@ export default class ObRouter extends Router {
     $(window).on('hashchange', () => {
       this.setAddressBarText();
     });
+
+    console.log('cache');
+    window.cache = this.guidHandleMap;
+
+    // todo - clear old entries from map
   }
 
-  standardizedRoute(route = location.hash) {
+  get maxCachedHandles() {
+    return 1000;
+  }
+
+  // todo: doc me up. to remove send in empty handle.
+  cacheGuidHandle(guid, handle) {
+    if (typeof guid !== 'string') {
+      throw new Error('Please provide a guid as a string.');
+    }
+
+    if (typeof handle !== 'string') {
+      throw new Error('Please provide a handle as a string.');
+    }
+
+    if (!handle) {
+      this.guidHandleMap.delete(guid);
+      return;
+    }
+
+    const keys = Array.from(this.guidHandleMap.keys());
+    if (!this.guidHandleMap.get(guid) && keys.length >= this.maxCachedHandles) {
+      // We're already at or over the limit, so we need to remove one from the cache to
+      // make room for the new one.
+      this.guidHandleMap.delete(keys[keys.length - 1]);
+    }
+
+    this.guidHandleMap.set(guid, {
+      handle,
+      created: Date.now(),
+    });
+  }
+
+  standardizedRoute(route = location.hash, options = {}) {
+    const opts = {
+      replaceGuidWithHandle: true, // if available in cache
+      ...options,
+    };
+
     let standardized = route;
 
     if (standardized.startsWith('#')) {
@@ -51,15 +94,38 @@ export default class ObRouter extends Router {
       standardized = standardized.slice(1);
     }
 
+    if (standardized.startsWith('ob://')) {
+      standardized = standardized.slice(5);
+    }
+
     if (standardized.endsWith('/')) {
       standardized = standardized.slice(0, standardized.length - 1);
     }
 
+    const split = standardized.split('/');
+
+    if (opts.replaceGuidWithHandle && isMultihash(split[0])) {
+      console.log('yup');
+      const handleObj = this.guidHandleMap.get(split[0]);
+
+      if (handleObj) {
+        console.log('yuppers');
+        standardized =
+          `@${handleObj.handle}${split.length > 1 ? `/${split.slice(1).join('/')}` : ''}`;
+        console.log(`pre: ${standardized}`);
+      } else {
+        console.log('nopers');
+      }
+    } else {
+      console.log('nope');
+    }
+
+    console.log(`the gold standard is ${standardized}`);
+
     return standardized;
   }
 
-  setAddressBarText() {
-    const route = this.standardizedRoute();
+  setAddressBarText(route = this.standardizedRoute()) {
     let displayRoute;
 
     if (!route) {
@@ -103,6 +169,39 @@ export default class ObRouter extends Router {
     this.currentPage = vw;
     getPageContainer().append(vw.el);
     app.loadingModal.close();
+  }
+
+  // todo: DOC me up yo
+  navigateUser(fragment, guid, options = {}) {
+    if (typeof fragment !== 'string') {
+      throw new Error('Please provide a fragment as a string.');
+    }
+
+    if (!guid) {
+      throw new Error('Please provide a guid.');
+    }
+
+    let guidRoute = fragment;
+    const split = fragment.split('/');
+
+    if (split[0].startsWith('@')) {
+      this.cacheGuidHandle(guid, split[0].slice(1));
+      guidRoute = [guid].concat(split.slice(1)).join('/');
+    }
+
+    // First we'll use the standard navigate to set the route with
+    // the guid in place of the handle. This will put the guid version
+    // both in history and in the address bar.
+
+    // todo: those good? ^ ^ ^
+    console.log(`boom: ${guidRoute}`);
+    super.navigate(guidRoute, options);
+
+    // Now, we'll set the address bar with the provided fragment (which
+    // probably has the handle in it if it was available).
+    // setTimeout(() => {
+    //   this.setAddressBarText(fragment);
+    // });
   }
 
   userViaHandle(handle, ...args) {
@@ -187,6 +286,10 @@ export default class ObRouter extends Router {
     this.once('will-route', onWillRoute);
 
     $.whenAll(profileFetch, listingFetch).done(() => {
+      const handle = profile.get('handle');
+      this.cacheGuidHandle(guid, handle);
+      if (handle) this.setAddressBarText();
+
       if (pageState === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
         // the user does not have an active store and this is not our own node
         if (state) {
@@ -198,7 +301,7 @@ export default class ObRouter extends Router {
 
         // You've attempted to find a user with no particular tab. Since store is not available
         // we'll take you to the home tab.
-        this.navigate(`${guid}/home${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+        this.navigate(`${guid}/home/${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
           replace: true,
           trigger: true,
         });
@@ -206,7 +309,7 @@ export default class ObRouter extends Router {
       }
 
       if (!state) {
-        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
+        this.navigate(`${guid}/store/${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
           replace: true,
         });
       }
@@ -222,18 +325,11 @@ export default class ObRouter extends Router {
       if (profileFetch.statusText === 'abort' ||
         profileFetch.statusText === 'abort') return;
 
-      if (!state) {
-        this.navigate(`${guid}/store${deepRouteParts ? deepRouteParts.join('/') : ''}`, {
-          replace: true,
-        });
-      }
-
       // todo: If really not found (404), route to
       // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
         this.userNotFound(guid);
       } else if (listingFetch.state() === 'rejected') {
-        // this.listingError(listingFetch, listing.get('slug'), `#${guid}/store`)
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
       }
     })

@@ -49,11 +49,8 @@ export default class extends baseVw {
 
       return this.createChild(ListingCard, options);
     }
-    const options = {
-      model,
-    };
 
-    return this.createChild(UserCard, options);
+    return this.createChild(UserCard, { model });
   }
 
   renderCards(models) {
