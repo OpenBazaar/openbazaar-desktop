@@ -679,10 +679,8 @@ export default class extends BaseModal {
         const url = `${base}/store/${this.model.get('slug')}`;
 
         if (location.hash === guidUrl) {
-          console.log('same same');
           Backbone.history.loadUrl();
         } else {
-          console.log(`I beckon ${url}`);
           app.router.navigateUser(url, app.profile.id, { trigger: true });
         }
       });
@@ -706,7 +704,7 @@ export default class extends BaseModal {
           savingStatusMsg.update(`Listing ${this.model.toJSON().item.title}` +
             ' saved. <a class="js-viewListing">view</a>');
 
-          setTimeout(() => savingStatusMsg.remove(), 60000);
+          setTimeout(() => savingStatusMsg.remove(), 6000);
         });
     } else {
       // client side validation failed

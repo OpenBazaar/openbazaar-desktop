@@ -59,7 +59,7 @@ export default class extends baseVw {
     let start = 0;
     const total = models.total;
     const noResults =
-              $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
+      $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
 
     if (total) {
       start = end >= this.pageSize ? end - this.pageSize + 1 : 1;

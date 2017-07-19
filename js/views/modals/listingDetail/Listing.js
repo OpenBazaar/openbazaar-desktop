@@ -223,11 +223,8 @@ export default class extends BaseModal {
     if (this.options.openedFromStore) {
       this.close();
     } else {
-      if (this.vendor.handle) {
-        location.hash = `#@${this.vendor.handle}/store`;
-      } else {
-        location.hash = `#${this.vendor.peerID}/store`;
-      }
+      const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
+      app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
   }
 

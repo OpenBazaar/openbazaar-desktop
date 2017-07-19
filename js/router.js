@@ -16,6 +16,13 @@ export default class ObRouter extends Router {
   constructor(options = {}) {
     super(options);
     this.options = options;
+
+    // This is a mapping of guids to handles. It is currently updated any time
+    // a profile is fetched via this.user() and anytime a user route is navigate to
+    // via this.navigateUser(). The main purpose of this cache is to avoid (in 95% of
+    // the cases) the flicker in the address bar that would be present due to the fact
+    // that we are storing user routes with guids in the history, but diplaying a version
+    // with the handle in the address bar.
     this.guidHandleMap = new Map();
 
     const routes = [
@@ -39,18 +46,35 @@ export default class ObRouter extends Router {
     $(window).on('hashchange', () => {
       this.setAddressBarText();
     });
-
-    console.log('cache');
-    window.cache = this.guidHandleMap;
-
-    // todo - clear old entries from map
   }
 
   get maxCachedHandles() {
     return 1000;
   }
 
-  // todo: doc me up. to remove send in empty handle.
+  /**
+   * Our own profile is not available when the router is constructed, so please call this method
+   * when it is.
+   */
+  onProfileSet() {
+    this.stopListening(app.profile, null, this.onOwnHandleChange);
+    this.listenTo(app.profile, 'change:handle', this.onOwnHandleChange);
+  }
+
+  onOwnHandleChange() {
+    this.cacheGuidHandle(app.profile.id, app.profile.get('handle'));
+
+    // If we're on our own user page, we'll call router.setAddressBarText, which
+    // will ensure the updated handle is reflected in the address bar.
+    if (location.hash.slice(1).startsWith(app.profile.id)) {
+      this.setAddressBarText();
+    }
+  }
+
+  /**
+   * Updates our this.guidHandleMap which is an in-memory cached mapping of
+   * a guid to handle.
+   */
   cacheGuidHandle(guid, handle) {
     if (typeof guid !== 'string') {
       throw new Error('Please provide a guid as a string.');
@@ -72,18 +96,10 @@ export default class ObRouter extends Router {
       this.guidHandleMap.delete(keys[keys.length - 1]);
     }
 
-    this.guidHandleMap.set(guid, {
-      handle,
-      created: Date.now(),
-    });
+    this.guidHandleMap.set(guid, handle);
   }
 
-  standardizedRoute(route = location.hash, options = {}) {
-    const opts = {
-      replaceGuidWithHandle: true, // if available in cache
-      ...options,
-    };
-
+  standardizedRoute(route = location.hash) {
     let standardized = route;
 
     if (standardized.startsWith('#')) {
@@ -102,36 +118,29 @@ export default class ObRouter extends Router {
       standardized = standardized.slice(0, standardized.length - 1);
     }
 
-    const split = standardized.split('/');
-
-    if (opts.replaceGuidWithHandle && isMultihash(split[0])) {
-      console.log('yup');
-      const handleObj = this.guidHandleMap.get(split[0]);
-
-      if (handleObj) {
-        console.log('yuppers');
-        standardized =
-          `@${handleObj.handle}${split.length > 1 ? `/${split.slice(1).join('/')}` : ''}`;
-        console.log(`pre: ${standardized}`);
-      } else {
-        console.log('nopers');
-      }
-    } else {
-      console.log('nope');
-    }
-
-    console.log(`the gold standard is ${standardized}`);
-
     return standardized;
   }
 
   setAddressBarText(route = this.standardizedRoute()) {
-    let displayRoute;
+    let displayRoute = route;
 
     if (!route) {
       displayRoute = '';
     } else {
-      displayRoute = route.startsWith('ob://') ? route : `ob://${route}`;
+      const split = route.split('/');
+
+      // If the route starts with a guid and we have a cached handle
+      // for that guid, we'll put the handle in.
+      if (isMultihash(split[0])) {
+        const handle = this.guidHandleMap.get(split[0]);
+
+        if (handle) {
+          displayRoute =
+            `@${handle}${split.length > 1 ? `/${split.slice(1).join('/')}` : ''}`;
+        }
+      }
+
+      displayRoute = `ob://${displayRoute}`;
     }
 
     app.pageNav.setAddressBar(displayRoute);
@@ -171,7 +180,22 @@ export default class ObRouter extends Router {
     app.loadingModal.close();
   }
 
-  // todo: DOC me up yo
+  /**
+   * If you need to navigate to a user page via a handle and you have the user's guid, use
+   * this method which is mostly a wrapper around the standard Router.navigate. The addition
+   * is that this will make sure to store a version of the given fragment in history with the
+   * guid in place of the handle. It will make sure that the given version (probably with handle)
+   * will be shown in the address bar. It will also update the guidHandleMap caching.
+   *
+   * It's essentially a way to ensure that behind the scenes navigation is being done via
+   * guids (not dependant on the 3rd party resolver), but visually in the address bar, the
+   * user is seeing the handle (when available).
+   *
+   * @param {string} fragment - The user route you want stored. If the handle is available,
+   *   provide it in this parameter (e.g. '@themes/store')
+   * @param {guid} string - The guid of the user corresponding to the given fragment.
+   * @param {object} [options={}] - Options that will be passed to Router.navigate.
+   */
   navigateUser(fragment, guid, options = {}) {
     if (typeof fragment !== 'string') {
       throw new Error('Please provide a fragment as a string.');
@@ -189,19 +213,7 @@ export default class ObRouter extends Router {
       guidRoute = [guid].concat(split.slice(1)).join('/');
     }
 
-    // First we'll use the standard navigate to set the route with
-    // the guid in place of the handle. This will put the guid version
-    // both in history and in the address bar.
-
-    // todo: those good? ^ ^ ^
-    console.log(`boom: ${guidRoute}`);
-    super.navigate(guidRoute, options);
-
-    // Now, we'll set the address bar with the provided fragment (which
-    // probably has the handle in it if it was available).
-    // setTimeout(() => {
-    //   this.setAddressBarText(fragment);
-    // });
+    return super.navigate(guidRoute, options);
   }
 
   userViaHandle(handle, ...args) {
@@ -288,7 +300,10 @@ export default class ObRouter extends Router {
     $.whenAll(profileFetch, listingFetch).done(() => {
       const handle = profile.get('handle');
       this.cacheGuidHandle(guid, handle);
-      if (handle) this.setAddressBarText();
+
+      // Setting the address bar which will ensure the most up to date handle (or none) is
+      // shown in the address bar.
+      this.setAddressBarText();
 
       if (pageState === 'store' && !profile.get('vendor') && guid !== app.profile.id) {
         // the user does not have an active store and this is not our own node

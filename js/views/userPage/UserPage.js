@@ -112,9 +112,9 @@ export default class extends baseVw {
    * Will update the route to include the user's handle, if available.
    */
   updateRouteWithHandle() {
-    const route = location.hash.slice(1);
-    const base = this.model.get('handle') ? `@${this.model.get('handle')}` : this.model.id;
-    app.router.navigateUser(`${base}/${route.split('/').slice(1).join('/')}`, this.model.id);
+    // const route = location.hash.slice(1);
+    // const base = this.model.get('handle') ? `@${this.model.get('handle')}` : this.model.id;
+    // app.router.navigateUser(`${base}/${route.split('/').slice(1).join('/')}`, this.model.id);
   }
 
   createFollowersTabView(opts = {}) {
