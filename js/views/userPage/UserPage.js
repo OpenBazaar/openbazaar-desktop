@@ -43,7 +43,6 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
-    // this.listenTo(this.model, 'change:handle', this.onHandleChange);
   }
 
   className() {
@@ -60,10 +59,6 @@ export default class extends baseVw {
       'click .js-createListing': 'clickCreateListing',
     };
   }
-
-  // onHandleChange() {
-  //   this.updateRouteWithHandle();
-  // }
 
   clickTab(e) {
     const targ = $(e.target).closest('.js-tab');
@@ -106,15 +101,6 @@ export default class extends baseVw {
         `background-image: url(${app.getServerUrl(`ipfs/${headerHash}`)}), 
       url('../imgs/defaultHeader.png')`);
     }
-  }
-
-  /**
-   * Will update the route to include the user's handle, if available.
-   */
-  updateRouteWithHandle() {
-    // const route = location.hash.slice(1);
-    // const base = this.model.get('handle') ? `@${this.model.get('handle')}` : this.model.id;
-    // app.router.navigateUser(`${base}/${route.split('/').slice(1).join('/')}`, this.model.id);
   }
 
   createFollowersTabView(opts = {}) {
@@ -249,7 +235,6 @@ export default class extends baseVw {
         addTabToHistory: false,
         listing: this.options.listing,
       });
-      // this.updateRouteWithHandle();
     });
 
     return this;

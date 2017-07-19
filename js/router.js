@@ -18,11 +18,11 @@ export default class ObRouter extends Router {
     this.options = options;
 
     // This is a mapping of guids to handles. It is currently updated any time
-    // a profile is fetched via this.user() and anytime a user route is navigate to
-    // via this.navigateUser(). The main purpose of this cache is to avoid (in 95% of
-    // the cases) the flicker in the address bar that would be present due to the fact
-    // that we are storing user routes with guids in the history, but diplaying a version
-    // with the handle in the address bar.
+    // a profile is fetched via this.user() and anytime a user route is navigated to
+    // via this.navigateUser(). The main purpose of this cache is to avoid the flicker
+    // in the address bar that would be present due to the fact that we are storing user
+    // routes with guids in the history, but diplaying a version with the handle in the
+    // address bar.
     this.guidHandleMap = new Map();
 
     const routes = [
@@ -72,8 +72,7 @@ export default class ObRouter extends Router {
   }
 
   /**
-   * Updates our this.guidHandleMap which is an in-memory cached mapping of
-   * a guid to handle.
+   * Updates our this.guidHandleMap which is an in-memory mapping of a guid to handle.
    */
   cacheGuidHandle(guid, handle) {
     if (typeof guid !== 'string') {
@@ -184,7 +183,7 @@ export default class ObRouter extends Router {
    * If you need to navigate to a user page via a handle and you have the user's guid, use
    * this method which is mostly a wrapper around the standard Router.navigate. The addition
    * is that this will make sure to store a version of the given fragment in history with the
-   * guid in place of the handle. It will make sure that the given version (probably with handle)
+   * guid in place of the handle. It will make sure that the given version (with handle)
    * will be shown in the address bar. It will also update the guidHandleMap caching.
    *
    * It's essentially a way to ensure that behind the scenes navigation is being done via
