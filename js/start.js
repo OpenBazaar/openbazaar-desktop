@@ -334,7 +334,7 @@ const onboardIfNeededDeferred = $.Deferred();
 
 function onboardIfNeeded() {
   isOnboardingNeeded().done((onboardingNeeded) => {
-    if (onboardingNeeded || true) {
+    if (onboardingNeeded) {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
