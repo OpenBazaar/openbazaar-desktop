@@ -42,7 +42,7 @@ export function addFeedback() {
       g.id = 'doorbellScript';
       g.type = 'text/javascript';
       g.async = true;
-      g.src = `https://embed.doorbell.io/button/4990?t='${(new Date().getTime())}`;
+      g.src = `https://embed.doorbell.io/button/4990?t=${(new Date().getTime())}`;
       (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(g);
     }
     if (w.attachEvent) {

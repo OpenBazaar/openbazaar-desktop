@@ -374,6 +374,43 @@ svg {
   }
 }
 
+#ov1 #doorbell #doorbell-container {
+  #doorbell-form {
+    border-radius: $corner;
+    border-color: $border;
+    border-width: 2px;
+    border-style: solid;
+
+    legend {
+      padding-bottom: $padSm;
+    }
+
+    #intro-text,
+    textarea {
+      margin-bottom: $pad;
+    }
+
+    .buttons .btn {
+      background-color: $secondary;
+      border-color: $border;
+      color: $text;
+    }
+
+    label {
+      display: inline;
+      line-height: 1em;
+    }
+
+    input[type="checkbox"] {
+      display: inline;
+    }
+
+    #doorbell-powered-by {
+      color: $text;
+    }
+  }
+}
+
 // Sometimes, I just like floats.
 .cf:before,
 .cf:after {
