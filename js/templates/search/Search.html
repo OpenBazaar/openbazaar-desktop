@@ -12,7 +12,10 @@
         <img src="<%= ob.logo %>"></img>
       </div>
       <% } %>
-      <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>" type="text" value="<%= ob.term %>">
+      <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>"
+             type="text"
+             placeholder="<%= ob.polyT('search.searchPlaceholder') %>"
+             value="<%= ob.term %>">
       <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
     </div>
     <% // TODO: if suggestions exist show below %>
@@ -31,7 +34,7 @@
           <div class="contentBox pad clrP clrBr">
             <h4 class="rowSm"><%= val.label %></h4>
             <% if (val.type ==='dropdown') { %>
-              <select name="<%= key %>">
+              <select name="<%= key %>" class="select2Small">
               <% _.each(val.options, function(option) {
                 var selected = option.checked ? 'selected' : '';
                 print(`<option ${selected} value="${option.value}">${option.label}</option>`);
@@ -82,7 +85,7 @@
                 <%= ob.polyT('search.sortBy') %>
               </div>
               <div class="col4">
-                <select id="sortBy" class="js-sortBy">
+                <select id="sortBy" class="select2Small js-sortBy">
                   <% _.each(ob.sortBy, function(val, key) {
                   let selected = '';
                   if (ob.sortBySelected) {

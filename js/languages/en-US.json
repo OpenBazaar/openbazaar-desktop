@@ -823,6 +823,7 @@
   },
   "search": {
     "searchBtn": "Search",
+    "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
