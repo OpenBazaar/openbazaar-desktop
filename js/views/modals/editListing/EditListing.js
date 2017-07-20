@@ -45,9 +45,6 @@ export default class extends BaseModal {
     this._origModel = this.model;
     this.model = this._origModel.clone();
 
-    console.log('sugar');
-    window.sugar = this.model;
-
     this.listenTo(this.model, 'sync', () => {
       setTimeout(() => {
         if (this.createMode && !this.model.isNew()) {
