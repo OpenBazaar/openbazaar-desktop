@@ -15,6 +15,15 @@ export default class extends BaseView {
       throw new Error('Please provide the maximum variant count.');
     }
 
+    // Certain variant validations are not possible to do purely in the model and
+    // need to be done by a parent model. In that case higher-level errors can be passed
+    // in the following format:
+    // options.errors = {
+    //   options[<model.cid>].<fieldName> = ['error1', 'error2', ...],
+    //   options[<model.cid>].<fieldName2> = ['error1', 'error2', ...],
+    //   options[<model2.cid>].<fieldName> = ['error1', 'error2', ...]
+    // }
+
     super(options);
     this.options = options;
     this._variantViews = [];
@@ -74,8 +83,21 @@ export default class extends BaseView {
   }
 
   createVariantView(model, options = {}) {
+    const errors = {};
+
+    if (this.options.errors) {
+      Object.keys(this.options.errors)
+        .forEach(errKey => {
+          if (errKey.startsWith(`options[${model.cid}]`)) {
+            errors[errKey.slice(errKey.indexOf('.') + 1)] =
+              this.options.errors[errKey];
+          }
+        });
+    }
+
     const view = this.createChild(Variant, {
       model,
+      errors,
       ...options,
     });
 

@@ -4,11 +4,20 @@
 </div>
 <div class="col6 simpleFlexCol">
   <%
+    let variantsErrs = [];
+    
     Object.keys(ob.errors).forEach(errKey => {
       if (errKey.startsWith('variants[') && errKey.endsWith('].name')) {
-        print(ob.formErrorTmpl({ errors: ob.errors[errKey] }));
+        console.log('boom boom');
+        variantsErrs = variantsErrs.concat(ob.errors[errKey]);
       }
     });
+
+    if (ob.errors['variants']) {
+      variantsErrs = variantsErrs.concat(ob.errors['variants']);
+    }
+
+    if (variantsErrs.length) print(ob.formErrorTmpl({ errors: variantsErrs }));
   %>
   <div class="flexRow marginTopAuto">
     <div class="select2TagFlexWrap">

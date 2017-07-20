@@ -44,6 +44,10 @@ export default class extends BaseModal {
     // we'll clone and update it on sync
     this._origModel = this.model;
     this.model = this._origModel.clone();
+
+    console.log('sugar');
+    window.sugar = this.model;
+
     this.listenTo(this.model, 'sync', () => {
       setTimeout(() => {
         if (this.createMode && !this.model.isNew()) {
@@ -1091,9 +1095,20 @@ export default class extends BaseModal {
       // render variants
       if (this.variantsView) this.variantsView.remove();
 
+      const variantErrors = {};
+
+      Object.keys(item.validationError || {})
+        .forEach(errKey => {
+          if (errKey.startsWith('options[')) {
+            variantErrors[errKey] =
+              item.validationError[errKey];
+          }
+        });
+
       this.variantsView = this.createChild(Variants, {
         collection: this.variantOptionsCl,
         maxVariantCount: item.max.optionCount,
+        errors: variantErrors,
       });
 
       this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',
