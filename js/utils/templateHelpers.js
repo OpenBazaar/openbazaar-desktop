@@ -33,6 +33,13 @@ export function parseEmojis(text, className = '', attrs = {}) {
   return $parsed.html();
 }
 
+export function formatRating(average, count) {
+  const ratingAverage = average ? average.toFixed(2) : 0;
+  const ratingCount = count ? `(${count})` : '';
+
+  return `${ratingAverage} ${ratingCount}`;
+}
+
 export const getServerUrl = app.getServerUrl.bind(app);
 
 export {

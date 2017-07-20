@@ -1,3 +1,5 @@
-<% const ratingCount = ob.ratingCount || 0;
-const averageRating = ob.averageRating ? ob.averageRating.toFixed(2) : 0;
-print(`${ob.parseEmojis('⭐')}${averageRating} (${ratingCount})`) %>
+<%
+if(ob.fetched) {
+  print(`${ob.parseEmojis('⭐')}${ob.formatRating(ob.averageRating, ob.ratingCount)}`)
+}
+%>
