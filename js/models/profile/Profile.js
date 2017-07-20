@@ -53,6 +53,7 @@ export default class extends BaseModel {
   get max() {
     return {
       locationLength: 100,
+      shortDescriptionLength: 160,
     };
   }
 
@@ -78,6 +79,14 @@ export default class extends BaseModel {
     if (typeof attrs.vendor !== 'boolean') {
       // this error should never be visible to the user
       addError('vendor', `The vendor value is not a boolean: ${attrs.vendor}`);
+    }
+
+    if (typeof attrs.shortDescription !== 'string') {
+      addError('shortDescription', 'The shortDescription must be provided as a string.');
+    } else if (attrs.shortDescription > this.max.shortDescriptionLength) {
+      addError('shortDescription',
+        app.polyglot.t('profileModelErrors.shortDescriptionTooLong',
+          { count: this.max.shortDescriptionLength }));
     }
 
     if (Object.keys(errObj).length) return errObj;

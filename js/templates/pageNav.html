@@ -38,8 +38,14 @@
       </div>
       <div class="rowDivV clrBrBk"></div>
       <div>
-        <div class="flexVCent box margLSm">
-          <a href="#search" class="discoverButton navListBtn" style="background-image: url('../imgs/obVectorIconSmall.svg')"></a>
+        <div class="flexVCent box margLSm posR">
+          <a href="#search" class="discoverButton navListBtn js-discover" style="background-image: url('../imgs/obVectorIconSmall.svg')"></a>
+          <% if (ob.showDiscoverCallout) { %>
+            <div class="discoverCallout js-discoverCallout arrowBoxTop confirmBox clrP clrBr">
+              <div class="tx3 txB rowSm"><%= ob.polyT('pageNav.discoverCalloutTitle') %></div>
+              <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>            
+            </div>
+          <% } %>
           <a class="iconBtn navWalletBtn js-navWalletBtn">
             <%= ob.walletIconTmpl() %>
           </a>
