@@ -92,7 +92,7 @@ export default class ObRouter extends Router {
     if (!this.guidHandleMap.get(guid) && keys.length >= this.maxCachedHandles) {
       // We're already at or over the limit, so we need to remove one from the cache to
       // make room for the new one.
-      this.guidHandleMap.delete(keys[keys.length - 1]);
+      this.guidHandleMap.delete(keys[0]);
     }
 
     this.guidHandleMap.set(guid, handle);
