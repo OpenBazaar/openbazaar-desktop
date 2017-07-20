@@ -119,8 +119,6 @@
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
     "store": {
       "retryStoreFetch": "Retry",
-      "btnLayoutStandard": "950px",
-      "btnLayoutFullWidth": "100%",
       "unableToFetchListings": "Unable to retrieve your listings",
       "noListings": "This store has no listings.",
       "noListingsFound": "No listings match your search criteria",

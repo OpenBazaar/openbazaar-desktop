@@ -42,13 +42,13 @@
             </div>
           </a>
         </div>
-        <p class="clamp2 userDescription">
+        <p class="clamp2 userDescription tx5">
           <%= ob.shortDescription %>
         </p>
       </div>
       <div class="flex gutterH contentBottom">
         <div class="flexExpand">
-          <span class="clrT2 clamp">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
+          <span class="clrT2 clamp tx5b">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>
         <div class="tx6">
           <% print(`${ob.parseEmojis('⭐')}${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
