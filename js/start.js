@@ -15,6 +15,7 @@ import serverConnect, {
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
+import { setFeedbackOptions, addFeedback } from './utils/feedback';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -116,6 +117,9 @@ app.loadingModal = new LoadingModal({
 }).render();
 
 handleLinks();
+
+// add the feedback mechanism
+addFeedback();
 
 const fetchConfigDeferred = $.Deferred();
 
@@ -386,6 +390,8 @@ function start() {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
+        // set the profile data for the feedback mechanism
+        setFeedbackOptions();
 
         // When starting the app the route is set to empty. We'll change that to be the
         // user's profile.
