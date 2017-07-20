@@ -22,9 +22,11 @@
 
 <td class="clrBr orderCol noOverflow">
   <div class="unreadBorder clrE1"></div>
-  <%= ob.type === 'cases' ? ob.caseId : ob.orderId %>
+  <span class="ulOnHover"><%= ob.type === 'cases' ? ob.caseId : ob.orderId %></span>
 </td>
-<td class="clrBr dateCol"><%= ob.moment(ob.timestamp).format('l LT') %></td>
+<td class="clrBr dateCol">
+  <span class="ulOnHover"><%= ob.moment(ob.timestamp).format('l LT') %></span>
+</td>
 <% if (ob.type !== 'cases') { %>
 <td class="clrBr listingCol js-listingCol">
   <div class="flexVCent gutterHSm">
@@ -67,60 +69,64 @@
 </td>  
 <% }) %>
 <td class="clrBr priceCol">
-  <%
-    var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useBtcSymbol: false });
+  <span class="ulOnHover">
+    <%
+      var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useBtcSymbol: false });
 
-    if (ob.userCurrency === 'BTC') {
-      print(btcPrice);
-    } else {
-        print(
-          ob.polyT('fiatBtcPairing', {
-            fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
-              ob.userCurrency, { useBtcSymbol: false }),
-            btcAmount: btcPrice,
-          })
-        );
-    }
-  %>
+      if (ob.userCurrency === 'BTC') {
+        print(btcPrice);
+      } else {
+          print(
+            ob.polyT('fiatBtcPairing', {
+              fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
+                ob.userCurrency, { useBtcSymbol: false }),
+              btcAmount: btcPrice,
+            })
+          );
+      }
+    %>
+  </span>
 </td>
 <td class="clrBr gutterH statusCol">
-  <%
-    if (ob.state === 'PENDING') {
-      if (ob.type === 'sales') {
-        if (ob.rejectOrderInProgress) {
+  <span class="ulOnHover">
+    <%
+      if (ob.state === 'PENDING') {
+        if (ob.type === 'sales') {
+          if (ob.rejectOrderInProgress) {
+        %>
+          <span class="posR">
+            <% // including invisible reject link to properly space the spinner %>
+            <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+            <%= ob.spinner({ className: 'spinnerSm center' }) %>
+          </span>
+        <%          
+            } else {
+        %>
+          <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+        <%  } %>
+          <%= ob.processingButton({
+            className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
+            btnText: ob.polyT('transactions.transactionsTable.btnAccept')
+          }) %>
+      <% } else if (!ob.moderated) {
+          if (ob.cancelOrderInProgress) {
       %>
-        <span class="posR">
-          <% // including invisible reject link to properly space the spinner %>
-          <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
-          <%= ob.spinner({ className: 'spinnerSm center' }) %>
-        </span>
+          <span class="posR">
+            <% // including invisible cancel link to properly space the spinner %>
+            <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
+            <%= ob.spinner({ className: 'spinnerSm center' }) %>
+          </span>
       <%          
           } else {
       %>
-        <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
-      <%  } %>
-        <%= ob.processingButton({
-          className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
-          btnText: ob.polyT('transactions.transactionsTable.btnAccept')
-        }) %>
-    <% } else if (!ob.moderated) {
-        if (ob.cancelOrderInProgress) {
-    %>
-        <span class="posR">
-          <% // including invisible cancel link to properly space the spinner %>
-          <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
-          <%= ob.spinner({ className: 'spinnerSm center' }) %>
-        </span>
-    <%          
+        <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
+      <%  }
         } else {
-    %>
-      <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
-    <%  }
+          print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
+        }
       } else {
         print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
       }
-    } else {
-      print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
-    }
-  %>
+    %>
+  </span>
 </td>
