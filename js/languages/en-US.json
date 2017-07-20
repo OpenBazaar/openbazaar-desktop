@@ -846,7 +846,7 @@
     "introScreen": {
       "connectionLbl": "Connection:",
       "btnChange": "Change",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn Bitcoin",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn Bitcoin.",
       "tagLine": "Buy and Sell Freely",
       "btnGetStarted": "Get Started"
     },
