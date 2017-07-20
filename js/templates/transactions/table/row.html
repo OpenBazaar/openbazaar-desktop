@@ -88,45 +88,45 @@
   </span>
 </td>
 <td class="clrBr gutterH statusCol">
-  <span class="ulOnHover">
-    <%
-      if (ob.state === 'PENDING') {
-        if (ob.type === 'sales') {
-          if (ob.rejectOrderInProgress) {
-        %>
-          <span class="posR">
-            <% // including invisible reject link to properly space the spinner %>
-            <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
-            <%= ob.spinner({ className: 'spinnerSm center' }) %>
-          </span>
-        <%          
-            } else {
-        %>
-          <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
-        <%  } %>
-          <%= ob.processingButton({
-            className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
-            btnText: ob.polyT('transactions.transactionsTable.btnAccept')
-          }) %>
-      <% } else if (!ob.moderated) {
-          if (ob.cancelOrderInProgress) {
+  <%
+    if (ob.state === 'PENDING') {
+      if (ob.type === 'sales') {
+        if (ob.rejectOrderInProgress) {
       %>
-          <span class="posR">
-            <% // including invisible cancel link to properly space the spinner %>
-            <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
-            <%= ob.spinner({ className: 'spinnerSm center' }) %>
-          </span>
+        <span class="posR">
+          <% // including invisible reject link to properly space the spinner %>
+          <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+          <%= ob.spinner({ className: 'spinnerSm center' }) %>
+        </span>
       <%          
           } else {
       %>
-        <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
-      <%  }
-        } else {
-          print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
-        }
-      } else {
-        print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
-      }
+        <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
+      <%  } %>
+        <%= ob.processingButton({
+          className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
+          btnText: ob.polyT('transactions.transactionsTable.btnAccept')
+        }) %>
+    <% } else if (!ob.moderated) {
+        if (ob.cancelOrderInProgress) {
     %>
-  </span>
+        <span class="posR">
+          <% // including invisible cancel link to properly space the spinner %>
+          <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
+          <%= ob.spinner({ className: 'spinnerSm center' }) %>
+        </span>
+    <%          
+        } else {
+    %>
+      <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
+    <%  }
+      } else {
+        const statusText = ob.polyT(`transactions.transactionsTable.status.${ob.state}`); 
+        print(`<span class="ulOnHover">${statusText}</span>`);
+      }
+    } else {
+      const statusText = ob.polyT(`transactions.transactionsTable.status.${ob.state}`);
+      print(`<span class="ulOnHover">${statusText}</span>`);
+    }
+  %>
 </td>
