@@ -12,7 +12,7 @@
       <% } %>
   </div>
   <div class="pad overflowAuto clrBr borderTop">
-    <div class="rowSm">
+    <div class="rowSm <% if(ob.vendor) print('trimWidth') %>">
       <a class="clrT clamp"><%= ob.title %></a>
     </div>
     <div class="flex">

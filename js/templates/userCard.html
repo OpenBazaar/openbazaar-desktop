@@ -35,10 +35,10 @@
     <% if (!ob.loading && !ob.notFound) { %>
       <div class="contentTop">
         <div>
-          <a class="flex snipKids gutterH rowTn userName js-userName">
-            <div class="tx3 clrT name"><strong><%= ob.name %></strong></div>
+          <a class="flex snipKids gutterH rowTn js-userName">
+            <div class="tx3 clrT"><strong><%= ob.name %></strong></div>
             <div class="clrT2">
-              <%= ob.handle %>
+              <%= ob.handle ? `@${ob.handle}` : '' %>
             </div>
           </a>
         </div>
