@@ -99,21 +99,17 @@
         </div>
       </form>
     <% } else if (ob.screen === 'tos') { %>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In accumsan lacus diam. Nulla dignissim eget massa at euismod. Nullam quis placerat ligula. Quisque non pellentesque odio. Vestibulum malesuada tristique nulla, vitae efficitur tortor commodo ac. Vivamus ut elit eu ex dapibus ultricies. Etiam pharetra vitae diam eget rhoncus. Suspendisse odio quam, gravida pulvinar leo vitae, lobortis maximus erat. Cras ultrices felis at ex dictum, non vulputate lorem vestibulum. Nullam ut felis dignissim, laoreet tortor sit amet, eleifend neque. Integer vel ante ante.
-
-      <p>
-        Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque vitae nibh sed tortor maximus auctor. Mauris aliquet faucibus leo a egestas. In nec odio ligula. Pellentesque in accumsan massa. Integer vulputate mauris non velit lobortis, ut accumsan turpis lacinia. Phasellus quis ipsum vitae lacus feugiat viverra. Nullam non urna sit amet eros rutrum sollicitudin. Sed ultrices scelerisque magna, id porttitor lacus sodales id. Curabitur enim ante, interdum a ultrices sed, cursus sagittis tellus. Sed quis mollis lorem. Praesent eu lacinia lacus, sed ultrices leo. Sed laoreet, sem eget mollis malesuada, felis tellus mattis erat, at iaculis purus nunc et orci.
-      </p>
-      <p>
-        Curabitur sodales nec dolor at accumsan. In laoreet condimentum malesuada. Praesent odio velit, finibus sit amet commodo quis, sollicitudin in diam. Quisque lectus neque, viverra at ultricies et, mattis a mi. Nam blandit nisi vel odio tincidunt tristique. Mauris ligula sapien, condimentum in aliquam ut, volutpat vel tortor. Donec augue mauris, posuere ac hendrerit et, ullamcorper at neque. Sed luctus tincidunt felis ut varius. Donec lobortis sodales arcu eget dictum. Vestibulum congue interdum tempus. Nunc convallis iaculis sapien. Nullam mauris mi, placerat eu neque eget, commodo blandit leo. Mauris eleifend lacus convallis dictum ultricies.
-      </p>
-      <p>
-        Donec eget scelerisque urna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur laoreet hendrerit neque in dapibus. Donec nisi neque, convallis eget nisl et, commodo egestas libero. Integer sollicitudin libero ut libero iaculis fermentum. Etiam dictum tincidunt pharetra. Sed ornare, nisl eu pulvinar accumsan, nunc lorem sollicitudin mauris, vitae molestie ipsum libero quis ligula. Phasellus consectetur ullamcorper tortor, sit amet auctor lacus luctus non. Ut volutpat sodales sodales.
-      </p>
-      <p>
-        Etiam pulvinar gravida egestas. Curabitur convallis tempus urna, in sodales massa feugiat ut. Maecenas nec porttitor leo. Duis gravida nisl nibh, eget euismod nunc bibendum a. Suspendisse scelerisque lectus ut cursus tristique. Nulla vel tincidunt orci. Vestibulum semper diam sit amet congue gravida. Phasellus porttitor ligula sed tempor finibus. Quisque aliquet sollicitudin diam. Mauris nisl eros, mattis quis ullamcorper eget, interdum at sem. Maecenas lacinia massa odio, eget malesuada eros accumsan at. Praesent et malesuada nulla. Donec tempor rutrum mi a rhoncus. Nulla vitae libero ac libero pretium porttitor et vel est. Sed laoreet pretium sem lacinia pulvinar.
-      </p>
+      <%
+        // split the TOS on line breaks so that we could ouput in p elements
+        let tos = ob.polyT('onboarding.tosScreen.tos').replace('\r', '\n');
+        tos = tos.replace(/\n\s*\n/g, '--->break-here<---');
+        tos.split('--->break-here<---').forEach(p => {
+          const trimmed = p.trim();
+          if (p.length) {
+            print(`<p>${trimmed}</p>`);
+          }
+        });
+      %>
     <% } %>
   </div>
   <% if (ob.screen !== 'intro') { %>
