@@ -1,0 +1,92 @@
+.onboarding {
+  .modalContent {
+    .mainContent {
+      padding: $pad 0;
+    }
+
+    .introScreen {
+      .mainContent {
+        height: 300px;
+
+        .btcIcon {
+          position: relative;
+          top: 2px;
+          left: 1px;
+        }
+
+        .headline {
+          font-size: 3.6rem;
+        }
+
+        .btnGetStarted {
+          font-size: 1.8rem;
+          min-width: 275px;
+          height: 52px;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    .infoScreen {
+      form {
+        width: 375px;
+        margin: 0 auto;
+
+        #onboardingCountry, #onboardingCurrency  {
+          height: 40px;
+          opacity: 0;
+        }
+      }
+
+      label {
+        line-height: 2.75rem;
+      }
+
+      .avatarCropperWrap {
+        height: 55px;
+      }
+
+      #avatarCropper {
+        .avatarPreview {
+          border-width: 3px;
+          border-style: solid;
+          border-radius: 50%;
+          width: 54px;
+          height: 54px;
+
+          .cropit-preview-image-container {
+            border-radius: 50%;
+            background-image: url(../../imgs/defaultAvatar.png);
+            background-position: center;
+            background-size: cover;
+
+            img[style] {
+              // without this the avatar preview doesn't honor the border radius
+              will-change: auto !important;
+            }
+          }
+        }
+
+        .avatarCropControls {
+          position: relative;
+          top: 5px;
+
+          .avatarLeft, .avatarRight {
+            height: 25px;
+          }
+
+          input[type=range] {
+            margin: 0;
+
+            &::-webkit-slider-thumb {
+              width: 15px;
+              height: 15px;
+              position: relative;
+              top: 3px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

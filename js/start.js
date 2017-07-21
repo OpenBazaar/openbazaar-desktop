@@ -15,6 +15,7 @@ import serverConnect, {
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
+import { setFeedbackOptions, addFeedback } from './utils/feedback';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -34,6 +35,7 @@ import { launchDebugLogModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
+import Onboarding from './views/modals/onboarding/Onboarding';
 
 fixLinuxZoomIssue();
 
@@ -115,6 +117,9 @@ app.loadingModal = new LoadingModal({
 }).render();
 
 handleLinks();
+
+// add the feedback mechanism
+addFeedback();
 
 const fetchConfigDeferred = $.Deferred();
 
@@ -236,77 +241,16 @@ function isOnboardingNeeded() {
 }
 
 const onboardDeferred = $.Deferred();
-let profileSaveUsePut = false;
 
 function onboard() {
-  // for now we'll just manually save the profile and settings
-  // model with their defaults.
-  let profileSave;
-  let settingsSave;
-
-  if (!Object.keys(app.profile.lastSyncedAttrs).length) {
-    profileSave = app.profile.save({}, {
-      type: profileSaveUsePut ? 'PUT' : 'POST',
-    });
-
-    if (!profileSave) {
-      throw new Error('Client side validation failed on your new Profile model.' +
-        'Ensure your defaults are valid.');
-    }
-  }
-
-  if (!Object.keys(app.settings.lastSyncedAttrs).length) {
-    settingsSave = app.settings.save({}, {
-      type: 'POST',
-    });
-
-    if (!settingsSave) {
-      throw new Error('Client side validation failed on your new Settings model.' +
-        'Ensure your defaults are valid.');
-    }
-  }
-
-  $.when(profileSave, settingsSave).done(() => {
-    onboardDeferred.resolve(true);
-  }).fail((jqXhr) => {
-    if (jqXhr === profileSave && jqXhr.responseJSON &&
-      jqXhr.responseJSON.reason === 'Profile already exists. Use PUT.') {
-      // todo: when this server bug is fixed, we shouldn't have to do this
-      // extra request to use PUT.
-      // https://github.com/OpenBazaar/openbazaar-go/issues/53
-      profileSaveUsePut = true;
-    }
-
-    const retryOnboardingSaveDialog = new Dialog({
-      title: app.polyglot.t('startUp.dialogs.retryOnboardingSave.title', {
-        type: jqXhr === profileSave ? 'profile' : 'settings',
-      }),
-      message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
-      buttons: [
-        {
-          text: app.polyglot.t('startUp.dialogs.btnRetry'),
-          fragment: 'retry',
-        },
-        {
-          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
-          fragment: 'manageConnections',
-        },
-      ],
-      dismissOnOverlayClick: false,
-      dismissOnEscPress: false,
-      showCloseButton: false,
-    }).on('click-retry', () => {
-      retryOnboardingSaveDialog.close();
-
-      // slight of hand to ensure the loading modal has a chance to at
-      // least briefly show before another potential failure
-      setTimeout(() => {
-        onboard();
-      }, 300);
-    }).on('click-manageConnections', () =>
-          app.connectionManagmentModal.open())
+  const onboarding = new Onboarding()
     .render()
     .open();
+
+  onboarding.on('onboarding-complete', () => {
+    location.hash = `${app.profile.id}/home`;
+    onboardDeferred.resolve();
+    onboarding.remove();
   });
 
   return onboardDeferred.promise();
@@ -446,6 +390,8 @@ function start() {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
+        // set the profile data for the feedback mechanism
+        setFeedbackOptions();
 
         // When starting the app the route is set to empty. We'll change that to be the
         // user's profile.

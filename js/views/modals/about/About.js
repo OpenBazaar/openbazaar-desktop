@@ -27,7 +27,6 @@ export default class extends BaseModal {
       License,
     };
 
-    // default about tab is Story
     this.currentTabName = 'Story';
   }
 
@@ -88,18 +87,19 @@ export default class extends BaseModal {
     const serverVersion = sVer.substring(sVer.lastIndexOf(':') + 1, sVer.lastIndexOf('/'));
 
     loadTemplate('modals/about/about.html', (t) => {
-      this.$el.html(t({
-        serverVersion,
-        ...this.options,
-        version,
-      }));
-      super.render();
+      loadTemplate('brandingBox.html', brandingBoxT => {
+        this.$el.html(t({
+          brandingBoxT,
+          serverVersion,
+          ...this.options,
+          version,
+        }));
+        super.render();
 
-      this.$tabContent = this.$('.js-tabContent .contentBox');
-
-      this.selectTab(this.currentTabName);
-
-      this.$('.js-btcTicker').append(this.btcTicker.$el);
+        this.$tabContent = this.$('.js-tabContent .contentBox');
+        this.selectTab(this.currentTabName);
+        this.$('.js-btcTicker').append(this.btcTicker.$el);
+      });
     });
 
     return this;
