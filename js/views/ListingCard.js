@@ -159,7 +159,6 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail((xhr) => {
-          // todo todo todo - test me. no trigger?
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
 
