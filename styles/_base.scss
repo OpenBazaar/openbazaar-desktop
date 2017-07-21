@@ -308,6 +308,12 @@ svg {
     white-space: nowrap; /* 1 */
   }
 
+  .TODO {
+    // put this class on elements that are not complete.
+    // this is used instead of visuallyHidden to make it clear it is in progress.
+    @extend .visuallyHidden;
+  }
+
   .disabled {
     @include disabled;
   }
@@ -330,41 +336,6 @@ svg {
 
   .inline {
     display: inline;
-  }
-}
-
-#milestone {
-  // delete this rule in production
-  display: none;
-
-  .pre-release & {
-    display: block;
-    position: fixed;
-    bottom: -8px;
-    padding: 2px 132px 30px 8px;
-    font-size: 14px;
-    right: $scrollbar + 4;
-    border-radius: 8px;
-    border-width: 2px;
-    border-style: solid;
-    z-index: 1;
-    @include chatOpeningTransition(right);
-
-    .milestone-inner {
-      position: relative;
-      top: 10px;
-      left: 110px;
-    }
-  }
-}
-
-#doorbell-button {
-  display: none;
-
-  .pre-release & {
-    display: block;
-    right: 304px;
-    @include chatOpeningTransition(right);
   }
 }
 

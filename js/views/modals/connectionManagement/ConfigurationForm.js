@@ -1,15 +1,34 @@
 import app from '../../../app';
 import openSimpleMessage from '../SimpleMessage';
+import { getCurrentConnection } from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
+    const opts = {
+      ...options,
+    };
 
-    if (!this.model) {
+    super(opts);
+
+    if (!opts.model) {
       throw new Error('Please provide a model.');
     }
+
+    const curConn = getCurrentConnection();
+    this.showConfigureTorMessage = false;
+    this.showTorUnavailableMessage = false;
+
+    if (curConn && curConn.server && curConn.server.id === options.model.id) {
+      if (curConn.reason === 'tor-not-configured') {
+        this.showConfigureTorMessage = true;
+      } else if (curConn.reason === 'tor-not-available') {
+        this.showTorUnavailableMessage = true;
+      }
+    }
+
+    this._lastSavedAttrs = this.model.toJSON();
 
     this.title = this.model.isNew() ?
       app.polyglot.t('connectionManagement.configurationForm.tabName') :
@@ -22,7 +41,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'newConfiguration';
+    return 'configurationForm';
   }
 
   events() {
@@ -30,6 +49,7 @@ export default class extends baseVw {
       'click .js-cancel': 'onCancelClick',
       'click .js-save': 'onSaveClick',
       'change #serverConfigServerIp': 'onChangeServerIp',
+      'change [name=useTor]': 'onChangeUseTor',
     };
   }
 
@@ -38,16 +58,22 @@ export default class extends baseVw {
   }
 
   onSaveClick() {
-    this.model.set(this.getFormData(this.$formFields));
-
+    const formData = this.getFormData(this.$formFields);
+    this.model.set({
+      ...this.getFormData(this.$formFields),
+      confirmedTor: this.model.get('confirmedTor') || formData.useTor ||
+        this.showConfigureTorMessage,
+    });
     const save = this.model.save();
 
     if (save) {
-      save.done(() => this.trigger('saved', { view: this }))
-        .fail(() => {
-          // since we're saving to localStorage this really shouldn't happen
-          openSimpleMessage('Unable to save server configuration');
-        });
+      save.done(() => {
+        this._lastSavedAttrs = this.model.toJSON();
+        this.trigger('saved', { view: this });
+      }).fail(() => {
+        // since we're saving to localStorage this really shouldn't happen
+        openSimpleMessage('Unable to save server configuration');
+      });
     }
 
     this.render();
@@ -65,6 +91,11 @@ export default class extends baseVw {
       this.$radioSslOn[0].checked = true;
       this.$btnStripSsl.addClass('disabled');
     }
+  }
+
+  onChangeUseTor(e) {
+    this.getCachedEl('.js-torProxyRow')
+      .toggleClass('hide', !e.target.checked);
   }
 
   get $formFields() {
@@ -93,12 +124,15 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/connectionManagement/configurationForm.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         isRemote: !this.model.isLocalServer(),
         title: this.title,
+        showConfigureTorMessage: this.showConfigureTorMessage,
+        showTorUnavailableMessage: this.showTorUnavailableMessage,
       }));
 
       this._$formFields = null;
@@ -109,7 +143,11 @@ export default class extends baseVw {
 
       if (!this.rendered) {
         this.rendered = true;
-        setTimeout(() => this.$('.js-inputName').focus());
+        setTimeout(() => {
+          if (!this.showConfigureTorMessage && !this.showTorUnavailableMessage) {
+            this.getCachedEl('.js-inputName').focus();
+          }
+        });
       }
     });
 

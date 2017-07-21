@@ -413,6 +413,12 @@
   @include colHGutter($pad);
 }
 
+.gutterHMd > * {
+  @extend .gutterHFlush;
+  margin-right: $padMd;
+  @include colHGutter($padMd);
+}
+
 .gutterHLg > * {
   @extend .gutterHFlush;
   margin-right: $padLg;

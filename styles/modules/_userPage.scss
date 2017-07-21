@@ -23,6 +23,18 @@
       .tabTitle {
         color: #fff; // this text is always white, regardless of the theme
       }
+
+      .storeWelcomeCallout {
+        transform: translateY(-100%);
+        top: -10px;
+        left: -160px;
+        width: 400px;
+
+        &::before {
+          left: auto;
+          right: 20px;
+        }
+      }
     }
 
     .informationList {

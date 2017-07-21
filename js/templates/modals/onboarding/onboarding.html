@@ -1,0 +1,133 @@
+<section class="contentBox padMd clrP clrBr clrSh3 <%= `${ob.screen}Screen` %>">
+  <div class="flexVCent gutterH posR">
+    <div class="<% if (ob.screen === 'intro') print('flexExpand') %>"><%= ob.brandingBoxT() %></div>
+    <% if (ob.screen === 'intro') { %>
+      <% if (ob.curConn && ob.curConn.server) { %>
+        <% const serverName = ob.curConn.server.get('name') || ''; %>
+        <div><span class="txB"><%= ob.polyT('onboarding.introScreen.connectionLbl') %></span> <%= serverName %></div>
+        <div>
+          <button class="btn clrP js-changeServer"><%= ob.polyT('onboarding.introScreen.btnChange') %></button>
+        </div>
+      <% } %>
+    <% } else if (ob.screen === 'info') { %>
+      <div class="flexExpand txB tx3">
+        <div class="center"><%= ob.polyT('onboarding.infoScreen.heading') %></div>
+      </div>
+      <div class="clrT2 txB"><%= ob.polyT('onboarding.pageOfPage', { startPage: 1, totalPages: 2 }) %></div>
+    <% } else if (ob.screen === 'tos') { %>
+      <div class="flexExpand txB tx3">
+        <div class="center"><%= ob.polyT('onboarding.tosScreen.heading') %></div>
+      </div>
+      <div class="clrT2 txB"><%= ob.polyT('onboarding.pageOfPage', { startPage: 2, totalPages: 2 }) %></div>
+    <% } %>
+  </div>
+  <hr class="clrBr" />
+  <div class="mainContent">
+    <% if (ob.screen === 'intro') { %>
+    <div class="flexCent">
+      <div>
+        <div class="txCtr rowSm">
+          <span class="txUp txB clrT2"><%= ob.polyT('onboarding.introScreen.introLine') %></span><i class="btcIcon"></i>
+        </div>
+        <div class="headline clrT txCtr rowHg"><%= ob.polyT('onboarding.introScreen.tagLine') %></div>
+        <div class="txCtr">
+          <button class="btnGetStarted btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-getStarted"><%= ob.polyT('onboarding.introScreen.btnGetStarted') %><span class="ion-chevron-right margL"></span></button>
+        </div>
+      </div>
+    </div>
+    <% } else if (ob.screen === 'info') { %>
+      <form class="padStack">
+        <div class="row">
+          <label for="onboardingName" class="required"><%= ob.polyT('onboarding.infoScreen.nameLbl') %></label>
+          <% if (ob.profileErrors.name) print(ob.formErrorTmpl({ errors: ob.profileErrors.name })) %>
+          <input type="text" class="clrBr clrSh2" name="name" id="onboardingName" value="<%= ob.profile.name %>" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderName') %>" data-model="profile">
+        </div>
+        <div class="row">
+          <div class="flexVBase">
+            <label for="onboardingShortDescription" class="flexExpand"><%= ob.polyT('onboarding.infoScreen.descriptionLbl') %></label>
+            <div class="clrT2 tx6"><%= ob.polyT('onboarding.infoScreen.descriptionHelper', { count: ob.profileConstraints.shortDescriptionLength }) %></div>
+          </div>
+          <% if (ob.profileErrors.shortDescription) print(ob.formErrorTmpl({ errors: ob.profileErrors.shortDescription })) %>
+          <textarea rows="3" maxlength="<%= ob.profileConstraints.shortDescriptionLength %>" name="shortDescription" id="onboardingShortDescription"
+                    class="clrBr clrSh2" placeholder="<%= ob.polyT('onboarding.infoScreen.placeholderDescription') %>"
+                    data-model="profile"><%= ob.profile.shortDescription %></textarea>
+        </div>
+        <div class="row">
+          <label><%= ob.polyT('onboarding.infoScreen.avatarLbl') %></label>
+          <div class="border clrBr pad avatarCropperWrap">
+            <div class="flexRow flexVCent gutterH" id="avatarCropper">
+              <div class="contentBox avatarPreview clrP clrBr2 clrSh1 flexNoShrink js-avatarPreview"></div>
+              <div class="flexNoShrink">
+                <div class="flexColRows gutterVTn avatarCropControls">
+                  <div>
+                    <div class="flex gutterH">
+                      <button class="iconBtn ion-reply flexExpand clrP clrBr clrSh2 disabled avatarLeft js-avatarLeft"></button>
+                      <button class="iconBtn ion-forward flexExpand clrP clrBr clrSh2 disabled avatarRight js-avatarRight"></button>
+                    </div>
+                  </div>
+                  <div class="posR">
+                    <input type="range" class="cropit-image-zoom-input disabled js-avatarZoom clrP" value=0 />
+                  </div>
+                </div>
+              </div>
+              <div>
+                <input type="file" id="avatarInput" class="cropit-image-input invisible posA" tabindex="-1" />
+                <button for="avatarInput" class="btn clrP clrBr clrSh2 tx6 js-changeAvatar">
+                  <%= ob.polyT('onboarding.infoScreen.changeAvatarLbl') %>
+                </button>
+              </div>              
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label for="onboardingCountry" class="required"><%= ob.polyT('onboarding.infoScreen.countryLbl') %></label>
+          <% if (ob.settingsErrors.country) print(ob.formErrorTmpl({ errors: ob.settingsErrors.country })) %>
+          <select id="onboardingCountry" name="country" class="clrSh2" data-model="settings">
+            <% ob.countryList.forEach((country) => { %>
+            <option value="<%= country.dataName %>" <% if (country.dataName == ob.settings.country) print('selected') %>><%= country.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="row">
+          <label for="onboardingCurrency" class="required"><%= ob.polyT('onboarding.infoScreen.currencyLbl') %></label>
+          <% if (ob.settingsErrors.currency) print(ob.formErrorTmpl({ errors: ob.settingsErrors.currency })) %>
+          <select id="onboardingCurrency" name="localCurrency" class="clrSh2" data-model="settings">
+            <% ob.currencyList.forEach((currency) => { %>
+            <option value="<%= currency.code %>" <% if (currency.code == ob.settings.localCurrency) print('selected') %>><%= currency.name %></option>
+            <% }); %>
+          </select>
+        </div>
+      </form>
+    <% } else if (ob.screen === 'tos') { %>
+      <%
+        // split the TOS on line breaks so that we could ouput in p elements
+        let tos = ob.polyT('onboarding.tosScreen.tos').replace('\r', '\n');
+        tos = tos.replace(/\n\s*\n/g, '--->break-here<---');
+        tos.split('--->break-here<---').forEach(p => {
+          const trimmed = p.trim();
+          if (p.length) {
+            print(`<p>${trimmed}</p>`);
+          }
+        });
+      %>
+    <% } %>
+  </div>
+  <% if (ob.screen !== 'intro') { %>
+  <hr class="clrBr row" />
+  <div class="flexVCent">
+    <div class="flexExpand">
+      <button class="btn clrP js-navBack">Back</button>
+    </div>
+    <div>
+      <% if (ob.screen !== 'tos') { %>
+        <button class="btn clrP js-navNext">Next</button>
+      <% } else { %>
+        <%= ob.processingButton({
+          className: `btn clrP js-tosAgree ${ob.saveInProgress ? 'processing' : ''}`,
+          btnText: 'I Agree'
+        }) %>
+      <% } %>
+    </div>
+  </div>
+  <% } %>
+</section>

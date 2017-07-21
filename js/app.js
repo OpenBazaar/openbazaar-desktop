@@ -12,4 +12,6 @@ export default {
     return this.serverConfigs.activeServer ?
       `${this.serverConfigs.activeServer.httpUrl}${urlFrag}` : '';
   },
+
+  serverConfig: {},
 };

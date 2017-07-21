@@ -1,5 +1,6 @@
 // This file is a place for component styles that are too few for their own file
 // and don't make sense in any of the existing files
+
 .closeIcon {
   position: relative;
   width: 24px;
@@ -28,10 +29,11 @@
 }
 
 .btcIcon {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background-size: contain;
   display: inline-block;
+  background-image: url('../../imgs/btcIcon128.png');
 }
 
 .shapeShiftIcon {

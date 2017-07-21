@@ -1,3 +1,4 @@
+import app from '../app';
 import BaseModel from './BaseModel';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import is from 'is_js';
@@ -17,6 +18,12 @@ export default class extends BaseModel {
       port: 4002,
       SSL: false,
       default: false,
+      useTor: false,
+      confirmedTor: false,
+      torProxy: '127.0.0.1:9150',
+      dontShowTorExternalLinkWarning: false,
+      dismissedDiscoverCallout: false,
+      dismissedStoreWelcome: false,
     };
   }
 
@@ -28,7 +35,7 @@ export default class extends BaseModel {
     };
 
     if (!is.existy(attrs.name) || is.empty(attrs.name)) {
-      addError('name', 'Please provide a value.');
+      addError('name', app.polyglot.t('serverConfigModelErrors.provideValue'));
     } else {
       // Slight hack since backbone doesn't document Model.collection and
       // it will only refer to the first collection that a Model belongs.
@@ -42,20 +49,20 @@ export default class extends BaseModel {
     }
 
     if (!is.existy(attrs.serverIp) || is.empty(attrs.serverIp)) {
-      addError('serverIp', 'Please provide a value.');
+      addError('serverIp', app.polyglot.t('serverConfigModelErrors.provideValue'));
     } else {
       if (!is.ip(attrs.serverIp)) {
-        addError('serverIp', 'This does not appear to be a valid IP address.');
+        addError('serverIp', app.polyglot.t('serverConfigModelErrors.invalidIp'));
       }
     }
 
     if (!this.isLocalServer()) {
       if (!attrs.username) {
-        addError('username', 'Please provide a value.');
+        addError('username', app.polyglot.t('serverConfigModelErrors.provideValue'));
       }
 
       if (!attrs.password) {
-        addError('password', 'Please provide a value.');
+        addError('password', app.polyglot.t('serverConfigModelErrors.provideValue'));
       }
 
       if (!attrs.SSL) {
@@ -63,13 +70,38 @@ export default class extends BaseModel {
       }
     }
 
-    if (!attrs.default) {
-      if (!is.number(attrs.port)) {
-        addError('port', 'Please provide a number.');
+    if (attrs.useTor) {
+      if (!attrs.torProxy) {
+        addError('torProxy', app.polyglot.t('serverConfigModelErrors.provideValue'));
+      } else if (typeof attrs.torProxy !== 'string') {
+        addError('torProxy', 'Please provide the tor proxy configuration as a string.');
       } else {
-        if (!is.within(attrs.port, -1, 65536)) {
-          addError('port', 'Please provide a number between 0 and 65535.');
+        let valid = true;
+        const split = attrs.torProxy.split(':');
+
+        if (split.length !== 2) {
+          valid = false;
+        } else {
+          if (!is.ip(split[0])) {
+            valid = false;
+          } else if (!is.within(parseInt(split[1], 10), -1, 65536)) {
+            valid = false;
+          }
         }
+
+        if (!valid) {
+          addError('torProxy', app.polyglot.t('serverConfigModelErrors.invalidTorProxy'));
+        }
+      }
+    }
+
+    if (!attrs.default) {
+      if (attrs.port === undefined || attrs.port === '') {
+        addError('port', app.polyglot.t('serverConfigModelErrors.provideValue'));
+      } else if (!is.number(attrs.port)) {
+        addError('port', app.polyglot.t('serverConfigModelErrors.providePortAsNumber'));
+      } else if (!is.within(attrs.port, -1, 65536)) {
+        addError('port', app.polyglot.t('serverConfigModelErrors.provideValidPortRange'));
       }
     } else {
       if (is.existy(attrs.port) && attrs.port !== this.defaults().port) {
@@ -103,7 +135,7 @@ export default class extends BaseModel {
   needsAuthentication() {
     let needsAuth = false;
 
-    if (!this.isLocalServer()) {
+    if (!this.isLocalServer() || this.get('default')) {
       needsAuth = true;
     } else {
       if (this.get('username') || this.get('password')) {
