@@ -34,10 +34,10 @@ export function parseEmojis(text, className = '', attrs = {}) {
 }
 
 export function formatRating(average, count) {
-  const ratingAverage = average ? average.toFixed(2) : 0;
-  const ratingCount = count || 0;
-
-  return `${ratingAverage} (${ratingCount})`;
+  const ratingAverage = typeof average === 'number' ? parseFloat(average.toFixed(2)) : 0;
+  // if there is no average, or the count is not a number, do not display it
+  const ratingCount = typeof average === 'number' && typeof count === 'number' ? ` (${count})` : '';
+  return `${ratingAverage}${ratingCount}`;
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);
