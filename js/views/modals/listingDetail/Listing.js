@@ -192,7 +192,6 @@ export default class extends BaseModal {
 
   onClickConfirmedDelete() {
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
-
     this.destroyRequest = this.model.destroy({ wait: true });
 
     if (this.destroyRequest) {

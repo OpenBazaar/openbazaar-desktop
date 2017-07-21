@@ -690,7 +690,13 @@
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting…",
-    "deleted": "Deleted"
+    "deleted": "Deleted",
+    "confirmDelete": {
+      "title": "Are you sure?",
+      "body": "Once it's deleted, it's gone forever.",
+      "btnCancel": "Cancel",
+      "btnConfirm": "Yes, Delete"
+    }    
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
@@ -698,7 +704,9 @@
     "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
     "deletedFailedDialogTitle": "Unable to delete listing",
     "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
-    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
+    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
+    "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
+    "deleteFailedBtnOk": "Ok"
   },
   "editListing": {
     "nsfwYes": "Yes",
