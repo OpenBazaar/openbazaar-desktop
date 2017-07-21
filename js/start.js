@@ -354,6 +354,7 @@ function onboardIfNeeded() {
 function start() {
   fetchConfig().done((data) => {
     app.profile = new Profile({ peerID: data.peerID });
+    app.router.onProfileSet();
 
     app.settings = new Settings();
 

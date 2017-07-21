@@ -673,13 +673,16 @@ export default class extends BaseModal {
         type: 'message',
         duration: 99999999999999,
       }).on('clickViewListing', () => {
-        const url = `#${app.profile.id}/store/${this.model.get('slug')}`;
+        const guidUrl = `#${app.profile.id}/store/${this.model.get('slug')}`;
+        const base = app.profile.get('handle') ?
+          `@${app.profile.get('handle')}` : app.profile.id;
+        const url = `${base}/store/${this.model.get('slug')}`;
 
-        // This couldn't have been a simple href because that URL may already be the
-        // page we're on, with the Listing Detail likely obscured by this modal. Since
-        // the url wouldn't be changing, clicking that anchor would do nothing, hence
-        // the use of loadUrl.
-        Backbone.history.loadUrl(url);
+        if (location.hash === guidUrl) {
+          Backbone.history.loadUrl();
+        } else {
+          app.router.navigateUser(url, app.profile.id, { trigger: true });
+        }
       });
 
       save.always(() => this.$saveButton.removeClass('disabled'))
