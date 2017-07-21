@@ -91,7 +91,7 @@
                   if (ob.sortBySelected) {
                     selected = key === ob.sortBySelected ? 'selected' : '';
                   } else {
-                    selected = val.default === true ? 'selected' : '';
+                    selected = val.default ? 'selected' : '';
                   }
                   print(`<option value="${key}" ${selected}>${val.label}</option>`);
                   }); %>

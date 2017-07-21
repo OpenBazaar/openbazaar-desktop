@@ -35,9 +35,9 @@ export function parseEmojis(text, className = '', attrs = {}) {
 
 export function formatRating(average, count) {
   const ratingAverage = average ? average.toFixed(2) : 0;
-  const ratingCount = count ? `(${count})` : '';
+  const ratingCount = count || 0;
 
-  return `${ratingAverage} ${ratingCount}`;
+  return `${ratingAverage} (${ratingCount})`;
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);
