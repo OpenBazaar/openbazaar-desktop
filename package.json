@@ -80,6 +80,8 @@
     "open": "0.0.5",
     "qr-encode": "^0.3.0",
     "sortablejs": "^1.5.0-rc1",
+    "source-map": "^0.5.6",
+    "through2": "^2.0.3",
     "trumbowyg": "^2.4.2",
     "trunk8": "0.0.1",
     "twemoji": "^2.2.5",
