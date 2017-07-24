@@ -7,6 +7,7 @@ export default class extends BaseView {
 
     this.averageRating = options.averageRating || 0;
     this.ratingCount = options.ratingCount || 0;
+    this.fetched = options.fetched || false;
   }
 
   render() {
@@ -14,6 +15,7 @@ export default class extends BaseView {
       this.$el.html(t({
         averageRating: this.averageRating,
         ratingCount: this.ratingCount,
+        fetched: this.fetched,
       }));
 
       super.render();

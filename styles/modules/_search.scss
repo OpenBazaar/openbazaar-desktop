@@ -65,9 +65,14 @@
 
   .filterWrapper {
     padding-right: 5px;
+
     label {
       line-height: 2em;
       min-height: 2em;
+    }
+
+    .select2 {
+      margin-top: 12px;
     }
   }
 

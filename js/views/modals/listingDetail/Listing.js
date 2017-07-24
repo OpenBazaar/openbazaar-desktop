@@ -147,6 +147,7 @@ export default class extends BaseModal {
     const pData = data || {};
     this.rating.averageRating = pData.average;
     this.rating.ratingCount = pData.count;
+    this.rating.fetched = true;
     this.rating.render();
     this.reviews.reviewIDs = pData.ratings || [];
     this.reviews.render();
