@@ -10,7 +10,7 @@ import { isScrolledIntoView } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
-import SimpleMessage from '../SimpleMessage';
+import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
@@ -546,6 +546,11 @@ export default class extends BaseModal {
         small: image.hashes.small,
         tiny: image.hashes.tiny,
       })));
+    })
+    .fail(jqXhr => {
+      openSimpleMessage(app.polyglot.t('editListing.errors.uploadImageErrorTitle',
+          { smart_count: imagesToUpload.length }),
+        jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
     });
 
     this.photoUploads.push(upload);

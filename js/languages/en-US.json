@@ -832,7 +832,8 @@
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",
       "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
-      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
+      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images.",
+      "uploadImageErrorTitle": "There was an error uploading your image. |||| There was an error uploading your images."
     }
   },
   "search": {
