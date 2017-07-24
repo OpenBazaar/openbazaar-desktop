@@ -125,7 +125,8 @@ export default class extends baseVw {
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
       const routeOnOpen = location.hash.slice(1);
-      app.router.navigate(`${this.options.listingBaseUrl}${this.model.get('slug')}`);
+      app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
+        this.ownerGuid);
 
       // todo: show a cancel button on the loading modal so the user could
       // cancel the loading. As of now, the user can still cancel by hitting
@@ -134,8 +135,8 @@ export default class extends baseVw {
       app.loadingModal.open();
 
       const fullListingFetch = this.fullListing.fetch()
-        .done(() => {
-          if (fullListingFetch.statusText === 'abort' || this.isRemoved()) return;
+        .done(jqXhr => {
+          if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
           const listingDetail = new ListingDetail({
             model: this.fullListing,
@@ -160,6 +161,8 @@ export default class extends baseVw {
         .fail((xhr) => {
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
+
+      this.fullListingFetches.push(fullListingFetch);
     }
   }
 

@@ -118,27 +118,6 @@ export default class extends baseVw {
     }
   }
 
-  setState(state, options = {}) {
-    if (!state) {
-      throw new Error('Please provide a state.');
-    }
-
-    const opts = {
-      updateHistory: true,
-      ...options,
-    };
-
-    const tabOpts = {
-      ...opts,
-      addTabToHistory: opts.updateHistory || false,
-    };
-
-    delete tabOpts.updateHistory;
-
-    this.state = state;
-    this.selectTab(state, tabOpts);
-  }
-
   createFollowersTabView(opts = {}) {
     return this.createChild(this.tabViews.Follow, {
       ...opts,
@@ -173,6 +152,15 @@ export default class extends baseVw {
     });
   }
 
+  setState(state, options = {}) {
+    if (!state) {
+      throw new Error('Please provide a state.');
+    }
+
+    this.state = state;
+    this.selectTab(state, options);
+  }
+
   selectTab(targ, options = {}) {
     const opts = {
       addTabToHistory: true,
@@ -197,19 +185,11 @@ export default class extends baseVw {
       this.$tabTitle.text(capitalize(targ));
 
       if (opts.addTabToHistory) {
-        // subRoute is anything after the tab in the route, which is something
-        // we want to maintain, e.g:
-        // <guid>/<tab>/<slug>/<blah>
-        // the subRoute is '/<slug>/<blah>'
-        const subRoute = location.hash
-          .slice(1)
-          .split('/')
-          .slice(2)
-          .join('/');
+        const listingBaseUrl = this.model.get('handle') ?
+          `@${this.model.get('handle')}` : this.model.id;
 
         // add tab to history
-        app.router.navigate(`${this.model.id}/${targ.toLowerCase()}` +
-          `${subRoute ? `/${subRoute}` : ''}`);
+        app.router.navigateUser(`${listingBaseUrl}/${targ.toLowerCase()}`, this.model.id);
       }
 
       this.$('.js-tab').removeClass('clrT active');
@@ -269,7 +249,7 @@ export default class extends baseVw {
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {
-        updateHistory: false,
+        addTabToHistory: false,
         listing: this.options.listing,
       });
     });
