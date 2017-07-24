@@ -12,7 +12,7 @@
       <span><%= ob.parseEmojis('👥', '', { style: 'width: 10px' }) %> <%= ob.polyT('userPage.followsYou') %></span>
       <% } %>
       <span>
-        <% print(`${ob.parseEmojis('⭐')}${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
+        <% print(`${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
       </span>
     </div>
   </div>

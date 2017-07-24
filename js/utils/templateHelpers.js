@@ -34,10 +34,17 @@ export function parseEmojis(text, className = '', attrs = {}) {
 }
 
 export function formatRating(average, count) {
-  const ratingAverage = typeof average === 'number' ? parseFloat(average.toFixed(2)) : 0;
-  // if there is no average, or the count is not a number, do not display it
-  const ratingCount = typeof average === 'number' && typeof count === 'number' ? ` (${count})` : '';
-  return `${ratingAverage}${ratingCount}`;
+  /**
+   * If the average is a number, show the last 2 digits and trim any trailing zeroes.
+   * Don't show the count if the count is invalid, x (0) would be inaccurate and confusing.
+   * If the average is invalid, don't show anything.
+   * @param {number} average - the average rating
+   * @param {number} count - the number of ratings
+   */
+  const avIsNum = typeof average === 'number';
+  const ratingAverage = avIsNum ? parseFloat(average.toFixed(2)) : '';
+  const ratingCount = typeof count === 'number' ? ` (${count})` : '';
+  return avIsNum ? `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}` : '';
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);

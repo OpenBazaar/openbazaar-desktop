@@ -51,7 +51,7 @@
           <span class="clrT2 clamp tx5b">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>
         <div class="tx6">
-          <% print(`${ob.parseEmojis('⭐')}${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
+          <% print(`${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
         </div>
       </div>
     <% } else if (ob.loading) { %>
