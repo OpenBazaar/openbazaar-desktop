@@ -147,6 +147,10 @@
         }
 
         tr {
+          .ulOnHover:hover {
+            text-decoration: underline;
+          }
+
           .unreadBorder {
             display: none;
           }
