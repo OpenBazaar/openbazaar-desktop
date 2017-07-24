@@ -173,7 +173,7 @@ export default class BaseModal extends baseVw {
 
     this.$modalClose = this.$('.jsModalClose');
 
-    return this;
+    return super.render();
   }
 }
 

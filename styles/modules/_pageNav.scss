@@ -37,6 +37,16 @@
       width: 34px;
     }
 
+    .discoverCallout {
+      font-size: $tx5;
+      left: -117px;
+      top: 52px;
+
+      .modalOpen & {
+        display: none;
+      }
+    }
+
     .addressBar {
       box-sizing: border-box;
       padding: $padSm $pad;
