@@ -165,7 +165,11 @@
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "tipFollow": "Follow",
+    "tipUnfollow": "Unfollow",
+    "tipModAdd": "Add as moderator",
+    "tipModRemove": "Remove as moderator"
   },
   "moderatorCard": {
     "view": "View",
