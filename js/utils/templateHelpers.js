@@ -33,14 +33,14 @@ export function parseEmojis(text, className = '', attrs = {}) {
   return $parsed.html();
 }
 
+/**
+ * If the average is a number, show the last 2 digits and trim any trailing zeroes.
+ * Don't show the count if the count is invalid, x (0) would be inaccurate and confusing.
+ * If the average is invalid, don't show anything.
+ * @param {number} average - the average rating
+ * @param {number} count - the number of ratings
+ */
 export function formatRating(average, count) {
-  /**
-   * If the average is a number, show the last 2 digits and trim any trailing zeroes.
-   * Don't show the count if the count is invalid, x (0) would be inaccurate and confusing.
-   * If the average is invalid, don't show anything.
-   * @param {number} average - the average rating
-   * @param {number} count - the number of ratings
-   */
   const avIsNum = typeof average === 'number';
   const ratingAverage = avIsNum ? parseFloat(average.toFixed(2)) : '';
   const ratingCount = typeof count === 'number' ? ` (${count})` : '';
