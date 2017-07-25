@@ -71,6 +71,7 @@ export default class extends BaseView {
         dropdownParent: this.$('.js-dropDownContainer'),
         matcher: () => false, // this is necessary
         maximumSelectionLength: this.model.max.variantCount,
+        clickThrough: true,
       }).on('change', (e) => {
         const count = $(e.target).val().length;
 
