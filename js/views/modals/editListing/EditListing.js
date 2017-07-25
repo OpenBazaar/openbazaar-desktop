@@ -975,6 +975,7 @@ export default class extends BaseModal {
         tags: true,
         selectOnClose: true,
         tokenSeparators: [','],
+        clickThrough: true,
         // ***
         // placeholder has issue where it won't show initially, will use
         // own element for this instead
@@ -1035,6 +1036,7 @@ export default class extends BaseModal {
         tags: true,
         selectOnClose: true,
         tokenSeparators: [','],
+        clickThrough: true,
         // dropdownParent needed to fully hide dropdown
         dropdownParent: this.$('#editListingCategoriesDropdown'),
         // This is necessary, see comment in select2 for tags above.
