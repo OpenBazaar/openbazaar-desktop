@@ -3,7 +3,6 @@ import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import $ from 'jquery';
-import is from 'is_js';
 import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
