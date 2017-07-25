@@ -13,7 +13,6 @@ export default class extends BaseModel {
     return shipsFreeToMe(this);
   }
 
-  // todo: unit testify me
   shipsTo(country) {
     if (!country) {
       throw new Error('Please provide a country.');

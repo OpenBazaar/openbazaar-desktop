@@ -18,13 +18,15 @@
       <div class="userControls">
         <% if (!ob.ownGuid) { %>
           <%= ob.processingButton({
-            className: `iconBtn clrP clrBr js-follow ${ob.followedByYou ? 'active' : ''}`,
-            btnText: '<i class="ion-person-stalker"></i>'
+            className: `iconBtn clrP clrBr toolTipNoWrap toolTipTop js-follow ${ob.followedByYou ? 'active' : ''}`,
+            btnText: '<i class="ion-person-stalker"></i>',
+            attrs: `data-tip="${ob.getFollowTip(ob.followedByYou)}"`,
           }) %>
           <% if (ob.moderator) { %>
             <%= ob.processingButton({
-            className: `iconBtn clrP clrBr js-mod ${ob.ownMod ? 'active' : ''}`,
-            btnText: '<i class="ion-briefcase"></i>'
+            className: `iconBtn clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
+            btnText: '<i class="ion-briefcase"></i>',
+            attrs: `data-tip="${ob.getModTip(ob.ownMod)}"`,
             }) %>
           <% } %>
         <% } %>
