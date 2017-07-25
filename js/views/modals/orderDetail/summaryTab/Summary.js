@@ -235,6 +235,9 @@ export default class extends BaseVw {
       'disputeUpdate',
       // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
       'disputeClose',
+      // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
+      // accepts, the buyer will get this and vice versa).
+      'disputeAccepted',
     ];
 
     if (serverSocket) {
@@ -607,6 +610,8 @@ export default class extends BaseVw {
       throw new Error('Unable to create the Dispute Payout view because the resolution ' +
         'data object has not been set.');
     }
+
+    console.log(`the state is ${this.model.get('state')}`);
 
     if (this.disputePayout) this.disputePayout.remove();
     this.disputePayout = this.createChild(DisputePayout, {
