@@ -1438,8 +1438,11 @@ S2.define('select2/selection/base',[
 
     $(document.body).on('mousedown.select2.' + container.id, function (e) {
       var $target = $(e.target);
+
       // This line is modified from the source to allow clicks on elements when closing
-      if (self.options.get('clickThrough')) $target.trigger('click');
+      setTimeout(() => {
+        $target.trigger('click');
+      });
 
       var $select = $target.closest('.select2');
 
