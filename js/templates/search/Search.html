@@ -36,7 +36,12 @@
             <% if (val.type ==='dropdown') { %>
               <select name="<%= key %>" class="select2Small">
               <% _.each(val.options, function(option) {
-                var selected = option.checked ? 'selected' : '';
+                let selected = '';
+                if (ob.filterVals[key]) {
+                  selected = option.value === ob.filterVals[key] ? 'selected' : '';
+                } else {
+                  selected = option.checked ? 'selected' : '';
+                }
                 print(`<option ${selected} value="${option.value}">${option.label}</option>`);
               }); %>
               </select>
@@ -45,7 +50,12 @@
               <% _.each(val.options, function(option, ind) { %>
                 <div class="btnRadio clrBr">
                    <%
-                    var checked = option.checked ? 'checked' : '';
+                    let checked = '';
+                    if (ob.filterVals[key]) {
+                      checked = option.value === ob.filterVals[key] ? 'checked' : '';
+                    } else {
+                      checked = option.checked ? 'checked' : '';
+                    }
                     var parsedLabel = ob.parseEmojis(option.label);
                     print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
                     print(`<label for="${key + ind}">${parsedLabel}</label>`);
@@ -56,7 +66,12 @@
             <% } else if (val.type ==='checkbox') { %>
               <div class="flexCol">
               <% _.each(val.options, function(option, index) {
-                var checked = option.checked ? 'checked' : '';
+                let checked = '';
+                if (ob.filterVals[key]) {
+                  checked = option.value === ob.filterVals[key] ? 'checked' : '';
+                } else {
+                  checked = option.checked ? 'checked' : '';
+                }
                 var parsedLabel = ob.parseEmojis(option.label);
                 print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
                 print(`<label for="${key + index}">${parsedLabel}</label>`);

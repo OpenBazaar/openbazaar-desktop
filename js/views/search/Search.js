@@ -1,7 +1,9 @@
+import _ from 'underscore';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import $ from 'jquery';
+import is from 'is_js';
 import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
@@ -13,28 +15,34 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    const queryParams = (new URL(`http://blah-blah?${options.query || ''}`)).searchParams;
-    const providerQuery = queryParams.get('providerQ');
+    this.sProvider = options.sProvider || app.localSettings.get('searchProvider');
 
-    if (providerQuery) {
-      // A query for a specific provider was provided.
-      const searchURL = new URL(providerQuery);
-      const params = searchURL.searchParams;
-      this.sProvider = `${searchURL.origin}${searchURL.pathname}`;
-      this.serverPage = params.get('p') || 0;
-      this.pageSize = params.get('ps') || 12;
-      this.term = params.get('q') || '';
-      this.sortBySelected = params.get('sortBy') || '';
-      this.callSearchProvider(searchURL);
-    } else {
-      this.sProvider = app.localSettings.get('searchProvider');
-      this.serverPage = options.serverPage || 0;
-      this.pageSize = options.pageSize || 12;
-      // if the term was not a url, process the term before calling the search provider
-      this.processTerm(queryParams.get('q') || '');
+    // the search provider is used here as a placeholder to get the parameters from the created url
+    const searchURL = new URL(`${this.sProvider}?${options.query || ''}`);
+    let queryParams = searchURL.searchParams;
+
+    // if a url with parameters was in the query in, use the parameters in it instead.
+    if (queryParams.get('providerQ')) {
+      const subURL = new URL(queryParams.get('providerQ'));
+      queryParams = subURL.searchParams;
+      this.sProvider = `${subURL.origin}${subURL.pathname}`;
     }
 
-    this.usingDefault = this.sProvider === app.localSettings.get('searchProvider');
+    const params = {};
+
+    for (const param of queryParams.entries()) {
+      params[param[0]] = param[1];
+    }
+
+    // use the parameters from the query unless they were overridden in the options
+    this.serverPage = options.serverPage || params.p || 0;
+    this.pageSize = options.pageSize || params.ps || 12;
+    this.term = options.term || params.q || '';
+    this.sortBySelected = options.sortBySelected || params.sortBy || '';
+    // all parameters not specified above are assumed to be filters
+    this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ']);
+
+    this.processTerm(this.term);
 
     // if not using a passed in URL, update the default provider if it changes
     this.listenTo(app.localSettings, 'change:searchProvider', (model, provider) => {
@@ -59,20 +67,25 @@ export default class extends baseVw {
     };
   }
 
-  get filterQuery() {
-    // return all currently active filters in the form of a query string
-    return this.$filters && this.$filters.length ? `&${this.$filters.serialize()}` : '';
+  get usingDefault() {
+    return this.sProvider === app.localSettings.get('searchProvider');
   }
 
+  /**
+   * This will create a url with the term and other query parameters
+   * @param {string} term
+   */
   processTerm(term) {
     this.term = term || '';
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
-    const searchURL = `${this.sProvider}?${query}${sortBy}${this.filterQuery}${page}`;
+    let filters = $.param(this.filters);
+    filters = filters ? `&${filters}` : '';
+    const newURL = `${this.sProvider}?${query}${sortBy}${page}${filters}`;
 
-    this.callSearchProvider(searchURL);
+    this.callSearchProvider(newURL);
   }
 
   callSearchProvider(searchURL) {
@@ -174,7 +187,9 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
-  changeFilter() {
+  changeFilter(e) {
+    const targ = $(e.target);
+    this.filters[targ.prop('name')] = targ.val();
     this.processTerm(this.term);
   }
 
@@ -183,7 +198,6 @@ export default class extends baseVw {
   }
 
   useDefault() {
-    this.usingDefault = true;
     this.sProvider = app.localSettings.get('searchProvider');
     this.processTerm(this.term);
   }
@@ -214,6 +228,7 @@ export default class extends baseVw {
         provider: this.sProvider,
         defaultProvider: app.localSettings.get('searchProvider'),
         sortBySelected: this.sortBySelected,
+        filterVals: this.filters,
         emptyData,
         loading,
         ...data,
