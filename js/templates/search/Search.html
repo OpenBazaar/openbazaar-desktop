@@ -37,10 +37,10 @@
               <select name="<%= key %>" class="select2Small">
               <% _.each(val.options, function(option) {
                 let selected = '';
-                if (ob.filterVals[key]) {
+                if (ob.filterVals.hasOwnProperty(key)) {
                   selected = option.value === ob.filterVals[key] ? 'selected' : '';
                 } else {
-                  selected = option.checked ? 'selected' : '';
+                  selected = option.default ? 'selected' : '';
                 }
                 print(`<option ${selected} value="${option.value}">${option.label}</option>`);
               }); %>
@@ -51,10 +51,10 @@
                 <div class="btnRadio clrBr">
                    <%
                     let checked = '';
-                    if (ob.filterVals[key]) {
+                    if (ob.filterVals.hasOwnProperty(key)) {
                       checked = option.value === ob.filterVals[key] ? 'checked' : '';
                     } else {
-                      checked = option.checked ? 'checked' : '';
+                      checked = option.default ? 'checked' : '';
                     }
                     var parsedLabel = ob.parseEmojis(option.label);
                     print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
@@ -67,10 +67,10 @@
               <div class="flexCol">
               <% _.each(val.options, function(option, index) {
                 let checked = '';
-                if (ob.filterVals[key]) {
+                if (ob.filterVals.hasOwnProperty(key)) {
                   checked = option.value === ob.filterVals[key] ? 'checked' : '';
                 } else {
-                  checked = option.checked ? 'checked' : '';
+                  checked = option.default ? 'checked' : '';
                 }
                 var parsedLabel = ob.parseEmojis(option.label);
                 print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
