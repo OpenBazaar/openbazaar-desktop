@@ -658,8 +658,8 @@ export default class extends BaseVw {
 
     if (this.disputeAcceptance) this.disputeAcceptance.remove();
     this.disputeAcceptance = this.createChild(DisputeAcceptance, {
-      dataObject: data,
       initialState: {
+        timestamp: data.timestamp,
         acceptedByBuyer: closer.id === this.buyer.id,
         buyerViewing: app.profile.id === this.buyer.id,
       },
