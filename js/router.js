@@ -290,7 +290,7 @@ export default class ObRouter extends Router {
     const onWillRoute = () => {
       // The app has been routed to a new route, let's
       // clean up by aborting all fetches
-      profileFetch.abort();
+      if (profileFetch.abort) profileFetch.abort();
       if (listingFetch) listingFetch.abort();
     };
 
@@ -335,9 +335,11 @@ export default class ObRouter extends Router {
           listing,
         }).render()
       );
-    }).fail(() => {
-      if (profileFetch.statusText === 'abort' ||
-        profileFetch.statusText === 'abort') return;
+    }).fail(...failArgs => {
+      const jqXhr = failArgs[0];
+
+      if (jqXhr === profileFetch && profileFetch.statusText === 'abort') return;
+      if (jqXhr === listingFetch && listingFetch.statusText === 'abort') return;
 
       // todo: If really not found (404), route to
       // not found page, otherwise display error.
