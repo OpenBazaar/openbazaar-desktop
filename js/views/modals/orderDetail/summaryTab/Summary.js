@@ -194,8 +194,13 @@ export default class extends BaseVw {
         }
       });
 
-      this.listenTo(this.contract, 'change:disputeAcceptance',
-        () => this.renderDisputeAcceptanceView());
+      this.listenTo(this.contract, 'change:disputeAcceptance', () => {
+        this.renderDisputeAcceptanceView();
+
+        if (this.disputePayout) {
+          this.disputePayout.setState({ showAcceptButton: false });
+        }
+      });
     } else {
       this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
         if (e.id === this.model.id) {
@@ -610,8 +615,6 @@ export default class extends BaseVw {
       throw new Error('Unable to create the Dispute Payout view because the resolution ' +
         'data object has not been set.');
     }
-
-    console.log(`the state is ${this.model.get('state')}`);
 
     if (this.disputePayout) this.disputePayout.remove();
     this.disputePayout = this.createChild(DisputePayout, {
