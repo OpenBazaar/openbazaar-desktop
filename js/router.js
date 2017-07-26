@@ -335,7 +335,7 @@ export default class ObRouter extends Router {
           listing,
         }).render()
       );
-    }).fail(...failArgs => {
+    }).fail((...failArgs) => {
       const jqXhr = failArgs[0];
 
       if (jqXhr === profileFetch && profileFetch.statusText === 'abort') return;
