@@ -24,6 +24,7 @@ export default class extends baseVw {
       this.serverPage = params.get('p') || 0;
       this.pageSize = params.get('ps') || 12;
       this.term = params.get('q') || '';
+      this.sortBySelected = params.get('sortBy') || '';
       this.callSearchProvider(searchURL);
     } else {
       this.sProvider = app.localSettings.get('searchProvider');
@@ -58,11 +59,6 @@ export default class extends baseVw {
     };
   }
 
-  get sortByQuery() {
-    // return current sortBy state in the form of a query string
-    return this.$sortBy && this.$sortBy.length ? this.$sortBy.val() : '';
-  }
-
   get filterQuery() {
     // return all currently active filters in the form of a query string
     return this.$filters && this.$filters.length ? `&${this.$filters.serialize()}` : '';
@@ -73,7 +69,7 @@ export default class extends baseVw {
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const sortBy = this.sortByQuery ? `&sortBy=${encodeURIComponent(this.sortByQuery)}` : '';
+    const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const searchURL = `${this.sProvider}?${query}${sortBy}${this.filterQuery}${page}`;
 
     this.callSearchProvider(searchURL);
@@ -173,7 +169,8 @@ export default class extends baseVw {
     }
   }
 
-  changeSortBy() {
+  changeSortBy(e) {
+    this.sortBySelected = $(e.target).val();
     this.processTerm(this.term);
   }
 
@@ -216,6 +213,7 @@ export default class extends baseVw {
         term: this.term === '*' ? '' : this.term,
         provider: this.sProvider,
         defaultProvider: app.localSettings.get('searchProvider'),
+        sortBySelected: this.sortBySelected,
         emptyData,
         loading,
         ...data,

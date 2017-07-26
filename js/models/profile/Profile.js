@@ -18,7 +18,7 @@ export default class extends BaseModel {
       shortDescription: '',
       avatarHashes: new Image(),
       headerHashes: new Image(),
-      vendor: false,
+      vendor: true,
       colors: new Colors(),
       contactInfo: new Contact(),
       stats: new BaseModel(),
