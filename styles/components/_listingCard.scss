@@ -85,6 +85,12 @@
     }
   }
 
+  .deleteConfirm {
+    transform: translate(-50%, -100%);
+    top: -12px;
+    left: 8px;
+  }
+
   &.listingDeleting,
   &.listingDeleted {
     cursor: default;
