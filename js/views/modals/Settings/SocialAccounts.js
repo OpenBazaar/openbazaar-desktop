@@ -13,29 +13,25 @@ export default class extends BaseView {
       throw new Error('Please provide a maximum number of accounts.');
     }
 
-    super({
-      className: 'socialAccounts gutterV',
-      ...options,
-    });
+    super(options);
     this.options = options;
     this.accountViews = [];
     this.maxAccounts = options.maxAccounts;
 
     this.listenTo(this.collection, 'add', (md) => {
       const view = this.createAccountView(md);
-      this.getCachedEl('.js-socialWrapper').append(view.render().el);
       this.accountViews.push(view);
+      this.getCachedEl('.js-socialWrapper').append(view.render().el);
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
       (this.accountViews.splice(removeOpts.index, 1)[0]).remove();
       this.showLimitErr(this.accountViews.length >= this.maxAccounts);
     });
+  }
 
-    // if the collection is empty on construction, add a blank account to the form
-    if (this.collection.length === 0) {
-      this.addBlankAccount();
-    }
+  className() {
+    return 'socialAccounts gutterV';
   }
 
   events() {
@@ -44,11 +40,22 @@ export default class extends BaseView {
     };
   }
 
+  get lastIndex() {
+    return this.collection.length ? this.collection.length - 1 : 0;
+  }
+
   addBlankAccount() {
-    this.collection.add(new SocialAccountMd());
-    const index = this.accountViews.length ? this.accountViews.length - 1 : 0;
-    this.accountViews[index]
-      .$('input[name=type]')
+    const notEmpty = !!this.collection.length;
+    let name = 'type';
+    const blank = notEmpty ? this.accountViews[this.lastIndex].firstBlankField : '';
+    // if the current last account isn't completely filled in, don't add a new one
+    if (!blank) {
+      this.collection.add(new SocialAccountMd());
+    } else {
+      name = blank;
+    }
+    this.accountViews[this.lastIndex]
+      .$(`input[name=${name}]`)
       .focus();
   }
 
@@ -69,7 +76,13 @@ export default class extends BaseView {
   }
 
   setCollectionData() {
-    this.accountViews.forEach(account => account.setModelData());
+    this.accountViews.forEach(account => {
+      account.setModelData();
+      // remove blank accounts
+      if (!account.model.get('type') && !account.model.get('username')) {
+        this.collection.remove(account.model);
+      }
+    });
   }
 
   createAccountView(model, options = {}) {
@@ -98,6 +111,7 @@ export default class extends BaseView {
 
       this.accountViews.forEach(account => account.remove());
       this.accountViews = [];
+
       const accountFrag = document.createDocumentFragment();
 
       this.collection.forEach(account => {
@@ -107,6 +121,11 @@ export default class extends BaseView {
       });
 
       this.getCachedEl('.js-socialWrapper').append(accountFrag);
+
+      // if the collection is empty on render, add a blank account to the form
+      if (this.collection.length === 0) {
+        this.collection.add(new SocialAccountMd());
+      }
     });
 
     return this;

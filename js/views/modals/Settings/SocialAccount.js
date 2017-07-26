@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -8,7 +9,6 @@ export default class extends BaseView {
     }
 
     super(options);
-    this.options = options;
   }
 
   className() {
@@ -27,6 +27,11 @@ export default class extends BaseView {
 
   getFormData(fields = this.getCachedEl('input[name]')) {
     return super.getFormData(fields);
+  }
+
+  get firstBlankField() {
+    const formData = this.getFormData();
+    return _.findKey(formData, val => !val);
   }
 
   // Sets the model based on the current data in the UI.
