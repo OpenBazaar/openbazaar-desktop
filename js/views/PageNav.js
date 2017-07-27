@@ -33,11 +33,14 @@ export default class extends BaseVw {
         'click .js-navWalletBtn': 'navWalletClick',
         'click .js-navCreateListing': 'navCreateListingClick',
         'click .js-navListItem': 'onNavListItemClick',
+        'click .js-navList': 'onNavListClick',
         'mouseenter .js-connectedServerListItem': 'onMouseEnterConnectedServerListItem',
         'mouseleave .js-connectedServerListItem': 'onMouseLeaveConnectedServerListItem',
         'mouseenter .js-connManagementContainer': 'onMouseEnterConnManagementContainer',
         'mouseleave .js-connManagementContainer': 'onMouseLeaveConnManagementContainer',
         'click .js-navNotifBtn': 'onClickNavNotifBtn',
+        'click .js-notifContainer': 'onClickNotifContainer',
+        'click .js-notificationListItem a[href]': 'onClickNotificationLink',
       },
       navigable: false,
       ...options,
@@ -54,7 +57,8 @@ export default class extends BaseVw {
     this.options = opts;
     this.addressBarText = '';
 
-    $(document).on('click', this.onDocClick.bind(this));
+    this.boundOnDocClick = this.onDocClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
 
     this.listenTo(app.localSettings, 'change:windowControlStyle',
       (_, style) => this.setWinControlsStyle(style));
@@ -160,10 +164,8 @@ export default class extends BaseVw {
   navMaxClick() {
     if (remote.getCurrentWindow().isMaximized()) {
       remote.getCurrentWindow().unmaximize();
-      // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Maximize'));
     } else {
       remote.getCurrentWindow().maximize();
-      // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Restore'));
     }
   }
 
@@ -207,14 +209,21 @@ export default class extends BaseVw {
   }
 
   onNavListItemClick() {
-    this.closePopMenu();
+    // Set timeout allows the new page to show before the overlay is removed. Otherwise,
+    // there's a flicker frmo the old page to the new page.
+    setTimeout(() => {
+      this.closeNavMenu();
+    });
   }
 
-  navListBtnClick() {
-    this.togglePopMenu();
+  navListBtnClick(e) {
+    this.closeNotifications();
+    this.toggleNavMenu();
+    // do not bubble to onDocClick
+    e.stopPropagation();
   }
 
-  togglePopMenu() {
+  toggleNavMenu() {
     this.$navList.toggleClass('open');
     this.$navOverlay.toggleClass('open');
 
@@ -223,14 +232,23 @@ export default class extends BaseVw {
     }
   }
 
-  closePopMenu() {
+  closeNavMenu() {
     this.$navList.removeClass('open');
     this.$navOverlay.removeClass('open');
     this.$connManagementContainer.removeClass('open');
   }
 
-  onClickNavNotifBtn() {
+  onNavListClick(e) {
+    console.log('nav list click');
+    // do not bubble to onDocClick
+    e.stopPropagation();
+  }
+
+  onClickNavNotifBtn(e) {
+    this.closeNavMenu();
     this.toggleNotifications();
+    // do not bubble to onDocClick
+    e.stopPropagation();
   }
 
   toggleNotifications() {
@@ -240,13 +258,28 @@ export default class extends BaseVw {
     }
 
     this.getCachedEl('.js-notifContainer').toggleClass('open');
+    this.$navOverlay.toggleClass('open');
   }
 
-  onDocClick(e) {
-    if (!this.$navList.hasClass('open')) return;
-    if (!$(e.target).closest('.js-navList, .js-navListBtn').length) {
-      this.togglePopMenu();
-    }
+  onClickNotifContainer(e) {
+    // do not bubble to onDocClick
+    e.stopPropagation();
+  }
+
+  closeNotifications() {
+    this.$navList.removeClass('open');
+    this.getCachedEl('.js-notifContainer').removeClass('open');
+    this.$navOverlay.removeClass('open');
+  }
+
+  onClickNotificationLink() {
+    this.closeNotifications();
+  }
+
+  onDocClick() {
+    console.log('doc click');
+    this.closeNotifications();
+    this.closeNavMenu();
   }
 
   onFocusInAddressBar() {
@@ -293,7 +326,7 @@ export default class extends BaseVw {
 
   navAboutClick() {
     launchAboutModal();
-    this.togglePopMenu();
+    this.closeNavMenu();
   }
 
   navWalletClick() {
@@ -354,6 +387,7 @@ export default class extends BaseVw {
   }
 
   remove() {
-    $(document).off('click', this.onDocClick);
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
   }
 }

@@ -26,7 +26,40 @@
   }
 
   .notificationsList {
-    background-color: pink;
-    height: 100px;
+    border-width: 0;
+    border-top-width: 1px;
+
+    .notificationListItem {
+      height: 80px;
+      border-bottom-style: solid;
+      border-bottom-width: 1px;
+      position: relative;
+
+      .unreadBorder {
+        position: absolute;
+        display: none;
+        width: 5px;
+        top: 0;
+        bottom: 0;
+      }
+
+      &.unread {
+        .unreadBorder {
+          display: block;
+        }
+
+        .notifMsg {
+          font-weight: bold;
+        }
+      }
+
+      &:last-child {
+        border-width: 0;
+      }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 }
