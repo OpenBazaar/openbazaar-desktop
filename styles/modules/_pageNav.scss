@@ -216,6 +216,14 @@
     }
   }
 
+  .notifContainer {
+    // z-index: 2;
+    // position: absolute;
+    width: 420px;
+    right: 40px;
+    padding: 0 $pad $pad;
+  }  
+
   .navListWrapper {
     z-index: 2;
     padding: 0 $pad $pad 1px; // give room for border and shadow -

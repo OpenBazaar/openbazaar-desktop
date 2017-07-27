@@ -1,0 +1,32 @@
+.notifications {
+  h1 {
+    font-size: $tx3b;
+    padding: $pad $pad 0;
+    margin-bottom: 5px;
+  }
+
+  .tabs {
+    padding: 0;
+
+    & > a {
+      padding: $pad $padMd;
+      text-decoration: none;
+      font-size: $tx5;
+      font-weight: bold;
+      border-bottom-style: solid;
+      border-bottom-color: transparent;
+      position: relative;
+      bottom: -2px;
+
+      &.active, &:hover {
+        border-bottom-width: 1px;
+        border-bottom-color: inherit;
+      }
+    }
+  }
+
+  .notificationsList {
+    background-color: pink;
+    height: 100px;
+  }
+}

@@ -6,13 +6,14 @@ import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
-import PageNavServersMenu from './PageNavServersMenu';
 import {
   launchEditListingModal, launchAboutModal,
   launchWallet, launchSettingsModal,
 } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
+import PageNavServersMenu from './PageNavServersMenu';
+import Notifications from './Notifications';
 
 export default class extends BaseVw {
   constructor(options) {
@@ -36,6 +37,7 @@ export default class extends BaseVw {
         'mouseleave .js-connectedServerListItem': 'onMouseLeaveConnectedServerListItem',
         'mouseenter .js-connManagementContainer': 'onMouseEnterConnManagementContainer',
         'mouseleave .js-connManagementContainer': 'onMouseLeaveConnManagementContainer',
+        'click .js-navNotifBtn': 'onClickNavNotifBtn',
       },
       navigable: false,
       ...options,
@@ -70,6 +72,10 @@ export default class extends BaseVw {
       this.torIndicatorOn = false;
       this.stopListening(app.router, null, this.onRouteSearch);
     });
+
+    setTimeout(() => {
+      this.toggleNotifications();
+    }, 500);
   }
 
   get navigable() {
@@ -223,6 +229,19 @@ export default class extends BaseVw {
     this.$connManagementContainer.removeClass('open');
   }
 
+  onClickNavNotifBtn() {
+    this.toggleNotifications();
+  }
+
+  toggleNotifications() {
+    if (!this.notifications) {
+      this.notifications = new Notifications();
+      this.getCachedEl('.js-notifContainer').html(this.notifications.render().el);
+    }
+
+    this.getCachedEl('.js-notifContainer').toggleClass('open');
+  }
+
   onDocClick(e) {
     if (!this.$navList.hasClass('open')) return;
     if (!$(e.target).closest('.js-navList, .js-navListBtn').length) {
@@ -290,6 +309,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     let connectedServer = getCurrentConnection();
 
     if (connectedServer && connectedServer.status !== 'disconnected') {
