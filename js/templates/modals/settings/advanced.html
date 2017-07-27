@@ -159,10 +159,10 @@
               <label>
                 <%= ob.polyT('settings.advancedTab.server.management') %>
               </label>
-              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperServerManagement') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.server.managementHelper') %></div>
             </div>
             <div class="col9">
-              <a class="btn clrP clrBr clrSh2 js-showConnectionManagement flexNoShrink"><%= ob.polyT('settings.advancedTab.server.btnShowManagementAction') %></a>
+              <a class="btn clrP clrBr clrSh2 js-showConnectionManagement flexNoShrink"><%= ob.polyT('settings.advancedTab.server.managementBtn') %></a>
             </div>
           </div>
           <div class="flexRow gutterH">
@@ -170,13 +170,26 @@
               <label>
                 <%= ob.polyT('settings.advancedTab.server.peers') %>
               </label>
-              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperServerPeers') %></div>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.server.peersHelper') %></div>
             </div>
             <div class="col9">
               <a  href="#connected-peers"
                   class="btn clrP clrBr clrSh2 js-showConnectedPeers flexNoShrink">
-                    <%= ob.polyT('settings.advancedTab.server.btnShowPeersAction') %>
+                    <%= ob.polyT('settings.advancedTab.server.peersBtn') %>
               </a>
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.purge') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.server.purgeHelper') %></div>
+            </div>
+            <div class="col9">
+              <button  class="btn clrP clrBr clrSh2 js-purge flexNoShrink">
+                <%= ob.polyT('settings.advancedTab.server.purgeBtn') %>
+              </button>
             </div>
           </div>
         </form>

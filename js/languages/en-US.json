@@ -329,8 +329,6 @@
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
       "helperDefaultFee": "Priority is recommended for the fastest transactions",
-      "helperServerManagement": "Switch and manage server connections",
-      "helperServerPeers": "Peers you're connected to",
       "smtp": {
         "sectionName": "Email Integration (SMTP)",
         "testAction": "Test Integration",
@@ -358,9 +356,15 @@
       "server": {
         "sectionName": "Server",
         "management": "Management",
+        "managementHelper": "Switch and manage server connections",
+        "managementBtn": "Connection Management",
         "peers": "Peers",
-        "btnShowManagementAction": "Connection Management",
-        "btnShowPeersAction": "Show Connected Peers"
+        "peersHelper": "Peers you're connected to",
+        "peersBtn": "Show Connected Peers",
+        "purge": "Purge Shared Files",
+        "purgeHelper": "Delete cached files you are sharing with others",
+        "purgeBtn": "Purge Files",
+        "purgeToolTip": "The OpenBazaar network shares files you have loaded with other users. If you have loaded a file (text, image, etc.) you do not want to share with others, you can delete it by clicking this button."
       },
       "transaction": {
         "sectionName": "Transactions",
@@ -701,7 +705,7 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
-    }    
+    }
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
