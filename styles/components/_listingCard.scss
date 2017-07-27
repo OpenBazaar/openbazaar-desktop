@@ -31,6 +31,10 @@
       top: 201px;
       right: 8px;
     }
+
+    .trimWidth {
+      width: calc(100% - #{$thumb});
+    }
   }
 
   .overlayPanel {
@@ -79,6 +83,12 @@
       display: none;
       text-align: center;
     }
+  }
+
+  .deleteConfirm {
+    transform: translate(-50%, -100%);
+    top: -12px;
+    left: 8px;
   }
 
   &.listingDeleting,

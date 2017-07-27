@@ -165,7 +165,11 @@
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "tipFollow": "Follow",
+    "tipUnfollow": "Unfollow",
+    "tipModAdd": "Add as moderator",
+    "tipModRemove": "Remove as moderator"
   },
   "moderatorCard": {
     "view": "View",
@@ -681,7 +685,8 @@
     },
     "errors": {
       "fetchRatings": "Ratings Could Not Be Loaded.",
-      "fetchReviews": "Reviews could not be loaded.",
+      "fetchReviews": "There was a problem loading the reviews. %{error}",
+      "loadReview": "Review %{id} failed due to %{error}",
       "noPurchaseTitle": "This Listing Can't Be Purchased",
       "zeroPriceMsg": "You cannot make a purchase with a price of zero or less."
     }
@@ -690,7 +695,13 @@
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting…",
-    "deleted": "Deleted"
+    "deleted": "Deleted",
+    "confirmDelete": {
+      "title": "Are you sure?",
+      "body": "Once it's deleted, it's gone forever.",
+      "btnCancel": "Cancel",
+      "btnConfirm": "Yes, Delete"
+    }    
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
@@ -698,7 +709,9 @@
     "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
     "deletedFailedDialogTitle": "Unable to delete listing",
     "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
-    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
+    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
+    "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
+    "deleteFailedBtnOk": "Ok"
   },
   "editListing": {
     "nsfwYes": "Yes",
@@ -820,11 +833,13 @@
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",
       "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
-      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
+      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images.",
+      "uploadImageErrorTitle": "There was an error uploading your image. |||| There was an error uploading your images."
     }
   },
   "search": {
     "searchBtn": "Search",
+    "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
@@ -1304,7 +1319,7 @@
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
-  },  
+  },
   "errors": {
     "saveError": "There was an error saving your data.",
     "badResult": "The server returned an error."

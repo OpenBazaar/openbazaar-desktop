@@ -38,9 +38,10 @@ export default class extends baseVw {
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
       vendor.avatar = vendor.avatarHashes;
-      const listingBaseUrl = `${vendor.handle || vendor.peerID}/store/`;
+      const base = vendor.handle ?
+        `@${vendor.handle}` : vendor.peerID;
       const options = {
-        listingBaseUrl,
+        listingBaseUrl: `${base}/store/`,
         model,
         vendor,
         onStore: false,
@@ -48,11 +49,8 @@ export default class extends baseVw {
 
       return this.createChild(ListingCard, options);
     }
-    const options = {
-      model,
-    };
 
-    return this.createChild(UserCard, options);
+    return this.createChild(UserCard, { model });
   }
 
   renderCards(models) {
@@ -61,7 +59,7 @@ export default class extends baseVw {
     let start = 0;
     const total = models.total;
     const noResults =
-              $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
+      $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
 
     if (total) {
       start = end >= this.pageSize ? end - this.pageSize + 1 : 1;

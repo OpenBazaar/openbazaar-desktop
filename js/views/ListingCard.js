@@ -22,7 +22,6 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
-
     // Any provided profile model or vendor info object will also be passed into the
     // listing detail modal.
     if (opts.profile) {
@@ -75,6 +74,9 @@ export default class extends baseVw {
     }
 
     this.viewType = opts.viewType;
+    this.deleteConfirmOn = false;
+    this.boundDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundDocClick);
   }
 
   className() {
@@ -90,8 +92,16 @@ export default class extends baseVw {
     return {
       'click .js-edit': 'onClickEdit',
       'click .js-delete': 'onClickDelete',
+      'click .js-deleteConfirmed': 'onClickConfirmedDelete',
+      'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
+      'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
       click: 'onClick',
     };
+  }
+
+  onDocumentClick() {
+    this.getCachedEl('.js-deleteConfirmedBox').addClass('hide');
+    this.deleteConfirmOn = false;
   }
 
   onClickEdit() {
@@ -115,27 +125,42 @@ export default class extends baseVw {
   }
 
   onClickDelete() {
-    if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
+    this.getCachedEl('.js-deleteConfirmedBox').removeClass('hide');
+    this.deleteConfirmOn = true;
+    // don't bubble to the document click handler
+    return false;
+  }
 
+  onClickConfirmedDelete() {
+    if (this.destroyRequest && this.destroyRequest.state === 'pending') return false;
     this.destroyRequest = this.model.destroy({ wait: true });
+    return false;
+  }
+
+  onClickConfirmCancel() {
+    this.getCachedEl('.js-deleteConfirmedBox').addClass('hide');
+    this.deleteConfirmOn = false;
+  }
+
+  onClickDeleteConfirmBox() {
+    // don't bubble to the document click handler
+    return false;
   }
 
   onClick(e) {
+    if (this.deleteConfirmOn) return;
     if (!this.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
       const routeOnOpen = location.hash.slice(1);
-      app.router.navigate(`${this.options.listingBaseUrl}${this.model.get('slug')}`);
+      app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
+        this.ownerGuid);
 
-      // todo: show a cancel button on the loading modal so the user could
-      // cancel the loading. As of now, the user can still cancel by hitting
-      // back, but that will go through the router and reload the whole
-      // page (e.g. the store) the user had been on.
       app.loadingModal.open();
 
       const fullListingFetch = this.fullListing.fetch()
-        .done(() => {
-          if (fullListingFetch.statusText === 'abort' || this.isRemoved()) return;
+        .done(jqXhr => {
+          if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
           const listingDetail = new ListingDetail({
             model: this.fullListing,
@@ -160,6 +185,8 @@ export default class extends baseVw {
         .fail((xhr) => {
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
+
+      this.fullListingFetches.push(fullListingFetch);
     }
   }
 
@@ -206,10 +233,13 @@ export default class extends baseVw {
   remove() {
     this.fullListingFetches.forEach(fetch => fetch.abort());
     if (this.destroyRequest) this.destroyRequest.abort();
+    $(document).off(null, this.boundDocClick);
     super.remove();
   }
 
   render() {
+    super.render();
+
     loadTemplate('listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),

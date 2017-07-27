@@ -9,6 +9,11 @@ export default class extends BaseView {
       throw new Error('Please provide a VariantOption model.');
     }
 
+    // any parent level errors can be passed in options.errors, e.g.
+    // options.errors = {
+    //   <field-name>: ['err1', 'err2', 'err3']
+    // }
+
     super(options);
     this.options = options;
   }
@@ -47,6 +52,7 @@ export default class extends BaseView {
   render() {
     const errors = {
       ...(this.model.validationError || {}),
+      ...(this.options.errors || {}),
     };
 
     this.$el.toggleClass('hasError', !!Object.keys(errors).length);

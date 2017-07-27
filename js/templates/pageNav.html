@@ -27,7 +27,7 @@
           <div class="searchWrapper">
             <input type="text" class="js-addressBar flexExpand addressBar clrSh2 clrBr4"
                    placeholder="<%= ob.polyT('addressBarPlaceholder') %>" value="<%= ob.addressBarText %>" />
-            <div class="torIndicator toolTip toolTipNarrow txCtr" data-tip="<%= ob.polyT('pageNav.torOnTooltip') %>"></div>
+            <div class="torIndicator toolTipNoWrap txCtr" data-tip="<%= ob.polyT('pageNav.torOnTooltip') %>"></div>
           </div>
           <% if (ob.testnet) { %>
             <div id="testnetFlag" class="btn barBtn toolTip clrP clrBr" data-tip="<%= ob.polyT('testnetTooltip') %>">

@@ -38,11 +38,14 @@ export default function () {
       if (!failReason) {
         dialogBody = app.polyglot.t('listingDelete.deletedFailedDialogBody',
           { listing: `<em>${getTitle(model)}</em>` });
+      } else if (xhr.status === 404) {
+        dialogBody = app.polyglot.t('listingDelete.deletedFailedListingNotFound',
+          { listing: `<em>${getTitle(model)}</em>` });
       } else {
         dialogBody = app.polyglot.t('listingDelete.deletedFailedDialogBodyWithReason',
           {
             listing: `<em>${getTitle(model)}</em>`,
-            reason: `<br /><br />${failReason}`,
+            reason: `<br />${failReason}`,
           });
       }
 
@@ -58,7 +61,7 @@ export default function () {
         title: app.polyglot.t('listingDelete.deletedFailedDialogTitle'),
         message: dialogBody,
         buttons: [{
-          text: 'ok (translate)',
+          text: app.polyglot.t('listingDelete.deleteFailedBtnOk'),
           fragment: 'ok',
         }],
       }).on('click-ok', () => failedListingDeleteDialog.close())

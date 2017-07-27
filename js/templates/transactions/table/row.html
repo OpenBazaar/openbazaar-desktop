@@ -22,9 +22,11 @@
 
 <td class="clrBr orderCol noOverflow">
   <div class="unreadBorder clrE1"></div>
-  <%= ob.type === 'cases' ? ob.caseId : ob.orderId %>
+  <span class="ulOnHover"><%= ob.type === 'cases' ? ob.caseId : ob.orderId %></span>
 </td>
-<td class="clrBr dateCol"><%= ob.moment(ob.timestamp).format('l LT') %></td>
+<td class="clrBr dateCol">
+  <span class="ulOnHover"><%= ob.moment(ob.timestamp).format('l LT') %></span>
+</td>
 <% if (ob.type !== 'cases') { %>
 <td class="clrBr listingCol js-listingCol">
   <div class="flexVCent gutterHSm">
@@ -67,21 +69,23 @@
 </td>  
 <% }) %>
 <td class="clrBr priceCol">
-  <%
-    var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useBtcSymbol: false });
+  <span class="ulOnHover">
+    <%
+      var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useBtcSymbol: false });
 
-    if (ob.userCurrency === 'BTC') {
-      print(btcPrice);
-    } else {
-        print(
-          ob.polyT('fiatBtcPairing', {
-            fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
-              ob.userCurrency, { useBtcSymbol: false }),
-            btcAmount: btcPrice,
-          })
-        );
-    }
-  %>
+      if (ob.userCurrency === 'BTC') {
+        print(btcPrice);
+      } else {
+          print(
+            ob.polyT('fiatBtcPairing', {
+              fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
+                ob.userCurrency, { useBtcSymbol: false }),
+              btcAmount: btcPrice,
+            })
+          );
+      }
+    %>
+  </span>
 </td>
 <td class="clrBr gutterH statusCol">
   <%
@@ -117,10 +121,12 @@
       <a class="txU tx6 js-cancelOrder"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
     <%  }
       } else {
-        print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
+        const statusText = ob.polyT(`transactions.transactionsTable.status.${ob.state}`); 
+        print(`<span class="ulOnHover">${statusText}</span>`);
       }
     } else {
-      print(ob.polyT(`transactions.transactionsTable.status.${ob.state}`));
+      const statusText = ob.polyT(`transactions.transactionsTable.status.${ob.state}`);
+      print(`<span class="ulOnHover">${statusText}</span>`);
     }
   %>
 </td>
