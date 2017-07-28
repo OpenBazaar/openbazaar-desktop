@@ -1,8 +1,15 @@
 {
-  "unpublishedConfirmTitle": "Unpublished Content",
-  "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
-  "unpublishedConfirmYes": "Yes",
-  "unpublishedConfirmNo": "No",
+  "publish": {
+    "unpublishedConfirmTitle": "Unpublished Content",
+    "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
+    "unpublishedConfirmYes": "Yes",
+    "unpublishedConfirmNo": "No",
+    "failedRetryTitle": "There was an error retrying the publish.",
+    "statusPublishing": "Publishing updates to network…",
+    "retryLink": "Retry",
+    "statusPublishFailed": "Publishing failed. %{retryLink}",
+    "statusPublishComplete": "Publishing complete."
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
