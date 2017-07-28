@@ -1,5 +1,6 @@
 import { capitalize } from '../../utils/string';
 import loadTemplate from '../../utils/loadTemplate';
+import Notifications from '../../collections/Notifications';
 import BaseVw from '../baseVw';
 import NotificationsList from './NotificationsList';
 
@@ -36,7 +37,9 @@ export default class extends BaseVw {
   // }
 
   createAllNotifList() {
-    return new NotificationsList();
+    return new NotificationsList({
+      collection: new Notifications(),
+    });
   }
 
   render() {

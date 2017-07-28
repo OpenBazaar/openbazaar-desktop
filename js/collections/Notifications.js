@@ -1,5 +1,4 @@
 import { Collection } from 'backbone';
-import ChatHead from '../models/chat/ChatHead';
 import app from '../app';
 
 export default class extends Collection {
@@ -7,15 +6,22 @@ export default class extends Collection {
     return app.getServerUrl('ob/notifications');
   }
 
-  model(attrs, options) {
-    return new ChatHead(attrs, options);
-  }
+  parse(response) {
+    let pickles = [];
+    const zippo = [ ...response.notifications ];
 
-  modelId(attrs) {
-    return attrs.peerId;
+    zippo.forEach(notif => {
+      delete notif.id;
+    });
+
+    for (var i = 0; i < 100; i++) {
+      pickles = pickles.concat(response.notifications);
+    }
+
+    return pickles;
   }
 
   comparator(message) {
-    return (new Date(message.get('timestamp')).getTime()) * -1;
+    return message.get('timestamp');
   }
 }

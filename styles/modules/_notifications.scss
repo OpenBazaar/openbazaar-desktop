@@ -25,9 +25,38 @@
     }
   }
 
+  .tabContainer {
+    max-height: 350px;
+  }
+
   .notificationsList {
     border-width: 0;
     border-top-width: 1px;
+
+    &.noNotifications {
+      text-align: center;
+
+      .fetcherContainer{
+        position: relative;
+        width: 100%;
+        height: 200px;
+
+        .listFetcher {
+          width: 100%;
+          @include center();
+          padding: $pad;
+        }
+      }
+    }
+
+    .listFetcher {
+      text-align: center;
+      padding: $pad;
+
+      &:empty {
+        padding: 0;
+      }
+    }
 
     .notificationListItem {
       height: 80px;

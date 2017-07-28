@@ -1,0 +1,11 @@
+<% if (ob.isFetching) { %>
+<div class="loadingSpinnerWrap">
+  <% print(ob.spinner({ className: 'spinnerMd' })) %>
+</div>
+<% } else if (ob.fetchFailed) { %>
+  <p>There was an error fetching the notifications.</p>
+  <% if (ob.fetchError) { %>
+    <p><%= ob.fetchError %></p>
+  <% } %>
+  <button class="btn normalBtn clrP clrBr js-retry">Retry</button>
+<% } %>

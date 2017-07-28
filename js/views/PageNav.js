@@ -245,6 +245,7 @@ export default class extends BaseVw {
   }
 
   onClickNavNotifBtn(e) {
+    console.log('dribble');
     this.closeNavMenu();
     this.toggleNotifications();
     // do not bubble to onDocClick
@@ -262,6 +263,7 @@ export default class extends BaseVw {
   }
 
   onClickNotifContainer(e) {
+    console.log('stubble');
     // do not bubble to onDocClick
     e.stopPropagation();
   }
@@ -273,11 +275,13 @@ export default class extends BaseVw {
   }
 
   onClickNotificationLink() {
+    console.log('pipple');
     this.closeNotifications();
   }
 
-  onDocClick() {
+  onDocClick(e) {
     console.log('doc click');
+    window.doc = e;
     this.closeNotifications();
     this.closeNavMenu();
   }
