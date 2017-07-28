@@ -183,6 +183,7 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail((xhr) => {
+          if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
 
