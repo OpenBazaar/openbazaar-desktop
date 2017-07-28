@@ -184,12 +184,23 @@
               <label>
                 <%= ob.polyT('settings.advancedTab.server.purge') %>
               </label>
-              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.server.purgeHelper') %></div>
+              <div class="clrT2 txSm">
+                <%= ob.polyT('settings.advancedTab.server.purgeHelper') %>
+                <span class="toolTip toolTipTop" data-tip="<%= ob.polyT('settings.advancedTab.server.purgeToolTip') %>">
+                  <i class="ion-help-circled"></i>
+                  </span>
+              </div>
             </div>
             <div class="col9">
-              <button  class="btn clrP clrBr clrSh2 js-purge flexNoShrink">
-                <%= ob.polyT('settings.advancedTab.server.purgeBtn') %>
-              </button>
+              <div class="flexVCent gutterH">
+                <%= ob.processingButton({
+                className: 'btn clrP clrBr clrSh2 js-purge',
+                btnText: ob.polyT('settings.advancedTab.server.purgeBtn'),
+                }) %>
+                <div class="js-purgeComplete hide">
+                  <i class="h4 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.purgeComplete') %></i>
+                </div>
+              </div>
             </div>
           </div>
         </form>
