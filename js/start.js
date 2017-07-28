@@ -21,6 +21,7 @@ import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
 import StartupLoadingModal from './views/modals/StartupLoading';
+import { openSimpleMessage } from './views/modals/SimpleMessage';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
 import { getLangByCode } from './data/languages';
@@ -627,6 +628,7 @@ ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 let publishingStatusMsg;
 let publishingStatusMsgRemoveTimer;
 let unpublishedContent = false;
+let retryPublishTimeout;
 
 function setPublishingStatus(msg) {
   if (!msg && typeof msg !== 'object') {
@@ -634,13 +636,38 @@ function setPublishingStatus(msg) {
   }
 
   msg.duration = 99999999999999;
+  clearTimeout(retryPublishTimeout);
 
   if (!publishingStatusMsg) {
     publishingStatusMsg = app.statusBar.pushMessage({
       ...msg,
     });
     publishingStatusMsg.on('clickRetry', () => {
-      alert('Coming soon - need publish API');
+      setPublishingStatus({
+        msg: app.polyglot.t('publish.statusPublishing'),
+        type: 'message',
+      });
+
+      // some fake latency so if the rety fails immediately, the UI has a chance
+      // to update
+      clearTimeout(retryPublishTimeout);
+      retryPublishTimeout = setTimeout(() => {
+        $.post(app.getServerUrl('ob/publish'))
+          .fail(jqXhr => {
+            setPublishingStatus({
+              msg: app.polyglot.t('publish.statusPublishFailed', {
+                retryLink: `<a class="js-retry">${app.polyglot.t('publish.retryLink')}</a>`,
+              }),
+              type: 'warning',
+            });
+
+            const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+            openSimpleMessage(
+              app.polyglot.t('publish.failedRetryTitle'),
+              failReason
+            );
+          });
+      }, 500);
     });
   } else {
     clearTimeout(publishingStatusMsgRemoveTimer);
@@ -655,21 +682,23 @@ serverConnectEvents.on('connected', (connectedEvent) => {
     if (e.jsonData) {
       if (e.jsonData.status === 'publishing') {
         setPublishingStatus({
-          msg: 'Publishing updates to network...',
+          msg: app.polyglot.t('publish.statusPublishing'),
           type: 'message',
         });
 
         unpublishedContent = true;
       } else if (e.jsonData.status === 'error publishing') {
         setPublishingStatus({
-          msg: 'Publishing failed. <a class="js-retry">Retry</a>',
+          msg: app.polyglot.t('publish.statusPublishFailed', {
+            retryLink: `<a class="js-retry">${app.polyglot.t('publish.retryLink')}</a>`,
+          }),
           type: 'warning',
         });
 
         unpublishedContent = true;
       } else if (e.jsonData.status === 'publish complete') {
         setPublishingStatus({
-          msg: 'Publishing complete.',
+          msg: app.polyglot.t('publish.statusPublishComplete'),
           type: 'message',
         });
 
@@ -693,13 +722,13 @@ ipcRenderer.on('close-attempt', (e) => {
     if (unpublishedConfirm) return;
 
     unpublishedConfirm = new Dialog({
-      title: app.polyglot.t('unpublishedConfirmTitle'),
-      message: app.polyglot.t('unpublishedConfirmBody'),
+      title: app.polyglot.t('publish.unpublishedConfirmTitle'),
+      message: app.polyglot.t('publish.unpublishedConfirmBody'),
       buttons: [{
-        text: app.polyglot.t('unpublishedConfirmYes'),
+        text: app.polyglot.t('publish.unpublishedConfirmYes'),
         fragment: 'yes',
       }, {
-        text: app.polyglot.t('unpublishedConfirmNo'),
+        text: app.polyglot.t('publish.unpublishedConfirmNo'),
         fragment: 'no',
       }],
       dismissOnOverlayClick: false,
