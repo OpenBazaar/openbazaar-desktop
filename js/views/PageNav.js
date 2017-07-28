@@ -13,7 +13,7 @@ import {
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 import PageNavServersMenu from './PageNavServersMenu';
-import Notifications from './Notifications';
+import Notifications from './notifications/Notificiations';
 
 export default class extends BaseVw {
   constructor(options) {
