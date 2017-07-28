@@ -11,10 +11,7 @@
   <div class="col3"></div>
   <div class="col6">
     <div class="flexCol">
-      <ul class="unstyled errorList hide js-limitErr">
-        <li><i class="ion-alert-circled"></i><%= ob.polyT('settings.socialAccounts.limitError', { max: ob.max }) %></li>
-      </ul>
-      <button class="btnTxtOnly txU txUnb js-addAccount">
+      <button class="btnTxtOnly clrTEm txUnb txUHover <% if (ob.currentCount >= ob.max) print('hide') %> js-addAccount">
         <%= ob.polyT('settings.socialAccounts.add') %>
       </button>
     </div>

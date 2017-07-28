@@ -479,8 +479,8 @@
       "accountLabel": "Social Account",
       "accountPlaceholder": "Facebook",
       "usernamePlaceholder": "Handle or Link to Page",
-      "add": "Add additional",
-      "limitError": "You can't add more than %{max} social accounts."
+      "add": "+ Add Social Account",
+      "limitError": "You can't have more than %{max} social account. |||| You can't have more than %{max} social accounts."
     },
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
@@ -708,7 +708,7 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
-    }    
+    }
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",

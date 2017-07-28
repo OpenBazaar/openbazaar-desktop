@@ -24,7 +24,7 @@ export default class extends baseVw {
     this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
 
     this.socialAccounts = this.createChild(SocialAccounts, {
-      collection: this.profile.get('contactInfo').get('social').clone(),
+      collection: this.profile.get('contactInfo').get('social'),
       maxAccounts: this.profile.get('contactInfo').maxSocialAccounts,
     });
   }
@@ -151,8 +151,6 @@ export default class extends baseVw {
 
     // set the model data for the social accounts
     this.socialAccounts.setCollectionData();
-    // set the data from the cloned social account
-    this.profile.get('contactInfo').get('social').set(this.socialAccounts.collection.models);
 
     this.profile.set(formData);
 
@@ -358,8 +356,8 @@ export default class extends baseVw {
         }
       }, 0);
 
-      this.$('.js-socialAccounts').append(this.socialAccounts.render().el);
       this.socialAccounts.delegateEvents();
+      this.$('.js-socialAccounts').append(this.socialAccounts.render().el);
     });
 
     return this;

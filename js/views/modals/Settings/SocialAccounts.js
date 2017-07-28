@@ -22,11 +22,12 @@ export default class extends BaseView {
       const view = this.createAccountView(md);
       this.accountViews.push(view);
       this.getCachedEl('.js-socialWrapper').append(view.render().el);
+      this.showLimit();
     });
 
     this.listenTo(this.collection, 'remove', (md, cl, removeOpts) => {
-      (this.accountViews.splice(removeOpts.index, 1)[0]).remove();
-      this.showLimitErr(this.accountViews.length >= this.maxAccounts);
+      this.accountViews.splice(removeOpts.index, 1)[0].remove();
+      this.showLimit();
     });
   }
 
@@ -59,20 +60,15 @@ export default class extends BaseView {
       .focus();
   }
 
-  showLimitErr(show) {
-    if (show !== this._showLimitErr) {
-      this._showLimitErr = show;
-      this.getCachedEl('.js-limitErr').toggleClass('hide', !show);
+  showLimit(show = this.accountViews.length >= this.maxAccounts) {
+    if (show !== this._showLimit) {
+      this._showLimit = show;
+      this.getCachedEl('.js-addAccount').toggleClass('hide', show);
     }
   }
 
   onClickAddAccount() {
-    // don't add a blank acount if the maximum has been reached
-    if (this.accountViews.length >= this.maxAccounts) {
-      this.showLimitErr(true);
-    } else {
-      this.addBlankAccount();
-    }
+    this.addBlankAccount();
   }
 
   setCollectionData() {
@@ -106,6 +102,7 @@ export default class extends BaseView {
     super.render();
     loadTemplate('modals/settings/socialAccounts.html', t => {
       this.$el.html(t({
+        currentCount: this.collection.length,
         max: this.maxAccounts,
       }));
 
