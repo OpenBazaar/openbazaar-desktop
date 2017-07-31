@@ -46,16 +46,30 @@ export default class extends BaseVw {
 
     this.listenTo(app.settings, 'change:storeModerators', () => {
       this.$modBtn.toggleClass('active', this.ownMod);
+      this.$modBtn.attr('data-tip', this.getModTip());
     });
 
     this.listenTo(app.ownFollowing, 'sync update', () => {
       this.followedByYou = followedByYou(this.guid);
       this.$followBtn.toggleClass('active', this.followedByYou);
+      this.$followBtn.attr('data-tip', this.getFollowTip());
     });
   }
 
   get ownMod() {
     return app.settings.ownMod(this.guid);
+  }
+
+  getModTip(ownMod = this.ownMod) {
+    return ownMod ?
+      `${app.polyglot.t('userShort.tipModRemove')}` :
+        `${app.polyglot.t('userShort.tipModAdd')}`;
+  }
+
+  getFollowTip(isFollowedByYou = this.followedByYou) {
+    return isFollowedByYou ?
+      `${app.polyglot.t('userShort.tipUnfollow')}` :
+        `${app.polyglot.t('userShort.tipFollow')}`;
   }
 
   loadUser(guid = this.guid) {
@@ -180,6 +194,8 @@ export default class extends BaseVw {
         ownGuid: this.ownGuid,
         followedByYou: this.followedByYou,
         ownMod: this.ownMod,
+        getModTip: this.getModTip,
+        getFollowTip: this.getFollowTip,
         ...this.options,
         ...this.model.toJSON(),
       }));

@@ -1,8 +1,15 @@
 {
-  "unpublishedConfirmTitle": "Unpublished Content",
-  "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
-  "unpublishedConfirmYes": "Yes",
-  "unpublishedConfirmNo": "No",
+  "publish": {
+    "unpublishedConfirmTitle": "Unpublished Content",
+    "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
+    "unpublishedConfirmYes": "Yes",
+    "unpublishedConfirmNo": "No",
+    "failedRetryTitle": "There was an error retrying the publish.",
+    "statusPublishing": "Publishing updates to network…",
+    "retryLink": "Retry",
+    "statusPublishFailed": "Publishing failed. %{retryLink}",
+    "statusPublishComplete": "Publishing complete."
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -165,7 +172,11 @@
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}"
+    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "tipFollow": "Follow",
+    "tipUnfollow": "Unfollow",
+    "tipModAdd": "Add as moderator",
+    "tipModRemove": "Remove as moderator"
   },
   "moderatorCard": {
     "view": "View",
@@ -691,7 +702,13 @@
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting…",
-    "deleted": "Deleted"
+    "deleted": "Deleted",
+    "confirmDelete": {
+      "title": "Are you sure?",
+      "body": "Once it's deleted, it's gone forever.",
+      "btnCancel": "Cancel",
+      "btnConfirm": "Yes, Delete"
+    }    
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
@@ -699,7 +716,9 @@
     "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
     "deletedFailedDialogTitle": "Unable to delete listing",
     "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
-    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}"
+    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
+    "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
+    "deleteFailedBtnOk": "Ok"
   },
   "editListing": {
     "nsfwYes": "Yes",
@@ -821,7 +840,8 @@
       "saveErrorTitle": "There was an error saving your listing.",
       "tooManyPhotosTitle": "Too many photos",
       "tooManyPhotosBody": "Some or all of your photos were prevented from being uploaded because you would have exceeded the maximum allowable amount.",
-      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images."
+      "unableToLoadImages": "We were unable to load your image. |||| We were unable to load your images.",
+      "uploadImageErrorTitle": "There was an error uploading your image. |||| There was an error uploading your images."
     }
   },
   "search": {

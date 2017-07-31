@@ -13,9 +13,9 @@
   </div>
 </div>
 <% if (ob.isFetching) { %>
-  <div class="txCtr padLg contentBox clrBr clrP"><h1 class="txCtr">Loading...</h1></div>
+  <div class="txCtr padHg contentBox clrBr clrP"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
 <% } else if (ob.fetchFailed) { %>
-  <div class="txCtr padLg contentBox clrBr clrP">
+  <div class="txCtr padHg contentBox clrBr clrP">
     <h3><%= ob.polyT('userPage.store.unableToFetchListings') %></h3>
     <p><%= ob.fetchFailReason %></p>
     <%= ob.processingButton({
