@@ -3,7 +3,7 @@
     <div class="flexHCent">
       <h2 class="h3 clrT"><%= ob.polyT('settings.advancedTab.sectionName') %></h2>
       <%= ob.processingButton({
-        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        className: `btn clrP clrBr clrSh2 modalContentCornerBtn js-save ${ob.isSaving ? 'processing' : ''}`,
         btnText: ob.polyT('settings.btnSave')
       }) %>
     </div>
@@ -194,11 +194,11 @@
             <div class="col9">
               <div class="flexVCent gutterH">
                 <%= ob.processingButton({
-                className: 'btn clrP clrBr clrSh2 js-purge',
+                className: `btn clrP clrBr clrSh2 js-purge ${ob.isPurging ? 'processing' : ''}`,
                 btnText: ob.polyT('settings.advancedTab.server.purgeBtn'),
                 }) %>
-                <div class="js-purgeComplete hide">
-                  <i class="h4 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.purgeComplete') %></i>
+                <div class="js-purgeComplete <% if (!ob.isComplete) print('hide') %>">
+                  <i class="tx5 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.purgeComplete') %></i>
                 </div>
               </div>
             </div>
@@ -349,7 +349,7 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
       <%= ob.processingButton({
-        className: 'btn clrP clrBr clrSh2 js-save',
+        className: `btn clrP clrBr clrSh2 js-save ${ob.isSaving ? 'processing' : ''}`,
         btnText: ob.polyT('settings.btnSave')
       }) %>
     </div>

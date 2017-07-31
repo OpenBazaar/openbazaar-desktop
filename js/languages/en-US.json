@@ -369,9 +369,9 @@
         "peersHelper": "Peers you're connected to",
         "peersBtn": "Show Connected Peers",
         "purge": "Purge Shared Files",
-        "purgeHelper": "Delete files you are sharing with others",
+        "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
-        "purgeToolTip": "OpenBazaar shares content you have viewed with other users. If you have viewed text or images you don't want to share this button will delete them. This will not affect any files that belong to you.",
+        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share this button will delete them. This will not affect any files that belong to you.",
         "purgeError": "There was an error, your cached files may not have been deleted.",
         "purgeComplete": "Your cached files have been deleted."
       },
