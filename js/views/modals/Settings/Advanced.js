@@ -8,12 +8,6 @@ export default class extends baseVw {
   constructor(options = {}) {
     super({
       className: 'settingsAdvanced',
-      initialState: {
-        isPurging: false,
-        isComplete: false,
-        isSaving: false,
-        ...options.initialState,
-      },
       ...options,
     });
 
@@ -66,12 +60,10 @@ export default class extends baseVw {
   purgeCache() {
     this.getCachedEl('.js-purge').addClass('processing');
     this.getCachedEl('.js-purgeComplete').addClass('hide');
-    this.setState({ isPurging: true, isComplete: false });
 
     this.purge = $.post(app.getServerUrl('ob/purgecache'))
       .always(() => {
         this.getCachedEl('.js-purge').removeClass('processing');
-        this.setState({ isPurging: false });
       })
       .fail((xhr) => {
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
@@ -80,7 +72,6 @@ export default class extends baseVw {
           failReason);
       })
       .done(() => {
-        this.setState({ isComplete: true });
         this.getCachedEl('.js-purgeComplete').removeClass('hide');
       });
   }
@@ -110,7 +101,6 @@ export default class extends baseVw {
         attrs: serverFormData,
         type: 'PATCH',
       });
-      this.setState({ isSaving: true });
 
       $.when(localSave, serverSave)
         .done(() => {
@@ -136,7 +126,6 @@ export default class extends baseVw {
         })
         .always(() => {
           this.getCachedEl('.js-save').removeClass('processing');
-          this.setState({ isSaving: false });
           setTimeout(() => statusMessage.remove(), 3000);
         });
     }
@@ -151,17 +140,18 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/settings/advanced.html', (t) => {
       this.$el.html(t({
         errors: {
           ...(this.settings.validationError || {}),
           ...(this.localSettings.validationError || {}),
         },
-        ...this.getState(),
+        isPurging: this.purge && this.purge.state() === 'pending',
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));
-
+      
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
