@@ -151,7 +151,7 @@ export default class extends baseVw {
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));
-      
+
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
