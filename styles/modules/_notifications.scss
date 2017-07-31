@@ -54,7 +54,7 @@
       padding: $pad;
 
       &:empty {
-        padding: 0;
+        display: none;
       }
     }
 
@@ -88,6 +88,10 @@
 
       &:hover {
         cursor: pointer;
+      }
+
+      .listingImage {
+        border-radius: 0;
       }
     }
   }

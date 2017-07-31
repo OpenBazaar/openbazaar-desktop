@@ -8,4 +8,6 @@
     <p><%= ob.fetchError %></p>
   <% } %>
   <button class="btn normalBtn clrP clrBr js-retry">Retry</button>
+<% } else if (ob.noResults) { %>
+  <p><%= ob.polyT('notifications.noResults') %></p>
 <% } %>

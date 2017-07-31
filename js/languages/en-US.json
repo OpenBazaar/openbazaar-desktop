@@ -72,6 +72,27 @@
       "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
     }
   },
+  "notifications": {
+    "noResults": "No notifications found.",
+    "text": {
+      "order": "%{buyerName} has purchased %{listingTitle}.",
+      "payment": "Your payment has been received.",
+      "orderConfirmation": "%{vendorName} has accepted your order.",
+      "declined": "%{vendorName} has declined your order.",
+      "canceled": "%{buyerName} has canceled their order.",
+      "refunded": "%{vendorName} has refunded your order.",
+      "fulfillment": "%{vendorName} has fulfilled your order.",
+      "orderComplete": "%{buyerName} has left feedback on their order.",
+      "disputeOpen": "%{disputerName} has opened a dispute with you.",
+      "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
+      "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
+      "disputeClose": "The dispute with %{otherPartyName} has been closed.",
+      "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
+      "follow": "%{name} has followed you.",
+      "modAdd": "%{name} has added you as a moderator.",
+      "modRemove": "%{name} has removed you as a moderator."
+    }
+  },
   "pageNav": {
     "notConnectedMenuItem": "Not Connected",
     "torOnTooltip": "Tor active",

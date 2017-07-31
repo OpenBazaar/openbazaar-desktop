@@ -76,10 +76,6 @@ export default class extends BaseVw {
       this.torIndicatorOn = false;
       this.stopListening(app.router, null, this.onRouteSearch);
     });
-
-    setTimeout(() => {
-      this.toggleNotifications();
-    }, 500);
   }
 
   get navigable() {
@@ -239,13 +235,11 @@ export default class extends BaseVw {
   }
 
   onNavListClick(e) {
-    console.log('nav list click');
     // do not bubble to onDocClick
     e.stopPropagation();
   }
 
   onClickNavNotifBtn(e) {
-    console.log('dribble');
     this.closeNavMenu();
     this.toggleNotifications();
     // do not bubble to onDocClick
@@ -256,6 +250,7 @@ export default class extends BaseVw {
     if (!this.notifications) {
       this.notifications = new Notifications();
       this.getCachedEl('.js-notifContainer').html(this.notifications.render().el);
+      this.listenTo(this.notifications, 'notifNavigate', () => this.closeNotifications());
     }
 
     this.getCachedEl('.js-notifContainer').toggleClass('open');
@@ -263,7 +258,6 @@ export default class extends BaseVw {
   }
 
   onClickNotifContainer(e) {
-    console.log('stubble');
     // do not bubble to onDocClick
     e.stopPropagation();
   }
@@ -275,13 +269,10 @@ export default class extends BaseVw {
   }
 
   onClickNotificationLink() {
-    console.log('pipple');
     this.closeNotifications();
   }
 
-  onDocClick(e) {
-    console.log('doc click');
-    window.doc = e;
+  onDocClick() {
     this.closeNotifications();
     this.closeNavMenu();
   }

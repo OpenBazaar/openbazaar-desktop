@@ -32,14 +32,14 @@ export default class extends BaseVw {
     };
   }
 
-  // remove() {
-  //   super.remove();
-  // }
-
   createAllNotifList() {
-    return new NotificationsList({
+    const notifList = new NotificationsList({
       collection: new Notifications(),
     });
+
+    this.listenTo(notifList, 'notifNavigate', () => this.trigger('notifNavigate', { list: 'all' }));
+
+    return notifList;
   }
 
   render() {

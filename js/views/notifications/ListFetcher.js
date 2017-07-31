@@ -12,6 +12,7 @@ export default class extends BaseVw {
     const opts = {
       initialState: {
         isFetching: false,
+        noResults: false,
         fetchError: '',
         ...options.initialState || {},
       },
@@ -21,10 +22,6 @@ export default class extends BaseVw {
     super(opts);
     this.options = opts;
   }
-
-  // get tagName() {
-  //   return 'section';
-  // }
 
   className() {
     return 'listFetcher';

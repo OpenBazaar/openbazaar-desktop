@@ -1,0 +1,103 @@
+<%
+  console.log('sizzle');
+  window.sizzle = ob;
+%>
+
+<%
+  let notifText = '';
+  let notifRoute = ''; // the route that will be routed to when you click on the notification
+  const isOrderNotif = !!ob.notification.orderId;
+  const notif = ob.notification;
+
+  if (notif.type === 'order') {
+    notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.order', {
+      buyerName: `<a href="#${notif.buyerId}">${notif.buyerHandle || `${notif.buyerId.slice(0, 8)}…`}</a>`,
+      listingTitle: `<a href="#${notifRoute}">${notif.title}</a>`,
+    });
+  } else if (notif.type === 'payment') {
+    notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.payment');
+  } else if (notif.type === 'orderConfirmation') {
+    notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.orderConfirmation', {
+      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'declined') {
+    notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.orderDeclined', {
+      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'cancel') {
+    notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.orderCanceled', {
+      buyerName: `<a href="#${notif.buyerId}">${notif.buyerHandle || `${notif.buyerId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'refund') {
+    notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.orderRefunded', {
+      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'fulfillment') {
+    notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.fulfillment', {
+      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'orderComplete') {
+    notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.orderComplete', {
+      buyerName: `<a href="#${notif.buyerId}">${notif.buyerHandle || `${notif.buyerId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'disputeOpen') {
+    if (ob.disputeeId === ob.ownGuid) {
+      // notif received by disputee
+      notifRoute = `#transactions/${notif.buyer === notif.disputerId ? 'purchases' : 'sales'}?orderId=${notif.orderId}`;
+      notifText = ob.polyT('notifications.text.disputeOpen', {
+        disputerName: `<a href="#${notif.disputerId}">${notif.disputerHandle || `${notif.disputerId.slice(0, 8)}…`}</a>`,
+      });
+    } else {
+      // you are the mod receiving this notification
+      notifRoute = `#transactions/cases?caseId=${notif.orderId}`;
+      notifText = ob.polyT('notifications.text.disputeOpenMod', {
+        disputerName: `<a href="#${notif.disputerId}">${notif.disputerHandle || `${notif.disputerId.slice(0, 8)}…`}</a>`,
+        disputeeName: `<a href="#${notif.disputeeId}">${notif.disputeeHandle || `${notif.disputeeId.slice(0, 8)}…`}</a>`,
+      });
+    }
+  } else if (notif.type === 'disputeUpdate') {
+    notifText = ob.polyT('notifications.text.disputeUpdate', {
+      disputerName: `<a href="#${notif.disputerId}">${notif.disputerHandle || `${notif.disputerId.slice(0, 8)}…`}</a>`,
+      disputeeName: `<a href="#${notif.disputeeId}">${notif.disputeeHandle || `${notif.disputeeId.slice(0, 8)}…`}</a>`,
+    });
+  } else if (notif.type === 'disputeClose') {
+    notifRoute = `#transactions/${notif.buyer === notif.otherPartyId ? 'purchases' : 'sales'}?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.disputeClose', {
+      otherPartyName: `<a href="#${notif.buyerId}">${notif.otherPartyHandle || `${notif.otherPartyId.slice(0, 8)}…`}</a>`,
+    });          
+  } else if (notif.type === 'disputeAccepted') {
+    notifRoute = `#transactions/${notif.buyer === notif.otherPartyId ? 'purchases' : 'sales'}?orderId=${notif.orderId}`;
+    notifText = ob.polyT('notifications.text.disputeAccepted', {
+      otherPartyName: `<a href="#${notif.buyerId}">${notif.otherPartyHandle || `${notif.otherPartyId.slice(0, 8)}…`}</a>`,
+    });          
+  } else if (notif.type === 'follow') {
+    notifRoute = `#${notif.peerId}`;
+    notifText = ob.polyT('notifications.text.follow', {
+      <!-- name: `<a href="#${notif.peerId}">${notif.handle || `${notif.peerId.slice(0, 8)}…`}</a>`, -->
+      name: `<a href="#Qmd87HSG2FEGqfJWAizs1DKXdZyxbiQ7jNZz9kfihhGVoA/store">${notif.handle || `${notif.peerId.slice(0, 8)}…`}</a>`,
+    });          
+  }
+%>
+<div class="listItem notificationListItem js-notificationListItem tx5 clrBr <% if (!ob.read) print('unread') %>" <% if (notifRoute) print(`data-route="${notifRoute}"`) %>>
+  <div class="unreadBorder clrBAtt1"></div>
+  <div class="flexVCent gutterHSm pad">
+    <%
+      const imageFunc = isOrderNotif ?
+        'getListingBgImage' : 'getAvatarBgImage';
+    %>
+    
+    <div class="thumbCol disc clrBr2 clrSh1 flexNoShrink <% if (isOrderNotif) print('listingImage') %> <% if (ob.notification.type === 'payment') print('invisible') %>" style="<%= ob[imageFunc](ob.notification.thumbnail || ob.avatarHashes || {}) %>"></div>
+    <div class="flexExpand">
+      <div class="rowTn clamp2 notifMsg"><%= notifText %></div>
+      <div class="clrT2 tx6">1m ago</div>
+    </div>
+  </div>
+</div>
