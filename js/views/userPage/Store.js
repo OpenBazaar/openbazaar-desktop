@@ -177,6 +177,9 @@ export default class extends BaseVw {
             this.retryPressed = false;
             this.render();
           }, 250 - callTime);
+        } else {
+          this.retryPressed = false;
+          this.render();
         }
       } else {
         this.retryPressed = false;
@@ -554,7 +557,8 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         isFetching,
         fetchFailed,
-        fetchFailReason: this.fetchFailed && this.fetch.responseText || '',
+        fetchFailReason: fetchFailed && this.fetch.responseJSON
+          && this.fetch.responseJSON.reason || '',
         filter: this.filter,
         countryList: this.countryList,
         shipsToSelected: this.filter.shipsTo || 'any',
@@ -579,7 +583,6 @@ export default class extends BaseVw {
 
     this.$shipsToSelect.select2({
       dropdownParent: this.$('.js-shipsToSelectDropdownContainer'),
-      // dropdownPosition : 'below',
     });
 
     if (!this.rendered) {

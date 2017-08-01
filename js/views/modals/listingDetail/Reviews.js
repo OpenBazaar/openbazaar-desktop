@@ -37,6 +37,11 @@ export default class extends BaseVw {
     }
   }
 
+  appendError(error) {
+    const msg = app.polyglot.t('listingDetail.errors.fetchReviews', { error });
+    this.$errors.append(`<p><i class="ion-alert-circled"> ${msg}</p>`);
+  }
+
   loadReviews(start = this.startIndex, pageSize = this.pageSize, async = this.options.async) {
     const revLength = this.reviewIDs.length;
     // if on the last page, only fetch the number of reviews that remain
@@ -64,8 +69,8 @@ export default class extends BaseVw {
         })
         .fail((xhr) => {
           const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-          const title = app.polyglot.t('listingDetail.errors.fetchReviews');
-          this.$errors.html(`<h3>${title}</h3><p>${failReason}</p>`);
+          this.appendError(failReason);
+          this.$errors.append(`<p>${failReason}</p>`);
           this.hideMoreBtn();
           this.$loadMoreBtn.removeClass('processing');
         });
@@ -80,9 +85,15 @@ export default class extends BaseVw {
       this.listenTo(serverSocket, 'message', (event) => {
         const eventData = event.jsonData;
         if (eventData.id === socketID && this.reviewIDs.indexOf(eventData.ratingId !== -1)) {
-          this.collection.add(eventData.rating.ratingData);
-          if (this.collection.length >= this.startIndex) {
-            this.$loadMoreBtn.removeClass('processing');
+          if (!eventData.error) {
+            this.collection.add(eventData.rating.ratingData);
+            if (this.collection.length >= this.startIndex) {
+              this.$loadMoreBtn.removeClass('processing');
+            }
+          } else {
+            const error = app.polyglot.t('listingDetail.errors.loadReview',
+              { id: eventData.ratingId, error: eventData.error });
+            this.appendError(error);
           }
         }
       });

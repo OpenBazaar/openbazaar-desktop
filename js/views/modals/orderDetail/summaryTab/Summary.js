@@ -194,8 +194,13 @@ export default class extends BaseVw {
         }
       });
 
-      this.listenTo(this.contract, 'change:disputeAcceptance',
-        () => this.renderDisputeAcceptanceView());
+      this.listenTo(this.contract, 'change:disputeAcceptance', () => {
+        this.renderDisputeAcceptanceView();
+
+        if (this.disputePayout) {
+          this.disputePayout.setState({ showAcceptButton: false });
+        }
+      });
     } else {
       this.listenTo(orderEvents, 'resolveDisputeComplete', e => {
         if (e.id === this.model.id) {
@@ -235,6 +240,9 @@ export default class extends BaseVw {
       'disputeUpdate',
       // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
       'disputeClose',
+      // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
+      // accepts, the buyer will get this and vice versa).
+      'disputeAccepted',
     ];
 
     if (serverSocket) {
@@ -658,8 +666,8 @@ export default class extends BaseVw {
 
     if (this.disputeAcceptance) this.disputeAcceptance.remove();
     this.disputeAcceptance = this.createChild(DisputeAcceptance, {
-      dataObject: data,
       initialState: {
+        timestamp: data.timestamp,
         acceptedByBuyer: closer.id === this.buyer.id,
         buyerViewing: app.profile.id === this.buyer.id,
       },
@@ -764,6 +772,7 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
       this.$el.html(t({
         id: this.model.id,

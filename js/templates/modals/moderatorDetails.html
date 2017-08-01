@@ -9,7 +9,7 @@
         <div>
           <div class="flex snipKids gutterHSm rowSm">
             <strong class="txt5"><%= ob.name %></strong>
-            <span class="clrT2"><%= ob.handle %></span>
+            <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
           </div>
           <div class="row clrT2">
             <p><%=ob.moderatorInfo.description %></p>

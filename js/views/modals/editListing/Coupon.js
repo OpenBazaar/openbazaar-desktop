@@ -13,6 +13,11 @@ export default class extends BaseView {
       throw new Error('Please provide a function for me to obtain the current currency.');
     }
 
+    // any parent level errors can be passed in options.couponErrors, e.g.
+    // options.couponErrors = {
+    //   <field-name>: ['err1', 'err2', 'err3']
+    // }
+
     super(options);
     this.options = options;
   }

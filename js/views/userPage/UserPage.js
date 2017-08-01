@@ -7,6 +7,7 @@ import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
 import { launchEditListingModal, launchSettingsModal } from '../../utils/modalManager';
+import { getCurrentConnection } from '../../utils/serverConnect';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import MiniProfile from '../MiniProfile';
@@ -43,6 +44,12 @@ export default class extends baseVw {
     }
 
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
+
+    this.curConn = getCurrentConnection();
+
+    if (this.curConn && this.curConn.server) {
+      this.showStoreWelcomeCallout = !this.curConn.server.get('dismissedStoreWelcome');
+    }
   }
 
   className() {
@@ -57,6 +64,7 @@ export default class extends baseVw {
       'click .js-moreBtn': 'clickMore',
       'click .js-customize': 'clickCustomize',
       'click .js-createListing': 'clickCreateListing',
+      'click .js-closeStoreWelcomeCallout': 'clickCloseStoreWelcomeCallout',
     };
   }
 
@@ -92,6 +100,13 @@ export default class extends baseVw {
     });
   }
 
+  clickCloseStoreWelcomeCallout() {
+    if (this.curConn && this.curConn.server) {
+      this.curConn.server.save({ dismissedStoreWelcome: true });
+      this.getCachedEl('.js-storeWelcomeCallout').remove();
+    }
+  }
+
   updateHeader() {
     const headerHashes = this.model.get('headerHashes').toJSON();
     const headerHash = isHiRez() ? headerHashes.large : headerHashes.medium;
@@ -101,27 +116,6 @@ export default class extends baseVw {
         `background-image: url(${app.getServerUrl(`ipfs/${headerHash}`)}), 
       url('../imgs/defaultHeader.png')`);
     }
-  }
-
-  setState(state, options = {}) {
-    if (!state) {
-      throw new Error('Please provide a state.');
-    }
-
-    const opts = {
-      updateHistory: true,
-      ...options,
-    };
-
-    const tabOpts = {
-      ...opts,
-      addTabToHistory: opts.updateHistory || false,
-    };
-
-    delete tabOpts.updateHistory;
-
-    this.state = state;
-    this.selectTab(state, tabOpts);
   }
 
   createFollowersTabView(opts = {}) {
@@ -158,6 +152,15 @@ export default class extends baseVw {
     });
   }
 
+  setState(state, options = {}) {
+    if (!state) {
+      throw new Error('Please provide a state.');
+    }
+
+    this.state = state;
+    this.selectTab(state, options);
+  }
+
   selectTab(targ, options = {}) {
     const opts = {
       addTabToHistory: true,
@@ -182,19 +185,11 @@ export default class extends baseVw {
       this.$tabTitle.text(capitalize(targ));
 
       if (opts.addTabToHistory) {
-        // subRoute is anything after the tab in the route, which is something
-        // we want to maintain, e.g:
-        // <guid>/<tab>/<slug>/<blah>
-        // the subRoute is '/<slug>/<blah>'
-        const subRoute = location.hash
-          .slice(1)
-          .split('/')
-          .slice(2)
-          .join('/');
+        const listingBaseUrl = this.model.get('handle') ?
+          `@${this.model.get('handle')}` : this.model.id;
 
         // add tab to history
-        app.router.navigate(`${this.model.id}/${targ.toLowerCase()}` +
-          `${subRoute ? `/${subRoute}` : ''}`);
+        app.router.navigateUser(`${listingBaseUrl}/${targ.toLowerCase()}`, this.model.id);
       }
 
       this.$('.js-tab').removeClass('clrT active');
@@ -229,11 +224,13 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         followed: this.followedByYou,
         ownPage: this.ownPage,
+        showStoreWelcomeCallout: this.showStoreWelcomeCallout,
       }));
 
       this.$tabContent = this.$('.js-tabContent');
@@ -252,7 +249,7 @@ export default class extends baseVw {
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {
-        updateHistory: false,
+        addTabToHistory: false,
         listing: this.options.listing,
       });
     });

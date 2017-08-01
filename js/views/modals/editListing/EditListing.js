@@ -10,7 +10,7 @@ import { isScrolledIntoView } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
-import SimpleMessage from '../SimpleMessage';
+import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
@@ -44,6 +44,7 @@ export default class extends BaseModal {
     // we'll clone and update it on sync
     this._origModel = this.model;
     this.model = this._origModel.clone();
+
     this.listenTo(this.model, 'sync', () => {
       setTimeout(() => {
         if (this.createMode && !this.model.isNew()) {
@@ -546,6 +547,11 @@ export default class extends BaseModal {
         small: image.hashes.small,
         tiny: image.hashes.tiny,
       })));
+    })
+    .fail(jqXhr => {
+      openSimpleMessage(app.polyglot.t('editListing.errors.uploadImageErrorTitle',
+          { smart_count: imagesToUpload.length }),
+        jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
     });
 
     this.photoUploads.push(upload);
@@ -673,13 +679,16 @@ export default class extends BaseModal {
         type: 'message',
         duration: 99999999999999,
       }).on('clickViewListing', () => {
-        const url = `#${app.profile.id}/store/${this.model.get('slug')}`;
+        const guidUrl = `#${app.profile.id}/store/${this.model.get('slug')}`;
+        const base = app.profile.get('handle') ?
+          `@${app.profile.get('handle')}` : app.profile.id;
+        const url = `${base}/store/${this.model.get('slug')}`;
 
-        // This couldn't have been a simple href because that URL may already be the
-        // page we're on, with the Listing Detail likely obscured by this modal. Since
-        // the url wouldn't be changing, clicking that anchor would do nothing, hence
-        // the use of loadUrl.
-        Backbone.history.loadUrl(url);
+        if (location.hash === guidUrl) {
+          Backbone.history.loadUrl();
+        } else {
+          app.router.navigateUser(url, app.profile.id, { trigger: true });
+        }
       });
 
       save.always(() => this.$saveButton.removeClass('disabled'))
@@ -1091,9 +1100,20 @@ export default class extends BaseModal {
       // render variants
       if (this.variantsView) this.variantsView.remove();
 
+      const variantErrors = {};
+
+      Object.keys(item.validationError || {})
+        .forEach(errKey => {
+          if (errKey.startsWith('options[')) {
+            variantErrors[errKey] =
+              item.validationError[errKey];
+          }
+        });
+
       this.variantsView = this.createChild(Variants, {
         collection: this.variantOptionsCl,
         maxVariantCount: item.max.optionCount,
+        errors: variantErrors,
       });
 
       this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',

@@ -147,6 +147,7 @@ export default class extends BaseModal {
     const pData = data || {};
     this.rating.averageRating = pData.average;
     this.rating.ratingCount = pData.count;
+    this.rating.fetched = true;
     this.rating.render();
     this.reviews.reviewIDs = pData.ratings || [];
     this.reviews.render();
@@ -192,7 +193,6 @@ export default class extends BaseModal {
 
   onClickConfirmedDelete() {
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
-
     this.destroyRequest = this.model.destroy({ wait: true });
 
     if (this.destroyRequest) {
@@ -223,11 +223,8 @@ export default class extends BaseModal {
     if (this.options.openedFromStore) {
       this.close();
     } else {
-      if (this.vendor.handle) {
-        location.hash = `#@${this.vendor.handle}/store`;
-      } else {
-        location.hash = `#${this.vendor.peerID}/store`;
-      }
+      const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
+      app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
   }
 

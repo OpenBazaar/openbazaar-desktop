@@ -18,13 +18,15 @@
       <div class="userControls">
         <% if (!ob.ownGuid) { %>
           <%= ob.processingButton({
-            className: `iconBtn clrP clrBr js-follow ${ob.followedByYou ? 'active' : ''}`,
-            btnText: '<i class="ion-person-stalker"></i>'
+            className: `iconBtn clrP clrBr toolTipNoWrap toolTipTop js-follow ${ob.followedByYou ? 'active' : ''}`,
+            btnText: '<i class="ion-person-stalker"></i>',
+            attrs: `data-tip="${ob.getFollowTip(ob.followedByYou)}"`,
           }) %>
           <% if (ob.moderator) { %>
             <%= ob.processingButton({
-            className: `iconBtn clrP clrBr js-mod ${ob.ownMod ? 'active' : ''}`,
-            btnText: '<i class="ion-briefcase"></i>'
+            className: `iconBtn clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
+            btnText: '<i class="ion-briefcase"></i>',
+            attrs: `data-tip="${ob.getModTip(ob.ownMod)}"`,
             }) %>
           <% } %>
         <% } %>
@@ -35,10 +37,10 @@
     <% if (!ob.loading && !ob.notFound) { %>
       <div class="contentTop">
         <div>
-          <a class="flex snipKids gutterH rowTn userName js-userName">
-            <div class="tx3 clrT name"><strong><%= ob.name %></strong></div>
+          <a class="flex snipKids gutterH rowTn js-userName">
+            <div class="tx3 clrT"><strong><%= ob.name %></strong></div>
             <div class="clrT2">
-              <%= ob.handle %>
+              <%= ob.handle ? `@${ob.handle}` : '' %>
             </div>
           </a>
         </div>
@@ -51,9 +53,7 @@
           <span class="clrT2 clamp tx5b">📍 <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>
         <div class="tx6">
-          <% const ratingCount = ob.stats.ratingCount !== 'undefined' ? ob.stats.ratingCount : 0;
-          const averageRating = ob.stats.averageRating ? ob.stats.averageRating.toFixed(2) : 0;
-          print(`${ob.parseEmojis('⭐')} ${averageRating} (${ratingCount})`) %>
+          <% print(`${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
         </div>
       </div>
     <% } else if (ob.loading) { %>

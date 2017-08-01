@@ -1,0 +1,71 @@
+#milestone {
+  // delete this rule in production
+  display: none;
+
+  .pre-release & {
+    display: block;
+    position: fixed;
+    bottom: -8px;
+    padding: 2px 132px 30px 8px;
+    font-size: 14px;
+    right: $scrollbar + 4;
+    border-radius: 8px;
+    border-width: 2px;
+    border-style: solid;
+    z-index: 1;
+    @include chatOpeningTransition(right);
+
+    .milestone-inner {
+      position: relative;
+      top: 10px;
+      left: 110px;
+    }
+  }
+}
+
+#doorbell-button {
+  display: none;
+
+  .pre-release & {
+    display: block;
+    right: 304px;
+    @include chatOpeningTransition(right);
+  }
+}
+
+#ov1 #doorbell #doorbell-container {
+  #doorbell-form {
+    border-radius: $corner;
+    border-color: $border;
+    border-width: 2px;
+    border-style: solid;
+
+    legend {
+      padding-bottom: $padSm;
+    }
+
+    #intro-text,
+    textarea,
+    #doorbell-attach-screenshot-wrapper {
+      margin-bottom: $pad;
+    }
+
+    .buttons .btn {
+      background-color: $secondary;
+      border-color: $border;
+      color: $text;
+    }
+
+    label {
+      line-height: normal;
+    }
+
+    input[type="checkbox"] {
+      display: inline;
+    }
+
+    #doorbell-powered-by {
+      color: $text;
+    }
+  }
+}

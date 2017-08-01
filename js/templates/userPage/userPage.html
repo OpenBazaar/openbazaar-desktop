@@ -28,7 +28,7 @@
       <h1 class="txBg txUnb txUnl txGlow tabTitle js-tabTitle">
       </h1>
     </div>
-    <div>
+    <div class="posR">
       <div class="btnStrip floR clrSh2">
         <% if(ob.ownPage) { %>
           <a class="btn clrP clrBr js-customize"><%= ob.polyT('userPage.customize') %></a>
@@ -43,6 +43,19 @@
           <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
         <% } %>
       </div>
+      <% if (ob.showStoreWelcomeCallout) { %>
+        <div class="storeWelcomeCallout js-storeWelcomeCallout arrowBoxBottom confirmBox clrP clrBr tx5">
+          <div class="tx3 txB rowSm padSm"><%= ob.polyT('userPage.storeWelcomeCalloutTitle') %></div>
+          <hr class="clrBr rowMd" />
+          <p class="rowMd"><%= ob.polyT('userPage.storeWelcomeCalloutBody') %></p>
+          <hr class="clrBr" />
+          <div class="txCtr padSm">
+            <button class="btn clrP clrBr js-closeStoreWelcomeCallout">
+              <%= ob.polyT('userPage.storeWelcomeCalloutBtnClose') %>
+            </button>
+          </div>
+        </div>
+      <% } %>
     </div>
   </div>
   <div class="tabContent js-tabContent">
