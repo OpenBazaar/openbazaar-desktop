@@ -50,10 +50,10 @@ export default class extends baseVw {
   }
 
   clickResync() {
-    this.resyncCache();
+    this.resynchronize();
   }
 
-  resyncCache() {
+  resynchronize() {
     this.getCachedEl('.js-resync').addClass('processing');
     this.getCachedEl('.js-resyncProgress').removeClass('hide');
     this.getCachedEl('.js-resyncComplete').addClass('hide');
