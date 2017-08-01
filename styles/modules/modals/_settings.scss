@@ -102,6 +102,17 @@
       width: $formElementHeight;
       height: $formElementHeight;
     }
+
+    .socialAccounts {
+      .socialAccount {
+
+        .deleteAccountWrapper {
+          position: absolute;
+          left: 100%;
+          top: 0;
+        }
+      }
+    }
   }
 
   .settingsStore {

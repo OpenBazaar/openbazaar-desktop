@@ -21,12 +21,6 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
-  "properNames": {
-    "twitter": "Twitter",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "snapchat": "Snapchat"
-  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -336,8 +330,6 @@
       "helperWindowControls": "Maximize, Minimize & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
       "helperDefaultFee": "Priority is recommended for the fastest transactions",
-      "helperServerManagement": "Switch and manage server connections",
-      "helperServerPeers": "Peers you're connected to",
       "smtp": {
         "sectionName": "Email Integration (SMTP)",
         "testAction": "Test Integration",
@@ -365,9 +357,17 @@
       "server": {
         "sectionName": "Server",
         "management": "Management",
+        "managementHelper": "Switch and manage server connections",
+        "managementBtn": "Connection Management",
         "peers": "Peers",
-        "btnShowManagementAction": "Connection Management",
-        "btnShowPeersAction": "Show Connected Peers"
+        "peersHelper": "Peers you're connected to",
+        "peersBtn": "Show Connected Peers",
+        "purge": "Purge Shared Files",
+        "purgeHelper": "Delete cached files you are sharing with others",
+        "purgeBtn": "Purge Files",
+        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share this button will delete them. This will not affect any files that belong to you.",
+        "purgeError": "There was an error, your cached files may not have been deleted.",
+        "purgeComplete": "Your cached files have been deleted."
       },
       "transaction": {
         "sectionName": "Transactions",
@@ -481,7 +481,13 @@
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
-    "socialAccounts": "Social Accounts",
+    "socialAccounts": {
+      "accountLabel": "Social Account",
+      "accountPlaceholder": "Facebook",
+      "usernamePlaceholder": "Handle or Link to Page",
+      "add": "+ Add Social Account",
+      "limitError": "You can't have more than %{max} social account. |||| You can't have more than %{max} social accounts."
+    },
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
     "coverPhoto": "Cover Photo",
@@ -708,7 +714,7 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
-    }    
+    }
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
@@ -1302,10 +1308,12 @@
     "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
-    "duplicateSocialAccount": "You already have a social account of this type."
+    "tooManySocialAccounts": "You cannot have more than %{max} social accounts",
+    "duplicateSocialAccount": "You can't add the same social account twice."
   },
   "socialAccountModelErrors": {
-    "provideUsername": "Please provide a username."
+    "provideUsername": "Please provide a handle or link.",
+    "provideType": "Please provide a type (Facebook, Twitter, etc.)."
   },
   "smtpModelErrors": {
     "username": {
