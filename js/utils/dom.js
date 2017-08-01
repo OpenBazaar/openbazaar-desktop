@@ -1,6 +1,6 @@
 // todo: check args and write unit test
 // http://stackoverflow.com/a/21627295/632806
-export function isScrolledIntoView(element) {
+export function isScrolledIntoView(element, scrollContainer = document.body) {
   let rect = element.getBoundingClientRect();
   const top = rect.top;
   const height = rect.height;
@@ -15,7 +15,7 @@ export function isScrolledIntoView(element) {
     if ((top + height) <= rect.top) return false;
 
     el = el.parentNode;
-  } while (el !== document.body);
+  } while (el !== scrollContainer);
   // Check its within the document viewport
   return top <= document.documentElement.clientHeight;
 }

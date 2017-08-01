@@ -35,6 +35,7 @@ export default class extends BaseVw {
   createAllNotifList() {
     const notifList = new NotificationsList({
       collection: new Notifications(),
+      $scrollContainer: this.getCachedEl('.js-tabContainer'),
     });
 
     this.listenTo(notifList, 'notifNavigate', () => this.trigger('notifNavigate', { list: 'all' }));

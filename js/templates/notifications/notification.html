@@ -9,11 +9,13 @@
   const isOrderNotif = !!ob.notification.orderId;
   const notif = ob.notification;
 
+  const getName = (handle, guid) => handle && `@${handle}` || `${guid.slice(0, 8)}…`;
+
   if (notif.type === 'order') {
     notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.order', {
-      buyerName: `<a href="#${notif.buyerId}">${notif.buyerHandle || `${notif.buyerId.slice(0, 8)}…`}</a>`,
-      listingTitle: `<a href="#${notifRoute}">${notif.title}</a>`,
+      buyerName: `<a href="#${notif.buyerId}">${getName(notif.buyerHandle, notif.buyerId)}</a>`,
+      listingTitle: `<a href="#${notif.buyerId}/store/">${notif.title}</a>`,
     });
   } else if (notif.type === 'payment') {
     notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
@@ -21,68 +23,67 @@
   } else if (notif.type === 'orderConfirmation') {
     notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.orderConfirmation', {
-      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+      vendorName: `<a href="#${notif.vendorId}">${getName(notif.vendorHandle, notif.vendorId)}</a>`,
     });
   } else if (notif.type === 'declined') {
     notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.orderDeclined', {
-      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+      vendorName: `<a href="#${notif.vendorId}">${getName(notif.vendorHandle, notif.vendorId)}</a>`,
     });
   } else if (notif.type === 'cancel') {
     notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.orderCanceled', {
-      buyerName: `<a href="#${notif.buyerId}">${notif.buyerHandle || `${notif.buyerId.slice(0, 8)}…`}</a>`,
+      buyerName: `<a href="#${notif.buyerId}">${getName(notif.buyerHandle, notif.buyerId)}</a>`,
     });
   } else if (notif.type === 'refund') {
     notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.orderRefunded', {
-      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+      vendorName: `<a href="#${notif.vendorId}">${getName(notif.vendorHandle, notif.vendorId)}</a>`,
     });
   } else if (notif.type === 'fulfillment') {
     notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.fulfillment', {
-      vendorName: `<a href="#${notif.vendorId}">${notif.vendorHandle || `${notif.vendorId.slice(0, 8)}…`}</a>`,
+      vendorName: `<a href="#${notif.vendorId}">${getName(notif.vendorHandle, notif.vendorId)}</a>`,
     });
   } else if (notif.type === 'orderComplete') {
     notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.orderComplete', {
-      buyerName: `<a href="#${notif.buyerId}">${notif.buyerHandle || `${notif.buyerId.slice(0, 8)}…`}</a>`,
+      buyerName: `<a href="#${notif.buyerId}">${getName(notif.buyerHandle, notif.buyerId)}</a>`,
     });
   } else if (notif.type === 'disputeOpen') {
     if (ob.disputeeId === ob.ownGuid) {
       // notif received by disputee
       notifRoute = `#transactions/${notif.buyer === notif.disputerId ? 'purchases' : 'sales'}?orderId=${notif.orderId}`;
       notifText = ob.polyT('notifications.text.disputeOpen', {
-        disputerName: `<a href="#${notif.disputerId}">${notif.disputerHandle || `${notif.disputerId.slice(0, 8)}…`}</a>`,
+        disputerName: `<a href="#${notif.disputerId}">${getName(notif.disputerHandle, notif.disputerId)}</a>`,
       });
     } else {
       // you are the mod receiving this notification
       notifRoute = `#transactions/cases?caseId=${notif.orderId}`;
       notifText = ob.polyT('notifications.text.disputeOpenMod', {
-        disputerName: `<a href="#${notif.disputerId}">${notif.disputerHandle || `${notif.disputerId.slice(0, 8)}…`}</a>`,
-        disputeeName: `<a href="#${notif.disputeeId}">${notif.disputeeHandle || `${notif.disputeeId.slice(0, 8)}…`}</a>`,
+        disputerName: `<a href="#${notif.disputerId}">${getName(notif.disputerHandle, notif.disputerId)}</a>`,
+        disputeeName: `<a href="#${notif.disputeeId}">${getName(notif.disputeeHandle, notif.disputeeId)}</a>`,
       });
     }
   } else if (notif.type === 'disputeUpdate') {
     notifText = ob.polyT('notifications.text.disputeUpdate', {
-      disputerName: `<a href="#${notif.disputerId}">${notif.disputerHandle || `${notif.disputerId.slice(0, 8)}…`}</a>`,
-      disputeeName: `<a href="#${notif.disputeeId}">${notif.disputeeHandle || `${notif.disputeeId.slice(0, 8)}…`}</a>`,
+      disputerName: `<a href="#${notif.disputerId}">${getName(notif.disputerHandle, notif.disputerId)}</a>`,
+      disputeeName: `<a href="#${notif.disputeeId}">${getName(notif.disputeeHandle, notif.disputeeId)}</a>`,
     });
   } else if (notif.type === 'disputeClose') {
     notifRoute = `#transactions/${notif.buyer === notif.otherPartyId ? 'purchases' : 'sales'}?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.disputeClose', {
-      otherPartyName: `<a href="#${notif.buyerId}">${notif.otherPartyHandle || `${notif.otherPartyId.slice(0, 8)}…`}</a>`,
+      otherPartyName: `<a href="#${notif.buyerId}">${getName(notif.otherPartyHandle, notif.otherPartyId)}</a>`,
     });          
   } else if (notif.type === 'disputeAccepted') {
     notifRoute = `#transactions/${notif.buyer === notif.otherPartyId ? 'purchases' : 'sales'}?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.disputeAccepted', {
-      otherPartyName: `<a href="#${notif.buyerId}">${notif.otherPartyHandle || `${notif.otherPartyId.slice(0, 8)}…`}</a>`,
+      otherPartyName: `<a href="#${notif.buyerId}">${getName(notif.otherPartyHandle, notif.otherPartyId)}</a>`,
     });          
   } else if (notif.type === 'follow') {
     notifRoute = `#${notif.peerId}`;
     notifText = ob.polyT('notifications.text.follow', {
-      <!-- name: `<a href="#${notif.peerId}">${notif.handle || `${notif.peerId.slice(0, 8)}…`}</a>`, -->
-      name: `<a href="#Qmd87HSG2FEGqfJWAizs1DKXdZyxbiQ7jNZz9kfihhGVoA/store">${notif.handle || `${notif.peerId.slice(0, 8)}…`}</a>`,
+      name: `<a href="#${notif.peerId}">${getName(notif.handle, notif.peerId)}</a>`,
     });          
   }
 %>

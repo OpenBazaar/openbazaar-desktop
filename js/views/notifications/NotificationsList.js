@@ -1,3 +1,5 @@
+import _ from 'underscore';
+import { isScrolledIntoView } from '../../utils/dom';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 import ListFetcher from './ListFetcher';
@@ -9,6 +11,11 @@ export default class extends BaseVw {
     //   ...options,
     // };
 
+    if (!options.$scrollContainer || !options.$scrollContainer.length) {
+      throw new Error('Please provide a jQuery object containing the scrollable element ' +
+        'this view is in.');
+    }
+
     super(options);
 
     if (!this.collection) {
@@ -17,19 +24,16 @@ export default class extends BaseVw {
 
     this.options = options;
     this.notifViews = [];
-    // this.fetchFailed = false;
-    // this.fetchErrorMessage = '';
 
     if (!this.collection.length) this.$el.addClass('noNotifications');
     this.listenTo(this.collection, 'update', (cl, opts) => {
       this.$el.toggleClass('noNotifications', !this.collection.length);
 
       if (opts.changes.added.length) {
-        // Expecting either a single new notifcation on top or a page
-        // of notifications on the bottom.
-        if (opts.changes.added.length === this.collection.length ||
-          opts.changes.added[opts.changes.added.length - 1] ===
-            this.collection.at(this.collection.length - 1)) {
+        // Expecting either a single new notifcation on the bottom (will
+        // be rendered on top) or a page of notifications on top (will be
+        // rendered on the bottom).
+        if (opts.changes.added[opts.changes.added.length - 1] === this.collection.at(0)) {
           // It's a page of notifcations at the bottom
           this.renderNotifications(opts.changes.added, 'append');
         } else {
@@ -39,8 +43,13 @@ export default class extends BaseVw {
       }
     });
 
-    // this.listenTo(this.collection, 'request', this.onRequest);
+    this.$scrollContainer = options.$scrollContainer;
+    this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
+
     this.fetchNotifications();
+
+    console.log('zoo');
+    window.zoo = this;
   }
 
   className() {
@@ -53,9 +62,32 @@ export default class extends BaseVw {
     };
   }
 
+  onScroll() {
+    if (this.collection.length && !this.allLoaded) {
+      // fetch next batch of notifications
+      const lastNotif = this.notifViews[this.notifViews.length - 1];
+
+      console.log('laster');
+      window.lastNotif = lastNotif;
+
+      if (!this.isFetching && isScrolledIntoView(lastNotif.el, this.$scrollContainer[0])) {
+        this.fetchNotifications();
+      }
+    }
+  }
+
   get notifsPerFetch() {
-    return 20;
-    // return 5;
+    // return 20;
+    return 3;
+  }
+
+  get isFetching() {
+    return this.notifFetch &&
+      this.notifFetch.state() === 'pending';
+  }
+
+  get allLoaded() {
+    return this.collection.length >= this.countAtFirstFetch;
   }
 
   fetchNotifications() {
@@ -66,7 +98,7 @@ export default class extends BaseVw {
     };
 
     if (this.collection.length) {
-      fetchParams.offsetId = this.collection.at(this.collection.length - 1).id;
+      fetchParams.offsetId = this.collection.at(0).id;
     }
 
     this.notifFetch = this.collection.fetch({
@@ -163,6 +195,9 @@ export default class extends BaseVw {
         notifications: this.collection.toJSON(),
       }));
     });
+
+    this.$scrollContainer.off('scroll', this.throttledOnScroll)
+      .on('scroll', this.throttledOnScroll);
 
     if (this.listFetcher) this.listFetcher.remove();
 
