@@ -218,6 +218,22 @@
     }
   }
 
+  .notifUnreadBadge {
+    position: absolute;
+    top: -11px;
+    right: -5px;
+    line-height: 18px;
+    font-size: $tx5b;
+    font-weight: bold;
+    text-align: center;
+    border-width: 1px;
+    border-style: solid;
+
+    &.ellipsisShown {
+      line-height: 14px;
+    }
+  }
+
   .notifContainer {
     z-index: 2;
     width: 420px;

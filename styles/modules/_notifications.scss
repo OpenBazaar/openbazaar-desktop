@@ -45,54 +45,57 @@
         .listFetcher {
           width: 100%;
           @include center();
-          padding: $pad;
         }
       }
     }
 
     .listFetcher {
       text-align: center;
-      padding: $pad;
+      padding: $padMd;
 
       &:empty {
         display: none;
       }
     }
 
-    .notificationListItem {
-      height: 80px;
-      border-bottom-style: solid;
-      border-bottom-width: 1px;
-      position: relative;
-
-      .unreadBorder {
-        position: absolute;
-        display: none;
-        width: 5px;
-        top: 0;
-        bottom: 0;
-      }
-
-      &.unread {
-        .unreadBorder {
-          display: block;
-        }
-
-        .notifMsg {
-          font-weight: bold;
-        }
-      }
-
+    .notification {
       &:last-child {
-        border-width: 0;
+        .notificationListItem {
+          border-width: 0;          
+        }
       }
 
-      &:hover {
-        cursor: pointer;
-      }
+      .notificationListItem {
+        height: 80px;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        position: relative;
 
-      .listingImage {
-        border-radius: 0;
+        .unreadBorder {
+          position: absolute;
+          display: none;
+          width: 5px;
+          top: 0;
+          bottom: 0;
+        }
+
+        &.unread {
+          .unreadBorder {
+            display: block;
+          }
+
+          .notifMsg {
+            font-weight: bold;
+          }
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        .listingImage {
+          border-radius: 0;
+        }
       }
     }
   }

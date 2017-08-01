@@ -1,7 +1,7 @@
 <h1>Notifications</h1>
 <div class="flex tabs">
-  <a class="js-tab clrBr clrT2 active" data-tab="all">All</a>
-  <a class="js-tab clrBr clrT2" data-tab="orders">Orders</a>
-  <a class="js-tab clrBr clrT2" data-tab="followers">Followers</a>
+  <a class="js-tab clrBr clrT2 <% if (ob.tab === 'all') print('active') %>" data-tab="all">All</a>
+  <a class="js-tab clrBr clrT2 <% if (ob.tab === 'orders') print('active') %>" data-tab="orders">Orders</a>
+  <a class="js-tab clrBr clrT2 <% if (ob.tab === 'followers') print('active') %>" data-tab="followers">Followers</a>
 </div>
 <div class="js-tabContainer tabContainer scrollBox"></div>

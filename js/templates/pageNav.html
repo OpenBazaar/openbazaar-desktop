@@ -49,7 +49,9 @@
           <a class="iconBtn navWalletBtn js-navWalletBtn">
             <%= ob.walletIconTmpl() %>
           </a>
-          <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
+          <a class="iconBtn ion-android-notifications posR js-navNotifBtn">
+            <div class="discTn notifUnreadBadge js-notifUnreadBadge clrE1 clrTOnEmph clrBr2 clrSh2 hide"></div>
+          </a>
           <div class="js-notifContainer notifContainer foldDown"></div>
           <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
           <nav class="navListWrapper foldDown js-navList">

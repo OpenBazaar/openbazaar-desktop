@@ -29,13 +29,33 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-edit': 'onClickEdit',
+      'click .js-tab[data-tab]': 'onClickTab',
     };
+  }
+
+  onClickTab(e) {
+    // Timeout needed so event can bubble to a page nav handler before the view is re-rendered
+    // and the target element is ripped out of the dom.
+    setTimeout(() => {
+      this.setState({ tab: e.target.getAttribute('data-tab') });
+    });
   }
 
   createAllNotifList() {
     const notifList = new NotificationsList({
       collection: new Notifications(),
-      $scrollContainer: this.getCachedEl('.js-tabContainer'),
+    });
+
+    this.listenTo(notifList, 'notifNavigate', () => this.trigger('notifNavigate', { list: 'all' }));
+
+    return notifList;
+  }
+
+  createOrdersNotifList() {
+    const notifList = new NotificationsList({
+      collection: new Notifications(),
+      filter: 'order,declined,cancel,refund,fulfillment,orderComplete,disputeOpen,' +
+        'disputeUpdate,disputeClose,disputeAccepted',
     });
 
     this.listenTo(notifList, 'notifNavigate', () => this.trigger('notifNavigate', { list: 'all' }));
@@ -48,7 +68,9 @@ export default class extends BaseVw {
     const state = this.getState();
 
     loadTemplate('notifications/notifications.html', (t) => {
-      this.$el.html(t({}));
+      this.$el.html(t({
+        ...this.getState(),
+      }));
     });
 
     let notifList = this.notifListsCache[state.tab];
@@ -65,7 +87,13 @@ export default class extends BaseVw {
       }
     }
 
-    this.getCachedEl('.js-tabContainer').html(notifList.el);
+    // If the tab we want is already the active one, do nothing.
+    if (notifList !== this.activeNotifList) {
+      notifList.delegateEvents();
+      this.getCachedEl('.js-tabContainer').html(notifList.el);
+      notifList.$scrollContainer = this.getCachedEl('.js-tabContainer');
+      this.activeNotifList = notifList;
+    }
 
     return this;
   }

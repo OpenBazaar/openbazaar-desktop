@@ -68,6 +68,7 @@ export default class extends BaseVw {
       this.$connectedServerName.text(e.server.get('name'))
         .addClass('txB');
       this.listenTo(app.router, 'route:search', this.onRouteSearch);
+      this.getUnreadNotifCount().done(data => this.setNotifUnreadCount(data.unread));
     });
 
     this.listenTo(serverConnectEvents, 'disconnected', () => {
@@ -75,6 +76,7 @@ export default class extends BaseVw {
         .removeClass('txB');
       this.torIndicatorOn = false;
       this.stopListening(app.router, null, this.onRouteSearch);
+      this.getCachedEl('.js-notifUnreadBadge').addClass('hide');
     });
   }
 
@@ -124,6 +126,26 @@ export default class extends BaseVw {
     setTimeout(() => {
       Backbone.history.loadUrl();
     }, 200);
+  }
+
+  getUnreadNotifCount() {
+    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
+
+    // We'll send a bogus filter because all we want is the count - we don't
+    // want to weight the returned payload down with any notifications. Those
+    // will be lazy loaded in when the notif menu is opened.
+    return $.get(app.getServerUrl('ob/notifications?filter=blah-blah'));
+  }
+
+  setNotifUnreadCount(count) {
+    if (typeof count !== 'number') {
+      throw new Error('Please provide a count as a number.');
+    }
+
+    this.getCachedEl('.js-notifUnreadBadge')
+      .removeClass('hide')
+      .toggleClass('ellipsisShown', count > 99)
+      .text(count > 99 ? '…' : count);
   }
 
   setWinControlsStyle(style) {
@@ -213,17 +235,18 @@ export default class extends BaseVw {
   }
 
   navListBtnClick(e) {
-    this.closeNotifications();
+    this.getCachedEl('.js-notifContainer').removeClass('open');
     this.toggleNavMenu();
     // do not bubble to onDocClick
     e.stopPropagation();
   }
 
   toggleNavMenu() {
-    this.$navList.toggleClass('open');
-    this.$navOverlay.toggleClass('open');
+    const isOpen = this.$navList.hasClass('open');
+    this.$navList.toggleClass('open', !isOpen);
+    this.$navOverlay.toggleClass('open', !isOpen);
 
-    if (!this.$navList.hasClass('open')) {
+    if (!isOpen) {
       this.$connManagementContainer.removeClass('open');
     }
   }
@@ -240,7 +263,8 @@ export default class extends BaseVw {
   }
 
   onClickNavNotifBtn(e) {
-    this.closeNavMenu();
+    this.$navList.removeClass('open');
+    this.$connManagementContainer.removeClass('open');
     this.toggleNotifications();
     // do not bubble to onDocClick
     e.stopPropagation();
@@ -253,8 +277,9 @@ export default class extends BaseVw {
       this.listenTo(this.notifications, 'notifNavigate', () => this.closeNotifications());
     }
 
-    this.getCachedEl('.js-notifContainer').toggleClass('open');
-    this.$navOverlay.toggleClass('open');
+    const isOpen = this.getCachedEl('.js-notifContainer').hasClass('open');
+    this.getCachedEl('.js-notifContainer').toggleClass('open', !isOpen);
+    this.$navOverlay.toggleClass('open', !isOpen);
   }
 
   onClickNotifContainer(e) {
@@ -382,6 +407,7 @@ export default class extends BaseVw {
   }
 
   remove() {
+    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
     $(document).off('click', this.boundOnDocClick);
     super.remove();
   }

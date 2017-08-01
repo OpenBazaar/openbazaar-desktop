@@ -1,5 +1,6 @@
+import $ from 'jquery';
 import _ from 'underscore';
-import { isScrolledIntoView } from '../../utils/dom';
+import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 import ListFetcher from './ListFetcher';
@@ -7,83 +8,113 @@ import Notif from './Notification';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    // const opts = {
-    //   ...options,
-    // };
+    const opts = {
+      filter: '',
+      ...options,
+    };
 
-    if (!options.$scrollContainer || !options.$scrollContainer.length) {
-      throw new Error('Please provide a jQuery object containing the scrollable element ' +
-        'this view is in.');
-    }
-
-    super(options);
+    super(opts);
 
     if (!this.collection) {
       throw new Error('Please provide a collection.');
     }
 
-    this.options = options;
+    this.options = opts;
     this.notifViews = [];
 
     if (!this.collection.length) this.$el.addClass('noNotifications');
-    this.listenTo(this.collection, 'update', (cl, opts) => {
+    this.listenTo(this.collection, 'update', (cl, updateOpts) => {
       this.$el.toggleClass('noNotifications', !this.collection.length);
 
-      if (opts.changes.added.length) {
+      if (updateOpts.changes.added.length) {
         // Expecting either a single new notifcation on the bottom (will
         // be rendered on top) or a page of notifications on top (will be
         // rendered on the bottom).
-        if (opts.changes.added[opts.changes.added.length - 1] === this.collection.at(0)) {
+        if (updateOpts.changes.added[updateOpts.changes.added.length - 1] ===
+          this.collection.at(0)) {
           // It's a page of notifcations at the bottom
-          this.renderNotifications(opts.changes.added, 'append');
+          this.renderNotifications(updateOpts.changes.added, 'append');
         } else {
           // New notification at top
-          this.renderNotifications(opts.changes.added, 'prepend');
+          this.renderNotifications(updateOpts.changes.added, 'prepend');
         }
       }
     });
 
-    this.$scrollContainer = options.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
-    this.fetchNotifications();
+    const serverSocket = getSocket();
 
-    console.log('zoo');
-    window.zoo = this;
+    if (serverSocket) {
+      // pass
+    }
+
+    this.fetchNotifications();
   }
 
   className() {
     return 'notificationsList navList listBox clrBr';
   }
 
-  events() {
-    return {
-      'click .js-edit': 'onClickEdit',
-    };
-  }
-
   onScroll() {
-    if (this.collection.length && !this.allLoaded) {
+    if (this.collection.length && !this.allLoaded && !this.isFetching
+      && !this.fetchFailed) {
       // fetch next batch of notifications
       const lastNotif = this.notifViews[this.notifViews.length - 1];
 
-      console.log('laster');
-      window.lastNotif = lastNotif;
-
-      if (!this.isFetching && isScrolledIntoView(lastNotif.el, this.$scrollContainer[0])) {
+      if (this.isNotifScrolledIntoView(lastNotif.el)) {
         this.fetchNotifications();
       }
     }
   }
 
+  /*
+   * isScrolledIntoView from util/dom.js is not accurataly returning a result for
+   * a notification because the notifications menu markup is inside the very narrow
+   * pageNav bar. Since the notification is outside the pageNav's "viewport", it thinks
+   * nothing within the notif menu is ever in view. It's a unique enough case that we'll
+   * create a custom function here.
+   */
+  isNotifScrolledIntoView(notifEl) {
+    const notifRect = notifEl.getBoundingClientRect();
+    const scrollRect = this.$scrollContainer[0].getBoundingClientRect();
+
+    return notifRect.top <= scrollRect.top + this.$scrollContainer[0].clientHeight;
+  }
+
+  set $scrollContainer($el) {
+    if (!($el instanceof $)) {
+      throw new Error('Please provide a jQuery element containing the scrollable element ' +
+        ' this view is in.');
+    }
+
+    if ($el !== this._$scrollContainer) {
+      if (this._$scrollContainer) {
+        this._$scrollContainer.off('scroll', this.throttledOnScroll);
+      }
+      this._$scrollContainer = $el;
+      this._$scrollContainer.on('scroll', this.throttledOnScroll);
+    }
+  }
+
+  get $scrollContainer() {
+    return this._$scrollContainer;
+  }
+
+
   get notifsPerFetch() {
     // return 20;
-    return 3;
+    return 4;
   }
 
   get isFetching() {
     return this.notifFetch &&
       this.notifFetch.state() === 'pending';
+  }
+
+  get fetchFailed() {
+    return this.notifFetch &&
+      this.notifFetch.state() === 'rejected';
   }
 
   get allLoaded() {
@@ -99,6 +130,10 @@ export default class extends BaseVw {
 
     if (this.collection.length) {
       fetchParams.offsetId = this.collection.at(0).id;
+    }
+
+    if (this.options.filter) {
+      fetchParams.filter = this.options.filter;
     }
 
     this.notifFetch = this.collection.fetch({
@@ -195,9 +230,6 @@ export default class extends BaseVw {
         notifications: this.collection.toJSON(),
       }));
     });
-
-    this.$scrollContainer.off('scroll', this.throttledOnScroll)
-      .on('scroll', this.throttledOnScroll);
 
     if (this.listFetcher) this.listFetcher.remove();
 

@@ -15,7 +15,7 @@
     notifRoute = `#transactions/sales?orderId=${notif.orderId}`;
     notifText = ob.polyT('notifications.text.order', {
       buyerName: `<a href="#${notif.buyerId}">${getName(notif.buyerHandle, notif.buyerId)}</a>`,
-      listingTitle: `<a href="#${notif.buyerId}/store/">${notif.title}</a>`,
+      listingTitle: `<a href="#${notif.buyerId}/store/${notif.slug}">${notif.title}</a>`,
     });
   } else if (notif.type === 'payment') {
     notifRoute = `#transactions/purchases?orderId=${notif.orderId}`;
