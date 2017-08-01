@@ -21,12 +21,6 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
-  "properNames": {
-    "twitter": "Twitter",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "snapchat": "Snapchat"
-  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -481,7 +475,13 @@
     "socialSection": "Social",
     "website": "Website",
     "email": "Email",
-    "socialAccounts": "Social Accounts",
+    "socialAccounts": {
+      "accountLabel": "Social Account",
+      "accountPlaceholder": "Facebook",
+      "usernamePlaceholder": "Handle or Link to Page",
+      "add": "+ Add Social Account",
+      "limitError": "You can't have more than %{max} social account. |||| You can't have more than %{max} social accounts."
+    },
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
     "coverPhoto": "Cover Photo",
@@ -708,7 +708,7 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
-    }    
+    }
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
@@ -1302,10 +1302,12 @@
     "provideUsername": "Please provide a username.",
     "provideValidEmail": "Please provide a valid email.",
     "provideValidURL": "Please provide a valid url.",
-    "duplicateSocialAccount": "You already have a social account of this type."
+    "tooManySocialAccounts": "You cannot have more than %{max} social accounts",
+    "duplicateSocialAccount": "You can't add the same social account twice."
   },
   "socialAccountModelErrors": {
-    "provideUsername": "Please provide a username."
+    "provideUsername": "Please provide a handle or link.",
+    "provideType": "Please provide a type (Facebook, Twitter, etc.)."
   },
   "smtpModelErrors": {
     "username": {
