@@ -144,6 +144,30 @@
               </div>
             </div>
           </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.resync') %>
+              </label>
+              <div class="clrT2 txSm">
+                <%= ob.polyT('settings.advancedTab.server.resyncHelper') %>
+              </div>
+            </div>
+            <div class="col9">
+              <div class="flexVCent gutterH">
+                <%= ob.processingButton({
+                className: `btn clrP clrBr clrSh2 js-resync ${ob.isSyncing ? 'processing' : ''}`,
+                btnText: ob.polyT('settings.advancedTab.server.resyncBtn'),
+                }) %>
+                <div class="js-resyncProgress hide">
+                  <i class="tx5 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.resyncProgress') %></i>
+                </div>
+                <div class="js-resyncComplete hide">
+                  <i class="tx4 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.resyncComplete') %></i>
+                </div>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>
