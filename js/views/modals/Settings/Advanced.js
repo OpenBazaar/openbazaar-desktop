@@ -31,6 +31,7 @@ export default class extends baseVw {
       'click .js-save': 'save',
       'click .js-showConnectionManagement': 'showConnectionManagement',
       'click .js-resync': 'clickResync',
+      'click .js-purge': 'clickPurge',
     };
   }
 
@@ -43,7 +44,7 @@ export default class extends baseVw {
   showConnectionManagement() {
     app.connectionManagmentModal.open();
   }
-  
+
   getFormData(subset = this.$formFields) {
     return super.getFormData(subset);
   }
@@ -52,11 +53,6 @@ export default class extends baseVw {
     this.resyncCache();
   }
 
-  /**
-   * Call to the server to remove cached files that are being shared on IPFS.
-   * This call should not be aborted when the view is removed, it's critical the user is informed if
-   * the call fails, even if they have navigated away from the view.
-   */
   resyncCache() {
     this.getCachedEl('.js-resync').addClass('processing');
     this.getCachedEl('.js-resyncProgress').removeClass('hide');
@@ -73,9 +69,37 @@ export default class extends baseVw {
           failReason);
       })
       .done(() => {
-      // the resync can take several minutes, the user will probably navigate away before it's done
+        // this takes several minutes, the user will probably navigate away before it's done
         this.getCachedEl('.js-resyncProgress').addClass('hide');
         this.getCachedEl('.js-resyncComplete').removeClass('hide');
+      });
+  }
+
+  clickPurge() {
+    this.purgeCache();
+  }
+
+  /**
+   * Call to the server to remove cached files that are being shared on IPFS.
+   * This call should not be aborted when the view is removed, it's critical the user is informed if
+   * the call fails, even if they have navigated away from the view.
+   */
+  purgeCache() {
+    this.getCachedEl('.js-purge').addClass('processing');
+    this.getCachedEl('.js-purgeComplete').addClass('hide');
+
+    this.purge = $.post(app.getServerUrl('ob/purgecache'))
+      .always(() => {
+        this.getCachedEl('.js-purge').removeClass('processing');
+      })
+      .fail((xhr) => {
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('settings.advancedTab.server.purgeError'),
+          failReason);
+      })
+      .done(() => {
+        this.getCachedEl('.js-purgeComplete').removeClass('hide');
       });
   }
 
@@ -128,23 +152,18 @@ export default class extends baseVw {
           });
         })
         .always(() => {
-          this.$btnSave.removeClass('processing');
+          this.getCachedEl('.js-save').removeClass('processing');
           setTimeout(() => statusMessage.remove(), 3000);
         });
     }
 
     this.render();
     if (!this.localSettings.validationError && !this.settings.validationError) {
-      this.$btnSave.addClass('processing');
+      this.getCachedEl('.js-save').addClass('processing');
     }
 
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-  }
-
-  get $btnSave() {
-    return this._$btnSave ||
-      (this._$btnSave = this.$('.js-save'));
   }
 
   render() {
@@ -156,6 +175,7 @@ export default class extends baseVw {
           ...(this.localSettings.validationError || {}),
         },
         isSyncing: this.resync && this.resync.state() === 'pending',
+        isPurging: this.purge && this.purge.state() === 'pending',
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));
@@ -163,7 +183,6 @@ export default class extends baseVw {
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
-      this._$btnSave = null;
     });
 
     return this;
