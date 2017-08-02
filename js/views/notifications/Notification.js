@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import moment from 'moment';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
@@ -52,6 +53,7 @@ export default class extends BaseVw {
         ...this.getState(),
         ...this.model.toJSON(),
         ownGuid: app.profile.id,
+        moment,
       }));
     });
 

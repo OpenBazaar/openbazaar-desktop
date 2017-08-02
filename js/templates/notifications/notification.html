@@ -89,11 +89,11 @@
       const imageFunc = isOrderNotif ?
         'getListingBgImage' : 'getAvatarBgImage';
     %>
-    
+    <div><%= ob.id.slice(0,4) %></div>    
     <div class="thumbCol disc clrBr2 clrSh1 flexNoShrink <% if (isOrderNotif) print('listingImage') %> <% if (ob.notification.type === 'payment') print('invisible') %>" style="<%= ob[imageFunc](ob.notification.thumbnail || ob.avatarHashes || {}) %>"></div>
     <div class="flexExpand">
       <div class="rowTn clamp2 notifMsg"><%= notifText %></div>
-      <div class="clrT2 tx6">1m ago</div>
+      <div class="clrT2 tx6"><%= ob.moment(ob.timestamp).fromNow() %></div>
     </div>
   </div>
 </div>

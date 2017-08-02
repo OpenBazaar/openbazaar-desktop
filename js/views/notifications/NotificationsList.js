@@ -22,6 +22,12 @@ export default class extends BaseVw {
     this.options = opts;
     this.notifViews = [];
 
+    // This count represents the total number of notifications that this list
+    // is to show. It's used to know when all pages have been loaded. It's determined
+    // based off of the returned total from the fetch of the first page + any new
+    // notifications that come over the socket.
+    this.totalNotifs = 0;
+
     if (!this.collection.length) this.$el.addClass('noNotifications');
     this.listenTo(this.collection, 'update', (cl, updateOpts) => {
       this.$el.toggleClass('noNotifications', !this.collection.length);
@@ -46,7 +52,26 @@ export default class extends BaseVw {
     const serverSocket = getSocket();
 
     if (serverSocket) {
-      // pass
+      serverSocket.on('message', e => {
+        if (e.jsonData.notification && e.jsonData.notification.type !== 'unfollow') {
+          const type = e.jsonData.notification.type;
+          const filters = (this.options.filter || '').split(',')
+            .filter(filter => filter.trim().length)
+            .map(filter => filter.trim());
+
+          if (!filters.length || filters.indexOf(type) > -1) {
+            this.totalNotifs += 1;
+            this.collection.add({
+              id: e.jsonData.notification.notificationId,
+              read: false,
+              timestamp: (new Date()).toISOString(),
+              notification: {
+                ...(_.omit(e.jsonData.notification, 'notificationId')),
+              },
+            });
+          }
+        }
+      });
     }
 
     this.fetchNotifications();
@@ -118,7 +143,7 @@ export default class extends BaseVw {
   }
 
   get allLoaded() {
-    return this.collection.length >= this.countAtFirstFetch;
+    return this.collection.length >= this.totalNotifs;
   }
 
   fetchNotifications() {
@@ -159,8 +184,8 @@ export default class extends BaseVw {
         fetchError: '',
       };
 
-      if (typeof this.countAtFirstFetch === 'undefined') {
-        this.countAtFirstFetch = data.total;
+      if (!fetchParams.offsetId) {
+        this.totalNotifs += data.total;
 
         if (!data.notifications.length) {
           state.noResults = true;

@@ -69,17 +69,26 @@ export default class extends BaseVw {
         .addClass('txB');
       this.listenTo(app.router, 'route:search', this.onRouteSearch);
       this.fetchUnreadNotifCount().done(data => {
-        this.unreadNotifCount = this.unreadNotifCount || 0 + data.unread;
+        this.unreadNotifCount = (this.unreadNotifCount || 0) + data.unread;
       });
+      this.listenTo(e.socket, 'message', this.onSocketMessage);
     });
 
-    this.listenTo(serverConnectEvents, 'disconnected', () => {
+    this.listenTo(serverConnectEvents, 'disconnect', e => {
       this.$connectedServerName.text(app.polyglot.t('pageNav.notConnectedMenuItem'))
         .removeClass('txB');
       this.torIndicatorOn = false;
       this.stopListening(app.router, null, this.onRouteSearch);
       this.getCachedEl('.js-notifUnreadBadge').addClass('hide');
+      this.stopListening(e.socket, 'message', this.onSocketMessage);
     });
+  }
+
+  onSocketMessage(e) {
+    if (e.jsonData.notification &&
+      e.jsonData.notification.type !== 'unfollow') {
+      this.unreadNotifCount = (this.unreadNotifCount || 0) + 1;
+    }
   }
 
   get navigable() {
@@ -327,7 +336,7 @@ export default class extends BaseVw {
         if (markAsRead) {
           this.unreadNotifCount = 0;
           markAsRead.fail(() => {
-            this.unreadNotifCount = this.unreadNotifCount || 0 + count;
+            this.unreadNotifCount = (this.unreadNotifCount || 0) + count;
           });
         }
       }
