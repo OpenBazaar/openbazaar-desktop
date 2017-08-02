@@ -329,6 +329,7 @@ export default class extends BaseVw {
     if (opts.closeNavList) this.$navList.removeClass('open');
     this.getCachedEl('.js-notifContainer').removeClass('open');
     if (opts.closeOverlay) this.$navOverlay.removeClass('open');
+
     if (this.notifications) {
       const count = this.unreadNotifCount;
       if (this.unreadNotifCount) {
@@ -340,6 +341,8 @@ export default class extends BaseVw {
           });
         }
       }
+
+      this.notifications.reset();
     }
   }
 

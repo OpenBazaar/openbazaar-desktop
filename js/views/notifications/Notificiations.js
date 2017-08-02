@@ -69,6 +69,17 @@ export default class extends BaseVw {
       .fail(() => notifs.forEach(notif => notif.set('read', false)));
   }
 
+  /**
+   * Will set the tab to 'All' and set the scroll position to the top - useful
+   * when hiding the menu so that it resets to a standard initial position. It will
+   * leave the collections in tact, so the user won't need to fetch notifications
+   * already fetched.
+   */
+  reset() {
+    this.setState({ tab: 'all' });
+    this.getCachedEl('.js-tabContainer')[0].scrollTop = 0;
+  }
+
   createAllNotifList() {
     const notifList = new NotificationsList({
       collection: new Notifications(),
