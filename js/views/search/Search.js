@@ -6,6 +6,7 @@ import $ from 'jquery';
 import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
+import Providers from './Providers';
 import { launchSettingsModal } from '../../utils/modalManager';
 import { selectEmojis } from '../../utils';
 
@@ -14,7 +15,8 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    this.sProvider = options.sProvider || app.localSettings.get('searchProvider');
+    this.searchProviders = this.createChild(Providers);
+    this.sProvider = app.searchProviders.defaultProvider.get('searchUrl');
 
     // the search provider is used here as a placeholder to get the parameters from the created url
     const searchURL = new URL(`${this.sProvider}?${options.query || ''}`);
@@ -255,6 +257,9 @@ export default class extends baseVw {
     this.$searchLogo.find('img').on('error', () => {
       this.$searchLogo.addClass('loadError');
     });
+
+    // this.searchProviders.delegateEvents();
+    this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     // use the initial set of results data to create the results view
     if (data) this.createResults(data, searchURL);

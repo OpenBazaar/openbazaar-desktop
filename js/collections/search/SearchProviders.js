@@ -18,8 +18,8 @@ export default class extends Collection {
   /**
    * One of the providers should be marked as isDefault. If none are, use the first one.
    */
-  get isDefaultProvider() {
-    const isDefaultProvider = this.findWhere({ isDefault: true });
-    return isDefaultProvider || this.at(0);
+  get defaultProvider() {
+    const defaultProvider = this.findWhere({ isDefault: true });
+    return defaultProvider || this.at(0);
   }
 }

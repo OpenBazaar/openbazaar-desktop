@@ -407,7 +407,7 @@ function start() {
 
         // set the default search providers.
         app.searchProviders.add(getDefaultSearchProviders());
-        
+
         // set the profile data for the feedback mechanism
         setFeedbackOptions();
 
