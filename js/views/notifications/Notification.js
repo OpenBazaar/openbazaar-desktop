@@ -18,6 +18,8 @@ export default class extends BaseVw {
 
     super(opts);
     this.options = opts;
+
+    this.listenTo(this.model, 'change', () => this.render());
   }
 
   className() {

@@ -68,7 +68,9 @@ export default class extends BaseVw {
       this.$connectedServerName.text(e.server.get('name'))
         .addClass('txB');
       this.listenTo(app.router, 'route:search', this.onRouteSearch);
-      this.getUnreadNotifCount().done(data => this.setNotifUnreadCount(data.unread));
+      this.fetchUnreadNotifCount().done(data => {
+        this.unreadNotifCount = this.unreadNotifCount || 0 + data.unread;
+      });
     });
 
     this.listenTo(serverConnectEvents, 'disconnected', () => {
@@ -128,7 +130,11 @@ export default class extends BaseVw {
     }, 200);
   }
 
-  getUnreadNotifCount() {
+  get unreadNotifCount() {
+    return this._unreadNotifCount;
+  }
+
+  fetchUnreadNotifCount() {
     if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
 
     // We'll send a bogus filter because all we want is the count - we don't
@@ -137,15 +143,21 @@ export default class extends BaseVw {
     return $.get(app.getServerUrl('ob/notifications?filter=blah-blah'));
   }
 
-  setNotifUnreadCount(count) {
+  set unreadNotifCount(count) {
     if (typeof count !== 'number') {
       throw new Error('Please provide a count as a number.');
     }
 
+    if (count === this._unreadNotifCount) return;
+    this._unreadNotifCount = count;
+    this.renderUnreadNotifCount();
+  }
+
+  renderUnreadNotifCount() {
     this.getCachedEl('.js-notifUnreadBadge')
-      .removeClass('hide')
-      .toggleClass('ellipsisShown', count > 99)
-      .text(count > 99 ? '…' : count);
+      .toggleClass('hide', !this.unreadNotifCount)
+      .toggleClass('ellipsisShown', this.unreadNotifCount > 99)
+      .text(this.unreadNotifCount > 99 ? '…' : this.unreadNotifCount);
   }
 
   setWinControlsStyle(style) {
@@ -235,7 +247,10 @@ export default class extends BaseVw {
   }
 
   navListBtnClick(e) {
-    this.getCachedEl('.js-notifContainer').removeClass('open');
+    this.closeNotifications({
+      closeOverlay: false,
+      closeNavList: false,
+    });
     this.toggleNavMenu();
     // do not bubble to onDocClick
     e.stopPropagation();
@@ -271,15 +286,23 @@ export default class extends BaseVw {
   }
 
   toggleNotifications() {
-    if (!this.notifications) {
-      this.notifications = new Notifications();
-      this.getCachedEl('.js-notifContainer').html(this.notifications.render().el);
-      this.listenTo(this.notifications, 'notifNavigate', () => this.closeNotifications());
-    }
-
     const isOpen = this.getCachedEl('.js-notifContainer').hasClass('open');
-    this.getCachedEl('.js-notifContainer').toggleClass('open', !isOpen);
-    this.$navOverlay.toggleClass('open', !isOpen);
+
+    if (isOpen) {
+      this.closeNotifications();
+      this.$navOverlay.removeClass('open');
+    } else {
+      this.$navOverlay.addClass('open');
+
+      // open notifications menu
+      if (!this.notifications) {
+        this.notifications = new Notifications();
+        this.getCachedEl('.js-notifContainer').html(this.notifications.render().el);
+        this.listenTo(this.notifications, 'notifNavigate', () => this.closeNotifications());
+      }
+
+      this.getCachedEl('.js-notifContainer').addClass('open');
+    }
   }
 
   onClickNotifContainer(e) {
@@ -287,10 +310,28 @@ export default class extends BaseVw {
     e.stopPropagation();
   }
 
-  closeNotifications() {
-    this.$navList.removeClass('open');
+  closeNotifications(options) {
+    const opts = {
+      closeOverlay: true,
+      closeNavList: true,
+      ...options,
+    };
+
+    if (opts.closeNavList) this.$navList.removeClass('open');
     this.getCachedEl('.js-notifContainer').removeClass('open');
-    this.$navOverlay.removeClass('open');
+    if (opts.closeOverlay) this.$navOverlay.removeClass('open');
+    if (this.notifications) {
+      const count = this.unreadNotifCount;
+      if (this.unreadNotifCount) {
+        const markAsRead = this.notifications.markNotifsAsRead();
+        if (markAsRead) {
+          this.unreadNotifCount = 0;
+          markAsRead.fail(() => {
+            this.unreadNotifCount = this.unreadNotifCount || 0 + count;
+          });
+        }
+      }
+    }
   }
 
   onClickNotificationLink() {
@@ -361,6 +402,12 @@ export default class extends BaseVw {
     });
   }
 
+  remove() {
+    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
+  }
+
   render() {
     super.render();
 
@@ -403,12 +450,8 @@ export default class extends BaseVw {
     this.$connectedServerName = this.$('.js-connectedServerName');
     this.$connManagementContainer = this.$('.js-connManagementContainer');
 
-    return this;
-  }
+    this.renderUnreadNotifCount();
 
-  remove() {
-    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
-    $(document).off('click', this.boundOnDocClick);
-    super.remove();
+    return this;
   }
 }

@@ -1,3 +1,5 @@
+import $ from 'jquery';
+import app from '../../app';
 import { capitalize } from '../../utils/string';
 import loadTemplate from '../../utils/loadTemplate';
 import Notifications from '../../collections/Notifications';
@@ -39,6 +41,32 @@ export default class extends BaseVw {
     setTimeout(() => {
       this.setState({ tab: e.target.getAttribute('data-tab') });
     });
+  }
+
+  /**
+   * If there are any loaded notifications, this method will kick off a server
+   * call that will mark all notifications (seen and unseen) as read. If there
+   * are no loaded notifications (possibly because a initial page is being fetch),
+   * it will return false and not kick off any server call.
+   * @return {boolean|object} False if no notifications have been loaded, otherwise
+   *   the xhr of the call to the server
+   */
+  markNotifsAsRead() {
+    // Going to optimistically mark all as read and switch back if the call fails.
+    const notifs = [];
+
+    Object.keys(this.notifListsCache).forEach(listType => {
+      this.notifListsCache[listType].collection
+        .forEach(notif => {
+          notif.set('read', true);
+          notifs.push(notif);
+        });
+    });
+
+    if (!notifs.length) return false;
+
+    return $.post(app.getServerUrl('ob/marknotificationsasread'))
+      .fail(() => notifs.forEach(notif => notif.set('read', false)));
   }
 
   createAllNotifList() {
