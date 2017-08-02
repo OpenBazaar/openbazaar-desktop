@@ -37,6 +37,8 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
+import SearchProvidersCol from './collections/search/SearchProviders';
+import { getDefaultSearchProviders } from './data/defaultSearchProviders';
 
 fixLinuxZoomIssue();
 
@@ -263,6 +265,8 @@ let ownFollowingFailed;
 let exchangeRatesFetch;
 let walletBalanceFetch;
 let walletBalanceFetchFailed;
+let searchProvidersFetch;
+let searchProvidersFetchFailed;
 
 function fetchStartupData() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
@@ -270,8 +274,10 @@ function fetchStartupData() {
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
   walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch ?
     app.walletBalance.fetch() : walletBalanceFetch;
+  searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch ?
+    app.searchProviders.fetch() : searchProvidersFetch;
 
-  $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch)
+  $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch)
     .progress((...args) => {
       const state = args[1];
 
@@ -282,6 +288,8 @@ function fetchStartupData() {
           ownFollowingFailed = true;
         } else if (jqXhr === walletBalanceFetch) {
           walletBalanceFetchFailed = true;
+        } else if (jqXhr === searchProvidersFetch) {
+          searchProvidersFetchFailed = true;
         }
       }
     })
@@ -289,13 +297,15 @@ function fetchStartupData() {
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
-      if (ownFollowingFailed || walletBalanceFetchFailed) {
+      if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed) {
         let title = '';
 
         if (ownFollowingFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
-        } else {
+        } else if (walletBalanceFetchFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
+        } else {
+          title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
         }
 
         const retryFetchStarupDataDialog = new Dialog({
@@ -387,11 +397,17 @@ function start() {
 
     app.walletBalance = new WalletBalance();
 
+    app.searchProviders = new SearchProvidersCol();
+
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
         app.pageNav.navigable = true;
         app.pageNav.setAppProfile();
         app.loadingModal.close();
+
+        // set the default search providers.
+        app.searchProviders.add(getDefaultSearchProviders());
+        
         // set the profile data for the feedback mechanism
         setFeedbackOptions();
 

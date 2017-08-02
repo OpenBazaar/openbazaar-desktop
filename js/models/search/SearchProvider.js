@@ -1,5 +1,6 @@
 import app from '../../app';
 import is from 'is_js';
+import LocalStorageSync from '../../utils/backboneLocalStorage';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -10,6 +11,14 @@ export default class extends BaseModel {
       searchUrl: '',
       torSearchUrl: '',
     };
+  }
+
+  localStorage() {
+    return new LocalStorageSync('__searchProviders');
+  }
+
+  sync(...args) {
+    return LocalStorageSync.sync.apply(this, args);
   }
 
   validate(attrs) {

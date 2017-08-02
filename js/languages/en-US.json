@@ -59,6 +59,9 @@
       },
       "unableToGetWalletBalance": {
         "title": "Unable to get wallet balance."
+      },
+      "unableToGetSearchProviders": {
+        "title": "Unable to load search providers."
       }
     },
     "startupLoadingModal": {
