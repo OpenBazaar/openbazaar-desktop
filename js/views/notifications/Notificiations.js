@@ -46,7 +46,7 @@ export default class extends BaseVw {
   /**
    * If there are any loaded notifications, this method will kick off a server
    * call that will mark all notifications (seen and unseen) as read. If there
-   * are no loaded notifications (possibly because a initial page is being fetch),
+   * are no loaded notifications (possibly because a initial page is being fetched),
    * it will return false and not kick off any server call.
    * @return {boolean|object} False if no notifications have been loaded, otherwise
    *   the xhr of the call to the server
@@ -86,7 +86,20 @@ export default class extends BaseVw {
         'disputeUpdate,disputeClose,disputeAccepted',
     });
 
-    this.listenTo(notifList, 'notifNavigate', () => this.trigger('notifNavigate', { list: 'all' }));
+    this.listenTo(notifList, 'notifNavigate',
+      () => this.trigger('notifNavigate', { list: 'order' }));
+
+    return notifList;
+  }
+
+  createFollowersNotifList() {
+    const notifList = new NotificationsList({
+      collection: new Notifications(),
+      filter: 'follow',
+    });
+
+    this.listenTo(notifList, 'notifNavigate',
+      () => this.trigger('notifNavigate', { list: 'follow' }));
 
     return notifList;
   }
