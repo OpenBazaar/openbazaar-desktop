@@ -24,6 +24,17 @@ export default class extends Collection {
   }
 }
 
+/**
+ * Based on a notification's data, this function will determine what text
+ * the notification should be displayed with and what route it should link to.
+ * Based on option.native, it will tailor the text for it to be used on a native
+ * JS notification or our internal app one (the former can't contain html).
+ *
+ * @param {object} attrs - The notification data, If you have a Notification model,
+ *   then this is the embedded notification object (i.e. this.model.toJSON().notification).
+ * @param {object} [options={}]
+ * @return {object} An object containting text and route properties.
+ */
 export function getNotifDisplayData(attrs, options = {}) {
   if (typeof attrs !== 'object') {
     throw new Error('Please provide an object with notification data.');
