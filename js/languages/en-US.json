@@ -866,7 +866,8 @@
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed.",
       "searchFailReason": "The search provider returned the following message: %{error}",
-      "emptyData": "No valid data was returned from %{provider}."
+      "emptyData": "No valid data was returned from %{provider}.",
+      "connection": "You are no longer connected to your node. Reconnect to continue searching"
     }
   },
   "onboarding": {

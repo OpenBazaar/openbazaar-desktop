@@ -155,14 +155,14 @@ svg {
         position: fixed;
         top: $bar;
         left: 0;
+        right: $scrollbar;
         z-index: 1;
         width: 100%;
         height: $barLg;
-        padding: 0;
+        padding: 0 $scrollbar 0 0;
         overflow: hidden;
         border-bottom-width: 1px;
         border-bottom-style: solid;
-
 
         .pageTabs {
           width: $pageWidth + $padLg + $padLg;
@@ -175,10 +175,6 @@ svg {
           }
 
           .userIcon {
-            border-width: 2px;
-            border-style: solid;
-            width: 44px;
-            height: 44px;
             margin-right: $pad;
           }
 

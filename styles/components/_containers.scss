@@ -147,6 +147,13 @@
   height: $thumbLg,
 }
 
+.userIcon {
+  border-width: 2px;
+  border-style: solid;
+  width: $thumb;
+  height: $thumb;
+}
+
 .thumb {
   // thumbnail image, used for small images
   @extend .box;
@@ -354,8 +361,8 @@
       top: 1px;
       left: 50%;
       transform: translate(-50%, -100%) rotate(-135deg);
-      -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);      
-    }    
+      -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
+    }
   }
 }
 

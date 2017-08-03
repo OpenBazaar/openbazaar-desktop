@@ -4,11 +4,13 @@ import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import $ from 'jquery';
 import Dialog from '../modals/Dialog';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
 import Providers from './Providers';
 import { launchSettingsModal } from '../../utils/modalManager';
 import { selectEmojis } from '../../utils';
+import { getCurrentConnection } from '../../utils/serverConnect';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -16,6 +18,8 @@ export default class extends baseVw {
     this.options = options;
 
     this.searchProviders = this.createChild(Providers);
+    this.listenTo(this.searchProviders, 'activateProvider', opts => this.activateProvider(opts));
+
     this.sProvider = app.searchProviders.defaultProvider.get('searchUrl');
 
     // the search provider is used here as a placeholder to get the parameters from the created url
@@ -70,6 +74,20 @@ export default class extends baseVw {
 
   get usingDefault() {
     return this.sProvider === app.localSettings.get('searchProvider');
+  }
+
+  activateProvider(opts) {
+    if (!opts.searchUrl && !opts.torSearchUrl) {
+      throw new Error('Please provide a search URL.');
+    }
+    const curConn = getCurrentConnection();
+    if (curConn && curConn.status !== 'disconnected') {
+      this.sProvider = app.serverConfig.tor && getCurrentConnection().server.get('useTor') ?
+        opts.torSearchUrl : opts.searchUrl;
+      this.processTerm(this.term);
+    } else {
+      openSimpleMessage(app.polyglot.t('search.errors.connection'));
+    }
   }
 
   /**

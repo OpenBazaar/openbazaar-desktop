@@ -1,13 +1,40 @@
 .search {
   // this is a temporary style to fill the space that will be filled by the tab bar
   position: relative;
-  top: -30px;
+  padding-top: 17px;
   min-height:710px;
 
   .loadingSearch {
     position: absolute;
     z-index: 1;
     top: 0;
+  }
+
+  .searchProviders {
+    width: $pageWidth + $padLg + $padLg;
+    padding: 0 $padLg;
+
+    .discoverLogo {
+      background-image: url('../../imgs/obVectorIconSmall.svg');
+      // adjust the size and position so the borders inside the svg match the other buttons
+      height: 48px;
+      width: 48px;
+      margin-top: 5px;
+    }
+
+    .providersBar {
+      button {
+        border-width: 1px;
+        border-style: solid;
+        border-radius: $corner;
+      }
+
+      .addBtn {
+        i:before {
+          font-size: 28px;
+        }
+      }
+    }
   }
 
   .searchBar {

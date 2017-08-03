@@ -16,12 +16,12 @@ export default class extends BaseView {
 
   events() {
     return {
-      'click .js-deleteProvider': 'onClickRemove',
+      'click .js-provider': 'onClickProvider',
     };
   }
 
-  onClickRemove() {
-    this.trigger('remove-click', { view: this });
+  onClickProvider() {
+    this.trigger('click', { ...this.model.toJSON() });
   }
 
   render() {

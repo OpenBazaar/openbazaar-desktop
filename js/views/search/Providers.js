@@ -22,7 +22,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'searchProviders gutterH';
+    return 'searchProviders flexVCent gutterH';
   }
 
   events() {
@@ -49,17 +49,26 @@ export default class extends BaseView {
       ...options,
     });
 
-    this.listenTo(view, 'remove-click', () => {
-      app.searchProviders.remove(view.model);
+    this.listenTo(view, 'click', (opts) => {
+      this.trigger('activateProvider', opts);
     });
 
     return view;
   }
 
+  removeProvider(id) {
+    if (!id) {
+      throw new Error('Please provide an id to remove.');
+    }
+    app.searchProviders.remove(id);
+  }
+
   render() {
     super.render();
     loadTemplate('search/Providers.html', t => {
-      this.$el.html(t());
+      this.$el.html(t({
+        peerID: app.profile.get('peerID'),
+      }));
 
       this.providerViews.forEach(provider => provider.remove());
       this.providerViews = [];
@@ -72,7 +81,7 @@ export default class extends BaseView {
         view.render().$el.appendTo(providerFrag);
       });
 
-      this.getCachedEl('.js-providerWrapper').append(providerFrag);
+      this.getCachedEl('.js-providerWrapper').prepend(providerFrag);
     });
 
     return this;
