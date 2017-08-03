@@ -609,3 +609,14 @@ const log = msg => {
 
 if (localServer) bindLocalServerEvent('log', (localServ, msg) => log(msg));
 ipcMain.on('server-connect-log', (e, msg) => log(msg));
+
+ipcMain.on('set-badge-count', (event, count) => {
+  // setBadgeCount is only available on certain environements:
+  // https://github.com/electron/electron/blob/master/docs/api/app.md#appsetbadgecountcount-linux-macos
+  try {
+    app.setBadgeCount(count);
+  } catch (err) {
+    // pass
+    console.log(err);
+  }
+});

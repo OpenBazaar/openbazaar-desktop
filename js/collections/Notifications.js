@@ -23,3 +23,153 @@ export default class extends Collection {
     return message.get('timestamp');
   }
 }
+
+export function getNotifDisplayData(attrs, options = {}) {
+  if (typeof attrs !== 'object') {
+    throw new Error('Please provide an object with notification data.');
+  }
+
+  const opts = {
+    native: false,
+    ...options,
+  };
+
+  let text = '';
+  let route = '';
+
+  const getName = (handle, guid) => handle && `@${handle}` || `${guid.slice(0, 8)}…`;
+
+  if (attrs.type === 'order') {
+    const buyerName = opts.native ?
+      getName(attrs.buyerHandle, attrs.buyerId) :
+      `<a href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
+    const listingTitle = opts.native ?
+      attrs.title :
+      `<a href="#${attrs.buyerId}/store/${attrs.slug}">${attrs.title}</a>`;
+
+    route = `#transactions/sales?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.order', {
+      buyerName,
+      listingTitle,
+    });
+  } else if (attrs.type === 'payment') {
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.payment');
+  } else if (attrs.type === 'orderConfirmation') {
+    const vendorName = opts.native ?
+      getName(attrs.vendorHandle, attrs.vendorId) :
+      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.orderConfirmation', {
+      vendorName,
+    });
+  } else if (attrs.type === 'declined') {
+    const vendorName = opts.native ?
+      getName(attrs.vendorHandle, attrs.vendorId) :
+      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.orderDeclined', {
+      vendorName,
+    });
+  } else if (attrs.type === 'cancel') {
+    const buyerName = opts.native ?
+      getName(attrs.buyerHandle, attrs.buyerId) :
+      `<a href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
+    route = `#transactions/sales?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.orderCanceled', {
+      buyerName,
+    });
+  } else if (attrs.type === 'refund') {
+    const vendorName = opts.native ?
+      getName(attrs.vendorHandle, attrs.vendorId) :
+      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.orderRefunded', {
+      vendorName,
+    });
+  } else if (attrs.type === 'fulfillment') {
+    const vendorName = opts.native ?
+      getName(attrs.vendorHandle, attrs.vendorId) :
+      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.fulfillment', {
+      vendorName,
+    });
+  } else if (attrs.type === 'orderComplete') {
+    const buyerName = opts.native ?
+      getName(attrs.buyerHandle, attrs.buyerId) :
+      `<a href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
+    route = `#transactions/sales?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.orderComplete', {
+      buyerName,
+    });
+  } else if (attrs.type === 'disputeOpen') {
+    if (attrs.disputeeId === app.profile.id) {
+      // notif received by disputee
+      const disputerName = opts.native ?
+        getName(attrs.disputerHandle, attrs.disputerId) :
+        `<a href="#${attrs.disputerId}">${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
+      route = `#transactions/${attrs.buyer === attrs.disputerId ? 'purchases' : 'sales'}` +
+        `?orderId=${attrs.orderId}`;
+      text = app.polyglot.t('notifications.text.disputeOpen', {
+        disputerName,
+      });
+    } else {
+      // you are the mod receiving this notification
+      const disputerName = opts.native ?
+        getName(attrs.disputerHandle, attrs.disputerId) :
+        `<a href="#${attrs.disputerId}">${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
+      const disputeeName = opts.native ?
+        getName(attrs.disputeeHandle, attrs.disputeeId) :
+        `<a href="#${attrs.disputeeId}">${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
+
+      route = `#transactions/cases?caseId=${attrs.orderId}`;
+      text = app.polyglot.t('notifications.text.disputeOpenMod', {
+        disputerName,
+        disputeeName,
+      });
+    }
+  } else if (attrs.type === 'disputeUpdate') {
+    const disputerName = opts.native ?
+      getName(attrs.disputerHandle, attrs.disputerId) :
+      `<a href="#${attrs.disputerId}">${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
+    const disputeeName = opts.native ?
+      getName(attrs.disputeeHandle, attrs.disputeeId) :
+      `<a href="#${attrs.disputeeId}">${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
+    text = app.polyglot.t('notifications.text.disputeUpdate', {
+      disputerName,
+      disputeeName,
+    });
+  } else if (attrs.type === 'disputeClose') {
+    const otherPartyName = opts.native ?
+      getName(attrs.otherPartyHandle, attrs.otherPartyId) :
+      `<a href="#${attrs.buyerId}">${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
+    route = `#transactions/${attrs.buyer === attrs.otherPartyId ? 'purchases' : 'sales'}` +
+      `?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.disputeClose', {
+      otherPartyName,
+    });
+  } else if (attrs.type === 'disputeAccepted') {
+    const otherPartyName = opts.native ?
+      getName(attrs.otherPartyHandle, attrs.otherPartyId) :
+      `<a href="#${attrs.buyerId}">${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
+    route = `#transactions/${attrs.buyer === attrs.otherPartyId ? 'purchases' : 'sales'}` +
+      `?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.disputeAccepted', {
+      otherPartyName,
+    });
+  } else if (attrs.type === 'follow') {
+    const name = opts.native ?
+      getName(attrs.handle, attrs.peerId) :
+      `<a href="#${attrs.peerId}">${getName(attrs.handle, attrs.peerId)}</a>`;
+    route = `#${attrs.peerId}`;
+    text = app.polyglot.t('notifications.text.follow', {
+      name,
+    });
+  }
+
+  return {
+    text,
+    route,
+  };
+}

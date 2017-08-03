@@ -1,6 +1,6 @@
-import $ from 'jquery';
 import moment from 'moment';
 import app from '../../app';
+import { getNotifDisplayData } from '../../collections/Notifications';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
@@ -29,20 +29,20 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click [data-route]': 'onClickRoute',
+      click: 'onClick',
     };
   }
 
-  onClickRoute(e) {
-    const $target = $(e.target);
+  onClick() {
+    const route = this.getNotifDisplayData().route;
+    if (route) {
+      location.hash = route;
+      this.trigger('navigate');
+    }
+  }
 
-    // If a link within a notification was clicked, we'll do nothing and let
-    // the href of that anchor drive what happens.
-    if ($target.attr('href')) return;
-
-    location.hash = $target.closest('[data-route]', e.delegateTarget)
-      .attr('data-route');
-    this.trigger('navigate');
+  getNotifDisplayData() {
+    return getNotifDisplayData(this.model.toJSON().notification);
   }
 
   render() {
@@ -52,6 +52,7 @@ export default class extends BaseVw {
       this.$el.html(t({
         ...this.getState(),
         ...this.model.toJSON(),
+        notifText: this.getNotifDisplayData().text,
         ownGuid: app.profile.id,
         moment,
       }));

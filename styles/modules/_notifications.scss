@@ -71,6 +71,17 @@
         border-bottom-width: 1px;
         position: relative;
 
+        .thumbCol {
+          position: relative;
+          width: 42px;
+
+          .btcIcon {
+            width: 32px;
+            height: 32px;
+            @include center();
+          }
+        }
+
         .unreadBorder {
           position: absolute;
           display: none;

@@ -1,4 +1,4 @@
-import { remote } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import Backbone from 'backbone';
@@ -13,6 +13,7 @@ import {
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 import PageNavServersMenu from './PageNavServersMenu';
+import { getNotifDisplayData } from '../collections/Notifications';
 import Notifications from './notifications/Notificiations';
 
 export default class extends BaseVw {
@@ -82,12 +83,48 @@ export default class extends BaseVw {
       this.getCachedEl('.js-notifUnreadBadge').addClass('hide');
       this.stopListening(e.socket, 'message', this.onSocketMessage);
     });
+
+    this.boundWinFocusHandler = this.onWinFocus.bind(this);
+    this.boundBlurFocusHandler = this.onWinBlur.bind(this);
+    $(window).on('focus', this.boundWinFocusHandler);
+    $(window).on('blur', this.boundBlurFocusHandler);
+  }
+
+  onWinFocus() {
+    ipcRenderer.send('set-badge-count', 0);
+  }
+
+  onWinBlur() {
+    if (this.unreadNotifCount) {
+      ipcRenderer.send('set-badge-count', this.unreadNotifCount);
+    }
   }
 
   onSocketMessage(e) {
-    if (e.jsonData.notification &&
-      e.jsonData.notification.type !== 'unfollow') {
+    const notif = e.jsonData.notification;
+
+    if (notif) {
+      if (notif.type === 'unfollow') return;
       this.unreadNotifCount = (this.unreadNotifCount || 0) + 1;
+
+      if (!document.hasFocus()) {
+        ipcRenderer.send('set-badge-count', this.unreadNotifCount);
+        const notifDisplayData = getNotifDisplayData(notif, { native: true });
+        const nativeNotifData = {
+          silent: true,
+        };
+        if (notif.thumbnail) {
+          nativeNotifData.icon = app.getServerUrl(`ipfs/${notif.thumbnail.small}`);
+        }
+        const nativeNotif = new Notification(notifDisplayData.text, nativeNotifData);
+        nativeNotif.onclick = () => {
+          remote.getCurrentWindow().restore();
+
+          if (notifDisplayData.route) {
+            location.hash = notifDisplayData.route;
+          }
+        };
+      }
     }
   }
 
@@ -143,15 +180,6 @@ export default class extends BaseVw {
     return this._unreadNotifCount;
   }
 
-  fetchUnreadNotifCount() {
-    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
-
-    // We'll send a bogus filter because all we want is the count - we don't
-    // want to weight the returned payload down with any notifications. Those
-    // will be lazy loaded in when the notif menu is opened.
-    return $.get(app.getServerUrl('ob/notifications?filter=blah-blah'));
-  }
-
   set unreadNotifCount(count) {
     if (typeof count !== 'number') {
       throw new Error('Please provide a count as a number.');
@@ -160,6 +188,18 @@ export default class extends BaseVw {
     if (count === this._unreadNotifCount) return;
     this._unreadNotifCount = count;
     this.renderUnreadNotifCount();
+    if (!document.hasFocus()) {
+      ipcRenderer.send('set-badge-count', this.unreadNotifCount);
+    }
+  }
+
+  fetchUnreadNotifCount() {
+    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
+
+    // We'll send a bogus filter because all we want is the count - we don't
+    // want to weight the returned payload down with any notifications. Those
+    // will be lazy loaded in when the notif menu is opened.
+    return $.get(app.getServerUrl('ob/notifications?filter=blah-blah'));
   }
 
   renderUnreadNotifCount() {
@@ -417,6 +457,8 @@ export default class extends BaseVw {
   remove() {
     if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
     $(document).off('click', this.boundOnDocClick);
+    $(window).off('focus', this.boundWinFocusHandler);
+    $(window).off('blur', this.boundBlurFocusHandler);
     super.remove();
   }
 
