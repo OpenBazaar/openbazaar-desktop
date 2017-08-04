@@ -30,6 +30,7 @@ export default class extends baseVw {
       'click .js-smtpContainer input[type="reset"]': 'resetSMTPFields',
       'click .js-save': 'save',
       'click .js-showConnectionManagement': 'showConnectionManagement',
+      'click .js-resync': 'clickResync',
       'click .js-purge': 'clickPurge',
     };
   }
@@ -46,6 +47,30 @@ export default class extends baseVw {
 
   getFormData(subset = this.$formFields) {
     return super.getFormData(subset);
+  }
+
+  clickResync() {
+    this.resynchronize();
+  }
+
+  resynchronize() {
+    this.getCachedEl('.js-resync').addClass('processing');
+    this.getCachedEl('.js-resyncComplete').addClass('hide');
+
+    this.resync = $.post(app.getServerUrl('wallet/resyncblockchain'))
+      .always(() => {
+        this.getCachedEl('.js-resync').removeClass('processing');
+      })
+      .fail((xhr) => {
+        if (xhr.statusText === 'abort') return;
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('settings.advancedTab.server.resyncError'),
+          failReason);
+      })
+      .done(() => {
+        this.getCachedEl('.js-resyncComplete').removeClass('hide');
+      });
   }
 
   clickPurge() {
@@ -139,6 +164,11 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  remove() {
+    if (this.resync) this.resync.abort();
+    super.remove();
+  }
+
   render() {
     super.render();
     loadTemplate('modals/settings/advanced.html', (t) => {
@@ -147,6 +177,7 @@ export default class extends baseVw {
           ...(this.settings.validationError || {}),
           ...(this.localSettings.validationError || {}),
         },
+        isSyncing: this.resync && this.resync.state() === 'pending',
         isPurging: this.purge && this.purge.state() === 'pending',
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
