@@ -166,6 +166,11 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  remove() {
+    if (this.resync) this.resync.abort();
+    super.remove();
+  }
+
   render() {
     super.render();
     loadTemplate('modals/settings/advanced.html', (t) => {
