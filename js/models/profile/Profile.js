@@ -228,10 +228,23 @@ function expireCachedProfile(peerId) {
  * via the socket. A profile model will be passed in the resolve handler.
  */
 export function getCachedProfiles(peerIds = []) {
+  if (!(Array.isArray(peerIds))) {
+    throw new Error('Please provide a list of peerIds or a single peerId as a string.');
+  }
+
+  if (!peerIds.length) {
+    throw new Error('Please provide at least one peerId.');
+  }
+
+  peerIds.forEach(id => {
+    if (typeof id !== 'string') {
+      throw new Error('One or more of the provided peerIds are not strings.');
+    }
+  });
+
+  console.log(`fetching ${peerIds.join(' ,')}`);
   const promises = [];
   const profilesToFetch = [];
-  const socketMsgHandlers = [];
-  let post;
   let socket;
 
   if (!profileCacheExpiredInterval) {
@@ -249,12 +262,13 @@ export function getCachedProfiles(peerIds = []) {
     let cached = profileCache.get(id);
 
     // make sure it's not expired
-    if (Date.now() - cached.createdAt >= profileCacheExpires) {
+    if (cached && Date.now() - cached.createdAt >= profileCacheExpires) {
       expireCachedProfile(id);
       cached = null;
     }
 
     if (!cached) {
+      console.log('gotz no cache');
       // if cache is full, remove the oldest entry to make room for the new one
       const keys = Array.from(profileCache.keys());
       if (keys.length >= maxCachedProfiles) {
@@ -274,13 +288,16 @@ export function getCachedProfiles(peerIds = []) {
         createdAt: Date.now(),
       });
       profilesToFetch.push(id);
+    } else {
+      console.log('going with cached');
     }
 
     promises.push(profileCache.get(id).deferred.promise());
   });
 
   if (profilesToFetch.length) {
-    post = $.post({
+    console.log('hey ho lets post yo');
+    $.post({
       url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
       data: JSON.stringify(profilesToFetch),
       dataType: 'json',
@@ -300,7 +317,7 @@ export function getCachedProfiles(peerIds = []) {
       }
 
       const onSocketMessage = e => {
-        if (e.id !== data.id) return;
+        if (e.jsonData.id !== data.id) return;
 
         if (profileCache.get(e.jsonData.peerId)) {
           if (e.jsonData.error) {
@@ -320,7 +337,6 @@ export function getCachedProfiles(peerIds = []) {
         socket.off(null, onSocketMessage);
       };
 
-      socketMsgHandlers.push(onSocketMessage);
       socket.on('message', onSocketMessage);
     })
       .fail(jqXhr => {
@@ -331,15 +347,7 @@ export function getCachedProfiles(peerIds = []) {
           });
         });
       });
-
-    this.profilePosts.push(post);
   }
 
-  return {
-    promises,
-    abort: () => {
-      if (post && post.abort) post.abort();
-      socketMsgHandlers.forEach(handler => socket.off(null, handler));
-    },
-  };
+  return promises;
 }

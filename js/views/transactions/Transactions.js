@@ -128,7 +128,6 @@ export default class extends baseVw {
       model,
       removeOnClose: true,
       returnText: app.polyglot.t(`transactions.${type}s.returnToFromOrder`),
-      getProfiles: this.getProfiles.bind(this),
       ...opts.modalOptions,
     });
 
@@ -345,7 +344,6 @@ export default class extends baseVw {
         ...this.filterUrlParams,
       },
       filterConfig: this.salesPurchasesFilterConfig,
-      getProfiles: this.getProfiles.bind(this),
       openOrder: this.openOrder.bind(this),
       openedOrderModal: this.openedOrderModal,
     });
@@ -365,7 +363,6 @@ export default class extends baseVw {
         ...this.filterUrlParams,
       },
       filterConfig: this.salesPurchasesFilterConfig,
-      getProfiles: this.getProfiles.bind(this),
       openOrder: this.openOrder.bind(this),
       openedOrderModal: this.openedOrderModal,
     });
@@ -385,60 +382,11 @@ export default class extends baseVw {
         ...this.filterUrlParams,
       },
       filterConfig: this.casesFilterConfig,
-      getProfiles: this.getProfiles.bind(this),
       openOrder: this.openOrder.bind(this),
       openedOrderModal: this.openedOrderModal,
     });
 
     return view;
-  }
-
-  /**
-   * This function will fetch a list of profiles via the profiles api utilizing
-   * the async and usecache flags. It will return a list of promises that will
-   * each resolve when their respective profile arrives via socket.
-   * @param {Array} peerIds List of peerId for whose profiles to fetch.
-   * @returns {Array} An array of promises corresponding to the array of passed
-   * in peerIds. Each promise will resolve when it's respective profile is received
-   * via the socket. A profile model will be passed in the resolve handler.
-   */
-  getProfiles(peerIds = []) {
-    const promises = [];
-    const profilesToFetch = [];
-
-    peerIds.forEach(id => {
-      if (!this.profileDeferreds[id]) {
-        const deferred = $.Deferred();
-        this.profileDeferreds[id] = deferred;
-        profilesToFetch.push(id);
-      }
-
-      promises.push(this.profileDeferreds[id].promise());
-    });
-
-    if (profilesToFetch.length) {
-      const post = $.post({
-        url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
-        data: JSON.stringify(profilesToFetch),
-        dataType: 'json',
-        contentType: 'application/json',
-      }).done(() => {
-        if (this.socket) {
-          this.listenTo(this.socket, 'message', (e) => {
-            // if (!e.jsonData.peerId) return;
-
-            if (this.profileDeferreds[e.jsonData.peerId]) {
-              this.profileDeferreds[e.jsonData.peerId].resolve(new Profile(e.jsonData.profile,
-                { parse: true }));
-            }
-          });
-        }
-      });
-
-      this.profilePosts.push(post);
-    }
-
-    return promises;
   }
 
   get $purchasesTabCount() {
@@ -454,11 +402,6 @@ export default class extends baseVw {
   get $casesTabCount() {
     return this._$casesTabCount ||
       (this._$casesTabCount = this.$('.js-casesTabCount'));
-  }
-
-  remove() {
-    this.profilePosts.forEach(post => post.abort());
-    super.remove();
   }
 
   render() {
