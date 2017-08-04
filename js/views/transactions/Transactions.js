@@ -7,7 +7,6 @@ import loadTemplate from '../../utils/loadTemplate';
 import Transactions from '../../collections/Transactions';
 import Order from '../../models/order/Order';
 import Case from '../../models/order/Case';
-import Profile from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Tab from './Tab';
