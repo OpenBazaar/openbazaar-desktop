@@ -371,7 +371,13 @@
         "purgeBtn": "Purge Files",
         "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share this button will delete them. This will not affect any files that belong to you.",
         "purgeError": "There was an error, your cached files may not have been deleted.",
-        "purgeComplete": "Your cached files have been deleted."
+        "purgeComplete": "Your cached files have been deleted.",
+        "blockData": "Block Data",
+        "blockDataHelper": "Show data useful for debugging.",
+        "blockDataBtn": "Show Block Data",
+        "blockDataError": "There was an error, your block data could not be retrieved.",
+        "blockDataTitle": "Your Block Data",
+        "blockDataCopy": "Copy to your Clipboard"
       },
       "transaction": {
         "sectionName": "Transactions",

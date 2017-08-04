@@ -3,6 +3,8 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../SimpleMessage';
+import Dialog from '../../modals/Dialog';
+import { clipboard } from 'electron';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -32,6 +34,7 @@ export default class extends baseVw {
       'click .js-showConnectionManagement': 'showConnectionManagement',
       'click .js-resync': 'clickResync',
       'click .js-purge': 'clickPurge',
+      'click .js-blockData': 'clickBlockData',
     };
   }
 
@@ -98,6 +101,46 @@ export default class extends baseVw {
       })
       .done(() => {
         this.getCachedEl('.js-purgeComplete').removeClass('hide');
+      });
+  }
+
+  clickBlockData() {
+    this.showBlockData();
+  }
+
+  /**
+   * Calls the server to retrieve and display information about the block the transactions are on
+   */
+  showBlockData() {
+    this.getCachedEl('.js-blockData').addClass('processing');
+
+    this.blockData = $.get(app.getServerUrl('wallet/status'))
+      .always(() => {
+        this.getCachedEl('.js-blockData').removeClass('processing');
+      })
+      .fail((xhr) => {
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('settings.advancedTab.server.blockDataError'),
+          failReason);
+      })
+      .done((data) => {
+        const buttons = [{
+          text: app.polyglot.t('settings.advancedTab.server.blockDataCopy'),
+          fragment: 'copyBlockData',
+        }];
+        const message = `<p><b>Best Hash:</b><br> ${data.bestHash}</p><p><b>Height:</b><br>` +
+          `${data.height}</p>`;
+        const blockDataDialog = new Dialog({
+          title: app.polyglot.t('settings.advancedTab.server.blockDataTitle'),
+          message,
+          buttons,
+          showCloseButton: true,
+          removeOnClose: true,
+        }).render().open();
+        this.listenTo(blockDataDialog, 'click-copyBlockData', () => {
+          clipboard.writeText(`Best Hash: ${data.bestHash} Height: ${data.height}`);
+        });
       });
   }
 
@@ -179,6 +222,7 @@ export default class extends baseVw {
         },
         isSyncing: this.resync && this.resync.state() === 'pending',
         isPurging: this.purge && this.purge.state() === 'pending',
+        isGettingBlockData: this.blockData && this.blockData.state() === 'pending',
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));

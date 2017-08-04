@@ -165,6 +165,24 @@
               </div>
             </div>
           </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.blockData') %>
+              </label>
+              <div class="clrT2 txSm">
+                <%= ob.polyT('settings.advancedTab.server.blockDataHelper') %>
+              </div>
+            </div>
+            <div class="col9">
+              <div class="flexVCent gutterH">
+                <%= ob.processingButton({
+                className: `btn clrP clrBr clrSh2 js-blockData ${ob.isGettingBlockData ? 'processing' : ''}`,
+                btnText: ob.polyT('settings.advancedTab.server.blockDataBtn'),
+                }) %>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>
