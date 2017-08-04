@@ -196,7 +196,7 @@ export default class Profile extends BaseModel {
   }
 }
 
-const maxCachedProfiles = 1000;
+const maxCachedProfiles = 500;
 const profileCacheExpires = 1000 * 60 * 60;
 const profileCache = new Map();
 let profileCacheExpiredInterval;
@@ -234,12 +234,16 @@ export function getCachedProfiles(peerIds = []) {
   let post;
   let socket;
 
-  // if (!profileCacheExpiredInterval) {
-  //   // Check every few minutes and clean up any expired cached profiles
-  //   profileCacheExpiredInterval = setInterval(() => {
-
-  //   }, 1000 * 60 * 5);
-  // }
+  if (!profileCacheExpiredInterval) {
+    // Check every few minutes and clean up any expired cached profiles
+    profileCacheExpiredInterval = setInterval(() => {
+      profileCache.forEach((cached, key) => {
+        if (Date.now() - cached.createdAt >= profileCacheExpires) {
+          expireCachedProfile(key);
+        }
+      });
+    }, 1000 * 60 * 5);
+  }
 
   peerIds.forEach(id => {
     let cached = profileCache.get(id);
@@ -251,6 +255,19 @@ export function getCachedProfiles(peerIds = []) {
     }
 
     if (!cached) {
+      // if cache is full, remove the oldest entry to make room for the new one
+      const keys = Array.from(profileCache.keys());
+      if (keys.length >= maxCachedProfiles) {
+        const cachedItemToRemove = profileCache.get(keys[0]);
+        // The deferred has almost certainly long been resolved, but just in case
+        // it's still pending, we'll reject it.
+        cachedItemToRemove.deferred.reject({
+          errCode: 'CACHE_FULL',
+          error: 'Entry removed because cache was full.',
+        });
+        profileCache.delete(keys[0]);
+      }
+
       const deferred = $.Deferred();
       profileCache.set(id, {
         deferred,
