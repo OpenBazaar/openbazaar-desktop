@@ -365,7 +365,6 @@
         "resync": "Resync Transactions",
         "resyncHelper": "Press this button if transactions are missing",
         "resyncBtn": "Resync",
-        "resyncProgress": "Resyncing your transaction. Do not close or turn off OpenBazaar. You can close this panel and use other parts of the app. Check your Wallet or Transactions in a few minutes to see if they have updated.",
         "resyncComplete": "Your transactions have been resynchronized.",
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",

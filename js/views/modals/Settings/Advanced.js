@@ -55,7 +55,6 @@ export default class extends baseVw {
 
   resynchronize() {
     this.getCachedEl('.js-resync').addClass('processing');
-    this.getCachedEl('.js-resyncProgress').removeClass('hide');
     this.getCachedEl('.js-resyncComplete').addClass('hide');
 
     this.resync = $.post(app.getServerUrl('wallet/resyncblockchain'))
@@ -69,7 +68,6 @@ export default class extends baseVw {
           failReason);
       })
       .done(() => {
-        this.getCachedEl('.js-resyncProgress').addClass('hide');
         this.getCachedEl('.js-resyncComplete').removeClass('hide');
       });
   }
