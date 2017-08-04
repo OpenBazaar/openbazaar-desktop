@@ -191,6 +191,7 @@ export default class extends baseVw {
           ...(this.localSettings.validationError || {}),
         },
         isPurging: this.purge && this.purge.state() === 'pending',
+        isGettingBlockData: this.blockData && this.blockData.state() === 'pending',
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));
