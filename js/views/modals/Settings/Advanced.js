@@ -62,6 +62,7 @@ export default class extends baseVw {
         this.getCachedEl('.js-resync').removeClass('processing');
       })
       .fail((xhr) => {
+        if (xhr.statusText === 'abort') return;
         const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
         openSimpleMessage(
           app.polyglot.t('settings.advancedTab.server.resyncError'),
