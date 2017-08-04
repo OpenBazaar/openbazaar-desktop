@@ -83,21 +83,6 @@ export default class extends BaseVw {
       this.getCachedEl('.js-notifUnreadBadge').addClass('hide');
       this.stopListening(e.socket, 'message', this.onSocketMessage);
     });
-
-    this.boundWinFocusHandler = this.onWinFocus.bind(this);
-    this.boundBlurFocusHandler = this.onWinBlur.bind(this);
-    $(window).on('focus', this.boundWinFocusHandler);
-    $(window).on('blur', this.boundBlurFocusHandler);
-  }
-
-  onWinFocus() {
-    ipcRenderer.send('set-badge-count', 0);
-  }
-
-  onWinBlur() {
-    if (this.unreadNotifCount) {
-      ipcRenderer.send('set-badge-count', this.unreadNotifCount);
-    }
   }
 
   onSocketMessage(e) {
@@ -106,9 +91,9 @@ export default class extends BaseVw {
     if (notif) {
       if (notif.type === 'unfollow') return;
       this.unreadNotifCount = (this.unreadNotifCount || 0) + 1;
+      ipcRenderer.send('set-badge-count', this.unreadNotifCount);
 
       if (!document.hasFocus()) {
-        ipcRenderer.send('set-badge-count', this.unreadNotifCount);
         const notifDisplayData = getNotifDisplayData(notif, { native: true });
         const nativeNotifData = {
           silent: true,
@@ -188,9 +173,7 @@ export default class extends BaseVw {
     if (count === this._unreadNotifCount) return;
     this._unreadNotifCount = count;
     this.renderUnreadNotifCount();
-    if (!document.hasFocus()) {
-      ipcRenderer.send('set-badge-count', this.unreadNotifCount);
-    }
+    ipcRenderer.send('set-badge-count', this.unreadNotifCount);
   }
 
   fetchUnreadNotifCount() {
@@ -334,10 +317,12 @@ export default class extends BaseVw {
     e.stopPropagation();
   }
 
-  toggleNotifications() {
-    const isOpen = this.getCachedEl('.js-notifContainer').hasClass('open');
+  isNotificationsOpen() {
+    return this.getCachedEl('.js-notifContainer').hasClass('open');
+  }
 
-    if (isOpen) {
+  toggleNotifications() {
+    if (this.isNotificationsOpen()) {
       this.closeNotifications();
       this.$navOverlay.removeClass('open');
     } else {
@@ -366,6 +351,7 @@ export default class extends BaseVw {
       ...options,
     };
 
+    if (!this.isNotificationsOpen()) return;
     if (opts.closeNavList) this.$navList.removeClass('open');
     this.getCachedEl('.js-notifContainer').removeClass('open');
     if (opts.closeOverlay) this.$navOverlay.removeClass('open');
@@ -457,8 +443,6 @@ export default class extends BaseVw {
   remove() {
     if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
     $(document).off('click', this.boundOnDocClick);
-    $(window).off('focus', this.boundWinFocusHandler);
-    $(window).off('blur', this.boundBlurFocusHandler);
     super.remove();
   }
 

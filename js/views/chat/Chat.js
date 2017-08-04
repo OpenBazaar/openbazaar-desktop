@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import '../../utils/velocity';
-import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getSocket } from '../../utils/serverConnect';
