@@ -147,6 +147,7 @@ export function getNotifDisplayData(attrs, options = {}) {
     const disputeeName = opts.native ?
       getName(attrs.disputeeHandle, attrs.disputeeId) :
       `<a href="#${attrs.disputeeId}">${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
+    route = `#transactions/cases?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.disputeUpdate', {
       disputerName,
       disputeeName,
@@ -169,12 +170,13 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t('notifications.text.disputeAccepted', {
       otherPartyName,
     });
-  } else if (attrs.type === 'follow') {
+  } else if (attrs.type === 'follow' || attrs.type === 'moderatorAdd' ||
+    attrs.type === 'moderatorRemove') {
     const name = opts.native ?
       getName(attrs.handle, attrs.peerId) :
       `<a href="#${attrs.peerId}">${getName(attrs.handle, attrs.peerId)}</a>`;
     route = `#${attrs.peerId}`;
-    text = app.polyglot.t('notifications.text.follow', {
+    text = app.polyglot.t(`notifications.text.${attrs.type}`, {
       name,
     });
   }

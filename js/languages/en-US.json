@@ -89,8 +89,8 @@
       "disputeClose": "The dispute with %{otherPartyName} has been closed.",
       "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
       "follow": "%{name} has followed you.",
-      "modAdd": "%{name} has added you as a moderator.",
-      "modRemove": "%{name} has removed you as a moderator."
+      "moderatorAdd": "%{name} has added you as a moderator.",
+      "moderatorRemove": "%{name} has removed you as a moderator."
     }
   },
   "pageNav": {

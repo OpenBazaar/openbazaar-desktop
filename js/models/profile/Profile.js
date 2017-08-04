@@ -229,7 +229,7 @@ function expireCachedProfile(peerId) {
  */
 export function getCachedProfiles(peerIds = []) {
   if (!(Array.isArray(peerIds))) {
-    throw new Error('Please provide a list of peerIds or a single peerId as a string.');
+    throw new Error('Please provide a list of peerIds.');
   }
 
   if (!peerIds.length) {
@@ -242,7 +242,6 @@ export function getCachedProfiles(peerIds = []) {
     }
   });
 
-  console.log(`fetching ${peerIds.join(' ,')}`);
   const promises = [];
   const profilesToFetch = [];
   let socket;
@@ -268,7 +267,6 @@ export function getCachedProfiles(peerIds = []) {
     }
 
     if (!cached) {
-      console.log('gotz no cache');
       // if cache is full, remove the oldest entry to make room for the new one
       const keys = Array.from(profileCache.keys());
       if (keys.length >= maxCachedProfiles) {
@@ -288,21 +286,25 @@ export function getCachedProfiles(peerIds = []) {
         createdAt: Date.now(),
       });
       profilesToFetch.push(id);
-    } else {
-      console.log('going with cached');
     }
 
-    promises.push(profileCache.get(id).deferred.promise());
+    const promise = profileCache.get(id).deferred.promise();
+
+    promise.fail(() => {
+      // If the promise fails for any reason, remove it from the cache.
+      profileCache.delete(id);
+    });
+
+    promises.push(promise);
   });
 
   if (profilesToFetch.length) {
-    console.log('hey ho lets post yo');
     $.post({
       url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
       data: JSON.stringify(profilesToFetch),
       dataType: 'json',
       contentType: 'application/json',
-    }).done(data => {
+    }).done(() => {
       socket = getSocket();
 
       if (!socket) {
@@ -317,7 +319,7 @@ export function getCachedProfiles(peerIds = []) {
       }
 
       const onSocketMessage = e => {
-        if (e.jsonData.id !== data.id) return;
+        if (!(e.jsonData.peerId && (e.jsonData.profile || e.jsonData.error))) return;
 
         if (profileCache.get(e.jsonData.peerId)) {
           if (e.jsonData.error) {
@@ -333,8 +335,6 @@ export function getCachedProfiles(peerIds = []) {
               .resolve(new Profile(e.jsonData.profile, { parse: true }));
           }
         }
-
-        socket.off(null, onSocketMessage);
       };
 
       socket.on('message', onSocketMessage);

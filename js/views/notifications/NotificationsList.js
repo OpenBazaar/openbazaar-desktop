@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import { getSocket } from '../../utils/serverConnect';
+import { getCachedProfiles } from '../../models/profile/Profile';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 import ListFetcher from './ListFetcher';
@@ -44,6 +45,23 @@ export default class extends BaseVw {
           // New notification at top
           this.renderNotifications(updateOpts.changes.added, 'prepend');
         }
+
+        updateOpts.changes.added.forEach(notif => {
+          const innerNotif = notif.get('notification');
+          const types = ['follow', 'moderatorAdd', 'moderatorRemove'];
+
+          if (types.indexOf(innerNotif.type) > -1) {
+            getCachedProfiles([innerNotif.peerId])[0]
+              .done(profile => {
+                notif.set('notification', {
+                  ...innerNotif,
+                  handle: profile.get('handle') || '',
+                  avatarHashes: profile.get('avatarHashes') &&
+                    profile.get('avatarHashes').toJSON() || {},
+                });
+              });
+          }
+        });
       }
     });
 
