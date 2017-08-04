@@ -69,7 +69,6 @@ export default class extends baseVw {
           failReason);
       })
       .done(() => {
-        // this takes several minutes, the user will probably navigate away before it's done
         this.getCachedEl('.js-resyncProgress').addClass('hide');
         this.getCachedEl('.js-resyncComplete').removeClass('hide');
       });
