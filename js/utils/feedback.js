@@ -18,6 +18,8 @@ export function setFeedbackOptions() {
     name: profile.name || "name data missing",
     email: contactInfo.email || "email data missing",
     properties: {
+      settingsReadable: !!app.settigs,
+      profileReadable: !!app.profile,
       peerID: profile.peerID || "peerID data missing",
       vendor: profile.vendor || "vendor data missing",
       clientVersion: version,
