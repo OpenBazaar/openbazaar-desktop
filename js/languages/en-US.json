@@ -70,7 +70,19 @@
     "notConnectedMenuItem": "Not Connected",
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
-    "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar"
+    "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
+    "toolTip": {
+      "back": "Back",
+      "forward": "Forward",
+      "refresh": "Refresh",
+      "close": "Close",
+      "min": "Minimize",
+      "max": "Maximize",
+      "discover": "Discover",
+      "wallet": "Wallet",
+      "notifications": "Notifications",
+      "nav": "Navigation"
+    }
   },
   "chat": {
     "fetchingConversations": "Retrieving your chat conversations…",

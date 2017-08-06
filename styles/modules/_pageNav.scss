@@ -8,8 +8,8 @@
 
     .btn,
     .iconBtn {
-      height: auto; //collapse the height of elements in the nav bar to leave draggable areas around them
-      line-height: 1em;
+      height: 20px;
+      margin-top: 7px;
 
       &.navWalletBtn {
         padding: 0 10px;
@@ -19,6 +19,7 @@
     .barBtn {
       height: 28px;
       padding: 9px;
+      margin-top: 0;
     }
 
     .iconPad {
@@ -30,11 +31,14 @@
       margin: auto $pad;
     }
 
+    .navBtn {
+      height: 34px;
+      width: 34px;
+    }
+
     .discoverButton {
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      height: 34px;
-      width: 34px;
     }
 
     .discoverCallout {
@@ -159,13 +163,13 @@
           margin-right: 0;
         }
 
-        span {
+        i {
           visibility: hidden;
           font-size: 10px;
         }
       }
 
-      &:hover span {
+      &:hover i {
         visibility: visible;
       }
     }
@@ -182,7 +186,7 @@
         margin-right: 8px;
         height: 30px;
 
-        span {
+        i {
           font-size: 30px;
           line-height:1em;
         }
@@ -193,7 +197,7 @@
           border-bottom-width: 1px;
           border-bottom-style: solid;
 
-          span {
+          i {
             visibility: hidden;
           }
         }
@@ -208,7 +212,7 @@
           height: 12px;
           order: 2;
 
-          span {
+          i {
             visibility: hidden;
           }
         }

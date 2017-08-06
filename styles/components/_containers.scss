@@ -298,6 +298,9 @@
 }
 
 .toolTip {
+  // Adds a tooltip that gets its text from the data-tip attribute.
+  // You can't put this on a class that already had before and after rules, like an icon.
+  // To add a tooltip to an icon, wrap it in another element, and put the tooltip on that.
   position: relative;
   cursor: pointer;
 
