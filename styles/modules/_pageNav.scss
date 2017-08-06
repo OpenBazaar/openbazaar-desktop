@@ -150,6 +150,12 @@
         &.navClose {
           background-color: #FF6058;
           border: solid 1px #E1473F;
+
+          &.toolTip:before {
+            // shift the tooltip so it doesn't extend off screen
+            left: 30%;
+            transform: translateX(-30%);
+          }
         }
 
         &.navMin {
@@ -173,6 +179,12 @@
         visibility: visible;
       }
     }
+
+    .navListBtn.toolTip:before {
+      // shift the tooltip so it doesn't extend off screen
+      left: 85%;
+      transform: translateX(-85%);
+    }
   }
 
   &.winStyleWindowControls {
@@ -184,21 +196,24 @@
 
       a {
         margin-right: 8px;
-        height: 30px;
+        height: 34px;
 
         i {
-          font-size: 30px;
+          font-size: 34px;
           line-height:1em;
         }
 
         &.navMin {
           order: 1;
-          height: 12px;
-          border-bottom-width: 1px;
-          border-bottom-style: solid;
 
           i {
-            visibility: hidden;
+            display: block;
+            height: 22px;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            &:before {
+              visibility: hidden;
+            }
           }
         }
 
@@ -207,13 +222,19 @@
         }
 
         &.navMax {
-          border-width: 1px;
-          border-style: solid;
-          height: 12px;
+          display: inline-flex;
+          align-items: center;
           order: 2;
 
           i {
-            visibility: hidden;
+            display: block;
+            border-width: 1px;
+            border-style: solid;
+            width: 12px;
+            height: 12px;
+            &:before{
+              visibility: hidden;
+            }
           }
         }
       }
