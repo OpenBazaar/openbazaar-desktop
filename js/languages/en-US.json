@@ -649,7 +649,7 @@
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",
           "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You do not have sufficient funds to add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
           "btnConfirmSend": "Send"
