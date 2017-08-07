@@ -1,7 +1,7 @@
 import app from '../app';
 import { version } from '../../package.json';
-const os = require('os');
-// TODO: make that an import above
+import * as os from 'os';
+
 
 /*
  * Sets the options for the feedback tool
@@ -15,24 +15,23 @@ export function setFeedbackOptions() {
 
   window.doorbellOptions = {
     appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
-    name: profile.name || "name data missing",
-    email: contactInfo.email || "email data missing",
+    name: profile.name || 'name data missing',
+    email: contactInfo.email || 'email data missing',
     properties: {
       settingsReadable: !!app.settigs,
       profileReadable: !!app.profile,
-      peerID: profile.peerID || "peerID data missing",
-      vendor: profile.vendor || "vendor data missing",
+      peerID: profile.peerID || 'peerID data missing',
+      vendor: profile.vendor || 'vendor data missing',
       clientVersion: version,
       serverVersion,
       contactInfo,
       systemLanguage: navigator.language,
       numberOfCPUs: os.cpus().length,
       cpu: os.cpus()[0],
-      RAMtotal: ((os.totalmem())/1048576).toFixed(2),
-      RAMfree: ((os.freemem())/1048576).toFixed(2),
+      RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
+      RAMfree: ((os.freemem()) / 1048576).toFixed(2),
     },
   };
-  console.log(window.doorbellOptions)
 }
 
 /*
