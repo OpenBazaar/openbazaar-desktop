@@ -23,7 +23,7 @@
     }
 
     .iconPad {
-      padding: 0 5px; 
+      padding: 0 5px;
     }
 
     .pageNavCenter  {
@@ -104,7 +104,7 @@
       top: -2px;
       right: 7px;
       width: 16px;
-      height: 100%;      
+      height: 100%;
     }
   }
 
@@ -153,8 +153,8 @@
 
           &.toolTip:before {
             // shift the tooltip so it doesn't extend off screen
-            left: 30%;
-            transform: translateX(-30%);
+            left: 20%;
+            transform: translateX(-20%);
           }
         }
 
@@ -247,7 +247,7 @@
                               // the left padding needs to be low
                               // to allow the mouse over / out of
                               // the Connected Server list item to
-                              // work properly. 
+                              // work properly.
     right: -$pad; // compensate for padding
 
     .navList {
@@ -312,7 +312,7 @@
       }
 
       .serverList {
-        .listItem {        
+        .listItem {
           & > span {
             padding-left: 15px;
             position: relative;
@@ -326,7 +326,7 @@
         }
       }
     }
-  }  
+  }
 
   .navOverlay {
     display: none;
