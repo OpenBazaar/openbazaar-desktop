@@ -424,7 +424,7 @@
       "languagesHelper": "Enter all of the languages you support (ie: you can communicate clearly in).",
       "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
-      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
+      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them, unless they violate the terms described above.",
       "status":{
         "saving": "Saving moderation settings…",
         "done": "Moderation settings saved.",
