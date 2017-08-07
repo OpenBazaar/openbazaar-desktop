@@ -305,6 +305,9 @@ export default class extends BaseModel {
             });
           }
 
+          // If the shipping regions are set to 'ALL', we'll replace with a list of individual
+          // countries, which is what our UI is deisgned to work with. If the list remains
+          // unchanged, it will be converted back to 'ALL' in sync.
           if (shipOpt.regions && shipOpt.regions.length && shipOpt.regions[0] === 'ALL') {
             parsedResponse.shippingOptions[shipOptIndex].regions =
               Object.keys(getIndexedCountries());
