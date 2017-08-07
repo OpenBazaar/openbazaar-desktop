@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
+import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
@@ -211,6 +212,14 @@ export default class extends BaseModel {
 
         // remove the hash
         delete options.attrs.hash;
+
+        // If all countries are individually provided as shipping regions, we'll send
+        // 'ALL' to the server.
+        options.attrs.shippingOptions.forEach(shipOpt => {
+          if (_.isEqual(Object.keys(getIndexedCountries()), shipOpt.regions)) {
+            shipOpt.regions = ['ALL'];
+          }
+        });
       } else {
         options.url = options.url ||
           app.getServerUrl(`ob/listing/${this.get('slug')}`);
@@ -294,6 +303,13 @@ export default class extends BaseModel {
                   .services[serviceIndex].price = 0;
               }
             });
+          }
+
+          // If the shipping regions are set to 'ALL', we'll replace with a list of individual
+          // countries, which is what our UI is designed to work with.
+          if (shipOpt.regions && shipOpt.regions.length && shipOpt.regions[0] === 'ALL') {
+            parsedResponse.shippingOptions[shipOptIndex].regions =
+              Object.keys(getIndexedCountries());
           }
         });
       }
