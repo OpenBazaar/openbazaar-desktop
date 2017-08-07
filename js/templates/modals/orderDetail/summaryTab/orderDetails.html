@@ -50,7 +50,7 @@
           <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
             <div><%= ob.order.shipping.shipTo %></div>
             <% if (ob.order.shipping.address) { %>
-            <div><%= ob.order.shipping.address %></div>
+            <div><%= ob.order.shipping.address.replace(/, /g, ',<br>') %></div>
             <% } %>
             <% if (addressLine3) { %>
             <div><%= addressLine3 %></div>
@@ -66,7 +66,7 @@
               if (addressLine3) clipboardAddress.push(addressLine3);
               if (addressLine4) clipboardAddress.push(addressLine4);
               clipboardAddress = clipboardAddress.join('\n');
-            %>  
+            %>
             <div class="gutterH">
               <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
               <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
@@ -85,7 +85,7 @@
                   <div><%= item.couponCodes.join(', ') %></div>
                 <% } else { %>
                   <div><%= ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
-                <% } %>              
+                <% } %>
               </div>
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
@@ -105,7 +105,7 @@
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
                 <div><%= priceText %></div>
               </div>
-            </div>            
+            </div>
           </div>
         </div>
       </div>
