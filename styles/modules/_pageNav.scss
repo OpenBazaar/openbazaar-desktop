@@ -34,6 +34,10 @@
     .navBtn {
       height: 34px;
       width: 34px;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
 
     .discoverButton {
@@ -150,12 +154,6 @@
         &.navClose {
           background-color: #FF6058;
           border: solid 1px #E1473F;
-
-          &.toolTip:before {
-            // shift the tooltip so it doesn't extend off screen
-            left: 20%;
-            transform: translateX(-20%);
-          }
         }
 
         &.navMin {
