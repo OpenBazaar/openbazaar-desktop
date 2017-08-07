@@ -187,6 +187,7 @@ export default class extends baseVw {
         userCurrency: app.settings.get('localCurrency'),
         timeAgo: this.renderedTimeAgo,
         isTestnet: !!app.serverConfig.testnet,
+        walletBalance: app.walletBalance.get('confirmed') || 0,
         ...this._state,
       }));
     });

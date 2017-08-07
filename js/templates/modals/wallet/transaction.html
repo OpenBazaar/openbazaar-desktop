@@ -75,7 +75,7 @@
     <div class="flexHRight">
       <div class="btnStrip">
         <a class="btn clrP clrBr clrSh2" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
-        <% if (ob.canBumpFee && ob.status === 'STUCK') { %>
+        <% if (ob.canBumpFee && ob.status === 'STUCK' || true) { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
             btnText: ob.polyT('wallet.transactions.transaction.retryTransactionBtn')
@@ -100,13 +100,22 @@
           btcAmount: ob.formatCurrency(estimatedFee, 'BTC', { useBtcSymbol: false }),
         });
       }
+
+      let insufficientFunds = !ob.fetchingEstimatedFee && ob.walletBalance < ob.estimatedFee;
   %>
   <div class="posR">
     <div class="<% if (ob.fetchingEstimatedFee) print('invisible') %>">
-      <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.body', {
-        fiatBtcPairing: estimatedFeeCombo,
-        asterisk: '<span>*</span>',
-      }) %></p>
+      <% if (!insufficientFunds) { %>
+        <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.body', {
+          fiatBtcPairing: estimatedFeeCombo,
+          asterisk: '<span>*</span>',
+        }) %></p>
+      <% } else { %>
+        <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.insufficientFundsBody', {
+          fiatBtcPairing: estimatedFeeCombo,
+          asterisk: '<span>*</span>',
+        }) %></p>      
+      <% } %>
       <p class="clrT2 tx6"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.subText', {
         asterisk: '<span>*</span>',
       }) %></p>
@@ -120,7 +129,7 @@
   <hr class="clrBr row" />
   <div class="flexHRight flexVCent gutterHLg buttonBar">
     <a class="js-retryConfirmCancel"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnCancel') %></a>
-    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmRetrySend <% if (ob.fetchingEstimatedFee) print('disabled') %>"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnConfirmSend') %></a>
+    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmRetrySend <% if (ob.fetchingEstimatedFee || insufficientFunds) print('disabled') %>"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnConfirmSend') %></a>
   </div>
   <% } %>
 </div>

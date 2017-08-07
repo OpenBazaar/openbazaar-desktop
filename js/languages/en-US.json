@@ -645,10 +645,11 @@
         "incomingText": "%{fiatBtcPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "View Details",
-        "retryTransactionBtn": "Retry",
+        "retryTransactionBtn": "Increase Fee",
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",
-          "body": "%{fiatBtcPairing}%{asterisk} will be added to retry the payment",
+          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You do not have sufficient funds to add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
           "btnConfirmSend": "Send"
