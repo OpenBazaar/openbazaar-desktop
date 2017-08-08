@@ -34,8 +34,8 @@ export default class extends baseVw {
       this.listenTo(app.ownFollowing, 'sync update', () => {
         this.followedByYou = followedByYou(this.model.id);
         this.getCachedEl('.js-followBtn .js-btnText').text(
-          this.followedByYou ? app.polyglot.t('userPage.follow') :
-            app.polyglot.t('userPage.unfollow')
+          this.followedByYou ? app.polyglot.t('userPage.unfollow') :
+            app.polyglot.t('userPage.follow')
         );
       });
     }
