@@ -70,7 +70,16 @@
     "notConnectedMenuItem": "Not Connected",
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
-    "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar"
+    "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
+    "toolTip": {
+      "back": "Back",
+      "forward": "Forward",
+      "refresh": "Refresh",
+      "discover": "Discover",
+      "wallet": "Wallet",
+      "notifications": "Notifications",
+      "nav": "Navigation"
+    }
   },
   "chat": {
     "fetchingConversations": "Retrieving your chat conversations…",
@@ -424,7 +433,7 @@
       "languagesHelper": "Enter all of the languages you support (ie: you can communicate clearly in).",
       "acceptGuidelines": "I have read the recommended %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "OpenBazaar Dispute Resolution Guidelines",
-      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them.",
+      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them, unless they violate the terms described above.",
       "status":{
         "saving": "Saving moderation settings…",
         "done": "Moderation settings saved.",
@@ -636,10 +645,11 @@
         "incomingText": "%{fiatBtcPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "View Details",
-        "retryTransactionBtn": "Retry",
+        "retryTransactionBtn": "Increase Fee",
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",
-          "body": "%{fiatBtcPairing}%{asterisk} will be added to retry the payment",
+          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
           "btnConfirmSend": "Send"

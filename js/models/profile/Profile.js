@@ -1,10 +1,10 @@
-import BaseModel from '../BaseModel';
+import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 import app from '../../app';
+import BaseModel from '../BaseModel';
 import Image from './Image';
 import Moderator from './Moderator';
 import Colors from './Colors';
 import Contact from './Contact';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
