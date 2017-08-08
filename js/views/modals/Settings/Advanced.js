@@ -3,6 +3,8 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../SimpleMessage';
+import Dialog from '../../modals/Dialog';
+import { clipboard } from 'electron';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -30,7 +32,9 @@ export default class extends baseVw {
       'click .js-smtpContainer input[type="reset"]': 'resetSMTPFields',
       'click .js-save': 'save',
       'click .js-showConnectionManagement': 'showConnectionManagement',
+      'click .js-resync': 'clickResync',
       'click .js-purge': 'clickPurge',
+      'click .js-blockData': 'clickBlockData',
     };
   }
 
@@ -46,6 +50,30 @@ export default class extends baseVw {
 
   getFormData(subset = this.$formFields) {
     return super.getFormData(subset);
+  }
+
+  clickResync() {
+    this.resynchronize();
+  }
+
+  resynchronize() {
+    this.getCachedEl('.js-resync').addClass('processing');
+    this.getCachedEl('.js-resyncComplete').addClass('hide');
+
+    this.resync = $.post(app.getServerUrl('wallet/resyncblockchain'))
+      .always(() => {
+        this.getCachedEl('.js-resync').removeClass('processing');
+      })
+      .fail((xhr) => {
+        if (xhr.statusText === 'abort') return;
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('settings.advancedTab.server.resyncError'),
+          failReason);
+      })
+      .done(() => {
+        this.getCachedEl('.js-resyncComplete').removeClass('hide');
+      });
   }
 
   clickPurge() {
@@ -73,6 +101,46 @@ export default class extends baseVw {
       })
       .done(() => {
         this.getCachedEl('.js-purgeComplete').removeClass('hide');
+      });
+  }
+
+  clickBlockData() {
+    this.showBlockData();
+  }
+
+  /**
+   * Calls the server to retrieve and display information about the block the transactions are on
+   */
+  showBlockData() {
+    this.getCachedEl('.js-blockData').addClass('processing');
+
+    this.blockData = $.get(app.getServerUrl('wallet/status'))
+      .always(() => {
+        this.getCachedEl('.js-blockData').removeClass('processing');
+      })
+      .fail((xhr) => {
+        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('settings.advancedTab.server.blockDataError'),
+          failReason);
+      })
+      .done((data) => {
+        const buttons = [{
+          text: app.polyglot.t('settings.advancedTab.server.blockDataCopy'),
+          fragment: 'copyBlockData',
+        }];
+        const message = `<p><b>Best Hash:</b><br> ${data.bestHash}</p><p><b>Height:</b><br>` +
+          `${data.height}</p>`;
+        const blockDataDialog = new Dialog({
+          title: app.polyglot.t('settings.advancedTab.server.blockDataTitle'),
+          message,
+          buttons,
+          showCloseButton: true,
+          removeOnClose: true,
+        }).render().open();
+        this.listenTo(blockDataDialog, 'click-copyBlockData', () => {
+          clipboard.writeText(`Best Hash: ${data.bestHash} Height: ${data.height}`);
+        });
       });
   }
 
@@ -139,6 +207,11 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  remove() {
+    if (this.resync) this.resync.abort();
+    super.remove();
+  }
+
   render() {
     super.render();
     loadTemplate('modals/settings/advanced.html', (t) => {
@@ -147,7 +220,9 @@ export default class extends baseVw {
           ...(this.settings.validationError || {}),
           ...(this.localSettings.validationError || {}),
         },
+        isSyncing: this.resync && this.resync.state() === 'pending',
         isPurging: this.purge && this.purge.state() === 'pending',
+        isGettingBlockData: this.blockData && this.blockData.state() === 'pending',
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));

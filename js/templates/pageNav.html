@@ -4,21 +4,27 @@
       <div class="windowControlsHolder">
         <div class="windowControls">
           <a class="navClose js-navClose">
-            <span class="ion-ios-close-empty"></span>
+            <i class="ion-ios-close-empty"></i>
           </a>
           <a class="navMin js-navMin">
-            <span class="ion-ios-minus-empty"></span>
+            <i class="ion-ios-minus-empty"></i>
           </a>
           <a class="navMax js-navMax">
-            <span class="ion-ios-plus-empty"></span>
+            <i class="ion-ios-plus-empty"></i>
           </a>
         </div>
       </div>
       <div>
         <div class="flexVCent iconPad">
-          <a class="iconBtn ion-chevron-left js-navBack"></a>
-          <a class="iconBtn ion-chevron-right js-navFwd"></a>
-          <a class="iconBtn ion-refresh js-navReload"></a>
+          <a class="iconBtn js-navBack toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.back') %>">
+            <i class="ion-chevron-left"></i>
+          </a>
+          <a class="iconBtn js-navFwd toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.forward') %>">
+            <i class="ion-chevron-right"></i>
+          </a>
+          <a class="iconBtn js-navReload toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.refresh') %>">
+            <i class="ion-refresh"></i>
+          </a>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
@@ -39,18 +45,25 @@
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box margLSm posR">
-          <a href="#search" class="discoverButton navListBtn js-discover" style="background-image: url('../imgs/obVectorIconSmall.svg')"></a>
+          <a href="#search" class="toolTipNoWrap js-discover" data-tip="<%= ob.polyT('pageNav.toolTip.discover') %>">
+            <div class="discoverButton navBtn" style="background-image: url('../imgs/obVectorIconSmall.svg')"></div>
+          </a>
           <% if (ob.showDiscoverCallout) { %>
             <div class="discoverCallout js-discoverCallout arrowBoxTop confirmBox clrP clrBr">
               <div class="tx3 txB rowSm"><%= ob.polyT('pageNav.discoverCalloutTitle') %></div>
-              <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>            
+              <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>
             </div>
           <% } %>
-          <a class="iconBtn navWalletBtn js-navWalletBtn">
-            <%= ob.walletIconTmpl() %>
+          <a class="navBtn toolTipNoWrap js-navWalletBtn"data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
+            <div class="iconBtn navWalletBtn ">
+              <%= ob.walletIconTmpl() %>
+            </div>
           </a>
-          <a class="iconBtn ion-android-notifications js-navNotifBtn"></a>
-          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+          <a class="navBtn toolTipNoWrap js-navNotifBtn" data-tip="<%= ob.polyT('pageNav.toolTip.notifications') %>">
+            <i class="iconBtn ion-android-notifications"></i>
+          </a>
+          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn toolTipNoWrap"
+             style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" data-tip="<%= ob.polyT('pageNav.toolTip.nav') %>"></a>
           <nav class="navListWrapper foldDown js-navList">
             <div class="navList clrBr listBox clrP clrSh1">
               <div class="listGroup clrP clrBr">
