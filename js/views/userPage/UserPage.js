@@ -234,8 +234,6 @@ export default class extends baseVw {
 
       this.$tabContent = this.$('.js-tabContent');
       this.$tabTitle = this.$('.js-tabTitle');
-      this.$followLbl = this.$('.js-followLbl');
-      this.$unfollowLbl = this.$('.js-unfollowLbl');
       this.$moreableBtns = this.$('.js-moreableBtn');
       this._$pageContent = null;
       this._$listingsCount = null;
