@@ -33,13 +33,10 @@ export default class extends baseVw {
 
       this.listenTo(app.ownFollowing, 'sync update', () => {
         this.followedByYou = followedByYou(this.model.id);
-        if (this.followedByYou) {
-          this.$followLbl.addClass('hide');
-          this.$unfollowLbl.removeClass('hide');
-        } else {
-          this.$followLbl.removeClass('hide');
-          this.$unfollowLbl.addClass('hide');
-        }
+        this.getCachedEl('.js-followBtn .js-btnText').text(
+          this.followedByYou ? app.polyglot.t('userPage.follow') :
+            app.polyglot.t('userPage.unfollow')
+        );
       });
     }
 
@@ -73,10 +70,12 @@ export default class extends baseVw {
     this.setState(targ.attr('data-tab'));
   }
 
-  clickFollow() {
+  clickFollow(e) {
     const type = this.followedByYou ? 'unfollow' : 'follow';
-
-    followUnfollow(this.model.id, type);
+    const $btn = $(e.target).closest('.js-followBtn');
+    $btn.addClass('processing');
+    followUnfollow(this.model.id, type)
+      .always(() => $btn.removeClass('processing'));
   }
 
   clickMessage() {
