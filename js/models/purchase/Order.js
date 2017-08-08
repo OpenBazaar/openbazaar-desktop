@@ -34,12 +34,9 @@ export default class extends BaseModel {
 
   addAddress(sAddr) {
     // this will convert and set an address from the settings
-    const shipTo = sAddr.get('name');
-    const addressArray = [];
-    if (sAddr.get('company')) addressArray.push(sAddr.get('company'));
-    if (sAddr.get('addressLineOne')) addressArray.push(sAddr.get('addressLineOne'));
-    if (sAddr.get('addressLineTwo')) addressArray.push(sAddr.get('addressLineTwo'));
-    const address = addressArray.join(', ');
+    const company = sAddr.get('company');
+    const shipTo = `${sAddr.get('name')}${company ? `, ${company}` : ''}`;
+    const address = `${sAddr.get('addressLineOne')} ${sAddr.get('addressLineTwo')}`;
     const city = sAddr.get('city');
     const state = sAddr.get('state');
     const postalCode = sAddr.get('postalCode');
