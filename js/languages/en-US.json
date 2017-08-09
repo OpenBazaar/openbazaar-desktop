@@ -773,7 +773,7 @@
     "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Something descriptive that clearly explains what you're selling",
-    "helperType": "Choose from 4 types",
+    "helperType": "Choose from 3 types",
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
