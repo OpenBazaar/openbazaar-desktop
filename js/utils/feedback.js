@@ -1,34 +1,44 @@
 import app from '../app';
+import { version } from '../../package.json';
+import * as os from 'os';
 
-const setFeedback = function () {
-  const profile = app.profile ? app.profile.toJSON() : {};
-  const contactInfo = profile.contactInfo || {};
-
-  window.doorbellOptions = {
-    appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
-    name: profile.name,
-    email: contactInfo.email,
-    properties: {
-      peerID: profile.peerID,
-      vendor: profile.vendor,
-      contactInfo,
-    },
-  };
-};
 
 /*
  * Sets the options for the feedback tool
  */
 
 export function setFeedbackOptions() {
-  setFeedback();
+  const profile = app.profile ? app.profile.toJSON() : {};
+  const contactInfo = profile.contactInfo || {};
+  const sVer = app.settings && app.settings.get('version') || '';
+  const serverVersion = sVer.substring(sVer.lastIndexOf(':') + 1, sVer.lastIndexOf('/'));
+
+  window.doorbellOptions = {
+    appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
+    name: profile.name || 'name data missing',
+    email: contactInfo.email || 'email data missing',
+    properties: {
+      settingsReadable: !!app.settings,
+      profileReadable: !!app.profile,
+      peerID: profile.peerID || 'peerID data missing',
+      vendor: profile.vendor || 'vendor data missing',
+      clientVersion: version,
+      serverVersion,
+      contactInfo,
+      systemLanguage: navigator.language,
+      numberOfCPUs: os.cpus().length,
+      cpu: os.cpus()[0],
+      RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
+      RAMfree: ((os.freemem()) / 1048576).toFixed(2),
+    },
+  };
 }
 
 /*
  * Adds the feedback tool to the page.
  */
 export function addFeedback() {
-  if (!window.doorbellOptions) setFeedback();
+  if (!window.doorbellOptions) setFeedbackOptions();
 
   (function (w, d, t) {
     let hasLoaded = false;
