@@ -35,10 +35,10 @@
           <a class="btn clrP clrBr js-createListing"><%= ob.polyT('userPage.createListing') %></a>
         <% } else { %>
           <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.message') %></a>
-          <a class="btn clrP clrBr js-followBtn">
-            <span class="js-unfollowLbl <% if(!ob.followed) print('hide') %>"><%= ob.polyT('userPage.unfollow') %></span>
-            <span class="js-followLbl <% if(ob.followed) print('hide') %>"><%= ob.polyT('userPage.follow') %></span>
-          </a>
+          <%= ob.processingButton({
+            className: `btn clrP clrBr js-followBtn`,
+            btnText: ob.followed ? ob.polyT('userPage.unfollow') : ob.polyT('userPage.follow'),
+          }) %>          
           <a class="btn clrP clrBr hide js-moreableBtn"><%= ob.polyT('userPage.block') %></a>
           <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
         <% } %>
