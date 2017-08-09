@@ -712,7 +712,7 @@
     "review": {
       "title": "%{time} by %{name}",
       "loadMore": "Load More",
-      "noReviews": "No reviews were found for this listing.",
+      "noReviews": "No reviews found",
       "showMore": "Show More",
       "showLess": "Show Less"
     },
