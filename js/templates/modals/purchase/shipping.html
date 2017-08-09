@@ -9,16 +9,18 @@
   <select id="shippingAddress">
     <% ob.userAddresses.forEach((a, i) => { %>
     <option value="<%= i %>">
-      <% let part1 = `${a.name}`;
-         part1 += a.addressLineOne ? ` ${a.addressLineOne}` : '';
-         let part2 = a.addressLineTwo ? ` ${a.addressLineTwo}` : '';
-         part2 += a.company ? `, ${a.company},` : '';
-         part2 += a.city ? ` ${a.city}` : '';
-         let part3 = a.state || a.postalCode ? ',' : '';
-         part3 += a.state ? ` ${a.state}` : '';
-         part3 += a.postalCode ? ` ${a.postalCode}` : '';
+      <% const addr = [];
+         addr.push(a.name);
+         if (a.company) addr.push(a.company);
+         if (a.addressLineOne) addr.push(a.addressLineOne);
+         if (a.addressLineTwo) addr.push(a.addressLineTwo);
+         if (a.city) addr.push(a.city);
+         const state = a.state || '';
+         const code = a.postalCode || '';
+         const stateCode = `${state ? `${state} ` : ''}${code}`;
+         if (stateCode) addr.push(stateCode);
+         print(addr.join(', '));
       %>
-      <%= `${part1}${part2}${part3}` %>
     </option>
     <% }); %>
   </select>
