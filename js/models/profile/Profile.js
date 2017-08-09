@@ -1,12 +1,12 @@
 import $ from 'jquery';
 import app from '../../app';
 import { getSocket } from '../../utils/serverConnect';
+import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import Moderator from './Moderator';
 import Colors from './Colors';
 import Contact from './Contact';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
 export default class Profile extends BaseModel {
   defaults() {

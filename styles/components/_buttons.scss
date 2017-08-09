@@ -27,6 +27,11 @@
     outline: 0;
   }
 
+  &.form {
+    // use when buttons are inline with form elements and should match their size
+    height: $inputHeight +2;
+  }
+
   .bar &:not(.barBtn) { //add barBtn to any btn that should keep standard button styling
     &:not(.normalBtn) {
       line-height: $bar;
@@ -172,6 +177,10 @@
   font-size: 2rem;
   padding: 0 12px;
   width: $buttonHeight;
+
+  &.form {
+    width: $inputHeight;
+  }
 }
 
 .iconBtnSm {

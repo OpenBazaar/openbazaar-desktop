@@ -71,6 +71,7 @@ textarea,
   line-height: $inputHeight;
 
   &.btnHeight {
+    // use to make form elements match the size of a button
     line-height: $buttonHeight;
     height: $buttonHeight;
   }
@@ -139,6 +140,8 @@ textarea {
   word-wrap: break-word;
 
   li {
+    display: flex;
+
     i {
       margin-right: 5px;
     }
