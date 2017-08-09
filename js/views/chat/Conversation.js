@@ -87,6 +87,9 @@ export default class extends baseVw {
     if (socket) {
       this.listenTo(socket, 'message', this.onSocketMessage);
     }
+
+    this.boundOnFocusin = this.onFocusIn.bind(this);
+    this.$el.on('focusin', this.boundOnFocusin);
   }
 
   get messagesPerPage() {
@@ -111,6 +114,13 @@ export default class extends baseVw {
       'blur .js-inputMessage': 'onBlurMessageInput',
       'click .js-emojiMenuTrigger': 'onClickEmojiMenuTrigger',
     };
+  }
+
+  onFocusIn() {
+    if (this.markAsReadOnFocus) {
+      this.markConvoAsRead();
+      this.markAsReadOnFocus = false;
+    }
   }
 
   onClickCloseConvo() {
@@ -170,7 +180,11 @@ export default class extends baseVw {
       this.setScrollTop(this.$convoMessagesWindow[0].scrollHeight);
 
       if (this.isOpen) {
-        this.markConvoAsRead();
+        if (document.hasFocus()) {
+          this.markConvoAsRead();
+        } else {
+          this.markAsReadOnFocus = true;
+        }
       }
     }
   }
@@ -356,7 +370,11 @@ export default class extends baseVw {
       this.messages.push(message);
 
       if (this.isOpen) {
-        this.markConvoAsRead();
+        if (document.hasFocus()) {
+          this.markConvoAsRead();
+        } else {
+          this.markAsReadOnFocus = true;
+        }
       }
 
       // We'll consider them to be done typing if an acutal message came
@@ -599,6 +617,11 @@ export default class extends baseVw {
   get $messageInput() {
     return this._$messageInput ||
       (this._$messageInput = this.$('.js-inputMessage'));
+  }
+
+  remove() {
+    this.$el.off(null, this.boundOnFocusin);
+    super.remove();
   }
 
   render() {
