@@ -54,20 +54,19 @@
               <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>
             </div>
           <% } %>
-          <a class="navBtn toolTipNoWrap js-navWalletBtn"data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
-            <div class="iconBtn navWalletBtn ">
-              <%= ob.walletIconTmpl() %>
-            </div>
+          <a class="navBtn toolTipNoWrap js-navWalletBtn" data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
+            <div class="iconBtn navWalletBtn "><%= ob.walletIconTmpl() %></div>
           </a>
           <a class="navBtn toolTipNoWrap js-navNotifBtn" data-tip="<%= ob.polyT('pageNav.toolTip.notifications') %>">
             <i class="iconBtn ion-android-notifications"></i>
+            <div class="discTn notifUnreadBadge js-notifUnreadBadge clrE1 clrTOnEmph clrBr2 clrSh2 hide"></div>
           </a>
-          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn toolTipNoWrap"
-             style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" data-tip="<%= ob.polyT('pageNav.toolTip.nav') %>"></a>
+          <div class="js-notifContainer notifContainer foldDown"></div>
+          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn toolTipNoWrap" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" data-tip="<%= ob.polyT('pageNav.toolTip.nav') %>"></a>
           <nav class="navListWrapper foldDown js-navList">
             <div class="navList clrBr listBox clrP clrSh1">
               <div class="listGroup clrP clrBr">
-                <div class="listItem js-navListItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
+                <div class="listItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
               </div>
               <div class="listGroup clrP clrBr">
                 <a class="listItem connectedServerListItem js-connectedServerListItem">

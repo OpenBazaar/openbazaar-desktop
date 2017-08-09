@@ -1,0 +1,7 @@
+<h1>Notifications</h1>
+<div class="flex tabs">
+  <a class="js-tab clrBr clrT2 <% if (ob.tab === 'all') print('active') %>" data-tab="all"><%= ob.polyT('notifications.tabAll') %></a>
+  <a class="js-tab clrBr clrT2 <% if (ob.tab === 'orders') print('active') %>" data-tab="orders"><%= ob.polyT('notifications.tabOrders') %></a>
+  <a class="js-tab clrBr clrT2 <% if (ob.tab === 'followers') print('active') %>" data-tab="followers"><%= ob.polyT('notifications.tabFollowers') %></a>
+</div>
+<div class="js-tabContainer tabContainer scrollBox clrBr"></div>

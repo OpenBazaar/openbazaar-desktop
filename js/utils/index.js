@@ -235,3 +235,20 @@ export function getBlockChainTxUrl(txid, isTestnet) {
 export function getBlockChainAddressUrl(address, isTestnet) {
   return `${getBlockChainBaseUrl(isTestnet)}address/${address}`;
 }
+
+let notifAudioEl;
+
+export function playNotifSound() {
+  if (!document) {
+    throw new Error('The document object needs to be available to this function.');
+  }
+
+  if (!notifAudioEl) {
+    notifAudioEl = document.createElement('audio');
+    notifAudioEl.setAttribute('src', '../audio/notification.mp3');
+    console.log('silly');
+    window.silly = notifAudioEl;
+  }
+
+  notifAudioEl.play();
+}

@@ -33,9 +33,11 @@
   }
 
   .bar &:not(.barBtn) { //add barBtn to any btn that should keep standard button styling
-    line-height: $bar;
-    height: $bar;
-    border: none;
+    &:not(.normalBtn) {
+      line-height: $bar;
+      height: $bar;
+      border: none;
+    }
   }
 
   .barSm & {

@@ -50,19 +50,12 @@ export default class extends baseVw {
     return this._chatHeadViews;
   }
 
-  setProfile(guid, profile) {
-    // Todo: when the profile is updated on the server to include the GUID, the signature
-    // of this function can be simplified.
-
-    if (!guid) {
-      throw new Error('Please provide a guid.');
-    }
-
+  setProfile(profile) {
     if (!profile) {
       throw new Error('Please provide a Profile model.');
     }
 
-    this.profiles[guid] = profile;
+    this.profiles[profile.id] = profile;
     this.render();
   }
 
