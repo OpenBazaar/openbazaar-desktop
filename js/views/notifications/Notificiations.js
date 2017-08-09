@@ -80,7 +80,7 @@ export default class extends BaseVw {
   }
 
   createAllNotifList() {
-    const notifList = new NotificationsList({
+    const notifList = this.createChild(NotificationsList, {
       collection: new Notifications(),
     });
 
@@ -90,7 +90,7 @@ export default class extends BaseVw {
   }
 
   createOrdersNotifList() {
-    const notifList = new NotificationsList({
+    const notifList = this.createChild(NotificationsList, {
       collection: new Notifications(),
       filter: 'order,declined,cancel,refund,fulfillment,orderComplete,disputeOpen,' +
         'disputeUpdate,disputeClose,disputeAccepted',
@@ -103,7 +103,7 @@ export default class extends BaseVw {
   }
 
   createFollowersNotifList() {
-    const notifList = new NotificationsList({
+    const notifList = this.createChild(NotificationsList, {
       collection: new Notifications(),
       filter: 'follow',
     });

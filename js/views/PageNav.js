@@ -1,5 +1,5 @@
 import { remote, ipcRenderer } from 'electron';
-import { isMultihash } from '../utils';
+import { isMultihash, playNotifSound } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import Backbone from 'backbone';
 import BaseVw from './baseVw';
@@ -93,23 +93,25 @@ export default class extends BaseVw {
       this.unreadNotifCount = (this.unreadNotifCount || 0) + 1;
       ipcRenderer.send('set-badge-count', this.unreadNotifCount);
 
-      if (!document.hasFocus()) {
-        const notifDisplayData = getNotifDisplayData(notif, { native: true });
-        const nativeNotifData = {
-          silent: true,
-        };
-        if (notif.thumbnail) {
-          nativeNotifData.icon = app.getServerUrl(`ipfs/${notif.thumbnail.small}`);
-        }
-        const nativeNotif = new Notification(notifDisplayData.text, nativeNotifData);
-        nativeNotif.onclick = () => {
-          remote.getCurrentWindow().restore();
+      const notifDisplayData = getNotifDisplayData(notif, { native: true });
+      const nativeNotifData = {
+        silent: true,
+      };
 
-          if (notifDisplayData.route) {
-            location.hash = notifDisplayData.route;
-          }
-        };
+      if (notif.thumbnail) {
+        nativeNotifData.icon = app.getServerUrl(`ipfs/${notif.thumbnail.small}`);
       }
+
+      const nativeNotif = new Notification(notifDisplayData.text, nativeNotifData);
+      nativeNotif.onclick = () => {
+        remote.getCurrentWindow().restore();
+
+        if (notifDisplayData.route) {
+          location.hash = notifDisplayData.route;
+        }
+      };
+
+      playNotifSound();
     }
   }
 
