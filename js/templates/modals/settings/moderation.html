@@ -167,7 +167,10 @@
 
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
-      <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
+      <%= ob.processingButton({
+      className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save',
+      btnText: ob.polyT('settings.btnSave')
+      }) %>
     </div>
   </div>
 </div>
