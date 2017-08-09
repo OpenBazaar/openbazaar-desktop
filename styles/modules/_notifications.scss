@@ -26,13 +26,13 @@
   }
 
   .tabContainer {
-    max-height: 400px;
-    max-height: 250px;
+    max-height: 320px;
+    border-top-style: solid;
+    border-top-width: 1px;
   }
 
   .notificationsList {
-    border-width: 0;
-    border-top-width: 1px;
+    border: 0;
 
     &.noNotifications {
       text-align: center;
@@ -70,6 +70,7 @@
         border-bottom-style: solid;
         border-bottom-width: 1px;
         position: relative;
+        font-size: $tx5b;
 
         .thumbCol {
           position: relative;

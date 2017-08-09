@@ -53,10 +53,10 @@ export function getNotifDisplayData(attrs, options = {}) {
   if (attrs.type === 'order') {
     const buyerName = opts.native ?
       getName(attrs.buyerHandle, attrs.buyerId) :
-      `<a href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
     const listingTitle = opts.native ?
       attrs.title :
-      `<a href="#${attrs.buyerId}/store/${attrs.slug}">${attrs.title}</a>`;
+      `<a class="clrTEm" href="#${app.profile.id}/store/${attrs.slug}">${attrs.title}</a>`;
 
     route = `#transactions/sales?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.order', {
@@ -69,7 +69,8 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'orderConfirmation') {
     const vendorName = opts.native ?
       getName(attrs.vendorHandle, attrs.vendorId) :
-      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.vendorId}">` +
+        `${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
     route = `#transactions/purchases?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.orderConfirmation', {
       vendorName,
@@ -77,31 +78,35 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'declined') {
     const vendorName = opts.native ?
       getName(attrs.vendorHandle, attrs.vendorId) :
-      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.vendorId}">` +
+        `${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
     route = `#transactions/purchases?orderId=${attrs.orderId}`;
-    text = app.polyglot.t('notifications.text.orderDeclined', {
+    text = app.polyglot.t('notifications.text.declined', {
       vendorName,
     });
   } else if (attrs.type === 'cancel') {
     const buyerName = opts.native ?
       getName(attrs.buyerHandle, attrs.buyerId) :
-      `<a href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.buyerId}">` +
+        `${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
     route = `#transactions/sales?orderId=${attrs.orderId}`;
-    text = app.polyglot.t('notifications.text.orderCanceled', {
+    text = app.polyglot.t('notifications.text.canceled', {
       buyerName,
     });
   } else if (attrs.type === 'refund') {
     const vendorName = opts.native ?
       getName(attrs.vendorHandle, attrs.vendorId) :
-      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.vendorId}">` +
+        `${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
     route = `#transactions/purchases?orderId=${attrs.orderId}`;
-    text = app.polyglot.t('notifications.text.orderRefunded', {
+    text = app.polyglot.t('notifications.text.refunded', {
       vendorName,
     });
   } else if (attrs.type === 'fulfillment') {
     const vendorName = opts.native ?
       getName(attrs.vendorHandle, attrs.vendorId) :
-      `<a href="#${attrs.vendorId}">${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.vendorId}">` +
+        `${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
     route = `#transactions/purchases?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.fulfillment', {
       vendorName,
@@ -109,7 +114,7 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'orderComplete') {
     const buyerName = opts.native ?
       getName(attrs.buyerHandle, attrs.buyerId) :
-      `<a href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.buyerId}">${getName(attrs.buyerHandle, attrs.buyerId)}</a>`;
     route = `#transactions/sales?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.orderComplete', {
       buyerName,
@@ -119,7 +124,8 @@ export function getNotifDisplayData(attrs, options = {}) {
       // notif received by disputee
       const disputerName = opts.native ?
         getName(attrs.disputerHandle, attrs.disputerId) :
-        `<a href="#${attrs.disputerId}">${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
+        `<a class="clrTEm" href="#${attrs.disputerId}">` +
+          `${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
       route = `#transactions/${attrs.buyer === attrs.disputerId ? 'purchases' : 'sales'}` +
         `?orderId=${attrs.orderId}`;
       text = app.polyglot.t('notifications.text.disputeOpen', {
@@ -129,10 +135,12 @@ export function getNotifDisplayData(attrs, options = {}) {
       // you are the mod receiving this notification
       const disputerName = opts.native ?
         getName(attrs.disputerHandle, attrs.disputerId) :
-        `<a href="#${attrs.disputerId}">${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
+        `<a class="clrTEm" href="#${attrs.disputerId}">` +
+          `${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
       const disputeeName = opts.native ?
         getName(attrs.disputeeHandle, attrs.disputeeId) :
-        `<a href="#${attrs.disputeeId}">${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
+        `<a class="clrTEm" href="#${attrs.disputeeId}">` +
+          `${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
 
       route = `#transactions/cases?caseId=${attrs.orderId}`;
       text = app.polyglot.t('notifications.text.disputeOpenMod', {
@@ -143,10 +151,12 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'disputeUpdate') {
     const disputerName = opts.native ?
       getName(attrs.disputerHandle, attrs.disputerId) :
-      `<a href="#${attrs.disputerId}">${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.disputerId}">` +
+        `${getName(attrs.disputerHandle, attrs.disputerId)}</a>`;
     const disputeeName = opts.native ?
       getName(attrs.disputeeHandle, attrs.disputeeId) :
-      `<a href="#${attrs.disputeeId}">${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.disputeeId}">` +
+        `${getName(attrs.disputeeHandle, attrs.disputeeId)}</a>`;
     route = `#transactions/cases?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.disputeUpdate', {
       disputerName,
@@ -155,7 +165,8 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'disputeClose') {
     const otherPartyName = opts.native ?
       getName(attrs.otherPartyHandle, attrs.otherPartyId) :
-      `<a href="#${attrs.buyerId}">${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.buyerId}">` +
+        `${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
     route = `#transactions/${attrs.buyer === attrs.otherPartyId ? 'purchases' : 'sales'}` +
       `?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.disputeClose', {
@@ -164,7 +175,8 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'disputeAccepted') {
     const otherPartyName = opts.native ?
       getName(attrs.otherPartyHandle, attrs.otherPartyId) :
-      `<a href="#${attrs.buyerId}">${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.buyerId}">` +
+        `${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
     route = `#transactions/${attrs.buyer === attrs.otherPartyId ? 'purchases' : 'sales'}` +
       `?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.disputeAccepted', {
@@ -174,7 +186,7 @@ export function getNotifDisplayData(attrs, options = {}) {
     attrs.type === 'moderatorRemove') {
     const name = opts.native ?
       getName(attrs.handle, attrs.peerId) :
-      `<a href="#${attrs.peerId}">${getName(attrs.handle, attrs.peerId)}</a>`;
+      `<a class="clrTEm" href="#${attrs.peerId}">${getName(attrs.handle, attrs.peerId)}</a>`;
     route = `#${attrs.peerId}`;
     text = app.polyglot.t(`notifications.text.${attrs.type}`, {
       name,

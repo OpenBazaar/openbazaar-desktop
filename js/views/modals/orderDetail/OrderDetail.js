@@ -44,10 +44,6 @@ export default class extends BaseModal {
       throw new Error('Please provide an Order model.');
     }
 
-    // if (typeof opts.getProfiles !== 'function') {
-    //   throw new Error('Please provide a function to retreive profiles.');
-    // }
-
     this._state = {
       ...opts.initialState || {},
     };

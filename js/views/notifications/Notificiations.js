@@ -30,7 +30,6 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-edit': 'onClickEdit',
       'click .js-tab[data-tab]': 'onClickTab',
     };
   }

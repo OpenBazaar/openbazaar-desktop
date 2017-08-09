@@ -62,6 +62,8 @@ export default class extends BaseVw {
               });
           }
         });
+
+        this.listFetcher.setState({ noResults: false });
       }
     });
 
@@ -96,7 +98,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'notificationsList navList listBox clrBr';
+    return 'notificationsList navList listBox';
   }
 
   onScroll() {

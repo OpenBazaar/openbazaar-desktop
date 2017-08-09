@@ -54,15 +54,11 @@
               <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>
             </div>
           <% } %>
-          <a class="navBtn toolTipNoWrap js-navWalletBtn"data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
-            <div class="iconBtn navWalletBtn ">
-              <%= ob.walletIconTmpl() %>
-            </div>
+          <a class="navBtn toolTipNoWrap js-navWalletBtn" data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
+            <div class="iconBtn navWalletBtn "><%= ob.walletIconTmpl() %></div>
           </a>
           <a class="navBtn toolTipNoWrap js-navNotifBtn" data-tip="<%= ob.polyT('pageNav.toolTip.notifications') %>">
             <i class="iconBtn ion-android-notifications"></i>
-          </a>
-          <a class="iconBtn ion-android-notifications posR js-navNotifBtn">
             <div class="discTn notifUnreadBadge js-notifUnreadBadge clrE1 clrTOnEmph clrBr2 clrSh2 hide"></div>
           </a>
           <div class="js-notifContainer notifContainer foldDown"></div>
