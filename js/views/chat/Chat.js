@@ -1,12 +1,11 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import '../../utils/velocity';
-import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
-import Profile from '../../models/profile/Profile';
+import Profile, { getCachedProfiles } from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ChatHeads from './ChatHeads';
 import Conversation from './Conversation';
@@ -79,7 +78,7 @@ export default class extends baseVw {
       this.open();
     }
 
-    const profilePromise = this.fetchProfile(e.view.model.id);
+    const profilePromise = this.fetchProfiles([e.view.model.id])[0];
     this._openConversation(e.view.model.id, profilePromise, e.view.model);
   }
 
@@ -287,7 +286,7 @@ export default class extends baseVw {
       profilePromise = deferred.promise();
     } else {
       // If not providing the profile, we'll fetch it.
-      profilePromise = this.fetchProfile(guid);
+      profilePromise = this.fetchProfiles([guid])[0];
     }
 
     this._openConversation(guid, profilePromise);
@@ -396,81 +395,40 @@ export default class extends baseVw {
     }
   }
 
-  /**
-   * Will return a promise that resolves to a Profile. If we have already
-   * fetched or are in the promise of fetching a Profile, then the
-   * existing promise will be returned.
-   */
-  fetchProfile(guid) {
-    if (!guid) {
-      throw new Error('Please provide a guid.');
+  fetchProfiles(peerIds) {
+    if (!Array.isArray(peerIds)) {
+      throw new Error('Please provide a list of peerIds.');
     }
 
-    const profileDeferred = this.profileDeferreds[guid];
-    let returnVal = profileDeferred;
-
-    if (!profileDeferred) {
-      this.fetchProfiles([guid]);
-      returnVal = this.profileDeferreds[guid];
+    if (!peerIds.length) {
+      throw new Error('Please provide at least one peerId');
     }
 
-    return returnVal.promise();
-  }
+    const profilePromises = getCachedProfiles(peerIds);
 
-  /**
-   * Will asynchronously (profiles returned via sockets) fetch the provided
-   * list of profiles and update the this.profileDeferreds. Will not refetch
-   * profiles that have already been fetched or are in the process of being
-   * fetched.
-   */
-  fetchProfiles(profiles) {
-    if (!_.isArray(profiles)) {
-      throw new Error('Please provide a list of profiles.');
-    }
+    profilePromises.forEach(profileFetch => {
+      profileFetch.done(profile => this.chatHeads.setProfile(profile));
+    });
 
-    const profilesToFetch = [];
-
-    if (profiles.length) {
-      profiles.forEach(profileId => {
-        if (!this.profileDeferreds[profileId]) {
-          const deferred = $.Deferred();
-          this.profileDeferreds[profileId] = deferred;
-          profilesToFetch.push(profileId);
-        }
-      });
-
-      $.post({
-        url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
-        data: JSON.stringify(profilesToFetch),
-        dataType: 'json',
-        contentType: 'application/json',
-      }).done((data) => {
-        if (this.socket) {
-          this.listenTo(this.socket, 'message', (e) => {
-            if (e.jsonData.id === data.id) {
-              const profile = new Profile(e.jsonData.profile, { parse: true });
-              this.profileDeferreds[e.jsonData.peerId].resolve(profile);
-
-              if (this.chatHeads) {
-                this.chatHeads.setProfile(e.jsonData.peerId, profile);
-              }
-            }
-          });
-        }
-      });
-    }
+    return profilePromises;
   }
 
   fetchProfileOfVisibleChatHeads() {
     if (!this.chatHeads || !this.chatHeads.views.length) return;
+    this.chatHeadProfilesFetched = this.chatHeadProfilesFetched || [];
 
     // Find which heads are in the viewport and filter out any that have already
     // had or are having their profiles fetched.
-    const profilesToFetch = this.chatHeads.views.filter(chatHead => (
-      !this.profileDeferreds[chatHead.model.get('peerId')] && isScrolledIntoView(chatHead.el)
-    )).map(chatHead => (chatHead.model.get('peerId')));
+    const profilesToFetch = this.chatHeads.views.filter(chatHead => {
+      const peerId = chatHead.model.get('peerId');
+      const alreadyFetched = this.chatHeadProfilesFetched.indexOf(peerId) > -1;
+      return !alreadyFetched && isScrolledIntoView(chatHead.el);
+    }).map(chatHead => (chatHead.model.get('peerId')));
 
-    this.fetchProfiles(profilesToFetch);
+    if (profilesToFetch.length) {
+      this.chatHeadProfilesFetched.concat(profilesToFetch);
+      this.fetchProfiles(profilesToFetch);
+    }
   }
 
   get $chatConvoContainer() {

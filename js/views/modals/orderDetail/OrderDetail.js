@@ -7,6 +7,7 @@ import {
   resolvingDispute,
   events as orderEvents,
 } from '../../../utils/order';
+import { getCachedProfiles } from '../../../models/profile/Profile';
 import loadTemplate from '../../../utils/loadTemplate';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
@@ -41,10 +42,6 @@ export default class extends BaseModal {
 
     if (!this.model) {
       throw new Error('Please provide an Order model.');
-    }
-
-    if (typeof opts.getProfiles !== 'function') {
-      throw new Error('Please provide a function to retreive profiles.');
     }
 
     this._state = {
@@ -217,7 +214,7 @@ export default class extends BaseModal {
         deferred.resolve(app.profile);
         this[profileKey] = deferred.promise();
       } else {
-        this[profileKey] = this.options.getProfiles([this[idKey]])[0];
+        this[profileKey] = getCachedProfiles([this[idKey]])[0];
       }
     }
 

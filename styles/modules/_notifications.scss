@@ -1,0 +1,114 @@
+.notifications {
+  h1 {
+    font-size: $tx3b;
+    padding: $pad $pad 0;
+    margin-bottom: 5px;
+  }
+
+  .tabs {
+    padding: 0;
+
+    & > a {
+      padding: $pad $padMd;
+      text-decoration: none;
+      font-size: $tx5;
+      font-weight: bold;
+      border-bottom-style: solid;
+      border-bottom-color: transparent;
+      position: relative;
+      bottom: -2px;
+
+      &.active, &:hover {
+        border-bottom-width: 1px;
+        border-bottom-color: inherit;
+      }
+    }
+  }
+
+  .tabContainer {
+    max-height: 320px;
+    border-top-style: solid;
+    border-top-width: 1px;
+  }
+
+  .notificationsList {
+    border: 0;
+
+    &.noNotifications {
+      text-align: center;
+
+      .fetcherContainer{
+        position: relative;
+        width: 100%;
+        height: 200px;
+
+        .listFetcher {
+          width: 100%;
+          @include center();
+        }
+      }
+    }
+
+    .listFetcher {
+      text-align: center;
+      padding: $padMd;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    .notification {
+      &:last-child {
+        .notificationListItem {
+          border-width: 0;          
+        }
+      }
+
+      .notificationListItem {
+        height: 80px;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        position: relative;
+        font-size: $tx5b;
+
+        .thumbCol {
+          position: relative;
+          width: 42px;
+
+          .btcIcon {
+            width: 32px;
+            height: 32px;
+            @include center();
+          }
+        }
+
+        .unreadBorder {
+          position: absolute;
+          display: none;
+          width: 5px;
+          top: 0;
+          bottom: 0;
+        }
+
+        &.unread {
+          .unreadBorder {
+            display: block;
+          }
+
+          .notifMsg {
+            font-weight: bold;
+          }
+        }
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        .listingImage {
+          border-radius: 0;
+        }
+      }
+    }
+  }
+}

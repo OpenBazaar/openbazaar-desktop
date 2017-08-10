@@ -236,7 +236,9 @@ export default class extends BaseVw {
       'orderComplete',
       // When a party opens a dispute the mod and the other party will get this notification
       'disputeOpen',
-      // Sent to the moderator when the other party sends their copy of the contract
+      // Sent to the moderator when the other party (the one that didn't open the dispute) sends
+      // their copy of the contract (which would occur if they were onffline when the dispute was
+      // opened and have since come online).
       'disputeUpdate',
       // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
       'disputeClose',
