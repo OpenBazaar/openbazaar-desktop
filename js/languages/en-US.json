@@ -70,7 +70,7 @@
     "noResults": "No notifications found.",
     "text": {
       "order": "%{buyerName} has purchased %{listingTitle}.",
-      "payment": "Your payment has been received.",
+      "payment": "Your payment has been delivered.",
       "orderConfirmation": "%{vendorName} has accepted your order.",
       "declined": "%{vendorName} has declined your order.",
       "canceled": "%{buyerName} has canceled their order.",
@@ -104,7 +104,8 @@
       "discover": "Discover",
       "wallet": "Wallet",
       "notifications": "Notifications",
-      "nav": "Navigation"
+      "nav": "Navigation",
+      "close": "Close"
     }
   },
   "chat": {
@@ -188,6 +189,9 @@
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
         "showLess": "less"
+      },
+      "toolTip": {
+        "contentView": "Toggle view"
       }
     },
     "mainNav": {
@@ -863,10 +867,12 @@
       "discountCodePlaceholder": "Enter a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
-      "btnAddCoupon": "+ Add Coupon"
+      "btnAddCoupon": "+ Add Coupon",
+      "btnDeleteCoupon": "Delete"
     },
     "variants": {
       "btnAddVariant": "Add Variant",
+      "btnDeleteVariant": "Delete",
       "addVariant": "+ Add Variant",
       "titleLabel": "Title",
       "titlePlaceholder": "e.g. Size, Color, Material, etc",

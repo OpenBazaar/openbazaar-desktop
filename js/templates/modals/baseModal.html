@@ -1,4 +1,4 @@
 <div class="<%= ob.modelContentClass %>">
-  <i class="jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>"></i>
+  <i class="toolTipNoWrap jsModalClose <%= ob.closeButtonClass %> <% !ob.showCloseButton && print('hide') %>" data-tip="<%= ob.polyT('pageNav.toolTip.close') %>"></i>
   <%= ob.innerContent %>
 </div>

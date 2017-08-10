@@ -30,21 +30,21 @@
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></div>
         <div class="flexExpand tx5">
           <div class="rowTn txB"><%= partyHeadings.buyer %></div>
-          <div class="flex gutterH clrT2"><%= priceLines.buyer %></div>
+          <div class="flex gutterH"><%= priceLines.buyer %></div>
         </div>
       </div>
       <div class="flex gutterH clrT">
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></span></div>
         <div class="flexExpand tx5">
           <div class="rowTn txB"><%= partyHeadings.vendor %></div>
-          <div class="flex gutterH clrT2"><%= priceLines.vendor %></div>
+          <div class="flex gutterH"><%= priceLines.vendor %></div>
         </div>
       </div>
       <div class="flex gutterH clrT">
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.moderatorAvatarHashes) %>"></span></div>
         <div class="flexExpand tx5">
           <div class="rowTn txB"><%= partyHeadings.moderator %></div>
-          <div class="flex gutterH clrT2"><%= priceLines.moderator %></div>
+          <div class="flex gutterH"><%= priceLines.moderator %></div>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
       </div>
     </div>
   </div>
-  <div class="flex gutterH clrT2">
+  <div class="flex gutterH">
     <!-- avatar col is just a spacer here -->
     <div class="avatarCol disc invisible flexNoShrink"></div>
     <div class="flexExpand tx5">
@@ -80,7 +80,7 @@
           ob.polyT('orderDetail.summaryTab.disputePayout.noteFromHeading');
       %>
       <div class="rowTn"><%= noteFromHeading %></div>
-      <div class="flex gutterH clrT2"><%= ob.resolution %></div>
+      <div class="flex gutterH"><%= ob.resolution %></div>
     </div>
   </div>
 </div>
