@@ -123,8 +123,7 @@
       },
       "typingIndicator": "%{user} is typing…",
       "deleteConvoErrorTitle": "Unable to delete conversation",
-      "deletingOverlayText": "Deleting conversation…",
-      "nativeNotifTitle": ""
+      "deletingOverlayText": "Deleting conversation…"
     }
   },
   "userPage": {
