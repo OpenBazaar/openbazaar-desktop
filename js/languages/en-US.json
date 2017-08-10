@@ -857,7 +857,10 @@
         "priceLabel": "Price",
         "pricePlaceholder": "0.00",
         "addService": "+ Add Service"
-      }
+      },
+      "toolTip": {
+        "delete": "Delete"
+      } 
     },
     "coupons": {
       "titleLabel": "Title",
@@ -868,7 +871,9 @@
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
       "btnAddCoupon": "+ Add Coupon",
-      "btnDeleteCoupon": "Delete"
+      "toolTip": {
+        "delete": "Delete"
+      } 
     },
     "variants": {
       "btnAddVariant": "Add Variant",
@@ -877,7 +882,10 @@
       "titleLabel": "Title",
       "titlePlaceholder": "e.g. Size, Color, Material, etc",
       "choicesLabel": "Choices",
-      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
+      "toolTip": {
+        "delete": "Delete"
+      } 
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",
