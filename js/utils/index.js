@@ -246,8 +246,6 @@ export function playNotifSound() {
   if (!notifAudioEl) {
     notifAudioEl = document.createElement('audio');
     notifAudioEl.setAttribute('src', '../audio/notification.mp3');
-    console.log('silly');
-    window.silly = notifAudioEl;
   }
 
   notifAudioEl.play();
