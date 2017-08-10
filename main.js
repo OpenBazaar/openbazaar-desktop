@@ -36,6 +36,8 @@ const plat = isOSWin64() ? 'win64' : process.platform;
 
 
 const feedURL = `https://updates2.openbazaar.org:5001/update/${plat}/${version}`;
+const updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
+
 global.serverLog = '';
 
 const handleStartupEvent = function () {
@@ -46,7 +48,6 @@ const handleStartupEvent = function () {
   const squirrelCommand = process.argv[1];
 
   function exeSquirrelCommand(args, cb) {
-    const updateDotExe = path.resolve(path.dirname(process.execPath), '..', 'update.exe');
     const child = childProcess.spawn(updateDotExe, args, { detached: true });
     child.on('close', cb());
   }
@@ -97,6 +98,7 @@ const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
   'openbazaard' : 'openbazaard.exe';
 const isBundledApp = _.once(() => fs.existsSync(serverPath + serverFilename));
+const canUpdate = fs.existsSync(path.resolve(updateDotExe));
 global.isBundledApp = isBundledApp;
 let localServer;
 
@@ -166,6 +168,32 @@ function preventWindowNavigation(win) {
       console.info(`Preventing navigation to: ${url}`);
     }
   });
+}
+
+let helpMenu = [
+  {
+    label: 'Documentation',
+    click() {
+      shell.openExternal('https://docs.openbazaar.org');
+    },
+  },
+];
+
+const updateMenuItem = [
+  {
+    label: 'Check for Updates...',
+    click() {
+      autoUpdater.checkForUpdates();
+    },
+  },
+  {
+    type: 'separator',
+  },
+];
+
+// only add the check for Updates option if this is a bundled app
+if (canUpdate) {
+  helpMenu = [...helpMenu, ...updateMenuItem];
 }
 
 function createWindow() {
@@ -248,26 +276,7 @@ function createWindow() {
     },
     {
       role: 'help',
-      submenu: [
-        // TODO: make this conditional if it is an installed app
-        /*
-        {
-          label: 'Check for Updates...',
-          click() {
-            autoUpdater.checkForUpdates();
-          },
-        },
-        {
-          type: 'separator',
-        },
-        */
-        {
-          label: 'Documentation',
-          click() {
-            shell.openExternal('https://docs.openbazaar.org');
-          },
-        },
-      ],
+      submenu: helpMenu,
     },
   ];
 
