@@ -105,7 +105,8 @@
       "wallet": "Wallet",
       "notifications": "Notifications",
       "nav": "Navigation",
-      "close": "Close"
+      "close": "Close",
+      "currentPrice": "Current Bitcoin price"
     }
   },
   "chat": {
