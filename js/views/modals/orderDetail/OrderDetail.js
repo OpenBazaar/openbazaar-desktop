@@ -482,7 +482,6 @@ export default class extends BaseModal {
       this.$el.html(t({
         ...state,
         ...this.model.toJSON(),
-        ownProfile: app.profile.toJSON(),
         returnText: this.options.returnText,
         type: this.type,
         getUnreadChatMessagesText: this.getUnreadChatMessagesText.bind(this),
