@@ -66,6 +66,32 @@
       "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
     }
   },
+  "notifications": {
+    "noResults": "No notifications found.",
+    "text": {
+      "order": "%{buyerName} has purchased %{listingTitle}.",
+      "payment": "Your payment has been received.",
+      "orderConfirmation": "%{vendorName} has accepted your order.",
+      "declined": "%{vendorName} has declined your order.",
+      "canceled": "%{buyerName} has canceled their order.",
+      "refunded": "%{vendorName} has refunded your order.",
+      "fulfillment": "%{vendorName} has fulfilled your order.",
+      "orderComplete": "%{buyerName} has left feedback on their order.",
+      "disputeOpen": "%{disputerName} has opened a dispute with you.",
+      "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
+      "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
+      "disputeClose": "The dispute with %{otherPartyName} has been closed.",
+      "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
+      "follow": "%{name} has followed you.",
+      "moderatorAdd": "%{name} has added you as a moderator.",
+      "moderatorRemove": "%{name} has removed you as a moderator."
+    },
+    "errorHeading": "There was an error fetching the notifications.",
+    "btnRetry": "Retry",
+    "tabAll": "All",
+    "tabOrders": "Orders",
+    "tabFollowers": "Followers"
+  },
   "pageNav": {
     "notConnectedMenuItem": "Not Connected",
     "torOnTooltip": "Tor active",
@@ -97,7 +123,8 @@
       },
       "typingIndicator": "%{user} is typing…",
       "deleteConvoErrorTitle": "Unable to delete conversation",
-      "deletingOverlayText": "Deleting conversation…"
+      "deletingOverlayText": "Deleting conversation…",
+      "nativeNotifTitle": ""
     }
   },
   "userPage": {

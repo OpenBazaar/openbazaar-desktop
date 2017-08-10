@@ -16,6 +16,7 @@ import {
   cancelOrder,
   events as orderEvents,
 } from '../../../utils/order';
+import { getCachedProfiles } from '../../../models/profile/Profile';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import Row from './Row';
@@ -36,10 +37,6 @@ export default class extends baseVw {
 
     if (types.indexOf(opts.type) === -1) {
       throw new Error('Please provide a valid type.');
-    }
-
-    if (typeof opts.getProfiles !== 'function') {
-      throw new Error('Please provide a function to retreive profiles.');
     }
 
     if (typeof opts.openOrder !== 'function') {
@@ -280,7 +277,7 @@ export default class extends baseVw {
     });
 
     if (profilesToFetch.length) {
-      this.options.getProfiles(profilesToFetch)
+      getCachedProfiles(profilesToFetch)
         .forEach(profilePromise => {
           profilePromise.done(profile => {
             const flatProfile = profile.toJSON();

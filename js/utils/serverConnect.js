@@ -44,7 +44,8 @@ function log(msg) {
 
   const logMsg = `[SERVER-CONNECT] ${msg}${EOL}`;
   debugLog += logMsg;
-  ipcRenderer.send('server-connect-log', logMsg);
+  // "if (ipcRenderer)" needed to prevent the `npm test` from bombing.
+  if (ipcRenderer) ipcRenderer.send('server-connect-log', logMsg);
 }
 
 export function getDebugLog() {
@@ -545,5 +546,6 @@ export default function connect(server, options = {}) {
   return promise;
 }
 
-ipcRenderer.send('server-connect-ready');
+// "if (ipcRenderer)" needed to prevent the `npm test` from bombing.
+if (ipcRenderer) ipcRenderer.send('server-connect-ready');
 log('Browser has been started or refreshed.');
