@@ -1,5 +1,5 @@
 <div class="<%= ob.modelContentClass %>">
-  <span class="<%= ob.closeButtonClass %> jsModalClose <% !ob.showCloseButton && print('hide') %>" data-tip="<%= ob.closeButtonTip %>">
+  <span class="<%= ob.closeButtonClass %> jsModalClose <% !ob.showCloseButton && print('hide') %>" data-tip="<%= ob.closeButtonTip || '' %>">
     <i class="<%= ob.innerButtonClass %>"></i>
   </span>
   <%= ob.innerContent %>
