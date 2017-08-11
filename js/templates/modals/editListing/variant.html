@@ -5,7 +5,7 @@
 <div class="col6 simpleFlexCol">
   <%
     let variantsErrs = [];
-    
+
     Object.keys(ob.errors).forEach(errKey => {
       if (errKey.startsWith('variants[') && errKey.endsWith('].name')) {
         variantsErrs = variantsErrs.concat(ob.errors[errKey]);
@@ -31,6 +31,8 @@
         <div class="tagsDropdown js-dropDownContainer"></div>
       </div>
     </div>
-    <a class="iconBtn ion-trash-b clrBr clrP margLSm js-btnRemoveVariant btnRemoveVariant"></a>
+    <a class="iconBtn clrBr clrP clrSh2 margLSm toolTipNoWrap js-btnRemoveVariant btnRemoveVariant" data-tip="<%= ob.polyT('editListing.variants.toolTip.delete') %>">
+      <i class="ion-trash-b"></i>
+    </a>
   </div>
 </div>
