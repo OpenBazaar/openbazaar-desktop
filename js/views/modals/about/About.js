@@ -8,6 +8,7 @@ import Donations from './Donations';
 import License from './License';
 import BTCTicker from '../../BTCTicker';
 import { version } from '../../../../package.json';
+import { ipcRenderer } from 'electron';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -73,7 +74,7 @@ export default class extends BaseModal {
 
   checkForUpdateClick() {
     console.log('checking for an update');
-    // TODO: wire this in
+    ipcRenderer.send('checkForUpdate');
   }
 
   render() {

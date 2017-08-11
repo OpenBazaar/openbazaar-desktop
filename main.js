@@ -250,7 +250,6 @@ function createWindow() {
     {
       role: 'help',
       submenu: [
-        // TODO: show this if the app is from an installer
         {
           label: 'Check for Updates...',
           click() {

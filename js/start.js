@@ -627,7 +627,7 @@ function showUpdateStatus(status = '', msg = '') {
   app.statusBar.pushMessage({
     msg: `${status ? `${status} ` : ''}${msg}`,
     type: 'message',
-    duration: 3000,
+    duration: 4000,
   });
 }
 
@@ -651,7 +651,8 @@ function updateReady() {
 ipcRenderer.on('updateAvailable', () => showUpdateStatus(app.polyglot.t('update.available')));
 ipcRenderer.on('update-not-available', () =>
   showUpdateStatus(app.polyglot.t('update.notAvailable')));
-ipcRenderer.on('error', (e, msg) => showUpdateStatus('Error:', msg));
+ipcRenderer.on('error', (e, msg) =>
+  showUpdateStatus(app.polyglot.t('update.error', { error: msg })));
 ipcRenderer.on('updateReadyForInstall', () => updateReady());
 
 
