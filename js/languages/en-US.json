@@ -14,6 +14,17 @@
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "update": {
+    "error": "There was an error checking for updates.",
+    "available": "An update is available. It will download automatically.",
+    "notAvailable": "No updates are available.",
+    "cancel": "Cancel",
+    "ready": {
+      "title": "The Update is Ready",
+      "msg": "Your update has downloaded. Click below to install it."
+    },
+    "install": "Install Now"
+  },
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",

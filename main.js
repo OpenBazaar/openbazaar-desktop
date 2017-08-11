@@ -251,7 +251,6 @@ function createWindow() {
       role: 'help',
       submenu: [
         // TODO: show this if the app is from an installer
-        /*
         {
           label: 'Check for Updates...',
           click() {
@@ -261,7 +260,6 @@ function createWindow() {
         {
           type: 'separator',
         },
-        */
         {
           label: 'Documentation',
           click() {
@@ -496,6 +494,7 @@ function createWindow() {
  */
   autoUpdater.on('error', (err, msg) => {
     console.log(msg);
+    mainWindow.send('error', msg);
   });
 
   autoUpdater.on('update-not-available', (msg) => {

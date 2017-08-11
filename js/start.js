@@ -622,6 +622,39 @@ $(window).on('beforeunload', () => {
 // Handle 'show debug log' requests from the main process.
 ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
+// Handle autoUpdate events
+function showUpdateStatus(status = '', msg = '') {
+  app.statusBar.pushMessage({
+    msg: `${status ? `${status} ` : ''}${msg}`,
+    type: 'message',
+    duration: 3000,
+  });
+}
+
+function updateReady() {
+  const updateReadyDialog = new Dialog({
+    title: app.polyglot.t('update.ready.title'),
+    message: app.polyglot.t('update.ready.msg'),
+    buttons: [{
+      text: app.polyglot.t('update.install'),
+      fragment: 'installUpdate',
+    }, {
+      text: app.polyglot.t('update.cancel'),
+      fragment: 'cancelInstall',
+    }],
+  }).on('click-installUpdate', () => ipcRenderer.send('installUpdate'))
+    .on('click-cancelInstall', () => updateReadyDialog.close())
+    .render()
+    .open();
+}
+
+ipcRenderer.on('updateAvailable', () => showUpdateStatus(app.polyglot.t('update.available')));
+ipcRenderer.on('update-not-available', () =>
+  showUpdateStatus(app.polyglot.t('update.notAvailable')));
+ipcRenderer.on('error', (e, msg) => showUpdateStatus('Error:', msg));
+ipcRenderer.on('updateReadyForInstall', () => updateReady());
+
+
 // manage publishing sockets
 // todo: break the publishing socket startup functionality
 // into its own micro-module in js/startup/
