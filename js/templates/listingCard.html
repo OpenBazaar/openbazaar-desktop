@@ -42,7 +42,10 @@
   </div>
   <% if (ob.vendor) { %>
   <a class="userIconWrapper js-userName">
-    <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap" data-tip="<%= ob.vendor.name %> <% if (ob.vendor.location) { %> 📍 <%= ob.vendor.location %><% } %>"
+    <% const vendorTip = `${ob.vendor.name}${ob.vendor.location ? `  📍  ${ob.vendor.location}` : ''}`;
+       const dataTip = ob.vendor.name ? `data-tip="${vendorTip}"` : '';
+    %>
+    <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap" <%= dataTip %>
     <% var avatarHash = ob.vendor.avatarHashes ? ob.isHiRez() ? ob.vendor.avatarHashes.small : ob.vendor.avatarHashes.tiny : ''; %>
     <% if (avatarHash) { %>
     style="background-image: url(<%= ob.getServerUrl(`ipfs/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
