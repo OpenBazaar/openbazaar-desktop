@@ -632,6 +632,7 @@ function showUpdateStatus(status = '', msg = '') {
 }
 
 function updateReady() {
+  console.log('update is ready to install, show a dialog');
   const updateReadyDialog = new Dialog({
     title: app.polyglot.t('update.ready.title'),
     message: app.polyglot.t('update.ready.msg'),

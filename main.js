@@ -506,11 +506,15 @@ function createWindow() {
   });
 
   autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
-    releaseDate, updateUrl, quitAndUpdate) => {
+    releaseDate, updateUrl) => {
     // Old way of doing things
     // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
     // .removeClass("softwareUpdateHidden");');
-    console.log(quitAndUpdate);
+    console.log('update ready for install');
+    console.log(releaseNotes);
+    console.log(releaseName);
+    console.log(releaseDate);
+    console.log(updateUrl);
     mainWindow.send('updateReadyForInstall');
   });
 
