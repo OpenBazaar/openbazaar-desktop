@@ -11,6 +11,7 @@ import urlparse from 'url-parse';
 import _ from 'underscore';
 import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
+import { addAutoUpdate } from './js/utils/autoUpdate';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 
 if (argv.userData) {
@@ -33,7 +34,6 @@ function isOSWin64() {
 }
 
 const plat = isOSWin64() ? 'win64' : process.platform;
-
 
 const feedURL = `https://updates2.openbazaar.org:5001/update/${plat}/${version}`;
 
@@ -93,6 +93,7 @@ const handleStartupEvent = function () {
 if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
+
 
 const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
@@ -479,62 +480,14 @@ function createWindow() {
     }
   });
 
+  // add the updater when the DOM is ready so it doesn't open a dialog too soon
+  mainWindow.webContents.on('dom-ready', () => addAutoUpdate(mainWindow, feedURL));
+
   // Set up protocol
   app.setAsDefaultProtocolClient('ob2');
 
   // Check for URL hijacking in the browser
   preventWindowNavigation(mainWindow);
-
-  /**
- * If there is an update available then we will send an IPC message to the
- * render process to notify the user. If the user wants to update
- * the software then they will send an IPC message back to the main process and we will
- * begin to download the file and update the software.
- */
-  autoUpdater.on('error', (err, msg) => {
-    console.log(msg);
-    mainWindow.send('error', msg);
-  });
-
-  autoUpdater.on('update-not-available', (msg) => {
-    console.log(msg);
-    mainWindow.send('updateNotAvailable');
-  });
-
-  autoUpdater.on('update-available', () => {
-    mainWindow.send('updateAvailable');
-  });
-
-  autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
-    releaseDate, updateUrl) => {
-    // Old way of doing things
-    // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
-    // .removeClass("softwareUpdateHidden");');
-    console.log('update ready for install');
-    console.log(releaseNotes);
-    console.log(releaseName);
-    console.log(releaseDate);
-    console.log(updateUrl);
-    mainWindow.send('updateReadyForInstall');
-  });
-
-  // Listen for installUpdate command to install the update
-  ipcMain.on('installUpdate', () => {
-    autoUpdater.quitAndInstall();
-  });
-
-  // Listen for checkForUpdate command to manually check for new versions
-  ipcMain.on('checkForUpdate', () => {
-    autoUpdater.checkForUpdates();
-  });
-
-  autoUpdater.setFeedURL(feedURL);
-
-  // Check for updates every hour
-  autoUpdater.checkForUpdates();
-  setInterval(() => {
-    autoUpdater.checkForUpdates();
-  }, 60 * 60 * 1000);
 }
 
 // This method will be called when Electron has finished

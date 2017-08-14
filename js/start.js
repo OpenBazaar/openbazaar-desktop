@@ -16,6 +16,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { setFeedbackOptions, addFeedback } from './utils/feedback';
+import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -622,40 +623,16 @@ $(window).on('beforeunload', () => {
 // Handle 'show debug log' requests from the main process.
 ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
-// Handle autoUpdate events
-function showUpdateStatus(status = '', msg = '') {
-  app.statusBar.pushMessage({
-    msg: `${status ? `${status} ` : ''}${msg}`,
-    type: 'message',
-    duration: 4000,
-  });
-}
-
-function updateReady() {
-  console.log('update is ready to install, show a dialog');
-  const updateReadyDialog = new Dialog({
-    title: app.polyglot.t('update.ready.title'),
-    message: app.polyglot.t('update.ready.msg'),
-    buttons: [{
-      text: app.polyglot.t('update.install'),
-      fragment: 'installUpdate',
-    }, {
-      text: app.polyglot.t('update.cancel'),
-      fragment: 'cancelInstall',
-    }],
-  }).on('click-installUpdate', () => ipcRenderer.send('installUpdate'))
-    .on('click-cancelInstall', () => updateReadyDialog.close())
-    .render()
-    .open();
-}
-
+// Handle update events from main.js
 ipcRenderer.on('updateAvailable', () => showUpdateStatus(app.polyglot.t('update.available')));
-ipcRenderer.on('update-not-available', () =>
-  showUpdateStatus(app.polyglot.t('update.notAvailable')));
+ipcRenderer.on('update-not-available', (msg) =>
+  showUpdateStatus(`${app.polyglot.t('update.notAvailable')} ${msg}`));
 ipcRenderer.on('error', (e, msg) =>
   showUpdateStatus(app.polyglot.t('update.error', { error: msg })));
-ipcRenderer.on('updateReadyForInstall', () => updateReady());
+ipcRenderer.on('updateReadyForInstall', (opts) => updateReady(opts));
 
+// Allow main.js to send messages to the console
+ipcRenderer.on('consoleMsg', (e, msg) => console.log(msg));
 
 // manage publishing sockets
 // todo: break the publishing socket startup functionality
