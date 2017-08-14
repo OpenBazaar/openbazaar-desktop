@@ -1,33 +1,24 @@
-import { Collection } from 'backbone';
-import UserShort from '../models/UserCard';
 import app from '../app';
+import { Collection } from 'backbone';
 
+export default class extends Collection {
+  constructor(models = [], options = {}) {
+    super(models, options);
 
-module.exports = Collection.extend({
-  /* we have to use the older style for this collection, the ES6 style creates a bug where models
-  cannot be removed using their ids */
-
-  initialize(models, options) {
-    if (!options.type) {
-      throw new Error('You must provide a type to the collection');
+    const types = ['followers', 'following'];
+    if (types.indexOf(options.type) === -1) {
+      throw new Error(`Please provide a type as one of ${types.join(', ')}`);
     }
 
-    this.guid = options.guid;
-    this.type = options.type;
-  },
+    if (!options.peerId) {
+      throw new Error('Please provide a peerId');
+    }
+
+    this.options = options;
+  }
 
   url() {
-    return app.getServerUrl(this.guid === app.profile.id || !this.guid ?
-      `ob/${this.type}` : `ipns/${this.guid}/${this.type}`);
-  },
-
-  model: UserShort,
-
-  parse(response) {
-    return response.map((guid) => {
-      // if a plain guid was passed in, convert it to an object
-      if (typeof guid === 'string') return { guid };
-      return guid;
-    });
-  },
-});
+    return app.getServerUrl(`ob/${this.options.type === 'followers' ? 'followers' : 'following'}` +
+      `${app.profile.id === this.options.peerId ? '' : `/${this.options.peerId}`}`);
+  }
+}

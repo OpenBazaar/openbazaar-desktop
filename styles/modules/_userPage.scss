@@ -65,15 +65,31 @@
     }
 
     .userPageFollow {
-      flex-wrap: wrap;
-      width: auto;
-      margin: 0 #{-$padMd / 2};
+      .userCards {
+        flex-wrap: wrap;
+        width: auto;
+        margin: 0 #{-$padMd / 2};
 
-      .userCard {
-        width: 33.33333333333333%;
-        flex: 0 0 auto;
-        padding: 0 $padMd / 2 $padMd $padMd / 2;
-        box-sizing: border-box;
+        .userCard {
+          width: 33.33333333333333%;
+          flex: 0 0 auto;
+          padding: 0 $padMd / 2 $padMd $padMd / 2;
+          box-sizing: border-box;
+        }
+      }
+
+      .followLoadingContainer {
+        padding: $padHg;
+        width: 100%;
+      }
+
+      &.noResults {
+        min-height: 235px;
+        position: relative;
+
+        .followLoadingContainer {
+          @include center();
+        }
       }
     }
 

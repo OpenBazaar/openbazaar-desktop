@@ -10,6 +10,7 @@ import { launchEditListingModal, launchSettingsModal } from '../../utils/modalMa
 import { getCurrentConnection } from '../../utils/serverConnect';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
+import Followers from '../../collections/Followers';
 import MiniProfile from '../MiniProfile';
 import Home from './Home';
 import Store from './Store';
@@ -120,14 +121,24 @@ export default class extends baseVw {
   createFollowersTabView(opts = {}) {
     return this.createChild(this.tabViews.Follow, {
       ...opts,
-      followType: 'Followers',
+      followType: 'followers',
+      peerId: this.model.id,
+      collection: new Followers([], {
+        peerId: this.model.id,
+        type: 'followers',
+      }),
     });
   }
 
   createFollowingTabView(opts = {}) {
     return this.createChild(this.tabViews.Follow, {
       ...opts,
-      followType: 'Following',
+      followType: 'following',
+      peerId: this.model.id,
+      collection: new Followers([], {
+        peerId: this.model.id,
+        type: 'following',
+      }),
     });
   }
 
@@ -220,6 +231,11 @@ export default class extends baseVw {
   get $listingsCount() {
     return this._$listingsCount ||
       (this._$listingsCount = this.$('.js-listingsCount'));
+  }
+
+  remove() {
+    if (this.followingFetch) this.followingFetch.abort();
+    super.remove();
   }
 
   render() {

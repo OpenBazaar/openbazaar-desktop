@@ -28,7 +28,6 @@ import { getLangByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/Settings';
 import WalletBalance from './models/wallet/WalletBalance';
-import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
@@ -258,29 +257,23 @@ function onboard() {
 }
 
 const fetchStartupDataDeferred = $.Deferred();
-let ownFollowingFetch;
-let ownFollowingFailed;
 let exchangeRatesFetch;
 let walletBalanceFetch;
 let walletBalanceFetchFailed;
 
 function fetchStartupData() {
-  ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
-    app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
   walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch ?
     app.walletBalance.fetch() : walletBalanceFetch;
 
-  $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch)
+  $.whenAll(exchangeRatesFetch, walletBalanceFetch)
     .progress((...args) => {
       const state = args[1];
 
       if (state !== 'success') {
         const jqXhr = args[0];
 
-        if (jqXhr === ownFollowingFetch) {
-          ownFollowingFailed = true;
-        } else if (jqXhr === walletBalanceFetch) {
+        if (jqXhr === walletBalanceFetch) {
           walletBalanceFetchFailed = true;
         }
       }
@@ -289,17 +282,9 @@ function fetchStartupData() {
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
-      if (ownFollowingFailed || walletBalanceFetchFailed) {
-        let title = '';
-
-        if (ownFollowingFailed) {
-          title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
-        } else {
-          title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        }
-
+      if (walletBalanceFetchFailed) {
         const retryFetchStarupDataDialog = new Dialog({
-          title,
+          title: app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title'),
           message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
           buttons: [
             {
@@ -381,9 +366,6 @@ function start() {
     app.settings.on('change:language', (settingsMd, lang) => {
       app.localSettings.save('language', getValidLanguage(lang));
     });
-
-    app.ownFollowing = new Followers(null, { type: 'following' });
-    app.ownFollowers = new Followers(null, { type: 'followers' });
 
     app.walletBalance = new WalletBalance();
 
@@ -742,21 +724,6 @@ ipcRenderer.on('close-attempt', (e) => {
     .render()
     .open();
   }
-});
-
-// update ownFollowers based on follow socket communication
-serverConnectEvents.on('connected', (connectedEvent) => {
-  connectedEvent.socket.on('message', (e) => {
-    if (e.jsonData) {
-      if (e.jsonData.notification) {
-        if (e.jsonData.notification.type === 'follow') {
-          app.ownFollowers.unshift({ guid: e.jsonData.notification.peerId });
-        } else if (e.jsonData.notification.type === 'unfollow') {
-          app.ownFollowers.remove(e.jsonData.notification.peerId); // remove by id
-        }
-      }
-    }
-  });
 });
 
 // initialize our listing delete handler

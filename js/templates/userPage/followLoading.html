@@ -1,0 +1,13 @@
+<% if (ob.isFetching) { %>
+<div class="loadingSpinnerWrap">
+  <% print(ob.spinner({ className: 'spinnerMd' })) %>
+</div>
+<% } else if (ob.fetchFailed) { %>
+  <p><%= ob.fetchErrorTitle %></p>
+  <% if (ob.fetchErrorMsg) { %>
+    <p><%= ob.fetchErrorMsg %></p>
+  <% } %>
+  <button class="btn normalBtn clrP clrBr js-retry"><%= ob.polyT('userPage.followTab.btnRetry') %></button>
+<% } else if (ob.noResults) { %>
+  <p><%= ob.noResultsMsg %></p>
+<% } %>
