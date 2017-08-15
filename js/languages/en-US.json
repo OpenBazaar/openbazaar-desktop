@@ -81,7 +81,7 @@
     "noResults": "No notifications found.",
     "text": {
       "order": "%{buyerName} has purchased %{listingTitle}.",
-      "payment": "Your payment has been received.",
+      "payment": "Your payment has been delivered.",
       "orderConfirmation": "%{vendorName} has accepted your order.",
       "declined": "%{vendorName} has declined your order.",
       "canceled": "%{buyerName} has canceled their order.",
@@ -115,7 +115,9 @@
       "discover": "Discover",
       "wallet": "Wallet",
       "notifications": "Notifications",
-      "nav": "Navigation"
+      "nav": "Navigation",
+      "close": "Close",
+      "currentPrice": "Current Bitcoin price"
     }
   },
   "chat": {
@@ -199,6 +201,9 @@
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
         "showLess": "less"
+      },
+      "toolTip": {
+        "contentView": "Toggle view"
       }
     },
     "mainNav": {
@@ -864,7 +869,10 @@
         "priceLabel": "Price",
         "pricePlaceholder": "0.00",
         "addService": "+ Add Service"
-      }
+      },
+      "toolTip": {
+        "delete": "Delete"
+      } 
     },
     "coupons": {
       "titleLabel": "Title",
@@ -874,15 +882,22 @@
       "discountCodePlaceholder": "Enter a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
-      "btnAddCoupon": "+ Add Coupon"
+      "btnAddCoupon": "+ Add Coupon",
+      "toolTip": {
+        "delete": "Delete"
+      } 
     },
     "variants": {
       "btnAddVariant": "Add Variant",
+      "btnDeleteVariant": "Delete",
       "addVariant": "+ Add Variant",
       "titleLabel": "Title",
       "titlePlaceholder": "e.g. Size, Color, Material, etc",
       "choicesLabel": "Choices",
-      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
+      "toolTip": {
+        "delete": "Delete"
+      } 
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",
