@@ -38,6 +38,7 @@ export function followUnfollow(guid, type = 'follow') {
       }
     })
     .fail((data) => {
+      // todo: more specific error title.
       new Dialog({
         title: app.polyglot.t('errors.badResult'),
         message: data.responseJSON.reason,

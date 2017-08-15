@@ -131,14 +131,22 @@ export default class extends baseVw {
   }
 
   createFollowingTabView(opts = {}) {
+    let collection;
+
+    if (app.profile.id === this.model.id) {
+      collection = app.ownFollowing;
+    } else {
+      collection = new Followers([], {
+        peerId: this.model.id,
+        type: 'following',
+      });
+    }
+
     return this.createChild(this.tabViews.Follow, {
       ...opts,
       followType: 'following',
       peerId: this.model.id,
-      collection: new Followers([], {
-        peerId: this.model.id,
-        type: 'following',
-      }),
+      collection,
     });
   }
 

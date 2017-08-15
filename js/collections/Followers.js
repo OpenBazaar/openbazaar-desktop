@@ -1,5 +1,6 @@
 import app from '../app';
 import { Collection } from 'backbone';
+import Follower from '../models/Follower';
 
 export default class extends Collection {
   constructor(models = [], options = {}) {
@@ -17,8 +18,20 @@ export default class extends Collection {
     this.options = options;
   }
 
+  model(attrs, options) {
+    return new Follower(attrs, options);
+  }
+
+  modelId(attrs) {
+    return attrs.peerId;
+  }
+
   url() {
     return app.getServerUrl(`ob/${this.options.type === 'followers' ? 'followers' : 'following'}` +
       `${app.profile.id === this.options.peerId ? '' : `/${this.options.peerId}`}`);
+  }
+
+  parse(response) {
+    return response.map(peerId => ({ peerId }));
   }
 }
