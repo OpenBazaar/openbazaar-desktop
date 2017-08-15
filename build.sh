@@ -143,6 +143,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-ia32 --outdir=dist/win32
     mv dist/win32/OpenBazaar2Setup.exe dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
+    mv dist/win64/RELEASES dist/win32/RELEASES
 
     echo 'Sign the installer'
     signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
@@ -168,6 +169,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Installer...'
     grunt create-windows-installer --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
     mv dist/win64/OpenBazaar2Setup.exe dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
+    mv dist/win64/RELEASES dist/win64/RELEASES-x64
 
     echo 'Sign the installer'
     signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
