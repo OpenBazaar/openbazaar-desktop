@@ -11,7 +11,6 @@ import urlparse from 'url-parse';
 import _ from 'underscore';
 import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
-import { addAutoUpdate } from './js/utils/autoUpdate';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
 
 if (argv.userData) {
@@ -480,8 +479,63 @@ function createWindow() {
     }
   });
 
-  // add the updater when the DOM is ready so it doesn't open a dialog too soon
-  mainWindow.webContents.on('dom-ready', () => addAutoUpdate(mainWindow, feedURL));
+  // send unhandled errors to the web dev console
+  process.on('uncaughtException', error => {
+    mainWindow.send(error);
+  });
+
+  /**
+   * If there is an update available then we will send an IPC message to the
+   * render process to notify the user. If the user wants to update
+   * the software then they will send an IPC message back to the main process and we will
+   * begin to download the file and update the software.
+   */
+
+  autoUpdater.setFeedURL(feedURL);
+
+  autoUpdater.on('error', (err, msg) => {
+    console.log(msg);
+    mainWindow.send('consoleMsg', msg);
+    mainWindow.send('error', msg);
+  });
+
+  autoUpdater.on('update-not-available', (msg) => {
+    mainWindow.send('updateNotAvailable', msg);
+    mainWindow.send('consoleMsg', msg);
+  });
+
+  autoUpdater.on('update-available', (msg) => {
+    mainWindow.send('updateAvailable');
+    mainWindow.send('consoleMsg', msg);
+  });
+
+  autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
+                                       releaseDate, updateUrl) => {
+    console.log('update ready for install');
+    console.log(releaseNotes);
+    console.log(releaseName);
+    console.log(releaseDate);
+    console.log(updateUrl);
+    const opts = { releaseNotes, releaseName, releaseDate, updateUrl };
+    mainWindow.send('updateReadyForInstall', opts);
+    mainWindow.send('consoleMsg', opts);
+  });
+
+// Listen for installUpdate command to install the update
+  ipcMain.on('installUpdate', () => {
+    autoUpdater.quitAndInstall();
+  });
+
+// Listen for checkForUpdate command to manually check for new versions
+  ipcMain.on('checkForUpdate', () => {
+    autoUpdater.checkForUpdates();
+  });
+
+// Check for updates every hour
+  autoUpdater.checkForUpdates();
+  setInterval(() => {
+    autoUpdater.checkForUpdates();
+  }, 60 * 60 * 1000);
 
   // Set up protocol
   app.setAsDefaultProtocolClient('ob2');
