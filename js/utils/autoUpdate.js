@@ -2,21 +2,32 @@ import { ipcRenderer } from 'electron';
 import app from '../app';
 import Dialog from '../views/modals/Dialog';
 
-
 let statusMsg;
+let removeStatusMsgTimout;
 
 export function showUpdateStatus(status = '', msg = '') {
   const fullmsg = `${status ? `${status} ` : ''}${msg}`;
+
+  clearTimeout(removeStatusMsgTimout);
 
   if (!statusMsg) {
     statusMsg = app.statusBar.pushMessage({
       msg: fullmsg,
       type: 'warning',
-      duration: 6000,
+      duration: 9999999999,
     });
   } else {
     statusMsg.update(fullmsg);
   }
+
+  // updates may arrive multiple times, manually remove the message when no new message
+  // arrives for 6 seconds
+  removeStatusMsgTimout = setTimeout(() => {
+    statusMsg.remove();
+    statusMsg = null;
+  }, 6000);
+
+  return statusMsg;
 }
 
 let updateReadyDialog;
