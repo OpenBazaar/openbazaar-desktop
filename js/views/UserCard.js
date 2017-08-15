@@ -49,10 +49,14 @@ export default class extends BaseVw {
       this.$modBtn.attr('data-tip', this.getModTip());
     });
 
-    this.listenTo(app.ownFollowing, 'sync update', () => {
-      this.followedByYou = followedByYou(this.guid);
-      this.$followBtn.toggleClass('active', this.followedByYou);
-      this.$followBtn.attr('data-tip', this.getFollowTip());
+    this.listenTo(app.ownFollowing, 'update', (cl, opts) => {
+      const updatedModels = opts.changes.added.concat(opts.changes.removed);
+
+      if (updatedModels.filter(md => md.id === this.guid).length) {
+        this.followedByYou = followedByYou(this.guid);
+        this.$followBtn.toggleClass('active', this.followedByYou);
+        this.$followBtn.attr('data-tip', this.getFollowTip());
+      }
     });
   }
 

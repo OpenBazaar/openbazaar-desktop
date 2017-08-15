@@ -32,7 +32,7 @@ export function followUnfollow(guid, type = 'follow') {
     .done(() => {
       // if the call succeeds, add or remove the guid from the collection
       if (type === 'follow') {
-        app.ownFollowing.unshift({ guid });
+        app.ownFollowing.unshift({ peerId: guid });
       } else {
         app.ownFollowing.remove(guid); // remove via id
       }

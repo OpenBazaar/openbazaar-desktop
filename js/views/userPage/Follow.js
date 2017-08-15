@@ -38,14 +38,16 @@ export default class extends BaseVw {
     this.listenTo(this.renderedCl, 'update', this.onCollectionUpdate);
 
     if (this.collection === app.ownFollowing) {
-      this.onCollectionFetched.call(this);
+      setTimeout(() => this.onCollectionFetched.call(this));
     } else {
       this.fetch();
     }
+
+    this.listenTo(app.ownFollowing, 'update', this.onOwnFollowingUpdate);
   }
 
   className() {
-    return 'userPageFollow flexRow noResults';
+    return 'userPageFollow noResults';
   }
 
   get userPerPage() {
@@ -56,8 +58,34 @@ export default class extends BaseVw {
     return this.options.peerId === app.profile.id;
   }
 
+  onOwnFollowingUpdate(cl, opts) {
+    if (opts.changes.added.length) {
+      if (this.ownPage) {
+        if (this.options.type === 'following') this.collection.add(opts.changes.added);
+        console.log('own page follow');
+      } else if (this.options.type === 'followers') {
+        const md = app.ownFollowing.get(this.model.id);
+        if (md && opts.changes.added.indexOf(md) > -1) {
+          this.collection.add(md);
+        }
+      }
+    }
+
+    if (opts.changes.removed.length) {
+      if (this.ownPage) {
+        console.log('own page unfollow');
+        if (this.options.type === 'following') this.collection.remove(opts.changes.removed);
+      } else if (this.options.type === 'followers') {
+        if (opts.changes.removed.filter(removedMd => (removedMd.id === this.model.id))) {
+          this.collection.remove(this.model.id);
+        }
+      }
+    }
+  }
+
   onCollectionUpdate(cl, opts) {
     this.$el.toggleClass('noResults', !cl.length);
+    console.log('cl update nation');
 
     if (opts.changes.added.length) {
       // Expecting either a single new user on the bottom (own node
@@ -70,7 +98,9 @@ export default class extends BaseVw {
         // New user at top
         this.renderUsers(opts.changes.added, 'prepend');
       }
-    } else if (opts.changes.removed.length) {
+    }
+
+    if (opts.changes.removed.length) {
       console.log('removal yo');
       window.removal = opts;
     }
@@ -89,11 +119,12 @@ export default class extends BaseVw {
     }
 
     if (this.followLoading) this.followLoading.setState(state);
-    this.renderedCl.add(this.collection.toJSON().slice(0, this.userPerPage));
+    this.renderedCl.add(this.collection.models.slice(0, this.userPerPage));
 
-    // If our own node follows / unfollows the user of this page we'll add / remove
-    // ourselves from the main collection. Here we'll ensure the renderedCl is kept
-    // in sync with that.
+    // If any additions / removal occur on the main collection (e.g. this view
+    // is showing our own following list and we follow / unfollow someone; this view
+    // is showing anothers followers list and our own node has followed / unfollowed
+    // that user), we sync them over to the renderedCl.
     this.listenTo(this.collection, 'add', md => {
       this.renderedCl.add(md, { at: this.collection.models.indexOf(md) });
     });
@@ -120,6 +151,7 @@ export default class extends BaseVw {
     const usersFrag = document.createDocumentFragment();
 
     models.forEach(user => {
+      console.log(`the id is ${user.id}`);
       const view = this.createChild(UserCard, { guid: user.id });
       this.userCardViews.push(view);
       view.render().$el.appendTo(usersFrag);

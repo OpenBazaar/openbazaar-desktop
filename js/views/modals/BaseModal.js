@@ -13,7 +13,7 @@ export default class BaseModal extends baseVw {
       dismissOnOverlayClick: false,
       dismissOnEscPress: true,
       showCloseButton: true,
-      closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
+      closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap modalCloseBtn',
       innerButtonClass: 'ion-ios-close-empty',
       closeButtonTip: app.polyglot.t('pageNav.toolTip.close'),
       modelContentClass: 'modalContent',
