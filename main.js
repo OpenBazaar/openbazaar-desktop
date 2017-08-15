@@ -32,7 +32,7 @@ function isOSWin64() {
   return process.arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
 }
 
-const plat = isOSWin64() ? 'win64' : process.platform;
+const plat = process.platform === 'win32' ? `${isOSWin64() ? 'win64' : 'win32'}` : process.platform;
 
 const feedURL = `https://updates2.openbazaar.org:5001/update/${plat}/${version}`;
 
@@ -479,19 +479,12 @@ function createWindow() {
     }
   });
 
-  // send unhandled errors to the web dev console
-  process.on('uncaughtException', error => {
-    mainWindow.send(error);
-  });
-
   /**
    * If there is an update available then we will send an IPC message to the
    * render process to notify the user. If the user wants to update
    * the software then they will send an IPC message back to the main process and we will
    * begin to download the file and update the software.
    */
-
-  autoUpdater.setFeedURL(feedURL);
 
   autoUpdater.on('error', (err, msg) => {
     console.log(msg);
@@ -530,6 +523,8 @@ function createWindow() {
   ipcMain.on('checkForUpdate', () => {
     autoUpdater.checkForUpdates();
   });
+
+  autoUpdater.setFeedURL(feedURL);
 
 // Check for updates every hour
   autoUpdater.checkForUpdates();
