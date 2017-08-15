@@ -64,8 +64,12 @@ export function addAutoUpdate(mainWindow, feedURL) {
   return autoUpdater;
 }
 
+let statusMsg;
+
 export function showUpdateStatus(status = '', msg = '') {
-  app.statusBar.pushMessage({
+  if (statusMsg) statusMsg.remove();
+
+  statusMsg = app.statusBar.pushMessage({
     msg: `${status ? `${status} ` : ''}${msg}`,
     type: 'warning',
     duration: 6000,
@@ -77,7 +81,6 @@ let updateReadyDialog;
 export function updateReady(opts = {}) {
   if (updateReadyDialog) updateReadyDialog.close();
 
-  console.log(opts);
   let displayData = '';
   Object.entries(opts).forEach(val => {
     displayData += `<b>${val[0]}:</b> <br>${val[1]}<br>`;
