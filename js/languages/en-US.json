@@ -15,6 +15,7 @@
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
   "update": {
+    "checking": "Checking for updates.",
     "error": "There was an error checking for updates. Updates only work if you installed using an installer. Error: %{error}",
     "available": "An update is available. It will download automatically.",
     "notAvailable": "No updates are available.",
@@ -872,7 +873,7 @@
       },
       "toolTip": {
         "delete": "Delete"
-      } 
+      }
     },
     "coupons": {
       "titleLabel": "Title",
@@ -885,7 +886,7 @@
       "btnAddCoupon": "+ Add Coupon",
       "toolTip": {
         "delete": "Delete"
-      } 
+      }
     },
     "variants": {
       "btnAddVariant": "Add Variant",
@@ -897,7 +898,7 @@
       "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
       "toolTip": {
         "delete": "Delete"
-      } 
+      }
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",

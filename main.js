@@ -486,6 +486,11 @@ function createWindow() {
    * begin to download the file and update the software.
    */
 
+  autoUpdater.on('checking-for-update', () => {
+    mainWindow.send('updateChecking');
+    mainWindow.send('consoleMsg', `Checking for updates at ${autoUpdater.getFeedURL()}`);
+  });
+
   autoUpdater.on('error', (err, msg) => {
     console.log(msg);
     mainWindow.send('consoleMsg', msg);
@@ -526,11 +531,15 @@ function createWindow() {
 
   autoUpdater.setFeedURL(feedURL);
 
-// Check for updates every hour
-  autoUpdater.checkForUpdates();
-  setInterval(() => {
+  mainWindow.webContents.on('dom-ready', () => {
+    mainWindow.send('consoleMsg', `Checking for updates at ${feedURL}`);
+
+    // Check for updates every hour
     autoUpdater.checkForUpdates();
-  }, 60 * 60 * 1000);
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60 * 60 * 1000);
+  });
 
   // Set up protocol
   app.setAsDefaultProtocolClient('ob2');

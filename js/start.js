@@ -624,6 +624,7 @@ $(window).on('beforeunload', () => {
 ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
 // Handle update events from main.js
+ipcRenderer.on('updateChecking', () => showUpdateStatus(app.polyglot.t('update.checking')));
 ipcRenderer.on('updateAvailable', () => showUpdateStatus(app.polyglot.t('update.available')));
 ipcRenderer.on('update-not-available', (msg) =>
   showUpdateStatus(`${app.polyglot.t('update.notAvailable')} ${msg}`));
