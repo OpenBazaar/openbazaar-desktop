@@ -35,9 +35,6 @@ export default class extends baseVw {
     this._followingCount = stats.get('followingCount');
     this._followerCount = stats.get('followerCount');
 
-    console.log('skip');
-    window.skip = this.model;
-
     if (!this.ownPage) {
       if (this._followerCount === 0 && app.ownFollowing.indexOf(this.model.id) > -1) {
         this._followerCount = 1;
@@ -46,6 +43,9 @@ export default class extends baseVw {
 
     if (!this.ownPage) {
       this.followedByYou = followedByYou(this.model.id);
+      console.log(this.model.id);
+      console.log('pep');
+      window.pep = app.ownFollowing;
 
       this.listenTo(app.ownFollowing, 'sync update', () => {
         this.followedByYou = followedByYou(this.model.id);

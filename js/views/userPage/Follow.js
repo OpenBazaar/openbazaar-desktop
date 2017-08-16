@@ -1,4 +1,6 @@
+import _ from 'underscore';
 import app from '../../app';
+import { getContentFrame } from '../../utils/selectors';
 import loadTemplate from '../../utils/loadTemplate';
 import Followers from '../../collections/Followers';
 import BaseVw from '../baseVw';
@@ -45,18 +47,39 @@ export default class extends BaseVw {
     }
 
     this.listenTo(app.ownFollowing, 'update', this.onOwnFollowingUpdate);
+    this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
   }
 
   className() {
     return 'userPageFollow noResults';
   }
 
-  get userPerPage() {
-    return 12;
+  get usersPerPage() {
+    return 3;
   }
 
   get ownPage() {
     return this.options.peerId === app.profile.id;
+  }
+
+  onScroll() {
+    const cf = getContentFrame()[0];
+    const scrollNearBot = cf.scrollTop >= cf.scrollHeight - cf.offsetHeight - 100;
+    if (this.renderedCl.length < this.collection.length &&
+      this.followLoading && !this.followLoading.getState().isFetching &&
+      scrollNearBot) {
+      // Some fake latency so a user doesn't just scroll down and load
+      // hundreds of userCards which would kick off hundreds of profile
+      // fetches.
+      this.followLoading.setState({ isFetching: true });
+
+      setTimeout(() => {
+        const start = this.renderedCl.length;
+        const end = start + this.usersPerPage;
+        this.followLoading.setState({ isFetching: false });
+        this.renderedCl.add(this.collection.models.slice(start, end));
+      }, 500);
+    }
   }
 
   onOwnFollowingUpdate(cl, opts) {
@@ -93,7 +116,7 @@ export default class extends BaseVw {
       // Expecting either a single new user on the bottom (own node
       // must have followed in the UI) or a page of users at the bottom.
       if (opts.changes.added[opts.changes.added.length - 1] ===
-        this.renderedCl.at(0)) {
+        this.renderedCl.at(this.renderedCl.length - 1)) {
         // It's a page of users at the bottom
         this.renderUsers(opts.changes.added, 'append');
       } else {
@@ -118,7 +141,7 @@ export default class extends BaseVw {
     }
 
     if (this.followLoading) this.followLoading.setState(state);
-    this.renderedCl.add(this.collection.models.slice(0, this.userPerPage));
+    this.renderedCl.add(this.collection.models.slice(0, this.usersPerPage));
 
     // If any additions / removal occur on the main collection (e.g. this view
     // is showing our own following list and we follow / unfollow someone; this view
@@ -134,7 +157,6 @@ export default class extends BaseVw {
   }
 
   collectionParse(response) {
-    console.log('middleware yo');
     return this._origClParse.call(this.collection, response);
   }
 
@@ -254,6 +276,9 @@ export default class extends BaseVw {
 
     this.listenTo(this.followLoading, 'retry-click', () => this.fetch());
     this.getCachedEl('.js-followLoadingContainer').html(this.followLoading.render().el);
+
+    getContentFrame().off('scroll', this.throttledOnScroll)
+      .on('scroll', this.throttledOnScroll);
 
     return this;
   }
