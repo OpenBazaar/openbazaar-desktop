@@ -1,9 +1,13 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import { remote } from 'electron';
 import '../../utils/velocity';
+import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getSocket } from '../../utils/serverConnect';
+import { setUnreadChatMsgCount, launchNativeNotification } from '../../utils/notification';
+import { isHiRez } from '../../utils/responsive';
 import loadTemplate from '../../utils/loadTemplate';
 import Profile, { getCachedProfiles } from '../../models/profile/Profile';
 import baseVw from '../baseVw';
@@ -51,6 +55,10 @@ export default class extends baseVw {
         this.fetchErrorMessage = resp.responseJSON && resp.responseJSON.reason || '';
         this.render();
       }, 300);
+    });
+
+    this.listenTo(this.collection, 'update change:unread', () => {
+      setUnreadChatMsgCount(this.collection.totalUnreadCount);
     });
 
     this.socket = getSocket();
@@ -155,7 +163,39 @@ export default class extends baseVw {
 
       if (chatHead) {
         if (!msg.outgoing) {
-          chatHeadData.unread = isConvoOpen ? 0 : chatHead.get('unread') + 1;
+          chatHeadData.unread = document.hasFocus() && isConvoOpen ?
+            0 : chatHead.get('unread') + 1;
+
+          if (!document.hasFocus() || !isConvoOpen) {
+            const notifOptions = {
+              onclick() {
+                remote.getCurrentWindow().restore();
+                location.hash = `#${msg.peerId}`;
+              },
+              body: msg.message,
+            };
+            let handle = '';
+
+            // If the profile is cached, we'll add in some additional data. If it's not,
+            // we won't hold up the notification for it to return.
+            const profilePromise = getCachedProfiles([msg.peerId])[0];
+
+            if (profilePromise.state() === 'resolved') {
+              profilePromise.done(profile => {
+                handle = profile.get('handle') || '';
+                const avatarHashes = profile.get('avatarHashes') &&
+                  profile.get('avatarHashes').toJSON() || {};
+                const imageHash = isHiRez ? avatarHashes.medium : avatarHashes.small;
+
+                if (imageHash) {
+                  notifOptions.icon = app.getServerUrl(`ipfs/${imageHash}`);
+                }
+              });
+            }
+
+            launchNativeNotification(handle || msg.peerId, notifOptions);
+          }
+
           // Remove any existing chat head so we could put it back in at the top.
           this.collection.remove(chatHead);
         } else {
@@ -215,12 +255,6 @@ export default class extends baseVw {
       // In order for the chat head unread count to update properly, be sure to
       // open before marking convo as read.
       this.conversation.open();
-
-      if (this.collection.get(guid) && this.collection.get(guid).get('unread') &&
-        this.conversation.messages.length) {
-        this.conversation.markConvoAsRead();
-      }
-
       return;
     }
 
