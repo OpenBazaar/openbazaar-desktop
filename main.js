@@ -501,12 +501,19 @@ function createWindow() {
     mainWindow.send('updateNotAvailable', msg);
     mainWindow.send('consoleMsg', 'Update Not Available');
     mainWindow.send('consoleMsg', msg);
+    console.log(msg);
   });
 
   autoUpdater.on('update-available', (e, msg) => {
     mainWindow.send('updateAvailable');
     mainWindow.send('consoleMsg', 'Update Available');
     mainWindow.send('consoleMsg', msg);
+    console.log(msg);
+  });
+
+  autoUpdater.on('download-progress', (e, data) => {
+    console.log(data);
+    mainWindow.send('consoleMsg', data);
   });
 
   autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
@@ -516,7 +523,11 @@ function createWindow() {
     console.log(releaseName);
     console.log(releaseDate);
     console.log(updateUrl);
-    const opts = { releaseNotes, releaseName, releaseDate, updateUrl };
+    const opts = {};
+    opts.Name = releaseName;
+    opts.URL = updateUrl;
+    opts.Date = releaseDate;
+    opts.Notes = releaseNotes;
     mainWindow.send('updateReadyForInstall', opts);
     mainWindow.send('consoleMsg', 'Update Ready for Install');
     mainWindow.send('consoleMsg', opts);
@@ -524,7 +535,8 @@ function createWindow() {
 
 // Listen for installUpdate command to install the update
   ipcMain.on('installUpdate', () => {
-    autoUpdater.quitAndInstall();
+    console.log('Quit and Install Update');
+    autoUpdater.quitAndInstall(false, true);
   });
 
 // Listen for checkForUpdate command to manually check for new versions

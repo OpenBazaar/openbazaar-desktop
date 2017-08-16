@@ -16,8 +16,8 @@
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
   "update": {
     "checking": "Checking for updates.",
-    "error": "There was an error checking for updates. Updates only work if you installed using an installer. Error: %{error}",
-    "available": "An update is available. It will download automatically.",
+    "error": "There was an error checking for updates. Error: %{error}",
+    "available": "An update is downloading now. You can choose to install it when the download is complete.",
     "notAvailable": "No updates are available.",
     "cancel": "Cancel",
     "ready": {
