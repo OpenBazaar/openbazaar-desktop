@@ -6,15 +6,16 @@ import Dialog from '../views/modals/Dialog';
 let statusMsg;
 let removeStatusMsgTimout;
 
-export function showUpdateStatus(status = '', msg = '') {
+export function showUpdateStatus(status = '', msg = '', type = 'message') {
   const fullmsg = `${status ? `${status} ` : ''}${msg}`;
+  console.log(type)
 
   clearTimeout(removeStatusMsgTimout);
 
   if (!statusMsg) {
     statusMsg = app.statusBar.pushMessage({
       msg: fullmsg,
-      type: 'warning',
+      type,
       duration: 9999999999,
     });
   } else {

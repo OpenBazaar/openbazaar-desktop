@@ -499,11 +499,13 @@ function createWindow() {
 
   autoUpdater.on('update-not-available', (e, msg) => {
     mainWindow.send('updateNotAvailable', msg);
+    mainWindow.send('consoleMsg', 'Update Not Available');
     mainWindow.send('consoleMsg', msg);
   });
 
   autoUpdater.on('update-available', (e, msg) => {
     mainWindow.send('updateAvailable');
+    mainWindow.send('consoleMsg', 'Update Available');
     mainWindow.send('consoleMsg', msg);
   });
 
