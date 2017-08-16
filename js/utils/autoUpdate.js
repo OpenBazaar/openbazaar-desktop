@@ -40,6 +40,8 @@ export function updateReady(opts = {}) {
   $.each(opts, (key, val) => {
     displayData += `<b>${key}:</b> <br>${val}<br>`;
   });
+  console.log(opts);
+  console.log(displayData);
 
   updateReadyDialog = new Dialog({
     title: app.polyglot.t('update.ready.title'),

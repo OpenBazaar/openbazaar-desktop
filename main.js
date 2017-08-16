@@ -492,26 +492,26 @@ function createWindow() {
   });
 
   autoUpdater.on('error', (err, msg) => {
+    console.log('update error');
     console.log(msg);
     mainWindow.send('consoleMsg', msg);
     mainWindow.send('error', msg);
   });
 
-  autoUpdater.on('update-not-available', (e, msg) => {
-    mainWindow.send('updateNotAvailable', msg);
+  autoUpdater.on('update-not-available', () => {
+    console.log('update not available');
+    mainWindow.send('updateNotAvailable');
     mainWindow.send('consoleMsg', 'Update Not Available');
-    mainWindow.send('consoleMsg', msg);
-    console.log(msg);
   });
 
-  autoUpdater.on('update-available', (e, msg) => {
+  autoUpdater.on('update-available', () => {
+    console.log('update available');
     mainWindow.send('updateAvailable');
     mainWindow.send('consoleMsg', 'Update Available');
-    mainWindow.send('consoleMsg', msg);
-    console.log(msg);
   });
 
   autoUpdater.on('download-progress', (e, data) => {
+    console.log('Update download progress');
     console.log(data);
     mainWindow.send('consoleMsg', data);
   });
@@ -547,7 +547,7 @@ function createWindow() {
   autoUpdater.setFeedURL(feedURL);
 
   mainWindow.webContents.on('dom-ready', () => {
-    mainWindow.send('consoleMsg', `Checking for updates at ${feedURL}`);
+    mainWindow.send('consoleMsg', `Checking for updates at ${autoUpdater.getFeedURL()}`);
 
     // Check for updates every hour
     autoUpdater.checkForUpdates();

@@ -626,13 +626,13 @@ ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 // Handle update events from main.js
 ipcRenderer.on('updateChecking', () =>
   showUpdateStatus(app.polyglot.t('update.checking'), '', 'pending'));
-ipcRenderer.on('updateAvailable', (msg) =>
-  showUpdateStatus(app.polyglot.t('update.available'), msg, 'pending'));
-ipcRenderer.on('update-not-available', (msg) =>
-  showUpdateStatus(`${app.polyglot.t('update.notAvailable')} ${msg}`));
+ipcRenderer.on('updateAvailable', () =>
+  showUpdateStatus(app.polyglot.t('update.available'), '', 'pending'));
+ipcRenderer.on('updateNotAvailable', () =>
+  showUpdateStatus(app.polyglot.t('update.notAvailable')));
 ipcRenderer.on('error', (e, msg) =>
   showUpdateStatus(app.polyglot.t('update.error', { error: msg }), '', 'warning'));
-ipcRenderer.on('updateReadyForInstall', (opts) => updateReady(opts));
+ipcRenderer.on('updateReadyForInstall', (e, opts) => updateReady(opts));
 
 // Allow main.js to send messages to the console
 ipcRenderer.on('consoleMsg', (e, msg) => console.log(msg));
