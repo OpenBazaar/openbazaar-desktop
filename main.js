@@ -497,12 +497,12 @@ function createWindow() {
     mainWindow.send('error', msg);
   });
 
-  autoUpdater.on('update-not-available', (msg) => {
+  autoUpdater.on('update-not-available', (e, msg) => {
     mainWindow.send('updateNotAvailable', msg);
     mainWindow.send('consoleMsg', msg);
   });
 
-  autoUpdater.on('update-available', (msg) => {
+  autoUpdater.on('update-available', (e, msg) => {
     mainWindow.send('updateAvailable');
     mainWindow.send('consoleMsg', msg);
   });
@@ -516,6 +516,7 @@ function createWindow() {
     console.log(updateUrl);
     const opts = { releaseNotes, releaseName, releaseDate, updateUrl };
     mainWindow.send('updateReadyForInstall', opts);
+    mainWindow.send('consoleMsg', 'Update Ready for Install');
     mainWindow.send('consoleMsg', opts);
   });
 

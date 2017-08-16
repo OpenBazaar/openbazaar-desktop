@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { ipcRenderer } from 'electron';
 import app from '../app';
 import Dialog from '../views/modals/Dialog';
@@ -36,8 +37,8 @@ export function updateReady(opts = {}) {
   if (updateReadyDialog) updateReadyDialog.close();
 
   let displayData = '';
-  Object.entries(opts).forEach(val => {
-    displayData += `<b>${val[0]}:</b> <br>${val[1]}<br>`;
+  $.each(opts, (key, val) => {
+    displayData += `<b>${key}:</b> <br>${val}<br>`;
   });
 
   updateReadyDialog = new Dialog({
