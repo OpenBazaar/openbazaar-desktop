@@ -8,7 +8,6 @@ let removeStatusMsgTimout;
 
 export function showUpdateStatus(status = '', msg = '', type = 'message') {
   const fullmsg = `${status ? `${status} ` : ''}${msg}`;
-  console.log(type)
 
   clearTimeout(removeStatusMsgTimout);
 
