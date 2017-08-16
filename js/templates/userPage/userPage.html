@@ -1,3 +1,4 @@
+<% console.log('sizzle');window.sizzle = ob %>
 <nav id="pageTabBar" class="barLg clrP clrBr">
       <div class="flexVCent pageTabs">
         <div class="js-miniProfileContainer"></div>
@@ -7,8 +8,8 @@
             <% if (ob.vendor || ob.ownPage) { %> <% // the store tab is only visible to the user if they have vendor set to false %>
               <a class="btn tab clrBr js-tab" data-tab="store">Store<span class="clrTEmph1 margLSm js-listingsCount"><%= ob.stats.listingCount %></span></a>
             <% } %>
-            <a class="btn tab clrBr js-tab" data-tab="following">Following<span class="clrTEmph1 margLSm js-followingCount"><%= ob.stats.followingCount %></span></a>
-            <a class="btn tab clrBr js-tab" data-tab="followers">Followers<span class="clrTEmph1 margLSm js-followerCount"><%= ob.stats.followerCount %></span></a>
+            <a class="btn tab clrBr js-tab" data-tab="following">Following<span class="clrTEmph1 margLSm js-followingCount"><%= ob.followingCount %></span></a>
+            <a class="btn tab clrBr js-tab" data-tab="followers">Followers<span class="clrTEmph1 margLSm js-followersCount"><%= ob.followerCount %></span></a>
           </div>
         </div>
       </div>

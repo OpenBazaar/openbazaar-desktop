@@ -20,14 +20,29 @@ import Reputation from './Reputation';
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+
+    if (!options.model) {
+      throw new Error('Please provide a user model.');
+    }
+
     this.options = options;
-
     this.ownPage = this.model.id === app.profile.id;
-
     this.state = options.state || 'store';
-
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
+
+    const stats = this.model.get('stats');
+    this._followingCount = stats.get('followingCount');
+    this._followerCount = stats.get('followerCount');
+
+    console.log('skip');
+    window.skip = this.model;
+
+    if (!this.ownPage) {
+      if (this._followerCount === 0 && app.ownFollowing.indexOf(this.model.id) > -1) {
+        this._followerCount = 1;
+      }
+    }
 
     if (!this.ownPage) {
       this.followedByYou = followedByYou(this.model.id);
@@ -48,6 +63,9 @@ export default class extends baseVw {
     if (this.curConn && this.curConn.server) {
       this.showStoreWelcomeCallout = !this.curConn.server.get('dismissedStoreWelcome');
     }
+
+    this.listenTo(app.ownFollowing, 'add', this.onOwnFollowingAdd);
+    this.listenTo(app.ownFollowing, 'remove', this.onOwnFollowingRemove);
   }
 
   className() {
@@ -64,6 +82,22 @@ export default class extends baseVw {
       'click .js-createListing': 'clickCreateListing',
       'click .js-closeStoreWelcomeCallout': 'clickCloseStoreWelcomeCallout',
     };
+  }
+
+  onOwnFollowingAdd(md) {
+    if (this.ownPage) {
+      this.followingCount += 1;
+    } else if (md.id === this.model.id) {
+      this.followerCount += 1;
+    }
+  }
+
+  onOwnFollowingRemove(md) {
+    if (this.ownPage) {
+      this.followingCount -= 1;
+    } else if (md.id === this.model.id) {
+      this.followerCount -= 1;
+    }
   }
 
   clickTab(e) {
@@ -104,6 +138,36 @@ export default class extends baseVw {
     if (this.curConn && this.curConn.server) {
       this.curConn.server.save({ dismissedStoreWelcome: true });
       this.getCachedEl('.js-storeWelcomeCallout').remove();
+    }
+  }
+
+  get followingCount() {
+    return this._followingCount;
+  }
+
+  set followingCount(count) {
+    if (typeof count !== 'number') {
+      throw new Error('Please provide a numeric count.');
+    }
+
+    if (count !== this._followingCount) {
+      this._followingCount = count;
+      this.getCachedEl('.js-followingCount').text(count);
+    }
+  }
+
+  get followerCount() {
+    return this._followerCount;
+  }
+
+  set followerCount(count) {
+    if (typeof count !== 'number') {
+      throw new Error('Please provide a numeric count.');
+    }
+
+    if (count !== this._followerCount) {
+      this._followerCount = count;
+      this.getCachedEl('.js-followerCount').text(count);
     }
   }
 
@@ -254,6 +318,8 @@ export default class extends baseVw {
         followed: this.followedByYou,
         ownPage: this.ownPage,
         showStoreWelcomeCallout: this.showStoreWelcomeCallout,
+        followingCount: this.followingCount,
+        followerCount: this.followerCount,
       }));
 
       this.$tabContent = this.$('.js-tabContent');

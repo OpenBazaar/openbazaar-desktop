@@ -4,8 +4,6 @@ import Followers from '../../collections/Followers';
 import BaseVw from '../baseVw';
 import FollowLoading from './FollowLoading';
 import UserCard from '../UserCard';
-// import { followedByYou, followsYou } from '../../utils/follow';
-// import { openSimpleMessage } from '../modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -28,6 +26,9 @@ export default class extends BaseVw {
     if (!options.collection) {
       throw new Error('Please provide a followers collection.');
     }
+
+    this._origClParse = this.collection.parse;
+    this.collection.parse = this.collectionParse.bind(this);
 
     this.options = options;
     this.userCardViews = [];
@@ -62,7 +63,6 @@ export default class extends BaseVw {
     if (opts.changes.added.length) {
       if (this.ownPage) {
         if (this.options.type === 'following') this.collection.add(opts.changes.added);
-        console.log('own page follow');
       } else if (this.options.type === 'followers') {
         const md = app.ownFollowing.get(this.model.id);
         if (md && opts.changes.added.indexOf(md) > -1) {
@@ -72,10 +72,13 @@ export default class extends BaseVw {
     }
 
     if (opts.changes.removed.length) {
-      if (this.ownPage) {
-        console.log('own page unfollow');
-        if (this.options.type === 'following') this.collection.remove(opts.changes.removed);
-      } else if (this.options.type === 'followers') {
+      // If someone is looking at their own following list, we won't remove the user card of
+      // users they've unfollowed. It's likely they're scrolling through their own followers
+      // list and cleaning house and since the unfollow process takes a while, it could
+      // be chaotic for the cards to just disappear at some later time. The follow button
+      // state on the card will correctly reflect that the user is no longer followed.
+
+      if (!this.ownPage && this.options.type === 'followers') {
         if (opts.changes.removed.filter(removedMd => (removedMd.id === this.model.id))) {
           this.collection.remove(this.model.id);
         }
@@ -85,7 +88,6 @@ export default class extends BaseVw {
 
   onCollectionUpdate(cl, opts) {
     this.$el.toggleClass('noResults', !cl.length);
-    console.log('cl update nation');
 
     if (opts.changes.added.length) {
       // Expecting either a single new user on the bottom (own node
@@ -100,10 +102,7 @@ export default class extends BaseVw {
       }
     }
 
-    if (opts.changes.removed.length) {
-      console.log('removal yo');
-      window.removal = opts;
-    }
+    opts.changes.removed.forEach(md => this.removeUserCard(md.id));
   }
 
   onCollectionFetched() {
@@ -134,6 +133,23 @@ export default class extends BaseVw {
     });
   }
 
+  collectionParse(response) {
+    console.log('middleware yo');
+    return this._origClParse.call(this.collection, response);
+  }
+
+  removeUserCard(peerId) {
+    if (!peerId) {
+      throw new Error('Please provide a peerId');
+    }
+
+    const view = this.userCardViews.find(vw => vw.guid === peerId);
+    if (view) {
+      view.remove();
+      this.userCardViews.splice(this.userCardViews.indexOf(view), 1);
+    }
+  }
+
   renderUsers(models = [], insertionType = 'append') {
     if (!models) {
       throw new Error('Please provide an array of Follower models.');
@@ -151,7 +167,6 @@ export default class extends BaseVw {
     const usersFrag = document.createDocumentFragment();
 
     models.forEach(user => {
-      console.log(`the id is ${user.id}`);
       const view = this.createChild(UserCard, { guid: user.id });
       this.userCardViews.push(view);
       view.render().$el.appendTo(usersFrag);
