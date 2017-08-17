@@ -170,6 +170,17 @@ function preventWindowNavigation(win) {
 }
 
 function createWindow() {
+  // Check for updates an hour after the last check
+  let checkForUpdatesInterval;
+
+  const checkForUpdates = () => {
+    clearInterval(checkForUpdatesInterval);
+    autoUpdater.checkForUpdates();
+    checkForUpdatesInterval = setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60 * 60 * 1000);
+  };
+
   const template = [
     {
       label: 'Edit',
@@ -253,7 +264,7 @@ function createWindow() {
         {
           label: 'Check for Updates...',
           click() {
-            autoUpdater.checkForUpdates();
+            checkForUpdates();
           },
         },
         {
@@ -492,66 +503,43 @@ function createWindow() {
   });
 
   autoUpdater.on('error', (err, msg) => {
-    console.log('update error');
-    console.log(msg);
     mainWindow.send('consoleMsg', msg);
-    mainWindow.send('error', msg);
+    mainWindow.send('updateError', msg);
   });
 
   autoUpdater.on('update-not-available', () => {
-    console.log('update not available');
     mainWindow.send('updateNotAvailable');
-    mainWindow.send('consoleMsg', 'Update Not Available');
   });
 
   autoUpdater.on('update-available', () => {
-    console.log('update available');
     mainWindow.send('updateAvailable');
-    mainWindow.send('consoleMsg', 'Update Available');
-  });
-
-  autoUpdater.on('download-progress', (e, data) => {
-    console.log('Update download progress');
-    console.log(data);
-    mainWindow.send('consoleMsg', data);
   });
 
   autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
                                        releaseDate, updateUrl) => {
-    console.log('update ready for install');
-    console.log(releaseNotes);
-    console.log(releaseName);
-    console.log(releaseDate);
-    console.log(updateUrl);
     const opts = {};
     opts.Name = releaseName;
     opts.URL = updateUrl;
     opts.Date = releaseDate;
     opts.Notes = releaseNotes;
     mainWindow.send('updateReadyForInstall', opts);
-    mainWindow.send('consoleMsg', 'Update Ready for Install');
-    mainWindow.send('consoleMsg', opts);
   });
 
 // Listen for installUpdate command to install the update
   ipcMain.on('installUpdate', () => {
-    console.log('Quit and Install Update');
     autoUpdater.quitAndInstall();
   });
 
 // Listen for checkForUpdate command to manually check for new versions
   ipcMain.on('checkForUpdate', () => {
-    autoUpdater.checkForUpdates();
+    checkForUpdates();
   });
 
   autoUpdater.setFeedURL(feedURL);
 
   mainWindow.webContents.on('dom-ready', () => {
-    // Check for updates every hour
-    autoUpdater.checkForUpdates();
-    setInterval(() => {
-      autoUpdater.checkForUpdates();
-    }, 60 * 60 * 1000);
+    // Check for an update once the DOM is ready so the update dialog box can be shown
+    checkForUpdates();
   });
 
   // Set up protocol

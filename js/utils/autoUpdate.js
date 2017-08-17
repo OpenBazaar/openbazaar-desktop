@@ -6,19 +6,17 @@ import Dialog from '../views/modals/Dialog';
 let statusMsg;
 let removeStatusMsgTimout;
 
-export function showUpdateStatus(status = '', msg = '', type = 'message') {
-  const fullmsg = `${status ? `${status} ` : ''}${msg}`;
-
+export function showUpdateStatus(status = '', type = 'message') {
   clearTimeout(removeStatusMsgTimout);
 
   if (!statusMsg) {
     statusMsg = app.statusBar.pushMessage({
-      msg: fullmsg,
+      msg: status,
       type,
       duration: 9999999999,
     });
   } else {
-    statusMsg.update(fullmsg);
+    statusMsg.update(status);
   }
 
   // updates may arrive multiple times, manually remove the message when no new message
@@ -40,8 +38,6 @@ export function updateReady(opts = {}) {
   $.each(opts, (key, val) => {
     displayData += `<b>${key}:</b> <br>${val}<br>`;
   });
-  console.log(opts);
-  console.log(displayData);
 
   updateReadyDialog = new Dialog({
     title: app.polyglot.t('update.ready.title'),

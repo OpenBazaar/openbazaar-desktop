@@ -73,7 +73,6 @@ export default class extends BaseModal {
   }
 
   checkForUpdateClick() {
-    console.log('checking for an update');
     ipcRenderer.send('checkForUpdate');
   }
 
