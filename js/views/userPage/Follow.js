@@ -61,7 +61,7 @@ export default class extends BaseVw {
   }
 
   get usersPerPage() {
-    return 3;
+    return 12;
   }
 
   get ownPage() {
