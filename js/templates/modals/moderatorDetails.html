@@ -4,7 +4,9 @@
     <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
       <div class="flex gutterH row">
         <div>
-          <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+          <a class="userIcon disc clrBr2 clrSh1"
+             style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"
+             href="#<%= ob.peerID %>"></a>
         </div>
         <div>
           <div class="flex snipKids gutterHSm rowSm">
@@ -31,14 +33,14 @@
     <div class="contentBox mDetailBox flexRow flexVCent gutterH padMd clrP clrBr clrSh3">
       <div class="flexExpand">
         <div class="flexCol flexCent">
-          <div>📍 <%= ob.location || ob.polyT('userPage.noLocation') %></div>
+          <div><%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %></div>
           <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.location') %></div>
         </div>
       </div>
-      <div class="rowDivV clrBr"></div>
-      <div class="flexExpand">
+      <div class="rowDivV clrBr TODO"></div>
+      <div class="flexExpand TODO">
         <div class="flexCol flexCent">
-          👍 XX<% // placeholder for reputation %>
+          <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
           <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.recommendations') %></div>
         </div>
       </div>
