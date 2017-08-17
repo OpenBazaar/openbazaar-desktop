@@ -815,8 +815,8 @@
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "Add many tags. Enter a tag name, press enter, repeat.",
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
-    "helperReturnPolicy": "If left blank, the listing will disply \"No return policy entered\"",
-    "helperTerms": "If left blank, the listing will disply \"No terms and conditions entered\"",
+    "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
+    "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
@@ -861,7 +861,7 @@
       },
       "toolTip": {
         "delete": "Delete"
-      } 
+      }
     },
     "coupons": {
       "titleLabel": "Title",
@@ -874,7 +874,7 @@
       "btnAddCoupon": "+ Add Coupon",
       "toolTip": {
         "delete": "Delete"
-      } 
+      }
     },
     "variants": {
       "btnAddVariant": "Add Variant",
@@ -886,7 +886,7 @@
       "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
       "toolTip": {
         "delete": "Delete"
-      } 
+      }
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",

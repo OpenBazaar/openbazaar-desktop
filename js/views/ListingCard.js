@@ -167,8 +167,6 @@ export default class extends baseVw {
             profile: this.options.profile,
             vendor: this.options.vendor,
             closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
-            innerButtonClass: 'ion-ios-close-empty',
-            closeButtonTip: app.polyglot.t('pageNav.toolTip.close'),
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
           }).render()

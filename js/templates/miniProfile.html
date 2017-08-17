@@ -1,6 +1,6 @@
 <div class="flexVCent">
   <div>
-    <% const userLink = ob.peerIDx ? `href="#${ob.peerID}"` : ''; %>
+    <% const userLink = ob.peerID ? `href="#${ob.peerID}"` : ''; %>
     <a <%= userLink %>>
       <div class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes || {}) %>"></div>
     </a>
