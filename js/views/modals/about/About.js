@@ -1,3 +1,5 @@
+import { version } from '../../../../package.json';
+import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -7,8 +9,6 @@ import Contributors from './Contributors';
 import Donations from './Donations';
 import License from './License';
 import BTCTicker from '../../BTCTicker';
-import { version } from '../../../../package.json';
-import { ipcRenderer } from 'electron';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -29,6 +29,7 @@ export default class extends BaseModal {
     };
 
     this.currentTabName = 'Story';
+    this.isBundledApp = remote.getGlobal('isBundledApp')();
   }
 
   className() {
@@ -93,6 +94,7 @@ export default class extends BaseModal {
           serverVersion,
           ...this.options,
           version,
+          isBundledApp: this.isBundledApp,
         }));
         super.render();
 

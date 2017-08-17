@@ -23,9 +23,11 @@
                 <%= ob.polyT('about.bothVersions', { cVer: ob.version, sVer: ob.serverVersion }) %>
               <% } %>
             </div>
+            <% if (ob.isBundledApp) { %>
             <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-checkForUpdate">
               <%= ob.polyT('about.btnUpdateCheck') %>
             </a>
+            <% } %>
           </div>
         </div>
         <hr class="clrBr" />
