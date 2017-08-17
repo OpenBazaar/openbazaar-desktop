@@ -16,6 +16,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { setFeedbackOptions, addFeedback } from './utils/feedback';
+import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -621,6 +622,20 @@ $(window).on('beforeunload', () => {
 
 // Handle 'show debug log' requests from the main process.
 ipcRenderer.on('show-server-log', () => launchDebugLogModal());
+
+// Handle update events from main.js
+ipcRenderer.on('updateChecking', () =>
+  showUpdateStatus(app.polyglot.t('update.checking'), 'pending'));
+ipcRenderer.on('updateAvailable', () =>
+  showUpdateStatus(app.polyglot.t('update.available'), 'pending'));
+ipcRenderer.on('updateNotAvailable', () =>
+  showUpdateStatus(app.polyglot.t('update.notAvailable')));
+ipcRenderer.on('updateError', (e, msg) =>
+  showUpdateStatus(app.polyglot.t('update.error', { error: msg }), 'warning'));
+ipcRenderer.on('updateReadyForInstall', (e, opts) => updateReady(opts));
+
+// Allow main.js to send messages to the console
+ipcRenderer.on('consoleMsg', (e, msg) => console.log(msg));
 
 // manage publishing sockets
 // todo: break the publishing socket startup functionality

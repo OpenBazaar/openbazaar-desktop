@@ -27,7 +27,15 @@ let mainWindow;
 let trayMenu;
 let closeConfirmed = false;
 const version = app.getVersion();
-const feedURL = `https://updates2.openbazaar.org:5001/update/${process.platform}/${version}`;
+
+function isOSWin64() {
+  return process.arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
+}
+
+const plat = process.platform === 'win32' ? `${isOSWin64() ? 'win64' : 'win32'}` : process.platform;
+
+const feedURL = `https://updates2.openbazaar.org:5001/update/${plat}/${version}`;
+
 global.serverLog = '';
 
 const handleStartupEvent = function () {
@@ -84,6 +92,7 @@ const handleStartupEvent = function () {
 if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
+
 
 const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
@@ -161,6 +170,41 @@ function preventWindowNavigation(win) {
 }
 
 function createWindow() {
+  // Check for updates an hour after the last check
+  let checkForUpdatesInterval;
+
+  const checkForUpdates = () => {
+    clearInterval(checkForUpdatesInterval);
+    autoUpdater.checkForUpdates();
+    checkForUpdatesInterval = setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60 * 60 * 1000);
+  };
+
+  let helpSubmenu = [
+    {
+      label: 'Documentation',
+      click() {
+        shell.openExternal('https://docs.openbazaar.org');
+      },
+    },
+  ];
+
+  if (isBundledApp()) {
+    helpSubmenu = [
+      {
+        label: 'Check for Updates...',
+        click() {
+          checkForUpdates();
+        },
+      },
+      {
+        type: 'separator',
+      },
+      ...helpSubmenu,
+    ];
+  }
+
   const template = [
     {
       label: 'Edit',
@@ -240,29 +284,7 @@ function createWindow() {
     },
     {
       role: 'help',
-      submenu: [
-        // {
-        //   label: 'Report Issue...',
-        //   click() {
-        //     // TODO: Open an issue tracking window
-        //   },
-        // },
-        {
-          label: 'Check for Updates...',
-          click() {
-            autoUpdater.checkForUpdates();
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: 'Documentation',
-          click() {
-            shell.openExternal('https://docs.openbazaar.org');
-          },
-        },
-      ],
+      submenu: helpSubmenu,
     },
   ];
 
@@ -476,26 +498,24 @@ function createWindow() {
     }
   });
 
-  // Set up protocol
-  app.setAsDefaultProtocolClient('ob2');
-
-  // Check for URL hijacking in the browser
-  preventWindowNavigation(mainWindow);
-
   /**
-   * For OS X users Squirrel manages the auto-updating code.
    * If there is an update available then we will send an IPC message to the
    * render process to notify the user. If the user wants to update
    * the software then they will send an IPC message back to the main process and we will
    * begin to download the file and update the software.
    */
-  if (process.platform === 'darwin') {
-    autoUpdater.on('error', (err, msg) => {
-      console.log(msg);
+  if (isBundledApp()) {
+    autoUpdater.on('checking-for-update', () => {
+      mainWindow.send('updateChecking');
+      mainWindow.send('consoleMsg', `Checking for update at ${autoUpdater.getFeedURL()}`);
     });
 
-    autoUpdater.on('update-not-available', (msg) => {
-      console.log(msg);
+    autoUpdater.on('error', (err, msg) => {
+      mainWindow.send('consoleMsg', msg);
+      mainWindow.send('updateError', msg);
+    });
+
+    autoUpdater.on('update-not-available', () => {
       mainWindow.send('updateNotAvailable');
     });
 
@@ -504,12 +524,13 @@ function createWindow() {
     });
 
     autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
-      releaseDate, updateUrl, quitAndUpdate) => {
-      // Old way of doing things
-      // mainWindow.webContents.executeJavaScript('$(".js-softwareUpdate")
-      // .removeClass("softwareUpdateHidden");');
-      console.log(quitAndUpdate);
-      mainWindow.send('updateReadyForInstall');
+                                         releaseDate, updateUrl) => {
+      const opts = {};
+      opts.Name = releaseName;
+      opts.URL = updateUrl;
+      opts.Date = releaseDate;
+      opts.Notes = releaseNotes;
+      mainWindow.send('updateReadyForInstall', opts);
     });
 
     // Listen for installUpdate command to install the update
@@ -519,17 +540,22 @@ function createWindow() {
 
     // Listen for checkForUpdate command to manually check for new versions
     ipcMain.on('checkForUpdate', () => {
-      autoUpdater.checkForUpdates();
+      checkForUpdates();
     });
 
     autoUpdater.setFeedURL(feedURL);
-
-    // Check for updates every hour
-    autoUpdater.checkForUpdates();
-    setInterval(() => {
-      autoUpdater.checkForUpdates();
-    }, 60 * 60 * 1000);
   }
+
+  mainWindow.webContents.on('dom-ready', () => {
+    // Check for an update once the DOM is ready so the update dialog box can be shown
+    if (isBundledApp()) checkForUpdates();
+  });
+
+  // Set up protocol
+  app.setAsDefaultProtocolClient('ob2');
+
+  // Check for URL hijacking in the browser
+  preventWindowNavigation(mainWindow);
 }
 
 // This method will be called when Electron has finished
