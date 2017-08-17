@@ -536,7 +536,7 @@ function createWindow() {
 // Listen for installUpdate command to install the update
   ipcMain.on('installUpdate', () => {
     console.log('Quit and Install Update');
-    autoUpdater.quitAndInstall(false, true);
+    autoUpdater.quitAndInstall();
   });
 
 // Listen for checkForUpdate command to manually check for new versions
