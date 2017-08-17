@@ -1,6 +1,9 @@
+import $ from 'jquery';
 import _ from 'underscore';
+import '../../lib/whenAll.jquery';
 import app from '../../app';
 import { getContentFrame } from '../../utils/selectors';
+import { followsYou, followedByYou } from '../../utils/follow';
 import loadTemplate from '../../utils/loadTemplate';
 import Followers from '../../collections/Followers';
 import BaseVw from '../baseVw';
@@ -10,7 +13,7 @@ import UserCard from '../UserCard';
 export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
-      followType: 'follow',
+      followType: 'followers',
       ...options,
     };
 
@@ -25,15 +28,17 @@ export default class extends BaseVw {
       throw new Error(`followType must be one of ${types.join(', ')}`);
     }
 
-    if (!options.collection) {
+    if (!opts.collection) {
       throw new Error('Please provide a followers collection.');
     }
 
     this._origClParse = this.collection.parse;
     this.collection.parse = this.collectionParse.bind(this);
 
-    this.options = options;
+    this.options = opts;
+    this.followType = opts.followType;
     this.userCardViews = [];
+    this.indexedUserCardViews = {};
     this.renderedCl = new Followers([], {
       peerId: opts.peerId,
       type: opts.followType,
@@ -85,11 +90,13 @@ export default class extends BaseVw {
   onOwnFollowingUpdate(cl, opts) {
     if (opts.changes.added.length) {
       if (this.ownPage) {
-        if (this.options.type === 'following') this.collection.add(opts.changes.added);
-      } else if (this.options.type === 'followers') {
-        const md = app.ownFollowing.get(this.model.id);
-        if (md && opts.changes.added.indexOf(md) > -1) {
-          this.collection.add(md);
+        if (this.followType === 'following') this.collection.add(opts.changes.added);
+      } else if (this.followType === 'followers') {
+        const isUserNewlyFollowed =
+          !!opts.changes.added.find(addMd => (addMd.id === this.model.id));
+
+        if (isUserNewlyFollowed) {
+          this.collection.add({ peerId: app.profile.id }, { at: 0 });
         }
       }
     }
@@ -100,10 +107,13 @@ export default class extends BaseVw {
       // list and cleaning house and since the unfollow process takes a while, it could
       // be chaotic for the cards to just disappear at some later time. The follow button
       // state on the card will correctly reflect that the user is no longer followed.
+      if (this.ownPage) return;
 
-      if (!this.ownPage && this.options.type === 'followers') {
-        if (opts.changes.removed.filter(removedMd => (removedMd.id === this.model.id))) {
-          this.collection.remove(this.model.id);
+      if (this.followType === 'followers') {
+        const isUserNewlyUnfollowed =
+          !!opts.changes.removed.find(removedMd => (removedMd.id === this.model.id));
+        if (isUserNewlyUnfollowed) {
+          this.collection.remove(app.profile.id);
         }
       }
     }
@@ -156,8 +166,41 @@ export default class extends BaseVw {
     });
   }
 
+  /**
+   * Other nodes followers lists are not up to date. Since we do have
+   * up to date knowledge of our own following / followers data, if we
+   * know some part of the other nodes followers lists are not accurate,
+   * we'll adjust them.
+   */
   collectionParse(response) {
-    return this._origClParse.call(this.collection, response);
+    let users = [...response];
+
+    if (!this.ownPage) {
+      if (this.followType === 'followers') {
+        const iFollow = followedByYou(this.model.id);
+        if (iFollow) {
+          if (users.indexOf(app.profile.id) === -1) {
+            // I am not in their followers list but should be.
+            users = [app.profile.id, ...users];
+          }
+        } else if (users.indexOf(app.profile.id) > -1) {
+          // I am in their followers list when I shouldn't be.
+          users.splice(users.indexOf(app.profile.id), 1);
+        }
+      } else if (typeof this.followsMe !== 'undefined') {
+        if (this.followsMe) {
+          if (users.indexOf(app.profile.id) === -1) {
+            // I am not in their following list but should be.
+            users = [app.profile.id, ...users];
+          }
+        } else if (users.indexOf(app.profile.id) > -1) {
+          // I am in their following list when I shouldn't be.
+          users.splice(users.indexOf(app.profile.id), 1);
+        }
+      }
+    }
+
+    return this._origClParse.call(this.collection, users);
   }
 
   removeUserCard(peerId) {
@@ -165,10 +208,11 @@ export default class extends BaseVw {
       throw new Error('Please provide a peerId');
     }
 
-    const view = this.userCardViews.find(vw => vw.guid === peerId);
+    const view = this.indexedUserCardViews[peerId];
     if (view) {
       view.remove();
       this.userCardViews.splice(this.userCardViews.indexOf(view), 1);
+      delete this.indexedUserCardViews[peerId];
     }
   }
 
@@ -184,6 +228,7 @@ export default class extends BaseVw {
     if (insertionType === 'replace') {
       this.userCardViews.forEach(user => user.remove());
       this.userCardViews = [];
+      this.indexedUserCardViews = {};
     }
 
     const usersFrag = document.createDocumentFragment();
@@ -191,6 +236,7 @@ export default class extends BaseVw {
     models.forEach(user => {
       const view = this.createChild(UserCard, { guid: user.id });
       this.userCardViews.push(view);
+      this.indexedUserCardViews[user.id] = view;
       view.render().$el.appendTo(usersFrag);
     });
 
@@ -202,10 +248,6 @@ export default class extends BaseVw {
   }
 
   fetch() {
-    if (this.fetchCall && this.fetchCall.state() === 'pending') {
-      return this.fetchCall;
-    }
-
     if (this.followLoading) {
       this.followLoading.setState({
         isFetching: true,
@@ -214,25 +256,44 @@ export default class extends BaseVw {
       });
     }
 
-    this.fetchCall = this.collection.fetch()
-      .done((list, txtStatus, xhr) => {
-        if (xhr.statusText === 'abort') return;
-        this.onCollectionFetched.call(this);
-      }).fail(xhr => {
-        if (this.followLoading) {
-          this.followLoading.setState({
-            isFetching: false,
-            fetchFailed: true,
-            fetchErrorMsg: xhr.responseJSON && xhr.responseJSON.reason || '',
-          });
-        }
-      });
+    const followsYouDeferred = $.Deferred();
 
-    return this.fetchCall;
+    if (!this.ownPage && this.followType === 'following' &&
+      (!this.followsYouFetch || this.followsYouFetchFailed)) {
+      this.followsYouFetch = followsYou(this.model.id)
+        .done(data => {
+          this.followsMe = data.followsMe;
+          followsYouDeferred.resolve();
+        });
+    } else {
+      followsYouDeferred.resolve();
+    }
+
+    followsYouDeferred
+      .always(() => {
+        this.followFetch = this.collection.fetch()
+          .done(() => (this.onCollectionFetched.call(this)))
+          .fail(xhr => {
+            if (xhr.statusText === 'abort') return;
+            if (xhr === this.followFetch) {
+              if (this.followLoading) {
+                this.followLoading.setState({
+                  isFetching: false,
+                  fetchFailed: true,
+                  fetchErrorMsg: xhr.responseJSON && xhr.responseJSON.reason || '',
+                });
+              }
+            }
+          });
+      });
   }
 
   remove() {
-    if (this.fetchCall) this.fetchCall.abort();
+    if (this.followFetch) this.followFetch.abort();
+    if (this.followsYouFetch && this.followsYouFetch.abort) {
+      this.followsYouFetch.abort();
+    }
+    super.remove();
   }
 
   render() {
@@ -246,7 +307,7 @@ export default class extends BaseVw {
     let noResultsMsg;
     let fetchErrorTitle;
 
-    if (this.options.type === 'follow') {
+    if (this.followType === 'follow') {
       fetchErrorTitle = app.polyglot.t('userPage.followTab.followersFetchError');
       noResultsMsg = this.ownPage ?
         app.polyglot.t('userPage.followTab.noOwnFollowers') :
@@ -262,13 +323,17 @@ export default class extends BaseVw {
         });
     }
 
+    const isFetching =
+      (this.followsYouFetch && this.followsYouFetch.state() === 'pending') ||
+      (this.followFetch && this.followFetch.state() === 'pending');
+
     this.followLoading = this.createChild(FollowLoading, {
       initialState: {
-        isFetching: this.fetchCall && this.fetchCall.state() === 'pending',
-        fetchFailed: this.fetchCall && this.fetchCall.state() === 'rejected',
+        isFetching,
+        fetchFailed: this.followFetch && this.followFetch.state() === 'rejected',
         fetchErrorTitle,
-        fetchErrorMsg: this.fetchCall && this.fetchCall.responseJSON &&
-          this.fetchCall.responseJSON.reason || '',
+        fetchErrorMsg: this.followFetch && this.followFetch.responseJSON &&
+          this.followFetch.responseJSON.reason || '',
         noResultsMsg,
         noResults: !this.collection.length,
       },

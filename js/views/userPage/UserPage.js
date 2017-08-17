@@ -39,15 +39,13 @@ export default class extends baseVw {
       if (this._followerCount === 0 && app.ownFollowing.indexOf(this.model.id) > -1) {
         this._followerCount = 1;
       }
+    } else {
+      this._followingCount = app.ownFollowing.length;
     }
 
     if (!this.ownPage) {
       this.followedByYou = followedByYou(this.model.id);
-      console.log(this.model.id);
-      console.log('pep');
-      window.pep = app.ownFollowing;
-
-      this.listenTo(app.ownFollowing, 'sync update', () => {
+      this.listenTo(app.ownFollowing, 'update', () => {
         this.followedByYou = followedByYou(this.model.id);
         this.getCachedEl('.js-followBtn .js-btnText').text(
           this.followedByYou ? app.polyglot.t('userPage.unfollow') :
@@ -183,28 +181,33 @@ export default class extends baseVw {
   }
 
   createFollowersTabView(opts = {}) {
+    const collection = new Followers([], {
+      peerId: this.model.id,
+      type: 'followers',
+    });
+
+    this.listenTo(collection, 'sync',
+      () => (this.followerCount = collection.length));
+
     return this.createChild(this.tabViews.Follow, {
       ...opts,
       followType: 'followers',
       peerId: this.model.id,
-      collection: new Followers([], {
-        peerId: this.model.id,
-        type: 'followers',
-      }),
+      collection,
     });
   }
 
   createFollowingTabView(opts = {}) {
-    let collection;
+    const models = app.profile.id === this.model.id ?
+      app.ownFollowing.models : [];
+    const collection = new Followers(models, {
+      peerId: this.model.id,
+      type: 'following',
+      fetchCollection: app.profile.id !== this.model.id,
+    });
 
-    if (app.profile.id === this.model.id) {
-      collection = app.ownFollowing;
-    } else {
-      collection = new Followers([], {
-        peerId: this.model.id,
-        type: 'following',
-      });
-    }
+    this.listenTo(collection, 'sync',
+      () => (this.followingCount = collection.length));
 
     return this.createChild(this.tabViews.Follow, {
       ...opts,

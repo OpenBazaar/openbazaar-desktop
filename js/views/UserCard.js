@@ -11,26 +11,30 @@ import { openSimpleMessage } from './modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      fetchCachedProfile: true,
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
 
     if (this.model instanceof Profile) {
       this.guid = this.model.id;
       this.fetched = true;
-    } else if (this.model) {
-      this.guid = this.model.get('guid');
-      this.fetched = false;
     } else {
-      this.model = new UserCard({ guid: options.guid });
-      this.guid = options.guid;
-      this.fetched = false;
-    }
+      if (!opts.guid) {
+        throw new Error('If not providing a profile model, you must provide a guid.');
+      }
 
-    if (!this.guid) {
-      if (this.model) {
-        throw new Error('The guid must be provided in the model.');
+      this.guid = opts.guid;
+
+      if (opts.guid === app.profile.id) {
+        this.model = app.profile;
+        this.fetched = true;
       } else {
-        throw new Error('The guid must be provided in the options.');
+        this.model = new UserCard({ guid: opts.guid });
+        this.fetched = false;
       }
     }
 
@@ -49,8 +53,8 @@ export default class extends BaseVw {
       this.$modBtn.attr('data-tip', this.getModTip());
     });
 
-    this.listenTo(app.ownFollowing, 'update', (cl, opts) => {
-      const updatedModels = opts.changes.added.concat(opts.changes.removed);
+    this.listenTo(app.ownFollowing, 'update', (cl, updateOpts) => {
+      const updatedModels = updateOpts.changes.added.concat(updateOpts.changes.removed);
 
       if (updatedModels.filter(md => md.id === this.guid).length) {
         this.followedByYou = followedByYou(this.guid);
@@ -217,5 +221,6 @@ export default class extends BaseVw {
 
   remove() {
     if (this.profileFetch && this.profileFetch.abort) this.profileFetch.abort();
+    super.remove();
   }
 }
