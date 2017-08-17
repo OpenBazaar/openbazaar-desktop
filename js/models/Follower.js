@@ -1,3 +1,5 @@
+/* Used for as a list item of both follower and following lists */
+
 import BaseModel from './BaseModel';
 
 export default class extends BaseModel {

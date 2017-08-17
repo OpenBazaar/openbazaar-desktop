@@ -1,3 +1,5 @@
+/* Used for lists of followers and following */
+
 import app from '../app';
 import { Collection } from 'backbone';
 import Follower from '../models/Follower';
