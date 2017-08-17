@@ -488,7 +488,7 @@ function createWindow() {
 
   autoUpdater.on('checking-for-update', () => {
     mainWindow.send('updateChecking');
-    mainWindow.send('consoleMsg', `Checking for updates at ${autoUpdater.getFeedURL()}`);
+    mainWindow.send('consoleMsg', `Checking for update at ${autoUpdater.getFeedURL()}`);
   });
 
   autoUpdater.on('error', (err, msg) => {
@@ -547,8 +547,6 @@ function createWindow() {
   autoUpdater.setFeedURL(feedURL);
 
   mainWindow.webContents.on('dom-ready', () => {
-    mainWindow.send('consoleMsg', `Checking for updates at ${autoUpdater.getFeedURL()}`);
-
     // Check for updates every hour
     autoUpdater.checkForUpdates();
     setInterval(() => {
