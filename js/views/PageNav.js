@@ -1,6 +1,7 @@
-import { remote, ipcRenderer } from 'electron';
-import { isMultihash, playNotifSound } from '../utils';
+import { remote } from 'electron';
+import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
+import { setUnreadNotifCount, launchNativeNotification } from '../utils/notification';
 import Backbone from 'backbone';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
@@ -91,27 +92,25 @@ export default class extends BaseVw {
     if (notif) {
       if (notif.type === 'unfollow') return;
       this.unreadNotifCount = (this.unreadNotifCount || 0) + 1;
-      ipcRenderer.send('set-badge-count', this.unreadNotifCount);
+      setUnreadNotifCount(this.unreadNotifCount);
 
       const notifDisplayData = getNotifDisplayData(notif, { native: true });
       const nativeNotifData = {
         silent: true,
+        onclick: () => {
+          remote.getCurrentWindow().restore();
+
+          if (notifDisplayData.route) {
+            location.hash = notifDisplayData.route;
+          }
+        },
       };
 
       if (notif.thumbnail) {
         nativeNotifData.icon = app.getServerUrl(`ipfs/${notif.thumbnail.small}`);
       }
 
-      const nativeNotif = new Notification(notifDisplayData.text, nativeNotifData);
-      nativeNotif.onclick = () => {
-        remote.getCurrentWindow().restore();
-
-        if (notifDisplayData.route) {
-          location.hash = notifDisplayData.route;
-        }
-      };
-
-      playNotifSound();
+      launchNativeNotification(notifDisplayData.text, nativeNotifData);
     }
   }
 
@@ -175,7 +174,7 @@ export default class extends BaseVw {
     if (count === this._unreadNotifCount) return;
     this._unreadNotifCount = count;
     this.renderUnreadNotifCount();
-    ipcRenderer.send('set-badge-count', this.unreadNotifCount);
+    setUnreadNotifCount(this.unreadNotifCount);
   }
 
   fetchUnreadNotifCount() {

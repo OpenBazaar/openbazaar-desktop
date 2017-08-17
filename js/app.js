@@ -2,6 +2,8 @@
 // shared state (e.g. router)
 
 export default {
+  serverConfig: {},
+
   // Short-hand convenience method to get the HTTP url of the active server configuration
   getServerUrl(urlFrag = '') {
     if (!this.serverConfigs) {
@@ -12,6 +14,4 @@ export default {
     return this.serverConfigs.activeServer ?
       `${this.serverConfigs.activeServer.httpUrl}${urlFrag}` : '';
   },
-
-  serverConfig: {},
 };
