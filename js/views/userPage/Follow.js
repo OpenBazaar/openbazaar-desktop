@@ -14,6 +14,7 @@ export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
       followType: 'followers',
+      fetchCollection: true,
       ...options,
     };
 
@@ -45,10 +46,10 @@ export default class extends BaseVw {
     });
     this.listenTo(this.renderedCl, 'update', this.onCollectionUpdate);
 
-    if (this.collection === app.ownFollowing) {
-      setTimeout(() => this.onCollectionFetched.call(this));
-    } else {
+    if (opts.fetchCollection) {
       this.fetch();
+    } else {
+      setTimeout(() => this.onCollectionFetched.call(this));
     }
 
     this.listenTo(app.ownFollowing, 'update', this.onOwnFollowingUpdate);

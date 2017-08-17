@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { capitalize } from '../utils/string';
 import app from '../app';
 import Dialog from '../views/modals/Dialog';
 
@@ -19,6 +20,11 @@ export function followUnfollow(guid, type = 'follow') {
     throw new Error('You must provide a valid guid.');
   }
 
+  const types = ['follow', 'unfollow'];
+  if (types.indexOf(type) === -1) {
+    throw new Error(`type must be one of ${types.join(', ')}`);
+  }
+
   if (guid === app.profile.id) {
     throw new Error('You can not follow or unfollow your own guid');
   }
@@ -34,14 +40,16 @@ export function followUnfollow(guid, type = 'follow') {
       if (type === 'follow') {
         app.ownFollowing.unshift({ peerId: guid });
       } else {
-        app.ownFollowing.remove(guid); // remove via id
+        app.ownFollowing.remove(guid);
       }
     })
-    .fail((data) => {
-      // todo: more specific error title.
+    .fail(data => {
       new Dialog({
-        title: app.polyglot.t('errors.badResult'),
-        message: data.responseJSON.reason,
+        title: app.polyglot.t('follow.followErrorTitle', {
+          type: app.polyglot.t(`follow.type${capitalize(type)}`),
+          user: guid,
+        }),
+        message: data.responseJSON && data.responseJSON.reason || '',
       })
         .render()
         .open();

@@ -10,6 +10,11 @@
     "statusPublishFailed": "Publishing failed. %{retryLink}",
     "statusPublishComplete": "Publishing complete."
   },
+  "follow": {
+    "typeFollow": "following",
+    "typeUnfollow": "unfollowing",
+    "followErrorTitle": "There was an error %{type} %{user}."
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -1400,10 +1405,6 @@
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
-  },
-  "errors": {
-    "saveError": "There was an error saving your data.",
-    "badResult": "The server returned an error."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
