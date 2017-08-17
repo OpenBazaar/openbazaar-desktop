@@ -4,37 +4,28 @@ import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
-import Profile from '../models/profile/Profile';
-import UserCard from '../models/UserCard';
+import Profile, { getCachedProfiles } from '../models/profile/Profile';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const opts = {
-      fetchCachedProfile: true,
-      ...options,
-    };
-
-    super(opts);
-    this.options = opts;
+    super(options);
+    this.options = options;
 
     if (this.model instanceof Profile) {
       this.guid = this.model.id;
       this.fetched = true;
     } else {
-      if (!opts.guid) {
-        throw new Error('If not providing a profile model, you must provide a guid.');
-      }
+      this.guid = options.guid;
+      this.fetched = false;
+    }
 
-      this.guid = opts.guid;
-
-      if (opts.guid === app.profile.id) {
-        this.model = app.profile;
-        this.fetched = true;
+    if (!this.guid) {
+      if (this.model) {
+        throw new Error('The guid must be provided in the model.');
       } else {
-        this.model = new UserCard({ guid: opts.guid });
-        this.fetched = false;
+        throw new Error('The guid must be provided in the options.');
       }
     }
 
@@ -81,19 +72,16 @@ export default class extends BaseVw {
   }
 
   loadUser(guid = this.guid) {
-    let profile;
     this.fetched = true;
 
     if (guid === app.profile.id) {
-      // don't fetch our this user's own profile, since we have it already
-      this.profileFetch = $.Deferred().resolve();
-      profile = app.profile;
+      // don't fetch this user's own profile, since we have it already
+      this.profileFetch = $.Deferred().resolve(app.profile);
     } else {
-      profile = new Profile({ peerID: guid });
-      this.profileFetch = profile.fetch();
+      this.profileFetch = getCachedProfiles([guid])[0];
     }
 
-    this.profileFetch.done(() => {
+    this.profileFetch.done(profile => {
       if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = false;
@@ -205,7 +193,7 @@ export default class extends BaseVw {
         getModTip: this.getModTip,
         getFollowTip: this.getFollowTip,
         ...this.options,
-        ...this.model.toJSON(),
+        ...(this.model && this.model.toJSON() || {}),
       }));
 
       this._$followBtn = null;
