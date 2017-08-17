@@ -2,7 +2,7 @@ import $ from 'jquery';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import { followedByYou, followUnfollow } from '../../utils/follow';
+import { followedByYou, followUnfollow, followsYou } from '../../utils/follow';
 import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
@@ -64,6 +64,15 @@ export default class extends baseVw {
 
     this.listenTo(app.ownFollowing, 'add', this.onOwnFollowingAdd);
     this.listenTo(app.ownFollowing, 'remove', this.onOwnFollowingRemove);
+
+    this.followsYou = false;
+    followsYou(this.model.id).done(data => {
+      if (this.miniProfile) {
+        this.miniProfile.setState({ followsYou: data.followsMe });
+      }
+
+      if (this.followerCount === 0) this.followerCount += 1;
+    });
   }
 
   className() {
@@ -334,6 +343,10 @@ export default class extends baseVw {
       if (this.miniProfile) this.miniProfile.remove();
       this.miniProfile = this.createChild(MiniProfile, {
         model: this.model,
+        fetchFollowsYou: false,
+        initialState: {
+          followsYou: this.followsYou,
+        },
       });
       this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
 

@@ -123,6 +123,10 @@ export default class extends BaseVw {
   onCollectionUpdate(cl, opts) {
     this.$el.toggleClass('noResults', !cl.length);
 
+    if (this.followLoading) {
+      this.followLoading.setState({ noResults: !cl.length });
+    }
+
     if (opts.changes.added.length) {
       // Expecting either a single new user on the bottom (own node
       // must have followed in the UI) or a page of users at the bottom.
@@ -308,7 +312,7 @@ export default class extends BaseVw {
     let noResultsMsg;
     let fetchErrorTitle;
 
-    if (this.followType === 'follow') {
+    if (this.followType === 'followers') {
       fetchErrorTitle = app.polyglot.t('userPage.followTab.followersFetchError');
       noResultsMsg = this.ownPage ?
         app.polyglot.t('userPage.followTab.noOwnFollowers') :
