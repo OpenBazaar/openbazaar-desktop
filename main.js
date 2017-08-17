@@ -181,6 +181,30 @@ function createWindow() {
     }, 60 * 60 * 1000);
   };
 
+  let helpSubmenu = [
+    {
+      label: 'Documentation',
+      click() {
+        shell.openExternal('https://docs.openbazaar.org');
+      },
+    },
+  ];
+
+  if (isBundledApp()) {
+    helpSubmenu = [
+      {
+        label: 'Check for Updates...',
+        click() {
+          checkForUpdates();
+        },
+      },
+      {
+        type: 'separator',
+      },
+      ...helpSubmenu,
+    ];
+  }
+
   const template = [
     {
       label: 'Edit',
@@ -260,23 +284,7 @@ function createWindow() {
     },
     {
       role: 'help',
-      submenu: [
-        {
-          label: 'Check for Updates...',
-          click() {
-            checkForUpdates();
-          },
-        },
-        {
-          type: 'separator',
-        },
-        {
-          label: 'Documentation',
-          click() {
-            shell.openExternal('https://docs.openbazaar.org');
-          },
-        },
-      ],
+      submenu: helpSubmenu,
     },
   ];
 
@@ -496,50 +504,51 @@ function createWindow() {
    * the software then they will send an IPC message back to the main process and we will
    * begin to download the file and update the software.
    */
+  if (isBundledApp()) {
+    autoUpdater.on('checking-for-update', () => {
+      mainWindow.send('updateChecking');
+      mainWindow.send('consoleMsg', `Checking for update at ${autoUpdater.getFeedURL()}`);
+    });
 
-  autoUpdater.on('checking-for-update', () => {
-    mainWindow.send('updateChecking');
-    mainWindow.send('consoleMsg', `Checking for update at ${autoUpdater.getFeedURL()}`);
-  });
+    autoUpdater.on('error', (err, msg) => {
+      mainWindow.send('consoleMsg', msg);
+      mainWindow.send('updateError', msg);
+    });
 
-  autoUpdater.on('error', (err, msg) => {
-    mainWindow.send('consoleMsg', msg);
-    mainWindow.send('updateError', msg);
-  });
+    autoUpdater.on('update-not-available', () => {
+      mainWindow.send('updateNotAvailable');
+    });
 
-  autoUpdater.on('update-not-available', () => {
-    mainWindow.send('updateNotAvailable');
-  });
+    autoUpdater.on('update-available', () => {
+      mainWindow.send('updateAvailable');
+    });
 
-  autoUpdater.on('update-available', () => {
-    mainWindow.send('updateAvailable');
-  });
+    autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
+                                         releaseDate, updateUrl) => {
+      const opts = {};
+      opts.Name = releaseName;
+      opts.URL = updateUrl;
+      opts.Date = releaseDate;
+      opts.Notes = releaseNotes;
+      mainWindow.send('updateReadyForInstall', opts);
+    });
 
-  autoUpdater.on('update-downloaded', (e, releaseNotes, releaseName,
-                                       releaseDate, updateUrl) => {
-    const opts = {};
-    opts.Name = releaseName;
-    opts.URL = updateUrl;
-    opts.Date = releaseDate;
-    opts.Notes = releaseNotes;
-    mainWindow.send('updateReadyForInstall', opts);
-  });
+    // Listen for installUpdate command to install the update
+    ipcMain.on('installUpdate', () => {
+      autoUpdater.quitAndInstall();
+    });
 
-// Listen for installUpdate command to install the update
-  ipcMain.on('installUpdate', () => {
-    autoUpdater.quitAndInstall();
-  });
+    // Listen for checkForUpdate command to manually check for new versions
+    ipcMain.on('checkForUpdate', () => {
+      checkForUpdates();
+    });
 
-// Listen for checkForUpdate command to manually check for new versions
-  ipcMain.on('checkForUpdate', () => {
-    checkForUpdates();
-  });
-
-  autoUpdater.setFeedURL(feedURL);
+    autoUpdater.setFeedURL(feedURL);
+  }
 
   mainWindow.webContents.on('dom-ready', () => {
     // Check for an update once the DOM is ready so the update dialog box can be shown
-    checkForUpdates();
+    if (isBundledApp()) checkForUpdates();
   });
 
   // Set up protocol
