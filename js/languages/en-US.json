@@ -10,6 +10,11 @@
     "statusPublishFailed": "Publishing failed. %{retryLink}",
     "statusPublishComplete": "Publishing complete."
   },
+  "follow": {
+    "typeFollow": "following",
+    "typeUnfollow": "unfollowing",
+    "followErrorTitle": "There was an error %{type} %{user}."
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -162,10 +167,15 @@
     "website": "Website",
     "email": "Email",
     "noLocation": "No Location",
-    "noFollowers": "No One is Following %{name} Yet",
-    "noFollowing": "%{name} is Not Following Anyone Yet",
-    "noOwnFollowers": "You Don't Have Any Followers Yet",
-    "noOwnFollowing": "You Aren't Following Anyone Yet",
+    "followTab": {
+      "noFollowers": "No One is Following %{name} Yet",
+      "noFollowing": "%{name} is Not Following Anyone Yet",
+      "noOwnFollowers": "You Don't Have Any Followers Yet",
+      "noOwnFollowing": "You Aren't Following Anyone Yet",
+      "followersFetchError": "Unable to fetch the followers list.",
+      "followingFetchError": "Unable to fetch the following list.",
+      "btnRetry": "Retry"
+    },
     "getFollowingError": "There was an error when determining if this user follows you.",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
@@ -1407,10 +1417,6 @@
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
-  },
-  "errors": {
-    "saveError": "There was an error saving your data.",
-    "badResult": "The server returned an error."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",

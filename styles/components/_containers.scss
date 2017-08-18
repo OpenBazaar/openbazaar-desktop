@@ -297,7 +297,7 @@
   }
 }
 
-.toolTip {
+.toolTip:not(.processing) {
   // Adds a tooltip that gets its text from the data-tip attribute.
   // You can't put this on a class that already had before and after rules, like an icon.
   // To add a tooltip to an icon, wrap it in another element, and put the tooltip on that.
@@ -364,8 +364,8 @@
 
 // Use for single line variable width tooltips. Factor in translations and
 // where you're tooltip will display. If it's possible it can get so wide that
-// it wouldn't look right, you'll probably want it to wrap (i.e. dont use this class).'
-&.toolTipNoWrap {
+// it wouldn't look right, you'll probably want it to wrap (i.e. dont use this class).
+.toolTipNoWrap:not(.processing) {  
   @extend .toolTip;
 
   &:before {

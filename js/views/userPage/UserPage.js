@@ -2,7 +2,7 @@ import $ from 'jquery';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import { followedByYou, followUnfollow } from '../../utils/follow';
+import { followedByYou, followUnfollow, followsYou } from '../../utils/follow';
 import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
@@ -10,6 +10,7 @@ import { launchEditListingModal, launchSettingsModal } from '../../utils/modalMa
 import { getCurrentConnection } from '../../utils/serverConnect';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
+import Followers from '../../collections/Followers';
 import MiniProfile from '../MiniProfile';
 import Home from './Home';
 import Store from './Store';
@@ -19,19 +20,32 @@ import Reputation from './Reputation';
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+
+    if (!options.model) {
+      throw new Error('Please provide a user model.');
+    }
+
     this.options = options;
-
     this.ownPage = this.model.id === app.profile.id;
-
     this.state = options.state || 'store';
-
     this.tabViewCache = {};
     this.tabViews = { Home, Store, Follow, Reputation };
 
+    const stats = this.model.get('stats');
+    this._followingCount = stats.get('followingCount');
+    this._followerCount = stats.get('followerCount');
+
+    if (!this.ownPage) {
+      if (this._followerCount === 0 && app.ownFollowing.indexOf(this.model.id) > -1) {
+        this._followerCount = 1;
+      }
+    } else {
+      this._followingCount = app.ownFollowing.length;
+    }
+
     if (!this.ownPage) {
       this.followedByYou = followedByYou(this.model.id);
-
-      this.listenTo(app.ownFollowing, 'sync update', () => {
+      this.listenTo(app.ownFollowing, 'update', () => {
         this.followedByYou = followedByYou(this.model.id);
         this.getCachedEl('.js-followBtn .js-btnText').text(
           this.followedByYou ? app.polyglot.t('userPage.unfollow') :
@@ -47,6 +61,18 @@ export default class extends baseVw {
     if (this.curConn && this.curConn.server) {
       this.showStoreWelcomeCallout = !this.curConn.server.get('dismissedStoreWelcome');
     }
+
+    this.listenTo(app.ownFollowing, 'add', this.onOwnFollowingAdd);
+    this.listenTo(app.ownFollowing, 'remove', this.onOwnFollowingRemove);
+
+    this.followsYou = false;
+    followsYou(this.model.id).done(data => {
+      if (this.miniProfile) {
+        this.miniProfile.setState({ followsYou: data.followsMe });
+      }
+
+      if (this.followingCount === 0 && !this.ownPage) this.followingCount = 1;
+    });
   }
 
   className() {
@@ -63,6 +89,22 @@ export default class extends baseVw {
       'click .js-createListing': 'clickCreateListing',
       'click .js-closeStoreWelcomeCallout': 'clickCloseStoreWelcomeCallout',
     };
+  }
+
+  onOwnFollowingAdd(md) {
+    if (this.ownPage) {
+      this.followingCount += 1;
+    } else if (md.id === this.model.id) {
+      this.followerCount += 1;
+    }
+  }
+
+  onOwnFollowingRemove(md) {
+    if (this.ownPage) {
+      this.followingCount -= 1;
+    } else if (md.id === this.model.id) {
+      this.followerCount -= 1;
+    }
   }
 
   clickTab(e) {
@@ -106,6 +148,36 @@ export default class extends baseVw {
     }
   }
 
+  get followingCount() {
+    return this._followingCount;
+  }
+
+  set followingCount(count) {
+    if (typeof count !== 'number') {
+      throw new Error('Please provide a numeric count.');
+    }
+
+    if (count !== this._followingCount) {
+      this._followingCount = count;
+      this.getCachedEl('.js-followingCount').text(count);
+    }
+  }
+
+  get followerCount() {
+    return this._followerCount;
+  }
+
+  set followerCount(count) {
+    if (typeof count !== 'number') {
+      throw new Error('Please provide a numeric count.');
+    }
+
+    if (count !== this._followerCount) {
+      this._followerCount = count;
+      this.getCachedEl('.js-followerCount').text(count);
+    }
+  }
+
   updateHeader() {
     const headerHashes = this.model.get('headerHashes').toJSON();
     const headerHash = isHiRez() ? headerHashes.large : headerHashes.medium;
@@ -118,16 +190,39 @@ export default class extends baseVw {
   }
 
   createFollowersTabView(opts = {}) {
+    const collection = new Followers([], {
+      peerId: this.model.id,
+      type: 'followers',
+    });
+
+    this.listenTo(collection, 'sync',
+      () => (this.followerCount = collection.length));
+
     return this.createChild(this.tabViews.Follow, {
       ...opts,
-      followType: 'Followers',
+      followType: 'followers',
+      peerId: this.model.id,
+      collection,
     });
   }
 
   createFollowingTabView(opts = {}) {
+    const models = app.profile.id === this.model.id ?
+      app.ownFollowing.models : [];
+    const collection = new Followers(models, {
+      peerId: this.model.id,
+      type: 'following',
+      fetchCollection: app.profile.id !== this.model.id,
+    });
+
+    this.listenTo(collection, 'sync',
+      () => (this.followingCount = collection.length));
+
     return this.createChild(this.tabViews.Follow, {
       ...opts,
-      followType: 'Following',
+      followType: 'following',
+      peerId: this.model.id,
+      collection,
     });
   }
 
@@ -222,6 +317,11 @@ export default class extends baseVw {
       (this._$listingsCount = this.$('.js-listingsCount'));
   }
 
+  remove() {
+    if (this.followingFetch) this.followingFetch.abort();
+    super.remove();
+  }
+
   render() {
     super.render();
     loadTemplate('userPage/userPage.html', (t) => {
@@ -230,6 +330,8 @@ export default class extends baseVw {
         followed: this.followedByYou,
         ownPage: this.ownPage,
         showStoreWelcomeCallout: this.showStoreWelcomeCallout,
+        followingCount: this.followingCount,
+        followerCount: this.followerCount,
       }));
 
       this.$tabContent = this.$('.js-tabContent');
@@ -241,6 +343,10 @@ export default class extends baseVw {
       if (this.miniProfile) this.miniProfile.remove();
       this.miniProfile = this.createChild(MiniProfile, {
         model: this.model,
+        fetchFollowsYou: false,
+        initialState: {
+          followsYou: this.followsYou,
+        },
       });
       this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
 

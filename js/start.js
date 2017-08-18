@@ -266,10 +266,10 @@ let walletBalanceFetch;
 let walletBalanceFetchFailed;
 
 function fetchStartupData() {
-  ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
+  ownFollowingFetch = !ownFollowingFetch || ownFollowingFailed ?
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
-  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch ?
+  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetchFailed ?
     app.walletBalance.fetch() : walletBalanceFetch;
 
   $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch)
@@ -344,7 +344,7 @@ function onboardIfNeeded() {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
-      fetchStartupData().done(() => onboardIfNeededDeferred.resolve());
+      onboardIfNeededDeferred.resolve();
     }
   });
 
@@ -383,8 +383,10 @@ function start() {
       app.localSettings.save('language', getValidLanguage(lang));
     });
 
-    app.ownFollowing = new Followers(null, { type: 'following' });
-    app.ownFollowers = new Followers(null, { type: 'followers' });
+    app.ownFollowing = new Followers([], {
+      type: 'following',
+      peerId: app.profile.id,
+    });
 
     app.walletBalance = new WalletBalance();
 
@@ -757,21 +759,6 @@ ipcRenderer.on('close-attempt', (e) => {
     .render()
     .open();
   }
-});
-
-// update ownFollowers based on follow socket communication
-serverConnectEvents.on('connected', (connectedEvent) => {
-  connectedEvent.socket.on('message', (e) => {
-    if (e.jsonData) {
-      if (e.jsonData.notification) {
-        if (e.jsonData.notification.type === 'follow') {
-          app.ownFollowers.unshift({ guid: e.jsonData.notification.peerId });
-        } else if (e.jsonData.notification.type === 'unfollow') {
-          app.ownFollowers.remove(e.jsonData.notification.peerId); // remove by id
-        }
-      }
-    }
-  });
 });
 
 // initialize our listing delete handler
