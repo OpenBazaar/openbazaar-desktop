@@ -43,7 +43,7 @@ export function parseEmojis(text, className = '', attrs = {}) {
  */
 export function formatRating(average, count) {
   const avIsNum = typeof average === 'number';
-  const ratingAverage = avIsNum ? parseFloat(average.toFixed(2)) : '';
+  const ratingAverage = avIsNum ? average.toFixed(1) : '';
   const ratingCount = typeof count === 'number' ? ` (${count})` : '';
   return avIsNum ? `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}` : '';
 }
