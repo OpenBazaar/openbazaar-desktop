@@ -409,7 +409,7 @@
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
-        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share this button will delete them. This will not affect any files that belong to you.",
+        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
         "purgeError": "There was an error, your cached files may not have been deleted.",
         "purgeComplete": "Your cached files have been deleted.",
         "blockData": "Block Data",
@@ -417,7 +417,19 @@
         "blockDataBtn": "Show Block Data",
         "blockDataError": "There was an error, your block data could not be retrieved.",
         "blockDataTitle": "Your Block Data",
-        "blockDataCopy": "Copy to your Clipboard"
+        "blockDataCopy": "Copy to your Clipboard",
+        "backupWalletLbl": "Backup Wallet Seed",
+        "backupWalletHelper": "This seed will allow you to recover your wallet in case of computer failure.",
+        "unableToFetchSeedTitle": "There was an error fetching your wallet seed",
+        "walletSeed": {
+          "btnShowSeed": "Show Seed",
+          "introLine": "Your wallet generation seed is:",
+          "directionLine": "Please save these words on paper (order is important).",
+          "warningHeading": "Warning:",
+          "warning1": "Never disclose your seed.",
+          "warning2": "Never type it on a website.",
+          "warning3": "Do not store it electronically."
+        }
       },
       "transaction": {
         "sectionName": "Transactions",
