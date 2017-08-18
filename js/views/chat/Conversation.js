@@ -26,7 +26,7 @@ export default class extends baseVw {
     }
 
     if (!options.guid) {
-      throw new Error('Please provide the GUID of the person you are conversing with.');
+      throw new Error('Please provide the peer ID of the person you are conversing with.');
     }
 
     if (options.subject && options.subject.length > ChatMessage.max.subjectLength) {
