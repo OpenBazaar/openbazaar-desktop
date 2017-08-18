@@ -88,7 +88,7 @@ export default class extends baseVw {
   }
 
   clickCustomize() {
-    launchSettingsModal({ initTab: 'Page' });
+    launchSettingsModal({ initialTab: 'Page' });
   }
 
   clickCreateListing() {

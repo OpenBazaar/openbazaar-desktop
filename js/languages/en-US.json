@@ -702,7 +702,10 @@
         "feeBumpOf": "Fee bump of %{address}"
       },
       "noTransactionsPlaceholder": "You have no transactions.",
-      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}"
+      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}",
+      "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
+      "recoverySeedLink": "backup your wallet recovery seed",
+      "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
     }
   },
   "formats": {

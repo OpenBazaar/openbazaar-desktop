@@ -3,6 +3,9 @@ import _ from 'underscore';
 import app from '../../../app';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { getSocket } from '../../../utils/serverConnect';
+import { openSimpleMessage } from '../SimpleMessage';
+import { launchSettingsModal } from '../../../utils/modalManager';
+import { getCurrentConnection } from '../../../utils/serverConnect';
 import TransactionMd from '../../../models/wallet/Transaction';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -225,6 +228,30 @@ export default class extends baseVw {
 
       if (typeof this.countAtFirstFetch === 'undefined') {
         this.countAtFirstFetch = data.count;
+      }
+
+      if (this.collection.length) {
+        const curConn = getCurrentConnection();
+
+        if (curConn && curConn.server && !curConn.server.get('backupWalletWarned')) {
+          const warning = openSimpleMessage(
+            app.polyglot.t('wallet.transactions.backupWalletWarningTitle'),
+            app.polyglot.t('wallet.transactions.backupWalletWarningBody', {
+              link: '<a class="js-recoverWalletSeed">' +
+                `${app.polyglot.t('wallet.transactions.recoverySeedLink')}</a>`,
+            })
+          );
+
+          warning.$el.on('click', '.js-recoverWalletSeed', () => {
+            launchSettingsModal({
+              initialTab: 'Advanced',
+              scrollTo: '.js-backupWalletSection',
+            });
+            warning.remove();
+          });
+
+          curConn.server.save({ backupWalletWarned: true });
+        }
       }
     });
 

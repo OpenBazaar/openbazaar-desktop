@@ -14,6 +14,8 @@ export default class extends BaseModal {
     const opts = {
       removeOnClose: true,
       removeOnRoute: false,
+      initialTab: 'General',
+      scrollTo: '',
       ...options,
     };
 
@@ -29,8 +31,6 @@ export default class extends BaseModal {
       Advanced,
       Moderation,
     };
-
-    this.initTab = this.tabViews.hasOwnProperty(opts.initTab) ? opts.initTab : 'General';
 
     this.listenTo(app.router, 'will-route', () => {
       this.close(true);
@@ -55,7 +55,7 @@ export default class extends BaseModal {
     this.selectTab(targ);
   }
 
-  selectTab(targ) {
+  selectTab(targ, options = {}) {
     const tabViewName = targ.data('tab');
     let tabView = this.tabViewCache[tabViewName];
 
@@ -72,6 +72,10 @@ export default class extends BaseModal {
 
       this.$tabContent.append(tabView.$el);
       this.currentTabView = tabView;
+
+      if (options.scrollTo && typeof tabView.scrollTo === 'function') {
+        setTimeout(() => tabView.scrollTo(options.scrollTo));
+      }
     }
   }
 
@@ -82,7 +86,9 @@ export default class extends BaseModal {
 
       this.$tabContent = this.$('.js-tabContent');
 
-      this.selectTab(this.$(`.js-tab[data-tab="${this.initTab}"]`));
+      this.selectTab(this.$(`.js-tab[data-tab="${this.options.initialTab}"]`), {
+        scrollTo: this.options.scrollTo,
+      });
     });
 
     return this;

@@ -160,7 +160,7 @@ export default class extends BaseModal {
   }
 
   clickNewAddress() {
-    launchSettingsModal({ initTab: 'Addresses' });
+    launchSettingsModal({ initialTab: 'Addresses' });
   }
 
   applyCoupon() {
