@@ -62,7 +62,7 @@
             <% ob.item.options.forEach((item) => { %>
               <div class="flexVCent gutterHLg">
                 <div class="col4 h5 txUnl"><%= item.name %></div>
-                <div class="col8">
+                <div class="col8 txLft">
                   <select class="js-variantSelect" name="<%= item.name %>">
                     <% item.variants.forEach((variant) => { %>
                       <option value="<%= variant.name %>"><%= variant.name %></option>
