@@ -71,7 +71,7 @@ export default class extends baseVw {
         this.miniProfile.setState({ followsYou: data.followsMe });
       }
 
-      if (this.followerCount === 0) this.followerCount += 1;
+      if (this.followingCount === 0 && !this.ownPage) this.followingCount = 1;
     });
   }
 

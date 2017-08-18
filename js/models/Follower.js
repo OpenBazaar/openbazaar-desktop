@@ -1,4 +1,4 @@
-/* Used for as a list item of both follower and following lists */
+/* Used as a list item of both follower and following lists */
 
 import BaseModel from './BaseModel';
 
