@@ -7,7 +7,7 @@
     const shippingPrice = ob.prices[i].sPrice;
     const surcharge = ob.prices[i].vPrice;
     const quantity = Number.isInteger(item.quantity) ? item.quantity : 1;
-    let itemTotal = basePrice;
+    let itemTotal = basePrice + surcharge;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
@@ -15,7 +15,7 @@
         itemTotal -= coupon.priceDiscount;
       }
     });
-    itemTotal = itemTotal + shippingPrice + surcharge;
+    itemTotal += shippingPrice;
     total += itemTotal * quantity;
     // don't allow coupons to make the total negative
     total = total > 0 ? total : 0;
@@ -28,6 +28,16 @@
       <%= ob.convertAndFormatCurrency(basePrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
     </b>
   </div>
+  <% if (ob.listing.item.options && ob.listing.item.options.length) { %>
+  <div class="flexRow">
+          <span class="flexExpand">
+            <%= ob.polyT('purchase.receipt.options') %>
+          </span>
+    <b class="flexNoShrink">
+      <%= ob.convertAndFormatCurrency(surcharge * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+    </b>
+  </div>
+  <% } %>
   <% ob.coupons.forEach((coupon) => { %>
     <div class="flexRow">
       <span class="flexExpand">
@@ -42,16 +52,7 @@
       </b>
     </div>
   <% }); %>
-  <% if (ob.listing.item.options && ob.listing.item.options.length) { %>
-  <div class="flexRow">
-        <span class="flexExpand">
-          <%= ob.polyT('purchase.receipt.options') %>
-        </span>
-    <b class="flexNoShrink">
-      <%= ob.convertAndFormatCurrency(surcharge * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
-    </b>
-  </div>
-  <% } %>
+
   <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
     <div class="flexRow">
       <span class="flexExpand">
