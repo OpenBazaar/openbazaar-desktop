@@ -7,6 +7,7 @@ import app from '../app';
 import multihashes from 'multihashes';
 import bitcoreLib from 'bitcore-lib';
 import twemoji from 'twemoji';
+import bech32 from 'bech32';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -142,7 +143,12 @@ export function isValidBitcoinAddress(address) {
     bitcoreLib.encoding.Base58Check.decode(address);
     return true;
   } catch (exc) {
-    return false;
+    try {
+        bech32.decode(address);
+        return true;
+    } catch(exc) {
+        return false;
+    }
   }
 }
 
