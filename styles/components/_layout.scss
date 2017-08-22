@@ -455,6 +455,11 @@
   margin-bottom: $padMd;
 }
 
+.gutterVMd2 > * {
+  @extend .gutterVFlush;
+  margin-bottom: $padMd2;
+}
+
 .gutterVLg > * {
   @extend .gutterVFlush;
   margin-bottom: $padLg;

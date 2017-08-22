@@ -1014,7 +1014,7 @@
     "pay": "PAY >",
     "payNote": "Clicking pay will advance you to the final step.",
     "pending": "Pending…",
-    "pendingNote": "Plese fund the order to complete your transaction.",
+    "pendingNote": "Please fund the order to complete your transaction.",
     "close": "close",
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
