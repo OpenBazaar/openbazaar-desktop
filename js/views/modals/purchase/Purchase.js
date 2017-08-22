@@ -473,15 +473,18 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
+      this.moderators.getModeratorsByID();
 
       if (this.shipping) {
         this.shipping.delegateEvents();
         this.$('.js-shippingWrapper').append(this.shipping.render().el);
       }
 
-      // remove old view if any on render
-      if (this.payment) this.payment.remove();
-      // pending view will be added once the purchase goes through
+      // if this is a re-render, and the payment exists, render it
+      if (this.payment) {
+        this.payment.delegateEvents();
+        this.$('.js-pending').append(this.payment.render().el);
+      }
 
       this.complete.delegateEvents();
       this.$('.js-complete').append(this.complete.render().el);
