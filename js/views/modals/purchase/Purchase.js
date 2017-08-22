@@ -452,6 +452,7 @@ export default class extends BaseModal {
         singleSelect: true,
         selectFirst: true,
         radioStyle: true,
+        useCache: false,
       });
       this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
