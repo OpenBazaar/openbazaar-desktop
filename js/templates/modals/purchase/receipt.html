@@ -1,31 +1,30 @@
 <hr class="clrBr">
 <b><%= ob.polyT('purchase.receipt.summary') %></b>
 <%
-  let total = 0;
+  const listingCurrency = ob.listing.metadata.pricingCurrency;
+  const viewingCurrency = ob.displayCurrency;
   ob.items.forEach((item, i) => {
-    const basePrice = ob.prices[i].price;
-    const shippingPrice = ob.prices[i].sPrice;
-    const surcharge = ob.prices[i].vPrice;
+    // convert and truncate the prices here, to prevent rounding errors in the display
+    const basePrice = Number(ob.convertCurrency(ob.prices[i].price, listingCurrency, viewingCurrency).toFixed(2));
+    const shippingPrice = Number(ob.convertCurrency(ob.prices[i].sPrice, listingCurrency, viewingCurrency).toFixed(2));
+    const surcharge = Number(ob.convertCurrency(ob.prices[i].vPrice, listingCurrency, viewingCurrency).toFixed(2));
     const quantity = Number.isInteger(item.quantity) ? item.quantity : 1;
     let itemTotal = basePrice + surcharge;
+    const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
       } else if (coupon.priceDiscount) {
-        itemTotal -= coupon.priceDiscount;
+        itemTotal -= ob.convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency).toFixed(2);
       }
     });
-    itemTotal += shippingPrice;
-    total += itemTotal * quantity;
-    // don't allow coupons to make the total negative
-    total = total > 0 ? total : 0;
 %>
   <div class="flexRow">
     <span class="flexExpand">
-      <%= ob.polyT('purchase.receipt.listing', { quantity }) %>
+      <%= ob.polyT('purchase.receipt.listing') %>
     </span>
     <b class="flexNoShrink">
-      <%= ob.convertAndFormatCurrency(basePrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+      <%= ob.formatCurrency(basePrice, viewingCurrency) %>
     </b>
   </div>
   <% if (ob.listing.item.options && ob.listing.item.options.length) { %>
@@ -34,7 +33,7 @@
             <%= ob.polyT('purchase.receipt.options') %>
           </span>
     <b class="flexNoShrink">
-      <%= ob.convertAndFormatCurrency(surcharge * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+      <%= ob.formatCurrency(surcharge, viewingCurrency) %>
     </b>
   </div>
   <% } %>
@@ -45,9 +44,9 @@
       </span>
       <b class="flexNoShrink">
         <% if (coupon.percentDiscount) {
-             print(`-${coupon.percentDiscount}%`);
+             print(`-${coupon.percentDiscount}% (-${preCouponPrice * 0.01 * coupon.percentDiscount})`);
         } else if (coupon.priceDiscount) {
-          print(`-${ob.convertAndFormatCurrency(Number(coupon.priceDiscount * quantity), ob.listing.metadata.pricingCurrency, ob.displayCurrency)}`);
+          print(`-${ob.convertAndFormatCurrency(Number(coupon.priceDiscount), listingCurrency, viewingCurrency)}`);
         } %>
       </b>
     </div>
@@ -59,17 +58,27 @@
         <%= ob.polyT('purchase.receipt.shipping') %>
       </span>
       <b class="flexNoShrink">
-        <%= ob.convertAndFormatCurrency(shippingPrice * quantity, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+        <%= ob.formatCurrency(shippingPrice, viewingCurrency) %>
       </b>
     </div>
   <% } %>
+  <hr class="clrBr">
+  <% if (quantity > 1) { %>
+    <div class="flexRow">
+      <span class="flexExpand">
+        <%= ob.polyT('purchase.receipt.subtotal') %>
+      </span>
+      <b class="flexNoShrink">
+        <%= ob.formatCurrency(itemTotal, viewingCurrency) %>
+      </b>
+    </div>
+  <% } %>
+  <div class="flexRow">
+    <span class="flexExpand">
+      <%= ob.polyT('purchase.receipt.total', { quantity }) %>
+    </span>
+    <b class="flexNoShrink">
+      <%= ob.formatCurrency(total, viewingCurrency) %>
+    </b>
+  </div>
 <% }); %>
-<hr class="clrBr">
-<div class="flexRow">
-  <span class="flexExpand">
-    <%= ob.polyT('purchase.receipt.total') %>
-  </span>
-  <b class="flexNoShrink">
-    <%= ob.convertAndFormatCurrency(total, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
-  </b>
-</div>

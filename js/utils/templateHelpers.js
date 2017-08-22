@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import app from '../app';
-import { formatCurrency, convertAndFormatCurrency } from './currency';
+import { formatCurrency, convertAndFormatCurrency, convertCurrency } from './currency';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -53,6 +53,7 @@ export const getServerUrl = app.getServerUrl.bind(app);
 export {
   formatCurrency,
   convertAndFormatCurrency,
+  convertCurrency,
   isHiRez,
   isLargeWidth,
   isSmallHeight,
