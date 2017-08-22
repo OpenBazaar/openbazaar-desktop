@@ -27,19 +27,9 @@
       <%= ob.polyT('purchase.receipt.listing') %>
     </span>
     <b class="flexNoShrink">
-      <%= ob.formatCurrency(basePrice, viewingCurrency) %>
+      <%= ob.formatCurrency(preCouponPrice, viewingCurrency) %>
     </b>
   </div>
-  <% if (ob.listing.item.options && ob.listing.item.options.length) { %>
-  <div class="flexRow">
-          <span class="flexExpand">
-            <%= ob.polyT('purchase.receipt.options') %>
-          </span>
-    <b class="flexNoShrink">
-      <%= ob.formatCurrency(surcharge, viewingCurrency) %>
-    </b>
-  </div>
-  <% } %>
   <% ob.coupons.forEach((coupon) => { %>
     <div class="flexRow">
       <span class="flexExpand">
@@ -47,7 +37,7 @@
       </span>
       <b class="flexNoShrink">
         <% if (coupon.percentDiscount) {
-             print(`-${coupon.percentDiscount}% (-${preCouponPrice * 0.01 * coupon.percentDiscount})`);
+             print(`-${coupon.percentDiscount}%`);
         } else if (coupon.priceDiscount) {
           print(`-${ob.convertAndFormatCurrency(Number(coupon.priceDiscount), listingCurrency, viewingCurrency)}`);
         } %>
