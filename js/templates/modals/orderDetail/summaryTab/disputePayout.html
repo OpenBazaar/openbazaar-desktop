@@ -1,6 +1,6 @@
 <%
   let priceLines = {};
-  let partyHeadings = {};  
+  let partyHeadings = {};
 
   ['buyer', 'vendor', 'moderator'].forEach(type => {
     priceLines[type] = ob.convertAndFormatCurrency(ob.payout[`${type}Output`].amount,
@@ -30,21 +30,21 @@
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></div>
         <div class="flexExpand tx5">
           <div class="rowTn txB"><%= partyHeadings.buyer %></div>
-          <div class="flex gutterH"><%= priceLines.buyer %></div>
+          <div><%= priceLines.buyer %></div>
         </div>
       </div>
       <div class="flex gutterH clrT">
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></span></div>
         <div class="flexExpand tx5">
           <div class="rowTn txB"><%= partyHeadings.vendor %></div>
-          <div class="flex gutterH"><%= priceLines.vendor %></div>
+          <div><%= priceLines.vendor %></div>
         </div>
       </div>
       <div class="flex gutterH clrT">
         <div class="avatarCol disc clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.moderatorAvatarHashes) %>"></span></div>
         <div class="flexExpand tx5">
           <div class="rowTn txB"><%= partyHeadings.moderator %></div>
-          <div class="flex gutterH"><%= priceLines.moderator %></div>
+          <div><%= priceLines.moderator %></div>
         </div>
       </div>
     </div>
@@ -80,7 +80,7 @@
           ob.polyT('orderDetail.summaryTab.disputePayout.noteFromHeading');
       %>
       <div class="rowTn"><%= noteFromHeading %></div>
-      <div class="flex gutterH"><%= ob.resolution %></div>
+      <div><%= ob.resolution %></div>
     </div>
   </div>
 </div>

@@ -42,7 +42,7 @@
       }
     }
 
-    .discoverButton {
+    .discoverBtn {
       background-repeat: no-repeat;
       background-size: 100% 100%;
     }
@@ -91,9 +91,13 @@
   }
 
   &.notNavigable {
+    a,
+    button,
+    .btn,
     .iconBtn,
     .addressBar,
     .navListBtn,
+    .discoverBtn,
     .searchWrapper::after {
       @include disabled;
     }
@@ -262,7 +266,7 @@
     width: 420px;
     right: 40px;
     padding: 0 $pad $pad;
-  }  
+  }
 
   .navListWrapper {
     z-index: 2;
