@@ -144,10 +144,10 @@ export function isValidBitcoinAddress(address) {
     return true;
   } catch (exc) {
     try {
-        bech32.decode(address);
-        return true;
-    } catch(exc) {
-        return false;
+      bech32.decode(address);
+      return true;
+    } catch (exc2) {
+      return false;
     }
   }
 }
