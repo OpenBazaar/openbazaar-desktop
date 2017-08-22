@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import app from '../app';
-import { formatCurrency, convertAndFormatCurrency, convertCurrency } from './currency';
+import { formatCurrency, convertAndFormatCurrency, convertCurrency, formatPrice } from './currency';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -51,6 +51,7 @@ export function formatRating(average, count) {
 export const getServerUrl = app.getServerUrl.bind(app);
 
 export {
+  formatPrice,
   formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
