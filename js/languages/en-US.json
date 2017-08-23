@@ -1085,11 +1085,12 @@
     },
     "receipt": {
       "summary": "Order Summary",
-      "listing": "Listing (%{quantity})",
+      "listing": "Listing",
       "coupon": "Coupon",
       "shipping": "Shipping",
       "options": "Options",
-      "total": "Total"
+      "subtotal": "Subtotal",
+      "total": "Total (%{quantity})"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
