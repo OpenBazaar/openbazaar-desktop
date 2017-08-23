@@ -51,7 +51,7 @@
 //     .array.syntax  ("[", "]")
 
 var module;
-(module||{}).exports = renderjson = (function() {
+(module||{}).exports = window.renderjson = (function() {
     var themetext = function(/* [class, text]+ */) {
         var spans = [];
         while (arguments.length)
