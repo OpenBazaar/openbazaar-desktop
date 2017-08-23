@@ -1,3 +1,4 @@
+import { remote } from 'electron';
 import app from '../app';
 import BaseModel from './BaseModel';
 import LocalStorageSync from '../utils/backboneLocalStorage';
@@ -25,6 +26,7 @@ export default class extends BaseModel {
       dismissedDiscoverCallout: false,
       dismissedStoreWelcome: false,
       backupWalletWarned: false,
+      torPw: '',
     };
   }
 
@@ -94,6 +96,10 @@ export default class extends BaseModel {
           addError('torProxy', app.polyglot.t('serverConfigModelErrors.invalidTorProxy'));
         }
       }
+
+      if (!attrs.torPassword && this.isTorPwRequired()) {
+        addError('torPassword', app.polyglot.t('serverConfigModelErrors.provideValue'));
+      }
     }
 
     if (!attrs.default) {
@@ -156,5 +162,10 @@ export default class extends BaseModel {
     const ip = this.get('serverIp');
 
     return ip === 'localhost' || ip === '127.0.0.1';
+  }
+
+  isTorPwRequired() {
+    return ['win', 'darwin'].indexOf(remote.process.platform) > -1 &&
+      this.isLocalServer();
   }
 }

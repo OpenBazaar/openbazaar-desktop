@@ -662,6 +662,8 @@
       "torNotAvailableMessage": "Tor was not detected. If you would like to proceed without Tor, uncheck \"Use Tor\" below and click Save. Otherwise start up Tor and then retry connecting.",
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
+      "torPwLabel": "Tor Password",
+      "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
       "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
     }

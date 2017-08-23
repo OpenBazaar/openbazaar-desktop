@@ -80,7 +80,9 @@ export default class extends baseVw {
   }
 
   onChangeServerIp(e) {
-    if (['localhost', '127.0.0.1'].indexOf(e.target.value) !== -1) {
+    this.model.set(this.getFormData(e.target));
+
+    if (this.model.isLocalServer()) {
       // it's a local ip
       this.$usernameLabel.add(this.$passwordLabel)
         .removeClass('required');
@@ -91,10 +93,13 @@ export default class extends baseVw {
       this.$radioSslOn[0].checked = true;
       this.$btnStripSsl.addClass('disabled');
     }
+
+    this.getCachedEl('.js-torPwLabel')
+      .toggleClass('required', this.model.isTorPwRequired());
   }
 
   onChangeUseTor(e) {
-    this.getCachedEl('.js-torProxyRow')
+    this.getCachedEl('.js-torDetails')
       .toggleClass('hide', !e.target.checked);
   }
 
@@ -133,6 +138,7 @@ export default class extends baseVw {
         title: this.title,
         showConfigureTorMessage: this.showConfigureTorMessage,
         showTorUnavailableMessage: this.showTorUnavailableMessage,
+        isTorPwRequired: this.model.isTorPwRequired(),
       }));
 
       this._$formFields = null;
