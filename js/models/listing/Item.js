@@ -208,6 +208,27 @@ export default class extends BaseModel {
       }
     });
 
+    // Ensure no duplicate VariantOption names.
+    const optionsNames = attrs.options.map(option => option.get('name'));
+    attrs.options.forEach((option, index) => {
+      if (optionsNames.indexOf(option.get('name')) !== index) {
+        addError(`options[${option.cid}].name`,
+          app.polyglot.t('itemModelErrors.duplicateOptionName'));
+      }
+
+      // Ensure no duplicate variant name.
+      const variantNames = option.get('variants').map(variant => variant.get('name'));
+      option.get('variants').forEach((variant, vIndex) => {
+        if (variantNames.indexOf(variant.get('name')) !== vIndex) {
+          const key = `options[${option.cid}].` +
+            `variants[${variant.cid}].name`;
+          addError(key, app.polyglot.t('itemModelErrors.duplicateVariantName', {
+            name: variant.get('name'),
+          }));
+        }
+      });
+    });
+
     if (attrs.options.length > this.max.optionCount) {
       addError('options', app.polyglot.t('itemModelErrors.tooManyOptions',
         { maxOptionCount: this.max.optionCount }));
