@@ -209,7 +209,7 @@ export default class extends BaseVw {
   }
 
   onClickActivateStore() {
-    launchSettingsModal({ initTab: 'Store' });
+    launchSettingsModal({ initialTab: 'Store' });
   }
 
   get listingsViewType() {

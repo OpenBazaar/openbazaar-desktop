@@ -101,6 +101,31 @@ export default class baseVw extends View {
   }
 
   /**
+   * Will scroll to the given element. The element must be within this view.
+   * @param {string|object} selector - A CSS selector or a DOM element or a jQuery object.
+   */
+  scrollTo(selector) {
+    if (!selector) {
+      throw new Error('Please provide a selector');
+    }
+
+    if (!(typeof selector === 'string' ||
+      _.isElement(selector) || selector instanceof $)) {
+      throw new Error('The selector must be a string, DOM element or jQuery object.');
+    }
+
+    let $el;
+
+    if (typeof selector === 'string') {
+      $el = this.getCachedEl(selector);
+    } else if (!(selector instanceof $)) {
+      $el = $(selector);
+    }
+
+    $el[0].scrollIntoView();
+  }
+
+  /**
    * If you are creating child views within your view, call this method
    * to register them. This will ensure that they will have their remove
    * method called if the parent is removed.

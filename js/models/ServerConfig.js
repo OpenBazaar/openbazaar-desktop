@@ -24,6 +24,7 @@ export default class extends BaseModel {
       dontShowTorExternalLinkWarning: false,
       dismissedDiscoverCallout: false,
       dismissedStoreWelcome: false,
+      backupWalletWarned: false,
     };
   }
 
