@@ -216,7 +216,7 @@ export default class extends BaseModel {
           app.polyglot.t('itemModelErrors.duplicateOptionName'));
       }
 
-      // Ensure no duplicate variant name.
+      // Ensure no duplicate variant names.
       const variantNames = option.get('variants').map(variant => variant.get('name'));
       option.get('variants').forEach((variant, vIndex) => {
         if (variantNames.indexOf(variant.get('name')) !== vIndex) {
