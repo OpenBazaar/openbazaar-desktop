@@ -88,6 +88,7 @@
     "underscore": "^1.8.3",
     "url-parse": "^1.1.7",
     "velocity-animate": "^1.2.3",
-    "yargs": "^6.6.0"
+    "yargs": "^6.6.0",
+    "bech32": "^0.0.3"
   }
 }
