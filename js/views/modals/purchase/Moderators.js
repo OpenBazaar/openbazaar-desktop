@@ -60,7 +60,7 @@ export default class extends baseVw {
     const op = this.options;
     const includeString = op.include ? `&include=${op.include}` : '';
     const urlString =
-      `ob/${op.apiPath}?async=${!!op.async}${includeString}&usecache=${!!op.useCache}`;
+      `ob/${op.apiPath}?async=${!!op.async}${includeString}&usecache=${op.useCache || true}`;
     const url = app.getServerUrl(urlString);
 
     this.notFetchedYet = IDs;
