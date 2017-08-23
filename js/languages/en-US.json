@@ -424,11 +424,12 @@
         "walletSeed": {
           "btnShowSeed": "Show Seed",
           "introLine": "Your wallet generation seed is:",
-          "directionLine": "Please save these words on paper (order is important).",
+          "directionLine": "Write the following words on paper and keep them somewhere safe. They must be in this exact order.",
           "warningHeading": "Warning:",
-          "warning1": "Never disclose your seed.",
+          "warning1": "Never share your seed. Anyone with this seed can steal your funds.",
           "warning2": "Never type it on a website.",
-          "warning3": "Do not store it electronically."
+          "warning3": "Do not store it electronically.",
+          "warning4": "Do not lose your seed, or your funds will be permanently lost if your data is erased."
         }
       },
       "transaction": {
