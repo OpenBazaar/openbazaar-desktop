@@ -66,11 +66,13 @@ export function openSimpleMessage(title = '', message = '', options = {}) {
     throw new Error('Please provide a title and / or message.');
   }
 
-  new SimpleMessage({
+  const dialog = new SimpleMessage({
     title,
     message,
     ...options,
-  })
-  .render()
-  .open();
+  });
+
+  dialog.render().open();
+
+  return dialog;
 }

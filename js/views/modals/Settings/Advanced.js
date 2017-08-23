@@ -1,10 +1,11 @@
 import $ from 'jquery';
 import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../../modals/Dialog';
 import { clipboard } from 'electron';
+import loadTemplate from '../../../utils/loadTemplate';
+import baseVw from '../../baseVw';
+import WalletSeed from './WalletSeed';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -36,6 +37,31 @@ export default class extends baseVw {
       'click .js-purge': 'clickPurge',
       'click .js-blockData': 'clickBlockData',
     };
+  }
+
+  onClickShowSeed() {
+    if (this.walletSeedFetch && this.walletSeedFetch.state() === 'pending') {
+      return this.walletSeedFetch;
+    }
+
+    if (this.walletSeed) this.walletSeed.setState({ isFetching: true });
+
+    this.walletSeedFetch = $.get(app.getServerUrl('wallet/mnemonic')).done((data) => {
+      this.mnemonic = data.mnemonic;
+      if (this.walletSeed) {
+        this.walletSeed.setState({ seed: data.mnemonic });
+      }
+    }).always(() => {
+      if (this.walletSeed) this.walletSeed.setState({ isFetching: false });
+    })
+    .fail(xhr => {
+      openSimpleMessage(
+        app.polyglot.t('settings.advancedTab.server.unableToFetchSeedTitle'),
+        xhr.responseJSON && xhr.responseJSON.reason || ''
+      );
+    });
+
+    return this.walletSeedFetch;
   }
 
   resetSMTPFields() {
@@ -230,6 +256,16 @@ export default class extends baseVw {
       this.$formFields = this.$('select[name], input[name], textarea[name]').
         not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
+
+      if (this.walletSeed) this.walletSeed.remove();
+      this.walletSeed = this.createChild(WalletSeed, {
+        initialState: {
+          seed: this.mnemonic || '',
+          isFetching: this.walletSeedFetch && this.walletSeedFetch.state() === 'pending',
+        },
+      });
+      this.listenTo(this.walletSeed, 'clickShowSeed', this.onClickShowSeed);
+      this.getCachedEl('.js-walletSeedContainer').append(this.walletSeed.render().el);
     });
 
     return this;
