@@ -1,6 +1,7 @@
 export function getDefaultSearchProviders() {
   const defaultSearchProviders = [
     {
+      id: 'ob1',
       name: 'OB1',
       logo: '../imgs/ob1searchLogo.png',
       search: 'https://search.ob1.io/search',
@@ -12,6 +13,7 @@ export function getDefaultSearchProviders() {
       order: 1,
     },
     {
+      id: 'duo',
       name: 'Duo',
       logo: '../imgs/duoSearchLogo.png',
       search: 'https://search.duosear.ch/search',
