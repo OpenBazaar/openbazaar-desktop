@@ -45,10 +45,6 @@ export default class extends BaseView {
     this.addProvider.getCachedEl('.js-addProviderInput').focus();
   }
 
-  get lastIndex() {
-    return app.searchProviders.length ? app.searchProviders.length - 1 : 0;
-  }
-
   createProviderView(model, options = {}) {
     // when in Tor mode, do not show providers that don't have Tor URLs.
     if (this.options.usingTor && !model.get('torlistings')) return false;
