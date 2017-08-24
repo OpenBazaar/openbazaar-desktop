@@ -46,8 +46,12 @@ export default class extends BaseView {
   }
 
   createProviderView(model, options = {}) {
-    // when in Tor mode, do not show providers that don't have Tor URLs.
-    if (this.options.usingTor && !model.get('torlistings')) return false;
+    // when in Tor mode, do not show providers that don't have Tor URLs and vice versa.
+    if (this.options.usingTor && !model.get('torlistings')) {
+      return false;
+    } else if (!this.options.usingTor && !model.get('listings')) {
+      return false;
+    }
 
     const view = this.createChild(Provider, {
       model,
@@ -59,13 +63,6 @@ export default class extends BaseView {
     });
 
     return view;
-  }
-
-  removeProvider(id) {
-    if (!id) {
-      throw new Error('Please provide an id to remove.');
-    }
-    app.searchProviders.remove(id);
   }
 
   render() {
