@@ -16,7 +16,10 @@ export function showUpdateStatus(status = '', type = 'message') {
       duration: 9999999999,
     });
   } else {
-    statusMsg.update(status);
+    statusMsg.update({
+      msg: status,
+      type,
+    });
   }
 
   // updates may arrive multiple times, manually remove the message when no new message

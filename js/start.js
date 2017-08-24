@@ -627,9 +627,9 @@ ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
 // Handle update events from main.js
 ipcRenderer.on('updateChecking', () =>
-  showUpdateStatus(app.polyglot.t('update.checking'), 'pending'));
+  showUpdateStatus(app.polyglot.t('update.checking')));
 ipcRenderer.on('updateAvailable', () =>
-  showUpdateStatus(app.polyglot.t('update.available'), 'pending'));
+  showUpdateStatus(app.polyglot.t('update.available')));
 ipcRenderer.on('updateNotAvailable', () =>
   showUpdateStatus(app.polyglot.t('update.notAvailable')));
 ipcRenderer.on('updateError', (e, msg) =>
