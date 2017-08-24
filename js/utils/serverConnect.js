@@ -345,8 +345,12 @@ export default function connect(server, options = {}) {
               });
           };
 
-          const commandLineArgs = [];
+          let commandLineArgs = [];
           if (server.get('useTor')) commandLineArgs.push('--tor');
+          const torPw = server.get('torPassword');
+          if (torPw) {
+            commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
+          }
           innerConnectDeferred.notify('starting-local-server');
           localServer.start(commandLineArgs);
 
