@@ -38,14 +38,16 @@ export default class extends BaseView {
     if (!this.model.validationError) {
       const save = this.model.save();
       if (save) {
+        // when saved successfully the parent will be removed when the search is rerendered
         save.done(() => app.searchProviders.add(this.model))
           .fail(() => {
           // this is saved to local storage, errors shouldn't normally happen
             openSimpleMessage('This search provider could not be saved.');
           });
       }
+    } else {
+      this.render();
     }
-    this.render();
   }
 
   onKeyUpAddProviderInput(e) {

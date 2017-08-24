@@ -30,7 +30,6 @@ export default class extends BaseView {
     loadTemplate('search/Provider.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        errors: this.model.validationError || {},
       }));
     });
     return this;

@@ -3,6 +3,7 @@
 %>
 
 <button
-    class="thumb clrP clrBr clrSh2 providerBtn js-provider"
-    style="background-image: <%= bkg %>">
+    class="thumb clrP clrBr clrSh2 providerBtn <% if (ob.name) print('toolTip') %> js-provider"
+    style="background-image: <%= bkg %>" data-tip="<%= ob.name %>">
 </button>
+

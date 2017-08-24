@@ -42,15 +42,15 @@ export default class extends BaseModel {
     }
 
     const urls = ['listings', 'torlistings'];
-    const noValidUrls = [];
+    const validUrls = [];
 
     urls.forEach((url) => {
       if (attrs[url] && is.string(attrs[url]) && is.url(attrs[url])) {
-        noValidUrls.push(url);
+        validUrls.push(url);
       }
     });
 
-    if (noValidUrls.length === urls.length) {
+    if (!validUrls.length) {
       addError('listings', app.polyglot.t('searchProviderModelErrors.listings'));
     }
 
