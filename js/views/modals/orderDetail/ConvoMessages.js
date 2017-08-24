@@ -81,7 +81,7 @@ export default class extends BaseVw {
     if (peerId === this.vendor.id) {
       participant = this.vendor;
       initialState.role = 'vendor';
-    } else if (this.moderator && model.get('peerId') === this.moderator.id) {
+    } else if (this.moderator && peerId === this.moderator.id) {
       participant = this.moderator;
       initialState.role = 'moderator';
     }
