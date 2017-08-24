@@ -1,11 +1,16 @@
 <div class="thumb discoverLogo flexNoShrink"></div>
 <div class="flexNoShrink">
   <div class="tx4 rowTn">OpenBazaar</div>
-  <div class="tx6">Discover</div>
+  <div class="tx6"><%= ob.polyT('search.title') %></div>
 </div>
 <div class="providersBar flexExpand">
-  <div class="flex gutterHMd js-providerWrapper">
-    <button class="thumb clrP clrBr clrSh2 addBtn js-addBtn"><i class="ion-ios-plus-empty"></i> </button>
+  <div class="flex gutterHMd">
+    <div>
+      <div class="flex gutterHMd js-providerWrapper"></div>
+    </div>
+    <div class="posR js-addWrapper">
+      <button class="thumb clrP clrBr clrSh2 addBtn js-openAddBtn"><i class="ion-ios-plus-empty"></i></button>
+    </div>
   </div>
 </div>
 <a class="btn barBtn flexNoShrink tx6 clrP clrBr clrSh2" href="#transactions/sales">Transactions</a>

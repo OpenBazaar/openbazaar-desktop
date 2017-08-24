@@ -1,0 +1,12 @@
+<div class="tx5 confirmBox arrowBoxCenteredTop padMd clrBr clrP clrT addBox js-addProvider <% if (ob.hideBox) print('hide') %>">
+  <div class="flexCol gutterV">
+    <h3><%= ob.polyT('search.addTitle') %></h3>
+    <% const plhdr = ob.polyT(`${ob.usingTor ? 'search.addTorPlaceholder' : 'search.addPlaceholder'}`) %>
+    <% if (ob.errors['listingsUrl']) print(ob.formErrorTmpl({ errors: ob.errors['listingsUrl'] })) %>
+    <input type="url" class="clrP clrBr js-addProviderInput" placeholder="<%= plhdr %>">
+    <div class="flexHRight flexVCent gutterH">
+      <button class="btnTxtOnly barBtn clrT2 txUnb js-cancelBtn">Cancel</button>
+      <button class="btn barBtn clrP clrBr js-addBtn">Add</button>
+    </div>
+  </div>
+</div>

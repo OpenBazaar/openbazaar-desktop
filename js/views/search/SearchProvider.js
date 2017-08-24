@@ -1,9 +1,10 @@
 import loadTemplate from '../../utils/loadTemplate';
 import BaseView from '../baseVw';
+import ProviderMd from '../../models/search/SearchProvider';
 
 export default class extends BaseView {
   constructor(options = {}) {
-    if (!options.model) {
+    if (!options.model || !(options.model instanceof ProviderMd)) {
       throw new Error('Please provide a model.');
     }
 
@@ -21,7 +22,7 @@ export default class extends BaseView {
   }
 
   onClickProvider() {
-    this.trigger('click', { ...this.model.toJSON() });
+    this.trigger('click', this.model);
   }
 
   render() {

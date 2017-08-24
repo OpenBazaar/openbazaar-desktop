@@ -304,6 +304,13 @@
   }
 }
 
+.arrowBoxCenteredTop {
+  // this will have an arror centered on the x and y of the parent
+  @extend .arrowBoxTop;
+  left: 20px; // width of the rotated square/hypotenuse of the arrow
+  transform: translateX(-50%);
+}
+
 .toolTip {
   // Adds a tooltip that gets its text from the data-tip attribute.
   // You can't put this on a class that already had before and after rules, like an icon.

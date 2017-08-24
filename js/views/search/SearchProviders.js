@@ -1,8 +1,8 @@
 import loadTemplate from '../../utils/loadTemplate';
 import BaseView from '../baseVw';
-import Provider from './Provider';
-import ProviderMd from '../../models/search/SearchProvider';
+import Provider from './SearchProvider';
 import app from '../../app';
+import AddProvider from './AddProvider';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -12,12 +12,15 @@ export default class extends BaseView {
 
     this.listenTo(app.searchProviders, 'add', (md) => {
       const view = this.createProviderView(md);
-      this.providerViews.push(view);
-      this.getCachedEl('.js-providerWrapper').append(view.render().el);
+      if (view) {
+        this.providerViews.push(view);
+        this.render();
+      }
     });
 
     this.listenTo(app.searchProviders, 'remove', (md, cl, removeOpts) => {
       this.providerViews.splice(removeOpts.index, 1)[0].remove();
+      this.render();
     });
   }
 
@@ -27,30 +30,36 @@ export default class extends BaseView {
 
   events() {
     return {
-      'click .js-addProvider': 'onClickAddProvider',
+      'click .js-openAddBtn': 'onClickOpenAdd',
     };
+  }
+
+  onClickOpenAdd() {
+    this.createAddBox();
+  }
+
+  createAddBox() {
+    if (this.addProvider) this.addProvider.remove();
+    this.addProvider = this.createChild(AddProvider, { ...this.options });
+    this.getCachedEl('.js-addWrapper').append(this.addProvider.render().$el);
+    this.addProvider.getCachedEl('.js-addProviderInput').focus();
   }
 
   get lastIndex() {
     return app.searchProviders.length ? app.searchProviders.length - 1 : 0;
   }
 
-  addBlankProvider() {
-    app.searchProviders.add(new ProviderMd());
-  }
-
-  onClickAddProvider() {
-    this.addBlankProvider();
-  }
-
   createProviderView(model, options = {}) {
+    // when in Tor mode, do not show providers that don't have Tor URLs.
+    if (this.options.usingTor && !model.get('torListingsUrl')) return false;
+
     const view = this.createChild(Provider, {
       model,
       ...options,
     });
 
-    this.listenTo(view, 'click', (opts) => {
-      this.trigger('activateProvider', opts);
+    this.listenTo(view, 'click', (md) => {
+      this.trigger('activateProvider', md);
     });
 
     return view;
@@ -67,7 +76,7 @@ export default class extends BaseView {
     super.render();
     loadTemplate('search/Providers.html', t => {
       this.$el.html(t({
-        peerID: app.profile.get('peerID'),
+        ...this.options,
       }));
 
       this.providerViews.forEach(provider => provider.remove());
@@ -77,8 +86,10 @@ export default class extends BaseView {
 
       app.searchProviders.forEach(provider => {
         const view = this.createProviderView(provider);
-        this.providerViews.push(view);
-        view.render().$el.appendTo(providerFrag);
+        if (view) {
+          this.providerViews.push(view);
+          view.render().$el.appendTo(providerFrag);
+        }
       });
 
       this.getCachedEl('.js-providerWrapper').prepend(providerFrag);

@@ -6,10 +6,15 @@ import BaseModel from '../BaseModel';
 export default class extends BaseModel {
   defaults() {
     return {
-      title: '',
+      name: '',
       logoUrl: '',
-      searchUrl: '',
-      torSearchUrl: '',
+      allUrl: '', // currently not used, this searches vendors and listings
+      listingsUrl: '',
+      torAllUrl: '', // currently not used, this searches vendors and listings
+      torListingsUrl: '',
+      isDefault: false,
+      locked: false,
+      order: 999999999, // order new providers after the defaults
     };
   }
 
@@ -28,17 +33,26 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.string(attrs.title) || !attrs.title) {
-      addError('title', app.polyglot.t('searchProviderModelErrors.title'));
+    if (attrs.name && is.not.string(attrs.name)) {
+      addError('name', app.polyglot.t('searchProviderModelErrors.name'));
     }
 
-    const urls = ['logoUrl', 'searchUrl', 'torSearchUrl'];
+    if (attrs.logoUrl && is.not.url(attrs.logoUrl)) {
+      addError('name', app.polyglot.t('searchProviderModelErrors.logoUrl'));
+    }
+
+    const urls = ['listingsUrl', 'torListingsUrl'];
+    const noValidUrls = [];
 
     urls.forEach((url) => {
-      if (is.not.string(attrs[url]) || !attrs[url] || is.not.url(attrs[url])) {
-        addError(url, app.polyglot.t(`searchProviderModelErrors.${url}`));
+      if (attrs[url] && is.string(attrs[url]) && is.url(attrs[url])) {
+        noValidUrls.push(url);
       }
     });
+
+    if (noValidUrls.length === urls.length) {
+      addError('listingsUrl', app.polyglot.t('searchProviderModelErrors.listingsUrl'));
+    }
 
     if (Object.keys(errObj).length) return errObj;
 

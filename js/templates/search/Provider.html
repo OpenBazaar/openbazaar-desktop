@@ -1,1 +1,8 @@
-<button class="thumb clrP clrBr clrSh2 js-provider" style="background-image: url(<%= ob.logoUrl %>)"></button>
+<%
+  const bkg = `${ob.logoUrl ? `url(${ob.logoUrl}), ` : ''}url(../imgs/defaultProvider.png)`;
+%>
+
+<button
+    class="thumb clrP clrBr clrSh2 providerBtn js-provider"
+    style="background-image: <%= bkg %>">
+</button>

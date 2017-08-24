@@ -14,8 +14,8 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    this.searchURL = options.searchURL;
-    if (!this.searchURL) {
+    this.searchUrl = options.searchUrl;
+    if (!this.searchUrl) {
       throw new Error('Please provide a search provider URL.');
     }
 
@@ -89,7 +89,7 @@ export default class extends baseVw {
 
   loadPage(page = this.serverPage, size = this.pageSize) {
     // get the new page
-    const url = new URL(this.searchURL);
+    const url = new URL(this.searchUrl);
     const params = new URLSearchParams(url.search);
     params.set('p', page);
     params.set('ps', size);

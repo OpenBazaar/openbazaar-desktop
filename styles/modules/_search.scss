@@ -23,7 +23,7 @@
     }
 
     .providersBar {
-      button {
+      .providerBtn, .addBtn {
         border-width: 1px;
         border-style: solid;
         border-radius: $corner;
@@ -33,6 +33,11 @@
         i:before {
           font-size: 28px;
         }
+      }
+
+      .addBox {
+        top: calc(100% + 12px);
+        min-width: 360px;
       }
     }
   }

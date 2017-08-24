@@ -164,6 +164,12 @@ svg {
         border-bottom-width: 1px;
         border-bottom-style: solid;
 
+        &.noTabs {
+          // there are no tabs, so overflow doesn't need to be hidden
+          // this allows arrow boxes and other elements outside the container bounds
+          overflow: visible;
+        }
+
         .pageTabs {
           width: $pageWidth + $padLg + $padLg;
           margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
