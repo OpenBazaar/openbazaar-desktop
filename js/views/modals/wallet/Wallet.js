@@ -14,13 +14,12 @@ import TransactionsVw from './Transactions';
 export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
-      sendModeOn: true,
       ...options,
     };
 
     super(opts);
     this.options = opts;
-    this.sendModeOn = opts.sendModeOn;
+    this.sendModeOn = true;
     this.addressFetches = [];
     this.needAddressFetch = true;
 
@@ -191,6 +190,10 @@ export default class extends BaseModal {
 
     if (this.sendMoney && !this.sendMoney.saveInProgress) {
       this.sendMoney.clearForm();
+
+      setTimeout(() => {
+        this.sendMoney.focusAddress();
+      });
     }
 
     return super.open();
