@@ -31,4 +31,26 @@ export default class extends Collection {
     const defaultProvider = this.findWhere({ isDefault: true });
     return defaultProvider || this.at(0);
   }
+
+  /**
+   * If the provider needs to be reset, this returns the 1st model from the hard coded providers
+   */
+  get originalProvider() {
+    return this.at(0);
+  }
+
+  set defaultProvider(md) {
+    if (!md instanceof Provider) {
+      throw new Error('Please provide a model as a SearchProvider instance.');
+    }
+
+    if (this.models.indexOf(md) === -1) {
+      throw new Error('The provider model to set to default must be in this collection.');
+    }
+
+    if (md !== this.defaultProvider) {
+      this.defaultProvider.set('isDefault', false);
+      md.set('isDefault', true);
+    }
+  }
 }

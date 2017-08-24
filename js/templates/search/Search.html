@@ -125,10 +125,11 @@
   <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
     <h2 class="rowLg"><%= ob.errTitle %></h2>
     <p><%= ob.errMsg %></p>
-    <div class="flexHCent">
-      <button class="btn clrP clrBr js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
-    </div>
-
+    <% if(!ob.providerLocked) { %>
+      <div class="flexHCent">
+        <button class="btn clrP clrBr js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
+      </div>
+    <% } %>
   </div>
   <% } %>
 </div>

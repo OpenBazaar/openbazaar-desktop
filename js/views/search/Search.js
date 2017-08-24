@@ -22,10 +22,15 @@ export default class extends baseVw {
     this.listenTo(this.searchProviders, 'activateProvider', opts => this.activateProvider(opts));
 
     this.sProvider = app.searchProviders.defaultProvider;
-    this.searchUrl = app.serverConfig.tor && getCurrentConnection().server.get('useTor') ?
-      this.sProvider.get('listingsUrl') : this.sProvider.get('torListingsUrl');
 
-    // the search provider is used here as a placeholder to get the parameters from the created url
+    // if the default provider returns a bad URL, reset to the original provider
+    if (is.not.url(this.providerUrl)) {
+      this.sProvider = app.searchProviders.originalProvider;
+      openSimpleMessage(app.polyglot.t('search.errors.resetToOriginal'));
+    }
+
+    this.searchUrl = this.providerUrl;
+
     const searchUrl = new URL(`${this.searchUrl}?${options.query || ''}`);
     let queryParams = searchUrl.searchParams;
 
@@ -52,14 +57,7 @@ export default class extends baseVw {
 
     this.processTerm(this.term);
 
-    // TODO: remove this, and the ability to set the default in the settings
-    // if not using a passed in URL, update the default provider if it changes
-    this.listenTo(app.localSettings, 'change:searchProvider', (model, provider) => {
-      if (this.usingDefault) {
-        this.sProvider = provider;
-        this.processTerm(this.term);
-      }
-    });
+    // TODO: remove the ability to set the default in the settings
   }
 
   className() {
@@ -77,20 +75,25 @@ export default class extends baseVw {
     };
   }
 
-  get usingDefault() {
-    return this.sProvider === app.localSettings.get('searchProvider');
+  get usingOriginal() {
+    return this.sProvider === app.searchProviders.originalProvider;
   }
 
   get usingTor() {
     return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
   }
 
+  get providerUrl() {
+    return this.usingTor ?
+      this.sProvider.get('torlistings') : this.sProvider.get('listings');
+  }
+
   activateProvider(md) {
     if (!md || !(md instanceof ProviderMd)) {
       throw new Error('Please provide a search provider model.');
     }
+    app.searchProviders.defaultProvider = md;
     this.sProvider = md;
-    this.searchUrl = this.usingTor ? md.get('torListingsUrl') : md.get('listingsUrl');
     this.processTerm(this.term);
   }
 
@@ -119,7 +122,7 @@ export default class extends baseVw {
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     let filters = $.param(this.filters);
     filters = filters ? `&${filters}` : '';
-    const newURL = `${this.searchUrl}?${query}${sortBy}${page}${filters}`;
+    const newURL = `${this.providerUrl}?${query}${sortBy}${page}${filters}`;
     this.callSearchProvider(newURL);
   }
 
@@ -139,22 +142,26 @@ export default class extends baseVw {
         // make sure minimal data is present
           if (data.name && data.links) {
             // if data about the provider is recieved, update the model
-            this.sProvider.set('name', data.name);
-            if (data.logo && is.url(data.logo)) this.sProvider.set('logoUrl', data.logo);
+            const update = { name: data.name };
+            if (data.logo && is.url(data.logo)) update.logo = data.logo;
             if (data.links) {
               if (data.links.search && is.url(data.links.search)) {
-                this.sProvider.set('allUrl', data.links.search);
-              }
-              if (data.links.tor && data.links.tor.search && is.url(data.links.tor.search)) {
-                this.sProvider.set('allTorUrl', data.links.tor.search);
+                update.search = data.links.search;
               }
               if (data.links.listings && is.url(data.links.listings)) {
-                this.sProvider.set('listingsUrl', data.links.listings);
+                update.listings = data.links.listings;
               }
-              if (data.links.tor && data.links.tor.listings && is.url(data.links.tor.listings)) {
-                this.sProvider.set('torListingsUrl');
+              if (data.links.tor) {
+                if (data.links.tor.search && is.url(data.links.tor.search)) {
+                  update.torsearch = data.links.tor.search;
+                }
+                if (data.links.tor.listings && is.url(data.links.tor.listings)) {
+                  update.torlistings = data.links.tor.listings;
+                }
               }
             }
+            this.sProvider.set(update);
+            this.sProvider.save();
             this.render(data, searchUrl);
           } else {
             this.render({}, searchUrl, xhr);
@@ -173,7 +180,7 @@ export default class extends baseVw {
     const msg = failReason ?
                 app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     const buttons = [];
-    if (this.usingDefault) {
+    if (this.usingOriginal) {
       buttons.push({
         text: app.polyglot.t('search.changeProvider'),
         fragment: 'changeProvider',
@@ -197,7 +204,7 @@ export default class extends baseVw {
       errorDialog.close();
     });
     this.listenTo(errorDialog, 'click-useDefault', () => {
-      this.activateProvider(app.searchProviders.defaultProvider);
+      this.activateProvider(app.searchProviders.originalProvider);
       errorDialog.close();
     });
   }
@@ -279,6 +286,7 @@ export default class extends baseVw {
         filterVals: this.filters,
         errTitle,
         errMsg,
+        providerLocked: this.sProvider.get('locked'),
         emptyData,
         loading,
         ...data,

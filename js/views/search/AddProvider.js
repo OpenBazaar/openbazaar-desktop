@@ -30,9 +30,9 @@ export default class extends BaseView {
     const opts = {};
     // if the user is using Tor, we will assume this is a Tor url
     if (this.options.usingTor) {
-      opts.torListingsUrl = URL;
+      opts.torlistings = URL;
     } else {
-      opts.listingsUrl = URL;
+      opts.listings = URL;
     }
     this.model.set(opts, { validate: true });
     if (!this.model.validationError) {

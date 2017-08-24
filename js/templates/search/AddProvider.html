@@ -2,7 +2,7 @@
   <div class="flexCol gutterV">
     <h3><%= ob.polyT('search.addTitle') %></h3>
     <% const plhdr = ob.polyT(`${ob.usingTor ? 'search.addTorPlaceholder' : 'search.addPlaceholder'}`) %>
-    <% if (ob.errors['listingsUrl']) print(ob.formErrorTmpl({ errors: ob.errors['listingsUrl'] })) %>
+    <% if (ob.errors['listings']) print(ob.formErrorTmpl({ errors: ob.errors['listings'] })) %>
     <input type="url" class="clrP clrBr js-addProviderInput" placeholder="<%= plhdr %>">
     <div class="flexHRight flexVCent gutterH">
       <button class="btnTxtOnly barBtn clrT2 txUnb js-cancelBtn">Cancel</button>

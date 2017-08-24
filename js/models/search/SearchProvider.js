@@ -7,11 +7,11 @@ export default class extends BaseModel {
   defaults() {
     return {
       name: '',
-      logoUrl: '',
-      allUrl: '', // currently not used, this searches vendors and listings
-      listingsUrl: '',
-      torAllUrl: '', // currently not used, this searches vendors and listings
-      torListingsUrl: '',
+      logo: '',
+      search: '', // currently not used, this searches vendors and listings
+      listings: '',
+      torsearch: '', // currently not used, this searches vendors and listings
+      torlistings: '',
       isDefault: false,
       locked: false,
       order: 999999999, // order new providers after the defaults
@@ -37,11 +37,11 @@ export default class extends BaseModel {
       addError('name', app.polyglot.t('searchProviderModelErrors.name'));
     }
 
-    if (attrs.logoUrl && is.not.url(attrs.logoUrl)) {
-      addError('name', app.polyglot.t('searchProviderModelErrors.logoUrl'));
+    if (attrs.logo && is.not.url(attrs.logo)) {
+      addError('name', app.polyglot.t('searchProviderModelErrors.logo'));
     }
 
-    const urls = ['listingsUrl', 'torListingsUrl'];
+    const urls = ['listings', 'torlistings'];
     const noValidUrls = [];
 
     urls.forEach((url) => {
@@ -51,7 +51,7 @@ export default class extends BaseModel {
     });
 
     if (noValidUrls.length === urls.length) {
-      addError('listingsUrl', app.polyglot.t('searchProviderModelErrors.listingsUrl'));
+      addError('listings', app.polyglot.t('searchProviderModelErrors.listings'));
     }
 
     if (Object.keys(errObj).length) return errObj;

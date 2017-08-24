@@ -895,7 +895,8 @@
       "searchFailReason": "The search provider returned the following message: %{error}",
       "connection": "You are no longer connected to your node. Reconnect to continue searching",
       "addError": "This provider cannot be added. Check your data and try again.",
-      "locked": "Default search providers can't be deleted."
+      "locked": "Default search providers can't be deleted.",
+      "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
     }
   },
   "onboarding": {
@@ -1510,8 +1511,8 @@
   },
   "searchProviderModelErrors": {
     "name": "The name must be a string.",
-    "logoUrl": "The logo URL must be a valid URL.",
-    "listingsUrl": "Please provide a valid search provider URL."
+    "logo": "The logo URL must be a valid URL.",
+    "listings": "Please provide a valid search provider URL."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

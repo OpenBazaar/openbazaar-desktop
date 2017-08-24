@@ -51,7 +51,7 @@ export default class extends BaseView {
 
   createProviderView(model, options = {}) {
     // when in Tor mode, do not show providers that don't have Tor URLs.
-    if (this.options.usingTor && !model.get('torListingsUrl')) return false;
+    if (this.options.usingTor && !model.get('torlistings')) return false;
 
     const view = this.createChild(Provider, {
       model,
