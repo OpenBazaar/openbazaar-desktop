@@ -9,7 +9,10 @@ export default class extends Collection {
 
   constructor(models, options) {
     super(models, options);
-    this._activeId = localStorage.activeSearchProvider;
+    this._activeId = localStorage.activeProvider;
+    this._activeTorId = localStorage.activeTorProvider;
+    this._defaultId = this.localStorage.defaultProvider;
+    this._defaultTorId = this.localStorage.defaultTorProvider;
   }
 
   model(attrs, options) {
@@ -24,33 +27,62 @@ export default class extends Collection {
     return LocalStorageSync.sync.apply(this, args);
   }
 
-  /**
-   * One of the providers should be marked as isDefault. If none are, use the first one.
-   */
-  get defaultProvider() {
-    const defaultProvider = this.findWhere({ isDefault: true });
-    return defaultProvider || this.at(0);
+  get activeProvider() {
+    return this.get(this._activeId);
   }
 
-  /**
-   * If the provider needs to be reset, this returns the 1st model from the hard coded providers
-   */
-  get originalProvider() {
-    return this.at(0);
+  get activeTorProvider() {
+    return this.get(this._activeTorId);
+  }
+
+  get defaultProvider() {
+    return this.get(this._defaultId);
+  }
+
+  get defaultTorProvider() {
+    return this.get(this._defaultTorId);
+  }
+
+  set activeProvider(md) {
+    this.setProvider(md, 'active');
+  }
+
+  set activeTorProvider(md) {
+    this.setProvider(md, 'active', true);
   }
 
   set defaultProvider(md) {
+    this.setProvider(md, 'default');
+  }
+
+  set defaultTorProvider(md) {
+    this.setProvider(md, 'default', true);
+  }
+
+  setProvider(md, type, tor = false) {
+    const types = ['active', 'default'];
     if (!md instanceof Provider) {
-      throw new Error('Please provide a model as a SearchProvider instance.');
+      throw new Error('Please provide a model as a Provider instance.');
     }
 
     if (this.models.indexOf(md) === -1) {
-      throw new Error('The provider model to set to default must be in this collection.');
+      throw new Error('Only a model in the collection can be set as a provider.');
     }
 
-    if (md !== this.defaultProvider) {
-      this.defaultProvider.set('isDefault', false);
-      md.set('isDefault', true);
+    if (!md.id) {
+      throw new Error('The model must have an id.');
+    }
+
+    if (!type || types.indexOf(type) === -1) {
+      throw new Error('You must provide a valid type.');
+    }
+
+    const idString = `_${type}${tor ? 'Tor' : ''}Id`;
+    const storageString = `${type}${tor ? 'Tor' : ''}Provider`;
+
+    if (this[idString] !== md.id) {
+      this[idString] = md.id;
+      localStorage[storageString] = md.id;
     }
   }
 }

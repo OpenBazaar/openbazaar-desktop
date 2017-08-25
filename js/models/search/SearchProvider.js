@@ -12,7 +12,6 @@ export default class extends BaseModel {
       listings: '',
       torsearch: '', // currently not used, this searches vendors and listings
       torlistings: '',
-      isDefault: false,
       locked: false,
       order: 999999999, // order new providers after the defaults
     };

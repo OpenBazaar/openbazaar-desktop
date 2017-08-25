@@ -25,14 +25,14 @@ export default class extends baseVw {
 
     // if the default provider returns a bad URL, reset to the original provider
     if (is.not.url(this.providerUrl)) {
-      this.sProvider = app.searchProviders.originalProvider;
+      this.sProvider = app.searchProviders.at(0);
       openSimpleMessage(app.polyglot.t('search.errors.resetToOriginal'));
     }
 
     this.searchUrl = this.providerUrl;
 
-    const searchUrl = new URL(`${this.searchUrl}?${options.query || ''}`);
-    let queryParams = searchUrl.searchParams;
+    const tempUrl = new URL(`${this.searchUrl}?${options.query || ''}`);
+    let queryParams = tempUrl.searchParams;
 
     // if a url with parameters was in the query in, use the parameters in it instead.
     if (queryParams.get('providerQ')) {
@@ -76,7 +76,7 @@ export default class extends baseVw {
   }
 
   get usingOriginal() {
-    return this.sProvider === app.searchProviders.originalProvider;
+    return this.sProvider === app.searchProviders.at(0);
   }
 
   get usingTor() {
@@ -88,11 +88,15 @@ export default class extends baseVw {
       this.sProvider.get('torlistings') : this.sProvider.get('listings');
   }
 
-  activateProvider(md) {
+  activateProvider(md, type = 'active') {
+    const types = ['active', 'default'];
     if (!md || !(md instanceof ProviderMd)) {
       throw new Error('Please provide a search provider model.');
     }
-    app.searchProviders.defaultProvider = md;
+    if (!type || types.indexOf(type) === -1) {
+      throw new Error('You must use a valid provider type.');
+    }
+    app.searchProviders[`${type}${this.usingTor ? 'Tor' : ''}Provider`] = md;
     this.sProvider = md;
     this.processTerm(this.term);
   }
@@ -204,7 +208,7 @@ export default class extends baseVw {
       errorDialog.close();
     });
     this.listenTo(errorDialog, 'click-useDefault', () => {
-      this.activateProvider(app.searchProviders.originalProvider);
+      this.activateProvider(app.searchProviders.at(0));
       errorDialog.close();
     });
   }
