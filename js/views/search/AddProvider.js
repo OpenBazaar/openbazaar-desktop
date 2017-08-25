@@ -39,7 +39,12 @@ export default class extends BaseView {
   save() {
     // set rendered to false so the re-render doesn't allow onDocumentClick to close the view
     this.rendered = false;
-    const URL = this.getCachedEl('.js-addProviderInput').val();
+    let URL = this.getCachedEl('.js-addProviderInput').val();
+    // if the user doesn't type http:// or https://, add http:// for them
+    if (!/^https?:\/\//i.test(URL)) {
+      URL = `http://${URL}`;
+    }
+
     const opts = {};
     // if the user is using Tor, we will assume this is a Tor url
     if (this.options.usingTor) {
@@ -52,7 +57,10 @@ export default class extends BaseView {
       const save = this.model.save();
       if (save) {
         // when saved successfully the parent will be removed when the search is rerendered
-        save.done(() => app.searchProviders.add(this.model))
+        save.done(() => {
+          app.searchProviders.add(this.model);
+          this.trigger('newProviderSaved', this.model);
+        })
           .fail(() => {
           // this is saved to local storage, errors shouldn't normally happen
             openSimpleMessage('This search provider could not be saved.');

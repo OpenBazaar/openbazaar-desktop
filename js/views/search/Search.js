@@ -21,24 +21,30 @@ export default class extends baseVw {
     this.searchProviders = this.createChild(Providers, { usingTor: this.usingTor });
     this.listenTo(this.searchProviders, 'activateProvider', opts => this.activateProvider(opts));
 
-    this.sProvider = app.searchProviders.defaultProvider;
-
-    // if the default provider returns a bad URL, reset to the original provider
-    if (is.not.url(this.providerUrl)) {
-      this.sProvider = app.searchProviders.at(0);
-      openSimpleMessage(app.polyglot.t('search.errors.resetToOriginal'));
+    const isTor = this.usingTor ? 'Tor' : '';
+    if (options.query) {
+      // the user arrived here from the address bar, use the default provider
+      this.sProvider = app.searchProviders[`default${isTor}Provider`];
+    } else {
+      // the user arrived from the discover button, use the active provider
+      this.sProvider = app.searchProviders[`active${isTor}Provider`];
     }
 
-    this.searchUrl = this.providerUrl;
 
-    const tempUrl = new URL(`${this.searchUrl}?${options.query || ''}`);
+    // if the  provider returns a bad URL, reset to the original provider
+    // this should never happen unless the local data is manually altered or corrupted
+    if (is.not.url(this.providerUrl)) {
+      this.sProvider = app.searchProviders.at(0);
+    }
+
+    const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
     let queryParams = tempUrl.searchParams;
 
     // if a url with parameters was in the query in, use the parameters in it instead.
     if (queryParams.get('providerQ')) {
       const subURL = new URL(queryParams.get('providerQ'));
       queryParams = subURL.searchParams;
-      this.searchUrl = `${subURL.origin}${subURL.pathname}`;
+      this.queryUrl = `${subURL.origin}${subURL.pathname}`;
     }
 
     const params = {};
@@ -88,6 +94,12 @@ export default class extends baseVw {
       this.sProvider.get('torlistings') : this.sProvider.get('listings');
   }
 
+  /**
+   * This will set either the current active or default provider. If the user is currently in
+   * Tor mode, the active or default Tor provider will be set.
+   * @param md the search provider model
+   * @param type should be active or default
+   */
   activateProvider(md, type = 'active') {
     const types = ['active', 'default'];
     if (!md || !(md instanceof ProviderMd)) {
@@ -192,7 +204,10 @@ export default class extends baseVw {
     } else {
       buttons.push({
         text: app.polyglot.t('search.useDefault',
-          { term: this.term, defaultProvider: app.localSettings.get('searchProvider') }),
+          {
+            term: this.term,
+            defaultProvider: app.searchProviders[`default${this.usingTor ? 'Tor' : ''}Provider`],
+          }),
         fragment: 'useDefault',
       });
     }

@@ -1,5 +1,5 @@
 <div class="tx5 confirmBox arrowBoxCenteredTop padMd clrBr clrP clrT addBox js-addProvider <% if (ob.hideBox) print('hide') %>">
-  <div class="flexCol gutterV">
+  <div class="flexCol gutterV txLft">
     <h3><%= ob.polyT('search.addTitle') %></h3>
     <% const plhdr = ob.polyT(`${ob.usingTor ? 'search.addTorPlaceholder' : 'search.addPlaceholder'}`) %>
     <% if (ob.errors['listings']) print(ob.formErrorTmpl({ errors: ob.errors['listings'] })) %>

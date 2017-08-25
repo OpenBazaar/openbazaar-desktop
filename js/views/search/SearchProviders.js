@@ -42,6 +42,9 @@ export default class extends BaseView {
     if (this.addProvider) this.addProvider.remove();
     this.addProvider = this.createChild(AddProvider, { ...this.options });
     this.getCachedEl('.js-addWrapper').append(this.addProvider.render().$el);
+    this.listenTo(this.addProvider, 'newProviderSaved', (md) => {
+      this.trigger('activateProvider', md);
+    });
   }
 
   createProviderView(model, options = {}) {
