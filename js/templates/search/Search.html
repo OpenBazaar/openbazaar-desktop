@@ -5,7 +5,12 @@
 <div class="pageContent">
   <% if (!ob.emptyData) { %>
   <div class="flexColRows row">
-    <h3 class="txUnl rowSm"><%= ob.name %></h3>
+    <div class="flexVBase gutterH">
+      <h3 class="txUnl rowSm"><%= ob.name %></h3>
+      <% if (!ob.providerLocked) { %>
+        <button class="btnTxtOnly txb txU txUnb js-deleteProvider">Remove Search Provider</button>
+      <% } %>
+    </div>
     <div class="searchBar row clrP clrBr">
       <% if (ob.logo) { %>
       <div class="searchLogo js-searchLogo">

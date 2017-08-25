@@ -43,7 +43,23 @@ export default class extends baseVw {
     if (queryParams.get('providerQ')) {
       const subURL = new URL(queryParams.get('providerQ'));
       queryParams = subURL.searchParams;
-      this.queryUrl = `${subURL.origin}${subURL.pathname}`;
+      const base = `${subURL.origin}${subURL.pathname}`;
+      const matchedProvider =
+        app.searchProviders.filter(p =>
+          base === p.get('listings') || base === p.get('torlistings'));
+      /* if the query provider doesn't exist, create a temporary provider model for it.
+         One quirk to note: if a tor url is passed in while the user is in clear mode, and an
+         existing provider has that tor url, that provider will be activated but will use its
+         clear url if it has one. The opposite is also true.
+       */
+      // lock the temporary provider, it cannot be modified or deleted
+      if (!matchedProvider.length) {
+        const queryOpts = { locked: true };
+        queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
+        this.queryProvider = new ProviderMd(queryOpts);
+      } else {
+        this.sProvider = matchedProvider[0];
+      }
     }
 
     const params = {};
@@ -93,8 +109,10 @@ export default class extends baseVw {
   }
 
   get providerUrl() {
+    // if a provider was created by the address bar query, use it instead
+    const currentProvider = this.queryProvider || this.sProvider;
     return this.usingTor ?
-      this.sProvider.get('torlistings') : this.sProvider.get('listings');
+      currentProvider.get('torlistings') : currentProvider.get('listings');
   }
 
   /**
@@ -113,6 +131,7 @@ export default class extends baseVw {
     }
     app.searchProviders[`${type}${this.torString}Provider`] = md;
     this.sProvider = md;
+    this.queryProvider = null;
     this.processTerm(this.term);
   }
 
@@ -339,7 +358,7 @@ export default class extends baseVw {
     });
 
     this.searchProviders.delegateEvents();
-    this.searchProviders.currentProviderId = this.sProvider.id;
+    this.searchProviders.currentProviderId = this.queryProvider ? '' : this.sProvider.id;
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     // use the initial set of results data to create the results view
