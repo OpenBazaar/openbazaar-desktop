@@ -701,7 +701,7 @@
       "sendPaymentFailDialogTitle": "Unable to send payment",
       "sendConfirm": {
         "heading": "Are you sure?",
-        "body": "Double check that the address and amount are correct.",
+        "body": "A %{fiatBtcPairing} network fee will be included.",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
       }
@@ -1064,13 +1064,15 @@
         "title": "Are you sure?",
         "payBTC": "Pay %{amountBTC} to the vendor",
         "payFiat": "Pay %{amountFiat} (%{amountBTC}) to the vendor",
+        "payMsg": "Pay %{fiatBtcPairing} to the vendor",
         "cancel": "Cancel",
         "confirm": "Yes, Pay",
         "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
         "insufficientFundsTitle": "Insufficient Funds",
         "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
         "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
-        "insufficientFundsNote": "*%{amount} plus an estimated fee of %{fee}"
+        "insufficientFundsNote": "*%{amount} plus an estimated fee of %{fee}",
+        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
       }
     },
     "completeSection": {

@@ -95,10 +95,12 @@ export default class extends baseVw {
     }
 
     this.getFeeLevel.done(fee => {
+      if (this.isRemoved()) return;
       this.setState({
         ...state,
         fetchingEstimatedFee: false,
-        estimatedFee: this.feeToBtc(fee),
+        // server doubles the fee when bumping
+        estimatedFee: fee * 2,
       });
     });
 
@@ -146,14 +148,6 @@ export default class extends baseVw {
     return this;
   }
 
-  feeToBtc(fee) {
-    // We'll approximateally match the server's algorythm to estimate the fee.
-    // Fee is per byte in satoshi. A estimated average transaction is 200 bytes.
-    // So we'll multiply the fee by 200, divide by a 100 mil to get BTC and
-    // then multiply by 2 (the server bumps the fee by doubling it.)
-    return fee * 200 / 100000000 * 2;
-  }
-
   closeRetryConfirmBox() {
     if (this.getFeeLevel) this.getFeeLevel.abort();
     this.setState({
@@ -172,7 +166,6 @@ export default class extends baseVw {
     $(document).off(null, this.boundDocClick);
     this.timeAgoInterval.cancel();
     clearTimeout(this.copiedIndicatorTimeout);
-    if (this.getFeeLevel) this.getFeeLevel.abort();
     super.remove();
   }
 

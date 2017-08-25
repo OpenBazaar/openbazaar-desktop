@@ -25,8 +25,6 @@ export default class extends baseVw {
     return {
       'click .js-btnSend': 'onClickSend',
       'click .js-sendMoneyClear': 'onClickClear',
-      'click .js-btnConfirmSend': 'onClickConfirmSend',
-      'click .js-sendConfirmCancel': 'onClickSendConfirmCancel',
     };
   }
 

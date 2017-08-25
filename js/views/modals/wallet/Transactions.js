@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import _ from 'underscore';
 import app from '../../../app';
 import { isScrolledIntoView } from '../../../utils/dom';
