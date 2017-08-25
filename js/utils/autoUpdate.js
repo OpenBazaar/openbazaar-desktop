@@ -45,7 +45,7 @@ export function updateReady(opts = {}) {
   updateReadyDialog = new Dialog({
     title: app.polyglot.t('update.ready.title'),
     message: `${app.polyglot.t('update.ready.msg')}<br><br>${displayData}`,
-    innerMessageClass: 'dialogScrollMsg',
+    messageClass: 'dialogScrollMsg',
     buttons: [{
       text: app.polyglot.t('update.install'),
       fragment: 'installUpdate',

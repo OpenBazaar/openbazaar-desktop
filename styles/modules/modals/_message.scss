@@ -15,8 +15,11 @@
     // specific to dialog styling
 
     .dialogScrollMsg {
-      max-height: 500px;
-      overflow: scroll;
+      .innerMessage {
+        max-height: 425px;
+        overflow: auto;
+        margin-right: -15px;
+      }
     }
 
     .buttonWrap {

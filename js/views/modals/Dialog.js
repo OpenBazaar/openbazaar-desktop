@@ -43,7 +43,6 @@ export default class extends BaseModal {
       message: '',
       titleClass: '',
       messageClass: '',
-      innerMessageClass: '',
       buttons: [],
       removeOnClose: true,
       ...options,
