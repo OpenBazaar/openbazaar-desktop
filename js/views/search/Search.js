@@ -21,13 +21,12 @@ export default class extends baseVw {
     this.searchProviders = this.createChild(Providers, { usingTor: this.usingTor });
     this.listenTo(this.searchProviders, 'activateProvider', opts => this.activateProvider(opts));
 
-    const isTor = this.usingTor ? 'Tor' : '';
     if (options.query) {
       // the user arrived here from the address bar, use the default provider
-      this.sProvider = app.searchProviders[`default${isTor}Provider`];
+      this.sProvider = app.searchProviders[`default${this.torString}Provider`];
     } else {
       // the user arrived from the discover button, use the active provider
-      this.sProvider = app.searchProviders[`active${isTor}Provider`];
+      this.sProvider = app.searchProviders[`active${this.torString}Provider`];
     }
 
 
@@ -89,6 +88,10 @@ export default class extends baseVw {
     return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
   }
 
+  get torString() {
+    return this.usingTor ? 'Tor' : '';
+  }
+
   get providerUrl() {
     return this.usingTor ?
       this.sProvider.get('torlistings') : this.sProvider.get('listings');
@@ -108,7 +111,7 @@ export default class extends baseVw {
     if (!type || types.indexOf(type) === -1) {
       throw new Error('You must use a valid provider type.');
     }
-    app.searchProviders[`${type}${this.usingTor ? 'Tor' : ''}Provider`] = md;
+    app.searchProviders[`${type}${this.torString}Provider`] = md;
     this.sProvider = md;
     this.processTerm(this.term);
   }
@@ -206,7 +209,7 @@ export default class extends baseVw {
         text: app.polyglot.t('search.useDefault',
           {
             term: this.term,
-            defaultProvider: app.searchProviders[`default${this.usingTor ? 'Tor' : ''}Provider`],
+            defaultProvider: app.searchProviders[`default${this.torString}Provider`],
           }),
         fragment: 'useDefault',
       });
@@ -248,12 +251,12 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
-    this.processTerm(this.$searchInput.val());
+    this.activateProvider(app.searchProviders[`active${this.torString}Provider`]);
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
-      this.processTerm(this.$searchInput.val());
+      this.activateProvider(app.searchProviders[`active${this.torString}Provider`]);
     }
   }
 
