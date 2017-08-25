@@ -39,12 +39,13 @@ export function updateReady(opts = {}) {
 
   let displayData = '';
   $.each(opts, (key, val) => {
-    displayData += `<b>${key}:</b> <br>${val}<br>`;
+    displayData += `<b>${key}:</b> <pre style="white-space: pre-wrap">${val}</pre>`;
   });
 
   updateReadyDialog = new Dialog({
     title: app.polyglot.t('update.ready.title'),
     message: `${app.polyglot.t('update.ready.msg')}<br><br>${displayData}`,
+    messageClass: 'dialogScrollMsg',
     buttons: [{
       text: app.polyglot.t('update.install'),
       fragment: 'installUpdate',
