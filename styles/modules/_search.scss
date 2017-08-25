@@ -46,6 +46,15 @@
         }
       }
 
+      .addWrapper {
+        width: auto;
+
+        .addProvider {
+          position: absolute;
+          height: $thumb;
+        }
+      }
+
       .providerBtn, .addBtn {
         border-width: 1px;
         border-style: solid;

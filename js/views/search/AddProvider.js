@@ -19,7 +19,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'posR addProvider';
+    return 'addProvider';
   }
 
   events() {
