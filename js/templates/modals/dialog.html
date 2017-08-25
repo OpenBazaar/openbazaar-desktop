@@ -3,7 +3,9 @@
     <h1><%= ob.title %></h1>
   </div>
   <div class="<%= ob.messageClass %>">
-    <p><%= ob.message %></p>
+    <div class="row <%= ob.innerMessageClass %>">
+      <%= ob.message %>
+    </div>
     <% if (ob.buttons.length) { %>
     <div class="buttonWrap">
       <% ob.buttons.forEach((btn, i) => { %>

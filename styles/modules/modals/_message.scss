@@ -6,13 +6,18 @@
   .modalContent {
     width: 600px;
   }
-  
+
   .msgWrap {
     font-size: 1.4rem;
   }
 
   &.dialog {
     // specific to dialog styling
+
+    .dialogScrollMsg {
+      max-height: 500px;
+      overflow: scroll;
+    }
 
     .buttonWrap {
       text-align: center;
