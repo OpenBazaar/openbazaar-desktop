@@ -3,6 +3,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../utils/';
+import estimateFee from '../../../utils/fees';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -15,10 +16,6 @@ export default class extends baseVw {
 
     if (!this.model) {
       throw new Error('Please provide a Transaction model.');
-    }
-
-    if (typeof options.getFeeLevel !== 'function') {
-      throw new Error('Please provide a function that returns the data from the estimatefee api');
     }
 
     this._state = {
@@ -84,7 +81,7 @@ export default class extends baseVw {
 
   onClickRetryPmt() {
     if (this.getFeeLevel) this.getFeeLevel.abort();
-    this.getFeeLevel = this.options.getFeeLevel('PRIORITY');
+    this.getFeeLevel = estimateFee('PRIORITY');
 
     const state = {
       retryConfirmOn: true,
@@ -175,6 +172,7 @@ export default class extends baseVw {
     $(document).off(null, this.boundDocClick);
     this.timeAgoInterval.cancel();
     clearTimeout(this.copiedIndicatorTimeout);
+    if (this.getFeeLevel) this.getFeeLevel.abort();
     super.remove();
   }
 

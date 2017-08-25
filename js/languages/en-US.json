@@ -1563,8 +1563,7 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider",
-    "transactionFee": "You must choose one of %{levels}."
+    "searchProvider": "This is not a valid url for a search provider"
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",

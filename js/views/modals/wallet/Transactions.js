@@ -151,34 +151,6 @@ export default class extends baseVw {
     return this.collection.length >= this.countAtFirstFetch;
   }
 
-  get estimatedFeeCacheExpire() {
-    return 1000 * 60 * 20;
-  }
-
-  fetchEstimatedFee(feeLevel) {
-    if (!feeLevel) {
-      throw new Error('Please provide a fee level');
-    }
-
-    let xhr;
-
-    if (this.estimatedFeeCache && this.estimatedFeeCache[feeLevel] &&
-      ['pending', 'resolved'].indexOf(this.estimatedFeeCache[feeLevel].xhr.state()) !== -1 &&
-      (Date.now() - this.estimatedFeeCache[feeLevel].createdAt <
-        this.estimatedFeeCacheExpire)) {
-      xhr = this.estimatedFeeCache[feeLevel].xhr;
-    } else {
-      xhr = $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${encodeURIComponent(feeLevel)}`));
-      this.estimatedFeeCache = this.estimatedFeeCache || {};
-      this.estimatedFeeCache[feeLevel] = {
-        xhr,
-        createdAt: Date.now(),
-      };
-    }
-
-    return xhr;
-  }
-
   fetchTransactions() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
 
@@ -303,7 +275,6 @@ export default class extends baseVw {
   createTransactionView(model, options = {}) {
     const view = this.createChild(Transaction, {
       model,
-      getFeeLevel: this.fetchEstimatedFee.bind(this),
       ...options,
     });
 
@@ -330,7 +301,6 @@ export default class extends baseVw {
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
-    this.estimatedFeeCache.forEach(cacheObj => cacheObj.xhr.abort());
     super.remove();
   }
 
