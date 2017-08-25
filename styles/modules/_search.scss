@@ -22,7 +22,24 @@
       margin-top: 5px;
     }
 
+    .providersHeader {
+      width: 134px;
+    }
+
     .providersBar {
+      display: flex;
+      align-items: stretch;
+
+      .providerWrapper {
+        display: flex;
+        align-items: stretch;
+
+        .searchProvider {
+          flex-shrink: 0;
+          width: auto;
+        }
+      }
+
       .providerBtn, .addBtn {
         border-width: 1px;
         border-style: solid;

@@ -12,7 +12,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'searchProvider';
+    return 'searchProvider flexVCent';
   }
 
   events() {

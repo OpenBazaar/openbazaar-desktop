@@ -289,6 +289,7 @@ export default class extends baseVw {
         providerLocked: this.sProvider.get('locked'),
         emptyData,
         loading,
+        ...this.sProvider,
         ...data,
       }));
     });

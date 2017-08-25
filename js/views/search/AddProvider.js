@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseView from '../baseVw';
 import app from '../../app';
@@ -11,6 +12,10 @@ export default class extends BaseView {
     this.options = options;
 
     this.model = new ProviderMd();
+    this.rendered = false;
+
+    this.boundOnDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
   }
 
   className() {
@@ -25,7 +30,15 @@ export default class extends BaseView {
     };
   }
 
+  onDocumentClick(e) {
+    if (this.rendered && !($.contains(this.el, e.target) || e.target === this.el)) {
+      this.remove();
+    }
+  }
+
   save() {
+    // set rendered to false so the re-render doesn't allow onDocumentClick to close the view
+    this.rendered = false;
     const URL = this.getCachedEl('.js-addProviderInput').val();
     const opts = {};
     // if the user is using Tor, we will assume this is a Tor url
@@ -64,10 +77,13 @@ export default class extends BaseView {
     this.remove();
   }
 
+  remove() {
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
+  }
+
   render() {
     super.render();
-
-
     loadTemplate('search/AddProvider.html', t => {
       this.$el.html(t({
         errors: {
@@ -75,6 +91,10 @@ export default class extends BaseView {
         },
         ...this.options,
       }));
+    });
+    // add a timeout so click that opens the view doesn't close it via onDocumentClick
+    setTimeout(() => {
+      this.rendered = 'true';
     });
 
     return this;

@@ -25,7 +25,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'searchProviders flexVCent gutterH';
+    return 'searchProviders flexRow gutterH';
   }
 
   events() {
@@ -69,6 +69,7 @@ export default class extends BaseView {
     super.render();
     loadTemplate('search/Providers.html', t => {
       this.$el.html(t({
+        peerID: app.profile.get('peerID'),
         ...this.options,
       }));
 
