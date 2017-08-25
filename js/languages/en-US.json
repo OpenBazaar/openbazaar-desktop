@@ -889,7 +889,8 @@
     "addTorPlaceholder": "Tor URL for the search provider (optional)",
     "addBtn": "Add",
     "cancel": "Cancel",
-    "deleteProviderBtn": "Delete this search provider",
+    "deleteProviderBtn": "Remove search provider",
+    "makeDefaultBtn": "Use this provider for address bar searches",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",

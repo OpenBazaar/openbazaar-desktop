@@ -52,9 +52,8 @@ export default class extends baseVw {
          existing provider has that tor url, that provider will be activated but will use its
          clear url if it has one. The opposite is also true.
        */
-      // lock the temporary provider, it cannot be modified or deleted
       if (!matchedProvider.length) {
-        const queryOpts = { locked: true };
+        const queryOpts = {};
         queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
         this.queryProvider = new ProviderMd(queryOpts);
       } else {
@@ -93,6 +92,7 @@ export default class extends baseVw {
       'change .js-filterWrapper input': 'changeFilter',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
+      'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
     };
   }
 
@@ -135,10 +135,6 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
-  clickDeleteProvider() {
-    this.deleteProvider();
-  }
-
   deleteProvider(md = this.sProvider) {
     if (md.get('locked')) {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
@@ -146,6 +142,19 @@ export default class extends baseVw {
       md.destroy();
       if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
     }
+  }
+
+  clickDeleteProvider() {
+    this.deleteProvider();
+  }
+
+  makeDefaultProvider() {
+    app.searchProviders.defaultProvider = this.sProvider;
+    this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
+  }
+
+  clickMakeDefaultProvider() {
+    this.makeDefaultProvider();
   }
 
   /**
@@ -328,6 +337,8 @@ export default class extends baseVw {
         errTitle,
         errMsg,
         providerLocked: this.sProvider.get('locked'),
+        isQueryProvider: !!this.queryProvider,
+        isDefaultProvider: this.sProvider === app.searchProviders.defaultProvider,
         emptyData,
         loading,
         ...this.sProvider,

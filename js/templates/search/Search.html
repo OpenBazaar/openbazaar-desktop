@@ -7,8 +7,13 @@
   <div class="flexColRows row">
     <div class="flexVBase gutterH">
       <h3 class="txUnl rowSm"><%= ob.name %></h3>
-      <% if (!ob.providerLocked) { %>
-        <button class="btnTxtOnly txb txU txUnb js-deleteProvider">Remove Search Provider</button>
+      <% if (!ob.isQueryProvider) { %>
+        <% if (!ob.providerLocked) { %>
+          <button class="btnTxtOnly txb txU txUnb js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
+        <% } %>
+        <% if (!ob.isDefaultProvider) { %>
+          <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider"><%= ob.polyT('search.makeDefaultBtn') %></button>
+        <% } %>
       <% } %>
     </div>
     <div class="searchBar row clrP clrBr">
