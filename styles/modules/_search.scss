@@ -12,6 +12,7 @@
 
   .searchProviders {
     width: $pageWidth + $padLg + $padLg;
+    height: 100%;
     padding: 0 $padLg;
 
     .discoverLogo {
@@ -37,6 +38,11 @@
         .searchProvider {
           flex-shrink: 0;
           width: auto;
+
+          &.active {
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+          }
         }
       }
 

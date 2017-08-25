@@ -42,7 +42,6 @@ export default class extends BaseView {
     if (this.addProvider) this.addProvider.remove();
     this.addProvider = this.createChild(AddProvider, { ...this.options });
     this.getCachedEl('.js-addWrapper').append(this.addProvider.render().$el);
-    this.addProvider.getCachedEl('.js-addProviderInput').focus();
   }
 
   createProviderView(model, options = {}) {
@@ -53,9 +52,14 @@ export default class extends BaseView {
       return false;
     }
 
+    const opts = {
+      active: this.currentProviderId === model.id,
+      ...options,
+    };
+
     const view = this.createChild(Provider, {
       model,
-      ...options,
+      ...opts,
     });
 
     this.listenTo(view, 'click', (md) => {

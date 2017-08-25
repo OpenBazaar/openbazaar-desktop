@@ -321,6 +321,7 @@ export default class extends baseVw {
     });
 
     this.searchProviders.delegateEvents();
+    this.searchProviders.currentProviderId = this.sProvider.id;
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     // use the initial set of results data to create the results view

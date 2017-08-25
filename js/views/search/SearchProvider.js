@@ -9,10 +9,11 @@ export default class extends BaseView {
     }
 
     super(options);
+    this.options = options;
   }
 
   className() {
-    return 'searchProvider flexVCent';
+    return 'searchProvider flexVCent clrBrT';
   }
 
   events() {
@@ -31,6 +32,7 @@ export default class extends BaseView {
       this.$el.html(t({
         ...this.model.toJSON(),
       }));
+      if (this.options.active) this.$el.addClass('active');
     });
     return this;
   }

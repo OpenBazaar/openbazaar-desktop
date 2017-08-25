@@ -95,6 +95,7 @@ export default class extends BaseView {
     // add a timeout so click that opens the view doesn't close it via onDocumentClick
     setTimeout(() => {
       this.rendered = 'true';
+      this.getCachedEl('.js-addProviderInput').focus();
     });
 
     return this;

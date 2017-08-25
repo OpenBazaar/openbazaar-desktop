@@ -172,6 +172,7 @@ svg {
 
         .pageTabs {
           width: $pageWidth + $padLg + $padLg;
+          height: 100%;
           margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
           @include chatOpeningTransition(margin);
           position: relative;
