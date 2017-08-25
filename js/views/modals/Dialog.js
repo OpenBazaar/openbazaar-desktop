@@ -45,6 +45,7 @@ export default class extends BaseModal {
       messageClass: '',
       buttons: [],
       removeOnClose: true,
+      defaultBtnClass: 'btn clrP clrBr',
       ...options,
     };
 
@@ -61,6 +62,8 @@ export default class extends BaseModal {
           throw new Error(`The button, '${serializedBut.slice(0, 10)}', is missing `
             + 'either a text or fragment property. Both are required.');
         }
+
+        btn.className = btn.className === undefined ? opts.defaultBtnClass : btn.className;
 
         events[`click .js-${btn.fragment}`] = 'onBtnClick';
       });
