@@ -91,7 +91,7 @@
   }
 
   &.notNavigable {
-    a,
+    a:not(.winControl),
     button,
     .btn,
     .iconBtn,
