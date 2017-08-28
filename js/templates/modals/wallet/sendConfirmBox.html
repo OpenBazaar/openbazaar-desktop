@@ -1,0 +1,37 @@
+<div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+<div class="posR padSm">
+<% if (ob.fetchingFee && typeof ob.fee !== 'number') { %>
+  <%= ob.spinner({ className: 'txCtr spinnerMd' }) %>
+<% } else if (typeof ob.fee === 'number') {
+  let feeText = ob.formatCurrency(ob.fee, 'BTC',
+    { useBtcSymbol: false });
+
+  if (ob.displayCurrency !== 'BTC') {
+    feeText = ob.polyT('fiatBtcPairing', {
+      fiatAmount: ob.convertAndFormatCurrency(ob.fee, 'BTC',
+        ob.displayCurrency),
+      btcAmount: feeText,
+    });
+  }
+%>
+  <p class="clrT2">
+    <%= ob.polyT('wallet.sendMoney.sendConfirm.body', {
+      fiatBtcPairing: feeText,
+    }) %>
+  </p>
+<% } else {
+  // The fee fetch must have failed.
+%>
+  <p class="clrT2">
+    <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyFeeUnavailable', {
+      fiatBtcPairing: ob.formatCurrency(ob.paymentAmount, ob.paymentCurrency),
+    }) %>
+  </p>
+<% } %>
+</div>
+<hr class="clrBr row" />
+
+<div class="flexHRight flexVCent gutterHLg">
+  <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
+  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a>
+</div>

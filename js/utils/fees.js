@@ -41,7 +41,7 @@ export default function estimateFee(feeLevel) {
     });
   }
 
-  window.charlie = $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${feeLevel}`))
+  $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${feeLevel}`))
     .done((...args) => deferred.resolve(feeToBtc(args[0]), ...args.slice(1)))
     .fail((...args) => deferred.reject(...args));
 

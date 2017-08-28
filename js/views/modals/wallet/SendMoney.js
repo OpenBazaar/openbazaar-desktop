@@ -4,7 +4,9 @@ import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
+import estimateFee from '../../../utils/fees';
 import loadTemplate from '../../../utils/loadTemplate';
+import SendConfirmBox from './SendConfirmBox';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -66,6 +68,21 @@ export default class extends baseVw {
       // our confirmation box
       setTimeout(() => {
         this.setSendConfirmOn(true);
+
+        if (!this.estimateFeeFetch || this.estimateFeeFetch.state() !== 'pending') {
+          this.estimateFeeFetch = estimateFee(app.localSettings.get('defaultTransactionFee'));
+        }
+
+        this.sendConfirmBox.setState({
+          paymentAmount: this.model.get('amount'),
+          paymentCurrency: this.model.get('currency'),
+          fetchingFee: this.estimateFeeFetch.state() === 'pending',
+        });
+
+        this.estimateFeeFetch.done(fee => this.sendConfirmBox.setState({
+          fee,
+          fetchingFee: false,
+        })).fail(() => this.sendConfirmBox.setState({ fetchingFee: false }));
       });
     }
 
@@ -187,6 +204,13 @@ export default class extends baseVw {
       this._$sendConfirm = null;
 
       this.$('#walletSendCurrency').select2();
+
+      this.sendConfirmBox = this.createChild(SendConfirmBox, {
+        fetchingFee: this.estimateFeeFetch && this.estimateFeeFetch.state() === 'pending',
+      });
+      this.listenTo(this.sendConfirmBox, 'clickSend', () => this.onClickConfirmSend());
+      this.listenTo(this.sendConfirmBox, 'clickCancel', () => this.onClickSendConfirmCancel());
+      this.$sendConfirm.html(this.sendConfirmBox.render().el);
     });
 
     return this;

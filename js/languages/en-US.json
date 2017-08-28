@@ -701,7 +701,8 @@
       "sendPaymentFailDialogTitle": "Unable to send payment",
       "sendConfirm": {
         "heading": "Are you sure?",
-        "body": "A %{fiatBtcPairing} network fee will be included.",
+        "body": "A %{fiatBtcPairing} estimated network fee will be included",
+        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
       }
@@ -1064,7 +1065,7 @@
         "title": "Are you sure?",
         "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
         "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
-        "payMsgNoteFeeIncluded": "*Includes the estimate network fee of %{amount}",
+        "payMsgNoteFeeIncluded": "*Includes the estimated network fee of %{amount}",
         "cancel": "Cancel",
         "confirm": "Yes, Pay",
         "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
