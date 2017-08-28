@@ -890,8 +890,9 @@
     "addBtn": "Add",
     "cancel": "Cancel",
     "deleteProviderBtn": "Remove search provider",
-    "makeDefaultBtn": "Use this provider for address bar searches",
-    "addQueryProviderBtn": "Add provider",
+    "makeDefaultBtn": "Set to default",
+    "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
+    "addQueryProviderBtn": "Add search provider",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",

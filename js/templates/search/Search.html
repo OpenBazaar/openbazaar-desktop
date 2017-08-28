@@ -12,7 +12,14 @@
           <button class="btnTxtOnly txb txU txUnb js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
         <% } %>
         <% if (!ob.isDefaultProvider) { %>
-          <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider"><%= ob.polyT('search.makeDefaultBtn') %></button>
+          <div>
+            <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider">
+              <%= ob.polyT('search.makeDefaultBtn') %>
+            </button>
+            <span class="toolTip" data-tip="<%= ob.polyT('search.makeDefaultBtnHelper') %>">
+              <i class="ion-help-circled"></i>
+            </span>
+          </div>
         <% } %>
       <% } else { %>
         <button class="btnTxtOnly txb txU txUnb js-addQueryProvider"><%= ob.polyT('search.addQueryProviderBtn') %></button>
