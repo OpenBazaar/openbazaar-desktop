@@ -73,10 +73,6 @@ export default class extends Collection {
       throw new Error('Only a model in the collection can be set as a provider.');
     }
 
-    if (!md.id) {
-      throw new Error('The model must have an id.');
-    }
-
     if (!type || types.indexOf(type) === -1) {
       throw new Error('You must provide a valid type.');
     }

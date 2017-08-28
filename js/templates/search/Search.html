@@ -14,6 +14,8 @@
         <% if (!ob.isDefaultProvider) { %>
           <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider"><%= ob.polyT('search.makeDefaultBtn') %></button>
         <% } %>
+      <% } else { %>
+        <button class="btnTxtOnly txb txU txUnb js-addQueryProvider"><%= ob.polyT('search.addQueryProviderBtn') %></button>
       <% } %>
     </div>
     <div class="searchBar row clrP clrBr">

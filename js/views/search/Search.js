@@ -55,6 +55,7 @@ export default class extends baseVw {
       const matchedProvider =
         app.searchProviders.filter(p =>
           base === p.get('listings') || base === p.get('torlistings'));
+
       /* if the query provider doesn't exist, create a temporary provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
@@ -66,6 +67,7 @@ export default class extends baseVw {
         this.queryProvider = new ProviderMd(queryOpts);
       } else {
         this.sProvider = matchedProvider[0];
+        this.queryProvider = null;
       }
     }
 
@@ -101,6 +103,7 @@ export default class extends baseVw {
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
+      'click .js-addQueryProvider': 'clickAddQueryProvider',
     };
   }
 
@@ -119,8 +122,7 @@ export default class extends baseVw {
   get providerUrl() {
     // if a provider was created by the address bar query, use it instead
     const currentProvider = this.queryProvider || this.sProvider;
-    return this.usingTor ?
-      currentProvider.get('torlistings') : currentProvider.get('listings');
+    return currentProvider.get(`${this.usingTor ? 'tor' : ''}listings`);
   }
 
   /**
@@ -136,6 +138,9 @@ export default class extends baseVw {
     }
     if (!type || types.indexOf(type) === -1) {
       throw new Error('You must use a valid provider type.');
+    }
+    if (app.searchProviders.indexOf(md) === -1) {
+      throw new Error('The provider must be in the collection.');
     }
     app.searchProviders[`${type}${this.torString}Provider`] = md;
     this.sProvider = md;
@@ -163,6 +168,15 @@ export default class extends baseVw {
 
   clickMakeDefaultProvider() {
     this.makeDefaultProvider();
+  }
+
+  addQueryProvider() {
+    if (this.queryProvider) app.searchProviders.add(this.queryProvider);
+    this.activateProvider(this.queryProvider);
+  }
+
+  clickAddQueryProvider() {
+    this.addQueryProvider();
   }
 
   /**
