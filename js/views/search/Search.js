@@ -238,7 +238,7 @@ export default class extends baseVw {
               }
             }
             this.sProvider.set(update);
-            this.sProvider.save();
+            if (Object.keys(this.sProvider.changedAttributes()).length) this.sProvider.save();
             this.render(data, searchUrl);
           } else {
             this.render({}, searchUrl, xhr);
