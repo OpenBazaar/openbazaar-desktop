@@ -28,7 +28,6 @@ export default class extends BaseVw {
       .done(data => {
         if (this.isRemoved()) return;
         this.fee = data;
-        this.fee = false;
         this.render();
       })
       .fail(() => {

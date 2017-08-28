@@ -1062,9 +1062,9 @@
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
         "title": "Are you sure?",
-        "payBTC": "Pay %{amountBTC} to the vendor",
-        "payFiat": "Pay %{amountFiat} (%{amountBTC}) to the vendor",
-        "payMsg": "Pay %{fiatBtcPairing} to the vendor",
+        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
+        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
+        "payMsgNoteFeeIncluded": "*Includes the estimate network fee of %{amount}",
         "cancel": "Cancel",
         "confirm": "Yes, Pay",
         "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",

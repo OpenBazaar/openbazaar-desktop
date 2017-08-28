@@ -7,13 +7,13 @@ export const feeLevels = [
   'ECONOMIC',
 ];
 
-const cacheExpires = 1000 * 60; // mirroring the server here
+const cacheExpires = 1000 * 60 * 5;
 const estimateFeeCache = new Map();
 
 // We'll approximateally match the server's algorythm to estimate the fee.
 // Fee is per byte in satoshi. A estimated average transaction is 200 bytes.
 // So we'll multiply the fee by 200 and divide by a 100 mil to get BTC
-const feeToBtc = fee => fee * 200 / 100000000 * 2;
+const feeToBtc = fee => fee * 200 / 100000000;
 
 export default function estimateFee(feeLevel) {
   if (feeLevels.indexOf(feeLevel) === -1) {
