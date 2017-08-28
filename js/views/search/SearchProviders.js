@@ -34,7 +34,8 @@ export default class extends BaseView {
     };
   }
 
-  onClickOpenAdd() {
+  onClickOpenAdd(e) {
+    e.stopPropagation();
     this.createAddBox();
   }
 

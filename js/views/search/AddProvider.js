@@ -12,7 +12,6 @@ export default class extends BaseView {
     this.options = options;
 
     this.model = new ProviderMd();
-    this.rendered = false;
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
@@ -31,14 +30,12 @@ export default class extends BaseView {
   }
 
   onDocumentClick(e) {
-    if (this.rendered && !($.contains(this.el, e.target) || e.target === this.el)) {
+    if (!($.contains(this.el, e.target) || e.target === this.el)) {
       this.remove();
     }
   }
 
   save() {
-    // set rendered to false so the re-render doesn't allow onDocumentClick to close the view
-    this.rendered = false;
     let URL = this.getCachedEl('.js-addProviderInput').val();
     // if the user doesn't type http:// or https://, add http:// for them
     if (!/^https?:\/\//i.test(URL)) {
@@ -56,7 +53,7 @@ export default class extends BaseView {
     if (!this.model.validationError) {
       const save = this.model.save();
       if (save) {
-        // when saved successfully the parent will be removed when the search is rerendered
+        // when saved successfully this view will be removed when the search is rerendered
         save.done(() => {
           app.searchProviders.add(this.model);
           this.trigger('newProviderSaved', this.model);
@@ -77,7 +74,8 @@ export default class extends BaseView {
     }
   }
 
-  onClickAdd() {
+  onClickAdd(e) {
+    e.stopPropagation();
     this.save();
   }
 
@@ -100,9 +98,7 @@ export default class extends BaseView {
         ...this.options,
       }));
     });
-    // add a timeout so click that opens the view doesn't close it via onDocumentClick
     setTimeout(() => {
-      this.rendered = 'true';
       this.getCachedEl('.js-addProviderInput').focus();
     });
 

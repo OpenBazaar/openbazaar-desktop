@@ -126,21 +126,6 @@
           </div>
         </div>
       </div>
-      <div class="flexRow gutterH">
-        <div class="col3">
-          <label class="required" for="settingsSearch"><%= ob.polyT('settings.generalTab.searchProvider') %></label>
-        </div>
-        <div class="col6">
-          <% if (ob.errors.searchProvider) print(ob.formErrorTmpl({ errors: ob.errors.searchProvider })) %>
-          <input type="text"
-                 class="clrBr clrSh2 rowSm"
-                 name="searchProvider"
-                 id="settingsSearch"
-                 data-persistence-location="local"
-                 value="<%= ob.searchProvider %>">
-          <a class="clrTEm txSm js-restoreDefaultProvider"><%= ob.polyT('settings.generalTab.restoreDefaultProvider') %></a>
-        </div>
-      </div>
     </form>
   </div>
 

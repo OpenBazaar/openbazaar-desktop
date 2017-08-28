@@ -86,8 +86,6 @@ export default class extends baseVw {
     this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ']);
 
     this.processTerm(this.term);
-
-    // TODO: remove the ability to set the default in the settings
   }
 
   className() {

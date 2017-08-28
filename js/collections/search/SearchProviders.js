@@ -20,6 +20,8 @@ export default class extends Collection {
   }
 
   comparator(provider) {
+    // normally only the defaults have unique orders. This ensures they are first, and appear
+    // in the expected sequence
     return provider.get('order');
   }
 
