@@ -126,6 +126,23 @@ export default class extends baseVw {
   }
 
   /**
+   * This will create a url with the term and other query parameters
+   * @param {string} term
+   */
+  processTerm(term) {
+    this.term = term || '';
+    // if term is false, search for *
+    const query = `q=${encodeURIComponent(term || '*')}`;
+    const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
+    const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
+    const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
+    let filters = $.param(this.filters);
+    filters = filters ? `&${filters}` : '';
+    const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
+    this.callSearchProvider(newURL);
+  }
+
+  /**
    * This will set either the current active or default provider. If the user is currently in
    * Tor mode, the active or default Tor provider will be set.
    * @param md the search provider model
@@ -177,22 +194,6 @@ export default class extends baseVw {
 
   clickAddQueryProvider() {
     this.addQueryProvider();
-  }
-
-  /**
-   * This will create a url with the term and other query parameters
-   * @param {string} term
-   */
-  processTerm(term) {
-    this.term = term || '';
-    // if term is false, search for *
-    const query = `q=${encodeURIComponent(term || '*')}`;
-    const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
-    let filters = $.param(this.filters);
-    filters = filters ? `&${filters}` : '';
-    const newURL = `${this.providerUrl}?${query}${sortBy}${page}${filters}`;
-    this.callSearchProvider(newURL);
   }
 
   callSearchProvider(searchUrl) {
