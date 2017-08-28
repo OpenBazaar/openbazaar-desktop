@@ -74,6 +74,17 @@
     }
   }
 
+  #pageTabBar.noTips {
+    .toolTip,
+    .toolTipNoWrap {
+      &:hover:before,
+      &:hover:after {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+
   .searchBar {
     display: flex;
     align-items: center;

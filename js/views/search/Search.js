@@ -15,11 +15,19 @@ import { getCurrentConnection } from '../../utils/serverConnect';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      initialState: {
+        fetching: false,
+        ...options.initialState,
+      },
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
 
     this.searchProviders = this.createChild(Providers, { usingTor: this.usingTor });
-    this.listenTo(this.searchProviders, 'activateProvider', opts => this.activateProvider(opts));
+    this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
 
     if (options.query) {
       // the user arrived here from the address bar, use the default provider
@@ -177,6 +185,10 @@ export default class extends baseVw {
     // remove a pending search if it exists
     if (this.callSearch) this.callSearch.abort();
 
+    this.setState({
+      fetching: true,
+    });
+
     // initial render to show the loading spinner
     this.render();
 
@@ -185,6 +197,11 @@ export default class extends baseVw {
       url: searchUrl,
       dataType: 'json',
     })
+        .always(() => {
+          this.setState({
+            fetching: false,
+          });
+        })
         .done((data, status, xhr) => {
         // make sure minimal data is present
           if (data.name && data.links) {
@@ -315,6 +332,9 @@ export default class extends baseVw {
 
     let errTitle;
     let errMsg;
+    const state = this.getState();
+    // check to see if the call to the provider failed, or returned an empty result
+    const emptyData = $.isEmptyObject(data);
 
     if (xhr) {
       errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: searchUrl });
@@ -322,12 +342,6 @@ export default class extends baseVw {
       errMsg = failReason ?
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
-
-    // the first render has no data, and only shows the loading state
-    const loading = !data;
-
-    // check to see if the call to the provider failed, or returned an empty result
-    const emptyData = $.isEmptyObject(data);
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
@@ -340,7 +354,7 @@ export default class extends baseVw {
         isQueryProvider: !!this.queryProvider,
         isDefaultProvider: this.sProvider === app.searchProviders.defaultProvider,
         emptyData,
-        loading,
+        ...state,
         ...this.sProvider,
         ...data,
       }));

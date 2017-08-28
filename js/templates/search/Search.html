@@ -1,4 +1,4 @@
-<nav id="pageTabBar" class="noTabs barLg clrP clrBr">
+<nav id="pageTabBar" class="noTabs barLg clrP clrBr <% if(ob.fetching) print('noTips') %>">
   <div class="pageTabs js-searchProviders"></div>
 </nav>
 
@@ -143,6 +143,6 @@
   </div>
   <% } %>
 </div>
-<% if (ob.loading) { %>
+<% if (ob.fetching) { %>
   <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
 <% } %>
