@@ -27,6 +27,10 @@ export default class extends Collection {
     return LocalStorageSync.sync.apply(this, args);
   }
 
+  get maxProviders() {
+    return 8;
+  }
+
   get activeProvider() {
     return this.get(this._activeId);
   }

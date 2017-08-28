@@ -77,6 +77,7 @@ export default class extends BaseView {
     loadTemplate('search/Providers.html', t => {
       this.$el.html(t({
         peerID: app.profile.get('peerID'),
+        showAdd: app.searchProviders.length < app.searchProviders.maxProviders,
         ...this.options,
       }));
 
