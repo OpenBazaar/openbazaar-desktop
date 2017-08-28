@@ -310,12 +310,12 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
-    this.activateProvider(app.searchProviders[`active${this.torString}Provider`]);
+    this.processTerm(this.$searchInput.val());
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
-      this.activateProvider(app.searchProviders[`active${this.torString}Provider`]);
+      this.processTerm(this.$searchInput.val());
     }
   }
 
