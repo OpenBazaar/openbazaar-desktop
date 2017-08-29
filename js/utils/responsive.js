@@ -25,7 +25,7 @@ function getBackgroundImage(imageHashes = {}, standardSize, responsiveSize, defa
   }
 
   if (imageHash) {
-    bgImageProperty = `background-image: url(${app.getServerUrl(`ipfs/${imageHash}`)})` +
+    bgImageProperty = `background-image: url(${app.getServerUrl(`ob/images/${imageHash}`)})` +
       `, url(${defaultUrl})`;
   } else {
     bgImageProperty = `background-image: url(${defaultUrl})`;

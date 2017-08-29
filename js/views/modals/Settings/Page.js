@@ -345,14 +345,14 @@ export default class extends baseVw {
           this.avatarCropper.cropit('imageSrc', avatarURI);
         } else if (this.profile.get('avatarHashes').get('original')) {
           this.avatarCropper.cropit('imageSrc',
-            app.getServerUrl(`ipfs/${this.profile.get('avatarHashes').get('original')}`));
+            app.getServerUrl(`ob/images/${this.profile.get('avatarHashes').get('original')}`));
         }
 
         if (headerURI) {
           this.headerCropper.cropit('imageSrc', headerURI);
         } else if (this.profile.get('headerHashes').get('original')) {
           this.headerCropper.cropit('imageSrc',
-            app.getServerUrl(`ipfs/${this.profile.get('headerHashes').get('original')}`));
+            app.getServerUrl(`ob/images/${this.profile.get('headerHashes').get('original')}`));
         }
       }, 0);
 

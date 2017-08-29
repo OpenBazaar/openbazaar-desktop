@@ -45,7 +45,7 @@
       <div class="mainImageWrapper">
         <div class="mainImage clrBr js-gotoPhotos"
         <% if (ob.item.images.length) { %>
-          style="background-image: url(<%= ob.getServerUrl(`ipfs/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
+          style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
         <% } else { %>
           style="background-image: url('../imgs/defaultListing.png')"
         <% } %>
@@ -124,7 +124,7 @@
           <% ob.item.images.forEach(function(image, index){
           const chk = index === 0 ? "checked" : "";
           print(`<input type="radio" name="photoStripThumbnails" class="js-photoSelect" id="photoStrip${index}" ${chk}>`);
-          print(`<label style="background-image: url(${ob.getServerUrl(`ipfs/${ob.isHiRez() ? image.small : image.tiny}`)}" for="photoStrip${index}"></label>`);
+          print(`<label style="background-image: url(${ob.getServerUrl(`ob/images/${ob.isHiRez() ? image.small : image.tiny}`)}" for="photoStrip${index}"></label>`);
           }); %>
         </div>
       <% } %>

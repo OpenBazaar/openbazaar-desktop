@@ -8,7 +8,7 @@ export default class extends baseVw {
     super(options);
 
     const opts = {
-      dismissable: true,
+      dismissable: false,
       ...options,
     };
 

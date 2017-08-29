@@ -17,7 +17,7 @@
 <div class="header js-header"
   <% var headerHash = ob.headerHashes ? ob.isHiRez() ? ob.headerHashes.large : ob.headerHashes.medium : ''; %>
   <% if (headerHash) { %>
-    style="background-image: url(<%= ob.getServerUrl(`ipfs/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
+    style="background-image: url(<%= ob.getServerUrl(`ob/images/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
   <% } else { %>
     style="background-image: url('../imgs/defaultHeader.png')"
   <% } %>>
