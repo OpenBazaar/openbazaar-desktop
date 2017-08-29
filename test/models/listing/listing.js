@@ -4,7 +4,7 @@ import { describe, it, before } from 'mocha';
 import Listing from '../../../js/models/listing/Listing';
 
 describe('the Listing model', () => {
-  before(function () {
+  before(() => {
     // creating a dummy polyglot t function, so our
     // model doesn't bomb. It's not critical to these
     // tests that it return an actual translation.
@@ -41,22 +41,6 @@ describe('the Listing model', () => {
     }
 
     expect(errorThrown).to.equal(true);
-  });
-
-  it('does not throw an error if you attempt to fetch with a guid and slug both set', () => {
-    const listing = new Listing({
-      slug: 'a-happy-slug',
-    }, { guid: '12345' });
-
-    let errorThrown = false;
-
-    try {
-      listing.fetch();
-    } catch (e) {
-      errorThrown = true;
-    }
-
-    expect(errorThrown).to.equal(false);
   });
 
   it('changes a hash in the response to a hash in parse', () => {

@@ -1,3 +1,10 @@
+// WARNING WARNING WARNING
+// The way this module exports itself (the "module.exports = ") line has been modified
+// from the original source, since the original way was not allowing this module to
+// be imported (at least using ES6 syntax). If you update this file to a new version,
+// unless the new version fixes the issue, please resurrect the tweaked part of this code.
+
+
 // Copyright © 2013-2014 David Caldwell <david@porkrind.org>
 //
 // Permission to use, copy, modify, and/or distribute this software for any
@@ -50,8 +57,7 @@
 //     .object.syntax ("{", "}")
 //     .array.syntax  ("[", "]")
 
-var module;
-(module||{}).exports = renderjson = (function() {
+module.exports = (function() {
     var themetext = function(/* [class, text]+ */) {
         var spans = [];
         while (arguments.length)

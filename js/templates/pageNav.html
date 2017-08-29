@@ -3,13 +3,13 @@
     <div class="flexVCent">
       <div class="windowControlsHolder">
         <div class="windowControls">
-          <a class="navClose js-navClose">
+          <a class="winControl navClose js-navClose">
             <i class="ion-ios-close-empty"></i>
           </a>
-          <a class="navMin js-navMin">
+          <a class="winControl navMin js-navMin">
             <i class="ion-ios-minus-empty"></i>
           </a>
-          <a class="navMax js-navMax">
+          <a class="winControl navMax js-navMax">
             <i class="ion-ios-plus-empty"></i>
           </a>
         </div>
@@ -46,7 +46,7 @@
       <div>
         <div class="flexVCent box margLSm posR">
           <a href="#search" class="toolTipNoWrap js-discover" data-tip="<%= ob.polyT('pageNav.toolTip.discover') %>">
-            <div class="discoverButton navBtn" style="background-image: url('../imgs/obVectorIconSmall.svg')"></div>
+            <div class="discoverBtn navBtn" style="background-image: url('../imgs/obVectorIconSmall.svg')"></div>
           </a>
           <% if (ob.showDiscoverCallout) { %>
             <div class="discoverCallout js-discoverCallout arrowBoxTop confirmBox clrP clrBr">
@@ -54,20 +54,19 @@
               <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>
             </div>
           <% } %>
-          <a class="navBtn toolTipNoWrap js-navWalletBtn"data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
-            <div class="iconBtn navWalletBtn ">
-              <%= ob.walletIconTmpl() %>
-            </div>
+          <a class="navBtn toolTipNoWrap js-navWalletBtn" data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
+            <div class="iconBtn navWalletBtn "><%= ob.walletIconTmpl() %></div>
           </a>
           <a class="navBtn toolTipNoWrap js-navNotifBtn" data-tip="<%= ob.polyT('pageNav.toolTip.notifications') %>">
             <i class="iconBtn ion-android-notifications"></i>
+            <div class="discTn notifUnreadBadge js-notifUnreadBadge clrE1 clrTOnEmph clrBr2 clrSh2 hide"></div>
           </a>
-          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn toolTipNoWrap"
-             style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" data-tip="<%= ob.polyT('pageNav.toolTip.nav') %>"></a>
+          <div class="js-notifContainer notifContainer foldDown"></div>
+          <a id="AvatarBtn" class="discSm clrBr2 clrSh1 js-navListBtn navListBtn toolTipNoWrap" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" data-tip="<%= ob.polyT('pageNav.toolTip.nav') %>"></a>
           <nav class="navListWrapper foldDown js-navList">
             <div class="navList clrBr listBox clrP clrSh1">
               <div class="listGroup clrP clrBr">
-                <div class="listItem js-navListItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
+                <div class="listItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
               </div>
               <div class="listGroup clrP clrBr">
                 <a class="listItem connectedServerListItem js-connectedServerListItem">

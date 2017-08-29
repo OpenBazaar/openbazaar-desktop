@@ -422,3 +422,11 @@ input[type=range][class~="clrS"] {
     }
   }
 }
+
+.notifications {
+  .tabs {
+    & > .active, & > :hover {
+      color: $text;
+    }
+  }
+}

@@ -16,6 +16,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { setFeedbackOptions, addFeedback } from './utils/feedback';
+import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -269,10 +270,10 @@ let searchProvidersFetch;
 let searchProvidersFetchFailed;
 
 function fetchStartupData() {
-  ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch ?
+  ownFollowingFetch = !ownFollowingFetch || ownFollowingFailed ?
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
-  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch ?
+  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetchFailed ?
     app.walletBalance.fetch() : walletBalanceFetch;
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch ?
     app.searchProviders.fetch() : searchProvidersFetch;
@@ -353,7 +354,7 @@ function onboardIfNeeded() {
       // let's go onboard
       onboard().done(() => onboardIfNeededDeferred.resolve());
     } else {
-      fetchStartupData().done(() => onboardIfNeededDeferred.resolve());
+      onboardIfNeededDeferred.resolve();
     }
   });
 
@@ -392,8 +393,10 @@ function start() {
       app.localSettings.save('language', getValidLanguage(lang));
     });
 
-    app.ownFollowing = new Followers(null, { type: 'following' });
-    app.ownFollowers = new Followers(null, { type: 'followers' });
+    app.ownFollowing = new Followers([], {
+      type: 'following',
+      peerId: app.profile.id,
+    });
 
     app.walletBalance = new WalletBalance();
 
@@ -651,6 +654,20 @@ $(window).on('beforeunload', () => {
 // Handle 'show debug log' requests from the main process.
 ipcRenderer.on('show-server-log', () => launchDebugLogModal());
 
+// Handle update events from main.js
+ipcRenderer.on('updateChecking', () =>
+  showUpdateStatus(app.polyglot.t('update.checking')));
+ipcRenderer.on('updateAvailable', () =>
+  showUpdateStatus(app.polyglot.t('update.available')));
+ipcRenderer.on('updateNotAvailable', () =>
+  showUpdateStatus(app.polyglot.t('update.notAvailable')));
+ipcRenderer.on('updateError', (e, msg) =>
+  showUpdateStatus(app.polyglot.t('update.error', { error: msg }), 'warning'));
+ipcRenderer.on('updateReadyForInstall', (e, opts) => updateReady(opts));
+
+// Allow main.js to send messages to the console
+ipcRenderer.on('consoleMsg', (e, msg) => console.log(msg));
+
 // manage publishing sockets
 // todo: break the publishing socket startup functionality
 // into its own micro-module in js/startup/
@@ -771,21 +788,6 @@ ipcRenderer.on('close-attempt', (e) => {
     .render()
     .open();
   }
-});
-
-// update ownFollowers based on follow socket communication
-serverConnectEvents.on('connected', (connectedEvent) => {
-  connectedEvent.socket.on('message', (e) => {
-    if (e.jsonData) {
-      if (e.jsonData.notification) {
-        if (e.jsonData.notification.type === 'follow') {
-          app.ownFollowers.unshift({ guid: e.jsonData.notification.peerId });
-        } else if (e.jsonData.notification.type === 'unfollow') {
-          app.ownFollowers.remove(e.jsonData.notification.peerId); // remove by id
-        }
-      }
-    }
-  });
 });
 
 // initialize our listing delete handler

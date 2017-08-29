@@ -1,18 +1,21 @@
 import { remote } from 'electron';
 import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
+import { setUnreadNotifCount, launchNativeNotification } from '../utils/notification';
 import Backbone from 'backbone';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import $ from 'jquery';
-import PageNavServersMenu from './PageNavServersMenu';
 import {
   launchEditListingModal, launchAboutModal,
   launchWallet, launchSettingsModal,
 } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
+import PageNavServersMenu from './PageNavServersMenu';
+import { getNotifDisplayData } from '../collections/Notifications';
+import Notifications from './notifications/Notificiations';
 
 export default class extends BaseVw {
   constructor(options) {
@@ -32,10 +35,14 @@ export default class extends BaseVw {
         'click .js-navWalletBtn': 'navWalletClick',
         'click .js-navCreateListing': 'navCreateListingClick',
         'click .js-navListItem': 'onNavListItemClick',
+        'click .js-navList': 'onNavListClick',
         'mouseenter .js-connectedServerListItem': 'onMouseEnterConnectedServerListItem',
         'mouseleave .js-connectedServerListItem': 'onMouseLeaveConnectedServerListItem',
         'mouseenter .js-connManagementContainer': 'onMouseEnterConnManagementContainer',
         'mouseleave .js-connManagementContainer': 'onMouseLeaveConnManagementContainer',
+        'click .js-navNotifBtn': 'onClickNavNotifBtn',
+        'click .js-notifContainer': 'onClickNotifContainer',
+        'click .js-notificationListItem a[href]': 'onClickNotificationLink',
       },
       navigable: false,
       ...options,
@@ -52,7 +59,8 @@ export default class extends BaseVw {
     this.options = opts;
     this.addressBarText = '';
 
-    $(document).on('click', this.onDocClick.bind(this));
+    this.boundOnDocClick = this.onDocClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
 
     this.listenTo(app.localSettings, 'change:windowControlStyle',
       (_, style) => this.setWinControlsStyle(style));
@@ -62,14 +70,48 @@ export default class extends BaseVw {
       this.$connectedServerName.text(e.server.get('name'))
         .addClass('txB');
       this.listenTo(app.router, 'route:search', this.onRouteSearch);
+      this.fetchUnreadNotifCount().done(data => {
+        this.unreadNotifCount = (this.unreadNotifCount || 0) + data.unread;
+      });
+      this.listenTo(e.socket, 'message', this.onSocketMessage);
     });
 
-    this.listenTo(serverConnectEvents, 'disconnected', () => {
+    this.listenTo(serverConnectEvents, 'disconnect', e => {
       this.$connectedServerName.text(app.polyglot.t('pageNav.notConnectedMenuItem'))
         .removeClass('txB');
       this.torIndicatorOn = false;
       this.stopListening(app.router, null, this.onRouteSearch);
+      this.getCachedEl('.js-notifUnreadBadge').addClass('hide');
+      this.stopListening(e.socket, 'message', this.onSocketMessage);
     });
+  }
+
+  onSocketMessage(e) {
+    const notif = e.jsonData.notification;
+
+    if (notif) {
+      if (notif.type === 'unfollow') return;
+      this.unreadNotifCount = (this.unreadNotifCount || 0) + 1;
+      setUnreadNotifCount(this.unreadNotifCount);
+
+      const notifDisplayData = getNotifDisplayData(notif, { native: true });
+      const nativeNotifData = {
+        silent: true,
+        onclick: () => {
+          remote.getCurrentWindow().restore();
+
+          if (notifDisplayData.route) {
+            location.hash = notifDisplayData.route;
+          }
+        },
+      };
+
+      if (notif.thumbnail) {
+        nativeNotifData.icon = app.getServerUrl(`ipfs/${notif.thumbnail.small}`);
+      }
+
+      launchNativeNotification(notifDisplayData.text, nativeNotifData);
+    }
   }
 
   get navigable() {
@@ -120,6 +162,37 @@ export default class extends BaseVw {
     }, 200);
   }
 
+  get unreadNotifCount() {
+    return this._unreadNotifCount;
+  }
+
+  set unreadNotifCount(count) {
+    if (typeof count !== 'number') {
+      throw new Error('Please provide a count as a number.');
+    }
+
+    if (count === this._unreadNotifCount) return;
+    this._unreadNotifCount = count;
+    this.renderUnreadNotifCount();
+    setUnreadNotifCount(this.unreadNotifCount);
+  }
+
+  fetchUnreadNotifCount() {
+    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
+
+    // We'll send a bogus filter because all we want is the count - we don't
+    // want to weight the returned payload down with any notifications. Those
+    // will be lazy loaded in when the notif menu is opened.
+    return $.get(app.getServerUrl('ob/notifications?filter=blah-blah'));
+  }
+
+  renderUnreadNotifCount() {
+    this.getCachedEl('.js-notifUnreadBadge')
+      .toggleClass('hide', !this.unreadNotifCount)
+      .toggleClass('ellipsisShown', this.unreadNotifCount > 99)
+      .text(this.unreadNotifCount > 99 ? '…' : this.unreadNotifCount);
+  }
+
   setWinControlsStyle(style) {
     if (style !== 'mac' && style !== 'win') {
       throw new Error('Style must be \'mac\' or \'win\'.');
@@ -154,10 +227,8 @@ export default class extends BaseVw {
   navMaxClick() {
     if (remote.getCurrentWindow().isMaximized()) {
       remote.getCurrentWindow().unmaximize();
-      // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Maximize'));
     } else {
       remote.getCurrentWindow().maximize();
-      // this.$('.js-navMax').attr('data-tooltip', window.polyglot.t('Restore'));
     }
   }
 
@@ -201,33 +272,114 @@ export default class extends BaseVw {
   }
 
   onNavListItemClick() {
-    this.closePopMenu();
+    // Set timeout allows the new page to show before the overlay is removed. Otherwise,
+    // there's a flicker frmo the old page to the new page.
+    setTimeout(() => {
+      this.closeNavMenu();
+    });
   }
 
-  navListBtnClick() {
-    this.togglePopMenu();
+  navListBtnClick(e) {
+    this.closeNotifications({
+      closeOverlay: false,
+      closeNavList: false,
+    });
+    this.toggleNavMenu();
+    // do not bubble to onDocClick
+    e.stopPropagation();
   }
 
-  togglePopMenu() {
-    this.$navList.toggleClass('open');
-    this.$navOverlay.toggleClass('open');
+  toggleNavMenu() {
+    const isOpen = this.$navList.hasClass('open');
+    this.$navList.toggleClass('open', !isOpen);
+    this.$navOverlay.toggleClass('open', !isOpen);
 
-    if (!this.$navList.hasClass('open')) {
+    if (!isOpen) {
       this.$connManagementContainer.removeClass('open');
     }
   }
 
-  closePopMenu() {
+  closeNavMenu() {
     this.$navList.removeClass('open');
     this.$navOverlay.removeClass('open');
     this.$connManagementContainer.removeClass('open');
   }
 
-  onDocClick(e) {
-    if (!this.$navList.hasClass('open')) return;
-    if (!$(e.target).closest('.js-navList, .js-navListBtn').length) {
-      this.togglePopMenu();
+  onNavListClick(e) {
+    // do not bubble to onDocClick
+    e.stopPropagation();
+  }
+
+  onClickNavNotifBtn(e) {
+    this.$navList.removeClass('open');
+    this.$connManagementContainer.removeClass('open');
+    this.toggleNotifications();
+    // do not bubble to onDocClick
+    e.stopPropagation();
+  }
+
+  isNotificationsOpen() {
+    return this.getCachedEl('.js-notifContainer').hasClass('open');
+  }
+
+  toggleNotifications() {
+    if (this.isNotificationsOpen()) {
+      this.closeNotifications();
+      this.$navOverlay.removeClass('open');
+    } else {
+      this.$navOverlay.addClass('open');
+
+      // open notifications menu
+      if (!this.notifications) {
+        this.notifications = new Notifications();
+        this.getCachedEl('.js-notifContainer').html(this.notifications.render().el);
+        this.listenTo(this.notifications, 'notifNavigate', () => this.closeNotifications());
+      }
+
+      this.getCachedEl('.js-notifContainer').addClass('open');
     }
+  }
+
+  onClickNotifContainer(e) {
+    // do not bubble to onDocClick
+    e.stopPropagation();
+  }
+
+  closeNotifications(options) {
+    const opts = {
+      closeOverlay: true,
+      closeNavList: true,
+      ...options,
+    };
+
+    if (!this.isNotificationsOpen()) return;
+    if (opts.closeNavList) this.$navList.removeClass('open');
+    this.getCachedEl('.js-notifContainer').removeClass('open');
+    if (opts.closeOverlay) this.$navOverlay.removeClass('open');
+
+    if (this.notifications) {
+      const count = this.unreadNotifCount;
+      if (this.unreadNotifCount) {
+        const markAsRead = this.notifications.markNotifsAsRead();
+        if (markAsRead) {
+          this.unreadNotifCount = 0;
+          markAsRead.fail(() => {
+            this.unreadNotifCount = (this.unreadNotifCount || 0) + count;
+          });
+        }
+      }
+
+      this.notifications.reset();
+    }
+  }
+
+  onClickNotificationLink() {
+    this.closeNotifications();
+  }
+
+  onDocClick() {
+    this.closeNotifications();
+    this.closeNavMenu();
   }
 
   onFocusInAddressBar() {
@@ -274,7 +426,7 @@ export default class extends BaseVw {
 
   navAboutClick() {
     launchAboutModal();
-    this.togglePopMenu();
+    this.closeNavMenu();
   }
 
   navWalletClick() {
@@ -289,7 +441,15 @@ export default class extends BaseVw {
     });
   }
 
+  remove() {
+    if (this.unreadNotifCountFetch) this.unreadNotifCountFetch.abort();
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
+  }
+
   render() {
+    super.render();
+
     let connectedServer = getCurrentConnection();
 
     if (connectedServer && connectedServer.status !== 'disconnected') {
@@ -329,10 +489,8 @@ export default class extends BaseVw {
     this.$connectedServerName = this.$('.js-connectedServerName');
     this.$connManagementContainer = this.$('.js-connManagementContainer');
 
-    return this;
-  }
+    this.renderUnreadNotifCount();
 
-  remove() {
-    $(document).off('click', this.onDocClick);
+    return this;
   }
 }

@@ -13,7 +13,7 @@
           ob.polyT('orderDetail.summaryTab.disputeStarted.genericIsDisputed');
       %>
       <div class="rowTn txB"><%= introLine %></div>
-      <div class="flex gutterH clrT2"><%= ob.claim || ob.polyT('orderDetail.summaryTab.disputeStarted.noReasonProvided') %></div>
+      <div><%= ob.claim || ob.polyT('orderDetail.summaryTab.disputeStarted.noReasonProvided') %></div>
     </div>
     <div class="col">
       <% if (ob.showResolveButton) { %>
@@ -21,7 +21,7 @@
           className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute`,
           btnText: ob.polyT('orderDetail.summaryTab.disputeStarted.resolveBtn')
         }) %>
-      <% } %>  
+      <% } %>
     </div>
   </div>
 </div>

@@ -10,10 +10,27 @@
     "statusPublishFailed": "Publishing failed. %{retryLink}",
     "statusPublishComplete": "Publishing complete."
   },
+  "follow": {
+    "typeFollow": "following",
+    "typeUnfollow": "unfollowing",
+    "followErrorTitle": "There was an error %{type} %{user}."
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
   "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "update": {
+    "checking": "Checking for updates…",
+    "error": "There was an error checking for updates. Error: %{error}",
+    "available": "An update is downloading now. You can choose to install it when the download is complete.",
+    "notAvailable": "No updates are available.",
+    "cancel": "Cancel",
+    "ready": {
+      "title": "The Update is Ready",
+      "msg": "Your update has downloaded. Click below to install it."
+    },
+    "install": "Install Now"
+  },
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
@@ -69,6 +86,32 @@
       "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
     }
   },
+  "notifications": {
+    "noResults": "No notifications found.",
+    "text": {
+      "order": "%{buyerName} has purchased %{listingTitle}.",
+      "payment": "Your payment has been delivered.",
+      "orderConfirmation": "%{vendorName} has accepted your order.",
+      "declined": "%{vendorName} has declined your order.",
+      "canceled": "%{buyerName} has canceled their order.",
+      "refunded": "%{vendorName} has refunded your order.",
+      "fulfillment": "%{vendorName} has fulfilled your order.",
+      "orderComplete": "%{buyerName} has left feedback on their order.",
+      "disputeOpen": "%{disputerName} has opened a dispute with you.",
+      "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
+      "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
+      "disputeClose": "The dispute with %{otherPartyName} has been closed.",
+      "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
+      "follow": "%{name} has followed you.",
+      "moderatorAdd": "%{name} has added you as a moderator.",
+      "moderatorRemove": "%{name} has removed you as a moderator."
+    },
+    "errorHeading": "There was an error fetching the notifications.",
+    "btnRetry": "Retry",
+    "tabAll": "All",
+    "tabOrders": "Orders",
+    "tabFollowers": "Followers"
+  },
   "pageNav": {
     "notConnectedMenuItem": "Not Connected",
     "torOnTooltip": "Tor active",
@@ -81,7 +124,9 @@
       "discover": "Discover",
       "wallet": "Wallet",
       "notifications": "Notifications",
-      "nav": "Navigation"
+      "nav": "Navigation",
+      "close": "Close",
+      "currentPrice": "Current Bitcoin price"
     }
   },
   "chat": {
@@ -125,10 +170,15 @@
     "website": "Website",
     "email": "Email",
     "noLocation": "No Location",
-    "noFollowers": "No One is Following %{name} Yet",
-    "noFollowing": "%{name} is Not Following Anyone Yet",
-    "noOwnFollowers": "You Don't Have Any Followers Yet",
-    "noOwnFollowing": "You Aren't Following Anyone Yet",
+    "followTab": {
+      "noFollowers": "No One is Following %{name} Yet",
+      "noFollowing": "%{name} is Not Following Anyone Yet",
+      "noOwnFollowers": "You Don't Have Any Followers Yet",
+      "noOwnFollowing": "You Aren't Following Anyone Yet",
+      "followersFetchError": "Unable to fetch the followers list.",
+      "followingFetchError": "Unable to fetch the following list.",
+      "btnRetry": "Retry"
+    },
     "getFollowingError": "There was an error when determining if this user follows you.",
     "modAddError": "There was an error adding this moderator. \n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
@@ -165,6 +215,9 @@
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
         "showLess": "less"
+      },
+      "toolTip": {
+        "contentView": "Toggle view"
       }
     },
     "mainNav": {
@@ -381,7 +434,7 @@
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
-        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share this button will delete them. This will not affect any files that belong to you.",
+        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
         "purgeError": "There was an error, your cached files may not have been deleted.",
         "purgeComplete": "Your cached files have been deleted.",
         "blockData": "Block Data",
@@ -389,7 +442,20 @@
         "blockDataBtn": "Show Block Data",
         "blockDataError": "There was an error, your block data could not be retrieved.",
         "blockDataTitle": "Your Block Data",
-        "blockDataCopy": "Copy to your Clipboard"
+        "blockDataCopy": "Copy to your Clipboard",
+        "backupWalletLbl": "Backup Wallet Seed",
+        "backupWalletHelper": "This seed will allow you to recover your wallet in case of computer failure.",
+        "unableToFetchSeedTitle": "There was an error fetching your wallet seed",
+        "walletSeed": {
+          "btnShowSeed": "Show Seed",
+          "introLine": "Your wallet generation seed is:",
+          "directionLine": "Write the following words on paper and keep them somewhere safe. They must be in this exact order.",
+          "warningHeading": "Warning:",
+          "warning1": "Never share your seed. Anyone with this seed can steal your funds.",
+          "warning2": "Never type it on a website.",
+          "warning3": "Do not store it electronically.",
+          "warning4": "Do not lose your seed, or your funds will be permanently lost if your data is erased."
+        }
       },
       "transaction": {
         "sectionName": "Transactions",
@@ -599,6 +665,8 @@
       "torNotAvailableMessage": "Tor was not detected. If you would like to proceed without Tor, uncheck \"Use Tor\" below and click Save. Otherwise start up Tor and then retry connecting.",
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
+      "torPwLabel": "Tor Password",
+      "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
       "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
     }
@@ -662,7 +730,10 @@
         "feeBumpOf": "Fee bump of %{address}"
       },
       "noTransactionsPlaceholder": "You have no transactions.",
-      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}"
+      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}",
+      "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
+      "recoverySeedLink": "backup your wallet recovery seed",
+      "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
     }
   },
   "formats": {
@@ -715,7 +786,7 @@
     "review": {
       "title": "%{time} by %{name}",
       "loadMore": "Load More",
-      "noReviews": "No reviews were found for this listing.",
+      "noReviews": "No reviews found",
       "showMore": "Show More",
       "showLess": "Show Less"
     },
@@ -776,7 +847,7 @@
     "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Something descriptive that clearly explains what you're selling",
-    "helperType": "Choose from 4 types",
+    "helperType": "Choose from 3 types",
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
@@ -787,8 +858,8 @@
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "Add many tags. Enter a tag name, press enter, repeat.",
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
-    "helperReturnPolicy": "If left blank, the listing will disply \"No return policy entered\"",
-    "helperTerms": "If left blank, the listing will disply \"No terms and conditions entered\"",
+    "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
+    "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
@@ -830,6 +901,9 @@
         "priceLabel": "Price",
         "pricePlaceholder": "0.00",
         "addService": "+ Add Service"
+      },
+      "toolTip": {
+        "delete": "Delete"
       }
     },
     "coupons": {
@@ -840,15 +914,22 @@
       "discountCodePlaceholder": "Enter a code",
       "discountTypePercent": "Percent",
       "discountTypeFixed": "Fixed",
-      "btnAddCoupon": "+ Add Coupon"
+      "btnAddCoupon": "+ Add Coupon",
+      "toolTip": {
+        "delete": "Delete"
+      }
     },
     "variants": {
       "btnAddVariant": "Add Variant",
+      "btnDeleteVariant": "Delete",
       "addVariant": "+ Add Variant",
       "titleLabel": "Title",
       "titlePlaceholder": "e.g. Size, Color, Material, etc",
       "choicesLabel": "Choices",
-      "choicesPlaceholder": "e.g. Small, Medium, Large, etc"
+      "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
+      "toolTip": {
+        "delete": "Delete"
+      }
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",
@@ -967,7 +1048,7 @@
     "pay": "PAY >",
     "payNote": "Clicking pay will advance you to the final step.",
     "pending": "Pending…",
-    "pendingNote": "Plese fund the order to complete your transaction.",
+    "pendingNote": "Please fund the order to complete your transaction.",
     "close": "close",
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
@@ -1022,11 +1103,12 @@
     },
     "receipt": {
       "summary": "Order Summary",
-      "listing": "Listing (%{quantity})",
+      "listing": "Listing",
       "coupon": "Coupon",
       "shipping": "Shipping",
       "options": "Options",
-      "total": "Total"
+      "subtotal": "Subtotal",
+      "total": "Total (%{quantity})"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1370,10 +1452,6 @@
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
-  },
-  "errors": {
-    "saveError": "There was an error saving your data.",
-    "badResult": "The server returned an error."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
