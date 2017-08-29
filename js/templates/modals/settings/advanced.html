@@ -1,9 +1,9 @@
-<div class="gutterVMd">
+<div class="gutterVMd2">
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
       <h2 class="h3 clrT"><%= ob.polyT('settings.advancedTab.sectionName') %></h2>
       <%= ob.processingButton({
-        className: 'btn clrP clrBr clrSh2 modalContentCornerBtn js-save',
+        className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-save',
         btnText: ob.polyT('settings.btnSave')
       }) %>
     </div>
@@ -144,6 +144,45 @@
               </div>
             </div>
           </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.resync') %>
+              </label>
+              <div class="clrT2 txSm">
+                <%= ob.polyT('settings.advancedTab.server.resyncHelper') %>
+              </div>
+            </div>
+            <div class="col9">
+              <div class="flexVCent gutterH">
+                <%= ob.processingButton({
+                className: `btn clrP clrBr clrSh2 flexNoShrink js-resync ${ob.isSyncing ? 'processing' : ''}`,
+                btnText: ob.polyT('settings.advancedTab.server.resyncBtn'),
+                }) %>
+                <div class="js-resyncComplete hide">
+                  <i class="tx6 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.resyncComplete') %></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.blockData') %>
+              </label>
+              <div class="clrT2 txSm">
+                <%= ob.polyT('settings.advancedTab.server.blockDataHelper') %>
+              </div>
+            </div>
+            <div class="col9">
+              <div class="flexVCent gutterH">
+                <%= ob.processingButton({
+                className: `btn clrP clrBr clrSh2 js-blockData ${ob.isGettingBlockData ? 'processing' : ''}`,
+                btnText: ob.polyT('settings.advancedTab.server.blockDataBtn'),
+                }) %>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>
@@ -203,6 +242,18 @@
               </div>
             </div>
           </div>
+          <div class="flexRow gutterH js-backupWalletSection">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.server.backupWalletLbl') %>
+              </label>
+              <div class="clrT2 txSm">
+                <%= ob.polyT('settings.advancedTab.server.backupWalletHelper') %>
+              </div>
+            </div>
+            <div class="col9 js-walletSeedContainer">
+            </div>
+          </div>          
         </form>
       </div>
     </div>
@@ -349,7 +400,7 @@
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHRight">
       <%= ob.processingButton({
-        className: 'btn clrP clrBr clrSh2 js-save',
+        className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save',
         btnText: ob.polyT('settings.btnSave')
       }) %>
     </div>

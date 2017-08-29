@@ -43,22 +43,6 @@ describe('the Listing model', () => {
     expect(errorThrown).to.equal(true);
   });
 
-  it('does not throw an error if you attempt to fetch with a guid and slug both set', () => {
-    const listing = new Listing({
-      slug: 'a-happy-slug',
-    }, { guid: '12345' });
-
-    let errorThrown = false;
-
-    try {
-      listing.fetch();
-    } catch (e) {
-      errorThrown = true;
-    }
-
-    expect(errorThrown).to.equal(false);
-  });
-
   it('changes a hash in the response to a hash in parse', () => {
     const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({

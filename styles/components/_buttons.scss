@@ -33,9 +33,11 @@
   }
 
   .bar &:not(.barBtn) { //add barBtn to any btn that should keep standard button styling
-    line-height: $bar;
-    height: $bar;
-    border: none;
+    &:not(.normalBtn) {
+      line-height: $bar;
+      height: $bar;
+      border: none;
+    }
   }
 
   .barSm & {
@@ -172,7 +174,7 @@
 .iconBtn {
   //this button has only an icon in it
   @extend .btn;
-  font-size: 2rem;
+  font-size: 1.8rem;
   padding: 0 12px;
   width: $buttonHeight;
 

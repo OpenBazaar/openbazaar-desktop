@@ -35,10 +35,6 @@ export default class extends baseVw {
       throw new Error('Please provide a filter config object.');
     }
 
-    if (typeof opts.getProfiles !== 'function') {
-      throw new Error('Please provide a function to retreive profiles.');
-    }
-
     if (typeof opts.openOrder !== 'function') {
       throw new Error('Please provide a function to open the order detail modal.');
     }

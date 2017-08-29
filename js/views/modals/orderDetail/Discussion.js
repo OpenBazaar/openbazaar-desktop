@@ -210,7 +210,6 @@ export default class extends baseVw {
 
     const message = e.target.value.trim();
     if (message) this.sendMessage(message);
-    $(e.target).val('');
     e.preventDefault();
   }
 
@@ -392,6 +391,8 @@ export default class extends baseVw {
       console.dir(chatMessage.validationError);
       messageSent = false;
     }
+
+    this.$inputMessage.val('');
 
     return messageSent;
   }

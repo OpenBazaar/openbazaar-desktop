@@ -1,8 +1,8 @@
-<div class="clrBr clrP clrBr flexVCent gutterH padSm convoHeader" style="height: 50px">
+<div class="clrBr clrP flexVCent gutterH padSm convoHeader" style="height: 50px">
   <div class="flexExpand js-convoProfileHeaderContainer"></div>
   <div class="btnStrip flexNoShrink">
-    <a class="btn clrBr clrP clrSh2 ion-android-more-vertical iconBtn js-subMenuTrigger"></a>
-    <a class="btn clrBr clrP clrSh2 ion-ios-close-empty iconBtn js-closeConvo"></a>
+    <a class="ion-android-more-vertical iconBtn js-subMenuTrigger"></a>
+    <a class="ion-ios-close-empty iconBtn js-closeConvo"></a>
   </div>
 </div>
 <div class="posR flexExpand">
@@ -12,7 +12,7 @@
   </div>
   <div class="subMenu boxList clrBr clrP clrSh1 hide js-subMenu">
     <a class="clrT" href="<%= ob.guid %>"><%= ob.polyT('chat.conversation.subMenu.viewPage') %></a>
-    <a class="clrT js-blockUser"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
+    <a class="clrT js-blockUser TODO"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
     <a class="clrT js-deleteConversation deleteConvoMenuItem"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
   </div>
   <div class="convoMessagesWindow tx6 js-convoMessagesWindow">

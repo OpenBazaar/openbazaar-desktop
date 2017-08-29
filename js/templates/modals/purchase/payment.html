@@ -1,5 +1,5 @@
 <!--
-  This view is used by both the Purch and Order detail flows. When making changes, please ensure
+  This view is used by both the Purchase and Order detail flows. When making changes, please ensure
   they play nice with both areas.
 -->
 <div class="flexRow gutterHLg pad rowMd">
@@ -17,7 +17,8 @@
           </button>
         </div>
         <div class="tx5 rowMd">
-          <%= ob.polyT('purchase.pendingSection.to', { address: ob.paymentAddress }) %>
+          <% const pAddress = ob.paymentAddress.length > 34 ? `${ob.paymentAddress.slice(0, 34)}…` : ob.paymentAddress; %>
+          <span <% if (ob.paymentAddress.length > 34) print(`class="toolTipNoWrap toolTipTop" data-tip="${ob.paymentAddress}"`) %>><%= ob.polyT('purchase.pendingSection.to', { address: pAddress }) %></span>
           <button class="btnTxtOnly txUnb flipBtn js-copyAddress">
             <span class="clrTEm unFlipped"><%= ob.polyT('purchase.pendingSection.copy') %></span>
             <span class="flipped"><%= ob.polyT('purchase.pendingSection.copied') %></span>

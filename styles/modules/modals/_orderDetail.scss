@@ -1,16 +1,4 @@
 .orderDetail {
-  .returnBox {
-    max-width: 905px;
-    text-decoration: none;
-    padding: $padSm;
-
-    .avatar {
-      width: $thumbTn;
-      height: $thumbTn;
-      float: left;
-    }
-  }
-
   .featuredProfile {
     text-align: center;
     padding: $padMd;
@@ -325,6 +313,8 @@
       .listingThumbCol {
         width: 42px;
         height: 42px;
+        background-size: cover;
+        background-position: center;
       }
 
       hr {

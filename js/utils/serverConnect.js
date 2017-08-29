@@ -44,7 +44,8 @@ function log(msg) {
 
   const logMsg = `[SERVER-CONNECT] ${msg}${EOL}`;
   debugLog += logMsg;
-  ipcRenderer.send('server-connect-log', logMsg);
+  // "if (ipcRenderer)" needed to prevent the `npm test` from bombing.
+  if (ipcRenderer) ipcRenderer.send('server-connect-log', logMsg);
 }
 
 export function getDebugLog() {
@@ -344,8 +345,12 @@ export default function connect(server, options = {}) {
               });
           };
 
-          const commandLineArgs = [];
+          let commandLineArgs = [];
           if (server.get('useTor')) commandLineArgs.push('--tor');
+          const torPw = server.get('torPassword');
+          if (torPw) {
+            commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
+          }
           innerConnectDeferred.notify('starting-local-server');
           localServer.start(commandLineArgs);
 
@@ -545,5 +550,6 @@ export default function connect(server, options = {}) {
   return promise;
 }
 
-ipcRenderer.send('server-connect-ready');
+// "if (ipcRenderer)" needed to prevent the `npm test` from bombing.
+if (ipcRenderer) ipcRenderer.send('server-connect-ready');
 log('Browser has been started or refreshed.');

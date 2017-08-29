@@ -1,12 +1,14 @@
-import BaseModel from '../BaseModel';
+import $ from 'jquery';
 import app from '../../app';
+import { getSocket } from '../../utils/serverConnect';
+import { decimalToInteger, integerToDecimal } from '../../utils/currency';
+import BaseModel from '../BaseModel';
 import Image from './Image';
 import Moderator from './Moderator';
 import Colors from './Colors';
 import Contact from './Contact';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 
-export default class extends BaseModel {
+export default class Profile extends BaseModel {
   defaults() {
     return {
       about: '',
@@ -192,4 +194,160 @@ export default class extends BaseModel {
 
     return super.sync(method, model, options);
   }
+}
+
+const maxCachedProfiles = 500;
+const profileCacheExpires = 1000 * 60 * 60;
+const profileCache = new Map();
+let profileCacheExpiredInterval;
+
+function expireCachedProfile(peerId) {
+  if (!peerId) {
+    throw new Error('Please provide a peerId');
+  }
+
+  const cached = profileCache.get(peerId);
+
+  if (cached) {
+    cached.deferred.reject({
+      errCode: 'TIMED_OUT',
+      error: 'The profile fetch timeed out.',
+    });
+  }
+
+  profileCache.delete(peerId);
+}
+
+/**
+ * This function will fetch a list of profiles via the profiles api utilizing
+ * the async and usecache flags. It will return a list of promises that will
+ * each resolve when their respective profile arrives via socket.
+ * @param {Array} peerIds List of peerId for whose profiles to fetch.
+ * @returns {Array} An array of promises corresponding to the array of passed
+ * in peerIds. Each promise will resolve when it's respective profile is received
+ * via the socket. A profile model will be passed in the resolve handler.
+ */
+export function getCachedProfiles(peerIds = []) {
+  if (!(Array.isArray(peerIds))) {
+    throw new Error('Please provide a list of peerIds.');
+  }
+
+  if (!peerIds.length) {
+    throw new Error('Please provide at least one peerId.');
+  }
+
+  peerIds.forEach(id => {
+    if (typeof id !== 'string') {
+      throw new Error('One or more of the provided peerIds are not strings.');
+    }
+  });
+
+  const promises = [];
+  const profilesToFetch = [];
+  let socket;
+
+  if (!profileCacheExpiredInterval) {
+    // Check every few minutes and clean up any expired cached profiles
+    profileCacheExpiredInterval = setInterval(() => {
+      profileCache.forEach((cached, key) => {
+        if (Date.now() - cached.createdAt >= profileCacheExpires) {
+          expireCachedProfile(key);
+        }
+      });
+    }, 1000 * 60 * 5);
+  }
+
+  peerIds.forEach(id => {
+    let cached = profileCache.get(id);
+
+    // make sure it's not expired
+    if (cached && Date.now() - cached.createdAt >= profileCacheExpires) {
+      expireCachedProfile(id);
+      cached = null;
+    }
+
+    if (!cached) {
+      // if cache is full, remove the oldest entry to make room for the new one
+      const keys = Array.from(profileCache.keys());
+      if (keys.length >= maxCachedProfiles) {
+        const cachedItemToRemove = profileCache.get(keys[0]);
+        // The deferred has almost certainly long been resolved, but just in case
+        // it's still pending, we'll reject it.
+        cachedItemToRemove.deferred.reject({
+          errCode: 'CACHE_FULL',
+          error: 'Entry removed because cache was full.',
+        });
+        profileCache.delete(keys[0]);
+      }
+
+      const deferred = $.Deferred();
+      profileCache.set(id, {
+        deferred,
+        createdAt: Date.now(),
+      });
+      profilesToFetch.push(id);
+    }
+
+    const promise = profileCache.get(id).deferred.promise();
+
+    promise.fail(() => {
+      // If the promise fails for any reason, remove it from the cache.
+      profileCache.delete(id);
+    });
+
+    promises.push(promise);
+  });
+
+  if (profilesToFetch.length) {
+    $.post({
+      url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
+      data: JSON.stringify(profilesToFetch),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).done(() => {
+      socket = getSocket();
+
+      if (!socket) {
+        promises.forEach(promise => {
+          promise.reject({
+            errCode: 'NO_SERVER_CONNECTION',
+            error: 'There is no server connection.',
+          });
+        });
+
+        return;
+      }
+
+      const onSocketMessage = e => {
+        if (!(e.jsonData.peerId && (e.jsonData.profile || e.jsonData.error))) return;
+
+        if (profileCache.get(e.jsonData.peerId)) {
+          if (e.jsonData.error) {
+            profileCache.get(e.jsonData.peerId)
+              .deferred
+              .reject({
+                errCode: 'SERVER_ERROR',
+                error: e.jsonData.error,
+              });
+          } else {
+            profileCache.get(e.jsonData.peerId)
+              .deferred
+              .resolve(new Profile(e.jsonData.profile, { parse: true }));
+          }
+        }
+      };
+
+      socket.on('message', onSocketMessage);
+    })
+      .fail(jqXhr => {
+        promises.forEach(promise => {
+          promise.reject({
+            errCode: 'SERVER_ERROR',
+            error: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          });
+        });
+      });
+  }
+
+  return promises;
 }

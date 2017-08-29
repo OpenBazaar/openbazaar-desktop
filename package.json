@@ -1,6 +1,7 @@
 {
   "name": "openbazaar-desktop",
-  "version": "2.0.5",
+  "productName": "OpenBazaar Desktop Client",
+  "version": "2.0.9",
   "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
@@ -25,7 +26,7 @@
     "type": "git",
     "url": "git+https://github.com/OpenBazaar/ob-desktop.git"
   },
-  "author": "",
+  "author": "OB1",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/OpenBazaar/ob-desktop/issues"
@@ -87,6 +88,7 @@
     "underscore": "^1.8.3",
     "url-parse": "^1.1.7",
     "velocity-animate": "^1.2.3",
-    "yargs": "^6.6.0"
+    "yargs": "^6.6.0",
+    "bech32": "^0.0.3"
   }
 }

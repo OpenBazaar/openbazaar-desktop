@@ -4,8 +4,7 @@ import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import { followedByYou, followUnfollow } from '../utils/follow';
-import Profile from '../models/profile/Profile';
-import UserCard from '../models/UserCard';
+import Profile, { getCachedProfiles } from '../models/profile/Profile';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
 
@@ -17,11 +16,7 @@ export default class extends BaseVw {
     if (this.model instanceof Profile) {
       this.guid = this.model.id;
       this.fetched = true;
-    } else if (this.model) {
-      this.guid = this.model.get('guid');
-      this.fetched = false;
     } else {
-      this.model = new UserCard({ guid: options.guid });
       this.guid = options.guid;
       this.fetched = false;
     }
@@ -49,10 +44,14 @@ export default class extends BaseVw {
       this.$modBtn.attr('data-tip', this.getModTip());
     });
 
-    this.listenTo(app.ownFollowing, 'sync update', () => {
-      this.followedByYou = followedByYou(this.guid);
-      this.$followBtn.toggleClass('active', this.followedByYou);
-      this.$followBtn.attr('data-tip', this.getFollowTip());
+    this.listenTo(app.ownFollowing, 'update', (cl, updateOpts) => {
+      const updatedModels = updateOpts.changes.added.concat(updateOpts.changes.removed);
+
+      if (updatedModels.filter(md => md.id === this.guid).length) {
+        this.followedByYou = followedByYou(this.guid);
+        this.$followBtn.toggleClass('active', this.followedByYou);
+        this.$followBtn.attr('data-tip', this.getFollowTip());
+      }
     });
   }
 
@@ -73,19 +72,16 @@ export default class extends BaseVw {
   }
 
   loadUser(guid = this.guid) {
-    let profile;
     this.fetched = true;
 
     if (guid === app.profile.id) {
-      // don't fetch our this user's own profile, since we have it already
-      this.profileFetch = $.Deferred().resolve();
-      profile = app.profile;
+      // don't fetch this user's own profile, since we have it already
+      this.profileFetch = $.Deferred().resolve(app.profile);
     } else {
-      profile = new Profile({ peerID: guid });
-      this.profileFetch = profile.fetch();
+      this.profileFetch = getCachedProfiles([guid])[0];
     }
 
-    this.profileFetch.done(() => {
+    this.profileFetch.done(profile => {
       if (this.isRemoved()) return;
       this.loading = false;
       this.notFound = false;
@@ -197,7 +193,7 @@ export default class extends BaseVw {
         getModTip: this.getModTip,
         getFollowTip: this.getFollowTip,
         ...this.options,
-        ...this.model.toJSON(),
+        ...(this.model && this.model.toJSON() || {}),
       }));
 
       this._$followBtn = null;
@@ -213,5 +209,6 @@ export default class extends BaseVw {
 
   remove() {
     if (this.profileFetch && this.profileFetch.abort) this.profileFetch.abort();
+    super.remove();
   }
 }

@@ -30,11 +30,11 @@
     </div>
   </div>
   <div class="flexExpand posR tabContent">
-    <div class="gutterVMd js-formSectionsContainer">
+    <div class="gutterVMd2 js-formSectionsContainer">
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3">
         <div class="flexHCent">
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
-          <a class="btn clrP clrBr clrSh2 modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+          <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
         <hr class="clrBr" />
 
@@ -224,7 +224,7 @@
         <hr class="clrBr rowMd">
         <% if (ob.errors['item.skus']) print(ob.formErrorTmpl({ errors: ob.errors['item.skus'] })) %>
         <div class="js-variantInventoryTableContainer"></div>
-      </section>      
+      </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h2>
@@ -253,7 +253,7 @@
 
       <div class="contentBox padMd clrP clrBr clrSh3">
         <div class="flexHRight">
-          <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('settings.btnSave') %></a>
+          <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
       </div>
     </div>

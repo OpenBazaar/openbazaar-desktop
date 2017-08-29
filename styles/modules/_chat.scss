@@ -31,10 +31,8 @@
 
       .unreadBadge {
         position: absolute;
-        top: -4px;
+        top: -5px;
         left: 0;
-        width: 22px;
-        height: 22px;
         line-height: 18px;
         font-size: $tx5b;
         font-weight: bold;
@@ -51,6 +49,7 @@
         padding: $padSm;
         max-height: 31px;
         flex-grow: 1;
+        background-color: #f9f9f9;
       }
 
       .handleGuid {
@@ -130,6 +129,7 @@
   height: 100%;
 
   .convoHeader {
+    background-color: #ecf0f1;
     border-bottom-style: solid;
     border-bottom-width: 1px;
     z-index: 2;
@@ -204,6 +204,7 @@
           max-width: 186px;
           line-height: 14px;
           text-align: left;
+          background-color: #f9f9f9;
 
           & > span {
             word-break: break-word;

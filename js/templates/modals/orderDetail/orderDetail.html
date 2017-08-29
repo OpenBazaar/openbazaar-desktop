@@ -4,11 +4,10 @@
     // and componentize the css.
   %>
   <% if (ob.returnText) { %>
-  <div class="contentBox clrP clrSh3 clrBr clrT">
-    <a class="padSm gutterHSm overflowAuto margRSm flexVCent returnBox js-returnBox">
-      <span class="clrBr2 clrSh1 disc avatar flexNoShrink" style="<%= ob.getAvatarBgImage(ob.ownProfile.avatarHashes) %>"></span>
-      <span class="txUnl tx3 clamp clrT name"><%= ob.ownProfile.name %></span>
-      <span class="txU flexNoShrink tx6"><%= ob.returnText %></span>
+  <div class="btnStrip clrSh3">
+    <a class="btn clrP clrBr clrT js-returnBox">
+      <span class="ion-chevron-left margRSm"></span>
+      <%= ob.returnText %>
     </a>
   </div>
   <% } %>

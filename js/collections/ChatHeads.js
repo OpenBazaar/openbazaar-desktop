@@ -18,4 +18,11 @@ export default class extends Collection {
   comparator(message) {
     return (new Date(message.get('timestamp')).getTime()) * -1;
   }
+
+  /**
+   * Returns an aggregrate count of all the unread count within each chat head.
+   */
+  get totalUnreadCount() {
+    return this.reduce((total, md) => (total + md.get('unread')), 0);
+  }
 }

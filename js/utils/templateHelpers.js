@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import app from '../app';
-import { formatCurrency, convertAndFormatCurrency } from './currency';
+import { formatCurrency, convertAndFormatCurrency, convertCurrency, formatPrice } from './currency';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -43,7 +43,7 @@ export function parseEmojis(text, className = '', attrs = {}) {
  */
 export function formatRating(average, count) {
   const avIsNum = typeof average === 'number';
-  const ratingAverage = avIsNum ? parseFloat(average.toFixed(2)) : '';
+  const ratingAverage = avIsNum ? average.toFixed(1) : '';
   const ratingCount = typeof count === 'number' ? ` (${count})` : '';
   return avIsNum ? `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}` : '';
 }
@@ -51,8 +51,10 @@ export function formatRating(average, count) {
 export const getServerUrl = app.getServerUrl.bind(app);
 
 export {
+  formatPrice,
   formatCurrency,
   convertAndFormatCurrency,
+  convertCurrency,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

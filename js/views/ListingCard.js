@@ -166,7 +166,7 @@ export default class extends baseVw {
             model: this.fullListing,
             profile: this.options.profile,
             vendor: this.options.vendor,
-            closeButtonClass: 'cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3',
+            closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
           }).render()

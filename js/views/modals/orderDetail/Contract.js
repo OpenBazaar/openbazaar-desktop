@@ -1,3 +1,4 @@
+import renderjson from '../../../lib/renderjson';
 import { capitalize } from '../../../utils/string';
 import BaseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -75,16 +76,16 @@ export default class extends BaseVw {
 
       if (contract) {
         this.$('.js-jsonContractContainer')
-          .append(window.renderjson.set_show_to_level(1)(contract));
+          .append(renderjson.set_show_to_level(1)(contract));
       } else {
         if (buyerContract) {
           this.$('.js-jsonBuyerContractContainer')
-            .append(window.renderjson.set_show_to_level(1)(buyerContract));
+            .append(renderjson.set_show_to_level(1)(buyerContract));
         }
 
         if (vendorContract) {
           this.$('.js-jsonVendorContractContainer')
-            .append(window.renderjson.set_show_to_level(1)(vendorContract));
+            .append(renderjson.set_show_to_level(1)(vendorContract));
         }
       }
     });
