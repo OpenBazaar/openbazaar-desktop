@@ -275,7 +275,7 @@ function fetchStartupData() {
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
   walletBalanceFetch = !walletBalanceFetch || walletBalanceFetchFailed ?
     app.walletBalance.fetch() : walletBalanceFetch;
-  searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch ?
+  searchProvidersFetch = !searchProvidersFetch || searchProvidersFetchFailed ?
     app.searchProviders.fetch() : searchProvidersFetch;
 
   $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch)
