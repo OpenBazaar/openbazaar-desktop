@@ -412,16 +412,16 @@ function start() {
         app.searchProviders.add(getDefaultSearchProviders);
         // if active and default providers aren't set, set them now.
         if (!app.searchProviders.activeProvider) {
-          app.searchProviders.setProvider(app.searchProviders.at(0), 'active');
+          app.searchProviders.activeProvider = app.searchProviders.at(0);
         }
         if (!app.searchProviders.activeTorProvider) {
-          app.searchProviders.setProvider(app.searchProviders.at(0), 'active', true);
+          app.searchProviders.activeTorProvider = app.searchProviders.at(0);
         }
         if (!app.searchProviders.defaultProvider) {
-          app.searchProviders.setProvider(app.searchProviders.at(0), 'default');
+          app.searchProviders.defaultProvider = app.searchProviders.at(0);
         }
         if (!app.searchProviders.defaultTorProvider) {
-          app.searchProviders.setProvider(app.searchProviders.at(0), 'default', true);
+          app.searchProviders.defaultTorProvider = app.searchProviders.at(0);
         }
 
         // set the profile data for the feedback mechanism
