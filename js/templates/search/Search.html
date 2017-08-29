@@ -15,10 +15,10 @@
           <div>
             <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider">
               <%= ob.polyT('search.makeDefaultBtn') %>
+              <span class="toolTip" data-tip="<%= ob.polyT('search.makeDefaultBtnHelper') %>">
+                <i class="ion-help-circled"></i>
+              </span>
             </button>
-            <span class="toolTip" data-tip="<%= ob.polyT('search.makeDefaultBtnHelper') %>">
-              <i class="ion-help-circled"></i>
-            </span>
           </div>
         <% } %>
       <% } else { %>

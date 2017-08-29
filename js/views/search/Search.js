@@ -339,6 +339,8 @@ export default class extends baseVw {
   }
 
   render(data, searchUrl, xhr) {
+    super.render();
+
     if (data && !searchUrl) {
       throw new Error('Please provide the search URL along with the data.');
     }
