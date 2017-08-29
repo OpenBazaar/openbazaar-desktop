@@ -39,7 +39,7 @@ import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
 import SearchProvidersCol from './collections/search/SearchProviders';
-import { getDefaultSearchProviders } from './data/defaultSearchProviders';
+import getDefaultSearchProviders from './data/defaultSearchProviders';
 
 fixLinuxZoomIssue();
 
@@ -409,7 +409,7 @@ function start() {
         app.loadingModal.close();
 
         // set the default search providers.
-        app.searchProviders.add(getDefaultSearchProviders());
+        app.searchProviders.add(getDefaultSearchProviders);
         // if active and default providers aren't set, set them now.
         if (!app.searchProviders.activeProvider) {
           app.searchProviders.setProvider(app.searchProviders.at(0), 'active');
