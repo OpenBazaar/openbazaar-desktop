@@ -84,6 +84,10 @@ export default class extends BaseVw {
     }
   }
 
+  get autoFocusFirstField() {
+    return true;
+  }
+
   render() {
     super.render();
     loadTemplate('modals/orderDetail/disputeOrder.html', (t) => {

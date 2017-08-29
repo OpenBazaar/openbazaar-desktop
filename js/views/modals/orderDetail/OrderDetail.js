@@ -293,6 +293,10 @@ export default class extends BaseModal {
         tabView.onAttach.call(tabView);
       }
 
+      if (tabView.autoFocusFirstField) {
+        tabView.$el.find('select, input, textarea')[0].focus();
+      }
+
       this.currentTabView = tabView;
     }
   }

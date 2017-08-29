@@ -83,6 +83,10 @@ export default class extends BaseVw {
     }
   }
 
+  get autoFocusFirstField() {
+    return true;
+  }
+
   get $btnCancel() {
     return this._$btnCancel ||
       (this._$btnCancel = this.$('.js-cancel'));
