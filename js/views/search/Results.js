@@ -20,7 +20,7 @@ export default class extends baseVw {
     }
 
     this.serverPage = this.options.serverPage || 0;
-    this.pageSize = this.options.pageSize || 12;
+    this.pageSize = this.options.pageSize || 24;
 
     this.cardViews = [];
     this.pageCollections = {};
