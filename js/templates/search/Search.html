@@ -25,7 +25,7 @@
         <button class="btnTxtOnly txb txU txUnb js-addQueryProvider"><%= ob.polyT('search.addQueryProviderBtn') %></button>
       <% } %>
     </div>
-    <div class="searchBar row clrP clrBr">
+    <div class="searchBar row clrP clrBr clrSh2">
       <% if (ob.logo) { %>
       <div class="searchLogo js-searchLogo">
         <img src="<%= ob.logo %>"></img>
@@ -50,7 +50,7 @@
     <form class="col3 filterWrapper js-filterWrapper">
       <div class="flexColWide gutterV">
         <% _.each(ob.options, function(val, key) { %>
-          <div class="contentBox pad clrP clrBr">
+          <div class="contentBox pad clrP clrBr clrSh2">
             <h4 class="rowSm"><%= val.label %></h4>
             <% if (val.type ==='dropdown') { %>
               <select name="<%= key %>" class="select2Small">

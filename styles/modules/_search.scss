@@ -101,6 +101,7 @@
     display: flex;
     align-items: center;
     position: relative;
+    border-radius: 3px;
 
     .searchLogo {
       position: absolute;
@@ -145,6 +146,7 @@
       line-height: 40px;
       font-size: 1.4rem;
       height: auto;
+      border-radius: 3px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
