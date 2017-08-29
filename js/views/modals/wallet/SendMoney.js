@@ -76,13 +76,10 @@ export default class extends baseVw {
         this.sendConfirmBox.setState({
           paymentAmount: this.model.get('amount'),
           paymentCurrency: this.model.get('currency'),
-          fetchingFee: this.estimateFeeFetch.state() === 'pending',
         });
 
-        this.estimateFeeFetch.done(fee => this.sendConfirmBox.setState({
-          fee,
-          fetchingFee: false,
-        })).fail(() => this.sendConfirmBox.setState({ fetchingFee: false }));
+        this.estimateFeeFetch.done(fee => this.sendConfirmBox.setState({ fee }))
+          .fail(() => this.sendConfirmBox.setState({ fetchingFee: false }));
       });
     }
 
@@ -205,9 +202,8 @@ export default class extends baseVw {
 
       this.$('#walletSendCurrency').select2();
 
-      this.sendConfirmBox = this.createChild(SendConfirmBox, {
-        fetchingFee: this.estimateFeeFetch && this.estimateFeeFetch.state() === 'pending',
-      });
+      const fee = this.sendConfirmBox && this.sendConfirmBox.getState().fee;
+      this.sendConfirmBox = this.createChild(SendConfirmBox, { fee });
       this.listenTo(this.sendConfirmBox, 'clickSend', () => this.onClickConfirmSend());
       this.listenTo(this.sendConfirmBox, 'clickCancel', () => this.onClickSendConfirmCancel());
       this.$sendConfirm.html(this.sendConfirmBox.render().el);

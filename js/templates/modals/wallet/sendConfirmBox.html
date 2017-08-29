@@ -1,8 +1,6 @@
 <div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
 <div class="posR padSm">
-<% if (ob.fetchingFee && typeof ob.fee !== 'number') { %>
-  <%= ob.spinner({ className: 'txCtr spinnerMd' }) %>
-<% } else if (typeof ob.fee === 'number') {
+<% if (typeof ob.fee === 'number') {
   let feeText = ob.formatCurrency(ob.fee, 'BTC',
     { useBtcSymbol: false });
 
@@ -19,9 +17,7 @@
       fiatBtcPairing: feeText,
     }) %>
   </p>
-<% } else {
-  // The fee fetch must have failed.
-%>
+<% } else { %>
   <p class="clrT2">
     <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyFeeUnavailable', {
       fiatBtcPairing: ob.formatCurrency(ob.paymentAmount, ob.paymentCurrency),
