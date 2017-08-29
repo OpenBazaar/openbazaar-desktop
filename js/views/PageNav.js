@@ -107,7 +107,7 @@ export default class extends BaseVw {
       };
 
       if (notif.thumbnail) {
-        nativeNotifData.icon = app.getServerUrl(`ipfs/${notif.thumbnail.small}`);
+        nativeNotifData.icon = app.getServerUrl(`ob/images/${notif.thumbnail.small}`);
       }
 
       launchNativeNotification(notifDisplayData.text, nativeNotifData);
