@@ -1459,10 +1459,12 @@
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
+    "duplicateOptionName": "You already have a variant with this name.",
     "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
     "provideQuantity": "Please provide a quantity.",
     "provideNumericQuantity": "Please provide the quantity as a number.",
-    "quantityMustBePositive": "The quantity must be more than zero."
+    "quantityMustBePositive": "The quantity must be more than zero.",
+    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
