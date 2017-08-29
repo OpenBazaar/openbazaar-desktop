@@ -79,7 +79,7 @@ export default class extends baseVw {
 
     // use the parameters from the query unless they were overridden in the options
     this.serverPage = options.serverPage || params.p || 0;
-    this.pageSize = options.pageSize || params.ps || 12;
+    this.pageSize = options.pageSize || params.ps || 24;
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters

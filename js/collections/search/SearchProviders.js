@@ -11,8 +11,8 @@ export default class extends Collection {
     super(models, options);
     this._activeId = localStorage.activeProvider;
     this._activeTorId = localStorage.activeTorProvider;
-    this._defaultId = this.localStorage.defaultProvider;
-    this._defaultTorId = this.localStorage.defaultTorProvider;
+    this._defaultId = localStorage.defaultProvider;
+    this._defaultTorId = localStorage.defaultTorProvider;
   }
 
   model(attrs, options) {
