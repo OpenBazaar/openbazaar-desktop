@@ -43,15 +43,14 @@ export default class extends BaseView {
     }
 
     const opts = {};
-    // if the user is using Tor, we will assume this is a Tor url
-    if (this.options.usingTor) {
-      opts.torlistings = URL;
-    } else {
-      opts.listings = URL;
-    }
-    this.model.set(opts, { validate: true });
-    if (!this.model.validationError) {
-      const save = this.model.save();
+    const urlType = this.options.usingTor ? 'torlistings' : 'listings';
+    opts[urlType] = URL;
+
+    // pass the type of url to validate to the model
+    this.model.set(opts, { validate: true, urlType });
+    const modelErrors = this.model.validationError && this.model.validationError[urlType];
+    if (!modelErrors) {
+      const save = this.model.save(opts, { urlType });
       if (save) {
         // when saved successfully this view will be removed when the search is rerendered
         save.done(() => {

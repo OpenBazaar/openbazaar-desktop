@@ -25,32 +25,26 @@ export default class extends BaseModel {
     return LocalStorageSync.sync.apply(this, args);
   }
 
-  validate(attrs) {
+  validate(attrs, options) {
     const errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+    const urlType = options.urlType || 'listings';
 
     if (attrs.name && is.not.string(attrs.name)) {
-      addError('name', app.polyglot.t('searchProviderModelErrors.name'));
+      addError('name', app.polyglot.t('searchProviderModelErrors.invalidName'));
     }
 
     if (attrs.logo && is.not.url(attrs.logo)) {
-      addError('name', app.polyglot.t('searchProviderModelErrors.logo'));
+      addError('logo', app.polyglot.t('searchProviderModelErrors.invalidLogo'));
     }
 
-    const urls = ['listings', 'torlistings'];
-    const validUrls = [];
-
-    urls.forEach((url) => {
-      if (attrs[url] && is.string(attrs[url]) && is.url(attrs[url])) {
-        validUrls.push(url);
-      }
-    });
-
-    if (!validUrls.length) {
-      addError('listings', app.polyglot.t('searchProviderModelErrors.listings'));
+    // a provider is expected to be created with one url. The view should retrieve the other urls
+    // on the first call to the endpoint.
+    if (!attrs[urlType] || is.not.string(attrs[urlType]) || is.not.url(attrs[urlType])) {
+      addError(urlType, app.polyglot.t(`searchProviderModelErrors.invalid${urlType}`));
     }
 
     if (Object.keys(errObj).length) return errObj;

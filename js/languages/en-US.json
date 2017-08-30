@@ -1591,9 +1591,12 @@
     "provideResolution": "Please explain your decision."
   },
   "searchProviderModelErrors": {
-    "name": "The name must be a string.",
-    "logo": "The logo URL must be a valid URL.",
-    "listings": "Please provide a valid search provider URL."
+    "invalidName": "The name must be a string.",
+    "invalidLogo": "The logo URL must be a valid URL.",
+    "invalidsearch": "You must provide a valid search URL.",
+    "invalidlistings": "You must provide a valid listings search URL",
+    "invalidtorsearch": "You must provide a valid Tor search URL",
+    "invalidtorlistings": "You must provide a valid Tor listings search URL."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
