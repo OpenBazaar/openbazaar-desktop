@@ -41,23 +41,21 @@ export default class extends BaseView {
 
   createAddBox() {
     if (this.addProvider) this.addProvider.remove();
-    this.addProvider = this.createChild(AddProvider, { ...this.options });
+    this.addProvider = this.createChild(AddProvider, {
+      urlType: this.options.urlType,
+      usingTor: this.options.usingTor,
+    });
     this.getCachedEl('.js-addWrapper').append(this.addProvider.render().$el);
     this.listenTo(this.addProvider, 'newProviderSaved', (md) => {
       this.trigger('activateProvider', md);
     });
   }
 
-  createProviderView(model, options = {}) {
-    const opts = {
-      active: this.options.currentID === model.id,
-      urlType: this.options.urlType,
-      ...options,
-    };
-
+  createProviderView(model) {
     const view = this.createChild(Provider, {
       model,
-      ...opts,
+      active: this.options.currentID === model.id,
+      urlType: this.options.urlType,
     });
 
     this.listenTo(view, 'click', (md) => {

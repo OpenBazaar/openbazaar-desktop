@@ -3,8 +3,7 @@
     <h3><%= ob.polyT('search.addTitle') %></h3>
     <%
       const plhdr = ob.polyT(`${ob.usingTor ? 'search.addTorPlaceholder' : 'search.addPlaceholder'}`);
-      const errorType = ob.usingTor ? 'torlistings' : 'listings';
-      if (ob.errors[errorType]) print(ob.formErrorTmpl({ errors: ob.errors[errorType] }));
+      if (ob.errors[ob.urlType]) print(ob.formErrorTmpl({ errors: ob.errors[ob.urlType] }));
     %>
     <input type="url" class="clrP clrBr clrSh2 js-addProviderInput" placeholder="<%= plhdr %>">
     <div class="flexHRight flexVCent gutterH">
