@@ -120,7 +120,7 @@ export default class extends baseVw {
   get providerUrl() {
     // if a provider was created by the address bar query, use it instead
     const currentProvider = this.queryProvider || this.sProvider;
-    return currentProvider.get(`${this.usingTor ? 'tor' : ''}listings`);
+    return currentProvider.get(this.urlType);
   }
 
   getCurrentProviderID() {
