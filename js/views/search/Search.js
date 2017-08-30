@@ -221,28 +221,33 @@ export default class extends baseVw {
           if (data.name && data.links) {
             // if data about the provider is recieved, update the model
             const update = { name: data.name };
+            const urlTypes = [];
             if (data.logo && is.url(data.logo)) update.logo = data.logo;
             if (data.links) {
-              if (data.links.search && is.url(data.links.search)) {
+              if (is.url(data.links.search)) {
                 update.search = data.links.search;
+                urlTypes.push('search');
               }
-              if (data.links.listings && is.url(data.links.listings)) {
+              if (is.url(data.links.listings)) {
                 update.listings = data.links.listings;
+                urlTypes.push('listings');
               }
               if (data.links.tor) {
-                if (data.links.tor.search && is.url(data.links.tor.search)) {
+                if (is.url(data.links.tor.search)) {
                   update.torsearch = data.links.tor.search;
+                  urlTypes.push('torsearch');
                 }
-                if (data.links.tor.listings && is.url(data.links.tor.listings)) {
+                if (is.url(data.links.tor.listings)) {
                   update.torlistings = data.links.tor.listings;
+                  urlTypes.push('torlistings');
                 }
               }
             }
             // update the defaults but do not save them
             if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
-              this.sProvider.save(update);
+              this.sProvider.save(update, { urlTypes });
             } else {
-              this.sProvider.set(update);
+              this.sProvider.set(update, { urlTypes });
             }
             this.render(data, searchUrl);
           } else {

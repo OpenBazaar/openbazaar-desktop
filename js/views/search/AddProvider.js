@@ -47,10 +47,10 @@ export default class extends BaseView {
     opts[urlType] = URL;
 
     // pass the type of url to validate to the model
-    this.model.set(opts, { validate: true, urlType });
+    this.model.set(opts, { validate: true, urlTypes: [urlType] });
     const modelErrors = this.model.validationError && this.model.validationError[urlType];
     if (!modelErrors) {
-      const save = this.model.save(opts, { urlType });
+      const save = this.model.save(opts, { urlTypes: [urlType] });
       if (save) {
         // when saved successfully this view will be removed when the search is rerendered
         save.done(() => {
