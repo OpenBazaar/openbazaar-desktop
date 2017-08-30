@@ -50,7 +50,7 @@ export default class extends BaseView {
 
   createProviderView(model, options = {}) {
     const opts = {
-      active: this.currentProviderId === model.id,
+      active: this.options.currentID === model.id,
       urlType: this.options.urlType,
       ...options,
     };

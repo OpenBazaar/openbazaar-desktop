@@ -27,10 +27,6 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
 
-    const urlType = this.usingTor ? 'torlistings' : 'listings';
-    this.searchProviders = this.createChild(Providers, { urlType });
-    this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
-
     if (options.query) {
       // the user arrived here from the address bar, use the default provider
       this.sProvider = app.searchProviders[`default${this.torString}Provider`];
@@ -125,6 +121,10 @@ export default class extends baseVw {
     return currentProvider.get(`${this.usingTor ? 'tor' : ''}listings`);
   }
 
+  getCurrentProviderID() {
+    return this.queryProvider ? '' : this.sProvider.id;
+  }
+
   /**
    * This will create a url with the term and other query parameters
    * @param {string} term
@@ -203,9 +203,6 @@ export default class extends baseVw {
     this.setState({
       fetching: true,
     });
-
-    // initial render to show the loading spinner
-    this.render();
 
     // query the search provider
     this.callSearch = $.get({
@@ -402,8 +399,12 @@ export default class extends baseVw {
       this.$searchLogo.addClass('loadError');
     });
 
-    this.searchProviders.delegateEvents();
-    this.searchProviders.currentProviderId = this.queryProvider ? '' : this.sProvider.id;
+    if (this.searchProviders) this.searchProviders.remove();
+    this.searchProviders = this.createChild(Providers, {
+      urlType: this.usingTor ? 'torlistings' : 'listings',
+      currentID: this.getCurrentProviderID(),
+    });
+    this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     // use the initial set of results data to create the results view
