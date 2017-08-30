@@ -8,7 +8,6 @@ const defaultSearchProviders = [
     torsearch: 'http://obsearchwhcqnhvj.onion/search',
     torlistings: 'http://obsearchwhcqnhvj.onion/search/listings',
     locked: true,
-    order: 1,
   },
   {
     id: 'duo',
@@ -19,7 +18,6 @@ const defaultSearchProviders = [
     torsearch: '',
     torlistings: '',
     locked: true,
-    order: 2,
   },
 ];
 

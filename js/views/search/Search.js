@@ -10,6 +10,7 @@ import Results from './Results';
 import ResultsCol from '../../collections/Results';
 import Providers from './SearchProviders';
 import ProviderMd from '../../models/search/SearchProvider';
+import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
 
@@ -41,7 +42,7 @@ export default class extends baseVw {
     // if the  provider returns a bad URL, reset to the original provider
     // this should never happen unless the local data is manually altered or corrupted
     if (is.not.url(this.providerUrl)) {
-      this.sProvider = app.searchProviders.at(0);
+      this.sProvider = app.searchProviders(defaultSearchProviders[0].id);
     }
 
     const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
@@ -106,7 +107,7 @@ export default class extends baseVw {
   }
 
   get usingOriginal() {
-    return this.sProvider === app.searchProviders.at(0);
+    return this.sProvider.id === defaultSearchProviders[0].id;
   }
 
   get usingTor() {

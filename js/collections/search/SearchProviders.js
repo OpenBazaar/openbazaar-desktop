@@ -19,12 +19,6 @@ export default class extends Collection {
     return new Provider(attrs, options);
   }
 
-  comparator(provider) {
-    // normally only the defaults have unique orders. This ensures they are first, and appear
-    // in the expected sequence
-    return provider.get('order');
-  }
-
   sync(...args) {
     return LocalStorageSync.sync.apply(this, args);
   }
