@@ -36,6 +36,14 @@ textarea,
   }
 }
 
+input[type=reset] {
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .trumbowyg-editor {
   border-radius: 0;
 }

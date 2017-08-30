@@ -6,6 +6,7 @@ import { clipboard } from 'electron';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import WalletSeed from './WalletSeed';
+import TestSmtpStatus from './TestSmtpStatus';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -36,6 +37,8 @@ export default class extends baseVw {
       'click .js-resync': 'clickResync',
       'click .js-purge': 'clickPurge',
       'click .js-blockData': 'clickBlockData',
+      'change [name="smtpSettings.notifications"]': 'onChangeShowSmtpNotifications',
+      'click .js-testSMTPSettings': 'onClickTestSMTPSettings',
     };
   }
 
@@ -64,9 +67,59 @@ export default class extends baseVw {
     return this.walletSeedFetch;
   }
 
+  onChangeShowSmtpNotifications() {
+    const formData = this.getFormData(this.$smtpSettingsFields);
+    this.settings.set(formData);
+    this.render();
+  }
+
+  onClickTestSMTPSettings() {
+    if (this.testSmtpPost) this.testSmtpPost.abort();
+    if (this.testSmtpStatus) {
+      this.testSmtpStatus.setState({
+        isFetching: true,
+        msg: '',
+      });
+    }
+
+    const data = this.getFormData(this.$smtpSettingsFields).smtpSettings;
+
+    this.testSmtpPost = $.post({
+      url: app.getServerUrl('ob/testemailnotifications'),
+      data: JSON.stringify(data || {}),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).done(() => {
+      this.testSmtpStatus.setState({
+        isFetching: false,
+        success: true,
+        msg: app.polyglot.t('settings.advancedTab.smtp.testSmtpSuccess'),
+      });
+    }).fail(xhr => {
+      if (xhr.statusText === 'abort') return;
+      const err = xhr.responseJSON && xhr.responseJSON.reason || '';
+      const msg = err ?
+        app.polyglot.t('settings.advancedTab.smtp.testSmtpFailWithError', { err }) :
+        app.polyglot.t('settings.advancedTab.smtp.testSmtpFail');
+
+      this.testSmtpStatus.setState({
+        isFetching: false,
+        success: false,
+        msg,
+      });
+    });
+  }
+
   resetSMTPFields() {
     this.settings.set('smtpSettings',
       this.settings.get('smtpSettings').defaults(), { validate: true });
+    if (this.testSmtpPost) this.testSmtpPost.abort();
+    if (this.testSmtpStatus) {
+      this.testSmtpStatus.setState({
+        isFetching: false,
+        msg: '',
+      });
+    }
     this.render();
   }
 
@@ -233,8 +286,17 @@ export default class extends baseVw {
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
   }
 
+  get $smtpSettingsFields() {
+    const selector = `.js-smtpSettingsForm select[name], .js-smtpSettingsForm input[name],
+      .js-smtpSettingsForm textarea[name]:not([class*="trumbowyg"]),
+      .js-smtpSettingsForm div[contenteditable][name]`;
+
+    return this.getCachedEl(selector);
+  }
+
   remove() {
     if (this.resync) this.resync.abort();
+    if (this.testSmtpPost) this.testSmtpPost.abort();
     super.remove();
   }
 
@@ -266,6 +328,19 @@ export default class extends baseVw {
       });
       this.listenTo(this.walletSeed, 'clickShowSeed', this.onClickShowSeed);
       this.getCachedEl('.js-walletSeedContainer').append(this.walletSeed.render().el);
+
+      const testSmtpStatusInitialState = {
+        ...(this.testSmtpStatus && this.testSmtpStatus.getState() || {}),
+      };
+
+      if (this.testSmtpStatus) this.testSmtpStatus.remove();
+      this.testSmtpStatus = this.createChild(TestSmtpStatus, {
+        initialState: {
+          ...testSmtpStatusInitialState,
+          isFetching: this.testSmtpPost && this.testSmtpPost.state() === 'pending',
+        },
+      });
+      this.getCachedEl('.js-testSmtpStatusContainer').html(this.testSmtpStatus.render().el);
     });
 
     return this;
