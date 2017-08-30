@@ -42,7 +42,7 @@ export default class extends BaseModel {
 
     // a provider is expected to be created with one url. The view should retrieve the other urls
     // on the first call to the endpoint.
-    if (!attrs[urlType] || is.not.string(attrs[urlType]) || is.not.url(attrs[urlType])) {
+    if (is.not.url(attrs[urlType])) {
       addError(urlType, app.polyglot.t(`searchProviderModelErrors.invalid${urlType}`));
     }
 

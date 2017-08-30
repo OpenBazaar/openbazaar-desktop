@@ -26,6 +26,8 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
+    // in the future the may be 4 or more possible types
+    this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
     if (options.query) {
       // the user arrived here from the address bar, use the default provider
@@ -236,10 +238,11 @@ export default class extends baseVw {
                 }
               }
             }
-            this.sProvider.set(update);
-            if (Object.keys(this.sProvider.changedAttributes()).length &&
-              !_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
-              this.sProvider.save();
+            // update the defaults but do not save them
+            if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
+              this.sProvider.save(update);
+            } else {
+              this.sProvider.set(update);
             }
             this.render(data, searchUrl);
           } else {
@@ -401,7 +404,7 @@ export default class extends baseVw {
 
     if (this.searchProviders) this.searchProviders.remove();
     this.searchProviders = this.createChild(Providers, {
-      urlType: this.usingTor ? 'torlistings' : 'listings',
+      urlType: this.urlType,
       currentID: this.getCurrentProviderID(),
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
