@@ -408,8 +408,8 @@ function start() {
         app.pageNav.setAppProfile();
         app.loadingModal.close();
 
-        // set the default search providers. If they already exist, overwrite any changes.
-        app.searchProviders.add(defaultSearchProviders, { at: 0, merge: true });
+        // set the default search providers if they don't already exist.
+        app.searchProviders.add(defaultSearchProviders, { at: 0 });
         // if active and default providers aren't set, set them now.
         if (!app.searchProviders.activeProvider) {
           app.searchProviders.activeProvider = app.searchProviders.at(0);
