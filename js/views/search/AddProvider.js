@@ -43,7 +43,7 @@ export default class extends BaseView {
     }
 
     const opts = {};
-    const urlType = this.options.usingTor ? 'torlistings' : 'listings';
+    const urlType = this.options.urlType;
     opts[urlType] = URL;
 
     // pass the type of url to validate to the model

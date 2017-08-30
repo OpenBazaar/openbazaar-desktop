@@ -27,7 +27,8 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
 
-    this.searchProviders = this.createChild(Providers, { usingTor: this.usingTor });
+    const urlType = this.usingTor ? 'torlistings' : 'listings';
+    this.searchProviders = this.createChild(Providers, { urlType });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
 
     if (options.query) {

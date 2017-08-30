@@ -33,6 +33,7 @@ export default class extends BaseView {
         ...this.model.toJSON(),
       }));
       if (this.options.active) this.$el.addClass('active');
+      if (!this.model.get(this.options.urlType)) this.$el.addClass('hide');
     });
     return this;
   }

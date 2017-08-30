@@ -49,15 +49,9 @@ export default class extends BaseView {
   }
 
   createProviderView(model, options = {}) {
-    // when in Tor mode, do not show providers that don't have Tor URLs and vice versa.
-    if (this.options.usingTor && !model.get('torlistings')) {
-      return false;
-    } else if (!this.options.usingTor && !model.get('listings')) {
-      return false;
-    }
-
     const opts = {
       active: this.currentProviderId === model.id,
+      urlType: this.options.urlType,
       ...options,
     };
 
