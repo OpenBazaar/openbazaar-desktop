@@ -27,11 +27,11 @@
 </div>
 <%
   const smtpSettingsErrorFields = [
-    'smtpSettings.serverAddress',
-    'smtpSettings.username',
-    'smtpSettings.password',
-    'smtpSettings.senderEmail',
-    'smtpSettings.recipientEmail',
+    'serverAddress',
+    'username',
+    'password',
+    'senderEmail',
+    'recipientEmail',
   ];
   const showSmtpSettings = ob.notifications ||
     smtpSettingsErrorFields.some(field => !!ob.errors[field]);
