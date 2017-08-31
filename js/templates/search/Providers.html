@@ -11,8 +11,8 @@
   <div class="providerWrapper gutterH <% if(!ob.selecting) print('margR') %> js-providerWrapper">
     <% if (ob.selecting) { %>
       <div class="selectingBox confirmBox arrowBoxTop clrP clrBr clrSh1">
-        <h2>Select a default search provider</h2>
-        <p>This provider will be used as the default for future seaches until you set a new one.</p>
+        <h2><%= ob.polyT('search.chooseDefaultTitle') %></h2>
+        <p class="tx5"><%= ob.polyT('search.chooseDefaultMsg') %></p>
       </div>
     <% } %>
   </div>

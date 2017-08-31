@@ -39,7 +39,7 @@
         .selectingBox {
           top: calc(100% + 10px);
           width: 420px;
-          padding: $padLg $pad;
+          padding: $padLg;
           transform: translateX(-50%);
           left: calc(50% - 5px); // offset by half the margin on the right side of the parent
         }

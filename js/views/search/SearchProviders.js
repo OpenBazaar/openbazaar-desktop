@@ -6,6 +6,9 @@ import AddProvider from './AddProvider';
 
 export default class extends BaseView {
   constructor(options = {}) {
+    if (!options.urlType) {
+      throw new Error('An urlType is required.');
+    }
     super(options);
     this.options = options;
     this.providerViews = [];
