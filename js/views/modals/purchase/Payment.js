@@ -51,6 +51,8 @@ export default class extends BaseVw {
           if (e.jsonData.notification.orderId === this.orderId) {
             const amount = integerToDecimal(e.jsonData.notification.fundingTotal, true);
             if (amount >= this.balanceRemaining) {
+              this.$confirmWalletConfirm.removeClass('processing');
+              this.$confirmWallet.addClass('hide');
               this.trigger('walletPaymentComplete', e.jsonData.notification);
             } else {
               // Ensure the resulting balance has a maximum of 8 decimal places with not
@@ -115,8 +117,6 @@ export default class extends BaseVw {
       .fail(jqXhr => {
         openSimpleMessage(app.polyglot.t('purchase.errors.paymentFailed'),
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
-      })
-      .always(() => {
         if (this.isRemoved()) return;
         this.$confirmWalletConfirm.removeClass('processing');
         this.$confirmWallet.addClass('hide');
