@@ -172,11 +172,13 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
+    this.serverPage = 0;
     this.processTerm(this.$searchInput.val());
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
+      this.serverPage = 0;
       this.processTerm(this.$searchInput.val());
     }
   }

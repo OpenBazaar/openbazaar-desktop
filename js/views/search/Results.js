@@ -56,14 +56,11 @@ export default class extends baseVw {
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
     const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
-    let start = 0;
     const total = models.total;
+    let start = 0;
+    if (total) start = this.pageSize * Number(this.serverPage) + 1;
     const noResults =
       $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
-
-    if (total) {
-      start = end >= this.pageSize ? end - this.pageSize + 1 : 1;
-    }
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
