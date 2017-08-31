@@ -198,11 +198,23 @@
         padding-right: 0;
       }
 
-      .testSmtpStatus {
-        .spinner {
-          padding-top: $padSm;
+      .smtpTestButtonWrap {
+        .btnCancelTest {
+          display: none;
         }
 
+        &.testInProgress {
+          .btnCancelTest {
+            display: inline-flex;
+          }
+
+          .btnTest {
+            display: none;
+          }          
+        }
+      }
+
+      .testSmtpStatus {
         .successMsg {
           position: relative;
           padding-left: 5px;

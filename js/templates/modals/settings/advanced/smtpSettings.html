@@ -1,4 +1,3 @@
-<% console.log('sizzle'); window.sizzle = ob %>
 <div class="flexRow">
   <div class="col3">
     <label><%= ob.polyT('settings.advancedTab.smtp.notifications') %></label>
@@ -12,7 +11,7 @@
              value="true"
              id="smtpNotificationsOn"
              data-var-type="boolean"
-      <% if(ob.notifications) { %>checked<% } %>>
+      <% if (ob.notifications) { %>checked<% } %>>
       <label for="smtpNotificationsOn"><%= ob.polyT('settings.on') %></label>
     </div>
     <div class="btnRadio clrBr">
@@ -21,7 +20,7 @@
              value="false"
              id="smtpNotificationsOff"
              data-var-type="boolean"
-      <% if(!ob.notifications) { %>checked<% } %>>
+      <% if (!ob.notifications) { %>checked<% } %>>
       <label for="smtpNotificationsOff"><%= ob.polyT('settings.off') %></label>
     </div>
   </div>
@@ -125,8 +124,11 @@
               <input class="clrBr clrP clrTEm"
                 type=reset value="<%= ob.polyT('settings.advancedTab.smtp.clearAction') %>">
             </div>
-            <div class="flexNoShrink">
-              <a class="btn clrP clrBr clrSh2 js-testSMTPSettings"><%= ob.polyT('settings.advancedTab.smtp.testAction') %></a>
+            <div class="flexNoShrink smtpTestButtonWrap js-smtpTestButtonWrap <% if (ob.testingSmtp) print('testInProgress') %>">
+              <a class="btn clrP clrBr clrSh2 js-testSMTPSettings btnTest"><%= ob.polyT('settings.advancedTab.smtp.testAction') %></a>
+              <a class="btn clrP clrBr clrSh2 js-cancelSMTPSettings btnCancelTest">
+                <%= ob.spinner({ className: 'spinnerSm padSm' }) %> <%= ob.polyT('settings.advancedTab.smtp.testSmtpCancel') %>
+              </a>
             </div>
           </div>
         </div>

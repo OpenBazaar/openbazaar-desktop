@@ -402,7 +402,7 @@
         "serverAddress": "Server Address",
         "senderEmail": "Send from",
         "recipientEmail": "Send to",
-        "placeholderServerAddress": "smtp.gmail.com:465",
+        "placeholderServerAddress": "smtp.gmail.com:587",
         "placeholderUsername": "Enter your username",
         "placeholderPassword": "The password to your email address",
         "placeholderSendFrom": "name@domain.com",
@@ -417,7 +417,8 @@
         "helperGmailLink": "Gmail",
         "testSmtpSuccess": "The integration test was successful. Don't forget to save the settings.",
         "testSmtpFail": "The integration test was not successful.",
-        "testSmtpFailWithError": "The integration test was not successful: %{err}"
+        "testSmtpFailWithError": "The integration test was not successful: %{err}",
+        "testSmtpCancel": "Cancel"
       },
       "server": {
         "sectionName": "Server",
