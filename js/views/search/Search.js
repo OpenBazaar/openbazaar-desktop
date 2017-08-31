@@ -119,6 +119,7 @@ export default class extends baseVw {
   }
 
   getCurrentProviderID() {
+    // if the user must select a default, or the provider is from the query, return no id
     return this.queryProvider || this.mustSelectDefault ? '' : this.sProvider.id;
   }
 
@@ -140,8 +141,8 @@ export default class extends baseVw {
   }
 
   /**
-   * This will set either the current default provider. If the user is currently in
-   * Tor mode, the default Tor provider will be set.
+   * This will activate a provider. If no default is set, the activated provider will be set as the
+   * the default. If the user is currently in Tor mode, the default Tor provider will be set.
    * @param md the search provider model
    */
   activateProvider(md) {
