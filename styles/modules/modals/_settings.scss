@@ -199,6 +199,10 @@
       }
 
       .testSmtpStatus {
+        .spinner {
+          padding-top: $padSm;
+        }
+
         .successMsg {
           position: relative;
           padding-left: 5px;
