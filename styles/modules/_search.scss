@@ -1,7 +1,7 @@
 .search {
   // this is a temporary style to fill the space that will be filled by the tab bar
   position: relative;
-  top: -30px;
+  padding-top: 17px;
   min-height:710px;
 
   .loadingSearch {
@@ -10,10 +10,98 @@
     top: 0;
   }
 
+  .searchProviders {
+    width: $pageWidth + $padLg + $padLg;
+    height: 100%;
+    padding: 0 $padLg;
+
+    .discoverLogo {
+      background-image: url('../../imgs/obVectorIconSmall.svg');
+      // adjust the size and position so the borders inside the svg match the other buttons
+      height: 48px;
+      width: 48px;
+      margin-top: 5px;
+    }
+
+    .providersHeader {
+      width: 134px;
+    }
+
+    .providersBar {
+      display: flex;
+      align-items: stretch;
+
+      .providerWrapper {
+        display: flex;
+        align-items: stretch;
+
+        .searchProvider {
+          flex-shrink: 0;
+          width: auto;
+
+          .providerBtn {
+            padding: 0;
+
+            .providerInner {
+              opacity: .35;
+            }
+          }
+
+          &.active {
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+
+            .providerBtn .providerInner {
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .addWrapper {
+        width: auto;
+
+        .addProvider {
+          position: absolute;
+          height: $thumb;
+        }
+      }
+
+      .providerBtn, .addBtn {
+        border-width: 1px;
+        border-style: solid;
+        border-radius: $corner;
+      }
+
+      .addBtn {
+        i:before {
+          font-size: 28px;
+        }
+      }
+
+      .addBox {
+        top: calc(100% + 12px);
+        min-width: 360px;
+      }
+    }
+  }
+
+  #pageTabBar.noTips {
+    .toolTip,
+    .toolTipNoWrap {
+      &:hover:before,
+      &:hover:after {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+  }
+
   .searchBar {
     display: flex;
     align-items: center;
     position: relative;
+    border-radius: 3px;
 
     .searchLogo {
       position: absolute;
@@ -58,6 +146,7 @@
       line-height: 40px;
       font-size: 1.4rem;
       height: auto;
+      border-radius: 3px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }

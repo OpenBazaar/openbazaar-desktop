@@ -1,12 +1,31 @@
-<% /*
-<nav id="pageTabBar" class="barLg clrP clrBr"> This will be for the channel bar.</nav>
-*/ %>
+<nav id="pageTabBar" class="noTabs barLg clrP clrBr <% if(ob.fetching) print('noTips') %>">
+  <div class="pageTabs js-searchProviders"></div>
+</nav>
 
 <div class="pageContent">
   <% if (!ob.emptyData) { %>
   <div class="flexColRows row">
-    <h3 class="txUnl rowSm"><%= ob.name %></h3>
-    <div class="searchBar row clrP clrBr">
+    <div class="flexVBase gutterH">
+      <h3 class="txUnl rowSm"><%= ob.name %></h3>
+      <% if (!ob.isQueryProvider) { %>
+        <% if (!ob.providerLocked) { %>
+          <button class="btnTxtOnly txb txU txUnb js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
+        <% } %>
+        <% if (!ob.isDefaultProvider) { %>
+          <div>
+            <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider">
+              <%= ob.polyT('search.makeDefaultBtn') %>
+              <span class="toolTip" data-tip="<%= ob.polyT('search.makeDefaultBtnHelper') %>">
+                <i class="ion-help-circled"></i>
+              </span>
+            </button>
+          </div>
+        <% } %>
+      <% } else { %>
+        <button class="btnTxtOnly txb txU txUnb js-addQueryProvider"><%= ob.polyT('search.addQueryProviderBtn') %></button>
+      <% } %>
+    </div>
+    <div class="searchBar row clrP clrBr clrSh2">
       <% if (ob.logo) { %>
       <div class="searchLogo js-searchLogo">
         <img src="<%= ob.logo %>"></img>
@@ -31,7 +50,7 @@
     <form class="col3 filterWrapper js-filterWrapper">
       <div class="flexColWide gutterV">
         <% _.each(ob.options, function(val, key) { %>
-          <div class="contentBox pad clrP clrBr">
+          <div class="contentBox pad clrP clrBr clrSh2">
             <h4 class="rowSm"><%= val.label %></h4>
             <% if (val.type ==='dropdown') { %>
               <select name="<%= key %>" class="select2Small">
@@ -123,10 +142,16 @@
   </div>
   <% } else { %>
   <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
-    <h2 class="rowLg"><%= ob.polyT('search.errors.emptyData', { provider: ob.provider }) %></h2>
+    <h2 class="rowLg"><%= ob.errTitle %></h2>
+    <p><%= ob.errMsg %></p>
+    <% if(!ob.providerLocked) { %>
+      <div class="flexHCent">
+        <button class="btn clrP clrBr js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
+      </div>
+    <% } %>
   </div>
   <% } %>
 </div>
-<% if (ob.loading) { %>
+<% if (ob.fetching) { %>
   <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
 <% } %>

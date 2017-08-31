@@ -147,6 +147,13 @@
   height: $thumbLg,
 }
 
+.userIcon {
+  border-width: 2px;
+  border-style: solid;
+  width: $thumb;
+  height: $thumb;
+}
+
 .thumb {
   // thumbnail image, used for small images
   @extend .box;
@@ -297,6 +304,13 @@
   }
 }
 
+.arrowBoxCenteredTop {
+  // this will have an arror centered on the x and y of the parent
+  @extend .arrowBoxTop;
+  left: 20px; // width of the rotated square/hypotenuse of the arrow
+  transform: translateX(-50%);
+}
+
 .toolTip:not(.processing) {
   // Adds a tooltip that gets its text from the data-tip attribute.
   // You can't put this on a class that already had before and after rules, like an icon.
@@ -357,15 +371,15 @@
       top: 1px;
       left: 50%;
       transform: translate(-50%, -100%) rotate(-135deg);
-      -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);      
-    }    
+      -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
+    }
   }
 }
 
 // Use for single line variable width tooltips. Factor in translations and
 // where you're tooltip will display. If it's possible it can get so wide that
 // it wouldn't look right, you'll probably want it to wrap (i.e. dont use this class).
-.toolTipNoWrap:not(.processing) {  
+.toolTipNoWrap:not(.processing) {
   @extend .toolTip;
 
   &:before {

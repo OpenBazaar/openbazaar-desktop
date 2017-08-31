@@ -1,30 +1,74 @@
 import _ from 'underscore';
+import $ from 'jquery';
+import is from 'is_js';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import $ from 'jquery';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 import Dialog from '../modals/Dialog';
 import Results from './Results';
 import ResultsCol from '../../collections/Results';
-import { launchSettingsModal } from '../../utils/modalManager';
+import Providers from './SearchProviders';
+import ProviderMd from '../../models/search/SearchProvider';
+import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
+import { getCurrentConnection } from '../../utils/serverConnect';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      initialState: {
+        fetching: false,
+        ...options.initialState,
+      },
+      ...options,
+    };
 
-    this.sProvider = options.sProvider || app.localSettings.get('searchProvider');
+    super(opts);
+    this.options = opts;
+    // in the future the may be 4 or more possible types
+    this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
-    // the search provider is used here as a placeholder to get the parameters from the created url
-    const searchURL = new URL(`${this.sProvider}?${options.query || ''}`);
-    let queryParams = searchURL.searchParams;
+    if (options.query) {
+      // the user arrived here from the address bar, use the default provider
+      this.sProvider = app.searchProviders[`default${this.torString}Provider`];
+    } else {
+      // the user arrived from the discover button, use the active provider
+      this.sProvider = app.searchProviders[`active${this.torString}Provider`];
+    }
+
+
+    // if the  provider returns a bad URL, reset to the original provider
+    // this should never happen unless the local data is manually altered or corrupted
+    if (is.not.url(this.providerUrl)) {
+      this.sProvider = app.searchProviders(defaultSearchProviders[0].id);
+    }
+
+    const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
+    let queryParams = tempUrl.searchParams;
 
     // if a url with parameters was in the query in, use the parameters in it instead.
     if (queryParams.get('providerQ')) {
       const subURL = new URL(queryParams.get('providerQ'));
       queryParams = subURL.searchParams;
-      this.sProvider = `${subURL.origin}${subURL.pathname}`;
+      const base = `${subURL.origin}${subURL.pathname}`;
+      const matchedProvider =
+        app.searchProviders.filter(p =>
+          base === p.get('listings') || base === p.get('torlistings'));
+
+      /* if the query provider doesn't exist, create a temporary provider model for it.
+         One quirk to note: if a tor url is passed in while the user is in clear mode, and an
+         existing provider has that tor url, that provider will be activated but will use its
+         clear url if it has one. The opposite is also true.
+       */
+      if (!matchedProvider.length) {
+        const queryOpts = {};
+        queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
+        this.queryProvider = new ProviderMd(queryOpts);
+      } else {
+        this.sProvider = matchedProvider[0];
+        this.queryProvider = null;
+      }
     }
 
     const params = {};
@@ -35,21 +79,13 @@ export default class extends baseVw {
 
     // use the parameters from the query unless they were overridden in the options
     this.serverPage = options.serverPage || params.p || 0;
-    this.pageSize = options.pageSize || params.ps || 12;
+    this.pageSize = options.pageSize || params.ps || 24;
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters
     this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ']);
 
     this.processTerm(this.term);
-
-    // if not using a passed in URL, update the default provider if it changes
-    this.listenTo(app.localSettings, 'change:searchProvider', (model, provider) => {
-      if (this.usingDefault) {
-        this.sProvider = provider;
-        this.processTerm(this.term);
-      }
-    });
   }
 
   className() {
@@ -63,11 +99,32 @@ export default class extends baseVw {
       'change .js-filterWrapper select': 'changeFilter',
       'change .js-filterWrapper input': 'changeFilter',
       'keyup .js-searchInput': 'onKeyupSearchInput',
+      'click .js-deleteProvider': 'clickDeleteProvider',
+      'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
+      'click .js-addQueryProvider': 'clickAddQueryProvider',
     };
   }
 
-  get usingDefault() {
-    return this.sProvider === app.localSettings.get('searchProvider');
+  get usingOriginal() {
+    return this.sProvider.id === defaultSearchProviders[0].id;
+  }
+
+  get usingTor() {
+    return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+  }
+
+  get torString() {
+    return this.usingTor ? 'Tor' : '';
+  }
+
+  get providerUrl() {
+    // if a provider was created by the address bar query, use it instead
+    const currentProvider = this.queryProvider || this.sProvider;
+    return currentProvider.get(this.urlType);
+  }
+
+  getCurrentProviderID() {
+    return this.queryProvider ? '' : this.sProvider.id;
   }
 
   /**
@@ -80,38 +137,126 @@ export default class extends baseVw {
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
+    const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
     let filters = $.param(this.filters);
     filters = filters ? `&${filters}` : '';
-    const newURL = `${this.sProvider}?${query}${sortBy}${page}${filters}`;
-
+    const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
     this.callSearchProvider(newURL);
   }
 
-  callSearchProvider(searchURL) {
+  /**
+   * This will set either the current active or default provider. If the user is currently in
+   * Tor mode, the active or default Tor provider will be set.
+   * @param md the search provider model
+   * @param type should be active or default
+   */
+  activateProvider(md, type = 'active') {
+    const types = ['active', 'default'];
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
+    if (!type || types.indexOf(type) === -1) {
+      throw new Error('You must use a valid provider type.');
+    }
+    if (app.searchProviders.indexOf(md) === -1) {
+      throw new Error('The provider must be in the collection.');
+    }
+    app.searchProviders[`${type}${this.torString}Provider`] = md;
+    this.sProvider = md;
+    this.queryProvider = null;
+    this.processTerm(this.term);
+  }
+
+  deleteProvider(md = this.sProvider) {
+    if (md.get('locked')) {
+      openSimpleMessage(app.polyglot.t('search.errors.locked'));
+    } else {
+      md.destroy();
+      if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
+    }
+  }
+
+  clickDeleteProvider() {
+    this.deleteProvider();
+  }
+
+  makeDefaultProvider() {
+    app.searchProviders.defaultProvider = this.sProvider;
+    this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
+  }
+
+  clickMakeDefaultProvider() {
+    this.makeDefaultProvider();
+  }
+
+  addQueryProvider() {
+    if (this.queryProvider) app.searchProviders.add(this.queryProvider);
+    this.activateProvider(this.queryProvider);
+  }
+
+  clickAddQueryProvider() {
+    this.addQueryProvider();
+  }
+
+  callSearchProvider(searchUrl) {
     // remove a pending search if it exists
     if (this.callSearch) this.callSearch.abort();
 
-    // initial render to show the loading spinner
-    this.render();
+    this.setState({
+      fetching: true,
+    });
 
     // query the search provider
     this.callSearch = $.get({
-      url: searchURL,
+      url: searchUrl,
       dataType: 'json',
     })
+        .always(() => {
+          this.setState({
+            fetching: false,
+          });
+        })
         .done((data, status, xhr) => {
         // make sure minimal data is present
           if (data.name && data.links) {
-            this.render(data, searchURL);
+            // if data about the provider is recieved, update the model
+            const update = { name: data.name };
+            const urlTypes = [];
+            if (data.logo && is.url(data.logo)) update.logo = data.logo;
+            if (data.links) {
+              if (is.url(data.links.search)) {
+                update.search = data.links.search;
+                urlTypes.push('search');
+              }
+              if (is.url(data.links.listings)) {
+                update.listings = data.links.listings;
+                urlTypes.push('listings');
+              }
+              if (data.links.tor) {
+                if (is.url(data.links.tor.search)) {
+                  update.torsearch = data.links.tor.search;
+                  urlTypes.push('torsearch');
+                }
+                if (is.url(data.links.tor.listings)) {
+                  update.torlistings = data.links.tor.listings;
+                  urlTypes.push('torlistings');
+                }
+              }
+            }
+            // update the defaults but do not save them
+            if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
+              this.sProvider.save(update, { urlTypes });
+            } else {
+              this.sProvider.set(update, { urlTypes });
+            }
+            this.render(data, searchUrl);
           } else {
-            this.showSearchError(xhr);
-            this.render({}, searchURL);
+            this.render({}, searchUrl, xhr);
           }
         })
         .fail((xhr) => {
           if (xhr.statusText !== 'abort') {
-            this.showSearchError(xhr);
-            this.render({}, searchURL);
+            this.render({}, searchUrl, xhr);
           }
         });
   }
@@ -122,7 +267,7 @@ export default class extends baseVw {
     const msg = failReason ?
                 app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     const buttons = [];
-    if (this.usingDefault) {
+    if (this.usingOriginal) {
       buttons.push({
         text: app.polyglot.t('search.changeProvider'),
         fragment: 'changeProvider',
@@ -130,7 +275,10 @@ export default class extends baseVw {
     } else {
       buttons.push({
         text: app.polyglot.t('search.useDefault',
-          { term: this.term, defaultProvider: app.localSettings.get('searchProvider') }),
+          {
+            term: this.term,
+            defaultProvider: app.searchProviders[`default${this.torString}Provider`],
+          }),
         fragment: 'useDefault',
       });
     }
@@ -143,21 +291,20 @@ export default class extends baseVw {
       removeOnClose: true,
     }).render().open();
     this.listenTo(errorDialog, 'click-changeProvider', () => {
-      this.changeProvider();
       errorDialog.close();
     });
     this.listenTo(errorDialog, 'click-useDefault', () => {
-      this.useDefault();
+      this.activateProvider(app.searchProviders.at(0));
       errorDialog.close();
     });
   }
 
-  createResults(data, searchURL) {
+  createResults(data, searchUrl) {
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
 
     const resultsView = this.createChild(Results, {
-      searchURL,
+      searchUrl,
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
       serverPage: this.serverPage,
@@ -192,15 +339,6 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
-  changeProvider() {
-    launchSettingsModal();
-  }
-
-  useDefault() {
-    this.sProvider = app.localSettings.get('searchProvider');
-    this.processTerm(this.term);
-  }
-
   scrollToTop() {
     this.$el[0].scrollIntoView();
   }
@@ -210,26 +348,39 @@ export default class extends baseVw {
     super.remove();
   }
 
-  render(data, searchURL) {
-    if (data && !searchURL) {
+  render(data, searchUrl, xhr) {
+    super.render();
+
+    if (data && !searchUrl) {
       throw new Error('Please provide the search URL along with the data.');
     }
 
-    // the first render has no data, and only shows the loading state
-    const loading = !data;
-
+    let errTitle;
+    let errMsg;
+    const state = this.getState();
     // check to see if the call to the provider failed, or returned an empty result
     const emptyData = $.isEmptyObject(data);
+
+    if (xhr) {
+      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: searchUrl });
+      const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
+      errMsg = failReason ?
+        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
+    }
 
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
-        provider: this.sProvider,
-        defaultProvider: app.localSettings.get('searchProvider'),
         sortBySelected: this.sortBySelected,
         filterVals: this.filters,
+        errTitle,
+        errMsg,
+        providerLocked: this.sProvider.get('locked'),
+        isQueryProvider: !!this.queryProvider,
+        isDefaultProvider: this.sProvider === app.searchProviders.defaultProvider,
         emptyData,
-        loading,
+        ...state,
+        ...this.sProvider,
         ...data,
       }));
     });
@@ -256,8 +407,16 @@ export default class extends baseVw {
       this.$searchLogo.addClass('loadError');
     });
 
+    if (this.searchProviders) this.searchProviders.remove();
+    this.searchProviders = this.createChild(Providers, {
+      urlType: this.urlType,
+      currentID: this.getCurrentProviderID(),
+    });
+    this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
+    this.$('.js-searchProviders').append(this.searchProviders.render().el);
+
     // use the initial set of results data to create the results view
-    if (data) this.createResults(data, searchURL);
+    if (data) this.createResults(data, searchUrl);
 
     return this;
   }
