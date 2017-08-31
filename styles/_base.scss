@@ -83,6 +83,10 @@ a {
   }
 }
 
+button {
+  cursor: pointer;
+}
+
 hr {
   border: none;
   border-bottom: 1px solid;
@@ -155,17 +159,24 @@ svg {
         position: fixed;
         top: $bar;
         left: 0;
+        right: $scrollbar;
         z-index: 1;
         width: 100%;
         height: $barLg;
-        padding: 0;
+        padding: 0 $scrollbar 0 0;
         overflow: hidden;
         border-bottom-width: 1px;
         border-bottom-style: solid;
 
+        &.noTabs {
+          // there are no tabs, so overflow doesn't need to be hidden
+          // this allows arrow boxes and other elements outside the container bounds
+          overflow: visible;
+        }
 
         .pageTabs {
           width: $pageWidth + $padLg + $padLg;
+          height: 100%;
           margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
           @include chatOpeningTransition(margin);
           position: relative;
@@ -175,16 +186,11 @@ svg {
           }
 
           .userIcon {
-            border-width: 2px;
-            border-style: solid;
-            width: 44px;
-            height: 44px;
             margin-right: $pad;
           }
 
           .tab {
             border-radius: 0;
-            box-sizing: content-box;
             font-size: $tx4;
 
             &.active {

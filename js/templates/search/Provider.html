@@ -1,0 +1,9 @@
+<%
+  const bkg = `${ob.logo ? `url(${ob.logo}), ` : ''}url(../imgs/defaultProvider.png)`;
+%>
+
+<button
+    class="clrP clrBr clrSh2 providerBtn <% if (ob.name) print('toolTipNoWrap') %> js-provider" data-tip="<%= ob.name %>">
+  <div class="thumb providerInner" style="background-image: <%= bkg %>"></div>
+</button>
+

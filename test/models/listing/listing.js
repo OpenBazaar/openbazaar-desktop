@@ -4,7 +4,7 @@ import { describe, it, before } from 'mocha';
 import Listing from '../../../js/models/listing/Listing';
 
 describe('the Listing model', () => {
-  before(function () {
+  before(() => {
     // creating a dummy polyglot t function, so our
     // model doesn't bomb. It's not critical to these
     // tests that it return an actual translation.

@@ -76,6 +76,9 @@
       },
       "unableToGetWalletBalance": {
         "title": "Unable to get wallet balance."
+      },
+      "unableToGetSearchProviders": {
+        "title": "Unable to load search providers."
       }
     },
     "startupLoadingModal": {
@@ -952,19 +955,32 @@
     }
   },
   "search": {
+    "title": "Discover",
     "searchBtn": "Search",
     "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
     "sortBy": "Sort by",
-    "changeProvider": "Change Default Search Provider",
+    "changeProvider": "Close and Choose a New Search Provider",
     "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
     "noResults": "No listings match your search criteria",
+    "addTitle": "Add search provider",
+    "addPlaceholder":"URL for the search provider",
+    "addTorPlaceholder": "Tor URL for the search provider (optional)",
+    "addBtn": "Add",
+    "cancel": "Cancel",
+    "deleteProviderBtn": "Remove search provider",
+    "makeDefaultBtn": "Set to default",
+    "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
+    "addQueryProviderBtn": "Add search provider",
     "errors": {
-      "searchFailTitle": "The search query to %{provider} has failed.",
+      "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
-      "emptyData": "No valid data was returned from %{provider}."
+      "connection": "You are no longer connected to your node. Reconnect to continue searching",
+      "addError": "This provider cannot be added. Check your data and try again.",
+      "locked": "Default search providers can't be deleted.",
+      "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
     }
   },
   "onboarding": {
@@ -1575,6 +1591,14 @@
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."
+  },
+  "searchProviderModelErrors": {
+    "invalidName": "The name must be a string.",
+    "invalidLogo": "The logo URL must be a valid URL.",
+    "invalidsearch": "You must provide a valid search URL.",
+    "invalidlistings": "You must provide a valid listings search URL",
+    "invalidtorsearch": "You must provide a valid Tor search URL",
+    "invalidtorlistings": "You must provide a valid Tor listings search URL."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
