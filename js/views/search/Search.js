@@ -29,19 +29,12 @@ export default class extends baseVw {
     // in the future the may be 4 or more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
-    if (options.query) {
-      // the user arrived here from the address bar, use the default provider
-      this.sProvider = app.searchProviders[`default${this.torString}Provider`];
-    } else {
-      // the user arrived from the discover button, use the active provider
-      this.sProvider = app.searchProviders[`active${this.torString}Provider`];
-    }
-
+    this.sProvider = app.searchProviders[`default${this.torString}Provider`];
 
     // if the  provider returns a bad URL, reset to the original provider
     // this should never happen unless the local data is manually altered or corrupted
     if (is.not.url(this.providerUrl)) {
-      this.sProvider = app.searchProviders(defaultSearchProviders[0].id);
+      this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
     }
 
     const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
@@ -118,9 +111,10 @@ export default class extends baseVw {
   }
 
   get providerUrl() {
-    // if a provider was created by the address bar query, use it instead
+    // if a provider was created by the address bar query, use it instead.
+    // use the first default provider if no other provider is available
     const currentProvider = this.queryProvider || this.sProvider;
-    return currentProvider.get(this.urlType);
+    return currentProvider && currentProvider.get(this.urlType);
   }
 
   getCurrentProviderID() {
@@ -145,23 +139,17 @@ export default class extends baseVw {
   }
 
   /**
-   * This will set either the current active or default provider. If the user is currently in
-   * Tor mode, the active or default Tor provider will be set.
+   * This will set either the current default provider. If the user is currently in
+   * Tor mode, the default Tor provider will be set.
    * @param md the search provider model
-   * @param type should be active or default
    */
-  activateProvider(md, type = 'active') {
-    const types = ['active', 'default'];
+  activateProvider(md) {
     if (!md || !(md instanceof ProviderMd)) {
       throw new Error('Please provide a search provider model.');
-    }
-    if (!type || types.indexOf(type) === -1) {
-      throw new Error('You must use a valid provider type.');
     }
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    app.searchProviders[`${type}${this.torString}Provider`] = md;
     this.sProvider = md;
     this.queryProvider = null;
     this.processTerm(this.term);
@@ -181,7 +169,7 @@ export default class extends baseVw {
   }
 
   makeDefaultProvider() {
-    app.searchProviders.defaultProvider = this.sProvider;
+    app.searchProviders[`default${this.torString}Provider`] = this.sProvider;
     this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
   }
 
