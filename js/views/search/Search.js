@@ -113,7 +113,7 @@ export default class extends baseVw {
 
   get providerUrl() {
     // if a provider was created by the address bar query, use it instead.
-    // use the first default provider if no other provider is available
+    // return false if no provider is available
     const currentProvider = this.queryProvider || this.sProvider;
     return currentProvider && currentProvider.get(this.urlType);
   }
