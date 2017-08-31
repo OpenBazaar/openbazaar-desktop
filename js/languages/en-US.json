@@ -415,7 +415,7 @@
         "helperSendFrom": "The email address to send from",
         "helperSendTo": "The email address to send to",
         "helperGmailLink": "Gmail",
-        "testSmtpSuccess": "The integration test was successful. Don't forget to save the settings.",
+        "testSmtpSuccess": "The integration test was successful. Don't forget to save your settings.",
         "testSmtpFail": "The integration test was not successful.",
         "testSmtpFailWithError": "The integration test was not successful: %{err}",
         "testSmtpCancel": "Cancel"
