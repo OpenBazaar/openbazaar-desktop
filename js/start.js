@@ -408,15 +408,8 @@ function start() {
         app.pageNav.setAppProfile();
         app.loadingModal.close();
 
-        // set the default search providers if they don't already exist.
+        // add the default search providers
         app.searchProviders.add(defaultSearchProviders, { at: 0 });
-        // if default providers aren't set, set them now.
-        if (!app.searchProviders.defaultProvider) {
-          app.searchProviders.defaultProvider = app.searchProviders.at(0);
-        }
-        if (!app.searchProviders.defaultTorProvider) {
-          app.searchProviders.defaultTorProvider = app.searchProviders.at(0);
-        }
 
         // set the profile data for the feedback mechanism
         setFeedbackOptions();

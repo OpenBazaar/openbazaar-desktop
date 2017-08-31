@@ -34,6 +34,15 @@
       .providerWrapper {
         display: flex;
         align-items: stretch;
+        position: relative;
+
+        .selectingBox {
+          top: calc(100% + 10px);
+          width: 420px;
+          padding: $padLg $pad;
+          transform: translateX(-50%);
+          left: calc(50% - 5px); // offset by half the margin on the right side of the parent
+        }
 
         .searchProvider {
           flex-shrink: 0;
@@ -44,6 +53,10 @@
 
             .providerInner {
               opacity: .35;
+            }
+
+            &.selecting .providerInner {
+              opacity: 1;
             }
           }
 

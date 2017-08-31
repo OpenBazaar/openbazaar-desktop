@@ -26,15 +26,16 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
-    // in the future the may be 4 or more possible types
+    // in the future the may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
     this.sProvider = app.searchProviders[`default${this.torString}Provider`];
 
-    // if the  provider returns a bad URL, reset to the original provider
-    // this should never happen unless the local data is manually altered or corrupted
+    // if the  provider returns a bad URL, the user must select a provider
     if (is.not.url(this.providerUrl)) {
+      // use the first default temporarily to construct the tempUrl below
       this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
+      this.mustSelectDefault = true;
     }
 
     const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
@@ -118,7 +119,7 @@ export default class extends baseVw {
   }
 
   getCurrentProviderID() {
-    return this.queryProvider ? '' : this.sProvider.id;
+    return this.queryProvider || this.mustSelectDefault ? '' : this.sProvider.id;
   }
 
   /**
@@ -152,6 +153,10 @@ export default class extends baseVw {
     }
     this.sProvider = md;
     this.queryProvider = null;
+    if (this.mustSelectDefault) {
+      this.mustSelectDefault = false;
+      this.makeDefaultProvider();
+    }
     this.processTerm(this.term);
   }
 
@@ -192,20 +197,20 @@ export default class extends baseVw {
 
     this.setState({
       fetching: true,
+      selecting: this.mustSelectDefault,
+      data: '',
+      searchUrl,
+      xhr: '',
     });
 
-    // query the search provider
-    this.callSearch = $.get({
-      url: searchUrl,
-      dataType: 'json',
-    })
-        .always(() => {
-          this.setState({
-            fetching: false,
-          });
-        })
+    if (!this.mustSelectDefault) {
+      // query the search provider
+      this.callSearch = $.get({
+        url: searchUrl,
+        dataType: 'json',
+      })
         .done((data, status, xhr) => {
-        // make sure minimal data is present
+          // make sure minimal data is present
           if (data.name && data.links) {
             // if data about the provider is recieved, update the model
             const update = { name: data.name };
@@ -237,16 +242,35 @@ export default class extends baseVw {
             } else {
               this.sProvider.set(update, { urlTypes });
             }
-            this.render(data, searchUrl);
+            this.setState({
+              fetching: false,
+              selecting: false,
+              data,
+              searchUrl,
+              xhr: '',
+            });
           } else {
-            this.render({}, searchUrl, xhr);
+            this.setState({
+              fetching: false,
+              selecting: false,
+              data: '',
+              searchUrl,
+              xhr,
+            });
           }
         })
         .fail((xhr) => {
           if (xhr.statusText !== 'abort') {
-            this.render({}, searchUrl, xhr);
+            this.setState({
+              fetching: false,
+              selecting: false,
+              data: '',
+              searchUrl,
+              xhr,
+            });
           }
         });
+    }
   }
 
   showSearchError(xhr = {}) {
@@ -336,22 +360,24 @@ export default class extends baseVw {
     super.remove();
   }
 
-  render(data, searchUrl, xhr) {
+  render() {
     super.render();
+    const state = this.getState();
+    const data = state.data;
 
-    if (data && !searchUrl) {
+    if (data && !state.searchUrl) {
       throw new Error('Please provide the search URL along with the data.');
     }
 
     let errTitle;
     let errMsg;
-    const state = this.getState();
+
     // check to see if the call to the provider failed, or returned an empty result
     const emptyData = $.isEmptyObject(data);
 
-    if (xhr) {
-      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: searchUrl });
-      const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
+    if (state.xhr) {
+      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: state.searchUrl });
+      const failReason = state.xhr.responseJSON ? state.xhr.responseJSON.reason : '';
       errMsg = failReason ?
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
@@ -399,12 +425,13 @@ export default class extends baseVw {
     this.searchProviders = this.createChild(Providers, {
       urlType: this.urlType,
       currentID: this.getCurrentProviderID(),
+      selecting: this.mustSelectDefault,
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     // use the initial set of results data to create the results view
-    if (data) this.createResults(data, searchUrl);
+    if (data) this.createResults(data, state.searchUrl);
 
     return this;
   }

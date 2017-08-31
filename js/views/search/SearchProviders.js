@@ -55,7 +55,7 @@ export default class extends BaseView {
     const view = this.createChild(Provider, {
       model,
       active: this.options.currentID === model.id,
-      urlType: this.options.urlType,
+      selecting: this.options.selecting,
     });
 
     this.listenTo(view, 'click', (md) => {
@@ -83,7 +83,10 @@ export default class extends BaseView {
         const view = this.createProviderView(provider);
         if (view) {
           this.providerViews.push(view);
-          view.render().$el.appendTo(providerFrag);
+          if (provider.get(this.options.urlType)) {
+            // if the provider is the wrong type, don't add it to the DOM
+            view.render().$el.appendTo(providerFrag);
+          }
         }
       });
 
