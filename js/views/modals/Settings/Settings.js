@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../../../app';
+import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import General from './General';
@@ -55,6 +56,23 @@ export default class extends BaseModal {
     this.selectTab(targ);
   }
 
+  onUnrecognizedModelError(tabView, models = []) {
+    const errors = models.map(md => {
+      const errObj = md.validationError || {};
+      return Object.keys(errObj).map(key => `${key}: ${errObj[key]}`);
+    });
+
+    const body = app.polyglot.t('settings.unrecognizedModelErrsWarning.body') +
+      (errors.length ? `<br><br>${errors.join('<br> ')}` : '');
+
+    console.log('hey');
+    window.hey = body;
+
+    console.log(app.polyglot.t('settings.unrecognizedModelErrsWarning.body'));
+
+    openSimpleMessage(app.polyglot.t('settings.unrecognizedModelErrsWarning.title'), body);
+  }
+
   selectTab(targ, options = {}) {
     const tabViewName = targ.data('tab');
     let tabView = this.tabViewCache[tabViewName];
@@ -68,6 +86,7 @@ export default class extends BaseModal {
         tabView = this.createChild(this.tabViews[tabViewName]);
         this.tabViewCache[tabViewName] = tabView;
         tabView.render();
+        this.listenTo(tabView, 'unrecognizedModelError', this.onUnrecognizedModelError);
       }
 
       this.$tabContent.append(tabView.$el);

@@ -108,6 +108,9 @@ export default class extends Model {
       (attrs = {})[key] = val;
     }
 
+    // take a snapshot of the attrs provided to this method
+    const setAttrs = JSON.parse(JSON.stringify(attrs));
+
     const previousAttrs = this.toJSON();
 
     // todo: will it break things if we unset a nested attribute?
@@ -148,7 +151,7 @@ export default class extends Model {
     // account nested models, we'll fire our own event if any part of the
     // model (including nested parts) change.
     if (!_.isEqual(this.toJSON(), previousAttrs)) {
-      this.trigger('someChange', this, {});
+      this.trigger('someChange', this, { setAttrs });
     }
 
     return superSet;

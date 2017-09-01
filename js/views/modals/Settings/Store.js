@@ -18,7 +18,25 @@ export default class extends baseVw {
     });
 
     this.profile = app.profile.clone();
+
+    // Sync our clone with any changes made to the global profile.
+    this.listenTo(app.profile, 'someChange',
+      (md, opts) => this.profile.set(opts.setAttrs));
+
+    // Sync the global profile with any changes we save via our clone.
+    this.listenTo(this.profile, 'sync',
+      (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+
     this.settings = app.settings.clone();
+
+    // Sync our clone with any changes made to the global settings model.
+    this.listenTo(app.settings, 'someChange',
+      (md, opts) => this.settings.set(opts.setAttrs));
+
+    // Sync the global settings model with any changes we save via our clone.
+    this.listenTo(this.settings, 'sync',
+      (md, resp, opts) => app.settings.set(this.settings.toJSON(opts.attrs)));
+
     this.currentMods = this.settings.get('storeModerators');
 
     this.modsSelected = new Moderators(null, {
@@ -104,9 +122,6 @@ export default class extends baseVw {
     this.listenTo(this.modsAvailable, 'doneLoading', () => {
       this.doneLoading(this.$modListAvailable);
     });
-
-    this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
-    this.listenTo(this.settings, 'sync', () => app.settings.set(this.settings.toJSON()));
   }
 
   events() {
@@ -292,9 +307,13 @@ export default class extends baseVw {
     const settingsFormData = this.getSettingsData();
 
     this.profile.set(profileFormData);
+    this.profile.set(profileFormData, { validate: true });
     this.settings.set(settingsFormData);
+    this.settings.set(settingsFormData, { validate: true });
 
     if (!this.profile.validationError && !this.settings.validationError) {
+      this.$btnSave.addClass('processing');
+
       const msg = {
         msg: app.polyglot.t('settings.storeTab.status.saving'),
         type: 'message',
@@ -366,13 +385,18 @@ export default class extends baseVw {
           setTimeout(() => statusMessage.remove(), 3000);
           this.render();
         });
-    }
-    if (!this.profile.validationError && !this.settings.validationError) {
-      this.$btnSave.addClass('processing');
-    }
+    } else {
+      const $firstErr = this.$('.errorList:first:not(.hide)');
 
-    const $firstErr = this.$('.errorList:first');
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+      if ($firstErr.length) {
+        $firstErr[0].scrollIntoViewIfNeeded();
+      } else {
+        const models = [];
+        if (this.profile.validationError) models.push(this.profile);
+        if (this.settings.validationError) models.push(this.settings);
+        this.trigger('unrecognizedModelError', this, models);
+      }
+    }
   }
 
   get $btnSave() {
