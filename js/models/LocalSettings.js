@@ -2,6 +2,7 @@ import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import { Model } from 'backbone';
 import is from 'is_js';
+import { feeLevels } from '../utils/fees';
 import app from '../app';
 
 export default class extends Model {
@@ -35,14 +36,6 @@ export default class extends Model {
     return ['list', 'grid'];
   }
 
-  get feeLevels() {
-    return [
-      'PRIORITY',
-      'NORMAL',
-      'ECONOMIC',
-    ];
-  }
-
   get bitcoinUnits() {
     return ['BTC', 'MBTC', 'UBTC', 'SATOSHI'];
   }
@@ -62,10 +55,8 @@ export default class extends Model {
       addError(`ListingGrideViewType needs to be one of ${this.viewStyles}.`);
     }
 
-    if (!this.feeLevels.includes(attrs.defaultTransactionFee)) {
-      const levels = this.feeLevels.join(', ').toLowerCase();
-      addError('defaultTransactionFee', app.polyglot.t('localSettingsModelErrors.transactionFee',
-        { levels }));
+    if (!feeLevels.includes(attrs.defaultTransactionFee)) {
+      addError('defaultTransactionFee', `The fee level must be one of ${feeLevels.join(', ')}`);
     }
 
     if (!this.bitcoinUnits.includes(attrs.bitcoinUnit)) {

@@ -704,7 +704,8 @@
       "sendPaymentFailDialogTitle": "Unable to send payment",
       "sendConfirm": {
         "heading": "Are you sure?",
-        "body": "Double check that the address and amount are correct.",
+        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
       }
@@ -1080,15 +1081,17 @@
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
         "title": "Are you sure?",
-        "payBTC": "Pay %{amountBTC} to the vendor",
-        "payFiat": "Pay %{amountFiat} (%{amountBTC}) to the vendor",
+        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
+        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
+        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
         "cancel": "Cancel",
         "confirm": "Yes, Pay",
         "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
         "insufficientFundsTitle": "Insufficient Funds",
         "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
         "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
-        "insufficientFundsNote": "*%{amount} plus an estimated fee of %{fee}"
+        "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
+        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
       }
     },
     "completeSection": {
@@ -1585,8 +1588,7 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider",
-    "transactionFee": "You must choose one of %{levels}."
+    "searchProvider": "This is not a valid url for a search provider"
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",
