@@ -14,13 +14,13 @@ export default class extends baseVw {
     super(options);
     this.options = options;
 
-    this.searchURL = options.searchURL;
-    if (!this.searchURL) {
+    this.searchUrl = options.searchUrl;
+    if (!this.searchUrl) {
       throw new Error('Please provide a search provider URL.');
     }
 
     this.serverPage = this.options.serverPage || 0;
-    this.pageSize = this.options.pageSize || 12;
+    this.pageSize = this.options.pageSize || 24;
 
     this.cardViews = [];
     this.pageCollections = {};
@@ -56,14 +56,11 @@ export default class extends baseVw {
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
     const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
-    let start = 0;
     const total = models.total;
+    let start = 0;
+    if (total) start = this.pageSize * Number(this.serverPage) + 1;
     const noResults =
       $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
-
-    if (total) {
-      start = end >= this.pageSize ? end - this.pageSize + 1 : 1;
-    }
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -89,7 +86,7 @@ export default class extends baseVw {
 
   loadPage(page = this.serverPage, size = this.pageSize) {
     // get the new page
-    const url = new URL(this.searchURL);
+    const url = new URL(this.searchUrl);
     const params = new URLSearchParams(url.search);
     params.set('p', page);
     params.set('ps', size);

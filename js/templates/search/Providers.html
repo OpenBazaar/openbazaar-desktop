@@ -1,0 +1,30 @@
+<div class="thumb discoverLogo flexNoShrink"></div>
+<div class="providersHeader flexNoShrink">
+  <div class="flexVCent">
+    <div>
+      <div class="tx4 rowTn">OpenBazaar</div>
+      <div class="tx6"><%= ob.polyT('search.title') %></div>
+    </div>
+  </div>
+</div>
+<div class="providersBar flexExpand">
+  <div class="providerWrapper gutterH <% if(!ob.selecting) print('margR') %> js-providerWrapper">
+    <% if (ob.selecting) { %>
+      <div class="selectingBox confirmBox arrowBoxTop clrP clrBr clrSh1">
+        <h2><%= ob.polyT('search.chooseDefaultTitle') %></h2>
+        <p class="tx5"><%= ob.polyT('search.chooseDefaultMsg') %></p>
+      </div>
+    <% } %>
+  </div>
+  <div class="posR flexVCent addWrapper js-addWrapper <% if(!ob.showAdd) print('hide') %>">
+    <button class="thumb clrP clrBr clrSh2 addBtn js-openAddBtn"><i class="ion-ios-plus-empty"></i></button>
+  </div>
+</div>
+<div>
+  <div class="flexVCent gutterHSm">
+    <a class="btn barBtn flexNoShrink tx6 clrP clrBr clrSh2" href="#transactions/sales">Transactions</a>
+    <a class="btn barBtn flexNoShrink tx6 clrP clrBr clrSh2" href="#<%= ob.peerID %>">My Page</a>
+  </div>
+</div>
+
+

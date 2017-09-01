@@ -40,13 +40,13 @@
     }
   }
 
-  .barSm & {
+  .barSm &:not(.barBtn) {
     line-height: $barSm;
     height: $barSm;
     border: none;
   }
 
-  .barLg & {
+  .barLg &:not(.barBtn) {
     line-height: $barLg;
     height: $barLg;
     border: none;

@@ -138,6 +138,10 @@ input[type=range][class~="clrS"] {
   @include borderColor($border4, $border5);
 }
 
+.clrBrT {
+  @include borderColor($text, $text2);
+}
+
 .clrBrDec1 {
   // decorative border with a shadow to create a faint outline
   border-color: $textOnEmph;
