@@ -191,5 +191,43 @@
         padding-left: 18px;
       }
     }
+
+    .smtpSettings {
+      & > * {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .smtpTestButtonWrap {
+        .btnCancelTest {
+          display: none;
+        }
+
+        &.testInProgress {
+          .btnCancelTest {
+            display: inline-flex;
+          }
+
+          .btnTest {
+            display: none;
+          }          
+        }
+      }
+
+      .testSmtpStatus {
+        .successMsg {
+          position: relative;
+          padding-left: 5px;
+
+          .successIcon {
+            &:before {
+              font-size: 25px;
+              position: absolute;
+              left: 0;
+            }
+          }
+        }
+      }
+    }
   }
 }

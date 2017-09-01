@@ -1,11 +1,12 @@
-import $ from 'jquery';
-import app from '../../../app';
-import { openSimpleMessage } from '../SimpleMessage';
-import Dialog from '../../modals/Dialog';
 import { clipboard } from 'electron';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import $ from 'jquery';
+import app from '../../../../app';
+import { openSimpleMessage } from '../../SimpleMessage';
+import Dialog from '../../../modals/Dialog';
+import loadTemplate from '../../../../utils/loadTemplate';
+import baseVw from '../../../baseVw';
 import WalletSeed from './WalletSeed';
+import SmtpSettings from './SmtpSettings';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -37,7 +38,6 @@ export default class extends baseVw {
 
   get events() {
     return {
-      'click .js-smtpContainer input[type="reset"]': 'resetSMTPFields',
       'click .js-save': 'save',
       'click .js-showConnectionManagement': 'showConnectionManagement',
       'click .js-resync': 'clickResync',
@@ -69,12 +69,6 @@ export default class extends baseVw {
     });
 
     return this.walletSeedFetch;
-  }
-
-  resetSMTPFields() {
-    this.settings.set('smtpSettings',
-      this.settings.get('smtpSettings').defaults(), { validate: true });
-    this.render();
   }
 
   showConnectionManagement() {
@@ -182,7 +176,11 @@ export default class extends baseVw {
     this.localSettings.set(this.getFormData(this.$localFields));
     this.localSettings.set({}, { validate: true });
 
-    const serverFormData = this.getFormData();
+    this.smtpSettings.setModelData();
+    const serverFormData = {
+      ...this.getFormData(),
+      smtpSettings: this.smtpSettings.model.toJSON(),
+    };
     this.settings.set(serverFormData, { validate: true });
 
     if (!this.localSettings.validationError && !this.settings.validationError) {
@@ -249,6 +247,14 @@ export default class extends baseVw {
     }
   }
 
+  get $smtpSettingsFields() {
+    const selector = `.js-smtpSettingsForm select[name], .js-smtpSettingsForm input[name],
+      .js-smtpSettingsForm textarea[name]:not([class*="trumbowyg"]),
+      .js-smtpSettingsForm div[contenteditable][name]`;
+
+    return this.getCachedEl(selector);
+  }
+
   remove() {
     if (this.resync) this.resync.abort();
     super.remove();
@@ -256,7 +262,7 @@ export default class extends baseVw {
 
   render() {
     super.render();
-    loadTemplate('modals/settings/advanced.html', (t) => {
+    loadTemplate('modals/settings/advanced/advanced.html', (t) => {
       this.$el.html(t({
         errors: {
           ...(this.settings.validationError || {}),
@@ -269,8 +275,13 @@ export default class extends baseVw {
         ...this.localSettings.toJSON(),
       }));
 
-      this.$formFields = this.$('select[name], input[name], textarea[name]').
-        not('[data-persistence-location="local"]');
+      const formFieldsSelector = `
+        .contentBox:not(.js-contentBoxEmailIntegration) select[name],
+        .contentBox:not(.js-contentBoxEmailIntegration) input[name],
+        .contentBox:not(.js-contentBoxEmailIntegration) textarea[name]
+      `;
+      this.$formFields = this.$(formFieldsSelector)
+        .not('[data-persistence-location="local"]');
       this.$localFields = this.$('[data-persistence-location="local"]');
 
       if (this.walletSeed) this.walletSeed.remove();
@@ -282,6 +293,12 @@ export default class extends baseVw {
       });
       this.listenTo(this.walletSeed, 'clickShowSeed', this.onClickShowSeed);
       this.getCachedEl('.js-walletSeedContainer').append(this.walletSeed.render().el);
+
+      if (this.smtpSettings) this.smtpSettings.remove();
+      this.smtpSettings = this.createChild(SmtpSettings, {
+        model: this.settings.get('smtpSettings'),
+      });
+      this.getCachedEl('.js-smtpSettingsContainer').html(this.smtpSettings.render().el);
     });
 
     return this;
