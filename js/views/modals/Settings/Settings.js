@@ -65,11 +65,6 @@ export default class extends BaseModal {
     const body = app.polyglot.t('settings.unrecognizedModelErrsWarning.body') +
       (errors.length ? `<br><br>${errors.join('<br> ')}` : '');
 
-    console.log('hey');
-    window.hey = body;
-
-    console.log(app.polyglot.t('settings.unrecognizedModelErrsWarning.body'));
-
     openSimpleMessage(app.polyglot.t('settings.unrecognizedModelErrsWarning.title'), body);
   }
 
