@@ -1190,7 +1190,8 @@
         "REFUNDED": "Refunded",
         "DISPUTED": "Disputed",
         "DECIDED": "Decided",
-        "RESOLVED": "Resolved"
+        "RESOLVED": "Resolved",
+        "PAYMENT_FINALIZED": "Payment Finalized"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
@@ -1232,6 +1233,7 @@
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "notApplicable": "n/a",
+      "vendorFinalizedPayment": "You have manually finalized the order.",
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",

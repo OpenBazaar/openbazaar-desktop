@@ -85,6 +85,10 @@ export default class extends BaseVw {
         this.completeOrderForm.remove();
         this.completeOrderForm = null;
       }
+
+      if (['PAYMENT_FINALIZED', 'COMPLETE'].indexOf(state) !== -1) {
+        this.renderPaymentFinalized();
+      }
     });
 
     if (!this.isCase()) {
@@ -303,7 +307,8 @@ export default class extends BaseVw {
 
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED' ||
-      (orderState === 'COMPLETED' && this.model.get('dispute') !== undefined)) {
+      (orderState === 'COMPLETED' && this.contract.get('dispute') !== undefined) ||
+      (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)) {
       if (!this.isCase()) {
         state.states = [
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
@@ -323,6 +328,10 @@ export default class extends BaseVw {
             break;
           case 'COMPLETE':
             state.currentState = 4;
+            state.disputeState = 0;
+            break;
+          case 'PAYMENT_FINALIZED':
+            state.currentState = 1;
             state.disputeState = 0;
             break;
           default:
@@ -367,6 +376,9 @@ export default class extends BaseVw {
           break;
         case 'COMPLETED':
           state.currentState = 4;
+          break;
+        case 'PAYMENT_FINALIZED':
+          state.currentState = 1;
           break;
         default:
           state.currentState = 0;
@@ -764,6 +776,11 @@ export default class extends BaseVw {
       });
   }
 
+  renderPaymentFinalized() {
+    this.getCachedEl('.js-paymentFinalizedMsg')
+      .toggleClass('hide', this.model.get('state') !== 'PAYMENT_FINALIZED');
+  }
+
   get $subSections() {
     return this._$subSections ||
       (this._$subSections = this.$('.js-subSections'));
@@ -789,6 +806,8 @@ export default class extends BaseVw {
         initialState: this.progressBarState,
       });
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
+
+      this.renderPaymentFinalized();
 
       if (this.orderDetails) this.orderDetails.remove();
       this.orderDetails = this.createChild(OrderDetails, {
