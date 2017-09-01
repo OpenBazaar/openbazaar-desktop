@@ -1,0 +1,141 @@
+<div class="flexRow">
+  <div class="col3">
+    <label><%= ob.polyT('settings.advancedTab.smtp.notifications') %></label>
+    <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperNotifications') %></div>
+  </div>
+  <div class="col6">
+    <% if (ob.errors['notifications']) print(ob.formErrorTmpl({ errors: ob.errors['notifications'] })) %>
+    <div class="btnRadio clrBr">
+      <input type="radio"
+             name="notifications"
+             value="true"
+             id="smtpNotificationsOn"
+             data-var-type="boolean"
+      <% if (ob.notifications) { %>checked<% } %>>
+      <label for="smtpNotificationsOn"><%= ob.polyT('settings.on') %></label>
+    </div>
+    <div class="btnRadio clrBr">
+      <input type="radio"
+             name="notifications"
+             value="false"
+             id="smtpNotificationsOff"
+             data-var-type="boolean"
+      <% if (!ob.notifications) { %>checked<% } %>>
+      <label for="smtpNotificationsOff"><%= ob.polyT('settings.off') %></label>
+    </div>
+  </div>
+</div>
+<%
+  const smtpSettingsErrorFields = [
+    'serverAddress',
+    'username',
+    'password',
+    'senderEmail',
+    'recipientEmail',
+  ];
+  const showSmtpSettings = ob.notifications ||
+    smtpSettingsErrorFields.some(field => !!ob.errors[field]);
+%>
+<div class="padMdKids padStack smtpSettings <% if (!showSmtpSettings) print('hide') %>">
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="smtpServerAddress" class="required"><%= ob.polyT('settings.advancedTab.smtp.serverAddress') %></label>
+      <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperServerAddress') %></div>
+    </div>
+    <div class="col6">
+      <% if (ob.errors['serverAddress']) print(ob.formErrorTmpl({ errors: ob.errors['serverAddress'] })) %>
+      <input class="clrBr clrSh2"
+        type="text"
+        name="serverAddress"
+        id="smtpServerAddress"
+        placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderServerAddress') %>"
+        value="<%= ob.serverAddress %>">
+      <div class="clrT2 txBase padSm"><%= ob.polyT('settings.advancedTab.smtp.helperNewEmail', { helperGmailLink: `<a href="https://accounts.google.com/SignUp" class="clrTEm">${ob.polyT('settings.advancedTab.smtp.helperGmailLink')}</a>` }) %></div>
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="smtpUsername" class="required"><%= ob.polyT('settings.advancedTab.smtp.username') %></label>
+      <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperUsername') %></div>
+    </div>
+    <div class="col6">
+      <% if (ob.errors['username']) print(ob.formErrorTmpl({ errors: ob.errors['username'] })) %>
+      <input class="clrBr clrSh2"
+        type="text"
+        name="username"
+        id="smtpUsername"
+        placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderUsername') %>"
+        value="<%= ob.username %>">
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="smtpPassword" class="required"><%= ob.polyT('settings.advancedTab.smtp.password') %></label>
+      <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperPassword') %></div>
+    </div>
+    <div class="col6">
+      <% if (ob.errors['password']) print(ob.formErrorTmpl({ errors: ob.errors['password'] })) %>
+      <input class="clrBr clrSh2"
+        type="password"
+        name="password"
+        id="smtpPassword"
+        placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderPassword') %>"
+        value="<%= ob.password %>">
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="smtpSenderEmail" class="required"><%= ob.polyT('settings.advancedTab.smtp.senderEmail') %></label>
+      <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperSendFrom') %></div>
+    </div>
+    <div class="col6">
+      <% if (ob.errors['senderEmail']) print(ob.formErrorTmpl({ errors: ob.errors['senderEmail'] })) %>
+      <input class="clrBr clrSh2"
+        type="email"
+        name="senderEmail"
+        id="smtpSenderEmail"
+        placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderSendFrom') %>"
+        value="<%= ob.senderEmail %>">
+    </div>
+  </div>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="smtpRecipientEmail" class="required"><%= ob.polyT('settings.advancedTab.smtp.recipientEmail') %></label>
+      <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.smtp.helperSendTo') %></div>
+    </div>
+    <div class="col6">
+      <% if (ob.errors['recipientEmail']) print(ob.formErrorTmpl({ errors: ob.errors['recipientEmail'] })) %>
+      <input class="clrBr clrSh2"
+        type="email"
+        name="recipientEmail"
+        id="smtpRecipientEmail"
+        placeholder="<%= ob.polyT('settings.advancedTab.smtp.placeholderSendTo') %>"
+        value="<%= ob.recipientEmail %>">
+    </div>
+  </div>
+  <div class="flexRow">
+    <div class="col3">
+    </div>
+    <div class="col9">
+      <div class="flex gutterH">
+        <div class="flexNoShrink">
+          <div class="flexVCent gutterH">
+            <div class="flexNoShrink">
+              <input class="clrBr clrP clrTEm"
+                type=reset value="<%= ob.polyT('settings.advancedTab.smtp.clearAction') %>">
+            </div>
+            <div class="flexNoShrink smtpTestButtonWrap js-smtpTestButtonWrap <% if (ob.testingSmtp) print('testInProgress') %>">
+              <a class="btn clrP clrBr clrSh2 js-testSMTPSettings btnTest"><%= ob.polyT('settings.advancedTab.smtp.testAction') %></a>
+              <a class="btn clrP clrBr clrSh2 js-cancelSMTPSettings btnCancelTest">
+                <%= ob.spinner({ className: 'spinnerSm padSm' }) %> <%= ob.polyT('settings.advancedTab.smtp.testSmtpCancel') %>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="flexVCent js-testSmtpStatusContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

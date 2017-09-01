@@ -1,0 +1,7 @@
+<% if (ob.msg) { %>
+  <% if (ob.success) { %>
+    <p class="successMsg"><span class="successIcon ion-ios-checkmark-empty padSm"></span><%= ob.msg %></p>
+  <% } else if (ob.msg) { %>
+    <p class="clrTErr"><span class="ion-alert-circled padSm"></span><%= ob.msg %></p>
+  <% } %>
+<% } %>
