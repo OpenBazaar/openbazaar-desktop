@@ -203,6 +203,7 @@ export default class extends baseVw {
       this.$('#walletSendCurrency').select2();
 
       const fee = this.sendConfirmBox && this.sendConfirmBox.getState().fee;
+      if (this.sendConfirmBox) this.sendConfirmBox.remove();
       this.sendConfirmBox = this.createChild(SendConfirmBox, { fee });
       this.listenTo(this.sendConfirmBox, 'clickSend', () => this.onClickConfirmSend());
       this.listenTo(this.sendConfirmBox, 'clickCancel', () => this.onClickSendConfirmCancel());
