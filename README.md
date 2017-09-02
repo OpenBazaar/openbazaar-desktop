@@ -1,4 +1,4 @@
-#OpenBazaar Client v2
+# OpenBazaar Client v2
 
 [![Build Status](https://travis-ci.org/OpenBazaar/openbazaar-desktop.svg)](https://travis-ci.org/OpenBazaar/openbazaar-desktop)
 
