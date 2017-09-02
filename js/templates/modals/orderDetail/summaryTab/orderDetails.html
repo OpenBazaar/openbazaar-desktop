@@ -50,14 +50,17 @@
           <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
             <div><%= ob.order.shipping.shipTo %></div>
             <% if (ob.order.shipping.address) { %>
-            <div><%= ob.order.shipping.address %></div>
+              <div><%= ob.order.shipping.address %></div>
             <% } %>
             <% if (addressLine3) { %>
-            <div><%= addressLine3 %></div>
+              <div><%= addressLine3 %></div>
             <% } %>
-            <div><%= addressLine4 %></div>
+              <div><%= addressLine4 %></div>
             <% if (ob.order.shipping.addressNotes) { %>
-            <div><%= ob.order.shipping.addressNotes %></div>
+              <div><%= ob.order.shipping.addressNotes %></div>
+            <% } %>
+            <% if (ob.order.alternateContactInfo) { %>
+              <div><%= ob.order.alternateContactInfo %></div>
             <% } %>
             <%
               let clipboardAddress = [ob.order.shipping.shipTo];
@@ -65,6 +68,7 @@
               if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
               if (addressLine3) clipboardAddress.push(addressLine3);
               if (addressLine4) clipboardAddress.push(addressLine4);
+              if (ob.order.alternateContactInfo) clipboardAddress.push(ob.order.alternateContactInfo);
               clipboardAddress = clipboardAddress.join('\n');
             %>
             <div class="gutterH">
