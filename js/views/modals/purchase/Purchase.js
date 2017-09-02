@@ -231,7 +231,8 @@ export default class extends BaseModal {
   }
 
   blurMemo(e) {
-    this.order.set('memo', $(e.target).val());
+    //this.order.set('memo', $(e.target).val());
+    this.order.get('items')[0].set('memo', $(e.target).val());
   }
 
   changeCoupons(hashes, codes) {
