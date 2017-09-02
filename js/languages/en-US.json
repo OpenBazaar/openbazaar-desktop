@@ -1038,7 +1038,7 @@
     "noAddresses": "You don't have any saved addresses.",
     "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
-    "emailAddress": "Email Address",
+    "emailAddress": "Email Address or Phone Number",
     "emailPlaceholder": "name@email.com",
     "emailNote": "An alternate way to reach you.",
     "couponCode": "Coupon Code",
