@@ -59,16 +59,12 @@
             <% if (ob.order.shipping.addressNotes) { %>
               <div><%= ob.order.shipping.addressNotes %></div>
             <% } %>
-            <% if (ob.order.alternateContactInfo) { %>
-              <div><%= ob.order.alternateContactInfo %></div>
-            <% } %>
             <%
               let clipboardAddress = [ob.order.shipping.shipTo];
 
               if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
               if (addressLine3) clipboardAddress.push(addressLine3);
               if (addressLine4) clipboardAddress.push(addressLine4);
-              if (ob.order.alternateContactInfo) clipboardAddress.push(ob.order.alternateContactInfo);
               clipboardAddress = clipboardAddress.join('\n');
             %>
             <div class="gutterH">
@@ -114,10 +110,23 @@
         </div>
       </div>
       <hr class="clrBr" />
-      <div class="gutterVTn">
-        <div class="txB">Memo</div>
-        <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+      <div class="flexRow gutterH">
+        <div class="col6">
+          <div class="gutterVTn">
+            <div class="txB">Memo</div>
+            <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+          </div>
+        </div>
+        <div class="col6">
+          <div>
+            <div class="gutterVTn">
+              <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.alternateContact') %></div>
+              <div><%= ob.order.alternateContactInfo %></div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </div>
