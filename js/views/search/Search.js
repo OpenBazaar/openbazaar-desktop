@@ -77,7 +77,7 @@ export default class extends baseVw {
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters
-    this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ']);
+    this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
 
     this.processTerm(this.term);
   }
