@@ -98,7 +98,16 @@ export default class extends baseVw {
                     // don't add profiles that are not moderators. The ID list may have peerIDs
                     // that are out of date, and are no longer moderators.
                     if (eventData.profile.moderator && eventData.profile.moderatorInfo) {
-                      this.moderatorsCol.add(eventData.profile);
+                      // if the moderator has an invalid currency, remove them from the list
+                      const buyerCur = !!app.serverConfig.testnet ? 'tBTC' : 'BTC';
+                      const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
+                      const validCur = modCurs.indexOf(buyerCur) > -1;
+                      if (validCur) {
+                        this.moderatorsCol.add(eventData.profile);
+                      } else {
+                        // remove the invalid moderator from the notFetched list
+                        this.removeNotFetched(eventData.peerId);
+                      }
                     } else {
                       // remove the invalid moderator from the notFetched list
                       this.removeNotFetched(eventData.peerId);
