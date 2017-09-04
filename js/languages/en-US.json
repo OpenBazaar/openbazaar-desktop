@@ -434,7 +434,7 @@
         "resync": "Reload Transactions",
         "resyncHelper": "Synchronize your transactions if some are missing",
         "resyncBtn": "Reload Transactions",
-        "resyncComplete": "Your transactions have been synchronized. Check your wallet or transactions for new data.",
+        "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
