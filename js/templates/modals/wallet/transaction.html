@@ -66,7 +66,7 @@
         <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
       </div>
       <%
-        const memo = ob.translatedMemo || ob.memo.slice(0, 300);
+        const memo = ob.translatedMemo || ob.memo.length > 300 ? `${ob.memo.slice(0, 300)}…` : ob.memo;
       %>
       <div class="toolTip toolTipTop toolTipCenter memoTip" data-tip="<%= memo %>">
         <div class="noOverflow"><%= memo %></div>
