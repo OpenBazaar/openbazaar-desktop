@@ -446,6 +446,7 @@ export default class extends BaseModal {
         items: this.order.get('items').toJSON(),
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
+        hasModerators: this.moderatorIDs.length,
       }));
 
       super.render();

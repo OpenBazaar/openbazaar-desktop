@@ -1,5 +1,4 @@
 <%
-const hasModerators = !!ob.listing.moderators && ob.listing.moderators.length
 // when multiple listings are supported, the prices array will have one price object for each
 const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
 %>
@@ -78,8 +77,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
             <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
           </div>
-          <div class="js-moderated-errors"></div>
-          <% if (hasModerators) { %>
+          <% if (ob.hasModerators) { %>
             <div class="js-moderatedOption">
               <input
                   type="checkbox"
@@ -97,9 +95,10 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
           <% } %>
         </div>
       </section>
-      <% if (hasModerators) { %>
+      <% if (ob.hasModerators) { %>
         <section class="contentBox padMd clrP clrBr clrSh3 showIfPay js-moderator">
           <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
+          <div class="js-moderated-errors"></div>
           <div class="js-moderatorsWrapper"></div>
         </section>
       <% } %>
@@ -175,7 +174,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
       <i class="js-close cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3 closeBtn"></i>
       <div class="js-actionBtn"></div>
       <div class="js-receipt"></div>
-      <% if (hasModerators) { %>
+      <% if (ob.hasModerators) { %>
         <hr class="clrBr js-moderatorNote">
         <div class="padSm txSm txCtr clrT2 js-moderatorNote">
           <%= ob.polyT('purchase.moderatorNote') %>
