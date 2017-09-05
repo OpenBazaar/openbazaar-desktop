@@ -1,6 +1,7 @@
 import moment from 'moment';
 import app from '../../app';
 import { getNotifDisplayData } from '../../collections/Notifications';
+import { setTimeagoInterval } from '../../utils/';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
@@ -20,6 +21,11 @@ export default class extends BaseVw {
     super(opts);
     this.options = opts;
     this.listenTo(this.model, 'change', () => this.render());
+
+    this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
+      const timeAgo = moment(this.model.get('timestamp')).fromNow();
+      if (timeAgo !== this.renderedTimeAgo) this.render();
+    });
   }
 
   className() {
@@ -46,6 +52,7 @@ export default class extends BaseVw {
 
   render() {
     super.render();
+    this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
 
     loadTemplate('notifications/notification.html', (t) => {
       this.$el.html(t({
@@ -53,6 +60,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         notifText: this.getNotifDisplayData().text,
         ownGuid: app.profile.id,
+        renderedTimeAgo: this.renderedTimeAgo,
         moment,
       }));
     });

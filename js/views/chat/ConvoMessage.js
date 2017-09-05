@@ -57,6 +57,7 @@ export default class extends baseVw {
 
   render() {
     let message = this.model.get('message');
+    this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
 
     // Give any links the emphasis color.
     const $msgHtml = $(`<div>${message}</div>`);
@@ -74,6 +75,7 @@ export default class extends baseVw {
         ...this._state,
         moment,
         message,
+        renderedTimeAgo: this.renderedTimeAgo,
         ownGuid: app.profile.id,
       }));
     });

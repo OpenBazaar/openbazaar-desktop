@@ -7,7 +7,7 @@
     </div>
     <% if (ob.showTimestampLine) { %>
     <div class="timestampLine posA">
-      <span class="clrT2 txBase"><%= ob.moment(ob.timestamp).fromNow() %></span>
+      <span class="clrT2 txBase"><%= ob.renderedTimeAgo %></span>
     </div>
     <% } %>      
   </div>
