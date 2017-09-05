@@ -56,9 +56,6 @@
               <div><%= addressLine3 %></div>
             <% } %>
               <div><%= addressLine4 %></div>
-            <% if (ob.order.shipping.addressNotes) { %>
-              <div><%= ob.order.shipping.addressNotes %></div>
-            <% } %>
             <%
               let clipboardAddress = [ob.order.shipping.shipTo];
 
@@ -71,10 +68,20 @@
               <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
               <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
             </div>
-            <% } else { %>
-              <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+            <% if (ob.order.shipping.addressNotes) { %>
+              <div class="addressNotes gutterVTn">
+                <div>
+                  <b><%= ob.polyT('orderDetail.summaryTab.orderDetails.addressNotes') %></b>
+                </div>
+                <div>
+                  <i><%= ob.order.shipping.addressNotes %></i>
+                </div>
+              </div>
             <% } %>
-            <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
+          <% } else { %>
+            <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+          <% } %>
+          <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
         </div>
         <div class="col8">
           <div class="row">

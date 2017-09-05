@@ -1362,6 +1362,7 @@
         "copyAddress": "Copy",
         "viewOnMap": "View on map",
         "memo": "Memo",
+        "addressNotes": "Notes:",
         "alternateContact": "Additional Contact Information"
       }
     },
