@@ -113,7 +113,7 @@
       <div class="flexRow gutterH">
         <div class="col6">
           <div class="gutterVTn">
-            <div class="txB">Memo</div>
+            <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.memo') %></div>
             <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
           </div>
         </div>
@@ -121,7 +121,7 @@
           <div>
             <div class="gutterVTn">
               <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.alternateContact') %></div>
-              <div><%= ob.order.alternateContactInfo %></div>
+              <div><%= ob.order.alternateContactInfo ? ob.order.alternateContactInfo : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
             </div>
           </div>
         </div>
