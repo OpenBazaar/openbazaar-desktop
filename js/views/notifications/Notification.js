@@ -50,6 +50,11 @@ export default class extends BaseVw {
     return getNotifDisplayData(this.model.toJSON().notification);
   }
 
+  remove() {
+    this.timeAgoInterval.cancel();
+    super.remove();
+  }
+
   render() {
     super.render();
     this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
