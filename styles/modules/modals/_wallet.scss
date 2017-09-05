@@ -182,6 +182,12 @@
         bottom: 3px;
         left: 5px;
       }
+
+      .memoTip {
+        &::before {
+          width: 200px;
+        }
+      }
     }
 
     .fetchErrorWrap {

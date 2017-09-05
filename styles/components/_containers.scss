@@ -374,6 +374,12 @@
       -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
     }
   }
+
+  &.toolTipCenter {
+    &::before {
+      text-align: center;
+    }
+  }
 }
 
 // Use for single line variable width tooltips. Factor in translations and
