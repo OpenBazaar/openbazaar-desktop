@@ -1,5 +1,5 @@
-import loadTemplate from '../../../utils/loadTemplate';
-import BaseVw from '../../baseVw';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -34,7 +34,7 @@ export default class extends BaseVw {
   render() {
     super.render();
 
-    loadTemplate('modals/settings/walletSeed.html', (t) => {
+    loadTemplate('modals/settings/advanced/walletSeed.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
       }));

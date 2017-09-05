@@ -9,8 +9,6 @@ export default class extends Collection {
 
   constructor(models, options) {
     super(models, options);
-    this._activeId = localStorage.activeProvider;
-    this._activeTorId = localStorage.activeTorProvider;
     this._defaultId = localStorage.defaultProvider;
     this._defaultTorId = localStorage.defaultTorProvider;
   }
@@ -27,14 +25,6 @@ export default class extends Collection {
     return 8;
   }
 
-  get activeProvider() {
-    return this.get(this._activeId);
-  }
-
-  get activeTorProvider() {
-    return this.get(this._activeTorId);
-  }
-
   get defaultProvider() {
     return this.get(this._defaultId);
   }
@@ -43,24 +33,15 @@ export default class extends Collection {
     return this.get(this._defaultTorId);
   }
 
-  set activeProvider(md) {
-    this.setProvider(md, 'active');
-  }
-
-  set activeTorProvider(md) {
-    this.setProvider(md, 'active', true);
-  }
-
   set defaultProvider(md) {
-    this.setProvider(md, 'default');
+    this.setProvider(md);
   }
 
   set defaultTorProvider(md) {
-    this.setProvider(md, 'default', true);
+    this.setProvider(md, true);
   }
 
-  setProvider(md, type, tor = false) {
-    const types = ['active', 'default'];
+  setProvider(md, tor = false) {
     if (!md instanceof Provider) {
       throw new Error('Please provide a model as a Provider instance.');
     }
@@ -69,12 +50,8 @@ export default class extends Collection {
       throw new Error('Only a model in the collection can be set as a provider.');
     }
 
-    if (!type || types.indexOf(type) === -1) {
-      throw new Error('You must provide a valid type.');
-    }
-
-    const idString = `_${type}${tor ? 'Tor' : ''}Id`;
-    const storageString = `${type}${tor ? 'Tor' : ''}Provider`;
+    const idString = `_default${tor ? 'Tor' : ''}Id`;
+    const storageString = `default${tor ? 'Tor' : ''}Provider`;
 
     if (this[idString] !== md.id) {
       this[idString] = md.id;

@@ -3,6 +3,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../utils/';
+import estimateFee from '../../../utils/fees';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -15,10 +16,6 @@ export default class extends baseVw {
 
     if (!this.model) {
       throw new Error('Please provide a Transaction model.');
-    }
-
-    if (typeof options.getFeeLevel !== 'function') {
-      throw new Error('Please provide a function that returns the data from the estimatefee api');
     }
 
     this._state = {
@@ -84,7 +81,7 @@ export default class extends baseVw {
 
   onClickRetryPmt() {
     if (this.getFeeLevel) this.getFeeLevel.abort();
-    this.getFeeLevel = this.options.getFeeLevel('PRIORITY');
+    this.getFeeLevel = estimateFee('PRIORITY');
 
     const state = {
       retryConfirmOn: true,
@@ -98,10 +95,12 @@ export default class extends baseVw {
     }
 
     this.getFeeLevel.done(fee => {
+      if (this.isRemoved()) return;
       this.setState({
         ...state,
         fetchingEstimatedFee: false,
-        estimatedFee: this.feeToBtc(fee),
+        // server doubles the fee when bumping
+        estimatedFee: fee * 2,
       });
     });
 
@@ -147,14 +146,6 @@ export default class extends baseVw {
     }
 
     return this;
-  }
-
-  feeToBtc(fee) {
-    // We'll approximateally match the server's algorythm to estimate the fee.
-    // Fee is per byte in satoshi. A estimated average transaction is 200 bytes.
-    // So we'll multiply the fee by 200, divide by a 100 mil to get BTC and
-    // then multiply by 2 (the server bumps the fee by doubling it.)
-    return fee * 200 / 100000000 * 2;
   }
 
   closeRetryConfirmBox() {

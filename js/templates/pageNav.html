@@ -35,11 +35,14 @@
                    placeholder="<%= ob.polyT('addressBarPlaceholder') %>" value="<%= ob.addressBarText %>" />
             <div class="torIndicator toolTipNoWrap txCtr" data-tip="<%= ob.polyT('pageNav.torOnTooltip') %>"></div>
           </div>
-          <% if (ob.testnet) { %>
-            <div id="testnetFlag" class="btn barBtn toolTip clrP clrBr" data-tip="<%= ob.polyT('testnetTooltip') %>">
-              <%= ob.polyT('testnet') %>
-            </div>
-          <% } %>
+
+          <div id="testnetFlag" class="btn barBtn normalBtn clrP clrBr" >
+            <span>Beta</span>
+            <% if (ob.testnet) { %>
+              <span class="toolTip" data-tip="<%= ob.polyT('testnetTooltip') %>">&nbsp;<%= ob.polyT('testnet') %></span>
+            <% } %>
+          </div>
+
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
@@ -49,7 +52,7 @@
             <div class="discoverBtn navBtn" style="background-image: url('../imgs/obVectorIconSmall.svg')"></div>
           </a>
           <% if (ob.showDiscoverCallout) { %>
-            <div class="discoverCallout js-discoverCallout arrowBoxTop confirmBox clrP clrBr">
+            <div class="discoverCallout js-discoverCallout arrowBoxTop confirmBox clrP clrSh1 clrBr">
               <div class="tx3 txB rowSm"><%= ob.polyT('pageNav.discoverCalloutTitle') %></div>
               <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>
             </div>
@@ -83,9 +86,6 @@
                 </a>
                 <a class="listItem js-navCreateListing js-navListItem">
                   <span>Create Listing</span><span class="clrT2 TODO">Cltrl + ?</span>
-                </a>
-                <a class="listItem js-navListItem" href="#connected-peers">
-                  <span>Connected Peers</span>
                 </a>
               </div>
               <div class="listGroup clrP clrBr">

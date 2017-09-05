@@ -405,19 +405,23 @@
         "serverAddress": "Server Address",
         "senderEmail": "Send from",
         "recipientEmail": "Send to",
-        "placeholderServerAddress": "smtp.gmail.com",
-        "placeholderUsername": "name@domain.com",
+        "placeholderServerAddress": "smtp.gmail.com:587",
+        "placeholderUsername": "Enter your username",
         "placeholderPassword": "The password to your email address",
         "placeholderSendFrom": "name@domain.com",
         "placeholderSendTo": "name@domain.com",
-        "helperNotifications": "Receive emails for order updates and new followers",
-        "helperServerAddress": "Use Gmail, Yahoo, anything",
+        "helperNotifications": "Receive emails for order updates",
+        "helperServerAddress": "Enter an outgoing (SMTP) server url followed by the TLS port number",
         "helperNewEmail": "Create an email address at %{helperGmailLink}",
-        "helperUsername": "Your email address",
+        "helperUsername": "Your SMTP username",
         "helperPassword": "Saved privately in your database",
-        "helperSendFrom": "The email address to send from",
-        "helperSendTo": "The email address to send to",
-        "helperGmailLink": "Gmail"
+        "helperSendFrom": "The email address to send from. Make sure you whitelist this address in your receiving account.",
+        "helperSendTo": "The email address to send to. Check your spam folder if you don't receive notifications.",
+        "helperGmailLink": "Gmail",
+        "testSmtpSuccess": "The integration test was successful. Don't forget to save your settings.",
+        "testSmtpFail": "The integration test was not successful.",
+        "testSmtpFailWithError": "The integration test was not successful: %{err}",
+        "testSmtpCancel": "Cancel"
       },
       "server": {
         "sectionName": "Server",
@@ -704,7 +708,8 @@
       "sendPaymentFailDialogTitle": "Unable to send payment",
       "sendConfirm": {
         "heading": "Are you sure?",
-        "body": "Double check that the address and amount are correct.",
+        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
         "btnCancel": "Cancel",
         "btnConfirmSend": "Yes, Send"
       }
@@ -974,6 +979,8 @@
     "makeDefaultBtn": "Set to default",
     "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
     "addQueryProviderBtn": "Add search provider",
+    "chooseDefaultTitle": "Select a default search provider",
+    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
@@ -1078,15 +1085,17 @@
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
         "title": "Are you sure?",
-        "payBTC": "Pay %{amountBTC} to the vendor",
-        "payFiat": "Pay %{amountFiat} (%{amountBTC}) to the vendor",
+        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
+        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
+        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
         "cancel": "Cancel",
         "confirm": "Yes, Pay",
         "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
         "insufficientFundsTitle": "Insufficient Funds",
         "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
         "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
-        "insufficientFundsNote": "*%{amount} plus an estimated fee of %{fee}"
+        "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
+        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
       }
     },
     "completeSection": {
@@ -1188,7 +1197,8 @@
         "REFUNDED": "Refunded",
         "DISPUTED": "Disputed",
         "DECIDED": "Decided",
-        "RESOLVED": "Resolved"
+        "RESOLVED": "Resolved",
+        "PAYMENT_FINALIZED": "Payment Finalized"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
@@ -1230,6 +1240,7 @@
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "notApplicable": "n/a",
+      "vendorFinalizedPayment": "You have manually finalized the order.",
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
@@ -1581,8 +1592,7 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider",
-    "transactionFee": "You must choose one of %{levels}."
+    "searchProvider": "This is not a valid url for a search provider"
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",

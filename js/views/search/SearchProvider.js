@@ -31,9 +31,9 @@ export default class extends BaseView {
     loadTemplate('search/Provider.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
+        ...this.options,
       }));
       if (this.options.active) this.$el.addClass('active');
-      if (!this.model.get(this.options.urlType)) this.$el.addClass('hide');
     });
     return this;
   }
