@@ -11,12 +11,12 @@ const defaultSearchProviders = [
   },
   {
     id: 'duo',
-    name: 'Duo Search',
+    name: 'Duo',
     logo: '../imgs/duoSearchLogo.png',
-    search: 'http://demo.duosear.ch/search',
-    listings: 'http://demo.duosear.ch/search/listings',
-    torsearch: '',
-    torlistings: '',
+    search: 'https://ob2.duosear.ch/search',
+    listings: 'https://ob2.duosear.ch/search/listings',
+    torsearch: 'https://ob2.duosear.ch/search',
+    torlistings: 'https://ob2.duosear.ch/search/listings',
     locked: true,
   },
 ];
