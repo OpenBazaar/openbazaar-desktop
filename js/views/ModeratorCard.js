@@ -45,7 +45,7 @@ export default class extends BaseVw {
   }
 
   rotateSelectState() {
-    if (this.cardState === 'selected') {
+    if (this.cardState === 'selected' && !this.options.radioStyle) {
       this.changeSelectState(this.notSelected);
     } else {
       this.changeSelectState('selected');
