@@ -598,7 +598,7 @@
       "state": "State/Province/Region",
       "country": "Country",
       "postalCode": "Postal Code",
-      "notes": "Address Notes"
+      "notes": "Delivery Notes"
     },
     "statusSaving": "Saving settings…",
     "statusSaveFailed": "Settings failed to save.",
