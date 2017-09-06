@@ -41,7 +41,7 @@
     </div>
     <div class="col7">
       <% if (ob.errors['digitalDelivery.password']) print(ob.formErrorTmpl({ errors: ob.errors['digitalDelivery.password'] })) %>
-      <input type="password" class="clrBr clrSh2" name="digitalDelivery.password" id="fulfillOrderPassword" value="<%= ob.digitalDelivery.password %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.passwordPlaceholder`) %>" />
+      <input type="text" class="clrBr clrSh2" name="digitalDelivery.password" id="fulfillOrderPassword" value="<%= ob.digitalDelivery.password %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.passwordPlaceholder`) %>" />
     </div>
   </div>
   <% } %>
