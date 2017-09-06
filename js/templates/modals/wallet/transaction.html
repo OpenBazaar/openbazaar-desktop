@@ -67,7 +67,10 @@
           <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
         </div>
       </div>
-      <div class="clrT2 tx6" style="vertical-align: text-top;"><%= ob.translatedMemo || ob.memo %></div>
+      <%
+        const memo = ob.translatedMemo || ob.memo.length > 300 ? `${ob.memo.slice(0, 300)}…` : ob.memo;
+      %>
+      <div class="clrT2 tx6" style="vertical-align: text-top;"><%= memo %></div>
     </div>
   </div>
   <div class="col">
