@@ -598,7 +598,7 @@
       "state": "State/Province/Region",
       "country": "Country",
       "postalCode": "Postal Code",
-      "notes": "Address Notes"
+      "notes": "Delivery Notes"
     },
     "statusSaving": "Saving settings…",
     "statusSaveFailed": "Settings failed to save.",
@@ -1038,7 +1038,7 @@
     "noAddresses": "You don't have any saved addresses.",
     "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
-    "emailAddress": "Email Address",
+    "emailAddress": "Email Address or Phone Number",
     "emailPlaceholder": "name@email.com",
     "emailNote": "An alternate way to reach you.",
     "couponCode": "Coupon Code",
@@ -1360,7 +1360,10 @@
         "totalHeading": "Total",
         "moderatorHeading": "Moderator",
         "copyAddress": "Copy",
-        "viewOnMap": "View on map"
+        "viewOnMap": "View on map",
+        "memo": "Memo",
+        "addressNotes": "Delivery Notes",
+        "alternateContact": "Additional Contact Information"
       }
     },
     "fulfillOrderTab": {
