@@ -93,6 +93,7 @@ export default class extends BaseModal {
         txid: data.txid,
         timestamp: data.timestamp,
         address: data.address,
+        memo: data.memo,
       }, { parse: true });
 
       this.transactionsVw.collection.unshift(transaction);

@@ -87,7 +87,7 @@
     </div>
   </div>
 </div>
-<div class="js-retryPmtConfirmed confirmBox retryConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.retryConfirmOn) print('hide') %>">
+<div class="js-retryPmtConfirmed confirmBox retryConfirm arrowBoxTop clrBr clrP clrT clrSh1 <% if (!ob.retryConfirmOn) print('hide') %>">
   <div class="tx3 txB rowSm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.title') %></div>
   <% if (ob.retryConfirmOn) {
       // if we're fetching we'll just hard code some fee and show the text invisibly
