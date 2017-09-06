@@ -11,7 +11,7 @@ const defaultSearchProviders = [
   },
   {
     id: 'duo',
-    name: 'Duo Search',
+    name: 'Duo',
     logo: '../imgs/duoSearchLogo.png',
     search: '',
     listings: 'https://ob2.duosear.ch/search/listings',
