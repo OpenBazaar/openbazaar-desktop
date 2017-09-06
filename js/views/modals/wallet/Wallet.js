@@ -52,7 +52,7 @@ export default class extends BaseModal {
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         // "wallet" sockets come for new transactions and when a transaction gets it's
-        // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
+        // first confirmation.
         if (e.jsonData.wallet && !e.jsonData.wallet.height) {
           if (this.stats) {
             this.stats.setState({
