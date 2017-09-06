@@ -30,6 +30,7 @@ export default class extends baseVw {
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
     this.sProvider = app.searchProviders[`default${this.torString}Provider`];
+    this.queryProvider = false;
 
     // if the  provider returns a bad URL, the user must select a provider
     if (is.not.url(this.providerUrl)) {
@@ -49,7 +50,6 @@ export default class extends baseVw {
       const matchedProvider =
         app.searchProviders.filter(p =>
           base === p.get('listings') || base === p.get('torlistings'));
-
       /* if the query provider doesn't exist, create a temporary provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
@@ -58,10 +58,10 @@ export default class extends baseVw {
       if (!matchedProvider.length) {
         const queryOpts = {};
         queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
-        this.queryProvider = new ProviderMd(queryOpts);
+        this.queryProvider = true;
+        this.sProvider = new ProviderMd(queryOpts);
       } else {
         this.sProvider = matchedProvider[0];
-        this.queryProvider = null;
       }
     }
 
@@ -114,7 +114,7 @@ export default class extends baseVw {
   get providerUrl() {
     // if a provider was created by the address bar query, use it instead.
     // return false if no provider is available
-    const currentProvider = this.queryProvider || this.sProvider;
+    const currentProvider = this.sProvider;
     return currentProvider && currentProvider.get(this.urlType);
   }
 
@@ -153,7 +153,7 @@ export default class extends baseVw {
       throw new Error('The provider must be in the collection.');
     }
     this.sProvider = md;
-    this.queryProvider = null;
+    this.queryProvider = false;
     if (this.mustSelectDefault) {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
@@ -175,6 +175,10 @@ export default class extends baseVw {
   }
 
   makeDefaultProvider() {
+    if (app.searchProviders.indexOf(this.sProvider) === -1) {
+      throw new Error('The provider to be made the default must be in the collection.');
+    }
+
     app.searchProviders[`default${this.torString}Provider`] = this.sProvider;
     this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
   }
@@ -184,8 +188,8 @@ export default class extends baseVw {
   }
 
   addQueryProvider() {
-    if (this.queryProvider) app.searchProviders.add(this.queryProvider);
-    this.activateProvider(this.queryProvider);
+    if (this.queryProvider) app.searchProviders.add(this.sProvider);
+    this.activateProvider(this.sProvider);
   }
 
   clickAddQueryProvider() {
@@ -393,7 +397,7 @@ export default class extends baseVw {
         errTitle,
         errMsg,
         providerLocked: this.sProvider.get('locked'),
-        isQueryProvider: !!this.queryProvider,
+        isQueryProvider: this.queryProvider,
         isDefaultProvider: this.sProvider === app.searchProviders.defaultProvider,
         emptyData,
         ...state,
