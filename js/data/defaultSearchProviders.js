@@ -13,10 +13,10 @@ const defaultSearchProviders = [
     id: 'duo',
     name: 'Duo',
     logo: '../imgs/duoSearchLogo.png',
-    search: 'https://ob2.duosear.ch/search',
+    search: '',
     listings: 'https://ob2.duosear.ch/search/listings',
-    torsearch: 'https://ob2.duosear.ch/search',
-    torlistings: 'https://ob2.duosear.ch/search/listings',
+    torsearch: '',
+    torlistings: '',
     locked: true,
   },
 ];
