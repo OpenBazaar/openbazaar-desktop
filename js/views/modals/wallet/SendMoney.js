@@ -51,9 +51,9 @@ export default class extends baseVw {
       openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
         jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
     }).always(() => {
-      this.clearModel();
       this.saveInProgress = false;
-    });
+    })
+      .done(() => this.clearModel());
   }
 
   onClickSend() {
