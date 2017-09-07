@@ -317,6 +317,10 @@
   },
   "settings": {
     "settingsLabel": "Settings",
+    "unrecognizedModelErrsWarning": {
+      "title": "Unable to save your settings",
+      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+    },
     "generalTab": {
       "helperLanguage": "Display interface elements in",
       "helperCountry": "The country you primarily reside in",
