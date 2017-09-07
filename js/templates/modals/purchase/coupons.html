@@ -1,7 +1,11 @@
 <% if (ob.codeResult && ob.codeResult.type && ob.codeResult.type !== 'valid') { %>
   <div class="txSm rowTn flex">
     <span class="clrTErr">
-      <%= ob.polyT(`purchase.codeErrors.${ob.codeResult.type}`, { code: ob.codeResult.code }) %>
+      <% if (ob.codeResult.code) { %>
+        <%= ob.polyT(`purchase.codeErrors.${ob.codeResult.type}`, { code: ob.codeResult.code }) %>
+      <% } else { %>
+        <%= ob.polyT('purchase.codeErrors.blank') %>
+      <% } %>
     </span>
   </div>
 <% } %>

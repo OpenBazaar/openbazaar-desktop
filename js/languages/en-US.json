@@ -1053,7 +1053,8 @@
     "codeErrors": {
       "invalid": "\"%{code}\" is not a valid code",
       "duplicate": "You can only add \"%{code}\" once",
-      "excessive": "You cannot apply discounts that total 100% or more."
+      "excessive": "You cannot apply discounts that total 100% or more.",
+      "blank": "You must enter a code."
     },
     "removeCode": "remove",
     "memo": "Memo",
