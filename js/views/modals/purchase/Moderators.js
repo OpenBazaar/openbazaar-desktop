@@ -99,7 +99,7 @@ export default class extends baseVw {
                     // that are out of date, and are no longer moderators.
                     if (eventData.profile.moderator && eventData.profile.moderatorInfo) {
                       // if the moderator has an invalid currency, remove them from the list
-                      const buyerCur = !!app.serverConfig.testnet ? 'tBTC' : 'BTC';
+                      const buyerCur = app.serverConfig.cryptoCurrency;
                       const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
                       const validCur = modCurs.indexOf(buyerCur) > -1;
                       if (validCur) {
