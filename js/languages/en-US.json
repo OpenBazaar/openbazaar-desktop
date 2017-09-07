@@ -1047,6 +1047,7 @@
     "emailPlaceholder": "name@email.com",
     "emailNote": "An alternate way to reach you.",
     "couponCode": "Coupon Code",
+    "couponCodePlaceholder": "Enter code",
     "applyCode": "Apply",
     "code": "\"%{code}\" applied to order",
     "codeErrors": {
