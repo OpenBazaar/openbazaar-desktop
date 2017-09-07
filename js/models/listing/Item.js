@@ -77,7 +77,7 @@ export default class extends BaseModel {
     } else {
       // If you don't have any options and have the top level as a non-negative
       // value (i.e. not infiniteInventory), we'll consider you to be tracking inventory
-      isInventoryTracked = this.get('quantity') > 0;
+      isInventoryTracked = this.get('quantity') >= 0;
     }
 
     return isInventoryTracked;
