@@ -11,7 +11,7 @@ import bech32 from 'bech32';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
-  let url = resolver || 'https://resolver.onename.com/v2/users/';
+  let url = resolver || app.getServerUrl('ob/resolve');
 
   if (!handle) {
     throw new Error('Please provide a handle.');
@@ -20,18 +20,8 @@ export function getGuid(handle, resolver) {
   url = url.charAt(url.length - 1) !== '/' ? `${url}/` : url;
   url += handle;
 
-  $.get(url).done((data) => {
-    if (data && data[handle] && data[handle].profile && data[handle].profile.account) {
-      const account = data[handle].profile.account.filter(
-        (accountObject) => accountObject.service === 'openbazaar');
-
-      deferred.resolve(account[0].identifier);
-    } else {
-      deferred.reject();
-    }
-  }).fail(() => {
-    deferred.reject();
-  });
+  $.get(url).done(peerId => deferred.resolve(peerId))
+    .fail(xhr => deferred.reject(xhr));
 
   return deferred.promise();
 }
