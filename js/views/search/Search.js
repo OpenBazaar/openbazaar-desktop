@@ -349,12 +349,14 @@ export default class extends baseVw {
 
   changeSortBy(e) {
     this.sortBySelected = $(e.target).val();
+    this.serverPage = 0;
     this.processTerm(this.term);
   }
 
   changeFilter(e) {
     const targ = $(e.target);
     this.filters[targ.prop('name')] = targ.val();
+    this.serverPage = 0;
     this.processTerm(this.term);
   }
 
