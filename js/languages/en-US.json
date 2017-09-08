@@ -34,6 +34,7 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
+  "betaTooltip": "OpenBazaar is currently in beta. Make sure to backup your wallet, and be careful if spending large amounts of bitcoin.",
   "tabMenuHeading": "MENU",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
@@ -1046,12 +1047,14 @@
     "emailPlaceholder": "name@email.com",
     "emailNote": "An alternate way to reach you.",
     "couponCode": "Coupon Code",
+    "couponCodePlaceholder": "Enter code",
     "applyCode": "Apply",
     "code": "\"%{code}\" applied to order",
     "codeErrors": {
       "invalid": "\"%{code}\" is not a valid code",
       "duplicate": "You can only add \"%{code}\" once",
-      "excessive": "You cannot apply discounts that total 100% or more."
+      "excessive": "You cannot apply discounts that total 100% or more.",
+      "blank": "You must enter a code."
     },
     "removeCode": "remove",
     "memo": "Memo",

@@ -131,7 +131,6 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             <div class="rowTn">
               <label for="couponCode" class="tx5">
                 <%= ob.polyT('purchase.couponCode') %>
-                <i class="ion-ios-information-outline js-couponInfo"></i>
               </label>
             </div>
             <div class="flex gutterH row">
@@ -139,7 +138,8 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                   class="btnHeight clrBr clrP"
                   type="text"
                   id="couponCode"
-                  name="couponCode">
+                  name="couponCode"
+                  placeholder="<%= ob.polyT('purchase.couponCodePlaceholder') %>">
               <button class="btn clrP clrBr clrSh2 js-applyCoupon">
                 <%= ob.polyT('purchase.applyCode') %>
               </button>

@@ -10,7 +10,6 @@
     .iconBtn {
       &:not(.normalBtn) {
         height: 20px;
-        margin-top: 7px;
       }
 
       &.navWalletBtn {
@@ -36,6 +35,8 @@
     .navBtn {
       height: 34px;
       width: 34px;
+      display: flex;
+      align-items: center;
 
       &:hover {
         text-decoration: none;
@@ -155,7 +156,25 @@
         color: #000;
         text-align: center;
         margin-right: 8px;
+        width: 13px;
+        height: 13px;
         box-sizing: border-box;
+        position: relative;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        i {
+          visibility: hidden;
+          font-size: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+        }
 
         &.navClose {
           background-color: #FF6058;
@@ -171,11 +190,32 @@
           background-color: #29CB41;
           border: solid 1px #13AD29;
           margin-right: 0;
-        }
 
-        i {
-          visibility: hidden;
-          font-size: 10px;
+          i {
+            display: block;
+            position: absolute;
+            top: 22%;
+            left: 22%;
+            width: 56%;
+            height: 56%;
+            border-radius: 1px;
+            background-color: #003200;
+          }
+
+          i:before {
+            content: '';
+            display: block;
+            position: absolute;
+            background-color: #29CB41;
+            height: 12px;
+            width: 2px;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            transform: rotate(45deg);
+          }
         }
       }
 
