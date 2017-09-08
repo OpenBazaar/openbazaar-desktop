@@ -127,6 +127,7 @@ export default class extends BaseModal {
     }
 
     $.when(...saves).done(() => {
+      app.settings.fetch();
       this.trigger('onboarding-complete');
     }).fail((jqXhr) => {
       let title;
