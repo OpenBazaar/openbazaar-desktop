@@ -161,6 +161,10 @@
         box-sizing: border-box;
         position: relative;
 
+        &:hover {
+          text-decoration: none;
+        }
+
         i {
           visibility: hidden;
           font-size: 15px;
@@ -169,6 +173,7 @@
           justify-content: center;
           width: 100%;
           height: 100%;
+          pointer-events: none;
         }
 
         &.navClose {
