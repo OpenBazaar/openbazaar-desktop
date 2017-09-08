@@ -55,12 +55,16 @@
             <% if (addressLine3) { %>
               <div><%= addressLine3 %></div>
             <% } %>
+            <% if (ob.order.shipping.postalCode) { %>
+              <div><%= ob.order.shipping.postalCode %></div>
+            <% } %>
               <div><%= addressLine4 %></div>
             <%
               let clipboardAddress = [ob.order.shipping.shipTo];
 
               if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
               if (addressLine3) clipboardAddress.push(addressLine3);
+              if (ob.order.shipping.postalCode) clipboardAddress.push(ob.order.shipping.postalCode);
               if (addressLine4) clipboardAddress.push(addressLine4);
               clipboardAddress = clipboardAddress.join('\n');
             %>
