@@ -3,6 +3,12 @@ import { events as listingEvents, shipsFreeToMe } from './';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
+  defaults() {
+    return {
+      freeShipping: [],
+    };
+  }
+
   // Needed so this.destroy() will work, since it's
   // a no-op on new models.
   isNew() {
