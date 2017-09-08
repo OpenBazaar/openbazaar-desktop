@@ -275,7 +275,7 @@ export default class extends baseVw {
       peerId: this.guid,
       subject: this.subject,
       message: msg,
-    });
+    }, { parse: true });
 
     const save = chatMessage.save();
 
