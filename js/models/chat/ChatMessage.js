@@ -1,4 +1,6 @@
 import moment from 'moment';
+import { getEmojiByName } from '../../data/emojis';
+import sanitizeHtml from 'sanitize-html';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -29,6 +31,42 @@ export default class ChatMessage extends BaseModel {
 
   url() {
     return app.getServerUrl(`ob/${this.isGroupChatMessage ? 'groupchat' : 'chat'}/`);
+  }
+
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    if (typeof attrs.message === 'string') {
+      // Convert any emoji placeholder (e.g :smiling_face:) into
+      // emoji unicode characters.
+      const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
+      const matches = attrs.message.match(emojiPlaceholderRegEx, 'g');
+
+      if (matches) {
+        matches.forEach(match => {
+          const emoji = getEmojiByName(match);
+
+          if (emoji && emoji.char) {
+            attrs.message = attrs.message.replace(match, emoji.char);
+          }
+        });
+      }
+
+      // sanitize the message
+      attrs.message = sanitizeHtml(attrs.message);
+    }
+
+
+    return super.set(attrs, opts);
   }
 
   validate(attrs) {
@@ -76,47 +114,4 @@ export default class ChatMessage extends BaseModel {
 
     return super.sync(method, model, options);
   }
-}
-
-/**
- * Use this function if you need to send a chat message outside of the main Chat view.
- * This will ensure that the sending of the message is communicated to the Chat view and
- * the relevant chat head and convo is updated.
- * @param {Object} fields An object containing the arguments to the send message call.
- * The only required field is peerId, but you almost certainly want to pass in a message as
- * well.
- * @returns {Object} The jqXhr representing the POST call to the server.
- */
-export function sendMessage(fields) {
-  const model = new ChatMessage({
-    ...fields,
-    outgoing: true,
-  });
-  const save = model.save();
-
-  if (!save) {
-    Object.keys(model.validationError)
-      .forEach(errorKey => {
-        throw new Error(`${errorKey}: ${model.validationError[errorKey][0]}`);
-      });
-  } else {
-    save.done(() => {
-      if (app && app.chat) {
-        if (app.chat.conversation &&
-          app.chat.conversation.guid === model.get('peerId') &&
-          typeof app.chat.conversation.onMessageSent === 'function') {
-          // If theres an active convo for the message recipient, we'll let the convo
-          // know of the message and it will let it's parent know so the chat head
-          // is added / updated.
-          app.chat.conversation.onMessageSent.call(app.chat.conversation, model);
-        } else if (typeof app.chat.onNewChatMessage === 'function') {
-          // If no active convo for the recipient of the message, we'll let the chat
-          // app know and it will handle adding the chat head in.
-          app.chat.onNewChatMessage.call(app.chat, model.toJSON());
-        }
-      }
-    });
-  }
-
-  return save;
 }
