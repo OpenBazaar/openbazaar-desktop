@@ -1,7 +1,7 @@
 <%
   if (ob.order.shipping && ob.order.shipping.country !== 'NA') {
     var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;
-    if (ob.order.shipping.postalCode) addressLine3 += `${addressLine3 ? ', ' : ''}${ob.order.shipping.postalCode}`;
+    if (ob.order.shipping.postalCode) addressLine3 += `${addressLine3 ? ' ' : ''}${ob.order.shipping.postalCode}`;
     var addressLine4 = ob.getCountryByDataName(ob.order.shipping.country).translatedName;
     let addressParts = [];
 
