@@ -285,7 +285,7 @@
     "licenseTab": {
       "linkText": "License",
       "sectionHeader": "OpenBazaar MIT License",
-      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
       "header": "The MIT License (MIT)",
       "copyright": "Copright &copy; 2016 OpenBazaar Developers",
       "paragraphs": {
