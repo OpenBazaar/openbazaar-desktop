@@ -7,7 +7,7 @@ import path from 'path';
 import '../../../utils/velocityUiPack.js';
 import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
-import '../../../utils/trumbowyg';
+import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
@@ -1201,16 +1201,8 @@ export default class extends BaseModal {
       this.$tabControls = this.$('.tabControls');
       this.$titleInput = this.$('#editListingTitle');
 
-      this.$('#editListingDescription').trumbowyg({
+      installRichEditor(this.$('#editListingDescription'), {
         topLevelClass: 'clrBr',
-        btns: [
-          ['formatting'],
-          ['bold', 'italic'],
-          ['link'],
-          ['insertImage'],
-          'btnGrp-lists',
-          ['horizontalRule'],
-        ],
       });
 
       if (this.sortablePhotos) this.sortablePhotos.destroy();
