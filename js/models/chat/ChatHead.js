@@ -1,4 +1,5 @@
 import { processMessage } from './ChatMessage';
+import sanitizeHtml from 'sanitize-html';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -12,9 +13,11 @@ export default class extends BaseModel {
   }
 
   parse(response) {
+    const processedMessage = processMessage(sanitizeHtml((response.lastMessage)));
+
     return {
       ...response,
-      lastMessage: processMessage(response.lastMessage),
+      lastMessage: processedMessage,
     };
   }
 }
