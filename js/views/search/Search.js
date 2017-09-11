@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
+import sanitizeHtml from 'sanitize-html';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
@@ -218,7 +219,10 @@ export default class extends baseVw {
           let data = JSON.stringify(pData, (key, val) => {
             // sanitize the data from any dangerous characters
             if (typeof val === 'string') {
-              return val.replace(/["&'\/<>]/g, '');
+              return sanitizeHtml(val, {
+                allowedTags: [],
+                allowedAttributes: [],
+              });
             }
             return val;
           });
