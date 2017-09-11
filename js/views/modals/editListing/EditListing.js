@@ -1210,7 +1210,6 @@ export default class extends BaseModal {
           ['insertImage'],
           'btnGrp-lists',
           ['horizontalRule'],
-          ['viewHTML'],
         ],
       });
 
