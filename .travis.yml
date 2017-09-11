@@ -33,6 +33,8 @@ deploy:
     - "dist/osx/*.zip"
     - "dist/linux32/*.deb"
     - "dist/linux64/*.deb"
+    - "dist/linux32/*.rpm"
+    - "dist/linux64/*.rpm"
   skip_cleanup: true
   all_branches: true
   on:
