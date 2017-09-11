@@ -2,7 +2,6 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 import ChatMessage from '../../../models/chat/ChatMessage';
-import { getEmojiByName } from '../../../data/emojis';
 import Listing from '../../../models/listing/Listing';
 
 

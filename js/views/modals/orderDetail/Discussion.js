@@ -3,7 +3,6 @@ import _ from 'underscore';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { getEmojiByName } from '../../../data/emojis';
 import loadTemplate from '../../../utils/loadTemplate';
 import ChatMessages from '../../../collections/ChatMessages';
 import ChatMessage from '../../../models/chat/ChatMessage';

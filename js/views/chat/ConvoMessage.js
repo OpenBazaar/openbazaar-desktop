@@ -1,7 +1,5 @@
-import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
-import twemoji from 'twemoji';
 import { setTimeagoInterval } from '../../utils/';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
@@ -56,25 +54,14 @@ export default class extends baseVw {
   }
 
   render() {
-    let message = this.model.get('message');
     this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
-
-    // Give any links the emphasis color.
-    // const $msgHtml = $(`<div>${message}</div>`);
-
-    // $msgHtml.find('a')
-    //   .addClass('clrTEm');
-
-    // Convert any unicode emoji characters to images via Twemoji
-    // message = twemoji.parse($msgHtml.html(),
-    //   icon => (`../imgs/emojis/72X72/${icon}.png`));
 
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ...this._state,
         moment,
-        message,
+        message: this.model.get('message'),
         renderedTimeAgo: this.renderedTimeAgo,
         ownGuid: app.profile.id,
       }));

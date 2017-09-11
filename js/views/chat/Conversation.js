@@ -6,7 +6,7 @@ import { getBody } from '../../utils/selectors';
 import { getSocket } from '../../utils/serverConnect';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import { insertAtCursor } from '../../utils/dom';
-import emojis, { getEmojiByName } from '../../data/emojis';
+import emojis from '../../data/emojis';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
