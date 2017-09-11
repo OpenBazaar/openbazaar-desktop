@@ -59,7 +59,7 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/linux64
 
     echo 'Install npm packages for Linux'
-    npm install --save-dev electron-installer-debian --silent
+    npm install -g --save-dev electron-installer-debian --silent
     npm install -g --save-dev electron-installer-redhat --silent
 
     # Install rpmbuild
