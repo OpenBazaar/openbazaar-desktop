@@ -60,14 +60,14 @@ export default class extends baseVw {
     this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
 
     // Give any links the emphasis color.
-    const $msgHtml = $(`<div>${message}</div>`);
+    // const $msgHtml = $(`<div>${message}</div>`);
 
-    $msgHtml.find('a')
-      .addClass('clrTEm');
+    // $msgHtml.find('a')
+    //   .addClass('clrTEm');
 
     // Convert any unicode emoji characters to images via Twemoji
-    message = twemoji.parse($msgHtml.html(),
-      icon => (`../imgs/emojis/72X72/${icon}.png`));
+    // message = twemoji.parse($msgHtml.html(),
+    //   icon => (`../imgs/emojis/72X72/${icon}.png`));
 
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({

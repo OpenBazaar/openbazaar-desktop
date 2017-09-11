@@ -90,6 +90,9 @@ export default class extends baseVw {
 
     this.boundOnFocusin = this.onFocusIn.bind(this);
     this.$el.on('focusin', this.boundOnFocusin);
+
+    console.log('hero');
+    window.hero = this.messages;
   }
 
   get messagesPerPage() {
