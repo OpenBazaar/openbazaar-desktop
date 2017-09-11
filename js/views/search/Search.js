@@ -391,6 +391,9 @@ export default class extends baseVw {
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
 
+    const isDefaultProvider =
+      this.sProvider === app.searchProviders[`default${this.torString}Provider`];
+
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
@@ -400,7 +403,7 @@ export default class extends baseVw {
         errMsg,
         providerLocked: this.sProvider.get('locked'),
         isQueryProvider: this.queryProvider,
-        isDefaultProvider: this.sProvider === app.searchProviders.defaultProvider,
+        isDefaultProvider,
         emptyData,
         ...state,
         ...this.sProvider,
