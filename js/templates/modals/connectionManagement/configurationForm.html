@@ -66,7 +66,7 @@
       </div>
       <div class="col9">
         <% if (ob.errors.ssl) print(ob.formErrorTmpl({ errors: ob.errors.ssl })) %>
-        <div class="btnStrip js-btnStripSsl <% if (ob.isRemote) print('disabled') %>">
+        <div class="btnStrip">
           <div class="btnRadio clrBr">
             <input type="radio"
                    name="SSL"
@@ -140,6 +140,17 @@
   <hr class="clrBr" />
   <div class="flexHRight flexVCent gutterHLg">
     <a class="js-cancel"><%= ob.polyT('connectionManagement.configurationForm.btnCancel') %></a>
-    <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('connectionManagement.configurationForm.btnSave') %></a>
+    <div class="posR">
+      <a class="btn clrP clrBr clrSh2 js-save"><%= ob.polyT('connectionManagement.configurationForm.btnSave') %></a>
+      <div class="js-saveConfirmBox confirmBox saveConfirmBox arrowBoxBottom tx5 clrBr clrP clrT hide">
+        <div class="tx3 txB rowSm"><%= ob.polyT('connectionManagement.configurationForm.saveConfirm.title') %></div>
+        <p><%= ob.polyT('connectionManagement.configurationForm.saveConfirm.body') %></p>
+        <hr class="clrBr row" />
+        <div class="flexHRight flexVCent gutterHLg buttonBar">
+          <a class="js-saveConfirmCancel"><%= ob.polyT('connectionManagement.configurationForm.saveConfirm.btnCancel') %></a>
+          <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-saveConfirmed"><%= ob.polyT('connectionManagement.configurationForm.saveConfirm.btnConfirm') %></a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

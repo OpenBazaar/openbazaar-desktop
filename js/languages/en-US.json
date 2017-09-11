@@ -677,7 +677,13 @@
       "torPwLabel": "Tor Password",
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
-      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
+      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "saveConfirm": {
+        "title": "Are you sure?",
+        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "btnCancel": "No, cancel",
+        "btnConfirm": "Yes, proceed"
+      }
     }
   },
   "torExternalLinkWarning": {
