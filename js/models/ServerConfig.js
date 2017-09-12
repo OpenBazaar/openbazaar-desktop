@@ -1,8 +1,8 @@
 import { remote } from 'electron';
-import app from '../app';
-import BaseModel from './BaseModel';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import is from 'is_js';
+import app from '../app';
+import BaseModel from './BaseModel';
 
 export default class extends BaseModel {
   localStorage() {
@@ -66,10 +66,6 @@ export default class extends BaseModel {
 
       if (!attrs.password) {
         addError('password', app.polyglot.t('serverConfigModelErrors.provideValue'));
-      }
-
-      if (!attrs.SSL) {
-        addError('SSL', 'SSL must be turned on for remote servers.');
       }
     }
 
@@ -158,14 +154,12 @@ export default class extends BaseModel {
    * your machine. It may be the local bundled server or it may be a locally
    * run stand-alone server.
    */
-  isLocalServer() {
-    const ip = this.get('serverIp');
-
+  isLocalServer(ip = this.get('serverIp')) {
     return ip === 'localhost' || ip === '127.0.0.1';
   }
 
   isTorPwRequired() {
     return ['win', 'darwin'].indexOf(remote.process.platform) > -1 &&
-      this.isLocalServer();
+      this.isLocalServer() && remote.getGlobal('isBundledApp')();
   }
 }

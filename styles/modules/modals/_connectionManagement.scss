@@ -105,5 +105,11 @@
       padding-left: 0;
       padding-right: 0;
     }
+
+    .saveConfirmBox {
+      @include center(true, false);
+      bottom: 0;
+      margin-bottom: 55px;
+    }
   }  
 }
