@@ -818,6 +818,10 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
+    },
+    "editFetchErrorDialog": {
+      "title": "There was an error retreiving the listing.",
+      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
   "listingDelete": {
