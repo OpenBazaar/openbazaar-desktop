@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
+import sanitizeHtml from 'sanitize-html';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
@@ -214,7 +215,18 @@ export default class extends baseVw {
         url: searchUrl,
         dataType: 'json',
       })
-        .done((data, status, xhr) => {
+        .done((pData, status, xhr) => {
+          let data = JSON.stringify(pData, (key, val) => {
+            // sanitize the data from any dangerous characters
+            if (typeof val === 'string') {
+              return sanitizeHtml(val, {
+                allowedTags: [],
+                allowedAttributes: [],
+              });
+            }
+            return val;
+          });
+          data = JSON.parse(data);
           // make sure minimal data is present
           if (data.name && data.links) {
             // if data about the provider is recieved, update the model
