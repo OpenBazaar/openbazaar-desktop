@@ -5,6 +5,10 @@ const languages = [
     name: 'English (English, America)',
     code: 'en-US',
   },
+  {
+    name: 'Arabic',
+    code: 'ar',
+  },
   // {
   //   name: '中文 (Chinese, S)',
   //   code: 'zh-CN',
@@ -17,14 +21,14 @@ const languages = [
   //   name: 'Croatian (Croatian, Croatia)',
   //   code: 'hr-HR',
   // },
-  // {
-  //   name: 'Dansk (Danish)',
-  //   code: 'da',
-  // },
-  // {
-  //   name: 'Deutsch (German, Germany)',
-  //   code: 'de-DE',
-  // },
+  {
+    name: 'Dansk (Danish)',
+    code: 'da',
+  },
+  {
+    name: 'Deutsch (German, Germany)',
+    code: 'de-DE',
+  },
   // {
   //   name: 'Dutch (Dutch, Netherlands)',
   //   code: 'nl-NL',
@@ -37,14 +41,14 @@ const languages = [
   //   name: 'Esperanto',
   //   code: 'eo',
   // },
-  // {
-  //   name: 'Français (French, Canada)',
-  //   code: 'fr-CA',
-  // },
-  // {
-  //   name: 'Français (French, France)',
-  //   code: 'fr',
-  // },
+  {
+    name: 'Français (French, Canada)',
+    code: 'fr-CA',
+  },
+  {
+    name: 'Français (French)',
+    code: 'fr',
+  },
   // {
   //   name: 'Greek (Greek)',
   //   code: 'el',
@@ -62,13 +66,13 @@ const languages = [
   //   code: 'ko',
   // },
   // {
-  //  name: 'Polski (Polish)',
-  //  code: 'pl',
+  // name: 'Polski (Polish)',
+  // code: 'pl',
   // },
-  // {
-  //   name: 'Português (Portuguese, Brazil)',
-  //   code: 'pt-BR',
-  // },
+  {
+    name: 'Português (Portuguese, Brazil)',
+    code: 'pt-BR',
+  },
   // {
   //   name: 'Română (Romanian)',
   //   code: 'ro',
@@ -92,10 +96,6 @@ const languages = [
   // {
   //   name: 'Uzbek (Uzbek)',
   //   code: 'uz',
-  // },
-  // {
-  //   name: 'Klingon (Klingon)',
-  //   code: 'tlh',
   // },
 ];
 
