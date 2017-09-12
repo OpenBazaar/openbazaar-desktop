@@ -9,14 +9,17 @@ export const editorOptions = {
     ['bold', 'italic'],
     ['link'],
     ['insertImage'],
-    'btnGrp-justify',
     'btnGrp-lists',
+    ['horizontalRule'],
   ],
 };
 
 export function installRichEditor(attachPoint, options = {}) {
   const opts = {
-    editorOptions,
+    editorOptions: {
+      ...editorOptions,
+      ...options.editorOptions || {},
+    },
     ...options,
   };
 
