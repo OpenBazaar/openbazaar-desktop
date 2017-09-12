@@ -492,7 +492,7 @@ export default class extends baseVw {
 
   // Currently the convo is marked as read under the following scenarios.
   // - when this view is opened and the first batch of messages have already
-  //   been fetched (don't want to mark as read if alll the user has seen is
+  //   been fetched (don't want to mark as read if all the user has seen is
   //   a spinner)
   // - when the first batch of messages have been fetched and this view is open
   //   and the app is in focus.
