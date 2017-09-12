@@ -5,8 +5,8 @@ const defaultSearchProviders = [
     logo: '../imgs/ob1searchLogo.png',
     search: 'https://search.ob1.io/search',
     listings: 'https://search.ob1.io/search/listings',
-    torsearch: 'http://obsearchwhcqnhvj.onion/search',
-    torlistings: 'http://obsearchwhcqnhvj.onion/search/listings',
+    torsearch: 'http://my7nrnmkscxr32zo.onion/search',
+    torlistings: 'http://my7nrnmkscxr32zo.onion/search/listings',
     locked: true,
   },
   {
