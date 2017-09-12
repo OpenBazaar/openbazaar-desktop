@@ -145,7 +145,7 @@ export default class extends baseVw {
         if (this.isRemoved()) return;
         // remove the processing class after a long enough time. If it's still visible
         // there are probably no moderators coming.
-        setTimeout(() => this.$modListAvailable.removeClass('processing'), 15000);
+        setTimeout(() => this.$modListAvailable.removeClass('processing'), 20000);
       });
     this.modFetches.push(fetch);
   }

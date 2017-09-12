@@ -63,8 +63,12 @@ export default class extends Collection {
         // don't add if not a mod or the mod data is missing
         // don't add if the currency doesn't match the network
         const cur = app.serverConfig.cryptoCurrency;
-        const validCur = mod.get('moderatorInfo').get('acceptedCurrencies').indexOf(cur) > -1;
-        if (!mod.isModerator) this.trigger('invalidMod', { id: mod.id });
+        let validCur = false;
+        if (!mod.isModerator) {
+          this.trigger('invalidMod', { id: mod.id });
+        } else {
+          validCur = mod.get('moderatorInfo').get('acceptedCurrencies').indexOf(cur) > -1;
+        }
         return mod.isModerator && notExcluded && validCur;
       });
     }
