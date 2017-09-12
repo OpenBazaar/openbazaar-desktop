@@ -491,12 +491,12 @@ export default class extends baseVw {
   }
 
   // Currently the convo is marked as read under the following scenarios.
-  // - when this view is opened and the first batch of messages have already
+  // - when this view is opened as long as the first batch of messages have already
   //   been fetched (don't want to mark as read if all the user has seen is
   //   a spinner)
-  // - when the first batch of messages have been fetched and this view is open
+  // - when the first batch of messages have been fetched as long as this view is open
   //   and the app is in focus.
-  // - when this view (or a child element) gets focus and the messages would have
+  // - when this view (or a child element) gets focus as long as the messages would have
   //   otherwise been marked as read, but the call was held off because the app was
   //   not in focus.
   markConvoAsRead() {
