@@ -3,7 +3,6 @@ import _ from 'underscore';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { getEmojiByName } from '../../../data/emojis';
 import loadTemplate from '../../../utils/loadTemplate';
 import ChatMessages from '../../../collections/ChatMessages';
 import ChatMessage from '../../../models/chat/ChatMessage';
@@ -354,28 +353,12 @@ export default class extends baseVw {
       throw new Error('Please provide a message to send.');
     }
 
-    let message = msg;
     this.lastTypingSentAt = null;
-
-    // Convert any emoji placeholder (e.g :smiling_face:) into
-    // emoji unicode characters.
-    const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
-    const matches = message.match(emojiPlaceholderRegEx, 'g');
-
-    if (matches) {
-      matches.forEach(match => {
-        const emoji = getEmojiByName(match);
-
-        if (emoji && emoji.char) {
-          message = message.replace(match, emoji.char);
-        }
-      });
-    }
 
     const chatMessage = new ChatMessage({
       peerIds: this.sendToIds,
       subject: this.model.id,
-      message,
+      message: msg,
     });
 
     const save = chatMessage.save();
