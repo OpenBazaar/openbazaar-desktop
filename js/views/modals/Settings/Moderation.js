@@ -19,6 +19,14 @@ export default class extends baseVw {
 
     this.profile = app.profile.clone();
 
+    // Sync our clone with any changes made to the global profile.
+    this.listenTo(app.profile, 'someChange',
+      (md, opts) => this.profile.set(opts.setAttrs));
+
+    // Sync the global profile with any changes we save via our clone.
+    this.listenTo(this.profile, 'sync',
+      (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+
     if (this.profile.get('moderatorInfo')) {
       this.moderator = this.profile.get('moderatorInfo');
     } else {
@@ -117,10 +125,17 @@ export default class extends baseVw {
     // render so errrors are shown / cleared
     this.render();
 
-    if (save) this.$btnSave.addClass('processing');
+    if (save) {
+      this.$btnSave.addClass('processing');
+    } else {
+      const $firstErr = this.$('.errorList:first');
 
-    const $firstErr = this.$('.errorList:first');
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+      if ($firstErr.length) {
+        $firstErr[0].scrollIntoViewIfNeeded();
+      } else {
+        this.trigger('unrecognizedModelError', this, [this.profile]);
+      }
+    }
   }
 
   changeFeeType(e) {

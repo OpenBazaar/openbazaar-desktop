@@ -21,7 +21,14 @@ export default class extends baseVw {
     this.headerMinHeight = 700;
 
     this.profile = app.profile.clone();
-    this.listenTo(this.profile, 'sync', () => app.profile.set(this.profile.toJSON()));
+
+    // Sync our clone with any changes made to the global profile.
+    this.listenTo(app.profile, 'someChange',
+      (md, opts) => this.profile.set(opts.setAttrs));
+
+    // Sync the global profile with any changes we save via our clone.
+    this.listenTo(this.profile, 'sync',
+      (md, resp, syncOpts) => app.profile.set(this.profile.toJSON(syncOpts.attrs)));
 
     this.socialAccounts = this.createChild(SocialAccounts, {
       collection: this.profile.get('contactInfo').get('social'),
@@ -223,10 +230,18 @@ export default class extends baseVw {
     }
 
     this.render();
-    if (save) this.$btnSave.addClass('processing');
 
-    const $firstErr = this.$('.errorList:first');
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+    if (save) {
+      this.$btnSave.addClass('processing');
+    } else {
+      const $firstErr = this.$('.errorList:first');
+
+      if ($firstErr.length) {
+        $firstErr[0].scrollIntoViewIfNeeded();
+      } else {
+        this.trigger('unrecognizedModelError', this, [this.profile]);
+      }
+    }
   }
 
   get $btnSave() {

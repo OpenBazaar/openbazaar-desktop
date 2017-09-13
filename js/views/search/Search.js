@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
+import sanitizeHtml from 'sanitize-html';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
@@ -30,6 +31,7 @@ export default class extends baseVw {
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
     this.sProvider = app.searchProviders[`default${this.torString}Provider`];
+    this.queryProvider = false;
 
     // if the  provider returns a bad URL, the user must select a provider
     if (is.not.url(this.providerUrl)) {
@@ -49,7 +51,6 @@ export default class extends baseVw {
       const matchedProvider =
         app.searchProviders.filter(p =>
           base === p.get('listings') || base === p.get('torlistings'));
-
       /* if the query provider doesn't exist, create a temporary provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
@@ -58,10 +59,10 @@ export default class extends baseVw {
       if (!matchedProvider.length) {
         const queryOpts = {};
         queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
-        this.queryProvider = new ProviderMd(queryOpts);
+        this.queryProvider = true;
+        this.sProvider = new ProviderMd(queryOpts);
       } else {
         this.sProvider = matchedProvider[0];
-        this.queryProvider = null;
       }
     }
 
@@ -77,7 +78,7 @@ export default class extends baseVw {
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters
-    this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ']);
+    this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
 
     this.processTerm(this.term);
   }
@@ -114,7 +115,7 @@ export default class extends baseVw {
   get providerUrl() {
     // if a provider was created by the address bar query, use it instead.
     // return false if no provider is available
-    const currentProvider = this.queryProvider || this.sProvider;
+    const currentProvider = this.sProvider;
     return currentProvider && currentProvider.get(this.urlType);
   }
 
@@ -153,7 +154,7 @@ export default class extends baseVw {
       throw new Error('The provider must be in the collection.');
     }
     this.sProvider = md;
-    this.queryProvider = null;
+    this.queryProvider = false;
     if (this.mustSelectDefault) {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
@@ -175,6 +176,10 @@ export default class extends baseVw {
   }
 
   makeDefaultProvider() {
+    if (app.searchProviders.indexOf(this.sProvider) === -1) {
+      throw new Error('The provider to be made the default must be in the collection.');
+    }
+
     app.searchProviders[`default${this.torString}Provider`] = this.sProvider;
     this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
   }
@@ -184,8 +189,8 @@ export default class extends baseVw {
   }
 
   addQueryProvider() {
-    if (this.queryProvider) app.searchProviders.add(this.queryProvider);
-    this.activateProvider(this.queryProvider);
+    if (this.queryProvider) app.searchProviders.add(this.sProvider);
+    this.activateProvider(this.sProvider);
   }
 
   clickAddQueryProvider() {
@@ -210,7 +215,18 @@ export default class extends baseVw {
         url: searchUrl,
         dataType: 'json',
       })
-        .done((data, status, xhr) => {
+        .done((pData, status, xhr) => {
+          let data = JSON.stringify(pData, (key, val) => {
+            // sanitize the data from any dangerous characters
+            if (typeof val === 'string') {
+              return sanitizeHtml(val, {
+                allowedTags: [],
+                allowedAttributes: [],
+              });
+            }
+            return val;
+          });
+          data = JSON.parse(data);
           // make sure minimal data is present
           if (data.name && data.links) {
             // if data about the provider is recieved, update the model
@@ -345,12 +361,14 @@ export default class extends baseVw {
 
   changeSortBy(e) {
     this.sortBySelected = $(e.target).val();
+    this.serverPage = 0;
     this.processTerm(this.term);
   }
 
   changeFilter(e) {
     const targ = $(e.target);
     this.filters[targ.prop('name')] = targ.val();
+    this.serverPage = 0;
     this.processTerm(this.term);
   }
 
@@ -385,6 +403,9 @@ export default class extends baseVw {
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
 
+    const isDefaultProvider =
+      this.sProvider === app.searchProviders[`default${this.torString}Provider`];
+
     loadTemplate('search/Search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
@@ -393,8 +414,8 @@ export default class extends baseVw {
         errTitle,
         errMsg,
         providerLocked: this.sProvider.get('locked'),
-        isQueryProvider: !!this.queryProvider,
-        isDefaultProvider: this.sProvider === app.searchProviders.defaultProvider,
+        isQueryProvider: this.queryProvider,
+        isDefaultProvider,
         emptyData,
         ...state,
         ...this.sProvider,

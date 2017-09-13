@@ -37,9 +37,10 @@
           </div>
 
           <div id="testnetFlag" class="btn barBtn normalBtn clrP clrBr" >
-            <span>Beta</span>
             <% if (ob.testnet) { %>
-              <span class="toolTip" data-tip="<%= ob.polyT('testnetTooltip') %>">&nbsp;<%= ob.polyT('testnet') %></span>
+              <span class="toolTip" data-tip="<%= ob.polyT('testnetTooltip') %>">Beta <%= ob.polyT('testnet') %></span>
+            <% } else { %>
+            <span class="toolTip" data-tip="<%= ob.polyT('betaTooltip') %>">Beta</span>
             <% } %>
           </div>
 

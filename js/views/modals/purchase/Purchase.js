@@ -231,7 +231,7 @@ export default class extends BaseModal {
   }
 
   blurMemo(e) {
-    this.order.set('memo', $(e.target).val());
+    this.order.get('items').at(0).set('memo', $(e.target).val());
   }
 
   changeCoupons(hashes, codes) {
@@ -446,6 +446,7 @@ export default class extends BaseModal {
         items: this.order.get('items').toJSON(),
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
+        hasModerators: this.moderatorIDs.length,
       }));
 
       super.render();

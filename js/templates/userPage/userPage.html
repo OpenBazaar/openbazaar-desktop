@@ -38,9 +38,11 @@
           <%= ob.processingButton({
             className: `btn clrP clrBr js-followBtn`,
             btnText: ob.followed ? ob.polyT('userPage.unfollow') : ob.polyT('userPage.follow'),
-          }) %>          
+          }) %>
+        <!--
           <a class="btn clrP clrBr hide js-moreableBtn"><%= ob.polyT('userPage.block') %></a>
           <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
+        -->
         <% } %>
       </div>
       <% if (ob.showStoreWelcomeCallout) { %>

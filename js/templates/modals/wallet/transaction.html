@@ -60,16 +60,18 @@
         smart_count: ob.confirmations,
       });
     %>
-    <div class="flex gutterH clrT2 tx6">
-      <div class="" style="flex-shrink: 0"><%= timeAgoAndConfirmCount %></div>
-      <div class="" style="flex-shrink: 0;max-width: 80px">
-        <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
+    <div>
+      <div class="flexInline gutterH margR clrT2 tx6 floL">
+        <div class="flexNoShrink"><%= timeAgoAndConfirmCount %></div>
+        <div class="flexNoShrink" style="max-width: 80px">
+          <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
+        </div>
       </div>
-      <div>
-        <div class="noOverflow"><%= ob.translatedMemo %></div>
-      </div>
+      <%
+        const memo = ob.translatedMemo || ob.memo.length > 300 ? `${ob.memo.slice(0, 300)}…` : ob.memo;
+      %>
+      <div class="clrT2 tx6" style="vertical-align: text-top;"><%= memo %></div>
     </div>
-    
   </div>
   <div class="col">
     <div class="flexHRight">
@@ -85,15 +87,15 @@
     </div>
   </div>
 </div>
-<div class="js-retryPmtConfirmed confirmBox retryConfirm arrowBoxTop clrBr clrP clrT <% if (!ob.retryConfirmOn) print('hide') %>">
+<div class="js-retryPmtConfirmed confirmBox retryConfirm arrowBoxTop clrBr clrP clrT clrSh1 <% if (!ob.retryConfirmOn) print('hide') %>">
   <div class="tx3 txB rowSm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.title') %></div>
   <% if (ob.retryConfirmOn) {
       // if we're fetching we'll just hard code some fee and show the text invisibly
       // so the spacing is still right (i.e. no jump when spinner goes away)
-      let estimatedFee = ob.fetchingEstimatedFee ? .0004 : ob.estimatedFee; 
+      let estimatedFee = ob.fetchingEstimatedFee ? .0004 : ob.estimatedFee;
       let estimatedFeeCombo = ob.convertAndFormatCurrency(estimatedFee, 'BTC',
         ob.userCurrency, { useBtcSymbol: false });
-        
+
       if (ob.userCurrency !== 'BTC') {
         estimatedFeeCombo = ob.polyT('fiatBtcPairing', {
           fiatAmount: estimatedFeeCombo,
@@ -114,13 +116,13 @@
         <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.insufficientFundsBody', {
           fiatBtcPairing: estimatedFeeCombo,
           asterisk: '<span>*</span>',
-        }) %></p>      
+        }) %></p>
       <% } %>
       <p class="clrT2 tx6"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.subText', {
         asterisk: '<span>*</span>',
       }) %></p>
     </div>
-    
+
     <% if (ob.fetchingEstimatedFee) { %>
       <%= ob.spinner({ className: 'center spinnerMd' }) %>
     <% } %>

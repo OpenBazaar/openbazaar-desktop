@@ -44,15 +44,16 @@ export default class extends baseVw {
     // POSTing payment to the server
     this.saveInProgress = true;
 
-    spend(this.model.toJSON())
-      .fail(jqXhr => {
-        openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
-          jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
-      })
-      .always(() => {
-        this.clearModel();
-        this.saveInProgress = false;
-      });
+    spend({
+      ...this.model.toJSON(),
+      feeLevel: app.localSettings.get('defaultTransactionFee'),
+    }).fail(jqXhr => {
+      openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
+        jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
+    }).always(() => {
+      this.saveInProgress = false;
+    })
+      .done(() => this.clearModel());
   }
 
   onClickSend() {

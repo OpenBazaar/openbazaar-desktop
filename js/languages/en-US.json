@@ -34,6 +34,7 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
+  "betaTooltip": "OpenBazaar is currently in beta. Make sure to backup your wallet, and be careful if spending large amounts of bitcoin.",
   "tabMenuHeading": "MENU",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
@@ -180,8 +181,8 @@
       "btnRetry": "Retry"
     },
     "getFollowingError": "There was an error when determining if this user follows you.",
-    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
     "storeWelcomeCalloutTitle": "Welcome to your store!",
     "storeWelcomeCalloutBody": "Your OpenBazaar store is now live on the network. Get started by creating some listings or customizing your page.",
     "storeWelcomeCalloutBtnClose": "Close",
@@ -230,8 +231,8 @@
   "userShort": {
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
-    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
     "tipFollow": "Follow",
     "tipUnfollow": "Unfollow",
     "tipModAdd": "Add as moderator",
@@ -284,7 +285,7 @@
     "licenseTab": {
       "linkText": "License",
       "sectionHeader": "OpenBazaar MIT License",
-      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
       "header": "The MIT License (MIT)",
       "copyright": "Copright &copy; 2016 OpenBazaar Developers",
       "paragraphs": {
@@ -317,6 +318,10 @@
   },
   "settings": {
     "settingsLabel": "Settings",
+    "unrecognizedModelErrsWarning": {
+      "title": "Unable to save your settings",
+      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+    },
     "generalTab": {
       "helperLanguage": "Display interface elements in",
       "helperCountry": "The country you primarily reside in",
@@ -434,7 +439,7 @@
         "resync": "Reload Transactions",
         "resyncHelper": "Synchronize your transactions if some are missing",
         "resyncBtn": "Reload Transactions",
-        "resyncComplete": "Your transactions have been synchronized. Check your wallet or transactions for new data.",
+        "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
@@ -598,7 +603,7 @@
       "state": "State/Province/Region",
       "country": "Country",
       "postalCode": "Postal Code",
-      "notes": "Address Notes"
+      "notes": "Delivery Notes"
     },
     "statusSaving": "Saving settings…",
     "statusSaveFailed": "Settings failed to save.",
@@ -672,7 +677,13 @@
       "torPwLabel": "Tor Password",
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
-      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
+      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "saveConfirm": {
+        "title": "Are you sure?",
+        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "btnCancel": "No, cancel",
+        "btnConfirm": "Yes, proceed"
+      }
     }
   },
   "torExternalLinkWarning": {
@@ -813,6 +824,10 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
+    },
+    "editFetchErrorDialog": {
+      "title": "There was an error retreiving the listing.",
+      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
   "listingDelete": {
@@ -1038,16 +1053,18 @@
     "noAddresses": "You don't have any saved addresses.",
     "noShippableAddresses": "This listing does not ship to your selected address.",
     "informationTitle": "Additional Information",
-    "emailAddress": "Email Address",
+    "emailAddress": "Email Address or Phone Number",
     "emailPlaceholder": "name@email.com",
     "emailNote": "An alternate way to reach you.",
     "couponCode": "Coupon Code",
+    "couponCodePlaceholder": "Enter code",
     "applyCode": "Apply",
     "code": "\"%{code}\" applied to order",
     "codeErrors": {
       "invalid": "\"%{code}\" is not a valid code",
       "duplicate": "You can only add \"%{code}\" once",
-      "excessive": "You cannot apply discounts that total 100% or more."
+      "excessive": "You cannot apply discounts that total 100% or more.",
+      "blank": "You must enter a code."
     },
     "removeCode": "remove",
     "memo": "Memo",
@@ -1360,7 +1377,10 @@
         "totalHeading": "Total",
         "moderatorHeading": "Moderator",
         "copyAddress": "Copy",
-        "viewOnMap": "View on map"
+        "viewOnMap": "View on map",
+        "memo": "Memo",
+        "addressNotes": "Delivery Notes",
+        "alternateContact": "Additional Contact Information"
       }
     },
     "fulfillOrderTab": {

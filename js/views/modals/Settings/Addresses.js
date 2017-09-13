@@ -14,12 +14,14 @@ export default class extends baseVw {
     });
 
     this.settings = app.settings.clone();
-    this.listenTo(this.settings, 'sync', (md, resp, syncOpts) => {
-      // Since different tabs are working off different parts of
-      // the settings model, to not overwrite each other, we'll only
-      // update fields that our tab has changed.
-      app.settings.set(syncOpts.attrs);
-    });
+
+    // Sync our clone with any changes made to the global settings model.
+    this.listenTo(app.settings, 'someChange', (md, opts) =>
+      this.settings.set(opts.setAttrs));
+
+    // Sync the global settings model with any changes we save via our clone.
+    this.listenTo(this.settings, 'sync', (md, resp, opts) =>
+      app.settings.set(this.settings.toJSON(opts.attrs)));
 
     this.addressForm = this.createChild(AddressesForm, { model: new ShippingAddress() });
 
@@ -38,7 +40,14 @@ export default class extends baseVw {
     const shippingAddresses = this.settings.get('shippingAddresses');
     const removeIndex = shippingAddresses.indexOf(address);
 
-    shippingAddresses.remove(address);
+    this.settings.set({}, { validate: true });
+
+    if (!this.settings.validationError) {
+      shippingAddresses.remove(address);
+    } else {
+      this.trigger('unrecognizedModelError', this, [this.settings]);
+      return;
+    }
 
     const save = this.settings.save({ shippingAddresses: shippingAddresses.toJSON() }, {
       attrs: { shippingAddresses: shippingAddresses.toJSON() },
@@ -95,8 +104,9 @@ export default class extends baseVw {
 
     model.set(formData);
     model.set(formData, { validate: true });
+    this.settings.set({}, { validate: true });
 
-    if (!model.validationError) {
+    if (!this.settings.validationError) {
       const shippingAddresses = this.settings.get('shippingAddresses');
 
       shippingAddresses.push(model);
@@ -107,6 +117,7 @@ export default class extends baseVw {
       });
 
       if (save) {
+        this.$btnAddAddress.addClass('processing');
         const truncatedName = model.get('name').slice(0, 30);
 
         const msg = {
@@ -158,10 +169,16 @@ export default class extends baseVw {
 
     // render so errors are shown / cleared
     this.addressForm.render();
-    if (!model.validationError) this.$btnAddAddress.addClass('processing');
 
-    const $firstFormErr = this.$('.js-formContainer .errorList:first');
-    if ($firstFormErr.length) $firstFormErr[0].scrollIntoViewIfNeeded();
+    if (this.settings.validationError) {
+      const $firstFormErr = this.$('.js-formContainer .errorList:first');
+
+      if ($firstFormErr.length) {
+        $firstFormErr[0].scrollIntoViewIfNeeded();
+      } else {
+        this.trigger('unrecognizedModelError', this, [this.settings]);
+      }
+    }
   }
 
   get $btnAddAddress() {

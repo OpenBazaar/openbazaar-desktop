@@ -6,7 +6,7 @@ import { getBody } from '../../utils/selectors';
 import { getSocket } from '../../utils/serverConnect';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import { insertAtCursor } from '../../utils/dom';
-import emojis, { getEmojiByName } from '../../data/emojis';
+import emojis from '../../data/emojis';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
@@ -269,29 +269,13 @@ export default class extends baseVw {
       throw new Error('Please provide a message to send.');
     }
 
-    let message = msg;
     this.lastTypingSentAt = null;
-
-    // Convert any emoji placeholder (e.g :smiling_face:) into
-    // emoji unicode characters.
-    const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
-    const matches = message.match(emojiPlaceholderRegEx, 'g');
-
-    if (matches) {
-      matches.forEach(match => {
-        const emoji = getEmojiByName(match);
-
-        if (emoji && emoji.char) {
-          message = message.replace(match, emoji.char);
-        }
-      });
-    }
 
     const chatMessage = new ChatMessage({
       peerId: this.guid,
       subject: this.subject,
-      message,
-    });
+      message: msg,
+    }, { parse: true });
 
     const save = chatMessage.save();
 
@@ -490,10 +474,20 @@ export default class extends baseVw {
     this.$convoMessagesWindow.on('scroll', this.boundScrollHandler);
   }
 
+  // Currently the convo is marked as read under the following scenarios.
+  // - when this view is opened as long as the first batch of messages have already
+  //   been fetched (don't want to mark as read if all the user has seen is
+  //   a spinner)
+  // - when the first batch of messages have been fetched as long as this view is open
+  //   and the app is in focus.
+  // - when this view (or a child element) gets focus as long as the messages would have
+  //   otherwise been marked as read, but the call was held off because the app was
+  //   not in focus.
   markConvoAsRead() {
     const queryString = this.subject ? `/?subject=${this.subject}` : '';
     $.post(app.getServerUrl(`ob/markchatasread/${this.guid}${queryString}`));
     this.trigger('convoMarkedAsRead');
+    this.markAsReadOnFocus = false;
   }
 
   get guid() {
@@ -505,6 +499,10 @@ export default class extends baseVw {
     this._isOpen = true;
     getBody().addClass('chatConvoOpen');
     this.$messageInput.focus();
+
+    if (this.firstSyncComplete) {
+      this.markConvoAsRead();
+    }
   }
 
   close() {

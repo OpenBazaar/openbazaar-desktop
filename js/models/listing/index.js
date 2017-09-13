@@ -66,5 +66,5 @@ export function shipsFreeToMe(md) {
   }
 
   // countries may have dupes, but it's no bother for this purpose
-  return !!_.intersection(freeShipping, countries).length;
+  return freeShipping.includes('ALL') || !!_.intersection(freeShipping, countries).length;
 }

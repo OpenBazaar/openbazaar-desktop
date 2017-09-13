@@ -45,9 +45,9 @@
       <div class="mainImageWrapper">
         <div class="mainImage clrBr js-gotoPhotos"
         <% if (ob.item.images.length) { %>
-          style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultListing.png')"
+          style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.item.images[0].large : ob.item.images[0].medium}`) %>), url('../imgs/defaultItem.png')"
         <% } else { %>
-          style="background-image: url('../imgs/defaultListing.png')"
+          style="background-image: url('../imgs/defaultItem.png')"
         <% } %>
         ></div>
         <div class="txCtr">

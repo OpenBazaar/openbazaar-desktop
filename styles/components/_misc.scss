@@ -24,6 +24,7 @@
 
 .trumbowyg .trumbowyg-editor {
   height: auto !important;
+  padding: 10px;
   /* gross hack to stop trumbowyg from setting inline height to huge numbers when external
   images are added */
 }

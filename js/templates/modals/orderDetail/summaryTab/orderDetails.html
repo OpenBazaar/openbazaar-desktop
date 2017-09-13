@@ -1,6 +1,7 @@
 <%
   if (ob.order.shipping && ob.order.shipping.country !== 'NA') {
     var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;
+    if (ob.order.shipping.postalCode) addressLine3 += `${addressLine3 ? ' ' : ''}${ob.order.shipping.postalCode}`;
     var addressLine4 = ob.getCountryByDataName(ob.order.shipping.country).translatedName;
     let addressParts = [];
 
@@ -50,18 +51,14 @@
           <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
             <div><%= ob.order.shipping.shipTo %></div>
             <% if (ob.order.shipping.address) { %>
-            <div><%= ob.order.shipping.address %></div>
+              <div><%= ob.order.shipping.address %></div>
             <% } %>
             <% if (addressLine3) { %>
-            <div><%= addressLine3 %></div>
+              <div><%= addressLine3 %></div>
             <% } %>
-            <div><%= addressLine4 %></div>
-            <% if (ob.order.shipping.addressNotes) { %>
-            <div><%= ob.order.shipping.addressNotes %></div>
-            <% } %>
+              <div><%= addressLine4 %></div>
             <%
               let clipboardAddress = [ob.order.shipping.shipTo];
-
               if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
               if (addressLine3) clipboardAddress.push(addressLine3);
               if (addressLine4) clipboardAddress.push(addressLine4);
@@ -71,10 +68,20 @@
               <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
               <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
             </div>
-            <% } else { %>
-              <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+            <% if (ob.order.shipping.addressNotes) { %>
+              <div class="addressNotes gutterVTn">
+                <div>
+                  <b><%= ob.polyT('orderDetail.summaryTab.orderDetails.addressNotes') %></b>
+                </div>
+                <div>
+                  <%= ob.order.shipping.addressNotes %>
+                </div>
+              </div>
             <% } %>
-            <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
+          <% } else { %>
+            <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+          <% } %>
+          <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
         </div>
         <div class="col8">
           <div class="row">
@@ -110,10 +117,23 @@
         </div>
       </div>
       <hr class="clrBr" />
-      <div class="gutterVTn">
-        <div class="txB">Memo</div>
-        <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+      <div class="flexRow gutterH">
+        <div class="col6">
+          <div class="gutterVTn">
+            <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.memo') %></div>
+            <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+          </div>
+        </div>
+        <div class="col6">
+          <div>
+            <div class="gutterVTn">
+              <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.alternateContact') %></div>
+              <div><%= ob.order.alternateContactInfo ? ob.order.alternateContactInfo : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </div>

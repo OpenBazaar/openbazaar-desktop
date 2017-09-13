@@ -39,6 +39,13 @@
   align-items: stretch; //this stretches the items to 100% height
 }
 
+.flexInline {
+  @extend .flex;
+  // use for inline flex elements
+  display: inline-flex;
+  width: auto;
+}
+
 .snip,
 .snipKids > * {
   //truncate the text in the child elements

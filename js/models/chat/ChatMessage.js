@@ -1,6 +1,94 @@
+import $ from 'jquery';
 import moment from 'moment';
+import { getEmojiByName } from '../../data/emojis';
+import { isMultihash } from '../../utils';
+import sanitizeHtml from 'sanitize-html';
+import twemoji from 'twemoji';
 import app from '../../app';
 import BaseModel from '../BaseModel';
+
+/**
+ * Will return a processed chat messages with changes appropriate for the UI (e.g. emojis will be
+ * twemojified, ob urls will be turned into links, etc...).
+ */
+export function processMessage(message) {
+  if (typeof message !== 'string') {
+    throw new Error('Please provide a message as a string.');
+  }
+
+  let processedMessage = message;
+
+  // jquery's html function converts &'s to &amps which messes with some of our
+  // string replacements, particulary when the &amps are in an ob link. So, we'll
+  // replace them with something else and then replace them back later.
+  processedMessage = processedMessage.replace(/&amp;/g, '__ob-full-amp__')
+    .replace(/&/g, '__ob-compact-amp__');
+
+  let $message = $(`<div>${processedMessage}</div>`);
+  const anchors = [];
+
+  // Ensure any OB links, handles (must be @ prefaced) or GUIDS are turned into anchor tags.
+
+  // First we'll pull out any existing anchors and set them aside since we want to
+  // leave those alone (i.e. avoid wrapping a guid / handle that's already in an anchor in
+  // another one).
+  $message.find('a')
+    .each((index, el) => {
+      anchors.push(el);
+      $(el).replaceWith($('<div />').addClass('__ob-replaced-anchor__'));
+    });
+
+  const wordsToAnchorify = [];
+  const findWords = node => {
+    if (node.nodeType === 3) {
+      // It's a text node. Loop through each word and if it's a guid or handle we keep track of it
+      // so later we'll wrap it in an anchor element.
+      node.textContent.replace(/\r\n/g, ' ')
+        .replace('\n', ' ')
+        .match(/\S+\s*/g)
+        .forEach(word => {
+          const w = word.trim();
+          if (wordsToAnchorify.includes(w)) return;
+
+          if ((w.startsWith('@') && w.length > 1) ||
+            (w.startsWith('ob://') && w.length > 5) ||
+            isMultihash(w)) {
+            wordsToAnchorify.push(w);
+          }
+        });
+    } else {
+      node.childNodes.forEach(child => findWords(child));
+    }
+  };
+
+  findWords($message[0]);
+
+  processedMessage = $message.html();
+
+  wordsToAnchorify.forEach(word => {
+    const w = word.startsWith('ob://') ? word.slice(5) : word;
+    processedMessage = processedMessage
+      .split(word)
+      .join(`<a href="#ob://${w}" class="clrTEm">${word}</a>`);
+  });
+
+  // restore the anchors we pulled out earlier
+  $message = $(`<div>${processedMessage}</div>`);
+  $message.find('.__ob-replaced-anchor__')
+    .each((index, el) => {
+      $(el).replaceWith($(anchors[index]).addClass('clrTEm'));
+    });
+
+  processedMessage = $message.html()
+    .replace(/__ob-full-amp__/g, '&amp;')
+    .replace(/__ob-compact-amp__/g, '&');
+
+  // convert any unicode emoji characters to images via Twemoji
+  processedMessage = twemoji.parse(processedMessage,
+    icon => (`../imgs/emojis/72X72/${icon}.png`));
+
+  return processedMessage;
+}
 
 export default class ChatMessage extends BaseModel {
   defaults() {
@@ -29,6 +117,48 @@ export default class ChatMessage extends BaseModel {
 
   url() {
     return app.getServerUrl(`ob/${this.isGroupChatMessage ? 'groupchat' : 'chat'}/`);
+  }
+
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    if (typeof attrs.message === 'string') {
+      // Convert any emoji placeholder (e.g :smiling_face:) into
+      // emoji unicode characters.
+      const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
+      const matches = attrs.message.match(emojiPlaceholderRegEx, 'g');
+
+      if (matches) {
+        matches.forEach(match => {
+          const emoji = getEmojiByName(match);
+
+          if (emoji && emoji.char) {
+            attrs.message = attrs.message.replace(match, emoji.char);
+          }
+        });
+      }
+
+      // sanitize the message
+      attrs.message = sanitizeHtml(attrs.message);
+
+      // Generate a processed message with changes to the message that are specific to our UI.
+      attrs.processedMessage = processMessage(attrs.message);
+    } else {
+      // The processedMessage is automatically derived from the message and should not
+      // be set directly.
+      delete attrs.processedMessage;
+    }
+
+    return super.set(attrs, opts);
   }
 
   validate(attrs) {
@@ -76,47 +206,4 @@ export default class ChatMessage extends BaseModel {
 
     return super.sync(method, model, options);
   }
-}
-
-/**
- * Use this function if you need to send a chat message outside of the main Chat view.
- * This will ensure that the sending of the message is communicated to the Chat view and
- * the relevant chat head and convo is updated.
- * @param {Object} fields An object containing the arguments to the send message call.
- * The only required field is peerId, but you almost certainly want to pass in a message as
- * well.
- * @returns {Object} The jqXhr representing the POST call to the server.
- */
-export function sendMessage(fields) {
-  const model = new ChatMessage({
-    ...fields,
-    outgoing: true,
-  });
-  const save = model.save();
-
-  if (!save) {
-    Object.keys(model.validationError)
-      .forEach(errorKey => {
-        throw new Error(`${errorKey}: ${model.validationError[errorKey][0]}`);
-      });
-  } else {
-    save.done(() => {
-      if (app && app.chat) {
-        if (app.chat.conversation &&
-          app.chat.conversation.guid === model.get('peerId') &&
-          typeof app.chat.conversation.onMessageSent === 'function') {
-          // If theres an active convo for the message recipient, we'll let the convo
-          // know of the message and it will let it's parent know so the chat head
-          // is added / updated.
-          app.chat.conversation.onMessageSent.call(app.chat.conversation, model);
-        } else if (typeof app.chat.onNewChatMessage === 'function') {
-          // If no active convo for the recipient of the message, we'll let the chat
-          // app know and it will handle adding the chat head in.
-          app.chat.onNewChatMessage.call(app.chat, model.toJSON());
-        }
-      }
-    });
-  }
-
-  return save;
 }

@@ -61,8 +61,15 @@ export default class extends Collection {
         // don't add excluded ids or your own id
         const notExcluded = excludeList.indexOf(mod.id) === -1 && mod.id !== app.profile.id;
         // don't add if not a mod or the mod data is missing
-        if (!mod.isModerator) this.trigger('invalidMod', { id: mod.id });
-        return mod.isModerator && notExcluded;
+        // don't add if the currency doesn't match the network
+        const cur = app.serverConfig.cryptoCurrency;
+        let validCur = false;
+        if (!mod.isModerator) {
+          this.trigger('invalidMod', { id: mod.id });
+        } else {
+          validCur = mod.get('moderatorInfo').get('acceptedCurrencies').indexOf(cur) > -1;
+        }
+        return mod.isModerator && notExcluded && validCur;
       });
     }
     return super.add(filteredModels, options);

@@ -17,17 +17,22 @@ export default class extends baseVw {
 
     this.settings = app.settings.clone();
 
-    this.listenTo(this.settings, 'sync', (md, resp, syncOpts) => {
-      // Since different tabs are working off different parts of
-      // the settings model, to not overwrite each other, we'll only
-      // update fields that our tab has changed.
-      app.settings.set(syncOpts.attrs);
-    });
+    // Sync our clone with any changes made to the global settings model.
+    this.listenTo(app.settings, 'someChange',
+      (md, opts) => this.settings.set(opts.setAttrs));
+
+    // Sync the global settings model with any changes we save via our clone.
+    this.listenTo(this.settings, 'sync', (md, resp, opts) => app.settings.set(opts.attrs));
 
     this.localSettings = app.localSettings.clone();
 
+    // Sync our clone with any changes made to the global local settings model.
     this.listenTo(this.localSettings, 'sync',
-      () => app.localSettings.set(this.localSettings.toJSON()));
+      (md, resp, opts) => app.localSettings.set(this.localSettings.toJSON(opts.attrs)));
+
+    // Sync the global local settings model with any changes we save via our clone.
+    this.listenTo(this.localSettings, 'sync',
+      (md, resp, opts) => app.localSettings.set(opts.attrs));
 
     this.countryList = getTranslatedCountries(app.settings.get('language'));
     this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
@@ -107,12 +112,21 @@ export default class extends baseVw {
     }
 
     this.render();
+
     if (!this.localSettings.validationError && !this.settings.validationError) {
       this.$btnSave.addClass('processing');
-    }
+    } else {
+      const $firstErr = this.$('.errorList:first');
 
-    const $firstErr = this.$('.errorList:first');
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+      if ($firstErr.length) {
+        $firstErr[0].scrollIntoViewIfNeeded();
+      } else {
+        const models = [];
+        if (this.localSettings.validationError) models.push(this.localSettings);
+        if (this.settings.validationError) models.push(this.settings);
+        this.trigger('unrecognizedModelError', this, models);
+      }
+    }
   }
 
   get $btnSave() {
