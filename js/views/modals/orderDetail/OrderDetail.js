@@ -138,10 +138,7 @@ export default class extends BaseModal {
     this.featuredProfileFetch.done(profile => {
       this.featuredProfileMd = profile;
       this.featuredProfile.setModel(this.featuredProfileMd);
-      this.featuredProfile.setState({
-        isFetching: false,
-      });
-    });
+    }).always(() => this.featuredProfile.setState({ isFetching: false }));
   }
 
   onClickRetryFetch() {
