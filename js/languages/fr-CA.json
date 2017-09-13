@@ -13,31 +13,31 @@
   "follow": {
     "typeFollow": "following",
     "typeUnfollow": "unfollowing",
-    "followErrorTitle": "There was an error %{type} %{user}."
+    "followErrorTitle": "Erreur de %{type} pour %{user}."
   },
   "restartNow": "Redémarrez maintenant",
   "restartLater": "Redémarrez plus tard",
   "langChangeRestartTitle": "Redémarrage requis pour le changement de langue",
   "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des enregistrements ou des publications sont en cours, attendez qu'ils soient terminés.",
   "update": {
-    "checking": "Checking for updates…",
-    "error": "There was an error checking for updates. Error: %{error}",
-    "available": "An update is downloading now. You can choose to install it when the download is complete.",
-    "notAvailable": "No updates are available.",
+    "checking": "Vérification des mises à jour...",
+    "error": "Une erreur s’est produite lors de la vérification des mises à jour. Erreur: %{error}",
+    "available": "Une mise à jour est en cours de téléchargement. Vous pourrez l'installer lorsque le téléchargement sera terminé.",
+    "notAvailable": "Aucune mise à jour n'est disponible.",
     "cancel": "Annuler",
     "ready": {
-      "title": "The Update is Ready",
-      "msg": "Your update has downloaded. Click below to install it."
+      "title": "La mise à jour est prête",
+      "msg": "Votre mise à jour a été téléchargée. Cliquez ci-dessous pour l'installer."
     },
-    "install": "Install Now"
+    "install": "Installer maintenant"
   },
   "addressBarPlaceholder": "Tapez un @handle, un identifiant ou un terme de recherche OpenBazaar",
   "testnet": "Mode de test",
   "testnetTooltip": "Le Mode de test utilise des monnaies testnet, qui sont uniquement proposées à des fins de test.",
-  "betaTooltip": "OpenBazaar is currently in beta. Make sure to backup your wallet, and be careful if spending large amounts of bitcoin.",
+  "betaTooltip": "OpenBazaar est actuellement en version bêta. Assurez-vous de sauvegarder votre portefeuille, et soyez prudent si vous dépensez de grandes quantités de bitcoins.",
   "tabMenuHeading": "MENU",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
-  "copiedToClipboard": "copié dans le presse-papier",
+  "copiedToClipboard": "copié dans le presse-papiers",
   "copiedToClipboardShort": "Copié",
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
@@ -79,7 +79,7 @@
         "title": "Impossible d'obtenir le solde du portefeuille."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Impossible de charger les fournisseurs de recherche."
       }
     },
     "startupLoadingModal": {
@@ -88,29 +88,29 @@
     }
   },
   "notifications": {
-    "noResults": "No notifications found.",
+    "noResults": "Aucune notification trouvée.",
     "text": {
-      "order": "%{buyerName} has purchased %{listingTitle}.",
-      "payment": "Your payment has been delivered.",
-      "orderConfirmation": "%{vendorName} has accepted your order.",
-      "declined": "%{vendorName} has declined your order.",
-      "canceled": "%{buyerName} has canceled their order.",
-      "refunded": "%{vendorName} has refunded your order.",
-      "fulfillment": "%{vendorName} has fulfilled your order.",
-      "orderComplete": "%{buyerName} has left feedback on their order.",
-      "disputeOpen": "%{disputerName} has opened a dispute with you.",
-      "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
-      "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
-      "disputeClose": "The dispute with %{otherPartyName} has been closed.",
-      "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
-      "follow": "%{name} has followed you.",
-      "moderatorAdd": "%{name} has added you as a moderator.",
-      "moderatorRemove": "%{name} has removed you as a moderator."
+      "order": "%{buyerName} a acheté %{listingTitle}.",
+      "payment": "Votre paiement a été réceptionné.",
+      "orderConfirmation": "%{vendorName} a accepté votre commande.",
+      "declined": "%{vendorName} a refusé votre commande.",
+      "canceled": "%{buyerName} a annulé sa commande.",
+      "refunded": "%{vendorName} a remboursé votre commande.",
+      "fulfillment": "%{vendorName} a réalisé votre commande.",
+      "orderComplete": "%{buyerName} a laissé une évaluation sur sa commande.",
+      "disputeOpen": "%{disputerName} a ouvert un litige avec vous.",
+      "disputeOpenMod": "%{disputerName} a ouvert un litige avec %{disputeeName}.",
+      "disputeUpdate": "%{disputeeName} a partagé son contrat pour le litige avec %{disputerName}.",
+      "disputeClose": "Le litige avec %{otherPartyName} a été clôturé.",
+      "disputeAccepted": "Le litige avec %{otherPartyName} a été finalisé.",
+      "follow": "%{name} vous a suivi.",
+      "moderatorAdd": "%{name} vous a ajouté comme modérateur.",
+      "moderatorRemove": "%{name} vous a supprimé comme modérateur."
     },
-    "errorHeading": "There was an error fetching the notifications.",
+    "errorHeading": "Une erreur s'est produite lors de la réception des notifications.",
     "btnRetry": "Réessayer",
     "tabAll": "Tout",
-    "tabOrders": "Orders",
+    "tabOrders": "Commandes",
     "tabFollowers": "Abonnés"
   },
   "pageNav": {
@@ -127,7 +127,7 @@
       "notifications": "Notifications",
       "nav": "Navigation",
       "close": "Fermez",
-      "currentPrice": "Current Bitcoin price"
+      "currentPrice": "Prix actuel d'un bitcoin"
     }
   },
   "chat": {
@@ -176,13 +176,13 @@
       "noFollowing": "%{name} ne suit encore personne",
       "noOwnFollowers": "Vous n'avez pas encore d'abonnés",
       "noOwnFollowing": "Vous ne suivez encore personne",
-      "followersFetchError": "Unable to fetch the followers list.",
-      "followingFetchError": "Unable to fetch the following list.",
+      "followersFetchError": "Impossible de récupérer la liste des abonnés.",
+      "followingFetchError": "Impossible d'accéder à la liste des abonnés.",
       "btnRetry": "Réessayer"
     },
     "getFollowingError": "Une erreur s'est produite lors de la détermination de si cet utilisateur vous suit.",
-    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
+    "modAddError": "Une erreur s'est produite lors de l'ajout de ce modérateur.\n %{errMsg}",
+    "modRemoveError": "Une erreur s'est produite lors de la suppression de ce modérateur.\n %{errMsg}",
     "storeWelcomeCalloutTitle": "Bienvenue dans votre boutique!",
     "storeWelcomeCalloutBody": "Votre boutique OpenBazaar est maintenant en ligne sur le réseau. Commencez par créer des annonces ou personnaliser votre page.",
     "storeWelcomeCalloutBtnClose": "Fermez",
@@ -218,7 +218,7 @@
         "showLess": "moins"
       },
       "toolTip": {
-        "contentView": "Toggle view"
+        "contentView": "Changer de vue"
       }
     },
     "mainNav": {
@@ -231,8 +231,8 @@
   "userShort": {
     "userLoading": "Chargement...",
     "userNotFound": "L'information pour %{guid} n'a <b>pas été trouvée sur le réseau.</b>",
-    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
+    "modAddError": "Une erreur s'est produite lors de l'ajout de ce modérateur.\n %{errMsg}",
+    "modRemoveError": "Une erreur s'est produite lors de la suppression de ce modérateur.\n %{errMsg}",
     "tipFollow": "Suivre",
     "tipUnfollow": "Ne plus suivre",
     "tipModAdd": "Ajouter comme modérateur",
@@ -276,7 +276,7 @@
       "sectionHeader": "Dons",
       "btnCopyAddress": "Copiez l'adresse",
       "btnOpenInWallet" : "Ouvrir dans le portefeuille",
-      "bannerCountDonations": "%{donationCountFloor}+ Dons reçus !",
+      "bannerCountDonations": "%{donationCountFloor}+ Dons reçus!",
       "unableToOpenInWallet": {
         "title": "L'ouverture du portefeuille a échoué",
         "body": "Impossible d'ouvrir l'adresse dans le portefeuille car un paiement est en train d'être envoyé. Attendez que l'envoi soit terminé et réessayez."
@@ -285,7 +285,7 @@
     "licenseTab": {
       "linkText": "Licence",
       "sectionHeader": "OpenBazaar Licence MIT",
-      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "licensePreface": "OpenBazaar est un logiciel open source sous licence MIT. Cette licence est permissive et conçue pour permettre aux gens de réutiliser complètement le code pour d'autres projets open source ou pour des logiciels propriétaires. Le texte complet de la licence est ci-dessous.",
       "header": "La Licence MIT (MIT)",
       "copyright": "Copright &copy; 2016 Développeurs OpenBazaar",
       "paragraphs": {
@@ -319,8 +319,8 @@
   "settings": {
     "settingsLabel": "Paramètres",
     "unrecognizedModelErrsWarning": {
-      "title": "Unable to save your settings",
-      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+      "title": "Impossible d'enregistrer vos paramètres",
+      "body": "Nous ne pouvons pas enregistrer les paramètres de cet onglet car il existe des erreurs inconnues. Elles proviennent probablement de valeurs non valides dans un autre onglet. Veuillez enregistrer les autres onglets afin d'identifier le champ comportant une erreur. L'erreur sera affichée au-dessus du champ. Après avoir corrigé l'erreur, assurez-vous de cliquer sur Enregistrer sur l'onglet dans lequel l'erreur s'est produite. Ensuite, vous pouvez revenir à cet onglet pour terminer l'enregistrement."
     },
     "generalTab": {
       "helperLanguage": "Affichez les éléments de l'interface en",
@@ -411,21 +411,21 @@
         "senderEmail": "Envoyer depuis",
         "recipientEmail": "Envoyer à",
         "placeholderServerAddress": "smtp.gmail.com:587",
-        "placeholderUsername": "Enter your username",
+        "placeholderUsername": "Saisissez votre nom d'utilisateur",
         "placeholderPassword": "Le mot de passe de votre adresse email",
         "placeholderSendFrom": "name@domain.com",
         "placeholderSendTo": "name@domain.com",
-        "helperNotifications": "Receive emails for order updates",
-        "helperServerAddress": "Enter an outgoing (SMTP) server url followed by the TLS port number",
+        "helperNotifications": "Recevoir des e-mails pour des mises à jour de commande",
+        "helperServerAddress": "Entrez une URL de serveur sortant (SMTP) suivie du numéro de port TLS",
         "helperNewEmail": "Créer une adresse email sur %{helperGmailLink}",
-        "helperUsername": "Your SMTP username",
+        "helperUsername": "Votre nom d'utilisateur SMTP",
         "helperPassword": "Sauvegardé en privé dans votre base de données",
-        "helperSendFrom": "The email address to send from. Make sure you whitelist this address in your receiving account.",
-        "helperSendTo": "The email address to send to. Check your spam folder if you don't receive notifications.",
+        "helperSendFrom": "L'adresse e-mail d'envoi. Assurez-vous de l'ajouter à la liste blanche dans votre compte de réception.",
+        "helperSendTo": "L'adresse e-mail de réception. Vérifiez votre dossier de spam si vous ne recevez pas de notifications.",
         "helperGmailLink": "Gmail",
-        "testSmtpSuccess": "The integration test was successful. Don't forget to save your settings.",
-        "testSmtpFail": "The integration test was not successful.",
-        "testSmtpFailWithError": "The integration test was not successful: %{err}",
+        "testSmtpSuccess": "Le test d'intégration a réussi. N'oubliez pas d'enregistrer vos paramètres.",
+        "testSmtpFail": "Le test d'intégration a échoué.",
+        "testSmtpFailWithError": "Le test d'intégration a échoué: %{err}",
         "testSmtpCancel": "Annuler"
       },
       "server": {
@@ -436,34 +436,34 @@
         "peers": "Pairs",
         "peersHelper": "Pairs avec qui vous êtes connectés",
         "peersBtn": "Afficher les pairs connectés",
-        "resync": "Reload Transactions",
-        "resyncHelper": "Synchronize your transactions if some are missing",
-        "resyncBtn": "Reload Transactions",
-        "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+        "resync": "Actualiser les transactions",
+        "resyncHelper": "Synchronise vos transactions si certaines sont manquantes",
+        "resyncBtn": "Actualiser les transactions",
+        "resyncComplete": "Vos transactions vont commencer à se resynchroniser. Cela peut durer de cinq à dix minutes ou plus.",
         "purge": "Supprimer les fichiers partagés",
         "purgeHelper": "Supprime les fichiers mis en cache que vous partagez avec les autres",
         "purgeBtn": "Supprimer les fichiers",
-        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
-        "purgeError": "Il y a eu une erreur, les fichiers en cache ont pu ne pas être supprimés.",
+        "purgeToolTip": "OpenBazaar partage le contenu en cache que vous avez consulté avec d'autres utilisateurs. Si vous avez vu du texte ou des images que vous ne voulez pas partager, ce bouton les supprimera. Cela n'aura aucune incidence sur des fichiers vous appartenant.",
+        "purgeError": "Une erreur s'est produite, les fichiers en cache ont pu ne pas être supprimés.",
         "purgeComplete": "Les fichiers en cache ont été supprimés.",
-        "blockData": "Block Data",
-        "blockDataHelper": "Show data useful for debugging.",
-        "blockDataBtn": "Show Block Data",
-        "blockDataError": "There was an error, your block data could not be retrieved.",
-        "blockDataTitle": "Your Block Data",
-        "blockDataCopy": "Copy to your Clipboard",
-        "backupWalletLbl": "Backup Wallet Seed",
-        "backupWalletHelper": "This seed will allow you to recover your wallet in case of computer failure.",
-        "unableToFetchSeedTitle": "There was an error fetching your wallet seed",
+        "blockData": "Données de bloc",
+        "blockDataHelper": "Afficher les données utiles pour le débogage.",
+        "blockDataBtn": "Afficher les données de bloc",
+        "blockDataError": "Une erreur s'est produite, vos données de bloc n'ont pas pu être récupérées.",
+        "blockDataTitle": "Vos données de bloc",
+        "blockDataCopy": "Copier dans votre presse-papiers",
+        "backupWalletLbl": "Sauvegarder la phrase de récupération",
+        "backupWalletHelper": "Cette phrase de récupération vous permet de récupérer votre portefeuille en cas de défaillance de votre ordinateur.",
+        "unableToFetchSeedTitle": "Une erreur s'est produite lors de la récupération de votre phrase",
         "walletSeed": {
-          "btnShowSeed": "Show Seed",
-          "introLine": "Your wallet generation seed is:",
-          "directionLine": "Write the following words on paper and keep them somewhere safe. They must be in this exact order.",
+          "btnShowSeed": "Afficher la phrase de récupération",
+          "introLine": "La phrase de récupération de votre portefeuille est:",
+          "directionLine": "Écrivez les mots suivants sur papier et gardez-les en sécurité. Ils doivent être dans cet ordre exact.",
           "warningHeading": "Attention:",
-          "warning1": "Never share your seed. Anyone with this seed can steal your funds.",
-          "warning2": "Never type it on a website.",
-          "warning3": "Do not store it electronically.",
-          "warning4": "Do not lose your seed, or your funds will be permanently lost if your data is erased."
+          "warning1": "Ne partagez jamais votre phrase de récupération. Toute personne avec cette phrase peut voler vos fonds.",
+          "warning2": "Ne l'écrivez jamais sur un site internet.",
+          "warning3": "Ne la conservez pas électroniquement.",
+          "warning4": "Ne perdez pas votre phrase de récupération, sinon vos fonds seront perdus à jamais si vos données sont effacées."
         }
       },
       "transaction": {
@@ -511,11 +511,11 @@
       "languagesHelper": "Entres les langues que vous maîtrisez (c'est à dire avec lesquels vous pouvez communiquer clairement).",
       "acceptGuidelines": "J'ai lu et accepté les %{acceptGuidelinesLink} recommandés",
       "acceptGuidelinesLink": "Lignes directrices OpenBazaar de règlement des litiges",
-      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them, unless they violate the terms described above.",
+      "understandRequirements": "Je comprends que je dois offrir mes services pour résoudre les litiges à quiconque les demande, à moins que les conditions décrites ci-dessus ne soient pas respectées.",
       "status":{
         "saving": "Sauvegarde des réglages de modération...",
         "done": "Réglages de modération sauvegardés.",
-        "fail": "Il y a eu une erreur lors de la sauvegarde des réglages de modération."
+        "fail": "Une erreur s'est produite lors de la sauvegarde des réglages de modération."
       },
       "errors": {
         "confirm": "Vous devez accepter les deux règles ci dessous pour devenir modérateur.",
@@ -541,7 +541,7 @@
         "saving": "Sauvegarde des réglages de la boutique...",
         "done": "Réglages de la boutique sauvegardés.",
         "fail": "La sauvegarde des réglages de la boutique a échoué.",
-        "error": "Il y a eu une erreur lors de la sauvegarde des réglages de la boutique."
+        "error": "Une erreur s'est produite lors de la sauvegarde des réglages de la boutique."
       },
       "errors": {
         "modNotFoundTitle": "Modérateur non trouvé",
@@ -603,7 +603,7 @@
       "state": "État / Région / Département",
       "country": "Pays",
       "postalCode": "Code postal",
-      "notes": "Delivery Notes"
+      "notes": "Remarques pour la livraison"
     },
     "statusSaving": "Sauvegarde des paramètres...",
     "statusSaveFailed": "Échec de la sauvegarde des paramètres.",
@@ -613,7 +613,7 @@
     "btnSave": "Enregistrer",
     "btnAddAddress": "Ajouter une adresse",
     "errors": {
-      "saveError": "Il y a eu une erreur lors de la sauvegarde des paramètres."
+      "saveError": "Une erreur s'est produite lors de la sauvegarde des paramètres."
     },
     "confirmNavAwayWarning": {
       "title": "Sauvegarde en cours",
@@ -674,8 +674,8 @@
       "torNotAvailableMessage": "Tor n'a pas été détecté. Si vous souhaitez procéder sans Tor, décochez \"Utiliser Tor\" ci-dessous et cliquez sur Enregistrer. Sinon, démarrez Tor et réessayez de vous connecter.",
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
-      "torPwLabel": "Tor Password",
-      "torPwPlaceholder": "The unhashed Tor control password",
+      "torPwLabel": "Mot de passe Tor",
+      "torPwPlaceholder": "Le mot de passe de contrôle Tor (non haché)",
       "warning": "Attention:",
       "torServerWarning": "%{warning} Afin d'être anonyme, il est essentiel que vous démarriez le serveur avec Tor."
     }
@@ -713,8 +713,8 @@
       "sendPaymentFailDialogTitle": "Impossible d'envoyer le paiement",
       "sendConfirm": {
         "heading": "Êtes-vous sûr ?",
-        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
+        "body": "Des frais de réseau seront inclus, actuellement estimés à %{fiatBtcPairing}",
+        "bodyFeeUnavailable": "Envoyez %{fiatBtcPairing}, plus des frais de réseau",
         "btnCancel": "Annuler",
         "btnConfirmSend": "Oui, envoyer"
       }
@@ -726,11 +726,11 @@
         "incomingText": "%{fiatBtcPairing} recus",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "Voir les détails",
-        "retryTransactionBtn": "Increase Fee",
+        "retryTransactionBtn": "Augmenter les frais",
         "retryPaymentConfirmBox": {
           "title": "Reessayer le paiement",
-          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "Ajoutez %{fiatBtcPairing}%{asterisk} aux frais et renvoyez la transaction.",
+          "insufficientFundsBody": "Vous avez besoin d'au moins %{fiatBtcPairing}%{asterisk} dans votre portefeuille pour soumettre à nouveau cette transaction avec des frais plus élevés.",
           "subText": "%{asterisk}prix estimé",
           "btnCancel": "Annuler",
           "btnConfirmSend": "Envoyer"
@@ -741,9 +741,9 @@
       },
       "noTransactionsPlaceholder": "Vous n'avez pas de transactions",
       "newTransactionsPopin": "%{smart_count} nouvelle transaction %{refreshLink} |||| %{smart_count} nouvelles transactions %{refreshLink}",
-      "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
-      "recoverySeedLink": "backup your wallet recovery seed",
-      "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
+      "backupWalletWarningTitle": "Sauvegarder la phrase de récupération du portefeuille",
+      "recoverySeedLink": "sauvegarder votre phrase de récupération du portefeuille",
+      "backupWalletWarningBody": "On dirait que vous avez une transaction ou deux. C'est peut-être un bon moment pour %{link}"
     }
   },
   "formats": {
@@ -776,9 +776,9 @@
     "reviews": "Évaluations",
     "attachments": "Pièces jointes",
     "refundPolicy": "Conditions de remboursement",
-    "noRefundPolicy": "Pas de conditions de retour fournies",
+    "noRefundPolicy": "Aucune condition de retour spécifiée ",
     "termsAndConditions": "Conditions d'utilisation",
-    "noTermsAndConditions": "Pas de conditions fournies",
+    "noTermsAndConditions": "Aucune condition spécifiée",
     "shipping": "Expédition",
     "shipsFrom": "Expédie depuis %{country}",
     "shipTo": "Expédie vers:",
@@ -796,13 +796,13 @@
     "review": {
       "title": "%{time} par %{name}",
       "loadMore": "Charger plus",
-      "noReviews": "No reviews found",
+      "noReviews": "Aucune évaluation trouvée",
       "showMore": "Afficher plus",
       "showLess": "Afficher moins"
     },
     "errors": {
       "fetchRatings": "Les notations n'ont pas pu être chargées.",
-      "fetchReviews": "Il y a eu un problème lors du chargement des évaluations. %{error}",
+      "fetchReviews": "Une erreur s'est produite lors du chargement des évaluations. %{error}",
       "loadReview": "L'évaluation %{id} a échoué à cause de l'erreur %{error}",
       "noPurchaseTitle": "Vous ne pouvez pas acheter cette annonce",
       "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins."
@@ -825,8 +825,8 @@
     "deletedListing": "Annonce %{listing} supprimée.",
     "deletedFailedStatusMsg": "Impossible de supprimer l'annonce %{listing}.",
     "deletedFailedDialogTitle": "Impossible de supprimer l'annonce",
-    "deletedFailedDialogBody": "Il y a eu une erreur lors de la suppression de l'annonce %{listing}.",
-    "deletedFailedDialogBodyWithReason": "Il y a eu une erreur lors de la suppression de l'annonce %{listing}: %{reason}",
+    "deletedFailedDialogBody": "Une erreur s'est produite lors de la suppression de l'annonce %{listing}.",
+    "deletedFailedDialogBodyWithReason": "Une erreur s'est produite lors de la suppression de l'annonce %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} n'a pas été trouvé. Elle a probablement été supprimée.",
     "deleteFailedBtnOk": "Ok"
   },
@@ -857,7 +857,7 @@
     "placeholderReturnPolicy": "Quelles sont vos conditions de retour ? Combien de jours sont acceptés pour les retours ? Qui paye les frais de retour (si il y en a) ? ...",
     "placeholderTerms": "Quels sont les termes et conditions de l'annonce ? En quoi êtes-vous responsable en tant que vendeur ? Existe-t-il une garantie ? Quand la transaction est-elle définitive ? etc",
     "helperTitle": "Quelque chose de descriptif qui explique clairement ce que vous vendez",
-    "helperType": "Choose from 3 types",
+    "helperType": "Choisissez parmi 3 types",
     "helperShipping": "Envoyez où vous voulez!",
     "helperPhotos": "Ajoutez jusqu'à %{maxPhotos} images",
     "helperSKU": "Un identifiant unique pour votre annonce",
@@ -868,8 +868,8 @@
     "helperNSFW": "Choisissez oui si l'annonce est choquante",
     "helperTags": "Ajoutez plusieurs mot-clés. Entrez un nom de mot-clé, appuyez sur Entrée, répétez.",
     "helperCategories": "L’imbrication de catégorie n'est pas prise en charge (par exemple, Chaussures > Bottes ne fonctionne pas actuellement). Entrez un nom de catégorie, appuyez sur Entrée, répétez.",
-    "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
-    "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperReturnPolicy": "Si laissé vide, l'annonce affichera \"Aucune condition de retour spécifiée\"",
+    "helperTerms": "Si laissé vide, l'annonce affichera \"Aucune condition spécifiée\"",
     "createListingLabel": "Lister une annonce",
     "editListingLabel": "Modifier l'annonce",
     "title": "Titre",
@@ -957,11 +957,11 @@
     "maxCatsWarning": "Vous avez atteint le nombre maximal de catégories autorisées.",
     "maxTagsWarning": "Vous avez atteint le nombre maximal de mot-clés autorisés.",
     "errors": {
-      "saveErrorTitle": "Il y a eu une erreur lors de la sauvegarde de votre annonce",
+      "saveErrorTitle": "Une erreur s'est produite lors de la sauvegarde de votre annonce.",
       "tooManyPhotosTitle": "Trop de photos",
       "tooManyPhotosBody": "Certaines de vos photos n'ont pas pu être chargées car vous avez dépassé la quantité maximale autorisée.",
       "unableToLoadImages": "Nous n'avons pas pu charger votre image. |||| Nous n'avons pas pu charger vos images.",
-      "uploadImageErrorTitle": "Il y a eu une erreur lors du chargement de votre image. |||| Il y a eu une erreur lors du chargement de vos images."
+      "uploadImageErrorTitle": "Une erreur s'est produite lors du chargement de votre image. |||| Il y a eu une erreur lors du chargement de vos images."
     }
   },
   "search": {
@@ -972,27 +972,27 @@
     "resultsFound": "<b>%{totalResults} annonce</b> trouvée pour <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} annonces",
     "sortBy": "Trier par",
-    "changeProvider": "Close and Choose a New Search Provider",
+    "changeProvider": "Fermer et choisir un nouveau fournisseur de recherche",
     "useDefault": "Recherche pour \"%{term}\" en utilisant %{defaultProvider}",
     "noResults": "Aucune annonce ne correspond à vos critères de recherche",
-    "addTitle": "Add search provider",
-    "addPlaceholder":"URL for the search provider",
-    "addTorPlaceholder": "Tor URL for the search provider (optional)",
+    "addTitle": "Ajouter un fournisseur de recherche",
+    "addPlaceholder":"URL du fournisseur de recherche",
+    "addTorPlaceholder": "URL Tor pour le fournisseur de recherche (optionnel)",
     "addBtn": "Ajouter",
     "cancel": "Annuler",
-    "deleteProviderBtn": "Remove search provider",
-    "makeDefaultBtn": "Set to default",
-    "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
-    "addQueryProviderBtn": "Add search provider",
-    "chooseDefaultTitle": "Select a default search provider",
-    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "deleteProviderBtn": "Supprimer le fournisseur de recherche",
+    "makeDefaultBtn": "Définir par défaut",
+    "makeDefaultBtnHelper": "Le fournisseur de recherche par défaut est utilisé pour les recherches dans la barre d'adresse.",
+    "addQueryProviderBtn": "Ajouter un fournisseur de recherche",
+    "chooseDefaultTitle": "Sélectionnez un fournisseur de recherche par défaut",
+    "chooseDefaultMsg": "Ce fournisseur sera utilisé par défaut pour les recherches futures jusqu'à ce que vous en définissez un nouveau.",
     "errors": {
-      "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
+      "searchFailTitle": "La requête de recherche vers %{provider} a échoué. Choisissez un autre fournisseur ci-dessus.",
       "searchFailReason": "Le fournisseur de recherche a renvoyé le message suivant: %{error}",
-      "connection": "You are no longer connected to your node. Reconnect to continue searching",
-      "addError": "This provider cannot be added. Check your data and try again.",
-      "locked": "Default search providers can't be deleted.",
-      "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
+      "connection": "Vous n'êtes plus connecté à votre nœud. Reconnectez-vous pour continuer la recherche",
+      "addError": "Ce fournisseur ne peut pas être ajouté. Vérifiez vos données et réessayez.",
+      "locked": "Les fournisseurs de recherche par défaut ne peuvent pas être supprimés.",
+      "resetToOriginal": "L'URL de votre fournisseur de recherche est invalide. Nous utiliserons le fournisseur par défaut."
     }
   },
   "onboarding": {
@@ -1026,7 +1026,7 @@
   },
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} sur %{total}</b>",
-    "displaying": "Affichage %{displayingCounts}"
+    "displaying": "Affiche %{displayingCounts}"
   },
   "purchase": {
     "refreshPurchase": "Actualiser",
@@ -1043,18 +1043,18 @@
     "noAddresses": "Vous n'avez pas d'adresses enregistrées.",
     "noShippableAddresses": "Cette annonce ne peut être expédiée à votre adresse.",
     "informationTitle": "Information additionnelle",
-    "emailAddress": "Email Address or Phone Number",
+    "emailAddress": "Adresse e-mail ou numéro de téléphone",
     "emailPlaceholder": "name@email.com",
     "emailNote": "Un autre moyen de vous contacter.",
     "couponCode": "Code promotionnel",
-    "couponCodePlaceholder": "Enter code",
+    "couponCodePlaceholder": "Entrez un code",
     "applyCode": "Appliquer",
     "code": "\"%{code}\" appliqué à votre commande",
     "codeErrors": {
       "invalid": "\"%{code}\" n'est pas un code valide",
       "duplicate": "Vous ne pouvez utiliser \"%{code}\" qu'une seule fois",
       "excessive": "Vous ne pouvez pas appliquer de réductions de 100% ou plus.",
-      "blank": "You must enter a code."
+      "blank": "Vous devez entrer un code."
     },
     "removeCode": "supprimer",
     "memo": "Mémo",
@@ -1062,7 +1062,7 @@
     "pay": "Payer >",
     "payNote": "Cliquer sur payer vous fera passer à l'étape finale.",
     "pending": "En attente...",
-    "pendingNote": "Please fund the order to complete your transaction.",
+    "pendingNote": "Veuillez payer la commande pour terminer votre transaction.",
     "close": "fermer",
     "closeNote": "Le paiement a été envoyé au vendeur.",
     "moderatorNote": "*Les frais de service de modération ne s'appliquent qu'après un litige.",
@@ -1092,17 +1092,17 @@
       "note4": "Une fois que vous avez payé, l'interface peut prendre un certain temps pour s'actualiser.",
       "confirmWallet": {
         "title": "Êtes-vous sûr ?",
-        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
-        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
-        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
+        "payMsg": "Payez %{fiatBtcPairing}* au vendeur.",
+        "payMsgNotePlusFee": "* Les frais de réseau seront ajoutés en plus du montant indiqué",
+        "payMsgNoteFeeIncluded": "* Comprend des frais de réseau, actuellement estimés à %{amount}",
         "cancel": "Annuler",
         "confirm": "Oui, payer",
         "fundsLow": "Votre portefeuille n'a pas assez de bitcoins. Ajoutez des fonds pour terminer cet achat.",
         "insufficientFundsTitle": "Fonds insuffisants ",
         "insufficientFundsMsg1": "Votre portefeuille détient actuellement %{funds}.",
         "insufficientFundsMsg2": "Ajoutez %{fundGap}* à votre portefeuille, ou payez avec un portefeuille externe pour continuer.",
-        "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
+        "insufficientFundsNote": "* %{amount} plus les frais, actuellement estimés à %{fee}",
+        "insufficientFundsNoteFeeUnavailable": "* Assurez-vous également d'ajouter les frais de réseau"
       }
     },
     "completeSection": {
@@ -1123,7 +1123,7 @@
       "coupon": "Code promotionnel",
       "shipping": "Expédition",
       "options": "Options",
-      "subtotal": "Subtotal",
+      "subtotal": "Sous-total",
       "total": "Total (%{quantity})"
     },
     "errors": {
@@ -1205,7 +1205,7 @@
         "DISPUTED": "Litigieux",
         "DECIDED": "Décidée",
         "RESOLVED": "Résolu",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Paiement finalisé"
       },
       "btnReject": "Refuser",
       "btnAccept": "Accepter",
@@ -1247,14 +1247,14 @@
       "orderNumber": "Commande #: %{orderId}",
       "copyLink": "Copier",
       "notApplicable": "n/a",
-      "vendorFinalizedPayment": "You have manually finalized the order.",
+      "vendorFinalizedPayment": "Vous avez finalisé manuellement la commande.",
       "payment": {
         "firstPaymentHeading": "Détails du paiement",
         "paymentHeading": "Détails du paiement #%{paymentNumber}",
         "amountTo": "%{fiatBtcPairing} à %{payeeName}",
         "refundedTo": "%{fiatBtcPairing} remboursés à %{payeeName}",
         "refunded": "%{fiatBtcPairing} remboursés",
-        "paidInFull": "Paiement totalement",
+        "paidInFull": "Payé totalement",
         "underpaidAmountShort": "Sous-payées (%{amountShort} requis)",
         "cancelBtn": "Annuler",
         "rejectBtn": "Refuser",
@@ -1369,14 +1369,14 @@
         "copyAddress": "Copier",
         "viewOnMap": "Voir sur la carte",
         "memo": "Mémo",
-        "addressNotes": "Delivery Notes",
-        "alternateContact": "Additional Contact Information"
+        "addressNotes": "Remarques pour la livraison",
+        "alternateContact": "Informations de contact supplémentaires"
       }
     },
     "fulfillOrderTab": {
       "heading": "Réaliser la commande",
       "shippingCarrierLabel": "Transporteur",
-      "shippingCarrierPlaceholder": "UPS, DHL, etc",
+      "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
       "trackingLabel": "Numéro de suivi #",
       "trackingPlaceholder": "optionnel",
       "fileUrlLabel": "URL du fichier",
@@ -1435,7 +1435,7 @@
     "fetchingRatesFailStatusMsgRetryLink": "réessayer"
   },
   "debugLog": {
-    "copyToClipboard": "Copier dans le presse-papier"
+    "copyToClipboard": "Copier dans le presse-papiers"
   },
   "profileModelErrors": {
     "provideName": "Vous devez entrer un nom.",
@@ -1496,12 +1496,12 @@
     "imageRequired": "Merci de fournir au moins une image.",
     "tooManyTags": "Vous avez dépassé la quantité maximale admissible de %{maxTags} mots-clés.",
     "tooManyCats": "Vous avez dépassé la quantité maximale admissible de %{maxCats} catégories.",
-    "duplicateOptionName": "You already have a variant with this name.",
+    "duplicateOptionName": "Vous avez déjà une variante avec ce nom.",
     "tooManyOptions": "Vous ne pouvez pas avoir plus de %{maxOptionCount} options.",
     "provideQuantity": "Merci d'entrer une quantité.",
     "provideNumericQuantity": "Merci d'entrer la quantité sous la forme d'un nombre.",
     "quantityMustBePositive": "La quantité doit être supérieure à zéro.",
-    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+    "duplicateVariantName": "Vous avez plusieurs choix \"%{name}\". Les noms des choix doivent être uniques."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Merci de saisir un code promotionnel.",
@@ -1586,9 +1586,9 @@
     "listingNotFoundMsg": "%{listing} est introuvable.",
     "pageNotFoundTitle": "Page introuvable",
     "pageNotFoundMsg": "Vérifiez la barre d'adresse pour confirmer que l'URL est correcte.",
-    "genericErrorTitle": "Il y a eu une erreur",
+    "genericErrorTitle": "Une erreur s'est produite",
     "listingErrorTitle": "Impossible de récupérer l'annonce",
-    "listingErrorMsg": "Il y a eu une erreur lors du chargement de l'annonce %{listing}"
+    "listingErrorMsg": "Une erreur s'est produite lors du chargement de l'annonce %{listing}"
   },
   "orderCompletionModelErrors": {
     "provideReview": "Merci d'envoyer une évaluation.",
@@ -1613,12 +1613,12 @@
     "provideResolution": "Merci d'expliquer votre décision."
   },
   "searchProviderModelErrors": {
-    "invalidName": "The name must be a string.",
-    "invalidLogo": "The logo URL must be a valid URL.",
-    "invalidsearch": "You must provide a valid search URL.",
-    "invalidlistings": "You must provide a valid listings search URL",
-    "invalidtorsearch": "You must provide a valid Tor search URL",
-    "invalidtorlistings": "You must provide a valid Tor listings search URL."
+    "invalidName": "Le nom doit être une chaîne.",
+    "invalidLogo": "L'URL du logo doit être valide.",
+    "invalidsearch": "Vous devez fournir une URL de recherche valide.",
+    "invalidlistings": "Vous devez fournir une URL de recherche d'annonces valide.",
+    "invalidtorsearch": "Vous devez fournir une URL de recherche Tor valide.",
+    "invalidtorlistings": "Vous devez fournir une URL de recherche d'annonces Tor valide."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
