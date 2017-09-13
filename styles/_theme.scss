@@ -261,7 +261,7 @@ input[type=range][class~="clrS"] {
 }
 
 .required::after {
-  color: $emphasis2;
+  color: $error;
 }
 
 .select2-container--focus .select2-selection__rendered {
