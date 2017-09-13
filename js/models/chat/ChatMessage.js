@@ -18,9 +18,9 @@ export function processMessage(message) {
 
   let processedMessage = message;
 
-  // jquery's html function converts &'s to &amps which messes with some of out
-  // string replacements, particulary when the apps are in an ob link. So, we'll
-  // replace them to something else and then replace them back later.
+  // jquery's html function converts &'s to &amps which messes with some of our
+  // string replacements, particulary when the &amps are in an ob link. So, we'll
+  // replace them with something else and then replace them back later.
   processedMessage = processedMessage.replace(/&amp;/g, '__ob-full-amp__')
     .replace(/&/g, '__ob-compact-amp__');
 
