@@ -490,10 +490,20 @@ export default class extends baseVw {
     this.$convoMessagesWindow.on('scroll', this.boundScrollHandler);
   }
 
+  // Currently the convo is marked as read under the following scenarios.
+  // - when this view is opened as long as the first batch of messages have already
+  //   been fetched (don't want to mark as read if all the user has seen is
+  //   a spinner)
+  // - when the first batch of messages have been fetched as long as this view is open
+  //   and the app is in focus.
+  // - when this view (or a child element) gets focus as long as the messages would have
+  //   otherwise been marked as read, but the call was held off because the app was
+  //   not in focus.
   markConvoAsRead() {
     const queryString = this.subject ? `/?subject=${this.subject}` : '';
     $.post(app.getServerUrl(`ob/markchatasread/${this.guid}${queryString}`));
     this.trigger('convoMarkedAsRead');
+    this.markAsReadOnFocus = false;
   }
 
   get guid() {
@@ -505,6 +515,10 @@ export default class extends baseVw {
     this._isOpen = true;
     getBody().addClass('chatConvoOpen');
     this.$messageInput.focus();
+
+    if (this.firstSyncComplete) {
+      this.markConvoAsRead();
+    }
   }
 
   close() {
