@@ -40,7 +40,7 @@
   <div class="flex gutterH clrT">
     <div class="listingThumbCol flexNoShrink" style="<%= ob.getAvatarBgImage(ob.listing.item.images[0]) %>"></div>
     <div class="flexExpand tx5">
-      <div class="txB <% if (ob.description) print('rowTn') %>"><%= ob.listing.item.title %></div>
+      <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="txB clrT <% if (ob.description) print('rowTn') %>"><%= ob.listing.item.title %></a>
       <% if (item.options && item.options.length) { %>
         <div><%= item.options.map(option => `${option.name}:&nbsp;${option.value}`).join(',&nbsp;') %></div>
       <% } %>
