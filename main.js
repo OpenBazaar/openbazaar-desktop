@@ -130,23 +130,13 @@ crashReporter.start({
  * @param  {Object} externalURL Contains a string url
  */
 function handleDeepLinkEvent(externalURL) {
-  if (!(typeof externalURL === 'string')) return;
+  if (typeof externalURL !== 'string') return;
 
   const theUrl = urlparse(externalURL);
-  if (theUrl.protocol !== 'ob2:') {
-    console.warn(`Unable to handle ${externalURL} because it's not the ob2: protocol.`);
+  if (theUrl.protocol !== 'ob:') {
+    console.warn(`Unable to handle ${externalURL} because it's not the ob: protocol.`);
     return;
   }
-
-  const query = theUrl.query;
-  const hash = theUrl.host;
-  const pathname = theUrl.pathname;
-
-  console.warn(`This is the hash to visit: ${hash}`);
-  console.warn(`These are the query params: ${query}`);
-  console.warn(`This is the path: ${pathname}`);
-
-  // TODO: handle protocol links
 }
 
 /**
@@ -161,10 +151,8 @@ function preventWindowNavigation(win) {
 
     e.preventDefault();
 
-    if (url.startsWith('ob2:')) {
+    if (url.startsWith('ob:')) {
       handleDeepLinkEvent(url);
-    } else {
-      console.info(`Preventing navigation to: ${url}`);
     }
   });
 }
@@ -576,9 +564,27 @@ app.on('activate', () => {
   if (mainWindow) mainWindow.show();
 });
 
-app.on('open-url', (e, url) => {
+const handleObLink = (route) => {
+  if (!route || typeof route !== 'string') {
+    throw new Error('Please provide a route as a string.');
+  }
+
+  global.externalRoute = route;
+
+  if (mainWindow) {
+    // if our app router is fully loaded it will process the event sent below, otherwise
+    // the global.externalRoute will be used
+    mainWindow.webContents.send('external-route', route);
+  }
+};
+
+app.on('open-url', (e, uri) => {
   e.preventDefault();
-  handleDeepLinkEvent(url);
+  const url = uri.split('://')[1];
+
+  if (url) {
+    handleObLink(url);
+  }
 });
 
 ipcMain.on('close-confirmed', () => {
