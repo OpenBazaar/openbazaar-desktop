@@ -192,6 +192,7 @@ svg {
           .tab {
             border-radius: 0;
             font-size: $tx4;
+            height: 54px; // set to match 100% height
 
             &.active {
               border-bottom-width: 1px;
