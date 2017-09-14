@@ -9,27 +9,27 @@
   <a  href="#<%= ob.peerId %>" class="avatar disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>
   <div class="posR flexExpand">
     <div class="contentBox msgContentBox clrBr clrP clrSh2 <% if (ob.showTimestampLine) print('rowSm') %>">
-      <span class="tx5"><%= ob.processMessage %></span>
+      <span class="tx5"><%= ob.processedMessage %></span>
     </div>
     <% if (ob.showTimestampLine) { %>
     <div>
       <span class="clrT2 tx6"><%= timeLine %></span>
     </div>
-    <% } %>      
+    <% } %>
   </div>
 </div>
 <% } else { %>
 <div class="flexHRight gutterH rowLg">
   <div class="posR flexExpand">
     <div class="contentBox msgContentBox clrBr clrP clrSh2 <% if (ob.showAsRead) print('read') %> <% if (ob.showTimestampLine) print('rowSm') %>">
-      <span class="tx5"><%= ob.processMessage %></span>
+      <span class="tx5"><%= ob.processedMessage %></span>
     </div>
     <% if (ob.showTimestampLine) { %>
     <div>
       <span class="clrT2 tx6"><%= timeLine %></span>
     </div>
-    <% } %>      
+    <% } %>
   </div>
-  <a href="#<%= ob.ownGuid %>" class="avatar disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>  
+  <a href="#<%= ob.ownGuid %>" class="avatar disc clrBr2 clrSh1 flexNoShrink <% if (!ob.showAvatar) print('invisible') %>" <% if (ob.showAvatar) { %>style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>" <% } %>></a>
 </div>
 <% } %>
