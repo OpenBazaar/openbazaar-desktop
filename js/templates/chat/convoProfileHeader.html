@@ -1,5 +1,5 @@
 <a class="chatIcon disc clrBr2 clrSh1 flexNoShrink" href="<%= ob.guid %>" style="<%= ob.getAvatarBgImage(ob.avatarHashes || {}) %>"></a>
 <div class="tx6">
   <a class="rowTn handle noOverflow clrT" href="<%= ob.guid %>"><%= ob.handle ? `@${ob.handle}` : ob.guid %></a>
-  <div class="clamp2"><%= ob.location ? `📍${ob.location}` : '' %></div>
+  <div class="clamp"><%= ob.location ? `📍${ob.location}` : '' %></div>
 </div>
