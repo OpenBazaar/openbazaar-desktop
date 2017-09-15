@@ -38,7 +38,7 @@
 <span class="clrT2 tx5b"><%= ob.moment(ob.order.timestamp).format('lll') %></span>
 <div class="border clrBr padMd">
   <div class="flex gutterH clrT">
-    <div class="listingThumbCol flexNoShrink" style="<%= ob.getAvatarBgImage(ob.listing.item.images[0]) %>"></div>
+    <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="listingThumbCol flexNoShrink" style="<%= ob.getAvatarBgImage(ob.listing.item.images[0]) %>"></a>
     <div class="flexExpand tx5">
       <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="txB clrT <% if (ob.description) print('rowTn') %>"><%= ob.listing.item.title %></a>
       <% if (item.options && item.options.length) { %>
