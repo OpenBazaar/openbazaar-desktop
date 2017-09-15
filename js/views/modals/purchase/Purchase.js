@@ -116,28 +116,7 @@ export default class extends BaseModal {
     });
 
     // on the initial load, fetch the fees
-    this.fetchFees = $.get({
-      url: app.getServerUrl('wallet/fees'),
-      dataType: 'json',
-    })
-      .done((data, status, xhr) => {
-        if (xhr.statusText === 'abort') return;
-        const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
-        this.minModPrice = feePerByte * 350 / 100000000;
-        this.setState({
-          isFetching: false,
-          fetchError: false,
-          fetchFailed: false,
-        });
-      })
-      .fail(xhr => {
-        if (xhr.statusText === 'abort') return;
-        this.setState({
-          isFetching: false,
-          fetchError: xhr.responseJSON && xhr.responseJSON.reason || '',
-          fetchFailed: true,
-        });
-      });
+    this.getFees();
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -155,6 +134,7 @@ export default class extends BaseModal {
     return {
       'click .js-goToListing': 'close',
       'click .js-close': 'clickClose',
+      'click .js-retryFee': 'clickRetryFee',
       'click #purchaseModerated': 'clickModerated',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
@@ -187,6 +167,41 @@ export default class extends BaseModal {
 
       this.$popInMessages.append(this.dataChangePopIn.render().el);
     }
+  }
+
+  getFees() {
+    if (this.fetchFees && this.fetchFees.state() === 'pending') {
+      return this.fetchFees;
+    }
+
+    this.fetchFees = $.get({
+      url: app.getServerUrl('wallet/fees'),
+      dataType: 'json',
+    })
+      .done((data, status, xhr) => {
+        if (xhr.statusText === 'abort') return;
+        const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
+        this.minModPrice = feePerByte * 350 / 100000000;
+        this.setState({
+          isFetching: false,
+          fetchError: false,
+          fetchFailed: false,
+        });
+      })
+      .fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+        this.setState({
+          isFetching: false,
+          fetchError: xhr.responseJSON && xhr.responseJSON.reason || '',
+          fetchFailed: true,
+        });
+      });
+
+    return this.fetchFees;
+  }
+
+  clickRetryFee() {
+    this.getFees();
   }
 
   clickClose() {
@@ -460,7 +475,6 @@ export default class extends BaseModal {
 
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
-    super.render();
     const state = this.getState();
 
     loadTemplate('modals/purchase/purchase.html', t => {
@@ -475,6 +489,8 @@ export default class extends BaseModal {
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: this.moderatorIDs.length,
       }));
+
+      super.render();
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
