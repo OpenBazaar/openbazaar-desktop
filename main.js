@@ -125,21 +125,6 @@ crashReporter.start({
 });
 
 /**
- * Handles valid OB2 protocol URLs in the webapp.
- *
- * @param  {Object} externalURL Contains a string url
- */
-function handleDeepLinkEvent(externalURL) {
-  if (typeof externalURL !== 'string') return;
-
-  const theUrl = urlparse(externalURL);
-  if (theUrl.protocol !== 'ob:') {
-    console.warn(`Unable to handle ${externalURL} because it's not the ob: protocol.`);
-    return;
-  }
-}
-
-/**
  * Prevent window navigation
  *
  * @param  {Object} win Contains a browserwindow object
@@ -150,10 +135,6 @@ function preventWindowNavigation(win) {
     if (url === win.webContents.getURL()) return;
 
     e.preventDefault();
-
-    if (url.startsWith('ob:')) {
-      handleDeepLinkEvent(url);
-    }
   });
 }
 
