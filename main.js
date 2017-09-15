@@ -7,7 +7,6 @@ import { argv } from 'yargs';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
-import urlparse from 'url-parse';
 import _ from 'underscore';
 import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
