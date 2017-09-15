@@ -115,6 +115,30 @@ export default class extends BaseModal {
       vendor: this.vendor,
     });
 
+    // on the initial load, fetch the fees
+    this.fetchFees = $.get({
+      url: app.getServerUrl('wallet/fees'),
+      dataType: 'json',
+    })
+      .done((data, status, xhr) => {
+        if (xhr.statusText === 'abort') return;
+        const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
+        this.minModPrice = feePerByte * 350 / 100000000;
+        this.setState({
+          isFetching: false,
+          fetchError: false,
+          fetchFailed: false,
+        });
+      })
+      .fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+        this.setState({
+          isFetching: false,
+          fetchError: xhr.responseJSON && xhr.responseJSON.reason || '',
+          fetchFailed: true,
+        });
+      });
+
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
   }
@@ -430,15 +454,19 @@ export default class extends BaseModal {
 
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
+    if (this.fetchFees) this.fetchFees.abort();
     super.remove();
   }
 
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
+    super.render();
+    const state = this.getState();
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
         ...this.order.toJSON(),
+        ...state,
         listing: this.listing.toJSON(),
         vendor: this.vendor,
         variants: this.variants,
@@ -447,8 +475,6 @@ export default class extends BaseModal {
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: this.moderatorIDs.length,
       }));
-
-      super.render();
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
