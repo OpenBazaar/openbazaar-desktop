@@ -36,6 +36,13 @@ export default class extends BaseView {
     return this._coupons;
   }
 
+  updatePrices(prices) {
+    if (prices !== this.prices) {
+      this.prices = prices;
+      this.render();
+    }
+  }
+
   set coupons(hashesAndCodes) {
     // when we implement multiple items, the coupons should go into an array that mirrors the itmes
     // if this is the user's own listing, the listing object only has the codes
