@@ -88,12 +88,12 @@
                 <% _.each(val.options, function(option, index) {
                   let checked = '';
                   if (ob.filterVals.hasOwnProperty(key)) {
-                    checked = option.value === ob.filterVals[key] ? 'checked' : '';
+                    checked = ob.filterVals[key] ? 'checked' : '';
                   } else {
                     checked = option.default ? 'checked' : '';
                   }
                   var parsedLabel = ob.parseEmojis(option.label);
-                  print(`<input type="checkbox" ${checked} value="${option.value}" id="${key + index}" name="${key}">`);
+                  print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}">`);
                   print(`<label for="${key + index}">${parsedLabel}</label>`);
                 }); %>
                 </div>
