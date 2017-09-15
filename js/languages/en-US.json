@@ -979,7 +979,7 @@
     "searchBtn": "Search",
     "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
-    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
     "sortBy": "Sort by",
     "changeProvider": "Close and Choose a New Search Provider",

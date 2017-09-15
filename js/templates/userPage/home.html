@@ -45,7 +45,9 @@
         <% if (ob.contactInfo.website){ %>
           <div class="listItem">
             <div><%= ob.polyT('userPage.website') %></div>
-            <a class="clrT2" href="<%= ob.contactInfo.website.startsWith('http') ? ob.contactInfo.website : `http://${ob.contactInfo.website}` %>"><%= ob.contactInfo.website %></a>
+            <div>
+              <a class="clrT2" href="<%= ob.contactInfo.website.startsWith('http') ? ob.contactInfo.website : `http://${ob.contactInfo.website}` %>"><%= ob.contactInfo.website %></a>
+            </div>
           </div>
         <% } %>
         <% if (ob.contactInfo.email){ %>
@@ -58,7 +60,7 @@
           <div class="listItem">
             <div><%= account.type %></div>
             <div class="clrT2">
-              <% print(ob.is.url(account.username) ? `<a data-open-external href="${account.username}">${account.username}</a>` : account.username) %>
+              <% print(ob.is.url(account.username) ? `<a data-open-external class="clrT2" href="${account.username}">${account.username}</a>` : account.username) %>
             </div>
           </div>
         <% }); %>

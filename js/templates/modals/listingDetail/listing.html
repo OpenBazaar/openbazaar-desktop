@@ -96,7 +96,7 @@
         <h5><%= ob.polyT('listingDetail.tags') %></h5>
         <div class="tagWrapper">
           <% ob.item.tags.forEach(function(tag){
-          print(`<a class="btn tag clrSh2 clrBr" href="#search?q=${tag}">#${tag}</a>`);
+          print(`<a class="btn tag clrSh2 clrBr" href="#search?q=${tag}">#${ob.parseEmojis(tag)}</a>`);
           }); %>
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>

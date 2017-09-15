@@ -186,11 +186,11 @@ export default class extends BaseModal {
     return false;
   }
 
-  open() {
+  open(clearSendForm = this.sendMoney && !this.sendMoney.saveInProgress) {
     this.sendModeOn = true;
 
-    if (this.sendMoney && !this.sendMoney.saveInProgress) {
-      this.sendMoney.clearForm();
+    if (this.sendMoney) {
+      if (clearSendForm) this.sendMoney.clearForm();
 
       setTimeout(() => {
         this.sendMoney.focusAddress();

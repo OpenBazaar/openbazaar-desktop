@@ -165,7 +165,7 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'disputeClose') {
     const otherPartyName = opts.native ?
       getName(attrs.otherPartyHandle, attrs.otherPartyId) :
-      `<a class="clrTEm" href="#${attrs.buyerId}">` +
+      `<a class="clrTEm" href="#${attrs.otherPartyId}">` +
         `${getName(attrs.otherPartyHandle, attrs.otherPartyId)}</a>`;
     route = `#transactions/${attrs.buyer === attrs.otherPartyId ? 'purchases' : 'sales'}` +
       `?orderId=${attrs.orderId}`;
