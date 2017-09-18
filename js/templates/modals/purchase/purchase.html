@@ -96,6 +96,9 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                 <p class="clrTErr hide js-noValidModerators">
                   <%= ob.polyT('purchase.noValidModerators') %>
                 </p>
+                <p class="clrTErr hide js-modsNotAllowed">
+                  <%= ob.polyT('purchase.tooLowForMods') %>
+                </p>
               <% } %>
             </div>
           </section>

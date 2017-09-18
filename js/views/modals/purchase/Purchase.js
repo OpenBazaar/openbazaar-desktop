@@ -19,6 +19,7 @@ import Payment from './Payment';
 import Complete from './Complete';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import { openSimpleMessage } from '../SimpleMessage';
+import { convertCurrency} from "../../../utils/currency";
 
 
 export default class extends BaseModal {
@@ -123,9 +124,9 @@ export default class extends BaseModal {
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
-    this.listenTo(this.order.get('items').at(0), 'change', () => this.refreshPrices());
+    this.listenTo(this.order.get('items').at(0), 'change', () => this.isModAllowed());
     this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
-      this.refreshPrices());
+      this.isModAllowed());
   }
 
   className() {
@@ -217,8 +218,8 @@ export default class extends BaseModal {
 
   clickModerated(e) {
     const checked = $(e.target).prop('checked');
-    this.$moderatorSection.toggleClass('hide', !checked);
-    this.$moderatorNote.toggleClass('hide', !checked);
+    this.getCachedEl('.js-moderator').toggleClass('hide', !checked);
+    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !checked);
     this.order.moderated = checked;
 
     if (checked && this._oldMod) {
@@ -237,14 +238,22 @@ export default class extends BaseModal {
     }
   }
 
-  onNoValidModerators() {
-    this.$purchaseModerated.prop('checked', false);
-    this.$moderatedOption.addClass('disabled');
-    this.$moderatorSection.addClass('hide');
-    this.$moderatorNote.addClass('hide');
-    this.$noValidModerators.removeClass('hide');
+  disableModerators() {
+    this.getCachedEl('#purchaseModerated').prop('checked', false);
     this.order.moderated = false;
     this.order.set('moderator', '');
+  }
+
+  toggleModeration(bool) {
+    this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
+    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
+    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
+    if (!bool) this.disableModerators();
+  }
+
+  onNoValidModerators() {
+    this.disableModerators();
+    this.getCachedEl('.js-noValidModerators').removeClass('hide');
   }
 
   changeQuantityInput(e) {
@@ -447,9 +456,15 @@ export default class extends BaseModal {
     return priceTotal;
   }
 
-  refreshPrices() {
-    console.log(this.minModPrice);
-    console.log(this.total);
+  isModAllowed() {
+    let btcTotal = this.total;
+    const cur = this.listing.get('metadata').get('pricingCurrency');
+    if (cur !== 'BTC') {
+      btcTotal = convertCurrency(btcTotal, cur, 'BTC');
+    }
+    const tooLow = btcTotal < this.minModPrice;
+    this.toggleModeration(!tooLow);
+    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', !tooLow);
   }
 
   get $popInMessages() {
@@ -460,26 +475,6 @@ export default class extends BaseModal {
   get $storeOwnerAvatar() {
     return this._$storeOwnerAvatar ||
         (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
-  }
-
-  get $moderatedOption() {
-    return this._$moderatedOption ||
-      (this._$moderatedOption = this.$('.js-moderatedOption'));
-  }
-
-  get $noValidModerators() {
-    return this._$noValidModerators ||
-      (this._$noValidModerators = this.$('.js-noValidModerators'));
-  }
-
-  get $moderatorSection() {
-    return this._$moderatorSection ||
-        (this._$moderatorSection = this.$('.js-moderator'));
-  }
-
-  get $moderatorNote() {
-    return this._$moderatorNote ||
-      (this._$moderatorNote = this.$('.js-moderatorNote'));
   }
 
   get $closeBtn() {
@@ -529,15 +524,10 @@ export default class extends BaseModal {
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
-      this._$moderatedOption = null;
-      this._$noValidModerators = null;
-      this._$moderatorSection = null;
       this._$closeBtn = null;
       this._$shippingErrors = null;
       this._$errors = null;
       this._$couponField = null;
-
-      this.$purchaseModerated = this.$('#purchaseModerated');
 
       this.actionBtn.delegateEvents();
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
@@ -565,6 +555,8 @@ export default class extends BaseModal {
 
       this.complete.delegateEvents();
       this.$('.js-complete').append(this.complete.render().el);
+
+      this.isModAllowed();
     });
 
     return this;
