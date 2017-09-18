@@ -20,6 +20,8 @@ export default class extends baseVw {
     return {
       'click .js-btnConfirmSend': 'onClickSend',
       'click .js-sendConfirmCancel': 'onClickCancel',
+      'click .js-sendConfirmRetry': 'onClickRetry',
+      'click .js-sendConfirmClose': 'onClickClose',
     };
   }
 
@@ -29,6 +31,14 @@ export default class extends baseVw {
 
   onClickCancel() {
     this.trigger('clickCancel');
+  }
+
+  onClickRetry() {
+    this.trigger('clickRetry');
+  }
+
+  onClickClose() {
+    this.trigger('clickClose');
   }
 
   render() {

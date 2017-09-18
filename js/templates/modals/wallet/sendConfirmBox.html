@@ -1,6 +1,24 @@
-<div class="tx3 txB rowSm"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+<% console.log('silly'); window.silly = ob %>
+<div class="tx3 txB rowSm"><%= ob.polyT(ob.fetchError ? 'wallet.sendMoney.sendConfirm.errorHeading' : 'wallet.sendMoney.sendConfirm.heading') %></div>
 <div class="posR padSm">
-<% if (typeof ob.fee === 'number') {
+<% if (ob.fetchingFee) { %>
+  <div class="txCtr"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
+<% } else if (ob.fetchError) {
+  if (ob.fetchError === 'ERROR_INSUFFICIENT_FUNDS') { %>
+    <p class="clrT2">
+      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyInsufficientFunds') %>
+    </p>
+  <% } else if (ob.fetchError === 'ERROR_DUST_AMOUNT') { %>
+    <p class="clrT2">
+      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyDustAmount') %>
+    </p>
+  <% } else { %>
+    <p class="clrT2">
+      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyGenericError') %>
+    </p>
+    <a class="js-sendConfirmRetry"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnRetry') %></a>
+  <% } %>
+<% } else if (typeof ob.fee === 'number') {
   let feeText = ob.formatCurrency(ob.fee, 'BTC',
     { useBtcSymbol: false });
 
@@ -17,17 +35,16 @@
       fiatBtcPairing: feeText,
     }) %>
   </p>
-<% } else { %>
-  <p class="clrT2">
-    <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyFeeUnavailable', {
-      fiatBtcPairing: ob.formatCurrency(ob.paymentAmount, ob.paymentCurrency),
-    }) %>
-  </p>
 <% } %>
 </div>
 <hr class="clrBr row" />
 
 <div class="flexHRight flexVCent gutterHLg">
+  <% if (!ob.fetchError) { %>
   <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
-  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a>
+  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') 
+  %></a>
+  <% } else { %>
+  <a class="js-sendConfirmClose"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnClose') %></a>
+  <% } %>
 </div>

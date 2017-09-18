@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { integerToDecimal } from './currency';
+import { integerToDecimal, decimalToInteger } from './currency';
 import { getSocket, events as serverConnectEvents } from './serverConnect';
 import app from '../app';
 
@@ -12,6 +12,9 @@ export const feeLevels = [
 const cacheExpires = 1000 * 60 * 5;
 const estimateFeeCache = new Map();
 let watchingTransactions = false;
+
+console.log('moo');
+window.moo = estimateFeeCache;
 
 function onSocket(e) {
   if (e.jsonData.wallet && !e.jsonData.wallet.height) {
@@ -33,7 +36,7 @@ function watchTransactions() {
   socket.on('message', onSocket);
 
   // in case we connect to a new server
-  this.listenTo(serverConnectEvents, 'connected', e => {
+  serverConnectEvents.on('connected', e => {
     socket.off(null, onSocket);
     e.socket.on('message', onSocket);
   });
@@ -54,7 +57,7 @@ export default function estimateFee(feeLevel, amount) {
     throw new Error('Please provide an amount as a number.');
   }
 
-  if (!watchingTransactions) watchTransactions();
+  watchTransactions();
 
   let deferred;
   const cacheKey = `${feeLevel}-${amount}`;
@@ -76,20 +79,22 @@ export default function estimateFee(feeLevel, amount) {
       deferred,
       createdAt: Date.now(),
     });
+
+    const queryArgs = `feeLevel=${feeLevel}&amount=${decimalToInteger(amount, true)}`;
+    $.get(app.getServerUrl(`wallet/estimatefee/?${queryArgs}`))
+      .done((...args) => {
+        deferred.resolve(integerToDecimal(args[0].estimatedFee, true), ...args.slice(1));
+      }).fail((xhr, ...args) => {
+        deferred.reject(xhr, ...args);
+
+        const knownReasons = ['ERROR_INSUFFICIENT_FUNDS', 'ERROR_DUST_AMOUNT'];
+
+        // don't cache calls that failed with an unknown reason
+        if (xhr.responseJSON && knownReasons.indexOf(xhr.responseJSON.reason) === -1) {
+          estimateFeeCache.delete(cacheKey);
+        }
+      });
   }
-
-  $.get(app.getServerUrl(`wallet/estimatefee/?feeLevel=${feeLevel}&amount=${amount}`))
-    .done((...args) => deferred.resolve(integerToDecimal(args[0], true), ...args.slice(1)))
-    .fail((xhr, ...args) => {
-      deferred.reject(xhr, ...args);
-
-      const knownReasons = ['ERROR_INSUFFICIENT_FUNDS', 'ERROR_DUST_AMOUNT'];
-
-      // don't cache calls that failed with an unknown reason
-      if (xhr.response && knownReasons.indexOf(xhr.response.reason) === -1) {
-        estimateFeeCache.delete(cacheKey);
-      }
-    });
 
   return deferred.promise();
 }

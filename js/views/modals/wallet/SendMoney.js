@@ -4,6 +4,7 @@ import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
+import { convertCurrency } from '../../../utils/currency';
 import estimateFee from '../../../utils/fees';
 import loadTemplate from '../../../utils/loadTemplate';
 import SendConfirmBox from './SendConfirmBox';
@@ -69,18 +70,7 @@ export default class extends baseVw {
       // our confirmation box
       setTimeout(() => {
         this.setSendConfirmOn(true);
-
-        if (!this.estimateFeeFetch || this.estimateFeeFetch.state() !== 'pending') {
-          this.estimateFeeFetch = estimateFee(app.localSettings.get('defaultTransactionFee'));
-        }
-
-        this.sendConfirmBox.setState({
-          paymentAmount: this.model.get('amount'),
-          paymentCurrency: this.model.get('currency'),
-        });
-
-        this.estimateFeeFetch.done(fee => this.sendConfirmBox.setState({ fee }))
-          .fail(() => this.sendConfirmBox.setState({ fetchingFee: false }));
+        this.fetchFeeEstimate();
       });
     }
 
@@ -153,6 +143,29 @@ export default class extends baseVw {
     }
   }
 
+  fetchFeeEstimate() {
+    this.sendConfirmBox.setState({
+      paymentAmount: this.model.get('amount'),
+      paymentCurrency: this.model.get('currency'),
+      fetchingFee: true,
+      fetchError: '',
+    });
+
+    const amount = convertCurrency(this.model.get('amount'), this.model.get('currency'), 'BTC');
+    estimateFee(app.localSettings.get('defaultTransactionFee'), amount)
+      .done(fee => {
+        this.sendConfirmBox.setState({
+          fee,
+          fetchingFee: false,
+        });
+      }).fail(xhr => {
+        this.sendConfirmBox.setState({
+          fetchingFee: false,
+          fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+        });
+      });
+  }
+
   isSendConfirmOn() {
     return this._sendConfirmOn;
   }
@@ -203,11 +216,15 @@ export default class extends baseVw {
 
       this.$('#walletSendCurrency').select2();
 
-      const fee = this.sendConfirmBox && this.sendConfirmBox.getState().fee;
+      const sendConfirmBoxState = this.sendConfirmBox && this.sendConfirmBox.getState();
       if (this.sendConfirmBox) this.sendConfirmBox.remove();
-      this.sendConfirmBox = this.createChild(SendConfirmBox, { fee });
-      this.listenTo(this.sendConfirmBox, 'clickSend', () => this.onClickConfirmSend());
-      this.listenTo(this.sendConfirmBox, 'clickCancel', () => this.onClickSendConfirmCancel());
+      this.sendConfirmBox = this.createChild(SendConfirmBox, {
+        initialState: { ...sendConfirmBoxState || {} },
+      });
+      this.listenTo(this.sendConfirmBox, 'clickSend', this.onClickConfirmSend);
+      this.listenTo(this.sendConfirmBox, 'clickCancel', this.onClickSendConfirmCancel);
+      this.listenTo(this.sendConfirmBox, 'clickClose', this.onClickSendConfirmCancel);
+      this.listenTo(this.sendConfirmBox, 'clickRetry', () => this.fetchFeeEstimate());
       this.$sendConfirm.html(this.sendConfirmBox.render().el);
     });
 
