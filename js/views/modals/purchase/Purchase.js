@@ -44,6 +44,8 @@ export default class extends BaseModal {
     const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
 
+    this.couponObj = [];
+
     this.order = new Order(
       {},
       {
@@ -79,6 +81,7 @@ export default class extends BaseModal {
       model: this.order,
       listing: this.listing,
       prices: this.prices,
+      couponObj: this.couponObj,
     });
 
     this.coupons = this.createChild(Coupons, {
@@ -120,6 +123,9 @@ export default class extends BaseModal {
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
+    this.listenTo(this.order.get('items').at(0), 'change', () => this.refreshPrices());
+    this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
+      this.refreshPrices());
   }
 
   className() {
@@ -276,7 +282,11 @@ export default class extends BaseModal {
   changeCoupons(hashes, codes) {
     // combine the codes and hashes so the receipt can check both.
     // if this is the user's own listing they will have codes instead of hashes
-    this.receipt.coupons = hashes.concat(codes);
+    const hashesAndCodes = hashes.concat(codes);
+    const filteredCoupons = this.listing.get('coupons').filter((coupon) =>
+      hashesAndCodes.indexOf(coupon.get('hash') || coupon.get('discountCode')) !== -1);
+    this.couponObj = filteredCoupons.map(coupon => coupon.toJSON());
+    this.receipt.coupons = this.couponObj;
     this.order.get('items').at(0).set('coupons', codes);
   }
 
@@ -412,9 +422,34 @@ export default class extends BaseModal {
       priceObj.price = this.listing.get('item').get('price');
       priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
       priceObj.vPrice = sku ? sku.get('surcharge') : 0;
+      priceObj.quantity = item.get('quantity');
       prices.push(priceObj);
     });
     return prices;
+  }
+
+  get total() {
+    const prices = this.prices;
+    let priceTotal = 0;
+    prices.forEach((priceObj) => {
+      let itemPrice = priceObj.price + priceObj.vPrice;
+      this.couponObj.forEach(coupon => {
+        if (coupon.percentDiscount) {
+          itemPrice -= itemPrice * 0.01 * coupon.percentDiscount;
+        } else if (coupon.priceDiscount) {
+          itemPrice -= coupon.priceDiscount;
+        }
+      });
+      itemPrice += priceObj.sPrice;
+      priceTotal += itemPrice * priceObj.quantity;
+    });
+
+    return priceTotal;
+  }
+
+  refreshPrices() {
+    console.log(this.minModPrice);
+    console.log(this.total);
   }
 
   get $popInMessages() {

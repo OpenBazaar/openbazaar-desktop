@@ -4,12 +4,12 @@
   const listingCurrency = ob.listing.metadata.pricingCurrency;
   const viewingCurrency = ob.displayCurrency;
   const isBTC = viewingCurrency === 'BTC';
-  ob.items.forEach((item, i) => {
+  ob.prices.forEach((priceObj, i) => {
     // convert and truncate the prices here, to prevent rounding errors in the display
-    const basePrice = Number(ob.formatPrice(ob.convertCurrency(ob.prices[i].price, listingCurrency, viewingCurrency), isBTC));
-    const shippingPrice = Number(ob.formatPrice(ob.convertCurrency(ob.prices[i].sPrice, listingCurrency, viewingCurrency), isBTC));
-    const surcharge = Number(ob.formatPrice(ob.convertCurrency(ob.prices[i].vPrice, listingCurrency, viewingCurrency), isBTC));
-    const quantity = Number.isInteger(item.quantity) ? item.quantity : 1;
+    const basePrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency), isBTC));
+    const shippingPrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency), isBTC));
+    const surcharge = Number(ob.formatPrice(ob.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency), isBTC));
+const quantity = Number.isInteger(ob.items[i].quantity) ? ob.items[i].quantity : 1;
     let itemTotal = basePrice + surcharge;
     const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {

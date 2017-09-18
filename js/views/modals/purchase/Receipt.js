@@ -7,8 +7,6 @@ import Listing from '../../../models/listing/Listing';
 export default class extends BaseView {
   constructor(options = {}) {
     super(options);
-    this.options = options;
-    this._coupons = [];
 
     if (!this.model || !(this.model instanceof Order)) {
       throw new Error('Please provide an order model');
@@ -22,10 +20,12 @@ export default class extends BaseView {
       throw new Error('Please provide the prices array');
     }
 
+    this.options = options;
+    this._coupons = options.couponObj || [];
+
     this.prices = options.prices;
 
     this.listenTo(this.model.get('items').at(0), 'change', () => this.render());
-    this.listenTo(this.model.get('items').at(0).get('shipping'), 'change', () => this.render());
   }
 
   className() {
@@ -36,19 +36,15 @@ export default class extends BaseView {
     return this._coupons;
   }
 
+  set coupons(coupons) {
+    this._coupons = coupons;
+  }
+
   updatePrices(prices) {
     if (prices !== this.prices) {
       this.prices = prices;
       this.render();
     }
-  }
-
-  set coupons(hashesAndCodes) {
-    // when we implement multiple items, the coupons should go into an array that mirrors the itmes
-    // if this is the user's own listing, the listing object only has the codes
-    const filteredCoupons = this.options.listing.get('coupons').filter((coupon) =>
-    hashesAndCodes.indexOf(coupon.get('hash') || coupon.get('discountCode')) !== -1);
-    this._coupons = filteredCoupons.map(coupon => coupon.toJSON());
   }
 
   render() {
