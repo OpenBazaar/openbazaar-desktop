@@ -189,7 +189,8 @@ export default class extends BaseModal {
       .done((data, status, xhr) => {
         if (xhr.statusText === 'abort') return;
         const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
-        this.estFee = feePerByte * 184 / 100000000;
+        const estFee = feePerByte * 184 / 100000000;
+        this.minModPrice = estFee * 10;
         this.setState({
           isFetching: false,
           fetchError: false,
@@ -464,7 +465,7 @@ export default class extends BaseModal {
     if (cur !== 'BTC') {
       btcTotal = convertCurrency(btcTotal, cur, 'BTC');
     }
-    const tooLow = btcTotal < this.estFee * 10;
+    const tooLow = btcTotal < this.minModPrice;
     this.toggleModeration(!tooLow);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', !tooLow);
   }
@@ -523,6 +524,7 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         prices: this.prices,
+        minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: this.moderatorIDs.length,
       }));
