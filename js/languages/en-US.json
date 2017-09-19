@@ -15,6 +15,15 @@
     "typeUnfollow": "unfollowing",
     "followErrorTitle": "There was an error %{type} %{user}."
   },
+  "feeLevels": {
+    "PRIORITY": "Priority",
+    "NORMAL": "Normal",
+    "ECONOMIC": "Economic"
+  },
+  "feeChangeWidget": {
+    "label": "Bitcoin fee:",
+    "btnChange": "change"
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
