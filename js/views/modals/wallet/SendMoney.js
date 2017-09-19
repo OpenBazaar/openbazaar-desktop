@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';

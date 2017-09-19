@@ -3,7 +3,6 @@
   ensure they are compatible with both the Purchase and Order Detail flows.
 */
 
-import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
