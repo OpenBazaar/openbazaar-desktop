@@ -13,9 +13,6 @@ const cacheExpires = 1000 * 60 * 5;
 const estimateFeeCache = new Map();
 let watchingTransactions = false;
 
-console.log('moo');
-window.moo = estimateFeeCache;
-
 function onSocket(e) {
   if (e.jsonData.wallet && !e.jsonData.wallet.height) {
     estimateFeeCache.clear();

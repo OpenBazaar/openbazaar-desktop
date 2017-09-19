@@ -1,59 +1,63 @@
-<% if (ob.fetchingFee) {
-    // invisible heading for spacing purposes
-%>
-<div class="tx3 txB rowSm invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
-<% } else { %>
-<div class="tx3 txB rowSm"><%= ob.polyT(ob.fetchError ? 'wallet.sendMoney.sendConfirm.errorHeading' : 'wallet.sendMoney.sendConfirm.heading') %></div>
-<% } %>
-<div class="posR padSm">
-<% if (ob.fetchingFee) { %>
-  <div class="txCtr"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
-<% } else if (ob.fetchError) {
-  if (ob.fetchError === 'ERROR_INSUFFICIENT_FUNDS') { %>
-    <p class="clrT2">
-      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyInsufficientFunds') %>
-    </p>
-  <% } else if (ob.fetchError === 'ERROR_DUST_AMOUNT') { %>
-    <p class="clrT2">
-      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyDustAmount') %>
-    </p>
-  <% } else { %>
-    <p class="clrT2">
-      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyGenericError', { err: ob.fetchError || '' }) %>
-    </p>
-    <a class="js-sendConfirmRetry"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnRetry') %></a>
-  <% } %>
-<% } else if (typeof ob.fee === 'number') {
-  let feeText = ob.formatCurrency(ob.fee, 'BTC',
-    { useBtcSymbol: false });
+<% if (ob.show) { %>
+  <div class="confirmBox sendConfirm arrowBoxTop clrBr clrP clrT clrSh1">
+    <% if (ob.fetchingFee) {
+        // invisible heading for spacing purposes
+    %>
+    <div class="tx3 txB rowSm invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+    <% } else { %>
+    <div class="tx3 txB rowSm"><%= ob.polyT(ob.fetchError ? 'wallet.sendMoney.sendConfirm.errorHeading' : 'wallet.sendMoney.sendConfirm.heading') %></div>
+    <% } %>
+    <div class="posR padSm">
+    <% if (ob.fetchingFee) { %>
+      <div class="txCtr"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
+    <% } else if (ob.fetchError) {
+      if (ob.fetchError === 'ERROR_INSUFFICIENT_FUNDS') { %>
+        <p class="clrT2">
+          <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyInsufficientFunds') %>
+        </p>
+      <% } else if (ob.fetchError === 'ERROR_DUST_AMOUNT') { %>
+        <p class="clrT2">
+          <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyDustAmount') %>
+        </p>
+      <% } else { %>
+        <p class="clrT2">
+          <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyGenericError', { err: ob.fetchError || '' }) %>
+        </p>
+        <a class="js-sendConfirmRetry"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnRetry') %></a>
+      <% } %>
+    <% } else if (typeof ob.fee === 'number') {
+      let feeText = ob.formatCurrency(ob.fee, 'BTC',
+        { useBtcSymbol: false });
 
-  if (ob.displayCurrency !== 'BTC') {
-    feeText = ob.polyT('fiatBtcPairing', {
-      fiatAmount: ob.convertAndFormatCurrency(ob.fee, 'BTC',
-        ob.displayCurrency),
-      btcAmount: feeText,
-    });
-  }
-%>
-  <p class="clrT2">
-    <%= ob.polyT('wallet.sendMoney.sendConfirm.body', {
-      fiatBtcPairing: feeText,
-    }) %>
-  </p>
-<% } %>
-</div>
-<hr class="clrBr row" />
+      if (ob.displayCurrency !== 'BTC') {
+        feeText = ob.polyT('fiatBtcPairing', {
+          fiatAmount: ob.convertAndFormatCurrency(ob.fee, 'BTC',
+            ob.displayCurrency),
+          btcAmount: feeText,
+        });
+      }
+    %>
+      <p class="clrT2">
+        <%= ob.polyT('wallet.sendMoney.sendConfirm.body', {
+          fiatBtcPairing: feeText,
+        }) %>
+      </p>
+    <% } %>
+    </div>
+    <hr class="clrBr row" />
 
-<div class="flexHRight flexVCent gutterHLg">
-  <% if (ob.fetchingFee) {
-    // invisible button for spacing purposes
-  %>
-  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a> 
-  <% } else if (!ob.fetchError) { %>
-  <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
-  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') 
-  %></a>
-  <% } else { %>
-  <a class="js-sendConfirmClose"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnClose') %></a>
-  <% } %>
-</div>
+    <div class="flexHRight flexVCent gutterHLg">
+      <% if (ob.fetchingFee) {
+        // invisible button for spacing purposes
+      %>
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a> 
+      <% } else if (!ob.fetchError) { %>
+      <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') 
+      %></a>
+      <% } else { %>
+      <a class="js-sendConfirmClose"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnClose') %></a>
+      <% } %>
+    </div>
+  </div>
+<% } %>  
