@@ -9,7 +9,8 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
-import ConfirmWallet from './ConfirmWallet';
+// import ConfirmWallet from './ConfirmWallet';
+import SpendConfirmBox from '../wallet/SpendConfirmBox';
 import qr from 'qr-encode';
 import { clipboard, remote } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
@@ -40,8 +41,8 @@ export default class extends BaseVw {
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
 
-    this.boundOnDocClick = this.onDocumentClick.bind(this);
-    $(document).on('click', this.boundOnDocClick);
+    // this.boundOnDocClick = this.onDocumentClick.bind(this);
+    // $(document).on('click', this.boundOnDocClick);
 
     const serverSocket = getSocket();
     if (serverSocket) {
@@ -91,20 +92,20 @@ export default class extends BaseVw {
     };
   }
 
-  onDocumentClick(e) {
-    if (!($.contains(this.$confirmWallet[0], e.target))) {
-      this.$confirmWallet.addClass('hide');
-    }
-  }
+  // onDocumentClick(e) {
+  //   if (!($.contains(this.$confirmWallet[0], e.target))) {
+  //     this.$confirmWallet.addClass('hide');
+  //   }
+  // }
 
   clickPayFromWallet(e) {
     e.stopPropagation();
     this.$confirmWallet.removeClass('hide');
   }
 
-  walletCancel() {
-    this.$confirmWallet.addClass('hide');
-  }
+  // walletCancel() {
+  //   this.$confirmWallet.addClass('hide');
+  // }
 
   walletConfirm() {
     this.$confirmWalletConfirm.addClass('processing');
@@ -198,6 +199,7 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
     const displayCurrency = app.settings.get('localCurrency');
 
     loadTemplate('modals/purchase/payment.html', (t) => {
@@ -212,23 +214,24 @@ export default class extends BaseVw {
         }));
       });
 
-      this._$confirmWallet = null;
       this._$copyAmount = null;
       this._$copyAddress = null;
       this._$confirmWalletConfirm = null;
       this._$amountDueLine = null;
       this._$qrCodeImg = null;
 
-      // remove old view if any on render
-      if (this.confirmWallet) this.confirmWallet.remove();
-      // add the confirmWallet view
-      this.confirmWallet = this.createChild(ConfirmWallet, {
-        displayCurrency,
-        amount: () => this.balanceRemaining,
-      });
-      this.listenTo(this.confirmWallet, 'walletCancel', () => this.walletCancel());
-      this.listenTo(this.confirmWallet, 'walletConfirm', () => this.walletConfirm());
-      this.$confirmWallet.append(this.confirmWallet.render().el);
+      // if (this.confirmWallet) this.confirmWallet.remove();
+      // this.confirmWallet = this.createChild(ConfirmWallet, {
+      //   displayCurrency,
+      //   amount: () => this.balanceRemaining,
+      // });
+      // this.listenTo(this.confirmWallet, 'walletCancel', () => this.walletCancel());
+      // this.listenTo(this.confirmWallet, 'walletConfirm', () => this.walletConfirm());
+      // this.$confirmWallet.append(this.confirmWallet.render().el);
+
+      this.spendConfirmBox = this.createChild(SpendConfirmBox);
+      this.listenTo(this.spendConfirmBox, 'clickSend', this.walletConfirm);
+      this.getCachedEl('.js-confirmWalletContainer').html(this.spendConfirmBox.render().el);
     });
 
     return this;
