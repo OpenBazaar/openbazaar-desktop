@@ -246,13 +246,15 @@ export default class extends BaseModal {
 
   toggleModeration(bool) {
     this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
-    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
-    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
+    // when the state is changed, always hide the following. They are unhidden by checking the
+    // moderated payment option
+    this.getCachedEl('.js-moderator').addClass('hide');
+    this.getCachedEl('.js-moderatorNote').addClass('hide');
     if (!bool) this.disableModerators();
   }
 
   onNoValidModerators() {
-    this.disableModerators();
+    this.toggleModeration(false);
     this.getCachedEl('.js-noValidModerators').removeClass('hide');
   }
 
