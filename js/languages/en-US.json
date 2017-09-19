@@ -742,9 +742,11 @@
           "title": "Retry Payment",
           "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
           "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
-          "btnConfirmSend": "Send"
+          "btnConfirmSend": "Send",
+          "btnRetry": "Retry"
         },
         "retryFailDialogTitle": "Unable to retry payment",
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",

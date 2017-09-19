@@ -40,12 +40,16 @@ function watchTransactions() {
 }
 
 /**
- * Will estimate a fee based on the current state of the wallet.
+ * Will estimate a fee based on the provided amount, fee level and the current state
+ * of the wallet.
  *
  * @param {string} feeLevel - The fee level
  * @param {amount} number - The amount of the transaction in Bitcoin.
+ * @return {object} An jQuery defered which on success will resolve with the fee
+ *   in Bitcoin. If the call fails, the deferred will fail and pass on the args the
+ *   xhr fail handler receives.
  */
-export default function estimateFee(feeLevel, amount) {
+export function estimateFee(feeLevel, amount) {
   if (feeLevels.indexOf(feeLevel) === -1) {
     throw new Error(`feelevel must be one of ${feeLevels.join(', ')}`);
   }
@@ -90,6 +94,41 @@ export default function estimateFee(feeLevel, amount) {
         if (xhr.responseJSON && knownReasons.indexOf(xhr.responseJSON.reason) === -1) {
           estimateFeeCache.delete(cacheKey);
         }
+      });
+  }
+
+  return deferred.promise();
+}
+
+let getFeesCache = {};
+
+/**
+ * Will call the fees api ('wallet/fees') on the server.
+ *
+ * @return {object} An jQuery defered which on success will resolve with the fees
+ *   per byte in Satoshi for each fee level. If the call fails, the deferred will
+ *   fail and pass on the args the xhr fail handler receives.
+ */
+export function getFees() {
+  let deferred;
+
+  if (getFeesCache.deferred && Date.now() - getFeesCache.createdAt < cacheExpires) {
+    deferred = getFeesCache.deferred;
+  }
+
+  if (!deferred) {
+    deferred = $.Deferred();
+
+    getFeesCache = {
+      deferred,
+      createdAt: Date.now(),
+    };
+
+    $.get(app.getServerUrl('wallet/fees'))
+      .done((...args) => deferred.resolve(...args))
+      .fail((...args) => {
+        deferred.reject(...args);
+        getFeesCache = {};
       });
   }
 

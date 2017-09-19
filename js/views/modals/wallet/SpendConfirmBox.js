@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import estimateFee from '../../../utils/fees';
+import { estimateFee } from '../../../utils/fees';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
