@@ -6,6 +6,7 @@ import Spend, { spend } from '../../../models/wallet/Spend';
 import { convertCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import SendConfirmBox from './SpendConfirmBox';
+import FeeChange from '../../components/FeeChange';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -156,11 +157,16 @@ export default class extends baseVw {
 
       const sendConfirmBoxState = this.sendConfirmBox && this.sendConfirmBox.getState();
       if (this.sendConfirmBox) this.sendConfirmBox.remove();
+
       this.sendConfirmBox = this.createChild(SendConfirmBox, {
         initialState: { ...sendConfirmBoxState || {} },
       });
       this.listenTo(this.sendConfirmBox, 'clickSend', this.onClickConfirmSend);
       this.getCachedEl('.js-sendConfirmContainer').html(this.sendConfirmBox.render().el);
+
+      if (this.feeChange) this.feeChange.remove();
+      this.feeChange = this.createChild(FeeChange);
+      this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
     });
 
     return this;
