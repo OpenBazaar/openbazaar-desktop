@@ -24,8 +24,6 @@ export default class extends BaseView {
     this._coupons = options.couponObj || [];
 
     this.prices = options.prices;
-
-    this.listenTo(this.model.get('items').at(0), 'change', () => this.render());
   }
 
   className() {
