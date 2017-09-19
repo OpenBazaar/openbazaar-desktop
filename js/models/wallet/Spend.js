@@ -52,7 +52,8 @@ class Spend extends BaseModel {
       addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
     } else if (attrs.amount <= 0) {
       addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-    } else if (this.amountInBitcoin >= app.walletBalance.get('confirmed')) {
+    } else if (this.amountInBitcoin >=
+      app.walletBalance.get('confirmed') + app.walletBalance.get('unconfirmed')) {
       addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
     }
 
