@@ -40,12 +40,17 @@
       <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="memo" id="walletSendNote" value="<%= ob.memo %>" placeholder="<%= ob.polyT('wallet.sendMoney.notePlaceholder') %>">
     </div>
   </div>
-  <div class="flexHRight flexVCent gutterH col11">
-    <a class="js-sendMoneyClear"><%= ob.polyT('wallet.sendMoney.clear') %></a>
-    <%= ob.processingButton({
-      className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
-      btnText: ob.polyT('wallet.sendMoney.sendBtn')
-    }) %>
+  <div class="flexVCent">
+    <div class="margL js-feeChangeContainer"></div>
+    <div class="flexExpand">
+      <div class="flexHRight flexVCent gutterH col11">
+        <a class="js-sendMoneyClear"><%= ob.polyT('wallet.sendMoney.clear') %></a>
+        <%= ob.processingButton({
+          className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
+          btnText: ob.polyT('wallet.sendMoney.sendBtn')
+        }) %>
+      </div>
+    </div>
   </div>
 </form>
 <div class="js-sendConfirm confirmBox sendConfirm arrowBoxTop clrBr clrP clrT clrSh1 <% if (!ob.sendConfirmOn) print('hide') %>"></div>

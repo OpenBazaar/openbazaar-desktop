@@ -20,10 +20,13 @@
   font-weight: 700;
   transition: border 0.15s ease;
 
-  &:hover:not(.btnRadio),
-  &:focus:not(.btnRadio) {
+  &:hover:not(.btnRadio, .btnAsLink),
+  &:focus:not(.btnRadio, .btnAsLink) {
     text-decoration: none;
     cursor: pointer;
+  }
+
+  &:focus:not(.btnRadio) {
     outline: 0;
   }
 
@@ -169,6 +172,16 @@
   align-items: inherit;
   justify-content: inherit;
   padding: 0;
+}
+
+.btnAsLink {
+  @extend .btnTxtOnly;
+  font-weight: inherit;
+  text-decoration: underline;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .iconBtn {

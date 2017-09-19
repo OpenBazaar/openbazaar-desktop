@@ -52,7 +52,7 @@
         <div class="flexExpand">
           <span class="clrT2 clamp tx5b"><%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>
-        <div class="tx6">
+        <div class="tx6 flexNoShrink">
           <% print(`${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
         </div>
       </div>

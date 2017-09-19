@@ -6,6 +6,7 @@ import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
 import estimateFee from '../../../utils/fees';
 import loadTemplate from '../../../utils/loadTemplate';
+import FeeChange from '../../components/FeeChange';
 import SendConfirmBox from './SendConfirmBox';
 import baseVw from '../../baseVw';
 
@@ -209,6 +210,10 @@ export default class extends baseVw {
       this.listenTo(this.sendConfirmBox, 'clickSend', () => this.onClickConfirmSend());
       this.listenTo(this.sendConfirmBox, 'clickCancel', () => this.onClickSendConfirmCancel());
       this.$sendConfirm.html(this.sendConfirmBox.render().el);
+
+      if (this.feeChange) this.feeChange.remove();
+      this.feeChange = this.createChild(FeeChange);
+      this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
     });
 
     return this;
