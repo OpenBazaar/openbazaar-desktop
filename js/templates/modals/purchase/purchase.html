@@ -180,13 +180,16 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
         <section class="contentBox pad clrP clrBr clrSh3 sidebar">
           <i class="js-close cornerTR ion-ios-close-empty iconBtn clrP clrBr clrSh3 closeBtn"></i>
           <div class="js-actionBtn"></div>
-          <div class="js-receipt"></div>
-          <% if (ob.hasModerators) { %>
-            <hr class="clrBr js-moderatorNote">
-            <div class="padSm txSm txCtr clrT2 js-moderatorNote">
-              <%= ob.polyT('purchase.moderatorNote') %>
-            </div>
-          <% } %>
+          <div class="rowLg">
+            <div class="js-receipt"></div>
+            <% if (ob.hasModerators) { %>
+              <hr class="clrBr js-moderatorNote">
+              <div class="padSm txSm txCtr clrT2 js-moderatorNote">
+                <%= ob.polyT('purchase.moderatorNote') %>
+              </div>
+            <% } %>
+          </div>
+          <div class="tx6 js-feeChangeContainer"></div>
         </section>
       </div>
     </div>

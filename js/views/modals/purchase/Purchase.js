@@ -4,6 +4,9 @@ import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import { launchSettingsModal } from '../../../utils/modalManager';
+import { convertCurrency} from '../../../utils/currency';
+import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
@@ -17,9 +20,7 @@ import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
-import { launchSettingsModal } from '../../../utils/modalManager';
-import { openSimpleMessage } from '../SimpleMessage';
-import { convertCurrency} from "../../../utils/currency";
+import FeeChange from '../../components/FeeChange';
 
 
 export default class extends BaseModal {
@@ -557,6 +558,10 @@ export default class extends BaseModal {
 
       this.complete.delegateEvents();
       this.$('.js-complete').append(this.complete.render().el);
+
+      if (this.feeChange) this.feeChange.remove();
+      this.feeChange = this.createChild(FeeChange);
+      this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
 
       this.isModAllowed();
     });
