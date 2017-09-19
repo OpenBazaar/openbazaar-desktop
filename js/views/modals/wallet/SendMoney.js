@@ -6,7 +6,7 @@ import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
 import { convertCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
-import SendConfirmBox from './SendConfirmBox';
+import SendConfirmBox from './SpendConfirmBox';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
