@@ -115,11 +115,6 @@
         right: -28px;
         transform: translateY(-7px);
       }
-
-      .spinner {
-        position: relative;
-        top: -10px;
-      }
     }
   }
 
@@ -217,5 +212,12 @@
         height: auto;
       }
     }
+  }
+}
+
+.spendConfirmBox {
+  .spinner {
+    position: relative;
+    top: -10px;
   }
 }

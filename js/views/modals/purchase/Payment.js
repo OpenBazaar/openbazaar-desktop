@@ -9,7 +9,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
-// import ConfirmWallet from './ConfirmWallet';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';
 import qr from 'qr-encode';
 import { clipboard, remote } from 'electron';
@@ -41,9 +40,6 @@ export default class extends BaseVw {
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
 
-    // this.boundOnDocClick = this.onDocumentClick.bind(this);
-    // $(document).on('click', this.boundOnDocClick);
-
     const serverSocket = getSocket();
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
@@ -52,11 +48,10 @@ export default class extends BaseVw {
           if (e.jsonData.notification.orderId === this.orderId) {
             const amount = integerToDecimal(e.jsonData.notification.fundingTotal, true);
             if (amount >= this.balanceRemaining) {
-              this.$confirmWalletConfirm.removeClass('processing');
-              this.$confirmWallet.addClass('hide');
+              this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);
             } else {
-              // Ensure the resulting balance has a maximum of 8 decimal places with not
+              // Ensure the resulting balance has a maximum of 8 decimal places without any
               // trailing zeros.
               this.balanceRemaining = parseFloat((this.balanceRemaining - amount).toFixed(8));
             }
@@ -92,23 +87,15 @@ export default class extends BaseVw {
     };
   }
 
-  // onDocumentClick(e) {
-  //   if (!($.contains(this.$confirmWallet[0], e.target))) {
-  //     this.$confirmWallet.addClass('hide');
-  //   }
-  // }
-
   clickPayFromWallet(e) {
+    this.spendConfirmBox.setState({ show: true });
+    this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
     e.stopPropagation();
-    this.$confirmWallet.removeClass('hide');
   }
 
-  // walletCancel() {
-  //   this.$confirmWallet.addClass('hide');
-  // }
-
   walletConfirm() {
-    this.$confirmWalletConfirm.addClass('processing');
+    this.getCachedEl('.js-payFromWallet').addClass('processing');
+    this.spendConfirmBox.setState({ show: false });
 
     spend({
       address: this.paymentAddress,
@@ -119,8 +106,7 @@ export default class extends BaseVw {
         openSimpleMessage(app.polyglot.t('purchase.errors.paymentFailed'),
           jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
         if (this.isRemoved()) return;
-        this.$confirmWalletConfirm.removeClass('processing');
-        this.$confirmWallet.addClass('hide');
+        this.getCachedEl('.js-payFromWallet').removeClass('processing');
       });
   }
 
@@ -163,11 +149,6 @@ export default class extends BaseVw {
     return qr(btcURL, { type: 8, size: 5, level: 'Q' });
   }
 
-  get $confirmWallet() {
-    return this._$confirmWallet ||
-      (this._$confirmWallet = this.$('.js-confirmWallet'));
-  }
-
   get $copyAmount() {
     return this._$copyAmount ||
       (this._$copyAmount = this.$('.js-copyAmount'));
@@ -178,11 +159,6 @@ export default class extends BaseVw {
       (this._$copyAddress = this.$('.js-copyAddress'));
   }
 
-  get $confirmWalletConfirm() {
-    return this._$confirmWalletConfirm ||
-      (this._$confirmWalletConfirm = this.$('.js-confirmWalletConfirm'));
-  }
-
   get $amountDueLine() {
     return this._$amountDueLine ||
       (this._$amountDueLine = this.$('.js-amountDueLine'));
@@ -191,11 +167,6 @@ export default class extends BaseVw {
   get $qrCodeImg() {
     return this._$qrCodeImg ||
       (this._$qrCodeImg = this.$('.js-qrCodeImg'));
-  }
-
-  remove() {
-    $(document).off('click', this.boundOnDocClick);
-    super.remove();
   }
 
   render() {
@@ -216,20 +187,14 @@ export default class extends BaseVw {
 
       this._$copyAmount = null;
       this._$copyAddress = null;
-      this._$confirmWalletConfirm = null;
       this._$amountDueLine = null;
       this._$qrCodeImg = null;
 
-      // if (this.confirmWallet) this.confirmWallet.remove();
-      // this.confirmWallet = this.createChild(ConfirmWallet, {
-      //   displayCurrency,
-      //   amount: () => this.balanceRemaining,
-      // });
-      // this.listenTo(this.confirmWallet, 'walletCancel', () => this.walletCancel());
-      // this.listenTo(this.confirmWallet, 'walletConfirm', () => this.walletConfirm());
-      // this.$confirmWallet.append(this.confirmWallet.render().el);
-
-      this.spendConfirmBox = this.createChild(SpendConfirmBox);
+      this.spendConfirmBox = this.createChild(SpendConfirmBox, {
+        initialState: {
+          btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
+        },
+      });
       this.listenTo(this.spendConfirmBox, 'clickSend', this.walletConfirm);
       this.getCachedEl('.js-confirmWalletContainer').html(this.spendConfirmBox.render().el);
     });

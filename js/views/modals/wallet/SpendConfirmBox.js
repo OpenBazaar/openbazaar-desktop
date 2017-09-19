@@ -13,12 +13,17 @@ export default class extends baseVw {
       fetchingFee: false,
       fee: false,
       displayCurrency: app.settings.get('localCurrency') || 'BTC',
+      btnSendText: app.polyglot.t('wallet.sendMoney.sendConfirm.btnConfirmSend'),
       ...options.initialState || {},
     };
 
     this.lastFetchFeeEstimateArgs = {};
     this.boundDocumentClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocumentClick);
+  }
+
+  className() {
+    return 'spendConfirmBox';
   }
 
   events() {
@@ -90,7 +95,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/wallet/sendConfirmBox.html', (t) => {
+    loadTemplate('modals/wallet/spendConfirmBox.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));

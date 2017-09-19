@@ -3,5 +3,5 @@
 %>
 <a class="btnProcessing <%= ob.className %>" <%= ob.attrs %>>
   <%= ob.spinner({ className: ob.spinnerClassName || '' }) %>
-  <span class="js-btnText"><%= ob.btnText %></span>
+  <span class="js-btnText <%= ob.textClassName %>"><%= ob.btnText %></span>
 </a>

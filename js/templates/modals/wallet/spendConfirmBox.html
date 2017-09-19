@@ -50,11 +50,10 @@
       <% if (ob.fetchingFee) {
         // invisible button for spacing purposes
       %>
-      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a> 
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.btnSendText %></a> 
       <% } else if (!ob.fetchError) { %>
       <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
-      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') 
-      %></a>
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.btnSendText %></a>
       <% } else { %>
       <a class="js-sendConfirmClose"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnClose') %></a>
       <% } %>

@@ -137,11 +137,6 @@ export default class extends baseVw {
       (this._$btnSend = this.$('.js-btnSend'));
   }
 
-  remove() {
-    $(document).off(null, this.boundDocumentClick);
-    super.remove();
-  }
-
   render() {
     super.render();
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
