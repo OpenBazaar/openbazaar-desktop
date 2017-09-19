@@ -125,9 +125,9 @@ export default class extends BaseModal {
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
-    this.listenTo(this.order.get('items').at(0), 'change', () => this.isModAllowed());
+    this.listenTo(this.order.get('items').at(0), 'change', () => this.refreshPrices());
     this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
-      this.isModAllowed());
+      this.refreshPrices());
   }
 
   className() {
@@ -247,7 +247,7 @@ export default class extends BaseModal {
 
   toggleModeration(bool) {
     this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
-    // when the state is changed, always hide the following. They are unhidden by checking the
+    // when the visibility is changed, always hide the following. They are unhidden by checking the
     // moderated payment option
     this.getCachedEl('.js-moderator').addClass('hide');
     this.getCachedEl('.js-moderatorNote').addClass('hide');
@@ -307,7 +307,6 @@ export default class extends BaseModal {
     this.order.get('items').at(0).get('shipping')
       .set(opts);
     this.actionBtn.render();
-    this.receipt.updatePrices(this.prices);
   }
 
   updatePageState(state) {
@@ -468,6 +467,11 @@ export default class extends BaseModal {
     const tooLow = btcTotal < this.minModPrice;
     this.toggleModeration(!tooLow);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', !tooLow);
+  }
+
+  refreshPrices() {
+    this.isModAllowed();
+    this.receipt.updatePrices(this.prices);
   }
 
   get $popInMessages() {

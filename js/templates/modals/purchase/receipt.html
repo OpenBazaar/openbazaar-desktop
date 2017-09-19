@@ -9,7 +9,7 @@
     const basePrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency), isBTC));
     const shippingPrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency), isBTC));
     const surcharge = Number(ob.formatPrice(ob.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency), isBTC));
-const quantity = Number.isInteger(ob.items[i].quantity) ? ob.items[i].quantity : 1;
+    const quantity = Number.isInteger(priceObj.quantity) ? priceObj.quantity : 1;
     let itemTotal = basePrice + surcharge;
     const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {
