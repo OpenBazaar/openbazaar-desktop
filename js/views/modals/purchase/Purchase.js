@@ -5,7 +5,7 @@ import '../../../utils/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
-import { convertCurrency} from '../../../utils/currency';
+import { convertCurrency } from '../../../utils/currency';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
