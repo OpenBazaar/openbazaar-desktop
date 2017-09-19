@@ -40,7 +40,7 @@ export default class extends baseVw {
   }
 
   onClickConfirmSend() {
-    this.setSendConfirmOn(false, false);
+    this.setSendConfirmOn(false);
 
     // POSTing payment to the server
     this.saveInProgress = true;
@@ -132,14 +132,14 @@ export default class extends baseVw {
     return this._saveInProgress;
   }
 
-  setSendConfirmOn(bool, renderOnChange = true) {
+  setSendConfirmOn(bool) {
     if (typeof bool !== 'boolean') {
       throw new Error('Please provide a boolean.');
     }
 
     if (bool !== this.isSendConfirmOn()) {
       this._sendConfirmOn = bool;
-      if (renderOnChange) this.render();
+      this.getCachedEl('.js-sendConfirm').toggleClass('hide', !bool);
     }
   }
 
@@ -198,6 +198,7 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -224,7 +225,10 @@ export default class extends baseVw {
       this.listenTo(this.sendConfirmBox, 'clickSend', this.onClickConfirmSend);
       this.listenTo(this.sendConfirmBox, 'clickCancel', this.onClickSendConfirmCancel);
       this.listenTo(this.sendConfirmBox, 'clickClose', this.onClickSendConfirmCancel);
-      this.listenTo(this.sendConfirmBox, 'clickRetry', () => this.fetchFeeEstimate());
+      this.listenTo(this.sendConfirmBox, 'clickRetry', e => {
+        this.fetchFeeEstimate();
+        e.originalEvent.stopPropagation();
+      });
       this.$sendConfirm.html(this.sendConfirmBox.render().el);
     });
 

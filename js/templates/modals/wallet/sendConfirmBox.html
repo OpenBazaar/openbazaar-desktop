@@ -1,5 +1,10 @@
-<% console.log('silly'); window.silly = ob %>
+<% if (ob.fetchingFee) {
+    // invisible heading for spacing purposes
+%>
+<div class="tx3 txB rowSm invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.heading') %></div>
+<% } else { %>
 <div class="tx3 txB rowSm"><%= ob.polyT(ob.fetchError ? 'wallet.sendMoney.sendConfirm.errorHeading' : 'wallet.sendMoney.sendConfirm.heading') %></div>
+<% } %>
 <div class="posR padSm">
 <% if (ob.fetchingFee) { %>
   <div class="txCtr"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
@@ -14,7 +19,7 @@
     </p>
   <% } else { %>
     <p class="clrT2">
-      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyGenericError') %>
+      <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyGenericError', { err: ob.fetchError || '' }) %>
     </p>
     <a class="js-sendConfirmRetry"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnRetry') %></a>
   <% } %>
@@ -40,7 +45,11 @@
 <hr class="clrBr row" />
 
 <div class="flexHRight flexVCent gutterHLg">
-  <% if (!ob.fetchError) { %>
+  <% if (ob.fetchingFee) {
+    // invisible button for spacing purposes
+  %>
+  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') %></a> 
+  <% } else if (!ob.fetchError) { %>
   <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
   <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnConfirmSend') 
   %></a>

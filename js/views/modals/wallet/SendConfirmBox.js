@@ -33,8 +33,8 @@ export default class extends baseVw {
     this.trigger('clickCancel');
   }
 
-  onClickRetry() {
-    this.trigger('clickRetry');
+  onClickRetry(e) {
+    this.trigger('clickRetry', { originalEvent: e });
   }
 
   onClickClose() {
