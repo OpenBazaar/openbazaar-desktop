@@ -92,6 +92,7 @@ export default class extends baseVw {
 
   remove() {
     $(document).off(null, this.boundDocumentClick);
+    super.remove();
   }
 
   render() {
