@@ -96,11 +96,11 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                 <p class="clrTErr hide js-noValidModerators">
                   <%= ob.polyT('purchase.noValidModerators') %>
                 </p>
-                <p class="clrTErr tx5b hide js-modsNotAllowed">
+                <p class="tx5b hide js-modsNotAllowed">
                   <%
                   const minModPrice = ob.convertAndFormatCurrency(ob.minModPrice, 'BTC', ob.displayCurrency);
                   %>
-                  <%= ob.polyT('purchase.tooLowForMods', { minModPrice }) %>
+                  <strong><%= ob.polyT('purchase.tooLowForMods', { minModPrice }) %></strong>
                 </p>
               <% } %>
             </div>
