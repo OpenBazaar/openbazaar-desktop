@@ -45,7 +45,7 @@ function watchTransactions() {
  *
  * @param {string} feeLevel - The fee level
  * @param {amount} number - The amount of the transaction in Bitcoin.
- * @return {object} An jQuery defered which on success will resolve with the fee
+ * @return {object} An jQuery promise which on success will resolve with the fee
  *   in Bitcoin. If the call fails, the deferred will fail and pass on the args the
  *   xhr fail handler receives.
  */
@@ -105,7 +105,7 @@ let getFeesCache = {};
 /**
  * Will call the fees api ('wallet/fees') on the server.
  *
- * @return {object} An jQuery defered which on success will resolve with the fees
+ * @return {object} An jQuery promise which on success will resolve with the fees
  *   per byte in Satoshi for each fee level. If the call fails, the deferred will
  *   fail and pass on the args the xhr fail handler receives.
  */
