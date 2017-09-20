@@ -106,7 +106,7 @@
       });
     }
 
-    insufficientFunds = ob.walletBalance.confirmed + ob.walletBalance.unconfirmed < ob.estimatedFee;
+    insufficientFunds = ob.walletBalance.confirmed < ob.estimatedFee;
   %>
     <% if (!insufficientFunds) { %>
       <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.body', {
