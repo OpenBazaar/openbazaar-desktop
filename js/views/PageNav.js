@@ -223,7 +223,7 @@ export default class extends BaseVw {
   navMinClick() {
     remote.getCurrentWindow().minimize();
   }
-  
+
   navMaxClick() {
     if (remote.process.platform === 'darwin') {
       if (remote.getCurrentWindow().isFullScreen()) {
