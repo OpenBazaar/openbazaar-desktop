@@ -27,8 +27,9 @@
       <a class="clrT clamp"><%= ob.title %></a>
     </div>
     <div class="flex">
+          
       <div class="flexExpand tx5b">
-        <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+        <% if (ob.ratingCount) print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
       </div>
       <div class="txB">
         <%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %>
@@ -65,9 +66,11 @@
         <div class="rowTn">
           <a class="clrT clamp3"><%= ob.title %></a>
         </div>
+        <% if (ob.ratingCount) { %>
         <div class="tx5b">
           <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
         </div>
+        <% } %>
       </div>
       <% if (ob.shipsFreeToMe) { %>
       <div class="freeShipCol flexNoShrink txCtr">
