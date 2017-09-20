@@ -125,7 +125,7 @@ export default class extends BaseModal {
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
-    this.listenTo(this.order.get('items').at(0), 'change', () => this.refreshPrices());
+    this.listenTo(this.order.get('items').at(0), 'someChange ', () => this.refreshPrices());
     this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
       this.refreshPrices());
   }
@@ -140,7 +140,7 @@ export default class extends BaseModal {
 
   events() {
     return {
-      'click .js-goToListing': 'close',
+      'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
       'click .js-retryFee': 'clickRetryFee',
       'click #purchaseModerated': 'clickModerated',
@@ -213,6 +213,16 @@ export default class extends BaseModal {
     this.getFees();
   }
 
+  goToListing() {
+    app.router.navigate(`${this.vendor.peerID}/store/${this.listing.get('slug')}`,
+      { trigger: true });
+    this.close();
+  }
+
+  clickGoToListing() {
+    this.goToListing();
+  }
+
   clickClose() {
     this.trigger('closeBtnPressed');
     this.close();
@@ -248,10 +258,8 @@ export default class extends BaseModal {
 
   toggleModeration(bool) {
     this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
-    // when the visibility is changed, always hide the following. They are unhidden by checking the
-    // moderated payment option
-    this.getCachedEl('.js-moderator').addClass('hide');
-    this.getCachedEl('.js-moderatorNote').addClass('hide');
+    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
+    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     if (!bool) this.disableModerators();
   }
 
