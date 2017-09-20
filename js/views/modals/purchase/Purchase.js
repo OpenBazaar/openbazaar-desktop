@@ -557,7 +557,7 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
-      this.moderators.getModeratorsByID();
+      if (!state.isFetching) this.moderators.getModeratorsByID();
 
       if (this.shipping) {
         this.shipping.delegateEvents();

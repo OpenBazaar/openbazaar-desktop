@@ -64,14 +64,15 @@ export default class extends baseVw {
       `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
     const url = app.getServerUrl(urlString);
 
+    if (this.fetch && this.fetch.state() === 'pending') return;
+
     this.notFetchedYet = IDs;
     this.fetchingMods = IDs;
     if (IDs.length) {
       this.$moderatorsStatus.removeClass('hide').text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: IDs.length, total: IDs.length }));
     }
-    // if somehow a new fetch is started while one is in progress, abort it.
-    if (this.fetch) this.fetch.abort();
+
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || this.options.method === 'GET') {
       this.$moderatorsWrapper.addClass('processing');
@@ -145,9 +146,12 @@ export default class extends baseVw {
 
   checkNotFetched() {
     const nfYet = this.notFetchedYet.length;
+    // if at least one mod has loaded, remove the spinner
+    if (nfYet < this.fetchingMods.length) {
+      this.$moderatorsWrapper.removeClass('processing');
+    }
     if (nfYet === 0) {
       // all ids have been fetced
-      this.$moderatorsWrapper.removeClass('processing');
       this.$moderatorsStatus.addClass('hide').text('');
       // check if none of the loaded moderators are valid
       if (!this.moderatorsCol.length) {
