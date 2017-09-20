@@ -23,8 +23,8 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-moderatorCard': 'clickModerator',
-      'click .js-selectBtn': 'clickSelectBtn',
+      'click .js-viewBtn': 'clickModerator',
+      'click .js-moderatorCard': 'clickSelectBtn',
     };
   }
 
