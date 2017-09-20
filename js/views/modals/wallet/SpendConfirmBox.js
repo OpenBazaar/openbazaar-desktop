@@ -11,6 +11,8 @@ export default class extends baseVw {
     this._state = {
       show: false,
       fetchingFee: false,
+      fetchFailed: false,
+      fetchError: '',
       fee: false,
       displayCurrency: app.settings.get('localCurrency') || 'BTC',
       btnSendText: app.polyglot.t('wallet.sendMoney.sendConfirm.btnConfirmSend'),
@@ -74,6 +76,7 @@ export default class extends baseVw {
     this.setState({
       fetchingFee: true,
       fetchError: '',
+      fetchFailed: false,
     });
 
     estimateFee(feeLevel, amount)
@@ -85,6 +88,7 @@ export default class extends baseVw {
       }).fail(xhr => {
         this.setState({
           fetchingFee: false,
+          fetchFailed: true,
           fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
         });
       });

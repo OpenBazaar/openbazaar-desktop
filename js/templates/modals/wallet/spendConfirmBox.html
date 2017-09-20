@@ -10,7 +10,7 @@
     <div class="posR padSm">
     <% if (ob.fetchingFee) { %>
       <div class="txCtr"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
-    <% } else if (ob.fetchError) {
+    <% } else if (ob.fetchFailed) {
       if (ob.fetchError === 'ERROR_INSUFFICIENT_FUNDS') { %>
         <p class="clrT2">
           <%= ob.polyT('wallet.sendMoney.sendConfirm.bodyInsufficientFunds') %>
@@ -51,7 +51,7 @@
         // invisible button for spacing purposes
       %>
       <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.btnSendText %></a> 
-      <% } else if (!ob.fetchError) { %>
+      <% } else if (!ob.fetchFailed) { %>
       <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.sendMoney.sendConfirm.btnCancel') %></a>
       <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.btnSendText %></a>
       <% } else { %>
