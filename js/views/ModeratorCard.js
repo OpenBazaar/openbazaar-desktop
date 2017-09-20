@@ -28,7 +28,8 @@ export default class extends BaseVw {
     };
   }
 
-  clickModerator() {
+  clickModerator(e) {
+    e.stopPropagation();
     const modModal = launchModeratorDetailsModal({
       model: this.model,
       purchase: this.options.purchase,
