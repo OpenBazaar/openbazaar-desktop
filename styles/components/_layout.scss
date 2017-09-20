@@ -142,6 +142,7 @@
   //creates a container with horizontally centered children
   @extend .flex;
   justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
