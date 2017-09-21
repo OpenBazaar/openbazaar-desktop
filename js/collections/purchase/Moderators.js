@@ -10,4 +10,8 @@ export default class extends Collection {
   model(attrs, options) {
     return new Profile(attrs, options);
   }
+
+  modelId(attrs) {
+    return attrs.peerID;
+  }
 }
