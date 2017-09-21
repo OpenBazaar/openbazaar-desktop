@@ -173,6 +173,40 @@ function createWindow() {
     ];
   }
 
+  const viewSubmenu = [
+    {
+      label: 'Reload',
+      accelerator: 'CmdOrCtrl+R',
+      click(item, focusedWindow) {
+        if (focusedWindow) focusedWindow.reload();
+      },
+    },
+    {
+      role: 'togglefullscreen',
+    },
+    {
+      role: 'zoomin',
+      accelerator: 'CommandOrControl+=',
+    },
+    {
+      role: 'zoomout',
+      accelerator: 'CommandOrControl+-',
+    },
+    {
+      role: 'resetzoom',
+    },
+  ];
+
+  if (!isBundledApp()) {
+    viewSubmenu.splice(1, 0, {
+      label: 'Toggle Developer Tools',
+      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+      click(item, focusedWindow) {
+        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+      },
+    });
+  }
+
   const template = [
     {
       label: 'Edit',
@@ -208,36 +242,7 @@ function createWindow() {
     },
     {
       label: 'View',
-      submenu: [
-        {
-          label: 'Reload',
-          accelerator: 'CmdOrCtrl+R',
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload();
-          },
-        },
-        {
-          label: 'Toggle Developer Tools',
-          accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-          click(item, focusedWindow) {
-            if (focusedWindow) focusedWindow.webContents.toggleDevTools();
-          },
-        },
-        {
-          role: 'togglefullscreen',
-        },
-        {
-          role: 'zoomin',
-          accelerator: 'CommandOrControl+=',
-        },
-        {
-          role: 'zoomout',
-          accelerator: 'CommandOrControl+-',
-        },
-        {
-          role: 'resetzoom',
-        },
-      ],
+      submenu: viewSubmenu,
     },
     {
       role: 'window',
