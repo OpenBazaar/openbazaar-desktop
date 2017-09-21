@@ -3,7 +3,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../utils/';
-import estimateFee from '../../../utils/fees';
+import { getFees } from '../../../utils/fees';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -42,6 +42,7 @@ export default class extends baseVw {
       'click .js-retryConfirmCancel': 'onClickRetryConfirmCancel',
       'click .js-btnConfirmRetrySend': 'onClickRetryConfirmed',
       'click .js-txidLink': 'onClickTxidLink',
+      'click .js-retryFeeFetch': 'onClickRetryFeeFetch',
     };
   }
 
@@ -53,6 +54,11 @@ export default class extends baseVw {
         retryConfirmOn: false,
       });
     }
+  }
+
+  onClickRetryFeeFetch(e) {
+    this.fetchFees();
+    e.stopPropagation();
   }
 
   onClickRetryConfirmed() {
@@ -79,33 +85,13 @@ export default class extends baseVw {
       });
   }
 
-  onClickRetryPmt() {
-    if (this.getFeeLevel) this.getFeeLevel.abort();
-    this.getFeeLevel = estimateFee('PRIORITY');
-
-    const state = {
+  onClickRetryPmt(e) {
+    this.setState({
       retryConfirmOn: true,
-    };
-
-    if (this.getFeeLevel.state() === 'pending') {
-      this.setState({
-        ...state,
-        fetchingEstimatedFee: true,
-      });
-    }
-
-    this.getFeeLevel.done(fee => {
-      if (this.isRemoved()) return;
-      this.setState({
-        ...state,
-        fetchingEstimatedFee: false,
-        // server doubles the fee when bumping
-        estimatedFee: fee * 2,
-      });
     });
 
-    // don't bubble to the document click handler
-    return false;
+    this.fetchFees();
+    e.stopPropagation();
   }
 
   onClickRetryConfirmCancel() {
@@ -148,8 +134,32 @@ export default class extends baseVw {
     return this;
   }
 
+  fetchFees() {
+    this.setState({
+      retryConfirmOn: true,
+      fetchingEstimatedFee: true,
+      fetchError: '',
+      fetchFailed: false,
+    });
+
+    getFees().done(fees => {
+      if (this.isRemoved()) return;
+      this.setState({
+        fetchingEstimatedFee: false,
+        // server doubles the fee when bumping
+        estimatedFee: (154 * fees.priority * 2) / 100000000,
+      });
+    }).fail(xhr => {
+      if (this.isRemoved()) return;
+      this.setState({
+        fetchingEstimatedFee: false,
+        fetchFailed: true,
+        fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+      });
+    });
+  }
+
   closeRetryConfirmBox() {
-    if (this.getFeeLevel) this.getFeeLevel.abort();
     this.setState({
       retryConfirmOn: false,
       fetchingEstimatedFee: false,
@@ -178,7 +188,7 @@ export default class extends baseVw {
         userCurrency: app.settings.get('localCurrency'),
         timeAgo: this.renderedTimeAgo,
         isTestnet: !!app.serverConfig.testnet,
-        walletBalance: app.walletBalance.get('confirmed') || 0,
+        walletBalance: app.walletBalance.toJSON(),
         ...this._state,
       }));
     });

@@ -1,13 +1,12 @@
-import $ from 'jquery';
 import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
-import estimateFee from '../../../utils/fees';
+import { convertCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
+import SendConfirmBox from './SpendConfirmBox';
 import FeeChange from '../../components/FeeChange';
-import SendConfirmBox from './SendConfirmBox';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -16,8 +15,6 @@ export default class extends baseVw {
     this._saveInProgress = false;
     this._sendConfirmOn = false;
     this.model = new Spend();
-    this.boundDocumentClick = this.onDocumentClick.bind(this);
-    $(document).on('click', this.boundDocumentClick);
   }
 
   className() {
@@ -31,16 +28,8 @@ export default class extends baseVw {
     };
   }
 
-  onDocumentClick(e) {
-    if (this.isSendConfirmOn() &&
-      !($.contains(this.$sendConfirm[0], e.target) ||
-        e.target === this.$sendConfirm[0])) {
-      this.setSendConfirmOn(false);
-    }
-  }
-
   onClickConfirmSend() {
-    this.setSendConfirmOn(false, false);
+    this.sendConfirmBox.setState({ show: false });
 
     // POSTing payment to the server
     this.saveInProgress = true;
@@ -54,10 +43,10 @@ export default class extends baseVw {
     }).always(() => {
       this.saveInProgress = false;
     })
-      .done(() => this.clearModel());
+      .done(() => this.clearForm());
   }
 
-  onClickSend() {
+  onClickSend(e) {
     const formData = this.getFormData(this.$formFields);
     this.model.set(formData);
     this.model.set({}, { validate: true });
@@ -66,31 +55,14 @@ export default class extends baseVw {
     this.render();
 
     if (!this.model.validationError) {
-      // timeout needed so the document click handler doesn't hide
-      // our confirmation box
-      setTimeout(() => {
-        this.setSendConfirmOn(true);
-
-        if (!this.estimateFeeFetch || this.estimateFeeFetch.state() !== 'pending') {
-          this.estimateFeeFetch = estimateFee(app.localSettings.get('defaultTransactionFee'));
-        }
-
-        this.sendConfirmBox.setState({
-          paymentAmount: this.model.get('amount'),
-          paymentCurrency: this.model.get('currency'),
-        });
-
-        this.estimateFeeFetch.done(fee => this.sendConfirmBox.setState({ fee }))
-          .fail(() => this.sendConfirmBox.setState({ fetchingFee: false }));
-      });
+      this.sendConfirmBox.setState({ show: true });
+      this.fetchFeeEstimate();
     }
 
     const $firstErr = this.$('.errorList:first');
     if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
-  }
 
-  onClickSendConfirmCancel() {
-    this.setSendConfirmOn(false);
+    e.stopPropagation();
   }
 
   onClickClear() {
@@ -143,19 +115,9 @@ export default class extends baseVw {
     return this._saveInProgress;
   }
 
-  setSendConfirmOn(bool, renderOnChange = true) {
-    if (typeof bool !== 'boolean') {
-      throw new Error('Please provide a boolean.');
-    }
-
-    if (bool !== this.isSendConfirmOn()) {
-      this._sendConfirmOn = bool;
-      if (renderOnChange) this.render();
-    }
-  }
-
-  isSendConfirmOn() {
-    return this._sendConfirmOn;
+  fetchFeeEstimate() {
+    const amount = convertCurrency(this.model.get('amount'), this.model.get('currency'), 'BTC');
+    this.sendConfirmBox.fetchFeeEstimate(amount);
   }
 
   get $addressInput() {
@@ -175,17 +137,8 @@ export default class extends baseVw {
       (this._$btnSend = this.$('.js-btnSend'));
   }
 
-  get $sendConfirm() {
-    return this._$sendConfirm ||
-      (this._$sendConfirm = this.$('.js-sendConfirm'));
-  }
-
-  remove() {
-    $(document).off(null, this.boundDocumentClick);
-    super.remove();
-  }
-
   render() {
+    super.render();
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -194,22 +147,22 @@ export default class extends baseVw {
         currencies: this.currencies ||
           getCurrenciesSortedByCode(),
         saveInProgress: this.saveInProgress,
-        sendConfirmOn: this.isSendConfirmOn(),
       }));
 
       this._$addressInput = null;
       this._$formFields = null;
       this._$btnSend = null;
-      this._$sendConfirm = null;
 
       this.$('#walletSendCurrency').select2();
 
-      const fee = this.sendConfirmBox && this.sendConfirmBox.getState().fee;
+      const sendConfirmBoxState = this.sendConfirmBox && this.sendConfirmBox.getState();
       if (this.sendConfirmBox) this.sendConfirmBox.remove();
-      this.sendConfirmBox = this.createChild(SendConfirmBox, { fee });
-      this.listenTo(this.sendConfirmBox, 'clickSend', () => this.onClickConfirmSend());
-      this.listenTo(this.sendConfirmBox, 'clickCancel', () => this.onClickSendConfirmCancel());
-      this.$sendConfirm.html(this.sendConfirmBox.render().el);
+
+      this.sendConfirmBox = this.createChild(SendConfirmBox, {
+        initialState: { ...sendConfirmBoxState || {} },
+      });
+      this.listenTo(this.sendConfirmBox, 'clickSend', this.onClickConfirmSend);
+      this.getCachedEl('.js-sendConfirmContainer').html(this.sendConfirmBox.render().el);
 
       if (this.feeChange) this.feeChange.remove();
       this.feeChange = this.createChild(FeeChange);
