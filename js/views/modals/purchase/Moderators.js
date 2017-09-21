@@ -92,8 +92,8 @@ export default class extends baseVw {
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
                     if (this.options.moderatorIDs.indexOf(eventData.peerId) !== -1) {
-                      eventData.profile = { peerID: eventData.peerId };
-                      this.moderatorsCol.add(eventData.profile);
+                      // don't add errored moderators
+                      this.removeNotFetched(eventData.peerId);
                     }
                   } else if (eventData.id === socketID) {
                     // don't add profiles that are not moderators. The ID list may have peerIDs
