@@ -23,12 +23,13 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-moderatorCard': 'clickModerator',
-      'click .js-selectBtn': 'clickSelectBtn',
+      'click .js-viewBtn': 'clickModerator',
+      'click .js-moderatorCard': 'clickSelectBtn',
     };
   }
 
-  clickModerator() {
+  clickModerator(e) {
+    e.stopPropagation();
     const modModal = launchModeratorDetailsModal({
       model: this.model,
       purchase: this.options.purchase,
