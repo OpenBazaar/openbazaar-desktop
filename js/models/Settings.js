@@ -9,7 +9,7 @@ export default class extends BaseModel {
     return {
       paymentDataInQR: false,
       showNotifications: true,
-      showNsfw: true,
+      showNsfw: false,
       localCurrency: 'USD',
       country: 'UNITED_STATES',
       language: 'en-US',
