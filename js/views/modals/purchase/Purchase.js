@@ -234,17 +234,17 @@ export default class extends BaseModal {
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !checked);
     this.order.moderated = checked;
 
-    if (checked && this._oldMod) {
+    if (checked) {
       // re-select the previously selected moderator, if any
       for (const mod of this.moderators.modCards) {
-        if (mod.model.id === this._oldMod) {
+        if (mod.model.id === this._oldMod || this.moderators.selectedIDs[0]) {
           mod.changeSelectState('selected');
           break;
         }
       }
     } else {
       // deselect all the moderators after storing any selected moderator
-      this._oldMod = this.order.get('moderator');
+      this._oldMod = this.moderators.selectedIDs[0];
       this.moderators.deselectOthers();
       this.order.set('moderator', '');
     }
