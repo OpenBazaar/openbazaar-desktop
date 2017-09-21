@@ -79,9 +79,8 @@ export default class extends baseVw {
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters
     this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
-    // replace the nsfw in the query, if any, with the user's default. They can manually change it
-    // if the provider has a nsfw filter
-    this.filters.nsfw = app.settings.get('showNsfw');
+    // if the nsfw filter is not set, use the value from settings
+    this.filters.nsfw = this.filters.nsfw || app.settings.get('showNsfw');
 
     this.processTerm(this.term);
   }
