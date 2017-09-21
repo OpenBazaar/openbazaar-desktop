@@ -1,6 +1,9 @@
 <% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent">
-  <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
+  <div class="listingImage posR js-gridViewListingImage">
+    <div class="js-listingImageLoadSpinner center">
+      <%= ob.spinner({ className: 'spinnerMd' }) %>
+    </div>
       <% if (ob.ownListing) { %>
         <div class="editOverlay overlayPanel pad">
           <div class="overlayPanelInner"></div>
@@ -59,7 +62,11 @@
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
       <div class="flexNoShrink">
-        <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
+        <div class="listingImage posR js-listViewListingImage">
+        <div class="js-listingImageLoadSpinner center">
+          <%= ob.spinner({ className: 'spinnerSm' }) %>
+        </div>          
+        </div>
       </div>
       <div class="flexExpand">
         <div class="rowTn">

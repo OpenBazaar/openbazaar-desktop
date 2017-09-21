@@ -99,3 +99,8 @@
     opacity: .35;
   }
 }
+
+// This could probably go into an animations components file once we have a couple
+.fadeIn {
+  @include fadeIn(1s ease);
+}
