@@ -4,13 +4,18 @@
     height: $spinnerLg;
   }
 
+  &.spinnerMd {
+    width: $spinnerMd;
+    height: $spinnerMd;
+  }
+
   &.spinnerSm {
     width: $spinnerSm;
     height: $spinnerSm;
   }
 
-  &.spinnerMd {
-    width: $spinnerMd;
-    height: $spinnerMd;
+  &.spinnerTxt {
+    width: 1em;
+    height: 1em;
   }
 }
