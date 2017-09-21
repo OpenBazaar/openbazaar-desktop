@@ -225,19 +225,7 @@ export default class extends BaseVw {
   }
 
   navMaxClick() {
-    if (remote.process.platform === 'darwin') {
-      if (remote.getCurrentWindow().isFullScreen()) {
-        remote.getCurrentWindow().setFullScreen(false);
-      } else {
-        remote.getCurrentWindow().setFullScreen(true);
-      }
-    } else {
-      if (remote.getCurrentWindow().isMaximized()) {
-        remote.getCurrentWindow().unmaximize();
-      } else {
-        remote.getCurrentWindow().maximize();
-      }
-    }
+    remote.getCurrentWindow().setFullScreen(!remote.getCurrentWindow().isFullScreen());
   }
 
   onRouteSearch() {
