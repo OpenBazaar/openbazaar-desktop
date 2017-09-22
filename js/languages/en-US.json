@@ -836,6 +836,9 @@
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting…",
     "deleted": "Deleted",
+    "editListingTooltip": "Edit listing",
+    "cloneListingTooltip": "Clone listing",
+    "deleteListingTooltip": "Delete listing",
     "confirmDelete": {
       "title": "Are you sure?",
       "body": "Once it's deleted, it's gone forever.",
