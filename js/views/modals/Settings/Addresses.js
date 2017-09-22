@@ -106,7 +106,7 @@ export default class extends baseVw {
     model.set(formData, { validate: true });
     this.settings.set({}, { validate: true });
 
-    if (!this.settings.validationError) {
+    if (!this.settings.validationError && !model.validationError) {
       const shippingAddresses = this.settings.get('shippingAddresses');
 
       shippingAddresses.push(model);
@@ -170,7 +170,7 @@ export default class extends baseVw {
     // render so errors are shown / cleared
     this.addressForm.render();
 
-    if (this.settings.validationError) {
+    if (this.settings.validationError || model.validationError) {
       const $firstFormErr = this.$('.js-formContainer .errorList:first');
 
       if ($firstFormErr.length) {

@@ -206,6 +206,7 @@ export default class extends baseVw {
       this.collection.add(chatHeadData, {
         at: 0,
         merge: true,
+        parse: true,
       });
     }
   }

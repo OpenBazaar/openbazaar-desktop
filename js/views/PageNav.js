@@ -225,11 +225,7 @@ export default class extends BaseVw {
   }
 
   navMaxClick() {
-    if (remote.getCurrentWindow().isMaximized()) {
-      remote.getCurrentWindow().unmaximize();
-    } else {
-      remote.getCurrentWindow().maximize();
-    }
+    remote.getCurrentWindow().setFullScreen(!remote.getCurrentWindow().isFullScreen());
   }
 
   onRouteSearch() {

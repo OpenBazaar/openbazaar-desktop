@@ -2,7 +2,7 @@
   <div class="center">
     <%= ob.spinner({ className: 'spinnerMd' }) %>
   </div>
-<% } else if (ob.name) { %>
+<% } else { %>
   <%
     let featuredProfileAvatarStyle = ob.getAvatarBgImage(ob.avatarHashes,
       {
@@ -10,7 +10,7 @@
         responsiveSize: 'medium',
       });
   %>
-  <div style="<%= featuredProfileAvatarStyle %>" class="avatar clrBr2 clrSh1 disc"></div>
-  <div class="txB clamp"><%= ob.name %></div>
+  <a href="#<%= ob.peerID %>" style="<%= featuredProfileAvatarStyle %>" class="avatar clrBr2 clrSh1 disc"></a>
+  <a href="#<%= ob.peerID %>" class="txB clamp clrT"><%= ob.name %></a>
   <div class="clrT2 tx5 clamp"><%= ob.location %></div>
 <% } %>

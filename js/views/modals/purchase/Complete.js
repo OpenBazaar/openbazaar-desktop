@@ -2,7 +2,6 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 import ChatMessage from '../../../models/chat/ChatMessage';
-import { getEmojiByName } from '../../../data/emojis';
 import Listing from '../../../models/listing/Listing';
 
 
@@ -41,27 +40,10 @@ export default class extends BaseVw {
       throw new Error('Please provide a message to send.');
     }
 
-    let message = msg;
-
-    // Convert any emoji placeholder (e.g :smiling_face:) into
-    // emoji unicode characters.
-    const emojiPlaceholderRegEx = new RegExp(':.+?:', 'g');
-    const matches = message.match(emojiPlaceholderRegEx, 'g');
-
-    if (matches) {
-      matches.forEach(match => {
-        const emoji = getEmojiByName(match);
-
-        if (emoji && emoji.char) {
-          message = message.replace(match, emoji.char);
-        }
-      });
-    }
-
     const chatMessage = new ChatMessage({
       peerId: this.vendorPeerID,
       subject: this.orderID,
-      message,
+      message: msg,
     });
 
     const save = chatMessage.save();

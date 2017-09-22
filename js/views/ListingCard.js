@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
+import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
@@ -104,7 +105,7 @@ export default class extends baseVw {
     this.deleteConfirmOn = false;
   }
 
-  onClickEdit() {
+  onClickEdit(e) {
     app.loadingModal.open();
 
     const fullListingFetch = this.fullListing.fetch()
@@ -119,9 +120,20 @@ export default class extends baseVw {
         if (this.isRemoved()) return;
         app.loadingModal.close();
       })
-      .fail(() => {
-        // todo: show errors;
+      .fail(xhr => {
+        let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+
+        if (xhr.status === 404) {
+          failReason = app.polyglot.t('listingCard.editFetchErrorDialog.bodyNotFound');
+        }
+
+        openSimpleMessage(
+          app.polyglot.t('listingCard.editFetchErrorDialog.title'),
+          failReason
+        );
       });
+
+    e.stopPropagation();
   }
 
   onClickDelete() {
@@ -196,7 +208,6 @@ export default class extends baseVw {
   }
 
   get fullListing() {
-    // todo: allow fullListing to be provided/retrieved externally
     if (!this._fullListing) {
       this._fullListing = new Listing({
         slug: this.model.get('slug'),

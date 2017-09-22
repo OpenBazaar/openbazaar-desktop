@@ -64,14 +64,16 @@ export default class extends baseVw {
       `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
     const url = app.getServerUrl(urlString);
 
+    if (this.fetch && this.fetch.state() === 'pending') return;
+
     this.notFetchedYet = IDs;
     this.fetchingMods = IDs;
     if (IDs.length) {
-      this.$moderatorsStatus.removeClass('hide').text(app.polyglot.t('moderators.moderatorsLoading',
+      this.$moderatorsStatus.removeClass('hide');
+      this.$moderatorStatusText.text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: IDs.length, total: IDs.length }));
     }
-    // if somehow a new fetch is started while one is in progress, abort it.
-    if (this.fetch) this.fetch.abort();
+
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || this.options.method === 'GET') {
       this.$moderatorsWrapper.addClass('processing');
@@ -91,8 +93,8 @@ export default class extends baseVw {
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
                     if (this.options.moderatorIDs.indexOf(eventData.peerId) !== -1) {
-                      eventData.profile = { peerID: eventData.peerId };
-                      this.moderatorsCol.add(eventData.profile);
+                      // don't add errored moderators
+                      this.removeNotFetched(eventData.peerId);
                     }
                   } else if (eventData.id === socketID) {
                     // don't add profiles that are not moderators. The ID list may have peerIDs
@@ -145,16 +147,20 @@ export default class extends baseVw {
 
   checkNotFetched() {
     const nfYet = this.notFetchedYet.length;
+    // if at least one mod has loaded, remove the spinner
+    if (nfYet < this.fetchingMods.length) {
+      this.$moderatorsWrapper.removeClass('processing');
+    }
     if (nfYet === 0) {
       // all ids have been fetced
-      this.$moderatorsWrapper.removeClass('processing');
-      this.$moderatorsStatus.addClass('hide').text('');
+      this.$moderatorsStatus.addClass('hide');
+      this.$moderatorStatusText.text('');
       // check if none of the loaded moderators are valid
       if (!this.moderatorsCol.length) {
         this.trigger('noValidModerators');
       }
     } else {
-      this.$moderatorsStatus.text(app.polyglot.t('moderators.moderatorsLoading',
+      this.$moderatorStatusText.text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: nfYet, total: this.fetchingMods.length }));
     }
   }
@@ -216,6 +222,7 @@ export default class extends baseVw {
       super.render();
       this.$moderatorsWrapper = this.$('.js-moderatorsWrapper');
       this.$moderatorsStatus = this.$('.js-moderatorsStatus');
+      this.$moderatorStatusText = this.$('.js-moderatorStatusInner');
     });
 
     return this;

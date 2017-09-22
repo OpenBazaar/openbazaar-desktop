@@ -50,7 +50,7 @@ export default class extends baseVw {
         .setSendFormData({ address: obDonationAddress });
     } else {
       if (wallet.setSendFormData({ address: obDonationAddress })) {
-        wallet.open();
+        wallet.open(false);
       } else {
         openSimpleMessage(app.polyglot.t('about.donationsTab.unableToOpenInWallet.title'),
           app.polyglot.t('about.donationsTab.unableToOpenInWallet.body'));

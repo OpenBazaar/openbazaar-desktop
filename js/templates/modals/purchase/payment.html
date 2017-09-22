@@ -36,12 +36,12 @@
         <!--
         <div class="flexRow gutterH">
           <div class="col6">
-            <button class="btn btnThin width100 clrP clrBr clrSh2 js-payFromWallet">
-              <i class="icon"><%= ob.walletIconTmpl() %></i>
-              <%= ob.polyT('purchase.pendingSection.payFromWallet') %>
-            </button>
-            <div class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 hide js-confirmWallet">
-            </div>
+            <%= ob.processingButton({
+              className: 'btn btnThin width100 clrP clrBr clrSh2 js-payFromWallet',
+              textClassName: 'flexCent',
+              btnText: `<i class="icon">${ob.walletIconTmpl()}</i>${ob.polyT('purchase.pendingSection.payFromWallet')}`,
+            }) %>          
+            <div class="js-confirmWalletContainer"></div>
           </div>
           <div class="col6">
             <button class="btn btnThin width100 clrP clrBr clrSh2 js-payFromAlt">

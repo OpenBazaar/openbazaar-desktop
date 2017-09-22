@@ -3,7 +3,7 @@
   <div class="flexColRows gutterV">
     <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
       <div class="flex gutterH row">
-        <div>
+        <div class="flexNoShrink">
           <a class="userIcon disc clrBr2 clrSh1"
              style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"
              href="#<%= ob.peerID %>"></a>
@@ -54,12 +54,13 @@
       </div>
     </div>
     <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
-      <h4><%= ob.polyT('moderatorDetails.termsOfService') %></h4>
-      <p><%= ob.moderatorInfo.termsAndConditions %></p>
-      <hr class="clrBr">
-      <div class="flexColRows flexHCent">
+      <div class="row">
+        <h4><%= ob.polyT('moderatorDetails.termsOfService') %></h4>
+        <p><%= ob.moderatorInfo.termsAndConditions %></p>
+        <hr class="clrBr">
+      </div>
+      <div class="flexCol flexHCent gutterV">
         <% if (ob.cardState !== 'selected' && (!ob.ownMod || ob.purchase)) { %>
-        <div class="rowSm">
           <button class="btn clrP clrBr js-addAsModerator">
             <% if (ob.purchase) { %>
               <%= ob.polyT('purchase.chooseModerator') %>
@@ -67,7 +68,6 @@
               <%= ob.polyT('moderatorDetails.addAsModeratorButton') %>
             <% } %>
           </button>
-        </div>
         <% } %>
         <div>
           <em class="tx6 clrT2"><%= ob.polyT('moderatorDetails.disclaimer') %></em>

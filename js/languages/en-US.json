@@ -15,6 +15,15 @@
     "typeUnfollow": "unfollowing",
     "followErrorTitle": "There was an error %{type} %{user}."
   },
+  "feeLevels": {
+    "PRIORITY": "Priority",
+    "NORMAL": "Normal",
+    "ECONOMIC": "Economic"
+  },
+  "feeChangeWidget": {
+    "label": "Bitcoin fee:",
+    "btnChange": "change"
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -181,8 +190,8 @@
       "btnRetry": "Retry"
     },
     "getFollowingError": "There was an error when determining if this user follows you.",
-    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
     "storeWelcomeCalloutTitle": "Welcome to your store!",
     "storeWelcomeCalloutBody": "Your OpenBazaar store is now live on the network. Get started by creating some listings or customizing your page.",
     "storeWelcomeCalloutBtnClose": "Close",
@@ -231,8 +240,8 @@
   "userShort": {
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
-    "modAddError": "There was an error adding this moderator. \n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator. \n %{errMsg}",
+    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
+    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
     "tipFollow": "Follow",
     "tipUnfollow": "Unfollow",
     "tipModAdd": "Add as moderator",
@@ -285,7 +294,7 @@
     "licenseTab": {
       "linkText": "License",
       "sectionHeader": "OpenBazaar MIT License",
-      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissiveand designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
       "header": "The MIT License (MIT)",
       "copyright": "Copright &copy; 2016 OpenBazaar Developers",
       "paragraphs": {
@@ -677,7 +686,13 @@
       "torPwLabel": "Tor Password",
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
-      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
+      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "saveConfirm": {
+        "title": "Are you sure?",
+        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "btnCancel": "No, cancel",
+        "btnConfirm": "Yes, proceed"
+      }
     }
   },
   "torExternalLinkWarning": {
@@ -714,9 +729,14 @@
       "sendConfirm": {
         "heading": "Are you sure?",
         "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
+        "errorHeading": "Unable to send payment",
+        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+        "bodyGenericError": "There was an error estimating the fee: %{err}",
+        "btnRetry": "Retry",
         "btnCancel": "Cancel",
-        "btnConfirmSend": "Yes, Send"
+        "btnConfirmSend": "Yes, Send",
+        "btnClose": "Close"
       }
     },
     "transactions": {
@@ -731,9 +751,11 @@
           "title": "Retry Payment",
           "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
           "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
-          "btnConfirmSend": "Send"
+          "btnConfirmSend": "Send",
+          "btnRetry": "Retry"
         },
         "retryFailDialogTitle": "Unable to retry payment",
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
@@ -818,6 +840,10 @@
       "body": "Once it's deleted, it's gone forever.",
       "btnCancel": "Cancel",
       "btnConfirm": "Yes, Delete"
+    },
+    "editFetchErrorDialog": {
+      "title": "There was an error retreiving the listing.",
+      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
   "listingDelete": {
@@ -969,7 +995,7 @@
     "searchBtn": "Search",
     "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
-    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
     "sortBy": "Sort by",
     "changeProvider": "Close and Choose a New Search Provider",
@@ -1069,6 +1095,7 @@
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
+    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "No valid moderators are available for this order.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
@@ -1090,20 +1117,7 @@
       "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
       "note3": "*The moderator service fee only applies if a dispute is opened.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
-      "confirmWallet": {
-        "title": "Are you sure?",
-        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
-        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
-        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
-        "cancel": "Cancel",
-        "confirm": "Yes, Pay",
-        "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
-        "insufficientFundsTitle": "Insufficient Funds",
-        "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
-        "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
-        "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
-      }
+      "btnConfirmedPay": "Yes, Pay"
     },
     "completeSection": {
       "paymentSent": "Payment Sent!",
@@ -1133,7 +1147,8 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero."
+      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
+      "feesFailed": "Transaction Fees Cannot Be Loaded"
     }
   },
   "moderators": {
