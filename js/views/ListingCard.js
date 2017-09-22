@@ -295,7 +295,7 @@ export default class extends baseVw {
     this._$btnEdit = null;
     this._$btnDelete = null;
 
-    const imageLoaderKey = `_${this.viewType}ViewListingImageLoad`;
+    const imageLoaderKey = `${this.viewType}ViewListingImageLoad`;
 
     if (this[imageLoaderKey]) {
       this[imageLoaderKey].always(imgUrl => {
