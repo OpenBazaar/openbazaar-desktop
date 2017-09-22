@@ -45,7 +45,7 @@
     <% } %>
   </div>
   <% if (ob.vendor) { %>
-  <a class="userIconWrapper js-userIcon" href="#<%= ob.vendor.peerID %>">
+  <a class="userIconWrapper js-userIcon" href="#<%= `${ob.vendor.peerID}/store` %>">
     <% const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : ''; %>
     <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap" <%= dataTip %>
     <% var avatarHash = ob.vendor.avatarHashes ? ob.isHiRez() ? ob.vendor.avatarHashes.small : ob.vendor.avatarHashes.tiny : ''; %>
