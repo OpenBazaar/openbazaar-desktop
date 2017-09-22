@@ -9,7 +9,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Transaction from './Transaction';
 import TransactionFetchState from './TransactionFetchState';
-import PopInMessage from '../../PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -241,18 +241,17 @@ export default class extends baseVw {
   }
 
   showNewTransactionPopup() {
-    const refreshLink =
-      '<a class="js-refresh">Refresh</a>';
-
     if (this.newTransactionPopIn && !this.newTransactionPopIn.isRemoved()) {
       this.newTransactionPopIn.setState({
-        messageText: app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { refreshLink, smart_count: this.newTransactionCount }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
+            { smart_count: this.newTransactionCount })),
       });
     } else {
       this.newTransactionPopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { refreshLink, smart_count: this.newTransactionCount }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
+            { smart_count: this.newTransactionCount })),
       });
 
       this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => {
