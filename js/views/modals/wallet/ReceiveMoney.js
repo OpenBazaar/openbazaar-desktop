@@ -1,4 +1,4 @@
-import { clipboard } from 'electron';
+import { clipboard, remote } from 'electron';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -22,6 +22,7 @@ export default class extends baseVw {
       'click .js-receiveAddress': 'onClickReceiveAddress',
       'click .js-receiveQrCode': 'onClickReceiveQrCode',
       'click .js-cancelReceiveBtn': 'onClickCancelReceive',
+      'click .js-fundViaShapeshift': 'onClickFundViaShapshift',
     };
   }
 
@@ -56,6 +57,12 @@ export default class extends baseVw {
 
   onClickCancelReceive() {
     this.trigger('click-cancel');
+  }
+
+  onClickFundViaShapshift() {
+    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.getState().address}&amp;output=BTC&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812`;
+    const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
+    shapeshiftWin.loadURL(shapeshiftURL);
   }
 
   copyAddressToClipboard() {
