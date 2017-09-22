@@ -80,7 +80,7 @@ export default class extends baseVw {
     // all parameters not specified above are assumed to be filters
     this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
     // if the nsfw filter is not set, use the value from settings
-    this.filters.nsfw = this.filters.nsfw || app.settings.get('showNsfw');
+    this.filters.nsfw = this.filters.nsfw || String(app.settings.get('showNsfw'));
 
     this.processTerm(this.term);
   }
