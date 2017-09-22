@@ -137,6 +137,7 @@ export default class extends baseVw {
         if (xhr.statusText === 'abort' || this.isRemoved()) return;
         const clonedModel = this.fullListing.clone();
         clonedModel.unset('slug').guid = this.ownerGuid;
+        clonedModel.lastSyncedAttrs = {};
 
         this.editModal = launchEditListingModal({
           model: clonedModel,
