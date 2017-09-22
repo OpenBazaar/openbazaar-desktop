@@ -52,8 +52,6 @@ export default class extends baseVw {
       this.$el.addClass('ownListing');
     }
 
-    this.fullListingFetches = [];
-
     if (this.ownListing) {
       this.listenTo(listingEvents, 'destroying', (md, destroyingOpts) => {
         if (this.isRemoved()) return;
@@ -93,6 +91,7 @@ export default class extends baseVw {
     return {
       'click .js-edit': 'onClickEdit',
       'click .js-delete': 'onClickDelete',
+      'click .js-clone': 'onClickClone',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
@@ -108,45 +107,53 @@ export default class extends baseVw {
   onClickEdit(e) {
     app.loadingModal.open();
 
-    const fullListingFetch = this.fullListing.fetch()
-      .done(() => {
-        if (fullListingFetch.statusText === 'abort' || this.isRemoved()) return;
+    this.fetchFullListing()
+      .done(xhr => {
+        if (xhr.statusText === 'abort' || this.isRemoved()) return;
 
-        this.editModal = launchEditListingModal({
+        launchEditListingModal({
           model: this.fullListing,
         });
       })
       .always(() => {
         if (this.isRemoved()) return;
         app.loadingModal.close();
-      })
-      .fail(xhr => {
-        let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-
-        if (xhr.status === 404) {
-          failReason = app.polyglot.t('listingCard.editFetchErrorDialog.bodyNotFound');
-        }
-
-        openSimpleMessage(
-          app.polyglot.t('listingCard.editFetchErrorDialog.title'),
-          failReason
-        );
       });
 
     e.stopPropagation();
   }
 
-  onClickDelete() {
+  onClickDelete(e) {
     this.getCachedEl('.js-deleteConfirmedBox').removeClass('hide');
     this.deleteConfirmOn = true;
-    // don't bubble to the document click handler
-    return false;
+    e.stopPropagation();
   }
 
-  onClickConfirmedDelete() {
-    if (this.destroyRequest && this.destroyRequest.state === 'pending') return false;
+  onClickClone(e) {
+    app.loadingModal.open();
+
+    this.fetchFullListing()
+      .done(xhr => {
+        if (xhr.statusText === 'abort' || this.isRemoved()) return;
+        const clonedModel = this.fullListing.clone();
+        clonedModel.unset('slug').guid = this.ownerGuid;
+
+        this.editModal = launchEditListingModal({
+          model: clonedModel,
+        });
+      })
+      .always(() => {
+        if (this.isRemoved()) return;
+        app.loadingModal.close();
+      });
+
+    e.stopPropagation();
+  }
+
+  onClickConfirmedDelete(e) {
+    e.stopPropagation();
+    if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
     this.destroyRequest = this.model.destroy({ wait: true });
-    return false;
   }
 
   onClickConfirmCancel() {
@@ -154,9 +161,8 @@ export default class extends baseVw {
     this.deleteConfirmOn = false;
   }
 
-  onClickDeleteConfirmBox() {
-    // don't bubble to the document click handler
-    return false;
+  onClickDeleteConfirmBox(e) {
+    e.stopPropagation();
   }
 
   onClick(e) {
@@ -170,7 +176,7 @@ export default class extends baseVw {
 
       app.loadingModal.open();
 
-      const fullListingFetch = this.fullListing.fetch()
+      this.fetchFullListing()
         .done(jqXhr => {
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
@@ -194,13 +200,39 @@ export default class extends baseVw {
           if (this.isRemoved()) return;
           app.loadingModal.close();
         })
-        .fail((xhr) => {
+        .fail(xhr => {
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
-
-      this.fullListingFetches.push(fullListingFetch);
     }
+  }
+
+  fetchFullListing(options = {}) {
+    const opts = {
+      showErrorOnFetchFail: true,
+      ...options,
+    };
+
+    if (this.fullListingFetch && this.fullListingFetch.state() === 'pending') {
+      return this.fullListingFetch;
+    }
+
+    this.fullListingFetch = this.fullListing.fetch()
+      .fail(xhr => {
+        if (!opts.showErrorOnFetchFail) return;
+        let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+
+        if (xhr.status === 404) {
+          failReason = app.polyglot.t('listingCard.editFetchErrorDialog.bodyNotFound');
+        }
+
+        openSimpleMessage(
+          app.polyglot.t('listingCard.editFetchErrorDialog.title'),
+          failReason
+        );
+      });
+
+    return this.fullListingFetch;
   }
 
   get ownListing() {
@@ -243,7 +275,7 @@ export default class extends baseVw {
   }
 
   remove() {
-    this.fullListingFetches.forEach(fetch => fetch.abort());
+    if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
     $(document).off(null, this.boundDocClick);
     super.remove();
