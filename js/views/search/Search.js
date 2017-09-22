@@ -370,7 +370,7 @@ export default class extends baseVw {
   changeFilter(e) {
     const targ = $(e.target);
     if (targ[0].type === 'checkbox') {
-      this.filters[targ.prop('name')] = targ[0].checked;
+      this.filters[targ.prop('name')] = String(targ[0].checked);
     } else {
       this.filters[targ.prop('name')] = targ.val();
     }

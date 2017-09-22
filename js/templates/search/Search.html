@@ -58,7 +58,7 @@
                 <% _.each(val.options, function(option) {
                   let selected = '';
                   if (ob.filterVals.hasOwnProperty(key)) {
-                    selected = option.value === String(ob.filterVals[key]) ? 'selected' : '';
+                    selected = option.value === ob.filterVals[key] ? 'selected' : '';
                   } else {
                     selected = option.default ? 'selected' : '';
                   }
@@ -72,7 +72,7 @@
                      <%
                       let checked = '';
                       if (ob.filterVals.hasOwnProperty(key)) {
-                        checked = option.value === String(ob.filterVals[key]) ? 'checked' : '';
+                        checked = option.value === ob.filterVals[key] ? 'checked' : '';
                       } else {
                         checked = option.default ? 'checked' : '';
                       }
