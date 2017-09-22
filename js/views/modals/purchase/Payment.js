@@ -13,6 +13,7 @@ import qr from 'qr-encode';
 import { clipboard, remote } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
+import { launchWallet } from '../../../utils/modalManager';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -83,6 +84,7 @@ export default class extends BaseVw {
       'click .js-payFromAlt': 'clickPayFromAlt',
       'click .js-copyAmount': 'copyAmount',
       'click .js-copyAddress': 'copyAddress',
+      'click .js-fundWallet': 'clickFundWallet',
     };
   }
 
@@ -136,6 +138,10 @@ export default class extends BaseVw {
     }
     this.hideCopyAddressTimer = setTimeout(
       () => this.$copyAddress.removeClass('active'), 3000);
+  }
+
+  clickFundWallet() {
+    launchWallet().sendModeOn = false;
   }
 
   get amountDueLine() {
