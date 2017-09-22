@@ -59,7 +59,11 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/linux64
 
     echo 'Install npm packages for Linux'
-    npm install --save-dev electron-installer-debian --silent
+    npm install -g --save-dev electron-installer-debian --silent
+    npm install -g --save-dev electron-installer-redhat --silent
+
+    # Install rpmbuild
+    sudo apt-get install rpm
 
     # Ensure fakeroot is installed
     sudo apt-get install fakeroot
@@ -74,7 +78,7 @@ case "$TRAVIS_OS_NAME" in
     APPNAME="openbazaar2"
 
     echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
     mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
@@ -85,12 +89,15 @@ case "$TRAVIS_OS_NAME" in
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_ia32.json
 
+    echo 'Create RPM archive'
+    electron-installer-redhat --config .travis/config_ia32.json
+
     echo 'Sign the installer'
 
     echo 'Building Linux 64-bit Installer....'
 
     echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=x64 --=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
     mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
@@ -100,6 +107,9 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_amd64.json
+
+    echo 'Create RPM archive'
+    electron-installer-redhat --config .travis/config_amd64.json
 
     echo 'Sign the installer'
 
