@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { ipcRenderer } from 'electron';
 import { Router } from 'backbone';
 import { getGuid, isMultihash } from './utils';
 import { getPageContainer } from './utils/selectors';
@@ -46,6 +47,9 @@ export default class ObRouter extends Router {
     $(window).on('hashchange', () => {
       this.setAddressBarText();
     });
+
+    ipcRenderer.on('external-route',
+      (e, route) => this.navigate(route, { trigger: true }));
   }
 
   get maxCachedHandles() {

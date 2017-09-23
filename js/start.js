@@ -414,9 +414,14 @@ function start() {
         // set the profile data for the feedback mechanism
         setFeedbackOptions();
 
-        // When starting the app the route is set to empty. We'll change that to be the
-        // user's profile.
-        if (!location.hash) {
+        const externalRoute = remote.getGlobal('externalRoute');
+
+        if (externalRoute) {
+          // handle opening the app from an an external ob link
+          location.hash = `#${externalRoute}`;
+        } else if (!location.hash) {
+          // If for some reason the route to start on is empty, we'll change it to be
+          // the user's profile.
           const href = location.href.replace(/(javascript:|#).*$/, '');
           location.replace(`${href}#${app.profile.id}`);
         }

@@ -58,12 +58,12 @@
   <div class="listViewContent">
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
-      <div>
+      <div class="flexNoShrink">
         <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
       </div>
       <div class="flexExpand">
         <div class="rowTn">
-          <a class="clrT txU clamp3"><%= ob.title %></a>
+          <a class="clrT clamp3"><%= ob.title %></a>
         </div>
         <div class="tx5b">
           <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
@@ -77,7 +77,7 @@
       <div class="priceCol flexNoShrink">
         <span class="txB"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
       </div>
-      <div>
+      <div class="flexNoShrink">
         <a class='btn clrP clrBr'><%= ob.polyT('listingCard.btnDetails') %></a>
       </div>
     </div>
@@ -88,7 +88,18 @@
       <div class="overlayPanelInner"></div>
       <div class="flexHCent gutterHSm">
         <a class='iconBtnSm clrP clrBr js-edit'><span class="ion-edit"></span></a>
-        <a class='iconBtnSm clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
+        <div class="posR">
+          <a class='iconBtnSm clrP clrBr js-delete'><span class="ion-trash-b"></span></a>
+          <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxBottom clrBr clrP clrT hide">
+            <div class="tx3 txB rowSm"><%= ob.polyT('listingCard.confirmDelete.title') %></div>
+            <p><%= ob.polyT('listingCard.confirmDelete.body') %></p>
+            <hr class="clrBr row" />
+            <div class="flexHRight flexVCent gutterHLg buttonBar">
+              <a class="js-deleteConfirmCancel"><%= ob.polyT('listingCard.confirmDelete.btnCancel') %></a>
+              <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingCard.confirmDelete.btnConfirm') %></a>
+            </div>
+          </div>
+        </div>          
       </div>
     </div>
   <% } %>

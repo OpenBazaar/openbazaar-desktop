@@ -19,7 +19,7 @@ export default class extends Model {
       windowControlStyle: remote.process.platform === 'darwin' ? 'mac' : 'win',
       showAdvancedVisualEffects: true,
       saveTransactionMetadata: true,
-      defaultTransactionFee: 'PRIORITY',
+      defaultTransactionFee: 'NORMAL',
       language: 'en-US',
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',

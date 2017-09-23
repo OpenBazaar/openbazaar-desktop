@@ -109,7 +109,11 @@
               <div class="tx5 flexExpand">
                 <% if (ob.results) { %>
                   <% if (ob.term) { %>
-                    <%= ob.polyT('search.resultsFound', { totalResults: ob.results.total, term: ob.term }) %>
+                    <%= ob.polyT('search.resultsFound', {
+                      totalResults: ob.results.total,
+                      term: ob.parseEmojis(ob.term),
+                      smart_count: ob.results.total,
+                    }) %>
                   <% } else { %>
                   <b><%= ob.polyT('search.resultsTotal', { totalResults: ob.results.total }) %></b>
                   <% } %>

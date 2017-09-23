@@ -35,9 +35,9 @@
 
 <div class="listingContent flexColRow gutterVMd2">
   <div class="contentBox padLg clrP clrBr clrSh3">
-    <div class="flex">
+    <div class="flex gutterHLg">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
-      <h2 class="txUnb js-price">
+      <h2 class="txUnb flexNoShrink js-price">
         <%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
       </h2>
     </div>
@@ -96,7 +96,7 @@
         <h5><%= ob.polyT('listingDetail.tags') %></h5>
         <div class="tagWrapper">
           <% ob.item.tags.forEach(function(tag){
-          print(`<a class="btn tag clrSh2 clrBr" href="#search?q=${tag}">#${tag}</a>`);
+          print(`<a class="btn tag clrSh2 clrBr" href="#search?q=${tag}">#${ob.parseEmojis(tag)}</a>`);
           }); %>
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>

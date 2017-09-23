@@ -30,6 +30,6 @@
 <div class="clrBr clrP convoFooter">
   <div class="flexCent">
     <textarea class="clrP tx6 js-inputMessage" placeholder="<%= ob.polyT('chat.conversation.messageInputPlaceholder') %>" maxlength="<%= ob.maxMessageLength %>" rows="1"></textarea>
-    <button class="btn clrP emojiMenuTrigger js-emojiMenuTrigger">😀</button>
+    <button class="btn clrP emojiMenuTrigger js-emojiMenuTrigger"><%= ob.parseEmojis('😀') %></button>
   </div>
 </div>

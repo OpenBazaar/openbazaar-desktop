@@ -15,6 +15,15 @@
     "typeUnfollow": "unfollowing",
     "followErrorTitle": "There was an error %{type} %{user}."
   },
+  "feeLevels": {
+    "PRIORITY": "Priority",
+    "NORMAL": "Normal",
+    "ECONOMIC": "Economic"
+  },
+  "feeChangeWidget": {
+    "label": "Bitcoin fee:",
+    "btnChange": "change"
+  },
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -720,9 +729,14 @@
       "sendConfirm": {
         "heading": "Are you sure?",
         "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
+        "errorHeading": "Unable to send payment",
+        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+        "bodyGenericError": "There was an error estimating the fee: %{err}",
+        "btnRetry": "Retry",
         "btnCancel": "Cancel",
-        "btnConfirmSend": "Yes, Send"
+        "btnConfirmSend": "Yes, Send",
+        "btnClose": "Close"
       }
     },
     "transactions": {
@@ -737,9 +751,11 @@
           "title": "Retry Payment",
           "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
           "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
-          "btnConfirmSend": "Send"
+          "btnConfirmSend": "Send",
+          "btnRetry": "Retry"
         },
         "retryFailDialogTitle": "Unable to retry payment",
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
@@ -979,7 +995,7 @@
     "searchBtn": "Search",
     "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
-    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
     "sortBy": "Sort by",
     "changeProvider": "Close and Choose a New Search Provider",
@@ -1100,20 +1116,7 @@
       "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
       "note3": "*The moderator service fee only applies if a dispute is opened.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
-      "confirmWallet": {
-        "title": "Are you sure?",
-        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
-        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
-        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
-        "cancel": "Cancel",
-        "confirm": "Yes, Pay",
-        "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
-        "insufficientFundsTitle": "Insufficient Funds",
-        "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
-        "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
-        "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
-      }
+      "btnConfirmedPay": "Yes, Pay"
     },
     "completeSection": {
       "paymentSent": "Payment Sent!",
