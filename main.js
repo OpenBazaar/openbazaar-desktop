@@ -1,8 +1,9 @@
 import {
   app, BrowserWindow, ipcMain,
   Menu, Tray, session, crashReporter,
-  autoUpdater, shell,
+  autoUpdater, shell, dialog,
 } from 'electron';
+import homedir from 'homedir';
 import { argv } from 'yargs';
 import path from 'path';
 import fs from 'fs';
@@ -11,14 +12,6 @@ import _ from 'underscore';
 import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
-
-if (argv.userData) {
-  try {
-    app.setPath('userData', argv.userData);
-  } catch (e) {
-    throw new Error(`The passed in userData directory does not appear to be valid: ${e}`);
-  }
-}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -111,6 +104,36 @@ if (isBundledApp()) {
   });
 
   global.authCookie = guid();
+}
+
+// set the client data path
+let defaultUserDataPath;
+
+switch (process.platform) {
+  case 'win32':
+    defaultUserDataPath = `${homedir()}\\OpenBazaar2.0-ClientData`;
+    break;
+  case 'darwin':
+    defaultUserDataPath = `${homedir()}/Library/Application Support/OpenBazaar2.0-ClientData`;
+    break;
+  default:
+    defaultUserDataPath = `${homedir()}/.openbazaar2.0-clientData`;
+}
+
+const userDataPath = argv.userData || defaultUserDataPath;
+
+// If you pass in a specific userData value as a command line option, we'll use that.
+// Otherwise, if you're using the bundled app, we'll use a custom data dir (as defined
+// in the switch above). Otherwise (running client from source), we won't update the data
+// dir and the electron default will be used.
+if (isBundledApp() || argv.userData) {
+  try {
+    app.setPath('userData', userDataPath);
+  } catch (e) {
+    dialog.showErrorBox('Error setting the user data path',
+      `There was an error setting the user data path to ${userDataPath}\n\n${e}`);
+    app.exit();
+  }
 }
 
 crashReporter.start({
