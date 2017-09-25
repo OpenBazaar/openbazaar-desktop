@@ -75,6 +75,7 @@
     "bitcoin-convert": "^1.0.4",
     "bitcore-lib": "^0.14.0",
     "cropit": "^0.5.1",
+    "homedir": "^0.6.0",
     "ionicons": "^2.0.1",
     "is_js": "^0.8.0",
     "jquery": "^3.0.0",
