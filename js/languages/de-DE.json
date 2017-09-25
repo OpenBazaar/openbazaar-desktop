@@ -11,30 +11,30 @@
     "statusPublishComplete": "Veröffentlichung abgeschlossen."
   },
   "follow": {
-    "typeFollow": "following",
-    "typeUnfollow": "unfollowing",
-    "followErrorTitle": "There was an error %{type} %{user}."
+    "typeFollow": "folgen",
+    "typeUnfollow": "entfolgen",
+    "followErrorTitle": "Es gab einen Fehler %{user} zu %{type}"
   },
   "restartNow": "Jetzt neu starten",
   "restartLater": "Später neu starten",
   "langChangeRestartTitle": "Für die Änderung der Spracheinstellungen ist ein Neustart der Anwendung notwendig",
   "langChangeRestartMessage": "Damit Ihre Änderung der Spracheinstellungen wirksam wird ist ein Neustart der Anwendung notwendig. Im Falle laufender Speichervorgänge oder Veröffentlichungen warten Sie bitte bis diese beendet sind.",
   "update": {
-    "checking": "Checking for updates…",
-    "error": "There was an error checking for updates. Error: %{error}",
-    "available": "An update is downloading now. You can choose to install it when the download is complete.",
-    "notAvailable": "No updates are available.",
+    "checking": "Suche nach Updates...",
+    "error": "Es gab einen Fehler beim Suchen nach Updates. Fehler: %{error}",
+    "available": "Ein Update wird gerade heruntergeladen. Sie können dieses nach Abschluss des Vorgangs installieren.",
+    "notAvailable": "Keine Updates verfügbar.",
     "cancel": "Abbrechen",
     "ready": {
-      "title": "The Update is Ready",
-      "msg": "Your update has downloaded. Click below to install it."
+      "title": "Das Update ist bereit",
+      "msg": "Ihr Update wurde heruntergeladen. Klicken sie unterhalb, zum installieren."
     },
-    "install": "Install Now"
+    "install": "Jetzt installieren"
   },
   "addressBarPlaceholder": "Geben Sie einen @Benutzernamen, eine OpenBazaar-ID oder einen Suchbegriff ein",
   "testnet": "Testmodus",
   "testnetTooltip": "Der Testmodus verwendet Testnet-Coins, die nur für Testzwecke gedacht sind.",
-  "betaTooltip": "OpenBazaar is currently in beta. Make sure to backup your wallet, and be careful if spending large amounts of bitcoin.",
+  "betaTooltip": "OpenBazaar ist momentan in Beta. Stellen erstellen sie ein Backup ihrer Wallet, und seien sie vorsichtig beim Ausgeben großer Mengen Bitcoin.",
   "tabMenuHeading": "MENÜ",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "In die Zwischenablage kopiert",
@@ -61,7 +61,7 @@
   },
   "startUp": {
     "dialogs": {
-      "btnRetry": "Wiederholen",
+      "btnRetry": "Erneut versuchen",
       "btnManageConnections": "Verbindungen verwalten",
       "retryConfig": {
         "title": "Ihre Servereinstellungen konnten nicht bezogen werden."
@@ -79,7 +79,7 @@
         "title": "Ihr Wallet-Guthaben konnte nicht bezogen werden."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Außerstande Suchanbieter zu laden."
       }
     },
     "startupLoadingModal": {
@@ -88,29 +88,29 @@
     }
   },
   "notifications": {
-    "noResults": "No notifications found.",
+    "noResults": "Keine Meldungen gefunden.",
     "text": {
-      "order": "%{buyerName} has purchased %{listingTitle}.",
-      "payment": "Your payment has been delivered.",
-      "orderConfirmation": "%{vendorName} has accepted your order.",
-      "declined": "%{vendorName} has declined your order.",
-      "canceled": "%{buyerName} has canceled their order.",
-      "refunded": "%{vendorName} has refunded your order.",
-      "fulfillment": "%{vendorName} has fulfilled your order.",
-      "orderComplete": "%{buyerName} has left feedback on their order.",
-      "disputeOpen": "%{disputerName} has opened a dispute with you.",
-      "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
-      "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
-      "disputeClose": "The dispute with %{otherPartyName} has been closed.",
-      "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
-      "follow": "%{name} has followed you.",
-      "moderatorAdd": "%{name} has added you as a moderator.",
-      "moderatorRemove": "%{name} has removed you as a moderator."
+      "order": "%{buyerName} hat %{listingTitle} gekauft.",
+      "payment": "Ihre Zahlung wurde zugestellt.",
+      "orderConfirmation": "%{vendorName} hat ihre Bestellung angenommen.",
+      "declined": "%{vendorName} hat ihre Bestellung abgelehnt.",
+      "canceled": "%{buyerName} hat seine Bestellung abgebrochen.",
+      "refunded": "%{vendorName} hat Ihre Bestellung zurückerstattet.",
+      "fulfillment": "%{vendorName} hat ihre Bestellung erfüllt.",
+      "orderComplete": "%{buyerName} hat eine Rückmeldung zu seiner Bestellung hinterlassen.",
+      "disputeOpen": "%{disputerName} hat einen Konfliktfall mit ihnen eröffnet.",
+      "disputeOpenMod": "%{disputerName} hat einen Konfliktfall mit %{disputeeName} eröffnet.",
+      "disputeUpdate": "%{disputeeName} hat seinen Vertrag für den Konfliktfall mit %{disputerName} geteilt.",
+      "disputeClose": "Der Konflikt mit %{otherPartyName} wurde geschlossen.",
+      "disputeAccepted": "Der Konflikt mit %{otherPartyName} wurde abgeschlossen.",
+      "follow": "%{name} folgt Ihnen.",
+      "moderatorAdd": "%{name} hat Sie als Moderator hinzugefügt.",
+      "moderatorRemove": "%{name} hat Sie als Moderator entfernt."
     },
-    "errorHeading": "There was an error fetching the notifications.",
+    "errorHeading": "Beim Aufrufen der Meldung ist ein Fehler aufgetreten.",
     "btnRetry": "Wiederversuchen",
     "tabAll": "All",
-    "tabOrders": "Orders",
+    "tabOrders": "Bestellungen",
     "tabFollowers": "Follower"
   },
   "pageNav": {
@@ -119,15 +119,15 @@
     "discoverCalloutTitle": "Entdecken",
     "discoverCalloutBody": "Stöbern und kaufen Sie in hunderten Shops auf OpenBaazar",
     "toolTip": {
-      "back": "Zur&uuml;ck",
+      "back": "Zurück",
       "forward": "Vor",
       "refresh": "Neu laden",
       "discover": "Entdecken",
       "wallet": "Wallet",
       "notifications": "Benachrichtigungen",
       "nav": "Navigation",
-      "close": "Schlie&szlig;en",
-      "currentPrice": "Current Bitcoin price"
+      "close": "Schließen",
+      "currentPrice": "Momentaner Bitcoinpreis"
     }
   },
   "chat": {
@@ -158,7 +158,7 @@
     "about": "Über",
     "aboutEmpty": "Über ist leer …",
     "follow": "Folgen",
-    "unfollow": "Nicht mehr folgen",
+    "unfollow": "Entfolgen",
     "searchStore": "Suchen",
     "moderator": "Moderator",
     "termsOfService": "Nutzungsbedingungen",
@@ -176,13 +176,13 @@
       "noFollowing": "%{name} folgt bisher niemandem",
       "noOwnFollowers": "Sie haben bisher keine Abonnenten",
       "noOwnFollowing": "Sie folgen bisher niemandem",
-      "followersFetchError": "Unable to fetch the followers list.",
-      "followingFetchError": "Unable to fetch the following list.",
-      "btnRetry": "Wiederversuchen"
+      "followersFetchError": "Followerliste konnten nicht geladen werden.",
+      "followingFetchError": "Gefolgtenliste konnte nicht geladen werden.",
+      "btnRetry": "Neu versuchen"
     },
     "getFollowingError": "Beim Überprüfen, ob dieser User Ihnen folgt, ist ein Fehler aufgetreten.",
-    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
+    "modAddError": "Beim Hinzufügen dieses Moderators ist ein Fehler aufgetreten.\n%{errMsg}",
+    "modRemoveError": "Beim Entfernen dieses Moderators ist ein Fehler aufgetreten.\n%{errMsg}",
     "storeWelcomeCalloutTitle": "Willkommen in Ihrem Shop!",
     "storeWelcomeCalloutBody": "Ihr OpenBazaar-Shop ist jetzt live im Netzwerk. Legen Sie los, indem Sie ein paar Artikel erstellen oder Ihre Seite individuell anpassen.",
     "storeWelcomeCalloutBtnClose": "Schließen",
@@ -218,7 +218,7 @@
         "showLess": "weniger"
       },
       "toolTip": {
-        "contentView": "Toggle view"
+        "contentView": "Ansicht umschalten"
       }
     },
     "mainNav": {
@@ -231,8 +231,8 @@
   "userShort": {
     "userLoading": "Wird geladen…",
     "userNotFound": "Informationen zum %{guid} konnten <b>nicht im Netzwerk gefunden werden.</b>",
-    "modAddError": "There was an error adding this moderator.\n %{errMsg}",
-    "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
+    "modAddError": "Beim Hinzufügen dieses Moderators ist ein Fehler aufgetreten.\n%{errMsg}",
+    "modRemoveError": "Beim Entfernen dieses Moderators ist ein Fehler aufgetreten.\n%{errMsg}",
     "tipFollow": "Folgen",
     "tipUnfollow": "Nicht mehr folgen",
     "tipModAdd": "Als Moderator hinzufügen",
@@ -285,7 +285,7 @@
     "licenseTab": {
       "linkText": "Lizenz",
       "sectionHeader": "OpenBazaar-MIT-Lizenz",
-      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
+      "licensePreface": "OpenBazaar ist Open-Source-Software unter der MIT-Lizenz. Diese Lizenz ist tolerant und dazu bestimmt, die Wiederverwendung des Codes in anderen Open-Source-Projekten und proprietärer Software zu erlauben. Für den vollständigen Lizenztext siehe unten.",
       "header": "Die MIT-Lizenz (MIT)",
       "copyright": "Copright &copy; 2016 OpenBazaar Entwickler",
       "paragraphs": {
@@ -319,8 +319,8 @@
   "settings": {
     "settingsLabel": "Einstellungen",
     "unrecognizedModelErrsWarning": {
-      "title": "Unable to save your settings",
-      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+      "title": "Ihre Einstellungen konnten nicht gespeichert werden",
+      "body": "Es war uns nicht möglich die Einstellungen für diesen Tab zu speichern, weil es unerkannte Fehler gab. Diese stammen wahrscheinlich von ungültigen Werten in einem anderen Tab. Speichern sie bitte die anderen Tabs ab, um das Feld mit dem Fehler zu finden. Der Fehler wird über dem Feld angezeigt. Stellen Sie sicher nach dem Beheben des Fehlers, im Tab mit dem Fehler, Speichern zu klicken. Danach können sie zu diesem Tab zurückkehren um das Speichern dieses Tabs abzuschließen."
     },
     "generalTab": {
       "helperLanguage": "Anzeigeelemente anzeigen in",
@@ -411,21 +411,21 @@
         "senderEmail": "Gesendet von",
         "recipientEmail": "Gesendet an",
         "placeholderServerAddress": "smtp.gmail.com:587",
-        "placeholderUsername": "Enter your username",
+        "placeholderUsername": "Geben sie ihren Nutzernamen ein",
         "placeholderPassword": "Das Passwort für Ihre E-Mail-Adresse",
         "placeholderSendFrom": "name@domain.com",
         "placeholderSendTo": "name@domain.com",
-        "helperNotifications": "Receive emails for order updates",
-        "helperServerAddress": "Enter an outgoing (SMTP) server url followed by the TLS port number",
+        "helperNotifications": "E-Mails zu Bestellungsänderungen erhalten",
+        "helperServerAddress": "Geben sie eine ausgehende  (SMTP) Server Url ein, gefolgt von der TLS Portnummer.",
         "helperNewEmail": "Erstellen Sie eine E-Mail-Adresse auf %{helperGmailLink}",
-        "helperUsername": "Your SMTP username",
+        "helperUsername": "Ihr SMTP Nutzername",
         "helperPassword": "Nur für Sie sichtbar in Ihrer Datenbank gespeichert",
-        "helperSendFrom": "The email address to send from. Make sure you whitelist this address in your receiving account.",
-        "helperSendTo": "The email address to send to. Check your spam folder if you don't receive notifications.",
+        "helperSendFrom": "Die E-Mail-Adresse von der gesendet wird. Stellen sie sicher diese in ihrem Empfangsaccount zu erlauben.",
+        "helperSendTo": "Die E-Mail-Adresse zu der gesendet wird. Überprüfen sie ihren Spamordner, wenn sie keine Meldungen erhalten.",
         "helperGmailLink": "Gmail",
-        "testSmtpSuccess": "The integration test was successful. Don't forget to save your settings.",
-        "testSmtpFail": "The integration test was not successful.",
-        "testSmtpFailWithError": "The integration test was not successful: %{err}",
+        "testSmtpSuccess": "Der Integrationstest war erfolgreich. Vergessen Sie nicht Ihre Einstellungen zu speichern.",
+        "testSmtpFail": "Der Integrationstest war nicht erfolgreich.",
+        "testSmtpFailWithError": "Der Integrationstest war nicht erfolgreich: %{err}",
         "testSmtpCancel": "Abbrechen"
       },
       "server": {
@@ -436,34 +436,34 @@
         "peers": "Peers",
         "peersHelper": "Peers, mit denen Sie verbunden sind",
         "peersBtn": "Verbundene Peers anzeigen",
-        "resync": "Reload Transactions",
-        "resyncHelper": "Synchronize your transactions if some are missing",
-        "resyncBtn": "Reload Transactions",
-        "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+        "resync": "Transaktionen neu laden",
+        "resyncHelper": "Synchronisieren Sie Ihre Transaktionen falls welche fehlen",
+        "resyncBtn": "Transaktionen neu laden",
+        "resyncComplete": "Die Transaktion wird anfangen neu zu synchronisieren. Dies kann fünf bis zehn Minuten oder länger dauern.",
         "purge": "Geteilte Dateien löschen",
         "purgeHelper": "Zwischengespeicherte Dateien, die Sie mit anderen teilen,  löschen",
         "purgeBtn": "Dateien löschen",
-        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
+        "purgeToolTip": "OpenBazaar teilt cashed Inhalte, die Sie mit anderen Nutzern gesehen haben. Wenn Sie Texte oder Bilder gesehen haben, die Sie nicht teilen wollen, wird dieser Knopf sie löschen. Dies wird Ihre Dateien nicht beeinflussen",
         "purgeError": "Es ist ein Fehler aufgetreten. Ihre zwischengespeicherten Dateien wurden möglicherweise nicht gelöscht.",
         "purgeComplete": "Ihre zwischengespeicherten Dateien wurden gelöscht.",
-        "blockData": "Block Data",
-        "blockDataHelper": "Show data useful for debugging.",
-        "blockDataBtn": "Show Block Data",
-        "blockDataError": "There was an error, your block data could not be retrieved.",
-        "blockDataTitle": "Your Block Data",
-        "blockDataCopy": "Copy to your Clipboard",
-        "backupWalletLbl": "Backup Wallet Seed",
-        "backupWalletHelper": "This seed will allow you to recover your wallet in case of computer failure.",
-        "unableToFetchSeedTitle": "There was an error fetching your wallet seed",
+        "blockData": "Blockdaten",
+        "blockDataHelper": "Zum Debugging nützliche Daten zeigen.",
+        "blockDataBtn": "Blockdaten zeigen",
+        "blockDataError": "Es gab einen Fehler, Ihre Blockdaten konnten nicht abgerufen werden.",
+        "blockDataTitle": "Ihre Blockdaten",
+        "blockDataCopy": "In Ihre Zwischenablage kopieren",
+        "backupWalletLbl": "Backup von Wallet Seed erzeugen",
+        "backupWalletHelper": "Dieser Seed wird es Ihnen im Falle eines Computerfehler erlauben, Ihre Wallet wiederherzustellen.",
+        "unableToFetchSeedTitle": "Beim Abrufen Ihres Wallet Seeds gab es einen Fehler",
         "walletSeed": {
-          "btnShowSeed": "Show Seed",
-          "introLine": "Your wallet generation seed is:",
-          "directionLine": "Write the following words on paper and keep them somewhere safe. They must be in this exact order.",
+          "btnShowSeed": "Seed zeigen",
+          "introLine": "Ihr Wallet generations Seed ist:",
+          "directionLine": "Schreiben Sie die folgenden Worte auf ein Papier und verfahren Sie es an einem Sicheren Ort. Sie müssen in genau dieser Reihenfolge sein.",
           "warningHeading": "Warnung:",
-          "warning1": "Never share your seed. Anyone with this seed can steal your funds.",
-          "warning2": "Never type it on a website.",
-          "warning3": "Do not store it electronically.",
-          "warning4": "Do not lose your seed, or your funds will be permanently lost if your data is erased."
+          "warning1": "Teilen Sie nie Ihren Seed. Jeder mit diesem Seed kann Ihre Gelder stehlen.",
+          "warning2": "Schreiben sie es nie in einer Webseite.",
+          "warning3": "Verwahren sie es nicht elektronisch.",
+          "warning4": "Verlieren Sie nicht ihren Seed, oder Ihre Gelder sind permanent verloren, wenn Ihre Daten gelöscht werden."
         }
       },
       "transaction": {
@@ -511,7 +511,7 @@
       "languagesHelper": "Tragen Sie alle Sprachen ein, die Sie unterstützen (d.h. in denen Sie sich klar verständigen können)",
       "acceptGuidelines": "Ich habe den empfohlenen %{acceptGuidelinesLink} gelesen.",
       "acceptGuidelinesLink": "OpenBazaar-Konfliktlösungsleitfaden",
-      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them, unless they violate the terms described above.",
+      "understandRequirements": "Ich verstehe, dass Ich Konfliktlösungsdienste jedem, der diese anfordert, anbieten muss, es sei denn, diese verstoßen gegen die Bedingungen oberhalb.",
       "status":{
         "saving": "Moderations-Einstellungen werden gespeichert …",
         "done": "Moderations-Einstellungen wurden gespeichert…",
@@ -603,7 +603,7 @@
       "state": "Bundesland / Landkreis / Region ",
       "country": "Land",
       "postalCode": "Postleitzahl",
-      "notes": "Delivery Notes"
+      "notes": "Versandnotizen"
     },
     "statusSaving": "Einstellungen werden gespeichert …",
     "statusSaveFailed": "Die Einstellungen konnten nicht gespeichert werden.",
@@ -674,8 +674,8 @@
       "torNotAvailableMessage": "Tor wurde nicht erkannt. Falls Sie ohne Tor fortfahren möchten, deaktivieren Sie unten \"Tor benutzen\" und klicken Sie auf \"Speichern\". Andernfalls starten Sie Tor und versuchen Sie dann erneut, sich zu verbinden.",
       "torProxyLabel": "Tor-SOCKS5-Proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
-      "torPwLabel": "Tor Password",
-      "torPwPlaceholder": "The unhashed Tor control password",
+      "torPwLabel": "Tor Passwort",
+      "torPwPlaceholder": "Das ungehashte Tor Kontrollpasswort",
       "warning": "Warnung:",
       "torServerWarning": "%{warning} Um anonym zu sein ist es wichtig, dass Sie auch den Server im Tor-Modus starten."
     }
@@ -713,8 +713,8 @@
       "sendPaymentFailDialogTitle": "Zahlung konnte nicht gesendet werden",
       "sendConfirm": {
         "heading": "Sind Sie sicher?",
-        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
+        "body": "Die Netzwerkgebühr wird enthalten sein, momentan auf %{fiatBtcPairing} geschätzt.",
+        "bodyFeeUnavailable": "Sende %{fiatBtcPairing}, plus eine Netzwerkgebühr",
         "btnCancel": "Abbrechen",
         "btnConfirmSend": "Ja, senden"
       }
@@ -726,11 +726,11 @@
         "incomingText": "%{fiatBtcPairing} empfangen",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} Bestätigung) |||| %{timeAgo} (%{confirmationsCount} Bestätigungen)",
         "viewDetailsBtn": "Details ansehen",
-        "retryTransactionBtn": "Increase Fee",
+        "retryTransactionBtn": "Gebühr erhöhen",
         "retryPaymentConfirmBox": {
           "title": "Erneuten Zahlungsversuch beginnen",
-          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "Fügen Sie %{fiatBtcPairing}%{asterisk} zu der Gebühr hinzu und senden Sie die Transaktion erneut ab.",
+          "insufficientFundsBody": "Sie brauchen wenigstens %{fiatBtcPairing}%{asterisk} in Ihrer Wallet um diese Transaktion mit einer höheren Gebühr abzusenden.",
           "subText": "%{asterisk} Geschätzter Preis",
           "btnCancel": "Abbrechen",
           "btnConfirmSend": "Senden"
@@ -741,9 +741,9 @@
       },
       "noTransactionsPlaceholder": "Keine Transaktionen vorhanden.",
       "newTransactionsPopin": "%{smart_count} neue Transaktion %{refreshLink} |||| %{smart_count} neue Transaktionen %{refreshLink}",
-      "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
-      "recoverySeedLink": "backup your wallet recovery seed",
-      "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
+      "backupWalletWarningTitle": "Backup von Wallet wiederherstellungs Seed erzeugen",
+      "recoverySeedLink": "Erstellen Sie ein Backup ihres Wallet wiederherstellungs Seeds",
+      "backupWalletWarningBody": "Sieht so aus als hätten Sie ein oder zwei Transaktion. Jetzt währe eine gute Zeit um %{Link}."
     }
   },
   "formats": {
@@ -796,7 +796,7 @@
     "review": {
       "title": "%{time} von %{name}",
       "loadMore": "Mehr laden",
-      "noReviews": "No reviews found",
+      "noReviews": "Keine Rezensionen gefunden",
       "showMore": "Mehr anzeigen",
       "showLess": "Weniger anzeigen"
     },
@@ -857,7 +857,7 @@
     "placeholderReturnPolicy": "Wie lautet Ihre Rücknahmegarantie? Wie viele Tage werden Rücknahmen angenommen? Wer zahlt für die Rücksendung (falls benötigt)? usw.",
     "placeholderTerms": "Wie lauten die Geschäftsbedingungen für den Artikel? Wofür sind Sie als Verkäufer verantwortlich? Gibt es eine Garantie? Wann ist die Transaktion endgültig? usw.",
     "helperTitle": "Eine Beschreibung, die erklärt, was genau Sie verkaufen",
-    "helperType": "Choose from 3 types",
+    "helperType": "Wählen Sie aus 3 Typen aus",
     "helperShipping": "Versenden Sie Artikel, wohin Sie möchten!",
     "helperPhotos": "Fügen Sie bis zu %{maxPhotos} Fotos hinzu",
     "helperSKU": "Eine eindeutige Kennung für Ihren Artikel",
@@ -868,8 +868,8 @@
     "helperNSFW": "Wählen Sie ja, falls Ihr Artikel nur für Erwachsene bestimmt ist",
     "helperTags": "Fügen Sie viele Tags hinzu. Geben Sie ein Tag ein, drücken Sie Enter, wiederholen Sie das Ganze.",
     "helperCategories": "Die Verschachtelung von Kategorien wird nicht unterstützt (z.B. Schuhe > Stiefel funktioniert momentan nicht). Geben Sie eine Kategorie ein, drücken Sie Enter, wiederholen Sie das Ganze.",
-    "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
-    "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperReturnPolicy": "Falls Sie das Feld leer lassen, wird für diesen Artikel \"Keine Rückgabe Methode eingetragen\" angezeigt",
+    "helperTerms": "Falls Sie das Feld leer lassen, wird für diesen Artikel \"Keine Geschäftsbedingungen eingetragen\" angezeigt",
     "createListingLabel": "Artikel erstellen",
     "editListingLabel": "Artikel bearbeiten",
     "title": "Titel",
@@ -907,13 +907,13 @@
         "nameLabel": "Dienstleistung",
         "namePlaceholder": "z.B. Standard, Express, Overnight",
         "estimatedDeliveryLabel": "Vsl. Lieferdatum",
-        "estimatedDeliveryPlaceholder": "z.B. 5 – 7 Tage",
+        "estimatedDeliveryPlaceholder": "z.B. 5–7 Tage",
         "priceLabel": "Preis",
         "pricePlaceholder": "0,00",
         "addService": "+ Dienstleistung hinzufügen"
       },
       "toolTip": {
-        "delete": "L&ouml;schen"
+        "delete": "Löschen"
       }
     },
     "coupons": {
@@ -926,30 +926,30 @@
       "discountTypeFixed": "Festpreis",
       "btnAddCoupon": "+ Gutschein hinzufügen",
       "toolTip": {
-        "delete": "L&ouml;schen"
+        "delete": "Löschen"
       }
     },
     "variants": {
       "btnAddVariant": "Variante hinzufügen",
-      "btnDeleteVariant": "L&ouml;schen",
+      "btnDeleteVariant": "Löschen",
       "addVariant": "+ Variante hinzufügen",
       "titleLabel": "Titel",
       "titlePlaceholder": "z.B. Größe, Farbe, Material, usw.",
       "choicesLabel": "Auswahlmöglichkeiten",
       "choicesPlaceholder": "z.B. klein, mittel, groß",
       "toolTip": {
-        "delete": "L&ouml;schen"
+        "delete": "Löschen"
       }
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Bestand nicht tracken",
       "trackSelectOption": "Bestand tracken",
       "doNotTrackHelperText": "Käufer können so viele erwerben, wie sie wollen",
-      "trackByFixedHelperText": "Die Menge wird heruntergezählt, bis sie 0 erreicht. Sie wird dann als ausverkauft angezeigt.",
+      "trackByFixedHelperText": "Die Anzahl wird verringert, bis sie 0 erreicht. Sie wird dann als ausverkauft angezeigt.",
       "trackByVariantsHelperText": "Der Bestand wird pro Variante / Variantenkombination getrackt"
     },
     "variantInventory": {
-      "helperText": "Variantenoptionen mit der Menge 0 werden nicht angezeigt",
+      "helperText": "Variationen mit der Anzahl 0 werden nicht angezeigt",
       "placeholderSKU": "Artikelnummer, ID, usw.",
       "unlimitedQuantityLabel": "unbegrenzt",
       "placeholderNeedMoreData": "Die Tabelle mit dem Bestand von Varianten erscheint, wenn Sie mindestens eine Variante mit mindestens einer Auswahlmöglichkeit festgelegt haben."
@@ -972,27 +972,27 @@
     "resultsFound": "<b>%{totalResults} Artikel</b> für <b>\"%{term}\"</b> gefunden",
     "resultsTotal": "%{totalResults} Artikel",
     "sortBy": "Sortieren nach",
-    "changeProvider": "Close and Choose a New Search Provider",
+    "changeProvider": "Schließen und neuen Standard Suchanbieter auswählen",
     "useDefault": "%{defaultProvider} nach \"%{term}\" durchsuchen",
     "noResults": "Es konnten keine Artikel gefunden werden, die Ihren Suchkriterien entsprechen",
-    "addTitle": "Add search provider",
-    "addPlaceholder":"URL for the search provider",
-    "addTorPlaceholder": "Tor URL for the search provider (optional)",
+    "addTitle": "Suchanbieter hinzufügen",
+    "addPlaceholder":"URL für den Suchanbieter",
+    "addTorPlaceholder": "Tor URL für den Suchanbieter (optional)",
     "addBtn": "Hinzufügen",
     "cancel": "Abbrechen",
-    "deleteProviderBtn": "Remove search provider",
-    "makeDefaultBtn": "Set to default",
-    "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
-    "addQueryProviderBtn": "Add search provider",
-    "chooseDefaultTitle": "Select a default search provider",
-    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "deleteProviderBtn": "Suchanbieter entfernen",
+    "makeDefaultBtn": "Auf Standard setzen",
+    "makeDefaultBtnHelper": "Der Standard Suchanbieter wird für Suchen in der Adressleiste genutzt.",
+    "addQueryProviderBtn": "Suchanbieter hinzufügen",
+    "chooseDefaultTitle": "Einen Standard Suchanbieter auswählen",
+    "chooseDefaultMsg": "Dieser Anbieter wird für zukünftige Suchen als Standard genutzt, bis Sie einen neuen wählen.",
     "errors": {
-      "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
+      "searchFailTitle": "Die Suchanfrage an %{provider} ist fehlgeschlagen. Wählen Sie einen anderen Anbieter oberhalb.",
       "searchFailReason": "Der Suchanbieter hat folgende Nachricht zurückgegeben: %{error}",
-      "connection": "You are no longer connected to your node. Reconnect to continue searching",
-      "addError": "This provider cannot be added. Check your data and try again.",
-      "locked": "Default search providers can't be deleted.",
-      "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
+      "connection": "Sie sind nicht mehr mit ihrem Knoten verbunden. Verbinden Sie sich neu, um weiter zu suchen.",
+      "addError": "Dieser Anbieter kann nicht hinzugefügt werden. Überprüfen Sie Ihre Daten und versuchen Sie es erneut.",
+      "locked": "Standard Such Anbieter können nicht gelöscht werden.",
+      "resetToOriginal": "Die URL Ihres Suchanbieters ist ungültig. Wir werden stattdessen den ursprünglichen Standardanbieter benutzen."
     }
   },
   "onboarding": {
@@ -1043,18 +1043,18 @@
     "noAddresses": "Sie haben keine gespeicherten Adressen.",
     "noShippableAddresses": "Dieser Artikel kann nicht an die von Ihnen ausgewählte Adresse versendet werden.",
     "informationTitle": "Zusatzinformationen",
-    "emailAddress": "Email Address or Phone Number",
+    "emailAddress": "E-Mailadresse oder Telefonnummer",
     "emailPlaceholder": "name@email.com",
     "emailNote": "Eine alternative Methode, um Sie zu erreichen.",
     "couponCode": "Gutscheincode",
-    "couponCodePlaceholder": "Enter code",
+    "couponCodePlaceholder": "Code eingeben",
     "applyCode": "Übernehmen",
     "code": "Der Code \"%{code}\" wurde auf die Bestellung angewendet",
     "codeErrors": {
       "invalid": "\"%{code}\" ist kein gültiger Code",
       "duplicate": "Sie können \"%{code}\" nur einmal hinzufügen",
       "excessive": "Sie können keine Ermäßigungen anwenden, die zusammen 100% oder mehr ergeben.",
-      "blank": "You must enter a code."
+      "blank": "Sie müssen einen Code eingeben."
     },
     "removeCode": "entfernen",
     "memo": "Notiz",
@@ -1062,11 +1062,11 @@
     "pay": "BEZAHLEN >",
     "payNote": "Das klicken auf \"BEZAHLEN >\" wird Sie zum letzten Schritt des Bestellvorgangs bringen.",
     "pending": "Ausstehend …",
-    "pendingNote": "Please fund the order to complete your transaction.",
+    "pendingNote": "Bitte finanzieren Sie Ihre Bestellung, um Ihre Transaktion abzuschließen.",
     "close": "schließen",
     "closeNote": "Ihre Zahlung wurde an den Verkäufer gesendet.",
     "moderatorNote": "* Die Servicegebühr für den Moderator gilt nur, falls ein Konflikt geöffnet wird. ",
-    "quantity": "Menge",
+    "quantity": "Anzahl",
     "useShapeShift": "Oder verwenden Sie im nächsten Schritt ShapeShift",
     "moderatedPayment": "Moderierte Zahlung",
     "noValidModerators": "Für diese Bestellung sind keine gültigen Moderatoren verfügbar.",
@@ -1092,17 +1092,17 @@
       "note4": "Wenn Sie gezahlt haben kann es einen kurzen Augenblick dauern, bis sich die Anzeige aktualisiert.",
       "confirmWallet": {
         "title": "Sind Sie sicher?",
-        "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
-        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
-        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
+        "payMsg": "Zahlen Sie %{fiatBtcPairing}* an den Verkäufer.",
+        "payMsgNotePlusFee": "*Die Netzwerkgebühr wird zu dem gelisteten Betrag hinzu addiert",
+        "payMsgNoteFeeIncluded": "*Enthält eine Netzwerkgebühr, momentan auf %{amount} geschätzt",
         "cancel": "Abbrechen",
         "confirm": "Ja, bezahlen",
         "fundsLow": "Es befinden sich nicht genügend Bitcoins in Ihrer Wallet. Fügen Sie Guthaben hinzu, um diesen Einkauf abzuschließen.",
         "insufficientFundsTitle": "Nicht genügend Guthaben vorhanden",
         "insufficientFundsMsg1": "Ihre Wallet beinhaltet momentan %{funds}.",
         "insufficientFundsMsg2": "Fügen Sie %{fundGap}* zu Ihrer Wallet hinzu oder zahlen Sie mit einer externen Wallet um fortzufahren.",
-        "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
+        "insufficientFundsNote": "*%{amount} plus Gebühr, momentan auf %{fee} geschätzt",
+        "insufficientFundsNoteFeeUnavailable": "*Stellen Sie sicher auch die Netzwerkgebühr einzurechnen"
       }
     },
     "completeSection": {
@@ -1119,12 +1119,12 @@
     },
     "receipt": {
       "summary": "Bestellübersicht",
-      "listing": "Angebot",
+      "listing": "Artikel",
       "coupon": "Gutschein",
       "shipping": "Versand",
       "options": "Optionen",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Zwischensumme",
+      "total": "Gesamt (%{quantity})"
     },
     "errors": {
       "moderatorsTitle": "Die Daten des Moderators konnten nicht geladen werden",
@@ -1205,7 +1205,7 @@
         "DISPUTED": "Umstritten",
         "DECIDED": "Entschieden",
         "RESOLVED": "Gelöst",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Zahlung abgeschlossen"
       },
       "btnReject": "Ablehnen",
       "btnAccept": "Zustimmen",
@@ -1247,7 +1247,7 @@
       "orderNumber": "Bestellnummer: %{orderId}",
       "copyLink": "Kopieren",
       "notApplicable": "k.A.",
-      "vendorFinalizedPayment": "You have manually finalized the order.",
+      "vendorFinalizedPayment": "Sie haben die Bestellung manuell abgeschlossen.",
       "payment": {
         "firstPaymentHeading": "Zahlungsdetails",
         "paymentHeading": "Zahlungsdetails #%{paymentNumber}",
@@ -1363,14 +1363,14 @@
         "heading": "Bestelldetails",
         "shipToHeading": "Versand nach",
         "couponHeading": "Gutscheine",
-        "quantityHeading": "Menge",
+        "quantityHeading": "Anzahl",
         "totalHeading": "Gesamtsumme",
         "moderatorHeading": "Moderator",
         "copyAddress": "Kopieren",
         "viewOnMap": "Auf Karte anzeigen",
         "memo": "Notiz",
-        "addressNotes": "Delivery Notes",
-        "alternateContact": "Additional Contact Information"
+        "addressNotes": "Versandnotizen",
+        "alternateContact": "Zusätzliche Kontakt Informationen"
       }
     },
     "fulfillOrderTab": {
@@ -1496,12 +1496,12 @@
     "imageRequired": "Bitte fügen Sie mindestens ein Bild hinzu.",
     "tooManyTags": "Sie haben die maximal zulässige Menge von %{maxTags} Tags überschritten.",
     "tooManyCats": "Sie haben die maximal zulässige Menge von %{maxTags} Kategorien überschritten.",
-    "duplicateOptionName": "You already have a variant with this name.",
+    "duplicateOptionName": "Sie haben schon eine Variante mit diesem Namen.",
     "tooManyOptions": "Sie können nicht mehr als %{maxOptionCount} Optionen angeben.",
-    "provideQuantity": "Bitte geben Sie eine Menge an.",
-    "provideNumericQuantity": "Bitte geben Sie eine Nummer als Menge an.",
-    "quantityMustBePositive": "Die Menge muss größer als 0 sein.",
-    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+    "provideQuantity": "Bitte geben Sie eine Anzahl an.",
+    "provideNumericQuantity": "Bitte geben Sie eine Nummer als Anzahl an.",
+    "quantityMustBePositive": "Die Anzahl muss größer als 0 sein.",
+    "duplicateVariantName": "Sie haben mehrere \"%{name}\" Auswahlmöglichkeiten. Namen von Auswahlmöglichkeiten müssen einzigartig sein,"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Bitte Geben Sie einen Gutscheincode an.",
@@ -1544,9 +1544,9 @@
     "noAmount": "Falls Sie als Art Ihrer Gebühr einen Festpreis oder einen Festpreis plus prozentualen Anteil wählen, müssen Sie eine gültige Menge für Ihre feste Gebühr angeben."
   },
   "skuModelErrors": {
-    "provideQuantity": "Bitte geben Sie eine Menge an.",
-    "provideNumericQuantity": "Bitte geben Sie eine Nummer als Menge an.",
-    "providePositiveQuantity": "Die Menge darf nicht weniger als 0 sein.",
+    "provideQuantity": "Bitte geben Sie eine Anzahl an.",
+    "provideNumericQuantity": "Bitte geben Sie eine Nummer als Anzahl an.",
+    "providePositiveQuantity": "Die Anzahl darf nicht weniger als 0 sein.",
     "provideSurcharge": "Bitte geben Sie einen Aufpreis an.",
     "provideNumericSurcharge": "Bitte geben Sie eine Nummer als Aufpreis ein."
   },
@@ -1566,8 +1566,8 @@
     "insufficientFunds": "Sie verfügen über nicht genügend Guthaben, um diesen Betrag zu senden. Bedenken Sie, dass Sie auch für die Transaktionsgebühr aufkommen müssen."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "Die Menge muss 1 oder mehr sein",
-    "quantityMustBeNumber": "Die Menge muss eine gültige Nummer sein",
+    "mustHaveQuantity": "Die Anzahl muss 1 oder mehr sein",
+    "quantityMustBeNumber": "Die Anzahl muss eine gültige Nummer sein",
     "noItems": "Sie müssen mindestens einen Einkauf tätigen.",
     "missingAddress": "Bitte wählen Sie eine gültige Lieferadresse.",
     "missingShippingOption": "Bitte wählen Sie eine gültige Lieferoption.",
@@ -1613,12 +1613,12 @@
     "provideResolution": "Bitte erläutern Sie Ihre Entscheidung."
   },
   "searchProviderModelErrors": {
-    "invalidName": "The name must be a string.",
-    "invalidLogo": "The logo URL must be a valid URL.",
-    "invalidsearch": "You must provide a valid search URL.",
-    "invalidlistings": "You must provide a valid listings search URL",
-    "invalidtorsearch": "You must provide a valid Tor search URL",
-    "invalidtorlistings": "You must provide a valid Tor listings search URL."
+    "invalidName": "Ihr Name muss eine Zeichenfolge sein.",
+    "invalidLogo": "Die Logo URL muss eine gültige URL sein.",
+    "invalidsearch": "Sie müssen eine gültige Such URL bereitstellen.",
+    "invalidlistings": "Sie müssen eine gültige Artikel Such URL bereitstellen",
+    "invalidtorsearch": "Sie müssen eine gültige Tor Such URL bereitstellen",
+    "invalidtorlistings": "Sie müssen eine gültige Tor Artikel Such URL bereitstellen"
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
@@ -1678,20 +1678,20 @@
     "CENTRAL_AFRICAN_REPUBLIC": "Zentralafrikanische Republik",
     "CHAD": "Tschad",
     "CHILE": "Chile",
-    "CHINA": "China (Volksrepublik)",
+    "CHINA": "China",
     "CHRISTMAS_ISLAND": "Weihnachtsinsel",
     "COCOS_ISLANDS": "Kokosinseln (Die)",
     "COLOMBIA": "Kolumbien",
     "COMOROS": "Komoren (Die)",
     "CONGO_REPUBLIC": "Kongo (Demokratische Republik)",
-    "CONGO": "Kongo",
+    "CONGO": "Kongo (Der)",
     "COOK_ISLANDS": "Cookinseln (Die)",
     "COSTA_RICA": "Costa Rica",
-    "COTE_DIVOIRE": "Elfenbeinküste (Republik Côte d’Ivoire)",
+    "COTE_DIVOIRE": "Elfenbeinküste",
     "CROATIA": "Kroatien",
     "CUBA": "Kuba",
     "CURACAO": "Curaçao",
-    "CYPRUS": "Zypern (Republik)",
+    "CYPRUS": "Zypern",
     "CZECH_REPUBLIC": "Tschechien (Tschechische Republik)",
     "DENMARK": "Dänemark",
     "DJIBOUTI": "Dschibuti",
@@ -1842,16 +1842,16 @@
     "SOUTH_SUDAN": "Südsudan",
     "SPAIN": "Spanien",
     "SRI_LANKA": "Sri Lanka",
-    "SUDAN": "Sudan",
+    "SUDAN": "Sudan (Der)",
     "SURINAME": "Suriname",
     "SVALBARD": "Spitzbergen und Jan Mayen",
     "SWAZILAND": "Swasiland",
     "SWEDEN": "Schweden",
     "SWITZERLAND": "Schweiz",
-    "SYRIAN_ARAB_REPUBLIC": "Syrien (Arabische Republik)",
+    "SYRIAN_ARAB_REPUBLIC": "Arabische Republik Syrien",
     "TAIWAN": "Taiwan",
     "TAJIKISTAN": "Tadschikistan",
-    "TANZANIA": "Tansania (Vereinigte Republik)",
+    "TANZANIA": "Tansania, Vereinigte Republik",
     "THAILAND": "Thailand",
     "TIMOR_LESTE": "Osttimor",
     "TOGO": "Togo",
