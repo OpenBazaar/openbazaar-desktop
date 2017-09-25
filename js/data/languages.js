@@ -33,10 +33,10 @@ const languages = [
   //   name: 'Dutch (Dutch, Netherlands)',
   //   code: 'nl-NL',
   // },
-  // {
-  //   name: 'Espa&ntilde;ol (Spanish)',
-  //   code: 'es',
-  // },
+  {
+    name: 'Espa&ntilde;ol (Spanish)',
+    code: 'es',
+  },
   // {
   //   name: 'Esperanto',
   //   code: 'eo',
