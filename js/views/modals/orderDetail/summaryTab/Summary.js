@@ -66,8 +66,8 @@ export default class extends BaseVw {
       }
 
       if (
-        ['REFUNDED', 'FULFILLED', 'DISPUTED', 'DECIDED', 'RESOLVED', 'COMPLETE'].indexOf(state) > -1
-        && this.accepted) {
+        ['REFUNDED', 'FULFILLED', 'DISPUTED', 'DECIDED', 'RESOLVED', 'COMPLETED']
+          .indexOf(state) > -1 && this.accepted) {
         const acceptedState = {
           showFulfillButton: false,
           infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
@@ -86,7 +86,7 @@ export default class extends BaseVw {
         this.completeOrderForm = null;
       }
 
-      if (['PAYMENT_FINALIZED', 'COMPLETE'].indexOf(state) !== -1) {
+      if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
         this.renderPaymentFinalized();
       }
     });
@@ -326,7 +326,7 @@ export default class extends BaseVw {
             state.currentState = 3;
             state.disputeState = 0;
             break;
-          case 'COMPLETE':
+          case 'COMPLETED':
             state.currentState = 4;
             state.disputeState = 0;
             break;
