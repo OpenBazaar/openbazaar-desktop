@@ -93,6 +93,7 @@ export default class extends baseVw {
       'click .js-edit': 'onClickEdit',
       'click .js-delete': 'onClickDelete',
       'click .js-clone': 'onClickClone',
+      'click .js-userIcon': 'onClickUserIcon',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
@@ -164,6 +165,10 @@ export default class extends baseVw {
   }
 
   onClickDeleteConfirmBox(e) {
+    e.stopPropagation();
+  }
+
+  onClickUserIcon(e) {
     e.stopPropagation();
   }
 
