@@ -1,7 +1,8 @@
 import _ from 'underscore';
-import { capitalize } from '../utils/string';
-import loadTemplate from '../utils/loadTemplate';
-import baseVw from './baseVw';
+import { capitalize } from '../../utils/string';
+import app from '../../app';
+import loadTemplate from '../../utils/loadTemplate';
+import baseVw from '../baseVw';
 
 export default class extends baseVw {
   constructor(options) {
@@ -28,7 +29,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'popInMessage clrP border clrBr pad tx5 clrSh1';
+    return 'popInMessage clrP border clrBrT pad tx5 clrSh1';
   }
 
   events() {
@@ -73,7 +74,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('./popInMessage.html', (tmpl) => {
+    loadTemplate('./components/popInMessage.html', (tmpl) => {
       this.$el.html(
         tmpl(this._state)
       );
@@ -81,4 +82,17 @@ export default class extends baseVw {
 
     return this;
   }
+}
+
+export function buildRefreshAlertMessage(text) {
+  if (typeof text !== 'string') {
+    throw new Error('Please provide text as string.');
+  }
+
+  return app.polyglot.t('refreshAlertPopInMessage.message', {
+    icon: '<span class="ion-alert-circled"></span>',
+    message: `<b>${text}</b>`,
+    refreshLink:
+      `<a class="clrTEm js-refresh">${app.polyglot.t('refreshAlertPopInMessage.refreshLink')}</a>`,
+  });
 }

@@ -15,7 +15,7 @@ import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
 import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
-import PopInMessage from '../PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -242,13 +242,9 @@ export default class extends BaseVw {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      const refreshLink =
-        `<a class="js-refresh">${app.polyglot.t('userPage.store.popinRefreshLink')}` +
-        '</a>';
-
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('userPage.store.listingDataChangedPopin',
-          { refreshLink }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('userPage.store.listingDataChangedPopin')),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
@@ -266,13 +262,9 @@ export default class extends BaseVw {
     if (this.shippingChangePopIn && !this.shippingChangePopIn.isRemoved()) {
       this.shippingChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      const refreshLink =
-        `<a class="js-refresh">${app.polyglot.t('userPage.store.popinRefreshLink')}` +
-        '</a>';
-
       this.shippingChangePopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('userPage.store.shippingDataChangedPopin',
-          { refreshLink }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('userPage.store.shippingDataChangedPopin')),
       });
 
       this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));

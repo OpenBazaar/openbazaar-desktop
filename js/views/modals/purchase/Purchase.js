@@ -12,7 +12,7 @@ import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
 import Purchase from '../../../models/purchase/Purchase';
-import PopInMessage from '../../PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
@@ -158,12 +158,9 @@ export default class extends BaseModal {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      const refreshLink =
-        `<a class="js-refresh">${app.polyglot.t('purchase.refreshPurchase')}</a>`;
-
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('purchase.purchaseDataChangedPopin',
-            { refreshLink }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('purchase.purchaseDataChangedPopin')),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));

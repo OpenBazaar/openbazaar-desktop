@@ -335,9 +335,15 @@ input[type=range][class~="clrS"] {
   .walletTransactions {
     .statusIconCol {
       .ion-alert-circled {
-        color: #fecf33;
+        color: $alert;
       }
     }
+  }
+}
+
+.popInMessage {
+  .ion-alert-circled {
+    color: $alert;
   }
 }
 
