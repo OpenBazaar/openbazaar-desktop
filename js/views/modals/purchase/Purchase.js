@@ -245,6 +245,7 @@ export default class extends BaseModal {
     } else {
       // deselect all the moderators after storing any selected moderator
       this._oldMod = this.moderators.selectedIDs[0];
+      this.moderators.noneSelected = true;
       this.moderators.deselectOthers();
       this.order.set('moderator', '');
     }
@@ -253,10 +254,12 @@ export default class extends BaseModal {
   disableModerators() {
     this.getCachedEl('#purchaseModerated').prop('checked', false);
     this.order.moderated = false;
+    this.moderators.noneSelected = true;
+    this.moderators.deselectOthers();
     this.order.set('moderator', '');
   }
 
-  toggleModeration(bool) {
+  moderationOn(bool) {
     this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
     this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
@@ -264,7 +267,7 @@ export default class extends BaseModal {
   }
 
   onNoValidModerators() {
-    this.toggleModeration(false);
+    this.moderationOn(false);
     this.getCachedEl('.js-noValidModerators').removeClass('hide');
   }
 
@@ -346,7 +349,9 @@ export default class extends BaseModal {
     }
 
     // set the moderator
-    this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
+    if (this.order.moderated) {
+      this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
+    }
 
     // cancel any existing order
     if (this.orderSubmit) this.orderSubmit.abort();
@@ -473,9 +478,9 @@ export default class extends BaseModal {
     if (cur !== 'BTC') {
       btcTotal = convertCurrency(btcTotal, cur, 'BTC');
     }
-    const tooLow = btcTotal < this.minModPrice;
-    this.toggleModeration(!tooLow);
-    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', !tooLow);
+    const allowModeration = btcTotal >= this.minModPrice;
+    this.moderationOn(allowModeration);
+    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }
 
   refreshPrices() {
