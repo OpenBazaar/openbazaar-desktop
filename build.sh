@@ -231,6 +231,8 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Running Electron Packager...'
     electron-packager . OpenBazaar2 --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --protocol=ob --platform=darwin --arch=x64 --icon=imgs/openbazaar2.icns --electron-version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
+    # Client Only
+    electron-packager . OpenBazaar2Client --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --protocol=ob --platform=darwin --arch=x64 --icon=imgs/openbazaar2.icns --electron-version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
 
     echo 'Creating openbazaar-go folder in the OS X .app'
     mkdir dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go
@@ -242,16 +244,26 @@ case "$TRAVIS_OS_NAME" in
     echo 'Codesign the .app'
     codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
     electron-installer-dmg dist/OpenBazaar2-darwin-x64/OpenBazaar2.app OpenBazaar2-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
+    # Client Only
+    codesign --force --deep --sign "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app
+    electron-installer-dmg dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app OpenBazaar2Client-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2Client-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
     echo 'Codesign the DMG and zip'
     codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
     cd dist/OpenBazaar2-darwin-x64/
     zip -q -r OpenBazaar2-mac-$PACKAGE_VERSION.zip OpenBazaar2.app
-
     cp -r OpenBazaar2.app ../osx/
     cp OpenBazaar2-mac-$PACKAGE_VERSION.zip ../osx/
     cp OpenBazaar2-$PACKAGE_VERSION.dmg ../osx/
 
+    # Client Only
+    cd ../../
+    codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
+    cd dist/OpenBazaar2Client-darwin-x64/
+    zip -q -r OpenBazaar2Client-mac-$PACKAGE_VERSION.zip OpenBazaar2Client.app
+    cp -r OpenBazaar2Client.app ../osx/
+    cp OpenBazaar2Client-mac-$PACKAGE_VERSION.zip ../osx/
+    cp OpenBazaar2Client-$PACKAGE_VERSION.dmg ../osx/
 
     ;;
 esac
