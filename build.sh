@@ -93,8 +93,6 @@ case "$TRAVIS_OS_NAME" in
     echo 'Create RPM archive'
     electron-installer-redhat --config .travis/config_ia32.json
 
-    echo 'Sign the installer'
-
     echo 'Building Linux 64-bit Installer....'
 
     echo "Packaging Electron application"
