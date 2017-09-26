@@ -48,6 +48,10 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
+  "refreshAlertPopInMessage": {
+    "refreshLink": "Refresh",
+    "message": "%{icon} %{message} %{refreshLink}"
+  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -207,9 +211,8 @@
       "countListingsFound": "%{countListings} found",
       "inactive": "Your store is currently inactive and hidden from the public. %{link}",
       "inactiveLink": "Change",
-      "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
-      "popinRefreshLink": "refresh",
+      "listingDataChangedPopin": "Listing data has changed.",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
       "freeShippingBanner": "Free Shipping",
       "sortOpts": {
         "priceAsc": "Price low to high",
@@ -715,7 +718,8 @@
     "receiveMoney": {
       "title": "Receive Money",
       "needBitcoin": "Need Bitcoin?",
-      "btnCancel": "Cancel"
+      "btnCancel": "Cancel",
+      "btnFundViaShapeshift": "Fund via ShapeShift"
     },
     "sendMoney": {
       "toLabel": "To",
@@ -762,7 +766,7 @@
         "feeBumpOf": "Fee bump of %{address}"
       },
       "noTransactionsPlaceholder": "You have no transactions.",
-      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}",
+      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
       "recoverySeedLink": "backup your wallet recovery seed",
       "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
@@ -785,8 +789,7 @@
     "delete": "Delete",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
-    "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "Refresh",
+    "listingDataChangedPopin": "Listing data has changed.",
     "viewPhotos": "View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
@@ -835,6 +838,9 @@
     "freeShippingBanner": "Free Shipping",
     "deleting": "Deleting…",
     "deleted": "Deleted",
+    "editListingTooltip": "Edit listing",
+    "cloneListingTooltip": "Clone listing",
+    "deleteListingTooltip": "Delete listing",
     "confirmDelete": {
       "title": "Are you sure?",
       "body": "Once it's deleted, it's gone forever.",
@@ -1055,9 +1061,7 @@
     "displaying": "Displaying %{displayingCounts}"
   },
   "purchase": {
-    "refreshPurchase": "Refresh",
-    "purchaseDataChangedPopin": "The data for this listing has changed. %{refreshLink}",
-    "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
+    "purchaseDataChangedPopin": "The data for this listing has changed.",
     "returnToListing": "Return To Listing",
     "optional": "optional",
     "shippingTitle": "Shipping",
@@ -1095,6 +1099,7 @@
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
+    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "No valid moderators are available for this order.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
@@ -1116,7 +1121,12 @@
       "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
       "note3": "*The moderator service fee only applies if a dispute is opened.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
-      "btnConfirmedPay": "Yes, Pay"
+      "btnConfirmedPay": "Yes, Pay",
+      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
+      "altcoinLink": "You can still fund your OB wallet with altcoins.",
+      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
+      "walletLink": "You can send funds to your OB wallet instead.",
+      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
     },
     "completeSection": {
       "paymentSent": "Payment Sent!",
@@ -1146,7 +1156,8 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero."
+      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
+      "feesFailed": "Transaction Fees Cannot Be Loaded"
     }
   },
   "moderators": {

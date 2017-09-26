@@ -130,9 +130,11 @@ const fetchConfigDeferred = $.Deferred();
 function fetchConfig() {
   $.get(app.getServerUrl('ob/config')).done((...args) => {
     fetchConfigDeferred.resolve(...args);
-  }).fail(() => {
+  }).fail(xhr => {
     const retryConfigDialog = new Dialog({
       title: app.polyglot.t('startUp.dialogs.retryConfig.title'),
+      message: xhr && xhr.responseJSON && xhr.responseJSON.reason ||
+        xhr.responseText || '',
       buttons: [
         {
           text: app.polyglot.t('startUp.dialogs.btnRetry'),

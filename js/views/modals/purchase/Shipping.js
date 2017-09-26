@@ -62,6 +62,7 @@ export default class extends baseView {
     if (userAddresses.length) {
       this.selectedAddress = userAddresses.at(0);
       this.shippingOptions.countryCode = this.selectedAddress.get('country');
+      this.shippingOptions.delegateEvents();
       this.$('.js-shippingOptionsWrapper').html(this.shippingOptions.render().el);
     } else {
       this.selectedAddress = null;

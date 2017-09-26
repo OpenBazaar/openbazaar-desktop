@@ -19,18 +19,9 @@
 
       .loadingMessage {
         &.fadeInAnim {
-          animation: fadeInAnim 1s ease;
+          @include fadeIn(1s ease);
         }
       }
     }
-  }
-}
-
-@keyframes fadeInAnim {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
   }
 }

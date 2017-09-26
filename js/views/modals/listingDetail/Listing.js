@@ -15,7 +15,7 @@ import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from './Reviews';
 import { events as listingEvents } from '../../../models/listing/';
-import PopInMessage from '../../PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends BaseModal {
@@ -361,13 +361,9 @@ export default class extends BaseModal {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      const refreshLink =
-        `<a class="js-refresh">${app.polyglot.t('listingDetail.listingDataChangedPopinRefresh')}` +
-        '</a>';
-
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('listingDetail.listingDataChangedPopin',
-          { refreshLink }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('listingDetail.listingDataChangedPopin')),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
@@ -426,6 +422,11 @@ export default class extends BaseModal {
       vendor: this.vendor,
       removeOnClose: true,
       showCloseButton: false,
+      initialState: {
+        isFetching: true,
+        fetchError: '',
+        fetchFailed: false,
+      },
     })
       .render()
       .open();

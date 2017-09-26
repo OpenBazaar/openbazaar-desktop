@@ -109,24 +109,25 @@ export default class extends BaseVw {
       'click .js-userName': 'nameClick',
       'click .js-follow': 'followClick',
       'click .js-mod': 'modClick',
+      'click .js-imageHeader': 'nameClick',
     };
   }
 
   nameClick() {
-    app.router.navigate(`${this.guid}`, {
-      trigger: true,
-    });
+    this.navToUser();
   }
 
-  followClick() {
+  followClick(e) {
     const type = this.followedByYou ? 'unfollow' : 'follow';
 
     this.$followBtn.addClass('processing');
     followUnfollow(this.guid, type)
       .always(() => (this.$followBtn.removeClass('processing')));
+
+    e.stopPropagation();
   }
 
-  modClick() {
+  modClick(e) {
     if (this.ownMod) {
       // remove this user from the moderator list
       this.$modBtn.addClass('processing');
@@ -139,6 +140,18 @@ export default class extends BaseVw {
         this.saveModeratorList(true);
       });
     }
+
+    e.stopPropagation();
+  }
+
+  onClickImageHeader() {
+    this.navToUser();
+  }
+
+  navToUser() {
+    app.router.navigate(`${this.guid}`, {
+      trigger: true,
+    });
   }
 
   saveModeratorList(add = false) {

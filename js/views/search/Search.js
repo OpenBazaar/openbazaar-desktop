@@ -79,6 +79,8 @@ export default class extends baseVw {
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters
     this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
+    // if the nsfw filter is not set, use the value from settings
+    this.filters.nsfw = this.filters.nsfw || String(app.settings.get('showNsfw'));
 
     this.processTerm(this.term);
   }
@@ -367,7 +369,11 @@ export default class extends baseVw {
 
   changeFilter(e) {
     const targ = $(e.target);
-    this.filters[targ.prop('name')] = targ.val();
+    if (targ[0].type === 'checkbox') {
+      this.filters[targ.prop('name')] = String(targ[0].checked);
+    } else {
+      this.filters[targ.prop('name')] = targ.val();
+    }
     this.serverPage = 0;
     this.processTerm(this.term);
   }

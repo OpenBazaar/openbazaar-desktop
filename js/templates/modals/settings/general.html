@@ -98,9 +98,9 @@
           </div>
         </div>
       </div>
-      <div class="flexRow gutterH TODO">
+      <div class="flexRow gutterH">
         <div class="col3">
-          <label class="required"><%= ob.polyT('settings.viewNsfwContent') %></label>
+          <label><%= ob.polyT('settings.viewNsfwContent') %></label>
         </div>
         <div class="col9">
           <% if (ob.errors.showNsfw) print(ob.formErrorTmpl({ errors: ob.errors.showNsfw })) %>

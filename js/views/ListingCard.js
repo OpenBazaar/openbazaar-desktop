@@ -3,6 +3,7 @@ import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
+import { isHiRez } from '../utils/responsive';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
@@ -52,8 +53,6 @@ export default class extends baseVw {
       this.$el.addClass('ownListing');
     }
 
-    this.fullListingFetches = [];
-
     if (this.ownListing) {
       this.listenTo(listingEvents, 'destroying', (md, destroyingOpts) => {
         if (this.isRemoved()) return;
@@ -93,6 +92,8 @@ export default class extends baseVw {
     return {
       'click .js-edit': 'onClickEdit',
       'click .js-delete': 'onClickDelete',
+      'click .js-clone': 'onClickClone',
+      'click .js-userIcon': 'onClickUserIcon',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
@@ -108,45 +109,54 @@ export default class extends baseVw {
   onClickEdit(e) {
     app.loadingModal.open();
 
-    const fullListingFetch = this.fullListing.fetch()
-      .done(() => {
-        if (fullListingFetch.statusText === 'abort' || this.isRemoved()) return;
+    this.fetchFullListing()
+      .done(xhr => {
+        if (xhr.statusText === 'abort' || this.isRemoved()) return;
 
-        this.editModal = launchEditListingModal({
+        launchEditListingModal({
           model: this.fullListing,
         });
       })
       .always(() => {
         if (this.isRemoved()) return;
         app.loadingModal.close();
-      })
-      .fail(xhr => {
-        let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-
-        if (xhr.status === 404) {
-          failReason = app.polyglot.t('listingCard.editFetchErrorDialog.bodyNotFound');
-        }
-
-        openSimpleMessage(
-          app.polyglot.t('listingCard.editFetchErrorDialog.title'),
-          failReason
-        );
       });
 
     e.stopPropagation();
   }
 
-  onClickDelete() {
+  onClickDelete(e) {
     this.getCachedEl('.js-deleteConfirmedBox').removeClass('hide');
     this.deleteConfirmOn = true;
-    // don't bubble to the document click handler
-    return false;
+    e.stopPropagation();
   }
 
-  onClickConfirmedDelete() {
-    if (this.destroyRequest && this.destroyRequest.state === 'pending') return false;
+  onClickClone(e) {
+    app.loadingModal.open();
+
+    this.fetchFullListing()
+      .done(xhr => {
+        if (xhr.statusText === 'abort' || this.isRemoved()) return;
+        const clonedModel = this.fullListing.clone();
+        clonedModel.unset('slug').guid = this.ownerGuid;
+        clonedModel.lastSyncedAttrs = {};
+
+        this.editModal = launchEditListingModal({
+          model: clonedModel,
+        });
+      })
+      .always(() => {
+        if (this.isRemoved()) return;
+        app.loadingModal.close();
+      });
+
+    e.stopPropagation();
+  }
+
+  onClickConfirmedDelete(e) {
+    e.stopPropagation();
+    if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
     this.destroyRequest = this.model.destroy({ wait: true });
-    return false;
   }
 
   onClickConfirmCancel() {
@@ -154,9 +164,12 @@ export default class extends baseVw {
     this.deleteConfirmOn = false;
   }
 
-  onClickDeleteConfirmBox() {
-    // don't bubble to the document click handler
-    return false;
+  onClickDeleteConfirmBox(e) {
+    e.stopPropagation();
+  }
+
+  onClickUserIcon(e) {
+    e.stopPropagation();
   }
 
   onClick(e) {
@@ -170,7 +183,7 @@ export default class extends baseVw {
 
       app.loadingModal.open();
 
-      const fullListingFetch = this.fullListing.fetch()
+      this.fetchFullListing()
         .done(jqXhr => {
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
@@ -194,13 +207,39 @@ export default class extends baseVw {
           if (this.isRemoved()) return;
           app.loadingModal.close();
         })
-        .fail((xhr) => {
+        .fail(xhr => {
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
-
-      this.fullListingFetches.push(fullListingFetch);
     }
+  }
+
+  fetchFullListing(options = {}) {
+    const opts = {
+      showErrorOnFetchFail: true,
+      ...options,
+    };
+
+    if (this.fullListingFetch && this.fullListingFetch.state() === 'pending') {
+      return this.fullListingFetch;
+    }
+
+    this.fullListingFetch = this.fullListing.fetch()
+      .fail(xhr => {
+        if (!opts.showErrorOnFetchFail) return;
+        let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+
+        if (xhr.status === 404) {
+          failReason = app.polyglot.t('listingCard.editFetchErrorDialog.bodyNotFound');
+        }
+
+        openSimpleMessage(
+          app.polyglot.t('listingCard.editFetchErrorDialog.title'),
+          failReason
+        );
+      });
+
+    return this.fullListingFetch;
   }
 
   get ownListing() {
@@ -230,6 +269,35 @@ export default class extends baseVw {
 
     // This just sets the flag. It's up to you to re-render.
     this._viewType = type;
+
+    const loaderKey = `_${type}ViewListingImageLoad`;
+
+    if (!this[loaderKey]) {
+      const deferred = $.Deferred();
+      const img = new Image();
+      const thumbnail = this.model.get('thumbnail');
+      let imgSrc;
+
+      if (type === 'grid') {
+        imgSrc = app.getServerUrl(`ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`);
+      } else {
+        imgSrc = app.getServerUrl(`ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`);
+      }
+
+      img.onload = () => deferred.resolve(imgSrc);
+      img.onerror = () => deferred.reject();
+      img.src = imgSrc;
+
+      this[loaderKey] = deferred.promise();
+    }
+  }
+
+  get gridViewListingImageLoad() {
+    return this._gridViewListingImageLoad;
+  }
+
+  get listViewListingImageLoad() {
+    return this._listViewListingImageLoad;
   }
 
   get $btnEdit() {
@@ -243,7 +311,7 @@ export default class extends baseVw {
   }
 
   remove() {
-    this.fullListingFetches.forEach(fetch => fetch.abort());
+    if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
     $(document).off(null, this.boundDocClick);
     super.remove();
@@ -264,6 +332,25 @@ export default class extends baseVw {
 
     this._$btnEdit = null;
     this._$btnDelete = null;
+
+    const imageLoaderKey = `${this.viewType}ViewListingImageLoad`;
+
+    if (this[imageLoaderKey]) {
+      this[imageLoaderKey].always(imgUrl => {
+        let url = 'url("../imgs/defaultItem.png")';
+
+        // there will not be an imgUrl if the listing image failed to load
+        if (imgUrl) {
+          url = `url("${imgUrl}"), ${url}`;
+        }
+
+        this.getCachedEl(`.js-${this.viewType}ViewListingImage`)[0]
+          .style
+          .backgroundImage = url;
+        this.getCachedEl('.js-listingImageLoadSpinner')
+          .remove();
+      });
+    }
 
     return this;
   }

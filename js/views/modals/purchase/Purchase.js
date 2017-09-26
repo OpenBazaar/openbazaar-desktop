@@ -4,12 +4,15 @@ import '../../../lib/select2';
 import '../../../utils/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import { launchSettingsModal } from '../../../utils/modalManager';
+import { convertCurrency } from '../../../utils/currency';
+import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
 import Purchase from '../../../models/purchase/Purchase';
-import PopInMessage from '../../PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
@@ -17,8 +20,7 @@ import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
-import { launchSettingsModal } from '../../../utils/modalManager';
-import { openSimpleMessage } from '../SimpleMessage';
+import FeeChange from '../../components/FeeChange';
 
 
 export default class extends BaseModal {
@@ -43,6 +45,8 @@ export default class extends BaseModal {
     const moderatorIDs = this.listing.get('moderators') || [];
     const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
+
+    this.couponObj = [];
 
     this.order = new Order(
       {},
@@ -79,6 +83,7 @@ export default class extends BaseModal {
       model: this.order,
       listing: this.listing,
       prices: this.prices,
+      couponObj: this.couponObj,
     });
 
     this.coupons = this.createChild(Coupons, {
@@ -115,8 +120,14 @@ export default class extends BaseModal {
       vendor: this.vendor,
     });
 
+    // on the initial load, fetch the fees
+    this.getFees();
+
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
+    this.listenTo(this.order.get('items').at(0), 'someChange ', () => this.refreshPrices());
+    this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
+      this.refreshPrices());
   }
 
   className() {
@@ -129,8 +140,9 @@ export default class extends BaseModal {
 
   events() {
     return {
-      'click .js-goToListing': 'close',
+      'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
+      'click .js-retryFee': 'clickRetryFee',
       'click #purchaseModerated': 'clickModerated',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
@@ -146,12 +158,9 @@ export default class extends BaseModal {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
-      const refreshLink =
-        `<a class="js-refresh">${app.polyglot.t('purchase.refreshPurchase')}</a>`;
-
       this.dataChangePopIn = this.createChild(PopInMessage, {
-        messageText: app.polyglot.t('purchase.purchaseDataChangedPopin',
-            { refreshLink }),
+        messageText:
+          buildRefreshAlertMessage(app.polyglot.t('purchase.purchaseDataChangedPopin')),
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
@@ -165,6 +174,52 @@ export default class extends BaseModal {
     }
   }
 
+  getFees() {
+    if (this.fetchFees && this.fetchFees.state() === 'pending') {
+      return this.fetchFees;
+    }
+
+    this.fetchFees = $.get({
+      url: app.getServerUrl('wallet/fees'),
+      dataType: 'json',
+    })
+      .done((data, status, xhr) => {
+        if (xhr.statusText === 'abort') return;
+        const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
+        const estFee = feePerByte * 184 / 100000000;
+        this.minModPrice = estFee * 10;
+        this.setState({
+          isFetching: false,
+          fetchError: false,
+          fetchFailed: false,
+        });
+      })
+      .fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+        this.setState({
+          isFetching: false,
+          fetchError: xhr.responseJSON && xhr.responseJSON.reason || '',
+          fetchFailed: true,
+        });
+      });
+
+    return this.fetchFees;
+  }
+
+  clickRetryFee() {
+    this.getFees();
+  }
+
+  goToListing() {
+    app.router.navigate(`${this.vendor.peerID}/store/${this.listing.get('slug')}`,
+      { trigger: true });
+    this.close();
+  }
+
+  clickGoToListing() {
+    this.goToListing();
+  }
+
   clickClose() {
     this.trigger('closeBtnPressed');
     this.close();
@@ -172,34 +227,42 @@ export default class extends BaseModal {
 
   clickModerated(e) {
     const checked = $(e.target).prop('checked');
-    this.$moderatorSection.toggleClass('hide', !checked);
-    this.$moderatorNote.toggleClass('hide', !checked);
+    this.getCachedEl('.js-moderator').toggleClass('hide', !checked);
+    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !checked);
     this.order.moderated = checked;
 
-    if (checked && this._oldMod) {
+    if (checked) {
       // re-select the previously selected moderator, if any
       for (const mod of this.moderators.modCards) {
-        if (mod.model.id === this._oldMod) {
+        if (mod.model.id === this._oldMod || this.moderators.selectedIDs[0]) {
           mod.changeSelectState('selected');
           break;
         }
       }
     } else {
       // deselect all the moderators after storing any selected moderator
-      this._oldMod = this.order.get('moderator');
+      this._oldMod = this.moderators.selectedIDs[0];
       this.moderators.deselectOthers();
       this.order.set('moderator', '');
     }
   }
 
-  onNoValidModerators() {
-    this.$purchaseModerated.prop('checked', false);
-    this.$moderatedOption.addClass('disabled');
-    this.$moderatorSection.addClass('hide');
-    this.$moderatorNote.addClass('hide');
-    this.$noValidModerators.removeClass('hide');
+  disableModerators() {
+    this.getCachedEl('#purchaseModerated').prop('checked', false);
     this.order.moderated = false;
     this.order.set('moderator', '');
+  }
+
+  toggleModeration(bool) {
+    this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
+    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
+    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
+    if (!bool) this.disableModerators();
+  }
+
+  onNoValidModerators() {
+    this.toggleModeration(false);
+    this.getCachedEl('.js-noValidModerators').removeClass('hide');
   }
 
   changeQuantityInput(e) {
@@ -237,7 +300,11 @@ export default class extends BaseModal {
   changeCoupons(hashes, codes) {
     // combine the codes and hashes so the receipt can check both.
     // if this is the user's own listing they will have codes instead of hashes
-    this.receipt.coupons = hashes.concat(codes);
+    const hashesAndCodes = hashes.concat(codes);
+    const filteredCoupons = this.listing.get('coupons').filter((coupon) =>
+      hashesAndCodes.indexOf(coupon.get('hash') || coupon.get('discountCode')) !== -1);
+    this.couponObj = filteredCoupons.map(coupon => coupon.toJSON());
+    this.receipt.coupons = this.couponObj;
     this.order.get('items').at(0).set('coupons', codes);
   }
 
@@ -246,8 +313,6 @@ export default class extends BaseModal {
     this.order.get('items').at(0).get('shipping')
       .set(opts);
     this.actionBtn.render();
-    this.receipt.prices = this.prices;
-    this.receipt.render();
   }
 
   updatePageState(state) {
@@ -374,9 +439,45 @@ export default class extends BaseModal {
       priceObj.price = this.listing.get('item').get('price');
       priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
       priceObj.vPrice = sku ? sku.get('surcharge') : 0;
+      priceObj.quantity = item.get('quantity');
       prices.push(priceObj);
     });
     return prices;
+  }
+
+  get total() {
+    const prices = this.prices;
+    let priceTotal = 0;
+    prices.forEach((priceObj) => {
+      let itemPrice = priceObj.price + priceObj.vPrice;
+      this.couponObj.forEach(coupon => {
+        if (coupon.percentDiscount) {
+          itemPrice -= itemPrice * 0.01 * coupon.percentDiscount;
+        } else if (coupon.priceDiscount) {
+          itemPrice -= coupon.priceDiscount;
+        }
+      });
+      itemPrice += priceObj.sPrice;
+      priceTotal += itemPrice * priceObj.quantity;
+    });
+
+    return priceTotal;
+  }
+
+  isModAllowed() {
+    let btcTotal = this.total;
+    const cur = this.listing.get('metadata').get('pricingCurrency');
+    if (cur !== 'BTC') {
+      btcTotal = convertCurrency(btcTotal, cur, 'BTC');
+    }
+    const tooLow = btcTotal < this.minModPrice;
+    this.toggleModeration(!tooLow);
+    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', !tooLow);
+  }
+
+  refreshPrices() {
+    this.isModAllowed();
+    this.receipt.updatePrices(this.prices);
   }
 
   get $popInMessages() {
@@ -387,26 +488,6 @@ export default class extends BaseModal {
   get $storeOwnerAvatar() {
     return this._$storeOwnerAvatar ||
         (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
-  }
-
-  get $moderatedOption() {
-    return this._$moderatedOption ||
-      (this._$moderatedOption = this.$('.js-moderatedOption'));
-  }
-
-  get $noValidModerators() {
-    return this._$noValidModerators ||
-      (this._$noValidModerators = this.$('.js-noValidModerators'));
-  }
-
-  get $moderatorSection() {
-    return this._$moderatorSection ||
-        (this._$moderatorSection = this.$('.js-moderator'));
-  }
-
-  get $moderatorNote() {
-    return this._$moderatorNote ||
-      (this._$moderatorNote = this.$('.js-moderatorNote'));
   }
 
   get $closeBtn() {
@@ -431,20 +512,24 @@ export default class extends BaseModal {
 
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
+    if (this.fetchFees) this.fetchFees.abort();
     super.remove();
   }
 
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
+    const state = this.getState();
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
         ...this.order.toJSON(),
+        ...state,
         listing: this.listing.toJSON(),
         vendor: this.vendor,
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         prices: this.prices,
+        minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: this.moderatorIDs.length,
       }));
@@ -453,15 +538,10 @@ export default class extends BaseModal {
 
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
-      this._$moderatedOption = null;
-      this._$noValidModerators = null;
-      this._$moderatorSection = null;
       this._$closeBtn = null;
       this._$shippingErrors = null;
       this._$errors = null;
       this._$couponField = null;
-
-      this.$purchaseModerated = this.$('#purchaseModerated');
 
       this.actionBtn.delegateEvents();
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
@@ -474,7 +554,7 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
-      this.moderators.getModeratorsByID();
+      if (!state.isFetching) this.moderators.getModeratorsByID();
 
       if (this.shipping) {
         this.shipping.delegateEvents();
@@ -489,6 +569,12 @@ export default class extends BaseModal {
 
       this.complete.delegateEvents();
       this.$('.js-complete').append(this.complete.render().el);
+
+      if (this.feeChange) this.feeChange.remove();
+      this.feeChange = this.createChild(FeeChange);
+      this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
+
+      this.isModAllowed();
     });
 
     return this;

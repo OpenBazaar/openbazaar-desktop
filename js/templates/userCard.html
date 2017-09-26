@@ -1,12 +1,12 @@
 <div class="contentBox clrBr clrP clrSh2 <% if (ob.notFound) { %>disabled<% } %>">
-  <div class="shortHeader"
+  <div class="shortHeader pointer js-imageHeader"
     <% var headerHash = ob.headerHashes ? ob.isHiRez() ? ob.headerHashes.small : ob.headerHashes.tiny : ''; %>
     <% if (headerHash) { %>
       style="background-image: url(<%= ob.getServerUrl(`ob/images/${headerHash}`) %>), url('../imgs/defaultHeader.png')"
     <% } else { %>
       style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
-    <a class="js-userName userIcon disc clrBr2 clrSh1"
+    <a class="userIcon disc clrBr2 clrSh1"
       <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
       <% if (avatarHash) { %>
         style="background-image: url(<%= ob.getServerUrl(`ob/images/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"

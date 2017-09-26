@@ -57,7 +57,7 @@
   .sendReceiveContainer {
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
-    height: 346px;
+    height: 363px;
     padding-top: 25px;
 
     .receiveMoney {
@@ -105,6 +105,11 @@
         position: absolute;
         right: 0;
         top: -25px;
+      }
+
+      .buttonsWrap {
+        position: relative;
+        left: calc($padMd / 2);
       }
     }
 
