@@ -1141,7 +1141,6 @@
       "send": "Send",
       "share": {
         "title": "Share with friends",
-        "link": "<a class='clrTEm' href='https://openbazaar.org'>https://openbazaar.org</a>",
         "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}",
         "shareMsg": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions.",
         "postToTwitter": "Post to Twitter",
