@@ -1,0 +1,22 @@
+{
+  "productName": "OpenBazaar",
+  "name": "openbazaar2client",
+  "version": "2.0.12",
+  "bin": "openbazaar2client",
+  "description": "Decentralized Peer to Peer Marketplace for Bitcoin",
+  "maintainer": "OpenBazaar <project@openbazaar.org>",
+  "arch": "i386",
+  "src": "dist/openbazaar2client-linux-ia32/",
+  "dest": "dist/linux32",
+  "productDescription": "Decentralized Peer to Peer Marketplace for Bitcoin",
+  "intianOverrides": [
+    "changelog-file-missing-in-native-package",
+    "executable-not-elf-or-script",
+    "extra-license-file"
+  ],
+  "icon": "imgs/icon.png",
+  "categories": [
+    "Utility"
+  ],
+  "priority": "optional"
+}
