@@ -1,4 +1,4 @@
-<div class="flexColRows">
+<div class="flexColRows gutterV">
   <div class="flexRow pad rowMd txCtr">
     <div class="col2"></div>
     <div class="col8">
@@ -18,7 +18,33 @@
     </div>
     <div class="col2"></div>
   </div>
-  <hr class="clrBr rowHg">
+  <div class="contentBox clrP clrBr padMd">
+    <h5><%= ob.polyT('purchase.completeSection.share.title') %></h5>
+    <p><%= ob.polyT('purchase.completeSection.share.body', { link: ob.polyT('purchase.completeSection.share.link') }) %></p>
+    <div class="flex flexKidsExpand gutterH">
+      <% var shareURL = "https%3A%2F%2Fopenbazaar.org" %>
+      <a class="btn btnThin clrP clrBr" href="https://twitter.com/intent/tweet/?text=<%= ob.polyT('purchase.completeSection.share.shareMsg') %>&url=<%= shareURL %>&hashtags=TradeFree&related=openbazaar%3AOpenBazaar,News%20about%20OpenBazaar">
+        <span class="flexInline gutterHSm">
+          <i class="ion-social-twitter twitterColor"></i><span><%= ob.polyT('purchase.completeSection.share.postToTwitter') %></span>
+        </span>
+      </a>
+      <a class="btn btnThin clrP clrBr" href="https://www.facebook.com/sharer/sharer.php?u=<%= shareURL %>">
+        <span class="flexInline gutterHSm">
+          <i class="ion-social-facebook facebookColor"></i><span><%= ob.polyT('purchase.completeSection.share.postToFacebook') %></span>
+        </span>
+      </a>
+      <a class="btn btnThin clrP clrBr" href="https://pinterest.com/pin/create/button/?url=<%= shareURL %>&description=<%= ob.polyT('purchase.completeSection.share.shareMsg') %>">
+        <span class="flexInline gutterHSm">
+          <i class="ion-social-pinterest pinterestColor"></i><span>P<%= ob.polyT('purchase.completeSection.share.postToPinterest') %></span>
+        </span>
+      </a>
+      <a class="btn btnThin clrP clrBr" href="https://www.tumblr.com/share/link?url=<%= shareURL %>&name=OpenBazaar&description=<%= ob.polyT('purchase.completeSection.share.shareMsg') %>">
+        <span class="flexInline gutterHSm">
+          <i class="ion-social-tumblr tumblrColor"></i><span><%= ob.polyT('purchase.completeSection.share.postToTumblr') %></span>
+        </span>
+      </a>
+    </div>
+  </div>
   <h5><%= ob.polyT('purchase.completeSection.vendorMessage') %></h5>
   <div class="clrBr clrP flex gutterHSm message js-message">
     <div class="avatar clrBr2 clrSh1 disc" style="<%= ob.getAvatarBgImage(ob.ownProfile.avatarHashes) %>"></div>
