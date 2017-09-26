@@ -48,6 +48,10 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
+  "refreshAlertPopInMessage": {
+    "refreshLink": "Refresh",
+    "message": "%{icon} %{message} %{refreshLink}"
+  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -207,9 +211,8 @@
       "countListingsFound": "%{countListings} found",
       "inactive": "Your store is currently inactive and hidden from the public. %{link}",
       "inactiveLink": "Change",
-      "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you. It is recommended you %{refreshLink} to see the latest data.",
-      "popinRefreshLink": "refresh",
+      "listingDataChangedPopin": "Listing data has changed.",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
       "freeShippingBanner": "Free Shipping",
       "sortOpts": {
         "priceAsc": "Price low to high",
@@ -763,7 +766,7 @@
         "feeBumpOf": "Fee bump of %{address}"
       },
       "noTransactionsPlaceholder": "You have no transactions.",
-      "newTransactionsPopin": "%{smart_count} new transaction %{refreshLink} |||| %{smart_count} new transactions %{refreshLink}",
+      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
       "recoverySeedLink": "backup your wallet recovery seed",
       "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
@@ -786,8 +789,7 @@
     "delete": "Delete",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
-    "listingDataChangedPopin": "Listing data has changed. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "Refresh",
+    "listingDataChangedPopin": "Listing data has changed.",
     "viewPhotos": "View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
@@ -1059,9 +1061,7 @@
     "displaying": "Displaying %{displayingCounts}"
   },
   "purchase": {
-    "refreshPurchase": "Refresh",
-    "purchaseDataChangedPopin": "The data for this listing has changed. %{refreshLink}",
-    "purchaseDataChanged": "The data on this page may no longer be accurate. Refresh the page to start over with updated data. %{refreshLink}",
+    "purchaseDataChangedPopin": "The data for this listing has changed.",
     "returnToListing": "Return To Listing",
     "optional": "optional",
     "shippingTitle": "Shipping",
