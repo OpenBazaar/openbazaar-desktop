@@ -381,7 +381,7 @@ function createWindow() {
 
   let trayTemplate = [];
 
-  if (localServer) {
+  if (localServer || true) {
     trayTemplate = [
       {
         label: 'Start Local Server',
@@ -399,7 +399,7 @@ function createWindow() {
         click() {
           mainWindow.focus();
           mainWindow.restore();
-          mainWindow.webContents.send('show-server-log', global.serverLog);
+          mainWindow.webContents.send('show-server-log');
         },
       },
       {
@@ -641,6 +641,10 @@ const log = msg => {
 
   if (!msg) return;
   global.serverLog += msg;
+
+  // We wont let the server log get too long otherwise it could fill up all the ram
+  // and crash the client.
+  global.serverLog = global.serverLog.slice(global.serverLog.length - 1000000);
 
   if (mainWindow) {
     mainWindow.webContents.send('server-log', msg);
