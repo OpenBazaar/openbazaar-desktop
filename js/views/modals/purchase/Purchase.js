@@ -251,7 +251,6 @@ export default class extends BaseModal {
   disableModerators() {
     this.getCachedEl('#purchaseModerated').prop('checked', false);
     this.order.moderated = false;
-    this.moderators.noneSelected = true;
     this.moderators.deselectOthers();
     this.order.set('moderator', '');
   }
@@ -261,6 +260,7 @@ export default class extends BaseModal {
     this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     if (!bool) this.disableModerators();
+    this.moderators.noneSelected = !bool;
   }
 
   onNoValidModerators() {
