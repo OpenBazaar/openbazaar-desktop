@@ -348,6 +348,23 @@ svg {
   .pointer {
     cursor: pointer;
   }
+
+  // external brand colors. They should not be overwritten by theme colors.
+  .twitterColor {
+    color: #00aced;
+  }
+
+  .facebookColor {
+    color: #3b5998;
+  }
+
+  .pinterestColor {
+    color: #bd081c;
+  }
+
+  .tumblrColor {
+    color: #35465c;
+  }
 }
 
 // Sometimes, I just like floats.
