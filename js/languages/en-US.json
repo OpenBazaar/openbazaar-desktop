@@ -1138,7 +1138,16 @@
       "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
       "vendorMessageLink": "discussion section of the order details",
       "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
-      "send": "Send"
+      "send": "Send",
+      "share": {
+        "title": "Share with friends",
+        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
+        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "postToTwitter": "Post to Twitter",
+        "postToFacebook": "Post to Facebook",
+        "postToPinterest": "Post to Pinterest",
+        "postToTumblr": "Post to Tumblr"
+      }
     },
     "receipt": {
       "summary": "Order Summary",
