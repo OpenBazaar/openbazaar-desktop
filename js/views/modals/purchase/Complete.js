@@ -83,8 +83,8 @@ export default class extends BaseVw {
     return this._orderID;
   }
 
-  set orderID(ID) {
-    if (ID !== this._orderID) this._orderID = ID;
+  set orderID(orderID) {
+    if (orderID !== this._orderID) this._orderID = orderID;
   }
 
   get $messageInput() {
