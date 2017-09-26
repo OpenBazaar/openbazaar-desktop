@@ -184,7 +184,7 @@ export default class extends baseVw {
       this.removeNotFetched(model.id);
       this.modCards.push(newModView);
       // if required, select the first  moderator
-      if (this.options.selectFirst && !this.firstSelected) {
+      if (this.options.selectFirst && !this.firstSelected && !this.noneSelected) {
         this.firstSelected = true;
         newModView.changeSelectState('selected');
       }
@@ -207,6 +207,14 @@ export default class extends baseVw {
         mod.changeSelectState(this.options.notSelected);
       }
     });
+  }
+
+  get noneSelected() {
+    return this._noneSelected;
+  }
+
+  set noneSelected(bool) {
+    this._noneSelected = bool;
   }
 
   remove() {
