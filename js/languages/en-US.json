@@ -13,7 +13,9 @@
   "follow": {
     "typeFollow": "following",
     "typeUnfollow": "unfollowing",
-    "followErrorTitle": "There was an error %{type} %{user}."
+    "followErrorTitle": "There was an error %{type} %{user}.",
+    "followBtn": "Follow",
+    "unfollowBtn": "Unfollow"
   },
   "feeLevels": {
     "PRIORITY": "Priority",

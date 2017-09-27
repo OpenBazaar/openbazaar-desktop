@@ -1,34 +1,38 @@
 <div class="popInMessageHolder js-popInMessages"></div>
 
-<div class="topControls gutterHSm flex">
+<div class="topControls withEndBtn gutterHSm flex">
   <% if (ob.vendor) { %>
-  <div class="contentBox clrP clrSh3 clrBr clrT">
-    <div class="padSm gutterHSm overflowAuto margRSm flexVCent">
-      <a class="clrBr2 clrSh1 disc storeOwnerAvatar flexNoShrink js-storeOwnerAvatar" style="<%= ob.getAvatarBgImage(ob.vendor.avatar) %>"></a>
-      <p class="txUnl tx3 clamp"><%= ob.vendor.name %></p>
-      <a class="link flexNoShrink tx6 js-goToStore"><% print(ob.openedFromStore ? ob.polyT('listingDetail.returnToStore'): ob.polyT('listingDetail.goToStore')) %></a>
+    <div class="contentBox clrP clrSh3 clrBr clrT">
+      <div class="padSm gutterHSm overflowAuto margRSm flexVCent">
+        <a class="clrBr2 clrSh1 disc storeOwnerAvatar flexNoShrink js-storeOwnerAvatar" style="<%= ob.getAvatarBgImage(ob.vendor.avatar) %>"></a>
+        <p class="txUnl tx3 clamp"><%= ob.vendor.name %></p>
+        <a class="link flexNoShrink tx6 js-goToStore"><% print(ob.openedFromStore ? ob.polyT('listingDetail.returnToStore'): ob.polyT('listingDetail.goToStore')) %></a>
+      </div>
     </div>
-  </div>
   <% } %>
   <% if (ob.ownListing) { %>
-  <div class="flexNoShrink" style="margin-right: 40px; margin-left: auto">
-    <div class="btnStrip clrSh3">
-      <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
-      <%= ob.processingButton({
-        className: 'btn js-deleteListing clrP clrBr',
-        btnText: ob.polyT('listingDetail.delete')
-      }) %>
+    <div class="flexNoShrink" style="margin-left: auto">
+      <div class="btnStrip clrSh3">
+        <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
+        <%= ob.processingButton({
+          className: 'btn js-deleteListing clrP clrBr',
+          btnText: ob.polyT('listingDetail.delete')
+        }) %>
+      </div>
     </div>
-  </div>
-  <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxTop clrBr clrP clrT hide">
-    <div class="tx3 txB rowSm"><%= ob.polyT('listingDetail.confirmDelete.title') %></div>
-    <p><%= ob.polyT('listingDetail.confirmDelete.body') %></p>
-    <hr class="clrBr row" />
-    <div class="flexHRight flexVCent gutterHLg buttonBar">
-      <a class="js-deleteConfirmCancel"><%= ob.polyT('listingDetail.confirmDelete.btnCancel') %></a>
-      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingDetail.confirmDelete.btnConfirm') %></a>
+    <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxTop clrBr clrP clrT hide">
+      <div class="tx3 txB rowSm"><%= ob.polyT('listingDetail.confirmDelete.title') %></div>
+      <p><%= ob.polyT('listingDetail.confirmDelete.body') %></p>
+      <hr class="clrBr row" />
+      <div class="flexHRight flexVCent gutterHLg buttonBar">
+        <a class="js-deleteConfirmCancel"><%= ob.polyT('listingDetail.confirmDelete.btnCancel') %></a>
+        <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingDetail.confirmDelete.btnConfirm') %></a>
+      </div>
     </div>
-  </div>
+  <% } else {%>
+    <div class="flexNoShrink" style="margin-left: auto">
+      <div class="js-socialBtns"></div>
+    </div>
   <% } %>
 </div>
 

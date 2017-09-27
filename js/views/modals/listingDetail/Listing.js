@@ -14,6 +14,7 @@ import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from './Reviews';
+import SocialBtns from '../../SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -527,6 +528,15 @@ export default class extends BaseModal {
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
+
+      if (!this.model.isOwnListing) {
+        this.socialBtns = this.createChild(SocialBtns, {
+          targetID: this.vendor.peerID,
+          stripClasses: 'clrSh3',
+          btnClasses: 'clrP clrBr',
+        });
+        this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+      }
 
       this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;
