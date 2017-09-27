@@ -7,6 +7,7 @@ import loadTemplate from '../../../../utils/loadTemplate';
 import baseVw from '../../../baseVw';
 import WalletSeed from './WalletSeed';
 import SmtpSettings from './SmtpSettings';
+import ReloadTransactions from './ReloadTransactions';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -247,6 +248,12 @@ export default class extends baseVw {
     }
   }
 
+  get reloadTransactions() {
+    if (this._reloadTransactions) return this._reloadTransactions;
+
+    this._reloadTransactions = this.createChild(ReloadTransactions);
+  }
+
   get $smtpSettingsFields() {
     const selector = `.js-smtpSettingsForm select[name], .js-smtpSettingsForm input[name],
       .js-smtpSettingsForm textarea[name]:not([class*="trumbowyg"]),
@@ -299,6 +306,10 @@ export default class extends baseVw {
         model: this.settings.get('smtpSettings'),
       });
       this.getCachedEl('.js-smtpSettingsContainer').html(this.smtpSettings.render().el);
+
+      if (this.reloadTransactions) this.reloadTransactions.delegateEvents();
+      this.getCachedEl('.js-reloadTransactionsContainer')
+        .append(this.reloadTransactions.render().el);
     });
 
     return this;

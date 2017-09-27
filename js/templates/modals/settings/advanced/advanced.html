@@ -154,15 +154,7 @@
               </div>
             </div>
             <div class="col9">
-              <div class="flexVCent gutterH">
-                <%= ob.processingButton({
-                className: `btn clrP clrBr clrSh2 flexNoShrink js-resync ${ob.isSyncing ? 'processing' : ''}`,
-                btnText: ob.polyT('settings.advancedTab.server.resyncBtn'),
-                }) %>
-                <div class="js-resyncComplete hide">
-                  <i class="tx6 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.resyncComplete') %></i>
-                </div>
-              </div>
+              <div class="js-reloadTransactionsContainer"></div>
             </div>
           </div>
           <div class="flexRow gutterH">
