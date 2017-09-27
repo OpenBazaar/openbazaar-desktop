@@ -533,7 +533,7 @@ export default class extends BaseModal {
         if (this.socialBtns) this.socialBtns.remove();
         this.socialBtns = this.createChild(SocialBtns, {
           targetID: this.vendor.peerID,
-          stripClasses: 'clrSh3',
+          stripClasses: 'btnStrip clrSh3',
           btnClasses: 'clrP clrBr',
         });
         this.$('.js-socialBtns').append(this.socialBtns.render().$el);

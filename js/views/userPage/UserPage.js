@@ -328,7 +328,7 @@ export default class extends baseVw {
         if (this.socialBtns) this.socialBtns.remove();
         this.socialBtns = this.createChild(SocialBtns, {
           targetID: this.model.id,
-          stripClasses: 'clrSh3',
+          stripClasses: 'btnStrip clrSh3',
           btnClasses: 'clrP clrBr',
         });
         this.$('.js-socialBtns').append(this.socialBtns.render().$el);

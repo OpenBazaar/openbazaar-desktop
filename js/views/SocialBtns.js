@@ -45,8 +45,11 @@ export default class extends BaseVw {
   onClickFollow() {
     const type = this._state.following ? 'unfollow' : 'follow';
     this.setState({ processing: true });
-    followUnfollow(this.options.targetID, type)
-      .always(() => this.setState({ processing: false }));
+    this.folCall = followUnfollow(this.options.targetID, type)
+      .always(() => {
+        if (this.isRemoved()) return;
+        this.setState({ processing: false });
+      });
   }
 
   render() {
