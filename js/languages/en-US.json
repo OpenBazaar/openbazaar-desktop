@@ -1179,7 +1179,12 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
-      "returnToFromOrder": "Return to sales"
+      "returnToFromOrder": "Return to sales",
+      "resyncPopInMessage": {
+        "link": "Resync",
+        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "message": "%{icon} %{text} %{link}"
+      }
     },
     "purchases": {
       "heading": "Purchases",
