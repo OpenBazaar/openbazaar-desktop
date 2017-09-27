@@ -131,6 +131,13 @@
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
     "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
+    "MyPage": "My page",
+    "CustomizePage": "Customize Page",
+    "CreateListing": "Create Listing",
+    "Purchases": "Purchases",
+    "Sales": "Sales",
+    "Cases": "Cases",
+    "Settings": "Settings",
     "toolTip": {
       "back": "Back",
       "forward": "Forward",
