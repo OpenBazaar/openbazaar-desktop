@@ -2,7 +2,7 @@ import $ from 'jquery';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import { followedByYou, followUnfollow, followsYou } from '../../utils/follow';
+import { followsYou } from '../../utils/follow';
 import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
@@ -12,6 +12,7 @@ import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import Followers from '../../collections/Followers';
 import MiniProfile from '../MiniProfile';
+import SocialBtns from '../SocialBtns';
 import Home from './Home';
 import Store from './Store';
 import Follow from './Follow';
@@ -43,17 +44,6 @@ export default class extends baseVw {
       this._followingCount = app.ownFollowing.length;
     }
 
-    if (!this.ownPage) {
-      this.followedByYou = followedByYou(this.model.id);
-      this.listenTo(app.ownFollowing, 'update', () => {
-        this.followedByYou = followedByYou(this.model.id);
-        this.getCachedEl('.js-followBtn .js-btnText').text(
-          this.followedByYou ? app.polyglot.t('userPage.unfollow') :
-            app.polyglot.t('userPage.follow')
-        );
-      });
-    }
-
     this.listenTo(this.model.get('headerHashes'), 'change', () => this.updateHeader());
 
     this.curConn = getCurrentConnection();
@@ -82,8 +72,6 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-tab': 'clickTab',
-      'click .js-followBtn': 'clickFollow',
-      'click .js-messageBtn': 'clickMessage',
       'click .js-moreBtn': 'clickMore',
       'click .js-customize': 'clickCustomize',
       'click .js-createListing': 'clickCreateListing',
@@ -110,19 +98,6 @@ export default class extends baseVw {
   clickTab(e) {
     const targ = $(e.target).closest('.js-tab');
     this.setState(targ.attr('data-tab'));
-  }
-
-  clickFollow(e) {
-    const type = this.followedByYou ? 'unfollow' : 'follow';
-    const $btn = $(e.target).closest('.js-followBtn');
-    $btn.addClass('processing');
-    followUnfollow(this.model.id, type)
-      .always(() => $btn.removeClass('processing'));
-  }
-
-  clickMessage() {
-    // activate the chat message
-    app.chat.openConversation(this.model.id);
   }
 
   clickMore() {
@@ -327,7 +302,6 @@ export default class extends baseVw {
     loadTemplate('userPage/userPage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        followed: this.followedByYou,
         ownPage: this.ownPage,
         showStoreWelcomeCallout: this.showStoreWelcomeCallout,
         followingCount: this.followingCount,
@@ -349,6 +323,16 @@ export default class extends baseVw {
         },
       });
       this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
+
+      if (!this.ownPage) {
+        if (this.socialBtns) this.socialBtns.remove();
+        this.socialBtns = this.createChild(SocialBtns, {
+          targetID: this.model.id,
+          stripClasses: 'clrSh3',
+          btnClasses: 'clrP clrBr',
+        });
+        this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+      }
 
       this.tabViewCache = {}; // clear for re-renders
       this.setState(this.state, {

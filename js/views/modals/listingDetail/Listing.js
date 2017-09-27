@@ -530,6 +530,7 @@ export default class extends BaseModal {
       this.$reviews.append(this.reviews.render().$el);
 
       if (!this.model.isOwnListing) {
+        if (this.socialBtns) this.socialBtns.remove();
         this.socialBtns = this.createChild(SocialBtns, {
           targetID: this.vendor.peerID,
           stripClasses: 'clrSh3',
