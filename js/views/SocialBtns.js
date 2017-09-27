@@ -1,5 +1,3 @@
-import $ from 'jquery';
-import _ from 'underscore';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { followedByYou, followUnfollow } from '../utils/follow';
