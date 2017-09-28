@@ -380,7 +380,7 @@ export default class ObRouter extends Router {
         new ConnectedPeersPage({ peers }).render()
       );
     }).fail((xhr) => {
-      let content = '<p>There was an error retreiving the connected peers.</p>';
+      let content = '<p>There was an error retrieving the connected peers.</p>';
 
       if (xhr.responseText) {
         content += `<p>${xhr.responseJSON && xhr.responseJSON.reason || xhr.responseText}</p>`;
