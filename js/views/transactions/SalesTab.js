@@ -63,7 +63,9 @@ export default class extends Tab {
       if (data && data.sales && data.sales.length) {
         const sale = data.sales[0];
         if (Date.now() - (new Date(sale.timestamp)).getTime() >
-          this.transactionAgeForResync && isResyncAvailable()) {
+          this.transactionAgeForResync &&
+          sale.state === 'AWAITING_PAYMENT' &&
+          isResyncAvailable()) {
           this.showResyncPopinMessage();
         }
       }
