@@ -225,8 +225,8 @@ export default class extends baseVw {
 
   get reloadTransactions() {
     if (this._reloadTransactions) return this._reloadTransactions;
-
     this._reloadTransactions = this.createChild(ReloadTransactions);
+    return this._reloadTransactions;
   }
 
   get $smtpSettingsFields() {
