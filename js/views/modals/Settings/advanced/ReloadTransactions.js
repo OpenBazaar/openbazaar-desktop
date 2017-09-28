@@ -14,6 +14,7 @@ export default class extends BaseVw {
       initialState: {
         isSyncing: isResyncingBlockchain(),
         syncComplete: false,
+        isResyncAvailable: isResyncAvailable(),
         ...options.initialState || {},
       },
       ...options,
@@ -29,6 +30,8 @@ export default class extends BaseVw {
       () => this.setState({ isSyncing: false }));
     this.listenTo(resyncEvents, 'resyncFail',
       () => this.setState({ isSyncing: false }));
+    this.listenTo(resyncEvents, 'changeResyncAvailable',
+      (resyncAvailable) => this.setState({ isResyncAvailable: resyncAvailable }));
   }
 
   className() {
@@ -65,7 +68,6 @@ export default class extends BaseVw {
 
     loadTemplate('modals/settings/advanced/reloadTransactions.html', (t) => {
       this.$el.html(t({
-        isResyncAvailable: isResyncAvailable(),
         ...this.getState(),
       }));
     });

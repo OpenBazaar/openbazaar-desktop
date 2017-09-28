@@ -29,7 +29,7 @@ export default class extends baseVw {
 
     this.listenTo(this.collection, 'update', this.render);
 
-    this.listenTo(serverConnectEvents, 'disconnect',
+    this.listenTo(serverConnectEvents, 'disconnected',
       () => this.setState({
         connectedServer: null,
       }));

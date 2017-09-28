@@ -62,6 +62,20 @@ export function getCurrentConnection() {
 }
 
 /**
+ * Returns the server config model of the server that you are currently
+ * connected to and null if you are not connected to a server.
+ */
+export function getServer() {
+  const curCon = getCurrentConnection();
+
+  if (!curCon || !curCon.server || curCon.status !== 'connected') {
+    return null;
+  }
+
+  return curCon.server;
+}
+
+/**
  * Call this method to obtain the socket instance in order to bind socket events.
  * If we are not currently connected to a server, this method will return false.
  * For the most part, you could no-op in that case since as it is now the
@@ -269,7 +283,7 @@ export default function connect(server, options = {}) {
     data.socket.on('close', (connectionLostE) => {
       const connectionLostEventData = getPromiseData({ socketCloseEvent: connectionLostE },
         { includeAttemptData: false });
-      events.trigger('disconnect', connectionLostEventData);
+      events.trigger('disconnected', connectionLostEventData);
       if (!currentConnection || currentConnection.socket === data.socket) {
         currentConnection = {
           ...data,

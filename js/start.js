@@ -525,7 +525,7 @@ serverConnectEvents.on('connected', () => {
 });
 
 // Handle a lost connection.
-serverConnectEvents.on('disconnect', () => {
+serverConnectEvents.on('disconnected', () => {
   app.connectionManagmentModal.setModalOptions({
     dismissOnOverlayClick: false,
     dismissOnEscPress: false,
@@ -547,7 +547,7 @@ const onWillRouteCloseConnModal =
   () => app.connectionManagmentModal.close();
 serverConnectEvents.on('connected', () =>
   app.router.on('will-route', onWillRouteCloseConnModal));
-serverConnectEvents.on('disconnect', () =>
+serverConnectEvents.on('disconnected', () =>
   app.router.off('will-route', onWillRouteCloseConnModal));
 
 
