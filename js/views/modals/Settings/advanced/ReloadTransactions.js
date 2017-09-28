@@ -1,5 +1,3 @@
-import app from '../../../../app';
-import { openSimpleMessage } from '../../SimpleMessage';
 import resyncBlockchain, {
   isResyncAvailable,
   isResyncingBlockchain,
@@ -45,22 +43,7 @@ export default class extends BaseVw {
   }
 
   onClickResync() {
-    this.setState({ isSyncing: true });
-
-    this.resync = resyncBlockchain()
-      .always(() => {
-        this.setState({ isSyncing: false });
-      })
-      .fail((xhr) => {
-        if (xhr.statusText === 'abort') return;
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('settings.advancedTab.server.resyncError'),
-          failReason);
-      })
-      .done(() => {
-        this.setState({ syncComplete: true });
-      });
+    resyncBlockchain();
   }
 
   render() {

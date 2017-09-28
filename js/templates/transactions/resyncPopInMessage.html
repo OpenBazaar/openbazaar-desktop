@@ -3,19 +3,21 @@
   <span class="ion-ios-close-empty clrBr clrP clrT"></span>
 </a> 
 <% } %>
-<% if (ob.needSyncText) { %>
+<% if (ob.complete) { %>
+<p class="txUnl">
+  <%= ob.polyT('transactions.sales.resyncPopInMessage.completeText') %>
+</p>
+<% } else if (ob.needSyncText) { %>
 <p class="txUnl">
   <%
-    const link = `<span class="posR"><a class="clrTEm js-resync $ob.isSyncing ? 'invisible' : ''}">${linkText}</a><%= ob.spinner({ className: `spinnerTxt ${!ob.isSyncing ? 'hide' : ''}` })</span>`;
+    const linkText = ob.polyT('transactions.sales.resyncPopInMessage.link');
+    const spinnerClass = `spinnerTxt ${!ob.isSyncing ? 'hide' : ''}`;
+    const link = `<a class="clrTEm js-resync ${ob.isSyncing ? 'invisible posA' : ''}">${linkText}</a> ${ob.spinner({ className: spinnerClass })}`;
     print(ob.polyT('transactions.sales.resyncPopInMessage.message', {
       icon: '<span class="ion-alert-circled"></span>',
       link,
-      text: `<b>${app.polyglot.t('transactions.sales.resyncPopInMessage.text')}</a>`,
+      text: `<b>${ob.polyT('transactions.sales.resyncPopInMessage.text')}</a>`,
     }));
   %>
-</p>
-<% } else if (ob.completeText) { %>
-<p class="txUnl">
-  Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page.
 </p>
 <% } %>

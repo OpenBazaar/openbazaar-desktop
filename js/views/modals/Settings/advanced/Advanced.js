@@ -41,7 +41,6 @@ export default class extends baseVw {
     return {
       'click .js-save': 'save',
       'click .js-showConnectionManagement': 'showConnectionManagement',
-      'click .js-resync': 'clickResync',
       'click .js-purge': 'clickPurge',
       'click .js-blockData': 'clickBlockData',
     };
@@ -78,30 +77,6 @@ export default class extends baseVw {
 
   getFormData(subset = this.$formFields) {
     return super.getFormData(subset);
-  }
-
-  clickResync() {
-    this.resynchronize();
-  }
-
-  resynchronize() {
-    this.getCachedEl('.js-resync').addClass('processing');
-    this.getCachedEl('.js-resyncComplete').addClass('hide');
-
-    this.resync = $.post(app.getServerUrl('wallet/resyncblockchain'))
-      .always(() => {
-        this.getCachedEl('.js-resync').removeClass('processing');
-      })
-      .fail((xhr) => {
-        if (xhr.statusText === 'abort') return;
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('settings.advancedTab.server.resyncError'),
-          failReason);
-      })
-      .done(() => {
-        this.getCachedEl('.js-resyncComplete').removeClass('hide');
-      });
   }
 
   clickPurge() {

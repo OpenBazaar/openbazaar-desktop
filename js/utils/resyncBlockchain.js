@@ -17,8 +17,7 @@ let server = getServer();
 
 // If you change this, be sure to change anywhere in the GUI you may have output how
 // long its unavailable (e.g. Advanced Settings).
-// const resyncInactiveTime = 1000 * 60 * 60 * 1;
-const resyncInactiveTime = 1000 * 30; // 30 secs
+const resyncInactiveTime = 1000 * 60 * 60 * 24; // 24 hours
 
 /**
  * Resync will be disabled if one was executed by this module less than the time specificed
@@ -63,8 +62,7 @@ function setLastResyncExpiresTimeout() {
     const fromNow = (new Date(lastBlockchainResync)).getTime() + resyncInactiveTime - Date.now();
     lastResyncExpiresTimeout = setTimeout(() => {
       setResyncAvailable(__isResyncAvailable(lastBlockchainResync));
-    // }, fromNow + (1000 * 60));
-    }, fromNow);
+    }, fromNow + (1000 * 60));
     // Giving a 1m buffer in case the timeout is a little fast
   }
 }

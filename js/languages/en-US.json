@@ -1187,7 +1187,8 @@
       "resyncPopInMessage": {
         "link": "Resync",
         "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
-        "message": "%{icon} %{text} %{link}"
+        "message": "%{icon} %{text} %{link}",
+        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
       }
     },
     "purchases": {
