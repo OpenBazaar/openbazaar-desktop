@@ -53,8 +53,7 @@ export default class extends Tab {
   }
 
   get transactionAgeForResync() {
-    // return 1000 * 60 * 60 * 24;
-    return 1000 * 60 * 60 * 2;
+    return 1000 * 60 * 60 * 24; // 24 hours
   }
 
   checkShowResyncPopin() {

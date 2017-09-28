@@ -17,7 +17,7 @@ let server = getServer();
 
 // If you change this, be sure to change anywhere in the GUI you may have output how
 // long its unavailable (e.g. Advanced Settings).
-const resyncInactiveTime = 1000 * 60 * 60 * 24; // 24 hours
+const resyncInactiveTime = 1000 * 60 * 60 * 1; // 1 hour
 
 /**
  * Resync will be disabled if one was executed by this module less than the time specificed
