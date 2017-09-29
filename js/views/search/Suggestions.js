@@ -4,7 +4,6 @@ import BaseView from '../baseVw';
 
 export default class extends BaseView {
   constructor(options = {}) {
-
     const opts = {
       initialState: {
         suggestions: [],
