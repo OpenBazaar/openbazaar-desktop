@@ -73,6 +73,11 @@
       .topControls {
         margin-bottom: $padSm;
         min-height: 35px;
+
+        &.withEndBtn {
+          // if a button, usually close, is at the end of the controls and absolutely positioned
+          width: calc(100% - #{$buttonHeight} - #{$padSm});
+        }
       }
     }
 
