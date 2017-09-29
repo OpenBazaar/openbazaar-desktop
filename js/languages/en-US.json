@@ -13,7 +13,9 @@
   "follow": {
     "typeFollow": "following",
     "typeUnfollow": "unfollowing",
-    "followErrorTitle": "There was an error %{type} %{user}."
+    "followErrorTitle": "There was an error %{type} %{user}.",
+    "followBtn": "Follow",
+    "unfollowBtn": "Unfollow"
   },
   "feeLevels": {
     "PRIORITY": "Priority",
@@ -855,7 +857,7 @@
       "btnConfirm": "Yes, Delete"
     },
     "editFetchErrorDialog": {
-      "title": "There was an error retreiving the listing.",
+      "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
@@ -1029,6 +1031,7 @@
         "transactions": "Transactions",
         "myPage": "My Page",
     },
+    "suggestions": "Suggestions:",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",

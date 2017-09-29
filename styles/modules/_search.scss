@@ -165,6 +165,11 @@
     }
   }
 
+  .suggestions > * {
+    flex-shrink: 0;
+    padding-bottom: 2px; // prevent descenders from being cut off
+  }
+
   .filterWrapper {
     padding-right: 5px;
 

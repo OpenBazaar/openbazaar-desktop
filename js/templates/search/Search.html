@@ -38,13 +38,7 @@
                value="<%= ob.term %>">
         <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
       </div>
-      <% // TODO: if suggestions exist show below %>
-      <% /* %>
-      <div class="suggestions flex gutterH row">
-        <span class="tx5 clrT2"><%= ob.polyT('search.suggestions') %></span>
-        <% // TODO: suggestions loop %>
-      </div>
-      <% */ %>
+      <div class="js-suggestions"></div>
       <hr class="clrBr">
     </div>
     <div class="flexRow gutterHLg">

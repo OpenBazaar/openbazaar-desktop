@@ -29,22 +29,18 @@
       </h1>
     </div>
     <div class="posR">
-      <div class="btnStrip floR clrSh2">
-        <% if(ob.ownPage) { %>
+      <% if(ob.ownPage) { %>
+        <div class="btnStrip floR clrSh2">
           <a class="btn clrP clrBr js-customize"><%= ob.polyT('userPage.customize') %></a>
           <a class="btn clrP clrBr js-createListing"><%= ob.polyT('userPage.createListing') %></a>
-        <% } else { %>
-          <a class="btn clrP clrBr js-messageBtn"><%= ob.polyT('userPage.message') %></a>
-          <%= ob.processingButton({
-            className: `btn clrP clrBr js-followBtn`,
-            btnText: ob.followed ? ob.polyT('userPage.unfollow') : ob.polyT('userPage.follow'),
-          }) %>
-        <!--
+          <!--
           <a class="btn clrP clrBr hide js-moreableBtn"><%= ob.polyT('userPage.block') %></a>
           <a class="iconBtn clrP clrBr js-moreBtn"><i class="ion-android-more-vertical"></i> </a>
         -->
-        <% } %>
-      </div>
+        </div>
+      <% } else { %>
+      <div class="js-socialBtns"></div>
+      <% } %>
       <% if (ob.showStoreWelcomeCallout) { %>
         <div class="storeWelcomeCallout js-storeWelcomeCallout arrowBoxBottom confirmBox clrP clrBr clrSh1 tx5">
           <div class="tx3 txB rowSm padSm"><%= ob.polyT('userPage.storeWelcomeCalloutTitle') %></div>
