@@ -1,7 +1,7 @@
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';
-import SocialBtns from '../SocialBtns';
+import SocialBtns from '../components/SocialBtns';
 import BaseModal from './BaseModal';
 
 export default class extends BaseModal {
@@ -53,8 +53,10 @@ export default class extends BaseModal {
       if (this.socialBtns) this.socialBtns.remove();
       this.socialBtns = this.createChild(SocialBtns, {
         targetID: this.model.id,
-        stripClasses: 'flexHCent gutterH',
-        btnClasses: 'clrP clrBr clrSh2',
+        initialState: {
+          stripClasses: 'flexHCent gutterH',
+          btnClasses: 'clrP clrBr clrSh2',
+        },
       });
       this.$('.js-socialBtns').append(this.socialBtns.render().$el);
     });

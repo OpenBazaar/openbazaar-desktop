@@ -12,7 +12,7 @@ import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import Followers from '../../collections/Followers';
 import MiniProfile from '../MiniProfile';
-import SocialBtns from '../SocialBtns';
+import SocialBtns from '../components/SocialBtns';
 import Home from './Home';
 import Store from './Store';
 import Follow from './Follow';
@@ -328,8 +328,6 @@ export default class extends baseVw {
         if (this.socialBtns) this.socialBtns.remove();
         this.socialBtns = this.createChild(SocialBtns, {
           targetID: this.model.id,
-          stripClasses: 'btnStrip clrSh3',
-          btnClasses: 'clrP clrBr',
         });
         this.$('.js-socialBtns').append(this.socialBtns.render().$el);
       }

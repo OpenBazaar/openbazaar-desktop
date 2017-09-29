@@ -1,8 +1,8 @@
-import app from '../app';
-import loadTemplate from '../utils/loadTemplate';
-import { followedByYou, followUnfollow } from '../utils/follow';
+import app from '../../app';
+import loadTemplate from '../../utils/loadTemplate';
+import { followedByYou, followUnfollow } from '../../utils/follow';
 
-import BaseVw from './baseVw';
+import BaseVw from '../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -13,7 +13,9 @@ export default class extends BaseVw {
 
     this._state = {
       following: followedByYou(options.targetID),
-      processing: false,
+      isFollowing: false,
+      stripClasses: 'btnStrip clrSh3',
+      btnClasses: 'clrP clrBr',
       ...options.initialState || {},
     };
 
@@ -41,20 +43,21 @@ export default class extends BaseVw {
   }
 
   onClickFollow() {
-    const type = this._state.following ? 'unfollow' : 'follow';
-    this.setState({ processing: true });
+    const type = this.getState().following ? 'unfollow' : 'follow';
+    this.setState({ isFollowing: true });
     this.folCall = followUnfollow(this.options.targetID, type)
       .always(() => {
         if (this.isRemoved()) return;
-        this.setState({ processing: false });
+        this.setState({ isFollowing: false });
       });
   }
 
   render() {
+    const state = this.getState();
     loadTemplate('socialBtns.html', (t) => {
       this.$el.html(t({
         ...this.options,
-        ...this._state,
+        ...state,
       }));
     });
 

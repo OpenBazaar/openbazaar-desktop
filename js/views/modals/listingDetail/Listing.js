@@ -14,7 +14,7 @@ import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from './Reviews';
-import SocialBtns from '../../SocialBtns';
+import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -533,8 +533,6 @@ export default class extends BaseModal {
         if (this.socialBtns) this.socialBtns.remove();
         this.socialBtns = this.createChild(SocialBtns, {
           targetID: this.vendor.peerID,
-          stripClasses: 'btnStrip clrSh3',
-          btnClasses: 'clrP clrBr',
         });
         this.$('.js-socialBtns').append(this.socialBtns.render().$el);
       }
