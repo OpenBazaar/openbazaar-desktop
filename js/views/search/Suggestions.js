@@ -36,7 +36,6 @@ export default class extends BaseView {
     const state = this.getState();
     loadTemplate('search/Suggestions.html', t => {
       this.$el.html(t({
-        ...this.options,
         ...state,
       }));
     });

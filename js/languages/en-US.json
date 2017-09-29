@@ -1020,6 +1020,7 @@
     "addQueryProviderBtn": "Add search provider",
     "chooseDefaultTitle": "Select a default search provider",
     "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "suggestions": "Suggestions:",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
