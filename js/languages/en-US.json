@@ -850,7 +850,7 @@
       "btnConfirm": "Yes, Delete"
     },
     "editFetchErrorDialog": {
-      "title": "There was an error retreiving the listing.",
+      "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
