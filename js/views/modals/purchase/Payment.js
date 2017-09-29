@@ -59,9 +59,6 @@ export default class extends BaseVw {
         }
       });
     }
-
-    console.log('sugar');
-    window.sugar = app;
   }
 
   set balanceRemaining(amount) {
