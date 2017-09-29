@@ -8,16 +8,19 @@ export default class extends BaseVw {
   constructor(options = {}) {
     if (!options.targetID) throw new Error('You must provide a targetID');
 
-    super(options);
-    this.options = options;
-
-    this._state = {
-      following: followedByYou(options.targetID),
-      isFollowing: false,
-      stripClasses: 'btnStrip clrSh3',
-      btnClasses: 'clrP clrBr',
-      ...options.initialState || {},
+    const opts = {
+      initialState: {
+        following: followedByYou(options.targetID),
+        isFollowing: false,
+        stripClasses: 'btnStrip clrSh3',
+        btnClasses: 'clrP clrBr',
+        ...options.initialState || {},
+      },
+      ...options,
     };
+
+    super(opts);
+    this.options = opts;
 
     this.listenTo(app.ownFollowing, 'update', () => {
       this.setState({
