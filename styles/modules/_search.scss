@@ -165,6 +165,10 @@
     }
   }
 
+  .suggestionTitle {
+    pointer-events: none; // this uses button markup to maintain alignment
+  }
+
   .filterWrapper {
     padding-right: 5px;
 

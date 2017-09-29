@@ -1,0 +1,6 @@
+<% if (ob.suggestions && ob.suggestions.length) { %>
+  <button class="btnTxtOnly txUnb clrT2 suggestionTitle">Suggestions:</button>
+  <% ob.suggestions.forEach(suggestion => { %>
+    <button class="btnTxtOnly txUnb js-suggestion" data-suggestion="<%= suggestion %>"><%= suggestion%></button>
+  <% }); %>
+<% } %>
