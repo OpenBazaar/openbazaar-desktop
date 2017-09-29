@@ -483,7 +483,7 @@ export default class extends baseVw {
     if (this.suggestions) this.suggestions.remove();
     this.suggestions = this.createChild(Suggestions, {
       initialState: {
-        suggestions: data.suggestions || this.defaultSuggestions,
+        suggestions: Array.isArray(data.suggestions) ? data.suggestions : this.defaultSuggestions,
       },
     });
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
