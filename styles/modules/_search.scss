@@ -165,8 +165,8 @@
     }
   }
 
-  .suggestionTitle {
-    pointer-events: none; // this uses button markup to maintain alignment
+  .suggestions > * {
+    flex-shrink: 0;
   }
 
   .filterWrapper {

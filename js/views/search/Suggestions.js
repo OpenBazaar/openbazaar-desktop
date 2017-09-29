@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseView from '../baseVw';
 
@@ -7,8 +8,9 @@ export default class extends BaseView {
     const opts = {
       initialState: {
         suggestions: [],
+        ...options.initialState || {},
       },
-      ...options.initialState || {},
+      ...options,
     };
 
     super(opts);
@@ -16,7 +18,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'suggestions flex gutterH row tx5';
+    return 'suggestions flex gutterH row tx5 noOverflow';
   }
 
   events() {
@@ -32,9 +34,11 @@ export default class extends BaseView {
 
   render() {
     super.render();
+    const state = this.getState();
     loadTemplate('search/Suggestions.html', t => {
       this.$el.html(t({
         ...this.options,
+        ...state,
       }));
     });
 
