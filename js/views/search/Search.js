@@ -457,8 +457,7 @@ export default class extends baseVw {
     });
     const filterWrapper = this.$('.js-filterWrapper');
     filterWrapper.find('select').select2({
-      // disables the search box
-      minimumResultsForSearch: Infinity,
+      minimumResultsForSearch: 10,
       templateResult: selectEmojis,
       templateSelection: selectEmojis,
     });
