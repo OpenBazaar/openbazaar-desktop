@@ -11,6 +11,7 @@ import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
+import Dialog from '../Dialog';
 import loadTemplate from '../../../utils/loadTemplate';
 import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
@@ -516,6 +517,43 @@ export default class extends BaseModal {
     return false;
   }
 
+  onCloseClick() {
+    // this.confirmClose().done(() => this.close());
+    // return false;
+  }
+
+  confirmClose() {
+    const deferred = $.Deferred();
+
+    this.setModelData();
+    const prevData = this.createMode ? this.attrsAtCreate : this.attrsAtLastSave;
+    const curData = this.model.toJSON();
+
+    if (!_.isEqual(prevData, curData)) {
+      this.closeConfirmDialog = this.createChild(Dialog, {
+        // title: app.polyglot.t('langChangeRestartTitle'),
+        title: 'Unsaved changes',
+        message: 'You have unsaved changes. Are you sure you want to close?',
+        buttons: [{
+          text: 'Yes',
+          fragment: 'yes',
+        }, {
+          text: 'No',
+          fragment: 'no',
+        }],
+      })
+        .on('click-yes', () => deferred.resolve())
+        .on('click-no', () => this.closeConfirmDialog.close())
+        .on('close', () => deferred.reject())
+        .render()
+        .open();
+    } else {
+      deferred.resolve();
+    }
+
+    return deferred.promise();
+  }
+
   uploadImages(images) {
     let imagesToUpload = images;
 
@@ -615,51 +653,8 @@ export default class extends BaseModal {
   }
 
   onSaveClick() {
-    const formData = this.getFormData(this.$formFields);
-    const item = this.model.get('item');
-
     this.$saveButton.addClass('disabled');
-
-    // set model / collection data for various child views
-    this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
-    this.variantsView.setCollectionData();
-    this.variantInventory.setCollectionData();
-    this.couponsView.setCollectionData();
-
-    if (item.get('options').length) {
-      // If we have options, we shouldn't be providing a top-level quantity or
-      // productID.
-      item.unset('quantity');
-      item.unset('productID');
-
-      // If we have options and are not tracking inventory, we'll set the infiniteInventory
-      // flag for any skus.
-      if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-        item.get('skus')
-          .forEach(sku => {
-            sku.set('infiniteInventory', true);
-          });
-      }
-    } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-      // If we're not tracking inventory and don't have any variants, we should provide a top-level
-      // quantity as -1, so it's considered infinite.
-      formData.item.quantity = -1;
-    }
-
-    this.model.set(formData);
-
-    // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
-    if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
-      this.model.get('shippingOptions').reset();
-    } else {
-      // If any shipping options have a type of 'LOCAL_PICKUP', we'll
-      // clear out any services that may be there.
-      this.model.get('shippingOptions').forEach(shipOpt => {
-        if (shipOpt.get('type') === 'LOCAL_PICKUP') {
-          shipOpt.set('services', []);
-        }
-      });
-    }
+    this.setModelData();
 
     const serverData = this.model.toJSON();
     serverData.item.skus = serverData.item.skus.map(sku => (
@@ -709,6 +704,7 @@ export default class extends BaseModal {
         }).done(() => {
           savingStatusMsg.update(`Listing ${this.model.toJSON().item.title}` +
             ' saved. <a class="js-viewListing">view</a>');
+          this.attrsAtLastSave = this.model.toJSON();
 
           setTimeout(() => savingStatusMsg.remove(), 6000);
         });
@@ -735,6 +731,56 @@ export default class extends BaseModal {
         trackBy: 'DO_NOT_TRACK',
       });
       this.$el.addClass('notTrackingInventory');
+    }
+  }
+
+  /**
+   * Will set the model with data from the form, including setting nested models
+   * and collections which are managed by nested views.
+   */
+  setModelData() {
+    const formData = this.getFormData(this.$formFields);
+    const item = this.model.get('item');
+
+    // set model / collection data for various child views
+    this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
+    this.variantsView.setCollectionData();
+    this.variantInventory.setCollectionData();
+    this.couponsView.setCollectionData();
+
+    if (item.get('options').length) {
+      // If we have options, we shouldn't be providing a top-level quantity or
+      // productID.
+      item.unset('quantity');
+      item.unset('productID');
+
+      // If we have options and are not tracking inventory, we'll set the infiniteInventory
+      // flag for any skus.
+      if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+        item.get('skus')
+          .forEach(sku => {
+            sku.set('infiniteInventory', true);
+          });
+      }
+    } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+      // If we're not tracking inventory and don't have any variants, we should provide a top-level
+      // quantity as -1, so it's considered infinite.
+      formData.item.quantity = -1;
+    }
+
+    this.model.set(formData);
+
+    // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
+    if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+      this.model.get('shippingOptions').reset();
+    } else {
+      // If any shipping options have a type of 'LOCAL_PICKUP', we'll
+      // clear out any services that may be there.
+      this.model.get('shippingOptions').forEach(shipOpt => {
+        if (shipOpt.get('type') === 'LOCAL_PICKUP') {
+          shipOpt.set('services', []);
+        }
+      });
     }
   }
 
@@ -1237,6 +1283,18 @@ export default class extends BaseModal {
         this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
         setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
       });
+
+      if (this.createMode) {
+        if (!this.attrsAtCreate) {
+          this.setModelData();
+          this.attrsAtCreate = this.model.toJSON();
+        }
+      } else {
+        if (!this.attrsAtLastSave) {
+          this.setModelData();
+          this.attrsAtLastSave = this.model.toJSON();
+        }
+      }
     });
 
     return this;

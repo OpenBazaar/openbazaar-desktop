@@ -3,6 +3,7 @@ import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 import { getHtml, getAppFrame } from '../../utils/selectors';
+import { isPromise } from '../../utils/object';
 import app from '../../app';
 
 export default class BaseModal extends baseVw {
@@ -107,8 +108,25 @@ export default class BaseModal extends baseVw {
     return this;
   }
 
-  close() {
+  close(bypassConfirmation = false) {
     let modalIndex;
+
+    // Unless bypassConfirmation is true, if you implement a confirmClose function
+    // in your modal, it will be called before potentially closing. If it returns a promise,
+    // the modal will close when the promise resolves. If it returns a truthy (other than a
+    // promise) the modal will close immediately.
+    if (!bypassConfirmation && typeof this.confirmClose === 'function') {
+      const closeConfirmed = this.confirmClose.call(this);
+
+      if (isPromise(closeConfirmed)) {
+        // it's a promise
+        closeConfirmed.done(() => this.close(true));
+      } else {
+        if (closeConfirmed) this.close(true);
+      }
+
+      return;
+    }
 
     if ($.contains(document, this.el)) {
       modalIndex = BaseModal.__openModals.indexOf(this);
