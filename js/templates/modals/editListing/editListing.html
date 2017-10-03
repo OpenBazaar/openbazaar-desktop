@@ -32,9 +32,14 @@
   <div class="flexExpand posR tabContent">
     <div class="gutterVMd2 js-formSectionsContainer">
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3">
-        <div class="flexHCent">
+        <div class="flexHCent posR">
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
-          <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
+          <div style="position: absolute; left: 0; right: 0">
+            <div class="flexHRight flexVCent gutterH">
+              <a class="txU">View listing</a>
+              <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
+            </div>
+          </div>
         </div>
         <hr class="clrBr" />
 
