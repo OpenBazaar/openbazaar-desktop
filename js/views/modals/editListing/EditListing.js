@@ -517,11 +517,6 @@ export default class extends BaseModal {
     return false;
   }
 
-  onCloseClick() {
-    // this.confirmClose().done(() => this.close());
-    // return false;
-  }
-
   confirmClose() {
     const deferred = $.Deferred();
 
@@ -530,20 +525,25 @@ export default class extends BaseModal {
     const curData = this.model.toJSON();
 
     if (!_.isEqual(prevData, curData)) {
+      const messageKey = `body${this.createMode ? 'Create' : 'Edit'}`;
+      this.bringToTop();
       this.closeConfirmDialog = this.createChild(Dialog, {
-        // title: app.polyglot.t('langChangeRestartTitle'),
-        title: 'Unsaved changes',
-        message: 'You have unsaved changes. Are you sure you want to close?',
+        removeOnClose: false,
+        title: app.polyglot.t('editListing.confirmCloseDialog.title'),
+        message: app.polyglot.t(`editListing.confirmCloseDialog.${messageKey}`),
         buttons: [{
-          text: 'Yes',
+          text: app.polyglot.t('editListing.confirmCloseDialog.btnYes'),
           fragment: 'yes',
         }, {
-          text: 'No',
+          text: app.polyglot.t('editListing.confirmCloseDialog.btnNo'),
           fragment: 'no',
         }],
       })
         .on('click-yes', () => deferred.resolve())
-        .on('click-no', () => this.closeConfirmDialog.close())
+        .on('click-no', () => {
+          deferred.reject();
+          this.closeConfirmDialog.close();
+        })
         .on('close', () => deferred.reject())
         .render()
         .open();

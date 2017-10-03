@@ -988,6 +988,13 @@
       "unlimitedQuantityLabel": "unlimited",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
     },
+    "confirmCloseDialog": {
+      "title": "You have unsaved changes",
+      "bodyCreate": "You have unsaved changes while creating a listing. Are you sure you want to close?",
+      "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
+      "btnYes": "Yes",
+      "btnNo": "No"
+    },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
     "errors": {

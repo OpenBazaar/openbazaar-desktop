@@ -3,8 +3,10 @@ import { ipcRenderer } from 'electron';
 import { Router } from 'backbone';
 import { getGuid, isMultihash } from './utils';
 import { getPageContainer } from './utils/selectors';
+import { isPromise } from './utils/object';
 import './lib/whenAll.jquery';
 import app from './app';
+import { getOpenModals } from './views/modals/BaseModal';
 import UserPage from './views/userPage/UserPage';
 import Search from './views/search/Search';
 import Transactions from './views/transactions/Transactions';
@@ -43,17 +45,32 @@ export default class ObRouter extends Router {
       .forEach((route) => this.route.apply(this, route));
 
     this.setAddressBarText();
+    this._curHash = location.hash;
 
     $(window).on('hashchange', () => {
       this.setAddressBarText();
     });
 
-    ipcRenderer.on('external-route',
-      (e, route) => this.navigate(route, { trigger: true }));
+    ipcRenderer.on('external-route', (e, route) => {
+      if (app.pageNav.navigable) {
+        this.navigate(route, { trigger: true });
+      }
+    });
   }
 
   get maxCachedHandles() {
     return 1000;
+  }
+
+  // FYI - There is a scenrio where the prevHash will be inaccurate. More details in
+  // 
+  setPrevHash(prevHash = this._curHash) {
+    this._prevHash = prevHash;
+    this._curHash = location.hash;
+  }
+
+  get prevHash() {
+    return this._prevHash;
   }
 
   /**
@@ -149,9 +166,70 @@ export default class ObRouter extends Router {
     app.pageNav.setAddressBar(displayRoute);
   }
 
-  execute(callback, args) {
-    app.loadingModal.open();
+  execute(callback, args, name, options = {}) {
+    if (this.closeUnconfirmedRollBack) {
+      this.closeUnconfirmedRollBack = false;
+      return false;
+    }
+
     this.navigate(this.standardizedRoute(), { replace: true });
+
+    // We'll iterate through any open modal which have a confirmClose method
+    // implemented. We'll call the method and only proceed with the route
+    // if every method confirms that the close is ok. If not, we'll cancel
+    // the route and roll back the hash.
+    if (!options.confirmedClose) {
+      const confirmPromises = [];
+      getOpenModals().forEach(modal => {
+        if (typeof modal.confirmClose !== 'function') return;
+        const closeConfirmed = modal.confirmClose.call(modal);
+
+        if (isPromise(closeConfirmed)) {
+          confirmPromises.push(closeConfirmed);
+        } else {
+          const deferred = $.Deferred();
+          if (closeConfirmed) {
+            deferred.resolve();
+            confirmPromises.push(deferred.promise());
+          }
+        }
+      });
+
+      if (confirmPromises.length) {
+        // Routing to a new page while the confirm close process is active could produce
+        // weird things, so we'll block page navigation.
+        app.pageNav.navigable = false;
+        $.when(...confirmPromises)
+          .done(() => {
+            this.execute(callback, args, name, { confirmedClose: true });
+          })
+          .fail(() => {
+            // If any of the closeConfirm promises are rejected, it indicates that
+            // the close of at least one modal was not confirmed and we won't proceed
+            // with the new route. We need to rollback the location hash.
+
+            if (location.hash !== this._prevHash) {
+              // When we roll back, it will trigger a new route. We want that route to be
+              // ignored and not reload a new page since we never unloaded the page. It's not
+              // pretty, but the following flag will be used for execute() to opt-out of reloading
+              // the page.
+              this.closeUnconfirmedRollBack = true;
+              location.hash = this._prevHash;
+
+              // FYI - at this point, since we've rolled back one level but never rolled back
+              // _prevHash one level, _prevHash is not accurate. To do that, we would need to track
+              // more than the previous hash, but also track all previous hashes. It's beyond the
+              // scope of what is necessary here. As long as prev hash is used only when the
+              // location hash changes to a new one and you want to cancel that route, we're good.
+            }
+          })
+          .always(() => (app.pageNav.navigable = true));
+
+        return false;
+      }
+    }
+
+    app.loadingModal.open();
 
     // This block is intentionally duplicated here and in loadPage. It's
     // here because we want to remove any current views (and have them
@@ -167,6 +245,8 @@ export default class ObRouter extends Router {
       this.trigger('will-route');
       callback.apply(this, args);
     }
+
+    return undefined;
   }
 
   loadPage(vw) {
@@ -216,7 +296,21 @@ export default class ObRouter extends Router {
       guidRoute = [guid].concat(split.slice(1)).join('/');
     }
 
-    return super.navigate(guidRoute, options);
+    return this.navigate(guidRoute, options);
+  }
+
+  navigate(fragment, options = {}) {
+    // Navigate is often times called in quick succession with url rewrites, so to
+    // properly capture the previous hash we'll just base it off the final call when
+    // they're called in such a burst fashion.
+    if (typeof fragment === 'string') {
+      clearTimeout(this.navigateSetPrevHash);
+      this.navigateSetPrevHash = setTimeout(() => {
+        this.setPrevHash();
+      });
+    }
+
+    return super.navigate(fragment, options);
   }
 
   userViaHandle(handle, ...args) {
