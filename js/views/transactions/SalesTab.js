@@ -1,4 +1,3 @@
-import app from '../../app';
 import Tab from './Tab';
 import resyncBlockchain, {
   isResyncAvailable,
@@ -75,18 +74,10 @@ export default class extends Tab {
   showResyncPopinMessage() {
     if (this.resyncPopinMessage) return;
 
-    const linkText = app.polyglot.t('transactions.sales.resyncPopInMessage.link');
-    const needSyncText = app.polyglot.t('transactions.sales.resyncPopInMessage.message', {
-      icon: '<span class="ion-alert-circled"></span>',
-      link: `<a class="clrTEm js-resync">${linkText}</a>`,
-      text: `<b>${app.polyglot.t('transactions.sales.resyncPopInMessage.text')}</a>`,
-    });
-
     this.resyncPopinMessage = this.createChild(ResyncPopInMessage, {
-      messageText: '-----', // not used but needed so the pop in message base class dosn't cry
+      messageText: '-----', // not used but needed so the pop in message base class doesn't cry
       initialState: {
         dismissable: true,
-        needSyncText,
         isSyncing: isResyncingBlockchain(),
       },
     });

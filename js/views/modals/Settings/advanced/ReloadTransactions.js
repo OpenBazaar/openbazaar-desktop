@@ -25,7 +25,10 @@ export default class extends BaseVw {
         syncComplete: false,
       }));
     this.listenTo(resyncEvents, 'resyncComplete',
-      () => this.setState({ isSyncing: false }));
+      () => this.setState({
+        isSyncing: false,
+        syncComplete: true,
+      }));
     this.listenTo(resyncEvents, 'resyncFail',
       () => this.setState({ isSyncing: false }));
     this.listenTo(resyncEvents, 'changeResyncAvailable',
