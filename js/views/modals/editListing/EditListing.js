@@ -991,7 +991,6 @@ export default class extends BaseModal {
 
     loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
-        ownPeerId: app.profile.id,
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
         returnText: this.options.returnText,
