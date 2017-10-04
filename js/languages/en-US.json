@@ -134,6 +134,13 @@
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
     "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
+    "myPage": "My Page",
+    "customizePage": "Customize Page",
+    "createListing": "Create Listing",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "cases": "Cases",
+    "settings": "Settings",
     "toolTip": {
       "back": "Back",
       "forward": "Forward",
@@ -1024,6 +1031,10 @@
     "addQueryProviderBtn": "Add search provider",
     "chooseDefaultTitle": "Select a default search provider",
     "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "providers": {
+        "transactions": "Transactions",
+        "myPage": "My Page"
+    },
     "suggestions": "Suggestions:",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
