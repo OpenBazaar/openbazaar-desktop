@@ -124,10 +124,8 @@ export default class BaseModal extends baseVw {
         // Routing to a new page while the confirm close process is active could produce
         // weird things, so we'll block page navigation.
         app.pageNav.navigable = false;
-        closeConfirmed.done(() => {
-          app.pageNav.navigable = true;
-          this.close(true);
-        });
+        closeConfirmed.done(() => this.close(true))
+          .always(() => (app.pageNav.navigable = true));
       } else {
         if (closeConfirmed) this.close(true);
       }

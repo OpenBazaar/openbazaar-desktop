@@ -56,6 +56,9 @@ export default class ObRouter extends Router {
         this.navigate(route, { trigger: true });
       }
     });
+
+    console.log('moo');
+    window.moo = getOpenModals;
   }
 
   get maxCachedHandles() {
@@ -63,7 +66,7 @@ export default class ObRouter extends Router {
   }
 
   // FYI - There is a scenrio where the prevHash will be inaccurate. More details in
-  // 
+  // the confirmPromises when() fail handler in execute().
   setPrevHash(prevHash = this._curHash) {
     this._prevHash = prevHash;
     this._curHash = location.hash;

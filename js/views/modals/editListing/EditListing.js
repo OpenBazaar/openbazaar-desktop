@@ -539,7 +539,10 @@ export default class extends BaseModal {
           fragment: 'no',
         }],
       })
-        .on('click-yes', () => deferred.resolve())
+        .on('click-yes', () => {
+          deferred.resolve();
+          this.remove();
+        })
         .on('click-no', () => {
           deferred.reject();
           this.closeConfirmDialog.close();

@@ -1,4 +1,6 @@
 import app from '../app';
+import { getOpenModals } from '../views/modals/BaseModal';
+import Listing from '../models/listing/Listing';
 import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
 import DebugLog from '../views/modals/DebugLog';
@@ -8,15 +10,28 @@ import Settings from '../views/modals/Settings/Settings';
 
 let aboutModal;
 let settingsModal;
-let editListingModal;
 let debugLogModal;
 let moderatorDetailsModal;
 let _wallet;
 
 export function launchEditListingModal(modalOptions = {}) {
-  if (editListingModal) editListingModal.remove();
+  const model = modalOptions.model;
+  const openModals = getOpenModals();
 
-  editListingModal = new EditListing(modalOptions)
+  if (!(model instanceof Listing)) {
+    throw new Error('In the modalOptions, please provide an instance of ' +
+      'a Listing model.');
+  }
+
+  if (model.isNew()) {
+    const createModal = openModals.find(modal => modal.model.isNew());
+    if (createModal) {
+      createModal.bringToTop();
+      return createModal;
+    }
+  }
+
+  const editListingModal = new EditListing(modalOptions)
     .render()
     .open();
 
