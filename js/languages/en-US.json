@@ -923,6 +923,7 @@
     "btnTermsAndConditions": "Add Terms and Conditions",
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "Primary Photo",
+    "viewListingLink": "View Listing",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
       "shippingDestinations": "Destinations",

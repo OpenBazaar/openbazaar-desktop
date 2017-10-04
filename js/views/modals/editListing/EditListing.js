@@ -33,6 +33,12 @@ export default class extends BaseModal {
       throw new Error('Please provide a model.');
     }
 
+    if (options.onClickViewListing !== undefined &&
+      typeof options.onClickViewListing !== 'function') {
+      throw new Error('If providing an onClickViewListing options, it must be ' +
+        'provided as a function.');
+    }
+
     const opts = {
       removeOnClose: true,
       ...options,
@@ -51,6 +57,7 @@ export default class extends BaseModal {
         if (this.createMode && !this.model.isNew()) {
           this.createMode = false;
           this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
+          this.getCachedEl('.js-viewListingWrap').removeClass('hide');
         }
 
         const updatedData = this.model.toJSON();
@@ -171,6 +178,7 @@ export default class extends BaseModal {
       'click .js-addFirstVariant': 'onClickAddFirstVariant',
       'keyup .js-variantNameInput': 'onKeyUpVariantName',
       'click .js-scrollToVariantInventory': 'onClickScrollToVariantInventory',
+      'click .js-viewListing': 'onClickViewListing',
       ...super.events(),
     };
   }
@@ -181,6 +189,17 @@ export default class extends BaseModal {
 
   onClickReturn() {
     this.trigger('click-return', { view: this });
+  }
+
+  onClickViewListing() {
+    if (this.options.onClickViewListing) {
+      this.options.onClickViewListing.call(this);
+    } else {
+      const slug = this.model.get('slug');
+      if (slug) {
+        app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
+      }
+    }
   }
 
   onAddImage(image) {
@@ -972,6 +991,7 @@ export default class extends BaseModal {
 
     loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
+        ownPeerId: app.profile.id,
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
         returnText: this.options.returnText,

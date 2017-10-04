@@ -155,13 +155,6 @@ export default class extends BaseModal {
   }
 
   onClickEditListing() {
-    this.editModal = launchEditListingModal({
-      model: this.model,
-      returnText: app.polyglot.t('listingDetail.editListingReturnText'),
-    });
-
-    this.$el.addClass('hide');
-
     const onCloseEditModal = () => {
       this.close();
 
@@ -170,14 +163,23 @@ export default class extends BaseModal {
       }
     };
 
-    this.listenTo(this.editModal, 'close', onCloseEditModal);
-
     const onEditModalClickReturn = () => {
-      this.stopListening(null, null, onCloseEditModal);
-      this.editModal.remove();
-      this.$el.removeClass('hide');
+      this.editModal.confirmClose()
+        .done(() => {
+          this.stopListening(null, null, onCloseEditModal);
+          this.editModal.remove();
+          this.$el.removeClass('hide');
+        });
     };
 
+    this.editModal = launchEditListingModal({
+      model: this.model,
+      returnText: app.polyglot.t('listingDetail.editListingReturnText'),
+      onClickViewListing: onEditModalClickReturn,
+    });
+
+    this.$el.addClass('hide');
+    this.listenTo(this.editModal, 'close', onCloseEditModal);
     this.listenTo(this.editModal, 'click-return', onEditModalClickReturn);
   }
 

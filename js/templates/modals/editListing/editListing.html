@@ -32,14 +32,9 @@
   <div class="flexExpand posR tabContent">
     <div class="gutterVMd2 js-formSectionsContainer">
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3">
-        <div class="flexHCent posR">
+        <div class="flexHCent">
           <h2 class="h3 clrT js-listingHeading"><% print(ob.createMode ? ob.polyT('editListing.createListingLabel') : ob.polyT('editListing.editListingLabel')) %></h2>
-          <div style="position: absolute; left: 0; right: 0">
-            <div class="flexHRight flexVCent gutterH">
-              <a class="txU">View listing</a>
-              <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
-            </div>
-          </div>
+          <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
         <hr class="clrBr" />
 
@@ -47,7 +42,14 @@
           <form class="box padSmKids padStack">
             <div class="flexRow">
               <div class="col12">
-                <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
+                <div class="flexRow">
+                  <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
+                  <div class="flexExpand js-viewListingWrap <% if (ob.createMode) print('hide') %>">
+                    <div class="flexHRight">
+                      <a class="txU js-viewListing"><%= ob.polyT('editListing.viewListingLink') %></a>
+                    </div>
+                  </div>
+                </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
                 <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTitle') %></div>
@@ -257,7 +259,8 @@
       </section>
 
       <div class="contentBox padMd clrP clrBr clrSh3">
-        <div class="flexHRight">
+        <div class="flexHRight flexVCent gutterH">
+          <a class="txU js-viewListing js-viewListingWrap <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingLink') %></a>
           <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
       </div>

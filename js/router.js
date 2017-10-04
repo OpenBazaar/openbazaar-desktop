@@ -56,9 +56,6 @@ export default class ObRouter extends Router {
         this.navigate(route, { trigger: true });
       }
     });
-
-    console.log('moo');
-    window.moo = getOpenModals;
   }
 
   get maxCachedHandles() {
