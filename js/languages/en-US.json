@@ -26,6 +26,7 @@
     "label": "Bitcoin fee:",
     "btnChange": "change"
   },
+  "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -452,8 +453,11 @@
         "peersBtn": "Show Connected Peers",
         "resync": "Reload Transactions",
         "resyncHelper": "Synchronize your transactions if some are missing",
-        "resyncBtn": "Reload Transactions",
-        "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+        "reloadTransactionsWidget": {
+          "resyncBtn": "Reload Transactions",
+          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+          "syncUnavailable": "You can only reload transactions once per hour."
+        },
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
@@ -1182,7 +1186,13 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
-      "returnToFromOrder": "Return to sales"
+      "returnToFromOrder": "Return to sales",
+      "resyncPopInMessage": {
+        "link": "Resync",
+        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "message": "%{icon} %{text} %{link}",
+        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+      }
     },
     "purchases": {
       "heading": "Purchases",

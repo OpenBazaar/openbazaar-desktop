@@ -27,6 +27,7 @@ export default class extends BaseModel {
       dismissedStoreWelcome: false,
       backupWalletWarned: false,
       torPw: '',
+      lastBlockchainResync: '',
     };
   }
 

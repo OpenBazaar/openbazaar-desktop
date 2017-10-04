@@ -76,7 +76,7 @@ export default class extends BaseVw {
       this.listenTo(e.socket, 'message', this.onSocketMessage);
     });
 
-    this.listenTo(serverConnectEvents, 'disconnect', e => {
+    this.listenTo(serverConnectEvents, 'disconnected', e => {
       this.$connectedServerName.text(app.polyglot.t('pageNav.notConnectedMenuItem'))
         .removeClass('txB');
       this.torIndicatorOn = false;

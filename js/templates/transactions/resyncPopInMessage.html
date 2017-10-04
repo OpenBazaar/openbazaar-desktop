@@ -1,0 +1,23 @@
+<% if (ob.dismissable) { %>
+<a class="closeIcon tx2 js-dismiss">
+  <span class="ion-ios-close-empty clrBr clrP clrT clrBrT"></span>
+</a> 
+<% } %>
+<% if (ob.complete) { %>
+<p class="txUnl">
+  <%= ob.polyT('transactions.sales.resyncPopInMessage.completeText') %>
+</p>
+<% } else { %>
+<p class="txUnl">
+  <%
+    const linkText = ob.polyT('transactions.sales.resyncPopInMessage.link');
+    const spinnerClass = `spinnerTxt ${!ob.isSyncing ? 'hide' : ''}`;
+    const link = `<a class="clrTEm js-resync ${ob.isSyncing ? 'invisible posA' : ''}">${linkText}</a> ${ob.spinner({ className: spinnerClass })}`;
+    print(ob.polyT('transactions.sales.resyncPopInMessage.message', {
+      icon: '<span class="ion-alert-circled"></span>',
+      link,
+      text: `<b>${ob.polyT('transactions.sales.resyncPopInMessage.text')}</a>`,
+    }));
+  %>
+</p>
+<% } %>

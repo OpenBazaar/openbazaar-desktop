@@ -25,7 +25,10 @@ export default class extends baseVw {
       throw new Error('Please provide only one of messageText or messageHTML');
     }
 
-    this._state = { ...opts };
+    this._state = {
+      ...opts,
+      ...(opts.initialState || {}),
+    };
   }
 
   className() {

@@ -54,7 +54,7 @@ export default class extends baseVw {
       });
     });
 
-    this.listenTo(serverConnectEvents, 'disconnect', e => {
+    this.listenTo(serverConnectEvents, 'disconnected', e => {
       const curConn = getCurrentConnection();
 
       // If the disconnect was at the users request (ie.
@@ -79,7 +79,7 @@ export default class extends baseVw {
       // we'll do nothing. Otherwise, we'll show a "lost connection"
       // state for the disconnected connection.
       if (!(curConn && curConn.socket !== e.socket)) {
-        this.handleFailedConnection('disconnect', e);
+        this.handleFailedConnection('disconnected', e);
       }
     });
 
@@ -182,7 +182,7 @@ export default class extends baseVw {
           model: this.collection.defaultConfig,
         });
       }
-    } else if (eventName === 'disconnect') {
+    } else if (eventName === 'disconnected') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorConnectionLost', {
         serverName: e.server.get('name'),
         errorPreface: '<span class="txB">' +
