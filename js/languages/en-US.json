@@ -134,7 +134,7 @@
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
     "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
-    "myPage": "My page",
+    "myPage": "My Page",
     "customizePage": "Customize Page",
     "createListing": "Create Listing",
     "purchases": "Purchases",
@@ -1033,7 +1033,7 @@
     "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
     "providers": {
         "transactions": "Transactions",
-        "myPage": "My Page",
+        "myPage": "My Page"
     },
     "suggestions": "Suggestions:",
     "errors": {
