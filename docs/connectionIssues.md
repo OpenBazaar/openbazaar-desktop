@@ -44,9 +44,9 @@ When you install the OpenBazaar.crt file on your client machine, be sure to enab
 
 On OSX, this is done via the Always Trust button.
 
-On Windows, you should import the certificate using the [Microsoft Management Console.](http://www.thewindowsclub.com/manage-trusted-root-certificates-windows)
-
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/osxTrustCertificate.png)
+
+On Windows, you should import the certificate using the [Microsoft Management Console.](http://www.thewindowsclub.com/manage-trusted-root-certificates-windows)
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/windowsCertManager.png)
 
@@ -71,5 +71,5 @@ It is likely one of two things:
 
 ---
 
-If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. The last bullet point there is what most people have not done.
+If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. Not having done the last bullet point in that section is the stumbling block for most Linux users.
 
