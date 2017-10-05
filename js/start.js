@@ -786,3 +786,9 @@ ipcRenderer.on('close-attempt', (e) => {
 
 // initialize our listing delete handler
 listingDeleteHandler();
+if (remote.getGlobal('isBundledApp')()) {
+  console.log(`%c${app.polyglot.t('consoleWarning.heading')}`,
+    'color: red; font-weight: bold; font-size: 50px;');
+  console.log(`%c${app.polyglot.t('consoleWarning.line1')}`, 'color: red;');
+  console.log(`%c${app.polyglot.t('consoleWarning.line2')}`, 'color: blue;');
+}
