@@ -38,11 +38,9 @@ For your protection, the client will only connect to a remote server via SSL. Th
 
 To enable SSL on your remote server, follow this [doc](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/ssl.md).
 
-You may want to change "rootCA" to something else like "ob1CA" to avoid issues with duplicate certifications on your computer. Change all instances of "rootCA" in the instructions at the link above to a word or phrase, no spaces, of your choosing.
-
 You may also find this [guide to remote server security helpful.](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/security.md#basic-authentication)
 
-When you install the rootCA.crt file on your client machine, be sure to enable it as a trusted certificate.
+When you install the OpenBazaar.crt file on your client machine, be sure to enable it as a trusted certificate.
 
 On OSX, this is done via the Always Trust button.
 
