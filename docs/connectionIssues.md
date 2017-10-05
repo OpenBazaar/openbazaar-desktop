@@ -25,7 +25,8 @@ Check your JS console. If you are **not** seeing any red `WebSocket...` errors:
 - In the remote server, in your OpenBazaar server directory, you can enter the command `go run openbazaard.go setapicreds` and follow the instructions.
 - On Linux or Macintosh, you can use this command in your terminal: `echo -n yourpassword | sha256sum` (replace "yourpassword" with your actual password), and paste the hash into your config file.
 - You can use an online hex generator (there are many options, just search for "create hex-encoded SHA-256 hash"), and paste the hash into your config file.
-In the client, you should enter the plain text password in your server configuration. The client will send a hashed version to the server.
+
+In the client, you should enter the plain text password in your server configuration.
 
 ---
 
@@ -48,6 +49,8 @@ On OSX, this is done via the Always Trust button.
 On Windows, you should import the certificate using the [Microsoft Management Console.](http://www.thewindowsclub.com/manage-trusted-root-certificates-windows)
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/osxTrustCertificate.png)
+
+![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/windowsCertManager.png)
 
 ---
 
