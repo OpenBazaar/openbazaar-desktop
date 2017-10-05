@@ -21,10 +21,11 @@ Check your JS console. If you are **not** seeing any red `WebSocket...` errors:
  - SSLCert is the path to your certificate (see the next section for how to set up a certificate)
  - SSLKey is the path to your key
  - Username is your username
-5. The password in your config file, in the JSON-API sectin, must be the hex-encoded SHA-256 hash of your plain text password. There are several options for setting it:
+5. The password in your config file, in the JSON-API section, must be the hex-encoded SHA-256 hash of your plain text password. There are several options for setting it:
 - In the remote server, in your OpenBazaar server directory, you can enter the command `go run openbazaard.go setapicreds` and follow the instructions.
-- On Linux or Macintosh, you can use this command in your terminal: `echo -n yourpassword | sha256sum` (replace "yourpassword" with your actual password)
+- On Linux or Macintosh, you can use this command in your terminal: `echo -n yourpassword | sha256sum` (replace "yourpassword" with your actual password), and paste the hash into your config file.
 - You can use an online hex generator (there are many options, just search for "create hex-encoded SHA-256 hash"), and paste the hash into your config file.
+In the client, you should enter the plain text password in your server configuration. The client will send a hashed version to the server.
 
 ---
 
@@ -35,6 +36,8 @@ If you are seeing the following error in your JS console:
 For your protection, the client will only connect to a remote server via SSL. The above error indicates that your server is not set-up to run SSL.
 
 To enable SSL on your remote server, follow this [doc](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/ssl.md).
+
+You may want to change "rootCA" to something else like "ob1CA" to avoid issues with duplicate certifications on your computer. Change all instances of "rootCA" in the instructions at the link above to a word or phrase, no spaces, of your choosing.
 
 You may also find this [guide to remote server security helpful.](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/security.md#basic-authentication)
 
