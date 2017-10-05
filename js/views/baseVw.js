@@ -230,7 +230,8 @@ export default class baseVw extends View {
    *   the existing state. To replace the state use the replace option.
    * @param {object} options
    * @param {boolean} [options.renderOnChange = true] - If true, will re-render the view
-   *   if the resulting state changes.
+   *   if the resulting state changes. Setting this to false should be done very judiciously
+   *   since it will result in your view not being in sync with its state.
    * @param {boolean} [options.replace = false] - If true, will replace the entire state
    *   with the given state. Otherwise, the given state will be merged in.
    * @return {object} The create child view instance.
