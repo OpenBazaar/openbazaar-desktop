@@ -50,6 +50,8 @@ On Windows, you should import the certificate using the [Microsoft Management Co
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/windowsCertManager.png)
 
+For Linux, please follow step 2 in the next section.
+
 ---
 
 If you are seeing the following error in your JS console:
