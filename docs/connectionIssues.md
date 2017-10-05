@@ -45,3 +45,8 @@ It is likely one of two things:
     This will lead to a ncurses menu. In this menu, choose ask, and scroll through the long list of trusted CAs until you   find your ‘my_ca.crt’ certificate authority file. Mark it for inclusion with Space, then hit Tab then Enter to finish up.
 
   - Finally, execute `certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "My Homemade CA" -i my_ca.crt`.
+
+---
+
+If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. The last bullet point there is what most people have not done.
+
