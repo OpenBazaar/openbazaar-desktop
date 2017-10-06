@@ -1427,7 +1427,8 @@
         "viewOnMap": "View on map",
         "memo": "Memo",
         "addressNotes": "Delivery Notes",
-        "alternateContact": "Additional Contact Information"
+        "alternateContact": "Additional Contact Information",
+        "skuLabel": "SKU"
       }
     },
     "fulfillOrderTab": {

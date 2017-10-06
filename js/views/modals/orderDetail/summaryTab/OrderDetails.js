@@ -68,16 +68,18 @@ export default class extends BaseVw {
     let orderOptions;
     let options;
     let skus;
+    const listing = this.listing.toJSON();
 
     try {
       orderOptions = this.order.items[0].options;
-      options = this.vendorListings[0].item.options;
-      skus = this.vendorListings[0].item.skus;
+      options = listing.item.options;
+      skus = listing.item.skus;
     } catch (e) {
       return '';
     }
 
-    if (orderOptions.length && orderOptions.length === options.length) {
+    if (orderOptions && orderOptions.length && orderOptions.length === options.length) {
+      // variants are present
       const indexes = [];
 
       orderOptions.forEach(orderOpt => {
@@ -94,6 +96,9 @@ export default class extends BaseVw {
         const matchingSku = skus.find(sku => _.isEqual(sku.variantCombo, indexes));
         return matchingSku && matchingSku.productID || '';
       }
+    } else {
+      // no variants
+      return listing.item.productID || '';
     }
 
     return '';
@@ -114,6 +119,7 @@ export default class extends BaseVw {
         userCurrency: app.settings.get('localCurrency'),
         moment,
         isModerated: this.isModerated(),
+        sku: this.sku,
       }));
 
       this._$copiedToClipboard = null;
