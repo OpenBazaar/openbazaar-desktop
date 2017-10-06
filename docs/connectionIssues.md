@@ -15,17 +15,42 @@ Check your JS console. If you are **not** seeing any red `WebSocket...` errors:
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/setPortInUi.png)
 
+4. Check the JSON-API section of your config file. Make sure:
+ - Authenticated is true
+ - SSL is true (and you have SSL checked in the client's server configuration)
+ - SSLCert is the path to your certificate (see the next section for how to set up a certificate)
+ - SSLKey is the path to your key
+ - Username is your username
+5. The password in your config file, in the JSON-API section, must be the hex-encoded SHA-256 hash of your plain text password. There are several options for setting it:
+- In the remote server, in your OpenBazaar server directory, you can enter the command `go run openbazaard.go setapicreds` and follow the instructions.
+- On Linux or Macintosh, you can use this command in your terminal: `echo -n yourpassword | sha256sum` (replace "yourpassword" with your actual password), and paste the hash into your config file.
+- You can use an online hex generator (there are many options, just search for "create hex-encoded SHA-256 hash"), and paste the hash into your config file.
+
+In the client, you should enter the plain text password in your server configuration.
+
 ---
 
 If you are seeing the following error in your JS console:
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/sslProtocolError.png)
 
-For your protection, the client will only connect to a remote server via SSL. The above error indicates that your server is not set-up to run SSL. To enable SSL, follow this [doc](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/ssl.md).
+For your protection, the client will only connect to a remote server via SSL. The above error indicates that your server is not set-up to run SSL.
 
-When you install the rootCA.crt file on your client machine, be sure to enable it as a trusted certificate. On OSX, this is done via the Always Trust button.
+To enable SSL on your remote server, follow this [doc](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/ssl.md).
+
+You may also find this [guide to remote server security helpful.](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/security.md#basic-authentication)
+
+When you install the OpenBazaar.crt file on your client machine, be sure to enable it as a trusted certificate.
+
+On OSX, this is done via the Always Trust button.
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/osxTrustCertificate.png)
+
+On Windows, you should import the certificate using the [Microsoft Management Console.](http://www.thewindowsclub.com/manage-trusted-root-certificates-windows)
+
+![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/windowsCertManager.png)
+
+For Linux, please follow step 2 in the next section.
 
 ---
 
@@ -41,12 +66,12 @@ It is likely one of two things:
   - First, install libnss3-tools, which contains the certutil command: `sudo apt-get install libnss3-tools`
   - Copy the public certificate authority file to the certificate store: `sudo cp my_ca.crt /usr/share/ca-certificates/`
   - We’ll now recompile the SSL CA list, adding our certificate: `sudo dpkg-reconfigure ca-certificates`
-    
+
     This will lead to a ncurses menu. In this menu, choose ask, and scroll through the long list of trusted CAs until you   find your ‘my_ca.crt’ certificate authority file. Mark it for inclusion with Space, then hit Tab then Enter to finish up.
 
   - Finally, execute `certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n "My Homemade CA" -i my_ca.crt`.
 
 ---
 
-If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. The last bullet point there is what most people have not done.
+If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. Not having done the last bullet point in that section is the stumbling block for most Linux users.
 
