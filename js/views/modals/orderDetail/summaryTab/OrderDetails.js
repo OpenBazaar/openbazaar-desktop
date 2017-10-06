@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../../../app';
 import moment from 'moment';
@@ -57,6 +58,45 @@ export default class extends BaseVw {
 
   isModerated() {
     return !!this.model.get('buyerOrder').payment.moderator;
+  }
+
+  /**
+   * If the product purchased has a sku, it will be returned, otherwise an empty string
+   * will be returned.
+   */
+  get sku() {
+    let orderOptions;
+    let options;
+    let skus;
+
+    try {
+      orderOptions = this.order.items[0].options;
+      options = this.vendorListings[0].item.options;
+      skus = this.vendorListings[0].item.skus;
+    } catch (e) {
+      return '';
+    }
+
+    if (orderOptions.length && orderOptions.length === options.length) {
+      const indexes = [];
+
+      orderOptions.forEach(orderOpt => {
+        const matchingOpt = options.find(opt => opt.name === orderOpt.name);
+
+        if (matchingOpt && matchingOpt.variants && matchingOpt.variants.length) {
+          const matchingVariant =
+            matchingOpt.variants.find(variant => variant.name === orderOpt.value);
+          if (matchingVariant) indexes.push(matchingOpt.variants.indexOf(matchingVariant));
+        }
+      });
+
+      if (Array.isArray(skus)) {
+        const matchingSku = skus.find(sku => _.isEqual(sku.variantCombo, indexes));
+        return matchingSku && matchingSku.productID || '';
+      }
+    }
+
+    return '';
   }
 
   get $copiedToClipboard() {
