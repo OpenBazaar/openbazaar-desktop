@@ -137,8 +137,8 @@
     border-style: solid;
     position: absolute;
     left: 0;
+    top: 0.1em;
     margin: 0 0.15em;
-    @include center(false, true);
 
     &:hover {
       cursor: inherit;
