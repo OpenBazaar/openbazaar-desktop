@@ -205,6 +205,13 @@ function createWindow() {
       },
     },
     {
+      label: 'Toggle Developer Tools',
+      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+      click(item, focusedWindow) {
+        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+      },
+    },
+    {
       role: 'togglefullscreen',
     },
     {
@@ -219,16 +226,6 @@ function createWindow() {
       role: 'resetzoom',
     },
   ];
-
-  if (!isBundledApp()) {
-    viewSubmenu.splice(1, 0, {
-      label: 'Toggle Developer Tools',
-      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-      click(item, focusedWindow) {
-        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
-      },
-    });
-  }
 
   const template = [
     {
