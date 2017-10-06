@@ -122,6 +122,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-editListing': 'onClickEditListing',
+      'click .js-cloneListing': 'onClickCloneListing',
       'click .js-deleteListing': 'onClickDeleteListing',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
@@ -179,6 +180,12 @@ export default class extends BaseModal {
     };
 
     this.listenTo(this.editModal, 'click-return', onEditModalClickReturn);
+  }
+
+  onClickCloneListing() {
+    launchEditListingModal({
+      model: this.model.cloneListing(),
+    });
   }
 
   onClickDeleteListing() {

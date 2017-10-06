@@ -67,6 +67,21 @@ export default class extends BaseModel {
     return app.profile.id === this.guid;
   }
 
+  /**
+   * Returns a new instance of the listing with mostly identical attributes. Certain
+   * attributes like slug and hash will be stripped since they are not appropriate
+   * if this listing is being used as a template for a new listing. This differs from
+   * clone() which will maintain identical attributes.
+   */
+  cloneListing() {
+    const clone = this.clone();
+    clone.unset('slug');
+    clone.unset('hash');
+    clone.guid = this.guid;
+    clone.lastSyncedAttrs = {};
+    return clone;
+  }
+
   validate(attrs) {
     let errObj = {};
     const addError = (fieldName, error) => {

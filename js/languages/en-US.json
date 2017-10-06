@@ -800,6 +800,7 @@
   "listingDetail": {
     "edit": "Edit",
     "delete": "Delete",
+    "clone": "Clone",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed.",
