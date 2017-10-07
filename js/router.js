@@ -186,12 +186,8 @@ export default class ObRouter extends Router {
 
         if (isPromise(closeConfirmed)) {
           confirmPromises.push(closeConfirmed);
-        } else {
-          const deferred = $.Deferred();
-          if (closeConfirmed) {
-            deferred.resolve();
-            confirmPromises.push(deferred.promise());
-          }
+        } else if (closeConfirmed) {
+          confirmPromises.push($.Deferred().resolve().promise());
         }
       });
 

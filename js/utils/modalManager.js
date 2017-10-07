@@ -24,7 +24,8 @@ export function launchEditListingModal(modalOptions = {}) {
   }
 
   if (model.isNew()) {
-    const createModal = openModals.find(modal => modal.model.isNew());
+    const createModal = openModals
+      .find(modal => modal instanceof EditListing && modal.model.isNew());
     if (createModal) {
       createModal.bringToTop();
       return createModal;

@@ -43,12 +43,8 @@
             <div class="flexRow">
               <div class="col12">
                 <div class="flexRow">
-                  <label for="editListingTitle" class="required"><%= ob.polyT('editListing.title') %></label>
-                  <div class="flexExpand js-viewListingWrap <% if (ob.createMode) print('hide') %>">
-                    <div class="flexHRight">
-                      <a class="txU js-viewListing"><%= ob.polyT('editListing.viewListingLink') %></a>
-                    </div>
-                  </div>
+                  <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
+                  <a class="txU js-viewListing <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingLink') %></a>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">

@@ -57,7 +57,7 @@ export default class extends BaseModal {
         if (this.createMode && !this.model.isNew()) {
           this.createMode = false;
           this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
-          this.getCachedEl('.js-viewListingWrap').removeClass('hide');
+          this.getCachedEl('.js-viewListing').removeClass('hide');
         }
 
         const updatedData = this.model.toJSON();
