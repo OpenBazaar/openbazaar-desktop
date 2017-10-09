@@ -127,6 +127,7 @@
   input[type="radio"] + label:before,
   .fauxRadioBtn {
     content: '';
+    display: inline-block;
     box-sizing: border-box;
     width: 1em;
     height: 1em;
