@@ -1,7 +1,15 @@
 .settings {
   form {
     label {
-      line-height: 2rem;
+      line-height: 1.4em;
+      min-height: 1.4em;
+      padding: 0.3em 0px;
+    }
+
+    input[type="radio"] + label:before {
+      top: 0.2em;
+      margin-right: 0.4em;
+      margin-left: -0.25em;
     }
   }
 
@@ -210,7 +218,7 @@
 
           .btnTest {
             display: none;
-          }          
+          }
         }
       }
 
