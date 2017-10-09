@@ -5,7 +5,7 @@
     "unpublishedConfirmYes": "Oui",
     "unpublishedConfirmNo": "Non",
     "failedRetryTitle": "Une erreur s'est produite lors de la nouvelle publication.",
-    "statusPublishing": "Publication de mises à jour sur le réseau...",
+    "statusPublishing": "Publication des mises à jour sur le réseau...",
     "retryLink": "Réessayer",
     "statusPublishFailed": "La publication a échoué. %{retryLink}",
     "statusPublishComplete": "Publication achevée."
@@ -15,10 +15,10 @@
     "typeUnfollow": "unfollowing",
     "followErrorTitle": "Erreur de %{type} pour %{user}."
   },
-  "restartNow": "Redémarrez maintenant",
-  "restartLater": "Redémarrez plus tard",
+  "restartNow": "Redémarrer maintenant",
+  "restartLater": "Redémarrer plus tard",
   "langChangeRestartTitle": "Redémarrage requis pour le changement de langue",
-  "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des enregistrements ou des publications sont en cours, attendez qu'ils soient terminés.",
+  "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des enregistrements ou des publications sont en cours, attendez qu'ils se terminent.",
   "update": {
     "checking": "Vérification des mises à jour...",
     "error": "Une erreur s’est produite lors de la vérification des mises à jour. Erreur: %{error}",
@@ -101,7 +101,7 @@
       "disputeOpen": "%{disputerName} a ouvert un litige avec vous.",
       "disputeOpenMod": "%{disputerName} a ouvert un litige avec %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} a partagé son contrat pour le litige avec %{disputerName}.",
-      "disputeClose": "Le litige avec %{otherPartyName} a été clôturé.",
+      "disputeClose": "Le litige avec %{otherPartyName} a été résolu.",
       "disputeAccepted": "Le litige avec %{otherPartyName} a été finalisé.",
       "follow": "%{name} vous a suivi.",
       "moderatorAdd": "%{name} vous a ajouté comme modérateur.",
@@ -172,10 +172,10 @@
     "email": "E-mail",
     "noLocation": "Aucune localisation",
     "followTab": {
-      "noFollowers": "Personne ne suit %{name} encore",
-      "noFollowing": "%{name} ne suit encore personne",
+      "noFollowers": "Personne ne suit %{name} pour le moment",
+      "noFollowing": "%{name} ne suit personne pour le moment",
       "noOwnFollowers": "Vous n'avez pas encore d'abonnés",
-      "noOwnFollowing": "Vous ne suivez encore personne",
+      "noOwnFollowing": "Vous ne suivez personne pour le moment",
       "followersFetchError": "Impossible de récupérer la liste des abonnés.",
       "followingFetchError": "Impossible d'accéder à la liste des abonnés.",
       "btnRetry": "Réessayer"
@@ -210,7 +210,7 @@
       },
       "shippingFilter": {
         "heading": "Expédition",
-        "shipsTo": "Expédié à"
+        "shipsTo": "Expédie vers"
       },
       "categoryFilter": {
         "heading": "Catégorie",
@@ -270,11 +270,11 @@
     "bothVersions": "client %{cVer}, serveur %{sVer}",
     "client": "Client",
     "server": "Serveur",
-    "btnUpdateCheck": "Vérifier la mise à jour",
+    "btnUpdateCheck": "Vérifier les mises à jour",
     "donationsTab": {
       "linkText": "Dons",
       "sectionHeader": "Dons",
-      "btnCopyAddress": "Copiez l'adresse",
+      "btnCopyAddress": "Copier l'adresse",
       "btnOpenInWallet" : "Ouvrir dans le portefeuille",
       "bannerCountDonations": "%{donationCountFloor}+ Dons reçus!",
       "unableToOpenInWallet": {
@@ -497,14 +497,14 @@
         "fixedPrice": "Frais fixe",
         "percentagePlusFixed": "Frais fixe plus pourcentage"
       },
-      "pricePerDisputeHelper": "Le montant que vous faites payer pour examiner et clôturer un litige",
+      "pricePerDisputeHelper": "Le montant que vous faites payer pour examiner et résoudre un litige",
       "feeTypeAmount": "Prix par litige",
       "fixed": "Fixe",
       "percentage": "Pourcentage",
       "fixedPlusPercentage": "Fixe plus pourcentage",
-      "feeTypeHelper": "Le montant que vous faites payer pour examiner et clôturer un litige.",
+      "feeTypeHelper": "Le montant que vous faites payer pour examiner et résoudre un litige.",
       "description": "Description",
-      "descriptionHelper": "Ajoutez votre description (par exemple, quelle est votre stratégie pour examiner les cas ? Quel est votre temps de réponse prévu ? Quel est votre calendrier d'opération ? Pendant quelles heures êtes-vous disponible chaque jour ? Etc.)",
+      "descriptionHelper": "Ajoutez votre description (par exemple, quelle est votre stratégie pour examiner les litiges? Quel est votre temps de réponse prévu? Quel est votre calendrier d'opération ? Pendant quelles heures êtes-vous disponible chaque jour? Etc.)",
       "terms": "Conditions",
       "termsHelper": "Ajoutez vos conditions de service (par exemple, avez-vous des limitations légales ? Que se passe-t-il après avoir pris une décision ? Etc.)",
       "languages": "Langues",
@@ -765,7 +765,7 @@
     "freeShippingBanner": "Expédition gratuite",
     "listingDataChangedPopin": "Les détails de l'annonce ont changé %{refreshLink}",
     "listingDataChangedPopinRefresh": "Actualiser",
-    "viewPhotos": "Voir %{count} images",
+    "viewPhotos": "Voir %{count} image(s)",
     "type": "Type: %{type}",
     "condition": "État: %{condition}",
     "tags": "Mots-clés",
@@ -1026,7 +1026,7 @@
   },
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} sur %{total}</b>",
-    "displaying": "Affiche %{displayingCounts}"
+    "displaying": "Affiche %{displayingCounts} annonces"
   },
   "purchase": {
     "refreshPurchase": "Actualiser",
@@ -1157,27 +1157,27 @@
       "returnToFromOrder": "Revenir aux achats"
     },
     "cases": {
-      "heading": "Cas",
-      "countTransactions": "%{smart_count} cas |||| %{smart_count} cas",
+      "heading": "Litiges",
+      "countTransactions": "%{smart_count} litige |||| %{smart_count} litiges",
       "countTransactionsFound": "%{countTransactions} trouvées",
-      "noResults": "Aucun cas trouvé",
-      "returnToFromOrder": "Revenir aux cas"
+      "noResults": "Aucun litige trouvé",
+      "returnToFromOrder": "Revenir aux litiges"
     },
     "filters": {
       "purchasing": "Achat",
-      "ready": "Prêt à traiter",
-      "fulfilled": "Réalisée",
+      "ready": "Prêt(e) à traiter",
+      "fulfilled": "Réalisé(e)",
       "refunded": "Remboursé(e)",
       "disputeOpen": "Litige ouvert",
       "disputePending": "Litige en attente",
-      "disputeClosed": "Litige clôturé",
-      "completed": "Terminée"
+      "disputeClosed": "Litige résolu",
+      "completed": "Terminé(e)"
     },
     "sort": {
       "label": "Trier par",
       "unread": "Non lu",
-      "dateAsc": "Les plus récentes",
-      "dateDesc": "Les plus anciennes"
+      "dateAsc": "Les plus récent(e)s",
+      "dateDesc": "Les plus ancien(ne)s"
     },
     "placeholderSearch": "Rechercher par Commande #, Titre ou Vendeur",
     "resetFilters": "Réinitialiser les filtres",
@@ -1196,9 +1196,9 @@
         "AWAITING_PAYMENT": "En attente du paiement",
         "AWAITING_PICKUP": "En attente de la récupération",
         "AWAITING_FULFILLMENT": "En attente de réalisation",
-        "PARTIALLY_FULFILLED": "Partiellement réalisée",
-        "FULFILLED": "Réalisée",
-        "COMPLETED": "Terminée",
+        "PARTIALLY_FULFILLED": "Partiellement réalisé(e)",
+        "FULFILLED": "Réalisé(e)",
+        "COMPLETED": "Terminé(e)",
         "CANCELED": "Annulée",
         "DECLINED": "Refusée",
         "REFUNDED": "Remboursé(e)",
@@ -1293,7 +1293,7 @@
         }
       },
       "fulfilled": {
-        "heading": "Réalisée",
+        "heading": "Réalisé(e)",
         "shippedByLabel": "Commande expédiée par:",
         "trackingNumberLabel": "Numéro de suivi #:",
         "noteFromLabel": "Note de %{store}:",
@@ -1340,7 +1340,7 @@
         }
       },
       "disputeAcceptance": {
-        "heading": "Litige clôturé",
+        "heading": "Litige résolu",
         "genericBuyerAcceptedPayout": "L'acheteur accepte le paiement du litige",
         "genericVendorAcceptedPayout": "Le vendeur accepte le paiement du litige",
         "userAcceptedPayout": "%{name} accepte le paiement du litige",
@@ -1351,8 +1351,8 @@
         "progressBarStates": {
           "paid": "Payé(e)",
           "accepted": "Acceptée",
-          "fulfilled": "Réalisée",
-          "complete": "Terminée",
+          "fulfilled": "Réalisé(e)",
+          "complete": "Terminé(e)",
           "canceled": "Annulée",
           "declined": "Refusée",
           "refunded": "Remboursé(e)",

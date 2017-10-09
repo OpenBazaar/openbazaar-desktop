@@ -29,10 +29,14 @@ const languages = [
     name: 'Deutsch (German, Germany)',
     code: 'de-DE',
   },
-  // {
-  //   name: 'Dutch (Dutch, Netherlands)',
-  //   code: 'nl-NL',
-  // },
+  {
+    name: 'Dutch (Dutch, Netherlands)',
+    code: 'nl-NL',
+   },
+  {
+    name: 'English (English, Australia)',
+    code: 'en-AU',
+  },
   {
     name: 'Espa&ntilde;ol (Spanish)',
     code: 'es',

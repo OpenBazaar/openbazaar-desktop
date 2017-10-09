@@ -91,19 +91,19 @@
     "noResults": "لا يوجد تنبيهات.",
     "text": {
       "order": "%{buyerName} has purchased %{listingTitle}.",
-      "payment": "Your payment has been delivered.",
+      "payment": "تم تسليم دفعتك.",
       "orderConfirmation": "%{vendorName} قد قبل الطلب الخاص بك.",
       "declined": "%{vendorName} قد رفض الطلب الخاص بك.",
-      "canceled": "%{buyerName} has canceled their order.",
-      "refunded": "%{vendorName} has refunded your order.",
-      "fulfillment": "%{vendorName} has fulfilled your order.",
-      "orderComplete": "%{buyerName} has left feedback on their order.",
+      "canceled": "%{buyerName} قام بإلغاء طلبيته.",
+      "refunded": "%{vendorName} قام باسترجاع طلبك.",
+      "fulfillment": "%{vendorName} قام بإتمام طلبك.",
+      "orderComplete": "%{buyerName} قام بترك تعليق على طلبه. ",
       "disputeOpen": "%{disputerName} has opened a dispute with you.",
       "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
       "disputeClose": "تم إغلاق الخلاف مع %{otherPartyName}.",
       "disputeAccepted": "انتهى الخلاف مع %{otherPartyName}.",
-      "follow": "%{name} has followed you.",
+      "follow": "%{name} قام بمتابعتك.",
       "moderatorAdd": "قام %{name} بإضافتك كمشرف.",
       "moderatorRemove": "قام %{name} بإزالتك كمشرف."
     },
@@ -195,7 +195,7 @@
       "shipsToFilterAny": "( أي بلد )",
       "sortBy": "ترتيب حسب",
       "countListings": "%{smart_count} listing |||| %{smart_count} listings",
-      "countListingsFound": "%{countListings} found",
+      "countListingsFound": "تم ايجاد %{countListings}",
       "inactive": "متجرك غير نشط حاليا ومخفي عن الجمهور. %{link}",
       "inactiveLink": "تغيير",
       "listingDataChangedPopin": "تم تغيير بيانات القائمة. %{refreshLink}",
@@ -218,7 +218,7 @@
         "showLess": "أقل"
       },
       "toolTip": {
-        "contentView": "Toggle view"
+        "contentView": "ثبت الإظهار"
       }
     },
     "mainNav": {
@@ -230,7 +230,7 @@
   },
   "userShort": {
     "userLoading": "جار التحميل…",
-    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
+    "userNotFound": "لم يتم إيجاد معلومات %{guid} على الشبكة.",
     "modAddError": "حدث خطأ أثناء إضافة هذا المشرف.\n%{errMsg}",
     "modRemoveError": "حدث خطأ أثناء إزالة المشرف.\n%{errMsg}",
     "tipFollow": "تابع",
@@ -550,7 +550,7 @@
         "availableModsFailed": "لا يمكن استرداد المشرفين من الشبكة",
         "modAlreadyAdded": "لقد أضفت هذا المشرف من قبل.",
         "modIsBlank": "You must add a moderator ID or handle",
-        "modIsInvalid": "%{guid} is not a valid moderator.",
+        "modIsInvalid": "%{guid} ليش مشرف صالح.",
         "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
         "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
@@ -617,7 +617,7 @@
     },
     "confirmNavAwayWarning": {
       "title": "يتم الحفظ",
-      "message": "A save is in progress. If you leave the modal and the save fails, your form data will be lost. Are you sure you want to leave?"
+      "message": "عملية الحفظ جارية. إذا قمت بمغادرة الشكل وفشل حفظ البيانات, فستخسر بيانات الهيئة. هل أنت متأكد من أنك تود المغادرة؟"
     }
   },
   "connectionManagement": {
@@ -634,7 +634,7 @@
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "إلغاء",
-      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "محاولة الاتصال بـ %{serverName}. %{cancelConnAttempt}"
     },
     "configurations": {
       "tabName": "تكوينات",
@@ -647,7 +647,7 @@
       "statusConnected": "متصل",
       "deleteConfirm": {
         "heading": "هل أنت متأكد؟",
-        "body": "The server configuration will be deleted. This will not delete the actual server.",
+        "body": "سيتم حذف تكوين الخادم. لن يؤدي هذا إلى حذف الخادم الفعلي.",
         "btnCancel": "إلغاء",
         "btnDelete": "نعم، أحذف"
       }
@@ -670,7 +670,7 @@
       "placeholderPort": "المنفذ للخادم الخاص بك",
       "torLabel": "شبكة Tor",
       "useTor": "استخدم شبكة Tor",
-      "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting. Click Save to confirm your decision.",
+      "configureTorMessage": "تم اكتشاف شبكة Tor. إذا كنت ترغب في استخدام شبكة Tor يرجى اختيار \" استخدام Tor \" أدناه, وتحديد إعدادات وكيل \" Tor SOCKS \". اضغط حفظ لتأكيد قرارك.",
       "torNotAvailableMessage": "Tor was not detected. If you would like to proceed without Tor, uncheck \"Use Tor\" below and click Save. Otherwise start up Tor and then retry connecting.",
       "torProxyLabel": "خادم SOCKS5 لشبكة Tor",
       "torProxyPlaceholder": "127.0.0.1:9150\n",
@@ -722,7 +722,7 @@
     "transactions": {
       "header": "العمليات التجارية",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} to %{address}",
+        "outgoingText": "%{fiatBtcPairing} إلى %{address}",
         "incomingText": "تم استلام %{fiatBtcPairing}",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "عرض التفاصيل",
@@ -767,7 +767,7 @@
     "listingDataChangedPopinRefresh": "تحديث",
     "viewPhotos": "أظهر %{count} صور",
     "type": "النوع: %{type}",
-    "condition": "Condition: %{condition}",
+    "condition": "الحالة: %{condition}",
     "tags": "وسوم Tags",
     "noTags": "لم يتم ادخال وسوم Tag",
     "buyNow": "اشتري الآن",
@@ -775,7 +775,7 @@
     "noDescription": "لم يتم إدخال أي وصف",
     "reviews": "التعليقات",
     "attachments": "مرفقات",
-    "refundPolicy": "Refund Policy",
+    "refundPolicy": "سياسة الإرجاع",
     "noRefundPolicy": "لم يتم إدخال أي سياسة إرجاع",
     "termsAndConditions": "شروط الخدمة",
     "noTermsAndConditions": "لم يتم ادخال احكام وشروط",
@@ -821,13 +821,13 @@
     }
   },
   "listingDelete": {
-    "deletingListing": "Deleting listing %{listing}…",
-    "deletedListing": "Listing %{listing} deleted.",
-    "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
+    "deletingListing": "جاري حذف قائمة %{listing}.",
+    "deletedListing": "تم حذف القائمة %{listing}.",
+    "deletedFailedStatusMsg": "غير قادر على حذف قائمة %{listing}.",
     "deletedFailedDialogTitle": "تعذر حذف القائمة",
-    "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
-    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
-    "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
+    "deletedFailedDialogBody": "حدث خطأ أثناء حذف قائمة %{listing}.",
+    "deletedFailedDialogBodyWithReason": "حدث خطأ أثناء حذف قائمة %{listing}: %{reason}",
+    "deletedFailedListingNotFound": "لم يتم العثور على %{listing}. من المحتمل أنها حذفت.",
     "deleteFailedBtnOk": "نعم"
   },
   "editListing": {
@@ -961,7 +961,7 @@
       "tooManyPhotosTitle": "عدد كبير جدا من الصور",
       "tooManyPhotosBody": "تم منع تحميل بعض أو كل صورك لأنك تجاوزت الحد الأقصى من الكمية المسموح به.",
       "unableToLoadImages": "تعذر تحميل صورتك. |||| تعذر تحميل الصور.",
-      "uploadImageErrorTitle": "There was an error uploading your image. |||| There was an error uploading your images."
+      "uploadImageErrorTitle": "حدث خطأ أثناء تحميل الصورة. |||| حدث خطأ أثناء تحميل الصور."
     }
   },
   "search": {
@@ -976,12 +976,12 @@
     "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
     "noResults": "لا يوجد قوائم تطابق معايير البحث الذي تقوم به",
     "addTitle": "إضافة مزود بحث",
-    "addPlaceholder":"URL for the search provider",
-    "addTorPlaceholder": "Tor URL for the search provider (optional)",
+    "addPlaceholder":"رابط مزود البحث",
+    "addTorPlaceholder": "رابط Tor لمزود البحث (اختياري)",
     "addBtn": "اضافة",
     "cancel": "إلغاء",
     "deleteProviderBtn": "إزالة مزود بحث",
-    "makeDefaultBtn": "Set to default",
+    "makeDefaultBtn": "تعيين كافتراضي",
     "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
     "addQueryProviderBtn": "اضف مزود بحث",
     "chooseDefaultTitle": "اختر مزود البحص الافتراضي",
@@ -989,14 +989,14 @@
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
-      "connection": "You are no longer connected to your node. Reconnect to continue searching",
-      "addError": "This provider cannot be added. Check your data and try again.",
+      "connection": "أنت لم تعد متصلاً بالعقدة الخاصة بك. أعد الاتصال لإتمام البحث",
+      "addError": "لا يمكن إضافة هذا المزود. تأكد من بياناتك وحاول مرة أخرى.",
       "locked": "لايمكن حذف مزودات البحث الافتراضية",
       "resetToOriginal": "رابط مزود البحث الخاص بك غير صالح. سنستخدم المزود الافتراضي بدلاً عنه."
     }
   },
   "onboarding": {
-    "pageOfPage": "%{startPage} of %{totalPages}",
+    "pageOfPage": "%{startPage} من %{totalPages}",
     "profileFailedSaveTitle": "تعذر حفظ ملفك الشخصي",
     "settingsFailedSaveTitle": "تعذر حفظ الإعدادات",
     "settingsFailedSaveAvatar": "تعذر حفظ صورتك الرمزية",
@@ -1021,11 +1021,11 @@
     },
     "tosScreen": {
       "heading": "شروط الخدمة",
-      "tos": "OpenBazaar is a network for trading goods and services directly between people - using Bitcoin - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
+      "tos": "أوبن بازار هي شبكة لتجارة السلع والخدمات مباشرة بين الناس - باستخدام بيتكوين - من دون أي منظمة مركزية تتحكم بالمنصة. وهذا يعني أنك مسؤول عن النشاط الخاص بك على الشبكة.  مستخدمين أوبن بازار ليسو مجهولون بالحالة الافتراضية, يتم تشفير معظم الاتصالات بين الأطراف، ولكن عناوين الشبكة عامة ويمكن ربطها بالنشاط على الشبكة. يمكن للأطراف الخبيثة استخدام هذه المعلومات ضدك ؛ وحماية خصوصيتك هي مسؤولية خاصة بك, يجب على مستخدمين أوبن بازار التقيد بالقوانين المعمول بها محليا وكذلك مراجعة ضمائرهم.  مطورين أوبن بازار لا تتغاضى - وغير مسؤولة عن - أي استخدام غير مشروع للمنصة. مجتمع مطورين أوبن بازار عمل بجد لتقديم منصة مجانية للتجارة إلى العالم. ولكن كما هو الحال مع أي برنامج، سيتم العثور على أخطاء.  المطورون ليسو مسؤولون عن أي خسارة نقدية مرتبطة بمشاكل في البرنامج.  باستخدامك برنامج أوبن بازار أنت مسؤول عن النشاطات الخاصة بك على شبكة أوبن بازار."
     }
   },
   "pageControls": {
-    "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
+    "displayingCounts": "%{start}-%{end} من %{total}",
     "displaying": "Displaying %{displayingCounts}"
   },
   "purchase": {
@@ -1049,10 +1049,10 @@
     "couponCode": "رمز القسيمة",
     "couponCodePlaceholder": "أدخل رمز",
     "applyCode": "تطبيق",
-    "code": "\"%{code}\" applied to order",
+    "code": "تم تعيين \"%{code}\" للطلب",
     "codeErrors": {
-      "invalid": "\"%{code}\" is not a valid code",
-      "duplicate": "You can only add \"%{code}\" once",
+      "invalid": "\"%{code}\" ليس رمز صالح",
+      "duplicate": "يمكنك إضافة \"%{code}\" مرة واحدة فقط",
       "excessive": "لا يمكنك تطبيق خصومات يبلغ مجموعها 100٪ أو أكثر.",
       "blank": "يجب إدخال رمز."
     },
@@ -1124,7 +1124,7 @@
       "shipping": "الشحن",
       "options": "خيارات",
       "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "total": "مجموع (%{quantity})"
     },
     "errors": {
       "moderatorsTitle": "إخفاق في تحميل بيانات الإشراف",
@@ -1143,7 +1143,7 @@
     "sales": {
       "heading": "مبيعات",
       "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "تم ايجاد %{countTransactions}",
       "unableToFetch": "تعذر الحصول على مبيعاتك.",
       "noResults": "لم يتم العثور على مبيعات",
       "returnToFromOrder": "العودة إلى المبيعات"
@@ -1151,7 +1151,7 @@
     "purchases": {
       "heading": "المشتريات",
       "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "تم ايجاد %{countTransactions}",
       "unableToFetch": "تعذر الحصول على مشترياتك.",
       "noResults": "لم يتم العثور على عمليات شراء",
       "returnToFromOrder": "الرجوع إلى عمليات الشراء"
@@ -1159,7 +1159,7 @@
     "cases": {
       "heading": "الحالات",
       "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "تم ايجاد %{countTransactions}",
       "noResults": "لم يتم العثور على أية حالات",
       "returnToFromOrder": "العودة إلى الحالات"
     },
@@ -1167,7 +1167,7 @@
       "purchasing": "شراء",
       "ready": "جاهز للمعالجة",
       "fulfilled": "استيفاء",
-      "refunded": "Refunded",
+      "refunded": "مسترجع",
       "disputeOpen": "الجدال مفتوح",
       "disputePending": "الجدال في انتظار المراجعة",
       "disputeClosed": "تم إغلاق الجدال",
@@ -1193,15 +1193,15 @@
       },
       "status": {
         "PENDING": "قيد الانتظار",
-        "AWAITING_PAYMENT": "Awaiting Payment",
-        "AWAITING_PICKUP": "Awaiting Pickup",
+        "AWAITING_PAYMENT": "انتظار الدفع",
+        "AWAITING_PICKUP": "انتظار الاستلام",
         "AWAITING_FULFILLMENT": "تنتظر الانجاز",
         "PARTIALLY_FULFILLED": "تم الانجاز جزئيا",
         "FULFILLED": "استيفاء",
         "COMPLETED": "اكتمال",
         "CANCELED": "ملغاة",
         "DECLINED": "رفض",
-        "REFUNDED": "Refunded",
+        "REFUNDED": "مسترجع",
         "DISPUTED": "Disputed",
         "DECIDED": "مقرر",
         "RESOLVED": "Resolved",
@@ -1225,7 +1225,7 @@
       "roleBuyer": "مشتر",
       "roleModerator": "مشرف",
       "timeLineAndRole": "%{timeFromNow} (%{role})",
-      "isTyping": "%{userRole} is typing...",
+      "isTyping": "%{userRole} جاري الكتابة...",
       "areTyping": "%{userRole1} and %{userRole2} are typing...",
       "enterMessagePlaceholder": "أدخل رسالة ...",
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
@@ -1267,10 +1267,10 @@
           "btnCancel": "إلغاء",
           "btnConfirm": "نعم, أرفض"
         },
-        "viewPaymentDetails": "View payment details %{icon}"
+        "viewPaymentDetails": "إظهار تفاصيل الدفعة %{icon}"
       },
       "refund": {
-        "heading": "Refunded",
+        "heading": "مسترجع",
         "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
         "refunded": "%{fiatBtcPairing} refunded",
         "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
@@ -1324,11 +1324,11 @@
       "disputePayout": {
         "heading": "Dispute Payout",
         "buyerHeading": "مشتر",
-        "buyerHeadingWithName": "%{name} (buyer)",
+        "buyerHeadingWithName": "%{name} (الشاري)",
         "vendorHeading": "بائع",
-        "vendorHeadingWithName": "%{name} (vendor)",
+        "vendorHeadingWithName": "%{name} (البائع)",
         "moderatorHeading": "مشرف",
-        "moderatorHeadingWithName": "%{name} (moderator)",
+        "moderatorHeadingWithName": "%{name} (مشرف)",
         "noteFromHeading": "ملاحظة من المشرف:",
         "noteFromHeadingWithName": "ملاحظة من %{name}:",
         "btnAcceptPayout": "Accept Payout",
@@ -1344,8 +1344,8 @@
         "genericBuyerAcceptedPayout": "The buyer accepted the dispute payout",
         "genericVendorAcceptedPayout": "The vendor accepted the dispute payout",
         "userAcceptedPayout": "%{name} accepted the dispute payout",
-        "orderCompleteWhenYouReview": "The order will be complete when you leave a review.",
-        "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review."
+        "orderCompleteWhenYouReview": "سيتم اتمام الطلب عندما تترك تعليق أو رأي.",
+        "orderCompleteWhenBuyerReviews": "سيتم اتمام الطلب عندما يترك الشاري تعليق أو رأي."
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1355,7 +1355,7 @@
           "complete": "منجز",
           "canceled": "ملغاة",
           "declined": "رفض",
-          "refunded": "Refunded",
+          "refunded": "مسترجع",
           "decided": "مقرر",
           "resolved": "Resolved",
           "disputed": "Disputed"
@@ -1370,13 +1370,13 @@
         "viewOnMap": "اظهر على الخريطة",
         "memo": "Memo",
         "addressNotes": "Delivery Notes",
-        "alternateContact": "Additional Contact Information"
+        "alternateContact": "معلومات اتصال إضافية"
       }
     },
     "fulfillOrderTab": {
       "heading": "الوفاء بالطلبات",
       "shippingCarrierLabel": "شركة الشحن",
-      "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
+      "shippingCarrierPlaceholder": "UPS, FedEx, DHL, إلخ",
       "trackingLabel": "Tracking #",
       "trackingPlaceholder": "اختياري",
       "fileUrlLabel": "رابط ملف",
@@ -1560,7 +1560,7 @@
   },
   "spendModelErrors": {
     "provideAddress": "يرجى وضع عنوان.",
-    "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
+    "invalidAddress": "العنوان المقدم لايبدو أنه عنوان bitcoin صالح.",
     "provideAmountNumber": "يرجي وضع الكمية كرقم",
     "amountGreaterThanZero": "الكمية يجب أن تكون أكبر من صفر",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
@@ -1583,9 +1583,9 @@
     "userNotFoundMsg": "%{user} was not found on the network. Make sure you have the correct handle or peerID.",
     "listingNotFoundTitle": "لايمكن العثور على هذه القائمة",
     "listingNotFoundLink": "انقر هنا لتصفح قوائم أخرى في هذا المتجر.",
-    "listingNotFoundMsg": "%{listing} could not be found.",
+    "listingNotFoundMsg": "لايمكن العثور على %{listing}.",
     "pageNotFoundTitle": "تعذر العثور على هذه الصفحة",
-    "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
+    "pageNotFoundMsg": "راجع حقل العنوان لتتأكد أن الرابط صحيح.",
     "genericErrorTitle": "كان هناك خطأ",
     "listingErrorTitle": "تعذر جلب القائمة",
     "listingErrorMsg": "حدث خطأ أثناء جلب القائمة %{listing}"
@@ -1730,7 +1730,7 @@
     "GUYANA": "غيانا",
     "HAITI": "هايتي",
     "HEARD_ISLAND": "جزيرة هيرد، وجزر ماكدونالد",
-    "HOLY_SEE": "Holy See (The)",
+    "HOLY_SEE": "الكرسي الباباوي",
     "HONDURAS": "هندوراس",
     "HONG_KONG": "هونغ كونغ",
     "HUNGARY": "هنغاريا",
@@ -1833,7 +1833,7 @@
     "SIERRA_LEONE": "سيراليون",
     "SINGAPORE": "سنغافورة",
     "SINT_MAARTEN": "سانت مارتن (الجزء الهولندي)",
-    "SUCRE": "Sistema Unitario de Compensacion Regional de Pagos 'Sucre'",
+    "SUCRE": "سورسي Surce عملة النظام الموحد للتعويض الإقليمي",
     "SLOVAKIA": "سلوفاكيا",
     "SLOVENIA": "سلوفينيا",
     "SOLOMON_ISLANDS": "جزر سليمان",
@@ -1889,15 +1889,15 @@
   "currencies": {
     "AED": "درهم الامارات العربية المتحدة",
     "AFN": "الأفغاني",
-    "ALL": "Lek",
+    "ALL": "ليك",
     "AMD": "درام أرميني",
     "ANG": "هولندا أنتيليان غيلدر",
-    "AOA": "Kwanza",
+    "AOA": "كوانزا",
     "ARS": "البيزو الأرجنتيني",
     "AUD": "الدولار الاسترالي",
     "AWG": "فلورين أروبان",
     "AZN": "مانت ازربيجاني",
-    "BAM": "Convertible Mark",
+    "BAM": "مارك بوسني",
     "BBD": "دولار باربادوس",
     "BDT": "تاكا",
     "BGN": "ليف بلغاري",
@@ -1910,7 +1910,7 @@
     "BSD": "الدولار البهامي",
     "BTC": "بيتكوين",
     "BTN": "بوتاني",
-    "BWP": "Pula",
+    "BWP": "بولا",
     "BYR": "روبل بيلاروسي",
     "BZD": "دولار بليز",
     "CAD": "الدولار الكندي",
@@ -1934,7 +1934,7 @@
     "FJD": "دولار فيجي",
     "FKP": "جنيه جزر فوكلاند",
     "GBP": "جنيه إسترليني",
-    "GEL": "Lari",
+    "GEL": "لاري جورجيا",
     "GHS": "سيدي غاني",
     "GIP": "جنيه جبل طارق",
     "GMD": "دالاسي غامبي",
@@ -1956,15 +1956,15 @@
     "JOD": "الدينار الأردني",
     "JPY": "ين",
     "KES": "الشيلينغ الكيني",
-    "KGS": "Som",
+    "KGS": "سوم",
     "KHR": "رييل",
     "KMF": "فرنك جزر القمر",
     "KPW": "يوان كوريا الشمالية",
-    "KRW": "Won",
+    "KRW": "وان",
     "KWD": "الدينار الكويتي",
     "KYD": "دولار جزر كايمان",
-    "KZT": "Tenge",
-    "LAK": "Kip",
+    "KZT": "تينغا كازخستان",
+    "LAK": "كيب",
     "LBP": "الليرة اللبنانية",
     "LKR": "روبية سريلانكا",
     "LRD": "دولار الليبيري",
@@ -1993,7 +1993,7 @@
     "OMR": "الريال العماني",
     "PAB": "بالبوا",
     "PEN": "نويفو سول",
-    "PGK": "Kina",
+    "PGK": "كينا",
     "PHP": "البيزو الفلبيني",
     "PKR": "روبي باكستاني",
     "PLN": "زلوتي",
@@ -2035,11 +2035,11 @@
     "VEF": "بوليفار",
     "VND": "دونغ",
     "VUV": "فاتو",
-    "WST": "Tala",
+    "WST": "تالا ساموا",
     "XAF": "فرنك افريقي",
     "XCD": "دولار شرق الكاريبي",
     "XOF": "فرنك بروندى",
-    "XPF": "CFP Franc",
+    "XPF": "فرنك CFP",
     "XSU": "سورسي عملة الأكوادور",
     "YER": "الريال اليمني",
     "ZAR": "راند",

@@ -1,7 +1,7 @@
 {
   "publish": {
     "unpublishedConfirmTitle": "Contenido inédito",
-    "unpublishedConfirmBody": "Tiene contenido sin publicar. Si cierra ahora, la última data no estará disponible para las demás personas. ¿Está seguro que quiere cerrarla?",
+    "unpublishedConfirmBody": "Tiene contenido sin publicar. Si cierra ahora, sus últimos datos no estaran disponibles para las demás personas. ¿Está seguro que quiere cerrarla?",
     "unpublishedConfirmYes": "Sí",
     "unpublishedConfirmNo": "No",
     "failedRetryTitle": "Hubo un error al reintentar publicar.",
@@ -571,10 +571,10 @@
     "nsfwContent": "Contenido Para Adultos (NSFW, adult, 18+, etc)",
     "avatar": "Avatar",
     "loadAvatar": "Seleccionar Foto",
-    "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
+    "loadAvatarHelp": "se recomienda %{minWidth}px por %{minHeight}px o mayor",
     "header": "Foto de portada",
     "loadHeader": "Seleccionar Foto",
-    "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
+    "loadHeaderHelp": "se recomienda %{minWidth}px por %{minHeight}px o mayor",
     "socialSection": "Social",
     "website": "Sitio Web",
     "email": "Correo electrónico",
@@ -603,7 +603,7 @@
       "state": "Estado/Provincia/Región",
       "country": "País",
       "postalCode": "Código Postal",
-      "notes": "Delivery Notes"
+      "notes": "Notas de Entrega"
     },
     "statusSaving": "Guardando configuración...",
     "statusSaveFailed": "Fallo al guardar la configuración.",
@@ -625,10 +625,10 @@
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "¿Necesitas ayuda?",
-      "viewLocalServerDebugLogLink": "Debug Log",
-      "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
-      "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
-      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "viewLocalServerDebugLogLink": "Registro de depuración",
+      "errorConnectionLost": "%{errorPreface} Se ah perdido la conexión a %{serverName}. %{links}",
+      "errorUnableToReachServer": "%{errorPreface} Falla la conexión a %{serverName}. El servidor podría no ser accesible. %{links}",
+      "errorAuthFailed": "%{errorPreface} Error al conectarse a %{serverName}. El usuario  y/o la password son incorrectos. %{links}",
       "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The auth cookie is invalid. %{links}",
       "editLink": "editar",
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
@@ -637,7 +637,7 @@
       "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
     },
     "configurations": {
-      "tabName": "Configurations",
+      "tabName": "Configuraciones",
       "heading": "Configuraciones de Servidor",
       "btnNew": "Nuevo",
       "btnCancel": "Cancelar",
@@ -677,12 +677,12 @@
       "torPwLabel": "Contraseña de Tor",
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Advertencia:",
-      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode."
+      "torServerWarning": "%{warning} Para ser anónimo, es critico que también arranque el servidor en modo Tor."
     }
   },
   "torExternalLinkWarning": {
     "heading": "Atención",
-    "body": "You're attempting to visit an external link in your default web browser. If your default web browser is not set to Tor, you may be exposing your IP address.",
+    "body": "Ud. esta intentando visitar un link externo en su navegador por defecto. Si su navegador por defecto no es Tor, podría estar exponiendo su dirección IP.",
     "areYouSureToProceed": "¿Está seguro de que quiere proceder?",
     "doNotShowAgain": "No volver a mostrar esta advertencia",
     "btnCancel": "Cancelar",
@@ -713,8 +713,8 @@
       "sendPaymentFailDialogTitle": "No se puede enviar el pago",
       "sendConfirm": {
         "heading": "¿Estás seguro?",
-        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Send %{fiatBtcPairing}, plus a network fee",
+        "body": "Un cargo por la red sera incluido, actulmente estimado en %{fiatBtcPairing}",
+        "bodyFeeUnavailable": "Enviar %{fiatBtcPairing}, adicional a la tarifa de red",
         "btnCancel": "Cancelar",
         "btnConfirmSend": "Sí, Enviar"
       }
@@ -804,7 +804,7 @@
       "fetchRatings": "No se pudieron cargar las puntuaciones.",
       "fetchReviews": "Ocurrió un problema cargando las reviews. %{error}",
       "loadReview": "La review %{id} falló debido a %{error}",
-      "noPurchaseTitle": "This Listing Can't Be Purchased",
+      "noPurchaseTitle": "Esta publicación no puede ser comprada",
       "zeroPriceMsg": "No puede realizar una compra con un precio de cero o menos."
     }
   },
@@ -821,11 +821,11 @@
     }
   },
   "listingDelete": {
-    "deletingListing": "Deleting listing %{listing}…",
-    "deletedListing": "Listing %{listing} deleted.",
+    "deletingListing": "Borrando publicación %{listing}…",
+    "deletedListing": "Listado %{listing} borrado.",
     "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
-    "deletedFailedDialogTitle": "Unable to delete listing",
-    "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
+    "deletedFailedDialogTitle": "No es posible borrar publicación",
+    "deletedFailedDialogBody": "Hubo un error l borrar su listado %{listing}.",
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
     "deleteFailedBtnOk": "Ok"
@@ -839,32 +839,32 @@
       "attachments": "Adjuntos",
       "shipping": "Envío",
       "tags": "Etiquetas",
-      "tagsDetailed": "Tags (For getting your listing discovered)",
+      "tagsDetailed": "Etiquetas (para que tu listado sea encontrado)",
       "category": "Categoría",
-      "categoryDetailed": "Category (For organizing your store)",
+      "categoryDetailed": "Categoría (para organizar tu tienda)",
       "variants": "Variantes",
-      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
+      "variantsDetailed": "Variantes (Añade tamaños, colores, materiales, etc. adicionales)",
       "inventory": "Inventario",
       "returnPolicy": "Política de devoluciones",
       "termsAndConditions": "Términos y Condiciones",
       "coupons": "Cupones",
-      "inventoryManagement": "Inventory Management",
+      "inventoryManagement": "Gestión de Inventorio",
       "variantInventory": "Variant Inventory"
     },
-    "placeholderTitle": "Enter your title…",
-    "placeholderSKU": "SKU, Part Number, ID, etc",
-    "placeholderDescription": "Describe your listing as best as you can… Include inline photos. Link to Youtube videos. etc",
+    "placeholderTitle": "Introduzca un título...",
+    "placeholderSKU": "SKU, Numero de parte, ID, etc",
+    "placeholderDescription": "Describa su listado lo mejor que pueda... Incluya fotos. Enlaces a videos de Youtube, etc.",
     "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
-    "helperTitle": "Something descriptive that clearly explains what you're selling",
+    "helperTitle": "Algo descriptivo que claramente explique lo que esta vendiendo",
     "helperType": "Elige entre 3 tipos",
-    "helperShipping": "Ship wherever you'd like!",
+    "helperShipping": "Envío a donde quiera!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
-    "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
-    "helperCondition": "The overall condition of your listing",
+    "helperPrice": "Pongo su precio en Dolares, Yuan, Bitcoin, lo que sea",
+    "helperCondition": "La condición general de tu publicación",
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "Add many tags. Enter a tag name, press enter, repeat.",
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
@@ -1062,19 +1062,19 @@
     "pay": "PAGAR >",
     "payNote": "Hacer click en pagar le llevará al paso final.",
     "pending": "Pendiente...",
-    "pendingNote": "Please fund the order to complete your transaction.",
+    "pendingNote": "Por favor pague la orden para completar su transaccion",
     "close": "cerrar",
-    "closeNote": "Your payment has been sent to the vendor.",
-    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
+    "closeNote": "Tu pago ha sido enviado al vendedor.",
+    "moderatorNote": "*El pago de servicio de moderador solamente se aplica si la disputa esta abierta.",
     "quantity": "Cantidad",
-    "useShapeShift": "Or use ShapeShift in the next step",
+    "useShapeShift": "O use ShapeShift en el siguiente paso",
     "moderatedPayment": "Pago Moderado",
-    "noValidModerators": "No valid moderators are available for this order.",
+    "noValidModerators": "No hay moderadores validos disponibles para esta orden.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Eligir este moderador",
     "confirmPayment": {
-      "title": "Everything look good?",
-      "msg": "If yes, please proceed to the final step.",
+      "title": "Todo luce bien?",
+      "msg": "Si es si, por favor proceda al paso final.",
       "confirm": "Sí",
       "cancel": "Cancelar"
     },
@@ -1086,15 +1086,15 @@
       "payFromWallet": "Pagar de billetera",
       "payWithAlt": "Pagar con altcoins",
       "note1": "If you need help getting started with Bitcoin, please read %{link}.",
-      "note1Link": "Need Bitcoin? on OpenBazaar.org",
+      "note1Link": "Necesitas Bitcoin? en OpenBazaar.org",
       "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
       "note3": "*The moderator service fee only applies if a dispute is opened.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "confirmWallet": {
         "title": "¿Estás seguro?",
         "payMsg": "Pay %{fiatBtcPairing}* to the vendor.",
-        "payMsgNotePlusFee": "*The network fee will be added on top of the listed amount",
-        "payMsgNoteFeeIncluded": "*Includes a network fee, currently estimated at %{amount}",
+        "payMsgNotePlusFee": "*La tasa de red sera agregada al monto de la publicación",
+        "payMsgNoteFeeIncluded": "*Incluye la tasa de red, estimada actualmente a %{amount}",
         "cancel": "Cancelar",
         "confirm": "Sí, Pagar",
         "fundsLow": "Your wallet doesn't have enough Bitcoin. Add funds to complete this purchase.",
@@ -1102,16 +1102,16 @@
         "insufficientFundsMsg1": "Your wallet currently holds %{funds}.",
         "insufficientFundsMsg2": "Add %{fundGap}* to your wallet, or pay with an external wallet to continue.",
         "insufficientFundsNote": "*%{amount} plus fee, currently estimated at %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Be sure to also add in the network fee"
+        "insufficientFundsNoteFeeUnavailable": "*Asegúrate también de agregar la tasa de red"
       }
     },
     "completeSection": {
       "paymentSent": "Su pago fue enviado!",
       "purchases": "Compras",
       "progressMessage": "Thank you for your purchase! If you’d like to check the status of your order, view your %{link} page.",
-      "estimatedProcessing": "Estimated Processing Time: %{time}",
+      "estimatedProcessing": "Tiempo de Procesamiento Estimado: %{time}",
       "noData": "No especificado",
-      "vendorMessage": "Message for Vendor (optional)",
+      "vendorMessage": "Mensaje al vendedor (opcional)",
       "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
       "vendorMessageLink": "discussion section of the order details",
       "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
@@ -1130,9 +1130,9 @@
       "moderatorsTitle": "Moderator Data Failted to Load",
       "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
-      "ownIDTitle": "You Can't Purchase Your Own Listings",
+      "ownIDTitle": "No Puedes Comprar Tu Propia Publicación",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
-      "paymentFailed": "The Payment Could Not Be Completed",
+      "paymentFailed": "El pago no pudo ser completado",
       "zeroPrice": "You cannot purchase a listing with a total price of zero."
     }
   },
@@ -1143,44 +1143,44 @@
     "sales": {
       "heading": "Ventas",
       "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "%{countTransactions} encontrados",
       "unableToFetch": "Unable to obtain your sales.",
-      "noResults": "No sales found",
-      "returnToFromOrder": "Return to sales"
+      "noResults": "No se encontró ventas",
+      "returnToFromOrder": "Volver a ventas"
     },
     "purchases": {
       "heading": "Compras",
       "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "%{countTransactions} encontrados",
       "unableToFetch": "Unable to obtain your purchases.",
-      "noResults": "No purchases found",
-      "returnToFromOrder": "Return to purchases"
+      "noResults": "No se encontró compras",
+      "returnToFromOrder": "Volver a compras"
     },
     "cases": {
       "heading": "Casos",
       "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
-      "countTransactionsFound": "%{countTransactions} found",
-      "noResults": "No cases found",
-      "returnToFromOrder": "Return to cases"
+      "countTransactionsFound": "%{countTransactions} encontrados",
+      "noResults": "Casos no encontrados",
+      "returnToFromOrder": "Volver a casos"
     },
     "filters": {
-      "purchasing": "Purchasing",
-      "ready": "Ready To Process",
+      "purchasing": "Comprando",
+      "ready": "Listo Para Procesar",
       "fulfilled": "Fulfilled",
       "refunded": "Fondos Devueltos",
-      "disputeOpen": "Dispute Open",
-      "disputePending": "Dispute Pending",
+      "disputeOpen": "Disputa Abierta",
+      "disputePending": "Disputa Pendiente",
       "disputeClosed": "Disputa Cerrada",
       "completed": "Completadas"
     },
     "sort": {
       "label": "Categoriza por...",
       "unread": "No leídas",
-      "dateAsc": "Newest",
-      "dateDesc": "Oldest"
+      "dateAsc": "Mas nuevo",
+      "dateDesc": "Mas antíguo"
     },
     "placeholderSearch": "Search by Order #, Title or Vendor",
-    "resetFilters": "Reset filters",
+    "resetFilters": "Reiniciar filtros",
     "transactionsTable": {
       "headers": {
         "orderId": "ID de la Orden",
@@ -1192,20 +1192,20 @@
         "status": "Estado"
       },
       "status": {
-        "PENDING": "Pending",
-        "AWAITING_PAYMENT": "Awaiting Payment",
+        "PENDING": "Pendiente",
+        "AWAITING_PAYMENT": "Esperando Pago",
         "AWAITING_PICKUP": "Awaiting Pickup",
         "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
         "PARTIALLY_FULFILLED": "Partially Fulfilled",
         "FULFILLED": "Fulfilled",
         "COMPLETED": "Completada",
         "CANCELED": "Cancelada",
-        "DECLINED": "Declined",
+        "DECLINED": "Rechazado",
         "REFUNDED": "Fondos Devueltos",
         "DISPUTED": "En Disputa",
         "DECIDED": "Decided",
         "RESOLVED": "Resuelto",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Pago Finalizado"
       },
       "btnReject": "Rechazar",
       "btnAccept": "Aceptar",
@@ -1217,9 +1217,9 @@
     "navMenu": {
       "summary": "Resumen",
       "discussion": "Discusi&oacute;n",
-      "contract": "Contract (JSON)"
+      "contract": "Contrato (JSON)"
     },
-    "backToSummary": "Back to summary",
+    "backToSummary": "Volver al sumario",
     "discussionTab": {
       "roleVendor": "vendedor",
       "roleBuyer": "comprador",
@@ -1234,7 +1234,7 @@
       "retryLink": "re-intentar"
     },
     "contractTab": {
-      "heading": "Contract (JSON)",
+      "heading": "Contrato (JSON)",
       "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
       "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
       "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
@@ -1246,15 +1246,15 @@
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copiar",
-      "notApplicable": "n/a",
+      "notApplicable": "N/A",
       "vendorFinalizedPayment": "You have manually finalized the order.",
       "payment": {
-        "firstPaymentHeading": "Payment Details",
+        "firstPaymentHeading": "Detalles del Pago",
         "paymentHeading": "Payment Details #%{paymentNumber}",
         "amountTo": "%{fiatBtcPairing} to %{payeeName}",
         "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
         "refunded": "%{fiatBtcPairing} refunded",
-        "paidInFull": "Paid In Full",
+        "paidInFull": "Pagado Completo",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "cancelBtn": "Cancelar",
         "rejectBtn": "Rechazar",
@@ -1277,10 +1277,10 @@
         "veryManyConfirmationsCount": "%{countText} confirmations"
       },
       "accepted": {
-        "heading": "Accepted",
-        "orderAccepted": "Order Accepted",
+        "heading": "Aceptado",
+        "orderAccepted": "Orden Aceptada",
         "vendorCanFulfill": "You received the order and can fulfill it whenever you're ready.",
-        "vendorReceived": "You received the order.",
+        "vendorReceived": "Has recibido la orden.",
         "buyerOrderAccepted": "¡Gracias por tu compra!",
         "modOrderAccepted": "The vendor order has accepted the order.",
         "refundBtn": "Refund",
@@ -1307,17 +1307,17 @@
         "heading": "Completar Compra",
         "maxReviewChars": "%{max} chars. max",
         "reviewLabel": "Written Review",
-        "anonCheckLabel": "Include my name (seen publicly)",
+        "anonCheckLabel": "Incluir mi nombre (público)",
         "btnCompleteOrder": "Completar Compra"
       },
       "orderComplete": {
-        "heading": "Order Complete",
+        "heading": "Orden Completa",
         "reviewLabel": "%{name}'s Review:"
       },
       "disputeStarted": {
         "heading": "Disputa iniciada",
         "partyIsDisputing": "%{name} is disputing the order:",
-        "resolveBtn": "Resolve Dispute",
+        "resolveBtn": "Resolver Disputa",
         "genericIsDisputed": "The order is being disputed:",
         "noReasonProvided": "No reason was provided."
       },
@@ -1336,7 +1336,7 @@
           "title": "¿Estás seguro?",
           "body": "Once accepted, the payout will process immediately",
           "btnCancel": "Cancelar",
-          "btnConfirm": "Yes, Accept"
+          "btnConfirm": "Sí, Acepto"
         }
       },
       "disputeAcceptance": {
@@ -1350,11 +1350,11 @@
       "orderDetails": {
         "progressBarStates": {
           "paid": "Pagada",
-          "accepted": "Accepted",
+          "accepted": "Aceptado",
           "fulfilled": "Fulfilled",
           "complete": "Completada",
           "canceled": "Cancelada",
-          "declined": "Declined",
+          "declined": "Rechazado",
           "refunded": "Fondos Devueltos",
           "decided": "Decided",
           "resolved": "Resuelto",
@@ -1369,7 +1369,7 @@
         "copyAddress": "Copiar",
         "viewOnMap": "Ver en mapa",
         "memo": "Memo",
-        "addressNotes": "Delivery Notes",
+        "addressNotes": "Notas de Entrega",
         "alternateContact": "Additional Contact Information"
       }
     },
@@ -1390,7 +1390,7 @@
       "btnSubmit": "Enviar"
     },
     "resolveDisputeTab": {
-      "heading": "Resolve Dispute",
+      "heading": "Resolver Disputa",
       "buyerAmountLabel": "Cantidad comprador",
       "vendorAmountLabel": "Vendor Amount",
       "commentLabel": "Comment",
@@ -1486,11 +1486,11 @@
     "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price."
   },
   "itemModelErrors": {
-    "provideTitle": "Please provide a title.",
+    "provideTitle": "Indique un título.",
     "titleTooLong": "The title exceeds the maximum allowable length.",
     "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "The description exceeds the maximum allowable length.",
-    "provideAmount": "Please provide a price.",
+    "provideAmount": "Indique un precio.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
@@ -1498,8 +1498,8 @@
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
     "duplicateOptionName": "You already have a variant with this name.",
     "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
-    "provideQuantity": "Please provide a quantity.",
-    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "provideQuantity": "Por favor provea una cantidad.",
+    "provideNumericQuantity": "Por favor provea la cantidad  como un número.",
     "quantityMustBePositive": "The quantity must be more than zero.",
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
@@ -1508,20 +1508,20 @@
     "provideDiscountAmount": "Please provide a discount value.",
     "percentageLow": "The percentage value must be greater than zero.",
     "percentageHigh": "You cannot set a percentage above or equal to 100%" ,
-    "priceLow": "The price must be geater than zero.",
+    "priceLow": "El precio debe ser mayor a cero.",
     "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
-    "provideName": "Please provide a title.",
+    "provideName": "Indique un título.",
     "provideRegion": "Please provide at least one shipping destination.",
     "provideService": "Please provide at least one shipping service."
   },
   "serviceModelErrors": {
-    "provideName": "Please provide a service name.",
+    "provideName": "Indique el nombre del servicio.",
     "provideEstDeliveryTime": "Please provide an estimated delivery time.",
     "provideService": "Please provide at least on shipping service.",
-    "provideAmount": "Please provide a price.",
+    "provideAmount": "Indique un precio.",
     "provideNumericAmount": "Please provide the price as a number.",
     "provideAmountGreaterThanZero": "The price must be greater than 0."
   },
@@ -1535,7 +1535,7 @@
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
     "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
-    "percentageLow": "You cannot set a fee percentage below zero.",
+    "percentageLow": "No puede ",
     "percentageHigh": "You cannot set a fee percentage above 100%",
     "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
   },
@@ -1544,33 +1544,33 @@
     "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
   },
   "skuModelErrors": {
-    "provideQuantity": "Please provide a quantity.",
-    "provideNumericQuantity": "Please provide the quantity as a number.",
-    "providePositiveQuantity": "The quantity cannot be less than 0.",
+    "provideQuantity": "Por favor provea una cantidad.",
+    "provideNumericQuantity": "Por favor provea la cantidad  como un número.",
+    "providePositiveQuantity": "La cantidad no puede ser menos de 0.",
     "provideSurcharge": "Please provide a surcharge.",
     "provideNumericSurcharge": "Please provide the surcharge as a number."
   },
   "variantOptionModelErrors": {
-    "provideName": "Please provide a title.",
-    "atLeast2Variants": "Please provide at least two choices."
+    "provideName": "Indique un título.",
+    "atLeast2Variants": "Por favor provea al menos dos opciones."
   },
   "variantModelErrors": {
-    "provideName": "Please provide a title.",
+    "provideName": "Indique un título.",
     "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
   },
   "spendModelErrors": {
-    "provideAddress": "Please provide an address.",
-    "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
-    "provideAmountNumber": "Please provide an amount as a number.",
-    "amountGreaterThanZero": "The amount must be greater than zero.",
-    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+    "provideAddress": "Por favor provea una dirección.",
+    "invalidAddress": "La dirección proveída no parece ser una dirección valida de bitcoin.",
+    "provideAmountNumber": "Por favor provea una cantidad como número.",
+    "amountGreaterThanZero": "La cantidad deber ser mayor que cero.",
+    "insufficientFunds": "No tiene fondos suficientes para enviar esa cantidad. Asegúrese de contar con el cargo de la transacción."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "The quantity must be 1 or more",
-    "quantityMustBeNumber": "The quantity must be a valid number",
-    "noItems": "You must make at least one purchase.",
-    "missingAddress": "Please choose a valid shipping address.",
-    "missingShippingOption": "Please choose a valid shipping option.",
+    "mustHaveQuantity": "La cantidad debe ser 1 o más.",
+    "quantityMustBeNumber": "La cantidad debe ser un número válido.",
+    "noItems": "Debe hacer al menos una compra.",
+    "missingAddress": "Por favor escoja una dirección válida para envió.",
+    "missingShippingOption": "Por favor escoja una opción válida de envío.",
     "needsModerator": "You must select a moderator to make a Moderated Payment."
   },
   "orderFulfillmentModelErrors": {
@@ -1579,38 +1579,38 @@
     "invalidUrl": "Please provide a valid url."
   },
   "errorPage": {
-    "userNotFoundTitle": "This User Could Not Be Found",
+    "userNotFoundTitle": "Este usuario no ha sido encontrado.",
     "userNotFoundMsg": "%{user} was not found on the network. Make sure you have the correct handle or peerID.",
     "listingNotFoundTitle": "This Listing Could Not Be Found",
-    "listingNotFoundLink": "Click here to browse the other listings in this store.",
+    "listingNotFoundLink": "Oprima aquí para buscar otros listados en esta tienda.",
     "listingNotFoundMsg": "%{listing} could not be found.",
     "pageNotFoundTitle": "Esta Página No Se Pudo Encontrar",
-    "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
+    "pageNotFoundMsg": "Chequea la barra de la dirección para asegurarse que el URL es correcto.",
     "genericErrorTitle": "Hubo Un Error",
     "listingErrorTitle": "Unable To Fetch Listing",
     "listingErrorMsg": "There was an error fetching listing %{listing}"
   },
   "orderCompletionModelErrors": {
-    "provideReview": "Please provide a review.",
-    "provideRating": "Please select a rating."
+    "provideReview": "Por favor provea una reseña.",
+    "provideRating": "Por favor seleccione un grado."
   },
   "ratingLabels": {
-    "overall": "Overall",
-    "quality": "Quality",
-    "asAdvertised": "As Advertised",
-    "delivery": "Delivery",
+    "overall": "Sobretodo ",
+    "quality": "Calidad",
+    "asAdvertised": "Como promocionado",
+    "delivery": "Entrega",
     "service": "Servicio"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider"
+    "searchProvider": "Esto no es un URL valido para un servidor de búsqueda."
   },
   "resolveDisputeModelErrors": {
-    "provideAmount": "Please provide an amount.",
-    "percentageOutOfRange": "The amount must be between 0 and 100.",
+    "provideAmount": "Por favor provee una cantidad.",
+    "percentageOutOfRange": "La cantidad debe ser entre 0 y 100.",
     "providePercentageAsNumber": "Please provide a vendor amount as a number.",
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
-    "provideResolution": "Please explain your decision."
+    "provideResolution": "Por favor explique su decisión."
   },
   "searchProviderModelErrors": {
     "invalidName": "The name must be a string.",
