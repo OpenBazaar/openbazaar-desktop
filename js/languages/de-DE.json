@@ -13,8 +13,25 @@
   "follow": {
     "typeFollow": "folgen",
     "typeUnfollow": "entfolgen",
-    "followErrorTitle": "Es gab einen Fehler %{user} zu %{type}"
+    "followErrorTitle": "Es gab einen Fehler %{user} zu %{type}",
+    "followBtn": "Follow",
+    "unfollowBtn": "Unfollow"
   },
+  "feeLevels": {
+    "PRIORITY": "Priority",
+    "NORMAL": "Normal",
+    "ECONOMIC": "Economic"
+  },
+  "feeChangeWidget": {
+    "label": "Bitcoin fee:",
+    "btnChange": "change"
+  },
+  "consoleWarning": {
+    "heading": "Stop!",
+    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
+    "line2": "Please close this window now."
+  },
+  "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Jetzt neu starten",
   "restartLater": "Später neu starten",
   "langChangeRestartTitle": "Für die Änderung der Spracheinstellungen ist ein Neustart der Anwendung notwendig",
@@ -39,6 +56,10 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "In die Zwischenablage kopiert",
   "copiedToClipboardShort": "Kopiert",
+  "refreshAlertPopInMessage": {
+    "refreshLink": "Refresh",
+    "message": "%{icon} %{message} %{refreshLink}"
+  },
   "abbreviatedNumbers": {
     "thousand": "%{number} Tsd.",
     "million": "%{number} Mio.",
@@ -118,6 +139,13 @@
     "torOnTooltip": "Tor ist aktiv",
     "discoverCalloutTitle": "Entdecken",
     "discoverCalloutBody": "Stöbern und kaufen Sie in hunderten Shops auf OpenBaazar",
+    "myPage": "My Page",
+    "customizePage": "Customize Page",
+    "createListing": "Create Listing",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "cases": "Cases",
+    "settings": "Settings",
     "toolTip": {
       "back": "Zurück",
       "forward": "Vor",
@@ -198,9 +226,8 @@
       "countListingsFound": "%{countListings} gefunden",
       "inactive": "Ihr Shop ist momentan inaktiv und vor der Öffentlichkeit verborgen. %{link}",
       "inactiveLink": "Ändern",
-      "listingDataChangedPopin": "Die Daten des Artikels wurden geändert. %{refreshLink}",
-      "shippingDataChangedPopin": "Ihr Land und/oder Ihre Lieferadresse hat sich geändert. Das kann beinflussen, welche Artikel für Sie versandkostenfrei sind. Es wird empfohlen, dass Sie die Seite %{refreshLink}, um sich die aktuellsten Daten anzeigen zu lassen.",
-      "popinRefreshLink": "neu laden",
+      "listingDataChangedPopin": "Listing data has changed.",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
       "freeShippingBanner": "Kostenloser Versand",
       "sortOpts": {
         "priceAsc": "Preis: aufsteigend",
@@ -320,7 +347,7 @@
     "settingsLabel": "Einstellungen",
     "unrecognizedModelErrsWarning": {
       "title": "Ihre Einstellungen konnten nicht gespeichert werden",
-      "body": "Es war uns nicht möglich die Einstellungen für diesen Tab zu speichern, weil es unerkannte Fehler gab. Diese stammen wahrscheinlich von ungültigen Werten in einem anderen Tab. Speichern sie bitte die anderen Tabs ab, um das Feld mit dem Fehler zu finden. Der Fehler wird über dem Feld angezeigt. Stellen Sie sicher nach dem Beheben des Fehlers, im Tab mit dem Fehler, Speichern zu klicken. Danach können sie zu diesem Tab zurückkehren um das Speichern dieses Tabs abzuschließen."
+      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
     },
     "generalTab": {
       "helperLanguage": "Anzeigeelemente anzeigen in",
@@ -438,8 +465,11 @@
         "peersBtn": "Verbundene Peers anzeigen",
         "resync": "Transaktionen neu laden",
         "resyncHelper": "Synchronisieren Sie Ihre Transaktionen falls welche fehlen",
-        "resyncBtn": "Transaktionen neu laden",
-        "resyncComplete": "Die Transaktion wird anfangen neu zu synchronisieren. Dies kann fünf bis zehn Minuten oder länger dauern.",
+        "reloadTransactionsWidget": {
+          "resyncBtn": "Reload Transactions",
+          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+          "syncUnavailable": "You can only reload transactions once per hour."
+        },
         "purge": "Geteilte Dateien löschen",
         "purgeHelper": "Zwischengespeicherte Dateien, die Sie mit anderen teilen,  löschen",
         "purgeBtn": "Dateien löschen",
@@ -629,7 +659,7 @@
       "errorConnectionLost": "%{errorPreface} Die Verbindung zu %{serverName} ist verloren gegangen. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Die Verbindung zu %{serverName} konnte nicht hergestellt werden. Der Server kann nicht erreicht werden. %{links}",
       "errorAuthFailed": "%{errorPreface} Die Verbindung zu %{serverName} konnte nicht hergestellt werden. Der Benutzername und/oder das Passwort sind falsch. %{links}",
-      "errorAuthFailedBuiltInServer": "%{errorPreface} Die Verbindung zu %{serverName} konnte nicht hergestellt werden. Der Authentifizierungs-Cookie ist ungültig. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
       "editLink": "bearbeiten",
       "errorTorNotConfigured": "Bitte %{editLink} Sie die Einstellungen für %{serverName} und legen Sie fest, ob Sie Tor verwenden möchten oder nicht. %{links}",
       "errorTorNotAvailable": "Tor wurde nicht erkannt. Bitte %{editLink} Sie die Einstellungen für %{serverName} und legen Sie fest, ob Tor nicht verwendet werden soll, oder starten Sie Tor. %{links}",
@@ -677,7 +707,13 @@
       "torPwLabel": "Tor Passwort",
       "torPwPlaceholder": "Das ungehashte Tor Kontrollpasswort",
       "warning": "Warnung:",
-      "torServerWarning": "%{warning} Um anonym zu sein ist es wichtig, dass Sie auch den Server im Tor-Modus starten."
+      "torServerWarning": "%{warning} Um anonym zu sein ist es wichtig, dass Sie auch den Server im Tor-Modus starten.",
+      "saveConfirm": {
+        "title": "Are you sure?",
+        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "btnCancel": "No, cancel",
+        "btnConfirm": "Yes, proceed"
+      }
     }
   },
   "torExternalLinkWarning": {
@@ -700,7 +736,8 @@
     "receiveMoney": {
       "title": "Geld empfangen",
       "needBitcoin": "Brauchen Sie Bitcoins?",
-      "btnCancel": "Abbrechen"
+      "btnCancel": "Abbrechen",
+      "btnFundViaShapeshift": "Fund via ShapeShift"
     },
     "sendMoney": {
       "toLabel": "An",
@@ -714,9 +751,14 @@
       "sendConfirm": {
         "heading": "Sind Sie sicher?",
         "body": "Die Netzwerkgebühr wird enthalten sein, momentan auf %{fiatBtcPairing} geschätzt.",
-        "bodyFeeUnavailable": "Sende %{fiatBtcPairing}, plus eine Netzwerkgebühr",
+        "errorHeading": "Unable to send payment",
+        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+        "bodyGenericError": "There was an error estimating the fee: %{err}",
+        "btnRetry": "Retry",
         "btnCancel": "Abbrechen",
-        "btnConfirmSend": "Ja, senden"
+        "btnConfirmSend": "Ja, senden",
+        "btnClose": "Close"
       }
     },
     "transactions": {
@@ -731,16 +773,18 @@
           "title": "Erneuten Zahlungsversuch beginnen",
           "body": "Fügen Sie %{fiatBtcPairing}%{asterisk} zu der Gebühr hinzu und senden Sie die Transaktion erneut ab.",
           "insufficientFundsBody": "Sie brauchen wenigstens %{fiatBtcPairing}%{asterisk} in Ihrer Wallet um diese Transaktion mit einer höheren Gebühr abzusenden.",
+          "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk} Geschätzter Preis",
           "btnCancel": "Abbrechen",
-          "btnConfirmSend": "Senden"
+          "btnConfirmSend": "Senden",
+          "btnRetry": "Retry"
         },
         "retryFailDialogTitle": "Der erneute Zahlungsversuch konnte nicht durchgeführt werden",
         "retryFailInsufficientFunds": "Sie verfügen nicht über genug Guthaben, um diese Transaktion durchzuführen.",
         "feeBumpOf": "Gebührenerhöhung von %{address}"
       },
       "noTransactionsPlaceholder": "Keine Transaktionen vorhanden.",
-      "newTransactionsPopin": "%{smart_count} neue Transaktion %{refreshLink} |||| %{smart_count} neue Transaktionen %{refreshLink}",
+      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup von Wallet wiederherstellungs Seed erzeugen",
       "recoverySeedLink": "Erstellen Sie ein Backup ihres Wallet wiederherstellungs Seeds",
       "backupWalletWarningBody": "Sieht so aus als hätten Sie ein oder zwei Transaktion. Jetzt währe eine gute Zeit um %{Link}."
@@ -763,8 +807,7 @@
     "delete": "Löschen",
     "editListingReturnText": "Zurück zum Artikel",
     "freeShippingBanner": "Kostenloser Versand",
-    "listingDataChangedPopin": "Die Artikeldaten wurden geändert. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "Neu laden",
+    "listingDataChangedPopin": "Listing data has changed.",
     "viewPhotos": "%{count} Fotos anzeigen",
     "type": "Art: %{type}",
     "condition": "Zustand: %{condition}",
@@ -813,11 +856,18 @@
     "freeShippingBanner": "Kostenloser Versand",
     "deleting": "Wird gelöscht …",
     "deleted": "Gelöscht",
+    "editListingTooltip": "Edit listing",
+    "cloneListingTooltip": "Clone listing",
+    "deleteListingTooltip": "Delete listing",
     "confirmDelete": {
       "title": "Sind Sie sicher?",
       "body": "Sobald diese Angaben glöscht worden sind, können sie nicht wieder hergestellt werden.",
       "btnCancel": "Abbrechen",
       "btnConfirm": "Ja, löschen"
+    },
+    "editFetchErrorDialog": {
+      "title": "There was an error retrieving the listing.",
+      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
   "listingDelete": {
@@ -969,7 +1019,7 @@
     "searchBtn": "Durchsuchen",
     "searchPlaceholder": "Geben Sie einen Suchbegriff oder ein #Tag ein.",
     "suggestions": "Vorschläge",
-    "resultsFound": "<b>%{totalResults} Artikel</b> für <b>\"%{term}\"</b> gefunden",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} Artikel",
     "sortBy": "Sortieren nach",
     "changeProvider": "Schließen und neuen Standard Suchanbieter auswählen",
@@ -986,6 +1036,10 @@
     "addQueryProviderBtn": "Suchanbieter hinzufügen",
     "chooseDefaultTitle": "Einen Standard Suchanbieter auswählen",
     "chooseDefaultMsg": "Dieser Anbieter wird für zukünftige Suchen als Standard genutzt, bis Sie einen neuen wählen.",
+    "providers": {
+        "transactions": "Transactions",
+        "myPage": "My Page"
+    },
     "errors": {
       "searchFailTitle": "Die Suchanfrage an %{provider} ist fehlgeschlagen. Wählen Sie einen anderen Anbieter oberhalb.",
       "searchFailReason": "Der Suchanbieter hat folgende Nachricht zurückgegeben: %{error}",
@@ -1029,9 +1083,7 @@
     "displaying": "%{displayingCounts} anzeigen"
   },
   "purchase": {
-    "refreshPurchase": "Neu laden",
-    "purchaseDataChangedPopin": "Die Daten für diesen Artikel wurden geändert. %{refreshLink}",
-    "purchaseDataChanged": "Die Daten auf dieser Seite sind möglicherweise nicht mehr zutreffend. Laden Sie die Seite neu, um aktualisierte Daten zu erhalten. %{refreshLink}",
+    "purchaseDataChangedPopin": "The data for this listing has changed.",
     "returnToListing": "Zurück zum Artikel",
     "optional": "optional",
     "shippingTitle": "Versand",
@@ -1069,6 +1121,7 @@
     "quantity": "Anzahl",
     "useShapeShift": "Oder verwenden Sie im nächsten Schritt ShapeShift",
     "moderatedPayment": "Moderierte Zahlung",
+    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "Für diese Bestellung sind keine gültigen Moderatoren verfügbar.",
     "moderationDisclaimer": "Ihre Zahlung wird sicher auf einem Escrow hinterlegt. Falls ein Problem auftritt, haben Sie die Möglichkeit, einen Konflikt mit einem Moderator zu öffnen. * Die Servicegebühr für den Moderator gilt nur, falls ein Konflikt geöffnet wird. ",
     "chooseModerator": "Diesen Moderator wählen",
@@ -1090,20 +1143,12 @@
       "note2": "Ihre Zahlung wird sicher auf einem Escrow hinterlegt. Falls ein Problem auftritt, haben Sie die Möglichkeit, einen Konflikt zu öffnen.",
       "note3": "* Die Servicegebühr für den Moderator gilt nur, falls ein Konflikt geöffnet wird. ",
       "note4": "Wenn Sie gezahlt haben kann es einen kurzen Augenblick dauern, bis sich die Anzeige aktualisiert.",
-      "confirmWallet": {
-        "title": "Sind Sie sicher?",
-        "payMsg": "Zahlen Sie %{fiatBtcPairing}* an den Verkäufer.",
-        "payMsgNotePlusFee": "*Die Netzwerkgebühr wird zu dem gelisteten Betrag hinzu addiert",
-        "payMsgNoteFeeIncluded": "*Enthält eine Netzwerkgebühr, momentan auf %{amount} geschätzt",
-        "cancel": "Abbrechen",
-        "confirm": "Ja, bezahlen",
-        "fundsLow": "Es befinden sich nicht genügend Bitcoins in Ihrer Wallet. Fügen Sie Guthaben hinzu, um diesen Einkauf abzuschließen.",
-        "insufficientFundsTitle": "Nicht genügend Guthaben vorhanden",
-        "insufficientFundsMsg1": "Ihre Wallet beinhaltet momentan %{funds}.",
-        "insufficientFundsMsg2": "Fügen Sie %{fundGap}* zu Ihrer Wallet hinzu oder zahlen Sie mit einer externen Wallet um fortzufahren.",
-        "insufficientFundsNote": "*%{amount} plus Gebühr, momentan auf %{fee} geschätzt",
-        "insufficientFundsNoteFeeUnavailable": "*Stellen Sie sicher auch die Netzwerkgebühr einzurechnen"
-      }
+      "btnConfirmedPay": "Yes, Pay",
+      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
+      "altcoinLink": "You can still fund your OB wallet with altcoins.",
+      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
+      "walletLink": "You can send funds to your OB wallet instead.",
+      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
     },
     "completeSection": {
       "paymentSent": "Die Zahlung wurde gesendet!",
@@ -1115,7 +1160,16 @@
       "vendorMessagePlaceholder": "Geben Sie zusätzliche Details an, stellen Sie eine Frage, geben Sie Feedback …",
       "vendorMessageLink": "Diskussionsbereich für die Bestelldetails",
       "vendorMessageSent": "Ihre Nachricht wurde an %{name} gesendet. Sie können das Gespräch hier fortsetzen: %{orderLink}.",
-      "send": "Senden"
+      "send": "Senden",
+      "share": {
+        "title": "Share with friends",
+        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
+        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "postToTwitter": "Post to Twitter",
+        "postToFacebook": "Post to Facebook",
+        "postToPinterest": "Post to Pinterest",
+        "postToTumblr": "Post to Tumblr"
+      }
     },
     "receipt": {
       "summary": "Bestellübersicht",
@@ -1133,7 +1187,8 @@
       "ownIDTitle": "Sie können Ihre eigenen Artikel nicht kaufen.",
       "ownIDMsg": "Sie können eine Vorschau des Kaufprozesses für Ihre eigenen Artikel sehen, diese jedoch nicht kaufen.",
       "paymentFailed": "Der Zahlungsvorgang konnte nicht abgeschlossen werden.",
-      "zeroPrice": "Sie können keinen Artikel mit dem Gesamtpreis von null kaufen."
+      "zeroPrice": "Sie können keinen Artikel mit dem Gesamtpreis von null kaufen.",
+      "feesFailed": "Transaction Fees Cannot Be Loaded"
     }
   },
   "moderators": {
@@ -1146,7 +1201,13 @@
       "countTransactionsFound": "%{countTransactions} gefunden",
       "unableToFetch": "Die Informationen über Ihre Verkäufe konnten nicht bezogen werden.",
       "noResults": "Es konnten keine Verkäufe gefunden werden",
-      "returnToFromOrder": "Zurück zu Verkäufen"
+      "returnToFromOrder": "Zurück zu Verkäufen",
+      "resyncPopInMessage": {
+        "link": "Resync",
+        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "message": "%{icon} %{text} %{link}",
+        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+      }
     },
     "purchases": {
       "heading": "Einkäufe",

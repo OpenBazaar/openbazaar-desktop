@@ -13,12 +13,29 @@
   "follow": {
     "typeFollow": "seguindo",
     "typeUnfollow": "deixando de seguir",
-    "followErrorTitle": "Houve um erro %{type} %{user}."
+    "followErrorTitle": "Houve um erro %{type} %{user}.",
+    "followBtn": "Follow",
+    "unfollowBtn": "Unfollow"
   },
+  "feeLevels": {
+    "PRIORITY": "Priority",
+    "NORMAL": "Normal",
+    "ECONOMIC": "Economic"
+  },
+  "feeChangeWidget": {
+    "label": "Bitcoin fee:",
+    "btnChange": "change"
+  },
+  "consoleWarning": {
+    "heading": "Stop!",
+    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
+    "line2": "Please close this window now."
+  },
+  "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Reiniciar Agora",
   "restartLater": "Reiniciar Depois",
-  "langChangeRestartTitle": "Reinicialização necessária para a mudança de idioma",
-  "langChangeRestartMessage": "Para mudar o seu idioma, você precisa reinicializar o aplicativo. Se algo estiver sendo salvo ou publicado, por favor, aguarde até que o processo seja concluído.",
+  "langChangeRestartTitle": "Reinicialização necessária",
+  "langChangeRestartMessage": "Para mudar o seu idioma, você precisa reinicializar o aplicativo. Se alguma modificação estiver sendo salva ou publicada, por favor, aguarde até que o processo seja concluído.",
   "update": {
     "checking": "Procurando atualizações…",
     "error": "Houve um erro ao procurar as atualizações. Erro: %{error}",
@@ -39,6 +56,10 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copiado para a área de transferência",
   "copiedToClipboardShort": "Copiado",
+  "refreshAlertPopInMessage": {
+    "refreshLink": "Refresh",
+    "message": "%{icon} %{message} %{refreshLink}"
+  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -104,8 +125,8 @@
       "disputeClose": "A disputa com %{otherPartyName} foi encerrada.",
       "disputeAccepted": "A disputa com %{otherPartyName} foi finalizada.",
       "follow": "%{name} passou a seguir você.",
-      "moderatorAdd": "%{name} adicionou você como um moderador.",
-      "moderatorRemove": "%{name} removeu você como um moderador."
+      "moderatorAdd": "%{name} adicionou você como moderador.",
+      "moderatorRemove": "%{name} removeu você como moderador."
     },
     "errorHeading": "Houve um erro ao buscar as notificações.",
     "btnRetry": "Tentar novamente",
@@ -118,6 +139,13 @@
     "torOnTooltip": "Tor ativo",
     "discoverCalloutTitle": "Descobrir",
     "discoverCalloutBody": "Navegue e compre em centenas de lojas no OpenBazaar",
+    "myPage": "My Page",
+    "customizePage": "Customize Page",
+    "createListing": "Create Listing",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "cases": "Cases",
+    "settings": "Settings",
     "toolTip": {
       "back": "Voltar",
       "forward": "Avançar",
@@ -134,7 +162,7 @@
     "fetchingConversations": "Recuperando as suas conversas de chat…",
     "errorFetching": "Houve um erro ao recuperar as suas conversas de chat.",
     "errorFetchingWithMessage": "Houve um erro ao recuperar as suas conversas de chat: %{msg}",
-    "unreadMessages": "Mensagens não-lidas %{arrow}",
+    "unreadMessages": "Mensagens não lidas %{arrow}",
     "conversation": {
       "messageInputPlaceholder": "Inserir mensagem...",
       "loadMessagesError": "Houve um erro ao carregar as mensagens. %{retryLink}",
@@ -198,9 +226,8 @@
       "countListingsFound": "%{countListings} encontrado(s)",
       "inactive": "A sua loja está atualmente inativa e escondida do público. %{link}",
       "inactiveLink": "Modificar",
-      "listingDataChangedPopin": "Os dados do anúncio foram modificados. %{refreshLink}",
-      "shippingDataChangedPopin": "O seu país e/ou o seu endereço de entrega mudou. Isso pode afetar quais anúncios terão frete grátis para você. Recomenda-se que você %{refreshLink} para ver os dados mais recentes.",
-      "popinRefreshLink": "atualizar",
+      "listingDataChangedPopin": "Listing data has changed.",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
       "freeShippingBanner": "Frete Grátis",
       "sortOpts": {
         "priceAsc": "Menor preço",
@@ -218,7 +245,7 @@
         "showLess": "menos"
       },
       "toolTip": {
-        "contentView": "Alternar visual"
+        "contentView": "Mudar visualização"
       }
     },
     "mainNav": {
@@ -320,12 +347,12 @@
     "settingsLabel": "Configurações",
     "unrecognizedModelErrsWarning": {
       "title": "Não foi possível salvar as suas configurações",
-      "body": "Não foi possível salvar as configurações dessa aba, provavelmente porque existem valores inválidos em algum campo em outra aba. Por favor, verifique nas outras abas se há algum campo incorreto, corrija-o e clique em Salvar. Depois disso, ao retornar para a aba atual,  você poderá salvá-la."
+      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
     },
     "generalTab": {
       "helperLanguage": "Exibir interface em",
       "helperCountry": "O país em que você mora",
-      "helperCurrency": "Mostrar Preços em",
+      "helperCurrency": "Mostrar preços em",
       "helperTranslations": "Ajude a traduzir o OpenBazaar em %{helperTranslationsLink}",
       "helperTranslationsLink": "Transifex",
       "sectionName": "Geral",
@@ -386,7 +413,7 @@
       "placeholderNotes": "exemplo: deixar os pacotes atrás dos arbustos",
       "sectionName": "Endereços de Entrega",
       "statusDeletingAddress": "Apagando endereço %{name}…",
-      "statusDeleteAddressComplete": "Endereço %{name} apagado.",
+      "statusDeleteAddressComplete": "Endereço %{name} excluído.",
       "statusDeleteAddressFailed": "Não foi possível apagar o endereço %{name}.",
       "deleteAddressErrorAlertTitle": "Não foi possível apagar o endereço %{name}",
       "statusAddingAddress": "Inserindo o endereço %{name}…",
@@ -397,7 +424,7 @@
     "advancedTab": {
       "sectionName": "Avançado",
       "helperVisualEffects": "Transições, Suavidade, Opacidade",
-      "helperWindowControls": "Controles de Maximizar, Minimizar & Fechar",
+      "helperWindowControls": "Botões de Maximizar, Minimizar & Fechar",
       "helperSaveMetaData": "Armazenar informações adicionais de transações",
       "helperDefaultFee": "Escolha \"Prioridade\" caso deseje que as suas transações sejam confirmadas o mais rápido possível pela rede",
       "smtp": {
@@ -438,14 +465,17 @@
         "peersBtn": "Mostrar Peers Conectados",
         "resync": "Recarregar Transações",
         "resyncHelper": "Sincronize as suas transações, caso alguma estiver faltando",
-        "resyncBtn": "Recarregar Transações",
-        "resyncComplete": "A sincronização de suas transações irá começar. Isso pode levar 5-10 minutos ou mais.",
+        "reloadTransactionsWidget": {
+          "resyncBtn": "Reload Transactions",
+          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+          "syncUnavailable": "You can only reload transactions once per hour."
+        },
         "purge": "Apagar Arquivos Compartilhados",
         "purgeHelper": "Apaga os arquivos de cache que você está compartilhando com outros usuários",
         "purgeBtn": "Apagar Arquivos",
         "purgeToolTip": "O OpenBazaar armazena as imagens e os textos dos anúncios que você visualizou em um cache, e compartilha essas imagens e textos com outros usuários. Se você visualizou em anúncio(s) textos ou imagens que você não gostaria de compartilhar, use esse botão para excluí-los. Isso não afetará quaisquer arquivos, textos ou imagens da sua loja ou do seu perfil.",
         "purgeError": "Houve um erro e seus arquivos de cache podem não ter sido deletados.",
-        "purgeComplete": "Os seus arquivos de cache foram apagados.",
+        "purgeComplete": "Os seus arquivos de cache foram excluídos.",
         "blockData": "Dados de Bloco",
         "blockDataHelper": "Mostrar dados úteis para debugging.",
         "blockDataBtn": "Mostrar Dados de Bloco",
@@ -489,29 +519,29 @@
     "moderationTab": {
       "sectionName": "Moderação",
       "disputeResolution": "Resolução de Disputas",
-      "disputeResolutionText": "Os vendedores podem escolher você como um moderador para a loja deles. Caso houve uma disputa entre os vendedores e um de seus clientes, você será chamado para atuar como moderador. Você irá analisar os detalhes do pedido e o motivo da disputa, e no final você irá decidir como que o dinheiro do pedido será distribuído.",
-      "moderationStatus": "Disputas Moderadas",
+      "disputeResolutionText": "Os vendedores podem escolher você para atuar como um moderador das compras realizadas em suas lojas. Caso houver uma disputa entre o vendedor e um cliente, você será chamado para atuar como moderador. Você irá analisar os detalhes do pedido, o motivo da disputa e as justificativas/provas do vendedor e do cliente. No final, após analisar a parcela de culpa de cada um dos envolvidos, você é quem irá decidir quanto do dinheiro da transação ficará com o vendedor e quanto ficará com o comprador.",
+      "moderationStatus": "Atuar como Moderador",
       "pricePerDispute": "Preço por disputa",
       "pricePerDisputeOptions": {
         "percentageOfOrder": "Percentual do Pedido",
         "fixedPrice": "Taxa Fixa",
         "percentagePlusFixed": "Taxa Fixa Mais Percentual"
       },
-      "pricePerDisputeHelper": "A quantia que você cobra para avaliar e encerrar uma disputa",
+      "pricePerDisputeHelper": "A quantia que você cobra para analisar uma disputa e tomar uma decisão",
       "feeTypeAmount": "Preço por disputa",
       "fixed": "Fixo",
       "percentage": "Percentual",
       "fixedPlusPercentage": "Fixa Mais Percentual",
-      "feeTypeHelper": "A quantia que você cobra para avaliar e encerrar uma disputa",
+      "feeTypeHelper": "A quantia que você cobra para analisar uma disputa e tomar uma decisão",
       "description": "Descrição",
       "descriptionHelper": "Adicione a sua descrição (por exemplo, qual a sua estratégia para revisar os casos? Qual é a  sua expectativa de tempo de resposta? Qual é a sua agenda de operação? Durante quantas horas você está disponível todos os dias, etc.)",
       "terms": "Termos",
       "termsHelper": "Insira os seus termos de serviço (ex: Você tem limitações legais? O que acontece após você tomar uma decisão? etc.)",
       "languages": "Idiomas",
-      "languagesHelper": "Insira todos os idiomas em que você consegue se comunicar sem dificuldades.",
+      "languagesHelper": "Insira todos os idiomas em que você consegue se comunicar sem dificuldades",
       "acceptGuidelines": "Eu li as %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "Diretrizes de Resolução de Disputas do OpenBazaar",
-      "understandRequirements": "Eu entendo que eu devo oferecer meus serviços de resolução de disputas para qualquer um que solicitá-los, a menos que os termos descritos acima sejam violados.",
+      "understandRequirements": "Eu estou ciente que terei que oferecer meu serviço de resolução de disputas para qualquer usuário que solicitá-lo, a menos que haja violação dos termos descritos acima.",
       "status":{
         "saving": "Salvando configurações de moderação…",
         "done": "Configurações de moderação salvas.",
@@ -524,7 +554,7 @@
     },
     "storeTab": {
       "sectionName": "Loja",
-      "storeStatus": "Loja",
+      "storeStatus": "Ativar Loja",
       "storeStatusHelper": "Criar uma loja na sua página",
       "moderators": "Moderadores",
       "moderatorsHelper": "Escolha alguns moderadores para a sua Loja",
@@ -559,9 +589,9 @@
     "language": "Idioma",
     "country": "País",
     "currency": "Moeda",
-    "viewNsfwContent": "Mostra Conteúdo Adulto/Ofensivo",
-    "on": "Ligado",
-    "off": "Desligado",
+    "viewNsfwContent": "Exibir Conteúdo Adulto/Ofensivo",
+    "on": "Sim",
+    "off": "Não",
     "yes": "Sim",
     "no": "Não",
     "name": "Nome",
@@ -571,10 +601,10 @@
     "nsfwContent": "Conteúdo Adulto/Ofensivo (NSFW, adulto, 18+, etc)",
     "avatar": "Imagem de Perfil",
     "loadAvatar": "Escolher Foto",
-    "loadAvatarHelp": "recomenda-se %{minWidth}px por %{minHeight}px ou maior",
+    "loadAvatarHelp": "Recomenda-se %{minWidth} x %{minHeight}px ou maior",
     "header": "Foto da Capa",
     "loadHeader": "Escolher Foto",
-    "loadHeaderHelp": "recomenda-se %{minWidth}px por %{minHeight}px ou maior",
+    "loadHeaderHelp": "Recomenda-se %{minWidth} x %{minHeight}px ou maior",
     "socialSection": "Social",
     "website": "Website",
     "email": "E-mail",
@@ -603,7 +633,7 @@
       "state": "Estado",
       "country": "País",
       "postalCode": "CEP",
-      "notes": "Notas para a Entrega"
+      "notes": "Observações para a entrega"
     },
     "statusSaving": "Salvando configurações…",
     "statusSaveFailed": "Falha ao salvar as configurações.",
@@ -629,7 +659,7 @@
       "errorConnectionLost": "%{errorPreface} A conexão com %{serverName} foi perdida. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Erro ao conectar-se a %{serverName}. O servidor não pode ser contatado. %{links}",
       "errorAuthFailed": "%{errorPreface} Erro ao conectar-se a %{serverName}. O nome do usuário e/ou a senha estão incorretos. %{links}",
-      "errorAuthFailedBuiltInServer": "%{errorPreface} Erro ao contectar-se a %{serverName}. O cookie de autenticação é inválido. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
       "editLink": "editar",
       "errorTorNotConfigured": "Por favor, %{editLink} a configuração do servidor %{serverName} para confirmar se você quer usar o Tor ou não. %{links}",
       "errorTorNotAvailable": "O Tor não foi detectado. Por favor, inicie o Tor ou %{editLink} a configuração do servidor %{serverName} para que ele não use o Tor. %{links}",
@@ -657,8 +687,8 @@
       "btnCancel": "Cancelar",
       "btnSave": "Salvar",
       "port": "Porta",
-      "sslOn": "Ligado",
-      "sslOff": "Desligado",
+      "sslOn": "Sim",
+      "sslOff": "Não",
       "password": "Senha",
       "username": "Usuário",
       "serverIp": "IP do Servidor",
@@ -677,7 +707,13 @@
       "torPwLabel": "Senha do Tor",
       "torPwPlaceholder": "A senha de controle do Tor (não hasheada)",
       "warning": "Aviso:",
-      "torServerWarning": "%{warning} Para se manter anônimo, é fundamental que você também inicie o servidor no modo Tor."
+      "torServerWarning": "%{warning} Para se manter anônimo, é fundamental que você também inicie o servidor no modo Tor.",
+      "saveConfirm": {
+        "title": "Are you sure?",
+        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "btnCancel": "No, cancel",
+        "btnConfirm": "Yes, proceed"
+      }
     }
   },
   "torExternalLinkWarning": {
@@ -691,7 +727,7 @@
   "wallet": {
     "title": "Carteira",
     "closeLink": "Fechar carteira",
-    "fundsHeader": "Fundos",
+    "fundsHeader": "Saldo",
     "btnReceiveMoney": "Receber Dinheiro",
     "btnSendMoney": "Enviar Dinheiro",
     "btcCurrencyLabel": "Bitcoin",
@@ -700,23 +736,29 @@
     "receiveMoney": {
       "title": "Receber Dinheiro",
       "needBitcoin": "Precisa de Bitcoins?",
-      "btnCancel": "Cancelar"
+      "btnCancel": "Cancelar",
+      "btnFundViaShapeshift": "Fund via ShapeShift"
     },
     "sendMoney": {
       "toLabel": "Para",
       "toPlaceholder": "Insira um Endereço Bitcoin",
       "amountLabel": "Quantia",
       "noteLabel": "Nota",
-      "notePlaceholder": "Somente você pode ver isso",
+      "notePlaceholder": "Visível apenas para você",
       "sendBtn": "Enviar",
       "clear": "Limpar",
       "sendPaymentFailDialogTitle": "Não foi possível enviar o pagamento",
       "sendConfirm": {
         "heading": "Você tem certeza?",
         "body": "Uma taxa da rede será incluída, atualmente estimada em %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Enviar %{fiatBtcPairing}, mais uma taxa da rede",
+        "errorHeading": "Unable to send payment",
+        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+        "bodyGenericError": "There was an error estimating the fee: %{err}",
+        "btnRetry": "Retry",
         "btnCancel": "Cancelar",
-        "btnConfirmSend": "Sim, Enviar"
+        "btnConfirmSend": "Sim, Enviar",
+        "btnClose": "Close"
       }
     },
     "transactions": {
@@ -731,16 +773,18 @@
           "title": "Tentar Pagar Novamente",
           "body": "Acrescentar %{fiatBtcPairing}%{asterisk} à taxa e reenviar a transação.",
           "insufficientFundsBody": "Você precisa de pelo menos %{fiatBtcPairing}%{asterisk} em sua carteira para reenviar essa transação com uma taxa maior.",
+          "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}preço estimado",
           "btnCancel": "Cancelar",
-          "btnConfirmSend": "Enviar"
+          "btnConfirmSend": "Enviar",
+          "btnRetry": "Retry"
         },
         "retryFailDialogTitle": "Não foi possível tentar pagar novamente",
         "retryFailInsufficientFunds": "Você não tem saldo suficiente para completar essa transação.",
         "feeBumpOf": "Taxa de incentivo (bump) de %{address}"
       },
       "noTransactionsPlaceholder": "Você não tem transações.",
-      "newTransactionsPopin": "%{smart_count} nova transação %{refreshLink} |||| %{smart_count} novas transações %{refreshLink}",
+      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Fazer Backup da Semente de Recuperação da Carteira",
       "recoverySeedLink": "backup da semente de recuperação da sua carteira",
       "backupWalletWarningBody": "Parece que você já recebeu algum dinheiro. É uma boa idéia fazer %{link}."
@@ -763,8 +807,7 @@
     "delete": "Apagar",
     "editListingReturnText": "Voltar ao anúncio",
     "freeShippingBanner": "Frete Grátis",
-    "listingDataChangedPopin": "Os dados do anúncio foram modificados. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "Atualizar",
+    "listingDataChangedPopin": "Listing data has changed.",
     "viewPhotos": "Ver %{count} Fotos",
     "type": "Tipo: %{type}",
     "condition": "Condição: %{condition}",
@@ -789,7 +832,7 @@
     "goToStore": "Ir para a loja",
     "confirmDelete": {
       "title": "Você tem certeza?",
-      "body": "Isso será apagado definitivamente.",
+      "body": "O item será excluído permanentemente.",
       "btnCancel": "Cancel",
       "btnConfirm": "Sim, Apagar"
     },
@@ -812,22 +855,29 @@
     "btnDetails": "Detalhes",
     "freeShippingBanner": "Frete Grátis",
     "deleting": "Apagando…",
-    "deleted": "Apagado",
+    "deleted": "Excluído",
+    "editListingTooltip": "Edit listing",
+    "cloneListingTooltip": "Clone listing",
+    "deleteListingTooltip": "Delete listing",
     "confirmDelete": {
       "title": "Você tem certeza?",
-      "body": "Isso será apagado definitivamente.",
+      "body": "O item será excluído permanentemente.",
       "btnCancel": "Cancelar",
       "btnConfirm": "Sim, Apagar"
+    },
+    "editFetchErrorDialog": {
+      "title": "There was an error retrieving the listing.",
+      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
   "listingDelete": {
     "deletingListing": "Apagando o anúncio %{listing}…",
-    "deletedListing": "Anúncio %{listing} apagado.",
+    "deletedListing": "Anúncio %{listing} excluído.",
     "deletedFailedStatusMsg": "Não foi possível apagar o anúncio %{listing}.",
     "deletedFailedDialogTitle": "Não foi possível apagar o anúncio",
     "deletedFailedDialogBody": "Houve um erro ao apagar o anúncio %{listing}.",
     "deletedFailedDialogBodyWithReason": "Houve um erro ao apagar o anúncio %{listing}: %{reason}",
-    "deletedFailedListingNotFound": "%{listing} não foi encontrado. Provavelmente ele já foi apagado.",
+    "deletedFailedListingNotFound": "%{listing} não foi encontrado. Provavelmente ele já foi excluído.",
     "deleteFailedBtnOk": "Ok"
   },
   "editListing": {
@@ -865,10 +915,10 @@
     "variantInventoryLink": "Inventário de Variantes",
     "helperPrice": "Coloque o seu preço em Reais, Dólares, Bitcoin, etc",
     "helperCondition": "A condição geral do seu produto anunciado",
-    "helperNSFW": "Clique em sim se o anúncio tem conteúdo adulto/ofensivo",
+    "helperNSFW": "Clique em sim se o anúncio tiver conteúdo adulto/ofensivo",
     "helperTags": "Você pode acrescentar várias tags. Pressione Enter após inserir cada tag.",
     "helperCategories": "Não há suporte para subcategorias (ex: Sapatos > Botas não funciona). Insira um nome de uma categoria, tecle Enter, e escreva o nome da próxima.",
-    "helperReturnPolicy": "Se deixado em brando, o anúncio irá exibir \"Nenhuma política de devoluções\"",
+    "helperReturnPolicy": "Se deixado em branco, o anúncio irá exibir \"Nenhuma política de devoluções\"",
     "helperTerms": "Se deixado em branco, o anúncio irá exibir \"Sem Termos e Condições\"",
     "createListingLabel": "Criar Anúncio",
     "editListingLabel": "Editar Anúncio",
@@ -918,7 +968,7 @@
     },
     "coupons": {
       "titleLabel": "Título",
-      "couponCodeLabel": "Código do Cupom",
+      "couponCodeLabel": "Cupom Promocional",
       "discountLabel": "Desconto",
       "titlePlaceholder": "opcional",
       "discountCodePlaceholder": "Insira um código",
@@ -969,7 +1019,7 @@
     "searchBtn": "Busca",
     "searchPlaceholder": "Insira um termo de busca ou uma #tag.",
     "suggestions": "Sugestões",
-    "resultsFound": "<b>%{totalResults} anúncio(s)</b> encontrado(s) para <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} anúncios",
     "sortBy": "Ordenar por",
     "changeProvider": "Fechar e Escolher um Novo Provedor de Busca",
@@ -986,12 +1036,16 @@
     "addQueryProviderBtn": "Adicionar um provedor de busca",
     "chooseDefaultTitle": "Escolher um provedor de busca padrão",
     "chooseDefaultMsg": "Esse provedor será usado como padrão nas buscas futuras, até que você escolha um novo.",
+    "providers": {
+        "transactions": "Transactions",
+        "myPage": "My Page"
+    },
     "errors": {
       "searchFailTitle": "Houve uma falha ao pesquisar em %{provider}. Escolha outro provedor de busca acima.",
       "searchFailReason": "O provedor de busca retornou a seguinte mensagem: %{error}",
       "connection": "Você não está mais conectado ao seu nodo. Reconecte-se para continuar a busca",
       "addError": "Esse provedor não pode ser adicionado. Verifique seus dados e tente novamente.",
-      "locked": "Os servidores de busca padrões não podem ser apagados.",
+      "locked": "Os servidores de busca padrões não podem ser excluídos.",
       "resetToOriginal": "A URL do seu provedor de busca é inválida. Em função disso, seu programa será configurado para o provedor de busca padrão original."
     }
   },
@@ -1029,9 +1083,7 @@
     "displaying": "Exibindo %{displayingCounts}"
   },
   "purchase": {
-    "refreshPurchase": "Atualizar",
-    "purchaseDataChangedPopin": "Os dados para esse anúncio foram modificados. %{refreshLink}",
-    "purchaseDataChanged": "Os dados desta página não parecem mais estar corretos. Atualize a página para iniciar novamente com dados atualizados. %{refreshLink}",
+    "purchaseDataChangedPopin": "The data for this listing has changed.",
     "returnToListing": "Voltar ao anúncio",
     "optional": "opcional",
     "shippingTitle": "Frete",
@@ -1045,8 +1097,8 @@
     "informationTitle": "Informações Adicionais",
     "emailAddress": "E-mail ou Número de Telefone",
     "emailPlaceholder": "nome@e-mail.com",
-    "emailNote": "Uma maneira alternativa de falar com você.",
-    "couponCode": "Código do Cupom",
+    "emailNote": "Insira outro meio de contato",
+    "couponCode": "Cupom Promocional",
     "couponCodePlaceholder": "Inserir código",
     "applyCode": "Aplicar",
     "code": "\"%{code}\" foi usado para o pedido",
@@ -1060,15 +1112,16 @@
     "memo": "Observações",
     "memoPlaceholder": "Forneça informações adicionais para o vendedor (opcional).",
     "pay": "PAGAR >",
-    "payNote": "Clique em pagar para ir à etapa final.",
+    "payNote": "Clique em pagar para ir à etapa final",
     "pending": "Pendente…",
     "pendingNote": "Por favor, pague o pedido para completar a sua transação.",
     "close": "close",
     "closeNote": "O seu pagamento foi enviado para o vendedor.",
     "moderatorNote": "*A taxa do serviço de moderação só será cobrada se uma disputa for aberta.",
     "quantity": "Quantidade",
-    "useShapeShift": "Ou use o ShapeShift no próximo passo",
+    "useShapeShift": "Ou use o ShapeShift na próxima etapa",
     "moderatedPayment": "Pagamento Moderado",
+    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "Nenhum moderador válido está disponível para esse pedido.",
     "moderationDisclaimer": "Neste método, o moderador se encarrega de proteger o seu dinheiro até que você receba a sua compra. Ao pagar, o vendedor poderá ver o seu pagamento, mas só irá recebê-lo após você confirmar o recebimento do produto. Se houver algum problema com o pedido ou se você não receber o produto,  tanto você quanto o vendedor poderão iniciar uma reclamação com o moderador, que irá resolver a disputa e decidir como o valor do pedido será distribuído entre as partes. *O serviço de moderação só será cobrado se você ou o vendedor iniciar uma reclamação.",
     "chooseModerator": "Escolher Esse Moderador",
@@ -1090,20 +1143,12 @@
       "note2": "O moderador se encarregará de proteger o seu dinheiro até que você receba a sua compra. Se houver algum problema com o pedido, você poderá iniciar uma reclamação.",
       "note3": "*A taxa do serviço de moderação só será cobrada se uma disputa for aberta.",
       "note4": "A tela pode demorar um pouco para atualizar após o pagamento ser realizado.",
-      "confirmWallet": {
-        "title": "Você tem certeza?",
-        "payMsg": "Pagar %{fiatBtcPairing}* ao vendedor.",
-        "payMsgNotePlusFee": "*A taxa da rede será adicionada ao valor do pedido",
-        "payMsgNoteFeeIncluded": "*Inclui uma taxa de rede, atualmente estimada em %{amount}",
-        "cancel": "Cancelar",
-        "confirm": "Sim, Pagar",
-        "fundsLow": "Sua wallet não possui Bitcoin o suficiente. Adicione fundos para concluir esta compra.",
-        "insufficientFundsTitle": "Saldo Insuficiente",
-        "insufficientFundsMsg1": "A sua carteira atualmente contém %{funds}.",
-        "insufficientFundsMsg2": "Deposite %{fundGap}* na sua carteira, ou pague com uma carteira externa para continuar.",
-        "insufficientFundsNote": "*%{amount} mais taxa, atualmente estimada em %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Não se esqueça de também somar a taxa da rede"
-      }
+      "btnConfirmedPay": "Yes, Pay",
+      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
+      "altcoinLink": "You can still fund your OB wallet with altcoins.",
+      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
+      "walletLink": "You can send funds to your OB wallet instead.",
+      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
     },
     "completeSection": {
       "paymentSent": "Pagamento Enviado!",
@@ -1115,7 +1160,16 @@
       "vendorMessagePlaceholder": "Forneça detalhes adicionais, faça uma pergunta, dê uma resposta…",
       "vendorMessageLink": "seção mensagens da página detalhes do pedido",
       "vendorMessageSent": "A sua mensagem foi enviada para %{name}, você pode continuar a conversa em %{orderLink}.",
-      "send": "Enviar"
+      "send": "Enviar",
+      "share": {
+        "title": "Share with friends",
+        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
+        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "postToTwitter": "Post to Twitter",
+        "postToFacebook": "Post to Facebook",
+        "postToPinterest": "Post to Pinterest",
+        "postToTumblr": "Post to Tumblr"
+      }
     },
     "receipt": {
       "summary": "Resumo do Pedido",
@@ -1133,7 +1187,8 @@
       "ownIDTitle": "Você Não Pode Comprar os Seus Próprios Anúncios",
       "ownIDMsg": "Você pode pré-visualizar o processo de compra de seus anúncios, mas você não pode comprá-los.",
       "paymentFailed": "O Pagamento Não Pode ser Completado",
-      "zeroPrice": "Você não pode comprar um anúncio com o preço total de zero."
+      "zeroPrice": "Você não pode comprar um anúncio com o preço total de zero.",
+      "feesFailed": "Transaction Fees Cannot Be Loaded"
     }
   },
   "moderators": {
@@ -1146,7 +1201,13 @@
       "countTransactionsFound": "%{countTransactions} encontrada(s)",
       "unableToFetch": "Não foi possível obter as suas vendas.",
       "noResults": "Nenhuma venda encontrada",
-      "returnToFromOrder": "Voltar às vendas"
+      "returnToFromOrder": "Voltar às vendas",
+      "resyncPopInMessage": {
+        "link": "Resync",
+        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "message": "%{icon} %{text} %{link}",
+        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+      }
     },
     "purchases": {
       "heading": "Compras",
@@ -1175,7 +1236,7 @@
     },
     "sort": {
       "label": "Ordernar por",
-      "unread": "Não-lida",
+      "unread": "Não lidas",
       "dateAsc": "Mais recentes",
       "dateDesc": "Mais antigas"
     },
@@ -1369,8 +1430,8 @@
         "copyAddress": "Copiar",
         "viewOnMap": "Ver no mapa",
         "memo": "Observações",
-        "addressNotes": "Observações para a Entrega",
-        "alternateContact": "Informações Adicionais para Contato"
+        "addressNotes": "Observações para a entrega",
+        "alternateContact": "Informações de contato adicionais"
       }
     },
     "fulfillOrderTab": {
@@ -1616,9 +1677,9 @@
     "invalidName": "O nome precisa ser uma string.",
     "invalidLogo": "A URL do logo deve ser uma URL válida.",
     "invalidsearch": "Você precisa fornecer uma URL de pesquisa válida.",
-    "invalidlistings": "Você precisa fornecer uma URL de pesquisa de anúncios válida",
+    "invalidlistings": "Você precisa fornecer uma URL válida",
     "invalidtorsearch": "Você precisa fornecer uma URL de pesquisa Tor válida",
-    "invalidtorlistings": "Você precisa fornecer uma URL de pesquisa de anúncios Tor válida"
+    "invalidtorlistings": "Você precisa fornecer uma URL de Tor válida"
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",

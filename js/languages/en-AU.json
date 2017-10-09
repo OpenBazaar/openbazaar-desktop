@@ -115,7 +115,7 @@
       "payment": "Your payment has been delivered.",
       "orderConfirmation": "%{vendorName} has accepted your order.",
       "declined": "%{vendorName} has declined your order.",
-      "canceled": "%{buyerName} has canceled their order.",
+      "canceled": "%{buyerName} has cancelled their order.",
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
       "orderComplete": "%{buyerName} has left feedback on their order.",
@@ -123,7 +123,7 @@
       "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
       "disputeClose": "The dispute with %{otherPartyName} has been closed.",
-      "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
+      "disputeAccepted": "The dispute with %{otherPartyName} has been finalised.",
       "follow": "%{name} has followed you.",
       "moderatorAdd": "%{name} has added you as a moderator.",
       "moderatorRemove": "%{name} has removed you as a moderator."
@@ -138,7 +138,7 @@
     "notConnectedMenuItem": "Not Connected",
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
-    "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
+    "discoverCalloutBody": "Browse and shop at hundreds of stores on OpenBazaar",
     "myPage": "My Page",
     "customizePage": "Customize Page",
     "createListing": "Create Listing",
@@ -180,7 +180,7 @@
   "userPage": {
     "followsYou": "Follows You",
     "message": "Message",
-    "customize": "Customize",
+    "customize": "Customise",
     "createListing": "Create Listing",
     "block": "Block",
     "about": "About",
@@ -212,7 +212,7 @@
     "modAddError": "There was an error adding this moderator.\n %{errMsg}",
     "modRemoveError": "There was an error removing this moderator.\n %{errMsg}",
     "storeWelcomeCalloutTitle": "Welcome to your store!",
-    "storeWelcomeCalloutBody": "Your OpenBazaar store is now live on the network. Get started by creating some listings or customizing your page.",
+    "storeWelcomeCalloutBody": "Your OpenBazaar store is now live on the network. Get started by creating some listings or customising your page.",
     "storeWelcomeCalloutBtnClose": "Close",
     "store": {
       "retryStoreFetch": "Retry",
@@ -314,11 +314,11 @@
       "sectionHeader": "OpenBazaar MIT License",
       "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
       "header": "The MIT License (MIT)",
-      "copyright": "Copright &copy; 2016 OpenBazaar Developers",
+      "copyright": "Copyright &copy; 2016 OpenBazaar Developers",
       "paragraphs": {
-        "permission": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+        "permission": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sub license, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
         "inclusion": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-        "indemnity": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+        "indemnity": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
       }
     },
     "contributorsTab": {
@@ -330,8 +330,8 @@
       "linkText": "The Story",
       "sectionHeader": "The Story of OpenBazaar",
       "paragraphs": {
-        "taakisDarkMarket": "In April 2014 at a secretive Toronto hackathon a project called \"Dark Market\" was created. Amir Taaki lead a small team of developers to build a proof of concept for a decentralized marketplace. The software was completely peer to peer with no central organization controlling it. The Dark Market entry won the hackathon, but Amir and his team decided not to continue work on the project.",
-        "briansOpenBazaar": "Brian Hoffman talked to Amir about Dark Market and learned they weren't going to continue development. He liked the idea of a decentralized marketplace, but didn't like the sole focus on darknet markets, so he forked the project and renamed it OpenBazaar",
+        "taakisDarkMarket": "In April 2014 at a secretive Toronto hackathon a project called \"Dark Market\" was created. Amir Taaki lead a small team of developers to build a proof of concept for a decentralised marketplace. The software was completely peer to peer with no central organisation controlling it. The Dark Market entry won the hackathon, but Amir and his team decided not to continue work on the project.",
+        "briansOpenBazaar": "Brian Hoffman talked to Amir about Dark Market and learned they weren't going to continue development. He liked the idea of a decentralised marketplace, but didn't like the sole focus on darknet markets, so he forked the project and renamed it OpenBazaar",
         "alphaTeamalphaRelease": "The idea of a permissionless marketplace was powerful, and people around the world joined Brian to help build this open source software. In September this team released the first test version of the software.",
         "momentOfTruth": "Over the next few months the team continued improving the software and got an encouraging response from the Bitcoin community. They visited FOSSDEM (Free Open Source Software Developers European Meeting) in Brussels early in 2015, and presented the project to an enthusiastic crowd. Brian and a few core members of the team decided that it was time to turn the project from a part-time, volunteer effort into a serious, well-funded campaign to bring free trade to the world.",
         "foundedAndFunded": "They founded a company, OB1, with a $1 million venture capital investment from Union Square Ventures and Andreessen Horowitz, and immediately began hiring developers to build a better version of the software from the ground up.",
@@ -381,7 +381,7 @@
       "helperSecondaryColor": "Body, Background",
       "helperTextColor": "Copy, About, Descriptions",
       "helperHighlightColor": "Notifications, Alerts, Badges",
-      "helperHighlightTextColor": "Color within Notifications",
+      "helperHighlightTextColor": "Colour within Notifications",
       "placeholderAbout": "Write whatever you would like on your page…",
       "placeholderName": "Name of your page",
       "placeholderHandle": "Enter your Onename @handle",
@@ -424,7 +424,7 @@
     "advancedTab": {
       "sectionName": "Advanced",
       "helperVisualEffects": "Transitions, Easing, Opacity",
-      "helperWindowControls": "Maximize, Minimize & Close controls",
+      "helperWindowControls": "Maximise, Minimise & Close controls",
       "helperSaveMetaData": "Store additional transaction information",
       "helperDefaultFee": "Priority is recommended for the fastest transactions",
       "smtp": {
@@ -464,7 +464,7 @@
         "peersHelper": "Peers you're connected to",
         "peersBtn": "Show Connected Peers",
         "resync": "Reload Transactions",
-        "resyncHelper": "Synchronize your transactions if some are missing",
+        "resyncHelper": "Synchronise your transactions if some are missing",
         "reloadTransactionsWidget": {
           "resyncBtn": "Reload Transactions",
           "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
@@ -618,11 +618,11 @@
     "themesSection": "Theme",
     "standardThemes": "Standard Themes",
     "coverPhoto": "Cover Photo",
-    "primaryColor": "Primary Color",
-    "secondaryColor": "Secondary Color",
-    "highlightColor": "Highlight Color",
-    "highlightTextColor": "Highlight Text Color",
-    "textColor": "Text Color",
+    "primaryColor": "Primary Colour",
+    "secondaryColor": "Secondary Colour",
+    "highlightColor": "Highlight Colour",
+    "highlightTextColor": "Highlight Text Colour",
+    "textColor": "Text Colour",
     "addresses": {
       "sectionName": "New Address",
       "name": "Name",
@@ -805,7 +805,6 @@
   "listingDetail": {
     "edit": "Edit",
     "delete": "Delete",
-    "clone": "Clone",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed.",
@@ -892,9 +891,9 @@
       "tags": "Tags",
       "tagsDetailed": "Tags (For getting your listing discovered)",
       "category": "Category",
-      "categoryDetailed": "Category (For organizing your store)",
+      "categoryDetailed": "Category (For organising your store)",
       "variants": "Variants",
-      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
+      "variantsDetailed": "Variants (Add additional sizes, colours, materials, etc)",
       "inventory": "Inventory",
       "returnPolicy": "Return Policy",
       "termsAndConditions": "Terms and Conditions",
@@ -912,7 +911,7 @@
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
-    "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
+    "helperSKUWithVariants": "When variants are present, SKUs can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
     "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
     "helperCondition": "The overall condition of your listing",
@@ -940,7 +939,6 @@
     "btnTermsAndConditions": "Add Terms and Conditions",
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "Primary Photo",
-    "viewListingLink": "View Listing",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
       "shippingDestinations": "Destinations",
@@ -986,7 +984,7 @@
       "btnDeleteVariant": "Delete",
       "addVariant": "+ Add Variant",
       "titleLabel": "Title",
-      "titlePlaceholder": "e.g. Size, Color, Material, etc",
+      "titlePlaceholder": "e.g. Size, Colour, Material, etc",
       "choicesLabel": "Choices",
       "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
       "toolTip": {
@@ -1005,13 +1003,6 @@
       "placeholderSKU": "SKU, ID, etc",
       "unlimitedQuantityLabel": "unlimited",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
-    },
-    "confirmCloseDialog": {
-      "title": "You have unsaved changes",
-      "bodyCreate": "You have unsaved changes while creating a listing. Are you sure you want to close?",
-      "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
-      "btnYes": "Yes",
-      "btnNo": "No"
     },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
@@ -1044,7 +1035,7 @@
     "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
     "addQueryProviderBtn": "Add search provider",
     "chooseDefaultTitle": "Select a default search provider",
-    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "chooseDefaultMsg": "This provider will be used as the default for future searches until you set a new one.",
     "providers": {
         "transactions": "Transactions",
         "myPage": "My Page"
@@ -1084,7 +1075,7 @@
     },
     "tosScreen": {
       "heading": "Terms of Service",
-      "tos": "OpenBazaar is a network for trading goods and services directly between people - using Bitcoin - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
+      "tos": "OpenBazaar is a network for trading goods and services directly between people - using Bitcoin - without any central organisation controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
     }
   },
   "pageControls": {
@@ -1132,7 +1123,7 @@
     "moderatedPayment": "Moderated Payment",
     "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "No valid moderators are available for this order.",
-    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
+    "moderationDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",
@@ -1190,8 +1181,8 @@
       "total": "Total (%{quantity})"
     },
     "errors": {
-      "moderatorsTitle": "Moderator Data Failted to Load",
-      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
+      "moderatorsTitle": "Moderator Data Failed to Load",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "Your order can not be processed due to the following errors.",
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
@@ -1265,17 +1256,17 @@
         "PENDING": "Pending",
         "AWAITING_PAYMENT": "Awaiting Payment",
         "AWAITING_PICKUP": "Awaiting Pickup",
-        "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
+        "AWAITING_FULFILLMENT": "Awaiting Fulfilment",
         "PARTIALLY_FULFILLED": "Partially Fulfilled",
         "FULFILLED": "Fulfilled",
         "COMPLETED": "Complete",
-        "CANCELED": "Canceled",
+        "CANCELED": "Cancelled",
         "DECLINED": "Declined",
         "REFUNDED": "Refunded",
         "DISPUTED": "Disputed",
         "DECIDED": "Decided",
         "RESOLVED": "Resolved",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Payment Finalised"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
@@ -1317,7 +1308,7 @@
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "notApplicable": "n/a",
-      "vendorFinalizedPayment": "You have manually finalized the order.",
+      "vendorFinalizedPayment": "You have manually finalised the order.",
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
@@ -1349,12 +1340,12 @@
       "accepted": {
         "heading": "Accepted",
         "orderAccepted": "Order Accepted",
-        "vendorCanFulfill": "You received the order and can fulfill it whenever you're ready.",
+        "vendorCanFulfill": "You received the order and can fulfil it whenever you're ready.",
         "vendorReceived": "You received the order.",
         "buyerOrderAccepted": "Thank you for your purchase!",
         "modOrderAccepted": "The vendor order has accepted the order.",
         "refundBtn": "Refund",
-        "fulfillBtn": "Fulfill Order",
+        "fulfillBtn": "Fulfil Order",
         "refundConfirm": {
           "title": "Are you sure?",
           "body": "The original amount in bitcoin will be returned to the buyer",
@@ -1423,7 +1414,7 @@
           "accepted": "Accepted",
           "fulfilled": "Fulfilled",
           "complete": "Complete",
-          "canceled": "Canceled",
+          "canceled": "Cancelled",
           "declined": "Declined",
           "refunded": "Refunded",
           "decided": "Decided",
@@ -1440,12 +1431,11 @@
         "viewOnMap": "View on map",
         "memo": "Memo",
         "addressNotes": "Delivery Notes",
-        "alternateContact": "Additional Contact Information",
-        "skuLabel": "SKU"
+        "alternateContact": "Additional Contact Information"
       }
     },
     "fulfillOrderTab": {
-      "heading": "Fulfill Order",
+      "heading": "Fulfil Order",
       "shippingCarrierLabel": "Shipping Carrier",
       "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
       "trackingLabel": "Tracking #",
@@ -1491,7 +1481,7 @@
   "orderUtil": {
     "failedAcceptHeading": "There was an error accepting the order.",
     "failedRejectHeading": "There was an error rejecting the order.",
-    "failedCancelHeading": "There was an error canceling the order.",
+    "failedCancelHeading": "There was an error cancelling the order.",
     "failedFulfillHeading": "There was an error fulfilling the order.",
     "failedRefundHeading": "There was an error refunding the order.",
     "failedCompleteHeading": "There was an error completing the order.",
@@ -1510,7 +1500,7 @@
   },
   "profileModelErrors": {
     "provideName": "You must provide a name.",
-    "provideValidHexColor": "Please provide a valid hex color.",
+    "provideValidHexColor": "Please provide a valid hex colour.",
     "locationTooLong": "The location exceeds the maximum allowable length.",
     "shortDescriptionTooLong": "The short description cannot exceed %{count} characters."
   },
@@ -1579,7 +1569,7 @@
     "provideDiscountAmount": "Please provide a discount value.",
     "percentageLow": "The percentage value must be greater than zero.",
     "percentageHigh": "You cannot set a percentage above or equal to 100%" ,
-    "priceLow": "The price must be geater than zero.",
+    "priceLow": "The price must be greater than zero.",
     "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
