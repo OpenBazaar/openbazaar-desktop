@@ -8,7 +8,7 @@
   <td class="clrBr js-totalPrice"><%= ob.calculateTotalPrice(ob.surcharge) %></td>
   <td class="clrBr">
     <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>
-    <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" data-var-type="number" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" maxlength="<%= ob.max.productIdLength %>" />
+    <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" maxlength="<%= ob.max.productIdLength %>" />
   </td>
   <td class="clrBr unconstrainedWidth quantityCol">
     <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>

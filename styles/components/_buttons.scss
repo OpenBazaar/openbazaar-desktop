@@ -114,6 +114,8 @@
   padding: 0 6px;
   font-weight: normal;
   height: auto;
+  position: relative;
+  padding-left: 1.5em;
 
   input[type="radio"] {
     display: none;
@@ -127,19 +129,16 @@
   input[type="radio"] + label:before,
   .fauxRadioBtn {
     content: '';
-    display: inline-block;
     box-sizing: border-box;
     width: 1em;
     height: 1em;
     border-radius: 50%;
     border-width: 1px;
     border-style: solid;
-    vertical-align: middle;
-    position: relative;
-    top: 0.05em;
-    margin-right: 0.4em;
-    margin-left: -0.25em;
-    //background color is assigned by the theme
+    position: absolute;
+    left: 0;
+    top: 0.1em;
+    margin: 0 0.15em;
 
     &:hover {
       cursor: inherit;

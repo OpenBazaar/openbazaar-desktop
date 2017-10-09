@@ -13,7 +13,8 @@
   <% if (ob.ownListing) { %>
     <div class="flexNoShrink" style="margin-left: auto">
       <div class="btnStrip clrSh3">
-        <a class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></a>
+        <button class="btn js-editListing clrP clrBr"><%= ob.polyT('listingDetail.edit') %></button>
+        <button class="btn js-cloneListing clrP clrBr"><%= ob.polyT('listingDetail.clone') %></button>
         <%= ob.processingButton({
           className: 'btn js-deleteListing clrP clrBr',
           btnText: ob.polyT('listingDetail.delete')
