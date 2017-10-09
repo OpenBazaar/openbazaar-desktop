@@ -1040,7 +1040,6 @@
         "transactions": "Transactions",
         "myPage": "My Page"
     },
-    "suggestions": "Suggestions:",
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",

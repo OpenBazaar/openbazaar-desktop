@@ -13,8 +13,25 @@
   "follow": {
     "typeFollow": "volgen",
     "typeUnfollow": "ontvolgen",
-    "followErrorTitle": "Er was een fout %{type} %{user}."
+    "followErrorTitle": "Er was een fout %{type} %{user}.",
+    "followBtn": "Follow",
+    "unfollowBtn": "Unfollow"
   },
+  "feeLevels": {
+    "PRIORITY": "Priority",
+    "NORMAL": "Normal",
+    "ECONOMIC": "Economic"
+  },
+  "feeChangeWidget": {
+    "label": "Bitcoin fee:",
+    "btnChange": "change"
+  },
+  "consoleWarning": {
+    "heading": "Stop!",
+    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
+    "line2": "Please close this window now."
+  },
+  "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Nu Herstarten",
   "restartLater": "Later Herstarten",
   "langChangeRestartTitle": "Opnieuw starten is nodig voor een taal verandering",
@@ -39,6 +56,10 @@
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Naar klembord gekopieerd",
   "copiedToClipboardShort": "Gekopieerd",
+  "refreshAlertPopInMessage": {
+    "refreshLink": "Refresh",
+    "message": "%{icon} %{message} %{refreshLink}"
+  },
   "abbreviatedNumbers": {
     "thousand": "%{number}k",
     "million": "%{number}m",
@@ -118,6 +139,13 @@
     "torOnTooltip": "Tor actief",
     "discoverCalloutTitle": "Ontdek",
     "discoverCalloutBody": "Browse en winkel bij honderden winkels op OpenBazaar",
+    "myPage": "My Page",
+    "customizePage": "Customize Page",
+    "createListing": "Create Listing",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "cases": "Cases",
+    "settings": "Settings",
     "toolTip": {
       "back": "Terug",
       "forward": "Verder",
@@ -198,9 +226,8 @@
       "countListingsFound": "%{countListings} gevonden",
       "inactive": "Jouw winkel is nu inactief en verborgen voor het publiek. %{link}",
       "inactiveLink": "Verander",
-      "listingDataChangedPopin": "Verkoopartikelen zijn gewijzigd. %{refreshLink}",
-      "shippingDataChangedPopin": "Jouw land en/of verzendadres zijn veranderd. Dit kan invloed hebben op welke artikelen gratis naar jou verzonden worden. We raden aan om te %{refreshLink} om de geupdate data te zien. ",
-      "popinRefreshLink": "verversen",
+      "listingDataChangedPopin": "Listing data has changed.",
+      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
       "freeShippingBanner": "Gratis Verzending",
       "sortOpts": {
         "priceAsc": "Laagste prijs te hoog",
@@ -320,7 +347,7 @@
     "settingsLabel": "Instellingen",
     "unrecognizedModelErrsWarning": {
       "title": "Kan je instellingen niet opslaan",
-      "body": "We kunnen de instellingen voor dit tabblad niet opslaan omdat er onbekende fouten zijn opgetreden. Waarschijnlijk wordt dit veroorzaakt door ongeldige waarden in een andere tabblad. Sla aub de andere tabbladen op om het veld met de ongeldige waarden en de foutmelding te identificeren. De error zal weergegeven worden boven het veld. Let op dat je na het aanpassen van de gegevens op Opslaan klikt op het tabblad waar de foutmelding verscheen. Hierna kun je terugkeren naar dit tabblad om dit tabblad op te slaan."
+      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
     },
     "generalTab": {
       "helperLanguage": "Toon interface elementen in",
@@ -438,8 +465,11 @@
         "peersBtn": "Laat peers zien waarmee je verbonden bent",
         "resync": "Herlaad transacties",
         "resyncHelper": "Synchroniseer je transacties als er enkele missen. ",
-        "resyncBtn": "Herlaad transacties ",
-        "resyncComplete": "Je transacties starten opnieuw met synchroniseren. Dit kan vijf tot tien minuten duren.",
+        "reloadTransactionsWidget": {
+          "resyncBtn": "Reload Transactions",
+          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+          "syncUnavailable": "You can only reload transactions once per hour."
+        },
         "purge": "Gedeelte bestanden opschonen",
         "purgeHelper": "Verwijder gecachte bestanden die je deelt met anderen",
         "purgeBtn": "Bestanden opschonen",
@@ -629,7 +659,7 @@
       "errorConnectionLost": "%{errorPreface} De verbinding met %{serverName} is afgebrorken. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Fout bij verbinden met %{serverName}. De server is niet bereikbaar.%{links}",
       "errorAuthFailed": "%{errorPreface} Fout bij verbinden met %{serverName}. De gebruikersnaam en/of wachtwoord zijn incorrect. %{links}",
-      "errorAuthFailedBuiltInServer": "%{errorPreface} Fout bij verbinden met %{serverName}. De auth cookie is ongeldig. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
       "editLink": "aanpassen",
       "errorTorNotConfigured": "Graag %{editLink} de %{serverName} configuratie om te bevestigen of je Tor wilt gebruiken of niet. %{links}",
       "errorTorNotAvailable": "Tor was niet gevonden. Graag %{editLink} de %{serverName} configuratie om Tor niet te gebruiken of te starten. %{links}",
@@ -677,7 +707,13 @@
       "torPwLabel": "Tor wachtwoord",
       "torPwPlaceholder": "Unhashed Tor control wachtwoord",
       "warning": "Waarschuwing:",
-      "torServerWarning": "%{warning} Om anoniem te zijn, moet de server ook in Tor mode gestart  worden."
+      "torServerWarning": "%{warning} Om anoniem te zijn, moet de server ook in Tor mode gestart  worden.",
+      "saveConfirm": {
+        "title": "Are you sure?",
+        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "btnCancel": "No, cancel",
+        "btnConfirm": "Yes, proceed"
+      }
     }
   },
   "torExternalLinkWarning": {
@@ -700,7 +736,8 @@
     "receiveMoney": {
       "title": "Ontvang geld",
       "needBitcoin": "Bitcoin nodig?",
-      "btnCancel": "Annuleer"
+      "btnCancel": "Annuleer",
+      "btnFundViaShapeshift": "Fund via ShapeShift"
     },
     "sendMoney": {
       "toLabel": "Naar",
@@ -714,9 +751,14 @@
       "sendConfirm": {
         "heading": "Weet u het zeker?",
         "body": "Een netwerk toeslag wordt toegevoegd, op dit moment isdit ongeveer %{fiatBtcPairing}",
-        "bodyFeeUnavailable": "Stuur %{ftcBtcParing}, plus een netwerk toeslag",
+        "errorHeading": "Unable to send payment",
+        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+        "bodyGenericError": "There was an error estimating the fee: %{err}",
+        "btnRetry": "Retry",
         "btnCancel": "Annuleer",
-        "btnConfirmSend": "Ja, verstuur"
+        "btnConfirmSend": "Ja, verstuur",
+        "btnClose": "Close"
       }
     },
     "transactions": {
@@ -731,16 +773,18 @@
           "title": "Betaling opnieuw proberen",
           "body": "Voet %{fiatBtcPairing}%{asterisk} toe aan de fee en verstuur de transactie opnieuw.",
           "insufficientFundsBody": "Je hebt tenminste %{fiatBtcPairing}%{asterisk} nodig in je wallet om deze transactie opnieuw te versturen met een hogere fee.",
+          "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk} geschatte prijs",
           "btnCancel": "Annuleer",
-          "btnConfirmSend": "Verzend"
+          "btnConfirmSend": "Verzend",
+          "btnRetry": "Retry"
         },
         "retryFailDialogTitle": "Kan betaling niet opnieuw proberen",
         "retryFailInsufficientFunds": "Je hebt onvoldoende vermogen (coins) om deze transactie af te ronden.",
         "feeBumpOf": "Fee verhoging van %{address}"
       },
       "noTransactionsPlaceholder": "Je hebt geen transacties",
-      "newTransactionsPopin": "%{smart_count} nieuwe transactie %{refreshLink} |||| %{smart_count} nieuwe transacties %{refreshLink}",
+      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup van recovery seed",
       "recoverySeedLink": "Backup maken van recovery seed",
       "backupWalletWarningBody": "Het lijkt er op dat je enkele transacties hebt. . Goed moment om %{link}."
@@ -763,8 +807,7 @@
     "delete": "Verwijder",
     "editListingReturnText": "Terug naar verkoopartikel",
     "freeShippingBanner": "Gratis Verzending",
-    "listingDataChangedPopin": "Verkoopartikelen zijn gewijzigd. %{refreshLink}",
-    "listingDataChangedPopinRefresh": "Ververs",
+    "listingDataChangedPopin": "Listing data has changed.",
     "viewPhotos": "Bekijk %{count} foto's",
     "type": "Type: %{type}",
     "condition": "Conditie: %{condition}",
@@ -813,11 +856,18 @@
     "freeShippingBanner": "Gratis Verzending",
     "deleting": "Verwijderen...",
     "deleted": "Verwijderd",
+    "editListingTooltip": "Edit listing",
+    "cloneListingTooltip": "Clone listing",
+    "deleteListingTooltip": "Delete listing",
     "confirmDelete": {
       "title": "Weet u het zeker?",
       "body": "Eenmaal verwijderd, kan dit niet teruggehaald worden.",
       "btnCancel": "Annuleer",
       "btnConfirm": "Ja, Verwijder"
+    },
+    "editFetchErrorDialog": {
+      "title": "There was an error retrieving the listing.",
+      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
   "listingDelete": {
@@ -969,7 +1019,7 @@
     "searchBtn": "Zoek",
     "searchPlaceholder": "Voer een zoekterm of #tag in.",
     "suggestions": "Suggesties",
-    "resultsFound": "<b>%{totalResults} artikelen</b> gevonden voor <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} verkoopartikelen",
     "sortBy": "Sorteer op",
     "changeProvider": "Sluit en kies een nieuwe searchprovider",
@@ -986,6 +1036,10 @@
     "addQueryProviderBtn": "Voeg een searchprovider toe",
     "chooseDefaultTitle": "Selecteer een default search provider",
     "chooseDefaultMsg": "Deze provider zal gebruikt worden als de default voor toekomstige zoekopdrachten, totdat je een andere instelt.",
+    "providers": {
+        "transactions": "Transactions",
+        "myPage": "My Page"
+    },
     "errors": {
       "searchFailTitle": "De zoekopdarcht bij %{provider} is mislukt. Kies een andere search provider.",
       "searchFailReason": "De search provider geeft de volgende foutmelding terug: %{error}",
@@ -1029,9 +1083,7 @@
     "displaying": "Weergegeven %{displayingCounts}"
   },
   "purchase": {
-    "refreshPurchase": "Ververs",
-    "purchaseDataChangedPopin": "De gegevens van dit verkoopartikel is gewijzigd. %{refreshLink}",
-    "purchaseDataChanged": "De data op deze pagina kan verouderd zijn. Ververs de pagina om opnieuw te beginnen met vernieuwde gegevens. %{refreshLink}",
+    "purchaseDataChangedPopin": "The data for this listing has changed.",
     "returnToListing": "Terug naar verkoopartikel.",
     "optional": "optioneel",
     "shippingTitle": "Verzending",
@@ -1069,6 +1121,7 @@
     "quantity": "Hoeveelheid",
     "useShapeShift": "Of gebruik ShapeShift in de volgende stap",
     "moderatedPayment": "Gemodereerde betaling",
+    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "Geen geldige moderators beschikbaar voor deze order.",
     "moderationDisclaimer": "Je betaling wordt veilig 'in escrow' gehouden. Als er problemen rijzen, heb je de mogelijkheid om een geschil te openen met een moderator. *De moderator service fee is alleen van toepassing als een geschil geopend wordt. ",
     "chooseModerator": "Kies deze moderator",
@@ -1090,20 +1143,12 @@
       "note2": "Uw betaling wordt beveiligd in borgstelling gezet. Als u problemen ervaart, kunt u een geschil openen.",
       "note3": "De moderator service toeslag is alleen van toepassing als een geschil wordt geopend.",
       "note4": "Als u heeft betaald, duurt het even voor het scherm ververst wordt.",
-      "confirmWallet": {
-        "title": "Weet u het zeker?",
-        "payMsg": "Betaal %{fiatBtcPairing}* aan de verkoper.",
-        "payMsgNotePlusFee": "*De netwerk fee zal worden toegevoegd bovenop het genoemde bedrag. ",
-        "payMsgNoteFeeIncluded": "*Inclusief een network fee, op dit moment geschat op %{amount}",
-        "cancel": "Annuleer",
-        "confirm": "Ja, Betaal",
-        "fundsLow": "Je wallet heeft niet genoeg Bitcoin. Voeg vermogen (coins) toe om deze aankoop af te ronden.",
-        "insufficientFundsTitle": "Onvoldoende vermogen (coins)",
-        "insufficientFundsMsg1": "Je wallet bevat nu de volgende hoeveelheid vermogen (coins) %{funds}",
-        "insufficientFundsMsg2": "Voeg %{fundGap}* toe aan je wallet, of betaal meteen externe wallet om door te gaan.",
-        "insufficientFundsNote": "*%{amount} plus fee, op dit moment geschat op  %{fee}",
-        "insufficientFundsNoteFeeUnavailable": "*Zorg er voor dat je ook de network fee toevoegt."
-      }
+      "btnConfirmedPay": "Yes, Pay",
+      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
+      "altcoinLink": "You can still fund your OB wallet with altcoins.",
+      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
+      "walletLink": "You can send funds to your OB wallet instead.",
+      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
     },
     "completeSection": {
       "paymentSent": "Betaling Verzonden!",
@@ -1115,7 +1160,16 @@
       "vendorMessagePlaceholder": "Geef aanvullende gegevens, stel een vraag, geef feedback...",
       "vendorMessageLink": "discussie sectie van de order details",
       "vendorMessageSent": "Jouw bericht is naar %{name} gestuurd, je kunt doorgaan naar de conversatie in de %{orderLink}.",
-      "send": "Verzend"
+      "send": "Verzend",
+      "share": {
+        "title": "Share with friends",
+        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
+        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "postToTwitter": "Post to Twitter",
+        "postToFacebook": "Post to Facebook",
+        "postToPinterest": "Post to Pinterest",
+        "postToTumblr": "Post to Tumblr"
+      }
     },
     "receipt": {
       "summary": "Bestellingsoverzicht",
@@ -1133,7 +1187,8 @@
       "ownIDTitle": "Je kunt niet je eigen verkoopartikelen aanschaffen",
       "ownIDMsg": "Je kunt het verkoopproces voor je eigen verkoopartikelen zien, maar je kunt ze niet aanschaffen.",
       "paymentFailed": "De betaling kon niet worden afgerond.",
-      "zeroPrice": "Je kunt een verkoopartikel met een prijs van nul niet aanschaffen."
+      "zeroPrice": "Je kunt een verkoopartikel met een prijs van nul niet aanschaffen.",
+      "feesFailed": "Transaction Fees Cannot Be Loaded"
     }
   },
   "moderators": {
@@ -1146,7 +1201,13 @@
       "countTransactionsFound": "%{countTransactions} gevonden",
       "unableToFetch": "Kan je verkopen niet ophalen.",
       "noResults": "Geen verkopen gevonden",
-      "returnToFromOrder": "Terugkeren naar verkopen"
+      "returnToFromOrder": "Terugkeren naar verkopen",
+      "resyncPopInMessage": {
+        "link": "Resync",
+        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "message": "%{icon} %{text} %{link}",
+        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+      }
     },
     "purchases": {
       "heading": "Aankopen",
