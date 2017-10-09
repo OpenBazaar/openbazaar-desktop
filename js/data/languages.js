@@ -32,7 +32,7 @@ const languages = [
   {
     name: 'Dutch (Dutch, Netherlands)',
     code: 'nl-NL',
-   },
+  },
   {
     name: 'English (English, Australia)',
     code: 'en-AU',
