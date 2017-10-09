@@ -114,8 +114,6 @@
   padding: 0 6px;
   font-weight: normal;
   height: auto;
-  position: relative;
-  padding-left: 1.5em;
 
   input[type="radio"] {
     display: none;
@@ -135,10 +133,13 @@
     border-radius: 50%;
     border-width: 1px;
     border-style: solid;
-    position: absolute;
-    left: 0;
-    top: 0.1em;
-    margin: 0 0.15em;
+    align-self: flex-start;
+    flex-shrink: 0;
+    position: relative;
+    top: 0.2em;
+    margin-right: 0.4em;
+    margin-left: -0.25em;
+    //background color is assigned by the theme
 
     &:hover {
       cursor: inherit;
