@@ -359,7 +359,7 @@ export default function connect(server, options = {}) {
               });
           };
 
-          let commandLineArgs = [];
+          let commandLineArgs = ['-v'];
           if (server.get('useTor')) commandLineArgs.push('--tor');
           const torPw = server.get('torPassword');
           if (torPw) {
