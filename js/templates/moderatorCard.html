@@ -25,12 +25,15 @@
       </div>
       <div class="row clrT2">
         <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
-        <div class="txSm">
-          <%= ob.modLanguages[0] %>
-          <% if (ob.modLanguages.length > 1) { %>
-            , and <%= ob.modLanguages.length -1 %> more.
-          <% } %>
-        </div>
+        <% if (ob.modLanguages && ob.modLanguages.length) { %>
+          <div class="txSm">
+            <% if (ob.modLanguages.length > 1) {
+                 print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
+               } else { %>
+              <%= ob.modLanguages[0] %>
+            <% } %>
+          </div>
+        <% } %>
       </div>
       <div class="flex snipKids gutterH tx5">
         <div class="flexNoShrink TODO">
