@@ -25,7 +25,12 @@
       </div>
       <div class="row clrT2">
         <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
-        <div class="txSm"><%= ob.modLanguages.join(', ') %></div>
+        <div class="txSm">
+          <%= ob.modLanguages[0] %>
+          <% if (ob.modLanguages.length > 1) { %>
+            , and <%= ob.modLanguages.length -1 %> more.
+          <% } %>
+        </div>
       </div>
       <div class="flex snipKids gutterH tx5">
         <div class="flexNoShrink TODO">
