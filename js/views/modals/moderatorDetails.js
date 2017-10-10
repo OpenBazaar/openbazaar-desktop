@@ -1,8 +1,10 @@
+import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';
 import SocialBtns from '../components/SocialBtns';
 import BaseModal from './BaseModal';
+import languages from '../../data/languages';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -36,6 +38,13 @@ export default class extends BaseModal {
   }
 
   render() {
+    const modLanguages = [];
+
+    this.model.get('moderatorInfo').get('languages').forEach(lang => {
+      const langName = _.findWhere(languages, { code: lang }).name;
+      modLanguages.push(langName);
+    });
+
     loadTemplate('modals/moderatorDetails.html', (t) => {
       this.$el.html(t({
         followedByYou: this.followedByYou,
@@ -43,6 +52,7 @@ export default class extends BaseModal {
         ownMod: app.settings.get('storeModerators').indexOf(this.model.id) !== -1,
         purchase: this.options.purchase,
         cardState: this.options.cardState,
+        modLanguages,
         ...this.model.toJSON(),
       }));
       super.render();

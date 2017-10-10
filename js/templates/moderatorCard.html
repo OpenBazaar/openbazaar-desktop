@@ -24,7 +24,8 @@
         <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
       </div>
       <div class="row clrT2">
-        <p class="clamp2"><%=ob.moderatorInfo.description %></p>
+        <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
+        <div class="txSm"><%= ob.modLanguages.join(', ') %></div>
       </div>
       <div class="flex snipKids gutterH tx5">
         <div class="flexNoShrink TODO">
@@ -51,7 +52,7 @@
   </div>
   <div class="flexNoShrink">
     <% if (ob.valid) { %>
-      <div class="flexColRows gutterV">
+      <div class="flexCol gutterV">
         <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
           <%= ob.polyT('moderatorCard.view') %>
         </button>

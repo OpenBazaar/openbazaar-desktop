@@ -1,8 +1,10 @@
+import _ from 'underscore';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import Profile from '../models/profile/Profile';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
+import languages from '../data/languages';
 
 
 export default class extends BaseVw {
@@ -65,12 +67,20 @@ export default class extends BaseVw {
   }
 
   render() {
+    const modLanguages = [];
+
+    this.model.get('moderatorInfo').get('languages').forEach(lang => {
+      const langName = _.findWhere(languages, { code: lang }).name;
+      modLanguages.push(langName);
+    });
+
     loadTemplate('moderatorCard.html', (t) => {
       this.$el.html(t({
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,
         radioStyle: this.options.radioStyle || false,
+        modLanguages,
         ...this.model.toJSON(),
       }));
 
