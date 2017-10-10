@@ -52,7 +52,7 @@ export default class extends BaseModal {
       {},
       {
         shippable,
-        moderated: !!this.moderatorIDs && this.moderatorIDs.length,
+        moderated: !!(this.moderatorIDs && this.moderatorIDs.length),
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
@@ -250,7 +250,6 @@ export default class extends BaseModal {
 
   disableModerators() {
     this.getCachedEl('#purchaseModerated').prop('checked', false);
-    this.order.moderated = false;
     this.moderators.deselectOthers();
     this.order.set('moderator', '');
   }
@@ -260,6 +259,7 @@ export default class extends BaseModal {
     this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     if (!bool) this.disableModerators();
+    this.order.moderated = bool;
     this.moderators.noneSelected = !bool;
   }
 
