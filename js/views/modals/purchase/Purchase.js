@@ -348,7 +348,8 @@ export default class extends BaseModal {
 
     // set the moderator
     const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
-    this.order.set({ moderator }, { validate: true });
+    this.order.set({ moderator });
+    this.order.set({}, { validate: true });
 
 
     // cancel any existing order
@@ -476,7 +477,7 @@ export default class extends BaseModal {
     if (cur !== 'BTC') {
       btcTotal = convertCurrency(btcTotal, cur, 'BTC');
     }
-    const allowModeration = btcTotal >= this.minModPrice && this.moderatorIDs.length > 0;
+    const allowModeration = btcTotal >= this.minModPrice && this.moderatorIDs.length;
     this.moderationOn(allowModeration);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }
@@ -537,7 +538,7 @@ export default class extends BaseModal {
         prices: this.prices,
         minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
-        hasModerators: this.moderatorIDs.length > 0,
+        hasModerators: !!this.moderatorIDs.length,
       }));
 
       super.render();
