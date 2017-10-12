@@ -260,6 +260,7 @@ export default class extends BaseModal {
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     if (!bool) this.disableModerators();
     this.order.moderated = bool;
+    this.getCachedEl('#purchaseModerated').prop('checked', bool);
     this.moderators.noneSelected = !bool;
   }
 
@@ -346,9 +347,10 @@ export default class extends BaseModal {
     }
 
     // set the moderator
-    if (this.order.moderated) {
-      this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
-    }
+    const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
+    this.order.set({ moderator });
+    this.order.set({}, { validate: true });
+
 
     // cancel any existing order
     if (this.orderSubmit) this.orderSubmit.abort();
@@ -475,7 +477,7 @@ export default class extends BaseModal {
     if (cur !== 'BTC') {
       btcTotal = convertCurrency(btcTotal, cur, 'BTC');
     }
-    const allowModeration = btcTotal >= this.minModPrice;
+    const allowModeration = btcTotal >= this.minModPrice && this.moderatorIDs.length;
     this.moderationOn(allowModeration);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }
@@ -536,7 +538,7 @@ export default class extends BaseModal {
         prices: this.prices,
         minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
-        hasModerators: this.moderatorIDs.length,
+        hasModerators: !!this.moderatorIDs.length,
       }));
 
       super.render();

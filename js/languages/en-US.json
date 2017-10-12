@@ -1642,7 +1642,8 @@
     "noItems": "You must make at least one purchase.",
     "missingAddress": "Please choose a valid shipping address.",
     "missingShippingOption": "Please choose a valid shipping option.",
-    "needsModerator": "You must select a moderator to make a Moderated Payment."
+    "needsModerator": "You must select a moderator to make a Moderated Payment.",
+    "removeModerator": "An unmoderated purchase cannot have a moderator."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",
