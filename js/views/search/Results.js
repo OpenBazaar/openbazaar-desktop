@@ -21,6 +21,7 @@ export default class extends baseVw {
 
     this.serverPage = this.options.serverPage || 0;
     this.pageSize = this.options.pageSize || 24;
+    this.reportsUrl = this.options.reportsUrl || '';
 
     this.cardViews = [];
     this.pageCollections = {};
@@ -42,6 +43,7 @@ export default class extends baseVw {
         `@${vendor.handle}` : vendor.peerID;
       const options = {
         listingBaseUrl: `${base}/store/`,
+        reportsUrl: this.reportsUrl,
         model,
         vendor,
         onStore: false,

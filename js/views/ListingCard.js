@@ -74,6 +74,7 @@ export default class extends baseVw {
     }
 
     this.viewType = opts.viewType;
+    this.reportsUrl = opts.reportsUrl || '';
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -97,6 +98,7 @@ export default class extends baseVw {
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
+      'click .js-report': 'onClickReportBtn',
       click: 'onClick',
     };
   }
@@ -166,6 +168,21 @@ export default class extends baseVw {
 
   onClickUserIcon(e) {
     e.stopPropagation();
+  }
+
+  onClickReportBtn(e) {
+    e.stopPropagation();
+    const data = {};
+    data.peerID = this.ownerGuid;
+    data.slug = this.model.get('slug');
+    data.reason = '';
+    $.ajax({
+      url: this.reportsUrl,
+      data,
+    })
+      .done()
+      .fail()
+      .always();
   }
 
   onClick(e) {
@@ -323,6 +340,7 @@ export default class extends baseVw {
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
         displayCurrency: app.settings.get('localCurrency'),
+        showReportBtn: !!this.reportsUrl,
       }));
     });
 
