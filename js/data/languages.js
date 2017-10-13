@@ -998,24 +998,58 @@ function getIndexedLanguages() {
   return _indexedLangs;
 }
 
-export function getLangByCode(code) {
+export function getLangByCode(code, translate = true, lang = app && app.localSettings &&
+  app.localSettings.get('language') || 'en-US') {
   if (!code) {
     throw new Error('Please provide a language code.');
   }
 
-  return getIndexedLanguages()[code];
+  if (translate && !lang) {
+    throw new Error('If you\'d like the name translated, please provide a ' +
+      'language.');
+  }
+
+  let langObj = getIndexedLanguages()[code];
+
+  let translatedName;
+  if (translate) {
+    if (!(app && app.polyglot)) {
+      console.warn('Unable to translate the name because the polyglot object is not available.');
+    } else {
+      translatedName = app.polyglot.t(`languages.${code}`);
+    }
+  }
+
+  if (langObj) {
+    langObj = {
+      ...langObj,
+      name: translatedName || langObj.name,
+    };
+  }
+
+  return langObj;
 }
 
-function getTranslatedLangs(lang, sort = true) {
+function getTranslatedLangs(lang = app && app.localSettings &&
+  app.localSettings.get('language') || 'en-US', sort = true) {
   if (!lang) {
-    throw new Error('Please provide the language the translated currencies' +
+    throw new Error('Please provide the language the translated languages' +
       ' should be returned in.');
   }
 
-  let translated = languages.map(language => ({
-    ...lang,
-    name: app.polyglot.t(`languages.${language.code}`),
-  }));
+  let translated = languages.map(language => {
+    let translatedName;
+    if (!(app && app.polyglot)) {
+      console.warn('Unable to translate the name because the polyglot object is not available.');
+    } else {
+      translatedName = app.polyglot.t(`languages.${language.code}`);
+    }
+
+    return {
+      ...language,
+      name: translatedName || language.name,
+    };
+  });
 
   if (sort) {
     translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));

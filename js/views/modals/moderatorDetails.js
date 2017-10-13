@@ -4,7 +4,7 @@ import app from '../../app';
 import Profile from '../../models/profile/Profile';
 import SocialBtns from '../components/SocialBtns';
 import BaseModal from './BaseModal';
-import languages from '../../data/languages';
+import { getLangByCode } from '../../data/languages';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -38,12 +38,12 @@ export default class extends BaseModal {
   }
 
   render() {
-    const modLanguages = [];
-
-    this.model.get('moderatorInfo').get('languages').forEach(lang => {
-      const langName = _.findWhere(languages, { code: lang }).name;
-      modLanguages.push(langName);
-    });
+    const modLanguages = this.model.get('moderatorInfo')
+      .get('languages')
+      .map(lang => {
+        const langData = getLangByCode(lang);
+        return langData && langData.name || lang;
+      });
 
     loadTemplate('modals/moderatorDetails.html', (t) => {
       this.$el.html(t({

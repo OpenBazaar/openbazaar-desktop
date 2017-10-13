@@ -6,7 +6,7 @@ import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
-import languages from '../../../data/languages';
+import { getTranslatedLangs } from '../../../data/languages';
 import { getTranslatedCurrencies } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 
@@ -30,7 +30,7 @@ export default class extends baseVw {
     if (this.profile.get('moderatorInfo')) {
       this.moderator = this.profile.get('moderatorInfo');
     } else {
-      this.moderator = new Moderator({ languages: [app.settings.get('language')] });
+      this.moderator = new Moderator({ languages: [app.localSettings.get('language')] });
       this.profile.set('moderatorInfo', this.moderator);
     }
 
@@ -182,7 +182,7 @@ export default class extends baseVw {
       this.$el.html(t({
         errors: this.profile.validationError || {},
         isModerator: this.profile.get('moderator'),
-        languageList: languages,
+        languageList: getTranslatedLangs(),
         defaultCurrency: app.settings.get('localCurrency'),
         currencyList: this.currencyList,
         max: {
