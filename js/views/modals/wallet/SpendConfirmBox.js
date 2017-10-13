@@ -15,7 +15,7 @@ export default class extends baseVw {
       fetchError: '',
       fee: false,
       displayCurrency: app.settings.get('localCurrency') || 'BTC',
-      btnSendText: app.polyglot.t('wallet.sendMoney.sendConfirm.btnConfirmSend'),
+      btnSendText: app.polyglot.t('wallet.spendConfirmBox.btnConfirmSend'),
       ...options.initialState || {},
     };
 
