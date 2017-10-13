@@ -44,6 +44,12 @@
       </div>
     </div>
     <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
+      <div class="rowLg">
+        <h4><%= ob.polyT('moderatorDetails.languages') %></h4>
+        <% ob.modLanguages.forEach(lang => { %>
+        <div class="rowSm txSm"><%= lang %></div>
+        <% }); %>
+      </div>
       <div class="row">
         <h4><%= ob.polyT('moderatorDetails.termsOfService') %></h4>
         <p><%= ob.moderatorInfo.termsAndConditions %></p>
