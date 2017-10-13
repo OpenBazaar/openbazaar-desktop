@@ -8,7 +8,7 @@ if (languages.length) {
     it('returns a language by code', () => {
       const code = languages[0].code;
 
-      expect(_.omit(languages[0], 'code')).to.deep.equal(getLangByCode(code));
+      expect(_.omit(languages[0], 'code')).to.deep.equal(getLangByCode(code, false));
     });
   });
 }
