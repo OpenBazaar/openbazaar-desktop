@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
