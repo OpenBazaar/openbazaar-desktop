@@ -30,7 +30,7 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
-    this.countryList = getTranslatedCountries(app.settings.get('language'));
+    this.countryList = getTranslatedCountries(app.localSettings.get('language'));
 
     this.defaultFilter = {
       category: 'all',

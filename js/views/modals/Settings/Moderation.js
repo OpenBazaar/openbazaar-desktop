@@ -39,7 +39,7 @@ export default class extends baseVw {
     this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
     this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
-    this.currencyList = getTranslatedCurrencies(app.settings.get('language'));
+    this.currencyList = getTranslatedCurrencies(app.localSettings.get('language'));
 
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({

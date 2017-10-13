@@ -99,7 +99,7 @@ export function formatPrice(price, isBtc = false) {
 // todo: check currency is one of our currencies
 export function formatCurrency(amount, currency, options) {
   const opts = {
-    locale: app && app.settings && app.settings.get('language') || 'en-US',
+    locale: app && app.localSettings && app.localSettings.get('language') || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
     useBtcSymbol: true, // if true use ฿ for btc instead of BTC
@@ -261,7 +261,7 @@ export function convertCurrency(amount, fromCur, toCur) {
  */
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
-    locale: app && app.settings && app.settings.get('language') || 'en-US',
+    locale: app && app.localSettings && app.localSettings.get('language') || 'en-US',
     btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
     skipConvertIfNoExchangeRateData: true,
     ...options,

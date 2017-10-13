@@ -30,14 +30,14 @@ export default class extends BaseView {
     this.options = opts;
 
     // get regions
-    this.select2CountryData = getTranslatedRegions(app.settings.get('language'))
+    this.select2CountryData = getTranslatedRegions(app.localSettings.get('language'))
       .map(regionObj => ({
         id: regionObj.id,
         text: `REGION_${regionObj.name}`,
       }));
 
     // now, we'll add in the countries
-    const select2countries = getTranslatedCountries(app.settings.get('language'))
+    const select2countries = getTranslatedCountries(app.localSettings.get('language'))
       .map(countryObj => ({
         id: countryObj.dataName,
         text: countryObj.name,
