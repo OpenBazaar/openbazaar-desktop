@@ -165,7 +165,7 @@ export default class extends baseVw {
         ...this.localSettings.toJSON(),
         ...this.settings.toJSON(),
         // local lang should be declared after the server model, so the local
-        // land takes precedence over the deprecated server one
+        // lang takes precedence over the deprecated server one
         language: this.localSettings.get('language'),
       }));
 
