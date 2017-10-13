@@ -960,29 +960,6 @@ const languages = [
   },
 ];
 
-// let _indexedLangs;
-
-// function getIndexedLangs() {
-//   if (_indexedLangs) return _indexedLangs;
-
-//   _indexedLangs = languages.reduce((indexedObj, language) => {
-//     indexedObj[language.code] = _.omit(language, 'code');
-//     return indexedObj;
-//   }, {});
-
-//   return _indexedLangs;
-// }
-
-// export function getLangByCode(code) {
-//   if (!code) {
-//     throw new Error('Please provide a language code.');
-//   }
-
-//   return getIndexedLangs()[code];
-// }
-
-// export default languages;
-
 export default languages;
 
 let _indexedLangs;
@@ -1066,7 +1043,7 @@ export { memoizedGetTranslatedLangs as getTranslatedLangs };
 export const translationLangs = [
   {
     name: 'English (English, America)',
-    code: 'en-US',
+    code: 'en_US',
   },
   {
     name: 'Arabic',
@@ -1074,7 +1051,7 @@ export const translationLangs = [
   },
   // {
   //   name: '中文 (Chinese, S)',
-  //   code: 'zh-CN',
+  //   code: 'zh_CN',
   // },
   // {
   //   name: 'Czech (Czech)',
@@ -1082,7 +1059,7 @@ export const translationLangs = [
   // },
   // {
   //   name: 'Croatian (Croatian, Croatia)',
-  //   code: 'hr-HR',
+  //   code: 'hr_HR',
   // },
   {
     name: 'Dansk (Danish)',
@@ -1090,15 +1067,15 @@ export const translationLangs = [
   },
   {
     name: 'Deutsch (German, Germany)',
-    code: 'de-DE',
+    code: 'de_DE',
   },
   {
     name: 'Dutch (Dutch, Netherlands)',
-    code: 'nl-NL',
+    code: 'nl_NL',
   },
   {
     name: 'English (English, Australia)',
-    code: 'en-AU',
+    code: 'en_AU',
   },
   {
     name: 'Espa&ntilde;ol (Spanish)',
@@ -1110,7 +1087,7 @@ export const translationLangs = [
   // },
   {
     name: 'Français (French, Canada)',
-    code: 'fr-CA',
+    code: 'fr_CA',
   },
   {
     name: 'Français (French)',
@@ -1126,7 +1103,7 @@ export const translationLangs = [
   // },
   // {
   //   name: '日本語 (Japanese, Japan)',
-  //   code: 'ja-JP',
+  //   code: 'ja_JP',
   // },
   // {
   //   name: '한국어 (Korean)',
@@ -1138,7 +1115,7 @@ export const translationLangs = [
   // },
   {
     name: 'Português (Portuguese, Brazil)',
-    code: 'pt-BR',
+    code: 'pt_BR',
   },
   // {
   //   name: 'Română (Romanian)',
