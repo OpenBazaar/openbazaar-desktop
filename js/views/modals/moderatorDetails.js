@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';

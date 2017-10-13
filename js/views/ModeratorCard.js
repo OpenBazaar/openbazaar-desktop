@@ -4,7 +4,7 @@ import loadTemplate from '../utils/loadTemplate';
 import app from '../app';
 import Profile from '../models/profile/Profile';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
-import languages from '../data/languages';
+import { getLangByCode } from '../data/languages';
 
 
 export default class extends BaseVw {
@@ -67,12 +67,12 @@ export default class extends BaseVw {
   }
 
   render() {
-    const modLanguages = [];
-
-    this.model.get('moderatorInfo').get('languages').forEach(lang => {
-      const langName = _.findWhere(languages, { code: lang }).name;
-      modLanguages.push(langName);
-    });
+    const modLanguages = this.model.get('moderatorInfo')
+      .get('languages')
+      .map(lang => {
+        const langData = getLangByCode(lang);
+        return langData && langData.name || lang;
+      });
 
     loadTemplate('moderatorCard.html', (t) => {
       this.$el.html(t({

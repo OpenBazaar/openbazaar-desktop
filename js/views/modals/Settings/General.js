@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import '../../../lib/select2';
 import app from '../../../app';
-import languages from '../../../data/languages';
+import { translationLangs } from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
 import { getTranslatedCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -155,7 +155,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/settings/general.html', (t) => {
       this.$el.html(t({
-        languageList: languages,
+        languageList: translationLangs,
         countryList: this.countryList,
         currencyList: this.currencyList,
         errors: {
@@ -164,6 +164,9 @@ export default class extends baseVw {
         },
         ...this.localSettings.toJSON(),
         ...this.settings.toJSON(),
+        // local lang should be declared after the server model, so the local
+        // land takes precedence over the deprecated server one
+        language: this.localSettings.get('language'),
       }));
 
       this.$('#settingsLanguageSelect').select2();
