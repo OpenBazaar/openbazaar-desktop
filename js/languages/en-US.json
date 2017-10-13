@@ -271,7 +271,8 @@
     "PERCENTAGE": "%{percentage}%**",
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
     "failed": "The information for this moderator failed to load.",
-    "invalid": "This user is not currently a moderator."
+    "invalid": "This user is not currently a moderator.",
+    "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
   },
   "moderatorDetails": {
     "messageButton": "Message",
@@ -285,7 +286,8 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Terms of Service",
     "addAsModeratorButton": "Add as Moderator",
-    "disclaimer": "**The moderator service charge only applies when a dispute arises."
+    "disclaimer": "**The moderator service charge only applies when a dispute arises.",
+    "languages": "Languages"
   },
   "about": {
     "linkText": "About OpenBazaar",

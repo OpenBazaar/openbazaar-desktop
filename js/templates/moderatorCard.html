@@ -24,7 +24,16 @@
         <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
       </div>
       <div class="row clrT2">
-        <p class="clamp2"><%=ob.moderatorInfo.description %></p>
+        <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
+        <% if (ob.modLanguages && ob.modLanguages.length) { %>
+          <div class="txSm">
+            <% if (ob.modLanguages.length > 1) {
+                 print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
+               } else { %>
+              <%= ob.modLanguages[0] %>
+            <% } %>
+          </div>
+        <% } %>
       </div>
       <div class="flex snipKids gutterH tx5">
         <div class="flexNoShrink TODO">
@@ -51,7 +60,7 @@
   </div>
   <div class="flexNoShrink">
     <% if (ob.valid) { %>
-      <div class="flexColRows gutterV">
+      <div class="flexCol gutterV">
         <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
           <%= ob.polyT('moderatorCard.view') %>
         </button>
