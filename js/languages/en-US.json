@@ -157,7 +157,7 @@
       "close": "Close",
       "currentPrice": "Current Bitcoin price"
     },
-    "ServersMenu": {
+    "serversMenu": {
       "newServer": "New Server",
       "manageServers": "Manage Servers"
     }
