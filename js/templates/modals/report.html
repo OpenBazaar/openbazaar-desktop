@@ -1,0 +1,30 @@
+<script src="../../models/Settings.js"></script><%
+  const offensive = ;
+  const fraud = ob.polyT('listingReport.reasonFraud');
+  const illegal = ob.polyT('listingReport.reasonIllegal');
+%>
+
+<div class="flexColRows gutterV">
+  <div class="topControls flexRow">
+  </div>
+  <div class="flexRow">
+    <div class="contentBox flexExpand padMd clrP clrBr clrSh3">
+        <h1><%= ob.polyT('listingReport.title') %></h1>
+      </div>
+      <hr class="clrBr">
+      <form class="">
+        <div class="btnRadio clrBr">
+           <input class="" type="radio" name="reason" value="Offensive" id="ReasonOffensive">
+           <label class="" for="ReasonOffensive"><%= ob.polyT('listingReport.reasonOffensive') %></label>
+        </div>
+      </form>
+      <hr class="clrBr">
+      <div class="flexHRight">
+        <%= ob.processingButton({
+        className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-submit',
+        btnText: ob.polyT('listingReport.submit')
+        }) %>
+      </div>
+    </div>
+  </div>
+</div>

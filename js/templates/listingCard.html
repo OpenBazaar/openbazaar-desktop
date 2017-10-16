@@ -24,8 +24,8 @@
             </div>
           </div>
         </div>
-      <% } else if (ob.showReportBtn) { %>
-        <button class="btn js-report">report this</button>
+      <% } else { %>
+        <div class="js-reportBtnWrapper"></div>
       <% } %>
   </div>
   <div class="pad clrBr borderTop">
@@ -126,3 +126,4 @@
     <%= ob.polyT('listingCard.deleted') %>
   </div>
 </div>
+<div class="js-report"></div>

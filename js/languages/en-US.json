@@ -749,7 +749,7 @@
       "clear": "Clear",
       "sendPaymentFailDialogTitle": "Unable to send payment"
     },
-    "spendConfirmBox": {  
+    "spendConfirmBox": {
       "heading": "Are you sure?",
       "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
       "errorHeading": "Unable to send payment",
@@ -760,7 +760,7 @@
       "btnCancel": "Cancel",
       "btnConfirmSend": "Yes, Send",
       "btnClose": "Close"
-    },    
+    },
     "transactions": {
       "header": "Transactions",
       "transaction": {
@@ -880,6 +880,16 @@
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
     "deleteFailedBtnOk": "Ok"
+  },
+  "listingReport": {
+    "title": "Report Listing",
+    "message": "Why are you reporting this listing?",
+    "reasonOffensive": "Offensive Content",
+    "reasonFraud": "Fraudulent or Inaccurate",
+    "reasonIllegal": "Illegal in my Area",
+    "reasonOther": "Other",
+    "reasonOtherPlaceholder": "Explain why...",
+    "submit": "Submit"
   },
   "editListing": {
     "nsfwYes": "Yes",

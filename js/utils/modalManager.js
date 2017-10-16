@@ -7,12 +7,14 @@ import DebugLog from '../views/modals/DebugLog';
 import ModeratorDetails from '../views/modals/moderatorDetails';
 import Wallet from '../views/modals/wallet/Wallet';
 import Settings from '../views/modals/Settings/Settings';
+import Report from '../views/modals/Report';
 
 let aboutModal;
 let settingsModal;
 let debugLogModal;
 let moderatorDetailsModal;
 let _wallet;
+let _report;
 
 export function launchEditListingModal(modalOptions = {}) {
   const model = modalOptions.model;
@@ -112,4 +114,17 @@ export function launchWallet(modalOptions = {}) {
 
 export function getWallet() {
   return _wallet;
+}
+
+export function launchReportModal(modalOptions = {}) {
+  // report modals have unique data, don't reuse an existing one
+  if (_report) _report.remove();
+  _report = new Report({
+    removeOnClose: true,
+    ...modalOptions,
+  })
+    .render()
+    .open();
+
+  _report.on('modal-will-remove', () => (_report = null));
 }

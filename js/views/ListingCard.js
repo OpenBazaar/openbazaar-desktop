@@ -2,13 +2,14 @@ import $ from 'jquery';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
-import { launchEditListingModal } from '../utils/modalManager';
+import { launchEditListingModal, launchReportModal } from '../utils/modalManager';
 import { isHiRez } from '../utils/responsive';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
+import ReportBtn from './ReportBtn';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -98,7 +99,6 @@ export default class extends baseVw {
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
-      'click .js-report': 'onClickReportBtn',
       click: 'onClick',
     };
   }
@@ -170,21 +170,6 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
-  onClickReportBtn(e) {
-    e.stopPropagation();
-    const data = {};
-    data.peerID = this.ownerGuid;
-    data.slug = this.model.get('slug');
-    data.reason = '';
-    $.ajax({
-      url: this.reportsUrl,
-      data,
-    })
-      .done()
-      .fail()
-      .always();
-  }
-
   onClick(e) {
     if (this.deleteConfirmOn) return;
     if (!this.ownListing ||
@@ -253,6 +238,19 @@ export default class extends baseVw {
       });
 
     return this.fullListingFetch;
+  }
+
+  onReportSubmitted() {
+
+  }
+
+  startReport() {
+    const reportModel = launchReportModal({
+      peerID: this.ownerGuid,
+      slug: this.model.get('slug'),
+      url: this.reportsUrl,
+    });
+    this.listenTo(reportModel, 'submitted', this.onReportSubmitted)
   }
 
   get ownListing() {
@@ -340,7 +338,6 @@ export default class extends baseVw {
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
         displayCurrency: app.settings.get('localCurrency'),
-        showReportBtn: !!this.reportsUrl,
       }));
     });
 
@@ -364,6 +361,13 @@ export default class extends baseVw {
         this.getCachedEl('.js-listingImageLoadSpinner')
           .remove();
       });
+    }
+
+    if (this.reportBtn) this.reportBtn.remove();
+    if (!!this.reportsUrl) {
+      this.reportBtn = new ReportBtn();
+      this.listenTo(this.reportBtn, 'startReport', this.startReport);
+      this.$('.js-reportBtnWrapper').append(this.reportBtn.render().el);
     }
 
     return this;

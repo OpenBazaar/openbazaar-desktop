@@ -20,7 +20,7 @@ export default class extends BaseModal {
   }
 
   className() {
-    return `${super.className()} moderatorDetails modalTop modalScrollPage modalNarrow`;
+    return `${super.className()} moderatorDetails modalTop modalNarrow`;
   }
 
   events() {
