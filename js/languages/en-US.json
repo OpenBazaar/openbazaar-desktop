@@ -809,7 +809,7 @@
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed.",
-    "viewPhotos": "View %{count} Photos",
+    "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
     "tags": "Tags",
