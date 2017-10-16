@@ -437,7 +437,7 @@ export default class extends baseVw {
     const isDefaultProvider =
       this.sProvider === app.searchProviders[`default${this.torString}Provider`];
 
-    loadTemplate('search/Search.html', (t) => {
+    loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
         sortBySelected: this.sortBySelected,

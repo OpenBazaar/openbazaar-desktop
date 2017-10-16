@@ -142,7 +142,7 @@ export default class extends baseVw {
 
 
   render() {
-    loadTemplate('search/Results.html', (t) => {
+    loadTemplate('search/results.html', (t) => {
       this.$el.html(t());
 
       this.$resultsGrid = this.$('.js-resultsGrid');
