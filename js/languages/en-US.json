@@ -199,6 +199,12 @@
     "website": "Website",
     "email": "Email",
     "noLocation": "No Location",
+    "tabTitles": {
+      "home": "Home",
+      "store": "Store",
+      "following": "Following",
+      "followers": "Followers"
+    },
     "followTab": {
       "noFollowers": "No One is Following %{name} Yet",
       "noFollowing": "%{name} is Not Following Anyone Yet",
@@ -1301,7 +1307,8 @@
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
       "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
-      "retryLink": "retry"
+      "retryLink": "retry",
+      "btnSend": "Send"
     },
     "contractTab": {
       "heading": "Contract (JSON)",
