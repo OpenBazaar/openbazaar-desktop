@@ -19,6 +19,7 @@
   cursor: pointer;
   font-weight: 700;
   transition: border 0.15s ease;
+  text-align: center;
 
   &:hover:not(.btnRadio, .btnAsLink),
   &:focus:not(.btnRadio, .btnAsLink) {
