@@ -6,7 +6,7 @@
       <hr class="clrBr">
       <form class="flexCol gutterV compact">
         <div class="btnRadio clrBr">
-          <input type="radio" name="reason" value="Offensive" id="Offensive">
+          <input type="radio" name="reason" value="Offensive" checked id="Offensive">
           <label for="Offensive"><%= ob.polyT('listingReport.reasonOffensive') %></label>
         </div>
         <div class="btnRadio clrBr">
@@ -22,13 +22,14 @@
             <input type="radio" name="reason" value="Other" id="ReasonOther">
             <label for="ReasonOther"><%= ob.polyT('listingReport.reasonOther') %></label>
           </div>
-          <input type="text" class="otherInput clrBr clrSh2" name="other">
+          <input type="text" class="js-otherInput clrBr clrSh2" name="other">
         </div>
       </form>
       <hr class="clrBr">
       <div class="flexHRight">
+        <% const isReporting = ob.reporting ? 'processing' : ''; %>
         <%= ob.processingButton({
-        className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-submit',
+        className: `btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn ${isReporting} js-submit`,
         btnText: ob.polyT('listingReport.submit')
         }) %>
       </div>

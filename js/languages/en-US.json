@@ -889,7 +889,9 @@
     "reasonIllegal": "Illegal in my Area",
     "reasonOther": "Other",
     "reasonOtherPlaceholder": "Explain why...",
-    "submit": "Submit"
+    "submit": "Submit",
+    "errorTitle": "Your report could not be submitted due to an error.",
+    "error404": "The report url returned a 404 error, it could not be reached."
   },
   "editListing": {
     "nsfwYes": "Yes",
