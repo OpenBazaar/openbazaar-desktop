@@ -1,21 +1,28 @@
-<script src="../../models/Settings.js"></script><%
-  const offensive = ;
-  const fraud = ob.polyT('listingReport.reasonFraud');
-  const illegal = ob.polyT('listingReport.reasonIllegal');
-%>
-
 <div class="flexColRows gutterV">
-  <div class="topControls flexRow">
-  </div>
+  <div class="topControls flexRow"></div>
   <div class="flexRow">
     <div class="contentBox flexExpand padMd clrP clrBr clrSh3">
-        <h1><%= ob.polyT('listingReport.title') %></h1>
-      </div>
+      <h1><%= ob.polyT('listingReport.title') %></h1>
       <hr class="clrBr">
-      <form class="">
+      <form class="flexCol gutterV compact">
         <div class="btnRadio clrBr">
-           <input class="" type="radio" name="reason" value="Offensive" id="ReasonOffensive">
-           <label class="" for="ReasonOffensive"><%= ob.polyT('listingReport.reasonOffensive') %></label>
+          <input type="radio" name="reason" value="Offensive" id="Offensive">
+          <label for="Offensive"><%= ob.polyT('listingReport.reasonOffensive') %></label>
+        </div>
+        <div class="btnRadio clrBr">
+          <input type="radio" name="reason" value="Fraudulent" id="Fraud">
+          <label for="Fraud"><%= ob.polyT('listingReport.reasonFraud') %></label>
+        </div>
+        <div class="btnRadio clrBr">
+          <input type="radio" name="reason" value="Illegal" id="Illegal">
+          <label for="Illegal"><%= ob.polyT('listingReport.reasonIllegal') %></label>
+        </div>
+        <div class="flex gutterH">
+          <div class="btnRadio clrBr">
+            <input type="radio" name="reason" value="Other" id="ReasonOther">
+            <label for="ReasonOther"><%= ob.polyT('listingReport.reasonOther') %></label>
+          </div>
+          <input type="text" class="otherInput clrBr clrSh2" name="other">
         </div>
       </form>
       <hr class="clrBr">

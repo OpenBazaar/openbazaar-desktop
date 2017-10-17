@@ -5,23 +5,25 @@
   </div>
   <div class="col6">
     <% if (ob.errors['notifications']) print(ob.formErrorTmpl({ errors: ob.errors['notifications'] })) %>
-    <div class="btnRadio clrBr">
-      <input type="radio"
-             name="notifications"
-             value="true"
-             id="smtpNotificationsOn"
-             data-var-type="boolean"
-      <% if (ob.notifications) { %>checked<% } %>>
-      <label for="smtpNotificationsOn"><%= ob.polyT('settings.on') %></label>
-    </div>
-    <div class="btnRadio clrBr">
-      <input type="radio"
-             name="notifications"
-             value="false"
-             id="smtpNotificationsOff"
-             data-var-type="boolean"
-      <% if (!ob.notifications) { %>checked<% } %>>
-      <label for="smtpNotificationsOff"><%= ob.polyT('settings.off') %></label>
+    <div class="btnStrip">
+      <div class="btnRadio clrBr">
+        <input type="radio"
+               name="notifications"
+               value="true"
+               id="smtpNotificationsOn"
+               data-var-type="boolean"
+        <% if (ob.notifications) { %>checked<% } %>>
+        <label for="smtpNotificationsOn"><%= ob.polyT('settings.on') %></label>
+      </div>
+      <div class="btnRadio clrBr">
+        <input type="radio"
+               name="notifications"
+               value="false"
+               id="smtpNotificationsOff"
+               data-var-type="boolean"
+        <% if (!ob.notifications) { %>checked<% } %>>
+        <label for="smtpNotificationsOff"><%= ob.polyT('settings.off') %></label>
+      </div>
     </div>
   </div>
 </div>
