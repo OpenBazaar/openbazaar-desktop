@@ -83,7 +83,7 @@ export function abbrNum(_number, _decPlaces = 1) {
         i++;
       }
 
-      let lang = app && app.localSettings && app.localSettings.get('language');
+      let lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang();
 
       if (!lang) {
         console.warn('Unable to get the languages from the local settings. Using en-US.');
