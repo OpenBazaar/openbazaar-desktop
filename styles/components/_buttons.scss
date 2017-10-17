@@ -210,6 +210,15 @@
   height: 30px;
 }
 
+.iconBtnTn {
+  //this button has only an icon in it and it's very small
+  @extend .btn;
+  font-size: $tx5;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+}
+
 .btnThin {
   padding: 0 12px;
 }
