@@ -241,16 +241,18 @@ export default class extends baseVw {
   }
 
   onReportSubmitted() {
-
+    if (this.reportBtn) {
+      this.reportBtn.setState({ reported: true });
+    }
   }
 
   startReport() {
-    const reportModel = launchReportModal({
+    const reportModal = launchReportModal({
       peerID: this.ownerGuid,
       slug: this.model.get('slug'),
       url: this.reportsUrl,
     });
-    this.listenTo(reportModel, 'submitted', this.onReportSubmitted)
+    this.listenTo(reportModal, 'submitted', this.onReportSubmitted);
   }
 
   get ownListing() {

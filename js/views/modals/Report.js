@@ -55,9 +55,6 @@ export default class extends BaseModal {
         this.trigger('submitted');
       })
       .fail((xhr) => {
-        console.log(xhr)
-        console.log(xhr.status)
-        console.log(xhr.status === 404)
         let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
         if (xhr.status === 404) failReason = app.polyglot.t('listingReport.error404');
         openSimpleMessage(

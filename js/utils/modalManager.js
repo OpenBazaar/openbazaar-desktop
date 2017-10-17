@@ -127,4 +127,6 @@ export function launchReportModal(modalOptions = {}) {
     .open();
 
   _report.on('modal-will-remove', () => (_report = null));
+
+  return _report;
 }
