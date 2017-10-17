@@ -15,23 +15,11 @@ export default class extends BaseModal {
     this.options = opts;
     this.debugLog = opts.debugLog;
 
-    // If the debug log gets too long, the modal will take a long
-    // time to appear because it's taking the browser so long
-    // to paint the content. To be simple, for now, we'll just
-    // trunacate it if it's beyond a certain length.
-    const splitDebugLog = this.debugLog.replace('\r\n', '\n')
-      .split('\n');
-
-    if (splitDebugLog.length > this.maxDebugLines) {
-      this.debugLog = '< Previous content has been truncated >\n\n' +
-        `${splitDebugLog.slice(splitDebugLog.length - this.maxDebugLines).join('\n')}`;
-    }
-
     ipcRenderer.on('server-log', this.onServerConnectLog.bind(this));
   }
 
   get maxDebugLines() {
-    return 5000;
+    return 1000;
   }
 
   className() {
@@ -54,7 +42,40 @@ export default class extends BaseModal {
   }
 
   onServerConnectLog(e, msg) {
-    this.$debugLog.append(msg);
+    this.debugLog += msg;
+
+    if (this.isOpen()) {
+      // re-rendering while the modal is open might be too disruptive (e.g. scroll position would
+      // be lost)
+      this.$debugLog.append(msg);
+    } else {
+      // If the modal is not open, we'll re-render since that will use the updated debug log which
+      // was truncated if too long.
+      this.render();
+    }
+  }
+
+  get debugLog() {
+    return this._debugLog;
+  }
+
+  set debugLog(log) {
+    if (typeof log !== 'string') {
+      throw new Error('Please provide the log as a string.');
+    }
+
+    // If the debug log gets too long, the modal will take a long time to render because it's taking
+    // the browser so long to paint the content. To be simple, for now, we'll just truncate it if
+    // it's beyond a certain number of lines.
+    const splitLog = log.replace('\r\n', '\n')
+      .split('\n');
+
+    if (splitLog.length > this.maxDebugLines) {
+      this._debugLog = '< Previous content has been truncated >\n\n' +
+        `${log.slice(log.length - this.maxDebugLines).join('\n')}`;
+    } else {
+      this._debugLog = log;
+    }
   }
 
   get $debugLog() {

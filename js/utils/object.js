@@ -31,3 +31,12 @@ export function removeProp(obj, key) {
 
   return obj;
 }
+
+// https://stackoverflow.com/a/13075985/632806
+/*
+ * Return true if obj is a promise.
+ */
+export function isPromise(obj) {
+  return typeof obj === 'object' &&
+    typeof obj.then === 'function';
+}

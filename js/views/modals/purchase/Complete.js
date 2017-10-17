@@ -20,7 +20,7 @@ export default class extends BaseVw {
     this.processingTime = this.options.listing.get('item').processingTime ||
       app.polyglot.t('purchase.completeSection.noData');
     this.vendorPeerID = this.options.listing.get('vendorID').peerID;
-    this.orderID = ''; // supplied by pending.js when the order is paid for
+    this._orderID = '';
   }
 
   className() {
@@ -77,6 +77,14 @@ export default class extends BaseVw {
     e.preventDefault();
     this.sendMessageInput();
     e.preventDefault();
+  }
+
+  get orderID() {
+    return this._orderID;
+  }
+
+  set orderID(orderID) {
+    if (orderID !== this._orderID) this._orderID = orderID;
   }
 
   get $messageInput() {

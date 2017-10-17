@@ -11,6 +11,7 @@ import Results from './Results';
 import ResultsCol from '../../collections/Results';
 import Providers from './SearchProviders';
 import ProviderMd from '../../models/search/SearchProvider';
+import Suggestions from './Suggestions';
 import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
@@ -27,6 +28,21 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
+
+    this.defaultSuggestions = this.options.defaultSuggestions ||
+      [
+        'books',
+        'clothing',
+        'electronics',
+        'food',
+        'games',
+        'health',
+        'movies',
+        'music',
+        'sports',
+        'toys',
+      ];
+
     // in the future the may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
@@ -378,6 +394,10 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
+  onClickSuggestion(opts) {
+    this.processTerm(opts.suggestion);
+  }
+
   scrollToTop() {
     this.$el[0].scrollIntoView();
   }
@@ -437,8 +457,7 @@ export default class extends baseVw {
     });
     const filterWrapper = this.$('.js-filterWrapper');
     filterWrapper.find('select').select2({
-      // disables the search box
-      minimumResultsForSearch: Infinity,
+      minimumResultsForSearch: 10,
       templateResult: selectEmojis,
       templateSelection: selectEmojis,
     });
@@ -459,6 +478,15 @@ export default class extends baseVw {
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
+
+    if (this.suggestions) this.suggestions.remove();
+    this.suggestions = this.createChild(Suggestions, {
+      initialState: {
+        suggestions: Array.isArray(data.suggestions) ? data.suggestions : this.defaultSuggestions,
+      },
+    });
+    this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
+    this.$('.js-suggestions').append(this.suggestions.render().el);
 
     // use the initial set of results data to create the results view
     if (data) this.createResults(data, state.searchUrl);

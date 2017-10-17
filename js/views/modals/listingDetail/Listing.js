@@ -14,6 +14,7 @@ import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from './Reviews';
+import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -121,6 +122,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-editListing': 'onClickEditListing',
+      'click .js-cloneListing': 'onClickCloneListing',
       'click .js-deleteListing': 'onClickDeleteListing',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
@@ -154,13 +156,6 @@ export default class extends BaseModal {
   }
 
   onClickEditListing() {
-    this.editModal = launchEditListingModal({
-      model: this.model,
-      returnText: app.polyglot.t('listingDetail.editListingReturnText'),
-    });
-
-    this.$el.addClass('hide');
-
     const onCloseEditModal = () => {
       this.close();
 
@@ -169,15 +164,30 @@ export default class extends BaseModal {
       }
     };
 
-    this.listenTo(this.editModal, 'close', onCloseEditModal);
-
     const onEditModalClickReturn = () => {
-      this.stopListening(null, null, onCloseEditModal);
-      this.editModal.remove();
-      this.$el.removeClass('hide');
+      this.editModal.confirmClose()
+        .done(() => {
+          this.stopListening(null, null, onCloseEditModal);
+          this.editModal.remove();
+          this.$el.removeClass('hide');
+        });
     };
 
+    this.editModal = launchEditListingModal({
+      model: this.model,
+      returnText: app.polyglot.t('listingDetail.editListingReturnText'),
+      onClickViewListing: onEditModalClickReturn,
+    });
+
+    this.$el.addClass('hide');
+    this.listenTo(this.editModal, 'close', onCloseEditModal);
     this.listenTo(this.editModal, 'click-return', onEditModalClickReturn);
+  }
+
+  onClickCloneListing() {
+    launchEditListingModal({
+      model: this.model.cloneListing(),
+    });
   }
 
   onClickDeleteListing() {
@@ -527,6 +537,14 @@ export default class extends BaseModal {
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
+
+      if (!this.model.isOwnListing) {
+        if (this.socialBtns) this.socialBtns.remove();
+        this.socialBtns = this.createChild(SocialBtns, {
+          targetID: this.vendor.peerID,
+        });
+        this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+      }
 
       this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;

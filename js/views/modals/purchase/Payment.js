@@ -89,26 +89,47 @@ export default class extends BaseVw {
   }
 
   clickPayFromWallet(e) {
-    this.spendConfirmBox.setState({ show: true });
-    this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
+    const insufficientFunds = this.balanceRemaining > app.walletBalance.get('confirmed');
+
+    if (insufficientFunds) {
+      this.spendConfirmBox.setState({
+        show: true,
+        fetchFailed: true,
+        fetchError: 'ERROR_INSUFFICIENT_FUNDS',
+      });
+    } else {
+      this.spendConfirmBox.setState({ show: true });
+      this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
+    }
+
     e.stopPropagation();
+  }
+
+  showSpendError(error = '') {
+    openSimpleMessage(app.polyglot.t('purchase.errors.paymentFailed'), error);
   }
 
   walletConfirm() {
     this.getCachedEl('.js-payFromWallet').addClass('processing');
     this.spendConfirmBox.setState({ show: false });
 
-    spend({
-      address: this.paymentAddress,
-      amount: this.balanceRemaining,
-      currency: 'BTC',
-    })
-      .fail(jqXhr => {
-        openSimpleMessage(app.polyglot.t('purchase.errors.paymentFailed'),
-          jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
-        if (this.isRemoved()) return;
-        this.getCachedEl('.js-payFromWallet').removeClass('processing');
-      });
+    try {
+      spend({
+        address: this.paymentAddress,
+        amount: this.balanceRemaining,
+        currency: 'BTC',
+      })
+        .fail(jqXhr => {
+          this.showSpendError(jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
+          if (this.isRemoved()) return;
+          this.getCachedEl('.js-payFromWallet').removeClass('processing');
+        });
+    } catch (e) {
+      // This is almost certainly a dev error if this happens, but it prevents the purchase and
+      // is confusing and at least to make debugging easier, we'll display an error modal.
+      this.showSpendError(e.message || '');
+      this.getCachedEl('.js-payFromWallet').removeClass('processing');
+    }
   }
 
   clickPayFromAlt() {

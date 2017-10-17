@@ -205,6 +205,13 @@ function createWindow() {
       },
     },
     {
+      label: 'Toggle Developer Tools',
+      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+      click(item, focusedWindow) {
+        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+      },
+    },
+    {
       role: 'togglefullscreen',
     },
     {
@@ -219,16 +226,6 @@ function createWindow() {
       role: 'resetzoom',
     },
   ];
-
-  if (!isBundledApp()) {
-    viewSubmenu.splice(1, 0, {
-      label: 'Toggle Developer Tools',
-      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-      click(item, focusedWindow) {
-        if (focusedWindow) focusedWindow.webContents.toggleDevTools();
-      },
-    });
-  }
 
   const template = [
     {
@@ -399,7 +396,7 @@ function createWindow() {
         click() {
           mainWindow.focus();
           mainWindow.restore();
-          mainWindow.webContents.send('show-server-log', global.serverLog);
+          mainWindow.webContents.send('show-server-log');
         },
       },
       {
@@ -640,10 +637,15 @@ const log = msg => {
   }
 
   if (!msg) return;
-  global.serverLog += msg;
+
+  // Prevent the logs / msg from getting so large it eats up all the ram
+  // and crashes the client.
+  const message = msg.slice(msg.length - 500000);
+  global.serverLog += message;
+  global.serverLog = global.serverLog.slice(global.serverLog.length - 2000000);
 
   if (mainWindow) {
-    mainWindow.webContents.send('server-log', msg);
+    mainWindow.webContents.send('server-log', message);
   }
 };
 

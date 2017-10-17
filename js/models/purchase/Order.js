@@ -64,6 +64,11 @@ export default class extends BaseModel {
       addError('moderated', app.polyglot.t('orderModelErrors.needsModerator'));
     }
 
+    if (!this.moderated && attrs.moderator) {
+      // this should only happen if there is a developer error
+      addError('moderated', app.polyglot.t('orderModelErrors.removeModerator'));
+    }
+
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;

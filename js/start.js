@@ -525,7 +525,7 @@ serverConnectEvents.on('connected', () => {
 });
 
 // Handle a lost connection.
-serverConnectEvents.on('disconnect', () => {
+serverConnectEvents.on('disconnected', () => {
   app.connectionManagmentModal.setModalOptions({
     dismissOnOverlayClick: false,
     dismissOnEscPress: false,
@@ -547,7 +547,7 @@ const onWillRouteCloseConnModal =
   () => app.connectionManagmentModal.close();
 serverConnectEvents.on('connected', () =>
   app.router.on('will-route', onWillRouteCloseConnModal));
-serverConnectEvents.on('disconnect', () =>
+serverConnectEvents.on('disconnected', () =>
   app.router.off('will-route', onWillRouteCloseConnModal));
 
 
@@ -786,3 +786,10 @@ ipcRenderer.on('close-attempt', (e) => {
 
 // initialize our listing delete handler
 listingDeleteHandler();
+
+if (remote.getGlobal('isBundledApp')()) {
+  console.log(`%c${app.polyglot.t('consoleWarning.heading')}`,
+    'color: red; font-weight: bold; font-size: 50px;');
+  console.log(`%c${app.polyglot.t('consoleWarning.line1')}`, 'color: red;');
+  console.log(`%c${app.polyglot.t('consoleWarning.line2')}`, 'color: blue;');
+}

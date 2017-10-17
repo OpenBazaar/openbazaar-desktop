@@ -13,7 +13,9 @@
   "follow": {
     "typeFollow": "following",
     "typeUnfollow": "unfollowing",
-    "followErrorTitle": "There was an error %{type} %{user}."
+    "followErrorTitle": "There was an error %{type} %{user}.",
+    "followBtn": "Follow",
+    "unfollowBtn": "Unfollow"
   },
   "feeLevels": {
     "PRIORITY": "Priority",
@@ -24,6 +26,12 @@
     "label": "Bitcoin fee:",
     "btnChange": "change"
   },
+  "consoleWarning": {
+    "heading": "Stop!",
+    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
+    "line2": "Please close this window now."
+  },
+  "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Restart Now",
   "restartLater": "Restart Later",
   "langChangeRestartTitle": "Restart needed for language change",
@@ -131,6 +139,13 @@
     "torOnTooltip": "Tor active",
     "discoverCalloutTitle": "Discover",
     "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
+    "myPage": "My Page",
+    "customizePage": "Customize Page",
+    "createListing": "Create Listing",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "cases": "Cases",
+    "settings": "Settings",
     "toolTip": {
       "back": "Back",
       "forward": "Forward",
@@ -332,7 +347,7 @@
     "settingsLabel": "Settings",
     "unrecognizedModelErrsWarning": {
       "title": "Unable to save your settings",
-      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
     },
     "generalTab": {
       "helperLanguage": "Display interface elements in",
@@ -450,8 +465,11 @@
         "peersBtn": "Show Connected Peers",
         "resync": "Reload Transactions",
         "resyncHelper": "Synchronize your transactions if some are missing",
-        "resyncBtn": "Reload Transactions",
-        "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+        "reloadTransactionsWidget": {
+          "resyncBtn": "Reload Transactions",
+          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+          "syncUnavailable": "You can only reload transactions once per hour."
+        },
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
@@ -641,7 +659,7 @@
       "errorConnectionLost": "%{errorPreface} The connection to %{serverName} has been lost. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
       "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
-      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The auth cookie is invalid. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
       "editLink": "edit",
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
@@ -729,20 +747,20 @@
       "notePlaceholder": "Only seen by you",
       "sendBtn": "Send",
       "clear": "Clear",
-      "sendPaymentFailDialogTitle": "Unable to send payment",
-      "sendConfirm": {
-        "heading": "Are you sure?",
-        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "errorHeading": "Unable to send payment",
-        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
-        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
-        "bodyGenericError": "There was an error estimating the fee: %{err}",
-        "btnRetry": "Retry",
-        "btnCancel": "Cancel",
-        "btnConfirmSend": "Yes, Send",
-        "btnClose": "Close"
-      }
+      "sendPaymentFailDialogTitle": "Unable to send payment"
     },
+    "spendConfirmBox": {  
+      "heading": "Are you sure?",
+      "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+      "errorHeading": "Unable to send payment",
+      "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+      "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+      "bodyGenericError": "There was an error estimating the fee: %{err}",
+      "btnRetry": "Retry",
+      "btnCancel": "Cancel",
+      "btnConfirmSend": "Yes, Send",
+      "btnClose": "Close"
+    },    
     "transactions": {
       "header": "Transactions",
       "transaction": {
@@ -787,6 +805,7 @@
   "listingDetail": {
     "edit": "Edit",
     "delete": "Delete",
+    "clone": "Clone",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed.",
@@ -848,7 +867,7 @@
       "btnConfirm": "Yes, Delete"
     },
     "editFetchErrorDialog": {
-      "title": "There was an error retreiving the listing.",
+      "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
     }
   },
@@ -921,6 +940,7 @@
     "btnTermsAndConditions": "Add Terms and Conditions",
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "Primary Photo",
+    "viewListingLink": "View Listing",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
       "shippingDestinations": "Destinations",
@@ -986,6 +1006,13 @@
       "unlimitedQuantityLabel": "unlimited",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
     },
+    "confirmCloseDialog": {
+      "title": "You have unsaved changes",
+      "bodyCreate": "You have unsaved changes while creating a listing. Are you sure you want to close?",
+      "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
+      "btnYes": "Yes",
+      "btnNo": "No"
+    },
     "maxCatsWarning": "You have reached the maximum amount of categories allowed.",
     "maxTagsWarning": "You have reached the maximum amount of tags allowed.",
     "errors": {
@@ -1018,6 +1045,10 @@
     "addQueryProviderBtn": "Add search provider",
     "chooseDefaultTitle": "Select a default search provider",
     "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "providers": {
+        "transactions": "Transactions",
+        "myPage": "My Page"
+    },
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
@@ -1138,7 +1169,16 @@
       "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
       "vendorMessageLink": "discussion section of the order details",
       "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
-      "send": "Send"
+      "send": "Send",
+      "share": {
+        "title": "Share with friends",
+        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
+        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "postToTwitter": "Post to Twitter",
+        "postToFacebook": "Post to Facebook",
+        "postToPinterest": "Post to Pinterest",
+        "postToTumblr": "Post to Tumblr"
+      }
     },
     "receipt": {
       "summary": "Order Summary",
@@ -1170,7 +1210,13 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
-      "returnToFromOrder": "Return to sales"
+      "returnToFromOrder": "Return to sales",
+      "resyncPopInMessage": {
+        "link": "Resync",
+        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "message": "%{icon} %{text} %{link}",
+        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+      }
     },
     "purchases": {
       "heading": "Purchases",
@@ -1394,7 +1440,8 @@
         "viewOnMap": "View on map",
         "memo": "Memo",
         "addressNotes": "Delivery Notes",
-        "alternateContact": "Additional Contact Information"
+        "alternateContact": "Additional Contact Information",
+        "skuLabel": "SKU"
       }
     },
     "fulfillOrderTab": {
@@ -1595,7 +1642,8 @@
     "noItems": "You must make at least one purchase.",
     "missingAddress": "Please choose a valid shipping address.",
     "missingShippingOption": "Please choose a valid shipping option.",
-    "needsModerator": "You must select a moderator to make a Moderated Payment."
+    "needsModerator": "You must select a moderator to make a Moderated Payment.",
+    "removeModerator": "An unmoderated purchase cannot have a moderator."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",

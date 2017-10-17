@@ -9,7 +9,7 @@ const countries = [
     number: '971',
   },
   {
-    name: 'Aland Islands',
+    name: 'Åland Islands',
     dataName: 'ALAND_ISLANDS',
     currency: 'EUR',
     number: '978',
@@ -573,7 +573,7 @@ const countries = [
     number: '332',
   },
   {
-    name: 'Heard Island and McDONALD Islands',
+    name: 'Heard Island and McDonald Islands',
     dataName: 'HEARD_ISLAND',
     currency: 'AUD',
     number: '036',
@@ -1011,7 +1011,7 @@ const countries = [
     number: '840',
   },
   {
-    name: 'PANAMA',
+    name: 'Panama',
     dataName: 'PANAMA',
     currency: 'PAB',
     number: '590',
@@ -1431,7 +1431,7 @@ const countries = [
     number: '937',
   },
   {
-    name: 'VietNam',
+    name: 'Vietnam',
     dataName: 'VIETNAM',
     currency: 'VND',
     number: '704',

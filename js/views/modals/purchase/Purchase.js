@@ -52,7 +52,7 @@ export default class extends BaseModal {
       {},
       {
         shippable,
-        moderated: !!this.moderatorIDs && this.moderatorIDs.length,
+        moderated: !!(this.moderatorIDs && this.moderatorIDs.length),
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
@@ -242,6 +242,7 @@ export default class extends BaseModal {
     } else {
       // deselect all the moderators after storing any selected moderator
       this._oldMod = this.moderators.selectedIDs[0];
+      this.moderators.noneSelected = true;
       this.moderators.deselectOthers();
       this.order.set('moderator', '');
     }
@@ -249,19 +250,22 @@ export default class extends BaseModal {
 
   disableModerators() {
     this.getCachedEl('#purchaseModerated').prop('checked', false);
-    this.order.moderated = false;
+    this.moderators.deselectOthers();
     this.order.set('moderator', '');
   }
 
-  toggleModeration(bool) {
+  moderationOn(bool) {
     this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
     this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     if (!bool) this.disableModerators();
+    this.order.moderated = bool;
+    this.getCachedEl('#purchaseModerated').prop('checked', bool);
+    this.moderators.noneSelected = !bool;
   }
 
   onNoValidModerators() {
-    this.toggleModeration(false);
+    this.moderationOn(false);
     this.getCachedEl('.js-noValidModerators').removeClass('hide');
   }
 
@@ -343,7 +347,10 @@ export default class extends BaseModal {
     }
 
     // set the moderator
-    this.order.set({ moderator: this.moderators.selectedIDs[0] }, { validate: true });
+    const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
+    this.order.set({ moderator });
+    this.order.set({}, { validate: true });
+
 
     // cancel any existing order
     if (this.orderSubmit) this.orderSubmit.abort();
@@ -470,9 +477,9 @@ export default class extends BaseModal {
     if (cur !== 'BTC') {
       btcTotal = convertCurrency(btcTotal, cur, 'BTC');
     }
-    const tooLow = btcTotal < this.minModPrice;
-    this.toggleModeration(!tooLow);
-    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', !tooLow);
+    const allowModeration = btcTotal >= this.minModPrice && this.moderatorIDs.length;
+    this.moderationOn(allowModeration);
+    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }
 
   refreshPrices() {
@@ -531,7 +538,7 @@ export default class extends BaseModal {
         prices: this.prices,
         minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
-        hasModerators: this.moderatorIDs.length,
+        hasModerators: !!this.moderatorIDs.length,
       }));
 
       super.render();

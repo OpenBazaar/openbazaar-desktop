@@ -15,7 +15,7 @@ export default class extends baseVw {
       fetchError: '',
       fee: false,
       displayCurrency: app.settings.get('localCurrency') || 'BTC',
-      btnSendText: app.polyglot.t('wallet.sendMoney.sendConfirm.btnConfirmSend'),
+      btnSendText: app.polyglot.t('wallet.spendConfirmBox.btnConfirmSend'),
       ...options.initialState || {},
     };
 
@@ -81,10 +81,23 @@ export default class extends baseVw {
 
     estimateFee(feeLevel, amount)
       .done(fee => {
-        this.setState({
+        let state = {
           fee,
           fetchingFee: false,
-        });
+        };
+
+        if (fee + amount > app.walletBalance.get('confirmed')) {
+          state = {
+            // The fetch didn't actually fail, but since the server allows unconfirmed spends and
+            // we don't want to allow that, we'll pretend it failed and simulate the server
+            // ERROR_INSUFFICIENT_FUNDS error.
+            fetchFailed: true,
+            fetchError: 'ERROR_INSUFFICIENT_FUNDS',
+            ...state,
+          };
+        }
+
+        this.setState(state);
       }).fail(xhr => {
         this.setState({
           fetchingFee: false,

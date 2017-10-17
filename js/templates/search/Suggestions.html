@@ -1,0 +1,6 @@
+<% if (ob.suggestions && ob.suggestions.length) { %>
+  <span class="clrT2"><%= ob.polyT('search.suggestions') %></span>
+  <% ob.suggestions.forEach(suggestion => { %>
+    <a class="clrT js-suggestion" data-suggestion="<%= suggestion %>"><%= suggestion%></a>
+  <% }); %>
+<% } %>

@@ -1,10 +1,10 @@
 <% if (ob.dismissable) { %>
 <a class="closeIcon tx2 js-dismiss">
-  <span class="ion-ios-close-empty clrBr clrP clrT"></span>
+  <span class="ion-ios-close-empty clrBr clrP clrT clrBrT"></span>
 </a> 
 <% } %>
 <% if (ob.messageText) { %>
-<p><%= ob.messageText %></p>
+<p class="txUnl"><%= ob.messageText %></p>
 <% } else { %>
   <%= ob.messageHTML %>
 <% } %>

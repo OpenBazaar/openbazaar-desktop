@@ -18,17 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="flexHCent gutterH">
-        <button class="btn clrP clrBr js-message"><%= ob.polyT('moderatorDetails.messageButton') %></button>
-        <%= ob.processingButton({
-        className: `btn clrP clrBr js-follow ${ob.followedByYou ? 'hide' : ''}`,
-        btnText: ob.polyT('moderatorDetails.followButton')
-        }) %>
-        <%= ob.processingButton({
-        className: `btn clrP clrBr js-unFollow ${!ob.followedByYou ? 'hide' : ''}`,
-        btnText: ob.polyT('moderatorDetails.unFollowButton')
-        }) %>
-      </div>
+      <div class="js-socialBtns"></div>
     </div>
     <div class="contentBox mDetailBox flexRow flexVCent gutterH padMd clrP clrBr clrSh3">
       <div class="flexExpand">
