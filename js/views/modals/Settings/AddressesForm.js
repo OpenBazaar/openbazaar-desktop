@@ -1,4 +1,3 @@
-import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries } from '../../../data/countries';
 import baseVw from '../../baseVw';
