@@ -34,8 +34,8 @@ export default class extends baseVw {
     this.listenTo(this.localSettings, 'sync',
       (md, resp, opts) => app.localSettings.set(opts.attrs));
 
-    this.countryList = getTranslatedCountries(app.localSettings.get('language'));
-    this.currencyList = getTranslatedCurrencies(app.localSettings.get('language'));
+    this.countryList = getTranslatedCountries();
+    this.currencyList = getTranslatedCurrencies();
   }
 
   events() {

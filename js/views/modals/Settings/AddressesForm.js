@@ -15,7 +15,7 @@ export default class extends baseVw {
       throw new Error('Please provide a model.');
     }
 
-    this.countryList = getTranslatedCountries(app.localSettings.get('language'));
+    this.countryList = getTranslatedCountries();
   }
 
   getFormData() {

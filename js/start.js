@@ -52,7 +52,7 @@ function getValidLanguage(lang) {
     return lang;
   }
 
-  return 'en-US';
+  return 'en_US';
 }
 
 const initialLang = getValidLanguage(app.localSettings.get('language'));
@@ -63,7 +63,7 @@ app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
-    require(`./languages/${lang}.json`));  // eslint-disable-line global-require
+    require(`./languages/${lang}.json`)); // eslint-disable-line global-require
 
   moment.locale(lang);
 

@@ -69,7 +69,7 @@ export function getIndexedRegions() {
   return indexedRegions;
 }
 
-function getTranslatedRegions(lang, sort = true) {
+function getTranslatedRegions(lang = app.localSettings.standardizedTranslatedLang(), sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated regions' +
       ' should be returned in.');

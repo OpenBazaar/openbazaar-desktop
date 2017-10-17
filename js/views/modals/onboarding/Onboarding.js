@@ -27,8 +27,8 @@ export default class extends BaseModal {
     this.screens = ['intro', 'info', 'tos'];
     this.lastAvatarImageRotate = 0;
     this.avatarChanged = false;
-    this.countryList = getTranslatedCountries(app.localSettings.get('language'));
-    this.currencyList = getTranslatedCurrencies(app.localSettings.get('language'));
+    this.countryList = getTranslatedCountries();
+    this.currencyList = getTranslatedCurrencies();
   }
 
   className() {

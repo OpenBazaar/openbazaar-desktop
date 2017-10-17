@@ -1051,7 +1051,7 @@ export const translationLangs = [
   },
   // {
   //   name: '中文 (Chinese, S)',
-  //   code: 'zh_CN',
+  //   code: 'zh-CN',
   // },
   // {
   //   name: 'Czech (Czech)',
