@@ -49,7 +49,10 @@ export default class extends BaseModal {
     });
     $.ajax({
       url: this.url,
-      data,
+      data: JSON.stringify(data),
+      type: 'POST',
+      dataType: 'json',
+      contentType: 'application/json',
     })
       .done(() => {
         this.trigger('submitted');
