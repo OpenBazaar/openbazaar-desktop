@@ -47,9 +47,6 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
 
-    console.log('under');
-    window.under = _;
-
     // So the passed in modal does not get any un-saved data,
     // we'll clone and update it on sync
     this._origModel = this.model;
@@ -545,10 +542,6 @@ export default class extends BaseModal {
     this.setModelData();
     const prevData = this.createMode ? this.attrsAtCreate : this.attrsAtLastSave;
     const curData = this.model.toJSON();
-
-    console.log('prev cur');
-    window.prev = prevData;
-    window.cur = curData;
 
     if (!_.isEqual(prevData, curData)) {
       const messageKey = `body${this.createMode ? 'Create' : 'Edit'}`;

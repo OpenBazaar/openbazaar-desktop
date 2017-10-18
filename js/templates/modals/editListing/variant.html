@@ -25,7 +25,7 @@
         <select multiple name="variants" class="clrBr clrP select2Tags" style="width: 100%">
           <% ob.variants.forEach(variant =>
               print(`<option value="${variant._clientID}<===>${variant.name}" selected>${variant.name}</option>`)) %>
-        </select>        
+        </select>
         <div class="placeholder tagsPlaceholder js-variantChoicesPlaceholder"><%= ob.polyT('editListing.variants.choicesPlaceholder') %></div>
         <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
         <div class="tagsDropdown js-dropDownContainer"></div>

@@ -83,7 +83,6 @@ export default class extends BaseView {
       this.$variantChoicesSelect = this.$('select[name=variants]');
       this._$formFields = null;
 
-      console.log('select2-ifying');
       this.$variantChoicesSelect.select2({
         multiple: true,
         tags: true,
