@@ -543,6 +543,10 @@ export default class extends BaseModal {
     const prevData = this.createMode ? this.attrsAtCreate : this.attrsAtLastSave;
     const curData = this.model.toJSON();
 
+    console.log('prev cur');
+    window.prev = prevData;
+    window.cur = curData;
+
     if (!_.isEqual(prevData, curData)) {
       const messageKey = `body${this.createMode ? 'Create' : 'Edit'}`;
       this.bringToTop();

@@ -16,6 +16,10 @@ export default class extends BaseView {
 
     super(options);
     this.options = options;
+
+    console.log('i am variant mooEl');
+    window.variant = this.model;
+    window.mooEl = this.$el;
   }
 
   className() {
@@ -33,23 +37,41 @@ export default class extends BaseView {
   }
 
   getFormData(fields = this.$formFields) {
-    return super.getFormData(fields);
+    const formData = super.getFormData(fields);
+
+    // We'll manually parse the variants select since we need to
+    // make sure to maintain the clientID.
+    const variants = [];
+    this.$('select[name=variants] option')
+      .each((index, opt) => {
+        variants.push({
+          name: opt.textContent,
+          _clientID: opt.getAttribute('data-clientID'),
+        });
+      });
+
+    return {
+      ...formData,
+      variants,
+    };
   }
 
   // Sets the model based on the current data in the UI.
   setModelData() {
     const formData = this.getFormData();
-    formData.variants = formData.variants.map(variantName => ({ name: variantName }));
+    console.log('data');
+    window.data = formData;
     this.model.set(formData);
   }
 
   get $formFields() {
     return this._$formFields ||
       (this._$formFields =
-        this.$('select[name], input[name], textarea[name]'));
+        this.$('input[name], textarea[name]'));
   }
 
   render() {
+    super.render();
     const errors = {
       ...(this.model.validationError || {}),
       ...(this.options.errors || {}),

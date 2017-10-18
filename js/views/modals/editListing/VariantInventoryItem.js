@@ -20,6 +20,9 @@ export default class extends BaseView {
 
     super(options);
     this.options = options;
+
+    console.log('pickle');
+    window.pickle = this.model;
   }
 
   tagName() {
