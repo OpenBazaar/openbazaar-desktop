@@ -241,9 +241,7 @@ export default class extends baseVw {
   }
 
   onReportSubmitted() {
-    if (this.reportBtn) {
-      this.reportBtn.setState({ reported: true });
-    }
+    this.reportBtn.setState({ reported: true });
   }
 
   startReport() {

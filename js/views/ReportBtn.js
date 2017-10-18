@@ -35,8 +35,6 @@ export default class extends baseVw {
 
 
   render() {
-    super.render();
-
     loadTemplate('reportBtn.html', (t) => {
       this.$el.html(t({
         ...this._state,

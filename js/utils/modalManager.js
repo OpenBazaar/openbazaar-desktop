@@ -117,8 +117,8 @@ export function getWallet() {
 }
 
 export function launchReportModal(modalOptions = {}) {
-  // report modals have unique data, don't reuse an existing one
   if (_report) _report.remove();
+
   _report = new Report({
     removeOnClose: true,
     ...modalOptions,
