@@ -1,10 +1,11 @@
 import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
 import app from '../../../app';
-import Moderators from '../../../collections/purchase/Moderators';
 import { getSocket } from '../../../utils/serverConnect';
 import { openSimpleMessage } from '../SimpleMessage';
+import Moderators from '../../../collections/purchase/Moderators';
+import Moderator from '../../../models/profile/Profile';
+import baseVw from '../../baseVw';
 import ModCard from '../../ModeratorCard';
 
 export default class extends baseVw {
@@ -105,7 +106,7 @@ export default class extends baseVw {
                       const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
                       const validCur = modCurs.indexOf(buyerCur) > -1;
                       if (validCur) {
-                        this.moderatorsCol.add(eventData.profile);
+                        this.moderatorsCol.add(new Moderator(eventData.profile, { parse: true }));
                       } else {
                         // remove the invalid moderator from the notFetched list
                         this.removeNotFetched(eventData.peerId);
@@ -123,7 +124,7 @@ export default class extends baseVw {
               const formattedMods = data.map((mod) => {
                 const mappedProfile = mod.profile;
                 mappedProfile.id = mod.peerId;
-                return mappedProfile;
+                return new Moderator(mappedProfile, { parse: true });
               });
               this.moderatorsCol.add(formattedMods);
               this.notFetchedYet = [];
