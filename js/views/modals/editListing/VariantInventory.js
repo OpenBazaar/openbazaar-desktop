@@ -27,9 +27,6 @@ export default class extends baseVw {
     this.optionsCl = options.optionsCl;
     this.itemViews = [];
 
-    console.log('moo');
-    window.moo = this.collection;
-
     // Give each Sku a mappingId which links it to the option it originated from
     // in a more robust way than relying on order which can change.
     if (this.optionsCl.length) {

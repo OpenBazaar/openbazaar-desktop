@@ -28,9 +28,6 @@ export default class extends BaseView {
     this.options = options;
     this._variantViews = [];
 
-    console.log(`willy has ${this.collection.length} members`);
-    window.willy = this.collection;
-
     this.listenTo(this.collection, 'add', (md, cl) => {
       const index = cl.indexOf(md);
       const view = this.createVariantView(md);

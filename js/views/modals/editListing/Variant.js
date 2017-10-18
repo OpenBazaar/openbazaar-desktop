@@ -16,10 +16,6 @@ export default class extends BaseView {
 
     super(options);
     this.options = options;
-
-    console.log('i am variant mooEl');
-    window.variant = this.model;
-    window.mooEl = this.$el;
   }
 
   className() {
@@ -39,35 +35,32 @@ export default class extends BaseView {
   getFormData(fields = this.$formFields) {
     const formData = super.getFormData(fields);
 
-    // We'll manually parse the variants select since we need to
-    // make sure to maintain the clientID.
-    const variants = [];
-    this.$('select[name=variants] option')
-      .each((index, opt) => {
-        variants.push({
-          name: opt.textContent,
-          _clientID: opt.getAttribute('data-clientID'),
-        });
-      });
+    // Post process the vairants to seperate the clientID from the actual value.
+    formData.variants = formData.variants.map(v => {
+      if (v.includes('<===>')) {
+        const split = v.split('<===>');
+        return {
+          _clientID: split[0],
+          name: split[1],
+        };
+      }
 
-    return {
-      ...formData,
-      variants,
-    };
+      return { name: v };
+    });
+
+    return formData;
   }
 
   // Sets the model based on the current data in the UI.
   setModelData() {
     const formData = this.getFormData();
-    console.log('data');
-    window.data = formData;
     this.model.set(formData);
   }
 
   get $formFields() {
     return this._$formFields ||
       (this._$formFields =
-        this.$('input[name], textarea[name]'));
+        this.$('select[name], input[name], textarea[name]'));
   }
 
   render() {
@@ -90,6 +83,7 @@ export default class extends BaseView {
       this.$variantChoicesSelect = this.$('select[name=variants]');
       this._$formFields = null;
 
+      console.log('select2-ifying');
       this.$variantChoicesSelect.select2({
         multiple: true,
         tags: true,

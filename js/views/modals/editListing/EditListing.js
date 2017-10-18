@@ -47,6 +47,9 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
 
+    console.log('under');
+    window.under = _;
+
     // So the passed in modal does not get any un-saved data,
     // we'll clone and update it on sync
     this._origModel = this.model;
@@ -785,7 +788,10 @@ export default class extends BaseModal {
       if (this.trackInventoryBy === 'DO_NOT_TRACK') {
         item.get('skus')
           .forEach(sku => {
-            sku.set('infiniteInventory', true);
+            sku.set({
+              infiniteInventory: true,
+              quantity: -1,
+            });
           });
       }
     } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
