@@ -891,7 +891,9 @@
     "reasonOtherPlaceholder": "Explain why...",
     "submit": "Submit",
     "errorTitle": "Your report could not be submitted due to an error.",
-    "error404": "The report url returned a 404 error, it could not be reached."
+    "error404": "The report url returned a 404 error, it could not be reached.",
+    "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
+    "closeBtn": "Close"
   },
   "editListing": {
     "nsfwYes": "Yes",

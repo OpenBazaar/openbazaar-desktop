@@ -10,6 +10,7 @@ export default class extends BaseModal {
 
     this._state = {
       reporting: false,
+      reported: false,
       ...options.initialState || {},
     };
 
@@ -30,6 +31,7 @@ export default class extends BaseModal {
     return {
       'keyup .js-otherInput': 'onKeyupOtherInput',
       'click .js-submit': 'onClickSubmit',
+      'click .js-close': 'onClickClose',
       ...super.events(),
     };
   }
@@ -56,6 +58,10 @@ export default class extends BaseModal {
     })
       .done(() => {
         this.trigger('submitted');
+        this.setState({
+          reporting: false,
+          reported: true,
+        });
       })
       .fail((xhr) => {
         let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
@@ -64,10 +70,15 @@ export default class extends BaseModal {
           app.polyglot.t('listingReport.errorTitle'),
           failReason
         );
-      })
-      .always(() => {
-        this.close();
+        this.setState({
+          reporting: false,
+          reported: false,
+        });
       });
+  }
+
+  onClickClose() {
+    this.close();
   }
 
   render() {
