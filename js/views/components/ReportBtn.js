@@ -28,7 +28,7 @@ export default class extends baseVw {
 
   onClickReportBtn(e) {
     e.stopPropagation();
-    if (!this._state.reported) {
+    if (!this.getState().reported) {
       this.trigger('startReport');
     }
   }

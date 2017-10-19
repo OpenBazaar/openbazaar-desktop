@@ -105,6 +105,18 @@
   @include fadeIn(1s ease);
 }
 
-.reportBtn .reported {
-  pointer-events: none;
+.reportBtn {
+  &:focus {
+    outline: none;
+  }
+
+  .reportBtnShell {
+    &:focus {
+      outline: none;
+    }
+
+    .reported {
+      pointer-events: none;
+    }
+  }
 }
