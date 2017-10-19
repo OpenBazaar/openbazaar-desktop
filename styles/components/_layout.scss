@@ -11,6 +11,10 @@
   & > * {
     flex: 0 1 auto; // children won't grow, but will shrink
     min-width: 0; // prevent children with long text from causing an overflow
+
+    hr {
+      width: 100%; // prevent rules from being 0 width
+    }
   }
 
   &.reverse {

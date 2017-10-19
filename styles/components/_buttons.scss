@@ -19,6 +19,7 @@
   cursor: pointer;
   font-weight: 700;
   transition: border 0.15s ease;
+  text-align: center;
 
   &:hover:not(.btnRadio, .btnAsLink),
   &:focus:not(.btnRadio, .btnAsLink) {
@@ -111,12 +112,20 @@
 .btnRadio {
   @extend .btn;
   border: 0;
-  padding: 0 6px;
+  padding: 0;
   font-weight: normal;
   height: auto;
+  display: inline;
 
   input[type="radio"] {
     display: none;
+  }
+
+  $radioBtnMargin: 0.4em;
+
+  input[type="radio"] + label,
+  .fauxRadioBtn {
+    padding-right: $radioBtnMargin; // match margin on radio button
   }
 
   input[type="radio"] + label:hover,
@@ -128,16 +137,14 @@
   .fauxRadioBtn {
     content: '';
     display: inline-block;
+    flex-shrink: 0;
     box-sizing: border-box;
     width: 1em;
     height: 1em;
     border-radius: 50%;
     border-width: 1px;
     border-style: solid;
-    position: relative;
-    top: 0.05em;
-    margin-right: 0.4em;
-    margin-left: -0.25em;
+    margin-right: $radioBtnMargin;
     //background color is assigned by the theme
 
     &:hover {
@@ -202,6 +209,15 @@
   padding: 0;
   width: 30px;
   height: 30px;
+}
+
+.iconBtnTn {
+  //this button has only an icon in it and it's very small
+  @extend .btn;
+  font-size: $tx5;
+  padding: 0;
+  width: 25px;
+  height: 25px;
 }
 
 .btnThin {

@@ -89,7 +89,7 @@ export default class extends BaseView {
 
   render() {
     super.render();
-    loadTemplate('search/AddProvider.html', t => {
+    loadTemplate('search/addProvider.html', t => {
       this.$el.html(t({
         errors: {
           ...(this.model.validationError || {}),

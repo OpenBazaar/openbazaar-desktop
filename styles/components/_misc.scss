@@ -104,3 +104,19 @@
 .fadeIn {
   @include fadeIn(1s ease);
 }
+
+.reportBtn {
+  &:focus {
+    outline: none;
+  }
+
+  .reportBtnShell {
+    &:focus {
+      outline: none;
+    }
+
+    .reported {
+      pointer-events: none;
+    }
+  }
+}

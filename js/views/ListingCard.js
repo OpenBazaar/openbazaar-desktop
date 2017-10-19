@@ -9,11 +9,14 @@ import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
+import ReportBtn from './components/ReportBtn';
+import Report from './modals/Report';
 
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       viewType: 'grid',
+      reportsUrl: '',
       ...options,
     };
 
@@ -74,6 +77,7 @@ export default class extends baseVw {
     }
 
     this.viewType = opts.viewType;
+    this.reportsUrl = opts.reportsUrl;
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -238,6 +242,26 @@ export default class extends baseVw {
     return this.fullListingFetch;
   }
 
+  onReportSubmitted() {
+    this.reportBtn.setState({ reported: true });
+  }
+
+  startReport() {
+    if (this.report) this.report.remove();
+
+    this.report = this.createChild(Report, {
+      removeOnClose: true,
+      peerID: this.ownerGuid,
+      slug: this.model.get('slug'),
+      url: this.reportsUrl,
+    })
+      .render()
+      .open();
+
+    this.report.on('modal-will-remove', () => (this.report = null));
+    this.listenTo(this.report, 'submitted', this.onReportSubmitted);
+  }
+
   get ownListing() {
     return app.profile.id === this.ownerGuid;
   }
@@ -346,6 +370,13 @@ export default class extends baseVw {
         this.getCachedEl('.js-listingImageLoadSpinner')
           .remove();
       });
+    }
+
+    if (this.reportBtn) this.reportBtn.remove();
+    if (this.reportsUrl) {
+      this.reportBtn = this.createChild(ReportBtn);
+      this.listenTo(this.reportBtn, 'startReport', this.startReport);
+      this.$('.js-reportBtnWrapper').append(this.reportBtn.render().el);
     }
 
     return this;

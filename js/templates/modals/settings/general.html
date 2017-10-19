@@ -53,48 +53,50 @@
           </select>
         </div>
       </div>
-      <div class="flexRow <% if (ob.localCurrency !== 'BTC') print('hide') %> js-bitcoinUnitField">
+      <div class="flexRow gutterH <% if (ob.localCurrency !== 'BTC') print('hide') %> js-bitcoinUnitField">
         <div class="col3">
           <label class="required"><%= ob.polyT('settings.generalTab.bitcoinUnit') %></label>
           <div class="clrT2 txSm"></div>
         </div>
         <div class="col6">
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
-          <div class="btnRadio clrBr">
-            <input type="radio"
-                   data-persistence-location="local"
-                   name="bitcoinUnit"
-                   value="BTC"
-                   id="settingsBitcoinUnitBtc"
-            <% if(ob.bitcoinUnit === 'BTC') { %>checked<% } %>>
-            <label for="settingsBitcoinUnitBtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.BTC') %></label>
-          </div>
-          <div class="btnRadio clrBr">
-            <input type="radio"
-                   data-persistence-location="local"
-                   name="bitcoinUnit"
-                   value="MBTC"
-                   id="settingsBitcoinUnitMbtc"
-            <% if(ob.bitcoinUnit === 'MBTC') { %>checked<% } %>>
-            <label for="settingsBitcoinUnitMbtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.MBTC') %></label>
-          </div>
-          <div class="btnRadio clrBr">
-            <input type="radio"
-                   data-persistence-location="local"
-                   name="bitcoinUnit"
-                   value="UBTC"
-                   id="settingsBitcoinUnitUbtc"
-            <% if(ob.bitcoinUnit === 'UBTC') { %>checked<% } %>>
-            <label for="settingsBitcoinUnitUbtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.UBTC') %></label>
-          </div>
-          <div class="btnRadio clrBr">
-            <input type="radio"
-                   data-persistence-location="local"
-                   name="bitcoinUnit"
-                   value="SATOSHI"
-                   id="settingsBitcoinUnitSatoshi"
-            <% if(ob.bitcoinUnit === 'SATOSHI') { %>checked<% } %>>
-            <label for="settingsBitcoinUnitSatoshi"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.SATOSHI') %></label>
+          <div class="btnStrip">
+            <div class="btnRadio clrBr">
+              <input type="radio"
+                     data-persistence-location="local"
+                     name="bitcoinUnit"
+                     value="BTC"
+                     id="settingsBitcoinUnitBtc"
+              <% if(ob.bitcoinUnit === 'BTC') { %>checked<% } %>>
+              <label for="settingsBitcoinUnitBtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.BTC') %></label>
+            </div>
+            <div class="btnRadio clrBr">
+              <input type="radio"
+                     data-persistence-location="local"
+                     name="bitcoinUnit"
+                     value="MBTC"
+                     id="settingsBitcoinUnitMbtc"
+              <% if(ob.bitcoinUnit === 'MBTC') { %>checked<% } %>>
+              <label for="settingsBitcoinUnitMbtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.MBTC') %></label>
+            </div>
+            <div class="btnRadio clrBr">
+              <input type="radio"
+                     data-persistence-location="local"
+                     name="bitcoinUnit"
+                     value="UBTC"
+                     id="settingsBitcoinUnitUbtc"
+              <% if(ob.bitcoinUnit === 'UBTC') { %>checked<% } %>>
+              <label for="settingsBitcoinUnitUbtc"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.UBTC') %></label>
+            </div>
+            <div class="btnRadio clrBr">
+              <input type="radio"
+                     data-persistence-location="local"
+                     name="bitcoinUnit"
+                     value="SATOSHI"
+                     id="settingsBitcoinUnitSatoshi"
+              <% if(ob.bitcoinUnit === 'SATOSHI') { %>checked<% } %>>
+              <label for="settingsBitcoinUnitSatoshi"><%= ob.polyT('settings.generalTab.bitcoinUnitTypes.SATOSHI') %></label>
+            </div>
           </div>
         </div>
       </div>

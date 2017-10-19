@@ -70,7 +70,7 @@ export default class extends BaseView {
 
   render() {
     super.render();
-    loadTemplate('search/Providers.html', t => {
+    loadTemplate('search/providers.html', t => {
       this.$el.html(t({
         peerID: app.profile.get('peerID'),
         showAdd: app.searchProviders.length < app.searchProviders.maxProviders,

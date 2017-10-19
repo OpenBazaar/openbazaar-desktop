@@ -156,6 +156,10 @@
       "nav": "Navigation",
       "close": "Close",
       "currentPrice": "Current Bitcoin price"
+    },
+    "serversMenu": {
+      "newServer": "New Server",
+      "manageServers": "Manage Servers"
     }
   },
   "chat": {
@@ -199,6 +203,12 @@
     "website": "Website",
     "email": "Email",
     "noLocation": "No Location",
+    "tabTitles": {
+      "home": "Home",
+      "store": "Store",
+      "following": "Following",
+      "followers": "Followers"
+    },
     "followTab": {
       "noFollowers": "No One is Following %{name} Yet",
       "noFollowing": "%{name} is Not Following Anyone Yet",
@@ -751,7 +761,7 @@
       "clear": "Clear",
       "sendPaymentFailDialogTitle": "Unable to send payment"
     },
-    "spendConfirmBox": {  
+    "spendConfirmBox": {
       "heading": "Are you sure?",
       "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
       "errorHeading": "Unable to send payment",
@@ -762,7 +772,7 @@
       "btnCancel": "Cancel",
       "btnConfirmSend": "Yes, Send",
       "btnClose": "Close"
-    },    
+    },
     "transactions": {
       "header": "Transactions",
       "transaction": {
@@ -811,7 +821,7 @@
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
     "listingDataChangedPopin": "Listing data has changed.",
-    "viewPhotos": "View %{count} Photos",
+    "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
     "tags": "Tags",
@@ -882,6 +892,22 @@
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
     "deleteFailedBtnOk": "Ok"
+  },
+  "listingReport": {
+    "btnTip": "Report this listing",
+    "btnTipReported": "This listing was reported",
+    "title": "Report Listing",
+    "message": "Why are you reporting this listing?",
+    "reasonOffensive": "Offensive Content",
+    "reasonFraud": "Fraudulent or Inaccurate",
+    "reasonIllegal": "Illegal in my Area",
+    "reasonOther": "Other",
+    "reasonOtherPlaceholder": "Explain why...",
+    "submit": "Submit",
+    "errorTitle": "Your report could not be submitted due to an error.",
+    "error404": "The report url returned a 404 error, it could not be reached.",
+    "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
+    "closeBtn": "Close"
   },
   "editListing": {
     "nsfwYes": "Yes",
@@ -1303,7 +1329,8 @@
       "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
       "modCannotChat": "You have issued a decision and cannot send further messages.",
       "loadMessagesError": "There was an error loading the messages. %{retryLink}",
-      "retryLink": "retry"
+      "retryLink": "retry",
+      "btnSend": "Send"
     },
     "contractTab": {
       "heading": "Contract (JSON)",

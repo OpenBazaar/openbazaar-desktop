@@ -477,7 +477,7 @@ export default class extends BaseModal {
     if (cur !== 'BTC') {
       btcTotal = convertCurrency(btcTotal, cur, 'BTC');
     }
-    const allowModeration = btcTotal >= this.minModPrice && this.moderatorIDs.length;
+    const allowModeration = (btcTotal >= this.minModPrice) && !!this.moderatorIDs.length;
     this.moderationOn(allowModeration);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }

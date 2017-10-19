@@ -1,0 +1,50 @@
+<div class="flexCol gutterV">
+  <div class="topControls flexRow"></div>
+  <div class="flexRow">
+    <div class="contentBox flexExpand padMd clrP clrBr clrSh3">
+      <% /* The min-height style property below keeps the content layout the same after it's submitted.
+            This won't necessarily be the case when the text is translated. */ %>
+      <div class="flexColWide" style="min-height: 280px;">
+        <h1 class="h3 txCtr"><%= ob.polyT('listingReport.title') %></h1>
+        <hr class="clrBr">
+        <% if (ob.reported) { %>
+          <p class="flexExpand"><%= ob.polyT('listingReport.postSubmitMsg') %></p>
+          <hr class="clrBr">
+          <div class="flexHRight">
+            <button class="btn clrP clrBrDec1 modalContentCornerBtn js-close"><%= ob.polyT('listingReport.closeBtn') %></button>
+          </div>
+        <% } else { %>
+          <form class="flexCol flexExpand gutterV compact">
+            <div class="btnRadio clrBr">
+              <input type="radio" name="reason" value="Offensive" checked id="Offensive">
+              <label for="Offensive"><%= ob.polyT('listingReport.reasonOffensive') %></label>
+            </div>
+            <div class="btnRadio clrBr">
+              <input type="radio" name="reason" value="Fraudulent" id="Fraud">
+              <label for="Fraud"><%= ob.polyT('listingReport.reasonFraud') %></label>
+            </div>
+            <div class="btnRadio clrBr">
+              <input type="radio" name="reason" value="Illegal" id="Illegal">
+              <label for="Illegal"><%= ob.polyT('listingReport.reasonIllegal') %></label>
+            </div>
+            <div class="flex gutterH">
+              <div class="btnRadio clrBr">
+                <input type="radio" name="reason" value="Other" id="ReasonOther">
+                <label for="ReasonOther"><%= ob.polyT('listingReport.reasonOther') %></label>
+              </div>
+              <input type="text" class="js-otherInput clrBr clrSh2" name="other">
+            </div>
+          </form>
+          <hr class="clrBr">
+          <div class="flexHRight">
+            <% const isReporting = ob.reporting ? 'processing' : ''; %>
+            <%= ob.processingButton({
+            className: `btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn ${isReporting} js-submit`,
+            btnText: ob.polyT('listingReport.submit')
+            }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>

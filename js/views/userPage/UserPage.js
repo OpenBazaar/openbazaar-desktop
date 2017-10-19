@@ -251,7 +251,8 @@ export default class extends baseVw {
     delete tabOptions.addTabToHistory;
 
     if (!this.currentTabView || this.currentTabView !== tabView) {
-      this.$tabTitle.text(capitalize(targ));
+      const tabName = app.polyglot.t(`userPage.tabTitles.${targ}`);
+      this.$tabTitle.text(tabName);
 
       if (opts.addTabToHistory) {
         const listingBaseUrl = this.model.get('handle') ?

@@ -75,6 +75,12 @@
     }
   }
 
+  &:hover {
+    .reportOverlay {
+      display: flex;
+    }
+  }
+
   .deleteOverlay {
     align-items: center;
     justify-content: center;

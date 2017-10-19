@@ -24,6 +24,8 @@
             </div>
           </div>
         </div>
+      <% } else { %>
+        <div class="reportOverlay overlayPanel padSm js-reportBtnWrapper"></div>
       <% } %>
   </div>
   <div class="pad clrBr borderTop">
@@ -69,7 +71,7 @@
         <div class="listingImage posR js-listViewListingImage">
         <div class="js-listingImageLoadSpinner center">
           <%= ob.spinner({ className: 'spinnerSm' }) %>
-        </div>          
+        </div>
         </div>
       </div>
       <div class="flexExpand">
@@ -99,7 +101,7 @@
       <div class="overlayPanelInner"></div>
       <div class="flexHCent gutterHSm">
         <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
-        <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-clone' data-tip="<%= ob.polyT('listingCard.cloneListingTooltip') %>"><span class="ion-ios-copy"></span></button>          
+        <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-clone' data-tip="<%= ob.polyT('listingCard.cloneListingTooltip') %>"><span class="ion-ios-copy"></span></button>
         <div class="posR">
           <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-delete' data-tip="<%= ob.polyT('listingCard.deleteListingTooltip') %>"><span class="ion-trash-b"></span></button>
           <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxBottom clrBr clrP clrT hide">
@@ -111,7 +113,7 @@
               <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingCard.confirmDelete.btnConfirm') %></a>
             </div>
           </div>
-        </div>          
+        </div>
       </div>
     </div>
   <% } %>
