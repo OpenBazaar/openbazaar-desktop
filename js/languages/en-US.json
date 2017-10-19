@@ -156,6 +156,10 @@
       "nav": "Navigation",
       "close": "Close",
       "currentPrice": "Current Bitcoin price"
+    },
+    "serversMenu": {
+      "newServer": "New Server",
+      "manageServers": "Manage Servers"
     }
   },
   "chat": {
