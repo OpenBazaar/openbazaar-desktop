@@ -759,7 +759,7 @@
       "clear": "Clear",
       "sendPaymentFailDialogTitle": "Unable to send payment"
     },
-    "spendConfirmBox": {  
+    "spendConfirmBox": {
       "heading": "Are you sure?",
       "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
       "errorHeading": "Unable to send payment",
@@ -770,7 +770,7 @@
       "btnCancel": "Cancel",
       "btnConfirmSend": "Yes, Send",
       "btnClose": "Close"
-    },    
+    },
     "transactions": {
       "header": "Transactions",
       "transaction": {
@@ -890,6 +890,22 @@
     "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
     "deleteFailedBtnOk": "Ok"
+  },
+  "listingReport": {
+    "btnTip": "Report this listing",
+    "btnTipReported": "This listing was reported",
+    "title": "Report Listing",
+    "message": "Why are you reporting this listing?",
+    "reasonOffensive": "Offensive Content",
+    "reasonFraud": "Fraudulent or Inaccurate",
+    "reasonIllegal": "Illegal in my Area",
+    "reasonOther": "Other",
+    "reasonOtherPlaceholder": "Explain why...",
+    "submit": "Submit",
+    "errorTitle": "Your report could not be submitted due to an error.",
+    "error404": "The report url returned a 404 error, it could not be reached.",
+    "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
+    "closeBtn": "Close"
   },
   "editListing": {
     "nsfwYes": "Yes",

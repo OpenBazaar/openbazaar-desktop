@@ -260,6 +260,10 @@ export default class extends baseVw {
                 update.listings = data.links.listings;
                 urlTypes.push('listings');
               }
+              if (is.url(data.links.reports)) {
+                update.reports = data.links.reports;
+                urlTypes.push('reports');
+              }
               if (data.links.tor) {
                 if (is.url(data.links.tor.search)) {
                   update.torsearch = data.links.tor.search;
@@ -352,6 +356,7 @@ export default class extends baseVw {
 
     const resultsView = this.createChild(Results, {
       searchUrl,
+      reportsUrl: this.sProvider.get('reports') || '',
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
       serverPage: this.serverPage,
@@ -432,7 +437,7 @@ export default class extends baseVw {
     const isDefaultProvider =
       this.sProvider === app.searchProviders[`default${this.torString}Provider`];
 
-    loadTemplate('search/Search.html', (t) => {
+    loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
         sortBySelected: this.sortBySelected,

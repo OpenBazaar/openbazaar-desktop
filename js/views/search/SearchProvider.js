@@ -28,7 +28,7 @@ export default class extends BaseView {
 
   render() {
     super.render();
-    loadTemplate('search/Provider.html', t => {
+    loadTemplate('search/provider.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ...this.options,

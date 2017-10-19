@@ -1,4 +1,5 @@
-form {
+form,
+.form {
   margin: 0;
   font-size: $tx5;
 
@@ -8,6 +9,14 @@ form {
     -webkit-user-select: none;
     display: flex;
     align-items: center;
+  }
+
+  &.compact label {
+    line-height: $formElementHeight * 0.75;
+  }
+
+  &.veryCompact label {
+    line-height: $formElementHeight * 0.5;
   }
 }
 
@@ -38,7 +47,7 @@ textarea,
 
 input[type=reset] {
   cursor: pointer;
-  
+
   &:hover {
     text-decoration: underline;
   }
@@ -83,6 +92,16 @@ textarea,
     // use to make form elements match the size of a button
     line-height: $buttonHeight;
     height: $buttonHeight;
+  }
+
+  form.compact &,
+  .form.compact & {
+    line-height: $formElementHeight * 0.75;
+  }
+
+  form.veryCompact &,
+  .form.veryCompact & {
+    line-height: $formElementHeight * 0.5;
   }
 }
 
