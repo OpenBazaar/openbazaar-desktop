@@ -7,7 +7,6 @@ import DebugLog from '../views/modals/DebugLog';
 import ModeratorDetails from '../views/modals/moderatorDetails';
 import Wallet from '../views/modals/wallet/Wallet';
 import Settings from '../views/modals/Settings/Settings';
-import Report from '../views/modals/Report';
 
 let aboutModal;
 let settingsModal;
