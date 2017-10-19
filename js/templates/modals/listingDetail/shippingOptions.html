@@ -18,16 +18,15 @@
           <div class="col4">
             <div class="flex gutterH">
               <div class="floL"><%= service.name %></div>
-              <% if (fShp) { %>
-                <div class="clrE1 clrTOnEmph phraseBox floL">
-                  <%= ob.polyT('listingDetail.freeShippingBanner') %>
-                </div>
-              <% } %>
             </div>
           </div>
           <div class="col4"><%= service.estimatedDelivery %></div>
           <div class="col4">
-            <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
+            <% if (fShp) { %>
+              <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
+            <% } else { %>
+              <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
+            <% } %>  
           </div>
         </div>
       <% }) %>
