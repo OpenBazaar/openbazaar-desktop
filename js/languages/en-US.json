@@ -882,6 +882,8 @@
     "deleteFailedBtnOk": "Ok"
   },
   "listingReport": {
+    "btnTip": "Report this listing",
+    "btnTipReported": "This listing was reported",
     "title": "Report Listing",
     "message": "Why are you reporting this listing?",
     "reasonOffensive": "Offensive Content",
