@@ -40,7 +40,7 @@ export default class extends Model {
       // pass
     }
 
-    const language = langDataObj || 'en_US';
+    const language = langDataObj && langDataObj.code || 'en_US';
 
     return {
       windowControlStyle: remote.process.platform === 'darwin' ? 'mac' : 'win',
