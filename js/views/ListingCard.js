@@ -9,7 +9,7 @@ import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
-import ReportBtn from './ReportBtn';
+import ReportBtn from './components/ReportBtn';
 
 export default class extends baseVw {
   constructor(options = {}) {

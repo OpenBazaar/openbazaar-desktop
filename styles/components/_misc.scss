@@ -104,3 +104,7 @@
 .fadeIn {
   @include fadeIn(1s ease);
 }
+
+.reportBtn .reported {
+  pointer-events: none;
+}

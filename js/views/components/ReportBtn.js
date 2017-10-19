@@ -1,5 +1,5 @@
-import loadTemplate from '../utils/loadTemplate';
-import baseVw from './baseVw';
+import loadTemplate from '../../utils/loadTemplate';
+import baseVw from '../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -35,7 +35,7 @@ export default class extends baseVw {
 
 
   render() {
-    loadTemplate('reportBtn.html', (t) => {
+    loadTemplate('components/reportBtn.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));
