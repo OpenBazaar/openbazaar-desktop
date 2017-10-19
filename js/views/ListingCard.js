@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
-import { launchEditListingModal, launchReportModal } from '../utils/modalManager';
+import { launchEditListingModal } from '../utils/modalManager';
 import { isHiRez } from '../utils/responsive';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
@@ -10,6 +10,7 @@ import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
 import ReportBtn from './components/ReportBtn';
+import Report from './modals/Report';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -245,12 +246,19 @@ export default class extends baseVw {
   }
 
   startReport() {
-    const reportModal = launchReportModal({
+    if (this.report) this.report.remove();
+
+    this.report = this.createChild(Report, {
+      removeOnClose: true,
       peerID: this.ownerGuid,
       slug: this.model.get('slug'),
       url: this.reportsUrl,
-    });
-    this.listenTo(reportModal, 'submitted', this.onReportSubmitted);
+    })
+      .render()
+      .open();
+
+    this.report.on('modal-will-remove', () => (this.report = null));
+    this.listenTo(this.report, 'submitted', this.onReportSubmitted);
   }
 
   get ownListing() {
