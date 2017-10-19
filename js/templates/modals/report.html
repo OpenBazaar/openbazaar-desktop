@@ -4,8 +4,8 @@
     <div class="contentBox flexExpand padMd clrP clrBr clrSh3">
       <% /* The min-height style property below keeps the content layout the same after it's submitted.
             This won't necessarily be the case when the text is translated. */ %>
-      <div class="flexCol" style="min-height: 280px;">
-        <h1><%= ob.polyT('listingReport.title') %></h1>
+      <div class="flexColWide" style="min-height: 280px;">
+        <h1 class="h3 txCtr"><%= ob.polyT('listingReport.title') %></h1>
         <hr class="clrBr">
         <% if (ob.reported) { %>
           <p class="flexExpand"><%= ob.polyT('listingReport.postSubmitMsg') %></p>

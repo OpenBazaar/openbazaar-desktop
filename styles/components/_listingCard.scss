@@ -75,6 +75,12 @@
     }
   }
 
+  &:hover {
+    .reportOverlay {
+      display: flex;
+    }
+  }
+
   .deleteOverlay {
     align-items: center;
     justify-content: center;
@@ -170,11 +176,5 @@
     .freeShipCol {
       padding-right: 20px;
     }
-  }
-
-  .reportBtn {
-    position: absolute;
-    top: $padSm;
-    left: $padSm;
   }
 }

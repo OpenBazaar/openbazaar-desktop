@@ -30,6 +30,7 @@ export default class extends BaseModal {
   events() {
     return {
       'keyup .js-otherInput': 'onKeyupOtherInput',
+      'click input[value="Other"]': 'onOtherClick',
       'click .js-submit': 'onClickSubmit',
       'click .js-close': 'onClickClose',
       ...super.events(),
@@ -38,6 +39,10 @@ export default class extends BaseModal {
 
   onKeyupOtherInput() {
     this.getCachedEl('#ReasonOther').prop('checked', true);
+  }
+
+  onOtherClick() {
+    this.getCachedEl('.js-otherInput').focus();
   }
 
   onClickSubmit() {
