@@ -749,20 +749,20 @@
       "notePlaceholder": "Only seen by you",
       "sendBtn": "Send",
       "clear": "Clear",
-      "sendPaymentFailDialogTitle": "Unable to send payment",
-      "sendConfirm": {
-        "heading": "Are you sure?",
-        "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
-        "errorHeading": "Unable to send payment",
-        "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
-        "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
-        "bodyGenericError": "There was an error estimating the fee: %{err}",
-        "btnRetry": "Retry",
-        "btnCancel": "Cancel",
-        "btnConfirmSend": "Yes, Send",
-        "btnClose": "Close"
-      }
+      "sendPaymentFailDialogTitle": "Unable to send payment"
     },
+    "spendConfirmBox": {  
+      "heading": "Are you sure?",
+      "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+      "errorHeading": "Unable to send payment",
+      "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+      "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
+      "bodyGenericError": "There was an error estimating the fee: %{err}",
+      "btnRetry": "Retry",
+      "btnCancel": "Cancel",
+      "btnConfirmSend": "Yes, Send",
+      "btnClose": "Close"
+    },    
     "transactions": {
       "header": "Transactions",
       "transaction": {
