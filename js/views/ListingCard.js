@@ -16,6 +16,7 @@ export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       viewType: 'grid',
+      reportsUrl: '',
       ...options,
     };
 
@@ -76,7 +77,7 @@ export default class extends baseVw {
     }
 
     this.viewType = opts.viewType;
-    this.reportsUrl = opts.reportsUrl || '';
+    this.reportsUrl = opts.reportsUrl;
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -372,8 +373,8 @@ export default class extends baseVw {
     }
 
     if (this.reportBtn) this.reportBtn.remove();
-    if (!!this.reportsUrl) {
-      this.reportBtn = new ReportBtn();
+    if (this.reportsUrl) {
+      this.reportBtn = this.createChild(ReportBtn);
       this.listenTo(this.reportBtn, 'startReport', this.startReport);
       this.$('.js-reportBtnWrapper').append(this.reportBtn.render().el);
     }
