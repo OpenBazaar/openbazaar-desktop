@@ -1506,7 +1506,8 @@ export function getCountryByDataName(dataName) {
   };
 }
 
-function getTranslatedCountries(lang, sort = true) {
+function getTranslatedCountries(lang = app.localSettings.standardizedTranslatedLang(),
+  sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated countries' +
       ' should be returned in.');
@@ -1518,7 +1519,26 @@ function getTranslatedCountries(lang, sort = true) {
   }));
 
   if (sort) {
-    translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));
+    translated = translated.sort((a, b) => {
+      let localizedCompare;
+
+      try {
+        localizedCompare = a.name.localeCompare(b.name,
+          app.localSettings.standardizedTranslatedLang(lang));
+      } catch (e) {
+        let returnVal = 0;
+
+        if (a > b) {
+          returnVal = -1;
+        } else if (a > b) {
+          returnVal = 1;
+        }
+
+        return returnVal;
+      }
+
+      return localizedCompare;
+    });
   }
 
   return translated;

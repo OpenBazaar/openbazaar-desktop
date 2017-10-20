@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { describe, it, before, after } from 'mocha';
 import Polyglot from 'node-polyglot';
-import enUsTranslations from '../../js/languages/en-US.json';
+import enUsTranslations from '../../js/languages/en_US.json';
 import * as cur from '../../js/utils/currency';
 
 describe('the currency utility module', () => {

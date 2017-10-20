@@ -43,7 +43,7 @@ export default class extends baseVw {
       throw new Error('Please provide a number.');
     }
 
-    return new Intl.NumberFormat(app.settings.get('language'), {
+    return new Intl.NumberFormat(app.localSettings.get('language'), {
       minimumFractionDigits: 0,
       maximumFractionDigits: 8,
     }).format(amount);

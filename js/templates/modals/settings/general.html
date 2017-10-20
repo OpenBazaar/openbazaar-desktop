@@ -17,7 +17,7 @@
         </div>
         <div class="col6">
           <% if (ob.errors.language) print(ob.formErrorTmpl({ errors: ob.errors.language })) %>
-          <select id="settingsLanguageSelect" name="language" class="clrSh2">
+          <select id="settingsLanguageSelect" name="language" class="clrSh2" data-persistence-location="local">
             <% ob.languageList.forEach((lang) => { %>
               <option value="<%= lang.code %>" <% if (lang.code == ob.language) print('selected') %>><%= lang.name %></option>
             <% }); %>
