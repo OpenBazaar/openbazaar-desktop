@@ -1636,14 +1636,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "You cannot set a fee percentage below zero.",
     "percentageHigh": "You cannot set a fee percentage above 100%",
     "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Please provide a quantity.",
