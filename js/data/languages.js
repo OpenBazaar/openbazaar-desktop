@@ -1029,7 +1029,26 @@ function getTranslatedLangs(lang = app && app.localSettings &&
   });
 
   if (sort) {
-    translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));
+    translated = translated.sort((a, b) => {
+      let localizedCompare;
+
+      try {
+        localizedCompare = a.name.localeCompare(b.name,
+          app.localSettings.standardizedTranslatedLang(lang));
+      } catch (e) {
+        let returnVal = 0;
+
+        if (a > b) {
+          returnVal = -1;
+        } else if (a > b) {
+          returnVal = 1;
+        }
+
+        return returnVal;
+      }
+
+      return localizedCompare;
+    });
   }
 
   return translated;
