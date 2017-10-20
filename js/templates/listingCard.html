@@ -29,9 +29,9 @@
       <% } %>
   </div>
   <div class="pad clrBr borderTop">
-    <div class="rowSm <% if(ob.vendor) print('trimWidth') %>">
+    <div class="rowSm">
       <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-      <div class="<%= tooltipClass %> toolTipTop inlineBlock" data-tip="<%= ob.title %>">
+      <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if(ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
         <a class="clrT clamp"><%= ob.title %></a>
       </div>
     </div>
