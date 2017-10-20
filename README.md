@@ -52,13 +52,11 @@ This client uses Babel to compile [ES6 JavaScript](https://github.com/lukehoban/
 
 We welcome contributions to the reference client. The best way to get started is to look for an issue with the [Help Wanted label](https://github.com/OpenBazaar/openbazaar-desktop/labels/help%20wanted).
 
-Any issue labeled Help Wanted is one we would like to see done but don't have plans to do ourselves.
-
 You can also look for issues with the [bug label](https://github.com/OpenBazaar/openbazaar-desktop/labels/bug). These are confirmed bugs that need to be fixed.
 
 Contributions are expected to match the coding style already present in this repo, and must pass es-lint with no errors.
 
-Constributions that make visual changes are also expected to match the repo's current style. 
+Constributions that make visual changes are also expected to match the repo's current style.
 
 ## License
 This project is licensed under the MIT License. You can view [LICENSE.MD](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/LICENSE) for more details.
