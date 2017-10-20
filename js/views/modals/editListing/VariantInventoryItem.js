@@ -82,11 +82,15 @@ export default class extends BaseView {
   }
 
   calculateTotalPrice(surcharge) {
-    const updatedSurcharge = (typeof surcharge === 'number' && !isNaN(surcharge)) ?
-      surcharge : 0;
+    const listingPrice = this.options.getPrice();
+
+    if (typeof listingPrice !== 'number' || isNaN(listingPrice) ||
+      typeof surcharge !== 'number' && isNaN(surcharge)) {
+      return '';
+    }
 
     return formatCurrency((this.options.getPrice() || 0) +
-      updatedSurcharge, this.options.getCurrency());
+      surcharge, this.options.getCurrency());
   }
 
   get $formFields() {
