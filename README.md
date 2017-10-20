@@ -13,13 +13,12 @@ To create a local development copy of the reference client, clone the client rep
 
 Make sure you have the latest versions of Node.js and NPM installed.
 
-This client uses Babel to compile [ES6 JavaScript](https://github.com/lukehoban/es6features). You should be familiar with ES6 before modifying this code.
+This client uses Babel to compile [ES6 JavaScript](https://github.com/lukehoban/es6features). You should be familiar with ES6 before modifying its code.
 
 ### Installation
 
-1. Navigate into the new folder created in (1)
-  - `cd openbazaar-desktop`
-2. `npm install`
+1. Navigate to the directory you cloned the repo into.
+2. Enter `npm install`
 
 ### Running
 
