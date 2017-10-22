@@ -1008,7 +1008,7 @@ export function getLangByCode(code, translate = true, lang = app && app.localSet
 }
 
 function getTranslatedLangs(lang = app && app.localSettings &&
-  app.localSettings.get('language') || 'en-US', sort = true) {
+  app.localSettings.standardizedTranslatedLang() || 'en-US', sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated languages' +
       ' should be returned in.');
