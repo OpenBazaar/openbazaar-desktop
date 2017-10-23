@@ -1,32 +1,29 @@
 <% if (ob.viewType === 'grid') { %>
-<div class="gridViewContent">
-  <div class="listingImage posR js-gridViewListingImage">
-    <div class="js-listingImageLoadSpinner center">
-      <%= ob.spinner({ className: 'spinnerMd' }) %>
-    </div>
-      <% if (ob.ownListing) { %>
-        <div class="editOverlay overlayPanel pad">
-          <div class="overlayPanelInner"></div>
-          <div class="flex gutterHSm">
-            <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
-            <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-clone' data-tip="<%= ob.polyT('listingCard.cloneListingTooltip') %>"><span class="ion-ios-copy"></span></button>
-            <div class="posR">
-              <a class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-delete' data-tip="<%= ob.polyT('listingCard.deleteListingTooltip') %>"><span class="ion-trash-b"></span></a>
-              <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxBottom clrBr clrP clrT hide">
-                <div class="tx3 txB rowSm"><%= ob.polyT('listingCard.confirmDelete.title') %></div>
-                <p><%= ob.polyT('listingCard.confirmDelete.body') %></p>
-                <hr class="clrBr row" />
-                <div class="flexHRight flexVCent gutterHLg buttonBar">
-                  <a class="js-deleteConfirmCancel"><%= ob.polyT('listingCard.confirmDelete.btnCancel') %></a>
-                  <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingCard.confirmDelete.btnConfirm') %></a>
-                </div>
+<div class="gridViewContent posR">
+  <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
+    <% if (ob.ownListing) { %>
+      <div class="editOverlay overlayPanel pad">
+        <div class="overlayPanelInner"></div>
+        <div class="flex gutterHSm">
+          <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
+          <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-clone' data-tip="<%= ob.polyT('listingCard.cloneListingTooltip') %>"><span class="ion-ios-copy"></span></button>
+          <div class="posR">
+            <a class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-delete' data-tip="<%= ob.polyT('listingCard.deleteListingTooltip') %>"><span class="ion-trash-b"></span></a>
+            <div class="js-deleteConfirmedBox confirmBox deleteConfirm tx5 arrowBoxBottom clrBr clrP clrT hide">
+              <div class="tx3 txB rowSm"><%= ob.polyT('listingCard.confirmDelete.title') %></div>
+              <p><%= ob.polyT('listingCard.confirmDelete.body') %></p>
+              <hr class="clrBr row" />
+              <div class="flexHRight flexVCent gutterHLg buttonBar">
+                <a class="js-deleteConfirmCancel"><%= ob.polyT('listingCard.confirmDelete.btnCancel') %></a>
+                <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-deleteConfirmed"><%= ob.polyT('listingCard.confirmDelete.btnConfirm') %></a>
               </div>
             </div>
           </div>
         </div>
-      <% } else { %>
-        <div class="reportOverlay overlayPanel padSm js-reportBtnWrapper"></div>
-      <% } %>
+      </div>
+    <% } else { %>
+      <div class="reportOverlay overlayPanel padSm js-reportBtnWrapper"></div>
+    <% } %>
   </div>
   <div class="pad clrBr borderTop">
     <div class="rowSm <% if(ob.vendor) print('trimWidth') %>">
@@ -68,11 +65,7 @@
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
       <div class="flexNoShrink">
-        <div class="listingImage posR js-listViewListingImage">
-        <div class="js-listingImageLoadSpinner center">
-          <%= ob.spinner({ className: 'spinnerSm' }) %>
-        </div>
-        </div>
+        <div class="listingImage posR" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
       </div>
       <div class="flexExpand">
         <div class="rowTn">
