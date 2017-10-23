@@ -30,7 +30,9 @@ export default class extends baseVw {
     if (this.profile.get('moderatorInfo')) {
       this.moderator = this.profile.get('moderatorInfo');
     } else {
-      this.moderator = new Moderator({ languages: [app.localSettings.get('language')] });
+      this.moderator = new Moderator({
+        languages: [app.localSettings.standardizedTranslatedLang()],
+      });
       this.profile.set('moderatorInfo', this.moderator);
     }
 
