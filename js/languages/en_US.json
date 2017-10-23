@@ -1279,7 +1279,7 @@
       "dateAsc": "Newest",
       "dateDesc": "Oldest"
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "placeholderSearch": "Search by Order #, Title or Person ID",
     "resetFilters": "Reset filters",
     "transactionsTable": {
       "headers": {
