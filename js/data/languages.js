@@ -976,7 +976,7 @@ function getIndexedLanguages() {
 }
 
 export function getLangByCode(code, translate = true, lang = app && app.localSettings &&
-  app.localSettings.get('language') || 'en-US') {
+  app.localSettings.standardizedTranslatedLang() || 'en-US') {
   if (!code) {
     throw new Error('Please provide a language code.');
   }
@@ -1008,7 +1008,7 @@ export function getLangByCode(code, translate = true, lang = app && app.localSet
 }
 
 function getTranslatedLangs(lang = app && app.localSettings &&
-  app.localSettings.get('language') || 'en-US', sort = true) {
+  app.localSettings.standardizedTranslatedLang() || 'en-US', sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated languages' +
       ' should be returned in.');
@@ -1033,9 +1033,10 @@ function getTranslatedLangs(lang = app && app.localSettings &&
       let localizedCompare;
 
       try {
-        localizedCompare = a.name.localeCompare(b.name,
-          app.localSettings.standardizedTranslatedLang(lang));
+        localizedCompare = a.name.localeCompare(b.name, lang);
       } catch (e) {
+        console.warn('Unable to sort the langs in a localized way. The lang '
+          + `code ${lang} is not valid.`);
         let returnVal = 0;
 
         if (a > b) {
