@@ -24,14 +24,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenBazaar/ob-desktop.git"
+    "url": "git+https://github.com/OpenBazaar/openbazaar-desktop.git"
   },
   "author": "OB1",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OpenBazaar/ob-desktop/issues"
+    "url": "https://github.com/OpenBazaar/openbazaar-desktop/issues"
   },
-  "homepage": "https://github.com/OpenBazaar/ob-desktop#readme",
+  "homepage": "https://github.com/OpenBazaar/openbazaar-desktop#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.5",
