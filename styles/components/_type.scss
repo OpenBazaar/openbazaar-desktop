@@ -149,24 +149,48 @@ a .txNoUnd:hover {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+  /* set the height to slightly less than the line height to prevent the top of the next row of
+     characters from peeking through. If the line height is not default, this property must be
+     overridden.
+   */
+  max-height: 1.18em;
 }
 
 .clamp2 {
   /* adds an ellipses to the end of wrapped text after 2 lines */
   @extend .clamp;
   -webkit-line-clamp: 2;
+  max-height: 2.38em;
 }
 
 .clamp3 {
   /* adds an ellipses to the end of wrapped text after 3 lines */
   @extend .clamp;
   -webkit-line-clamp: 3;
+  max-height: 3.58em;
 }
 
 .clamp4 {
   /* adds an ellipses to the end of wrapped text after 4 lines */
   @extend .clamp;
   -webkit-line-clamp: 4;
+  max-height: 4.78em;
+}
+
+p.clamp {
+  max-height: 1.48em;
+}
+
+p.clamp2 {
+  max-height: 2.98em;
+}
+
+p.clamp3 {
+  max-height: 4.48em;
+}
+
+p.clamp4 {
+  max-height: 5.98em;
 }
 
 // two column flow
