@@ -208,6 +208,7 @@ svg {
         margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
         padding: 0 $padLg $bar $padLg;
         position: relative;
+        z-index: 0; // position below the tab tab bar for scrolling
         @include chatOpeningTransition(margin);
 
         @include alignToChat {
@@ -347,7 +348,7 @@ svg {
 
   .inlineBlock {
     display: inline-block;
-  }  
+  }
 
   .pointer {
     cursor: pointer;
