@@ -5,7 +5,7 @@ import '../../lib/select2';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import TransactionsTable from './table/Table';
-import { capitalize } from "../../utils/string";
+import { capitalize } from '../../utils/string';
 
 export default class extends baseVw {
   constructor(options = {}) {
