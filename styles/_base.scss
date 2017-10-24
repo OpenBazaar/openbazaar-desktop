@@ -26,11 +26,18 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: 'bitcoinregular';
+  src: url('../../fonts/Bitcoin-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   // fonts
   color: $text;
   font: {
-    family: "noto_sans";
+    family: 'bitcoinregular', 'noto_sans';
     size: $baseFontSize;
     weight: 400;
   }
