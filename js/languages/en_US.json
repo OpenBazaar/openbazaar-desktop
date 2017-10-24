@@ -1279,9 +1279,9 @@
       "dateAsc": "Newest",
       "dateDesc": "Oldest"
     },
-    "placeholderSearchsales": "Search by Order #, Title or Buyer",
-    "placeholderSearchpurchases": "Search by Order #, Title or Vendor",
-    "placeholderSearchcases": "Search by Order #, Title, Buyer or Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "Reset filters",
     "transactionsTable": {
       "headers": {
