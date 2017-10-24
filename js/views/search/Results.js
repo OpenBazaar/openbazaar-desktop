@@ -82,8 +82,13 @@ export default class extends baseVw {
     this.pageControls.setState({ start, end, total });
     // hide the loading spinner
     this.$el.removeClass('loading');
-    // move focus to the first result
-    this.$resultsGrid.find('.listingCard').filter(':first').focus();
+    /*
+    // disabled until an enter handler to added to the listing card
+    // move focus to the first result. The timeout orders it after other operations.
+    setTimeout(() => {
+      this.$resultsGrid.find('.listingCard').filter(':first').focus();
+    });
+    */
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
