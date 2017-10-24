@@ -5,6 +5,7 @@ import '../../lib/select2';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import TransactionsTable from './table/Table';
+import { capitalize } from "../../utils/string";
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -202,6 +203,7 @@ export default class extends baseVw {
           filtersHtml,
           filter: this.filter,
           currentFilterIsDefault: this.currentFilterIsDefault(),
+          capitalize,
         }));
 
         this._$filterCheckboxes = null;

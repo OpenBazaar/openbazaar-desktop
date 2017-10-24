@@ -10,7 +10,6 @@ import {
   splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
 } from './';
 import is from 'is_js';
-import { capitalize } from "./string";
 
 export function polyT(...args) {
   return app.polyglot.t(...args);
@@ -52,7 +51,6 @@ export function formatRating(average, count) {
 export const getServerUrl = app.getServerUrl.bind(app);
 
 export {
-  capitalize,
   formatPrice,
   formatCurrency,
   convertAndFormatCurrency,
