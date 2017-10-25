@@ -168,7 +168,7 @@ export default class extends baseVw {
   }
 
   currentFilterIsDefault() {
-    return _.isEqual(this.options.defaultFilter, this.filter);
+    return _.isEqual(this.options.defaultFilter, _.omit(this.filter, 'orderId'));
   }
 
   get $queryTotalWrapper() {

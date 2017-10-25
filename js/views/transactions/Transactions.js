@@ -10,7 +10,6 @@ import Case from '../../models/order/Case';
 import baseVw from '../baseVw';
 import MiniProfile from '../MiniProfile';
 import Tab from './Tab';
-import SalesTab from './SalesTab';
 import OrderDetail from '../modals/orderDetail/OrderDetail';
 
 export default class extends baseVw {
@@ -49,17 +48,8 @@ export default class extends baseVw {
 
     this.salesCol = new Transactions([], { type: 'sales' });
     this.syncTabHeadCount(this.salesCol, () => this.$salesTabCount);
-    // Fetch so we get the count for the tabhead. We also need to get the last sale from
-    // an unfiltered fetch which will be used to determine if the resync pop in message
-    // needs to be shown.
-    this.unfilteredSalesFetch = this.salesCol.fetch({
-      data: {
-        sortByAscending: false,
-        sortByRead: false,
-        states: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        limit: 1,
-      },
-    });
+    // fetch so we get the count for the tabhead
+    this.salesCol.fetch();
 
     this.casesCol = new Transactions([], { type: 'cases' });
     this.syncTabHeadCount(this.casesCol, () => this.$casesTabCount);
@@ -361,7 +351,7 @@ export default class extends baseVw {
   }
 
   createSalesTabView() {
-    const view = this.createChild(SalesTab, {
+    const view = this.createChild(Tab, {
       collection: this.salesCol,
       type: 'sales',
       defaultFilter: {
@@ -374,7 +364,6 @@ export default class extends baseVw {
       filterConfig: this.salesPurchasesFilterConfig,
       openOrder: this.openOrder.bind(this),
       openedOrderModal: this.openedOrderModal,
-      unfilteredSalesFetch: this.unfilteredSalesFetch,
     });
 
     return view;
