@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { ipcRenderer } from 'electron';
+import { stripHtml } from './dom';
 
 let unreadNotifCount = 0;
 let unreadChatMsgCount = 0;
@@ -65,9 +66,19 @@ function playNotifSound() {
 }
 
 export function launchNativeNotification(notifTitle = '', options = {}) {
+  if (options.body !== undefined && typeof options.body !== 'string') {
+    throw new Error('If providing a notification body, it must be provided ' +
+      'as a string.');
+  }
+
+  if (typeof notifTitle !== 'string') {
+    throw new Error('Please provide the notifTitle as a string.');
+  }
+
   const notifOptions = {
     silent: true,
     ...(_.omit(options || {}, 'onclick', 'onerror')),
+    body: options.body ? stripHtml(options.body) : '',
   };
 
   const notif = new Notification(notifTitle, notifOptions);

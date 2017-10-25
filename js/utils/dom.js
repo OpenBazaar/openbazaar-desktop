@@ -49,3 +49,17 @@ export function insertAtCursor(myField, myValue) {
     myField.value += myValue;
   }
 }
+
+/**
+ * Returns a string of text with html stripped out.
+ * (https://stackoverflow.com/a/822486/632806)
+ */
+export function stripHtml(text) {
+  if (typeof text !== 'string') {
+    throw new Error('Please provide text as a string.');
+  }
+
+  const el = document.createElement('div');
+  el.innerHTML = text;
+  return el.textContent || el.innerText || '';
+}
