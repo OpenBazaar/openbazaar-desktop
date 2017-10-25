@@ -310,6 +310,7 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Check for Update",
+    "downloadLatest": "Download Latest",
     "donationsTab": {
       "linkText": "Donations",
       "sectionHeader": "Donations",

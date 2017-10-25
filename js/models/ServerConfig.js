@@ -161,6 +161,6 @@ export default class extends BaseModel {
 
   isTorPwRequired() {
     return ['win', 'darwin'].indexOf(remote.process.platform) > -1 &&
-      this.isLocalServer() && remote.getGlobal('isBundledApp')();
+      this.isLocalServer() && remote.getGlobal('isBundledApp');
   }
 }
