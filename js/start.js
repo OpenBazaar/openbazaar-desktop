@@ -565,7 +565,7 @@ app.connectionManagmentModal = new ConnectionManagement({
 app.serverConfigs.fetch().done(() => {
   if (!app.serverConfigs.length) {
     // no saved server configurations
-    if (remote.getGlobal('isBundledApp')()) {
+    if (remote.getGlobal('isBundledApp')) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
@@ -604,7 +604,7 @@ app.serverConfigs.fetch().done(() => {
       activeServer = app.serverConfigs.activeServer = app.serverConfigs.at(0);
     }
 
-    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')()) {
+    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')) {
       // Your active server is the locally bundled server, but you're
       // not running the bundled app. You have bad data!
       activeServer.set('default', false);
@@ -775,7 +775,7 @@ ipcRenderer.on('close-attempt', (e) => {
 // initialize our listing delete handler
 listingDeleteHandler();
 
-if (remote.getGlobal('isBundledApp')()) {
+if (remote.getGlobal('isBundledApp')) {
   console.log(`%c${app.polyglot.t('consoleWarning.heading')}`,
     'color: red; font-weight: bold; font-size: 50px;');
   console.log(`%c${app.polyglot.t('consoleWarning.line1')}`, 'color: red;');
