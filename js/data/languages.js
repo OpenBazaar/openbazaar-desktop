@@ -1141,10 +1141,10 @@ export const translationLangs = [
   //   name: 'Română (Romanian)',
   //   code: 'ro',
   // },
-  // {
-  //   name: 'Russian (Russian)',
-  //   code: 'ru',
-  // },
+  {
+    name: 'Russian (Russian)',
+    code: 'ru',
+  },
   // {
   //   name: 'Slovenský jazyk (Slovak)',
   //   code: 'sk',
