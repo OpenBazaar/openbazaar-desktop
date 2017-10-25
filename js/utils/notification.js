@@ -71,14 +71,17 @@ export function launchNativeNotification(notifTitle = '', options = {}) {
       'as a string.');
   }
 
+  if (typeof notifTitle !== 'string') {
+    throw new Error('Please provide the notifTitle as a string.');
+  }
+
   const notifOptions = {
     silent: true,
     ...(_.omit(options || {}, 'onclick', 'onerror')),
     body: options.body ? stripHtml(options.body) : '',
   };
 
-  const title = typeof notifTitle === 'string' ? stripHtml(notifTitle) : notifTitle;
-  const notif = new Notification(title, notifOptions);
+  const notif = new Notification(notifTitle, notifOptions);
 
   if (typeof options.onclick === 'function') {
     notif.addEventListener('click', notifOptions.onclick);
