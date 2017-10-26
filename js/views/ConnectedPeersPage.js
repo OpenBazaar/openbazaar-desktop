@@ -2,6 +2,9 @@ import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import userShort from './UserCard';
 import $ from 'jquery';
+import 'selectize';
+import { getTranslatedCountries } from '../data/countries';
+import _ from 'underscore';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -68,6 +71,58 @@ export default class extends baseVw {
     this._$peerWrapper = null;
     this._$morePeers = null;
     this.loadPeers();
+
+    this.$('#testS').selectize({
+      // maxItems: null,
+      // valueField: 'name',
+      // create: false,
+      plugins: ['remove_button'],
+      delimiter: ',',
+      persist: false,
+      // options: ['moo', 'shoo', 'chicken'],
+      create(input) {
+        return {
+          value: input,
+          text: input,
+        };
+      },
+    });
+
+    let s;
+    const getS = () => {
+      if (s) return s;
+      return this.$('#pickles')[0].selectize;
+    };
+
+    const debounced = _.debounce(() => {
+      console.timeEnd('someFunction');
+    }, 100);
+
+    this.$('#pickles').selectize({
+      maxItems: null,
+      valueField: 'dataName',
+      searchField: ['name', 'dataName'],
+      // hideSelected: false,
+      options: getTranslatedCountries(),
+      render: {
+        option: data => {
+          return `<div>${data.name}</div>`;
+        },
+        item: data => {
+          // console.log(`the goods are ${this.$('#pickles')[0].value}`);
+          return `<div>${data.name}</div>`;
+        },
+      },
+      onItemAdd: (value, $item) => {
+        console.time('someFunction');
+        try {
+          // getS().addItems(getTranslatedCountries().map(c => c.dataName), true);
+        } catch(e) {
+        }
+
+        debounced();
+      },
+    });
 
     return this;
   }
