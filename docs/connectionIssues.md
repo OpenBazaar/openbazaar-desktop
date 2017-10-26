@@ -4,7 +4,7 @@ Troubleshooting connection issues
 comming soon...
 
 ### Tor
-You can find infomation about (setting up OpenBazaar to run on Tor here.)[https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/tor.md)
+You can find infomation about [setting up OpenBazaar to run on Tor here.](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/tor.md)
 
 ### Local Stand-alone Server
 1. Ensure the server is running.
