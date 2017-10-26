@@ -12,7 +12,6 @@ export default class extends BaseModel {
       showNsfw: false,
       localCurrency: 'USD',
       country: 'UNITED_STATES',
-      language: 'en-US',
       termsAndConditions: '',
       refundPolicy: '',
       blockedNodes: [],

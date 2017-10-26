@@ -58,7 +58,7 @@ export default class extends BaseModal {
     // bridge when we get to it.
     this.vendor = this.vendor || opts.vendor;
 
-    this.countryData = getTranslatedCountries(app.settings.get('language'))
+    this.countryData = getTranslatedCountries()
       .map(countryObj => ({ id: countryObj.dataName, text: countryObj.name }));
 
     this.defaultCountry = app.settings.get('shippingAddresses').length ?

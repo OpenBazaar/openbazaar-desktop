@@ -21,8 +21,8 @@ const resyncInactiveTime = 1000 * 60 * 60 * 1; // 1 hour
 
 /**
  * Resync will be disabled if one was executed by this module less than the time specificed
- * in this.resyncInactiveTime. resyncBlockchain to remain flexible does not enforce this.
- * If you are exposing resync function in the GUI, you probably want to disable them based
+ * in resyncInactiveTime. resyncBlockchain to remain flexible does not enforce this.
+ * If you are exposing a resync function in the GUI, you probably want to disable it based
  * on this function.
  */
 function __isResyncAvailable() {

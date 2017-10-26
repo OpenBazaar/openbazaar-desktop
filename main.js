@@ -8,7 +8,6 @@ import { argv } from 'yargs';
 import path from 'path';
 import fs from 'fs';
 import childProcess from 'child_process';
-import _ from 'underscore';
 import { guid } from './js/utils';
 import LocalServer from './js/utils/localServer';
 import { bindLocalServerEvent } from './js/utils/mainProcLocalServerEvents';
@@ -89,11 +88,11 @@ if (handleStartupEvent()) {
 const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
   'openbazaard' : 'openbazaard.exe';
-const isBundledApp = _.once(() => fs.existsSync(serverPath + serverFilename));
+const isBundledApp = fs.existsSync(serverPath + serverFilename);
 global.isBundledApp = isBundledApp;
 let localServer;
 
-if (isBundledApp()) {
+if (isBundledApp) {
   global.localServer = localServer = new LocalServer({
     serverPath,
     serverFilename,
@@ -105,6 +104,9 @@ if (isBundledApp()) {
 
   global.authCookie = guid();
 }
+
+const updatesSupported = process.platform === 'win32' || process.platform === 'darwin';
+global.updatesSupported = updatesSupported;
 
 // set the client data path
 let defaultUserDataPath;
@@ -126,7 +128,7 @@ const userDataPath = argv.userData || defaultUserDataPath;
 // Otherwise, if you're using the bundled app, we'll use a custom data dir (as defined
 // in the switch above). Otherwise (running client from source), we won't update the data
 // dir and the electron default will be used.
-if (isBundledApp() || argv.userData) {
+if (isBundledApp || argv.userData) {
   try {
     app.setPath('userData', userDataPath);
   } catch (e) {
@@ -142,7 +144,7 @@ crashReporter.start({
   submitURL: 'http://104.131.17.128:1127/post',
   autoSubmit: true,
   extra: {
-    bundled: isBundledApp(),
+    bundled: isBundledApp,
   },
 });
 
@@ -181,12 +183,16 @@ function createWindow() {
     },
   ];
 
-  if (isBundledApp()) {
+  if (isBundledApp) {
     helpSubmenu = [
       {
-        label: 'Check for Updates...',
+        label: updatesSupported ? 'Check for Updates...' : 'Download Latest',
         click() {
-          checkForUpdates();
+          if (updatesSupported) {
+            checkForUpdates();
+          } else {
+            shell.openExternal('https://www.openbazaar.org/download/');
+          }
         },
       },
       {
@@ -497,7 +503,7 @@ function createWindow() {
    * the software then they will send an IPC message back to the main process and we will
    * begin to download the file and update the software.
    */
-  if (isBundledApp()) {
+  if (isBundledApp) {
     autoUpdater.on('checking-for-update', () => {
       mainWindow.send('updateChecking');
       mainWindow.send('consoleMsg', `Checking for update at ${autoUpdater.getFeedURL()}`);
@@ -541,7 +547,7 @@ function createWindow() {
 
   mainWindow.webContents.on('dom-ready', () => {
     // Check for an update once the DOM is ready so the update dialog box can be shown
-    if (isBundledApp()) checkForUpdates();
+    if (isBundledApp) checkForUpdates();
   });
 
   // Set up protocol

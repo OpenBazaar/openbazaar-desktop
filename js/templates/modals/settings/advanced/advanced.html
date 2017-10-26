@@ -17,25 +17,27 @@
                 <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperVisualEffects') %></div>
               </div>
               <div class="col9">
-                <div class="btnRadio clrBr">
-                  <input type="radio"
-                         data-persistence-location="local"
-                         name="showAdvancedVisualEffects"
-                         value="true"
-                         id="advancedTabVisualEffectsOn"
-                         data-var-type="boolean"
-                  <% if(ob.showAdvancedVisualEffects) { %>checked<% } %>>
-                  <label for="advancedTabVisualEffectsOn"><%= ob.polyT('settings.on') %></label>
-                </div>
-                <div class="btnRadio clrBr">
-                  <input type="radio"
-                         data-persistence-location="local"
-                         name="showAdvancedVisualEffects"
-                         value="false"
-                         id="advancedTabVisualEffectsOff"
-                         data-var-type="boolean"
-                  <% if(!ob.showAdvancedVisualEffects) { %>checked<% } %>>
-                  <label for="advancedTabVisualEffectsOff"><%= ob.polyT('settings.off') %></label>
+                <div class="btnStrip">
+                  <div class="btnRadio clrBr">
+                    <input type="radio"
+                           data-persistence-location="local"
+                           name="showAdvancedVisualEffects"
+                           value="true"
+                           id="advancedTabVisualEffectsOn"
+                           data-var-type="boolean"
+                    <% if(ob.showAdvancedVisualEffects) { %>checked<% } %>>
+                    <label for="advancedTabVisualEffectsOn"><%= ob.polyT('settings.on') %></label>
+                  </div>
+                  <div class="btnRadio clrBr">
+                    <input type="radio"
+                           data-persistence-location="local"
+                           name="showAdvancedVisualEffects"
+                           value="false"
+                           id="advancedTabVisualEffectsOff"
+                           data-var-type="boolean"
+                    <% if(!ob.showAdvancedVisualEffects) { %>checked<% } %>>
+                    <label for="advancedTabVisualEffectsOff"><%= ob.polyT('settings.off') %></label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -45,25 +47,27 @@
                 <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperWindowControls') %></div>
               </div>
               <div class="col9">
-                <div class="btnRadio clrBr">
-                  <input type="radio"
-                         data-persistence-location="local"
-                         name="windowControlStyle"
-                         value="mac"
-                         id="windowControlStyleMac"
-                         data-var-type="string"
-                  <% if(ob.windowControlStyle == "mac") { %>checked<% } %>>
-                  <label for="windowControlStyleMac"><%= ob.polyT('settings.advancedTab.appearance.macOS') %></label>
-                </div>
-                <div class="btnRadio clrBr">
-                  <input type="radio"
-                         data-persistence-location="local"
-                         name="windowControlStyle"
-                         value="win"
-                         id="windowControlStyleWindows"
-                         data-var-type="string"
-                  <% if(ob.windowControlStyle == "win") { %>checked<% } %>>
-                  <label for="windowControlStyleWindows"><%= ob.polyT('settings.advancedTab.appearance.windowsOS') %></label>
+                <div class="btnStrip">
+                  <div class="btnRadio clrBr">
+                    <input type="radio"
+                           data-persistence-location="local"
+                           name="windowControlStyle"
+                           value="mac"
+                           id="windowControlStyleMac"
+                           data-var-type="string"
+                    <% if(ob.windowControlStyle == "mac") { %>checked<% } %>>
+                    <label for="windowControlStyleMac"><%= ob.polyT('settings.advancedTab.appearance.macOS') %></label>
+                  </div>
+                  <div class="btnRadio clrBr">
+                    <input type="radio"
+                           data-persistence-location="local"
+                           name="windowControlStyle"
+                           value="win"
+                           id="windowControlStyleWindows"
+                           data-var-type="string"
+                    <% if(ob.windowControlStyle == "win") { %>checked<% } %>>
+                    <label for="windowControlStyleWindows"><%= ob.polyT('settings.advancedTab.appearance.windowsOS') %></label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -83,25 +87,27 @@
               <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.helperSaveMetaData') %></div>
             </div>
             <div class="col9">
-              <div class="btnRadio clrBr">
-                <input type="radio"
-                       data-persistence-location="local"
-                       name="saveTransactionMetadata"
-                       value="true"
-                       id="saveTransactionMetadataOn"
-                       data-var-type="boolean"
-                <% if(ob.saveTransactionMetadata) { %>checked<% } %>>
-                <label for="saveTransactionMetadataOn"><%= ob.polyT('settings.on') %></label>
-              </div>
-              <div class="btnRadio clrBr">
-                <input type="radio"
-                       data-persistence-location="local"
-                       name="saveTransactionMetadata"
-                       value="false"
-                       id="saveTransactionsMetadataOff"
-                       data-var-type="boolean"
-                <% if(!ob.saveTransactionMetadata) { %>checked<% } %>>
-                <label for="saveTransactionsMetadataOff"><%= ob.polyT('settings.off') %></label>
+              <div class="btnStrip">
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="saveTransactionMetadata"
+                         value="true"
+                         id="saveTransactionMetadataOn"
+                         data-var-type="boolean"
+                  <% if(ob.saveTransactionMetadata) { %>checked<% } %>>
+                  <label for="saveTransactionMetadataOn"><%= ob.polyT('settings.on') %></label>
+                </div>
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="saveTransactionMetadata"
+                         value="false"
+                         id="saveTransactionsMetadataOff"
+                         data-var-type="boolean"
+                  <% if(!ob.saveTransactionMetadata) { %>checked<% } %>>
+                  <label for="saveTransactionsMetadataOff"><%= ob.polyT('settings.off') %></label>
+                </div>
               </div>
             </div>
           </div>
@@ -112,35 +118,37 @@
             </div>
             <div class="col9">
               <% if (ob.errors['defaultTransactionFee']) print(ob.formErrorTmpl({ errors: ob.errors['defaultTransactionFee'] })) %>
-              <div class="btnRadio clrBr">
-                <input type="radio"
-                       data-persistence-location="local"
-                       name="defaultTransactionFee"
-                       value="ECONOMIC"
-                       id="defaultTransactionFeeLow"
-                       data-var-type="string"
-                <% if(ob.defaultTransactionFee == "ECONOMIC") { %>checked<% } %>>
-                <label for="defaultTransactionFeeLow"><%= ob.polyT('settings.advancedTab.transaction.low') %></label>
-              </div>
-              <div class="btnRadio clrBr">
-                <input type="radio"
-                       data-persistence-location="local"
-                       name="defaultTransactionFee"
-                       value="NORMAL"
-                       id="defaultTransactionFeeMedium"
-                       data-var-type="string"
-                <% if(ob.defaultTransactionFee == "NORMAL") { %>checked<% } %>>
-                <label for="defaultTransactionFeeMedium"><%= ob.polyT('settings.advancedTab.transaction.medium') %></label>
-              </div>
-              <div class="btnRadio clrBr">
-                <input type="radio"
-                       data-persistence-location="local"
-                       name="defaultTransactionFee"
-                       value="PRIORITY"
-                       id="defaultTransactionFeeHigh"
-                       data-var-type="string"
-                <% if(ob.defaultTransactionFee == "PRIORITY") { %>checked<% } %>>
-                <label for="defaultTransactionFeeHigh"><%= ob.polyT('settings.advancedTab.transaction.high') %></label>
+              <div class="btnStrip">
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="defaultTransactionFee"
+                         value="ECONOMIC"
+                         id="defaultTransactionFeeLow"
+                         data-var-type="string"
+                  <% if(ob.defaultTransactionFee == "ECONOMIC") { %>checked<% } %>>
+                  <label for="defaultTransactionFeeLow"><%= ob.polyT('settings.advancedTab.transaction.low') %></label>
+                </div>
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="defaultTransactionFee"
+                         value="NORMAL"
+                         id="defaultTransactionFeeMedium"
+                         data-var-type="string"
+                  <% if(ob.defaultTransactionFee == "NORMAL") { %>checked<% } %>>
+                  <label for="defaultTransactionFeeMedium"><%= ob.polyT('settings.advancedTab.transaction.medium') %></label>
+                </div>
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="defaultTransactionFee"
+                         value="PRIORITY"
+                         id="defaultTransactionFeeHigh"
+                         data-var-type="string"
+                  <% if(ob.defaultTransactionFee == "PRIORITY") { %>checked<% } %>>
+                  <label for="defaultTransactionFeeHigh"><%= ob.polyT('settings.advancedTab.transaction.high') %></label>
+                </div>
               </div>
             </div>
           </div>
@@ -245,7 +253,7 @@
             </div>
             <div class="col9 js-walletSeedContainer">
             </div>
-          </div>          
+          </div>
         </form>
       </div>
     </div>

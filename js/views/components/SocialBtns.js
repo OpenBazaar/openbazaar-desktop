@@ -57,7 +57,7 @@ export default class extends BaseVw {
 
   render() {
     const state = this.getState();
-    loadTemplate('socialBtns.html', (t) => {
+    loadTemplate('components/socialBtns.html', (t) => {
       this.$el.html(t({
         ...this.options,
         ...state,

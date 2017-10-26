@@ -659,7 +659,8 @@ export function getCurrencyByCode(code) {
   return getIndexedCurrencies()[code];
 }
 
-function getTranslatedCurrencies(lang, sort = true) {
+function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslatedLang(),
+  sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated currencies' +
       ' should be returned in.');

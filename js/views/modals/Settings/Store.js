@@ -178,7 +178,7 @@ export default class extends baseVw {
       }
       // if the view already exists and is in the DOM, this will move it
       docFrag.append(newModView.render().$el);
-      target.prepend(docFrag);
+      target.append(docFrag);
       this.modViewCache.push(newModView);
     }
   }

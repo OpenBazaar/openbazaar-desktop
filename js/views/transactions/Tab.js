@@ -5,6 +5,7 @@ import '../../lib/select2';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import TransactionsTable from './table/Table';
+import { capitalize } from '../../utils/string';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -167,7 +168,7 @@ export default class extends baseVw {
   }
 
   currentFilterIsDefault() {
-    return _.isEqual(this.options.defaultFilter, this.filter);
+    return _.isEqual(this.options.defaultFilter, _.omit(this.filter, 'orderId'));
   }
 
   get $queryTotalWrapper() {
@@ -202,6 +203,7 @@ export default class extends baseVw {
           filtersHtml,
           filter: this.filter,
           currentFilterIsDefault: this.currentFilterIsDefault(),
+          capitalize,
         }));
 
         this._$filterCheckboxes = null;

@@ -1,7 +1,7 @@
 {
   "name": "openbazaar-desktop",
   "productName": "OpenBazaar Desktop Client",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
@@ -24,14 +24,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenBazaar/ob-desktop.git"
+    "url": "git+https://github.com/OpenBazaar/openbazaar-desktop.git"
   },
   "author": "OB1",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OpenBazaar/ob-desktop/issues"
+    "url": "https://github.com/OpenBazaar/openbazaar-desktop/issues"
   },
-  "homepage": "https://github.com/OpenBazaar/ob-desktop#readme",
+  "homepage": "https://github.com/OpenBazaar/openbazaar-desktop#readme",
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.5",
@@ -40,9 +40,6 @@
     "copyfiles": "^1.0.0",
     "cross-env": "^1.0.8",
     "electron": "^1.7.8",
-    "electron-installer-debian": "^0.5.2",
-    "electron-installer-redhat": "^0.5.0",
-    "electron-winstaller": "2.5.2",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-config-defaults": "^9.0.0",
@@ -51,6 +48,7 @@
     "eslint-plugin-react": "^5.2.2",
     "grunt": "^1.0.1",
     "grunt-electron-installer": "^2.1.0",
+    "electron-winstaller": "2.5.2",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
     "node-sass": "^3.13.0",

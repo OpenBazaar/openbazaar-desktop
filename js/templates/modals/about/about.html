@@ -24,9 +24,15 @@
               <% } %>
             </div>
             <% if (ob.isBundledApp) { %>
-            <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-checkForUpdate">
-              <%= ob.polyT('about.btnUpdateCheck') %>
-            </a>
+              <% if (ob.updatesSupported) { %>
+                <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-checkForUpdate">
+                  <%= ob.polyT('about.btnUpdateCheck') %>
+                </a>
+              <% } else { %>
+                <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph" href="https://www.openbazaar.org/download/">
+                  <%= ob.polyT('about.downloadLatest') %>
+                </a>              
+              <% } %>
             <% } %>
           </div>
         </div>

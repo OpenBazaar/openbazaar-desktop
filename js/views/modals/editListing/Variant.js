@@ -33,13 +33,27 @@ export default class extends BaseView {
   }
 
   getFormData(fields = this.$formFields) {
-    return super.getFormData(fields);
+    const formData = super.getFormData(fields);
+
+    // Post process the vairants to seperate the clientID from the actual value.
+    formData.variants = formData.variants.map(v => {
+      if (v.includes('<===>')) {
+        const split = v.split('<===>');
+        return {
+          _clientID: split[0],
+          name: split[1],
+        };
+      }
+
+      return { name: v };
+    });
+
+    return formData;
   }
 
   // Sets the model based on the current data in the UI.
   setModelData() {
     const formData = this.getFormData();
-    formData.variants = formData.variants.map(variantName => ({ name: variantName }));
     this.model.set(formData);
   }
 
@@ -50,6 +64,7 @@ export default class extends BaseView {
   }
 
   render() {
+    super.render();
     const errors = {
       ...(this.model.validationError || {}),
       ...(this.options.errors || {}),

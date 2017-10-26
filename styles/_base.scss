@@ -26,11 +26,18 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: 'bitcoinregular';
+  src: url('../../fonts/Bitcoin-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   // fonts
   color: $text;
   font: {
-    family: "noto_sans";
+    family: 'bitcoinregular', 'noto_sans';
     size: $baseFontSize;
     weight: 400;
   }
@@ -208,6 +215,7 @@ svg {
         margin: 0 calc((100% - #{$pageWidth + $padLg + $padLg}) / 2) 0 auto;
         padding: 0 $padLg $bar $padLg;
         position: relative;
+        z-index: 0; // position below the pageTabBar for scrolling
         @include chatOpeningTransition(margin);
 
         @include alignToChat {
@@ -347,7 +355,7 @@ svg {
 
   .inlineBlock {
     display: inline-block;
-  }  
+  }
 
   .pointer {
     cursor: pointer;

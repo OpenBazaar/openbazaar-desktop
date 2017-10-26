@@ -11,6 +11,8 @@ const events = {
 
 export { events };
 
+export const btcSymbol = '₿';
+
 /**
  * Converts the amount from a decimal to an integer. If the
  * currency code is BTC, it will convert to Satoshi.
@@ -99,10 +101,10 @@ export function formatPrice(price, isBtc = false) {
 // todo: check currency is one of our currencies
 export function formatCurrency(amount, currency, options) {
   const opts = {
-    locale: app && app.settings && app.settings.get('language') || 'en-US',
+    locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
-    useBtcSymbol: true, // if true use ฿ for btc instead of BTC
+    useBtcSymbol: true,
     ...options,
   };
 
@@ -142,10 +144,9 @@ export function formatCurrency(amount, currency, options) {
         bitcoinConvertUnit = 'Satoshi';
         break;
       default:
-        // The default is BTC. Using the ฿ char for the Bitcoin symbol which will be
-        // replaced by the real Bitcoin symbol once we bring in a Bitcoin font, e.g:
-        // http://www.righto.com/2015/02/how-to-display-bitcoin-symbol-using_14.html
-        curSymbol = opts.useBtcSymbol ? '฿' : 'BTC';
+        // The default is BTC. Using the ₿ char for the Bitcoin symbol which will be
+        // replaced by the real Bitcoin symbol coming from the Bitcoin_Regular font file.
+        curSymbol = opts.useBtcSymbol ? btcSymbol : 'BTC';
         bitcoinConvertUnit = 'BTC';
     }
 
@@ -261,7 +262,7 @@ export function convertCurrency(amount, fromCur, toCur) {
  */
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
-    locale: app && app.settings && app.settings.get('language') || 'en-US',
+    locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
     skipConvertIfNoExchangeRateData: true,
     ...options,

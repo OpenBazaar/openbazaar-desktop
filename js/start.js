@@ -25,7 +25,7 @@ import StartupLoadingModal from './views/modals/StartupLoading';
 import { openSimpleMessage } from './views/modals/SimpleMessage';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
-import { getLangByCode } from './data/languages';
+import { getTranslationLangByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/Settings';
 import WalletBalance from './models/wallet/WalletBalance';
@@ -48,11 +48,11 @@ app.localSettings.fetch().fail(() => app.localSettings.save());
 
 // initialize language functionality
 function getValidLanguage(lang) {
-  if (getLangByCode(lang)) {
+  if (getTranslationLangByCode(lang)) {
     return lang;
   }
 
-  return 'en-US';
+  return 'en_US';
 }
 
 const initialLang = getValidLanguage(app.localSettings.get('language'));
@@ -63,7 +63,7 @@ app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
-    require(`./languages/${lang}.json`));  // eslint-disable-line global-require
+    require(`./languages/${lang}.json`)); // eslint-disable-line global-require
 
   moment.locale(lang);
 
@@ -383,18 +383,6 @@ function start() {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
     }
 
-    // We'll default our server language to whatever is stored locally.
-    app.settings.set('language', app.localSettings.get('language'));
-
-    // Beyond the start-up flow in this file, any language changes should ideally
-    // be done via a save on a clone of the app.settings model. When the save succeeds,
-    // update the app.settings model which will in turn update our local
-    // settings model. You shouldn't be directly updating the language in our local
-    // settings model.
-    app.settings.on('change:language', (settingsMd, lang) => {
-      app.localSettings.save('language', getValidLanguage(lang));
-    });
-
     app.ownFollowing = new Followers([], {
       type: 'following',
       peerId: app.profile.id,
@@ -577,7 +565,7 @@ app.connectionManagmentModal = new ConnectionManagement({
 app.serverConfigs.fetch().done(() => {
   if (!app.serverConfigs.length) {
     // no saved server configurations
-    if (remote.getGlobal('isBundledApp')()) {
+    if (remote.getGlobal('isBundledApp')) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
@@ -616,7 +604,7 @@ app.serverConfigs.fetch().done(() => {
       activeServer = app.serverConfigs.activeServer = app.serverConfigs.at(0);
     }
 
-    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')()) {
+    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')) {
       // Your active server is the locally bundled server, but you're
       // not running the bundled app. You have bad data!
       activeServer.set('default', false);
@@ -787,7 +775,7 @@ ipcRenderer.on('close-attempt', (e) => {
 // initialize our listing delete handler
 listingDeleteHandler();
 
-if (remote.getGlobal('isBundledApp')()) {
+if (remote.getGlobal('isBundledApp')) {
   console.log(`%c${app.polyglot.t('consoleWarning.heading')}`,
     'color: red; font-weight: bold; font-size: 50px;');
   console.log(`%c${app.polyglot.t('consoleWarning.line1')}`, 'color: red;');

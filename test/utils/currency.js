@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { expect } from 'chai';
 import { describe, it, before, after } from 'mocha';
 import Polyglot from 'node-polyglot';
-import enUsTranslations from '../../js/languages/en-US.json';
+import enUsTranslations from '../../js/languages/en_US.json';
 import * as cur from '../../js/utils/currency';
 
 describe('the currency utility module', () => {
@@ -153,25 +153,25 @@ describe('the currency utility module', () => {
     it('properly localizes a BTC amount', () => {
       expect(cur.formatCurrency(523, 'BTC'))
         .to
-        .equal('฿523');
+        .equal('₿523');
 
       expect(cur.formatCurrency(523.987, 'BTC'))
         .to
-        .equal('฿523.987');
+        .equal('₿523.987');
 
       expect(cur.formatCurrency(523.12, 'BTC'))
         .to
-        .equal('฿523.12');
+        .equal('₿523.12');
       expect(cur.formatCurrency(523.12345678, 'BTC'))
         .to
-        .equal('฿523.12345678');
+        .equal('₿523.12345678');
     });
 
     it('properly localizes a BTC amount with the correct bitcoin units', () => {
       expect(cur.formatCurrency(523.3456, 'BTC', {
         btcUnit: 'BTC',
       })).to
-        .equal('฿523.3456');
+        .equal('₿523.3456');
 
       expect(cur.formatCurrency(523.3456, 'BTC', {
         btcUnit: 'MBTC',
@@ -259,7 +259,7 @@ describe('the currency utility module', () => {
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'USD', 'BTC', { locale: 'en-US' }))
           .to
-          .equal('฿0.66613376');
+          .equal('₿0.66613376');
       });
 
       it('which will convert between BTC and a fiat currency properly localize ' +

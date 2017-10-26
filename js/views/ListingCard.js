@@ -3,17 +3,19 @@ import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
-import { isHiRez } from '../utils/responsive';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
+import ReportBtn from './components/ReportBtn';
+import Report from './modals/Report';
 
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       viewType: 'grid',
+      reportsUrl: '',
       ...options,
     };
 
@@ -74,6 +76,7 @@ export default class extends baseVw {
     }
 
     this.viewType = opts.viewType;
+    this.reportsUrl = opts.reportsUrl;
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -238,6 +241,26 @@ export default class extends baseVw {
     return this.fullListingFetch;
   }
 
+  onReportSubmitted() {
+    this.reportBtn.setState({ reported: true });
+  }
+
+  startReport() {
+    if (this.report) this.report.remove();
+
+    this.report = this.createChild(Report, {
+      removeOnClose: true,
+      peerID: this.ownerGuid,
+      slug: this.model.get('slug'),
+      url: this.reportsUrl,
+    })
+      .render()
+      .open();
+
+    this.report.on('modal-will-remove', () => (this.report = null));
+    this.listenTo(this.report, 'submitted', this.onReportSubmitted);
+  }
+
   get ownListing() {
     return app.profile.id === this.ownerGuid;
   }
@@ -265,35 +288,6 @@ export default class extends baseVw {
 
     // This just sets the flag. It's up to you to re-render.
     this._viewType = type;
-
-    const loaderKey = `_${type}ViewListingImageLoad`;
-
-    if (!this[loaderKey]) {
-      const deferred = $.Deferred();
-      const img = new Image();
-      const thumbnail = this.model.get('thumbnail');
-      let imgSrc;
-
-      if (type === 'grid') {
-        imgSrc = app.getServerUrl(`ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`);
-      } else {
-        imgSrc = app.getServerUrl(`ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`);
-      }
-
-      img.onload = () => deferred.resolve(imgSrc);
-      img.onerror = () => deferred.reject();
-      img.src = imgSrc;
-
-      this[loaderKey] = deferred.promise();
-    }
-  }
-
-  get gridViewListingImageLoad() {
-    return this._gridViewListingImageLoad;
-  }
-
-  get listViewListingImageLoad() {
-    return this._listViewListingImageLoad;
   }
 
   get $btnEdit() {
@@ -329,23 +323,11 @@ export default class extends baseVw {
     this._$btnEdit = null;
     this._$btnDelete = null;
 
-    const imageLoaderKey = `${this.viewType}ViewListingImageLoad`;
-
-    if (this[imageLoaderKey]) {
-      this[imageLoaderKey].always(imgUrl => {
-        let url = 'url("../imgs/defaultItem.png")';
-
-        // there will not be an imgUrl if the listing image failed to load
-        if (imgUrl) {
-          url = `url("${imgUrl}"), ${url}`;
-        }
-
-        this.getCachedEl(`.js-${this.viewType}ViewListingImage`)[0]
-          .style
-          .backgroundImage = url;
-        this.getCachedEl('.js-listingImageLoadSpinner')
-          .remove();
-      });
+    if (this.reportBtn) this.reportBtn.remove();
+    if (this.reportsUrl) {
+      this.reportBtn = this.createChild(ReportBtn);
+      this.listenTo(this.reportBtn, 'startReport', this.startReport);
+      this.$('.js-reportBtnWrapper').append(this.reportBtn.render().el);
     }
 
     return this;

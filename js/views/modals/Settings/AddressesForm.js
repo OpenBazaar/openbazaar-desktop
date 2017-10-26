@@ -1,4 +1,3 @@
-import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries } from '../../../data/countries';
 import baseVw from '../../baseVw';
@@ -15,7 +14,7 @@ export default class extends baseVw {
       throw new Error('Please provide a model.');
     }
 
-    this.countryList = getTranslatedCountries(app.settings.get('language'));
+    this.countryList = getTranslatedCountries();
   }
 
   getFormData() {

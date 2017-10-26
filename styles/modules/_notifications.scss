@@ -61,7 +61,7 @@
     .notification {
       &:last-child {
         .notificationListItem {
-          border-width: 0;          
+          border-width: 0;
         }
       }
 
@@ -75,6 +75,7 @@
         .thumbCol {
           position: relative;
           width: 42px;
+          min-width: 42px; // prevent collapse when in flex parents
 
           .btcIcon {
             width: 32px;

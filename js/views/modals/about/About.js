@@ -29,7 +29,8 @@ export default class extends BaseModal {
     };
 
     this.currentTabName = 'Story';
-    this.isBundledApp = remote.getGlobal('isBundledApp')();
+    this.isBundledApp = remote.getGlobal('isBundledApp');
+    this.updatesSupported = remote.getGlobal('updatesSupported');
   }
 
   className() {
@@ -95,6 +96,7 @@ export default class extends BaseModal {
           ...this.options,
           version,
           isBundledApp: this.isBundledApp,
+          updatesSupported: this.updatesSupported,
         }));
         super.render();
 
