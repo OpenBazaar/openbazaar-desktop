@@ -2,9 +2,6 @@ import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 import userShort from './UserCard';
 import $ from 'jquery';
-import 'selectize';
-import { getTranslatedCountries } from '../data/countries';
-import _ from 'underscore';
 
 export default class extends baseVw {
   constructor(options = {}) {
