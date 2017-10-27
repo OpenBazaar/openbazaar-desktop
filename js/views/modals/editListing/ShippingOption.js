@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import '../../../lib/select2';
+import '../../../lib/selectize';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getTranslatedCountries } from '../../../data/countries';
 import regions, {
@@ -30,19 +31,21 @@ export default class extends BaseView {
     this.options = opts;
 
     // get regions
-    this.select2CountryData = getTranslatedRegions()
+    this.selectCountryData = getTranslatedRegions()
       .map(regionObj => ({
         id: regionObj.id,
-        text: `REGION_${regionObj.name}`,
+        text: regionObj.name,
+        isRegion: true,
       }));
 
     // now, we'll add in the countries
-    const select2countries = getTranslatedCountries()
+    const selectCountries = getTranslatedCountries()
       .map(countryObj => ({
         id: countryObj.dataName,
         text: countryObj.name,
+        isRegion: false,
       }));
-    this.select2CountryData = this.select2CountryData.concat(select2countries);
+    this.selectCountryData = this.selectCountryData.concat(selectCountries);
 
     this.services = this.model.get('services');
     this.serviceViews = [];
@@ -88,10 +91,9 @@ export default class extends BaseView {
   }
 
   onClickClearShipDest() {
-    this.$shipDestinationsSelect
-      .find('select')
-      .val(null)
-      .trigger('change', true);
+    this.$shipDestinationSelect[0]
+      .selectize
+      .clear();
   }
 
   onChangeShippingType(e) {
@@ -180,11 +182,6 @@ export default class extends BaseView {
       (this._$serviceSection = this.$('.js-serviceSection'));
   }
 
-  get $shipDestinationsSelect() {
-    return this._$shipDestinationsSelect ||
-      (this._$shipDestinationsSelect = this.$('.js-shipDestinationsSelect'));
-  }
-
   get $formFields() {
     return this._$formFields ||
       (this._$formFields =
@@ -192,16 +189,19 @@ export default class extends BaseView {
           !$(el).parents('.js-serviceSection').length)));
   }
 
-  get fullRegions() {
-    // Returns a list of any regions that are fully represented
-    // in the country dropdown (i.e. all the individual countries
-    // of the region are selected - the actual region selection may
-    // or may not be)
-    const curSelectionVal = this.$shipDestinationSelect.val();
+  /**
+   * Returns a list of any regions that are fully represented in the provided
+   * countries list.
+   */
+  representedRegions(countries = []) {
+    if (!Array.isArray(countries)) {
+      throw new Error('Please provide an array of country codes.');
+    }
+
     const selectedRegions = [];
 
     regions.forEach(region => {
-      if (region.countries.every(elem => curSelectionVal.indexOf(elem) > -1)) {
+      if (region.countries.every(elem => countries.indexOf(elem) > -1)) {
         selectedRegions.push(region.id);
       }
     });
@@ -210,6 +210,7 @@ export default class extends BaseView {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/editListing/shippingOption.html', t => {
       this.$el.html(t({
         // Since multiple instances of this view will be rendered, any id's should
@@ -218,7 +219,6 @@ export default class extends BaseView {
         listPosition: this.options.listPosition,
         shippingTypes: this.model.shippingTypes,
         errors: this.model.validationError || {},
-        countrySelectOptions: this.select2CountryData,
         ...this.model.toJSON(),
       }));
 
@@ -227,92 +227,60 @@ export default class extends BaseView {
         minimumResultsForSearch: Infinity,
       });
 
-      this.$shipDestinationSelect = this.$(`#shipDestinationsSelect_${this.model.cid}`);
-      this.$shipDestinationsPlaceholder = this.$(`#shipDestinationsPlaceholder_${this.model.cid}`);
+      this.$shipDestinationSelect = this.getCachedEl(`#shipDestinationsSelect_${this.model.cid}`);
       this.$servicesWrap = this.$('.js-servicesWrap');
 
-      this.$shipDestinationSelect.select2({
-        multiple: true,
-        // even though this is a tagging field, since we are limiting the possible selections
-        // to a list of countries, don't use tag: true, because then it will allows you to
-        // add tags not in the list
-        // tags: true,
-        dropdownParent: this.$(`#shipDestinationsDropdown_${this.model.cid}`),
-        templateSelection: (data) => {
-          const text = data.text.startsWith('REGION_') ?
-            data.text.slice(7) : data.text;
-
-          return text;
+      this.$shipDestinationSelect.selectize({
+        maxItems: null,
+        plugins: ['remove_button'],
+        valueField: 'id',
+        searchField: ['text', 'id'],
+        closeAfterSelect: true,
+        items: this.model.get('regions'),
+        options: this.selectCountryData,
+        render: {
+          option: data => {
+            const className = data.isRegion ? 'region' : '';
+            return `<div class="${className}">${data.text}</div>`;
+          },
+          item: data => {
+            const className = data.isRegion ? 'region' : '';
+            return `<div class="${className}">${data.text}</div>`;
+          },
         },
-        templateResult: (data) => {
-          const text = data.text.startsWith('REGION_') ?
-            data.text.slice(7) : data.text;
+        onItemAdd: value => {
+          const region = getIndexedRegions()[value];
+          const selectize = this.$shipDestinationSelect[0].selectize;
 
-          return text;
-        },
-      }).on('change', (e, ignoreRegions = false) => {
-        this.$shipDestinationsPlaceholder[
-          this.$shipDestinationSelect.val().length ? 'removeClass' : 'addClass'
-        ]('emptyOfTags');
-
-        if (ignoreRegions) return;
-
-        setTimeout(() => {
-          const curSelected = $(e.target).val();
-          const newSelected = this.fullRegions;
-          const indexedRegions = getIndexedRegions();
-
-          curSelected.forEach(selected => {
-            // We started the newSelected list with any fully
-            // represented regions, not we'll add in the selected
-            // countries.
-            if (!indexedRegions[selected]) {
-              newSelected.push(selected);
-            }
-          });
-
-          $(e.target).val(newSelected)
-            .trigger('change', true)
-            .select2('close');
-        });
-      }).on('select2:selecting', (e) => {
-        // manage regions
-        const region = getIndexedRegions()[e.params.args.data.id];
-
-        if (region) {
-          // decide whether we should add or remove the region
-          if (this.fullRegions.indexOf(e.params.args.data.id) !== -1) {
-            // the region is fully represented, so we'll remove it
-            $(e.target).val(
-              $(e.target).val()
-                .filter(selectedCountry =>
-                  (region.countries.indexOf(selectedCountry) === -1))
-            ).trigger('change');
+          if (region) {
+            // If adding a region, we'll add in all the countries for that region.
+            // selectize.removeItem(value);
+            selectize.addItems(region.countries, true);
           } else {
-            // the region is not fully represented, so we'll add it
-            $(e.target).val(
-              $(e.target).val()
-                .concat(region.countries)
-            ).trigger('change');
+            // Adding a country may cause a region or regions to be represented.
+            // We'll add in any full regions so they're not selectable as options.
+            // CSS will hide the tag.
+            selectize.addItems(this.representedRegions(selectize.items), true);
           }
-        }
-      })
-      .on('select2:unselecting', (e) => {
-        // manage regions
-        const region = getIndexedRegions()[e.params.args.data.id];
+        },
+        onItemRemove: value => {
+          const isRegion = !!getIndexedRegions()[value];
+          const selectize = this.$shipDestinationSelect[0].selectize;
+          const representedRegions = this.representedRegions(selectize.items);
 
-        if (region) {
-          $(e.target).val(
-            $(e.target).val()
-              .filter(country =>
-                region.countries.indexOf(country) === -1)
-          ).trigger('change');
-        }
+          if (!isRegion) {
+            // Adding a country may cause a regions or regions to be represented.
+            // We'll add in any full regions so they're not selectable as options.
+            // CSS will hide the tag.
+            selectize.items.forEach(item => {
+              const isItemRegion = getIndexedRegions()[item];
+              if (isItemRegion && !representedRegions.includes(item)) {
+                selectize.removeItem(item, true);
+              }
+            });
+          }
+        },
       });
-
-      this.$shipDestinationsPlaceholder[
-        this.$shipDestinationSelect.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
 
       this.serviceViews.forEach((serviceVw) => serviceVw.remove());
       this.serviceViews = [];

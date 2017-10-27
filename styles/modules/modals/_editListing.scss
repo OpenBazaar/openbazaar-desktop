@@ -147,14 +147,8 @@
             }
           }
 
-          .select2TagsWrap {
-            .placeholder {
-              margin-top: 11px;
-            }
-
-            .select2-selection__choice[title*=REGION_] {
-              display: none;
-            }
+          .selectize-control .selectize-input .region {
+            display: none;
           }
         }
       }

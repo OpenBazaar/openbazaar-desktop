@@ -7,6 +7,7 @@ $text2: adjust-color($text, $lightness: +32%);
 $text3: adjust-color($text, $lightness: +59%);
 $text4: adjust-color($text, $lightness: +65%);
 $textOnEmph: rgb(255, 255, 255);
+$textOnSelection: rgb(255, 255, 255);
 
 $border: adjust-color($primary, $lightness: -14%);
 $border2: adjust-color($primary, $lightness: 100%);
@@ -18,6 +19,7 @@ $emphasis1: hsl(116.5, 66.3, 41);
 $emphasis1Disabled: adjust_color($emphasis1, $saturation: -50%, $lightness: +40%);
 $emphasis2: adjust-color($emphasis1, $lightness: +20%);
 $emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
+$selection: #5897fb;
 $error: red;
 $alert: #fecf33;
 

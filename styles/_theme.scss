@@ -10,7 +10,7 @@ input,
 select,
 textarea,
 button,
-.trumbowyg div[contenteditable]{
+.trumbowyg div[contenteditable] {
   &:focus {
     border-color: $border3;
   }
@@ -305,6 +305,28 @@ input[type=range][class~="clrS"] {
 .tagsDropdown {
   .select2-container--open .select2-dropdown {
     border-color: $border3;
+  }
+}
+
+#appFrame {
+  .selectize-control {
+    .items {
+      & > *:not(input) {
+        border-color: $border;
+        background-color: $primary;
+      }
+    } 
+  }
+
+  .selectize-dropdown-content {
+    & > * {
+      background-color: $primary;
+
+      &.active {
+        background-color: $selection;
+        color: $textOnSelection;
+      }
+    }
   }
 }
 
