@@ -6,10 +6,27 @@
 
     .items {
       & > *:not(input) {
+        font-size: inherit;
         border-width: 1px;
         border-style: solid;
         border-radius: $corner;
       }
+    }
+
+    .selectize-dropdown-content {
+      .create {
+        display: none;
+      }
     } 
+  }
+
+  .hashPrefacedTags {
+    .items {
+      & > *:not(input) {
+        &::before {
+          content: '#';
+        }        
+      }
+    }    
   }
 }

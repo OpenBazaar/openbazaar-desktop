@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import '../../../lib/select2';
+import '../../../lib/selectize';
 import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
@@ -793,7 +794,14 @@ export default class extends BaseModal {
       formData.item.quantity = -1;
     }
 
-    this.model.set(formData);
+    this.model.set({
+      ...formData,
+      item: {
+        ...formData.item,
+        tags: formData.item.tags.length ?
+          formData.item.tags.split(',') : [],
+      },
+    });
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
     if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
@@ -1029,7 +1037,7 @@ export default class extends BaseModal {
       super.render();
 
       this.$editListingTags = this.$('#editListingTags');
-      this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
+      // this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
       this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
       this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
@@ -1047,65 +1055,70 @@ export default class extends BaseModal {
       this.$('#editListingCurrency').select2()
         .on('change', () => this.variantInventory.render());
 
-      this.$editListingTags.select2({
-        multiple: true,
-        tags: true,
-        selectOnClose: true,
-        tokenSeparators: [','],
-        // ***
-        // placeholder has issue where it won't show initially, will use
-        // own element for this instead
-        // placeholder: 'Enter tags... (and translate me)',
-        // ***
-        // dropdownParent needed to fully hide dropdown
-        dropdownParent: this.$('#editListingTagsDropdown'),
-        createTag: (params) => {
-          let term = params.term;
-          if (term === '') {
-            return null; // don't add blank tags triggered by blur
-          }
+      this.$editListingTags.selectize({
+        delimiter: ',',
+        persist: false,
+        create: input => ({
+          value: input,
+          text: input,
+        }),
+      });
 
-          // we'll make the tag all lowercase and
-          // replace spaces with dashes.
-          term = term.toLowerCase()
-              .replace(/\s/g, '-')
-              .replace('#', '')
-              // replace consecutive dashes with one
-              .replace(/-{2,}/g, '-');
+      // this.$editListingTags.select2({
+      //   multiple: true,
+      //   tags: true,
+      //   selectOnClose: true,
+      //   tokenSeparators: [','],
+      //   // ***
+      //   // placeholder has issue where it won't show initially, will use
+      //   // own element for this instead
+      //   // placeholder: 'Enter tags... (and translate me)',
+      //   // ***
+      //   // dropdownParent needed to fully hide dropdown
+      //   dropdownParent: this.$('#editListingTagsDropdown'),
+      //   createTag: (params) => {
+      //     let term = params.term;
+      //     if (term === '') {
+      //       return null; // don't add blank tags triggered by blur
+      //     }
 
-          return {
-            id: term,
-            text: term,
-          };
-        },
-        // This is necessary, otherwise partial matches of existing tags are
-        // prevented. E,G. If you have a tag of hello-world, hello would be prevented
-        // as a tag because select2 would match hellow-world in the hidden dropdown
-        // and think you are selecting that.
-        matcher: () => false,
-      }).on('change', () => {
-        const tags = this.$editListingTags.val();
-        this.model.get('item').set('tags', tags);
-        this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
+      //     // we'll make the tag all lowercase and
+      //     // replace spaces with dashes.
+      //     term = term.toLowerCase()
+      //         .replace(/\s/g, '-')
+      //         .replace('#', '')
+      //         // replace consecutive dashes with one
+      //         .replace(/-{2,}/g, '-');
 
-        if (tags.length >= item.maxTags) {
-          this.showMaxTagsWarning();
-        } else {
-          this.hideMaxTagsWarning();
-        }
-      }).on('select2:selecting', (e) => {
-        if (this.$editListingTags.val().length >= item.maxTags) {
-          this.$maxTagsWarning.velocity('callout.flash', { duration: 500 });
-          e.preventDefault();
-        }
-      })
-      .next()
-      .find('.select2-search__field')
-      .attr('maxLength', item.max.tagLength);
+      //     return {
+      //       id: term,
+      //       text: term,
+      //     };
+      //   },
+      //   // This is necessary, otherwise partial matches of existing tags are
+      //   // prevented. E,G. If you have a tag of hello-world, hello would be prevented
+      //   // as a tag because select2 would match hellow-world in the hidden dropdown
+      //   // and think you are selecting that.
+      //   matcher: () => false,
+      // }).on('change', () => {
+      //   const tags = this.$editListingTags.val();
+      //   this.model.get('item').set('tags', tags);
+      //   this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
 
-      this.$editListingTagsPlaceholder[
-        this.$editListingTags.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
+      //   if (tags.length >= item.maxTags) {
+      //     this.showMaxTagsWarning();
+      //   } else {
+      //     this.hideMaxTagsWarning();
+      //   }
+      // }).on('select2:selecting', (e) => {
+      //   if (this.$editListingTags.val().length >= item.maxTags) {
+      //     this.$maxTagsWarning.velocity('callout.flash', { duration: 500 });
+      //     e.preventDefault();
+      //   }
+      // })
+      // .next()
+      // .find('.select2-search__field')
+      // .attr('maxLength', item.max.tagLength);
 
       this.$editListingCategories.select2({
         multiple: true,
