@@ -1039,7 +1039,7 @@ export default class extends BaseModal {
       this.$editListingTags = this.$('#editListingTags');
       // this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
-      this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
+      // this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
       this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
       this.$editListingVariantsChoicesPlaceholder =
         this.$('#editListingVariantsChoicesPlaceholder');
@@ -1057,100 +1057,59 @@ export default class extends BaseModal {
 
       this.$editListingTags.selectize({
         delimiter: ',',
+        plugins: ['remove_button'],
         persist: false,
-        create: input => ({
-          value: input,
-          text: input,
-        }),
+        maxItems: item.max.tags,
+        create: input => {
+          // we'll make the tag all lowercase and
+          // replace spaces with dashes.
+          const term = input.toLowerCase()
+            .replace(/\s/g, '-')
+            .replace('#', '')
+            // replace consecutive dashes with one
+            .replace(/-{2,}/g, '-');
+          return {
+            value: term,
+            text: term,
+          };
+        },
+        onChange: value => {
+          const tags = value.length ? value.split(',') : [];
+          if (tags.length >= item.max.tags) {
+            this.showMaxTagsWarning();
+          } else {
+            this.hideMaxTagsWarning();
+          }
+        },
       });
 
-      // this.$editListingTags.select2({
+      // this.$editListingCategories.select2({
       //   multiple: true,
       //   tags: true,
       //   selectOnClose: true,
       //   tokenSeparators: [','],
-      //   // ***
-      //   // placeholder has issue where it won't show initially, will use
-      //   // own element for this instead
-      //   // placeholder: 'Enter tags... (and translate me)',
-      //   // ***
       //   // dropdownParent needed to fully hide dropdown
-      //   dropdownParent: this.$('#editListingTagsDropdown'),
-      //   createTag: (params) => {
-      //     let term = params.term;
-      //     if (term === '') {
-      //       return null; // don't add blank tags triggered by blur
-      //     }
-
-      //     // we'll make the tag all lowercase and
-      //     // replace spaces with dashes.
-      //     term = term.toLowerCase()
-      //         .replace(/\s/g, '-')
-      //         .replace('#', '')
-      //         // replace consecutive dashes with one
-      //         .replace(/-{2,}/g, '-');
-
-      //     return {
-      //       id: term,
-      //       text: term,
-      //     };
-      //   },
-      //   // This is necessary, otherwise partial matches of existing tags are
-      //   // prevented. E,G. If you have a tag of hello-world, hello would be prevented
-      //   // as a tag because select2 would match hellow-world in the hidden dropdown
-      //   // and think you are selecting that.
+      //   dropdownParent: this.$('#editListingCategoriesDropdown'),
+      //   // This is necessary, see comment in select2 for tags above.
       //   matcher: () => false,
       // }).on('change', () => {
-      //   const tags = this.$editListingTags.val();
-      //   this.model.get('item').set('tags', tags);
-      //   this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
+      //   const count = this.$editListingCategories.val().length;
 
-      //   if (tags.length >= item.maxTags) {
-      //     this.showMaxTagsWarning();
+      //   this.$editListingCategoriesPlaceholder[
+      //     count ? 'removeClass' : 'addClass'
+      //   ]('emptyOfTags');
+
+      //   if (count >= item.maxCategories) {
+      //     this.showMaxCatsWarning();
       //   } else {
-      //     this.hideMaxTagsWarning();
+      //     this.hideMaxCatsWarning();
       //   }
       // }).on('select2:selecting', (e) => {
-      //   if (this.$editListingTags.val().length >= item.maxTags) {
-      //     this.$maxTagsWarning.velocity('callout.flash', { duration: 500 });
+      //   if (this.$editListingCategories.val().length >= item.maxCategories) {
+      //     this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
       //     e.preventDefault();
       //   }
-      // })
-      // .next()
-      // .find('.select2-search__field')
-      // .attr('maxLength', item.max.tagLength);
-
-      this.$editListingCategories.select2({
-        multiple: true,
-        tags: true,
-        selectOnClose: true,
-        tokenSeparators: [','],
-        // dropdownParent needed to fully hide dropdown
-        dropdownParent: this.$('#editListingCategoriesDropdown'),
-        // This is necessary, see comment in select2 for tags above.
-        matcher: () => false,
-      }).on('change', () => {
-        const count = this.$editListingCategories.val().length;
-
-        this.$editListingCategoriesPlaceholder[
-          count ? 'removeClass' : 'addClass'
-        ]('emptyOfTags');
-
-        if (count >= item.maxCategories) {
-          this.showMaxCatsWarning();
-        } else {
-          this.hideMaxCatsWarning();
-        }
-      }).on('select2:selecting', (e) => {
-        if (this.$editListingCategories.val().length >= item.maxCategories) {
-          this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
-          e.preventDefault();
-        }
-      });
-
-      this.$editListingCategoriesPlaceholder[
-        this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
+      // });
 
       // render shipping options
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());

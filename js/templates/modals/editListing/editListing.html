@@ -182,28 +182,17 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['item.tags'] })) %>
         <div class="js-maxTagsWarning"><% if (ob.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
-        <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags" value="<%= ob.item.tags.join(',') %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
-        <div id="editListingTagsDropdown" class="tagsDropdown"></div>
+        <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(',') %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
         <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>        
       </section>
 
-      <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
+<!--       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.categoryDetailed') %></h2>
         <hr class="clrBr rowMd" />
         <% if (ob.errors['item.categories']) print(ob.formErrorTmpl({ errors: ob.errors['item.categories'] })) %>
         <div class="js-maxCatsWarning"><% if (ob.item.categories.length >= ob.max.cats) print(ob.maxCatsWarning) %></div>
-        <div class="select2TagsWrap">
-          <!-- WARNING! Styling is dependant on the following elements being in this order. -->
-          <select id="editListingCategories" multiple name="item.categories" class="clrBr clrP select2Tags">
-            <% ob.item.categories.forEach(cat =>
-                print(`<option value="${cat}" selected>${cat}</option>`)) %>
-          </select>
-          <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.categoryPlaceholder') %></div>
-          <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
-          <div id="editListingCategoriesDropdown" class="tagsDropdown"></div>
-          <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCategories') %></div>
-        </div>
-      </section>
+        <input type="text" id="editListingCategories" name="item.categories" class="clrBr clrP" value="<%= ob.item.categories.join(',') %>" placeholder="<%= ob.polyT('editListing.categoryPlaceholder') %>" />
+      </section> -->
 
       <section class="js-scrollToSection js-variantsSection variantsSection contentBox padMd clrP clrBr clrSh3 tx3 <% ob.item.options.length && print('expandedVariantsView') %>">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.variantsDetailed') %></h2>
