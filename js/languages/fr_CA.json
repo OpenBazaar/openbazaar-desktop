@@ -685,7 +685,7 @@
       "btnCancel": "Annuler",
       "btnRetry": "Réessayer",
       "btnConnect": "Connexion",
-      "btnDisconnect": "Déconnecter",
+      "btnDisconnect": "Déconnexion",
       "statusConnected": "Connecté",
       "deleteConfirm": {
         "heading": "Êtes-vous sûr ?",
@@ -1036,8 +1036,8 @@
     },
     "confirmCloseDialog": {
       "title": "Vous avez des modifications non enregistrées",
-      "bodyCreate": "Vous avez des modifications non enregistrées lors de la création d'une annonce. Êtes-vous sûr de vouloir fermer?",
-      "bodyEdit": "Vous avez des changements non enregistrés lors de la modification d'une annonce. Êtes-vous sûr de vouloir fermer?",
+      "bodyCreate": "Vous avez des modifications non enregistrées en ce qui concerne la création d'une annonce. Êtes-vous sûr de vouloir fermer?",
+      "bodyEdit": "Vous avez des changements non enregistrés en ce qui concerne la modification d'une annonce. Êtes-vous sûr de vouloir fermer?",
       "btnYes": "Oui",
       "btnNo": "Non"
     },
