@@ -1249,7 +1249,7 @@
     "purchases": {
       "heading": "Achats",
       "countTransactions": "%{smart_count} achat |||| %{smart_count} achats",
-      "countTransactionsFound": "%{countTransactions} trouvées",
+      "countTransactionsFound": "%{countTransactions} trouvés",
       "unableToFetch": "Impossible d'obtenir vos achats.",
       "noResults": "Aucun achat n'a été trouvé",
       "returnToFromOrder": "Revenir aux achats"
@@ -1257,7 +1257,7 @@
     "cases": {
       "heading": "Litiges",
       "countTransactions": "%{smart_count} litige |||| %{smart_count} litiges",
-      "countTransactionsFound": "%{countTransactions} trouvées",
+      "countTransactionsFound": "%{countTransactions} trouvés",
       "noResults": "Aucun litige trouvé",
       "returnToFromOrder": "Revenir aux litiges"
     },
