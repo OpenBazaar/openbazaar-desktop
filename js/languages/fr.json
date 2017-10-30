@@ -685,7 +685,7 @@
       "btnCancel": "Annuler",
       "btnRetry": "Réessayer",
       "btnConnect": "Connexion",
-      "btnDisconnect": "Déonnexion",
+      "btnDisconnect": "Déconnecter",
       "statusConnected": "Connecté",
       "deleteConfirm": {
         "heading": "Êtes-vous sûr ?",
