@@ -800,6 +800,8 @@ export default class extends BaseModal {
         ...formData.item,
         tags: formData.item.tags.length ?
           formData.item.tags.split(',') : [],
+        categories: formData.item.categories.length ?
+          formData.item.categories.split(',') : [],
       },
     });
 
@@ -1079,6 +1081,25 @@ export default class extends BaseModal {
             this.showMaxTagsWarning();
           } else {
             this.hideMaxTagsWarning();
+          }
+        },
+      });
+
+      this.$editListingCategories.selectize({
+        delimiter: ',',
+        plugins: ['remove_button'],
+        persist: false,
+        maxItems: item.max.cats,
+        create: input => ({
+          value: input,
+          text: input,
+        }),
+        onChange: value => {
+          const cats = value.length ? value.split(',') : [];
+          if (cats.length >= item.max.cats) {
+            this.showMaxCatsWarning();
+          } else {
+            this.hideMaxCatsWarning();
           }
         },
       });

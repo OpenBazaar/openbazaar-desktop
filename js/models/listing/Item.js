@@ -59,6 +59,7 @@ export default class extends BaseModel {
       images: 30,
       tags: 10,
       cats: 10,
+      cats: 3,
       titleLength: 140,
       tagLength: 40,
       productIdLength: 40,
