@@ -362,6 +362,11 @@ export default class extends BaseModal {
         canvas.height = imgH;
 
         this.getOrientation(photoFile, (orientation) => {
+          if (orientation > 4) {
+            canvas.width = imgH;
+            canvas.height = imgW;
+          }
+
           switch (orientation) {
             case 2:
               ctx.translate(imgW, 0);
