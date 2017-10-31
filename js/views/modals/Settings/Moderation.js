@@ -200,7 +200,7 @@ export default class extends baseVw {
         plugins: ['remove_button'],
         valueField: 'code',
         searchField: ['name', 'code'],
-        closeAfterSelect: true,
+        closeAfterSelect: false,
         items: moderator.get('languages'),
         options: getTranslatedLangs(),
         render: {

@@ -235,7 +235,7 @@ export default class extends BaseView {
         plugins: ['remove_button'],
         valueField: 'id',
         searchField: ['text', 'id'],
-        closeAfterSelect: true,
+        // closeAfterSelect: true,
         items: this.model.get('regions'),
         options: this.selectCountryData,
         render: {
