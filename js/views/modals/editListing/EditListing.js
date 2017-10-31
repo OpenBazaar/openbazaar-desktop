@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import '../../../lib/select2';
+import { tagsDelimiter } from '../../../utils/selectize';
 import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
@@ -798,7 +799,16 @@ export default class extends BaseModal {
       formData.item.quantity = -1;
     }
 
-    this.model.set(formData);
+    this.model.set({
+      ...formData,
+      item: {
+        ...formData.item,
+        tags: formData.item.tags.length ?
+          formData.item.tags.split(tagsDelimiter) : [],
+        categories: formData.item.categories.length ?
+          formData.item.categories.split(tagsDelimiter) : [],
+      },
+    });
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
     if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
@@ -1034,12 +1044,7 @@ export default class extends BaseModal {
       super.render();
 
       this.$editListingTags = this.$('#editListingTags');
-      this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
-      this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
-      this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
-      this.$editListingVariantsChoicesPlaceholder =
-        this.$('#editListingVariantsChoicesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
       this.$couponsSection = this.$('.js-couponsSection');
       this.$variantsSection = this.$('.js-variantsSection');
@@ -1052,97 +1057,48 @@ export default class extends BaseModal {
       this.$('#editListingCurrency').select2()
         .on('change', () => this.variantInventory.render());
 
-      this.$editListingTags.select2({
-        multiple: true,
-        tags: true,
-        selectOnClose: true,
-        tokenSeparators: [','],
-        // ***
-        // placeholder has issue where it won't show initially, will use
-        // own element for this instead
-        // placeholder: 'Enter tags... (and translate me)',
-        // ***
-        // dropdownParent needed to fully hide dropdown
-        dropdownParent: this.$('#editListingTagsDropdown'),
-        createTag: (params) => {
-          let term = params.term;
-          if (term === '') {
-            return null; // don't add blank tags triggered by blur
-          }
-
+      this.$editListingTags.selectize({
+        persist: false,
+        maxItems: item.max.tags,
+        create: input => {
           // we'll make the tag all lowercase and
           // replace spaces with dashes.
-          term = term.toLowerCase()
-              .replace(/\s/g, '-')
-              .replace('#', '')
-              // replace consecutive dashes with one
-              .replace(/-{2,}/g, '-');
-
+          const term = input.toLowerCase()
+            .replace(/\s/g, '-')
+            .replace('#', '')
+            // replace consecutive dashes with one
+            .replace(/-{2,}/g, '-');
           return {
-            id: term,
+            value: term,
             text: term,
           };
         },
-        // This is necessary, otherwise partial matches of existing tags are
-        // prevented. E,G. If you have a tag of hello-world, hello would be prevented
-        // as a tag because select2 would match hellow-world in the hidden dropdown
-        // and think you are selecting that.
-        matcher: () => false,
-      }).on('change', () => {
-        const tags = this.$editListingTags.val();
-        this.model.get('item').set('tags', tags);
-        this.$editListingTagsPlaceholder[tags.length ? 'removeClass' : 'addClass']('emptyOfTags');
-
-        if (tags.length >= item.maxTags) {
-          this.showMaxTagsWarning();
-        } else {
-          this.hideMaxTagsWarning();
-        }
-      }).on('select2:selecting', (e) => {
-        if (this.$editListingTags.val().length >= item.maxTags) {
-          this.$maxTagsWarning.velocity('callout.flash', { duration: 500 });
-          e.preventDefault();
-        }
-      })
-      .next()
-      .find('.select2-search__field')
-      .attr('maxLength', item.max.tagLength);
-
-      this.$editListingTagsPlaceholder[
-        this.$editListingTags.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
-
-      this.$editListingCategories.select2({
-        multiple: true,
-        tags: true,
-        selectOnClose: true,
-        tokenSeparators: [','],
-        // dropdownParent needed to fully hide dropdown
-        dropdownParent: this.$('#editListingCategoriesDropdown'),
-        // This is necessary, see comment in select2 for tags above.
-        matcher: () => false,
-      }).on('change', () => {
-        const count = this.$editListingCategories.val().length;
-
-        this.$editListingCategoriesPlaceholder[
-          count ? 'removeClass' : 'addClass'
-        ]('emptyOfTags');
-
-        if (count >= item.maxCategories) {
-          this.showMaxCatsWarning();
-        } else {
-          this.hideMaxCatsWarning();
-        }
-      }).on('select2:selecting', (e) => {
-        if (this.$editListingCategories.val().length >= item.maxCategories) {
-          this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
-          e.preventDefault();
-        }
+        onChange: value => {
+          const tags = value.length ? value.split(',') : [];
+          if (tags.length >= item.max.tags) {
+            this.showMaxTagsWarning();
+          } else {
+            this.hideMaxTagsWarning();
+          }
+        },
       });
 
-      this.$editListingCategoriesPlaceholder[
-        this.$editListingCategories.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
+      this.$editListingCategories.selectize({
+        persist: false,
+        maxItems: item.max.cats,
+        create: input => ({
+          value: input,
+          text: input,
+        }),
+        onChange: value => {
+          const cats = value.length ? value.split(',') : [];
+          if (cats.length >= item.max.cats) {
+            this.showMaxCatsWarning();
+          } else {
+            this.hideMaxCatsWarning();
+          }
+        },
+      });
 
       // render shipping options
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());

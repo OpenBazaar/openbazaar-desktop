@@ -81,6 +81,7 @@
     "open": "0.0.5",
     "qr-encode": "^0.3.0",
     "sanitize-html": "^1.14.1",
+    "selectize": "0.12.4",
     "sortablejs": "^1.5.0-rc1",
     "trumbowyg": "^2.7.2",
     "trunk8": "0.0.1",
