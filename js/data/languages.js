@@ -1117,10 +1117,10 @@ export const translationLangs = [
   //   name: 'Greek (Greek)',
   //   code: 'el',
   // },
-  // {
-  //   name: 'Italiano (Italian)',
-  //   code: 'it',
-  // },
+  {
+    name: 'Italiano (Italian, Italy)',
+    code: 'it_IT',
+   },
   // {
   //   name: '日本語 (Japanese, Japan)',
   //   code: 'ja_JP',

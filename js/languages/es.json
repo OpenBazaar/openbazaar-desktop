@@ -1635,9 +1635,9 @@
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
     "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
-    "percentageLow": "No puede ",
-    "percentageHigh": "You cannot set a fee percentage above 100%",
-    "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
+    "percentageLow": "No puede fijar un porcentaje de cargo bajo cero.",
+    "percentageHigh": "No puede fijar un porcentaje de cargo sobre 100%",
+    "percentageDecimals": "No puede fijar un porcentaje de cargo a más de 2 puntos decimales."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
@@ -1647,7 +1647,7 @@
     "provideQuantity": "Por favor provea una cantidad.",
     "provideNumericQuantity": "Por favor provea la cantidad  como un número.",
     "providePositiveQuantity": "La cantidad no puede ser menos de 0.",
-    "provideSurcharge": "Please provide a surcharge.",
+    "provideSurcharge": "Provea una sobreprecio por favor.",
     "provideNumericSurcharge": "Please provide the surcharge as a number."
   },
   "variantOptionModelErrors": {
