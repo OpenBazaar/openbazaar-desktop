@@ -3,8 +3,9 @@
 */
 
 // If triggering selectize from an input[type=text] the default delimiter has been changed
-// in the lib to use the following, since some of our tags may have commas in them. If manipulating
-// the data (e.g. Array.split(), String.join()), you'll likely want to pass this variable in.
+// in the lib to use the following instead of a comma, since some of our tags may have
+// commas in them. If manipulating the data (e.g. Array.split(), String.join()), you'll
+// likely want to pass this variable in.
 export const tagsDelimiter = '<=!=>';
 
 import '../lib/selectize';
