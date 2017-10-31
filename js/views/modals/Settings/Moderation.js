@@ -197,7 +197,6 @@ export default class extends baseVw {
 
       this.$('#moderationLanguageSelect').selectize({
         maxItems: null,
-        plugins: ['remove_button'],
         valueField: 'code',
         searchField: ['name', 'code'],
         closeAfterSelect: false,

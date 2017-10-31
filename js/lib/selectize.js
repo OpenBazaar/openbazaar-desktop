@@ -2660,7 +2660,7 @@ import { _tagsDelimiter } from '../utils/selectize';
     options: [],
     optgroups: [],
   
-    plugins: [],
+    plugins: ['remove_button'],
     delimiter: _tagsDelimiter(),
     splitOn: null, // regexp or string for splitting up values from a paste command
     persist: true,

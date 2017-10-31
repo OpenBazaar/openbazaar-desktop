@@ -90,7 +90,6 @@ export default class extends BaseView {
         });
 
       this.getCachedEl('select[name=variants]').selectize({
-        plugins: ['remove_button'],
         persist: false,
         valueField: 'value',
         options: variantOptions,

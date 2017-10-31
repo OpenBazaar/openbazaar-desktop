@@ -1053,7 +1053,6 @@ export default class extends BaseModal {
         .on('change', () => this.variantInventory.render());
 
       this.$editListingTags.selectize({
-        plugins: ['remove_button'],
         persist: false,
         maxItems: item.max.tags,
         create: input => {
@@ -1080,7 +1079,6 @@ export default class extends BaseModal {
       });
 
       this.$editListingCategories.selectize({
-        plugins: ['remove_button'],
         persist: false,
         maxItems: item.max.cats,
         create: input => ({

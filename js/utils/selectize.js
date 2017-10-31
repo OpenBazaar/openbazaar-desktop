@@ -9,6 +9,7 @@
 export const tagsDelimiter = '<=!=>';
 
 import '../lib/selectize';
+
 // hack to work around the circular dependance issue and expose the
 // tags delimiter to the '../lib/selectize' module. Only that module
 // should ever have to import _tagsDelimiter - all others could import

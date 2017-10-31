@@ -232,10 +232,9 @@ export default class extends BaseView {
 
       this.$shipDestinationSelect.selectize({
         maxItems: null,
-        plugins: ['remove_button'],
         valueField: 'id',
         searchField: ['text', 'id'],
-        // closeAfterSelect: true,
+        closeAfterSelect: false,
         items: this.model.get('regions'),
         options: this.selectCountryData,
         render: {
