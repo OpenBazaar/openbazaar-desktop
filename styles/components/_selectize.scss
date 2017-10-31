@@ -2,8 +2,15 @@
   .selectize-control {
     .selectize-input {
       font-size: inherit;
+      padding-top: 7px;
+      min-height: $formElementHeight;
+
+      input {
+        font-size: inherit;
+      }
 
       &:not(.has-items) input {
+        top: 3px;
         width: 100% !important; // otherwise placeholder is sometimes getting cut off
       }
     }
@@ -14,6 +21,7 @@
         border-width: 1px;
         border-style: solid;
         border-radius: $corner;
+        margin: 0 5px 5px 0;
       }
     }
 

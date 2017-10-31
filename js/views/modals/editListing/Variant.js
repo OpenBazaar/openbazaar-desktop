@@ -1,5 +1,3 @@
-import $ from 'jquery';
-import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -79,35 +77,34 @@ export default class extends BaseView {
         errors,
       }));
 
-      this.$variantChoicesPlaceholder = this.$('.js-variantChoicesPlaceholder');
-      this.$variantChoicesSelect = this.$('select[name=variants]');
       this._$formFields = null;
 
-      this.$variantChoicesSelect.select2({
-        multiple: true,
-        tags: true,
-        selectOnClose: true,
-        tokenSeparators: [','],
-        // dropdownParent needed to fully hide dropdown
-        dropdownParent: this.$('.js-dropDownContainer'),
-        matcher: () => false, // this is necessary
-        maximumSelectionLength: this.model.max.variantCount,
-      }).on('change', (e) => {
-        const count = $(e.target).val().length;
+      const variantItems = [];
+      const variantOptions = [];
 
-        this.$variantChoicesPlaceholder[
-          count ? 'removeClass' : 'addClass'
-        ]('emptyOfTags');
-
-        this.trigger('choiceChange', {
-          view: this,
-          originalEvent: e,
+      this.model.get('variants').toJSON()
+        .forEach(variant => {
+          const value = `${variant._clientID}<===>${variant.name}`;
+          variantOptions.push({ ...variant, value });
+          variantItems.push(value);
         });
-      });
 
-      this.$variantChoicesPlaceholder[
-        this.$variantChoicesSelect.val().length ? 'removeClass' : 'addClass'
-      ]('emptyOfTags');
+      this.getCachedEl('select[name=variants]').selectize({
+        plugins: ['remove_button'],
+        persist: false,
+        valueField: 'value',
+        options: variantOptions,
+        items: variantItems,
+        createOnBlur: true,
+        create: input => ({
+          name: input,
+          value: input,
+        }),
+        render: {
+          option: data => `<div>${data.name}</div>`,
+          item: data => `<div>${data.name}</div>`,
+        },
+      });
     });
 
     return this;

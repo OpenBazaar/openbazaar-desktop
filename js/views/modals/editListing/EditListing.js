@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import '../../../utils/velocity';
 import '../../../lib/select2';
-import '../../../lib/selectize';
+import { tagsDelimiter } from '../../../utils/selectize';
 import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
@@ -799,9 +799,9 @@ export default class extends BaseModal {
       item: {
         ...formData.item,
         tags: formData.item.tags.length ?
-          formData.item.tags.split(',') : [],
+          formData.item.tags.split(tagsDelimiter) : [],
         categories: formData.item.categories.length ?
-          formData.item.categories.split(',') : [],
+          formData.item.categories.split(tagsDelimiter) : [],
       },
     });
 
@@ -1039,12 +1039,7 @@ export default class extends BaseModal {
       super.render();
 
       this.$editListingTags = this.$('#editListingTags');
-      // this.$editListingTagsPlaceholder = this.$('#editListingTagsPlaceholder');
       this.$editListingCategories = this.$('#editListingCategories');
-      // this.$editListingCategoriesPlaceholder = this.$('#editListingCategoriesPlaceholder');
-      this.$editListingVariantsChoices = this.$('#editListingVariantsChoices');
-      this.$editListingVariantsChoicesPlaceholder =
-        this.$('#editListingVariantsChoicesPlaceholder');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
       this.$couponsSection = this.$('.js-couponsSection');
       this.$variantsSection = this.$('.js-variantsSection');
@@ -1058,7 +1053,6 @@ export default class extends BaseModal {
         .on('change', () => this.variantInventory.render());
 
       this.$editListingTags.selectize({
-        delimiter: ',',
         plugins: ['remove_button'],
         persist: false,
         maxItems: item.max.tags,
@@ -1086,7 +1080,6 @@ export default class extends BaseModal {
       });
 
       this.$editListingCategories.selectize({
-        delimiter: ',',
         plugins: ['remove_button'],
         persist: false,
         maxItems: item.max.cats,
@@ -1103,34 +1096,6 @@ export default class extends BaseModal {
           }
         },
       });
-
-      // this.$editListingCategories.select2({
-      //   multiple: true,
-      //   tags: true,
-      //   selectOnClose: true,
-      //   tokenSeparators: [','],
-      //   // dropdownParent needed to fully hide dropdown
-      //   dropdownParent: this.$('#editListingCategoriesDropdown'),
-      //   // This is necessary, see comment in select2 for tags above.
-      //   matcher: () => false,
-      // }).on('change', () => {
-      //   const count = this.$editListingCategories.val().length;
-
-      //   this.$editListingCategoriesPlaceholder[
-      //     count ? 'removeClass' : 'addClass'
-      //   ]('emptyOfTags');
-
-      //   if (count >= item.maxCategories) {
-      //     this.showMaxCatsWarning();
-      //   } else {
-      //     this.hideMaxCatsWarning();
-      //   }
-      // }).on('select2:selecting', (e) => {
-      //   if (this.$editListingCategories.val().length >= item.maxCategories) {
-      //     this.$maxCatsWarning.velocity('callout.flash', { duration: 500 });
-      //     e.preventDefault();
-      //   }
-      // });
 
       // render shipping options
       this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());

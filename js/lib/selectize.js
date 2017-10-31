@@ -1,7 +1,7 @@
 /**
  * WARNING - WARNING - WARNING
  * This is a tweaked version of the selectize source. We are still importing selectize from npm
- * because we are using the css from there. This file is also getting it's dependancies from
+ * because we are using the css from there. This file is also getting its dependancies from
  * there. Make sure to keep the version locked at 0.12.4 so the deps and css do not get out
  * of sync with this file.
  */
@@ -24,6 +24,8 @@
 
 /*jshint curly:false */
 /*jshint browser:true */
+
+import { _tagsDelimiter } from '../utils/selectize';
 
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -942,7 +944,7 @@
     onKeyPress: function(e) {
       if (this.isLocked) return e && e.preventDefault();
       var character = String.fromCharCode(e.keyCode || e.which);
-      if (this.settings.create && this.settings.mode === 'multi' && character === this.settings.delimiter) {
+      if (this.settings.create && this.settings.mode === 'multi' && character === ',') {
         this.createItem();
         e.preventDefault();
         return false;
@@ -1016,7 +1018,13 @@
           return;
         case KEY_TAB:
           if (self.settings.selectOnTab && self.isOpen && self.$activeOption) {
-            self.onOptionSelect({currentTarget: self.$activeOption});
+            const isHidingDropDown = self.$wrapper && self.$wrapper.hasClass('hideDropDown');
+
+            if (isHidingDropDown && !self.$control_input[0].value) {
+              return;
+            }
+
+            if (!isHidingDropDown) self.onOptionSelect({currentTarget: self.$activeOption});
   
             // Default behaviour is to jump to the next field, we only want this
             // if the current field doesn't accept any more entries
@@ -1180,8 +1188,16 @@
       }
   
       $target = $(e.currentTarget);
-      if ($target.hasClass('create')) {
-        self.createItem(null, function() {
+      const isHidingDropDown = self.$wrapper && self.$wrapper.hasClass('hideDropDown');
+      const inputVal = self.$control_input[0].value;
+
+      if ($target.hasClass('create') || isHidingDropDown) {
+        let val = null;
+        if (isHidingDropDown) {
+          if (!inputVal) return;
+          val = inputVal;
+        }
+        self.createItem(val, function() {
           if (self.settings.closeAfterSelect) {
             self.close();
           }
@@ -2645,7 +2661,7 @@
     optgroups: [],
   
     plugins: [],
-    delimiter: ',',
+    delimiter: _tagsDelimiter(),
     splitOn: null, // regexp or string for splitting up values from a paste command
     persist: true,
     diacritics: true,
@@ -2658,7 +2674,7 @@
     maxItems: null,
     hideSelected: null,
     addPrecedence: false,
-    selectOnTab: false,
+    selectOnTab: true,
     preload: false,
     allowEmptyOption: false,
     closeAfterSelect: false,

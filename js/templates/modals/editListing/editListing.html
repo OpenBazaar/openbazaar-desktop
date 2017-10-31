@@ -182,7 +182,7 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['item.tags'] })) %>
         <div class="js-maxTagsWarning"><% if (ob.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
-        <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(',') %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
+        <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
         <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>        
       </section>
 
@@ -191,7 +191,7 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['item.categories']) print(ob.formErrorTmpl({ errors: ob.errors['item.categories'] })) %>
         <div class="js-maxCatsWarning"><% if (ob.item.categories.length >= ob.max.cats) print(ob.maxCatsWarning) %></div>
-        <input type="text" id="editListingCategories" name="item.categories" class="clrBr clrP hideDropDown" value="<%= ob.item.categories.join(',') %>" placeholder="<%= ob.polyT('editListing.categoryPlaceholder') %>" />
+        <input type="text" id="editListingCategories" name="item.categories" class="clrBr clrP hideDropDown" value="<%= ob.item.categories.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.categoryPlaceholder') %>" />
       </section>
 
       <section class="js-scrollToSection js-variantsSection variantsSection contentBox padMd clrP clrBr clrSh3 tx3 <% ob.item.options.length && print('expandedVariantsView') %>">

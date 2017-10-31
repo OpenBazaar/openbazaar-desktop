@@ -9,6 +9,7 @@ import twemoji from 'twemoji';
 import {
   splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
 } from './';
+import { tagsDelimiter } from '../utils/selectize';
 import is from 'is_js';
 
 export function polyT(...args) {
@@ -66,4 +67,5 @@ export {
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
   is,
+  tagsDelimiter,
 };
