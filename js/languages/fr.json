@@ -141,7 +141,7 @@
     "discoverCalloutBody": "Parcourez et achetez dans des centaines de boutiques sur OpenBazaar",
     "myPage": "Ma page",
     "customizePage": "Modifier ma page",
-    "createListing": "Lister une annonce",
+    "createListing": "Créer une annonce",
     "purchases": "Achats",
     "sales": "Ventes",
     "cases": "Litiges",
@@ -294,7 +294,7 @@
     "FIXED": "%{amount}**",
     "PERCENTAGE": "%{percentage}%**",
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
-    "termsOfService": "Conditions d'utilisation",
+    "termsOfService": "Conditions de service",
     "addAsModeratorButton": "Ajouter comme modérateur",
     "disclaimer": "**Les frais de service du modérateur ne s'appliquent qu'après un litige.",
     "languages": "Langues"
@@ -685,7 +685,7 @@
       "btnCancel": "Annuler",
       "btnRetry": "Réessayer",
       "btnConnect": "Connexion",
-      "btnDisconnect": "Déonnexion",
+      "btnDisconnect": "Déconnexion",
       "statusConnected": "Connecté",
       "deleteConfirm": {
         "heading": "Êtes-vous sûr ?",
@@ -833,7 +833,7 @@
     "attachments": "Pièces jointes",
     "refundPolicy": "Conditions de remboursement",
     "noRefundPolicy": "Aucune condition de retour spécifiée ",
-    "termsAndConditions": "Conditions d'utilisation",
+    "termsAndConditions": "Conditions générales",
     "noTermsAndConditions": "Aucune condition spécifiée",
     "shipping": "Expédition",
     "shipsFrom": "Expédie depuis %{country}",
@@ -925,7 +925,7 @@
       "variantsDetailed": "Variantes (ajouter d'autres tailles, couleurs, matériaux, ...)",
       "inventory": "Inventaire",
       "returnPolicy": "Conditions de retour",
-      "termsAndConditions": "Conditions",
+      "termsAndConditions": "Conditions générales",
       "coupons": "Codes promotionnels",
       "inventoryManagement": "Gestion d'inventaire",
       "variantInventory": "Inventaire des variantes"
@@ -949,7 +949,7 @@
     "helperCategories": "L’imbrication de catégorie n'est pas prise en charge (par exemple, Chaussures > Bottes ne fonctionne pas actuellement). Entrez un nom de catégorie, appuyez sur Entrée, répétez.",
     "helperReturnPolicy": "Si laissé vide, l'annonce affichera \"Aucune condition de retour spécifiée\"",
     "helperTerms": "Si laissé vide, l'annonce affichera \"Aucune condition spécifiée\"",
-    "createListingLabel": "Lister une annonce",
+    "createListingLabel": "Créer une annonce",
     "editListingLabel": "Modifier l'annonce",
     "title": "Titre",
     "type": "Type",
@@ -1036,8 +1036,8 @@
     },
     "confirmCloseDialog": {
       "title": "Vous avez des modifications non enregistrées",
-      "bodyCreate": "Vous avez des modifications non enregistrées lors de la création d'une annonce. Êtes-vous sûr de vouloir fermer ?",
-      "bodyEdit": "Vous avez des changements non enregistrés lors de la modification d'une annonce. Êtes-vous sûr de vouloir fermer ?",
+      "bodyCreate": "Vous avez des modifications non enregistrées en ce qui concerne la création d'une annonce. Êtes-vous sûr de vouloir fermer ?",
+      "bodyEdit": "Vous avez des changements non enregistrés en ce qui concerne la modification d'une annonce. Êtes-vous sûr de vouloir fermer ?",
       "btnYes": "Oui",
       "btnNo": "Non"
     },
@@ -1249,7 +1249,7 @@
     "purchases": {
       "heading": "Achats",
       "countTransactions": "%{smart_count} achat |||| %{smart_count} achats",
-      "countTransactionsFound": "%{countTransactions} trouvées",
+      "countTransactionsFound": "%{countTransactions} trouvés",
       "unableToFetch": "Impossible d'obtenir vos achats.",
       "noResults": "Aucun achat n'a été trouvé",
       "returnToFromOrder": "Revenir aux achats"
@@ -1257,7 +1257,7 @@
     "cases": {
       "heading": "Litiges",
       "countTransactions": "%{smart_count} litige |||| %{smart_count} litiges",
-      "countTransactionsFound": "%{countTransactions} trouvées",
+      "countTransactionsFound": "%{countTransactions} trouvés",
       "noResults": "Aucun litige trouvé",
       "returnToFromOrder": "Revenir aux litiges"
     },
@@ -1580,7 +1580,7 @@
   },
   "listingModelErrors": {
     "returnPolicyTooLong": "Les conditions de retour dépassent la longueur maximale autorisée.",
-    "termsAndConditionsTooLong": "Les conditions de vente dépassent la longueur maximale autorisée.",
+    "termsAndConditionsTooLong": "Les conditions générales dépassent la longueur maximale autorisée.",
     "provideShippingOption": "Pour un produit physique, vous devez fournir au moins une option d'expédition.",
     "tooManyCoupons": "Vous ne pouvez pas avoir plus de %{maxCouponCount} codes promotionnels",
     "couponsPriceTooLarge": "La réduction ne peut pas être égale ou supérieure au prix original."
