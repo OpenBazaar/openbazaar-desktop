@@ -199,7 +199,6 @@ export default class extends baseVw {
         maxItems: null,
         valueField: 'code',
         searchField: ['name', 'code'],
-        closeAfterSelect: false,
         items: moderator.get('languages'),
         options: getTranslatedLangs(),
         render: {
