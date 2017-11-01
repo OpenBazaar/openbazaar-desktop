@@ -972,7 +972,7 @@
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
     "btnAddCoupon": "Add Coupon",
-    "primaryPhoto": "Primary Photo",
+    "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "View Listing",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
