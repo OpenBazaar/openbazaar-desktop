@@ -21,7 +21,7 @@
         }));
       %>
       <div class="flexVCent">
-        <span class="margL margR">Quantity</span>
+        <span class="margL margR"><%= ob.polyT('editListing.inventoryManagement.quantity') %></span>
         <input type="text" class="clrBr clrP clrSh2 quantityInput js-quantityInput" name="item.quantity" value="<%= ob.quantity < 0 ? '' : ob.quantity %>" placeholder="0" data-var-type="number">
       </div>
     </div>

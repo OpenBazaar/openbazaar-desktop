@@ -60,7 +60,7 @@ export default class Profile extends BaseModel {
   }
 
   validate(attrs) {
-    const errObj = this.mergeInNestedErrors({});
+    const errObj = this.mergeInNestedErrors();
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
@@ -89,6 +89,19 @@ export default class Profile extends BaseModel {
       addError('shortDescription',
         app.polyglot.t('profileModelErrors.shortDescriptionTooLong',
           { count: this.max.shortDescriptionLength }));
+    }
+
+    // We'll delete the moderatorInfo errors, because we'll revalidate below passing
+    // in the appropriate flag on whether required fields should be validated.
+    Object.keys(errObj).forEach(key => {
+      if (key.startsWith('moderatorInfo')) delete errObj[key];
+    });
+
+    if (attrs.moderatorInfo instanceof Moderator) {
+      const validateRequiredFields = !!this.get('moderator');
+      const errs = attrs.moderatorInfo.isValid({ validateRequiredFields }) ?
+        {} : attrs.moderatorInfo.validationError;
+      Object.keys(errs).forEach(key => (errObj[`moderatorInfo.${key}`] = errs[key]));
     }
 
     if (Object.keys(errObj).length) return errObj;

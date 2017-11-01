@@ -103,7 +103,7 @@
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
-                <label>Mature Content (NSFW, adult, 18+, etc)</label>
+                <label><%= ob.polyT('editListing.nsfwLabel') %></label>
                 <% if (ob.errors['item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['item.nsfw'] })) %>
                 <div class="btnStrip">
                   <div class="btnRadio clrBr">
