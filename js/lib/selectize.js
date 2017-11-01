@@ -698,9 +698,6 @@ import { _tagsDelimiter } from '../utils/selectize';
         blur      : function() { return self.onBlur.apply(self, arguments); },
         focus     : function() { self.ignoreBlur = false; return self.onFocus.apply(self, arguments); },
         paste     : function() { return self.onPaste.apply(self, arguments); }
-        // click     : function() {
-
-        // }
       });
   
       $document.on('keydown' + eventNS, function(e) {
