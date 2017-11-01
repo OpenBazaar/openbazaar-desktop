@@ -698,6 +698,9 @@ import { _tagsDelimiter } from '../utils/selectize';
         blur      : function() { return self.onBlur.apply(self, arguments); },
         focus     : function() { self.ignoreBlur = false; return self.onFocus.apply(self, arguments); },
         paste     : function() { return self.onPaste.apply(self, arguments); }
+        // click     : function() {
+
+        // }
       });
   
       $document.on('keydown' + eventNS, function(e) {
@@ -851,7 +854,18 @@ import { _tagsDelimiter } from '../utils/selectize';
      */
     onClick: function(e) {
       var self = this;
-  
+
+      // If the input has focus, we'll let a click of it open the menu, which
+      // might be closed. This prevents the user from having to click out of the
+      // input and then click back in, just to show the menu.
+      if (self.isFocused && !self.isDisabled) {
+        if (!self.$activeItems.length) {
+          self.showInput();
+          self.setActiveItem(null);
+          self.refreshOptions(!!self.settings.openOnFocus);
+        }
+      }
+
       // necessary for mobile webkit devices (manual focus triggering
       // is ignored unless invoked within a click event)
       if (!self.isFocused) {
@@ -2677,7 +2691,7 @@ import { _tagsDelimiter } from '../utils/selectize';
     selectOnTab: true,
     preload: false,
     allowEmptyOption: false,
-    closeAfterSelect: false,
+    closeAfterSelect: true,
   
     scrollDuration: 60,
     loadThrottle: 300,

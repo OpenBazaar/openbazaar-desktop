@@ -234,7 +234,6 @@ export default class extends BaseView {
         maxItems: null,
         valueField: 'id',
         searchField: ['text', 'id'],
-        closeAfterSelect: false,
         items: this.model.get('regions'),
         options: this.selectCountryData,
         render: {
