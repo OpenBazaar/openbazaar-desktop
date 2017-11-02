@@ -9,6 +9,8 @@ form,
     -webkit-user-select: none;
     display: flex;
     align-items: center;
+    word-wrap: break-word;
+    hyphens: auto;
   }
 
   &.compact label {
@@ -166,10 +168,9 @@ textarea {
 .errorList {
   color: $error;
   word-wrap: break-word;
+  hyphens: auto;
 
   li {
-    display: flex;
-
     i {
       margin-right: 5px;
     }

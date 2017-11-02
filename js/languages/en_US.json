@@ -992,7 +992,8 @@
         "namePlaceholder": "e.g. Standard, Express, Overnight",
         "estimatedDeliveryLabel": "Est. Delivery Time",
         "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
-        "priceLabel": "Price",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Add Service"
       },
@@ -1632,7 +1633,7 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
-    "provideAmountGreaterThanZero": "The price must be greater than 0."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Please provide a description.",
