@@ -379,9 +379,9 @@ function createWindow() {
 
   // put logic here to set tray icon based on OS
   if (process.platform === 'linux') {
-    const osTrayIcon = 'openbazaar-icon.png';
+    var osTrayIcon = 'icon.png';
   } else {
-    const osTrayIcon = 'openbazaar-mac-system-tray.png';
+    var osTrayIcon = 'openbazaar-mac-system-tray.png';
   }
   
   trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
@@ -459,7 +459,7 @@ function createWindow() {
     center: true,
     title: 'OpenBazaar',
     frame: false,
-    icon: process.platform === 'linux' && `${__dirname}/imgs/openbazaar-icon.png`,
+    icon: process.platform === 'linux' && `${__dirname}/imgs/icon.png`,
   });
 
   // and load the index.html of the app.
