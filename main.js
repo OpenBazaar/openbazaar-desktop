@@ -459,7 +459,7 @@ function createWindow() {
     center: true,
     title: 'OpenBazaar',
     frame: false,
-    icon: process.platform === 'linux' && `${__dirname}/imgs/icon.png`,
+    icon: `${__dirname}/imgs/icon.png`,
   });
 
   // and load the index.html of the app.
