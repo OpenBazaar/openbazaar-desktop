@@ -26,6 +26,11 @@
     "label": "Bitcoin fee:",
     "btnChange": "change"
   },
+  "unsupportedCryptoCurDialog": {
+    "title": "Unsupported Currency",
+    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
+    "connectLink": "connect"
+  },
   "consoleWarning": {
     "heading": "Stop!",
     "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",

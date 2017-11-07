@@ -5,6 +5,7 @@ import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import moment from 'moment';
 import app from './app';
+import { getCurrencyByCode } from './data/currencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
@@ -363,19 +364,49 @@ function onboardIfNeeded() {
   return onboardIfNeededDeferred.promise();
 }
 
+function isCryptoCurrencySupported(cryptoCurrency) {
+  return !!getCurrencyByCode(cryptoCurrency);
+}
+
  // let's start our flow - do we need onboarding?,
  // fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
-    app.profile = new Profile({ peerID: data.peerID });
-    app.router.onProfileSet();
-
-    app.settings = new Settings();
-
     // This is the server config as returned by ob/config. It has nothing to do with
     // app.serverConfigs which is a collection of server configuration data related
     // to connecting with a server. The latter is stored in local storage.
     app.serverConfig = data || {};
+
+    if (!isCryptoCurrencySupported) {
+      const connectLink =
+        '<button class="btnAsLink js-connect clrTEm">' +
+          `${app.polyglot.t('unsupportedCryptoCurDialog.connectLink')}` +
+          '</button>';
+
+      const unsupportedCryptoCurDialog = openSimpleMessage(
+        app.polyglot.t('unsupportedCryptoCurDialog.title'),
+        app.polyglot.t('unsupportedCryptoCurDialog.body', {
+          curCode: app.serverConfig.cryptoCurrency,
+          connectLink,
+        }),
+        {
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }
+      );
+
+      unsupportedCryptoCurDialog.$('.js-connect')
+        .on('click', () => app.connectionManagmentModal.open());
+
+      serverConnectEvents.once('connected', () => unsupportedCryptoCurDialog.remove());
+
+      return;
+    }
+
+    app.profile = new Profile({ peerID: data.peerID });
+    app.router.onProfileSet();
+
+    app.settings = new Settings();
 
     const curConn = getCurrentConnection();
 
