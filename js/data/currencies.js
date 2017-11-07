@@ -664,7 +664,13 @@ export function getCurrencyByCode(code, options = {}) {
   const currency = getIndexedCurrencies()[code];
 
   if (!currency && opts.includeCrypto) {
-    return getCryptoCurByCode(code);
+    const cryptoCurrency = getCryptoCurByCode(code);
+    if (cryptoCurrency) {
+      return {
+        ...getCryptoCurByCode(code),
+        isCrypto: true,
+      };
+    }
   }
 
   return currency;
@@ -689,7 +695,10 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
   }));
 
   if (opts.includeCrypto) {
-    translated.concat(getTranslatedCryptoCurs(undefined, false));
+    translated = translated.concat(
+      (getTranslatedCryptoCurs(undefined, false) || [])
+        .map(curData => ({ ...curData, isCrypto: true }))
+    );
   }
 
   if (opts.sort) {

@@ -27,6 +27,7 @@
      { useBtcSymbol: false });
 
   if (ob.userCurrency !== 'BTC') {
+    console.log('slick willy');
     priceText = ob.polyT('fiatBtcPairing', {
       fiatAmount: ob.convertAndFormatCurrency(ob.order.payment.amount, 'BTC',
         ob.userCurrency),

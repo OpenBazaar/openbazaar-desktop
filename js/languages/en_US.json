@@ -1747,12 +1747,16 @@
     "SATOSHI": "sat"
   },
   "bitcoinCurrencyFormat": {
-    "shortBTC": "%{symbol}%{amount}",
-    "longBTC": "%{amount} %{symbol}",
-    "MBTC": "%{amount} %{symbol}",
-    "UBTC": "%{amount} %{symbol}",
-    "SATOSHI": "%{amount} %{symbol}"
+    "symbolBTC": "%{curSymbol}%{amount}",
+    "curCodeBTC": "%{amount} %{curCode}",
+    "MBTC": "%{amount} %{curCode}",
+    "UBTC": "%{amount} %{curCode}",
+    "SATOSHI": "%{amount} %{curCode}"
   },
+  "cryptoCurrencyFormat": {
+    "curSymbolAmount": "%{symbol}%{amount}",
+    "curCodeAmount": "%{amount} %{symbol}"
+  },  
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

@@ -4,6 +4,7 @@ import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
+import { getCurrencyByCode } from '../data/currencies';
 
 const events = {
   ...Events,
@@ -104,7 +105,7 @@ export function formatCurrency(amount, currency, options) {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
-    useBtcSymbol: true,
+    // useCryptoSymbol: true,
     ...options,
   };
 
@@ -124,46 +125,50 @@ export function formatCurrency(amount, currency, options) {
     throw new Error('Please provide a currency as a string');
   }
 
+  const cur = currency.toUpperCase();
+  const curData = getCurrencyByCode(cur);
+
+  if (!curData) {
+    // if it's a currency we don't recognize, send back an empty string
+    return '';
+  }
+
   let formattedCurrency;
 
-  if (currency.toUpperCase() === 'BTC' || currency.toUpperCase() === 'TBTC') {
-    let curSymbol;
+  if (curData.isCrypto) {
+    let curSymbol = curData.symbol || curData.code;
     let bitcoinConvertUnit;
+    let amt = amount;
 
-    switch (opts.btcUnit) {
-      case 'MBTC':
-        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.MBTC');
-        bitcoinConvertUnit = 'mBTC';
-        break;
-      case 'UBTC':
-        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.UBTC');
-        bitcoinConvertUnit = 'μBTC';
-        break;
-      case 'SATOSHI':
-        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.SATOSHI');
-        bitcoinConvertUnit = 'Satoshi';
-        break;
-      default:
-        // The default is BTC. Using the ₿ char for the Bitcoin symbol which will be
-        // replaced by the real Bitcoin symbol coming from the Bitcoin_Regular font file.
-        curSymbol = opts.useBtcSymbol ? btcSymbol : 'BTC';
-        bitcoinConvertUnit = 'BTC';
+    if (cur === 'BTC' || cur === 'TBTC') {
+      switch (opts.btcUnit) {
+        case 'MBTC':
+          // curSymbol = app.polyglot.t('bitcoinCurrencyUnits.MBTC');
+          bitcoinConvertUnit = curSymbol = 'mBTC';
+          break;
+        case 'UBTC':
+          // curSymbol = app.polyglot.t('bitcoinCurrencyUnits.UBTC');
+          bitcoinConvertUnit = curSymbol = 'μBTC';
+          break;
+        case 'SATOSHI':
+          curSymbol = 'sat';
+          bitcoinConvertUnit = 'Satoshi';
+          break;
+        default:
+          bitcoinConvertUnit = 'BTC';
+      }
+
+      amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
     }
 
-    // going to use USD just to know the localized placement of the $, which we'll swap
-    // out with the appropriate Bitcoin symbol
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 8,
-    }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
+      minimumFractionDigits: curData.minDisplayDecimals,
+      maximumFractionDigits: curData.maxDisplayDecimals,
+    }).format(amt);
 
-    let btcUnit = opts.btcUnit;
-
-    if (opts.btcUnit === 'BTC') {
-      btcUnit = opts.useBtcSymbol ? 'shortBTC' : 'longBTC';
-    }
-
-    formattedCurrency = app.polyglot.t(`bitcoinCurrencyFormat.${btcUnit}`, {
+    const translationSubKey = curSymbol === curData.symbol ?
+      'curSymbolAmount' : 'curCodeAmount';
+    formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
       amount: formattedAmount,
       symbol: curSymbol,
     });

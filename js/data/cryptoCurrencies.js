@@ -6,7 +6,9 @@ const currencies = [
     name: 'Bitcoin',
     code: 'BTC',
     testnetCode: 'TBTC',
+    symbol: '₿',
     baseUnit: 100000000,
+    minDisplayDecimals: 0,
     maxDisplayDecimals: 8,
   },
 ];
