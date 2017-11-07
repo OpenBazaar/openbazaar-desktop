@@ -31,6 +31,11 @@
     "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
     "connectLink": "connect"
   },
+  "setValidCurDialog": {
+    "title": "Invalid Local Currency",
+    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
+    "settingsLink": "settings"
+  },
   "consoleWarning": {
     "heading": "Stop!",
     "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",

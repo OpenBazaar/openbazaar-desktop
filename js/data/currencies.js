@@ -664,7 +664,7 @@ export function getCurrencyByCode(code, options = {}) {
   const currency = getIndexedCurrencies()[code];
 
   if (!currency && opts.includeCrypto) {
-    return getCryptoCurByCode()[code];
+    return getCryptoCurByCode(code);
   }
 
   return currency;

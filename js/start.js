@@ -34,7 +34,7 @@ import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
-import { launchDebugLogModal } from './utils/modalManager';
+import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
@@ -368,6 +368,67 @@ function isCryptoCurrencySupported(cryptoCurrency) {
   return !!getCurrencyByCode(cryptoCurrency);
 }
 
+let ensureValidSettingsCurDeferred;
+
+function ensureValidSettingsCurrency() {
+  if (!ensureValidSettingsCurDeferred) {
+    ensureValidSettingsCurDeferred = $.Deferred();
+  } else {
+    return ensureValidSettingsCurDeferred.promise();
+  }
+
+  const settingsCur = app.settings.get('localCurrency');
+  const dialogTitle = app.polyglot.t('setValidCurDialog.title');
+  const settingsLink =
+    '<button class="btnAsLink js-setCurSettings clrTEm">' +
+      `${app.polyglot.t('setValidCurDialog.settingsLink')}` +
+      '</button>';
+  const dialogBody = currency => (
+    app.polyglot.t('setValidCurDialog.body', {
+      currency,
+      settingsLink,
+    })
+  );
+
+  if (!getCurrencyByCode(settingsCur)) {
+    const setValidCurDialog = openSimpleMessage(
+      dialogTitle,
+      dialogBody(settingsCur), {
+        dismissOnEscPress: false,
+        showCloseButton: false,
+      }
+    );
+
+    let settingsModal;
+
+    const bindSetCurSettingsHandler = () => {
+      setValidCurDialog.$('.js-setCurSettings')
+        .on('click', () =>
+          (settingsModal = launchSettingsModal({ initialTab: 'General' })));
+    };
+
+    bindSetCurSettingsHandler();
+
+    const onCurChange = (md, cur) => {
+      if (getCurrencyByCode(cur)) {
+        settingsModal.close();
+        setValidCurDialog.close();
+        ensureValidSettingsCurDeferred.resolve();
+      } else {
+        setValidCurDialog.open(dialogTitle, dialogBody(cur));
+        bindSetCurSettingsHandler();
+        settingsModal.close();
+      }
+    };
+
+    app.settings.on('change:localCurrency', onCurChange);
+  } else {
+    ensureValidSettingsCurDeferred.resolve();
+  }
+
+  return ensureValidSettingsCurDeferred.promise();
+}
+
  // let's start our flow - do we need onboarding?,
  // fetching app-wide models...
 function start() {
@@ -405,7 +466,6 @@ function start() {
 
     app.profile = new Profile({ peerID: data.peerID });
     app.router.onProfileSet();
-
     app.settings = new Settings();
 
     const curConn = getCurrentConnection();
@@ -420,69 +480,70 @@ function start() {
     });
 
     app.walletBalance = new WalletBalance();
-
     app.searchProviders = new SearchProvidersCol();
 
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
-        app.pageNav.navigable = true;
-        app.pageNav.setAppProfile();
-        app.loadingModal.close();
+        ensureValidSettingsCurrency().done(() => {
+          app.pageNav.navigable = true;
+          app.pageNav.setAppProfile();
+          app.loadingModal.close();
 
-        // add the default search providers
-        app.searchProviders.add(defaultSearchProviders, { at: 0 });
+          // add the default search providers
+          app.searchProviders.add(defaultSearchProviders, { at: 0 });
 
-        // set the profile data for the feedback mechanism
-        setFeedbackOptions();
+          // set the profile data for the feedback mechanism
+          setFeedbackOptions();
 
-        const externalRoute = remote.getGlobal('externalRoute');
+          const externalRoute = remote.getGlobal('externalRoute');
 
-        if (externalRoute) {
-          // handle opening the app from an an external ob link
-          location.hash = `#${externalRoute}`;
-        } else if (!location.hash) {
-          // If for some reason the route to start on is empty, we'll change it to be
-          // the user's profile.
-          const href = location.href.replace(/(javascript:|#).*$/, '');
-          location.replace(`${href}#${app.profile.id}`);
-        }
+          if (externalRoute) {
+            // handle opening the app from an an external ob link
+            location.hash = `#${externalRoute}`;
+          } else if (!location.hash) {
+            // If for some reason the route to start on is empty, we'll change it to be
+            // the user's profile.
+            const href = location.href.replace(/(javascript:|#).*$/, '');
+            location.replace(`${href}#${app.profile.id}`);
+          }
 
-        Backbone.history.start();
+          Backbone.history.start();
 
-        // load chat
-        const chatConvos = new ChatHeads();
+          // load chat
+          const chatConvos = new ChatHeads();
 
-        chatConvos.once('request', (cl, xhr) => {
-          xhr.always(() => app.chat.attach(getChatContainer()));
-        });
-
-        app.chat = new Chat({
-          collection: chatConvos,
-          $scrollContainer: getChatContainer(),
-        });
-
-        chatConvos.fetch();
-        $('#chatCloseBtn').on('click', () => (app.chat.close()));
-
-        getChatContainer()
-            .on('mouseenter', () => getBody().addClass('chatHover'))
-            .on('mouseleave', () => getBody().removeClass('chatHover'));
-
-        // have our walletBalance model update from the walletUpdate socket event
-        const serverSocket = getSocket();
-
-        if (serverSocket) {
-          serverSocket.on('message', (e = {}) => {
-            if (e.jsonData.walletUpdate) {
-              const parsedData = app.walletBalance.parse({
-                confirmed: e.jsonData.walletUpdate.confirmed,
-                unconfirmed: e.jsonData.walletUpdate.unconfirmed,
-              });
-
-              app.walletBalance.set(parsedData);
-            }
+          chatConvos.once('request', (cl, xhr) => {
+            xhr.always(() => app.chat.attach(getChatContainer()));
           });
-        }
+
+          app.chat = new Chat({
+            collection: chatConvos,
+            $scrollContainer: getChatContainer(),
+          });
+
+          chatConvos.fetch();
+          $('#chatCloseBtn').on('click', () => (app.chat.close()));
+
+          getChatContainer()
+              .on('mouseenter', () => getBody().addClass('chatHover'))
+              .on('mouseleave', () => getBody().removeClass('chatHover'));
+
+          // have our walletBalance model update from the walletUpdate socket event
+          const serverSocket = getSocket();
+
+          if (serverSocket) {
+            serverSocket.on('message', (e = {}) => {
+              if (e.jsonData.walletUpdate) {
+                const parsedData = app.walletBalance.parse({
+                  confirmed: e.jsonData.walletUpdate.confirmed,
+                  unconfirmed: e.jsonData.walletUpdate.unconfirmed,
+                });
+
+                app.walletBalance.set(parsedData);
+              }
+            });
+          }
+        });
       });
     });
   });
