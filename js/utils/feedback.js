@@ -16,7 +16,6 @@ export function setFeedbackOptions() {
   window.doorbellOptions = {
     appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
     name: profile.name || 'name data missing',
-    email: contactInfo.email || 'email data missing',
     properties: {
       settingsReadable: !!app.settings,
       profileReadable: !!app.profile,
