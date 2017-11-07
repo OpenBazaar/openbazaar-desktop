@@ -2018,7 +2018,6 @@
     "BOB": "Boliviano",
     "BRL": "Brazilian Real",
     "BSD": "Bahamian Dollar",
-    "BTC": "Bitcoin",
     "BTN": "Ngultrum",
     "BWP": "Pula",
     "BYR": "Belarussian Ruble",
@@ -2155,6 +2154,9 @@
     "ZAR": "Rand",
     "ZMW": "Zambian Kwacha",
     "ZWL": "Zimbabwe Dollar"
+  },
+  "cryptoCurrencies": {
+    "BTC": "Bitcoin"
   },
   "languages": {
     "af": "Afrikaans",

@@ -1,14 +1,14 @@
 import _ from 'underscore';
 import app from '../app';
+import {
+  getCurrencyByCode as getCryptoCurByCode,
+  getTranslatedCurrencies as getTranslatedCryptoCurs,
+} from './cryptoCurrencies';
 
 const currencies = [
   {
     name: 'Afghani',
     code: 'AFN',
-  },
-  {
-    name: 'Bitcoin',
-    code: 'BTC',
   },
   {
     name: 'Euro',
@@ -651,16 +651,33 @@ function getIndexedCurrencies() {
   return _indexedCurrencies;
 }
 
-export function getCurrencyByCode(code) {
+export function getCurrencyByCode(code, options = {}) {
+  const opts = {
+    includeCrypto: true,
+    ...options,
+  };
+
   if (!code) {
     throw new Error('Please provide a currency code.');
   }
 
-  return getIndexedCurrencies()[code];
+  const currency = getIndexedCurrencies()[code];
+
+  if (!currency && opts.includeCrypto) {
+    return getCryptoCurByCode()[code];
+  }
+
+  return currency;
 }
 
 function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslatedLang(),
-  sort = true) {
+  options = {}) {
+  const opts = {
+    sort: true,
+    includeCrypto: true,
+    ...options,
+  };
+
   if (!lang) {
     throw new Error('Please provide the language the translated currencies' +
       ' should be returned in.');
@@ -671,7 +688,11 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
     name: app.polyglot.t(`currencies.${currency.code}`),
   }));
 
-  if (sort) {
+  if (opts.includeCrypto) {
+    translated.concat(getTranslatedCryptoCurs(undefined, false));
+  }
+
+  if (opts.sort) {
     translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));
   }
 
@@ -679,7 +700,7 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
 }
 
 const memoizedGetTranslatedCurrencies =
-  _.memoize(getTranslatedCurrencies, (lang, sort) => `${lang}-${!!sort}`);
+  _.memoize(getTranslatedCurrencies, (lang, opts) => `${lang}-${JSON.stringify(opts)}`);
 
 export { memoizedGetTranslatedCurrencies as getTranslatedCurrencies };
 
