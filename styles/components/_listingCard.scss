@@ -29,7 +29,7 @@
     .userIconWrapper {
       position: absolute;
       z-index: 1;
-      top: 201px;
+      top: -#{$thumb / 2};
       right: 8px;
     }
 

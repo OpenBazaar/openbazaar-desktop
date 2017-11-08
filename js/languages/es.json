@@ -105,7 +105,7 @@
     },
     "startupLoadingModal": {
       "canceLink": "Cancelar ",
-      "connectAttemptMsg": "Conectandose a %{serverName}. %{cancelLink}"
+      "connectAttemptMsg": "Conectandose a %{serverName}. %{canceLink}"
     }
   },
   "notifications": {
