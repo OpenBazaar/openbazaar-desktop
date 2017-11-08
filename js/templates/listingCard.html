@@ -25,7 +25,7 @@
       <div class="reportOverlay overlayPanel padSm js-reportBtnWrapper"></div>
     <% } %>
   </div>
-  <div class="pad clrBr borderTop">
+  <div class="pad clrBr borderTop infoArea">
     <div class="rowSm">
       <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
       <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if(ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
@@ -37,7 +37,13 @@
         <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
       </div>
       <div class="txB">
-        <%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %>
+        <%= 
+          ob.itemPrice({
+            price: ob.price.amount,
+            fromCur: ob.price.currencyCode,
+            toCur: ob.displayCurrency,
+          })
+        %>
       </div>
     </div>
   </div>

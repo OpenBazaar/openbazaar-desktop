@@ -105,7 +105,6 @@ export function formatCurrency(amount, currency, options) {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
-    // useCryptoSymbol: true,
     ...options,
   };
 
@@ -143,11 +142,9 @@ export function formatCurrency(amount, currency, options) {
     if (cur === 'BTC' || cur === 'TBTC') {
       switch (opts.btcUnit) {
         case 'MBTC':
-          // curSymbol = app.polyglot.t('bitcoinCurrencyUnits.MBTC');
           bitcoinConvertUnit = curSymbol = 'mBTC';
           break;
         case 'UBTC':
-          // curSymbol = app.polyglot.t('bitcoinCurrencyUnits.UBTC');
           bitcoinConvertUnit = curSymbol = 'μBTC';
           break;
         case 'SATOSHI':
@@ -194,7 +191,13 @@ let exchangeRates = {};
  */
 export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
-    .done((data) => (exchangeRates = data));
+    // .done((data) => (exchangeRates = data));
+    .done((data) => {
+      console.log('moo');
+      window.moo = data;
+      exchangeRates = data;
+      delete exchangeRates.AED;
+    });
 
   events.trigger('fetching-exchange-rates', { xhr });
 
@@ -290,4 +293,30 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
 
   return formatCurrency(convertedAmt, outputFormat,
     _.omit(opts, 'skipConvertIfNoExchangeRateData'));
+}
+
+export function getCurrencyValidity(cur) {
+  if (typeof cur !== 'string') {
+    throw new Error('A currency must be provided as a string.');
+  }
+
+  const curData = getCurrencyByCode(cur);
+  let returnVal;
+
+  if (curData) {
+    // Determine if the given currency is the one the node is running in
+    const isCurServerCurrency = curData.isCrypto &&
+      app.serverConfig.cryptoCurrency === cur ||
+      app.serverConfig.cryptoCurrency === curData.testnetCode;
+
+    if (getExchangeRate(cur) || isCurServerCurrency) {
+      returnVal = 'VALID';
+    } else {
+      returnVal = 'EXCHANGE_RATE_MISSING';
+    }
+  } else {
+    returnVal = 'UNRECOGNIZED_CURRENCY';
+  }
+
+  return returnVal;
 }

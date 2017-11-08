@@ -1,0 +1,33 @@
+
+<%
+  const price = ob.price; // required
+  const fromCur = ob.fromCur; // required
+  const toCur = ob.toCur; // required
+  const toolTipBaseClass = ob.toolTipBaseClass || 'toolTip toolTipTop';
+  const toolTipClass = ob.toolTipClass || '';
+  const toolTipFullClass = `${toolTipBaseClass} ${toolTipClass}`;
+  const iconBaseClass = ob.iconBaseClass || 'ion-alert-circled clrTAlert';
+  const iconClass = ob.iconClass || '';
+  const iconFullClass = `${iconBaseClass} ${iconClass}`;
+
+  const fromCurValidity = ob.getCurrencyValidity(fromCur);
+  const toCurValidity = ob.getCurrencyValidity(toCur);
+  let tip;
+
+  // todo: translate Translate TRANSLATE!!!
+
+  if (fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
+    console.log(`the from cur is ${fromCur}`);
+    console.log(`the to cur is ${toCur}`);
+    tip = 'We are unable to provide price information because it is priced in an unrecognized currency.';
+  } else if (fromCurValidity === 'EXCHANGE_RATE_MISSING' ||
+    toCurValidity === 'EXCHANGE_RATE_MISSING') {
+    tip = 'The price has not been converted to your preferred currency because exchange rate data ' +
+      'is not available.';
+  }
+%>
+
+<%= ob.convertAndFormatCurrency(price, fromCur, toCur) %>
+<% if (fromCurValidity !== 'VALID' || toCurValidity !== 'VALID') { %>
+&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= tip %>"><span class="<%= iconFullClass %>"></span></span>
+<% } %>

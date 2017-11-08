@@ -1,6 +1,12 @@
 import $ from 'jquery';
 import app from '../app';
-import { formatCurrency, convertAndFormatCurrency, convertCurrency, formatPrice } from './currency';
+import {
+  formatCurrency,
+  convertAndFormatCurrency,
+  convertCurrency,
+  formatPrice,
+  getCurrencyValidity,
+} from './currency';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -56,6 +62,7 @@ export {
   formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
+  getCurrencyValidity,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

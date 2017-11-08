@@ -438,7 +438,7 @@ function start() {
     // to connecting with a server. The latter is stored in local storage.
     app.serverConfig = data || {};
 
-    if (!isCryptoCurrencySupported) {
+    if (!isCryptoCurrencySupported(app.serverConfig.cryptoCurrency)) {
       const connectLink =
         '<button class="btnAsLink js-connect clrTEm">' +
           `${app.polyglot.t('unsupportedCryptoCurDialog.connectLink')}` +

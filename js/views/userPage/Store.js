@@ -81,6 +81,9 @@ export default class extends BaseVw {
       this.fetch = options.initialFetch;
       this.onRequest(this.collection, this.fetch);
     }
+
+    console.log('moo');
+    window.moo = this.collection;
   }
 
   className() {
