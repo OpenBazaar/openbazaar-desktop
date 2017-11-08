@@ -31,7 +31,6 @@ export default class extends Collection {
       const relationships = result.relationships || {};
 
       if (!window.zoom) {
-        console.log('zoom');
         updatedResult.price.currencyCode = 'OM';
         window.zoom = true;
       }

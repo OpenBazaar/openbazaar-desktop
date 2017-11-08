@@ -25,7 +25,13 @@
             <% if (fShp) { %>
               <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
             <% } else { %>
-              <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
+              <%= 
+                ob.itemPrice({
+                  price: service.price,
+                  fromCur: ob.pricingCurrency,
+                  toCur: ob.displayCurrency,
+                })
+              %>              
             <% } %>  
           </div>
         </div>

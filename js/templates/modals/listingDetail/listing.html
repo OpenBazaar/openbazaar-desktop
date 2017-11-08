@@ -43,7 +43,13 @@
     <div class="flex gutterHLg">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
       <h2 class="txUnb flexNoShrink js-price">
-        <%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+        <%= 
+          ob.itemPrice({
+            price: ob.item.price,
+            fromCur: ob.metadata.pricingCurrency,
+            toCur: ob.displayCurrency,
+          })
+        %>
       </h2>
     </div>
     <div class="flex gutterHLg">
@@ -76,9 +82,19 @@
                 </div>
               </div>
             <% }); %>
-            <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn">
+            <%
+              let buyNowClass = '';
+              let unpurchasableMarkup = '';
+
+              if (ob.currencyValidity === 'UNRECOGNIZED_CURRENCY') {
+                buyNowClass = 'disabled';
+                unpurchasableMarkup = '<div class="flexHRight clrTErr">This listing is not purchasable. &nbsp;<span class="toolTip"   data-tip="It is priced in an unrecognized currency." style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>';
+              }
+            %>
+            <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT('listingDetail.buyNow') %>
             </button>
+            <%= unpurchasableMarkup %>
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
               <% if(ob.shipsFreeToMe) { %>

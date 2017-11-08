@@ -6,7 +6,10 @@ import app from '../../../app';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import { convertAndFormatCurrency } from '../../../utils/currency';
+import {
+  convertAndFormatCurrency,
+  getCurrencyValidity,
+} from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import { getTranslatedCountries } from '../../../data/countries';
@@ -530,6 +533,9 @@ export default class extends BaseModal {
         defaultCountry: this.defaultCountry,
         vendor: this.vendor,
         openedFromStore: this.options.openedFromStore,
+        currencyValidity: getCurrencyValidity(
+          this.model.get('metadata').get('pricingCurrency')
+        ),
       }));
 
       super.render();

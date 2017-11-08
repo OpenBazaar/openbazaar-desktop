@@ -193,10 +193,8 @@ export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
     // .done((data) => (exchangeRates = data));
     .done((data) => {
-      console.log('moo');
-      window.moo = data;
       exchangeRates = data;
-      delete exchangeRates.AED;
+      // delete exchangeRates.USD;
     });
 
   events.trigger('fetching-exchange-rates', { xhr });
