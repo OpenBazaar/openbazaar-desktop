@@ -13,6 +13,10 @@
     <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-closeBtn">
       <%= ob.polyT('purchase.close') %>
     </button>
+  <% } else if (ob.phase ==='fetching') { %>
+    <button class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph disabled">
+      <%= ob.polyT('purchase.fetching') %>
+    </button>
   <% } %>
   <% if (ob.phase === 'confirm') { %>
     <div id="confirmPay" class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 js-confirmPay">

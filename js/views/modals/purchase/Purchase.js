@@ -49,7 +49,7 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-    this.state = { phase: 'pay' };
+    this.state = { phase: 'fetching' };
     this.listing = opts.listing;
     this.variants = opts.variants;
     this.vendor = opts.vendor;
@@ -205,7 +205,6 @@ export default class extends BaseModal {
     })
       .done((data, status, xhr) => {
         if (xhr.statusText === 'abort') return;
-        console.log(data);
         this.setState({
           onlineStatus: data.status,
           onlineStatusError: false,
@@ -215,6 +214,8 @@ export default class extends BaseModal {
           ...this.getState(),
           total: this.total,
         });
+        this.updatePageState('pay');
+        this.actionBtn.render();
       })
       .fail(xhr => {
         if (xhr.statusText === 'abort') return;
@@ -582,6 +583,7 @@ export default class extends BaseModal {
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
     if (this.fetchFees) this.fetchFees.abort();
+    if (this.fetchOnlineStatus) this.fetchOnlineStatus.abort();
     super.remove();
   }
 
