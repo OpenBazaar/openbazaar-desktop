@@ -983,6 +983,10 @@
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "View Listing",
+    "unrecognizedCurrencyWarning": {
+      "title": "Unrecognized currency",
+      "body": "This listing is set in an unrecognized currency (%{cur}). Be sure to select a new currency before saving. Please also double-check the prices to ensure they are appropriate for the new currency."
+    },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
       "shippingDestinations": "Destinations",

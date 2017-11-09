@@ -10,7 +10,7 @@ import Backbone from 'backbone';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
-import { formatPrice } from '../../../utils/currency';
+import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -36,7 +36,7 @@ export default class extends BaseModal {
 
     if (options.onClickViewListing !== undefined &&
       typeof options.onClickViewListing !== 'function') {
-      throw new Error('If providing an onClickViewListing options, it must be ' +
+      throw new Error('If providing an onClickViewListing option, it must be ' +
         'provided as a function.');
     }
 
@@ -89,6 +89,7 @@ export default class extends BaseModal {
       // event emitter in models/listing/index.js.
     });
 
+    this.initialCur = this.model.get('metadata').get('pricingCurrency');
     this.selectedNavTabIndex = 0;
     this.createMode = !(this.model.lastSyncedAttrs &&
       this.model.lastSyncedAttrs.slug);
@@ -821,6 +822,21 @@ export default class extends BaseModal {
           shipOpt.set('services', []);
         }
       });
+    }
+  }
+
+  open() {
+    super.open();
+
+    if (!this.openedBefore) {
+      this.openedBefore = true;
+      console.log(getCurrencyValidity(this.initialCur));
+      if (getCurrencyValidity(this.initialCur) === 'UNRECOGNIZED_CURRENCY') {
+        openSimpleMessage(
+          app.polyglot.t('editListing.unrecognizedCurrencyWarning.title'),
+          app.polyglot.t('editListing.unrecognizedCurrencyWarning.body', { cur: this.initialCur })
+        );
+      }
     }
   }
 
