@@ -5,6 +5,7 @@ import bitcoinConvert from 'bitcoin-convert';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
+import { getServerCurrency } from '../data/cryptoCurrencies';
 
 const events = {
   ...Events,
@@ -194,7 +195,7 @@ export function fetchExchangeRates(options = {}) {
     // .done((data) => (exchangeRates = data));
     .done((data) => {
       exchangeRates = data;
-      // delete exchangeRates.USD;
+      delete exchangeRates.USD;
     });
 
   events.trigger('fetching-exchange-rates', { xhr });
@@ -207,7 +208,15 @@ export function getExchangeRate(currency) {
     throw new Error('Please provide a currency.');
   }
 
-  return exchangeRates[currency];
+  let returnVal = exchangeRates[currency];
+  const serverCurrency = getServerCurrency();
+
+  if (serverCurrency.code === currency ||
+    serverCurrency.testnetCode === currency) {
+    returnVal = 1;
+  }
+
+  return returnVal;
 }
 
 export function NoExchangeRateDataError(message) {

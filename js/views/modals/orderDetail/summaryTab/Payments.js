@@ -8,6 +8,7 @@ import {
   cancelOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { getServerCurrency } from '../../../../data/cryptoCurrencies';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import baseVw from '../../../baseVw';
 import Payment from './Payment';
@@ -163,8 +164,9 @@ export default class extends baseVw {
       let paidSoFar = this.collection.models
         .slice(0, index + 1)
         .reduce((total, model) => total + model.get('value'), 0);
-      // round to 8 decimal places
-      paidSoFar = Math.round(paidSoFar * 100000000) / 100000000;
+      // round based on the coins base units
+      const cryptoBaseUnit = getServerCurrency().baseUnit;
+      paidSoFar = Math.round(paidSoFar * cryptoBaseUnit) / cryptoBaseUnit;
       const isMostRecentPayment = index === this.collection.length - 1;
       const paymentView = this.createPayment(payment, {
         initialState: {

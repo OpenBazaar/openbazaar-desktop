@@ -7,6 +7,7 @@ import {
   formatPrice,
   getCurrencyValidity,
 } from './currency';
+import { getServerCurrency } from '../data/cryptoCurrencies';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -63,6 +64,7 @@ export {
   convertAndFormatCurrency,
   convertCurrency,
   getCurrencyValidity,
+  getServerCurrency,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

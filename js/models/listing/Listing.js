@@ -285,7 +285,7 @@ export default class extends BaseModel {
   parse(response) {
     const parsedResponse = response.listing;
 
-    // parsedResponse.metadata.pricingCurrency = 'PICKLES';
+    // parsedResponse.metadata.pricingCurrency = 'MOO';
 
     if (parsedResponse) {
       // set the hash

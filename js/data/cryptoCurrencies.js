@@ -10,6 +10,9 @@ const currencies = [
     baseUnit: 100000000,
     minDisplayDecimals: 0,
     maxDisplayDecimals: 8,
+    averageModeratedTransactionSize: 184,
+    allowFeeBumping: true,
+    feeBumpTransactionSize: 154,
   },
 ];
 
@@ -77,3 +80,15 @@ export function getCurrenciesSortedByCode() {
   return currenciesSortedByCode;
 }
 
+/**
+ * Returns the currency data object based on the currency the connect to node is in.
+ */
+ // TODO - TODO - TODO: doc with TBTC vs BTC scenario.
+export function getServerCurrency() {
+  if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
+    throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
+  }
+
+  return app && app.serverConfig && app.serverConfig.cryptoCurrency &&
+    getCurrencyByCode(app.serverConfig.cryptoCurrency) || undefined;
+}

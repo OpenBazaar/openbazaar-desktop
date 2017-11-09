@@ -86,9 +86,13 @@
               let buyNowClass = '';
               let unpurchasableMarkup = '';
 
-              if (ob.currencyValidity === 'UNRECOGNIZED_CURRENCY') {
+              // TRANSLATE don't hate, just TRANS to the LATE!
+              // TRANSLATE don't hate, just TRANS to the LATE!
+              // TRANSLATE don't hate, just TRANS to the LATE!
+
+              if (ob.currencyValidity !== 'VALID') {
                 buyNowClass = 'disabled';
-                unpurchasableMarkup = '<div class="flexHRight clrTErr">This listing is not purchasable. &nbsp;<span class="toolTip"   data-tip="It is priced in an unrecognized currency." style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>';
+                unpurchasableMarkup = '<div class="flexHRight clrTErr">This listing is not purchasable. &nbsp;<span class="toolTip"   data-tip="It is priced in an unrecognized currency or exchange rate data is not available." style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>';
               }
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
