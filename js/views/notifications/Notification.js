@@ -70,6 +70,10 @@ export default class extends BaseVw {
       }));
     });
 
+    if(app.serverConfig.cryptoCurrency == "TZEC") {
+      this.$el.find('.btcIcon').css('background-image', 'url("../imgs/zecIcon128.png")');
+    }
+    
     return this;
   }
 }

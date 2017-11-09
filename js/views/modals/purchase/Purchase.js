@@ -527,7 +527,7 @@ export default class extends BaseModal {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
     const state = this.getState();
 
-    loadTemplate('modals/purchase/purchase.html', t => {
+    loadTemplate('modals/purchase/purchase.html', t => { 
       this.$el.html(t({
         ...this.order.toJSON(),
         ...state,
@@ -543,6 +543,10 @@ export default class extends BaseModal {
 
       super.render();
 
+      if(app.serverConfig.cryptoCurrency == "TZEC") {
+        this.$el.find('.btcIcon').css('background-image', 'url("../imgs/zecIcon128.png")');
+      }
+      
       this._$popInMessages = null;
       this._$storeOwnerAvatar = null;
       this._$closeBtn = null;

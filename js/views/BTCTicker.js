@@ -52,7 +52,7 @@ export default class extends baseVw {
         currentBTCPrice: this.currentBTCPrice,
         localCurrency: this.localCurrency,
       }));
-      debugger;
+      //debugger;
       if(app.serverConfig.cryptoCurrency == "TZEC") {
         globalThis.$el.find('.btcIcon').css('background-image', 'url("../imgs/zecIcon128.png")');
       }
