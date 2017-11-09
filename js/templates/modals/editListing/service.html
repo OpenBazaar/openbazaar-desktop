@@ -9,7 +9,7 @@
 <div class="col3 simpleFlexCol">
   <% if (ob.errors['price']) print(ob.formErrorTmpl({ errors: ob.errors['price'] })) %>
   <div class="flexRow marginTopAuto">
-    <input type="text" class="clrBr clrP clrSh2 js-price" name="price" value="<% print(typeof ob.price === 'number' ? ob.formatPrice(ob.price, ob.getCurrency() === 'BTC') : ob.price || '') %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="number">
+    <input type="text" class="clrBr clrP clrSh2 js-price" name="price" value="<% print(typeof ob.price === 'number' ? ob.formatPrice(ob.price, ob.getCurrency()) : ob.price || '') %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="number">
     <a class="iconBtn clrBr clrP margLSm toolTipNoWrap js-btnRemoveService btnRemoveService" data-tip="<%= ob.polyT('editListing.shippingOptions.toolTip.delete') %>">
       <i class="ion-trash-b"></i>
     </a>

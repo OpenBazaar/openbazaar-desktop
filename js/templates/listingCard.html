@@ -38,12 +38,14 @@
       </div>
       <div class="txB">
         <%= 
-          ob.itemPrice({
-            price: ob.price.amount,
-            fromCur: ob.price.currencyCode,
-            toCur: ob.displayCurrency,
-            toolTipClass: 'toolTipTop',
-          })
+          ob.formattedPrice(
+            ob.price.amount,
+            ob.price.currencyCode,
+            ob.displayCurrency,
+            {
+              toolTipClass: 'toolTipTop',
+            }
+          )
         %>
       </div>
     </div>

@@ -983,9 +983,10 @@
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "View Listing",
-    "unrecognizedCurrencyWarning": {
+    "unsupportedCurrencyDialog": {
       "title": "Unrecognized currency",
-      "body": "This listing is set in an unrecognized currency (%{cur}). Be sure to select a new currency before saving. Please also double-check the prices to ensure they are appropriate for the new currency."
+      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "btnOk": "OK"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",

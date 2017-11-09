@@ -46,7 +46,8 @@ export default class extends BaseVw {
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
-            const amount = integerToDecimal(e.jsonData.notification.fundingTotal, true);
+            const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
+              app.serverConfig.cryptoCurrency);
             if (amount >= this.balanceRemaining) {
               this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);

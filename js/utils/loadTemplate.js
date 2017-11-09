@@ -36,10 +36,6 @@ export default function loadTemplate(templateFile, callback, root = `${__dirname
       templateHelpers.processingButton = t;
     });
 
-    loadTemplate('components/itemPrice.html', (t) => {
-      templateHelpers.itemPrice = t;
-    });
-
     loadTemplate('formError.html', (t) => {
       templateHelpers.formErrorTmpl = t;
       sendBackTmpl();

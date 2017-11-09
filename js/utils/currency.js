@@ -6,6 +6,7 @@ import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
 import { getServerCurrency } from '../data/cryptoCurrencies';
+import loadTemplate from '../utils/loadTemplate';
 
 const events = {
   ...Events,
@@ -15,24 +16,58 @@ export { events };
 
 export const btcSymbol = '₿';
 
+export function NoExchangeRateDataError(message) {
+  this.message = message || 'Missing exchange rate data';
+  this.name = 'NoExchangeRateDataError';
+  this.stack = (new Error()).stack;
+}
+
+NoExchangeRateDataError.prototype = Object.create(Error.prototype);
+NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
+
+export function UnrecognizedCurrencyError(message) {
+  this.message = message || 'The currency is not recognized.';
+  this.name = 'UnrecognizedCurrencyError';
+  this.stack = (new Error()).stack;
+}
+
+UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
+UnrecognizedCurrencyError.prototype.constructor = NoExchangeRateDataError;
+
 /**
  * Converts the amount from a decimal to an integer. If the
  * currency code is BTC, it will convert to Satoshi.
  */
-export function decimalToInteger(amount, isBtc = false) {
+export function decimalToInteger(amount, currency, options = {}) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number.');
   }
 
-  let updatedAmount = amount;
-
-  if (isBtc) {
-    updatedAmount = Math.round(amount * 100000000);
-  } else {
-    updatedAmount = Math.round(amount * 100);
+  if (typeof currency !== 'string') {
+    throw new Error('Please provide a currency as a string.');
   }
 
-  return updatedAmount;
+  const opts = {
+    returnUndefinedOnError: true,
+    ...options,
+  };
+
+  const curData = getCurrencyByCode(currency);
+  let returnVal;
+
+  if (!curData) {
+    if (!opts.returnUndefinedOnError) {
+      throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+    }
+  } else {
+    if (curData.isCrypto) {
+      returnVal = Math.round(amount * curData.baseUnit);
+    } else {
+      returnVal = Math.round(amount * 100);
+    }
+  }
+
+  return returnVal;
 }
 
 /**
@@ -40,20 +75,30 @@ export function decimalToInteger(amount, isBtc = false) {
  * to 2 decimal places. If the currency code is BTC, it will
  * convert from Satoshi to BTC.
  */
-export function integerToDecimal(amount, isBtc = false) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number.');
-  }
+export function integerToDecimal(amount, currency, options = {}) {
+  const opts = {
+    returnUndefinedOnError: true,
+    ...options,
+  };
 
-  let updatedAmount = amount;
+  const curData = getCurrencyByCode(currency);
+  let returnVal;
 
-  if (isBtc) {
-    updatedAmount = Number((amount / 100000000).toFixed(8));
+  if (!curData) {
+    if (!opts.returnUndefinedOnError) {
+      throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+    }
   } else {
-    updatedAmount = Number((amount / 100).toFixed(2));
+    if (curData.isCrypto) {
+      returnVal = Number(
+        (amount / curData.baseUnit).toFixed(curData.maxDisplayDecimals)
+      );
+    } else {
+      returnVal = Number((amount / 100).toFixed(2));
+    }
   }
 
-  return updatedAmount;
+  return returnVal;
 }
 
 /**
@@ -71,8 +116,6 @@ export function integerToDecimal(amount, isBtc = false) {
  * It is more useful for <input>'s because we are not
  * localizing the numbers in them.
  *
- * todo: add this as a template helper; perhaps there's
- * a better name for this function?
  */
 export function formatPrice(price, isBtc = false) {
   if (typeof price !== 'number') {
@@ -98,9 +141,9 @@ export function formatPrice(price, isBtc = false) {
 
 /**
  * Will format an amount in the given currency into the format
- * appropriate for the given locale.
+ * appropriate for the given locale. An empty string will be returned
+ * if an unrecognized currency code is provided.
  */
-// todo: check currency is one of our currencies
 export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
@@ -129,7 +172,7 @@ export function formatCurrency(amount, currency, options) {
   const curData = getCurrencyByCode(cur);
 
   if (!curData) {
-    // if it's a currency we don't recognize, send back an empty string
+    // return an empty string when we have an unrecognized currency code
     return '';
   }
 
@@ -195,7 +238,7 @@ export function fetchExchangeRates(options = {}) {
     // .done((data) => (exchangeRates = data));
     .done((data) => {
       exchangeRates = data;
-      delete exchangeRates.USD;
+      // delete exchangeRates.USD;
     });
 
   events.trigger('fetching-exchange-rates', { xhr });
@@ -218,15 +261,6 @@ export function getExchangeRate(currency) {
 
   return returnVal;
 }
-
-export function NoExchangeRateDataError(message) {
-  this.message = message || 'Missing exchange rate data';
-  this.name = 'NoExchangeRateDataError';
-  this.stack = (new Error()).stack;
-}
-
-NoExchangeRateDataError.prototype = Object.create(Error.prototype);
-NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
 
 /**
  * Converts an amount from one currency to another based on exchange
@@ -326,4 +360,39 @@ export function getCurrencyValidity(cur) {
   }
 
   return returnVal;
+}
+
+export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
+  if (typeof price !== 'number') {
+    throw new Error('Please provide a price as a number.');
+  }
+
+  if (typeof fromCur !== 'string' || !fromCur) {
+    throw new Error('Please provide a "from currency" as a string.');
+  }
+
+  if (typeof toCur !== 'string' || !fromCur) {
+    throw new Error('If providing a "to currency", it must be provided as a string.');
+  }
+
+  let result = '';
+
+  loadTemplate('components/formattedPrice.html', (t) => {
+    result = t({
+      price,
+      fromCur,
+      toCur: toCur || fromCur,
+      ...options,
+    });
+  });
+
+  return result;
+
+  // return loadTemplate('components/formattedPrice.html',
+  //     (t) => t({
+  //       price,
+  //       fromCur,
+  //       toCur: toCur || fromCur,
+  //       ...options,
+  //     }));
 }

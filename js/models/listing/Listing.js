@@ -164,14 +164,14 @@ export default class extends BaseModel {
         if (options.attrs.item.price) {
           const price = options.attrs.item.price;
           options.attrs.item.price = decimalToInteger(price,
-            options.attrs.metadata.pricingCurrency === 'BTC');
+            options.attrs.metadata.pricingCurrency);
         }
 
         options.attrs.shippingOptions.forEach(shipOpt => {
           shipOpt.services.forEach(service => {
             if (typeof service.price === 'number') {
               service.price = decimalToInteger(service.price,
-                options.attrs.metadata.pricingCurrency === 'BTC');
+                options.attrs.metadata.pricingCurrency);
             }
           });
         });
@@ -179,7 +179,7 @@ export default class extends BaseModel {
         options.attrs.coupons.forEach(coupon => {
           if (typeof coupon.priceDiscount === 'number') {
             coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
-              options.attrs.metadata.pricingCurrency === 'BTC');
+              options.attrs.metadata.pricingCurrency);
           }
         });
         // END - convert price fields
@@ -207,7 +207,7 @@ export default class extends BaseModel {
           options.attrs.item.skus.forEach(sku => {
             if (typeof sku.surcharge === 'number') {
               sku.surcharge = decimalToInteger(sku.surcharge,
-                options.attrs.metadata.pricingCurrency === 'BTC');
+                options.attrs.metadata.pricingCurrency);
             }
           });
         }
@@ -283,9 +283,19 @@ export default class extends BaseModel {
   }
 
   parse(response) {
+    this.unparsedResponse = JSON.parse(JSON.stringify(response)); // deep clone
     const parsedResponse = response.listing;
 
-    // parsedResponse.metadata.pricingCurrency = 'MOO';
+    // console.log(`the goods are ${parsedResponse.metadata.pricingCurrency}`);
+
+    if (!window.milky) {
+      window.milky = true;
+      console.log('aroo aroo');
+      this.unparsedResponse.listing.metadata.pricingCurrency = 'MOO';
+      parsedResponse.metadata.pricingCurrency = 'MOO';
+    }
+
+    // console.log(`the goods are now ${parsedResponse.metadata.pricingCurrency}`);
 
     if (parsedResponse) {
       // set the hash
@@ -294,11 +304,11 @@ export default class extends BaseModel {
       // convert price fields
       if (parsedResponse.item) {
         const price = parsedResponse.item.price;
-        const isBtc = parsedResponse.metadata &&
-          parsedResponse.metadata.pricingCurrency === 'BTC';
+        const cur = parsedResponse.metadata &&
+          parsedResponse.metadata.pricingCurrency;
 
         if (price) {
-          parsedResponse.item.price = integerToDecimal(price, isBtc);
+          parsedResponse.item.price = integerToDecimal(price, cur);
         }
       }
 
@@ -307,12 +317,12 @@ export default class extends BaseModel {
           if (shipOpt.services && shipOpt.services.length) {
             shipOpt.services.forEach((service, serviceIndex) => {
               const price = service.price;
-              const isBtc = parsedResponse.metadata &&
-                parsedResponse.metadata.pricingCurrency === 'BTC';
+              const cur = parsedResponse.metadata &&
+                parsedResponse.metadata.pricingCurrency;
 
               if (typeof price === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = integerToDecimal(price, isBtc);
+                  .services[serviceIndex].price = integerToDecimal(price, cur);
               } else {
                 // This is necessary because of this bug:
                 // https://github.com/OpenBazaar/openbazaar-go/issues/178
@@ -335,11 +345,10 @@ export default class extends BaseModel {
         parsedResponse.coupons.forEach((coupon, couponIndex) => {
           if (typeof coupon.priceDiscount === 'number') {
             const price = parsedResponse.coupons[couponIndex].priceDiscount;
-            const isBtc = parsedResponse.metadata &&
-              parsedResponse.metadata.pricingCurrency === 'BTC';
+            const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
             parsedResponse.coupons[couponIndex].priceDiscount =
-              integerToDecimal(price, isBtc);
+              integerToDecimal(price, cur);
           }
         });
       }
@@ -365,11 +374,10 @@ export default class extends BaseModel {
           }
           // convert the surcharge
           const surcharge = sku.surcharge;
-          const isBtc = parsedResponse.metadata &&
-            parsedResponse.metadata.pricingCurrency === 'BTC';
+          const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
           if (surcharge) {
-            sku.surcharge = integerToDecimal(surcharge, isBtc);
+            sku.surcharge = integerToDecimal(surcharge, cur);
           }
         });
         // END - convert price fields

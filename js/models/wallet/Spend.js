@@ -83,7 +83,7 @@ class Spend extends BaseModel {
         amount = this.amountInBitcoin;
       }
 
-      options.attrs.amount = decimalToInteger(amount, true);
+      options.attrs.amount = decimalToInteger(amount, options.attrs.currency);
       delete options.attrs.currency;
     }
 

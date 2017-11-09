@@ -7,10 +7,12 @@ import _ from 'underscore';
 import path from 'path';
 import '../../../utils/velocityUiPack.js';
 import Backbone from 'backbone';
+import app from '../../../app';
 import { isScrolledIntoView } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
+import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -19,7 +21,6 @@ import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
 import Coupon from '../../../models/listing/Coupon';
 import VariantOption from '../../../models/listing/VariantOption';
-import app from '../../../app';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
 import Coupons from './Coupons';
@@ -27,6 +28,7 @@ import Variants from './Variants';
 import VariantInventory from './VariantInventory';
 import InventoryManagement from './InventoryManagement';
 import SkuField from './SkuField';
+import UnsupportedCurrency from './UnsupportedCurrency';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -89,7 +91,6 @@ export default class extends BaseModal {
       // event emitter in models/listing/index.js.
     });
 
-    this.initialCur = this.model.get('metadata').get('pricingCurrency');
     this.selectedNavTabIndex = 0;
     this.createMode = !(this.model.lastSyncedAttrs &&
       this.model.lastSyncedAttrs.slug);
@@ -830,12 +831,27 @@ export default class extends BaseModal {
 
     if (!this.openedBefore) {
       this.openedBefore = true;
-      console.log(getCurrencyValidity(this.initialCur));
-      if (getCurrencyValidity(this.initialCur) === 'UNRECOGNIZED_CURRENCY') {
-        openSimpleMessage(
-          app.polyglot.t('editListing.unrecognizedCurrencyWarning.title'),
-          app.polyglot.t('editListing.unrecognizedCurrencyWarning.body', { cur: this.initialCur })
-        );
+      let cur;
+
+      try {
+        cur = this._origModel.unparsedResponse.listing.metadata.pricingCurrency;
+      } catch (e) {
+        return;
+      }
+
+      if (getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
+        const unsupportedCurrencyDialog = new UnsupportedCurrency({
+          unsupportedCurrency: cur,
+        }).render().open();
+
+        this.listenTo(unsupportedCurrencyDialog, 'close', () => {
+          const response = JSON.parse(JSON.stringify(this._origModel.unparsedResponse));
+          const newCur = unsupportedCurrencyDialog.getCurrency();
+          setDeepValue(response, 'listing.metadata.pricingCurrency', newCur);
+          this.model.set(this.model.parse(response));
+          this.$currencySelect.val(newCur);
+          this.render();
+        });
       }
     }
   }
@@ -1059,6 +1075,27 @@ export default class extends BaseModal {
 
       super.render();
 
+      this._$scrollLinks = null;
+      this._$scrollToSections = null;
+      this._$formFields = null;
+      this._$currencySelect = null;
+      this._$priceInput = null;
+      this._$conditionWrap = null;
+      this._$buttonSave = null;
+      this._$inputPhotoUpload = null;
+      this._$photoUploadingLabel = null;
+      this._$editListingReturnPolicy = null;
+      this._$editListingTermsAndConditions = null;
+      this._$sectionShipping = null;
+      this._$maxCatsWarning = null;
+      this._$maxTagsWarning = null;
+      this._$addShipOptSectionHeading = null;
+      this._$variantInventorySection = null;
+      this._$itemPrice = null;
+      this.$photoUploadItems = this.$('.js-photoUploadItems');
+      this.$modalContent = this.$('.modalContent');
+      this.$tabControls = this.$('.tabControls');
+      this.$titleInput = this.$('#editListingTitle');
       this.$editListingTags = this.$('#editListingTags');
       this.$editListingCategories = this.$('#editListingCategories');
       this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
@@ -1226,28 +1263,6 @@ export default class extends BaseModal {
       this.$couponsSection.find('.js-couponsContainer').append(
         this.couponsView.render().el
       );
-
-      this._$scrollLinks = null;
-      this._$scrollToSections = null;
-      this._$formFields = null;
-      this._$currencySelect = null;
-      this._$priceInput = null;
-      this._$conditionWrap = null;
-      this._$buttonSave = null;
-      this._$inputPhotoUpload = null;
-      this._$photoUploadingLabel = null;
-      this._$editListingReturnPolicy = null;
-      this._$editListingTermsAndConditions = null;
-      this._$sectionShipping = null;
-      this._$maxCatsWarning = null;
-      this._$maxTagsWarning = null;
-      this._$addShipOptSectionHeading = null;
-      this._$variantInventorySection = null;
-      this._$itemPrice = null;
-      this.$photoUploadItems = this.$('.js-photoUploadItems');
-      this.$modalContent = this.$('.modalContent');
-      this.$tabControls = this.$('.tabControls');
-      this.$titleInput = this.$('#editListingTitle');
 
       installRichEditor(this.$('#editListingDescription'), {
         topLevelClass: 'clrBr',

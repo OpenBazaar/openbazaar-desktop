@@ -46,7 +46,8 @@ export default class extends BaseModel {
 
       // convert price fields
       response.contract.buyerOrder.payment.amount =
-        integerToDecimal(response.contract.buyerOrder.payment.amount, true);
+        integerToDecimal(response.contract.buyerOrder.payment.amount,
+          app.serverConfig.cryptoCurrency);
 
       if (response.contract.disputeResolution) {
         response.contract.disputeResolution.payout.buyerOutput =
@@ -74,13 +75,16 @@ export default class extends BaseModel {
 
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(
-            response.contract.disputeResolution.payout.buyerOutput.amount || 0, true);
+            response.contract.disputeResolution.payout.buyerOutput.amount || 0,
+              app.serverConfig.cryptoCurrency);
         response.contract.disputeResolution.payout.vendorOutput.amount =
           integerToDecimal(
-            response.contract.disputeResolution.payout.vendorOutput.amount || 0, true);
+            response.contract.disputeResolution.payout.vendorOutput.amount || 0,
+              app.serverConfig.cryptoCurrency);
         response.contract.disputeResolution.payout.moderatorOutput.amount =
           integerToDecimal(
-            response.contract.disputeResolution.payout.moderatorOutput.amount || 0, true);
+            response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
+              app.serverConfig.cryptoCurrency);
       }
     }
 

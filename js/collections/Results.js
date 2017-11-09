@@ -44,7 +44,7 @@ export default class extends Collection {
         updatedResult.vendor = vendor;
         const priceObj = updatedResult.price || {};
         updatedResult.price.amount =
-            integerToDecimal(priceObj.amount, priceObj.currencyCode === 'BTC');
+            integerToDecimal(priceObj.amount, priceObj.currencyCode);
         parsedResponse.push(updatedResult);
       } else if (result.type === 'profile') {
         // only add if the results have a valid peerID
