@@ -103,7 +103,7 @@
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
-                <label>Mature Content (NSFW, adult, 18+, etc)</label>
+                <label><%= ob.polyT('editListing.nsfwLabel') %></label>
                 <% if (ob.errors['item.nsfw']) print(ob.formErrorTmpl({ errors: ob.errors['item.nsfw'] })) %>
                 <div class="btnStrip">
                   <div class="btnRadio clrBr">
@@ -182,17 +182,8 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['item.tags'] })) %>
         <div class="js-maxTagsWarning"><% if (ob.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
-        <div class="select2TagsWrap hashPrefacedTags">
-          <!-- WARNING! Styling is dependant on the following elements being in this order. -->
-          <select id="editListingTags" multiple name="item.tags" class="clrBr clrP select2Tags">
-            <% ob.item.tags.forEach(tag =>
-                print(`<option value="${tag}" selected>${tag}</option>`)) %>
-          </select>
-          <div id="editListingTagsPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.tagsPlaceholder') %></div>
-          <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
-          <div id="editListingTagsDropdown" class="tagsDropdown"></div>
-          <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>
-        </div>
+        <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
+        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>        
       </section>
 
       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
@@ -200,17 +191,7 @@
         <hr class="clrBr rowMd" />
         <% if (ob.errors['item.categories']) print(ob.formErrorTmpl({ errors: ob.errors['item.categories'] })) %>
         <div class="js-maxCatsWarning"><% if (ob.item.categories.length >= ob.max.cats) print(ob.maxCatsWarning) %></div>
-        <div class="select2TagsWrap">
-          <!-- WARNING! Styling is dependant on the following elements being in this order. -->
-          <select id="editListingCategories" multiple name="item.categories" class="clrBr clrP select2Tags">
-            <% ob.item.categories.forEach(cat =>
-                print(`<option value="${cat}" selected>${cat}</option>`)) %>
-          </select>
-          <div id="editListingCategoriesPlaceholder" class="placeholder tagsPlaceholder"><%= ob.polyT('editListing.categoryPlaceholder') %></div>
-          <!-- needed to properly hide the select2 dropdown which we don't want on a tagging field -->
-          <div id="editListingCategoriesDropdown" class="tagsDropdown"></div>
-          <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCategories') %></div>
-        </div>
+        <input type="text" id="editListingCategories" name="item.categories" class="clrBr clrP hideDropDown" value="<%= ob.item.categories.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.categoryPlaceholder') %>" />
       </section>
 
       <section class="js-scrollToSection js-variantsSection variantsSection contentBox padMd clrP clrBr clrSh3 tx3 <% ob.item.options.length && print('expandedVariantsView') %>">

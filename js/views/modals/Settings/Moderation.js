@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import '../../../lib/select2';
+import '../../../utils/selectize';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -195,10 +195,16 @@ export default class extends baseVw {
         ...moderator.toJSON(),
       }));
 
-      this.$('#moderationLanguageSelect').select2({
-        multiple: true,
-        // do not set tags to true, or the user can add non-existant languages
-        dropdownParent: this.$('#moderationLanguageDropdown'),
+      this.$('#moderationLanguageSelect').selectize({
+        maxItems: null,
+        valueField: 'code',
+        searchField: ['name', 'code'],
+        items: moderator.get('languages'),
+        options: getTranslatedLangs(),
+        render: {
+          option: data => `<div>${data.name}</div>`,
+          item: data => `<div>${data.name}</div>`,
+        },
       });
 
       this.$('#moderationFeeType').select2({

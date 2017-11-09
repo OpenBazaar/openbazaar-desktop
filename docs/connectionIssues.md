@@ -3,6 +3,12 @@ Troubleshooting connection issues
 ### Local Bundled Server
 comming soon...
 
+### Tor
+You can find a guide to [configuring OpenBazaar to run on Tor here.](https://github.com/OpenBazaar/openbazaar-desktop/wiki/Tor-Setup).
+
+More information is available [in the server Tor documentation if you need it.](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/tor.md)
+
+
 ### Local Stand-alone Server
 1. Ensure the server is running.
 

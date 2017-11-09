@@ -35,15 +35,11 @@
                    placeholder="<%= ob.polyT('addressBarPlaceholder') %>" value="<%= ob.addressBarText %>" />
             <div class="torIndicator toolTipNoWrap txCtr" data-tip="<%= ob.polyT('pageNav.torOnTooltip') %>"></div>
           </div>
-
-          <div id="testnetFlag" class="btn barBtn normalBtn clrP clrBr" >
-            <% if (ob.testnet) { %>
-              <span class="toolTip" data-tip="<%= ob.polyT('testnetTooltip') %>">Beta <%= ob.polyT('testnet') %></span>
-            <% } else { %>
-            <span class="toolTip" data-tip="<%= ob.polyT('betaTooltip') %>">Beta</span>
-            <% } %>
-          </div>
-
+          <% if (ob.testnet) { %>
+            <div id="testnetFlag" class="btn barBtn normalBtn clrP clrBr" >
+                <span class="toolTip" data-tip="<%= ob.polyT('testnetTooltip') %>"><%= ob.polyT('testnet') %></span>
+            </div>
+          <% } %>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>

@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
-  "betaTooltip": "OpenBazaar is currently in beta. Make sure to backup your wallet, and be careful if spending large amounts of bitcoin.",
   "tabMenuHeading": "MENU",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copied to clipboard",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Connected Peers",
     "totalPeers": "%{totalPeers} Found",
-    "noResults": "No connected peers"
+    "noResults": "No connected peers",
+    "loadMore": "Load More"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Notifications",
     "noResults": "No notifications found.",
     "text": {
       "order": "%{buyerName} has purchased %{listingTitle}.",
@@ -432,7 +433,8 @@
       "statusAddingAddress": "Adding address %{name}…",
       "statusAddAddressComplete": "Address %{name} added.",
       "statusAddAddressFailed": "Unable to add address %{name}.",
-      "addAddressErrorAlertTitle": "Unable to add address %{name}"
+      "addAddressErrorAlertTitle": "Unable to add address %{name}",
+      "btnDelete": "Delete"
     },
     "advancedTab": {
       "sectionName": "Advanced",
@@ -913,6 +915,7 @@
   "editListing": {
     "nsfwYes": "Yes",
     "nsfwNo": "No",
+    "nsfwLabel": "Mature Content (NSFW, adult, 18+, etc)",
     "sectionNames": {
       "general": "General",
       "photos": "Photos",
@@ -968,7 +971,7 @@
     "btnAddReturnPolicy": "Add Return Policy",
     "btnTermsAndConditions": "Add Terms and Conditions",
     "btnAddCoupon": "Add Coupon",
-    "primaryPhoto": "Primary Photo",
+    "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "View Listing",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1027,7 +1030,8 @@
       "trackSelectOption": "Track Inventory",
       "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
       "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
-      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
+      "quantity": "Quantity"
     },
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",

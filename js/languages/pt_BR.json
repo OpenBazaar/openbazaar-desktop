@@ -205,7 +205,7 @@
     "noLocation": "Localização não informada",
     "tabTitles": {
       "home": "Início",
-      "store": "Ativar Loja",
+      "store": "Loja",
       "following": "Seguindo",
       "followers": "Seguidores"
     },
@@ -566,7 +566,7 @@
     },
     "storeTab": {
       "sectionName": "Loja",
-      "storeStatus": "Ativar Loja",
+      "storeStatus": "Loja",
       "storeStatusHelper": "Criar uma loja na sua página",
       "moderators": "Moderadores",
       "moderatorsHelper": "Escolha alguns moderadores para a sua Loja",
@@ -591,7 +591,7 @@
         "modNotFoundSelected": "%{guidOrHandle} não pode ser encontrado na rede. Talvez isso não seja um ID ou um Apelido válido. Eles não serão mostrados na sua lista, mas ainda estão salvos como um de seus moderadores.",
         "availableModsFailed": "Os Moderadores Disponíveis Não Puderam Ser Encontrados Na Rede",
         "modAlreadyAdded": "Você já adicionou esse moderador.",
-        "modIsBlank": "Você precisa inserir um ID ou handle de um moderador",
+        "modIsBlank": "Insira um @apelido ou ID de um moderador",
         "modIsInvalid": "%{guid} não é um moderador válido.",
         "modsAreInvalid": "Os seguintes moderadores atualmente não são moderadores válidos: %{guids}",
         "modsAreInvalidAsync": "Os seguintes moderadores não puderam ser encontrados na rede. Eles ainda estão salvos na sua lista de moderadores, mas a informação sobre eles não está disponível. %{guids}"
@@ -705,7 +705,7 @@
       "username": "Usuário",
       "serverIp": "IP do Servidor",
       "name": "Nome",
-      "placeholderName": "Escreve um nome…",
+      "placeholderName": "Insira um nome…",
       "placeholderServerIp": "O endereço IP do seu servidor (ou localhost)",
       "placeholderUsername": "O usuário do seu servidor",
       "placeholderPassword": "A senha do seu servidor",
@@ -749,7 +749,7 @@
       "title": "Receber Dinheiro",
       "needBitcoin": "Precisa de Bitcoins?",
       "btnCancel": "Cancelar",
-      "btnFundViaShapeshift": "Depositar através do ShapeShift"
+      "btnFundViaShapeshift": "Depositar com ShapeShift"
     },
     "sendMoney": {
       "toLabel": "Para",

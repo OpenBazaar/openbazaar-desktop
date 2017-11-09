@@ -1,0 +1,49 @@
+#ov1 {
+  .selectize-control {
+    .selectize-input {
+      font-size: inherit;
+      padding-top: 7px;
+      min-height: $formElementHeight;
+
+      input {
+        font-size: inherit;
+      }
+
+      &:not(.has-items) input {
+        top: 3px;
+        width: 100% !important; // otherwise placeholder is sometimes getting cut off
+        position: relative;
+      }
+    }
+
+    .items {
+      & > *:not(input) {
+        font-size: inherit;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: $corner;
+        margin: 0 5px 5px 0;
+      }
+    }
+
+    .selectize-dropdown-content {
+      .create {
+        display: none;
+      }
+    } 
+
+    &.hashPrefacedTags {
+      .items {
+        & > *:not(input) {
+          &::before {
+            content: '#';
+          }        
+        }
+      }    
+    }
+
+    .selectize-dropdown.hideDropDown {
+      display: none !important;
+    }
+  }
+}

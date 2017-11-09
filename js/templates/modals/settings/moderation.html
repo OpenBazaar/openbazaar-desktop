@@ -1,7 +1,7 @@
 <div class="gutterVMd2">
   <div class="contentBox padMd clrP clrBr clrSh3">
     <div class="flexHCent">
-      <h2 class="h3 clrT">Moderation</h2>
+      <h2 class="h3 clrT"><%= ob.polyT('settings.moderationTab.sectionName') %></h2>
       <%= ob.processingButton({
         className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph modalContentCornerBtn js-save',
         btnText: ob.polyT('settings.btnSave')
@@ -122,14 +122,7 @@
           </div>
           <div class="col9">
             <% if (ob.errors['moderatorInfo.languages']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.languages'] })) %>
-            <div class="select2TagsWrap showDropdown">
-              <select id="moderationLanguageSelect" multiple name="moderatorInfo.languages" class="clrBr clrP clrSh2 select2Tags">
-                <% ob.languageList.forEach((lang) => { %>
-                <option value="<%= lang.code %>" <% if (ob.languages.indexOf(lang.code) !== -1 ) print('selected') %>><%= lang.name %></option>
-                <% }); %>
-              </select>
-              <div id="moderationLanguageDropdown" class="tagsDropdown"></div>
-            </div>
+            <select id="moderationLanguageSelect" multiple name="moderatorInfo.languages" class="clrBr clrP clrSh2"></select>
             <div class="tx6 txPlaceholder">
               <%= ob.polyT('settings.moderationTab.languagesHelper') %>
             </div>

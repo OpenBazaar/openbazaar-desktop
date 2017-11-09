@@ -25,7 +25,11 @@ export default class extends BaseModel {
     };
   }
 
-  validate(attrs) {
+  validate(attrs, options = {}) {
+    const opts = {
+      validateRequiredFields: true,
+      ...options || {},
+    };
     const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
@@ -34,28 +38,32 @@ export default class extends BaseModel {
     const max = this.max;
 
     if (!attrs.description) {
-      addError('description',
-        app.polyglot.t('moderatorModelErrors.noDescription'));
-    }
-
-    if (attrs.description.length > max.descriptionLength) {
+      if (opts.validateRequiredFields) {
+        addError('description',
+          app.polyglot.t('moderatorModelErrors.noDescription'));
+      }
+    } else if (attrs.description.length > max.descriptionLength) {
       addError('description',
         app.polyglot.t('moderatorModelErrors.descriptionLength'));
     }
 
     if (!attrs.termsAndConditions) {
-      addError('termsAndConditions',
-        app.polyglot.t('moderatorModelErrors.noTerms'));
-    }
-
-    if (attrs.termsAndConditions.length > max.termsLength) {
+      if (opts.validateRequiredFields) {
+        addError('termsAndConditions',
+          app.polyglot.t('moderatorModelErrors.noTerms'));
+      }
+    } else if (attrs.termsAndConditions.length > max.termsLength) {
       addError('termsAndConditions',
         app.polyglot.t('moderatorModelErrors.termsLength'));
     }
 
-    if (!attrs.languages.length) {
-      addError('languages',
-        app.polyglot.t('moderatorModelErrors.noLanguages'));
+    if (!Array.isArray(attrs.languages)) {
+      addError('languages', 'Languages must be provided as an array.');
+    } else if (!attrs.languages.length) {
+      if (opts.validateRequiredFields) {
+        addError('languages',
+          app.polyglot.t('moderatorModelErrors.noLanguages'));
+      }
     }
 
     if (Object.keys(errObj).length) return errObj;
