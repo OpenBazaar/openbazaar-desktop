@@ -379,8 +379,8 @@ export default class extends BaseModal {
   }
 
   updatePageState(state) {
-    if (this._state !== state) {
-      this._state = state;
+    if (this._pageState !== state) {
+      this._pageState = state;
       this.state.phase = state;
       this.$el.attr('data-phase', state);
     }
