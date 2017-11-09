@@ -1,0 +1,18 @@
+<% if (ob.onlineStatus !== 'online' && ob.onlineStatus !== 'fetching') { %>
+<div class="row"></div>
+<div class="tx5b">
+  <%
+  const fee = ob.convertAndFormatCurrency(ob.estFee, 'BTC', ob.displayCurrency);
+  conFee = ob.convertCurrency(ob.estFee, 'BTC', ob.listingCurrency, true);
+  const payout = ob.convertAndFormatCurrency(ob.total - conFee, ob.listingCurrency, ob.displayCurrency);
+  console.log(fee)
+  console.log(conFee)
+  console.log(ob.total)
+  console.log(payout)
+  %>
+  <p><%= ob.polyT('purchase.status.offlineWarning', { fee, payout }) %></p>
+  <% if (ob.total - conFee < ob.total * .10) { %>
+  <p class="clrTErr"><%= ob.polyT('purchase.status.tooLowWarning') %></p>
+  <% } %>
+</div>
+<% } %>

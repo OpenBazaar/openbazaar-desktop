@@ -1,6 +1,6 @@
 <%
 // when multiple listings are supported, the prices array will have one price object for each
-const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+const basePrice = ob.prices[0].price + ob.prices[0].vPrice;
 %>
 
 <div class="popInMessageHolder js-popInMessages"></div>
@@ -59,7 +59,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
               </div>
               <div class="pad flexNoShrink">
                 <b>
-                  <%= ob.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+                  <%= ob.convertAndFormatCurrency(basePrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
                 </b>
               </div>
             </div>
@@ -71,7 +71,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             </section>
           <% } %>
           <section class="contentBox padMd clrP clrBr clrSh3 showIfPay">
-            <div class="flexColRows gutterVSm">
+            <div class="flexColRows gutterVSm row">
               <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <div class="contentBox pad clrP clrBr flexVCent">
                 <i class="btcIcon margRSm"></i>
@@ -103,6 +103,22 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                 </p>
               <% } %>
             </div>
+            <hr class="clrBr row">
+            <div>
+              <%
+              const statuses = {};
+              statuses.online = `<span class="clrTEm">${ob.polyT('purchase.status.online')}</span>`;
+              statuses.offline = `<span class="clrTErr">${ob.polyT('purchase.status.offline')}</span>`;
+              statuses.unknown = `<span class="clrTErr">${ob.polyT('purchase.status.unknown')}</span>`;
+              statuses.fetching = `${ob.spinner({ className: 'spinnerTxt' })} <span class="clrT2">${ob.polyT('purchase.status.fetching')}</span>`;
+              const statusText = ob.polyT('purchase.status.vendorStatus', { status: `&nbsp;${statuses[ob.onlineStatus || 'unknown']}` });
+              %>
+              <b class="flexVCent flexInline tx5b"><%= statusText %></b>
+              <% if (ob.onlineStatusFailed) { %>
+                <span class="clrTErr"><%= ob.polyT('purchase.status.error', { error: ob.onlineStatusError }) %></span>
+              <% } %>
+            </div>
+            <div class="js-offlineWarning"></div>
           </section>
           <% if (ob.hasModerators) { %>
             <section class="contentBox padMd clrP clrBr clrSh3 showIfPay js-moderator">

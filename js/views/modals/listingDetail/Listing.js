@@ -432,11 +432,6 @@ export default class extends BaseModal {
       vendor: this.vendor,
       removeOnClose: true,
       showCloseButton: false,
-      initialState: {
-        isFetching: true,
-        fetchError: '',
-        fetchFailed: false,
-      },
     })
       .render()
       .open();

@@ -16,6 +16,7 @@ import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMe
 import Moderators from './Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
+import OfflineWarning from './OfflineWarning';
 import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
 import Payment from './Payment';
@@ -33,12 +34,25 @@ export default class extends BaseModal {
       throw new Error('Please provide a vendor object');
     }
 
-    super(options);
-    this.options = options;
+    const opts = {
+      initialState: {
+        estFee: '',
+        isFetching: true,
+        fetchError: '',
+        fetchFailed: false,
+        onlineStatus: 'fetching',
+        onlineStatusError: '',
+        onlineStatusFailed: false,
+      },
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
     this.state = { phase: 'pay' };
-    this.listing = options.listing;
-    this.variants = options.variants;
-    this.vendor = options.vendor;
+    this.listing = opts.listing;
+    this.variants = opts.variants;
+    this.vendor = opts.vendor;
     const shippingOptions = this.listing.get('shippingOptions');
     const shippable = !!(shippingOptions && shippingOptions.length);
 
@@ -65,7 +79,7 @@ export default class extends BaseModal {
       {
         shippable,
       });
-    if (options.variants) item.get('options').add(options.variants);
+    if (opts.variants) item.get('options').add(opts.variants);
     // add the item to the order.
     this.order.get('items').add(item);
 
@@ -84,6 +98,14 @@ export default class extends BaseModal {
       listing: this.listing,
       prices: this.prices,
       couponObj: this.couponObj,
+    });
+
+    this.offlineWarning = this.createChild(OfflineWarning, {
+      initialState: {
+        ...this.getState(),
+        total: this.total,
+      },
+      listingCurrency: this.listing.get('metadata').get('pricingCurrency'),
     });
 
     this.coupons = this.createChild(Coupons, {
@@ -174,6 +196,38 @@ export default class extends BaseModal {
     }
   }
 
+  checkOnlineStatus() {
+    if (this.fetchOnlineStatus) this.fetchOnlineStatus.abort();
+
+    this.fetchOnlineStatus = $.get({
+      url: app.getServerUrl(`ob/status/${this.vendor.peerID}`),
+      dataType: 'json',
+    })
+      .done((data, status, xhr) => {
+        if (xhr.statusText === 'abort') return;
+        console.log(data);
+        this.setState({
+          onlineStatus: data.status,
+          onlineStatusError: false,
+          onlineStatusFailed: false,
+        });
+        this.offlineWarning.setState({
+          ...this.getState(),
+          total: this.total,
+        });
+      })
+      .fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+        this.setState({
+          onlineStatus: 'unknown',
+          onlineStatusError: xhr.responseJSON && xhr.responseJSON.reason || '',
+          onlineStatusFailed: true,
+        });
+      });
+
+    return this.fetchOnlineStatus;
+  }
+
   getFees() {
     if (this.fetchFees && this.fetchFees.state() === 'pending') {
       return this.fetchFees;
@@ -189,14 +243,18 @@ export default class extends BaseModal {
         const estFee = feePerByte * 184 / 100000000;
         this.minModPrice = estFee * 10;
         this.setState({
+          estFee,
           isFetching: false,
           fetchError: false,
           fetchFailed: false,
         });
+        // check if the vendor is online
+        this.checkOnlineStatus();
       })
       .fail(xhr => {
         if (xhr.statusText === 'abort') return;
         this.setState({
+          estFee: '',
           isFetching: false,
           fetchError: xhr.responseJSON && xhr.responseJSON.reason || '',
           fetchFailed: true,
@@ -485,6 +543,10 @@ export default class extends BaseModal {
   refreshPrices() {
     this.isModAllowed();
     this.receipt.updatePrices(this.prices);
+    this.offlineWarning.setState({
+      ...this.getState(),
+      total: this.total,
+    });
   }
 
   get $popInMessages() {
@@ -555,6 +617,9 @@ export default class extends BaseModal {
 
       this.receipt.delegateEvents();
       this.$('.js-receipt').append(this.receipt.render().el);
+
+      this.offlineWarning.delegateEvents();
+      this.$('.js-offlineWarning').append(this.offlineWarning.render().el);
 
       this.coupons.delegateEvents();
       this.$('.js-couponsWrapper').html(this.coupons.render().el);
