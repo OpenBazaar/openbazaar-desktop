@@ -89,6 +89,14 @@ export function getServerCurrency() {
     throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
   }
 
-  return app && app.serverConfig && app.serverConfig.cryptoCurrency &&
-    getCurrencyByCode(app.serverConfig.cryptoCurrency) || undefined;
+  let curData = getCurrencyByCode(app.serverConfig.cryptoCurrency);
+
+  if (curData && curData.testnetCode !== app.serverConfig.cryptoCurrency) {
+    curData = {
+      ...curData,
+      code: app.serverConfig.cryptoCurrency,
+    };
+  }
+
+  return curData;
 }

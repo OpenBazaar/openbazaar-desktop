@@ -25,13 +25,13 @@
             <% if (fShp) { %>
               <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
             <% } else { %>
-              <%= 
-                ob.formattedPrice(
-                  service.price,
-                  ob.pricingCurrency,
-                  ob.displayCurrency
-                )
-              %>              
+                <%= 
+                  ob.formattedPrice(
+                    service.price,
+                    ob.pricingCurrency,
+                    ob.displayCurrency
+                  )
+                %>
             <% } %>  
           </div>
         </div>

@@ -202,13 +202,28 @@ export function formatCurrency(amount, currency, options) {
       amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
     }
 
+    let translationSubKey;
+
+    if (curSymbol === curData.symbol) {
+      if (amt < 0) {
+        // For negative amounts, we'll make the amount a positive number
+        // and rely on the translation string to display the "negative"
+        // symbol. It's difficult to position it proprely in a localized
+        // manner otherwise.
+        translationSubKey = 'curSymbolNegativeAmount';
+        amt = amt * -1;
+      } else {
+        translationSubKey = 'curSymbolAmount';
+      }
+    } else {
+      translationSubKey = 'curCodeAmount';
+    }
+
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: curData.minDisplayDecimals,
       maximumFractionDigits: curData.maxDisplayDecimals,
     }).format(amt);
 
-    const translationSubKey = curSymbol === curData.symbol ?
-      'curSymbolAmount' : 'curCodeAmount';
     formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
       amount: formattedAmount,
       symbol: curSymbol,
@@ -363,15 +378,11 @@ export function getCurrencyValidity(cur) {
 }
 
 export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
-  if (typeof price !== 'number') {
-    throw new Error('Please provide a price as a number.');
-  }
-
   if (typeof fromCur !== 'string' || !fromCur) {
     throw new Error('Please provide a "from currency" as a string.');
   }
 
-  if (typeof toCur !== 'string' || !fromCur) {
+  if (fromCur && typeof toCur !== 'string') {
     throw new Error('If providing a "to currency", it must be provided as a string.');
   }
 
@@ -387,12 +398,4 @@ export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
   });
 
   return result;
-
-  // return loadTemplate('components/formattedPrice.html',
-  //     (t) => t({
-  //       price,
-  //       fromCur,
-  //       toCur: toCur || fromCur,
-  //       ...options,
-  //     }));
 }

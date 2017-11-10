@@ -1,4 +1,4 @@
-<div class="flexVCent clrP clrBr clrSh3 contentBox padSm toolTipNoWrap <% if (ob.localCurrency === 'BTC') print('hide') %>" data-tip="<%= ob.polyT('pageNav.toolTip.currentPrice') %>">
+<div class="flexVCent clrP clrBr clrSh3 contentBox padSm toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.currentPrice') %>">
   <i class="btcIcon margRSm"></i>
-  <strong class="tx5"><%= ob.formatCurrency(ob.currentBTCPrice, ob.localCurrency) %></strong>
+  <strong class="tx5"><%= ob.formatCurrency(ob.currentPrice, ob.localCurrency) %></strong>
 </div>

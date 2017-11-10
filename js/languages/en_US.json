@@ -1760,6 +1760,7 @@
   },
   "cryptoCurrencyFormat": {
     "curSymbolAmount": "%{symbol}%{amount}",
+    "curSymbolNegativeAmount": "-%{symbol}%{amount}",
     "curCodeAmount": "%{amount} %{symbol}"
   },  
   "countries": {

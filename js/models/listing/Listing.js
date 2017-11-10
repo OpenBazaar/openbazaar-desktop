@@ -283,19 +283,13 @@ export default class extends BaseModel {
   }
 
   parse(response) {
+    // if (!window.milky) {
+    //   window.milky = true;
+    //   response.listing.metadata.pricingCurrency = 'MOO';
+    // }
+
     this.unparsedResponse = JSON.parse(JSON.stringify(response)); // deep clone
     const parsedResponse = response.listing;
-
-    // console.log(`the goods are ${parsedResponse.metadata.pricingCurrency}`);
-
-    if (!window.milky) {
-      window.milky = true;
-      console.log('aroo aroo');
-      this.unparsedResponse.listing.metadata.pricingCurrency = 'MOO';
-      parsedResponse.metadata.pricingCurrency = 'MOO';
-    }
-
-    // console.log(`the goods are now ${parsedResponse.metadata.pricingCurrency}`);
 
     if (parsedResponse) {
       // set the hash
