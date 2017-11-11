@@ -24,7 +24,7 @@
   var item = ob.order.items[0];
 
   var priceText = ob.formatCurrency(ob.order.payment.amount, 'BTC',
-     { useBtcSymbol: false });
+     { useCurSymbol: false });
 
   if (ob.userCurrency !== 'BTC') {
     console.log('slick willy');

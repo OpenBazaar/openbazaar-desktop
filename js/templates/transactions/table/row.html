@@ -71,7 +71,7 @@
 <td class="clrBr priceCol">
   <span class="ulOnHover">
     <%
-      var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useBtcSymbol: false });
+      var btcPrice = ob.formatCurrency(ob.total, 'BTC', { useCurSymbol: false });
 
       if (ob.userCurrency === 'BTC') {
         print(btcPrice);
@@ -79,7 +79,7 @@
           print(
             ob.polyT('fiatBtcPairing', {
               fiatAmount: ob.convertAndFormatCurrency(ob.total, 'BTC',
-                ob.userCurrency, { useBtcSymbol: false }),
+                ob.userCurrency, { useCurSymbol: false }),
               btcAmount: btcPrice,
             })
           );

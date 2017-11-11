@@ -1,9 +1,10 @@
 import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { convertCurrency, getExchangeRate } from '../../../utils/currency';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
-import { convertCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import SendConfirmBox from './SpendConfirmBox';
 import FeeChange from '../../components/FeeChange';
@@ -139,11 +140,15 @@ export default class extends baseVw {
 
   render() {
     super.render();
+
+    const defaultCur = typeof getExchangeRate(app.settings.get('localCurrency')) === 'number' ?
+      app.settings.get('localCurrency') : getServerCurrency().code;
+
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
-        currency: this.model.get('currency') || app.settings.get('localCurrency'),
+        currency: this.model.get('currency') || defaultCur,
         currencies: this.currencies ||
           getCurrenciesSortedByCode(),
         saveInProgress: this.saveInProgress,

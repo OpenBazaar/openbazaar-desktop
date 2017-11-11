@@ -13,6 +13,7 @@ const currencies = [
     averageModeratedTransactionSize: 184,
     allowFeeBumping: true,
     feeBumpTransactionSize: 154,
+    qrCodeText: address => `bitcoin:${address}`,
   },
 ];
 
@@ -95,6 +96,7 @@ export function getServerCurrency() {
     curData = {
       ...curData,
       code: app.serverConfig.cryptoCurrency,
+      isTestnet: app.serverConfig.cryptoCurrency === curData.testnetCode,
     };
   }
 

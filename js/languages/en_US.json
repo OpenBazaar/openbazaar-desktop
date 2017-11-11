@@ -62,7 +62,7 @@
   "testnet": "Test Mode",
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "tabMenuHeading": "MENU",
-  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
   "refreshAlertPopInMessage": {
@@ -776,7 +776,7 @@
     },
     "spendConfirmBox": {
       "heading": "Are you sure?",
-      "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
       "errorHeading": "Unable to send payment",
       "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
@@ -789,15 +789,15 @@
     "transactions": {
       "header": "Transactions",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} to %{address}",
-        "incomingText": "%{fiatBtcPairing} received",
+        "outgoingText": "%{currencyPairing} to %{address}",
+        "incomingText": "%{currencyPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "View Details",
         "retryTransactionBtn": "Increase Fee",
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",
-          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Cancel",
@@ -1374,9 +1374,9 @@
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
-        "amountTo": "%{fiatBtcPairing} to %{payeeName}",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "amountTo": "%{currencyPairing} to %{payeeName}",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "paidInFull": "Paid In Full",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "cancelBtn": "Cancel",
@@ -1394,8 +1394,8 @@
       },
       "refund": {
         "heading": "Refunded",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
         "veryManyConfirmationsCount": "%{countText} confirmations"
       },
@@ -1687,7 +1687,8 @@
     "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "The amount must be greater than zero.",
-    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee.",
+    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "The quantity must be 1 or more",
@@ -1760,8 +1761,7 @@
   },
   "cryptoCurrencyFormat": {
     "curSymbolAmount": "%{symbol}%{amount}",
-    "curSymbolNegativeAmount": "-%{symbol}%{amount}",
-    "curCodeAmount": "%{amount} %{symbol}"
+    "curCodeAmount": "%{amount} %{code}"
   },  
   "countries": {
     "AFGHANISTAN": "Afghanistan",

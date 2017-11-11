@@ -19,6 +19,7 @@
     </div>
     <div class="col9">
       <% if (ob.errors.amount) print(ob.formErrorTmpl({ errors: ob.errors.amount })) %>
+      <% if (ob.errors.currency) print(ob.formErrorTmpl({ errors: ob.errors.currency })) %>
       <div class="inputSelect <% if (ob.saveInProgress) print('disabled') %>">
         <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.amount %>" data-var-type="number" placeholder="0.00">
         <select id="walletSendCurrency" name="currency" class="clrBr clrP nestInputRight">

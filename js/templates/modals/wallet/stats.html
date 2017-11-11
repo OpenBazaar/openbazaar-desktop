@@ -11,17 +11,21 @@
     }
   };
 
-  const formattedBtc = ob.formatUnitlessBtc(ob.balance);
-  const btcTextSize = getTextSize(formattedBtc);
-  const formattedFiat = ob.convertAndFormatCurrency(ob.balance, 'BTC', ob.userCurrency);
+  const serverCur = ob.getServerCurrency().code;
+  const formattedCrypto = ob.formatUnitlessCryptoAmount(ob.balance);
+  const cryptoTextSize = getTextSize(formattedCrypto);
+  const formattedFiat = ob.convertAndFormatCurrency(ob.balance, serverCur, ob.userCurrency);
+
   const fiatTextSize = getTextSize(formattedFiat);
 %>
 <div class="rowLg flexColRows gutterV">
+  <% if (ob.userCurExchangRateAvailable) { %>
   <div>
-    <div class="clrTEmph1 <%= btcTextSize %> txB"><%= formattedBtc %></div>
+    <div class="clrTEmph1 <%= cryptoTextSize %> txB"><%= formattedCrypto %></div>
     <div><%= ob.polyT('wallet.btcCurrencyLabel') %></div>
   </div>
-  <% if (ob.userCurrency !== 'BTC') { %>
+  <% } %>
+  <% if (ob.userCurrency !== serverCur) { %>
   <div>
     <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
     <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: ob.userCurrency }) %></div>

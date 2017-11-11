@@ -6,7 +6,9 @@ import {
   convertCurrency,
   formatPrice,
   getCurrencyValidity,
+  getCurrencyByCode,
   renderFormattedPrice,
+  renderPairedCurrency,
 } from './currency';
 import { getServerCurrency } from '../data/cryptoCurrencies';
 import {
@@ -67,6 +69,7 @@ export {
   getCurrencyValidity,
   getServerCurrency,
   renderFormattedPrice as formattedPrice,
+  renderPairedCurrency as pairedCurrency,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

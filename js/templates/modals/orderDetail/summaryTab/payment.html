@@ -28,12 +28,12 @@
     <div class="flexExpand tx5">
       <%
         let priceFrag = ob.convertAndFormatCurrency(ob.value,
-          'BTC', ob.userCurrency, { useBtcSymbol: false });
+          'BTC', ob.userCurrency, { useCurSymbol: false });
 
         if (ob.userCurrency !== 'BTC') {
           priceFrag = ob.polyT('fiatBtcPairing', {
             fiatAmount: priceFrag,
-            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useCurSymbol: false }),
           });
         }
 

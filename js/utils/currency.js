@@ -202,28 +202,13 @@ export function formatCurrency(amount, currency, options) {
       amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
     }
 
-    let translationSubKey;
-
-    if (curSymbol === curData.symbol) {
-      if (amt < 0) {
-        // For negative amounts, we'll make the amount a positive number
-        // and rely on the translation string to display the "negative"
-        // symbol. It's difficult to position it proprely in a localized
-        // manner otherwise.
-        translationSubKey = 'curSymbolNegativeAmount';
-        amt = amt * -1;
-      } else {
-        translationSubKey = 'curSymbolAmount';
-      }
-    } else {
-      translationSubKey = 'curCodeAmount';
-    }
-
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: curData.minDisplayDecimals,
       maximumFractionDigits: curData.maxDisplayDecimals,
     }).format(amt);
 
+    const translationSubKey = curSymbol === curData.symbol ?
+      'curSymbolAmount' : 'curCodeAmount';
     formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
       amount: formattedAmount,
       symbol: curSymbol,
@@ -261,6 +246,8 @@ export function fetchExchangeRates(options = {}) {
   return xhr;
 }
 
+// todo: factor in Testnetters
+// TODO - todo - TODO
 export function getExchangeRate(currency) {
   if (!currency) {
     throw new Error('Please provide a currency.');
@@ -396,6 +383,36 @@ export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
       ...options,
     });
   });
+
+  return result;
+}
+
+// TODO: DOC me UP - DOC ME Uppers - DOC DOC DOC DOC DOC
+export function renderPairedCurrency(price, fromCur, toCur) {
+  const fromCurValidity = getCurrencyValidity(fromCur);
+
+  if (!price || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
+    // Sometimes when prices are in an unsupported currency, they will be
+    // saved as empty strings or undefined. We'll ignore those an just render an
+    // empty string.
+    return '';
+  }
+
+  const toCurValidity = getCurrencyValidity(toCur);
+
+  const formattedBase = formatCurrency(price, fromCur);
+  const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||
+    fromCurValidity !== 'VALID' ?
+      '' : convertAndFormatCurrency(price, fromCur, toCur);
+
+  let result = formattedBase;
+
+  if (formattedConverted !== '') {
+    result = app.polyglot.t('currencyPairing', {
+      baseCurValue: formattedBase,
+      convertedCurValue: formattedConverted,
+    });
+  }
 
   return result;
 }
