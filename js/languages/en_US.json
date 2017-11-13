@@ -1224,9 +1224,12 @@
       "listing": "Listing",
       "coupon": "Coupon",
       "shipping": "Shipping",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Options",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Total"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
