@@ -5,11 +5,11 @@
   const viewingCurrency = ob.displayCurrency;
   const isBTC = viewingCurrency === 'BTC';
   ob.prices.forEach((priceObj, i) => {
-    // convert and truncate the prices here, to prevent rounding errors in the display
-    const basePrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency), isBTC));
-    const shippingPrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency), isBTC));
-    const additionalShippingPrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.aPrice, listingCurrency, viewingCurrency), isBTC));
-    const surcharge = Number(ob.formatPrice(ob.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency), isBTC));
+    // convert the prices here, to prevent rounding errors in the display
+    const basePrice = ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
+    const shippingPrice = ob.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency);
+    const additionalShippingPrice = ob.convertCurrency(priceObj.aPrice, listingCurrency, viewingCurrency);
+    const surcharge = ob.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
     const quantity = Number.isInteger(priceObj.quantity) ? priceObj.quantity : 1;
     let itemTotal = basePrice + surcharge;
     const preCouponPrice = itemTotal;
@@ -17,7 +17,7 @@
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
       } else if (coupon.priceDiscount) {
-        itemTotal -= Number(ob.formatPrice(ob.convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency), isBTC));
+        itemTotal -= ob.convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency);
       }
     });
     const subTotal = itemTotal * quantity;
