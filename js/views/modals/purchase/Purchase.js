@@ -132,8 +132,8 @@ export default class extends BaseModal {
       this.shipping = this.createChild(Shipping, {
         model: this.listing,
       });
-      this.listenTo(this.shipping, 'shippingOptionSelected', ((opts) => {
-        this.updateShippingOption(opts);
+      this.listenTo(this.shipping, 'shippingOptionSelected', ((shipOpts) => {
+        this.updateShippingOption(shipOpts);
       }));
     }
 
@@ -628,7 +628,9 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
-      if (!state.isFetching) this.moderators.getModeratorsByID();
+      if (!state.isFetching && state.onlineStatus !== 'fetching') {
+        this.moderators.getModeratorsByID();
+      }
 
       if (this.shipping) {
         this.shipping.delegateEvents();
