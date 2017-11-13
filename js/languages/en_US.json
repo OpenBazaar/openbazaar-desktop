@@ -1160,6 +1160,7 @@
     "pending": "Pending…",
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "close",
+    "fetching": "Checking Status...",
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
@@ -1169,6 +1170,16 @@
     "noValidModerators": "No valid moderators are available for this order.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
+    "status": {
+      "vendorStatus": "Current Vendor Status: %{status}",
+      "fetching": "Checking...",
+      "online": "Online",
+      "offline": "Offline - A bitcoin network fee will be applied.",
+      "unknown": "Unknown",
+      "offlineWarning": "An estimated fee of %{fee} will be subtracted from your payment. The vendor will receive %{payout}.",
+      "tooLowWarning": "If the fee results in a zero or less payout to the vendor, your order may not be completed.",
+      "error": "The vendor status could not be determined. They may be offline. Error: %{error}"
+    },
     "confirmPayment": {
       "title": "Everything look good?",
       "msg": "If yes, please proceed to the final step.",
