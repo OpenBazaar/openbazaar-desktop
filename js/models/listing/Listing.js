@@ -283,10 +283,10 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    // if (!window.milky) {
-    //   window.milky = true;
-    //   response.listing.metadata.pricingCurrency = 'MOO';
-    // }
+    if (!window.milky) {
+      window.milky = true;
+      response.listing.metadata.pricingCurrency = 'BTC';
+    }
 
     this.unparsedResponse = JSON.parse(JSON.stringify(response)); // deep clone
     const parsedResponse = response.listing;

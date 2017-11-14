@@ -2,7 +2,14 @@
 <b><%= ob.polyT('purchase.receipt.summary') %></b>
 <%
   const listingCurrency = ob.listing.metadata.pricingCurrency;
-  const viewingCurrency = ob.displayCurrency;
+  
+  // The expecation is the purchase flow will be prevented if the listingCurrency is
+  // not valid. The scenario we are accounting for below is if item is priced in the
+  // server's currency and exchange rate data is not available for the viewing currency.
+  // In that case we could still show the purchase flow in the server's currency (e.g. BTC).
+  const viewingCurrency = ob.getCurrencyValidity(ob.displayCurrency) === 'VALID' ?
+    ob.displayCurrency : listingCurrency;
+
   ob.prices.forEach((priceObj, i) => {
     // convert and truncate the prices here, to prevent rounding errors in the display
     const basePrice = Number(ob.formatPrice(ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency), viewingCurrency));
