@@ -726,17 +726,11 @@ export function getCurrenciesSortedByCode() {
 
   if (serverCur) curs.push(serverCur);
 
-  // console.log(`the goods are ${serverCur.code}`);
-  // console.log('poop');
-  // window.poop = currenciesSortedByCode;
-
   currenciesSortedByCode = curs.sort((a, b) => {
     if (a.code < b.code) return -1;
     if (a.code > b.code) return 1;
     return 0;
   });
-
-  // console.log(curs.map(cur => cur.code));
 
   return currenciesSortedByCode;
 }

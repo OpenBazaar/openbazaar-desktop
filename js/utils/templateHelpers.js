@@ -12,15 +12,15 @@ import {
 import {
   getServerCurrency,
   renderCryptoIcon,
+  getBlockChainTxUrl,
+  getBlockChainAddressUrl,
 } from '../data/cryptoCurrencies';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
-import {
-  splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
-} from './';
+import { splitIntoRows } from './';
 import { tagsDelimiter } from '../utils/selectize';
 import is from 'is_js';
 
@@ -73,6 +73,8 @@ export {
   renderFormattedPrice as formattedPrice,
   renderPairedCurrency as pairedCurrency,
   renderCryptoIcon as cryptoIcon,
+  getBlockChainTxUrl,
+  getBlockChainAddressUrl,
   isHiRez,
   isLargeWidth,
   isSmallHeight,
@@ -80,9 +82,6 @@ export {
   getListingBgImage,
   upToFixed,
   splitIntoRows,
-  getBlockChainBaseUrl,
-  getBlockChainTxUrl,
-  getBlockChainAddressUrl,
   is,
   tagsDelimiter,
 };

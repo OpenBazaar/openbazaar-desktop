@@ -45,7 +45,7 @@
     <div class="margL js-feeChangeContainer"></div>
     <div class="flexExpand">
       <div class="flexHRight flexVCent gutterH col11">
-        <a class="js-sendMoneyClear"><%= ob.polyT('wallet.sendMoney.clear') %></a>
+        <a class="js-sendMoneyClear flexNoShrink"><%= ob.polyT('wallet.sendMoney.clear') %></a>
         <%= ob.processingButton({
           className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
           btnText: ob.polyT('wallet.sendMoney.sendBtn')

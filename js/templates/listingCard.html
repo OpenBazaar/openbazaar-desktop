@@ -90,7 +90,18 @@
       </div>
       <% } %>
       <div class="priceCol flexNoShrink">
-        <span class="txB"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
+        <span class="txB">
+          <%= 
+            ob.formattedPrice(
+              ob.price.amount,
+              ob.price.currencyCode,
+              ob.displayCurrency,
+              {
+                toolTipClass: 'toolTipTop',
+              }
+            )
+          %>
+        </span>
       </div>
       <div class="flexNoShrink">
         <a class='btn clrP clrBr'><%= ob.polyT('listingCard.btnDetails') %></a>

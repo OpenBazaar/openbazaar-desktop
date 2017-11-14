@@ -15,6 +15,16 @@ const currencies = [
     qrCodeText: address => `bitcoin:${address}`,
     icon: 'imgs/btcIcon128.png',
     needCoinLink: 'https://openbazaar.org/bitcoin',
+    getBlockChainAddressUrl: (address, isTestnet) => (
+      isTestnet ?
+        `https://testnet.blockexplorer.com/address/${address}` :
+        `https://blockchain.info/address/${address}`
+    ),
+    getBlockChainTxUrl: (txid, isTestnet) => (
+      isTestnet ?
+        `https://testnet.blockexplorer.com/tx/${txid}` :
+        `https://blockchain.info/tx/${txid}`
+    ),
   },
 ];
 
@@ -104,18 +114,14 @@ export function getServerCurrency() {
   return curData;
 }
 
-function getInitialCode() {
-  const serverCur = getServerCurrency();
-  return serverCur ? serverCur.code : undefined;
-}
-
 export function renderCryptoIcon(options = {}) {
   if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
     throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
   }
 
+  const serverCur = getServerCurrency();
   const opts = {
-    code: getInitialCode(),
+    code: serverCur && serverCur.code || '',
     className: '',
     attrs: {},
     ...options,
@@ -134,3 +140,24 @@ export function renderCryptoIcon(options = {}) {
 
   return '';
 }
+
+export function getBlockChainTxUrl(txid, isTestnet) {
+  const serverCur = getServerCurrency();
+
+  if (serverCur) {
+    return serverCur.getBlockChainTxUrl(txid, isTestnet);
+  }
+
+  return '';
+}
+
+export function getBlockChainAddressUrl(address, isTestnet) {
+  const serverCur = getServerCurrency();
+
+  if (serverCur) {
+    return serverCur.getBlockChainAddressUrl(address, isTestnet);
+  }
+
+  return '';
+}
+

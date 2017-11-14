@@ -57,7 +57,6 @@ export default class extends baseVw {
       this.$el.html(t({
         ...state,
         formatUnitlessCryptoAmount: this.formatUnitlessCryptoAmount,
-        userCurExchangRateAvailable: typeof getExchangeRate(state.userCurrency) === 'number',
       }));
     });
 

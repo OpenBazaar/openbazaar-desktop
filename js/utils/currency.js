@@ -234,16 +234,16 @@ let exchangeRates = {};
  * or more commonly convertCurrency().
  */
 export function fetchExchangeRates(options = {}) {
-  // const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
-  //   // .done((data) => (exchangeRates = data));
-  //   .done((data) => {
-  //     exchangeRates = data;
-  //     // delete exchangeRates.USD;
-  //   });
+  const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
+    // .done((data) => (exchangeRates = data));
+    .done((data) => {
+      exchangeRates = data;
+      // delete exchangeRates.USD;
+    });
 
-  // events.trigger('fetching-exchange-rates', { xhr });
+  events.trigger('fetching-exchange-rates', { xhr });
 
-  // return xhr;
+  return xhr;
 }
 
 // todo: factor in Testnetters
