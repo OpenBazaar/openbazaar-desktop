@@ -3,15 +3,11 @@
   let partyHeadings = {};
 
   ['buyer', 'vendor', 'moderator'].forEach(type => {
-    priceLines[type] = ob.convertAndFormatCurrency(ob.payout[`${type}Output`].amount,
-      'BTC', ob.userCurrency, { useCurSymbol: false });
-
-    if (ob.userCurrency !== 'BTC') {
-      priceLines[type] = ob.polyT('fiatBtcPairing', {
-        fiatAmount: priceLines[type],
-        btcAmount: ob.formatCurrency(ob.payout[`${type}Output`].amount, 'BTC', { useCurSymbol: false }),
-      });
-    }
+    priceLines[type] = ob.pairedCurrency(
+      ob.payout[`${type}Output`].amount,
+      ob.getServerCurrency().code,
+      ob.userCurrency
+    );
 
     partyHeadings[type] = ob[`${type}Name`] ?
       ob.polyT(`orderDetail.summaryTab.disputePayout.${type}HeadingWithName`, { name: ob[`${type}Name`] }) :

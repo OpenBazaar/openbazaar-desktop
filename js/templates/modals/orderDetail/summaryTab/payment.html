@@ -27,21 +27,17 @@
     <div class="statusIconCol <%= statusIconClass %>"><span class="clrBr <%= statusIcon %>"></span></div>
     <div class="flexExpand tx5">
       <%
-        let priceFrag = ob.convertAndFormatCurrency(ob.value,
-          'BTC', ob.userCurrency, { useCurSymbol: false });
-
-        if (ob.userCurrency !== 'BTC') {
-          priceFrag = ob.polyT('fiatBtcPairing', {
-            fiatAmount: priceFrag,
-            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useCurSymbol: false }),
-          });
-        }
+        const priceFrag = ob.pairedCurrency(
+          ob.value,
+          ob.getServerCurrency().code,
+          ob.userCurrency
+        );
 
         let infoLine = '';
 
         if (ob.payee) {
           infoLine = ob.polyT(`orderDetail.summaryTab.payment.amountTo`, {
-            fiatBtcPairing: priceFrag,
+            currencyPairing: priceFrag,
             payeeName: ob.payee,
           });
         } else {

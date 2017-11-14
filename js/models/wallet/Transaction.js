@@ -51,10 +51,6 @@ export default class extends BaseModel {
       } else if (confirmations > 5) {
         attrs.status = 'CONFIRMED';
       }
-
-      if (height !== 0) {
-        attrs.canBumpFee = false;
-      }
     }
 
     return super.set(attrs, opts);

@@ -148,7 +148,8 @@ export default class extends baseVw {
       this.setState({
         fetchingEstimatedFee: false,
         // server doubles the fee when bumping
-        estimatedFee: (154 * fees.priority * 2) / getServerCurrency().baseUnit,
+        estimatedFee: (getServerCurrency().feeBumpTransactionSize * fees.priority * 2) /
+          getServerCurrency().baseUnit,
       });
     }).fail(xhr => {
       if (this.isRemoved()) return;
