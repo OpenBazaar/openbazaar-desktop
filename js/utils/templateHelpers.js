@@ -6,11 +6,13 @@ import {
   convertCurrency,
   formatPrice,
   getCurrencyValidity,
-  getCurrencyByCode,
   renderFormattedPrice,
   renderPairedCurrency,
 } from './currency';
-import { getServerCurrency } from '../data/cryptoCurrencies';
+import {
+  getServerCurrency,
+  renderCryptoIcon,
+} from '../data/cryptoCurrencies';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -70,6 +72,7 @@ export {
   getServerCurrency,
   renderFormattedPrice as formattedPrice,
   renderPairedCurrency as pairedCurrency,
+  renderCryptoIcon as cryptoIcon,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

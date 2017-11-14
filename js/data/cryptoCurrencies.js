@@ -11,9 +11,9 @@ const currencies = [
     minDisplayDecimals: 0,
     maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
-    allowFeeBumping: true,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
+    icon: 'imgs/btcIcon128.png',
   },
 ];
 
@@ -101,4 +101,35 @@ export function getServerCurrency() {
   }
 
   return curData;
+}
+
+function getInitialCode() {
+  const serverCur = getServerCurrency();
+  return serverCur ? serverCur.code : undefined;
+}
+
+export function renderCryptoIcon(options = {}) {
+  if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
+    throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
+  }
+
+  const opts = {
+    code: getInitialCode(),
+    className: '',
+    attrs: {},
+    ...options,
+  };
+
+  const curData = getCurrencyByCode(opts.code);
+
+  if (curData && curData.icon) {
+    const attrs = Object.keys(opts.attrs).reduce(
+      (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
+    );
+
+    const style = `style="background-image: url(../${curData.icon})"`;
+    return `<i class="cryptoIcon ${opts.className}" ${attrs} ${style}></i>`;
+  }
+
+  return '';
 }
