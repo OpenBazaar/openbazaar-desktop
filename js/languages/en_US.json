@@ -23,7 +23,6 @@
     "ECONOMIC": "Economic"
   },
   "feeChangeWidget": {
-    "label": "Bitcoin fee:",
     "btnChange": "change"
   },
   "unsupportedCryptoCurDialog": {
@@ -755,18 +754,15 @@
     "fundsHeader": "Funds",
     "btnReceiveMoney": "Receive Money",
     "btnSendMoney": "Send Money",
-    "btcCurrencyLabel": "Bitcoin",
     "valueInCurrencyLabel": "Value in %{currency}",
     "transactionsLabel": "Transactions",
     "receiveMoney": {
       "title": "Receive Money",
-      "needBitcoin": "Need Bitcoin?",
       "btnCancel": "Cancel",
       "btnFundViaShapeshift": "Fund via ShapeShift"
     },
     "sendMoney": {
       "toLabel": "To",
-      "toPlaceholder": "Enter a Bitcoin Address",
       "amountLabel": "Amount",
       "noteLabel": "Note",
       "notePlaceholder": "Only seen by you",
@@ -956,7 +952,6 @@
     "helperSKU": "A unique identifier for your listing",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
-    "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
     "helperCondition": "The overall condition of your listing",
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "Add many tags. Enter a tag name, press enter, repeat.",
@@ -2175,8 +2170,23 @@
     "ZMW": "Zambian Kwacha",
     "ZWL": "Zimbabwe Dollar"
   },
-  "cryptoCurrencies": {
-    "BTC": "Bitcoin"
+  "cryptoCurrencyPhrases": {
+    "BTC": {
+      "name": "Bitcoin",
+      "feeChangeWidgetLabel": "Bitcoin fee:",
+      "wallet": {
+        "cryptoCurrencyLabel": "Bitcoin",
+        "receiveMoney": {
+          "needCoin": "Need Bitcoin?"
+        },
+        "sendMoney": {
+          "toPlaceholder": "Enter a Bitcoin Address"
+        }
+      },
+      "editListing": {
+        "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything"
+      }
+    }
   },
   "languages": {
     "af": "Afrikaans",

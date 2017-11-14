@@ -14,6 +14,7 @@ const currencies = [
     feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
     icon: 'imgs/btcIcon128.png',
+    needCoinLink: 'https://openbazaar.org/bitcoin',
   },
 ];
 

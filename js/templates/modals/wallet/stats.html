@@ -22,7 +22,7 @@
   <% if (ob.userCurExchangRateAvailable) { %>
   <div>
     <div class="clrTEmph1 <%= cryptoTextSize %> txB"><%= formattedCrypto %></div>
-    <div><%= ob.polyT('wallet.btcCurrencyLabel') %></div>
+    <div><%= ob.polyT(`cryptoCurrencyPhrases.${ob.getServerCurrency().code}.wallet.cryptoCurrencyLabel`) %></div>
   </div>
   <% } %>
   <% if (ob.userCurrency !== serverCur) { %>

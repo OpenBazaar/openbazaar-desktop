@@ -21,7 +21,10 @@
       </button>
       <div class="flexVCent">
         <%= ob.cryptoIcon({ className: 'margRSm'}) %>
-        <a href="https://openbazaar.org/bitcoin" class="clrT txB txU"><%= ob.polyT('wallet.receiveMoney.needBitcoin') %></a>
+        <% serverCur = ob.getServerCurrency() %>
+        <% if (serverCur.needCoinLink) { %>
+          <a href="<%= serverCur.needCoinLink %>" class="clrT txB txU"><%= ob.polyT(`cryptoCurrencyPhrases.${serverCur.code}.wallet.receiveMoney.needCoin`) %></a>
+        <% } %>
       </div>
     </div>
   </div>

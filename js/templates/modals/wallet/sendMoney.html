@@ -8,7 +8,7 @@
     </div>
     <div class="col9">
       <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
-      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder') %>">
+      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT(`cryptoCurrencyPhrases.${ob.getServerCurrency().code}.wallet.sendMoney.toPlaceholder`) %>">
     </div>
   </div>
   <div class="flexRow gutterHLg">

@@ -76,7 +76,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
               <div class="contentBox pad clrP clrBr flexVCent">
                 <%= ob.cryptoIcon({ className: 'margRSm'}) %>
                 <div class="flexExpand">
-                  <%= ob.polyT(`cryptoCurrencies.${ob.getServerCurrency().code}`) %>
+                  <%= ob.polyT(`cryptoCurrencyPhrases.${ob.getServerCurrency().code}.name`) %>
                 </div>
                 <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
                 <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>

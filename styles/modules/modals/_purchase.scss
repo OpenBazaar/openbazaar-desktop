@@ -23,6 +23,11 @@
   &[data-phase='pay'] {
     .showIfPay {
       display: block;
+
+      .cryptoIcon {
+        position: relative;
+        top: -1px;
+      }
     }
   }
 
