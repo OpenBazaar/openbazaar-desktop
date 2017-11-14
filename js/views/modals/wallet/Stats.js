@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import app from '../../../app';
-import { getExchangeRate } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
