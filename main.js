@@ -378,12 +378,7 @@ function createWindow() {
   });
 
   // put logic here to set tray icon based on OS
-  if (process.platform === 'linux') {
-    var osTrayIcon = 'icon.png';
-  } else {
-    var osTrayIcon = 'openbazaar-mac-system-tray.png';
-  }
-  
+
   trayMenu = new Tray(`${__dirname}/imgs/${osTrayIcon}`);
 
   let trayTemplate = [];
