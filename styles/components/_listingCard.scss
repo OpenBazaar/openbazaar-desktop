@@ -21,6 +21,8 @@
     }
 
     .infoArea {
+      position: relative;
+      
       .toolTip {
         &::after, &::before {
           z-index: 2;

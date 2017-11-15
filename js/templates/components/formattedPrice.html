@@ -26,7 +26,7 @@
   // todo: translate Translate TRANSLATE!!!
 
   if (fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-    tip = 'We are unable to provide price information because the price is in an unrecognized currency.';
+    tip = 'Unable to provide price information because the item is priced in an unrecognized currency.';
     invalidPrice = true;
   } else if (fromCurValidity !== toCurValidity && (fromCurValidity === 'EXCHANGE_RATE_MISSING' ||
     toCurValidity === 'EXCHANGE_RATE_MISSING')) {

@@ -235,11 +235,7 @@ let exchangeRates = {};
  */
 export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
-    // .done((data) => (exchangeRates = data));
-    .done((data) => {
-      exchangeRates = data;
-      // delete exchangeRates.USD;
-    });
+    .done((data) => (exchangeRates = data));
 
   events.trigger('fetching-exchange-rates', { xhr });
 
