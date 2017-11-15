@@ -30,9 +30,9 @@ export default class extends BaseModel {
   parse(response) {
     const parsedResponse = { ...response };
 
-    // if (!window.shillbert) {
+    // if (!window.fizzle) {
     //   parsedResponse.price.currencyCode = 'MILLY';
-    //   window.shillbert = true;
+    //   window.fizzle = true;
     // }
 
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
