@@ -48,6 +48,16 @@ export default class extends baseVw {
     }
   }
 
+  className() {
+    return 'miniprofile';
+  }
+
+  events() {
+    return {
+      'click .js-rating': 'clickRating',
+    };
+  }
+
   getState() {
     return this._state;
   }
@@ -67,6 +77,10 @@ export default class extends baseVw {
     }
 
     return this;
+  }
+
+  clickRating() {
+    this.trigger('clickRating');
   }
 
   render() {

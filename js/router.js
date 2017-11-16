@@ -323,6 +323,7 @@ export default class ObRouter extends Router {
       'store',
       'following',
       'followers',
+      'reputation',
     ];
   }
 

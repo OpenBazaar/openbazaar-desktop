@@ -208,7 +208,8 @@
       "home": "Home",
       "store": "Store",
       "following": "Following",
-      "followers": "Followers"
+      "followers": "Followers",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "No One is Following %{name} Yet",
