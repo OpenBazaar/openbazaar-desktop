@@ -139,6 +139,7 @@ export default class extends baseVw {
 
   render() {
     super.render();
+    
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),

@@ -197,6 +197,7 @@ export default class extends BaseVw {
 
   render() {
     super.render();
+    
     const displayCurrency = app.settings.get('localCurrency');
 
     loadTemplate('modals/purchase/payment.html', (t) => {

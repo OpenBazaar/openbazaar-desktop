@@ -222,6 +222,10 @@ export default class extends BaseModal {
 
         super.render();
 
+        if(app.serverConfig.cryptoCurrency == "TZEC") {
+          globalThis.$el.find('.btcIcon').css('background-image', 'url("../imgs/zecIcon128.png")');
+        }
+
         if (state.screen === 'info') {
           setTimeout(() => {
             this.getCachedEl('#onboardingCountry').select2();

@@ -45,11 +45,17 @@ export default class extends baseVw {
       this.currentBTCPrice = this.getCurrentPrice();
     }
 
+    var globalThis = this;
+    
     loadTemplate('btcTicker.html', (t) => {
       this.$el.html(t({
         currentBTCPrice: this.currentBTCPrice,
         localCurrency: this.localCurrency,
       }));
+      //debugger;
+      if(app.serverConfig.cryptoCurrency == "TZEC") {
+        globalThis.$el.find('.btcIcon').css('background-image', 'url("../imgs/zecIcon128.png")');
+      }
     });
 
     return this;

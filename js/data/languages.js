@@ -231,6 +231,10 @@ const languages = [
     name: 'English (United States)',
   },
   {
+    code: 'en-ZC',
+    name: 'English (United States - Zcash)',
+  },
+  {
     code: 'en-ZA',
     name: 'English (South Africa)',
   },
@@ -1064,6 +1068,10 @@ export const translationLangs = [
   {
     name: 'English (English, America)',
     code: 'en_US',
+  },
+  {
+    name: 'English (English, America - Zcash)',
+    code: 'en_ZC',
   },
   {
     name: 'Arabic',

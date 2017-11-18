@@ -214,6 +214,8 @@ export default class extends BaseModal {
 
         super.render();
 
+        console.log(app.serverConfig.cryptoCurrency);
+        
         if (this.btcTicker) this.btcTicker.remove();
         this.btcTicker = this.createChild(BTCTicker);
         this.$('.js-btcTickerContainer').append(this.btcTicker.render().$el);

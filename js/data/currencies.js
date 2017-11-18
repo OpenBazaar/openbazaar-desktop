@@ -627,6 +627,10 @@ const currencies = [
     code: 'YER',
   },
   {
+    name: 'Zcash',
+    code: 'ZEC',
+  },
+  {
     name: 'Zambian Kwacha',
     code: 'ZMW',
   },
