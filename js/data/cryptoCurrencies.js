@@ -13,7 +13,7 @@ const currencies = [
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
-    icon: 'imgs/btcIcon128.png',
+    icon: 'imgs/cryptoIcons/btcIcon128.png',
     needCoinLink: 'https://openbazaar.org/bitcoin',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
@@ -24,6 +24,50 @@ const currencies = [
       isTestnet ?
         `https://testnet.blockexplorer.com/tx/${txid}` :
         `https://blockchain.info/tx/${txid}`
+    ),
+  },
+  {
+    name: 'Bitcoin Cash',
+    code: 'BCH',
+    testnetCode: 'TBCH',
+    baseUnit: 100000000,
+    minDisplayDecimals: 0,
+    maxDisplayDecimals: 8,
+    averageModeratedTransactionSize: 184,
+    feeBumpTransactionSize: 154,
+    qrCodeText: address => `${address}`,
+    icon: 'imgs/cryptoIcons/bchIcon128.png',
+    getBlockChainAddressUrl: (address, isTestnet) => (
+      isTestnet ?
+        `https://tbtc.blockdozer.com/insight/address/${address}` :
+        `https://blockdozer.com/insight/address/${address}`
+    ),
+    getBlockChainTxUrl: (txid, isTestnet) => (
+      isTestnet ?
+        `https://tbtc.blockdozer.com/insight/tx/${txid}` :
+        `https://blockdozer.com/insight/tx/${txid}`
+    ),
+  },
+  {
+    name: 'Zcash',
+    code: 'ZEC',
+    testnetCode: 'TZEC',
+    baseUnit: 100000000,
+    minDisplayDecimals: 0,
+    maxDisplayDecimals: 8,
+    averageModeratedTransactionSize: 184,
+    feeBumpTransactionSize: 154,
+    qrCodeText: address => `zcash:${address}`,
+    icon: 'imgs/zecIcon128.png',
+    getBlockChainAddressUrl: (address, isTestnet) => (
+      isTestnet ?
+        `https://explorer.testnet.z.cash/address/${address}` :
+        `https://explorer.zcha.in/accounts/${address}`
+    ),
+    getBlockChainTxUrl: (txid, isTestnet) => (
+      isTestnet ?
+        `https://explorer.testnet.z.cash/tx/${txid}` :
+        `https://explorer.zcha.in/transactions/${txid}`
     ),
   },
 ];
