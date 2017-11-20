@@ -2,7 +2,6 @@ import _ from 'underscore';
 import app from '../app';
 import {
   getCurrencyByCode as getCryptoCurByCode,
-  getTranslatedCurrencies as getTranslatedCryptoCurs,
   getServerCurrency,
 } from './cryptoCurrencies';
 
@@ -665,13 +664,7 @@ export function getCurrencyByCode(code, options = {}) {
   const currency = getIndexedCurrencies()[code];
 
   if (!currency && opts.includeCrypto) {
-    const cryptoCurrency = getCryptoCurByCode(code);
-    if (cryptoCurrency) {
-      return {
-        ...getCryptoCurByCode(code),
-        isCrypto: true,
-      };
-    }
+    return getCryptoCurByCode(code);
   }
 
   return currency;
@@ -681,7 +674,7 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
   options = {}) {
   const opts = {
     sort: true,
-    includeCrypto: true,
+    includeServerCur: true,
     ...options,
   };
 
@@ -695,11 +688,15 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
     name: app.polyglot.t(`currencies.${currency.code}`),
   }));
 
-  if (opts.includeCrypto) {
-    translated = translated.concat(
-      (getTranslatedCryptoCurs(undefined, false) || [])
-        .map(curData => ({ ...curData, isCrypto: true }))
-    );
+  if (opts.includeServerCur && app && app.serverConfig && app.serverConfig.cryptoCurrency) {
+    const serverCur = getCryptoCurByCode(app.serverConfig.cryptoCurrency);
+
+    if (serverCur) {
+      translated = translated.concat({
+        ...serverCur,
+        name: app.polyglot.t(`cryptoCurrencies.${serverCur.code}`),
+      });
+    }
   }
 
   if (opts.sort) {

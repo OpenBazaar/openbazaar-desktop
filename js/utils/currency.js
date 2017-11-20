@@ -5,7 +5,10 @@ import bitcoinConvert from 'bitcoin-convert';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
-import { getServerCurrency } from '../data/cryptoCurrencies';
+import {
+  getServerCurrency,
+  getCurrencyByCode as getCryptoCurByCode,
+} from '../data/cryptoCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
 const events = {
@@ -35,8 +38,8 @@ UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
 UnrecognizedCurrencyError.prototype.constructor = NoExchangeRateDataError;
 
 /**
- * Converts the amount from a decimal to an integer. If the
- * currency code is BTC, it will convert to Satoshi.
+ * Converts the amount from a decimal to an integer. If the currency code is a crypto currency,
+ * it will convert to its base units.
  */
 export function decimalToInteger(amount, currency, options = {}) {
   if (typeof amount !== 'number') {
@@ -60,7 +63,7 @@ export function decimalToInteger(amount, currency, options = {}) {
       throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
     }
   } else {
-    if (curData.isCrypto) {
+    if (getCryptoCurByCode(curData.code)) {
       returnVal = Math.round(amount * curData.baseUnit);
     } else {
       returnVal = Math.round(amount * 100);
@@ -71,9 +74,8 @@ export function decimalToInteger(amount, currency, options = {}) {
 }
 
 /**
- * Converts the amount from an integer to a decimal, rounding
- * to 2 decimal places. If the currency code is BTC, it will
- * convert from Satoshi to BTC.
+ * Converts the amount from an integer to a decimal, rounding to 2 decimal places. If the
+ * currency code is for a crypto currency, it will convert from its base units.
  */
 export function integerToDecimal(amount, currency, options = {}) {
   const opts = {
@@ -89,7 +91,7 @@ export function integerToDecimal(amount, currency, options = {}) {
       throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
     }
   } else {
-    if (curData.isCrypto) {
+    if (getCryptoCurByCode(curData.code)) {
       returnVal = Number(
         (amount / curData.baseUnit).toFixed(curData.maxDisplayDecimals)
       );
@@ -102,22 +104,19 @@ export function integerToDecimal(amount, currency, options = {}) {
 }
 
 /**
- * Will take a number and return a string version of the number
- * with the appropriate number of decimal places based on whether
- * the number represents a BTC or fiat price.
+ * Will take a number and return a string version of the number with the appropriate number of
+ * decimal places based on whether the number represents a crypto or fiat price.
  *
- * This differs from formatCurrency in that this does not localize
- * the number at all. It simply returns the value with the
- * appropriate number of decimal place, e.g:
+ * This differs from formatCurrency in that this does not localize the number at all. It simply
+ * returns the value with the appropriate number of decimal place, e.g:
  *
- * formatPrice(123.456, false) // "123.46"
- * formatPrice(123.456, true)  // "123.45600000"
+ * formatPrice(123.456, 'USD') // "123.46"
+ * formatPrice(123.456, 'BTC')  // "123.45600000"
  *
- * It is more useful for <input>'s because we are not
- * localizing the numbers in them.
+ * It is more useful for <input>'s because we are not localizing the numbers in them.
  *
  */
-export function formatPrice(price, isBtc = false) {
+export function formatPrice(price, currency) {
   if (typeof price !== 'number') {
     throw new Error('Please provide a price as a number');
   }
@@ -126,12 +125,17 @@ export function formatPrice(price, isBtc = false) {
     throw new Error('Please provide a price that is not NaN');
   }
 
-  let convertedPrice;
+  if (typeof currency !== 'string') {
+    throw new Error('Please provide a currency as a string');
+  }
 
-  if (isBtc) {
-    // Format BTC price so it has up to 8 decimal places,
-    // but without any trailing zeros
-    convertedPrice = upToFixed(price, 8);
+  let convertedPrice;
+  const cryptoCur = getCryptoCurByCode(currency);
+
+  if (cryptoCur) {
+    // Format crypto price so it has up to the max decimal places (as specified in the crypto
+    // config), but without any trailing zeros
+    convertedPrice = upToFixed(price, cryptoCur.maxDisplayDecimals);
   } else {
     convertedPrice = price.toFixed(2);
   }

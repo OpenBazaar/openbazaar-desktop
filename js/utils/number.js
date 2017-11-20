@@ -1,6 +1,6 @@
 /*
  * Like Number.toFixed, but whereas that will force your number
- * to have the specified number of decimal place, this will not
+ * to have the specified number of decimal places, this will not
  * allow you to have more than the specified number, but will allow
  * less, e.g:
  *
@@ -16,3 +16,4 @@ export function upToFixed(number, decimalPlaces) {
 
   return parseFloat((number).toFixed(decimalPlaces)).toString();
 }
+
