@@ -15,10 +15,12 @@
 <div class="flexCent buttonsWrap">
   <div>
     <div class="flexVCent gutterH">
+      <% if (ob.getServerCurrency().canShapeShiftInto) { %>
       <button class="btn btnThin clrP clrBr clrSh2 flexNoShrink js-fundViaShapeshift">
         <i class="shapeShiftIcon icon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
         <%= ob.polyT('wallet.receiveMoney.btnFundViaShapeshift') %>
       </button>
+      <% } %>
       <div class="flexVCent">
         <%= ob.cryptoIcon({ className: 'margRSm'}) %>
         <% serverCur = ob.getServerCurrency() %>

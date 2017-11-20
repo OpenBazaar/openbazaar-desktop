@@ -238,7 +238,7 @@ export default class extends BaseModal {
 
     if (!isNaN(numericVal) && trimmedVal) {
       $(e.target).val(
-        formatPrice(numericVal, this.$currencySelect.val() === 'BTC')
+        formatPrice(numericVal, this.$currencySelect.val())
       );
     } else {
       $(e.target).val(trimmedVal);

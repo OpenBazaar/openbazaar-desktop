@@ -1,3 +1,5 @@
+// While this file is named BTCTicker, it is really a widget which will show the exchange
+// rate of the server's currency (may be BTC or another crypto) in the user's local currency.
 import loadTemplate from '../utils/loadTemplate';
 import baseVw from './baseVw';
 import { getExchangeRate } from '../utils/currency';

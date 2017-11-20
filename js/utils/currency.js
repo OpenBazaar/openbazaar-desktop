@@ -296,9 +296,11 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
-  const fromRate = fromCurCaps === 'BTC' || fromCurCaps === 'TBTC' ?
-      1 : getExchangeRate(fromCurCaps);
-  const toRate = toCurCaps === 'BTC' || toCurCaps === 'TBTC' ? 1 : getExchangeRate(toCurCaps);
+  const serverCur = getServerCurrency();
+  const fromRate = fromCurCaps === serverCur.code || fromCurCaps === serverCur.testnetCode ?
+    1 : getExchangeRate(fromCurCaps);
+  const toRate = toCurCaps === serverCur.code || toCurCaps === serverCur.testnetCode ?
+    1 : getExchangeRate(toCurCaps);
 
   return (amount / fromRate) * toRate;
 }

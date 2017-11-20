@@ -10,7 +10,7 @@ export default class extends BaseModel {
   parse(response = {}) {
     return {
       ...response,
-      // Convert satoshi to BTC
+      // Convert from base units
       value: integerToDecimal(response.value, app.serverConfig.cryptoCurrency),
     };
   }

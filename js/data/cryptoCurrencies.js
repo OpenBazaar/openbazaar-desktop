@@ -25,6 +25,7 @@ const currencies = [
         `https://testnet.blockexplorer.com/tx/${txid}` :
         `https://blockchain.info/tx/${txid}`
     ),
+    canShapeShiftInto: true,
   },
   {
     name: 'Bitcoin Cash',
@@ -47,6 +48,7 @@ const currencies = [
         `https://tbtc.blockdozer.com/insight/tx/${txid}` :
         `https://blockdozer.com/insight/tx/${txid}`
     ),
+    canShapeShiftInto: true,
   },
   {
     name: 'Zcash',
@@ -69,6 +71,7 @@ const currencies = [
         `https://explorer.testnet.z.cash/tx/${txid}` :
         `https://explorer.zcha.in/transactions/${txid}`
     ),
+    canShapeShiftInto: true,
   },
 ];
 

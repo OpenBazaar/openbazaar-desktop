@@ -16,7 +16,7 @@
 
         if (typeof ob.priceDiscount !== 'undefined') {
           discountAmount = typeof ob.priceDiscount === 'number' ?
-            ob.formatPrice(ob.priceDiscount, ob.getCurrency() === 'BTC') :
+            ob.formatPrice(ob.priceDiscount, ob.getCurrency()) :
             ob.priceDiscount
         } else {
           discountAmount = typeof ob.percentDiscount === 'number' ?

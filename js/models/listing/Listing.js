@@ -176,7 +176,7 @@ export default class extends BaseModel {
 
             if (typeof service.additionalItemPrice === 'number') {
               service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
-                options.attrs.metadata.pricingCurrency === 'BTC');
+                options.attrs.metadata.pricingCurrency);
             }
           });
         });
