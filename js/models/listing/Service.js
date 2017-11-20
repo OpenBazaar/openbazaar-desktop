@@ -7,6 +7,7 @@ export default class extends BaseModel {
     return {
       name: '',
       price: '',
+      additionalItemPrice: '',
       estimatedDelivery: '',
     };
   }
@@ -38,6 +39,16 @@ export default class extends BaseModel {
       addError('price', app.polyglot.t('serviceModelErrors.provideAmount'));
     } else if (is.not.number(attrs.price)) {
       addError('price', app.polyglot.t('serviceModelErrors.provideNumericAmount'));
+    } else if (attrs.price < 0) {
+      addError('price', app.polyglot.t('serviceModelErrors.provideNonNegativePrice'));
+    }
+
+    if (attrs.additionalItemPrice === '') {
+      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideAmount'));
+    } else if (is.not.number(attrs.additionalItemPrice)) {
+      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideNumericAmount'));
+    } else if (attrs.additionalItemPrice < 0) {
+      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideNonNegativePrice'));
     }
 
     if (Object.keys(errObj).length) return errObj;
