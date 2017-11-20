@@ -96,6 +96,12 @@
       right: -1px;
       top: -42px;
     }
+
+    .receipt {
+      .subShipping {
+        padding-left: $pad;
+      }
+    }
   }
 
   .loadingPurchase {
@@ -108,8 +114,4 @@
     width: 100%;
     height: 100%;
   }
-
-
-
-
 }

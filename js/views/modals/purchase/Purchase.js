@@ -448,6 +448,7 @@ export default class extends BaseModal {
 
       priceObj.price = this.listing.get('item').get('price');
       priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
+      priceObj.aPrice = sOptService ? sOptService.get('additionalItemPrice') : 0;
       priceObj.vPrice = sku ? sku.get('surcharge') : 0;
       priceObj.quantity = item.get('quantity');
       prices.push(priceObj);
@@ -467,8 +468,8 @@ export default class extends BaseModal {
           itemPrice -= coupon.priceDiscount;
         }
       });
-      itemPrice += priceObj.sPrice;
-      priceTotal += itemPrice * priceObj.quantity;
+      priceTotal = itemPrice * priceObj.quantity;
+      priceTotal += priceObj.sPrice + priceObj.aPrice * (priceObj.quantity - 1);
     });
 
     return priceTotal;

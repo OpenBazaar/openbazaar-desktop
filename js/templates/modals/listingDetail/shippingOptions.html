@@ -1,45 +1,53 @@
 <% if (ob.templateData.length) { %>
+  <table class="shippingTable clrBr">
   <% ob.templateData.forEach((option, tdi) => { %>
-    <% if (tdi > 0) { %>
-      <hr class="clrBr rowLg">
-    <% } %>
-    <div class="rowLg tx4">
-      <div class="flexRow rowLg">
-        <h3 class="col8"><%= option.name %></h3>
-        <% if (option.type === "LOCAL_PICKUP") { %>
-          <div class="col4">
-            <%= ob.polyT('listingDetail.localPickup') %>
-          </div>
-        <% } %>
-      </div>
-      <% option.services.sort((a,b) => parseFloat(a.price) - parseFloat(b.price)).forEach((service) => { %>
-        <% if (service.price === 0) var fShp = true; %>
-        <div class="flexRow rowLg <% if (fShp) { %>txB<% } %>">
-          <div class="col4">
-            <div class="flex gutterH">
-              <div class="floL"><%= service.name %></div>
-            </div>
-          </div>
-          <div class="col4"><%= service.estimatedDelivery %></div>
-          <div class="col4">
-            <% if (fShp) { %>
-              <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
-            <% } else { %>
-                <%= 
-                  ob.formattedPrice(
-                    service.price,
-                    ob.pricingCurrency,
-                    ob.displayCurrency
-                  )
-                %>
-            <% } %>  
-          </div>
-        </div>
-      <% }) %>
-
-    </div>
+    <tr class="tx5 clrBr borderBottom">
+      <th><%= option.name %></th>
+      <% if (option.type === "LOCAL_PICKUP") { %>
+        <th colspan="3"><%= ob.polyT('listingDetail.localPickup') %></th>
+      <% } else { %>
+        <th><%= ob.polyT('listingDetail.deliveryTime') %></th>
+        <th><%= ob.polyT('listingDetail.priceFirst') %></th>
+        <th><%= ob.polyT('listingDetail.priceSecond') %></th>
+      <% } %>
+    </tr>
+    <% option.services.sort((a,b) => parseFloat(a.price) - parseFloat(b.price)).forEach((service, si) => { %>
+      <% if (service.price === 0) var fShp = true; %>
+      <tr class="<% if (fShp) print('txB') %> <% if (si === option.services.length -1) print('lastRow') %>">
+        <td><%= service.name %></td>
+        <td><%= service.estimatedDelivery %></td>
+        <td>
+          <% if (fShp) { %>
+            <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
+          <% } else { %>
+            <%= 
+              ob.formattedPrice(
+                service.price,
+                ob.pricingCurrency,
+                ob.displayCurrency
+              )
+            %>
+          <% } %>
+        </td>
+        <td>
+          <% if (service.additionalItemPrice === 0) { %>
+            <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
+          <% } else { %>
+            <%= 
+              ob.formattedPrice(
+                service.additionalItemPrice,
+                ob.pricingCurrency,
+                ob.displayCurrency
+              )
+            %>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
   <% }); %>
+  </table>
 <% } else { %>
+  <hr class="row">
   <div class="rowLg tx4 txCtr">
     <%= ob.polyT('listingDetail.noShippingFound') %>
   </div>

@@ -206,6 +206,40 @@
           }
         }
       }
+
+      #shippingSection {
+
+        .shippingTable {
+          width: 100%;
+          margin-top: $pad;
+          table-layout: fixed;
+
+          th {
+            font-weight: 700;
+            text-align: left;
+            border-bottom-style: solid;
+            border-bottom-width: 1px;
+            border-bottom-color: inherit;
+            border-top-style: solid;
+            border-top-width: 1px;
+            border-top-color: inherit;
+            width: 28%;
+            padding: $padMd 0;
+          }
+
+          th:first-child {
+            width: 46%;
+          }
+
+          td {
+            padding: $pad 0;
+          }
+
+          tr.lastRow td {
+            padding-bottom: $padLg;
+          }
+        }
+      }
     }
   }
 }

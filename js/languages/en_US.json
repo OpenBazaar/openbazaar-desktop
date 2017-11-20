@@ -849,6 +849,9 @@
     "shipTo": "Ship to:",
     "noShippingFound": "This listing does not ship to the selected country.",
     "localPickup": "This option is for local pickup only.",
+    "deliveryTime": "Delivery Time",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "Any Country",
     "returnToStore": "Return to store",
     "goToStore": "Go to store",
@@ -1002,7 +1005,8 @@
         "namePlaceholder": "e.g. Standard, Express, Overnight",
         "estimatedDeliveryLabel": "Est. Delivery Time",
         "estimatedDeliveryPlaceholder": "e.g. 5-7 days",
-        "priceLabel": "Price",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Add Service"
       },
@@ -1230,9 +1234,12 @@
       "listing": "Listing",
       "coupon": "Coupon",
       "shipping": "Shipping",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Options",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Total"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1642,7 +1649,7 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number.",
-    "provideAmountGreaterThanZero": "The price must be greater than 0."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Please provide a description.",
