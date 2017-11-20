@@ -5,15 +5,15 @@
     "unpublishedConfirmYes": "Sì",
     "unpublishedConfirmNo": "No",
     "failedRetryTitle": "There was an error retrying the publish.",
-    "statusPublishing": "Publishing updates to network…",
+    "statusPublishing": "Sto pubblicando gli aggiornamenti...",
     "retryLink": "Riprova",
-    "statusPublishFailed": "Publishing failed. %{retryLink}",
-    "statusPublishComplete": "Publishing complete."
+    "statusPublishFailed": "Pubblicazione fallita. %{retryLink}",
+    "statusPublishComplete": "Pubblicazione completata."
   },
   "follow": {
-    "typeFollow": "following",
-    "typeUnfollow": "unfollowing",
-    "followErrorTitle": "There was an error %{type} %{user}.",
+    "typeFollow": "segui",
+    "typeUnfollow": "non seguire più",
+    "followErrorTitle": "C'è stato un errore %{type} %{user}.",
     "followBtn": "Segui",
     "unfollowBtn": "Non seguire"
   },
@@ -23,19 +23,19 @@
     "ECONOMIC": "Economica"
   },
   "feeChangeWidget": {
-    "label": "Bitcoin fee:",
+    "label": "Tassa in Bitcoin:",
     "btnChange": "cambia"
   },
   "consoleWarning": {
     "heading": "Stop!",
-    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
+    "line1": "Questa è una console per sviluppatori. Se qualcuno ti ha chiesto di aprire questa finestra, è possibile che l'obiettivo sia compromettere il tuo account.",
     "line2": "Adesso puoi chiudere questa finestra."
   },
   "resyncBlockchainError": "C'e' stato un errore durante il ricaricamento delle transazioni.",
   "restartNow": "Riavvia ora",
   "restartLater": "Riavvia dopo",
   "langChangeRestartTitle": "È necessario il riavvio per cambiare la lingua",
-  "langChangeRestartMessage": "In order for your language change to fully take effect, you must restart the app. If any saves or publishes are still in progress, please wait until they are done.",
+  "langChangeRestartMessage": "Per attivare effettivamente il cambio di lingua, devi riavviare l'applicazione. Se uno o più salvataggi sono in corso, aspetta finchè saranno completati.",
   "update": {
     "checking": "Controllo aggiornamenti...",
     "error": "C'è stato un errore nel controllo degli aggiornamenti. Error: %{error}",
@@ -48,10 +48,10 @@
     },
     "install": "Installa ora"
   },
-  "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
-  "testnet": "Test Mode",
-  "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
-  "betaTooltip": "OpenBazaar is currently in beta. Make sure to backup your wallet, and be careful if spending large amounts of bitcoin.",
+  "addressBarPlaceholder": "Digita uno pseudonimo, un ID Open Baazar o una parola",
+  "testnet": "Modalità Test",
+  "testnetTooltip": "La Modalità Test utilizza delle monete di prova, che sono da intendere tali. ",
+  "betaTooltip": "OpenBazaar è attualmente in versione beta. Assicurati di fare una copia del tuo wallet, e presta attenzione quando spendi grandi quantità di Bitcoin.",
   "tabMenuHeading": "MENÙ",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copiato negli appunti",
@@ -100,7 +100,7 @@
         "title": "Non è stato possibile determinare se questo utente ti segue."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Non è stato possibile caricare i motori di ricerca."
       }
     },
     "startupLoadingModal": {
@@ -117,8 +117,8 @@
       "declined": "%{vendorName} ha rifiutato il tuo ordine.",
       "canceled": "%{buyerName} has canceled their order.",
       "refunded": "%{vendorName} ha rimborsato il tuo ordine.",
-      "fulfillment": "%{vendorName} has fulfilled your order.",
-      "orderComplete": "%{buyerName} has left feedback on their order.",
+      "fulfillment": "%{vendorName} ha eseguito il tuo ordine.",
+      "orderComplete": "%{buyerName} ha lasciato un feedback sull'ordine.",
       "disputeOpen": "%{disputerName} ha aperto una disputa con te.",
       "disputeOpenMod": "%{disputerName} ha aperto una disputa con %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} ha condiviso l contratto per la disputa con %{disputerName}.",
@@ -206,7 +206,7 @@
     "tabTitles": {
       "home": "Home",
       "store": "Negozio",
-      "following": "Chi si segue",
+      "following": "Segui",
       "followers": "Seguaci"
     },
     "followTab": {
@@ -237,7 +237,7 @@
       "inactive": "Il tuo negozio è attualmente inattivo e nascosto al pubblico. %{link}",
       "inactiveLink": "Cambia",
       "listingDataChangedPopin": "I listini sono cambiati.",
-      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
+      "shippingDataChangedPopin": "Il tuo Paese e/o indirizzo di spedizione sono cambiati. Questo potrebbe influire sul costo delle prossime spedizioni.",
       "freeShippingBanner": "Spedizione gratuita",
       "sortOpts": {
         "priceAsc": "Prezzo crescente",
@@ -267,7 +267,7 @@
   },
   "userShort": {
     "userLoading": "Caricamento...",
-    "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",
+    "userNotFound": "Informazioni per %{guid} <b>non sono state trovate.</b>",
     "modAddError": "C'è stato un errore nell'aggiunta di questo moderatore.\n %{errMsg}",
     "modRemoveError": "C'è stato un errore nella rimozione di questo moderatore.\n %{errMsg}",
     "tipFollow": "Segui",
@@ -303,7 +303,7 @@
     "linkText": "Riguardo a OpenBazaar",
     "brand": "OpenBazaar",
     "blurbs": {
-      "tradeFree": "OpenBazaar is made possible by an international community of developers and volunteers contributing their time to help make trade free."
+      "tradeFree": "OpenBazaar è reso possibile da una comunità internazionale di sviluppatori e di volontari che dedicano il loro tempo per rendere il commercio finalmente libero."
     },
     "version": "versione %{version}",
     "bothVersions": "client %{cVer}, server %{sVer}",
@@ -317,20 +317,20 @@
       "btnOpenInWallet" : "Apri nel portafoglio",
       "bannerCountDonations": "%{donationCountFloor}+ Donazioni ricevute!",
       "unableToOpenInWallet": {
-        "title": "Unable to open in wallet",
+        "title": "Non è stato possibile aprire l'indirizzo con il wallet.",
         "body": "Non è stato possibile aprire l'indirizzo con il portafoglio perché è in corso un pagamento. Aspetta fin quando il pagamento è completato e prova di nuovo."
       }
     },
     "licenseTab": {
       "linkText": "Licenza",
       "sectionHeader": "Licenza MIT di OpenBazaar",
-      "licensePreface": "OpenBazaar is open source software under the MIT license. This license is permissive and designed to allow people to fully reuse the code for other open source projects or for proprietary software. The full license text is below.",
-      "header": "La licenza MIT (MIT)",
-      "copyright": "Copright &copy; 2016 OpenBazaar Developers",
+      "licensePreface": "OpenBazaar è un software open source con licenza MIT. Questa licenza è pensata per permettere alle persone di riutilizzare il codice per altri progetti open source o proprietari. Il testo completo della licenza è mostrato qui sotto. ",
+      "header": "Licenza MIT (MIT)",
+      "copyright": "Copyright &copy; 2016 OpenBazaar Developers",
       "paragraphs": {
-        "permission": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+        "permission": "\nL'autorizzazione è concessa gratuitamente a qualsiasi persona che ottiene una copia di questo software e dei file di documenti associati (il \"software\"), per trattare il software senza restrizioni, inclusi, senza limitazione, i diritti di utilizzare, copiare, modificare, unire, pubblicare, distribuire, sublicenziare e/o vendere copie del software e consentire alle persone a cui è fornito il software, a seconda delle seguenti condizioni:",
         "inclusion": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
-        "indemnity": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+        "indemnity": "IL SOFTWARE È FORNITO COSÌ COM'È, SENZA ALCUNA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, TRA CUI LA GARANZIA DI COMMERCIABILITÀ DEL PRODOTTO, L'IDONEITÀ PER SCOPI PARTICOLARI E LA CONTRAFFAZIONE. IN NESSUN CASO GLI AUTORI O I DETENTORI DEI DIRITTI D'AUTORE DEL SOFTWARE SARANNO RITENUTI RESPONSABILI PER RICHIESTE DI RISARCIMENTI, DANNI O ALTRE RESPONSABILITÀ, SIA IN CASO DI DISPOSIZIONE DI CONTRATTO, DI TORTO O COMUNQUE DERIVANTI DA O IN CONNESSIONE CON IL SOFTWARE, O L'UTILIZZO DI ALTRE ATTIVITÀ NEL SOFTWARE."
       }
     },
     "contributorsTab": {
@@ -359,11 +359,11 @@
     "settingsLabel": "Impostazioni",
     "unrecognizedModelErrsWarning": {
       "title": "Non è stato possibile salvare le impostazioni.",
-      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+      "body": "Non è stato possibile salvare le impostazioni per questa finestra a causa di errori non riconosciuti. È possibile che ciò sia dovuto a valori invalidi presenti in altre finestre. Salva le modifiche effettuate in altre finestre in modo da identificare la finestra contenente l'errore, che verrà mostrato sopra il campo da compilare. Una volta corretto l'errore, clicca su Salva nella finestra in cui è apparso l'errore. Una volta completata questa procedura potrai tornare su questa finestra e salvare le modifiche. "
     },
     "generalTab": {
-      "helperLanguage": "Display interface elements in",
-      "helperCountry": "The country you primarily reside in",
+      "helperLanguage": "Mostra gli elementi dell'interfaccia in",
+      "helperCountry": "Il Paese in cui risiedi",
       "helperCurrency": "Mostra prezzi in",
       "helperTranslations": "Aiuta a tradurre OpenBazaar in %{helperTranslationsLink}",
       "helperTranslationsLink": "Transifex",
@@ -379,14 +379,14 @@
       "statusSaveComplete": "Impostazioni generali salvate.",
       "statusSaveFailed": "Non è possibile salvare le impostazioni generali.",
       "saveErrorAlertTitle": "Non è possibile salvare le impostazioni generali",
-      "searchProvider": "Search Provider",
-      "restoreDefaultProvider": "Restore default"
+      "searchProvider": "Motore di ricerca",
+      "restoreDefaultProvider": "Resetta"
     },
     "pageTab": {
       "helperAbout": "Mostra nella tua Homepage",
-      "helperHandle": "Handles make it easy to access your page/store",
+      "helperHandle": "Gli pseudonimi facilitano l'accesso alla tua pagina/negozio",
       "helperLocation": "Dove abiti?",
-      "helperHandleRegister": "Register a unique handle at %{helperHandleRegisterLink}",
+      "helperHandleRegister": "Registra uno pseudonimo unico su %{helperHandleRegisterLink}",
       "helperHandleRegisterLink": "Onename",
       "helperShortDescription": "160 o meno caratteri",
       "helperPrimaryColor": "Header, Containers, Buttons",
@@ -396,7 +396,7 @@
       "helperHighlightTextColor": "Color within Notifications",
       "placeholderAbout": "Write whatever you would like on your page…",
       "placeholderName": "Nome della tua pagina",
-      "placeholderHandle": "Enter your Onename @handle",
+      "placeholderHandle": "Inserisci il tuo @handle",
       "placeholderLocation": "Inserisci la tua posizione",
       "placeholderShortDescription": "Scrivi qualcosa di interessante...",
       "placeholderWebsite": "http://",
@@ -417,7 +417,7 @@
       "locationLabel": "Posizione"
     },
     "addressesTab": {
-      "placeholderName": "Your name / name of recipient",
+      "placeholderName": "Il tuo nome / nome del destinatario",
       "placeholderAddress": "427 N Greenfield Road",
       "placeholderCity": "Chicago",
       "placeholderState": "IL",
@@ -436,12 +436,12 @@
     "advancedTab": {
       "sectionName": "Avanzate",
       "helperVisualEffects": "Transitions, Easing, Opacity",
-      "helperWindowControls": "Maximize, Minimize & Close controls",
+      "helperWindowControls": "Espandi, riduci e chiudi finestra",
       "helperSaveMetaData": "Store additional transaction information",
-      "helperDefaultFee": "Priority is recommended for the fastest transactions",
+      "helperDefaultFee": "La priorità è suggerita per le transazioni più veloci",
       "smtp": {
-        "sectionName": "Email Integration (SMTP)",
-        "testAction": "Test Integration",
+        "sectionName": "Integrazione Email (SMTP)",
+        "testAction": "Test di Integrazione",
         "clearAction": "Cancella tutto",
         "notifications": "Notifiche",
         "username": "Username",
@@ -451,26 +451,26 @@
         "recipientEmail": "Invia a",
         "placeholderServerAddress": "smtp.gmail.com:587",
         "placeholderUsername": "Inserisci il tuo username",
-        "placeholderPassword": "The password to your email address",
+        "placeholderPassword": "Password del tuo indirizzo email",
         "placeholderSendFrom": "nome@dominio.com",
         "placeholderSendTo": "nome@dominio.com",
-        "helperNotifications": "Receive emails for order updates",
-        "helperServerAddress": "Enter an outgoing (SMTP) server url followed by the TLS port number",
+        "helperNotifications": "Ricevi email per aggiornamenti sull'ordine",
+        "helperServerAddress": "Inserisci un URL in uscita dal server (SMTP) seguito dal numero della porta TLS",
         "helperNewEmail": "Crea un indirizzo email su %{helperGmailLink}",
-        "helperUsername": "Your SMTP username",
-        "helperPassword": "Saved privately in your database",
-        "helperSendFrom": "The email address to send from. Make sure you whitelist this address in your receiving account.",
-        "helperSendTo": "The email address to send to. Check your spam folder if you don't receive notifications.",
+        "helperUsername": "Il tuo username SMTP",
+        "helperPassword": "Salvato nel tuo database privato",
+        "helperSendFrom": "L'indirizzo email da cui verranno spedite le email. Assicurati che l'indirizzo sia in lista bianca nel tuo account di ricezione.",
+        "helperSendTo": "L'indirizzo email a cui spedire le email. Controlla la tua cartella di posta indesiderata se non ricevi delle notifiche.",
         "helperGmailLink": "Gmail",
-        "testSmtpSuccess": "The integration test was successful. Don't forget to save your settings.",
-        "testSmtpFail": "The integration test was not successful.",
-        "testSmtpFailWithError": "The integration test was not successful: %{err}",
+        "testSmtpSuccess": "Il test di integrazione è andato a buon fine. Non dimenticarti di salvare le impostazioni.",
+        "testSmtpFail": "Il test di integrazione non è andato a buon fine.",
+        "testSmtpFailWithError": "Il test di integrazione non è andato a buon fine: %{err}",
         "testSmtpCancel": "Cancella"
       },
       "server": {
         "sectionName": "Server",
         "management": "Gestione",
-        "managementHelper": "Switch and manage server connections",
+        "managementHelper": "Cambia e gestisci le connessioni al server",
         "managementBtn": "Gestione delle Connessioni",
         "peers": "Nodi",
         "peersHelper": "Nodi a cui sei connesso",
@@ -482,19 +482,19 @@
           "resyncComplete": "Le transazioni verranno risincronizzate. Questo processo potrà durare dai cinque ai dieci minuti o anche di più.",
           "syncUnavailable": "Puoi ricaricare le transazioni una volta ogni ora."
         },
-        "purge": "Purge Shared Files",
-        "purgeHelper": "Delete cached files you are sharing with others",
-        "purgeBtn": "Purge Files",
+        "purge": "Elimina i file condivisi",
+        "purgeHelper": "Cancella i file nella cache condivisi con altri",
+        "purgeBtn": "Elimina files",
         "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
-        "purgeError": "There was an error, your cached files may not have been deleted.",
+        "purgeError": "C'è stato un errore. È possibile che i file nella cache non siano stati eliminati.",
         "purgeComplete": "I file che avevi nella cache sono stati eliminati.",
-        "blockData": "Block Data",
-        "blockDataHelper": "Show data useful for debugging.",
-        "blockDataBtn": "Show Block Data",
-        "blockDataError": "There was an error, your block data could not be retrieved.",
-        "blockDataTitle": "Your Block Data",
+        "blockData": "Blocca dati",
+        "blockDataHelper": "Mostra dati utili per il debugging.",
+        "blockDataBtn": "Mostra dati bloccati",
+        "blockDataError": "C'è stato un errore. Non è stato possibile trovare i tuoi dati bloccati.",
+        "blockDataTitle": "I tuoi dati bloccati",
         "blockDataCopy": "Copia sugli Appunti",
-        "backupWalletLbl": "Backup Wallet Seed",
+        "backupWalletLbl": "Seed di backup del portafoglio",
         "backupWalletHelper": "Questo Seed ti permetterà di recuperare il tuo portafoglio.",
         "unableToFetchSeedTitle": "C'è stato un errore nel recupero del tuo Seed.",
         "walletSeed": {
@@ -511,15 +511,15 @@
       "transaction": {
         "sectionName": "Transazioni",
         "saveMetadata": "Salva metadati",
-        "defaultFee": "Bitcoin Fee",
+        "defaultFee": "Costo della transazione Bitcoin",
         "low": "Economica",
         "medium": "Normale",
         "high": "Priorità"
       },
       "appearance": {
         "sectionName": "Aspetto",
-        "visualEffects": "Visual Effects",
-        "windowControlStyle": "Window Controls",
+        "visualEffects": "Effetti visivi",
+        "windowControlStyle": "Controlli della finestra",
         "macOS": "Mac (in alto a sinistra)",
         "windowsOS": "Windows (in altro a destra)"
       },
@@ -535,25 +535,25 @@
       "moderationStatus": "Modera dispute",
       "pricePerDispute": "Prezzo per disputa",
       "pricePerDisputeOptions": {
-        "percentageOfOrder": "Percentage of Order",
-        "fixedPrice": "Fixed Fee",
-        "percentagePlusFixed": "Fixed Fee Plus Percentage"
+        "percentageOfOrder": "Percentuale dell'ordine",
+        "fixedPrice": "Commissione fissa",
+        "percentagePlusFixed": "Commissione fissa più percentuale"
       },
-      "pricePerDisputeHelper": "The amount you charge to review and close a dispute",
+      "pricePerDisputeHelper": "La quantità che richiedi per rivedere e chiudere una disputa",
       "feeTypeAmount": "Prezzo per disputa",
       "fixed": "Fissa",
       "percentage": "Percentuale",
       "fixedPlusPercentage": "Fissa più percentuale",
       "feeTypeHelper": "Il prezzo che applichi per risolvere una disputa.",
       "description": "Descrizione",
-      "descriptionHelper": "Add your description (e.g. What is your strategy for reviewing cases? What is your expected response time? What is your schedule of operation? During what hours are you available each day? etc.)",
+      "descriptionHelper": "Aggiungi la tua descrizione (come valuti i casi? In quanto tempo rispondi? Che metodo di revisione segui? In che ore del giorno sei disponibile? Ecc.)",
       "terms": "Termini",
-      "termsHelper": "Add your terms of service (e.g. Do you have legal limitations? What happens after you make a decisions? etc.)",
+      "termsHelper": "Aggiungi i tuoi termini di servizio (Cosa succede dopo che prendi una decisione? Hai delle limitazioni legali? Ecc.)",
       "languages": "Lingue",
       "languagesHelper": "Inserisci le lingue in cui puoi comunicare chiaramente.",
       "acceptGuidelines": "Ho letto le linee guida %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "Linee Guida per la Risoluzione delle Dispute su OpenBazaar",
-      "understandRequirements": "I understand I must offer my services to resolve disputes to anyone that requests them, unless they violate the terms described above.",
+      "understandRequirements": "Comprendo di dover offrire i miei servizi di moderatore a chiunque li richieda, a meno che non vengano violati i termini descritti sopra.",
       "status":{
         "saving": "Salvo le impostazioni di moderazione...",
         "done": "Impostazioni di moderazione salvate.",
@@ -571,9 +571,9 @@
       "moderators": "Moderatori",
       "moderatorsHelper": "Seleziona qualche moderatore per il tuo negozio.",
       "selectedModerators": "Moderatori selezionati",
-      "selectedModeratorsEmpty": "No Moderators Added",
-      "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
-      "moderatorByIDPlaceholder": "Enter a @handle or ID",
+      "selectedModeratorsEmpty": "Nessun moderatore aggunto",
+      "selectedModeratorsEmptyWarning": "Nel tuo negozio è disponibile solamente il pagamento diretto",
+      "moderatorByIDPlaceholder": "Inserisci @handle o un ID",
       "moderatoryByIDSubmit": "Cerca moderatori",
       "availableModerators": "Moderatori disponibili nella reta",
       "browseModerators": "Cerca tra i moderatori",
@@ -587,43 +587,43 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderatore non trovato",
-        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
-        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
+        "modNotFound": "%{guidOrHandle} non è stato trovato. È possibile che l'ID o @handle non siano validi.",
+        "modNotFoundSelected": "%{guidOrHandle} non è stato trovato. È possibile che l'ID o @handle non siano validi. Non saranno mostrati nella tua lista, ma sono ancora salvati come moderatori.",
         "availableModsFailed": "Non è stato possibile caricare i moderatori disponibili.",
         "modAlreadyAdded": "Hai già aggiunto questo moderatore.",
-        "modIsBlank": "You must add a moderator ID or handle",
+        "modIsBlank": "Devi aggiungere l'iD o handle di un moderatore",
         "modIsInvalid": "%{guid} non è un moderatore valido.",
-        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
-        "modsAreInvalidAsync": "I seguenti moderatori non sono stati trovati nella rete. Sono ancora salvati nella tua lista di moderatori, ma le informazioni non sono disponibili."
+        "modsAreInvalid": "I moderatori seguenti non sono validi: %{guids}",
+        "modsAreInvalidAsync": "I seguenti moderatori non sono stati trovati nella rete. Sono ancora salvati nella tua lista di moderatori, ma le informazioni non sono disponibili. %{guids}"
       }
     },
     "optional": "On",
     "language": "Lingua",
     "country": "Nazione",
     "currency": "Valuta",
-    "viewNsfwContent": "Display Mature Content",
+    "viewNsfwContent": "Mostra contenuti per adulti",
     "on": "On",
     "off": "Off",
     "yes": "Sì",
     "no": "No",
     "name": "Nome",
     "handle": "Handle",
-    "shortDescription": "Short Description",
+    "shortDescription": "Breve descrizione",
     "about": "A proposito",
-    "nsfwContent": "Mature Content (NSFW, adult, 18+, etc)",
+    "nsfwContent": "Contenuto per adulti (contenuti non appropriati, 18+, ecc.)",
     "avatar": "Avatar",
     "loadAvatar": "Seleziona Immagine",
-    "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
+    "loadAvatarHelp": "%{minWidth}px per %{minHeight}px o più grande suggerita",
     "header": "Foto Copertina",
     "loadHeader": "Seleziona Immagine",
-    "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
+    "loadHeaderHelp": "%{minWidth}px per %{minHeight}px o più grande suggerita",
     "socialSection": "Social",
     "website": "Sito Web",
     "email": "Email",
     "socialAccounts": {
-      "accountLabel": "Social Account",
+      "accountLabel": "Account social",
       "accountPlaceholder": "Facebook",
-      "usernamePlaceholder": "Handle or Link to Page",
+      "usernamePlaceholder": "Handle o link alla pagina",
       "add": "+ Aggiungi account social",
       "limitError": "Non puoi avere più di %{max} account social. |||| Non puoi avere più di %{max} account social."
     },
@@ -632,8 +632,8 @@
     "coverPhoto": "Foto Copertina",
     "primaryColor": "Colore primario",
     "secondaryColor": "Colore secondario",
-    "highlightColor": "Highlight Color",
-    "highlightTextColor": "Highlight Text Color",
+    "highlightColor": "Colore evidenziazione",
+    "highlightTextColor": "Colore testo evidenziato",
     "textColor": "Colore del testo",
     "addresses": {
       "sectionName": "Nuovo indirizzo",
@@ -645,7 +645,7 @@
       "state": "Stato/Provincia/Regione",
       "country": "Nazione",
       "postalCode": "Codice postale",
-      "notes": "Delivery Notes"
+      "notes": "Note alla consegna"
     },
     "statusSaving": "Salvo le impostazioni...",
     "statusSaveFailed": "Le impostazioni non possono essere salvate.",
@@ -663,20 +663,20 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Built-in Server",
+    "defaultServerName": "Server integrato",
     "statusBar": {
       "errorPreface": "Errore:",
       "needHelpLink": "Serve aiuto?",
-      "viewLocalServerDebugLogLink": "Debug Log",
+      "viewLocalServerDebugLogLink": "Registro dei debug",
       "errorConnectionLost": "%{errorPreface} La connessione a %{serverName} è stata persa. %{links}",
-      "errorUnableToReachServer": "%{errorPreface} Failed to connect to %{serverName}. The server cannot be reached. %{links}",
-      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
-      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
+      "errorUnableToReachServer": "%{errorPreface} Connessione a %{serverName} fallita. Non è stato possibile raggiungere il server. %{links}",
+      "errorAuthFailed": "%{errorPreface} Connessione a %{serverName} fallita. Username o password sono sbagliati. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} Connessione a %{serverName} fallita. Il cookie di autenticazioni è invalido. %[links]",
       "editLink": "modifica",
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Cancella",
-      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Tentativo di connessione a %{serverName}. %{cancelConnAttempt}"
     },
     "configurations": {
       "tabName": "Configurazioni",
@@ -689,7 +689,7 @@
       "statusConnected": "Connesso",
       "deleteConfirm": {
         "heading": "Sei sicuro?",
-        "body": "The server configuration will be deleted. This will not delete the actual server.",
+        "body": "La configurazione del server verrà eliminata. Il server non verrà cancellato.",
         "btnCancel": "Cancella",
         "btnDelete": "Sì, elimina"
       }
@@ -719,11 +719,11 @@
       "torPwLabel": "Tor Password",
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Attenzione:",
-      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "torServerWarning": "%{warning} Per rimanere anonimo, è importante che Tor sia attivo anche sul server.",
       "saveConfirm": {
         "title": "Sei sicuro?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
-        "btnCancel": "No, cancel",
+        "btnCancel": "No, indietro",
         "btnConfirm": "Sì, procedi"
       }
     }
@@ -757,7 +757,7 @@
       "amountLabel": "Quantità",
       "noteLabel": "Nota",
       "notePlaceholder": "Visto solo da te",
-      "sendBtn": "Manda",
+      "sendBtn": "Invia",
       "clear": "Cancella",
       "sendPaymentFailDialogTitle": "Non è stato possibile inviare il pagamento"
     },
@@ -765,9 +765,9 @@
       "heading": "Sei sicuro?",
       "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
       "errorHeading": "Non è stato possibile inviare il pagamento",
-      "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
+      "bodyInsufficientFunds": "Non hai abbastanza fondi. Assicurati di averne abbastanza per pagare la tassa di transazione",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
-      "bodyGenericError": "There was an error estimating the fee: %{err}",
+      "bodyGenericError": "C'è stato un errore mentre si stimava il costo della transazione: %{err}",
       "btnRetry": "Indietro",
       "btnCancel": "Cancella",
       "btnConfirmSend": "Sì, invia",
@@ -783,7 +783,7 @@
         "retryTransactionBtn": "Aumenta Tassa",
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",
-          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "body": "Aggiungi %{fiatBtcPairing}%{asterisk} al costo della transazione e effettua di nuovo la transazione.",
           "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}prezzo stimato",
@@ -798,7 +798,7 @@
       "noTransactionsPlaceholder": "Non ci sono transazioni.",
       "newTransactionsPopin": "%{smart_count} nuova transazione |||| %{smart_count} nuove transazioni",
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
-      "recoverySeedLink": "backup your wallet recovery seed",
+      "recoverySeedLink": "fai una copia del tuo Seed",
       "backupWalletWarningBody": "Sembra che tu abbia una o più transazioni. Sarebbe un buon momento per %{link}."
     }
   },
@@ -811,7 +811,7 @@
     "NEW": "Nuovo",
     "USED_EXCELLENT": "Usato - Eccellente",
     "USED_GOOD": "Usato - Buono",
-    "USED_POOR": "Usato - ",
+    "USED_POOR": "Usato - Messo male",
     "REFURBISHED": "Ristrutturato"
   },
   "listingDetail": {
@@ -935,7 +935,7 @@
     "placeholderDescription": "Descrivi il contenuto dell'annuncio meglio che puoi. Inserisci foto o video.",
     "placeholderReturnPolicy": "Qual è la tua politica di reso? Fino a quanti giorni dopo il prodotto può essere restituito? Chi paga per la spedizione (nel caso sia necessaria)? Ecc. ",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
-    "helperTitle": "Something descriptive that clearly explains what you're selling",
+    "helperTitle": "Inserisci una descrizione che spieghi chiaramente cosa stai vendendo",
     "helperType": "Choose from 3 types",
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Includi massimo %{maxPhotos} immagini",
@@ -943,12 +943,12 @@
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
     "helperPrice": "Imposta il tuo prezzo in dollari, yuan, Bitcoin o qualsiasi altra valuta",
-    "helperCondition": "The overall condition of your listing",
-    "helperNSFW": "Mark yes if the listing is NSFW",
-    "helperTags": "Add many tags. Enter a tag name, press enter, repeat.",
+    "helperCondition": "Le condizioni generali di ciò che stai vendendo",
+    "helperNSFW": "Spunta 'sì' se l'annuncio contiene contenuti per adulti",
+    "helperTags": "Aggiungi i tags. Inserisci un tag, premi invio, ripeti.",
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
-    "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
-    "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperReturnPolicy": "Se lasciato bianco, l'annuncio mostrerà 'Non è stata specificata alcuna Politica di Reso'",
+    "helperTerms": "Se lasciato bianco, l'annuncio mostrerà 'Non sono stati specificati i Termini e Condizioni'",
     "createListingLabel": "Crea Annuncio",
     "editListingLabel": "Modifica Annuncio",
     "title": "Titolo",
@@ -974,7 +974,7 @@
       "shippingDestinations": "Destinazioni",
       "regionsPlaceholder": "Inserisci Paesi...",
       "nameLabel": "Option Title",
-      "namePlaceholder": "e.g. USA Shipping, International, etc",
+      "namePlaceholder": "es. Spedizione in Italia, spedizione internazionale, ecc.",
       "typeLabel": "Tipo",
       "shippingTypes": {
         "FIXED_PRICE": "Prezzo Fisso",
@@ -1024,8 +1024,8 @@
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",
       "trackSelectOption": "Track Inventory",
-      "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
-      "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
+      "doNotTrackHelperText": "Gli acquirenti possono acquistarne quanti ne vogliono",
+      "trackByFixedHelperText": "La quantita diminuisce fino a zero. A quel punto verrà verrà mostrato 'esaurito'.",
       "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
     },
     "variantInventory": {
@@ -1037,7 +1037,7 @@
     "confirmCloseDialog": {
       "title": "Hai delle modifiche non salvate",
       "bodyCreate": "Hai delle modifiche non salvate per un annuncio. Sei sicuro di voler abbandonare la pagina?",
-      "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
+      "bodyEdit": "Non hai salvato le modifiche all'annuncio. Sei sicuro di voler chiudere la pagina?",
       "btnYes": "Sì",
       "btnNo": "No"
     },
@@ -1060,34 +1060,34 @@
     "resultsTotal": "%{totalResults} annunci",
     "sortBy": "Ordina per",
     "changeProvider": "Close and Choose a New Search Provider",
-    "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
+    "useDefault": "Cerca \"%{term}\" usando %{defaultProvider}",
     "noResults": "Nessun annuncio coincide con i criteri di ricerca.",
     "addTitle": "Add search provider",
     "addPlaceholder":"URL for the search provider",
     "addTorPlaceholder": "Tor URL for the search provider (optional)",
     "addBtn": "Aggiungi",
     "cancel": "Cancella",
-    "deleteProviderBtn": "Remove search provider",
-    "makeDefaultBtn": "Set to default",
-    "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
+    "deleteProviderBtn": "Elimina motore di ricerca",
+    "makeDefaultBtn": "Imposta come predefinito",
+    "makeDefaultBtnHelper": "Il motore di ricerca predefinito viene utilizzato per gli URL inseriti nella barra dell'indirizzo.",
     "addQueryProviderBtn": "Add search provider",
-    "chooseDefaultTitle": "Select a default search provider",
-    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "chooseDefaultTitle": "Seleziona come motore di ricerca predefinito",
+    "chooseDefaultMsg": "Questo motore di ricerca sarà quello predefinito finchè questa impostazione non sarà cambiata.",
     "providers": {
         "transactions": "Transazioni",
         "myPage": "Mia Pagina"
     },
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
-      "searchFailReason": "The search provider returned the following message: %{error}",
+      "searchFailReason": "Il motore di ricerca ha restituito il seguente messaggio: %{error}",
       "connection": "You are no longer connected to your node. Reconnect to continue searching",
       "addError": "This provider cannot be added. Check your data and try again.",
-      "locked": "Default search providers can't be deleted.",
+      "locked": "I motori di ricerca predefiniti non possono essere eliminati",
       "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
     }
   },
   "onboarding": {
-    "pageOfPage": "%{startPage} of %{totalPages}",
+    "pageOfPage": "%{startPage} di %{totalPages}",
     "profileFailedSaveTitle": "Non è stato possibile salvare il tuo profilo",
     "settingsFailedSaveTitle": "Non è stato possibile salvare le tue impostazioni",
     "settingsFailedSaveAvatar": "Non è stato possibile salvare il tuo avatar",
@@ -1108,7 +1108,7 @@
       "countryLbl": "Nazione",
       "currencyLbl": "Valuta",
       "changeAvatarLbl": "Cambia Avatar",
-      "heading": "Set Your Information"
+      "heading": "Imposta le tue informazioni"
     },
     "tosScreen": {
       "heading": "Termini di servizio",
@@ -1209,7 +1209,7 @@
       }
     },
     "receipt": {
-      "summary": "Order Summary",
+      "summary": "Riepilogo dell'ordine",
       "listing": "Annunci",
       "coupon": "Codice Promozionale",
       "shipping": "Spedizione",
@@ -1218,37 +1218,37 @@
       "total": "Totale (%{quantity})"
     },
     "errors": {
-      "moderatorsTitle": "Moderator Data Failted to Load",
-      "moderatorsMsg": "This listing has availble moderators, but they could not be loaded.",
+      "moderatorsTitle": "Non è stato possibile caricare i dati del moderatore",
+      "moderatorsMsg": "Questo annuncio ha dei moderatori disponibili, ma non è stato possibile caricarli.",
       "orderError": "Il tuo ordine non può essere processato a causa dei seguenti errori:",
       "ownIDTitle": "Non puoi acquistare i tuoi annunci",
       "ownIDMsg": "Puoi vedere in anteprima il processo di acquisto dei tuoi annunci, ma non li puoi acquistare.",
       "paymentFailed": "Non è stato possibile completare il pagamento",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "zeroPrice": "Non puoi acquistare un prodotto con un prezzo pari a 0.",
+      "feesFailed": "Non è stato possibile caricare le tasse di transazione"
     }
   },
   "moderators": {
-    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
+    "moderatorsLoading": "Carico %{remaining} di %{total} moderatori."
   },
   "transactions": {
     "sales": {
       "heading": "Vendite",
-      "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
+      "countTransactions": "%{smart_count} caso |||| %{smart_count} casi",
       "countTransactionsFound": "%{countTransactions} trovate",
-      "unableToFetch": "Unable to obtain your sales.",
-      "noResults": "No sales found",
-      "returnToFromOrder": "Return to sales",
+      "unableToFetch": "Non è stato possibile ottenere l'elenco delle tue vendite",
+      "noResults": "Nessuna vendita trovata",
+      "returnToFromOrder": "Torna alle vendite",
       "resyncPopInMessage": {
-        "link": "Resync",
+        "link": "Risincronizza",
         "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
         "message": "%{icon} %{text} %{link}",
-        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+        "completeText": "La tua transazione è in sincronizzazione. Aspetta almeno cinque minuti, dopo di che aggiorna la pagina."
       }
     },
     "purchases": {
       "heading": "Acquisti",
-      "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
+      "countTransactions": "%{smart_count} acquisto |||| %{smart_count} acquisti",
       "countTransactionsFound": "%{countTransactions} trovate",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "Nessun acquisto trovato",
@@ -1256,7 +1256,7 @@
     },
     "cases": {
       "heading": "Casi",
-      "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
+      "countTransactions": "%{smart_count} caso |||| %{smart_count} casi",
       "countTransactionsFound": "%{countTransactions} trovate",
       "noResults": "No cases found",
       "returnToFromOrder": "Return to cases"
@@ -1290,9 +1290,9 @@
         "status": "Stato"
       },
       "status": {
-        "PENDING": "Pending",
-        "AWAITING_PAYMENT": "Awaiting Payment",
-        "AWAITING_PICKUP": "Awaiting Pickup",
+        "PENDING": "In attessa",
+        "AWAITING_PAYMENT": "In attesa di pagamento",
+        "AWAITING_PICKUP": "In attesa di ritiro",
         "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
         "PARTIALLY_FULFILLED": "Partially Fulfilled",
         "FULFILLED": "Fulfilled",
@@ -1313,11 +1313,11 @@
   },
   "orderDetail": {
     "navMenu": {
-      "summary": "Summary",
+      "summary": "Riepilogo",
       "discussion": "Discussione",
       "contract": "Contract (JSON)"
     },
-    "backToSummary": "Back to summary",
+    "backToSummary": "Torna al riepilogo",
     "discussionTab": {
       "roleVendor": "venditore",
       "roleBuyer": "acquirente",
@@ -1326,8 +1326,8 @@
       "isTyping": "%{userRole} sta scrivendo...",
       "areTyping": "%{userRole1} e %{userRole2} stanno scrivendo...",
       "enterMessagePlaceholder": "Inserisci messaggio...",
-      "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
-      "modCannotChat": "You have issued a decision and cannot send further messages.",
+      "enterMessageNoMoreModPlaceholder": "Inserisci messaggio... (il moderatore ha rilasciato la decisione e non vedrà più i messaggi di questa conversazione)",
+      "modCannotChat": "Hai rilasciato una decisione e non puoi più inviare messaggi.",
       "loadMessagesError": "C'è stato un errore nel caricamento del messaggio. %{retryLink}",
       "retryLink": "indietro",
       "btnSend": "Manda"
@@ -1362,7 +1362,7 @@
         "veryManyConfirmationsCount": "%{countText} conferme",
         "rejectConfirm": {
           "title": "Sei sicuro?",
-          "body": "The original amount in bitcoin will be returned to the buyer",
+          "body": "La quantità originale in Bitcoin verrà restituita all'acquirente",
           "btnCancel": "Cancella",
           "btnConfirm": "Sì, rifiuta"
         },
@@ -1378,7 +1378,7 @@
       "accepted": {
         "heading": "Accettato",
         "orderAccepted": "Ordine accettatto",
-        "vendorCanFulfill": "You received the order and can fulfill it whenever you're ready.",
+        "vendorCanFulfill": "Hai ricevuto l'ordine e lo puoi processare quando sei pronto.",
         "vendorReceived": "Hai ricevuto l'ordine",
         "buyerOrderAccepted": "Grazie per il tuo acquisto!",
         "modOrderAccepted": "Il venditore ha accettato l'ordine",
@@ -1386,27 +1386,27 @@
         "fulfillBtn": "Fulfill Order",
         "refundConfirm": {
           "title": "Sei sicuro?",
-          "body": "The original amount in bitcoin will be returned to the buyer",
+          "body": "La quantità originale in Bitcoin verrà restituita all'acquirente",
           "btnCancel": "Cancella",
-          "btnConfirm": "Yes, Refund"
+          "btnConfirm": "Sì, rimborsa"
         }
       },
       "fulfilled": {
         "heading": "Fulfilled",
-        "shippedByLabel": "Order Shipped via:",
-        "trackingNumberLabel": "Tracking #:",
+        "shippedByLabel": "Ordine spedito via:",
+        "trackingNumberLabel": "Tracciamento #:",
         "noteFromLabel": "Note from %{store}:",
         "copyLink": "Copia",
-        "digitalReadyForDlHeading": "Digital files are ready for download!",
+        "digitalReadyForDlHeading": "I file digitali sono pronti per essere scaricati",
         "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
       "completeOrderForm": {
         "heading": "Completa Ordine",
-        "maxReviewChars": "%{max} chars. max",
+        "maxReviewChars": "%{max} caratteri massimo",
         "reviewLabel": "Written Review",
-        "anonCheckLabel": "Include my name (seen publicly)",
+        "anonCheckLabel": "Includi il mio nome (tutti possono vedere)",
         "btnCompleteOrder": "Completa Ordine"
       },
       "orderComplete": {
@@ -1414,14 +1414,14 @@
         "reviewLabel": "Recensione di %{name}:"
       },
       "disputeStarted": {
-        "heading": "Dispute Started",
-        "partyIsDisputing": "%{name} is disputing the order:",
+        "heading": "La disputa è partita.",
+        "partyIsDisputing": "%{name} è responsabile per la disputa.",
         "resolveBtn": "Risolvi Disputa",
-        "genericIsDisputed": "The order is being disputed:",
-        "noReasonProvided": "No reason was provided."
+        "genericIsDisputed": "L'ordine è in fase di disputa.",
+        "noReasonProvided": "Non è stata fornita nessuna spiegazione."
       },
       "disputePayout": {
-        "heading": "Dispute Payout",
+        "heading": "Pagamento della disputa.",
         "buyerHeading": "Acquirente",
         "buyerHeadingWithName": "%{name} (acquirente)",
         "vendorHeading": "Venditore",
@@ -1430,19 +1430,19 @@
         "moderatorHeadingWithName": "%{name} (moderator)",
         "noteFromHeading": "Note del moderatore:",
         "noteFromHeadingWithName": "Nota da %{name}:",
-        "btnAcceptPayout": "Accept Payout",
+        "btnAcceptPayout": "Accetta pagamento",
         "acceptPayoutConfirm": {
           "title": "Sei sicuro?",
-          "body": "Once accepted, the payout will process immediately",
+          "body": "Una volta accettato, il pagamento verrà spedito immediatamente.",
           "btnCancel": "Cancella",
-          "btnConfirm": "Yes, Accept"
+          "btnConfirm": "Sì, accetta"
         }
       },
       "disputeAcceptance": {
         "heading": "Dispute chiuse",
-        "genericBuyerAcceptedPayout": "The buyer accepted the dispute payout",
-        "genericVendorAcceptedPayout": "The vendor accepted the dispute payout",
-        "userAcceptedPayout": "%{name} accepted the dispute payout",
+        "genericBuyerAcceptedPayout": "L'acquirente ha accettato il pagamento della disputa.",
+        "genericVendorAcceptedPayout": "Il venditore ha accettato il pagamento della disputa.",
+        "userAcceptedPayout": "%{name} ha accettato il pagamento della disputa.",
         "orderCompleteWhenYouReview": "The order will be complete when you leave a review.",
         "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review."
       },
@@ -1468,7 +1468,7 @@
         "copyAddress": "Copia",
         "viewOnMap": "Vedi sulla mappa",
         "memo": "Memo",
-        "addressNotes": "Delivery Notes",
+        "addressNotes": "Note alla consegna",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "SKU"
       }
@@ -1539,16 +1539,16 @@
   },
   "profileModelErrors": {
     "provideName": "Devi inserire un nome",
-    "provideValidHexColor": "Please provide a valid hex color.",
+    "provideValidHexColor": "Per favore fornisci un colore in formato esadecimale valido.",
     "locationTooLong": "Il nome della posizione supera il numero di caratteri consentito.",
-    "shortDescriptionTooLong": "The short description cannot exceed %{count} characters."
+    "shortDescriptionTooLong": "La descrizione breve non può superare i %{count} caratteri."
   },
   "contactModelErrors": {
     "provideUsername": "Devi fornire un username valido.",
     "provideValidEmail": "Devi fornire un indirizzo email valido.",
     "provideValidURL": "Per favore, fornisci un indirizzo valido.",
-    "tooManySocialAccounts": "You cannot have more than %{max} social accounts",
-    "duplicateSocialAccount": "You can't add the same social account twice."
+    "tooManySocialAccounts": "Non puoi aggiungere più di %[max] account social.",
+    "duplicateSocialAccount": "Non puoi aggiungere lo stesso account più di una volta."
   },
   "socialAccountModelErrors": {
     "provideUsername": "Please provide a handle or link.",
@@ -1557,33 +1557,33 @@
   "smtpModelErrors": {
     "username": {
       "caseEmpty": "Devi fornire un username valido.",
-      "noWhitespace": "The username cannot contain spaces."
+      "noWhitespace": "Il nome utente non può contenere spazi."
     },
-    "password": "Please provide a valid password.",
-    "serverAddress": "Please provide a valid URL.",
+    "password": "Per favore fornisci una password valida.",
+    "serverAddress": "Per favore fornisci un URL valido.",
     "senderEmail": "Devi fornire un indirizzo email valido.",
     "recipientEmail": "Devi fornire un indirizzo email valido.",
     "notifications": {
-      "caseOffIfEmpty": "Please fill out all settings if you turn notifications on."
+      "caseOffIfEmpty": "Compila tutti i campi se hai le notifiche accese."
     }
   },
   "serverConfigModelErrors": {
     "provideValue": "Inserisci un valore.",
-    "invalidIp": "This does not appear to be a valid IP address.",
+    "invalidIp": "Sembra che questo indirizzo IP non sia valido.",
     "providePortAsNumber": "Please provide a port as a number.",
-    "provideValidPortRange": "Please provide a number between 0 and 65535.",
+    "provideValidPortRange": "Per favore fornisci un numero tra 0 e 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
   },
   "shippingAddressModelErrors": {
-    "provideName": "Please provide a name.",
-    "provideCountry": "Please provide a country."
+    "provideName": "Per favore fornisci un nome.",
+    "provideCountry": "Per favore fornisci un paese."
   },
   "listingModelErrors": {
-    "returnPolicyTooLong": "The return policy exceeds the maximum allowable length.",
+    "returnPolicyTooLong": "La descrizione della politica di reso supera il numero di caratteri consentito.",
     "termsAndConditionsTooLong": "I termini e le condizioni superano il limite di caratteri consentito.",
-    "provideShippingOption": "For a physical good, at least one shipping option is required.",
-    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price."
+    "provideShippingOption": "Per i beni fisici, almeno una modalità di spedizione è richiesta.",
+    "tooManyCoupons": "Non puoi avere più di %{maxCouponCount} codici promozionali.",
+    "couponsPriceTooLarge": "Lo sconto non può essere uguale o maggiore del prezzo dell'annuncio."
   },
   "itemModelErrors": {
     "provideTitle": "Inserisci un titolo.",
@@ -1591,7 +1591,7 @@
     "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "La descrizione supera il numero di caratteri consentito.",
     "provideAmount": "Inserisci un prezzo.",
-    "provideNumericAmount": "Please provide the price as a number.",
+    "provideNumericAmount": "Per favore fornisci il prezzo come numero.",
     "provideAmountGreaterThanZero": "Il prezzo deve essere superiore a 0.",
     "imageRequired": "Inserisci almeno un'immagine.",
     "tooManyTags": "Hai superato il numero consentito di %{maxTags}  tags.",
@@ -1599,18 +1599,18 @@
     "duplicateOptionName": "You already have a variant with this name.",
     "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
     "provideQuantity": "Inserisci una quantità.",
-    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "provideNumericQuantity": "Per favore fornisci la quantità come numero.",
     "quantityMustBePositive": "La quantità deve essere superiore a 0.",
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Inserisci un codice promozionale",
-    "provideDiscountAmount": "Please provide a discount value.",
-    "percentageLow": "The percentage value must be greater than zero.",
-    "percentageHigh": "You cannot set a percentage above or equal to 100%" ,
+    "provideDiscountAmount": "Per favore, fornisci l'ammontare dello sconto.",
+    "percentageLow": "La percentuale deve essere maggiore di zero.",
+    "percentageHigh": "La percentuale non può essere maggiore o uguale a 100%." ,
     "priceLow": "Il prezzo deve essere superiore a 0.",
-    "provideNumericDiscountAmount": "Please provide the discount amount as a number.",
-    "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
+    "provideNumericDiscountAmount": "Indica la percentuale di sconto con un numero.",
+    "needUniqueDiscountCode": "Hai già un buono sconto con quel codice. Per favore, fornisci un altro codice."
   },
   "shippingOptionModelErrors": {
     "provideName": "Inserisci un titolo.",
@@ -1622,7 +1622,7 @@
     "provideEstDeliveryTime": "Please provide an estimated delivery time.",
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Inserisci un prezzo.",
-    "provideNumericAmount": "Please provide the price as a number.",
+    "provideNumericAmount": "Per favore fornisci il prezzo come numero.",
     "provideAmountGreaterThanZero": "Il prezzo deve essere maggiore di 0."
   },
   "moderatorModelErrors": {
@@ -1633,22 +1633,22 @@
     "noLanguages": "Inserisci almeno una lingua in cui puoi comunicare."
   },
   "feeModelErrors": {
-    "noFeeType": "Please set a valid fee type",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
-    "percentageLow": "You cannot set a fee percentage below zero.",
-    "percentageHigh": "You cannot set a fee percentage above 100%",
-    "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
+    "noFeeType": "Imposta un tipo di commissione valido.",
+    "noPercentage": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una percentuale valida. ",
+    "percentageLow": "Non puoi impostare la percentuale di tassa al di sotto di 0.",
+    "percentageHigh": "Non puoi impostare la percentuale di tassa al di sopra di 100%.",
+    "percentageDecimals": "Non puoi impostare la percentuale di tassa con più di 2 cifre dopo la virgola."
   },
   "fixedFeeModelErrors": {
-    "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+    "noCurrency": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una valuta valida. ",
+    "noAmount": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una quantità valida per la commissione."
   },
   "skuModelErrors": {
     "provideQuantity": "Inserisci una quantità.",
-    "provideNumericQuantity": "Please provide the quantity as a number.",
+    "provideNumericQuantity": "Per favore fornisci la quantità come numero.",
     "providePositiveQuantity": "La quantità non può essere minore di 0.",
-    "provideSurcharge": "Please provide a surcharge.",
-    "provideNumericSurcharge": "Please provide the surcharge as a number."
+    "provideSurcharge": "Per favore, indica una sovrattassa. ",
+    "provideNumericSurcharge": "Indica la sovvrattassa con un numero."
   },
   "variantOptionModelErrors": {
     "provideName": "Inserisci un titolo.",
@@ -1656,70 +1656,70 @@
   },
   "variantModelErrors": {
     "provideName": "Inserisci un titolo.",
-    "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
+    "nameTooLong": "%{name} supera la lunghezza massima di %{maxLength} caratteri."
   },
   "spendModelErrors": {
     "provideAddress": "Inserisci un indirizzo.",
     "invalidAddress": "L'indirizzo fornito non sembra essere un indirizzo Bitcoin valido",
-    "provideAmountNumber": "Please provide an amount as a number.",
-    "amountGreaterThanZero": "The amount must be greater than zero.",
-    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+    "provideAmountNumber": "Per favore, fornisci la quantità come un numero.",
+    "amountGreaterThanZero": "La quantità deve essere maggiore di zero.",
+    "insufficientFunds": "Non hai abbastanza fondi per inviare la quantità indicata. Assicurati di includere il costo della transazione. "
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "The quantity must be 1 or more",
-    "quantityMustBeNumber": "The quantity must be a valid number",
+    "mustHaveQuantity": "La quantità deve essere 1 o più",
+    "quantityMustBeNumber": "La quantità deve essere un numero valido",
     "noItems": "Devi effettuare almeno un acquisto.",
     "missingAddress": "Seleziona un indirizzo di spedizione valido",
-    "missingShippingOption": "Please choose a valid shipping option.",
-    "needsModerator": "You must select a moderator to make a Moderated Payment.",
+    "missingShippingOption": "Scegli un'opzione di spedizione valida.",
+    "needsModerator": "Per effettuare un pagamento moderato devi selezionare un moderatore.",
     "removeModerator": "Per questo acquisto non è prevista la moderazione."
   },
   "orderFulfillmentModelErrors": {
-    "provideShipper": "Please provide a shipping carrier.",
-    "provideUrl": "Please provide a file url.",
+    "provideShipper": "Per favore fornisci un corriere. ",
+    "provideUrl": "Per favore, fornisci un file URL.",
     "invalidUrl": "Per favore, fornisci un indirizzo valido."
   },
   "errorPage": {
     "userNotFoundTitle": "Questo utente non è stato trovato.",
-    "userNotFoundMsg": "%{user} was not found on the network. Make sure you have the correct handle or peerID.",
+    "userNotFoundMsg": "%{user} non è stato trovato sul network. Assicurati di aver inserito il giusto handle o ID.",
     "listingNotFoundTitle": "Questo annuncio non è stato trovato",
-    "listingNotFoundLink": "Click here to browse the other listings in this store.",
-    "listingNotFoundMsg": "%{listing} could not be found.",
+    "listingNotFoundLink": "Clicca qui per vedere gli altri annunci nel negozio.",
+    "listingNotFoundMsg": "%{listing} non è stato trovato.",
     "pageNotFoundTitle": "Questa pagina non è stata trovata",
-    "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
+    "pageNotFoundMsg": "Controlla la barra dell'indirizzo e assicurati che l'URL sia corretto",
     "genericErrorTitle": "C'è stato un errore",
     "listingErrorTitle": "Non è stato possibile recuperare l'annuncio",
-    "listingErrorMsg": "There was an error fetching listing %{listing}"
+    "listingErrorMsg": "C'è stato un errore nel recupero dell'annuncio %{listing}"
   },
   "orderCompletionModelErrors": {
     "provideReview": "Per favore, scrivi una recensione.",
     "provideRating": "Seleziona una valutazione."
   },
   "ratingLabels": {
-    "overall": "Overall",
+    "overall": "Generale",
     "quality": "Qualità",
-    "asAdvertised": "As Advertised",
+    "asAdvertised": "Come descritto",
     "delivery": "Consegna",
     "service": "Servizio"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider"
+    "searchProvider": "Questo non è un indirizzo valido per il motore di ricerca"
   },
   "resolveDisputeModelErrors": {
-    "provideAmount": "Please provide an amount.",
-    "percentageOutOfRange": "The amount must be between 0 and 100.",
-    "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "provideAmount": "Per favore fornisci una quantità-",
+    "percentageOutOfRange": "La quantità deve essere tra 0 e 100.",
+    "providePercentageAsNumber": "Per favore, fornisci la quantità come un numero.",
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
-    "provideResolution": "Please explain your decision."
+    "provideResolution": "Spiega la tua decisione."
   },
   "searchProviderModelErrors": {
-    "invalidName": "The name must be a string.",
-    "invalidLogo": "The logo URL must be a valid URL.",
-    "invalidsearch": "You must provide a valid search URL.",
-    "invalidlistings": "You must provide a valid listings search URL",
-    "invalidtorsearch": "You must provide a valid Tor search URL",
-    "invalidtorlistings": "You must provide a valid Tor listings search URL."
+    "invalidName": "Il nome deve essere una serie di caratteri.",
+    "invalidLogo": "L'URL del logo deve essere valido.",
+    "invalidsearch": "Devi fornire un URL valido.",
+    "invalidlistings": "Devi fornire un URL di ricerca dell'annuncio valido.",
+    "invalidtorsearch": "Devi fornire un URL di Tor valido.",
+    "invalidtorlistings": "Devi fornire un URL di ricerca dell'annuncio Tor valido."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
@@ -1736,10 +1736,10 @@
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
-    "ALAND_ISLANDS": "Aland Islands",
+    "ALAND_ISLANDS": "Isole Åland",
     "ALBANIA": "Albania",
     "ALGERIA": "Algeria",
-    "AMERICAN_SAMOA": "American Samoa",
+    "AMERICAN_SAMOA": "Samoa Americana",
     "ANDORRA": "Andorra",
     "ANGOLA": "Angola",
     "ANGUILLA": "Anguilla",
@@ -1761,12 +1761,12 @@
     "BERMUDA": "Bermuda",
     "BHUTAN": "Bhutan",
     "BOLIVIA": "Bolivia",
-    "BONAIRE_SINT_EUSTATIUS_SABA": "Bonaire, Sint Eustatius and Saba",
-    "BOSNIA": "Bosnia and Herzegovina",
+    "BONAIRE_SINT_EUSTATIUS_SABA": "Paesi Bassi Caraibici",
+    "BOSNIA": "Bosnia ed Erzegovina",
     "BOTSWANA": "Botswana",
-    "BOUVET_ISLAND": "Bouvet Island",
+    "BOUVET_ISLAND": "Isola Bouvet",
     "BRAZIL": "Brasile",
-    "BRITISH_INDIAN_OCEAN_TERRITORY": "British Indian Ocean Territory (The)",
+    "BRITISH_INDIAN_OCEAN_TERRITORY": "Territorio britannico dell'Oceano Indiano",
     "BRUNEI_DARUSSALAM": "Brunei",
     "BULGARIA": "Bulgaria",
     "BURKINA_FASO": "Burkina Faso",
@@ -1776,15 +1776,15 @@
     "CAMEROON": "Camerun",
     "CANADA": "Canada",
     "CAYMAN_ISLANDS": "Isole Cayman",
-    "CENTRAL_AFRICAN_REPUBLIC": "Central African Republic (The)",
+    "CENTRAL_AFRICAN_REPUBLIC": "Repubblica Centrale Africana",
     "CHAD": "Ciad",
     "CHILE": "Cile",
     "CHINA": "Cina",
-    "CHRISTMAS_ISLAND": "Christmas Island",
-    "COCOS_ISLANDS": "Cocos (KEELING) Islands (The)",
+    "CHRISTMAS_ISLAND": "Isola di Natale",
+    "COCOS_ISLANDS": "Isole Cocos (Keeling)",
     "COLOMBIA": "Colombia",
     "COMOROS": "Isole Comoros",
-    "CONGO_REPUBLIC": "Congo (The Democratic Republic of the)",
+    "CONGO_REPUBLIC": "Congo (Repubblica Democratica del)",
     "CONGO": "Congo",
     "COOK_ISLANDS": "Isole Cook",
     "COSTA_RICA": "Costa Rica",
@@ -1812,7 +1812,7 @@
     "FRANCE": "Francia",
     "FRENCH_GUIANA": "Guiana Francese",
     "FRENCH_POLYNESIA": "Polinesia francese",
-    "FRENCH_SOUTHERN_TERRITORIES": "French Southern Territories (The)",
+    "FRENCH_SOUTHERN_TERRITORIES": "Terre Australi e Antartiche Francesi",
     "GABON": "Gabon",
     "GAMBIA": "Gambia",
     "GEORGIA": "Georgia",
@@ -1828,10 +1828,10 @@
     "GUERNSEY": "Guernsey",
     "GUINEA": "Guinea",
     "GUINEA_BISSAU": "Guinea-Bissau",
-    "GUYANA": "Guyana",
+    "GUYANA": "Guiana",
     "HAITI": "Haiti",
-    "HEARD_ISLAND": "Heard Island and McDonald Islands",
-    "HOLY_SEE": "Holy See (The)",
+    "HEARD_ISLAND": "Isole Heard e McDonald",
+    "HOLY_SEE": "Vaticano",
     "HONDURAS": "Honduras",
     "HONG_KONG": "Hong Kong",
     "HUNGARY": "Hungary",
@@ -1846,16 +1846,16 @@
     "ITALY": "Italia",
     "JAMAICA": "Giamaica",
     "JAPAN": "Giappone",
-    "JERSEY": "Jersey",
+    "JERSEY": "Isola di Jersey",
     "JORDAN": "Giordania",
     "KAZAKHSTAN": "Kazakistan",
     "KENYA": "Kenya",
     "KIRIBATI": "Kiribati",
-    "NORTH_KOREA": "Korea (The Democratic People's Republic of)",
+    "NORTH_KOREA": "Corea (Repubblica Democratica Popolare di)",
     "SOUTH_KOREA": "Corea (Repubblica di)",
     "KUWAIT": "Kuwait",
     "KYRGYZSTAN": "Kirghizistan",
-    "LAO": "Lao People's Democratic Republic (The)",
+    "LAO": "Laos",
     "LATVIA": "Lettonia",
     "LEBANON": "Libana",
     "LESOTHO": "Lesotho",
@@ -1897,8 +1897,8 @@
     "NIGER": "Niger",
     "NIGERIA": "Nigeria",
     "NIUE": "Niue",
-    "NORFOLK_ISLAND": "Norfolk Island",
-    "NORTHERN_MARIANA_ISLANDS": "Northern Mariana Islands (The)",
+    "NORFOLK_ISLAND": "Isole Norfolk",
+    "NORTHERN_MARIANA_ISLANDS": "Isole Marianne Settentrionali",
     "NORWAY": "Norbegia",
     "OMAN": "Oman",
     "PAKISTAN": "Pakistan",
@@ -1911,14 +1911,14 @@
     "PITCAIRN": "Isole Pitcairn",
     "POLAND": "Polonia",
     "PORTUGAL": "Portogallo",
-    "PUERTO_RICO": "Puerto Rico",
+    "PUERTO_RICO": "Porto Rico",
     "QATAR": "Qatar",
     "REUNION": "Réunion",
     "ROMANIA": "Romania",
     "RUSSIA": "Russia",
     "RWANDA": "Ruanda",
     "SAINT_BARTHELEMY": "Saint Barthélemy",
-    "SAINT_HELENA": "Saint Helena, Ascension and Tristan da Cunha",
+    "SAINT_HELENA": "Sant'Elena, Ascensione e Tristan da Cunha",
     "SAINT_KITTS": "Saint Kitts e Nevis",
     "SAINT_LUCIA": "Santa Lucia",
     "SAINT_MARTIN": "Saint Vincent e Grenadine",
@@ -1933,8 +1933,8 @@
     "SEYCHELLES": "Seychelles",
     "SIERRA_LEONE": "Sierra Leone",
     "SINGAPORE": "Singapore",
-    "SINT_MAARTEN": "Sint Maarten (Dutch Part)",
-    "SUCRE": "Sistema Unitario de Compensacion Regional de Pagos 'Sucre'",
+    "SINT_MAARTEN": "Sint Maarten (Parte Olandese)",
+    "SUCRE": "Sistema Unitario di Compensazione Regionale di Pagos 'Sucre'",
     "SLOVAKIA": "Slovacchia",
     "SLOVENIA": "Slovenia",
     "SOLOMON_ISLANDS": "Isole Solomon",
@@ -1962,7 +1962,7 @@
     "TUNISIA": "Tunisia",
     "TURKEY": "Turchia",
     "TURKMENISTAN": "Turkmenistan",
-    "TURKS_AND_CAICOS_ISLANDS": "Turks and Caicos Islands (The)",
+    "TURKS_AND_CAICOS_ISLANDS": "Turks e Caicos",
     "TUVALU": "Tuvalu",
     "UGANDA": "Uganda",
     "UKRAINE": "Ucraina",
@@ -1974,10 +1974,10 @@
     "VANUATU": "Vanuatu",
     "VENEZUELA": "Venezuela",
     "VIETNAM": "Vietnam",
-    "VIRGIN_ISLANDS_BRITISH": "Virgin Islands (British)",
-    "VIRGIN_ISLANDS_US": "Virgin Islands (U.S.)",
+    "VIRGIN_ISLANDS_BRITISH": "Isole Vergini (Regno Unito)",
+    "VIRGIN_ISLANDS_US": "Isole Vergini (Stati Uniti d'America)",
     "WALLIS_AND_FUTUNA": "Wallis e Futuna",
-    "WESTERN_SAHARA": "Western Sahara",
+    "WESTERN_SAHARA": "Sahara Occidentale",
     "YEMEN": "Yemen",
     "ZAMBIA": "Zambia",
     "ZIMBABWE": "Zimbabwe"
@@ -1985,7 +1985,7 @@
   "regions": {
     "ALL": "Tutti",
     "EUROPEAN_UNION": "Unione Europea",
-    "EUROPEAN_ECONOMIC_AREA": "European Economic Area"
+    "EUROPEAN_ECONOMIC_AREA": "Spazio Economico Europeo"
   },
   "currencies": {
     "AED": "Dirham",
@@ -1998,7 +1998,7 @@
     "AUD": "Dollaro Australiano",
     "AWG": "Fiorino Arubano",
     "AZN": "Manat Azero",
-    "BAM": "Convertible Mark",
+    "BAM": "Marco bosniaco",
     "BBD": "Dollaro delle Barbados",
     "BDT": "Taka Bengalese",
     "BGN": "Lev Bulgaro",
@@ -2046,8 +2046,8 @@
     "HNL": "Lempira",
     "HRK": "Kuna Croata",
     "HTG": "Gourde",
-    "HUF": "Forint",
-    "IDR": "Rupiah",
+    "HUF": "Fiorino",
+    "IDR": "Rupia",
     "ILS": "Nuovo Sicli",
     "INR": "Rupia Indiana",
     "IQD": "Dinaro Iracheno",
@@ -2074,7 +2074,7 @@
     "MAD": "Dirham Marocchino",
     "MDL": "Leu Moldavo",
     "MGA": "Ariary",
-    "MKD": "Denar",
+    "MKD": "Dinaro",
     "MMK": "Kyat Birmano",
     "MNT": "Tugrik Mongolo",
     "MOP": "Pataca del Macau",
@@ -2105,7 +2105,7 @@
     "RUB": "Rublo Russo",
     "RWF": "Franco del Ruanda",
     "SAR": "Rial Saudita",
-    "SBD": "Solomon Islands Dollar",
+    "SBD": "Dollaro delle Isole Salomone",
     "SCR": "Rupia delle Seychelles",
     "SDG": "Sterlina Sudanese",
     "SEK": "Corona Svedesa",
@@ -2114,9 +2114,9 @@
     "SLL": "Leone",
     "SOS": "Scellino Somalo",
     "SRD": "Dollaro Surinamese",
-    "SSP": "South Sudanese Pound",
+    "SSP": "Sterlina del Sudan del Sud",
     "STD": "Dobra",
-    "SVC": "El Salvador Colon",
+    "SVC": "Colón salvadoregno",
     "SYP": "Sterlina Siriana",
     "SZL": "Lilageni",
     "THB": "Baht Tailandese",
@@ -2137,10 +2137,10 @@
     "VND": "Dong Vietnamita",
     "VUV": "Vatu",
     "WST": "Tala",
-    "XAF": "CFA Franc BEAC",
+    "XAF": "Franco CFA BEAC",
     "XCD": "Dollaro",
-    "XOF": "CFA Franc BCEAO",
-    "XPF": "CFP Franc",
+    "XOF": "Franco CFA BCEAO",
+    "XPF": "Franco CFP",
     "XSU": "Sucre",
     "YER": "Rial dello Yemen",
     "ZAR": "Rand Sudafricano",
@@ -2149,9 +2149,9 @@
   },
   "languages": {
     "af": "Afrikaans",
-    "af-ZA": "Afrikaans (South Africa)",
-    "ar": "Arabic",
-    "ar-AE": "Arabic (U.A.E.)",
+    "af-ZA": "Afrikaans (Sudafrica)",
+    "ar": "Arabo",
+    "ar-AE": "Arabo (Emirati Arabi Uniti)",
     "ar-BH": "Arabo (Bahrain)",
     "ar-DZ": "Arabo (Algeria)",
     "ar-EG": "Arabo (Egitto)",
@@ -2187,9 +2187,9 @@
     "de-CH": "Tedesco (Svizzera)",
     "de-DE": "Tedesco (Germania)",
     "de-LI": "Tedesco (Liechtenstein)",
-    "de-LU": "German (Luxembourg)",
-    "dv": "Divehi",
-    "dv-MV": "Divehi (Maldives)",
+    "de-LU": "Tedesco (Lussemburgo)",
+    "dv": "Maldiviano",
+    "dv-MV": "Maldiviano (Maldive)",
     "el": "Greco",
     "el-GR": "Greco (Grecia)",
     "en": "Inglese",
@@ -2201,8 +2201,8 @@
     "en-IE": "Inglese (Irlanda)",
     "en-JM": "Inglese (Giamaica)",
     "en-NZ": "Inglese (Nuova Zelanda)",
-    "en-PH": "English (Republic of the Philippines)",
-    "en-TT": "English (Trinidad and Tobago)",
+    "en-PH": "Inglese (Filippine)",
+    "en-TT": "Inglese (Trinidad e Tobago)",
     "en-US": "Inglese (Stati Uniti d'America)",
     "en-ZA": "Inglese (Sudafrica)",
     "en-ZW": "Inglese (Zimbabwe)",
@@ -2268,8 +2268,8 @@
     "it-IT": "Italiano (Italia)",
     "ja": "Giapponese",
     "ja-JP": "Giapponese (Giappone)",
-    "ka": "Georgian",
-    "ka-GE": "Georgian (Georgia)",
+    "ka": "Georgiano",
+    "ka-GE": "Georgiano (Georgia)",
     "kk": "Kazako",
     "kk-KZ": "Kazako (Kazakhstan)",
     "kn": "Kannada",
@@ -2278,23 +2278,23 @@
     "ko-KR": "Coreano (Corea)",
     "kok": "Konkani",
     "kok-IN": "Konkani (India)",
-    "ky": "Kyrgyz",
-    "ky-KG": "Kyrgyz (Kyrgyzstan)",
+    "ky": "Kirghiso",
+    "ky-KG": "Kirghiso (Kirghizistan)",
     "lt": "Lituano",
     "lt-LT": "Lituano (Lituania)",
     "lv": "Lettone",
     "lv-LV": "Lettone (Lettonia)",
     "mi": "Maori",
     "mi-NZ": "Maori (Nuova Zelanda)",
-    "mk": "FYRO Macedonian",
-    "mk-MK": "FYRO Macedonian (Former Yugoslav Republic of Macedonia)",
+    "mk": "Macedone",
+    "mk-MK": "Macedone (Ex Repubblica Juogoslava di Macedonia)",
     "mn": "Mongolo",
     "mn-MN": "Mongolo (Mongolia)",
     "mr": "Marathi",
     "mr-IN": "Marathi (India)",
-    "ms": "Malay",
-    "ms-BN": "Malay (Brunei Darussalam)",
-    "ms-MY": "Malay (Malaysia)",
+    "ms": "Malese",
+    "ms-BN": "Malese (Brunei)",
+    "ms-MY": "Malese (Malesia)",
     "mt": "Maltese",
     "mt-MT": "Maltese (Malta)",
     "nb": "Norwegian (Bokm?l)",
@@ -2302,15 +2302,15 @@
     "nl": "Olandese",
     "nl-BE": "Olandese (Belgio)",
     "nl-NL": "Olandese (Olanda)",
-    "nn-NO": "Norwegian (Nynorsk) (Norway)",
-    "ns": "Northern Sotho",
-    "ns-ZA": "Northern Sotho (South Africa)",
+    "nn-NO": "Norvegese (Norvegia)",
+    "ns": "Sotho del Nord",
+    "ns-ZA": "Sotho del Nord (Sudafrica)",
     "pa": "Punjabi",
     "pa-IN": "Punjabi (India)",
     "pl": "Polacco",
     "pl-PL": "Polacco (Polonia)",
-    "ps": "Pashto",
-    "ps-AR": "Pashto (Afghanistan)",
+    "ps": "Pashtu",
+    "ps-AR": "Pashtu (Afghanistan)",
     "pt": "Portoghese",
     "pt-BR": "Portoghese (Brasile)",
     "pt-PT": "Portoghese (Portogallo)",
@@ -2322,12 +2322,12 @@
     "ro-RO": "Romeno (Romania)",
     "ru": "Russo",
     "ru-RU": "Russo (Russia)",
-    "sa": "Sanskrit",
-    "sa-IN": "Sanskrit (India)",
-    "se": "Sami (Northern)",
-    "se-FI": "Sami (Inari) (Finland)",
-    "se-NO": "Sami (Southern) (Norway)",
-    "se-SE": "Sami (Southern) (Sweden)",
+    "sa": "Sanscrito",
+    "sa-IN": "Sanscrito (India)",
+    "se": "Sami (Nord)",
+    "se-FI": "Sami (Inari) (Finlandia)",
+    "se-NO": "Sami (Sud) (Norvegia)",
+    "se-SE": "Sami (Sud) (Svezia)",
     "sk": "Slovacco",
     "sk-SK": "Slovacco (Slovacchia)",
     "sl": "Sloveno",
@@ -2341,8 +2341,8 @@
     "sv-SE": "Svedese (Svezia)",
     "sw": "Swahili",
     "sw-KE": "Swahili (Kenya)",
-    "syr": "Syriac",
-    "syr-SY": "Syriac (Syria)",
+    "syr": "Siriano",
+    "syr-SY": "Siriano (Siria)",
     "ta": "Tamil",
     "ta-IN": "Tamil (India)",
     "te": "Telugu",
@@ -2350,13 +2350,13 @@
     "th": "Thai",
     "th-TH": "Thai (Tailandia)",
     "tl": "Tagalog",
-    "tl-PH": "Tagalog (Philippines)",
+    "tl-PH": "Tagalog (Filippine)",
     "tn": "Tswana",
-    "tn-ZA": "Tswana (South Africa)",
+    "tn-ZA": "Tswana (Sudafrica)",
     "tr": "Turco",
     "tr-TR": "Turco (Turchia)",
-    "tt": "Tatar",
-    "tt-RU": "Tatar (Russia)",
+    "tt": "Tataro",
+    "tt-RU": "Tataro (Russia)",
     "ts": "Tsonga",
     "uk": "Ucraino",
     "uk-UA": "Ucraino (Ucraina)",
@@ -2364,10 +2364,10 @@
     "ur-PK": "Urdu (Pakistan)",
     "uz": "Uzbeko (Latino)",
     "uz-UZ": "Uzbeko (Cirillico) (Uzbekistan)",
-    "vi": "Vietnamese",
-    "vi-VN": "Vietnamese (Viet Nam)",
+    "vi": "Vietnamita",
+    "vi-VN": "Vietnamita (Vietnam)",
     "xh": "Xhosa",
-    "xh-ZA": "Xhosa (South Africa)",
+    "xh-ZA": "Xhosa (Sudafrica)",
     "zh": "Cinese",
     "zh-CN": "Cinese (S)",
     "zh-HK": "Cinese (Hong Kong)",
