@@ -14,7 +14,8 @@ export default class extends BaseVw {
     this.options = options;
 
     this.startIndex = options.startIndex || 0;
-    this.pageSize = options.pageSize || 3;
+    this.initialPageSize = options.pageSize || 3;
+    this.pageSize = options.pageSize || 10;
     this.options.async = options.async || false;
     this.reviewIDs = options.ratings || [];
     this.collection = new Collection();
@@ -85,6 +86,7 @@ export default class extends BaseVw {
       this.listenTo(serverSocket, 'message', (event) => {
         const eventData = event.jsonData;
         if (eventData.id === socketID && this.reviewIDs.indexOf(eventData.ratingId !== -1)) {
+          console.log(eventData)
           if (!eventData.error) {
             this.collection.add(eventData.rating.ratingData);
             if (this.collection.length >= this.startIndex) {
@@ -117,7 +119,7 @@ export default class extends BaseVw {
   }
 
   clickLoadMore() {
-    this.loadReviews(this.startIndex, 10);
+    this.loadReviews(this.startIndex);
   }
 
   get $reviewWrapper() {

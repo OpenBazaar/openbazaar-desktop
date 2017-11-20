@@ -71,6 +71,10 @@
       opacity: 0.4;
       pointer-events: none;
 
+      .emoji {
+        margin-right: 0.3em;
+      }
+
       &.clickable {
         pointer-events: auto;
       }
@@ -93,7 +97,6 @@
 .emoji {
   height: 1em;
   width: 1em;
-  margin-right: 0.3em;
 
   &.fade {
     opacity: .35;

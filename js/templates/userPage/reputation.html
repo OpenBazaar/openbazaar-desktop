@@ -1,1 +1,16 @@
-Placeholder for reputation
+<div class="flexColRows gutterVLg">
+  <div class="contentBox flexRow flexVCent gutterH pad clrP clrBr statsBox">
+    <div class="flexExpand txCtr">
+      <div class="txBg"><%= ob.count %></div>
+      <div class="tx1">Reviews</div>
+    </div>
+    <div class="rowDivV clrBrBk"></div>
+    <div class="flexExpand txCtr">
+      <div class="txBg"><% print(`${ob.formatRating(ob.average)}`) %></div>
+      <div class="tx1">Average</div>
+    </div>
+  </div>
+  <div class="js-reviews">
+  </div>
+</div>
+<% console.log(ob) %>
