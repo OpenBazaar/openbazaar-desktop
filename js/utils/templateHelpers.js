@@ -6,7 +6,7 @@ import {
   convertCurrency,
   formatPrice,
   getCurrencyValidity,
-  renderFormattedPrice,
+  renderFormattedCurrency,
   renderPairedCurrency,
 } from './currency';
 import {
@@ -70,7 +70,7 @@ export {
   convertCurrency,
   getCurrencyValidity,
   getServerCurrency,
-  renderFormattedPrice as formattedPrice,
+  renderFormattedCurrency as formattedCurrency,
   renderPairedCurrency as pairedCurrency,
   renderCryptoIcon as cryptoIcon,
   getBlockChainTxUrl,

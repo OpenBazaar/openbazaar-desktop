@@ -8,7 +8,7 @@ import '../../../utils/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import {
   getCurrencyValidity,
-  renderFormattedPrice,
+  renderFormattedCurrency,
 } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -364,7 +364,7 @@ export default class extends BaseModal {
     const _totalPrice = this.model.get('item').get('price') + surcharge;
     if (_totalPrice !== this.totalPrice) {
       this.totalPrice = _totalPrice;
-      const adjPrice = renderFormattedPrice(this.totalPrice,
+      const adjPrice = renderFormattedCurrency(this.totalPrice,
         this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
       this.getCachedEl('.js-price').html(adjPrice);
     }

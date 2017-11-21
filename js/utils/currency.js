@@ -63,7 +63,7 @@ export function decimalToInteger(amount, currency, options = {}) {
       throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
     }
   } else {
-    if (getCryptoCurByCode(curData.code)) {
+    if (getCryptoCurByCode(currency)) {
       returnVal = Math.round(amount * curData.baseUnit);
     } else {
       returnVal = Math.round(amount * 100);
@@ -91,7 +91,7 @@ export function integerToDecimal(amount, currency, options = {}) {
       throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
     }
   } else {
-    if (getCryptoCurByCode(curData.code)) {
+    if (getCryptoCurByCode(currency)) {
       returnVal = Number(
         (amount / curData.baseUnit).toFixed(curData.maxDisplayDecimals)
       );
@@ -144,9 +144,8 @@ export function formatPrice(price, currency) {
 }
 
 /**
- * Will format an amount in the given currency into the format
- * appropriate for the given locale. An empty string will be returned
- * if an unrecognized currency code is provided.
+ * Will format an amount in the given currency into the format appropriate for the given locale. An
+ * empty string will be returned if an unrecognized currency code is provided.
  */
 export function formatCurrency(amount, currency, options) {
   const opts = {
@@ -181,8 +180,9 @@ export function formatCurrency(amount, currency, options) {
   }
 
   let formattedCurrency;
+  const cryptoCur = getCryptoCurByCode(cur);
 
-  if (curData.isCrypto) {
+  if (cryptoCur) {
     let curSymbol = curData.symbol || curData.code;
     let bitcoinConvertUnit;
     let amt = amount;
@@ -232,10 +232,9 @@ export function formatCurrency(amount, currency, options) {
 let exchangeRates = {};
 
 /**
- * Will fetch exchange rate data from the server. This is already called
- * on an interval via exchangeRateSyncer.js, so it's unlikely you would
- * need to call this method. Instead access cached values via getExchangeRate()
- * or more commonly convertCurrency().
+ * Will fetch exchange rate data from the server. This is already called on an interval via
+ * exchangeRateSyncer.js, so it's unlikely you would need to call this method. Instead access
+ * cached values via getExchangeRate() or more commonly convertCurrency().
  */
 export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
@@ -246,8 +245,10 @@ export function fetchExchangeRates(options = {}) {
   return xhr;
 }
 
-// todo: factor in Testnetters
-// TODO - todo - TODO
+/**
+ * Will return the exchange rate between the server's crypto currency and the given
+ * currency.
+ */
 export function getExchangeRate(currency) {
   if (!currency) {
     throw new Error('Please provide a currency.');
@@ -265,8 +266,7 @@ export function getExchangeRate(currency) {
 }
 
 /**
- * Converts an amount from one currency to another based on exchange
- * rate data.
+ * Converts an amount from one currency to another based on exchange rate data.
  */
 export function convertCurrency(amount, fromCur, toCur) {
   const fromCurCaps = fromCur.toUpperCase();
@@ -310,8 +310,8 @@ export function convertCurrency(amount, fromCur, toCur) {
 }
 
 /**
- * Convenience function to both convert and format a currency amount using
- * convertCurrency() and formatCurrency().
+ * Convenience function to both convert and format a currency amount using convertCurrency()
+ * and formatCurrency().
  */
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
@@ -340,6 +340,10 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     _.omit(opts, 'skipConvertIfNoExchangeRateData'));
 }
 
+/**
+ * Returns `VALID` if the given currency is valid, otherwise it will return a code
+ * indicating why it's not valid.
+ */
 export function getCurrencyValidity(cur) {
   if (typeof cur !== 'string') {
     throw new Error('A currency must be provided as a string.');
@@ -366,7 +370,13 @@ export function getCurrencyValidity(cur) {
   return returnVal;
 }
 
-export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
+/**
+ * Will render a formattedCurrency template. The main function of the template is that it will
+ * render a localized price when possible. When it is not possible (e.g. an unrecognized currency),
+ * it will render an alert icon with a tooltip containing an explanation (assuming you don't pass in
+ * the showTooltipOnUnrecognizedCur option as false).
+ */
+export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
   if (typeof fromCur !== 'string' || !fromCur) {
     throw new Error('Please provide a "from currency" as a string.');
   }
@@ -377,9 +387,9 @@ export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
 
   let result = '';
 
-  loadTemplate('components/formattedPrice.html', (t) => {
+  loadTemplate('components/formattedCurrency.html', (t) => {
     result = t({
-      price,
+      price: amount,
       fromCur,
       toCur: toCur || fromCur,
       ...options,
@@ -389,7 +399,12 @@ export function renderFormattedPrice(price, fromCur, toCur, options = {}) {
   return result;
 }
 
-// TODO: DOC me UP - DOC ME Uppers - DOC DOC DOC DOC DOC
+/**
+ * Will render a pairing of currencies, most commonly used to show a crypto currency
+ * along with it's fiat equivalent (e.g. $2.33 (0.0002534 BTC)). If it cannot show the
+ * "to" currency (e.g. exchange rate data not available), it will just show the "from".
+ * If the "from" currency is invalid, it will render an empty string.
+ */
 export function renderPairedCurrency(price, fromCur, toCur) {
   const fromCurValidity = getCurrencyValidity(fromCur);
 
@@ -401,7 +416,6 @@ export function renderPairedCurrency(price, fromCur, toCur) {
   }
 
   const toCurValidity = getCurrencyValidity(toCur);
-
   const formattedBase = formatCurrency(price, fromCur);
   const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||
     fromCurValidity !== 'VALID' ?
