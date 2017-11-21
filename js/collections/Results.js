@@ -30,11 +30,6 @@ export default class extends Collection {
       updatedResult.type = result.type;
       const relationships = result.relationships || {};
 
-      if (!window.zoom) {
-        updatedResult.price.currencyCode = 'OM';
-        window.zoom = true;
-      }
-
       if (updatedResult.type === 'listing') {
         const vendor = relationships.vendor ? relationships.vendor.data : {};
         if (vendor) {
