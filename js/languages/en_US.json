@@ -2189,6 +2189,22 @@
       "editListing": {
         "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything"
       }
+    },
+    "BCH": {
+      "name": "Bitcoin Cash",
+      "feeChangeWidgetLabel": "Bitcoin Cash fee:",
+      "wallet": {
+        "cryptoCurrencyLabel": "Bitcoin Cash",
+        "receiveMoney": {
+          "needCoin": "Need Bitcoin Cash?"
+        },
+        "sendMoney": {
+          "toPlaceholder": "Enter a Bitcoin Cash Address"
+        }
+      },
+      "editListing": {
+        "helperPrice": "Set your price in Dollars, Yuan, Bitcoin Cash, anything"
+      }
     }
   },
   "languages": {

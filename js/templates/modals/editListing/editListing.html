@@ -83,7 +83,7 @@
                   <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' ? ob.currency.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
                   <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
-                    <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
+                    <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
                     <% }); %>
                   </select>
                 </div>

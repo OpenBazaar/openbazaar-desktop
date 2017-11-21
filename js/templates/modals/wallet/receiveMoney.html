@@ -22,10 +22,12 @@
       </button>
       <% } %>
       <div class="flexVCent">
-        <%= ob.currency.cryptoIcon({ className: 'margRSm'}) %>
         <% serverCur = ob.currency.getServerCurrency() %>
         <% if (serverCur.needCoinLink) { %>
-          <a href="<%= serverCur.needCoinLink %>" class="clrT txB txU"><%= ob.polyT(`cryptoCurrencies.${serverCur.code}.wallet.receiveMoney.needCoin`) %></a>
+          <%= ob.currency.cryptoIcon({ className: 'margRSm'}) %>
+          <a href="<%= serverCur.needCoinLink %>" class="clrT txB txU">
+            <%= ob.polyT(`cryptoCurrencies.${serverCur.code}.wallet.receiveMoney.needCoin`) %>
+          </a>
         <% } %>
       </div>
     </div>

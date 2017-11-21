@@ -24,7 +24,7 @@
         <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.amount %>" data-var-type="number" placeholder="0.00">
         <select id="walletSendCurrency" name="currency" class="clrBr clrP nestInputRight">
           <% ob.currencies.forEach((currency) => {%>
-          <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
+          <option value="<%= currency.code %>" <% if (currency.code === ob.currencyCode) print('selected'); %>><%= currency.code %></option>
           <% }); %>
         </select>
       </div>

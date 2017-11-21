@@ -36,7 +36,7 @@ const currencies = [
     feeBumpTransactionSize: 154,
     qrCodeText: address => `${address}`,
     // icon: 'imgs/cryptoIcons/bchIcon128.png',
-    icon: 'imgs/zecIcon128.png',
+    icon: 'imgs/cryptoIcons/zecIcon128.png',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://tbtc.blockdozer.com/insight/address/${address}` :
@@ -58,7 +58,7 @@ const currencies = [
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
-    icon: 'imgs/zecIcon128.png',
+    icon: 'imgs/cryptoIcons/zecIcon128.png',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://explorer.testnet.z.cash/address/${address}` :

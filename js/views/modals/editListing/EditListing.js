@@ -1044,7 +1044,7 @@ export default class extends BaseModal {
         createMode: this.createMode,
         selectedNavTabIndex: this.selectedNavTabIndex,
         returnText: this.options.returnText,
-        currency: this.currency,
+        listingCurrency: this.currency,
         currencies: this.currencies,
         contractTypes: this.model.get('metadata')
           .contractTypes

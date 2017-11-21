@@ -148,7 +148,7 @@ export default class extends baseVw {
       this.$el.html(t({
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
-        currency: this.model.get('currency') || defaultCur,
+        currencyCode: this.model.get('currency') || defaultCur,
         currencies: this.currencies ||
           getCurrenciesSortedByCode(),
         saveInProgress: this.saveInProgress,

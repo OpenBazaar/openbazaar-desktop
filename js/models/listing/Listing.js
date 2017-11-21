@@ -178,6 +178,9 @@ export default class extends BaseModel {
               service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
                 options.attrs.metadata.pricingCurrency);
             }
+
+            // TODO TODO TEMP temp TEMPER temp TODO pimple.
+            delete service.additionalItemPrice;
           });
         });
 

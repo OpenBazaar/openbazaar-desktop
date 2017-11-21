@@ -271,6 +271,9 @@ export function getExchangeRate(currency) {
 export function convertCurrency(amount, fromCur, toCur) {
   const fromCurCaps = fromCur.toUpperCase();
   const toCurCaps = toCur.toUpperCase();
+  const serverCur = getServerCurrency();
+  const isFromServerCur = fromCurCaps === serverCur.code || fromCurCaps === serverCur.testnetCode;
+  const isToServerCur = toCurCaps === serverCur.code || toCurCaps === serverCur.testnetCode;
 
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
@@ -292,19 +295,16 @@ export function convertCurrency(amount, fromCur, toCur) {
     return amount;
   }
 
-  if (!exchangeRates[fromCurCaps]) {
+  if (!isFromServerCur && !exchangeRates[fromCurCaps]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
   }
 
-  if (!exchangeRates[toCurCaps]) {
+  if (!isToServerCur && !exchangeRates[toCurCaps]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
-  const serverCur = getServerCurrency();
-  const fromRate = fromCurCaps === serverCur.code || fromCurCaps === serverCur.testnetCode ?
-    1 : getExchangeRate(fromCurCaps);
-  const toRate = toCurCaps === serverCur.code || toCurCaps === serverCur.testnetCode ?
-    1 : getExchangeRate(toCurCaps);
+  const fromRate = isFromServerCur ? 1 : getExchangeRate(fromCurCaps);
+  const toRate = isToServerCur ? 1 : getExchangeRate(toCurCaps);
 
   return (amount / fromRate) * toRate;
 }
