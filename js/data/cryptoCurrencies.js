@@ -3,7 +3,6 @@ import app from '../app';
 
 const currencies = [
   {
-    name: 'Bitcoin',
     code: 'BTC',
     testnetCode: 'TBTC',
     symbol: '₿',
@@ -28,7 +27,6 @@ const currencies = [
     canShapeShiftInto: true,
   },
   {
-    name: 'Bitcoin Cash',
     code: 'BCH',
     testnetCode: 'TBCH',
     baseUnit: 100000000,
@@ -51,7 +49,6 @@ const currencies = [
     canShapeShiftInto: true,
   },
   {
-    name: 'Zcash',
     code: 'ZEC',
     testnetCode: 'TZEC',
     baseUnit: 100000000,
@@ -108,7 +105,7 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
 
   let translated = currencies.map((currency) => ({
     ...currency,
-    name: app.polyglot.t(`cryptoCurrencies.${currency.code}`),
+    name: app.polyglot.t(`cryptoCurrencies.${currency.code}.name`),
   }));
 
   if (sort) {

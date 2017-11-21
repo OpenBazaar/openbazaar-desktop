@@ -87,7 +87,7 @@
                     <% }); %>
                   </select>
                 </div>
-                <div class="clrT2 txSm padSm"><%= ob.polyT(`cryptoCurrencyPhrases.${ob.getServerCurrency().code}.editListing.helperPrice`) %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT(`cryptoCurrencies.${ob.getServerCurrency().code}.editListing.helperPrice`) %></div>
               </div>
               <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
                 <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>

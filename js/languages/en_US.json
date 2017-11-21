@@ -2173,7 +2173,7 @@
     "ZMW": "Zambian Kwacha",
     "ZWL": "Zimbabwe Dollar"
   },
-  "cryptoCurrencyPhrases": {
+  "cryptoCurrencies": {
     "BTC": {
       "name": "Bitcoin",
       "feeChangeWidgetLabel": "Bitcoin fee:",
