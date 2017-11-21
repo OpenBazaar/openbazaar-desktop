@@ -7,15 +7,15 @@
   // not valid. The scenario we are accounting for below is if item is priced in the
   // server's currency and exchange rate data is not available for the viewing currency.
   // In that case we could still show the purchase flow in the server's currency (e.g. BTC).
-  const viewingCurrency = ob.getCurrencyValidity(ob.displayCurrency) === 'VALID' ?
+  const viewingCurrency = ob.currency.getCurrencyValidity(ob.displayCurrency) === 'VALID' ?
     ob.displayCurrency : listingCurrency;
 
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
-    const basePrice = ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
-    const shippingPrice = ob.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency);
-    const additionalShippingPrice = ob.convertCurrency(priceObj.aPrice, listingCurrency, viewingCurrency);
-    const surcharge = ob.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
+    const basePrice = ob.currency.convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
+    const shippingPrice = ob.currency.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency);
+    const additionalShippingPrice = ob.currency.convertCurrency(priceObj.aPrice, listingCurrency, viewingCurrency);
+    const surcharge = ob.currency.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
     const quantity = Number.isInteger(priceObj.quantity) ? priceObj.quantity : 1;
     let itemTotal = basePrice + surcharge;
     const preCouponPrice = itemTotal;
@@ -23,7 +23,7 @@
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
       } else if (coupon.priceDiscount) {
-        itemTotal -= ob.convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency);
+        itemTotal -= ob.currency.convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency);
       }
     });
     const subTotal = itemTotal * quantity;
@@ -34,7 +34,7 @@
       <%= ob.polyT('purchase.receipt.listing') %>
     </span>
     <b class="flexNoShrink">
-      <%= ob.formatCurrency(preCouponPrice, viewingCurrency) %>
+      <%= ob.currency.formatCurrency(preCouponPrice, viewingCurrency) %>
     </b>
   </div>
   <% ob.coupons.forEach((coupon) => { %>
@@ -46,7 +46,7 @@
         <% if (coupon.percentDiscount) {
              print(`-${coupon.percentDiscount}%`);
         } else if (coupon.priceDiscount) {
-          print(`-${ob.convertAndFormatCurrency(Number(coupon.priceDiscount), listingCurrency, viewingCurrency)}`);
+          print(`-${ob.currency.convertAndFormatCurrency(Number(coupon.priceDiscount), listingCurrency, viewingCurrency)}`);
         } %>
       </b>
     </div>
@@ -63,7 +63,7 @@
             <%= ob.polyT('purchase.receipt.firstItem') %>
           </span>
     <b class="flexNoShrink">
-      <%= ob.formatCurrency(shippingPrice, viewingCurrency) %>
+      <%= ob.currency.formatCurrency(shippingPrice, viewingCurrency) %>
     </b>
   </div>
   <div class="flexRow subShipping">
@@ -71,7 +71,7 @@
             <%= ob.polyT('purchase.receipt.additionalItems') %>
           </span>
     <b class="flexNoShrink">
-      <%= ob.formatCurrency(additionalShippingPrice, viewingCurrency) %>
+      <%= ob.currency.formatCurrency(additionalShippingPrice, viewingCurrency) %>
     </b>
   </div>
   <% } else if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
@@ -80,7 +80,7 @@
             <%= ob.polyT('purchase.receipt.shipping') %>
           </span>
       <b class="flexNoShrink">
-        <%= ob.formatCurrency(shippingPrice, viewingCurrency) %>
+        <%= ob.currency.formatCurrency(shippingPrice, viewingCurrency) %>
       </b>
     </div>
   <% } %>
@@ -91,7 +91,7 @@
         <%= ob.polyT('purchase.receipt.subtotal', { quantity }) %>
       </span>
       <b class="flexNoShrink">
-        <%= ob.formatCurrency(subTotal, viewingCurrency) %>
+        <%= ob.currency.formatCurrency(subTotal, viewingCurrency) %>
       </b>
     </div>
     <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && shippingTotal) { %>
@@ -100,7 +100,7 @@
               <%= ob.polyT('purchase.receipt.shippingTotal') %>
             </span>
         <b class="flexNoShrink">
-          <%= ob.formatCurrency(shippingTotal, viewingCurrency) %>
+          <%= ob.currency.formatCurrency(shippingTotal, viewingCurrency) %>
         </b>
       </div>
     <% } %>
@@ -110,7 +110,7 @@
       <%= ob.polyT('purchase.receipt.total') %>
     </span>
     <b class="flexNoShrink">
-      <%= ob.formatCurrency(subTotal + shippingTotal, viewingCurrency) %>
+      <%= ob.currency.formatCurrency(subTotal + shippingTotal, viewingCurrency) %>
     </b>
   </div>
 <% }); %>

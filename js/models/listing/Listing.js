@@ -332,7 +332,7 @@ export default class extends BaseModel {
               const price2 = service.additionalItemPrice;
               if (typeof price2 === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, isBtc);
+                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, cur);
               } else {
                 // This is necessary because of this bug:
                 // https://github.com/OpenBazaar/openbazaar-go/issues/178

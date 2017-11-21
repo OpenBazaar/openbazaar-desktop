@@ -3,9 +3,9 @@
   let partyHeadings = {};
 
   ['buyer', 'vendor', 'moderator'].forEach(type => {
-    priceLines[type] = ob.pairedCurrency(
+    priceLines[type] = ob.currency.pairedCurrency(
       ob.payout[`${type}Output`].amount,
-      ob.getServerCurrency().code,
+      ob.currency.getServerCurrency().code,
       ob.userCurrency
     );
 

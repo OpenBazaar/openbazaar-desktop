@@ -44,7 +44,7 @@
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
       <h2 class="txUnb flexNoShrink js-price">
         <%= 
-          ob.formattedCurrency(
+          ob.currency.formattedCurrency(
             ob.item.price,
             ob.metadata.pricingCurrency,
             ob.displayCurrency

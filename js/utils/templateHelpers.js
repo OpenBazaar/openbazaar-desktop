@@ -63,18 +63,22 @@ export function formatRating(average, count) {
 
 export const getServerUrl = app.getServerUrl.bind(app);
 
-export {
+const currencyExport = {
   formatPrice,
   formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
   getCurrencyValidity,
   getServerCurrency,
-  renderFormattedCurrency as formattedCurrency,
-  renderPairedCurrency as pairedCurrency,
-  renderCryptoIcon as cryptoIcon,
+  formattedCurrency: renderFormattedCurrency,
+  pairedCurrency: renderPairedCurrency,
+  cryptoIcon: renderCryptoIcon,
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
+};
+
+export {
+  currencyExport as currency,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

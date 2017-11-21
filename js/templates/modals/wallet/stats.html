@@ -11,11 +11,11 @@
     }
   };
 
-  const serverCur = ob.getServerCurrency().code;
+  const serverCur = ob.currency.getServerCurrency().code;
   const formattedCrypto = ob.formatUnitlessCryptoAmount(ob.balance);
   const cryptoTextSize = getTextSize(formattedCrypto);
-  const formattedFiat = ob.convertAndFormatCurrency(ob.balance, serverCur, ob.userCurrency);
-  const userCurrencyValidity = ob.getCurrencyValidity(ob.userCurrency);
+  const formattedFiat = ob.currency.convertAndFormatCurrency(ob.balance, serverCur, ob.userCurrency);
+  const userCurrencyValidity = ob.currency.getCurrencyValidity(ob.userCurrency);
 
   const fiatTextSize = getTextSize(formattedFiat);
 %>

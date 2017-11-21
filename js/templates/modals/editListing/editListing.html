@@ -80,14 +80,14 @@
                 <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
                   <% if (ob.errors['item.price']) print(ob.formErrorTmpl({ errors: ob.errors['item.price'] })) %>
                 <div class="inputSelect marginTopAuto">
-                  <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' ? ob.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
+                  <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' ? ob.currency.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
                   <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                     <% ob.currencies.forEach((currency) => {%>
                     <option value="<%= currency.code %>" <% if (currency.code === ob.currency) print('selected'); %>><%= currency.code %></option>
                     <% }); %>
                   </select>
                 </div>
-                <div class="clrT2 txSm padSm"><%= ob.polyT(`cryptoCurrencies.${ob.getServerCurrency().code}.editListing.helperPrice`) %></div>
+                <div class="clrT2 txSm padSm"><%= ob.polyT(`cryptoCurrencies.${ob.currency.getServerCurrency().code}.editListing.helperPrice`) %></div>
               </div>
               <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
                 <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>

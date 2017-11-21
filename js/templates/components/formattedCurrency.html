@@ -16,8 +16,8 @@
 
   const showTooltipOnUnrecognizedCur = ob.showTooltipOnUnrecognizedCur || true;
 
-  const fromCurValidity = ob.getCurrencyValidity(fromCur);
-  const toCurValidity = ob.getCurrencyValidity(toCur);
+  const fromCurValidity = ob.currency.getCurrencyValidity(fromCur);
+  const toCurValidity = ob.currency.getCurrencyValidity(toCur);
 
   let tip;
 
@@ -29,7 +29,7 @@
 
 <%
   if (fromCurValidity !== 'UNRECOGNIZED_CURRENCY') {
-    print(ob.convertAndFormatCurrency(price, fromCur, toCur));
+    print(ob.currency.convertAndFormatCurrency(price, fromCur, toCur));
   }
 %>
 <% if (fromCurValidity === 'UNRECOGNIZED_CURRENCY' && showTooltipOnUnrecognizedCur) { %>

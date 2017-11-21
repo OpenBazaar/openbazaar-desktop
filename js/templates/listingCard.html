@@ -51,7 +51,7 @@
       </div>
       <div class="txB">
         <%= 
-          ob.formattedCurrency(
+          ob.currency.formattedCurrency(
             ob.price.amount,
             ob.price.currencyCode,
             ob.displayCurrency,
@@ -92,7 +92,7 @@
       <div class="priceCol flexNoShrink">
         <span class="txB">
           <%= 
-            ob.formattedCurrency(
+            ob.currency.formattedCurrency(
               ob.price.amount,
               ob.price.currencyCode,
               ob.displayCurrency,

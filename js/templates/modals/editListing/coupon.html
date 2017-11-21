@@ -16,7 +16,7 @@
 
         if (typeof ob.priceDiscount !== 'undefined') {
           discountAmount = typeof ob.priceDiscount === 'number' ?
-            ob.formatPrice(ob.priceDiscount, ob.getCurrency()) :
+            ob.currency.formatPrice(ob.priceDiscount, ob.getCurrency()) :
             ob.priceDiscount
         } else {
           discountAmount = typeof ob.percentDiscount === 'number' ?
@@ -24,7 +24,7 @@
         }
 
         if (typeof ob.price === 'number') {
-          discountAmount = ob.formatPrice(ob.price, ob.getCurrency())
+          discountAmount = ob.currency.formatPrice(ob.price, ob.getCurrency())
         }
       %>
       <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" data-var-type="number">

@@ -104,9 +104,9 @@
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
                 <div>
                   <%=
-                    ob.pairedCurrency(
+                    ob.currency.pairedCurrency(
                       ob.order.payment.amount,
-                      ob.getServerCurrency().code,
+                      ob.currency.getServerCurrency().code,
                       ob.userCurrency
                     )
                   %>
