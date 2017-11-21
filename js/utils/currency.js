@@ -215,7 +215,7 @@ export function formatCurrency(amount, currency, options) {
       'curSymbolAmount' : 'curCodeAmount';
     formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
       amount: formattedAmount,
-      symbol: curSymbol,
+      [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
     });
   } else {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {

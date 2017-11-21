@@ -62,6 +62,9 @@ moment.locale(initialLang);
 app.polyglot = new Polyglot();
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
+console.log('sizzle');
+window.sizzle = app.polyglot;
+
 app.localSettings.on('change:language', (localSettings, lang) => {
   app.polyglot.extend(
     require(`./languages/${lang}.json`)); // eslint-disable-line global-require

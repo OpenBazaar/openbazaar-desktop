@@ -1754,15 +1754,8 @@
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "µBTC",
+    "UBTC": "μBTC",
     "SATOSHI": "sat"
-  },
-  "bitcoinCurrencyFormat": {
-    "symbolBTC": "%{curSymbol}%{amount}",
-    "curCodeBTC": "%{amount} %{curCode}",
-    "MBTC": "%{amount} %{curCode}",
-    "UBTC": "%{amount} %{curCode}",
-    "SATOSHI": "%{amount} %{curCode}"
   },
   "cryptoCurrencyFormat": {
     "curSymbolAmount": "%{symbol}%{amount}",
