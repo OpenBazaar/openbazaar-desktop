@@ -140,9 +140,8 @@ export function getCurrenciesSortedByCode() {
 }
 
 /**
- * Returns the currency data object based on the currency the connect to node is in.
+ * Returns the currency data object based on the currency the connected server is in.
  */
- // TODO - TODO - TODO: doc with TBTC vs BTC scenario.
 export function getServerCurrency() {
   if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
     throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
@@ -161,6 +160,10 @@ export function getServerCurrency() {
   return curData;
 }
 
+/**
+ * Will render the icon of the connected servers crypto currency. If there is not currenctly
+ * an icon for that currency, it will render an empty string.
+ */
 export function renderCryptoIcon(options = {}) {
   if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
     throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
