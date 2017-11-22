@@ -2,7 +2,7 @@ import $ from 'jquery';
 import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import Reviews from '../modals/listingDetail/Reviews';
+import Reviews from '../reviews/Reviews';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import Profile from '../../models/profile/Profile';
 
@@ -14,7 +14,7 @@ export default class extends BaseVw {
     super(options);
 
     this.ratingsFetch =
-      $.get(app.getServerUrl(`ob/ratings/${options.model.get('peerID')}`))
+      $.get(app.getServerUrl(`ob/ratings/${options.model.get('peerID')}/testing-search-albatros`))
         .done(data => this.onRatings(data))
         .fail((jqXhr) => {
           if (jqXhr.statusText === 'abort') return;

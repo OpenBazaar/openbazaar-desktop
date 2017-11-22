@@ -267,6 +267,11 @@
       "followers": "Followers"
     }
   },
+  "reputation": {
+    "averageRating": "%{number} overall rating",
+    "totalReviews": "%{number} reviews"
+
+  },
   "userShort": {
     "userLoading": "Loading…",
     "userNotFound": "Information for %{guid} was <b>not found on the network.</b>",

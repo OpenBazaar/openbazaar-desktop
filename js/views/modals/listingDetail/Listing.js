@@ -13,7 +13,7 @@ import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
-import Reviews from './Reviews';
+import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';

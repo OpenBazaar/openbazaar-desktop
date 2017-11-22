@@ -1,8 +1,8 @@
 import $ from 'jquery';
-import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
-import RatingsStrip from '../../RatingsStrip';
+import app from '../../app';
+import loadTemplate from '../../utils/loadTemplate';
+import baseVw from '../baseVw';
+import RatingsStrip from '../RatingsStrip';
 import moment from 'moment';
 import 'trunk8';
 

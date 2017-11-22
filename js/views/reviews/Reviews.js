@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import BaseVw from '../../baseVw';
-import loadTemplate from '../../../utils/loadTemplate';
-import { getSocket } from '../../../utils/serverConnect';
-import app from '../../../app';
-import Collection from '../../../collections/listing/Reviews';
+import BaseVw from '../baseVw';
+import loadTemplate from '../../utils/loadTemplate';
+import { getSocket } from '../../utils/serverConnect';
+import app from '../../app';
+import Collection from '../../collections/Reviews';
 import Review from './Review';
 import 'trunk8';
 
