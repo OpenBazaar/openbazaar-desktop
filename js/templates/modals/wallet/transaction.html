@@ -1,4 +1,4 @@
-<% const serverCurCode = ob.currency.getServerCurrency().code %>
+<% const serverCurCode = ob.currencyMod.getServerCurrency().code %>
 <div class="flex gutterHSm clrT <% if (ob.status === 'CONFIRMED') print('confirmedTransaction') %>">
   <%
     let statusIcon = 'ion-ios-checkmark-empty';
@@ -18,7 +18,7 @@
   <div class="statusIconCol <%= statusIconClasses %>"><span class="<%= statusIcon %>"></span></div>
   <div class="flexExpand tx5">
     <%
-      let priceFrag = ob.currency.pairedCurrency(
+      let priceFrag = ob.currencyMod.pairedCurrency(
         Math.abs(ob.value),
         serverCurCode,
         ob.userCurrency
@@ -69,7 +69,7 @@
   <div class="col">
     <div class="flexHRight">
       <div class="btnStrip">
-        <a class="btn clrP clrBr clrSh2" href="<%= ob.currency.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
+        <a class="btn clrP clrBr clrSh2" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
         <% if (ob.canBumpFee && ob.status === 'STUCK') { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
@@ -89,7 +89,7 @@
     <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchError || '' }) %></p>
     <a class="js-retryFeeFetch clrTEm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnRetry') %></a>
   <% } else if (typeof ob.estimatedFee === 'number') {
-    let estimatedFeeCombo = ob.currency.pairedCurrency(
+    let estimatedFeeCombo = ob.currencyMod.pairedCurrency(
       ob.estimatedFee,
       serverCurCode,
       ob.userCurrency

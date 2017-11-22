@@ -8,7 +8,7 @@
     %>
     <% if (ob.notification.type === 'payment') { %>
     <div class="thumbCol flexNoShrink>">
-    <%= ob.currency.cryptoIcon() %>
+    <%= ob.currencyMod.cryptoIcon() %>
     </div>
     <% } else { %>
     <div class="thumbCol disc clrBr2 clrSh1 flexNoShrink <% if (isOrderNotif) print('listingImage') %>" style="<%= ob[imageFunc](ob.notification.thumbnail || ob.notification.avatarHashes || {}) %>"></div>

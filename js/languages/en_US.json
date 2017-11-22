@@ -23,7 +23,8 @@
     "ECONOMIC": "Economic"
   },
   "feeChangeWidget": {
-    "btnChange": "change"
+    "btnChange": "change",
+    "label": "%{cur} fee:"
   },
   "unsupportedCryptoCurDialog": {
     "title": "Unsupported Currency",
@@ -762,10 +763,12 @@
     "receiveMoney": {
       "title": "Receive Money",
       "btnCancel": "Cancel",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnFundViaShapeshift": "Fund via ShapeShift",
+      "needCoinLink": "Need %{cur}?"
     },
     "sendMoney": {
       "toLabel": "To",
+      "toPlaceholder": "Enter a %{cur} Address",
       "amountLabel": "Amount",
       "noteLabel": "Note",
       "notePlaceholder": "Only seen by you",
@@ -964,6 +967,7 @@
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
     "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
@@ -1689,11 +1693,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "Please provide an address.",
-    "invalidAddress": "The provided address does not appear to be a valid bitcoin address.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "The amount must be greater than zero.",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee.",
-    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}."
+    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "The quantity must be 1 or more",
@@ -2174,36 +2178,13 @@
     "ZWL": "Zimbabwe Dollar"
   },
   "cryptoCurrencies": {
+    "BTC": "Bitcoin",
+    "BCH": "Bitcoin Cash"
+  },
+  "cryptoCurrenciesMoo": {
     "BTC": {
-      "name": "Bitcoin",
-      "feeChangeWidgetLabel": "Bitcoin fee:",
-      "wallet": {
-        "cryptoCurrencyLabel": "Bitcoin",
-        "receiveMoney": {
-          "needCoin": "Need Bitcoin?"
-        },
-        "sendMoney": {
-          "toPlaceholder": "Enter a Bitcoin Address"
-        }
-      },
-      "editListing": {
-        "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything"
-      }
-    },
-    "BCH": {
-      "name": "Bitcoin Cash",
-      "feeChangeWidgetLabel": "Bitcoin Cash fee:",
-      "wallet": {
-        "cryptoCurrencyLabel": "Bitcoin Cash",
-        "receiveMoney": {
-          "needCoin": "Need Bitcoin Cash?"
-        },
-        "sendMoney": {
-          "toPlaceholder": "Enter a Bitcoin Cash Address"
-        }
-      },
-      "editListing": {
-        "helperPrice": "Set your price in Dollars, Yuan, Bitcoin Cash, anything"
+      "spendModelErrors": {
+        "invalidAddress": "The provided address does not appear to be a valid bitcoin address."
       }
     }
   },

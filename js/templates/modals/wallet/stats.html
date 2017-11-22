@@ -11,11 +11,11 @@
     }
   };
 
-  const serverCur = ob.currency.getServerCurrency().code;
+  const serverCur = ob.currencyMod.getServerCurrency().code;
   const formattedCrypto = ob.formatUnitlessCryptoAmount(ob.balance);
   const cryptoTextSize = getTextSize(formattedCrypto);
-  const formattedFiat = ob.currency.convertAndFormatCurrency(ob.balance, serverCur, ob.userCurrency);
-  const userCurrencyValidity = ob.currency.getCurrencyValidity(ob.userCurrency);
+  const formattedFiat = ob.currencyMod.convertAndFormatCurrency(ob.balance, serverCur, ob.userCurrency);
+  const userCurrencyValidity = ob.currencyMod.getCurrencyValidity(ob.userCurrency);
 
   const fiatTextSize = getTextSize(formattedFiat);
 %>
@@ -23,7 +23,7 @@
   <% if (userCurrencyValidity === 'VALID') { %>
   <div>
     <div class="clrTEmph1 <%= cryptoTextSize %> txB"><%= formattedCrypto %></div>
-    <div><%= ob.polyT(`cryptoCurrencies.${serverCur}.wallet.cryptoCurrencyLabel`) %></div>
+    <div><%= ob.polyT(`cryptoCurrencies.${serverCur}`) %></div>
   </div>
   <% } %>
   <% if (ob.userCurrency !== serverCur) { %>

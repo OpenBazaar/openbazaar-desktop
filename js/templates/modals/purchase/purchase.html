@@ -59,7 +59,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
               </div>
               <div class="pad flexNoShrink">
                 <b>
-                  <%= ob.currency.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+                  <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
                 </b>
               </div>
             </div>
@@ -74,9 +74,9 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             <div class="flexColRows gutterVSm">
               <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <div class="contentBox pad clrP clrBr flexVCent">
-                <%= ob.currency.cryptoIcon({ className: 'margRSm'}) %>
+                <%= ob.currencyMod.cryptoIcon({ className: 'margRSm'}) %>
                 <div class="flexExpand">
-                  <%= ob.polyT(`cryptoCurrencies.${ob.currency.getServerCurrency().code}.name`) %>
+                  <%= ob.polyT(`cryptoCurrencies.${ob.currencyMod.getServerCurrency().code}.name`) %>
                 </div>
                 <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
                 <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
@@ -97,7 +97,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                 </p>
                 <p class="tx5b hide js-modsNotAllowed">
                   <%
-                  const minModPrice = ob.currency.convertAndFormatCurrency(ob.minModPrice, ob.currency.getServerCurrency().code, ob.displayCurrency);
+                  const minModPrice = ob.currencyMod.convertAndFormatCurrency(ob.minModPrice, ob.currencyMod.getServerCurrency().code, ob.displayCurrency);
                   %>
                   <strong><%= ob.polyT('purchase.tooLowForMods', { minModPrice }) %></strong>
                 </p>

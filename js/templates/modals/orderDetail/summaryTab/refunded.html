@@ -7,9 +7,9 @@
     <div class="statusIconCol clrT"><span class="clrBr ion-ios-rewind"></span></div>
     <div class="flexExpand tx5">
       <%
-        const priceFrag = const priceFrag = ob.currency.pairedCurrency(
+        const priceFrag = const priceFrag = ob.currencyMod.pairedCurrency(
           ob.value,
-          ob.currency.getServerCurrency().code,
+          ob.currencyMod.getServerCurrency().code,
           ob.userCurrency
         );
 
@@ -43,7 +43,7 @@
         %>
         <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
         <div class="" style="flex-shrink: 0;max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.currency.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
+          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
         </div>
       </div>
     </div>

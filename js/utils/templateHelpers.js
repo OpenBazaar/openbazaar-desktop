@@ -78,7 +78,7 @@ const currencyExport = {
 };
 
 export {
-  currencyExport as currency,
+  currencyExport as currencyMod,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

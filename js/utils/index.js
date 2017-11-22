@@ -5,9 +5,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import app from '../app';
 import multihashes from 'multihashes';
-import bitcoreLib from 'bitcore-lib';
 import twemoji from 'twemoji';
-import bech32 from 'bech32';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
@@ -121,24 +119,6 @@ export function isMultihash(_string) {
     return true;
   } catch (exc) {
     return false;
-  }
-}
-
-export function isValidBitcoinAddress(address) {
-  if (typeof address !== 'string') {
-    throw new Error('Please provide a string.');
-  }
-
-  try {
-    bitcoreLib.encoding.Base58Check.decode(address);
-    return true;
-  } catch (exc) {
-    try {
-      bech32.decode(address);
-      return true;
-    } catch (exc2) {
-      return false;
-    }
   }
 }
 

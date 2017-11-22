@@ -71,9 +71,9 @@
 <td class="clrBr priceCol">
   <span class="ulOnHover">
     <%=
-      ob.currency.pairedCurrency(
+      ob.currencyMod.pairedCurrency(
         ob.total,
-        ob.currency.getServerCurrency().code,
+        ob.currencyMod.getServerCurrency().code,
         ob.userCurrency
       )
     %>

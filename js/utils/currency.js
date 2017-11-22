@@ -183,7 +183,7 @@ export function formatCurrency(amount, currency, options) {
   const cryptoCur = getCryptoCurByCode(cur);
 
   if (cryptoCur) {
-    let curSymbol = curData.symbol || curData.code;
+    let curSymbol = curData.symbol || cur;
     let bitcoinConvertUnit;
     let amt = amount;
 

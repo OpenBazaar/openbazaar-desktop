@@ -45,8 +45,10 @@ class Spend extends BaseModel {
 
     if (!attrs.address) {
       addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
-    } else if (!isValidBitcoinAddress(attrs.address)) {
-      addError('address', app.polyglot.t('spendModelErrors.invalidAddress'));
+    } else if (typeof getServerCurrency().isValidAddress === 'function' &&
+      !getServerCurrency().isValidAddress(attrs.address)) {
+      addError('address', app.polyglot.t('spendModelErrors.invalidAddress',
+        { cur: getServerCurrency().name }));
     }
 
     const exchangeRateAvailable = typeof getExchangeRate(attrs.currency) === 'number';
@@ -60,14 +62,14 @@ class Spend extends BaseModel {
       }));
     }
 
-    if (typeof attrs.amount !== 'number') {
-      addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
-    } else if (attrs.amount <= 0) {
-      addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-    } else if (exchangeRateAvailable &&
-      this.amountInServerCur >= app.walletBalance.get('confirmed')) {
-      addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
-    }
+    // if (typeof attrs.amount !== 'number') {
+    //   addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
+    // } else if (attrs.amount <= 0) {
+    //   addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
+    // } else if (exchangeRateAvailable &&
+    //   this.amountInServerCur >= app.walletBalance.get('confirmed')) {
+    //   addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+    // }
 
     if (this.feeLevels.indexOf(attrs.feeLevel) === -1) {
       addError('feeLevel', `The fee level must be one of [${this.feeLevels}].`);

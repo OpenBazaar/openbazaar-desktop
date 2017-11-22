@@ -1,5 +1,7 @@
 import _ from 'underscore';
 import app from '../app';
+import bitcoreLib from 'bitcore-lib';
+import bech32 from 'bech32';
 
 const currencies = [
   {
@@ -25,6 +27,23 @@ const currencies = [
         `https://blockchain.info/tx/${txid}`
     ),
     canShapeShiftInto: true,
+    isValidAddress: address => {
+      if (typeof address !== 'string') {
+        throw new Error('Please provide a string.');
+      }
+
+      try {
+        bitcoreLib.encoding.Base58Check.decode(address);
+        return true;
+      } catch (exc) {
+        try {
+          bech32.decode(address);
+          return true;
+        } catch (exc2) {
+          return false;
+        }
+      }
+    },
   },
   {
     code: 'BCH',
@@ -48,6 +67,7 @@ const currencies = [
         `https://blockdozer.com/insight/tx/${txid}`
     ),
     canShapeShiftInto: true,
+    // isValidAddress: () => false,
   },
   {
     code: 'ZEC',
@@ -75,28 +95,6 @@ const currencies = [
 
 export default currencies;
 
-let _indexedCurrencies;
-
-function getIndexedCurrencies() {
-  if (_indexedCurrencies) return _indexedCurrencies;
-
-  _indexedCurrencies = currencies.reduce((indexedObj, currency) => {
-    indexedObj[currency.code] = _.omit(currency, 'code');
-    indexedObj[currency.testnetCode] = { ...currency };
-    return indexedObj;
-  }, {});
-
-  return _indexedCurrencies;
-}
-
-export function getCurrencyByCode(code) {
-  if (!code) {
-    throw new Error('Please provide a currency code.');
-  }
-
-  return getIndexedCurrencies()[code];
-}
-
 function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslatedLang(),
   sort = true) {
   if (!lang) {
@@ -106,7 +104,7 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
 
   let translated = currencies.map((currency) => ({
     ...currency,
-    name: app.polyglot.t(`cryptoCurrencies.${currency.code}.name`),
+    name: app.polyglot.t(`cryptoCurrencies.${currency.code}`),
   }));
 
   if (sort) {
@@ -120,6 +118,29 @@ const memoizedGetTranslatedCurrencies =
   _.memoize(getTranslatedCurrencies, (lang, sort) => `${lang}-${!!sort}`);
 
 export { memoizedGetTranslatedCurrencies as getTranslatedCurrencies };
+
+let _indexedCurrencies;
+
+function getIndexedCurrencies() {
+  if (_indexedCurrencies) return _indexedCurrencies;
+
+  _indexedCurrencies = memoizedGetTranslatedCurrencies(undefined, false)
+    .reduce((indexedObj, currency) => {
+      indexedObj[currency.code] = _.omit(currency, 'code');
+      indexedObj[currency.testnetCode] = { ...currency };
+      return indexedObj;
+    }, {});
+
+  return _indexedCurrencies;
+}
+
+export function getCurrencyByCode(code) {
+  if (!code) {
+    throw new Error('Please provide a currency code.');
+  }
+
+  return getIndexedCurrencies()[code];
+}
 
 let currenciesSortedByCode;
 
