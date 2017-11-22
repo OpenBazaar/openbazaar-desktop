@@ -1,17 +1,32 @@
 <div class="flexRow gutterHLg">
-  <div class="col8">
-
-      <div class="row">
+  <div class="col8 flex gutterHMd">
+    <% if (!ob.isListing) { %>
+      <%
+         let background = '';
+         if (ob.thumbnail) {
+           background = ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`);
+         }
+      %>
+      <a class="thumbHg" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')"></a>
+    <% } %>
+    <div class="flexExpand gutterVSm">
+      <div class="tx5b clrT2">
         <% if (ob.buyerID) { %>
-        <% const nameLink = `<a class="clrT txU" href="${ob.buyerID.peerID}">${ob.buyerName}</a>`; %>
+        <% const nameLink = `<a href="${ob.buyerID.peerID}"><span class="clrT2">${ob.buyerName}</span></a>`; %>
         <b><%= ob.polyT('listingDetail.review.title', { time: ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a'), name: nameLink }) %></b>
         <% } else { %>
         <b><%= ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a') %></b>
         <% } %>
       </div>
-
-    <div class="reviewTextWrapper js-reviewTextWrapper">
-      <p class="reviewText js-reviewText"><%= ob.review %></p>
+      <% if (!ob.isListing) { %>
+        <%
+          const title = ob.listingTitle ? ob.listingTitle : ob.polyT('reputation.noTitle');
+        %>
+        <h4 class="clrT"><%= title %></h4>
+      <% } %>
+      <div class="reviewTextWrapper js-reviewTextWrapper">
+        <p class="reviewText js-reviewText"><%= ob.review %></p>
+      </div>
     </div>
   </div>
   <div class="col4">

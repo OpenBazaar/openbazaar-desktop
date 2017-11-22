@@ -18,6 +18,7 @@ export default class extends BaseVw {
     this.pageSize = options.pageSize || 10;
     this.options.async = options.async || false;
     this.reviewIDs = options.ratings || [];
+    this.isListing = options.isListing;
     this.collection = new Collection();
     this.listenTo(this.collection, 'add', model => this.addReview(model));
   }
@@ -105,7 +106,10 @@ export default class extends BaseVw {
   }
 
   addReview(model) {
-    const newReview = new Review({ model });
+    const newReview = new Review({
+      model,
+      isListing: this.isListing,
+    });
     const newRevieEl = newReview.render().$el;
     const btnTxt = app.polyglot.t('listingDetail.review.showMore');
     const truncLines = model.get('buyerID') !== undefined ? 5 : 6;

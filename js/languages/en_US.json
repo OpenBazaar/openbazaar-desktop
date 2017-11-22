@@ -269,7 +269,8 @@
   },
   "reputation": {
     "averageRating": "%{number} overall rating",
-    "totalReviews": "%{number} reviews"
+    "totalReviews": "%{number} reviews",
+    "noTitle": "Listing title not found"
 
   },
   "userShort": {

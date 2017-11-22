@@ -9,6 +9,7 @@ import 'trunk8';
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+    this.options = options;
 
     this.ratingStrips = {};
   }
@@ -39,6 +40,7 @@ export default class extends baseVw {
     loadTemplate('reviews/review.html', (t) => {
       this.$el.html(t({
         moment,
+        isListing: this.options.isListing,
         ...this.model.toJSON(),
       }));
 
