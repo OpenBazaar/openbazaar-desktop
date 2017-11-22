@@ -36,7 +36,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/listingDetail/review.html', (t) => {
+    loadTemplate('reviews/review.html', (t) => {
       this.$el.html(t({
         moment,
         ...this.model.toJSON(),

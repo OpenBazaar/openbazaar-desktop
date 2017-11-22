@@ -143,7 +143,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('modals/listingDetail/reviews.html', (t) => {
+    loadTemplate('reviews/reviews.html', (t) => {
       this.$el.html(t({
         reviewsLength: this.reviewIDs.length,
       }));
