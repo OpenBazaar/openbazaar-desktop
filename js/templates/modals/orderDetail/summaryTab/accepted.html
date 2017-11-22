@@ -25,7 +25,7 @@
               <% if (ob.refundConfirmOn) { %>
               <div class="js-refundConfirm confirmBox refundConfirm tx5 arrowBoxTop clrBr clrP clrT">
                 <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.title') %></div>
-                <p><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.body') %></p>
+                <p><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.body', { cur: ob.currencyMod.getServerCurrency().name }) %></p>
                 <hr class="clrBr row" />
                 <div class="flexHRight flexVCent gutterHLg buttonBar">
                   <a class="js-refundConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.accepted.refundConfirm.btnCancel') %></a>

@@ -169,7 +169,7 @@
       "notifications": "Notifications",
       "nav": "Navigation",
       "close": "Close",
-      "currentPrice": "Current Bitcoin price"
+      "currentPrice": "Current %{cur} price"
     },
     "serversMenu": {
       "newServer": "New Server",
@@ -527,7 +527,7 @@
       "transaction": {
         "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
-        "defaultFee": "Bitcoin Fee",
+        "defaultFee": "%{cur} Fee",
         "low": "Economic",
         "medium": "Normal",
         "high": "Priority"
@@ -1122,7 +1122,7 @@
     "introScreen": {
       "connectionLbl": "Connection:",
       "btnChange": "Change",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn Bitcoin.",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
       "tagLine": "Buy and Sell Freely",
       "btnGetStarted": "Get Started"
     },
@@ -1395,7 +1395,7 @@
         "veryManyConfirmationsCount": "%{countText} confirmations",
         "rejectConfirm": {
           "title": "Are you sure?",
-          "body": "The original amount in bitcoin will be returned to the buyer",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Cancel",
           "btnConfirm": "Yes, Reject"
         },
@@ -1419,7 +1419,7 @@
         "fulfillBtn": "Fulfill Order",
         "refundConfirm": {
           "title": "Are you sure?",
-          "body": "The original amount in bitcoin will be returned to the buyer",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Cancel",
           "btnConfirm": "Yes, Refund"
         }
@@ -2180,13 +2180,6 @@
   "cryptoCurrencies": {
     "BTC": "Bitcoin",
     "BCH": "Bitcoin Cash"
-  },
-  "cryptoCurrenciesMoo": {
-    "BTC": {
-      "spendModelErrors": {
-        "invalidAddress": "The provided address does not appear to be a valid bitcoin address."
-      }
-    }
   },
   "languages": {
     "af": "Afrikaans",

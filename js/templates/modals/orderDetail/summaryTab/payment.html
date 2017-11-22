@@ -96,7 +96,7 @@
                 <a class="txU tx6 js-rejectOrder <% if (ob.acceptInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
                 <div class="js-rejectConfirm confirmBox rejectConfirm tx5 arrowBoxTop clrBr clrP clrT <% if (!ob.rejectConfirmOn) print('hide') %>">
                   <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.title') %></div>
-                  <p><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.body') %></p>
+                  <p><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.body', { cur: ob.currencyMod.getServerCurrency().name }) %></p>
                   <hr class="clrBr row" />
                   <div class="flexHRight flexVCent gutterHLg buttonBar">
                     <a class="js-rejectConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.btnCancel') %></a>
