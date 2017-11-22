@@ -95,8 +95,9 @@ const currencies = [
 
 export default currencies;
 
-function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslatedLang(),
-  sort = true) {
+const defaultLangParam = app && app.localSettings &&
+  app.localSettings.standardizedTranslatedLang() || 'en-US';
+function getTranslatedCurrencies(lang = defaultLangParam, sort = true) {
   if (!lang) {
     throw new Error('Please provide the language the translated currencies' +
       ' should be returned in.');

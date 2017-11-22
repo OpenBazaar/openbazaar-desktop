@@ -1,4 +1,3 @@
-import { isValidBitcoinAddress } from '../../utils/';
 import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/currency';
 import { getServerCurrency } from '../../data/cryptoCurrencies';
 import { getWallet } from '../../utils/modalManager';
