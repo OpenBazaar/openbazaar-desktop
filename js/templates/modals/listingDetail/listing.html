@@ -83,25 +83,29 @@
               </div>
             <% }); %>
             <%
-              let buyNowClass = '';
-              let unpurchasableMarkup = '';
+              let tip;
+              let buyNowClass = 'disabled';
+              let unpurchaseable = true;
+              const serverCur = ob.currencyMod.getServerCurrency();
+              const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
 
-              // TRANSLATE don't hate, just TRANS to the LATE!
-              // TRANSLATE don't hate, just TRANS to the LATE!
-              // TRANSLATE don't hate, just TRANS to the LATE!
-
-              if (ob.currencyValidity !== 'VALID') {
-                const tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
-                  'The item is priced in an unrecognized currency.' :
-                  'The item is priced in a currency for which exchange rate data is currently unavailable.';
-                buyNowClass = 'disabled';
-                unpurchasableMarkup = `<div class="flexHRight clrTErr">This listing is not purchasable. &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;
+              if (ob.metadata.acceptedCurrencies.indexOf(serverCurCode) === -1) {
+                tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto', { cur: serverCurCode });
+              } else if (ob.currencyValidity !== 'VALID') {
+                tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
+                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
+                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+              } else {
+                buyNowClass = '';
+                unpurchaseable = false;
               }
+
+              let unpurchasableMarkup = `<div class="flexHRight clrTErr">This listing is not purchasable. &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;              
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT('listingDetail.buyNow') %>
             </button>
-            <%= unpurchasableMarkup %>
+            <%= unpurchaseable ? unpurchasableMarkup : '' %>
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
               <% if(ob.shipsFreeToMe) { %>

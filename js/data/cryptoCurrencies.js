@@ -127,8 +127,7 @@ function getIndexedCurrencies() {
 
   _indexedCurrencies = memoizedGetTranslatedCurrencies(undefined, false)
     .reduce((indexedObj, currency) => {
-      indexedObj[currency.code] = _.omit(currency, 'code');
-      indexedObj[currency.testnetCode] = { ...currency };
+      indexedObj[currency.code] = indexedObj[currency.testnetCode] = { ...currency };
       return indexedObj;
     }, {});
 
@@ -169,13 +168,10 @@ export function getServerCurrency() {
 
   let curData = getCurrencyByCode(app.serverConfig.cryptoCurrency);
 
-  if (curData && curData.testnetCode !== app.serverConfig.cryptoCurrency) {
-    curData = {
-      ...curData,
-      code: app.serverConfig.cryptoCurrency,
-      isTestnet: app.serverConfig.cryptoCurrency === curData.testnetCode,
-    };
-  }
+  curData = {
+    ...curData,
+    isTestnet: app.serverConfig.cryptoCurrency === curData.testnetCode,
+  };
 
   return curData;
 }
