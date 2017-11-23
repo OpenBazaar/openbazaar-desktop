@@ -14,6 +14,7 @@ import {
   renderCryptoIcon,
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
+  getCurrencyByCode as getCryptoCurByCode,
 } from '../data/cryptoCurrencies';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
@@ -70,6 +71,7 @@ const currencyExport = {
   convertCurrency,
   getCurrencyValidity,
   getServerCurrency,
+  getCryptoCurByCode,
   formattedCurrency: renderFormattedCurrency,
   pairedCurrency: renderPairedCurrency,
   cryptoIcon: renderCryptoIcon,
