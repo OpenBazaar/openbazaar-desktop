@@ -79,8 +79,8 @@ describe('our index utilities', () => {
 
   describe('have a abbrNum utility that', () => {
     it('returns abbreviated a rounded number based on (1000(n) & maximum trillion)', () => {
-      var sourceNumberSet = [123,1266,125468,77547959,388475766449,48242478968789,482424789687893242,-12341235,0];
-      var formattedNumberSet = [123,'1.3k','125.47k','77.548m','388.476b','48.242t','482,424.79t',-12341235,0];
+      var sourceNumberSet = [123,1266,125468,77547959,388475766449,48242478968789,482424789687893242];
+      var formattedNumberSet = [123,'1.3k','125.47k','77.548m','388.476b','48.242t','482,424.79t'];
       for (let i = 0; i < sourceNumberSet.length;i++) {
         expect(abbrNum(sourceNumberSet[i],i)).to.be.equal(formattedNumberSet[i]);
       }
