@@ -179,7 +179,7 @@ export default class extends BaseModel {
                 options.attrs.metadata.pricingCurrency);
             }
 
-            // TODO TODO TEMP temp TEMPER temp TODO pimple.
+            // TODO TODO TEMP temp until the server BCH branch is rebased!!!!!
             delete service.additionalItemPrice;
           });
         });
