@@ -112,5 +112,32 @@ describe('the crypto currencies data module', () => {
         expect(typeof cur.canShapeShiftInto).to.equal('boolean');
       });
     });
+
+    // isValidAddress
+    it('that, if provided, requires isValidAddress to be a function', () => {
+      currencies.forEach(cur => {
+        if (cur.isValidAddress !== undefined) {
+          expect(typeof cur.isValidAddress).to.equal('function');
+        }
+      });
+    });
+
+    it('that, if provided, requires isValidAddress to be a function that returns a boolean ' +
+      'or throws an exception', () => {
+      currencies.forEach(cur => {
+        if (cur.isValidAddress !== undefined) {
+          let isValid;
+          let exceptionThrown = false;
+
+          try {
+            isValid = cur.isValidAddress('abcdefghijklmnop');
+          } catch (e) {
+            exceptionThrown = true;
+          }
+
+          expect(typeof isValid === 'boolean' || exceptionThrown).to.equal(true);
+        }
+      });
+    });
   });
 });
