@@ -54,6 +54,13 @@
         }
       }
 
+      .acceptedCurName {
+        // line height makes the text not vertically centered - want to preserve line height in
+        // the unlikely case a crypto name is so long that it needs to wrap
+        position: relative;
+        top: 1px;
+      }
+
       .descriptionSection {
 
         img {
