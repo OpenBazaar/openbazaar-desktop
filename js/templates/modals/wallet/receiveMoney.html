@@ -6,7 +6,7 @@
   </div>
   <div class="rowMd receiveAddressWrap <% if (ob.fetching) print('invisible') %>">
     <div class="copiedText hide js-copiedText">Copied</div>
-    <a class="js-receiveAddress clrT clrBr receiveAddressLink"><%= ob.address %></a>
+    <a class="js-receiveAddress clrT clrBr receiveAddressLink noOverflow"><%= ob.address %></a>
   </div>
   <div class="spinnerWrap <% if (!ob.fetching) print('hide') %>">
     <%= ob.spinner() %>
