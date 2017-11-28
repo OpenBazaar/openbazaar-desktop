@@ -78,7 +78,7 @@ describe('our index utilities', () => {
   });
 
   describe('have a abbrNum utility that', () => {
-    it('returns abbreviated a rounded number based on (1000(n) & maximum trillion)', () => {
+    it('returns abbreviated a rounded number for (1000(n) & max trillion)', () => {
       const sourceNumberSet = [123, 1266, 125468,
                              77547959, 388475766449,
                              48242478968789, 482424789687893242];
@@ -90,9 +90,13 @@ describe('our index utilities', () => {
       }
     });
 
-    it('returns no abbreviation if a negative number or 0', () => {
-      const sourceNumberSet = [-12341235, 0];
-      const formattedNumberSet = [-12341235, 0];
+    it('returns abbreviated a rounded negative number for (1000(n) & max trillion)', () => {
+      const sourceNumberSet = [-123, -1266, -125468,
+                             -77547959, -388475766449,
+                             -48242478968789, -482424789687893242];
+      const formattedNumberSet = [-123, '-1.3k', '-125.47k',
+                                '-77.548m', '-388.476b',
+                                '-48.242t', '-482,424.79t'];
       for (let i = 0; i < sourceNumberSet.length; i++) {
         expect(abbrNum(sourceNumberSet[i], i)).to.be.equal(formattedNumberSet[i]);
       }
