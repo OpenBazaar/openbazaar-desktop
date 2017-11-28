@@ -87,7 +87,6 @@ export default class extends BaseVw {
       this.listenTo(serverSocket, 'message', (event) => {
         const eventData = event.jsonData;
         if (eventData.id === socketID && this.reviewIDs.indexOf(eventData.ratingId !== -1)) {
-          console.log(eventData)
           if (!eventData.error) {
             this.collection.add(eventData.rating.ratingData);
             if (this.collection.length >= this.startIndex) {

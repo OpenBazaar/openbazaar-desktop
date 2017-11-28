@@ -14,7 +14,7 @@ export default class extends BaseVw {
     super(options);
 
     this.ratingsFetch =
-      $.get(app.getServerUrl(`ob/ratings/${options.model.get('peerID')}/testing-search-albatros`))
+      $.get(app.getServerUrl(`ob/ratings/${options.model.get('peerID')}`))
         .done(data => this.onRatings(data))
         .fail((jqXhr) => {
           if (jqXhr.statusText === 'abort') return;
@@ -41,7 +41,6 @@ export default class extends BaseVw {
   }
 
   onRatings(data) {
-    console.log(data)
     const pData = data || {};
     this.setState({
       ...pData,
