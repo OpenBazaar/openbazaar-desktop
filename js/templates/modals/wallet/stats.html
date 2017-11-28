@@ -20,13 +20,11 @@
   const fiatTextSize = getTextSize(formattedFiat);
 %>
 <div class="rowLg flexColRows gutterV">
-  <% if (userCurrencyValidity === 'VALID') { %>
   <div>
     <div class="clrTEmph1 <%= cryptoTextSize %> txB"><%= formattedCrypto %></div>
     <div><%= ob.polyT(`cryptoCurrencies.${serverCur}`) %></div>
   </div>
-  <% } %>
-  <% if (ob.userCurrency !== serverCur) { %>
+  <% if (userCurrencyValidity === 'VALID' && ob.userCurrency !== serverCur) { %>
   <div>
     <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
     <div><%= ob.polyT('wallet.valueInCurrencyLabel',
