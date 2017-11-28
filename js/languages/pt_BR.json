@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Insira um @apelido, ID do OpenBazaar ou um termo de busca",
   "testnet": "Modo de Testes",
   "testnetTooltip": "O Modo de Testes usa moedas da testnet, que são feitas apenas para fins de testes.",
-  "betaTooltip": "O OpenBazaar está atualmente em versão beta. Certifique-se que você fez backup de sua carteira e evite gastar grandes quantidades de bitcoins.",
   "tabMenuHeading": "MENU",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copiado para a área de transferência",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Peers Conectados",
     "totalPeers": "%{totalPeers} Encontrados",
-    "noResults": "Nenhum peer conectado"
+    "noResults": "Nenhum peer conectado",
+    "loadMore": "Carregar Mais"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Notificações",
     "noResults": "Nenhuma notificação encontrada.",
     "text": {
       "order": "%{buyerName} comprou %{listingTitle}.",
@@ -310,6 +311,7 @@
     "client": "Cliente",
     "server": "Servidor",
     "btnUpdateCheck": "Procurar Atualizações",
+    "downloadLatest": "Baixar a Última",
     "donationsTab": {
       "linkText": "Doações",
       "sectionHeader": "Doações",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "Inserindo o endereço %{name}…",
       "statusAddAddressComplete": "Endereço %{name} inserido.",
       "statusAddAddressFailed": "Não foi possível inserir o endereço %{name}.",
-      "addAddressErrorAlertTitle": "Não foi possível inserir o endereço %{name}"
+      "addAddressErrorAlertTitle": "Não foi possível inserir o endereço %{name}",
+      "btnDelete": "Apagar"
     },
     "advancedTab": {
       "sectionName": "Avançado",
@@ -840,6 +843,9 @@
     "shipTo": "Envia para:",
     "noShippingFound": "Esse item não é enviado para o país selecionado",
     "localPickup": "Esta opção é apenas para retirada local.",
+    "deliveryTime": "Tempo de Entrega",
+    "priceFirst": "Preço (primeiro item)",
+    "priceSecond": "Preço (item adicional)",
     "allCountries": "Qualquer País",
     "returnToStore": "Voltar à loja",
     "goToStore": "Ir para a loja",
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "Sim",
     "nsfwNo": "Não",
+    "nsfwLabel": "Conteúdo Adulto/Ofensivo (NSFW, adulto, 18+, etc)",
     "sectionNames": {
       "general": "Geral",
       "photos": "Fotos",
@@ -967,7 +974,7 @@
     "btnAddReturnPolicy": "Inserir Política de Devolução",
     "btnTermsAndConditions": "Inserir Termos e Condições",
     "btnAddCoupon": "Inserir Cupom",
-    "primaryPhoto": "Foto Primária",
+    "primaryPhoto": "FOTO PRINCIPAL",
     "viewListingLink": "Ver Anúncio",
     "shippingOptions": {
       "optionHeading": "Opção de Frete #%{listPosition}",
@@ -988,7 +995,8 @@
         "namePlaceholder": "ex: PAC, SEDEX, etc.",
         "estimatedDeliveryLabel": "Tempo Estimado de Entrega",
         "estimatedDeliveryPlaceholder": "ex: 5-7 dias",
-        "priceLabel": "Preço",
+        "priceLabel": "Preço (primeiro item)",
+        "additionalItemPriceLabel": "Preço (item adicional)",
         "pricePlaceholder": "0.00",
         "addService": "+ Inserir Serviço"
       },
@@ -1026,13 +1034,16 @@
       "trackSelectOption": "Controlar o Inventário",
       "doNotTrackHelperText": "Os consumidores podem comprar o quanto eles quiserem",
       "trackByFixedHelperText": "A quantidade irá reduzir até atingir 0. A partir de então o item será exibido como esgotado.",
-      "trackByVariantsHelperText": "O inventário é controlado por variante / combinação de variante"
+      "trackByVariantsHelperText": "O inventário é controlado por variante / combinação de variante",
+      "quantity": "Quantidade"
     },
     "variantInventory": {
       "helperText": "As opções de variantes com uma quantidade de 0 não serão exibidas",
       "placeholderSKU": "SKU, ID, etc",
       "unlimitedQuantityLabel": "ilimitado",
-      "placeholderNeedMoreData": "A tabela do inventário de variantes irá aprecer quando você declarar pelo menos uma variante com pelo menos uma opção."
+      "placeholderNeedMoreData": "A tabela do inventário de variantes irá aprecer quando você declarar pelo menos uma variante com pelo menos uma opção.",
+      "unableToCalcTotalPrice": "Não foi possível calcular",
+      "unableToCalcTotalPriceTip": "Tanto o preço do anúncio quanto a sobretaxa devem ser números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00)."
     },
     "confirmCloseDialog": {
       "title": "Você possui modificações não salvas",
@@ -1213,9 +1224,12 @@
       "listing": "Anúncio",
       "coupon": "Cupom",
       "shipping": "Frete",
+      "firstItem": "Primeiro Item",
+      "additionalItems": "Cada Item Adicional",
       "options": "Opções",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Frete Total",
+      "total": "Total"
     },
     "errors": {
       "moderatorsTitle": "Erro ao Carregar Dados do Moderador",
@@ -1277,7 +1291,9 @@
       "dateAsc": "Mais recentes",
       "dateDesc": "Mais antigas"
     },
-    "placeholderSearch": "Buscar por Nº do Pedido, Título ou Vendedor",
+    "placeholderSearchSales": "Buscar por ID do Pedido, Título ou Comprador",
+    "placeholderSearchPurchases": "Buscar por ID do Pedido, Título ou Vendedor",
+    "placeholderSearchCases": "Buscar por ID do Pedido, Título, Comprador ou Vendedor",
     "resetFilters": "Resetar filtros",
     "transactionsTable": {
       "headers": {
@@ -1591,7 +1607,7 @@
     "badConditionType": "A condição não é um dos tipos disponíveis.",
     "descriptionTooLong": "A descrição é mais longa do que o permitido.",
     "provideAmount": "Por favor, forneça um preço.",
-    "provideNumericAmount": "Por favor, forneça o preço como um número.",
+    "provideNumericAmount": "Por favor, forneça o preço em números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "provideAmountGreaterThanZero": "O preço deve ser maior do que 0.",
     "imageRequired": "Por favor, forneça pelo menos uma imagem",
     "tooManyTags": "Você excedeu a quantidade máxima de %{maxTags} tags permitidos.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "O valor percentual deve ser maior do que zero.",
     "percentageHigh": "Você não pode definir um percentual maior ou igual a 100%" ,
     "priceLow": "O preço deve ser maior do que zero.",
-    "provideNumericDiscountAmount": "Por favor, forneça a quantidade de desconto como um número.",
+    "provideNumericDiscountAmount": "Por favor, forneça o desconto em números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "needUniqueDiscountCode": "Você já possui um cupom usando esse código. Por favor, forneça um código de cupom diferente."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "Por favor, forneça pelo menos um serviço de entrega.",
     "provideAmount": "Por favor, forneça um preço.",
     "provideNumericAmount": "Por favor, forneça o preço como um número.",
-    "provideAmountGreaterThanZero": "O preço deve ser maior do que 0."
+    "provideNonNegativePrice": "O preço deve ser maior ou igual a 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Por favor, forneça uma descrição.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Por favor, defina um tipo de taxa válido",
-    "noPercentage": "Se o seu tipo de taxa é percentual ou fixa mais percentual, você deve definir um percentual válido.",
+    "noPercentage": "Se o seu tipo de taxa for percentual ou fixa + percentual, você deve definir um percentual válido. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "percentageLow": "Você não pode definir um percentual de taxa menor do que zero.",
     "percentageHigh": "Você não pode definir um percentual acima de 100%",
     "percentageDecimals": "Você não pode definir um percentual de taxa maior do que duas casas decimais."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "Se o seu tipo de taxa é fixa ou fixa mais percentual, você deve definir uma moeda válida para a sua taxa.",
-    "noAmount": "Se o seu tipo de taxa é fixa ou fixa mais percentual, você deve definir uma quantia válida para a sua taxa fixa."
+    "noAmount": "Se o seu tipo de taxa for fixa ou fixa + percentual, você deve definir um valor válido para sua taxa fixa. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00)."
   },
   "skuModelErrors": {
     "provideQuantity": "Por favor, forneça uma quantidade.",
@@ -1661,7 +1677,7 @@
   "spendModelErrors": {
     "provideAddress": "Por favor, forneça um endereço.",
     "invalidAddress": "O endereço fornecido não parece ser um endereço bitcoin válido.",
-    "provideAmountNumber": "Por favor, forneça uma quantia como um número.",
+    "provideAmountNumber": "Por favor, forneça a quantia em números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "amountGreaterThanZero": "A quantia deve ser maior do que zero.",
     "insufficientFunds": "Você não tem saldo suficiente para enviar essa quantia. Certifique-se de que você está considerando a taxa da transação."
   },

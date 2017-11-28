@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Digita uno pseudonimo, un ID Open Baazar o una parola",
   "testnet": "Modalità Test",
   "testnetTooltip": "La Modalità Test utilizza delle monete di prova, che sono da intendere tali. ",
-  "betaTooltip": "OpenBazaar è attualmente in versione beta. Assicurati di fare una copia del tuo wallet, e presta attenzione quando spendi grandi quantità di Bitcoin.",
   "tabMenuHeading": "MENÙ",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copiato negli appunti",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Nodi connessi",
     "totalPeers": "%{totalPeers} trovati",
-    "noResults": "Nessun nodo connesso"
+    "noResults": "Nessun nodo connesso",
+    "loadMore": "Carica di più"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Notifiche",
     "noResults": "Non ci sono notifiche.",
     "text": {
       "order": "%{buyerName} ha acquistato %{listingTitle}.",
@@ -310,6 +311,7 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Controlla gli aggiornamenti",
+    "downloadLatest": "Download Latest",
     "donationsTab": {
       "linkText": "Donazioni",
       "sectionHeader": "Donazioni",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "Aggiungo indirizzo %{name}…",
       "statusAddAddressComplete": "Indirizzo %{name} aggiunto.",
       "statusAddAddressFailed": "Non è stato possibile aggiungere l'indirizzo %{name}.",
-      "addAddressErrorAlertTitle": "Non è stato possibile aggiungere l'indirizzo %{name}"
+      "addAddressErrorAlertTitle": "Non è stato possibile aggiungere l'indirizzo %{name}",
+      "btnDelete": "Elimina"
     },
     "advancedTab": {
       "sectionName": "Avanzate",
@@ -840,6 +843,9 @@
     "shipTo": "Spedisci a:",
     "noShippingFound": "Il contenuto di questo annuncio non può essere spedito al Paese selezionato.",
     "localPickup": "Questa opzione è solamente per il ritiro a mano.",
+    "deliveryTime": "Delivery Time",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "Tutti i Paesi",
     "returnToStore": "Ritorna al negozio",
     "goToStore": "Vai al negozio",
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "Sì",
     "nsfwNo": "No",
+    "nsfwLabel": "Contenuto per adulti (contenuti non appropriati, 18+, ecc.)",
     "sectionNames": {
       "general": "Generale",
       "photos": "Immagini",
@@ -967,7 +974,7 @@
     "btnAddReturnPolicy": "Aggiungi Politica di Reso",
     "btnTermsAndConditions": "Aggiungi Termini e Condizioni",
     "btnAddCoupon": "Aggiungi Codice Promozionale",
-    "primaryPhoto": "Immagine principale",
+    "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "Vedi Elenco",
     "shippingOptions": {
       "optionHeading": "Opzioni di Spedizione #%{listPosition}",
@@ -988,7 +995,8 @@
         "namePlaceholder": "es. Ordinaria, Veloce",
         "estimatedDeliveryLabel": "Tempo di consegna stimato",
         "estimatedDeliveryPlaceholder": "es. 5-7 giorni",
-        "priceLabel": "Prezzo",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Aggiungi Servizio"
       },
@@ -1026,13 +1034,16 @@
       "trackSelectOption": "Track Inventory",
       "doNotTrackHelperText": "Gli acquirenti possono acquistarne quanti ne vogliono",
       "trackByFixedHelperText": "La quantita diminuisce fino a zero. A quel punto verrà verrà mostrato 'esaurito'.",
-      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
+      "quantity": "Quantità"
     },
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, etc",
       "unlimitedQuantityLabel": "illimitato",
-      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
+      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
+      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
       "title": "Hai delle modifiche non salvate",
@@ -1213,9 +1224,12 @@
       "listing": "Annunci",
       "coupon": "Codice Promozionale",
       "shipping": "Spedizione",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Opzioni",
-      "subtotal": "Subtotale",
-      "total": "Totale (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Totale"
     },
     "errors": {
       "moderatorsTitle": "Non è stato possibile caricare i dati del moderatore",
@@ -1277,7 +1291,9 @@
       "dateAsc": "Recenti",
       "dateDesc": "Più vecchi"
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "Azzera filtri",
     "transactionsTable": {
       "headers": {
@@ -1591,7 +1607,7 @@
     "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "La descrizione supera il numero di caratteri consentito.",
     "provideAmount": "Inserisci un prezzo.",
-    "provideNumericAmount": "Per favore fornisci il prezzo come numero.",
+    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "Il prezzo deve essere superiore a 0.",
     "imageRequired": "Inserisci almeno un'immagine.",
     "tooManyTags": "Hai superato il numero consentito di %{maxTags}  tags.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "La percentuale deve essere maggiore di zero.",
     "percentageHigh": "La percentuale non può essere maggiore o uguale a 100%." ,
     "priceLow": "Il prezzo deve essere superiore a 0.",
-    "provideNumericDiscountAmount": "Indica la percentuale di sconto con un numero.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "Hai già un buono sconto con quel codice. Per favore, fornisci un altro codice."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Inserisci un prezzo.",
     "provideNumericAmount": "Per favore fornisci il prezzo come numero.",
-    "provideAmountGreaterThanZero": "Il prezzo deve essere maggiore di 0."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Inserisci una descrizione.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Imposta un tipo di commissione valido.",
-    "noPercentage": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una percentuale valida. ",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "Non puoi impostare la percentuale di tassa al di sotto di 0.",
     "percentageHigh": "Non puoi impostare la percentuale di tassa al di sopra di 100%.",
     "percentageDecimals": "Non puoi impostare la percentuale di tassa con più di 2 cifre dopo la virgola."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una valuta valida. ",
-    "noAmount": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una quantità valida per la commissione."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Inserisci una quantità.",
@@ -1661,7 +1677,7 @@
   "spendModelErrors": {
     "provideAddress": "Inserisci un indirizzo.",
     "invalidAddress": "L'indirizzo fornito non sembra essere un indirizzo Bitcoin valido",
-    "provideAmountNumber": "Per favore, fornisci la quantità come un numero.",
+    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "La quantità deve essere maggiore di zero.",
     "insufficientFunds": "Non hai abbastanza fondi per inviare la quantità indicata. Assicurati di includere il costo della transazione. "
   },
