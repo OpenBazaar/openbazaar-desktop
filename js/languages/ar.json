@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "وضع الاختبار",
   "testnetTooltip": "يستخدم وضع الاختبار عملات testnet، والتي تهدف لأغراض الاختبار فقط.",
-  "betaTooltip": "أوبن يازار الآن في مرحلة تجريبية. تأكد من عمل نسخة احتياطية لمحفظتك, وكن حذراً إذا منت تنفق كمية كبيرة من بيتكوين. ",
   "tabMenuHeading": "قائمة",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "تم النسخ إلى الحافظة",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "الأطراف المتصلة",
     "totalPeers": "%{totalPeers} تم ايجاد",
-    "noResults": "لايوجد أطراف متصلة"
+    "noResults": "لايوجد أطراف متصلة",
+    "loadMore": "حمل المزيد"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "إشعارات",
     "noResults": "لا يوجد تنبيهات.",
     "text": {
       "order": "%{buyerName} قام بشراء %{listingTitle}.",
@@ -310,6 +311,7 @@
     "client": "Client",
     "server": "الخادم",
     "btnUpdateCheck": "التأكد من وجود التحديثات",
+    "downloadLatest": "Download Latest",
     "donationsTab": {
       "linkText": "التبرعات",
       "sectionHeader": "التبرعات",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "إضافة عنوان %{name}…",
       "statusAddAddressComplete": "تمت إضافة عنوان %{name}.",
       "statusAddAddressFailed": "تعذر إضافة العنوان %{name}.",
-      "addAddressErrorAlertTitle": "تعذر إضافة العنوان %{name}."
+      "addAddressErrorAlertTitle": "تعذر إضافة العنوان %{name}.",
+      "btnDelete": "حذف"
     },
     "advancedTab": {
       "sectionName": "متقدم",
@@ -840,6 +843,9 @@
     "shipTo": "شحن إلى",
     "noShippingFound": "هذه القائمة لاتشحن إلى البلد المحدد.",
     "localPickup": "هذا الخيار للأخذ المحلي فقط.",
+    "deliveryTime": "Delivery Time",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "أي بلد",
     "returnToStore": "العودة إلى المتجر",
     "goToStore": "اذهب إلى متجر",
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "نعم",
     "nsfwNo": "لا",
+    "nsfwLabel": "محتوى للبالغين ( إباحي, كلمات نابية, 18+, إلخ .... )",
     "sectionNames": {
       "general": "عام",
       "photos": "الصور",
@@ -967,7 +974,7 @@
     "btnAddReturnPolicy": "اضف سياسة إرجاع",
     "btnTermsAndConditions": "إضافة البنود والشروط",
     "btnAddCoupon": "إضافة قسيمة",
-    "primaryPhoto": "الصورة الأساسية",
+    "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "عرض قائمة",
     "shippingOptions": {
       "optionHeading": "خيارات الشحن #%{listPosition}",
@@ -988,7 +995,8 @@
         "namePlaceholder": "e.g. Standard, Express, Overnight",
         "estimatedDeliveryLabel": "موعد التسليم ,المقدر",
         "estimatedDeliveryPlaceholder": "مثال. 5-7 أيام",
-        "priceLabel": "السعر",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ اضف خدمة"
       },
@@ -1026,13 +1034,16 @@
       "trackSelectOption": "تتبع المخزون",
       "doNotTrackHelperText": "يمكن للمستهلكين شراء بقدر مايريدون",
       "trackByFixedHelperText": "ستنخفض الكمية حتى تصل إلى\"0\" الصفر, ثم ستعرض كمادة مباعة",
-      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
+      "quantity": "كمية"
     },
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, etc",
       "unlimitedQuantityLabel": "غير محدود",
-      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
+      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
+      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
       "title": "You have unsaved changes",
@@ -1213,9 +1224,12 @@
       "listing": "قائمة",
       "coupon": "قسيمة",
       "shipping": "الشحن",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "خيارات",
-      "subtotal": "Subtotal",
-      "total": "مجموع (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "مجموع"
     },
     "errors": {
       "moderatorsTitle": "إخفاق في تحميل بيانات الإشراف",
@@ -1277,7 +1291,9 @@
       "dateAsc": "الأحدث",
       "dateDesc": "الأقدم"
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "إعادة تعيين الفلاتر",
     "transactionsTable": {
       "headers": {
@@ -1591,7 +1607,7 @@
     "badConditionType": "الحالة ليست من الأنواع المتاحة.",
     "descriptionTooLong": "تجاوز الوصف الحد الأقصى المسموح به للطول.",
     "provideAmount": "يرجى تقديم سعر.",
-    "provideNumericAmount": "يرجى تقديم السعر كرقم.",
+    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "يجب أن يكون السعر أكبر من الرقم صفر 0 .",
     "imageRequired": "يرجى وضع صورة واحدة على الأقل",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "يجب أن تكون قيمة النسبة المئوية أكبر من الصفر.",
     "percentageHigh": "لا يمكنك تعيين نسبة رسوم أعلى أو تساوي 100٪" ,
     "priceLow": "يجب أن يكون السعر أكبر من الرقم صفر.",
-    "provideNumericDiscountAmount": "يرجى وضع مبلغ الحسم كرقم.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "أنت لديك أساسا قسيمة باستخدام هذا الرمز. يرجى تقديم رمز قسيمة فريد."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "يرجى تقديم خدمة شحن واحدة على الأقل.",
     "provideAmount": "يرجى تقديم سعر.",
     "provideNumericAmount": "يرجى تقديم السعر كرقم.",
-    "provideAmountGreaterThanZero": "يجب أن يكون السعر أكبر من الرقم صفر 0 ."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "يرجى ادخال وصف.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "يرجى تحديد نوع رسوم صالح",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "لا يمكنك تعيين نسبة رسوم تحت 0٪",
     "percentageHigh": "لا يمكنك تعيين نسبة رسوم أعلى من 100٪",
     "percentageDecimals": "لا يمكنك تعيين نسبة رسوم أكثر من 2 من حقول المنازل العشرية."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "إذا كان نوع الرسوم الثابتة أو الثابتة بالإضافة إلى النسبة المئوية، يجب عليك تعيين عملة صالحة للرسوم الخاصة بك.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "يرجى وضع كمية.",
@@ -1661,7 +1677,7 @@
   "spendModelErrors": {
     "provideAddress": "يرجى وضع عنوان.",
     "invalidAddress": "العنوان المقدم لايبدو أنه عنوان bitcoin صالح.",
-    "provideAmountNumber": "يرجي وضع الكمية كرقم",
+    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "الكمية يجب أن تكون أكبر من صفر",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
   },

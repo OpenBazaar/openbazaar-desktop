@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Напишите @handle, OpenBazaar ID или ищите по ключевому слову",
   "testnet": "Режим Тестирования",
   "testnetTooltip": "В Режиме Тестирования используются testnet монеты, которые предназначены только для режима тестирования.",
-  "betaTooltip": "OpenBazaar в настоящее время находится в стадии бета-тестирования. Обязательно создайте резервную копию своего кошелька и будьте осторожны при трате больших сумм.",
   "tabMenuHeading": "МЕНЮ",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Скопировано в буфер",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Подключенные участники",
     "totalPeers": "%{totalPeers} Найдено",
-    "noResults": "Никто не подключен"
+    "noResults": "Никто не подключен",
+    "loadMore": "Загрузить больше"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Уведомления",
     "noResults": "Уведомления не найдены.",
     "text": {
       "order": "%{buyerName} совершил покупку %{listingTitle}.",
@@ -310,6 +311,7 @@
     "client": "Клиент",
     "server": "Сервер",
     "btnUpdateCheck": "Проверить обновления",
+    "downloadLatest": "Download Latest",
     "donationsTab": {
       "linkText": "Пожертвования",
       "sectionHeader": "Пожертвования ",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "Добавление адреса %{name}…",
       "statusAddAddressComplete": "Адрес %{name} добавлен.",
       "statusAddAddressFailed": "Не удалось добавить адрес %{name}.",
-      "addAddressErrorAlertTitle": "Не удалось добавить адрес %{name}"
+      "addAddressErrorAlertTitle": "Не удалось добавить адрес %{name}",
+      "btnDelete": "Удалить"
     },
     "advancedTab": {
       "sectionName": "Сервер",
@@ -840,6 +843,9 @@
     "shipTo": "Отправка в:",
     "noShippingFound": "Этот товар не поставляется в выбранную страну.",
     "localPickup": "This option is for local pickup only.",
+    "deliveryTime": "Срок доставки",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "Любая страна",
     "returnToStore": "Возврат в магазин",
     "goToStore": "Перейти в магазин",
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "Да",
     "nsfwNo": "Нет",
+    "nsfwLabel": "Контент для взрослых (NSFW, 18+, и т. д.)",
     "sectionNames": {
       "general": "Общий",
       "photos": "Фотографии",
@@ -967,7 +974,7 @@
     "btnAddReturnPolicy": "Добавить политику возвратов",
     "btnTermsAndConditions": "Добавить условия",
     "btnAddCoupon": "Добавить Купон",
-    "primaryPhoto": "Основное фото",
+    "primaryPhoto": "Главное фото",
     "viewListingLink": "Просмотр товара",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -988,7 +995,8 @@
         "namePlaceholder": "e.g. Standard, Express, Overnight",
         "estimatedDeliveryLabel": "Est. Delivery Time",
         "estimatedDeliveryPlaceholder": "например, 5-7 дней",
-        "priceLabel": "Цена",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Добавить услугу"
       },
@@ -1026,13 +1034,16 @@
       "trackSelectOption": "Track Inventory",
       "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
       "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
-      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
+      "quantity": "Количество"
     },
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, и т. д.",
       "unlimitedQuantityLabel": "unlimited",
-      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
+      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
+      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
       "title": "Имеются несохраненные изменения",
@@ -1163,7 +1174,7 @@
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Выберите этого модератора",
     "confirmPayment": {
-      "title": "Everything look good?",
+      "title": "Все выглядит хорошо ?",
       "msg": "If yes, please proceed to the final step.",
       "confirm": "Да",
       "cancel": "Отмена"
@@ -1199,7 +1210,7 @@
       "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
       "send": "Отправить",
       "share": {
-        "title": "Share with friends",
+        "title": "Поделитесь с друзьями",
         "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
         "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
         "postToTwitter": "Опубликовать в Twitter",
@@ -1213,9 +1224,12 @@
       "listing": "Объявление",
       "coupon": "Купон",
       "shipping": "Доставка",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Параметры",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Суммарно"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1277,7 +1291,9 @@
       "dateAsc": "Новейший",
       "dateDesc": "Старейший "
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "Reset filters",
     "transactionsTable": {
       "headers": {
@@ -1591,7 +1607,7 @@
     "badConditionType": "Данный тип состояния не доступен.",
     "descriptionTooLong": "Описание превышает максимально допустимую длину.",
     "provideAmount": "Пожалуйста, укажите цену.",
-    "provideNumericAmount": "Пожалуйста, укажите цену цифрами.",
+    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "Цена должна быть больше 0",
     "imageRequired": "Укажите хотя бы одно изображение",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "Процентное значение должно быть больше нуля.",
     "percentageHigh": "Вы не можете установить процент выше или равный 100%" ,
     "priceLow": "Цена должна быть больше нуля.",
-    "provideNumericDiscountAmount": "Укажите сумму скидки цифрами.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Пожалуйста, укажите цену.",
     "provideNumericAmount": "Пожалуйста, укажите цену цифрами.",
-    "provideAmountGreaterThanZero": "Цена должна быть больше 0."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Пожалуйста, предоставьте описание.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "Вы не можете установить процентную ставку ниже нуля.",
     "percentageHigh": "Вы не можете установить процент гонорара выше 100%",
     "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Укажите количество.",
@@ -1661,7 +1677,7 @@
   "spendModelErrors": {
     "provideAddress": "Пожалуйста укажите адрес.",
     "invalidAddress": "Предоставленный адрес не является действительным bitcoin адресом.",
-    "provideAmountNumber": "Укажите количество цифрами.",
+    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "Сумма должна быть больше нуля.",
     "insufficientFunds": "У вас недостаточно средств для отправки такой суммы. Обязательно учтите плату за транзакцию."
   },

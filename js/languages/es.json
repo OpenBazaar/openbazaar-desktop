@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Escriba una @manija, OpenBazaar ID o término de búsqueda.",
   "testnet": "Modo de prueba.",
   "testnetTooltip": "\"Modo de prueba\" utiliza monedas/divisas de la red-de-prueba, las cuales son utilizadas con propósito de prueba solamente.",
-  "betaTooltip": "OpenBazaar está actualmente en Beta. Asegúrese de respaldar su monedero, y sea cuidadoso si va a gastar cantidades grandes de bitcoin.",
   "tabMenuHeading": "MENÚ",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Copiado al sujetapapeles.",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Pares conectados",
     "totalPeers": "%{totalPeers} encontrados",
-    "noResults": "No hay pares conectados"
+    "noResults": "No hay pares conectados",
+    "loadMore": "Cargar Más"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Notificaciones",
     "noResults": "No hay notificaciones.",
     "text": {
       "order": "%{buyerName} ha comprado %{listingTitle}.",
@@ -237,7 +238,7 @@
       "inactive": "Su tienda está inactiva en este momento, y escondida para el público. %{link}",
       "inactiveLink": "Cambio/a",
       "listingDataChangedPopin": "Los datos del listado cambiaron.",
-      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
+      "shippingDataChangedPopin": "Su información de país y/o dirección de envío ha cambiado. Esto puede afectar a qué listados le enviarán gratis.",
       "freeShippingBanner": "Envío gratis",
       "sortOpts": {
         "priceAsc": "Precio bajo a alto",
@@ -310,6 +311,7 @@
     "client": "Cliente",
     "server": "Servidor",
     "btnUpdateCheck": "Revisar actualizaciones",
+    "downloadLatest": "Descargar último",
     "donationsTab": {
       "linkText": "Donaciones",
       "sectionHeader": "Donaciones",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "Agregando dirección %{name}…",
       "statusAddAddressComplete": "Dirección %{name} agregada.",
       "statusAddAddressFailed": "No se pudo añadir la dirección %{name}",
-      "addAddressErrorAlertTitle": "No se pudo añadir la dirección %{name}"
+      "addAddressErrorAlertTitle": "No se pudo añadir la dirección %{name}",
+      "btnDelete": "Borrar"
     },
     "advancedTab": {
       "sectionName": "Avanzado",
@@ -840,6 +843,9 @@
     "shipTo": "Enviar a:",
     "noShippingFound": "Este listado no puede ser enviado al país seleccionado.",
     "localPickup": "La opción es sólo para recogida local.",
+    "deliveryTime": "Delivery Time",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "Cualquier país",
     "returnToStore": "Volver a la tienda",
     "goToStore": "Ir a tienda",
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "Sí",
     "nsfwNo": "No",
+    "nsfwLabel": "Contenido Para Adultos (NSFW, adult, 18+, etc)",
     "sectionNames": {
       "general": "General",
       "photos": "Fotos",
@@ -967,7 +974,7 @@
     "btnAddReturnPolicy": "Añadir política de devolución",
     "btnTermsAndConditions": "Añadir términos y condiciones",
     "btnAddCoupon": "Agregar Cupón",
-    "primaryPhoto": "Fotografía principal",
+    "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "Ver Listado",
     "shippingOptions": {
       "optionHeading": "Opción de envío #%{listPosition}",
@@ -988,7 +995,8 @@
         "namePlaceholder": "ej. Estándar, Express, 24 horas",
         "estimatedDeliveryLabel": "Tiempo de entrega estimado",
         "estimatedDeliveryPlaceholder": "ej. 5-7 días",
-        "priceLabel": "Precio",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Agregar Servicio"
       },
@@ -1026,13 +1034,16 @@
       "trackSelectOption": "Registrar inventario",
       "doNotTrackHelperText": "Los cientes pueden comprar tanto como quieran",
       "trackByFixedHelperText": "La cantidad decrementará hasta que alcance 0. Entonces se mostará como agotado.",
-      "trackByVariantsHelperText": "El inventario se registra por variante / combinación de variantes"
+      "trackByVariantsHelperText": "El inventario se registra por variante / combinación de variantes",
+      "quantity": "Cantidad"
     },
     "variantInventory": {
       "helperText": "Las opciones variantes con una cantidad de 0 no se mostrarán",
       "placeholderSKU": "SKU, ID, etc...",
       "unlimitedQuantityLabel": "ilimitado",
-      "placeholderNeedMoreData": "La tabla de inventario variante aparecerá cuando haya declarado al menos una variante con al menos una elección."
+      "placeholderNeedMoreData": "La tabla de inventario variante aparecerá cuando haya declarado al menos una variante con al menos una elección.",
+      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
       "title": "Tiene mensajes no guardados",
@@ -1213,9 +1224,12 @@
       "listing": "Listado",
       "coupon": "Cupón",
       "shipping": "Envío",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Opciones",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Total"
     },
     "errors": {
       "moderatorsTitle": "Datos del Moderador Fallaron en Cargarse",
@@ -1277,7 +1291,9 @@
       "dateAsc": "Mas nuevo",
       "dateDesc": "Mas antíguo"
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "Reiniciar filtros",
     "transactionsTable": {
       "headers": {
@@ -1591,7 +1607,7 @@
     "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "The description exceeds the maximum allowable length.",
     "provideAmount": "Indique un precio.",
-    "provideNumericAmount": "Por favor indique el precio con un número.",
+    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "El precio debe ser mayor a 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "El valor del porcentaje debe ser mayor a cero.",
     "percentageHigh": "No puede definir un porcentaje mayor o igual a 100%" ,
     "priceLow": "El precio debe ser mayor a cero.",
-    "provideNumericDiscountAmount": "Introduzca el importe de descuento como un número.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Indique un precio.",
     "provideNumericAmount": "Por favor indique el precio con un número.",
-    "provideAmountGreaterThanZero": "El precio debe ser mayor a 0."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Please provide a description.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "No puede fijar un porcentaje de cargo bajo cero.",
     "percentageHigh": "No puede fijar un porcentaje de cargo sobre 100%",
     "percentageDecimals": "No puede fijar un porcentaje de cargo a más de 2 puntos decimales."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Por favor provea una cantidad.",
@@ -1661,7 +1677,7 @@
   "spendModelErrors": {
     "provideAddress": "Por favor provea una dirección.",
     "invalidAddress": "La dirección proveída no parece ser una dirección valida de bitcoin.",
-    "provideAmountNumber": "Por favor provea una cantidad como número.",
+    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "La cantidad deber ser mayor que cero.",
     "insufficientFunds": "No tiene fondos suficientes para enviar esa cantidad. Asegúrese de contar con el cargo de la transacción."
   },
