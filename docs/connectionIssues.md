@@ -6,7 +6,7 @@ comming soon...
 ### Tor
 You can find a guide to [configuring OpenBazaar to run on Tor here.](https://github.com/OpenBazaar/openbazaar-desktop/wiki/Tor-Setup).
 
-More information is available [in the server Tor documentation if you need it.](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/tor.md)
+More information is available in the [server Tor documentation](https://github.com/OpenBazaar/openbazaar-go/blob/master/docs/tor.md), if you need it.
 
 
 ### Local Stand-alone Server
