@@ -82,10 +82,11 @@ describe('our index utilities', () => {
       const sourceNumberSet = [123, 1266, 125468,
                              77547959, 388475766449,
                              48242478968789, 482424789687893242];
-      const formattedNumberSet = [123, '1.3k', '125.47k',
+      const formattedNumberSet = ['123', '1.3k', '125.47k',
                                 '77.548m', '388.476b',
                                 '48.242t', '482,424.79t'];
       for (let i = 0; i < sourceNumberSet.length; i++) {
+        expect(abbrNum(sourceNumberSet[i], i)).to.be.a('string');
         expect(abbrNum(sourceNumberSet[i], i)).to.be.equal(formattedNumberSet[i]);
       }
     });
@@ -94,10 +95,11 @@ describe('our index utilities', () => {
       const sourceNumberSet = [-123, -1266, -125468,
                              -77547959, -388475766449,
                              -48242478968789, -482424789687893242];
-      const formattedNumberSet = [-123, '-1.3k', '-125.47k',
+      const formattedNumberSet = ['-123', '-1.3k', '-125.47k',
                                 '-77.548m', '-388.476b',
                                 '-48.242t', '-482,424.79t'];
       for (let i = 0; i < sourceNumberSet.length; i++) {
+        expect(abbrNum(sourceNumberSet[i], i)).to.be.a('string');
         expect(abbrNum(sourceNumberSet[i], i)).to.be.equal(formattedNumberSet[i]);
       }
     });
