@@ -7,6 +7,7 @@ import BaseModal from '../BaseModal';
 import Story from './Story';
 import Contributors from './Contributors';
 import Donations from './Donations';
+import Help from './Help';
 import License from './License';
 import BTCTicker from '../../BTCTicker';
 
@@ -26,6 +27,7 @@ export default class extends BaseModal {
       Contributors,
       Donations,
       License,
+      Help,
     };
 
     this.currentTabName = 'Story';
