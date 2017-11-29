@@ -62,6 +62,13 @@ export function abbrNum(_number, _maxDecPlaces = 1) {
   const decPlaces = Math.pow(10, _maxDecPlaces);
   const isNegative = _number < 0;
   let number = Math.abs(_number);
+  let processed = false;
+  let lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang();
+
+  if (!lang) {
+    console.warn('Unable to get the languages from the local settings. Using en-US.');
+    lang = 'en-US';
+  }
 
   // Enumerate number abbreviations
   const abbrev = ['thousand', 'million', 'billion', 'trillion'];
@@ -83,19 +90,17 @@ export function abbrNum(_number, _maxDecPlaces = 1) {
         i++;
       }
 
-      let lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang();
-
-      if (!lang) {
-        console.warn('Unable to get the languages from the local settings. Using en-US.');
-        lang = 'en-US';
-      }
-
       number = new Intl.NumberFormat(lang).format(isNegative ? number * -1 : number);
       number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
 
       // We are done... stop
+      processed = true;
       break;
     }
+  }
+
+  if (!processed) {
+    number = new Intl.NumberFormat(lang).format(isNegative ? number * -1 : number);
   }
 
   return number;
