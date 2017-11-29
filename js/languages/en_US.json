@@ -253,7 +253,8 @@
       "categoryFilter": {
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
-        "showLess": "less"
+        "showLess": "less",
+        "all": "All"
       },
       "toolTip": {
         "contentView": "Toggle view"
