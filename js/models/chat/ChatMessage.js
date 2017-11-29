@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
+import is from 'is_js';
 import { getEmojiByName } from '../../data/emojis';
 import { isMultihash } from '../../utils';
 import sanitizeHtml from 'sanitize-html';
@@ -50,9 +51,16 @@ export function processMessage(message) {
           const w = word.trim();
           if (wordsToAnchorify.includes(w)) return;
 
+          // Certain words are valid multihashes (e.g. that)
+          // const isGuid = isMultihash(w) && w.length > 15;
+          const isGuid = isMultihash(w) && w.length > 15;
+
           if ((w.startsWith('@') && w.length > 1) ||
             (w.startsWith('ob://') && w.length > 5) ||
-            isMultihash(w)) {
+            (w.startsWith('http://') && w.length >= 11) ||
+            (w.startsWith('https://') && w.length >= 12) ||
+            (w.startsWith('www.') && w.length >= 8) ||
+            isGuid) {
             wordsToAnchorify.push(w);
           }
         });
@@ -66,10 +74,20 @@ export function processMessage(message) {
   processedMessage = $message.html();
 
   wordsToAnchorify.forEach(word => {
-    const w = word.startsWith('ob://') ? word.slice(5) : word;
+    let href = !is.url(word) && !word.startsWith('ob://') ?
+      `#ob://${word}` : word;
+
+    if (is.url(word)) {
+      const link = document.createElement('a');
+      link.setAttribute('href', word);
+      if (link.protocol === 'file:') {
+        href = `http://${word}`;
+      }
+    }
+
     processedMessage = processedMessage
       .split(word)
-      .join(`<a href="#ob://${w}" class="clrTEm">${word}</a>`);
+      .join(`<a href="${href}" class="clrTEm">${word}</a>`);
   });
 
   // restore the anchors we pulled out earlier
