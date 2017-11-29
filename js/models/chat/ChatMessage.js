@@ -57,9 +57,9 @@ export function processMessage(message) {
 
           if ((w.startsWith('@') && w.length > 1) ||
             (w.startsWith('ob://') && w.length > 5) ||
-            (w.startsWith('http://') && w.length > 7) ||
-            (w.startsWith('https://') && w.length > 8) ||
-            (w.startsWith('www.') && w.length > 4) ||
+            (w.startsWith('http://') && w.length >= 11) ||
+            (w.startsWith('https://') && w.length >= 12) ||
+            (w.startsWith('www.') && w.length >= 8) ||
             isGuid) {
             wordsToAnchorify.push(w);
           }
