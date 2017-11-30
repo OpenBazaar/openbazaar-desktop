@@ -178,9 +178,6 @@ export default class extends BaseModel {
               service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
                 options.attrs.metadata.pricingCurrency);
             }
-
-            // TODO TODO TEMP temp until the server BCH branch is rebased!!!!!
-            delete service.additionalItemPrice;
           });
         });
 
