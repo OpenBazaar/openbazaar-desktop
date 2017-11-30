@@ -34,12 +34,6 @@ export default class extends BaseVw {
     return 'userPageReputation';
   }
 
-  events() {
-    return {
-      // 'click .js-tab': 'tabClick',
-    };
-  }
-
   onRatings(data) {
     const pData = data || {};
     this.setState({
@@ -47,6 +41,11 @@ export default class extends BaseVw {
     });
     this.reviews.reviewIDs = pData.ratings || [];
     this.reviews.render();
+  }
+
+  remove() {
+    if (this.ratingsFetch) this.ratingsFetch.abort();
+    super.remove();
   }
 
   render() {
