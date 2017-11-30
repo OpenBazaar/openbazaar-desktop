@@ -17,7 +17,7 @@ export default class extends BaseVw {
     this.initialPageSize = options.pageSize || 3;
     this.pageSize = options.pageSize || 10;
     this.options.async = options.async || false;
-    this.reviewIDs = options.ratings || [];
+    this._reviewIDs = options.ratings || [];
     this.isListing = options.isListing;
     this.collection = new Collection();
     this.listenTo(this.collection, 'add', model => this.addReview(model));
@@ -31,6 +31,16 @@ export default class extends BaseVw {
     return {
       'click .js-loadMoreBtn': 'clickLoadMore',
     };
+  }
+
+  get reviewIDs() {
+    return this._reviewIDs;
+  }
+
+  set reviewIDs(ids) {
+    if (!Array.isArray(ids)) throw new Error('The Review ids must be an array.');
+
+    this._reviewIDs = ids;
   }
 
   hideMoreBtn() {
