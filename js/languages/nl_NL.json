@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Type een @handle, OpenBazaar ID of zoek term",
   "testnet": "Test Modus",
   "testnetTooltip": "Test Modus gebruikt testnet coins, deze zijn slechts bedoelt voor testdoeleinden.",
-  "betaTooltip": "OpenBazaar is op dit moment in Beta. Maak een update van uw wallet en wees voorzichtig bij het spenderen van grote hoeveelheden bitcoin.",
   "tabMenuHeading": "MENU",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Naar klembord gekopieerd",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Verbonden Peers",
     "totalPeers": "%{totalPeers} gevonden",
-    "noResults": "Geen verbonden Peers"
+    "noResults": "Geen verbonden Peers",
+    "loadMore": "Laad meer"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Notificaties",
     "noResults": "Geen meldingen gevonden.",
     "text": {
       "order": "%{buyerName} heeft %{listingTitle} gekocht.",
@@ -310,6 +311,7 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Controleer op update",
+    "downloadLatest": "Download Latest",
     "donationsTab": {
       "linkText": "Donaties",
       "sectionHeader": "Donaties ",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "Adres %{name} wordt toegevoegd...",
       "statusAddAddressComplete": "adres %{name} wordt toegevoegd.",
       "statusAddAddressFailed": "Kan adres %{name} niet toevoegen.",
-      "addAddressErrorAlertTitle": "Kan adres %{name} niet toevoegen."
+      "addAddressErrorAlertTitle": "Kan adres %{name} niet toevoegen.",
+      "btnDelete": "Verwijder"
     },
     "advancedTab": {
       "sectionName": "Geavanceerd",
@@ -840,6 +843,9 @@
     "shipTo": "Verstuur naar:",
     "noShippingFound": "Verkoopartikel wordt niet naar het geselecteerde land verstuurd.",
     "localPickup": "Deze optie is alleen bij ophalen",
+    "deliveryTime": "Delivery Time",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "Alle landen",
     "returnToStore": "Terug naar winkel",
     "goToStore": "Naar winkel",
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "ja",
     "nsfwNo": "Nee",
+    "nsfwLabel": "Inhoud voor volwassenen (NSFW, adult, 18+, etc)",
     "sectionNames": {
       "general": "Algemeen",
       "photos": "Foto's",
@@ -967,7 +974,7 @@
     "btnAddReturnPolicy": "Voer terugstuurbeleid toe.",
     "btnTermsAndConditions": "Voeg verkoopvoorwaarden toe.",
     "btnAddCoupon": "Voeg coupon toe",
-    "primaryPhoto": "Primaire foto",
+    "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "Bekijk Aanbieding",
     "shippingOptions": {
       "optionHeading": "Verzend Optie #%{listPosition}",
@@ -988,7 +995,8 @@
         "namePlaceholder": "b.v. Standaard, Express, Overnight",
         "estimatedDeliveryLabel": "Verwachte leveringsdatum",
         "estimatedDeliveryPlaceholder": "b.v. 5-7 dagen",
-        "priceLabel": "Prijs",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Voeg service toe"
       },
@@ -1026,13 +1034,16 @@
       "trackSelectOption": "Voorraad bijhouden",
       "doNotTrackHelperText": "Consumenten kunnen zoveel kopen als ze willen",
       "trackByFixedHelperText": "De hoeveelheid wordt verlaagd tot hij 0 is. Daarna zal weergegeven worden dat het artikel uitverkocht is.",
-      "trackByVariantsHelperText": "Voorraad wordt per uitvoering bijgehouden"
+      "trackByVariantsHelperText": "Voorraad wordt per uitvoering bijgehouden",
+      "quantity": "Hoeveelheid"
     },
     "variantInventory": {
       "helperText": "Uitvoeringsopties met een hoeveelheid van 0 worden niet weergegeven",
       "placeholderSKU": "Items, ID, etc",
       "unlimitedQuantityLabel": "onbeperkt",
-      "placeholderNeedMoreData": "De tabel voor uitvoeringsvoorraad wordt zichtbaar wanneer je de eerste uitvoering met keuzes hebt opgevoerd."
+      "placeholderNeedMoreData": "De tabel voor uitvoeringsvoorraad wordt zichtbaar wanneer je de eerste uitvoering met keuzes hebt opgevoerd.",
+      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
       "title": "You have unsaved changes",
@@ -1213,9 +1224,12 @@
       "listing": "Verkoopartikel",
       "coupon": "Coupon",
       "shipping": "Verzending",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Opties",
-      "subtotal": "Subtotaal",
-      "total": "Totaal (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Totaal"
     },
     "errors": {
       "moderatorsTitle": "Moderator data kon niet geladen worden",
@@ -1277,7 +1291,9 @@
       "dateAsc": "Nieuwste",
       "dateDesc": "Oudste"
     },
-    "placeholderSearch": "Zoek op Order #, Title of Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Zoek op Order #, Title of Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "Herstel filters",
     "transactionsTable": {
       "headers": {
@@ -1591,7 +1607,7 @@
     "badConditionType": "De conditie is geen beschikbaar type.",
     "descriptionTooLong": "De beschrijving is langer dan toegestaan.",
     "provideAmount": "Voer een prijs in",
-    "provideNumericAmount": "Voer de prijs in als nummer",
+    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "De prijs moet hoger zijn dan 0.",
     "imageRequired": "Voer tenminste 1 afbeelding op",
     "tooManyTags": "Je hebt het maximaal aantal van %{maxTags} tags overschreden.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "Het percentage moet groter zijn dan nul.",
     "percentageHigh": "Je kunt niet een percentage opgeven gelijk aan of groter dan 100%" ,
     "priceLow": "De prijs moet hoger zijn dan nul.",
-    "provideNumericDiscountAmount": "Geef een korting op als nummer.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "Je hebt al een coupon met die code. Geef een unieke coupon code in."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "Voer tenminste 1 verzend service in.",
     "provideAmount": "Voer een prijs in.",
     "provideNumericAmount": "Voer de prijs in als nummer.",
-    "provideAmountGreaterThanZero": "De prijs moet hoger zijn dan 0. "
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Voer een beschrijving in.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Geef een geldige fee type op.",
-    "noPercentage": "Als je fee type een percentage is of vast plus percentage, dan moet je een geldig percentage opgeven.",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "Je kunt geen percentage instellen onder 0 %",
     "percentageHigh": "Je kunt geen percentage instellen boven 100%",
     "percentageDecimals": "Je kunt geen fee percentage zetten met meer dan 2 decimalen."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "Als je fee type vast is of vast plus percentage, dan moet je een geldige valuta instellen voor je fee.",
-    "noAmount": "Als je fee type vast is of vast plus percentage, dan moet je een geldige hoeveelheid instellen voor je vaste fee."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Voer een hoeveelheid in.",
@@ -1661,7 +1677,7 @@
   "spendModelErrors": {
     "provideAddress": "Voer adres in.",
     "invalidAddress": "Het opgegeven adres lijkt geen geldig Bitcoin adres te zijn.",
-    "provideAmountNumber": "Voer bedrag in als cijfer.",
+    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "Bedrag moet  groter zijn dan nul.",
     "insufficientFunds": "U heeft onvoldoende saldo om dit bedrag te versturen. Houdt rekening met de transactie toeslag."
   },
