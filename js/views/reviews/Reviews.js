@@ -155,7 +155,7 @@ export default class extends BaseVw {
       this._$loadMore = null;
       this._$loadMoreBtn = null;
       this._$errors = null;
-      this.loadReviews();
+      this.loadReviews(this.startIndex, this.initialPageSize);
     });
 
     return this;
