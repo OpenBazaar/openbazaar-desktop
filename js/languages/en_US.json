@@ -864,7 +864,7 @@
     "returnToStore": "Return to store",
     "goToStore": "Go to store",
     "unableToPurchase": {
-      "incompatibleCrypto": "The listing does not accept %{cur}.",
+      "incompatibleCrypto": "The listing does not accept the currency your wallet is configured to transact in.",
       "unrecognizedCur": "The item is priced in an unrecognized currency.",
       "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable."
     },

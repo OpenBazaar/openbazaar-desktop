@@ -90,7 +90,7 @@
               const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
 
               if (ob.metadata.acceptedCurrencies.indexOf(serverCurCode) === -1) {
-                tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto', { cur: serverCurCode });
+                tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto');
               } else if (ob.currencyValidity !== 'VALID') {
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
                    ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
