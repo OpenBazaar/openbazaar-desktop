@@ -52,9 +52,9 @@
         <div class="flexExpand">
           <span class="clrT2 clamp tx5b"><%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %></span>
         </div>
-        <div class="tx6 flexNoShrink">
+        <a class="tx6 flexNoShrink js-rating">
           <% print(`${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
-        </div>
+        </a>
       </div>
     <% } else if (ob.loading) { %>
       <div class="h3 clrT"><%= ob.polyT('userShort.userLoading') %></div>

@@ -12,9 +12,9 @@
   <div class="col8 flex gutterHMd">
     <% if (!ob.isListing) { %>
       <% if (slugLink) { %>
-        <a class="thumbHg" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')" href="<%= slugLink %>"></a>
+        <a class="thumbHg flexNoShrink" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')" href="<%= slugLink %>"></a>
       <% } else { %>
-        <div class="thumbHg" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')" href="<%= slugLink %>"></div>
+        <div class="thumbHg flexNoShrink" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')" href="<%= slugLink %>"></div>
       <% } %>
     <% } %>
     <div class="flexExpand gutterVSm">

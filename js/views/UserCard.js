@@ -110,6 +110,7 @@ export default class extends BaseVw {
       'click .js-follow': 'followClick',
       'click .js-mod': 'modClick',
       'click .js-imageHeader': 'nameClick',
+      'click .js-rating': 'ratingClick',
     };
   }
 
@@ -148,8 +149,13 @@ export default class extends BaseVw {
     this.navToUser();
   }
 
-  navToUser() {
-    app.router.navigate(`${this.guid}`, {
+  ratingClick() {
+    this.navToUser('reputation');
+  }
+
+  navToUser(tab) {
+    const route = `${this.guid}${tab ? `/${tab}` : ''}`;
+    app.router.navigate(route, {
       trigger: true,
     });
   }

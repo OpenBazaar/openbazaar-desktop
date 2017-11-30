@@ -20,9 +20,9 @@
       <% if (ob.followsYou) { %>
       <span><%= ob.parseEmojis('👥', '', { style: 'width: 10px' }) %> <%= ob.polyT('userPage.followsYou') %></span>
       <% } %>
-      <span class="js-rating clickable">
+      <a class="js-rating">
         <% print(`${ob.formatRating(ob.stats.averageRating, ob.stats.ratingCount)}`) %>
-      </span>
+      </a>
     </div>
   </div>
 </div>
