@@ -90,7 +90,11 @@
               const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
 
               if (ob.metadata.acceptedCurrencies.indexOf(serverCurCode) === -1) {
-                tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto');
+                tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
+                  {
+                    acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
+                    serverCur: serverCurCode,
+                  });
               } else if (ob.currencyValidity !== 'VALID') {
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
                    ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
@@ -100,7 +104,7 @@
                 unpurchaseable = false;
               }
 
-              let unpurchasableMarkup = `<div class="flexHRight clrTErr">This listing is not purchasable. &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;              
+              let unpurchasableMarkup = `<div class="flexHRight clrTErr">ob.polyT('listingDetail.unableToPurchase.unpurchaseable') &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;              
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT('listingDetail.buyNow') %>
