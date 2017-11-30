@@ -25,14 +25,17 @@ class Spend extends BaseModel {
   }
 
   get amountInServerCur() {
-    let btcAmount = 0;
+    let cryptoAmount = 0;
     const amount = this.get('amount');
 
     if (typeof amount === 'number') {
-      btcAmount = convertCurrency(amount, this.get('currency'), getServerCurrency().code);
+      console.log(`${amount} - ${this.get('currency')} - ${getServerCurrency().code}`);
+      cryptoAmount = convertCurrency(amount, this.get('currency'), getServerCurrency().code);
     }
 
-    return btcAmount;
+    console.log(`the result is ${cryptoAmount}`);
+
+    return cryptoAmount;
   }
 
   validate(attrs) {
@@ -93,7 +96,7 @@ class Spend extends BaseModel {
         amount = this.amountInServerCur;
       }
 
-      options.attrs.amount = decimalToInteger(amount, options.attrs.currency);
+      options.attrs.amount = decimalToInteger(amount, getServerCurrency().code);
       delete options.attrs.currency;
     }
 

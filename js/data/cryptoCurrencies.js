@@ -57,12 +57,12 @@ const currencies = [
     icon: 'imgs/cryptoIcons/bchIcon128.png',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
-        `https://tbtc.blockdozer.com/insight/address/${address}` :
+        `https://www.blocktrail.com/tBCC/address/${address}` :
         `https://blockdozer.com/insight/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
-        `https://tbtc.blockdozer.com/insight/tx/${txid}` :
+        `https://www.blocktrail.com/tBCC/tx/${txid}` :
         `https://blockdozer.com/insight/tx/${txid}`
     ),
     canShapeShiftInto: true,
