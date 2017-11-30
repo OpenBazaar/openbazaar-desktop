@@ -1,12 +1,16 @@
+<%
+  let title = ob.vendorSig.metadata.listingTitle ? ob.vendorSig.metadata.listingTitle : ob.vendorSig.metadata.listingSlug;
+  title = title ? title : ob.polyT('reputation.noTitle');
+  const slugLink = ob.vendorID && ob.vendorSig.metadata.listingSlug ? `ob://${ob.vendorID.peerID}/store/${ob.vendorSig.metadata.listingSlug}` : '';
+  let background = '';
+  if (ob.vendorSig.metadata.thumbnail) {
+    background = ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.vendorSig.metadata.thumbnail.small : ob.vendorSig.metadata.thumbnail.tiny}`);
+  }
+%>
+
 <div class="flexRow gutterHLg">
   <div class="col8 flex gutterHMd">
     <% if (!ob.isListing) { %>
-      <%
-         let background = '';
-         if (ob.thumbnail) {
-           background = ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`);
-         }
-      %>
       <a class="thumbHg" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')"></a>
     <% } %>
     <div class="flexExpand gutterVSm">
@@ -19,10 +23,13 @@
         <% } %>
       </div>
       <% if (!ob.isListing) { %>
-        <%
-          const title = ob.listingTitle ? ob.listingTitle : ob.polyT('reputation.noTitle');
-        %>
-        <h4 class="clrT"><%= title %></h4>
+        <h4 class="clrT">
+          <% if (slugLink) { %>
+            <a href="<%= slugLink %>" class="clrT"><%= title %></a>
+          <% } else { %>
+            <%= title %>
+          <% } %>
+        </h4>
       <% } %>
       <div class="reviewTextWrapper js-reviewTextWrapper">
         <p class="reviewText js-reviewText"><%= ob.review %></p>
