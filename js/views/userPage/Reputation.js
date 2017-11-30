@@ -26,6 +26,7 @@ export default class extends BaseVw {
 
     this.reviews = this.createChild(Reviews, {
       async: true,
+      initialPageSize: 5,
       pageSize: 5,
     });
   }

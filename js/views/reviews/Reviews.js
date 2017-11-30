@@ -89,13 +89,12 @@ export default class extends BaseVw {
         if (eventData.id === socketID && this.reviewIDs.indexOf(eventData.ratingId !== -1)) {
           if (!eventData.error) {
             this.collection.add(eventData.rating.ratingData);
-            if (this.collection.length >= this.startIndex) {
-              this.$loadMoreBtn.removeClass('processing');
-            }
           } else {
-            const error = app.polyglot.t('listingDetail.errors.loadReview',
-              { id: eventData.ratingId, error: eventData.error });
-            this.appendError(error);
+            // add the error to the collection so it can be shown in place of the review
+            this.collection.add(eventData);
+          }
+          if (this.collection.length >= this.startIndex) {
+            this.$loadMoreBtn.removeClass('processing');
           }
         }
       });
