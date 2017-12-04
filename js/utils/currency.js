@@ -35,7 +35,7 @@ export function UnrecognizedCurrencyError(message) {
 }
 
 UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
-UnrecognizedCurrencyError.prototype.constructor = NoExchangeRateDataError;
+UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
 
 /**
  * Converts the amount from a decimal to an integer. If the currency code is a crypto currency,

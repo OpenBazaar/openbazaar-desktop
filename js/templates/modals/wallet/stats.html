@@ -25,16 +25,15 @@
     <div><%= ob.polyT(`cryptoCurrencies.${serverCur}`) %></div>
   </div>
   <% if (userCurrencyValidity === 'VALID' && ob.userCurrency !== serverCur) { %>
-  <div>
-    <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
-    <div><%= ob.polyT('wallet.valueInCurrencyLabel',
-      { currency: userCurrencyValidity === 'VALID' ? ob.userCurrency : serverCur }) %></div>
-  </div>
+    <div>
+      <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
+      <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: ob.userCurrency })</div>
+    </div>
   <% } %>
   <div>
     <% if (typeof ob.transactionCount !== 'undefined') { %>
-    <div class="clrTEmph1 tx2 txB"><%= ob.transactionCount %></div>
-    <div><%= ob.polyT('wallet.transactionsLabel') %></div>
+      <div class="clrTEmph1 tx2 txB"><%= ob.transactionCount %></div>
+      <div><%= ob.polyT('wallet.transactionsLabel') %></div>
     <% } %>
   </div>            
 </div>

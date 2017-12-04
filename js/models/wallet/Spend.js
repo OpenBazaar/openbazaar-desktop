@@ -29,11 +29,8 @@ class Spend extends BaseModel {
     const amount = this.get('amount');
 
     if (typeof amount === 'number') {
-      console.log(`${amount} - ${this.get('currency')} - ${getServerCurrency().code}`);
       cryptoAmount = convertCurrency(amount, this.get('currency'), getServerCurrency().code);
     }
-
-    console.log(`the result is ${cryptoAmount}`);
 
     return cryptoAmount;
   }
