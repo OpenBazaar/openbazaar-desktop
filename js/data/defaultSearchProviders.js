@@ -11,16 +11,6 @@ const defaultSearchProviders = [
     locked: true,
   },
   {
-    id: 'duo',
-    name: 'Duo',
-    logo: '../imgs/duoSearchLogo.png',
-    search: '',
-    listings: 'https://ob2.duosear.ch/search/listings',
-    torsearch: '',
-    torlistings: '',
-    locked: true,
-  },
-  {
     id: 'rawflood',
     name: 'Raw Flood',
     logo: '../imgs/rawFloodLogo.png',
