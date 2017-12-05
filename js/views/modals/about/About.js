@@ -15,6 +15,7 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
+      initialTab: 'Story',
       ...options,
     };
 
@@ -30,7 +31,7 @@ export default class extends BaseModal {
       Help,
     };
 
-    this.currentTabName = 'Story';
+    this.currentTabName = this.tabViews[opts.initialTab] ? opts.initialTab : 'Story';
     this.isBundledApp = remote.getGlobal('isBundledApp');
     this.updatesSupported = remote.getGlobal('updatesSupported');
   }
