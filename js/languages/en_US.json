@@ -356,6 +356,12 @@
         "or": "or",
         "codeCTA": "get involved."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {
