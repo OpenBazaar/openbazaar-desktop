@@ -16,18 +16,23 @@
     <div class="col8 flex gutterHMd">
       <% if (!ob.isListing) { %>
         <% if (slugLink) { %>
-          <a class="thumbHg flexNoShrink" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')" href="<%= slugLink %>"></a>
+          <a class="thumbHg flexNoShrink"
+             style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')"
+             href="<%= slugLink %>">
+          </a>
         <% } else { %>
-          <div class="thumbHg flexNoShrink" style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')" href="<%= slugLink %>"></div>
+          <div class="thumbHg flexNoShrink"
+               style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')">
+          </div>
         <% } %>
       <% } %>
       <div class="flexExpand gutterVSm">
         <div class="tx5b clrT2">
           <% if (ob.buyerID) { %>
-          <% const nameLink = `<a href="${ob.buyerID.peerID}"><span class="clrT2">${ob.buyerName}</span></a>`; %>
-          <b><%= ob.polyT('listingDetail.review.title', { time: ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a'), name: nameLink }) %></b>
+            <% const nameLink = `<a href="${ob.buyerID.peerID}"><span class="clrT2">${ob.buyerName}</span></a>`; %>
+            <b><%= ob.polyT('listingDetail.review.title', { time: ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a'), name: nameLink }) %></b>
           <% } else { %>
-          <b><%= ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a') %></b>
+            <b><%= ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a') %></b>
           <% } %>
         </div>
         <% if (!ob.isListing) { %>

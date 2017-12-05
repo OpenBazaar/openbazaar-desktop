@@ -13,6 +13,15 @@ export default class extends BaseVw {
     }
     super(options);
 
+    // create the reviews here, so they're available for the fetch
+    this.reviews = this.createChild(Reviews, {
+      async: true,
+      initialPageSize: 5,
+      pageSize: 5,
+    });
+
+    // fetch the ratings immediately. They are asyncronous, and should not be refetched
+    // if the view re-renders.
     this.ratingsFetch =
       $.get(app.getServerUrl(`ob/ratings/${options.model.get('peerID')}`))
         .done(data => this.onRatings(data))
@@ -23,12 +32,6 @@ export default class extends BaseVw {
             app.polyglot.t('listingDetail.errors.fetchRatings'),
             failReason);
         });
-
-    this.reviews = this.createChild(Reviews, {
-      async: true,
-      initialPageSize: 5,
-      pageSize: 5,
-    });
   }
 
   className() {
