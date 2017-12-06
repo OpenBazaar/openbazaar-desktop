@@ -48,7 +48,7 @@ fixLinuxZoomIssue();
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
 
-// initialize language functionality 
+// initialize language functionality
 function getValidLanguage(lang) {
   if (getTranslationLangByCode(lang)) {
     return lang;
