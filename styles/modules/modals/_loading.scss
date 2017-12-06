@@ -24,4 +24,13 @@
       }
     }
   }
+
+  .content {
+    @include center();
+    margin-top: $spinnerLg / 2 + 15;
+
+    .fadeInContentText {
+      @include fadeIn(1s ease);
+    }
+  }
 }

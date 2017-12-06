@@ -6,6 +6,7 @@ import './lib/whenAll.jquery';
 import moment from 'moment';
 import app from './app';
 import { getCurrencyByCode } from './data/currencies';
+import { getServerCurrency } from './data/cryptoCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
@@ -22,7 +23,6 @@ import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
-import StartupLoadingModal from './views/modals/StartupLoading';
 import { openSimpleMessage } from './views/modals/SimpleMessage';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
@@ -104,22 +104,13 @@ app.router = new ObRouter();
 app.statusBar = new StatusBar();
 $('#statusBar').html(app.statusBar.render().el);
 
-// Create and launch a startup loading modal which will be
-// used during the startup connecting process.
-const startupLoadingModal = new StartupLoadingModal({
-  dismissOnOverlayClick: false,
-  dismissOnEscPress: false,
-  showCloseButton: false,
-}).render().open();
-
-// Create loading modal, which is a shared instance used by
-// the app after the initial connect sequence
+// Create loading modal, which is a shared instance used throughout the app
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
   removeOnRoute: false,
-}).render();
+}).render().open();
 
 handleLinks();
 
@@ -472,6 +463,17 @@ function start() {
 
     if (curConn && curConn.status !== 'disconnected') {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
+
+      console.log('sizzle');
+      window.sizzle = curConn;
+
+      const serverCur = getServerCurrency();
+
+      if (serverCur.code === 'BTC') {
+        app.loadingModal.setState({
+          contentText: 'You with them stars in your eyes.',
+        });
+      }
     }
 
     app.ownFollowing = new Followers([], {
@@ -553,32 +555,28 @@ function connectToServer() {
   const server = app.serverConfigs.activeServer;
   let connectAttempt = null;
 
-  startupLoadingModal
+  app.loadingModal
     .setState({
-      msg: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {
+      contentText: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {
         serverName: server.get('name'),
-        canceLink: '<a class="js-cancel delayBorder">' +
+        canceLink: '<a class="js-cancel">' +
           `${app.polyglot.t('startUp.startupLoadingModal.canceLink')}</a>`,
       }),
-      // There's a weird issue where the first time we render a message, it renders the
+      // There's a weird issue where the first time we render some text, it renders the
       // underline for the link first and then after a brief delay, the text after it. Looks
       // tacky, so to avoid it, we'll fade in the message.
-      msgClass: 'fadeInAnim',
+      contentClass: 'fadeInContentText',
     }).on('clickCancel', () => {
       connectAttempt.cancel();
       app.connectionManagmentModal.open();
-      startupLoadingModal.close();
+      app.loadingModal.close();
     });
 
   connectAttempt = serverConnect(app.serverConfigs.activeServer)
-    .done(() => {
-      startupLoadingModal.close();
-      app.loadingModal.open();
-      start();
-    })
+    .done(() => start())
     .fail(() => {
       app.connectionManagmentModal.open();
-      startupLoadingModal.close();
+      app.loadingModal.close();
       serverConnectEvents.once('connected', () => {
         app.loadingModal.open();
         start();
