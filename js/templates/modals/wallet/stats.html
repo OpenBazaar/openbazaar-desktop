@@ -27,7 +27,7 @@
   <% if (userCurrencyValidity === 'VALID' && ob.userCurrency !== serverCur) { %>
     <div>
       <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
-      <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: ob.userCurrency })</div>
+      <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: ob.userCurrency }) %></div>
     </div>
   <% } %>
   <div>
