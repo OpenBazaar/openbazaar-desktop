@@ -1,65 +1,36 @@
-import { capitalize } from '../../utils/string';
+import { View } from 'backbone';
 import BaseModal from './BaseModal';
 import loadTemplate from '../../utils/loadTemplate';
 
 export default class extends BaseModal {
-  constructor(options = {}) {
-    const opts = {
-      contentHtml: '',
-      contentText: '',
-      contentClass: '', // only used if providing a contentText
-      ...options,
-    };
-
-    super(opts);
-
-    this._state = {
-      ...opts.initialState || {},
-    };
-  }
-
   className() {
     return `${super.className()} loadingModal clrP clrT`;
   }
 
-  events() {
-    return {
-      'click .js-content [class^="js-"], .js-content [class*=" js-"]': 'onContentClick',
-    };
+  clearContentView() {
+    this._contentView = null;
+    this.getCachedEl('.js-content').empty();
   }
 
-  // TODO TODO HEy Hujohafd asoijdoia soajidiosa
-  // User of this view may embed CTA's in the msg. This is a generic handler to
-  // trigger events for them.
-  onContentClick(e) {
-    // If the the el has a '.js-<class>' class, we'll trigger a
-    // 'click<Class>' event from this view.
-    const events = [];
-
-    e.currentTarget.classList.forEach((className) => {
-      if (className.startsWith('js-')) events.push(className.slice(3));
-    });
-
-    if (events.length) {
-      events.forEach(event => {
-        this.trigger(`click${capitalize(event)}`, { view: this, e });
-      });
+  setContentView(contentView) {
+    if (!(contentView instanceof View)) {
+      throw new Error('The contentView must be provided as a backbone view instance.');
     }
+
+    this._contentView = contentView;
+    this.getCachedEl('.js-content').html(contentView.el);
   }
 
-  open(content = {}) {
-    const state = {
-      contentHtml: '',
-      contentText: '',
-      contentClass: '',
-      ...content,
-    };
+  open(contentView) {
+    // Since this modal is used as a single chared instance across the app, the contentView
+    // will be cleared on each open so one user of the modal doesn't impose their contentView
+    // on another.
+    if (!contentView) {
+      this.clearContentView();
+    } else {
+      this.setContentView(contentView);
+    }
 
-    // Since this loading modal is being used as a single instance shared by many parts of
-    // the app, any content will be cleared each time the modal is opened unless it's explicitly
-    // passed into open. This way one "consumer" of the loading modal will not impose their state
-    // on the next guy.
-    this.setState(state);
     return super.open();
   }
 
@@ -70,6 +41,10 @@ export default class extends BaseModal {
       }));
 
       super.render();
+      if (this._contentView) {
+        this.setContentView(this._contentView);
+        this._contentView.delegateEvents();
+      }
     });
 
     return this;

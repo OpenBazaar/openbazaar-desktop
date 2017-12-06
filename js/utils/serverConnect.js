@@ -214,7 +214,6 @@ export default function connect(server, options = {}) {
 
   const opts = {
     attempts: 7,
-    attempts: 70,
     minAttemptSpacing: 3000,
     maxAttemptTime: 5000,
     ...options,

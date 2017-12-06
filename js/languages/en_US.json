@@ -116,9 +116,10 @@
         "title": "Unable to load search providers."
       }
     },
-    "startupLoadingModal": {
-      "canceLink": "cancel",
-      "connectAttemptMsg": "Connecting to %{serverName}. %{canceLink}"
+    "connectMessaging": {
+      "cancelLink": "cancel",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
     }
   },
   "notifications": {

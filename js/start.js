@@ -23,6 +23,7 @@ import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
 import LoadingModal from './views/modals/Loading';
+import StartupConnectMessaging from './views/StartupConnectMessaging';
 import { openSimpleMessage } from './views/modals/SimpleMessage';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
@@ -104,13 +105,15 @@ app.router = new ObRouter();
 app.statusBar = new StatusBar();
 $('#statusBar').html(app.statusBar.render().el);
 
+const startupConnectMessaging = new StartupConnectMessaging();
+
 // Create loading modal, which is a shared instance used throughout the app
 app.loadingModal = new LoadingModal({
   dismissOnOverlayClick: false,
   dismissOnEscPress: false,
   showCloseButton: false,
   removeOnRoute: false,
-}).render().open();
+}).render().open(startupConnectMessaging);
 
 handleLinks();
 
@@ -464,14 +467,14 @@ function start() {
     if (curConn && curConn.status !== 'disconnected') {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
 
-      console.log('sizzle');
-      window.sizzle = curConn;
-
       const serverCur = getServerCurrency();
 
       if (serverCur.code === 'BTC') {
-        app.loadingModal.setState({
-          contentText: 'You with them stars in your eyes.',
+        startupConnectMessaging.setState({
+          msg: app.polyglot.t('startUp.connectMessaging.zecBinaryInit', {
+            cancelLink: '<a class="js-cancel">' +
+              `${app.polyglot.t('startUp.connectMessaging.cancelLink')}</a>`,
+          }),
         });
       }
     }
@@ -555,17 +558,13 @@ function connectToServer() {
   const server = app.serverConfigs.activeServer;
   let connectAttempt = null;
 
-  app.loadingModal
+  startupConnectMessaging
     .setState({
-      contentText: app.polyglot.t('startUp.startupLoadingModal.connectAttemptMsg', {
+      msg: app.polyglot.t('startUp.connectMessaging.connectAttemptMsg', {
         serverName: server.get('name'),
-        canceLink: '<a class="js-cancel">' +
-          `${app.polyglot.t('startUp.startupLoadingModal.canceLink')}</a>`,
+        cancelLink: '<a class="js-cancel">' +
+          `${app.polyglot.t('startUp.connectMessaging.cancelLink')}</a>`,
       }),
-      // There's a weird issue where the first time we render some text, it renders the
-      // underline for the link first and then after a brief delay, the text after it. Looks
-      // tacky, so to avoid it, we'll fade in the message.
-      contentClass: 'fadeInContentText',
     }).on('clickCancel', () => {
       connectAttempt.cancel();
       app.connectionManagmentModal.open();
@@ -578,7 +577,8 @@ function connectToServer() {
       app.connectionManagmentModal.open();
       app.loadingModal.close();
       serverConnectEvents.once('connected', () => {
-        app.loadingModal.open();
+        startupConnectMessaging.setState({ msg: '' });
+        app.loadingModal.open(startupConnectMessaging);
         start();
       });
     });

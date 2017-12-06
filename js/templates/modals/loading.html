@@ -1,10 +1,2 @@
 <div class="flexCent"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
-<div class="content js-content">
-  <%
-    if (ob.contentHtml) {
-      print(ob.contentHtml);
-    } else if (ob.contentText) {
-      print(`<p class="txUnl tx4 clrT clrBr ${ob.contentClass || ''}">${ob.contentText}</p>`);
-    }
-  %>
-</div>
+<div class="content js-content"></div>
