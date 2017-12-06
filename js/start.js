@@ -469,7 +469,7 @@ function start() {
 
       const serverCur = getServerCurrency();
 
-      if (serverCur.code === 'BTC') {
+      if (serverCur.code === 'ZEC') {
         startupConnectMessaging.setState({
           msg: app.polyglot.t('startUp.connectMessaging.zecBinaryInit', {
             cancelLink: '<a class="js-cancel">' +
