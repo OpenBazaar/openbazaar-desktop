@@ -5,7 +5,6 @@ import '../../../utils/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
-import { convertCurrency } from '../../../utils/currency';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -120,9 +119,6 @@ export default class extends BaseModal {
       vendor: this.vendor,
     });
 
-    // on the initial load, fetch the fees
-    this.getFees();
-
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     this.listenTo(this.order.get('items').at(0), 'someChange ', () => this.refreshPrices());
@@ -174,42 +170,6 @@ export default class extends BaseModal {
     }
   }
 
-  getFees() {
-    if (this.fetchFees && this.fetchFees.state() === 'pending') {
-      return this.fetchFees;
-    }
-
-    this.fetchFees = $.get({
-      url: app.getServerUrl('wallet/fees'),
-      dataType: 'json',
-    })
-      .done((data, status, xhr) => {
-        if (xhr.statusText === 'abort') return;
-        const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
-        const estFee = feePerByte * 184 / 100000000;
-        this.minModPrice = estFee * 10;
-        this.setState({
-          isFetching: false,
-          fetchError: false,
-          fetchFailed: false,
-        });
-      })
-      .fail(xhr => {
-        if (xhr.statusText === 'abort') return;
-        this.setState({
-          isFetching: false,
-          fetchError: xhr.responseJSON && xhr.responseJSON.reason || '',
-          fetchFailed: true,
-        });
-      });
-
-    return this.fetchFees;
-  }
-
-  clickRetryFee() {
-    this.getFees();
-  }
-
   goToListing() {
     app.router.navigate(`${this.vendor.peerID}/store/${this.listing.get('slug')}`,
       { trigger: true });
@@ -248,21 +208,15 @@ export default class extends BaseModal {
     }
   }
 
-  disableModerators() {
-    this.getCachedEl('#purchaseModerated').prop('checked', false);
-    this.moderators.deselectOthers();
-    this.order.set('moderator', '');
-  }
-
   moderationOn(bool) {
     this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
     this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
     this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
-    if (!bool) this.disableModerators();
     this.order.moderated = bool;
     this.getCachedEl('#purchaseModerated').prop('checked', bool);
     this.moderators.noneSelected = !bool;
   }
+
 
   onNoValidModerators() {
     this.moderationOn(false);
@@ -324,6 +278,7 @@ export default class extends BaseModal {
       this._state = state;
       this.state.phase = state;
       this.$el.attr('data-phase', state);
+      this.actionBtn.render();
     }
   }
 
@@ -332,12 +287,11 @@ export default class extends BaseModal {
     const allErrContainers = this.$('div[class $="-errors"]');
     allErrContainers.each((i, container) => $(container).html(''));
 
-    // don't allow a zero price purchase
+    // don't allow a zero or negative price purchase
     const priceObj = this.prices[0];
     if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
       this.insertErrors(this.$errors, [app.polyglot.t('purchase.errors.zeroPrice')]);
       this.updatePageState('pay');
-      this.actionBtn.render();
       return;
     }
 
@@ -362,7 +316,6 @@ export default class extends BaseModal {
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
         this.updatePageState('pay');
-        this.actionBtn.render();
       } else {
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -372,7 +325,6 @@ export default class extends BaseModal {
         })
           .done((data) => {
             this.updatePageState('pending');
-            this.actionBtn.render();
             this.purchase.set(this.purchase.parse(data));
             this.payment = this.createChild(Payment, {
               balanceRemaining: this.purchase.get('amount'),
@@ -390,7 +342,6 @@ export default class extends BaseModal {
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
             this.updatePageState('pay');
-            this.actionBtn.render();
           });
       }
     } else {
@@ -402,7 +353,6 @@ export default class extends BaseModal {
         this.insertErrors(container, this.order.validationError[errKey]);
       });
       this.updatePageState('pay');
-      this.actionBtn.render();
     }
   }
 
@@ -472,19 +422,7 @@ export default class extends BaseModal {
     return priceTotal;
   }
 
-  isModAllowed() {
-    let btcTotal = this.total;
-    const cur = this.listing.get('metadata').get('pricingCurrency');
-    if (cur !== 'BTC') {
-      btcTotal = convertCurrency(btcTotal, cur, 'BTC');
-    }
-    const allowModeration = (btcTotal >= this.minModPrice) && !!this.moderatorIDs.length;
-    this.moderationOn(allowModeration);
-    this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
-  }
-
   refreshPrices() {
-    this.isModAllowed();
     this.receipt.updatePrices(this.prices);
   }
 
@@ -520,7 +458,6 @@ export default class extends BaseModal {
 
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
-    if (this.fetchFees) this.fetchFees.abort();
     super.remove();
   }
 
@@ -537,7 +474,6 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         prices: this.prices,
-        minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: !!this.moderatorIDs.length,
       }));
@@ -562,7 +498,7 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
-      if (!state.isFetching) this.moderators.getModeratorsByID();
+      this.moderators.getModeratorsByID();
 
       if (this.shipping) {
         this.shipping.delegateEvents();
@@ -581,8 +517,6 @@ export default class extends BaseModal {
       if (this.feeChange) this.feeChange.remove();
       this.feeChange = this.createChild(FeeChange);
       this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
-
-      this.isModAllowed();
     });
 
     return this;
