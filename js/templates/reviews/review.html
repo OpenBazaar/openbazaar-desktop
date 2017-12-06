@@ -3,7 +3,9 @@
 <% } else { %>
 
   <%
-    let title = ob.vendorSig.metadata.listingTitle ? ob.vendorSig.metadata.listingTitle : ob.vendorSig.metadata.listingSlug;
+    let niceSlug = ob.vendorSig.metadata.listingSlug.replace(/-/g, ' ');
+    niceSlug = niceSlug.replace(/\b\w/g, m => m.toUpperCase());
+    let title = ob.vendorSig.metadata.listingTitle ? ob.vendorSig.metadata.listingTitle : niceSlug;
     title = title ? title : ob.polyT('reputation.noTitle');
     const slugLink = ob.vendorID && ob.vendorSig.metadata.listingSlug ? `ob://${ob.vendorID.peerID}/store/${ob.vendorSig.metadata.listingSlug}` : '';
     let background = '';
