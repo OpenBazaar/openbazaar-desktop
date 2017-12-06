@@ -268,8 +268,8 @@
     }
   },
   "reputation": {
-    "averageRating": "%{number} overall rating",
-    "totalReviews": "%{number} reviews",
+    "averageRating": "overall rating",
+    "totalReviews": "reviews",
     "noTitle": "Listing title not found"
 
   },

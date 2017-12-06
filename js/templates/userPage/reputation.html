@@ -1,16 +1,13 @@
-<%
-   const formattedRating = `<span class="repBg">${ob.formatRating(ob.average)}</span>`;
-   const formattedTotal = `<span class="repBg">${ob.count}</span>`
-%>
-
 <div class="flexColRows gutterVLg">
   <div class="contentBox flexRow flexVCent gutterH pad clrP clrBr statsBox">
     <div class="col6 txCtr">
-      <span class="tx2b"><%= ob.polyT('reputation.averageRating', { number: formattedRating }) %></span>
+      <div class="repBg"><%= ob.formatRating(ob.average) %></div>
+      <div class="tx2b"><%= ob.polyT('reputation.averageRating') %></div>
     </div>
     <div class="rowDivV clrBrBk"></div>
     <div class="col6 txCtr">
-      <span class="tx2b"><%= ob.polyT('reputation.totalReviews', { number: formattedTotal }) %></span>
+      <div class="repBg"><%= ob.count %></div>
+      <div class="tx2b"><%= ob.polyT('reputation.totalReviews') %></div>
     </div>
   </div>
   <div class="js-reviews">
