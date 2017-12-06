@@ -31,7 +31,7 @@ export default class extends BaseModal {
       Help,
     };
 
-    this.currentTabName = this.tabViews[opts.initialTab] ? opts.initialTab : 'Story';
+    this.currentTabName = opts.initialTab;
     this.isBundledApp = remote.getGlobal('isBundledApp');
     this.updatesSupported = remote.getGlobal('updatesSupported');
   }
@@ -56,6 +56,10 @@ export default class extends BaseModal {
 
   selectTab(tabViewName) {
     let tabView = this.tabViewCache[tabViewName];
+
+    if (!tabView && !this.tabViews[tabViewName]) {
+      throw new Error('You are attempting to select an invalid tab.');
+    }
 
     this.$('.js-tab.clrT.active').removeClass('clrT active');
     this.$(`.js-tab[data-tab="${tabViewName}"]`).addClass('clrT active');
