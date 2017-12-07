@@ -32,12 +32,20 @@ export default class extends BaseModal {
       throw new Error('Please provide a vendor object');
     }
 
-    super(options);
-    this.options = options;
-    this.state = { phase: 'pay' };
-    this.listing = options.listing;
-    this.variants = options.variants;
-    this.vendor = options.vendor;
+    const opts = {
+      ...options,
+      initialState: {
+        phase: 'pay',
+        ...options.initialState || {},
+      },
+    };
+
+    super(opts);
+    this.options = opts;
+
+    this.listing = opts.listing;
+    this.variants = opts.variants;
+    this.vendor = opts.vendor;
     const shippingOptions = this.listing.get('shippingOptions');
     const shippable = !!(shippingOptions && shippingOptions.length);
 
@@ -72,7 +80,6 @@ export default class extends BaseModal {
     this.purchase = new Purchase();
 
     this.actionBtn = this.createChild(ActionBtn, {
-      state: this.state,
       listing: this.listing,
     });
     this.listenTo(this.actionBtn, 'purchase', (() => this.purchaseListing()));
@@ -273,15 +280,6 @@ export default class extends BaseModal {
     this.actionBtn.render();
   }
 
-  updatePageState(state) {
-    if (this._state !== state) {
-      this._state = state;
-      this.state.phase = state;
-      this.$el.attr('data-phase', state);
-      this.actionBtn.render();
-    }
-  }
-
   purchaseListing() {
     // clear any old errors
     const allErrContainers = this.$('div[class $="-errors"]');
@@ -291,7 +289,7 @@ export default class extends BaseModal {
     const priceObj = this.prices[0];
     if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
       this.insertErrors(this.$errors, [app.polyglot.t('purchase.errors.zeroPrice')]);
-      this.updatePageState('pay');
+      this.setState({ phase: 'pay' });
       return;
     }
 
@@ -309,13 +307,15 @@ export default class extends BaseModal {
     // cancel any existing order
     if (this.orderSubmit) this.orderSubmit.abort();
 
+    this.setState({ phase: 'processing' });
+
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
+        this.setState({ phase: 'pay' });
         // don't allow a seller to buy their own items
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        this.updatePageState('pay');
       } else {
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -324,7 +324,7 @@ export default class extends BaseModal {
           contentType: 'application/json',
         })
           .done((data) => {
-            this.updatePageState('pending');
+            this.setState({ phase: 'pending' });
             this.purchase.set(this.purchase.parse(data));
             this.payment = this.createChild(Payment, {
               balanceRemaining: this.purchase.get('amount'),
@@ -337,14 +337,15 @@ export default class extends BaseModal {
             this.$('.js-pending').append(this.payment.render().el);
           })
           .fail((jqXHR) => {
+            this.setState({ phase: 'pay' });
             if (jqXHR.statusText === 'abort') return;
             const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
-            this.updatePageState('pay');
           });
       }
     } else {
+      this.setState({ phase: 'pay' });
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
         let container = this.$(`.js-${domKey}-errors`);
@@ -352,7 +353,6 @@ export default class extends BaseModal {
         container = container.length ? container : this.$errors;
         this.insertErrors(container, this.order.validationError[errKey]);
       });
-      this.updatePageState('pay');
     }
   }
 
@@ -367,8 +367,7 @@ export default class extends BaseModal {
   completePurchase(data) {
     this.complete.orderID = data.orderId;
     this.complete.render();
-    this.updatePageState('complete');
-    this.actionBtn.render();
+    this.setState({ phase: 'complete' });
   }
 
   get prices() {
@@ -488,6 +487,7 @@ export default class extends BaseModal {
       this._$couponField = null;
 
       this.actionBtn.delegateEvents();
+      this.actionBtn.setState({ phase: state.phase });
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
       this.receipt.delegateEvents();

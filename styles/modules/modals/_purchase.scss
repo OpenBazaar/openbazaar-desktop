@@ -20,19 +20,19 @@
     display: none;
   }
 
-  &[data-phase='pay'] {
+  .mainSection[data-phase='pay'] {
     .showIfPay {
       display: block;
     }
   }
 
-  &[data-phase='pending'] {
+  .mainSection[data-phase='pending'] {
     .showIfPending {
       display: block;
     }
   }
 
-  &[data-phase='complete'] {
+  .mainSection[data-phase='complete'] {
     .showIfComplete {
       display: block;
     }

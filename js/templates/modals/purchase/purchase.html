@@ -17,7 +17,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
   <% } %>
 </div>
 
-<div class="flexRow gutterH">
+<div class="flexRow gutterH mainSection" data-phase="<%= ob.phase %>">
   <div class="col9">
     <div class="flexColRow gutterV">
       <% // to support multiple items in a purchase, loop this section %>
@@ -82,6 +82,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
               <input
                   type="checkbox"
                   name="moderated"
+                  checked
                   id="purchaseModerated">
               <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
               <p class="clrT2 tx6">
