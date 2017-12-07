@@ -11,7 +11,7 @@ For full installable versions of the OpenBazaar app, with the server and client 
 To create a local development copy of the reference client, clone the client repository into a directory of your choice:
 - `git clone https://github.com/OpenBazaar/openbazaar-desktop`
 
-Make sure you have the latest versions of Node.js and NPM installed.
+Make sure you have Node.js 8.9.2 and NPM 5.5.1 installed.
 
 This client uses Babel to compile [ES6 JavaScript](https://github.com/lukehoban/es6features). You should be familiar with ES6 before modifying its code.
 
