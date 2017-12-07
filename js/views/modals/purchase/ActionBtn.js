@@ -39,7 +39,8 @@ export default class extends baseView {
   }
 
   onDocumentClick(e) {
-    if (this.getState().confirmOpen && !($.contains(this.$confirmPay[0], e.target))) {
+    if (this.getState().confirmOpen &&
+      !($.contains(this.getCachedEl('.js-confirmPay')[0], e.target))) {
       this.setState({ confirmOpen: false });
     }
   }
@@ -61,30 +62,19 @@ export default class extends baseView {
     this.trigger('close');
   }
 
-  get $payBtn() {
-    return this._$payBtn ||
-      (this._$payBtn = this.$('.js-payBtn'));
-  }
-
-  get $confirmPay() {
-    return this._$confirmPay ||
-      (this._$confirmPay = this.$('.js-confirmPay'));
-  }
-
   remove() {
     $(document).off('click', this.boundOnDocClick);
     super.remove();
   }
 
   render() {
-    console.log("render action button")
+    super.render();
     loadTemplate('modals/purchase/actionBtn.html', t => {
       this.$el.html(t({
         ...this.getState(),
         listing: this.options.listing,
       }));
 
-      this._$payBtn = null;
       this._$confirmPay = null;
     });
 
