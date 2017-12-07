@@ -74,8 +74,6 @@ export default class extends baseView {
         ...this.getState(),
         listing: this.options.listing,
       }));
-
-      this._$confirmPay = null;
     });
 
     return this;

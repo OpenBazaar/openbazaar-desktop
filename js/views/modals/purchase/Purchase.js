@@ -137,10 +137,6 @@ export default class extends BaseModal {
     return `${super.className()} purchase modalScrollPage`;
   }
 
-  attributes() {
-    return { 'data-phase': 'pay' };
-  }
-
   events() {
     return {
       'click .js-goToListing': 'clickGoToListing',
@@ -475,6 +471,7 @@ export default class extends BaseModal {
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: !!this.moderatorIDs.length,
+        moderated: this.order.moderated,
       }));
 
       super.render();

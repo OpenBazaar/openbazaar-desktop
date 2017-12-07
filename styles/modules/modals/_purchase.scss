@@ -20,24 +20,6 @@
     display: none;
   }
 
-  .mainSection[data-phase='pay'] {
-    .showIfPay {
-      display: block;
-    }
-  }
-
-  .mainSection[data-phase='pending'] {
-    .showIfPending {
-      display: block;
-    }
-  }
-
-  .mainSection[data-phase='complete'] {
-    .showIfComplete {
-      display: block;
-    }
-  }
-
   .pending {
     .QR {
       display: block;
