@@ -81,13 +81,13 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
               <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
             </div>
             <% if (ob.showModerators) { %>
-              <div class="js-moderatedOption">
+              <div class="js-moderatedOption <% if (ob.noValidModerators) print('disabled'); %>">
                 <input
                     type="checkbox"
                     name="moderated"
-                    <% if (ob.moderated) print('checked') %>
-                    <% if (ob.noValidModerators) print('disabled'); %>
-                    id="purchaseModerated">
+                    id="purchaseModerated"
+                    <% if (ob.moderated && !ob.noValidModerators) print('checked') %>
+                    >
                 <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
                 <p class="clrT2 tx6">
                   <%= ob.polyT('purchase.moderationDisclaimer') %>
