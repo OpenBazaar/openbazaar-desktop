@@ -52,6 +52,7 @@ export default class extends BaseModal {
     const moderatorIDs = this.listing.get('moderators') || [];
     const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
+    this.setState({ showModerators: !!this.moderatorIDs.length }, { renderOnChange: false });
 
     this.couponObj = [];
 
@@ -110,6 +111,9 @@ export default class extends BaseModal {
       selectFirst: true,
       radioStyle: true,
     });
+    // render the moderators so it can start fetching and adding moderator cards
+    this.moderators.render();
+    this.moderators.getModeratorsByID();
     this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
 
     if (this.listing.get('shippingOptions').length) {
@@ -212,18 +216,19 @@ export default class extends BaseModal {
   }
 
   moderationOn(bool) {
-    this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
-    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
-    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
+    this.setState({ showModerators: bool });
+    //this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
+    //this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
+    //this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     this.order.moderated = bool;
-    this.getCachedEl('#purchaseModerated').prop('checked', bool);
+    //this.getCachedEl('#purchaseModerated').prop('checked', bool);
     this.moderators.noneSelected = !bool;
   }
 
 
   onNoValidModerators() {
-    this.moderationOn(false);
-    this.getCachedEl('.js-noValidModerators').removeClass('hide');
+   // this.moderationOn(false);
+    this.setState({ noValidModerators: true });
   }
 
   changeQuantityInput(e) {
@@ -470,7 +475,6 @@ export default class extends BaseModal {
         items: this.order.get('items').toJSON(),
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
-        hasModerators: !!this.moderatorIDs.length,
         moderated: this.order.moderated,
       }));
 
@@ -494,8 +498,7 @@ export default class extends BaseModal {
       this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
       this.moderators.delegateEvents();
-      this.$('.js-moderatorsWrapper').append(this.moderators.render().el);
-      this.moderators.getModeratorsByID();
+      this.$('.js-moderatorsWrapper').append(this.moderators.el);
 
       if (this.shipping) {
         this.shipping.delegateEvents();

@@ -250,9 +250,9 @@ export default class baseVw extends View {
       newState = _.extend({}, this._state, state);
     }
 
-    if (opts.renderOnChange && !_.isEqual(this._state, newState)) {
+    if (!_.isEqual(this._state, newState)) {
       this._state = newState;
-      this.render();
+      if (opts.renderOnChange) this.render();
     }
 
     return this;

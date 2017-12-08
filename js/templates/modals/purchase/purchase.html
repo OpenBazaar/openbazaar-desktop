@@ -80,25 +80,28 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
               <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
               <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
             </div>
-            <% if (ob.hasModerators) { %>
+            <% if (ob.showModerators) { %>
               <div class="js-moderatedOption">
                 <input
                     type="checkbox"
                     name="moderated"
                     <% if (ob.moderated) print('checked') %>
+                    <% if (ob.noValidModerators) print('disabled'); %>
                     id="purchaseModerated">
                 <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
                 <p class="clrT2 tx6">
                   <%= ob.polyT('purchase.moderationDisclaimer') %>
                 </p>
               </div>
-              <p class="clrTErr hide js-noValidModerators">
-                <%= ob.polyT('purchase.noValidModerators') %>
-              </p>
+              <% if (ob.noValidModerators) { %>
+                <p class="clrTErr">
+                  <%= ob.polyT('purchase.noValidModerators') %>
+                </p>
+              <% } %>
             <% } %>
           </div>
         </section>
-        <% if (ob.hasModerators) { %>
+        <% if (ob.showModerators && !ob.noValidModerators) { %>
           <section class="contentBox padMd clrP clrBr clrSh3 js-moderator">
             <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
             <div class="js-moderated-errors"></div>
@@ -181,9 +184,9 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
       <div class="js-actionBtn"></div>
       <div class="rowLg">
         <div class="js-receipt"></div>
-        <% if (ob.hasModerators) { %>
-          <hr class="clrBr js-moderatorNote">
-          <div class="padSm txSm txCtr clrT2 js-moderatorNote">
+        <% if (ob.showModerators && !ob.noValidModerators) { %>
+          <hr class="clrBr">
+          <div class="padSm txSm txCtr clrT2">
             <%= ob.polyT('purchase.moderatorNote') %>
           </div>
         <% } %>
