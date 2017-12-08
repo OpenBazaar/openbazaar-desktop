@@ -120,8 +120,8 @@ export default class extends BaseModal {
       this.shipping = this.createChild(Shipping, {
         model: this.listing,
       });
-      this.listenTo(this.shipping, 'shippingOptionSelected', ((opts) => {
-        this.updateShippingOption(opts);
+      this.listenTo(this.shipping, 'shippingOptionSelected', ((sOpts) => {
+        this.updateShippingOption(sOpts);
       }));
     }
 
@@ -173,7 +173,7 @@ export default class extends BaseModal {
         this.dataChangePopIn = null;
       });
 
-      this.$popInMessages.append(this.dataChangePopIn.render().el);
+      this.getCachedEl('.js-popInMessages').append(this.dataChangePopIn.render().el);
     }
   }
 
@@ -216,13 +216,9 @@ export default class extends BaseModal {
   }
 
   moderationOn(bool) {
-    this.setState({ showModerators: bool });
-    //this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
-    //this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
-    //this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
     this.order.moderated = bool;
-    //this.getCachedEl('#purchaseModerated').prop('checked', bool);
     this.moderators.noneSelected = !bool;
+    this.setState({ showModerators: bool });
   }
 
 
@@ -278,7 +274,6 @@ export default class extends BaseModal {
     // set the shipping option
     this.order.get('items').at(0).get('shipping')
       .set(opts);
-    this.actionBtn.render();
   }
 
   purchaseListing() {
@@ -289,7 +284,8 @@ export default class extends BaseModal {
     // don't allow a zero or negative price purchase
     const priceObj = this.prices[0];
     if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
-      this.insertErrors(this.$errors, [app.polyglot.t('purchase.errors.zeroPrice')]);
+      this.insertErrors(this.getCachedEl('.js-errors'),
+        [app.polyglot.t('purchase.errors.zeroPrice')]);
       this.setState({ phase: 'pay' });
       return;
     }
@@ -351,7 +347,7 @@ export default class extends BaseModal {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
-        container = container.length ? container : this.$errors;
+        container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
       });
     }
@@ -426,31 +422,6 @@ export default class extends BaseModal {
     this.receipt.updatePrices(this.prices);
   }
 
-  get $popInMessages() {
-    return this._$popInMessages ||
-        (this._$popInMessages = this.$('.js-popInMessages'));
-  }
-
-  get $storeOwnerAvatar() {
-    return this._$storeOwnerAvatar ||
-        (this._$storeOwnerAvatar = this.$('.js-storeOwnerAvatar'));
-  }
-
-  get $closeBtn() {
-    return this._$closeBtn ||
-        (this._$closeBtn = this.$('.js-closeBtn'));
-  }
-
-  get $shippingErrors() {
-    return this._$shippingErrors ||
-      (this._$shippingErrors = this.$('.js-shipping-errors'));
-  }
-
-  get $errors() {
-    return this._$errors ||
-      (this._$errors = this.$('.js-errors'));
-  }
-
   get $couponField() {
     return this._$couponField ||
       (this._$couponField = this.$('#couponCode'));
@@ -480,11 +451,6 @@ export default class extends BaseModal {
 
       super.render();
 
-      this._$popInMessages = null;
-      this._$storeOwnerAvatar = null;
-      this._$closeBtn = null;
-      this._$shippingErrors = null;
-      this._$errors = null;
       this._$couponField = null;
 
       this.actionBtn.delegateEvents();

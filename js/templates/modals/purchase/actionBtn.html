@@ -5,7 +5,6 @@
       className: `btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn ${initPay} ${ob.phase}`,
       btnText: ob.polyT('purchase.pay')
     }) %>
-  <% console.log("action button phase: " + ob.phase) %>
   <% } else if (ob.phase ==='pending') { %>
     <div class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph pendingBtn">
       <%= ob.polyT('purchase.pending') %>
