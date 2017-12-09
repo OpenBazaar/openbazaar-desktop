@@ -40,6 +40,7 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleLinks } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
+import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 
@@ -238,6 +239,7 @@ function isOnboardingNeeded() {
       }
     });
 
+  // onboardingNeededDeferred.resolve(true);
   return onboardingNeededDeferred.promise();
 }
 
