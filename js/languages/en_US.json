@@ -147,6 +147,7 @@
     "sales": "Sales",
     "cases": "Cases",
     "settings": "Settings",
+    "help": "Help",
     "toolTip": {
       "back": "Back",
       "forward": "Forward",
@@ -254,7 +255,8 @@
       "categoryFilter": {
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
-        "showLess": "less"
+        "showLess": "less",
+        "all": "All"
       },
       "toolTip": {
         "contentView": "Toggle view"
@@ -362,6 +364,12 @@
         "or": "or",
         "codeCTA": "get involved."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {

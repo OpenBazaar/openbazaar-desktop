@@ -31,6 +31,7 @@ export default class extends BaseVw {
         'focusin .js-addressBar': 'onFocusInAddressBar',
         'click .js-navListBtn': 'navListBtnClick',
         'click .js-navSettings': 'navSettingsClick',
+        'click .js-navHelp': 'navHelpClick',
         'click .js-navAboutModal': 'navAboutClick',
         'click .js-navWalletBtn': 'navWalletClick',
         'click .js-navCreateListing': 'navCreateListingClick',
@@ -420,8 +421,13 @@ export default class extends BaseVw {
     launchSettingsModal();
   }
 
+  navHelpClick() {
+    launchAboutModal({ initialTab: 'Help' });
+    this.closeNavMenu();
+  }
+
   navAboutClick() {
-    launchAboutModal();
+    launchAboutModal({ initialTab: 'Story' });
     this.closeNavMenu();
   }
 

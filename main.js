@@ -181,6 +181,12 @@ function createWindow() {
         shell.openExternal('https://docs.openbazaar.org');
       },
     },
+    {
+      label: 'Support',
+      click() {
+        shell.openExternal('https://openbazaar.org/support');
+      },
+    },
   ];
 
   if (isBundledApp) {
