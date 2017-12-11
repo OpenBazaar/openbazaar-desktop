@@ -109,7 +109,7 @@ export default class extends BaseModal {
 
     this.reviews = this.createChild(Reviews, {
       async: true,
-      isListing: true,
+      showListingData: true,
     });
 
     this.boundDocClick = this.onDocumentClick.bind(this);

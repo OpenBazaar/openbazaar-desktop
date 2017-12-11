@@ -40,7 +40,7 @@ export default class extends baseVw {
     loadTemplate('reviews/review.html', (t) => {
       this.$el.html(t({
         moment,
-        isListing: this.options.isListing,
+        showListingData: this.options.showListingData,
         ...this.model.toJSON(),
       }));
 

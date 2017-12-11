@@ -16,7 +16,7 @@
 
   <div class="flexRow gutterHLg">
     <div class="col8 flex gutterHMd">
-      <% if (!ob.isListing) { %>
+      <% if (!ob.showListingData) { %>
         <% if (slugLink) { %>
           <a class="thumbHg flexNoShrink"
              style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')"
@@ -37,7 +37,7 @@
             <b><%= ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a') %></b>
           <% } %>
         </div>
-        <% if (!ob.isListing) { %>
+        <% if (!ob.showListingData) { %>
           <h4 class="clrT">
             <% if (slugLink) { %>
               <a href="<%= slugLink %>" class="clrT"><%= title %></a>
