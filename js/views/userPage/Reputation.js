@@ -11,19 +11,30 @@ export default class extends BaseVw {
     if (!options.model && !(options.model instanceof Profile)) {
       throw new Error('Please provide a valid profile model.');
     }
-    super(options);
+    const opts = {
+      ...options,
+      initialState: {
+        isFetching: true,
+        ...options.initialState || {},
+      },
+    };
+    super(opts);
+    this.options = opts;
 
     // create the reviews here, so they're available for the fetch
     this.reviews = this.createChild(Reviews, {
       async: true,
       initialPageSize: 5,
       pageSize: 5,
+      initialState: {
+        isFetching: true,
+      },
     });
 
     // fetch the ratings immediately. They are asyncronous, and should not be refetched
     // if the view re-renders.
     this.ratingsFetch =
-      $.get(app.getServerUrl(`ob/ratings/${options.model.get('peerID')}`))
+      $.get(app.getServerUrl(`ob/ratings/${this.options.model.get('peerID')}`))
         .done(data => this.onRatings(data))
         .fail((jqXhr) => {
           if (jqXhr.statusText === 'abort') return;
@@ -41,9 +52,11 @@ export default class extends BaseVw {
   onRatings(data) {
     const pData = data || {};
     this.setState({
+      isFetching: false,
       ...pData,
     });
     this.reviews.reviewIDs = pData.ratings || [];
+    console.log(pData.ratings);
     this.reviews.render();
   }
 

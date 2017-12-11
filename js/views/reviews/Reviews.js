@@ -10,15 +10,21 @@ import 'trunk8';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      ...options,
+      initialState: {
+        isFetchingRatings: false, // pass in true if ratings are provided after the first render
+        ...options.initialState || {},
+      },
+    };
+    super(opts);
+    this.options = opts;
 
-    this.startIndex = options.startIndex || 0;
-    this.initialPageSize = options.pageSize || 3;
-    this.pageSize = options.pageSize || 10;
-    this.options.async = options.async || false;
-    this._reviewIDs = options.ratings || [];
-    this.isListing = options.isListing;
+    this.startIndex = this.options.startIndex || 0;
+    this.initialPageSize = this.options.pageSize || 3;
+    this.pageSize = this.options.pageSize || 10;
+    this._reviewIDs = this.options.ratings || [];
+    this.showListingData = this.options.showListingData;
     this.collection = new Collection();
     this.listenTo(this.collection, 'add', model => this.addReview(model));
   }
@@ -45,23 +51,23 @@ export default class extends BaseVw {
 
   hideMoreBtn() {
     if (this.startIndex >= this.reviewIDs.length) {
-      this.$loadMore.addClass('hide');
+      this.getCachedEl('.js-loadMore').addClass('hide');
     }
   }
 
   appendError(error) {
     const msg = app.polyglot.t('listingDetail.errors.fetchReviews', { error });
-    this.$errors.append(`<p><i class="ion-alert-circled"> ${msg}</p>`);
+    this.getCachedEl('.js-errors').append(`<p><i class="ion-alert-circled"> ${msg}</p>`);
   }
 
-  loadReviews(start = this.startIndex, pageSize = this.pageSize, async = this.options.async) {
+  loadReviews(start = this.startIndex, pageSize = this.pageSize, async = !!this.options.async) {
     const revLength = this.reviewIDs.length;
     // if on the last page, only fetch the number of reviews that remain
     const ps = start + pageSize <= revLength ? pageSize : revLength - start;
 
     if (start < revLength) {
-      this.$loadMoreBtn.addClass('processing');
-      this.$errors.html('');
+      this.getCachedEl('.js-loadMoreBtn').addClass('processing');
+      this.getCachedEl('.js-errors').html('');
       $.ajax({
         url: app.getServerUrl(`ob/fetchratings?async=${async}`),
         data: JSON.stringify(this.reviewIDs.slice(start, start + ps)),
@@ -73,7 +79,7 @@ export default class extends BaseVw {
           this.startIndex = start + ps;
           if (!async) {
             this.collection.add(_.pluck(data, 'ratingData'));
-            this.$loadMoreBtn.removeClass('processing');
+            this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
           } else {
             this.listenForReviews(data);
           }
@@ -82,9 +88,9 @@ export default class extends BaseVw {
         .fail((xhr) => {
           const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
           this.appendError(failReason);
-          this.$errors.append(`<p>${failReason}</p>`);
+          this.getCachedEl('.js-errors').append(`<p>${failReason}</p>`);
           this.hideMoreBtn();
-          this.$loadMoreBtn.removeClass('processing');
+          this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
         });
     }
   }
@@ -96,6 +102,7 @@ export default class extends BaseVw {
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', (event) => {
         const eventData = event.jsonData;
+        console.log(eventData)
         if (eventData.id === socketID && this.reviewIDs.indexOf(eventData.ratingId !== -1)) {
           if (!eventData.error) {
             this.collection.add(eventData.rating.ratingData);
@@ -104,7 +111,7 @@ export default class extends BaseVw {
             this.collection.add(eventData);
           }
           if (this.collection.length >= this.startIndex) {
-            this.$loadMoreBtn.removeClass('processing');
+            this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
           }
         }
       });
@@ -114,15 +121,18 @@ export default class extends BaseVw {
   }
 
   addReview(model) {
+    console.log("add")
     const newReview = new Review({
       model,
-      isListing: this.isListing,
+      showListingData: this.showListingData,
     });
     const newRevieEl = newReview.render().$el;
     const btnTxt = app.polyglot.t('listingDetail.review.showMore');
     const truncLines = model.get('buyerID') !== undefined ? 5 : 6;
 
-    this.$reviewWrapper.append(newRevieEl);
+
+
+    this.getCachedEl('.js-reviewWrapper').append(newRevieEl);
     // truncate any review text that is too long
     newRevieEl.find('.js-reviewText').trunk8({
       fill: `… <button class="btnTxtOnly trunkLink js-showMore">${btnTxt}</button>`,
@@ -134,37 +144,22 @@ export default class extends BaseVw {
     this.loadReviews(this.startIndex);
   }
 
-  get $reviewWrapper() {
-    return this._$reviewWrapper ||
-      (this._$reviewWrapper = this.$('.js-reviewWrapper'));
-  }
-
-  get $loadMore() {
-    return this._$loadMore ||
-      (this._$loadMore = this.$('.js-loadMore'));
-  }
-
-  get $loadMoreBtn() {
-    return this._$loadMoreBtn ||
-      (this._$loadMoreBtn = this.$loadMore.find('.js-loadMoreBtn'));
-  }
-
-  get $errors() {
-    return this._$errors ||
-      (this._$errors = this.$('.js-errors'));
-  }
-
   render() {
+    console.log(this.reviewIDs)
+    super.render();
     loadTemplate('reviews/reviews.html', (t) => {
       this.$el.html(t({
         reviewsLength: this.reviewIDs.length,
+        ...this.getState(),
       }));
 
-      this._$reviewWrapper = null;
-      this._$loadMore = null;
-      this._$loadMoreBtn = null;
-      this._$errors = null;
-      this.loadReviews(this.startIndex, this.initialPageSize);
+      // render any reviews that have already loaded
+      this.collection.each(review => this.addReview(review));
+
+      // load the reviews when data is available and the collection is empty
+      if (this.reviewIDs.length && !this.collection.length) {
+        this.loadReviews(this.startIndex, this.initialPageSize);
+      }
     });
 
     return this;
