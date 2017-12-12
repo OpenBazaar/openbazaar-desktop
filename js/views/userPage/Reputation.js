@@ -27,7 +27,7 @@ export default class extends BaseVw {
       initialPageSize: 5,
       pageSize: 5,
       initialState: {
-        isFetching: true,
+        isFetchingRatings: true,
       },
     });
 
@@ -56,8 +56,7 @@ export default class extends BaseVw {
       ...pData,
     });
     this.reviews.reviewIDs = pData.ratings || [];
-    console.log(pData.ratings);
-    this.reviews.render();
+    this.reviews.setState({ isFetchingRatings: false });
   }
 
   remove() {

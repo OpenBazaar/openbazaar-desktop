@@ -271,7 +271,7 @@
   },
   "reputation": {
     "averageRating": "overall rating",
-    "totalReviews": "reviews",
+    "totalReviews": "%{smart_count} review |||| %{smart_count} reviews",
     "noTitle": "Listing title not found"
 
   },

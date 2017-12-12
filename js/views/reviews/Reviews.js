@@ -130,9 +130,11 @@ export default class extends BaseVw {
     const btnTxt = app.polyglot.t('listingDetail.review.showMore');
     const truncLines = model.get('buyerID') !== undefined ? 5 : 6;
 
-
-
     this.getCachedEl('.js-reviewWrapper').append(newRevieEl);
+    this.getCachedEl('.js-loadMore').removeClass('hide');
+    this.getCachedEl('.js-reviewWrapper').removeClass('hide');
+    this.getCachedEl('.js-reviewsSpinner').addClass('hide');
+
     // truncate any review text that is too long
     newRevieEl.find('.js-reviewText').trunk8({
       fill: `… <button class="btnTxtOnly trunkLink js-showMore">${btnTxt}</button>`,
@@ -145,11 +147,11 @@ export default class extends BaseVw {
   }
 
   render() {
-    console.log(this.reviewIDs)
     super.render();
     loadTemplate('reviews/reviews.html', (t) => {
       this.$el.html(t({
         reviewsLength: this.reviewIDs.length,
+        collectionLength: this.collection.length,
         ...this.getState(),
       }));
 
