@@ -8,7 +8,7 @@ import Profile from '../../models/profile/Profile';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    if (!options.model && !(options.model instanceof Profile)) {
+    if (!options.model || !(options.model instanceof Profile)) {
       throw new Error('Please provide a valid profile model.');
     }
     const opts = {
