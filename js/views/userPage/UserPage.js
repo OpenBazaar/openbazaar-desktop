@@ -323,6 +323,7 @@ export default class extends baseVw {
       this.miniProfile = this.createChild(MiniProfile, {
         model: this.model,
         fetchFollowsYou: false,
+        onClickRating: () => this.setState('reputation'),
         initialState: {
           followsYou: this.followsYou,
         },
