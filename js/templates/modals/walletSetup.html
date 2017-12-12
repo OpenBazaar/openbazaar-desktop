@@ -1,48 +1,43 @@
+<% console.log('moo'); window.moo = ob %>
 <section class="contentBox padMd clrP clrBr clrSh3">
   <div class="flexCent gutterH padMd posR">
-    <div class="txB tx3">OpenBazaar Wallet Setup</div>
+    <div class="txB tx3"><%= ob.polyT('walletSetup.heading') %></div>
   </div>
   <hr class="clrBr" />
   <div class="mainContent">
     <form class="padStack">
       <div class="flexRow rowLg">
         <div class="col3">
-          <label class="required">Currency</label>
-          <div class="clrT2 tx6">Choose a currency for your Wallet</div>
+          <label class="required"><%= ob.polyT('walletSetup.currencyLabel') %></label>
+          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper') %></div>
         </div>
         <div class="col9">
           <div class="currencyRadio rowSm">
+            <% ob.cryptoCurs.forEach(cur => { %>
             <div class="clrBr">
               <div class="btnRadio">
                 <input type="radio"
                        name="walletCurrency"
-                       value="BTC"
-                       id="walletSetupCurrencyBtc">
-                <label class="gutterHSm" for="walletSetupCurrencyBtc"><%= ob.currencyMod.cryptoIcon({ code: 'BTC' }) %> <span>Bitcoin</span> <a class="tx6 txU" href="https://bitcoin.org/">https://bitcoin.org/</a></label>
+                       value="<%= cur.code %>"
+                       id="walletSetupCurrency<%= cur.code %>">
+                <label class="gutterHSm" for="walletSetupCurrency<%= cur.code %>"><%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %></label>
               </div>
             </div>
-            <div class="clrBr">
-              <div class="btnRadio">
-                <input type="radio"
-                       name="walletCurrency"
-                       value="BCH"
-                       id="walletSetupCurrencyBch">
-                <label class="gutterHSm" for="walletSetupCurrencyBch"><%= ob.currencyMod.cryptoIcon({ code: 'BCH' }) %> <span>Bitcoin Cash</span> <a class="tx6 txU" href="https://bitcoincash.org/">https://bitcoincash.org/</a></label>
-              </div>
-            </div>            
+            <% }) %>
           </div>
-          <div class="clrT2 tx6">Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.</div>
+          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
         </div>        
       </div>
       <div class="flexRow rowLg">
         <div class="col3">
-          <label class="required">Zcash Binary</label>
+          <label class="required"><%= ob.polyT('walletSetup.zcashBinaryLabel') %></label>
         </div>
         <div class="col9">
-          <input type="text" class="hide" placeholder="Enter path to your Zcash full node…" />
-          <input type="file" class="hide js-binaryFileUpload">
-          <button class="btn clrP clrBr rowSm js-browseZcashBinary">Browse</button>
-          <div class="clrT2 tx6">A Zcash full node is required. Download a Zcash full node here. Once installed, enter the path to your Zcash node above. Learn more</div>
+          <div class="flex gutterH rowSm">
+            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" placeholder="Enter path to your Zcash full node…" />
+            <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
+          </div>
+          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.zcashBinaryHelper') %></div>
         </div>        
       </div>      
     </form>
@@ -50,7 +45,7 @@
   <hr class="clrBr row" />
   <div class="flexVCent flexHRight">
     <div>
-      <button class="btn clrP js-navNext">Next</button>
+      <button class="btn clrP js-navNext"><%= ob.polyT('walletSetup.btnNext') %></button>
     </div>
   </div>
 </section>

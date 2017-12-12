@@ -26,6 +26,16 @@
     "btnChange": "change",
     "label": "%{cur} fee:"
   },
+  "walletSetup": {
+    "heading": "OpenBazaar Wallet Setup",
+    "currencyLabel": "Currency",
+    "currencyHelper": "Choose a currency for your Wallet",
+    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
+    "zcashBinaryLabel": "Zcash Binary",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node here. Once installed, enter the path to your Zcash node above. Learn more",
+    "btnBrowse": "Browse",
+    "btnNext": "Next"
+  },
   "unsupportedCryptoCurDialog": {
     "title": "Unsupported Currency",
     "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",

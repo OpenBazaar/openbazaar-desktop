@@ -1,5 +1,5 @@
-// import $ from 'jquery';
 import { remote } from 'electron';
+import { getTranslatedCurrencies } from '../../data/cryptoCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
 
@@ -8,15 +8,21 @@ export default class extends BaseModal {
     const opts = {
       dismissOnEscPress: false,
       showCloseButton: false,
-      // initialState: {
-      //   screen: 'intro',
-      //   saveInProgress: false,
-      //   ...options.initialState,
-      // },
       ...options,
     };
 
     super(opts);
+
+    const curUrls = {
+      BTC: 'https://bitcoin.org/',
+      BCH: 'https://bitcoincash.org/',
+      ZEC: 'https://z.cash',
+    };
+
+    this.cryptoCurs = getTranslatedCurrencies().map(cur => ({
+      ...cur,
+      url: curUrls[cur.code] || '',
+    }));
   }
 
   className() {
@@ -32,20 +38,17 @@ export default class extends BaseModal {
   }
 
   onClickBrowseZcashBinary() {
-    // this.getCachedEl('.js-binaryFileUpload').trigger('click');
-    remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory'] }, (sizzle) => {
-      console.log('sizzle');
-      window.sizzle = sizzle;
+    remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory'] }, e => {
+      this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
     });
   }
-
-  // onChangeBinaryFileUpload(e) {
-  // }
 
   render() {
     super.render();
     loadTemplate('modals/walletSetup.html', t => {
-      this.$el.html(t({}));
+      this.$el.html(t({
+        cryptoCurs: this.cryptoCurs,
+      }));
       super.render();
     });
 
