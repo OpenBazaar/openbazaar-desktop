@@ -27,6 +27,10 @@ export default class extends BaseVw {
     this.showListingData = this.options.showListingData;
     this.collection = new Collection();
     this.listenTo(this.collection, 'add', model => this.addReview(model));
+
+    // Socket review data may arrive before the POST returns, listen for them immediately
+    // If the ratings are provided after initialization, the provider must trigger this.
+    if (this.reviewIDs.length) this.listenForReviews();
   }
 
   className() {
@@ -37,6 +41,30 @@ export default class extends BaseVw {
     return {
       'click .js-loadMoreBtn': 'clickLoadMore',
     };
+  }
+
+  listenForReviews() {
+    if (!this.reviewIDs.length) return;
+
+    const serverSocket = getSocket();
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', (event) => {
+        const eventData = event.jsonData;
+        if (this.reviewIDs.indexOf(eventData.ratingId) !== -1) {
+          if (!eventData.error) {
+            this.collection.add(eventData.rating.ratingData);
+          } else {
+            // add the error to the collection so it can be shown in place of the review
+            this.collection.add(eventData);
+          }
+          if (this.collection.length >= this.startIndex) {
+            this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
+          }
+        }
+      });
+    } else {
+      throw new Error('There is no connection to the server to listen to.');
+    }
   }
 
   get reviewIDs() {
@@ -80,8 +108,6 @@ export default class extends BaseVw {
           if (!async) {
             this.collection.add(_.pluck(data, 'ratingData'));
             this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
-          } else {
-            this.listenForReviews(data);
           }
           this.hideMoreBtn();
         })
@@ -95,33 +121,7 @@ export default class extends BaseVw {
     }
   }
 
-  listenForReviews(data) {
-    const socketID = data.id;
-    // listen to the websocket for review data
-    const serverSocket = getSocket();
-    if (serverSocket) {
-      this.listenTo(serverSocket, 'message', (event) => {
-        const eventData = event.jsonData;
-        console.log(eventData)
-        if (eventData.id === socketID && this.reviewIDs.indexOf(eventData.ratingId !== -1)) {
-          if (!eventData.error) {
-            this.collection.add(eventData.rating.ratingData);
-          } else {
-            // add the error to the collection so it can be shown in place of the review
-            this.collection.add(eventData);
-          }
-          if (this.collection.length >= this.startIndex) {
-            this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
-          }
-        }
-      });
-    } else {
-      throw new Error('There is no connection to the server to listen to.');
-    }
-  }
-
   addReview(model) {
-    console.log("add")
     const newReview = new Review({
       model,
       showListingData: this.showListingData,
@@ -131,9 +131,11 @@ export default class extends BaseVw {
     const truncLines = model.get('buyerID') !== undefined ? 5 : 6;
 
     this.getCachedEl('.js-reviewWrapper').append(newRevieEl);
-    this.getCachedEl('.js-loadMore').removeClass('hide');
     this.getCachedEl('.js-reviewWrapper').removeClass('hide');
     this.getCachedEl('.js-reviewsSpinner').addClass('hide');
+    if (this.startIndex < this.reviewIDs.length) {
+      this.getCachedEl('.js-loadMore').removeClass('hide');
+    }
 
     // truncate any review text that is too long
     newRevieEl.find('.js-reviewText').trunk8({

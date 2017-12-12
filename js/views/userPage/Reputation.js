@@ -56,6 +56,7 @@ export default class extends BaseVw {
       ...pData,
     });
     this.reviews.reviewIDs = pData.ratings || [];
+    this.reviews.listenForReviews();
     this.reviews.setState({ isFetchingRatings: false });
   }
 

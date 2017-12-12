@@ -110,6 +110,9 @@ export default class extends BaseModal {
     this.reviews = this.createChild(Reviews, {
       async: true,
       showListingData: true,
+      initialState: {
+        isFetchingRatings: true,
+      },
     });
 
     this.boundDocClick = this.onDocumentClick.bind(this);
@@ -153,7 +156,8 @@ export default class extends BaseModal {
     this.rating.fetched = true;
     this.rating.render();
     this.reviews.reviewIDs = pData.ratings || [];
-    this.reviews.render();
+    this.reviews.listenForReviews();
+    this.reviews.setState({ isFetchingRatings: false });
   }
 
   onClickEditListing() {
