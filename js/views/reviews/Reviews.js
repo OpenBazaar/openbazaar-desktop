@@ -27,10 +27,6 @@ export default class extends BaseVw {
     this.showListingData = this.options.showListingData;
     this.collection = new Collection();
     this.listenTo(this.collection, 'add', model => this.addReview(model));
-
-    // Socket review data may arrive before the POST returns, listen for them immediately
-    // If the ratings are provided after initialization, the provider must trigger this.
-    if (this.reviewIDs.length) this.listenForReviews();
   }
 
   className() {
@@ -43,25 +39,29 @@ export default class extends BaseVw {
     };
   }
 
+  onSocketMessage(event) {
+    const eventData = event.jsonData || {};
+    if (this.reviewIDs && this.reviewIDs.indexOf(eventData.ratingId) !== -1) {
+      if (!eventData.error) {
+        this.collection.add(eventData.rating.ratingData);
+      } else {
+        // add the error to the collection so it can be shown in place of the review
+        this.collection.add(eventData);
+      }
+      if (this.collection.length >= this.startIndex) {
+        this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
+      }
+    }
+  }
+
   listenForReviews() {
     if (!this.reviewIDs.length) return;
 
     const serverSocket = getSocket();
+
     if (serverSocket) {
-      this.listenTo(serverSocket, 'message', (event) => {
-        const eventData = event.jsonData;
-        if (this.reviewIDs.indexOf(eventData.ratingId) !== -1) {
-          if (!eventData.error) {
-            this.collection.add(eventData.rating.ratingData);
-          } else {
-            // add the error to the collection so it can be shown in place of the review
-            this.collection.add(eventData);
-          }
-          if (this.collection.length >= this.startIndex) {
-            this.getCachedEl('.js-loadMoreBtn').removeClass('processing');
-          }
-        }
-      });
+      this.stopListening(serverSocket, null, this.onSocketMessage);
+      this.listenTo(serverSocket, 'message', this.onSocketMessage);
     } else {
       throw new Error('There is no connection to the server to listen to.');
     }
@@ -75,6 +75,9 @@ export default class extends BaseVw {
     if (!Array.isArray(ids)) throw new Error('The Review ids must be an array.');
 
     this._reviewIDs = ids;
+    if (this.options.async) {
+      this.listenForReviews();
+    }
   }
 
   hideMoreBtn() {

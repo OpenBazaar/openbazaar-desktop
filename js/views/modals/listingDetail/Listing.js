@@ -156,7 +156,6 @@ export default class extends BaseModal {
     this.rating.fetched = true;
     this.rating.render();
     this.reviews.reviewIDs = pData.ratings || [];
-    this.reviews.listenForReviews();
     this.reviews.setState({ isFetchingRatings: false });
   }
 
