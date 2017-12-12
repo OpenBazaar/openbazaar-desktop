@@ -1,0 +1,56 @@
+<section class="contentBox padMd clrP clrBr clrSh3">
+  <div class="flexCent gutterH padMd posR">
+    <div class="txB tx3">OpenBazaar Wallet Setup</div>
+  </div>
+  <hr class="clrBr" />
+  <div class="mainContent">
+    <form class="padStack">
+      <div class="flexRow rowLg">
+        <div class="col3">
+          <label class="required">Currency</label>
+          <div class="clrT2 tx6">Choose a currency for your Wallet</div>
+        </div>
+        <div class="col9">
+          <div class="currencyRadio rowSm">
+            <div class="clrBr">
+              <div class="btnRadio">
+                <input type="radio"
+                       name="walletCurrency"
+                       value="BTC"
+                       id="walletSetupCurrencyBtc">
+                <label class="gutterHSm" for="walletSetupCurrencyBtc"><%= ob.currencyMod.cryptoIcon({ code: 'BTC' }) %> <span>Bitcoin</span> <a class="tx6 txU" href="https://bitcoin.org/">https://bitcoin.org/</a></label>
+              </div>
+            </div>
+            <div class="clrBr">
+              <div class="btnRadio">
+                <input type="radio"
+                       name="walletCurrency"
+                       value="BCH"
+                       id="walletSetupCurrencyBch">
+                <label class="gutterHSm" for="walletSetupCurrencyBch"><%= ob.currencyMod.cryptoIcon({ code: 'BCH' }) %> <span>Bitcoin Cash</span> <a class="tx6 txU" href="https://bitcoincash.org/">https://bitcoincash.org/</a></label>
+              </div>
+            </div>            
+          </div>
+          <div class="clrT2 tx6">Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.</div>
+        </div>        
+      </div>
+      <div class="flexRow rowLg">
+        <div class="col3">
+          <label class="required">Zcash Binary</label>
+        </div>
+        <div class="col9">
+          <input type="text" class="hide" placeholder="Enter path to your Zcash full node…" />
+          <input type="file" class="hide js-binaryFileUpload">
+          <button class="btn clrP clrBr rowSm js-browseZcashBinary">Browse</button>
+          <div class="clrT2 tx6">A Zcash full node is required. Download a Zcash full node here. Once installed, enter the path to your Zcash node above. Learn more</div>
+        </div>        
+      </div>      
+    </form>
+  </div>
+  <hr class="clrBr row" />
+  <div class="flexVCent flexHRight">
+    <div>
+      <button class="btn clrP js-navNext">Next</button>
+    </div>
+  </div>
+</section>

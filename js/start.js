@@ -91,6 +91,8 @@ window.addEventListener('contextmenu', (e) => {
   ipcRenderer.send('contextmenu-click');
 }, false);
 
+new WalletSetup().render().open();
+
 // Instantiating our Server Configs collection now since the page nav
 // utilizes it. We'll fetch it later on.
 app.serverConfigs = new ServerConfigs();

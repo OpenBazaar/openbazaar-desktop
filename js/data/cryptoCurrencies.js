@@ -175,17 +175,20 @@ export function getServerCurrency() {
 }
 
 /**
- * Will render the icon of the connected servers crypto currency. If there is not currenctly
- * an icon for that currency, it will render an empty string.
+ * Will render the icon for the crypto currency provided in options.code. If not provided, it will
+ * attempt to use the server currency. If the currency ends up not having an icon, a blank string
+ * will be returned.
  */
 export function renderCryptoIcon(options = {}) {
-  if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
-    throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
+  let code = options.code;
+
+  if (!code) {
+    const serverCur = getServerCurrency();
+    code = serverCur && serverCur.code || '';
   }
 
-  const serverCur = getServerCurrency();
   const opts = {
-    code: serverCur && serverCur.code || '',
+    code,
     className: '',
     attrs: {},
     ...options,
