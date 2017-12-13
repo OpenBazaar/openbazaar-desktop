@@ -101,6 +101,9 @@
       },
       "unableToGetSearchProviders": {
         "title": "Unable to load search providers."
+      },
+      "unableToGetValidatedMods": {
+        "title": "Unable to load validated moderators."
       }
     },
     "startupLoadingModal": {
@@ -477,6 +480,12 @@
         "testSmtpFail": "The integration test was not successful.",
         "testSmtpFailWithError": "The integration test was not successful: %{err}",
         "testSmtpCancel": "Cancel"
+      },
+      "services": {
+        "sectionName": "Services",
+        "validatedMods": "Validated Moderators",
+        "validatedModsHelper": "The service used to validate moderators.",
+        "restoreDefault": "Restore default service."
       },
       "server": {
         "sectionName": "Server",
@@ -1727,7 +1736,7 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider"
+    "validatedModsProvider": "This is not a valid url for a validated moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",

@@ -43,6 +43,7 @@ export default class extends baseVw {
       'click .js-showConnectionManagement': 'showConnectionManagement',
       'click .js-purge': 'clickPurge',
       'click .js-blockData': 'clickBlockData',
+      'click .js-restoreDefaultValidatedModProvider': 'clickRestoreDefaultValidatedModProvider',
     };
   }
 
@@ -145,6 +146,11 @@ export default class extends baseVw {
           clipboard.writeText(`Best Hash: ${data.bestHash} Height: ${data.height}`);
         });
       });
+  }
+
+  clickRestoreDefaultValidatedModProvider() {
+    const defaultVal = this.localSettings.defaults().validatedModsProvider;
+    this.getCachedEl('.js-validatedModsProvider').val(defaultVal);
   }
 
 
