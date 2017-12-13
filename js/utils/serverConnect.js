@@ -30,6 +30,11 @@ const events = {
 
 export { events };
 
+const serverCurStartArgMap = {
+  BCH: '--bitcoincash',
+  ZEC: '--zcash',
+};
+
 const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
 
 let currentConnection = null;
@@ -152,7 +157,7 @@ let boundServerConfigRemove = false;
 
 /**
  * Called to establish a connection with a server. This involves ensuring the
- * local server is running, if attempting to connect to the Default
+ * local server is running, if attempting to connect to a built-in
  * (i.e. local bundled) connection. It also involves opening a websocket connection
  * with the server. Additionally, if the configuration requires authentication,
  * it will call a server endpoint to make sure authentication was successful.
@@ -221,6 +226,7 @@ export default function connect(server, options = {}) {
 
   const deferred = $.Deferred();
   const localServer = getLocalServer();
+  const serverCurrency = server.get('walletCurrency');
   let attempt = 1;
   let socket = null;
   let connectAttempt = null;
@@ -300,13 +306,21 @@ export default function connect(server, options = {}) {
     if (connectAttempt) connectAttempt.cancel();
   };
 
-  // If we're not connecting to the local bundled server,
+  // If we're not connecting to the local bundled server or it's running for a different coin,
   // then let's ensure it's stopped.
-  if (!server.get('default') && localServer && localServer.isRunning) {
+  if (
+    (!server.get('builtIn') && localServer && localServer.isRunning) ||
+    (
+      server.get('builtIn') && localServer &&
+      localServer.lastStartCommandLineArgs.indexOf(serverCurStartArgMap[serverCurrency]) === -1
+    )
+  ) {
     deferred.notify({
       status: 'stopping-local-server',
       localServer,
     });
+
+    console.log('gotta start a new one dog');
 
     localServer.stop();
   }
@@ -331,7 +345,7 @@ export default function connect(server, options = {}) {
     const onClientTorProxyChecked = () => {
       // This flag means that we want the server to be running in a certain tor mode
       // (tor on or tor off), buts it's already running in the opposite mode.
-      const serverRunningIncompatibleWithTor = server.get('default') &&
+      const serverRunningIncompatibleWithTor = server.get('builtIn') &&
         localServer.isRunning && (server.get('useTor') !==
           (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
 
@@ -343,7 +357,7 @@ export default function connect(server, options = {}) {
         innerConnectDeferred.reject('incompatible-tor-mode');
       }
 
-      if (server.get('default') &&
+      if (server.get('builtIn') &&
         (!localServer.isRunning || localServer.isStopping)) {
         const onTorChecked = () => {
           const onLocalServerStart = () => {
@@ -360,6 +374,19 @@ export default function connect(server, options = {}) {
           };
 
           let commandLineArgs = ['-v'];
+
+          if (serverCurrency !== 'BTC') {
+            const serverCoinArg = serverCurStartArgMap[walletCurrency];
+
+            if (serverCoinArg) {
+              commandLineArgs.push(serverCoinArg);
+
+              if (serverCurrency === 'ZEC') {
+                commandLineArgs.push(server.get('zcashBinaryPath'));
+              }
+            }
+          }
+
           if (server.get('useTor')) commandLineArgs.push('--tor');
           const torPw = server.get('torPassword');
           if (torPw) {
@@ -426,11 +453,11 @@ export default function connect(server, options = {}) {
     // Putting a timeout, because we want to return the promise before sending any
     // progress (i.e. notify()) events.
     setTimeout(() => {
-      if (server.get('default') && !localServer) {
+      if (server.get('builtIn') && !localServer) {
         // This should never happen to normal users. The only way it would is if you are a dev
         // and mucking with localStorage and / or fudging the source for the app to masquerade
         // as a bundled app.
-        throw new Error('The default configuration should only be used on the bundled app.');
+        throw new Error('A configuration for a built-in server should only be used on the bundled app.');
       }
 
       innerConnectDeferred.notify('connecting');

@@ -1,4 +1,3 @@
-<% console.log('moo'); window.moo = ob %>
 <section class="contentBox padMd clrP clrBr clrSh3">
   <div class="flexCent gutterH padMd posR">
     <div class="txB tx3"><%= ob.polyT('walletSetup.heading') %></div>
@@ -34,7 +33,7 @@
         </div>
         <div class="col9">
           <div class="flex gutterH rowSm">
-            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" placeholder="Enter path to your Zcash full node…" />
+            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" />
             <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
           </div>
           <div class="clrT2 tx6"><%= ob.polyT('walletSetup.zcashBinaryHelper') %></div>

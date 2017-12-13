@@ -1,6 +1,9 @@
+import fs from 'fs';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import is from 'is_js';
+import { getCurrencyByCode as getCryptoCurByCode } from '../data/cryptoCurrencies';
+import { fileModeToPermissions } from '../utils';
 import app from '../app';
 import BaseModel from './BaseModel';
 
@@ -18,7 +21,8 @@ export default class extends BaseModel {
       serverIp: 'localhost',
       port: 4002,
       SSL: false,
-      default: false,
+      // default: false,
+      builtIn: false,
       useTor: false,
       confirmedTor: false,
       torProxy: '127.0.0.1:9150',
@@ -99,7 +103,7 @@ export default class extends BaseModel {
       }
     }
 
-    if (!attrs.default) {
+    if (!attrs.builtIn) {
       if (attrs.port === undefined || attrs.port === '') {
         addError('port', app.polyglot.t('serverConfigModelErrors.provideValue'));
       } else if (!is.number(attrs.port)) {
@@ -109,11 +113,38 @@ export default class extends BaseModel {
       }
     } else {
       if (is.existy(attrs.port) && attrs.port !== this.defaults().port) {
-        // For now, not allowing the port to be changed on the default server,
+        // For now, not allowing the port to be changed on built in servers,
         // since there is currently no way to set the port as an option
         // on the command line, the local bundled server will always be started
         // with the default port.
-        addError('port', `On the default server, the port can only be ${this.defaults().port}.`);
+        addError('port', `On a built-in server, the port can only be ${this.defaults().port}.`);
+      }
+
+      if (typeof attrs.walletCurrency === 'undefined') {
+        addError('walletCurrency',
+          'Please select a wallet currency.');
+      } else if (!getCryptoCurByCode(attrs.walletCurrency)) {
+        addError('walletCurrency',
+          `${attrs.walletCurrency} is not a currently supported crypto currency.`);
+      }
+
+      if (attrs.walletCurrency === 'ZEC' && attrs.zcashBinaryPath === 'undefined') {
+        addError('zcashBinaryPath', 'Please provide a value.');
+      }
+
+      if (attrs.zcashBinaryPath) {
+        let fsStat;
+
+        try {
+          fsStat = fs.statSync(attrs.zcashBinaryPath);
+        } catch (e) {
+          // pass
+        }
+
+        if (!fsStat || !fileModeToPermissions(fsStat).execute.owner) {
+          addError('walletCurrency',
+            'The provided path must be to be a valid exectuable.');
+        }
       }
     }
 
@@ -139,7 +170,7 @@ export default class extends BaseModel {
   needsAuthentication() {
     let needsAuth = false;
 
-    if (!this.isLocalServer() || this.get('default')) {
+    if (!this.isLocalServer() || this.get('builtIn')) {
       needsAuth = true;
     } else {
       if (this.get('username') || this.get('password')) {

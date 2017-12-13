@@ -32,7 +32,6 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-browseZcashBinary': 'onClickBrowseZcashBinary',
-      'change .js-binaryFileUpload': 'onChangeBinaryFileUpload',
       ...super.events(),
     };
   }

@@ -657,9 +657,22 @@ app.connectionManagmentModal = new ConnectionManagement({
 
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
+  // Migrate any old "built in" configurations containing the 'default' flag to
+  // use the new 'builtIn' flag.
+  app.serverConfigs.forEach(serverConfig => {
+    if (typeof serverConfig.get('default') !== 'undefined') {
+      serverConfig.unset('default');
+      serverConfig.save({
+        builtIn: true,
+        walletCurrency: 'BTC',
+      });
+    }
+  });
+
+  const isBundled = remote.getGlobal('isBundledApp');
   if (!app.serverConfigs.length) {
     // no saved server configurations
-    if (remote.getGlobal('isBundledApp')) {
+    if (isBundled) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
