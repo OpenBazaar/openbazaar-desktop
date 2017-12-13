@@ -21,7 +21,6 @@ export default class extends BaseModel {
       serverIp: 'localhost',
       port: 4002,
       SSL: false,
-      // default: false,
       builtIn: false,
       useTor: false,
       confirmedTor: false,
@@ -33,6 +32,31 @@ export default class extends BaseModel {
       torPw: '',
       lastBlockchainResync: '',
     };
+  }
+
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    const fullAttrs = {
+      ...this.toJSON(),
+      ...attrs,
+    };
+
+    if (fullAttrs.builtIn && typeof attrs.walletCurrency === 'string') {
+      attrs.name = app.polyglot.t('connectionManagement.builtInServerName',
+        { cur: attrs.walletCurrency });
+    }
+
+    return super.set(attrs, opts);
   }
 
   validate(attrs) {

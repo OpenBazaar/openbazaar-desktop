@@ -693,7 +693,6 @@ app.serverConfigs.fetch().done(() => {
       // for a bundled app, we'll create a
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
-        name: app.polyglot.t('connectionManagement.defaultServerName'),
         builtIn: true,
       });
 

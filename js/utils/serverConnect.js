@@ -170,7 +170,7 @@ let boundServerConfigRemove = false;
  *   the initial connection process (e.g. at startup), it is useful to have multiple attempts
  *   since the server may still be in the process of starting up.
  * @param {number} [options.minAttemptSpacing=3000] - The minimum number of milliseconds it
- *   should take from the start of one connection attempt until the start of the second one.
+ *   should take from the start of one connection attempt until the start of the second on.
  *   This is very important because if a server is is down, in most cases the failure will
  *   be instant, if you don't enforce spacing all the attempts will happen in a fraction
  *   of a second, never giving a server a chance to startup. (Please note this governs the
@@ -220,9 +220,7 @@ export default function connect(server, options = {}) {
   const opts = {
     attempts: 7,
     minAttemptSpacing: 3000,
-    minAttemptSpacing: 25000,
     maxAttemptTime: 5000,
-    maxAttemptTime: 500000,
     ...options,
   };
 
@@ -376,7 +374,7 @@ export default function connect(server, options = {}) {
           let commandLineArgs = ['-v'];
 
           if (serverCurrency !== 'BTC') {
-            const serverCoinArg = serverCurStartArgMap[walletCurrency];
+            const serverCoinArg = serverCurStartArgMap[serverCurrency];
 
             if (serverCoinArg) {
               commandLineArgs.push(serverCoinArg);

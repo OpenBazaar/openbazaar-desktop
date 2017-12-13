@@ -693,7 +693,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Built-in Server",
+    "builtInServerName": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
