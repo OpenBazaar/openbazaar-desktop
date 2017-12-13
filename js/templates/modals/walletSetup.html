@@ -11,6 +11,7 @@
           <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper') %></div>
         </div>
         <div class="col9">
+          <% if (ob.errors.walletCurrency) print(ob.formErrorTmpl({ errors: ob.errors.walletCurrency })) %>
           <div class="currencyRadio rowSm">
             <% ob.cryptoCurs.forEach(cur => { %>
             <div class="clrBr">
@@ -18,7 +19,8 @@
                 <input type="radio"
                        name="walletCurrency"
                        value="<%= cur.code %>"
-                       id="walletSetupCurrency<%= cur.code %>">
+                       id="walletSetupCurrency<%= cur.code %>"
+                       <% if (ob.walletCurrency === cur.code) { %>checked<% } %>>
                 <label class="gutterHSm" for="walletSetupCurrency<%= cur.code %>"><%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %></label>
               </div>
             </div>
@@ -27,18 +29,19 @@
           <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
         </div>        
       </div>
-      <div class="flexRow rowLg">
+      <div class="flexRow rowLg js-zcashSection <% if (ob.walletCurrency !== 'ZEC') print('hide') %>">
         <div class="col3">
           <label class="required"><%= ob.polyT('walletSetup.zcashBinaryLabel') %></label>
         </div>
         <div class="col9">
+          <% if (ob.errors.zcashBinaryPath) print(ob.formErrorTmpl({ errors: ob.errors.zcashBinaryPath })) %>
           <div class="flex gutterH rowSm">
-            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" />
+            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" value="<%= ob.zcashBinaryPath %>" />
             <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
           </div>
           <div class="clrT2 tx6"><%= ob.polyT('walletSetup.zcashBinaryHelper') %></div>
         </div>        
-      </div>      
+      </div>
     </form>
   </div>
   <hr class="clrBr row" />

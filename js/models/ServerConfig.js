@@ -128,7 +128,8 @@ export default class extends BaseModel {
           `${attrs.walletCurrency} is not a currently supported crypto currency.`);
       }
 
-      if (attrs.walletCurrency === 'ZEC' && attrs.zcashBinaryPath === 'undefined') {
+      window.moo = attrs;
+      if (attrs.walletCurrency === 'ZEC' && !attrs.zcashBinaryPath) {
         addError('zcashBinaryPath', 'Please provide a value.');
       }
 
@@ -142,7 +143,7 @@ export default class extends BaseModel {
         }
 
         if (!fsStat || !fileModeToPermissions(fsStat).execute.owner) {
-          addError('walletCurrency',
+          addError('zcashBinaryPath',
             'The provided path must be to be a valid exectuable.');
         }
       }

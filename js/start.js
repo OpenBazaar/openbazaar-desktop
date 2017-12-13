@@ -91,8 +91,6 @@ window.addEventListener('contextmenu', (e) => {
   ipcRenderer.send('contextmenu-click');
 }, false);
 
-new WalletSetup().render().open();
-
 // Instantiating our Server Configs collection now since the page nav
 // utilizes it. We'll fetch it later on.
 app.serverConfigs = new ServerConfigs();
@@ -655,6 +653,25 @@ app.connectionManagmentModal = new ConnectionManagement({
   showCloseButton: false,
 }).render();
 
+/**
+ * If the provided server requires a wallet setup, the Wallet Setup modal will be launched.
+ * The function returns a promise that resolves when the process is complete.
+ */
+function setupWallet(server) {
+  const deferred = $.Deferred();
+
+  if (server && server.get('builtIn') && server.get('walletCurrency') === undefined) {
+    new WalletSetup({ model: server })
+      .render()
+      .open()
+      .on('walletSetupComplete', () => deferred.resolve());
+  } else {
+    deferred.resolve();
+  }
+
+  return deferred.promise();
+}
+
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
   // Migrate any old "built in" configurations containing the 'default' flag to
@@ -677,24 +694,14 @@ app.serverConfigs.fetch().done(() => {
       // "default" one and try to connect
       const defaultConfig = new ServerConfig({
         name: app.polyglot.t('connectionManagement.defaultServerName'),
-        default: true,
+        builtIn: true,
       });
 
-      const save = defaultConfig.save();
-
-      if (save) {
-        save.done(() => {
-          app.serverConfigs.add(defaultConfig);
-          app.serverConfigs.activeServer = defaultConfig;
-          connectToServer();
-        });
-      } else {
-        const validationErr = defaultConfig.validationError;
-
-        // This is developer error.
-        throw new Error('There were one or more errors saving the default server configuration' +
-          `${Object.keys(validationErr).map(key => `\n- ${validationErr[key]}`)}`);
-      }
+      setupWallet(defaultConfig).done(() => {
+        app.serverConfigs.add(defaultConfig);
+        app.serverConfigs.activeServer = defaultConfig;
+        connectToServer();
+      });
     } else {
       app.connectionManagmentModal.open();
       serverConnectEvents.once('connected', () => {
@@ -711,13 +718,13 @@ app.serverConfigs.fetch().done(() => {
       activeServer = app.serverConfigs.activeServer = app.serverConfigs.at(0);
     }
 
-    if (activeServer.get('default') && !remote.getGlobal('isBundledApp')) {
+    if (activeServer.get('builtIn') && !remote.getGlobal('isBundledApp')) {
       // Your active server is the locally bundled server, but you're
       // not running the bundled app. You have bad data!
-      activeServer.set('default', false);
+      activeServer.set('builtIn', false);
     }
 
-    connectToServer();
+    setupWallet(activeServer).done(() => connectToServer());
   }
 });
 

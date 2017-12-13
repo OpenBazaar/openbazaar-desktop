@@ -20,7 +20,9 @@ export default class LocalServer {
 
     _.extend(this, Events);
     this.serverPath = options.serverPath;
+    this.serverPath = '/Users/rob/develop/openbazaar/v2/go/src/github.com/OpenBazaar/openbazaar-go/';
     this.serverFilename = options.serverFilename;
+    this.serverFilename = 'openbazaard.go';
     this.errorLogPath = options.errorLogPath;
     this._isRunning = false;
     this._isStopping = false;
@@ -67,7 +69,8 @@ export default class LocalServer {
     }
 
     this._isRunning = true;
-    let serverStartArgs = ['start', ...commandLineArgs];
+    // let serverStartArgs = ['start', ...commandLineArgs];
+    let serverStartArgs = ['run', this.serverFilename, 'start', ...commandLineArgs];
 
     // wire in our auth cookie
     if (global.authCookie) {
@@ -79,7 +82,8 @@ export default class LocalServer {
 
     this._lastStartCommandLineArgs = commandLineArgs;
     this.serverSubProcess =
-      childProcess.spawn(this.serverPath + this.serverFilename,
+      childProcess.spawn(this.serverPath + 'moo',
+      // childProcess.spawn(this.serverPath + this.serverFilename,
         serverStartArgs, {
           detach: false,
           cwd: this.serverPath,
@@ -163,8 +167,10 @@ export default class LocalServer {
     console.log('Starting local server in status mode.');
 
     const subProcess =
-      childProcess.spawn(this.serverPath + this.serverFilename,
-        ['status', ...commandLineArgs], {
+      childProcess.spawn(this.serverPath + 'moo',
+      // childProcess.spawn(this.serverPath + this.serverFilename,
+        ['run', this.serverFilename, 'status', ...commandLineArgs], {
+        // ['status', ...commandLineArgs], {
           detach: false,
           cwd: this.serverPath,
         });

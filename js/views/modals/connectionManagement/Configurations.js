@@ -162,7 +162,7 @@ export default class extends baseVw {
         // open, we won't auto send them to the config form, since it may interrupt something else
         // they may be doing.
         this.trigger('editConfig', {
-          model: this.collection.defaultConfig,
+          model: this.collection.activeServer,
         });
       }
     } else if (e.reason === 'tor-not-available') {
@@ -179,7 +179,7 @@ export default class extends baseVw {
         // open, we won't auto send them to the config form, since it may interrupt something else
         // they may be doing.
         this.trigger('editConfig', {
-          model: this.collection.defaultConfig,
+          model: this.collection.activeServer,
         });
       }
     } else if (eventName === 'disconnected') {
