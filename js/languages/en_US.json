@@ -31,6 +31,7 @@
     "currencyLabel": "Currency",
     "currencyHelper": "Choose a currency for your Wallet",
     "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
+    "curInUseTip": "You already have a built-in server with this wallet currency.",
     "zcashBinaryLabel": "Zcash Binary",
     "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node here. Once installed, enter the path to your zcashd binary above. Learn more",
     "zcashBinaryPlaceholder": "/path/to/zcashd",
@@ -750,6 +751,10 @@
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
       "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "lblServerType": "Type",
+      "helperServerType": "Select your server type",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeStandalone": "Stand-alone (advanced)",
       "saveConfirm": {
         "title": "Are you sure?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
@@ -1625,7 +1630,10 @@
     "invalidIp": "This does not appear to be a valid IP address.",
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
+    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideZcashBinaryPath": "Please provide a value.",
+    "invalidZcashBinaryPath": "The provided path must be to be a valid exectuable file."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",

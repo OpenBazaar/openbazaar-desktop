@@ -24,8 +24,8 @@
     <% if (ob.isNew) { %>
       <div class="flexRow">
         <div class="col3">
-          <label class="required">Type</label>
-          <div class="clrT2 tx6">Select your server type</div>
+          <label class="required"><%= ob.polyT('connectionManagement.configurationForm.lblServerType') %></label>
+          <div class="clrT2 tx6"><%= ob.polyT('connectionManagement.configurationForm.helperServerType') %></div>
         </div>
         <div class="col9">
           <div class="btnStrip">
@@ -37,7 +37,7 @@
                      data-field-builtin
                      data-field-standalone
                      <% if (ob.builtIn === true) { %>checked<% } %>>
-              <label class="gutterHSm" for="serverConfigBuiltin"><span>Built-in (local)</span><span class="toolTip" data-tip="If you build it, they will come."><i class="ion-help-circled"></i></span></label>
+              <label class="gutterHSm" for="serverConfigBuiltin"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeBuiltin') %></span><span class="toolTip" data-tip=""><i class="ion-help-circled"></i></span></label>
             </div>
             <div class="btnRadio">
               <input type="radio"
@@ -47,7 +47,7 @@
                      data-field-builtin
                      data-field-standalone                     
                      <% if (ob.builtIn === false) { %>checked<% } %>>
-              <label class="gutterHSm" for="serverConfigStandalone"><span>Stand-alone (advanced)</span><span class="toolTip" data-tip="Why stand alone when we could stand together?"><i class="ion-help-circled"></i></span></label>
+              <label class="gutterHSm" for="serverConfigStandalone"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeStandalone') %></span><span class="toolTip" data-tip=""><i class="ion-help-circled"></i></span></label>
             </div>
           </div>
         </div>        
@@ -80,7 +80,7 @@
                       <%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
                     </div>
                     <% if (inUse) { %>
-                      <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span>Already in use</span><span class="toolTip" data-tip="You already have a built-in server with this wallet currency."><i class="ion-help-circled"></i></span></div>
+                      <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span>Already in use</span><span class="toolTip" data-tip="<%= ob.polyT('walletSetup.curInUseTip') %>"><i class="ion-help-circled"></i></span></div>
                     <% } %>
                   </label>
                 </div>

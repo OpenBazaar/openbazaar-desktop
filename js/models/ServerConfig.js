@@ -145,15 +145,15 @@ export default class extends BaseModel {
       }
 
       if (typeof attrs.walletCurrency === 'undefined') {
-        addError('walletCurrency',
-          'Please select a wallet currency.');
+        addError('walletCurrency', app.polyglot.t('serverConfigModelErrors.provideWalletCurrency'));
       } else if (!getCryptoCurByCode(attrs.walletCurrency)) {
         addError('walletCurrency',
           `${attrs.walletCurrency} is not a currently supported crypto currency.`);
       }
 
       if (attrs.walletCurrency === 'ZEC' && !attrs.zcashBinaryPath) {
-        addError('zcashBinaryPath', 'Please provide a value.');
+        addError('zcashBinaryPath',
+          app.polyglot.t('serverConfigModelErrors.provideZcashBinaryPath'));
       }
 
       if (attrs.zcashBinaryPath) {
@@ -167,7 +167,7 @@ export default class extends BaseModel {
 
         if (!fsStat || !fsStat.isFile() || !fileModeToPermissions(fsStat).execute.owner) {
           addError('zcashBinaryPath',
-            'The provided path must be to be a valid exectuable file.');
+            app.polyglot.t('serverConfigModelErrors.invalidZcashBinaryPath'));
         }
       }
     }
