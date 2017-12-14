@@ -52,6 +52,9 @@ export default class extends baseVw {
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
+
+    console.log('soo');
+    window.soo = this.model;
   }
 
   className() {
@@ -93,12 +96,7 @@ export default class extends baseVw {
   }
 
   onSaveClick(e) {
-    const formData = this.getFormData(this.$formFields);
-    this.model.set({
-      ...formData,
-      confirmedTor: this.model.get('confirmedTor') || formData.useTor ||
-        this.showConfigureTorMessage,
-    });
+    this.setModelFromForm();
     this.model.set({}, { validate: true });
 
     if (this.model.validationError) {
@@ -106,7 +104,7 @@ export default class extends baseVw {
       return;
     }
 
-    if (!this.model.isLocalServer() && !formData.SSL) {
+    if (!this.model.isLocalServer() && !this.model.get('SSL')) {
       this.getCachedEl('.js-saveConfirmBox').removeClass('hide');
     } else {
       this.save();
@@ -169,13 +167,33 @@ export default class extends baseVw {
     return false;
   }
 
-  save() {
-    const formData = this.getFormData(this.$formFields);
+  setModelFromForm() {
+    const id = this.model.id;
+    this.model.clear({ silent: true });
+    const serverType = this.getFormData(this.getCachedEl('[name=serverType]')).serverType;
+    console.log(`the servertype is ${serverType}`);
+    const formFieldsDataAttr = serverType === 'BUILT_IN' ?
+      'data-field-builtin' : 'data-field-standalone';
+    const formData = this.getFormData(
+      this.getCachedEl(`select[${formFieldsDataAttr}], input[${formFieldsDataAttr}], ` +
+        `textarea[${formFieldsDataAttr}]`)
+    );
+    delete formData.serverType;
     this.model.set({
+      ...this.model.defaults(),
       ...formData,
       confirmedTor: this.model.get('confirmedTor') || formData.useTor ||
         this.showConfigureTorMessage,
+      builtIn: this.model.isNew() ? serverType === 'BUILT_IN' : this.model.get('builtIn'),
+      id,
     });
+  }
+
+  /**
+   * Save() assumes that you've previously called setModelFromForm to sync the model
+   * from the UI.
+   */
+  save() {
     const save = this.model.save();
 
     if (save) {
@@ -224,6 +242,7 @@ export default class extends baseVw {
         isTorPwRequired: this.model.isTorPwRequired(),
         cryptoCurs: this.cryptoCurs,
         inUseCrypto: this.inUseCryptos,
+        isNew: this.model.isNew(),
       }));
 
       this._$formFields = null;

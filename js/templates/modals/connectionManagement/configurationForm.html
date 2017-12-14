@@ -21,67 +21,76 @@
   <% } %>  
 
   <form class="padMdKids padStack <% if (ob.useTor) print('useTor') %>">
-    <div class="flexRow">
-      <div class="col3">
-        <label class="required">Type</label>
-        <div class="clrT2 tx6">Select your server type</div>
-      </div>
-      <div class="col9">
-        <div class="btnStrip">
-          <div class="btnRadio">
-            <input type="radio"
-                   name="serverType"
-                   value="BUILT_IN"
-                   id="serverConfigBuiltin"
-                   <% if (ob.builtIn === true) { %>checked<% } %>>
-            <label class="gutterHSm" for="serverConfigBuiltin"><span>Built-in (local)</span><span class="toolTip" data-tip="If you build it, they will come."><i class="ion-help-circled"></i></span></label>
-          </div>
-          <div class="btnRadio">
-            <input type="radio"
-                   name="serverType"
-                   value="STAND_ALONE"
-                   id="serverConfigStandalone"
-                   <% if (ob.builtIn === false) { %>checked<% } %>>
-            <label class="gutterHSm" for="serverConfigStandalone"><span>Stand-alone (advanced)</span><span class="toolTip" data-tip="Why stand alone when we could stand together?"><i class="ion-help-circled"></i></span></label>
-          </div>
-        </div>
-      </div>        
-    </div>  
-    <div class="walletSetupForm js-walletSetupForm padMdKids padStack pad0 <% if (!ob.builtIn) print('hide') %>">
+    <% if (ob.isNew) { %>
       <div class="flexRow">
         <div class="col3">
-          <label class="required"><%= ob.polyT('walletSetup.currencyLabel') %></label>
-          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper') %></div>
+          <label class="required">Type</label>
+          <div class="clrT2 tx6">Select your server type</div>
         </div>
         <div class="col9">
-          <% if (ob.errors.walletCurrency) print(ob.formErrorTmpl({ errors: ob.errors.walletCurrency })) %>
-          <div class="currencyRadio rowSm">
-            <%
-              ob.cryptoCurs.forEach(cur => {
-                const inUse = ob.inUseCrypto.indexOf(cur.code) !== -1;
-            %>
-            <div class="clrBr">
-              <div class="btnRadio <% if (inUse) print('inUse') %>">
-                <input type="radio"
-                       name="walletCurrency"
-                       value="<%= cur.code %>"
-                       id="walletSetupCurrency<%= cur.code %>"
-                       <% if (ob.walletCurrency === cur.code) { %>checked<% } %>>
-                <label class="flexVCent" for="walletSetupCurrency<%= cur.code %>">
-                  <div class="gutterHSm flexExpand flexVCent coinInfo">
-                    <%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
-                  </div>
-                  <% if (inUse) { %>
-                    <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span>Already in use</span><span class="toolTip" data-tip="You already have a built-in server with this wallet currency."><i class="ion-help-circled"></i></span></div>
-                  <% } %>
-                </label>
-              </div>
+          <div class="btnStrip">
+            <div class="btnRadio">
+              <input type="radio"
+                     name="serverType"
+                     value="BUILT_IN"
+                     id="serverConfigBuiltin"
+                     data-field-builtin
+                     data-field-standalone
+                     <% if (ob.builtIn === true) { %>checked<% } %>>
+              <label class="gutterHSm" for="serverConfigBuiltin"><span>Built-in (local)</span><span class="toolTip" data-tip="If you build it, they will come."><i class="ion-help-circled"></i></span></label>
             </div>
-            <% }) %>
+            <div class="btnRadio">
+              <input type="radio"
+                     name="serverType"
+                     value="STAND_ALONE"
+                     id="serverConfigStandalone"
+                     data-field-builtin
+                     data-field-standalone                     
+                     <% if (ob.builtIn === false) { %>checked<% } %>>
+              <label class="gutterHSm" for="serverConfigStandalone"><span>Stand-alone (advanced)</span><span class="toolTip" data-tip="Why stand alone when we could stand together?"><i class="ion-help-circled"></i></span></label>
+            </div>
           </div>
-          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
         </div>        
       </div>
+    <% } %>
+    <div class="walletSetupForm js-walletSetupForm padMdKids padStack pad0 <% if (!ob.builtIn) print('hide') %>">
+      <% if (ob.isNew) { %>
+        <div class="flexRow">
+          <div class="col3">
+            <label class="required"><%= ob.polyT('walletSetup.currencyLabel') %></label>
+            <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper') %></div>
+          </div>
+          <div class="col9">
+            <% if (ob.errors.walletCurrency) print(ob.formErrorTmpl({ errors: ob.errors.walletCurrency })) %>
+            <div class="currencyRadio rowSm">
+              <%
+                ob.cryptoCurs.forEach(cur => {
+                  const inUse = ob.inUseCrypto.indexOf(cur.code) !== -1;
+              %>
+              <div class="clrBr">
+                <div class="btnRadio <% if (inUse) print('inUse') %>">
+                  <input type="radio"
+                         name="walletCurrency"
+                         value="<%= cur.code %>"
+                         id="walletSetupCurrency<%= cur.code %>"
+                         data-field-builtin
+                         <% if (ob.walletCurrency === cur.code) { %>checked<% } %>>
+                  <label class="flexVCent" for="walletSetupCurrency<%= cur.code %>">
+                    <div class="gutterHSm flexExpand flexVCent coinInfo">
+                      <%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
+                    </div>
+                    <% if (inUse) { %>
+                      <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span>Already in use</span><span class="toolTip" data-tip="You already have a built-in server with this wallet currency."><i class="ion-help-circled"></i></span></div>
+                    <% } %>
+                  </label>
+                </div>
+              </div>
+              <% }) %>
+            </div>
+            <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
+          </div>        
+        </div>
+      <% } %>
       <div class="flexRow js-zcashSection padBot0 <% if (ob.walletCurrency !== 'ZEC') print('hide') %>">
         <div class="col3">
           <label class="required"><%= ob.polyT('walletSetup.zcashBinaryLabel') %></label>
@@ -89,7 +98,7 @@
         <div class="col9">
           <% if (ob.errors.zcashBinaryPath) print(ob.formErrorTmpl({ errors: ob.errors.zcashBinaryPath })) %>
           <div class="flex gutterH rowSm">
-            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" value="<%= ob.zcashBinaryPath %>" />
+            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" value="<%= ob.zcashBinaryPath %>" data-field-builtin />
             <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
           </div>
           <div class="clrT2 tx6"><%= ob.polyT('walletSetup.zcashBinaryHelper') %></div>
@@ -103,7 +112,7 @@
         </div>
         <div class="col9">
         <% if (ob.errors.name) print(ob.formErrorTmpl({ errors: ob.errors.name })) %>
-          <input type="text" class="clrBr clrSh2 js-inputName" name="name" id="serverConfigName" value="<%= ob.name %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderName') %>" >
+          <input type="text" class="clrBr clrSh2 js-inputName" name="name" id="serverConfigName" value="<%= ob.name %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderName') %>" data-field-standalone />
         </div>
       </div>
       <div class="flexRow">
@@ -112,7 +121,7 @@
         </div>
         <div class="col9">
         <% if (ob.errors.serverIp) print(ob.formErrorTmpl({ errors: ob.errors.serverIp })) %>
-          <input type="text" class="clrBr clrSh2" name="serverIp" id="serverConfigServerIp" value="<%= ob.serverIp %>"placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderServerIp') %>">
+          <input type="text" class="clrBr clrSh2" name="serverIp" id="serverConfigServerIp" value="<%= ob.serverIp %>"placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderServerIp') %>" data-field-standalone />
         </div>
       </div>
       <div class="flexRow">
@@ -121,7 +130,7 @@
         </div>
         <div class="col9">
         <% if (ob.errors.username) print(ob.formErrorTmpl({ errors: ob.errors.username })) %>
-          <input type="text" class="clrBr clrSh2" name="username" id="serverConfigUsername" value="<%= ob.username %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderUsername') %>">
+          <input type="text" class="clrBr clrSh2" name="username" id="serverConfigUsername" value="<%= ob.username %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderUsername') %>" data-field-standalone>
         </div>
       </div>
       <div class="flexRow">
@@ -130,7 +139,7 @@
         </div>
         <div class="col9">
         <% if (ob.errors.password) print(ob.formErrorTmpl({ errors: ob.errors.password })) %>
-          <input type="password" class="clrBr clrSh2" name="password" id="serverConfigPassword" value="<%= ob.password %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPassword') %>">
+          <input type="password" class="clrBr clrSh2" name="password" id="serverConfigPassword" value="<%= ob.password %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPassword') %>" data-field-standalone>
         </div>
       </div>
       <div class="flexRow">
@@ -146,6 +155,7 @@
                      value="true"
                      id="serverConfigSSLOn"
                      data-var-type="boolean"
+                     data-field-standalone
               <% if(ob.SSL) { %>checked<% } %>>
               <label for="serverConfigSSLOn"><%= ob.polyT('connectionManagement.configurationForm.sslOn') %></label>
             </div>
@@ -155,6 +165,7 @@
                      value="false"
                      id="serverConfigSSLOff"
                      data-var-type="boolean"
+                     data-field-standalone
               <% if(!ob.SSL) { %>checked<% } %>>
               <label for="serverConfigSSLOff"><%= ob.polyT('connectionManagement.configurationForm.sslOff') %></label>
             </div>
@@ -167,7 +178,7 @@
         </div>
         <div class="col9">
         <% if (ob.errors.port) print(ob.formErrorTmpl({ errors: ob.errors.port })) %>
-          <input type="text" class="clrBr clrSh2" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPort') %>">
+          <input type="text" class="clrBr clrSh2" name="port" id="serverConfigPort" value="<%= ob.port %>" data-var-type="number" placeholder="<%= ob.polyT('connectionManagement.configurationForm.placeholderPort') %>" data-field-standalone>
         </div>
       </div>
     </div>
@@ -177,11 +188,11 @@
       </div>
       <div class="col9">
         <% if (ob.errors.useTor) print(ob.formErrorTmpl({ errors: ob.errors.useTor })) %>
-        <input type="checkbox" id="serverConfigUseTor" name="useTor" <% if (ob.useTor) print('checked') %> />
+        <input type="checkbox" id="serverConfigUseTor" name="useTor" <% if (ob.useTor) print('checked') %> data-field-standalone data-field-builtin />
         <label for="serverConfigUseTor"><%= ob.polyT('connectionManagement.configurationForm.useTor') %></label>
       </div>
     </div>
-    <div class="torDetails padMdKids padStack">
+    <div class="torDetails padMdKids padStack padBot0">
       <% if (!ob.builtIn) { %>
       <div>
         <%= ob.polyT('connectionManagement.configurationForm.torServerWarning', {
@@ -195,7 +206,7 @@
         </div>
         <div class="col9">
           <% if (ob.errors.torProxy) print(ob.formErrorTmpl({ errors: ob.errors.torProxy })) %>
-          <input type="text" class="clrBr clrSh2 required" name="torProxy" id="serverConfigTorProxy" value="<%= ob.torProxy %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.torProxyPlaceholder') %>">
+          <input type="text" class="clrBr clrSh2 required" name="torProxy" id="serverConfigTorProxy" value="<%= ob.torProxy %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.torProxyPlaceholder') %>" data-field-standalone data-field-builtin>
         </div>
       </div>
       <div class="flexRow">
@@ -204,7 +215,7 @@
         </div>
         <div class="col9">
           <% if (ob.errors.torPassword) print(ob.formErrorTmpl({ errors: ob.errors.torPassword })) %>
-          <input type="password" class="clrBr clrSh2" name="torPassword" id="serverConfigTorPw" value="<%= ob.torPassword %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.torPwPlaceholder') %>">
+          <input type="password" class="clrBr clrSh2" name="torPassword" id="serverConfigTorPw" value="<%= ob.torPassword %>" placeholder="<%= ob.polyT('connectionManagement.configurationForm.torPwPlaceholder') %>" data-field-standalone data-field-builtin>
         </div>
       </div>
     </div>
