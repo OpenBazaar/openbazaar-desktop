@@ -297,6 +297,11 @@ function fetchStartupData() {
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
+      // If the calls fails with an empty xhr, it's because we lost the connection to the
+      // server. In that case we'll no-op here since the connection management modal will be
+      // displayed with relevant info.
+      if (!jqXhr) return;
+
       if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed) {
         let title = '';
 
@@ -310,7 +315,7 @@ function fetchStartupData() {
 
         const retryFetchStarupDataDialog = new Dialog({
           title,
-          message: jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          message: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
           buttons: [
             {
               text: app.polyglot.t('startUp.dialogs.btnRetry'),

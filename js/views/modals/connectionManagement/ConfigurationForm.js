@@ -52,9 +52,6 @@ export default class extends baseVw {
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
-
-    console.log('soo');
-    window.soo = this.model;
   }
 
   className() {
@@ -168,24 +165,20 @@ export default class extends baseVw {
   }
 
   setModelFromForm() {
-    const id = this.model.id;
-    this.model.clear({ silent: true });
     const serverType = this.getFormData(this.getCachedEl('[name=serverType]')).serverType;
-    console.log(`the servertype is ${serverType}`);
-    const formFieldsDataAttr = serverType === 'BUILT_IN' ?
-      'data-field-builtin' : 'data-field-standalone';
+    const builtIn = this.model.isNew() ? serverType === 'BUILT_IN' : this.model.get('builtIn');
+    const formFieldsDataAttr = builtIn ? 'data-field-builtin' : 'data-field-standalone';
     const formData = this.getFormData(
       this.getCachedEl(`select[${formFieldsDataAttr}], input[${formFieldsDataAttr}], ` +
         `textarea[${formFieldsDataAttr}]`)
     );
     delete formData.serverType;
     this.model.set({
-      ...this.model.defaults(),
+      ...this.model.lastSyncedAttrs || {},
       ...formData,
       confirmedTor: this.model.get('confirmedTor') || formData.useTor ||
         this.showConfigureTorMessage,
-      builtIn: this.model.isNew() ? serverType === 'BUILT_IN' : this.model.get('builtIn'),
-      id,
+      builtIn,
     });
   }
 
