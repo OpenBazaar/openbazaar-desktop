@@ -169,6 +169,12 @@
   height: $thumbLg;
 }
 
+.thumbHg {
+  @extend .thumb;
+  width: $thumbHg;
+  height: $thumbHg;
+}
+
 .border {
   //use on wrapping containers that should have a border. The element should also have a clrBr class.
   border-width: 1px;

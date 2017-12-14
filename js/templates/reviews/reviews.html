@@ -1,0 +1,26 @@
+<div class="contentBox padLg clrP clrBr clrSh3">
+  <h2 class="txUnb title"><%= ob.polyT('listingDetail.reviews') %></h2>
+  <% if (!ob.isFetchingRatings) { %>
+    <% if (ob.reviewsLength) { %>
+      <div class="js-reviewWrapper <% if (!ob.collectionLength) print('hide') %>"></div>
+      <div class="clrTErr js-errors"></div>
+      <div class="flexHCent loadMore clrBr js-loadMore <% if (!ob.collectionLength) print('hide') %>">
+        <%= ob.processingButton({
+        className: 'btn clrP clrBr js-loadMoreBtn',
+        btnText: ob.polyT('listingDetail.review.loadMore')
+        }) %>
+      </div>
+      <div class="flexHCent js-reviewsSpinner">
+        <%= ob.spinner({ className: 'spinnerMd' }) %>
+      </div>
+    <% } else { %>
+      <div class="noReviews">
+        <i class="clrT2"><%= ob.polyT('listingDetail.review.noReviews') %></i>
+      </div>
+    <% } %>
+  <% } else { %>
+    <div class="flexHCent">
+      <%= ob.spinner({ className: 'spinnerMd' }) %>
+    </div>
+  <% } %>
+</div>

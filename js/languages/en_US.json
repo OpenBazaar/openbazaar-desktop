@@ -212,7 +212,8 @@
       "home": "Home",
       "store": "Store",
       "following": "Following",
-      "followers": "Followers"
+      "followers": "Followers",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "No One is Following %{name} Yet",
@@ -270,6 +271,12 @@
       "following": "Following",
       "followers": "Followers"
     }
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "%{smart_count} review |||| %{smart_count} reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "Loading…",

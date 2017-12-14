@@ -186,5 +186,33 @@
         z-index: 2; // so it's above the listing card overlays
       }
     }
+
+    .userPageReputation {
+
+      .repBg {
+        font-size: 38px;
+      }
+
+      .statsBox {
+        min-height: 150px;
+      }
+
+      .reviews {
+        .title {
+          display: none;
+        }
+
+        .noReviews {
+          text-align: center;
+        }
+
+        .loadMore {
+          padding-top: $padLg;
+          margin-top: $padLg;
+          border-top-style: solid;
+          border-top-width: 1px;
+        }
+      }
+    }
   }
 }

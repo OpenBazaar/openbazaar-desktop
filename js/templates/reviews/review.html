@@ -1,0 +1,80 @@
+<% if (ob.error) { %>
+  <p class="clrTErr txCtr"><i class="ion-alert-circled"></i> <%= ob.polyT('listingDetail.errors.loadReview', { id: ob.ratingId, error: ob.error }) %></p>
+<% } else { %>
+
+  <%
+    let niceSlug = ob.vendorSig.metadata.listingSlug.replace(/-/g, ' ');
+    niceSlug = niceSlug.replace(/\b\w/g, m => m.toUpperCase());
+    let title = ob.vendorSig.metadata.listingTitle ? ob.vendorSig.metadata.listingTitle : niceSlug;
+    title = title ? title : ob.polyT('reputation.noTitle');
+    const slugLink = ob.vendorID && ob.vendorSig.metadata.listingSlug ? `ob://${ob.vendorID.peerID}/store/${ob.vendorSig.metadata.listingSlug}` : '';
+    let background = '';
+    if (ob.vendorSig.metadata.thumbnail) {
+      background = ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.vendorSig.metadata.thumbnail.small : ob.vendorSig.metadata.thumbnail.tiny}`);
+    }
+  %>
+
+  <div class="flexRow gutterHLg">
+    <div class="col8 flex gutterHMd">
+      <% if (!ob.showListingData) { %>
+        <% if (slugLink) { %>
+          <a class="thumbHg flexNoShrink"
+             style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')"
+             href="<%= slugLink %>">
+          </a>
+        <% } else { %>
+          <div class="thumbHg flexNoShrink"
+               style="background-image: url(<%= background %>), url('../imgs/defaultItem.png')">
+          </div>
+        <% } %>
+      <% } %>
+      <div class="flexExpand gutterVSm">
+        <div class="tx5b clrT2">
+          <% if (ob.buyerID) { %>
+            <% const nameLink = `<a href="${ob.buyerID.peerID}"><span class="clrT2">${ob.buyerName}</span></a>`; %>
+            <b><%= ob.polyT('listingDetail.review.title', { time: ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a'), name: nameLink }) %></b>
+          <% } else { %>
+            <b><%= ob.moment(ob.timestamp).format('MMM Do YYYY h:mm a') %></b>
+          <% } %>
+        </div>
+        <% if (!ob.showListingData) { %>
+          <h4 class="clrT">
+            <% if (slugLink) { %>
+              <a href="<%= slugLink %>" class="clrT"><%= title %></a>
+            <% } else { %>
+              <%= title %>
+            <% } %>
+          </h4>
+        <% } %>
+        <div class="reviewTextWrapper js-reviewTextWrapper">
+          <p class="reviewText js-reviewText"><%= ob.review %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col4">
+      <table class="ratings">
+        <tr>
+          <td><b><%= ob.polyT('ratingLabels.overall') %></b></td>
+          <td class="ratingsContainer" data-rating-type="overall"></td>
+        </tr>
+        <tr>
+          <td><%= ob.polyT('ratingLabels.quality') %></td>
+          <td class="ratingsContainer" data-rating-type="quality"></td>
+        </tr>
+        <tr>
+          <td><%= ob.polyT('ratingLabels.asAdvertised') %></td>
+          <td class="ratingsContainer" data-rating-type="description"></td>
+        </tr>
+        <tr>
+          <td><%= ob.polyT('ratingLabels.delivery') %></td>
+          <td class="ratingsContainer" data-rating-type="deliverySpeed"></td>
+        </tr>
+        <tr>
+          <td><%= ob.polyT('ratingLabels.service') %></td>
+          <td class="ratingsContainer" data-rating-type="customerService"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+<% } %>
+
