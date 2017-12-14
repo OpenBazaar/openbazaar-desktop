@@ -1,4 +1,5 @@
 import BaseModel from './BaseModel';
+import is from 'is_js';
 
 export default class extends BaseModel {
   defaults() {
@@ -27,10 +28,10 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.string(attrs.peerID)) {
-      addError('peerID', 'peerID must be a string.');
-    } else if (!attrs.name.length) {
+    if (!attrs.name) {
       addError('peerID', 'peerID must be provided');
+    } else if (is.not.string(attrs.peerID)) {
+      addError('peerID', 'peerID must be a string.');
     }
 
     if (Object.keys(errObj).length) return errObj;
@@ -38,4 +39,3 @@ export default class extends BaseModel {
     return undefined;
   }
 }
-

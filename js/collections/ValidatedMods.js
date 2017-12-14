@@ -25,8 +25,13 @@ export default class extends Collection {
 
   parse(response) {
     // handle just an array of moderators, or a more complext response
-    const parsedResponse = response.moderators || response;
+    const parsedResponse = response.moderators || Array.isArray(response) ? response : [];
     this.types = response.types || [];
+    if (response.data) {
+      this.name = response.data.name;
+      this.description = response.data.description;
+      this.link = response.data.link;
+    }
     return parsedResponse;
   }
 }
