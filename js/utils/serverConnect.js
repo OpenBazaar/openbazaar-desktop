@@ -455,7 +455,8 @@ export default function connect(server, options = {}) {
         // This should never happen to normal users. The only way it would is if you are a dev
         // and mucking with localStorage and / or fudging the source for the app to masquerade
         // as a bundled app.
-        throw new Error('A configuration for a built-in server should only be used on the bundled app.');
+        throw new Error('A configuration for a built-in server should only be used on ' +
+          ' the bundled app.');
       }
 
       innerConnectDeferred.notify('connecting');

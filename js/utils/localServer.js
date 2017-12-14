@@ -20,8 +20,6 @@ export default class LocalServer {
 
     _.extend(this, Events);
     this.serverPath = options.serverPath;
-    this.serverPath = '/Users/rob/develop/openbazaar/v2/server/';
-    this.serverFilename = options.serverFilename;
     this.serverFilename = options.serverFilename;
     this.errorLogPath = options.errorLogPath;
     this._isRunning = false;
