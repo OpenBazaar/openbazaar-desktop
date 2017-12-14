@@ -15,6 +15,7 @@ const currencies = [
     feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
     icon: 'imgs/cryptoIcons/btcIcon128.png',
+    url: 'https://bitcoin.org/',
     needCoinLink: 'https://openbazaar.org/bitcoin',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
@@ -55,6 +56,7 @@ const currencies = [
     feeBumpTransactionSize: 154,
     qrCodeText: address => `${address}`,
     icon: 'imgs/cryptoIcons/bchIcon128.png',
+    url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/address/${address}` :
@@ -77,6 +79,7 @@ const currencies = [
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
     icon: 'imgs/cryptoIcons/zecIcon128.png',
+    url: 'https://z.cash',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://explorer.testnet.z.cash/address/${address}` :

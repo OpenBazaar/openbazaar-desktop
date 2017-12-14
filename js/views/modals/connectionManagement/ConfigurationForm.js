@@ -1,7 +1,9 @@
 import $ from 'jquery';
-import app from '../../../app';
+import { remote } from 'electron';
 import openSimpleMessage from '../SimpleMessage';
 import { getCurrentConnection } from '../../../utils/serverConnect';
+import { getTranslatedCurrencies } from '../../../data/cryptoCurrencies';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -35,6 +37,14 @@ export default class extends baseVw {
       app.polyglot.t('connectionManagement.configurationForm.tabName') :
       this.model.get('name');
 
+    this.cryptoCurs = getTranslatedCurrencies();
+    this.inUseCryptos = app.serverConfigs.filter(config => config.get('builtIn'))
+      .map(config => config.get('walletCurrency'));
+
+    if (this.model.isNew()) {
+      this.model.set('builtIn', true);
+    }
+
     this.listenTo(this.model, 'change:name', () => {
       const newName = this.model.get('name');
       if (newName) this.title = newName;
@@ -57,6 +67,10 @@ export default class extends baseVw {
       'click .js-saveConfirmCancel': 'onClickSaveConfirmCancel',
       'change #serverConfigServerIp': 'onChangeServerIp',
       'change [name=useTor]': 'onChangeUseTor',
+      'change [name=serverType]': 'onChangeServerType',
+      'change [name=walletCurrency]': 'onWalletCurrencyChange',
+      'click .js-browseZcashBinary': 'onClickBrowseZcashBinary',
+      'click .js-inUseText': 'onClickInUseText',
     };
   }
 
@@ -129,8 +143,30 @@ export default class extends baseVw {
   }
 
   onChangeUseTor(e) {
-    this.getCachedEl('.js-torDetails')
-      .toggleClass('hide', !e.target.checked);
+    this.getCachedEl('form')
+      .toggleClass('useTor', e.target.checked);
+  }
+
+  onChangeServerType(e) {
+    this.getCachedEl('.js-walletSetupForm')
+      .toggleClass('hide', e.target.value === 'STAND_ALONE');
+    this.getCachedEl('.js-standAloneSection')
+      .toggleClass('hide', e.target.value === 'BUILT_IN');
+  }
+
+  onWalletCurrencyChange(e) {
+    this.getCachedEl('.js-zcashSection').toggleClass('hide', e.target.value !== 'ZEC');
+  }
+
+  onClickBrowseZcashBinary() {
+    remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory'] }, e => {
+      this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
+    });
+  }
+
+  onClickInUseText() {
+    // prevents the click of the help icon from selecting the otherwise disabled radio
+    return false;
   }
 
   save() {
@@ -186,6 +222,8 @@ export default class extends baseVw {
         showConfigureTorMessage: this.showConfigureTorMessage,
         showTorUnavailableMessage: this.showTorUnavailableMessage,
         isTorPwRequired: this.model.isTorPwRequired(),
+        cryptoCurs: this.cryptoCurs,
+        inUseCrypto: this.inUseCryptos,
       }));
 
       this._$formFields = null;

@@ -111,7 +111,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnNew': 'onNewClick',
-      'click .js-editDefaultConfig': 'onClickEditDefaultConfig',
+      'click .js-editServer': 'onClickEditServer',
     };
   }
 
@@ -151,7 +151,7 @@ export default class extends baseVw {
     } else if (e.reason === 'tor-not-configured') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotConfigured', {
         serverName: e.server.get('name'),
-        editLink: '<a class="js-editDefaultConfig">' +
+        editLink: `<a class="js-editServer" data-server-id="${e.server.id}">` +
           `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
         links,
       });
@@ -168,7 +168,7 @@ export default class extends baseVw {
     } else if (e.reason === 'tor-not-available') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotAvailable', {
         serverName: e.server.get('name'),
-        editLink: '<a class="js-editDefaultConfig">' +
+        editLink: `<a class="js-editServer" data-server-id="${e.server.id}">` +
           `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
         links,
       });
@@ -212,10 +212,15 @@ export default class extends baseVw {
     this.trigger('newClick');
   }
 
-  onClickEditDefaultConfig() {
-    this.trigger('editConfig', {
-      model: this.collection.defaultConfig,
-    });
+  onClickEditServer(e) {
+    const serverId = e.target.getAttribute('data-server-id');
+
+    if (serverId !== null) {
+      const model = this.collection.get(serverId);
+      if (model) {
+        this.trigger('editConfig', { model });
+      }
+    }
   }
 
   onConfigConnectClick(e) {

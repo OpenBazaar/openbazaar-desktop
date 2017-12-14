@@ -19,16 +19,7 @@ export default class extends BaseModal {
       throw new Error('Please provide a server configuration model.');
     }
 
-    const curUrls = {
-      BTC: 'https://bitcoin.org/',
-      BCH: 'https://bitcoincash.org/',
-      ZEC: 'https://z.cash',
-    };
-
-    this.cryptoCurs = getTranslatedCurrencies().map(cur => ({
-      ...cur,
-      url: curUrls[cur.code] || '',
-    }));
+    this.cryptoCurs = getTranslatedCurrencies();
   }
 
   className() {
