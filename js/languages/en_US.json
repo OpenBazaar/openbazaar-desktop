@@ -173,6 +173,7 @@
     "sales": "Sales",
     "cases": "Cases",
     "settings": "Settings",
+    "help": "Help",
     "toolTip": {
       "back": "Back",
       "forward": "Forward",
@@ -234,7 +235,8 @@
       "home": "Home",
       "store": "Store",
       "following": "Following",
-      "followers": "Followers"
+      "followers": "Followers",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "No One is Following %{name} Yet",
@@ -279,7 +281,8 @@
       "categoryFilter": {
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
-        "showLess": "less"
+        "showLess": "less",
+        "all": "All"
       },
       "toolTip": {
         "contentView": "Toggle view"
@@ -291,6 +294,12 @@
       "following": "Following",
       "followers": "Followers"
     }
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "%{smart_count} review |||| %{smart_count} reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "Loading…",
@@ -383,6 +392,12 @@
         "or": "or",
         "codeCTA": "get involved."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {

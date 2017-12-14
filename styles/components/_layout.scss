@@ -62,7 +62,8 @@
   //a vertical divider. Use when you need to separate things without adding a border to one of them
   //use a color class for the background color
   width: 1px;
-  height: 100%;
+  flex-shrink: 0;
+  align-self: stretch;
 }
 
 .rowDivH {

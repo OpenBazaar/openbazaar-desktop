@@ -42,6 +42,7 @@ export function launchEditListingModal(modalOptions = {}) {
 export function launchAboutModal(modalOptions = {}) {
   if (aboutModal) {
     aboutModal.bringToTop();
+    if (modalOptions.initialTab) aboutModal.selectTab(modalOptions.initialTab);
   } else {
     aboutModal = new About({
       removeOnClose: true,
