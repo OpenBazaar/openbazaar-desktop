@@ -8,11 +8,13 @@ export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       fetchFollowsYou: true,
+      onClickRating:
+        () => app.router.navigate(`ob://${options.model.id}/reputation`, { trigger: true }),
       ...options,
     };
 
     super(opts);
-
+    this.options = opts;
     if (!this.model) {
       throw new Error('Please provide a profile model.');
     }
@@ -46,6 +48,20 @@ export default class extends baseVw {
         }
       });
     }
+  }
+
+  className() {
+    return 'miniprofile';
+  }
+
+  events() {
+    return {
+      'click .js-rating': 'onClickRating',
+    };
+  }
+
+  onClickRating() {
+    this.options.onClickRating();
   }
 
   getState() {

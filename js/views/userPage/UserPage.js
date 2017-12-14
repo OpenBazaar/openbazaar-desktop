@@ -123,6 +123,10 @@ export default class extends baseVw {
     }
   }
 
+  clickRating() {
+    this.setState('reputation');
+  }
+
   get followingCount() {
     return this._followingCount;
   }
@@ -319,10 +323,12 @@ export default class extends baseVw {
       this.miniProfile = this.createChild(MiniProfile, {
         model: this.model,
         fetchFollowsYou: false,
+        onClickRating: () => this.setState('reputation'),
         initialState: {
           followsYou: this.followsYou,
         },
       });
+      this.listenTo(this.miniProfile, 'clickRating', this.clickRating);
       this.$('.js-miniProfileContainer').html(this.miniProfile.render().el);
 
       if (!this.ownPage) {

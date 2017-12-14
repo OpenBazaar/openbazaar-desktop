@@ -1,0 +1,28 @@
+.review {
+  padding-bottom:$padLg;
+  margin-bottom: $padLg;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+
+  &:last-child {
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .reviewTextWrapper .reviewText {
+    line-height: 1.6; // hack to make sure 6 lines works right for trunk8
+
+    .trunkLink {
+      font-weight: 400;
+      text-decoration: underline;
+    }
+  }
+
+  .ratings {
+    td {
+      width: 50%;
+      padding-bottom: $padSm;
+    }
+  }
+}
