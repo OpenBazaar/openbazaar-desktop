@@ -18,5 +18,8 @@
   "categories": [
     "Utility"
   ],
+  "depends": [
+    "libgconf2-4"
+  ],
   "priority": "optional"
 }
