@@ -2677,7 +2677,7 @@ import { _tagsDelimiter } from '../utils/selectize';
     persist: true,
     diacritics: true,
     create: false,
-    createOnBlur: false,
+    createOnBlur: true,
     createFilter: null,
     highlight: true,
     openOnFocus: true,
