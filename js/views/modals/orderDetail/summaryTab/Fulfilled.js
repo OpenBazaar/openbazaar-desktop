@@ -2,6 +2,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
 import '../../../../utils/velocity';
+import app from '../../../../app';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -17,6 +18,8 @@ export default class extends BaseVw {
       contractType: 'PHYSICAL_GOOD',
       isLocalPickup: false,
       showPassword: false,
+      noteFromLabel:
+        app.polyglot.t('orderDetail.summaryTab.fulfilled.noteFromVendorLabel'),
       ...options.initialState || {},
     };
 
