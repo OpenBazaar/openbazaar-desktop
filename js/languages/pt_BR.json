@@ -1272,7 +1272,7 @@
       "heading": "Disputas",
       "countTransactions": "%{smart_count} disputa |||| %{smart_count} disputas",
       "countTransactionsFound": "%{countTransactions} encontrada(s)",
-      "noResults": "Nenhum caso encontrado",
+      "noResults": "Nenhuma disputa encontrada",
       "returnToFromOrder": "Voltar às disputas"
     },
     "filters": {
