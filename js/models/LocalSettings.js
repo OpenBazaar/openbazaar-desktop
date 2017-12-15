@@ -50,7 +50,7 @@ export default class extends Model {
       language,
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
-      validatedModsProvider: 'https://search.ob1.io/trusted_moderators',
+      verifiedModsProvider: 'https://search.ob1.io/trusted_moderators',
       dontShowTorExternalLinkWarning: false,
     };
   }
@@ -95,9 +95,9 @@ export default class extends Model {
       addError(`bitcoinUnit needs to be one of ${this.bitcoinUnits}.`);
     }
 
-    if (is.not.url(attrs.validatedModsProvider)) {
-      addError('validatedModsProvider',
-        app.polyglot.t('localSettingsModelErrors.validatedModsProvider'));
+    if (is.not.url(attrs.verifiedModsProvider)) {
+      addError('verifiedModsProvider',
+        app.polyglot.t('localSettingsModelErrors.verifiedModsProvider'));
     }
 
     if (typeof attrs.dontShowTorExternalLinkWarning !== 'boolean') {

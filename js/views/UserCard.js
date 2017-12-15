@@ -7,6 +7,7 @@ import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile, { getCachedProfiles } from '../models/profile/Profile';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
+import VerifiedMod from './components/VerifiedMod';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -221,6 +222,15 @@ export default class extends BaseVw {
       if (!this.fetched) this.loadUser();
       /* the view should be rendered when it is created and before it has data, so it can occupy
        space in the DOM while the data is being fetched. */
+
+      const verifiedMod = app.verifiedMods.get(this.guid);
+      if (verifiedMod) {
+        this.verifiedMod = new VerifiedMod({
+          model: verifiedMod,
+          arrowClass: 'arrowBoxTop',
+        });
+        this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+      }
     });
 
     return this;

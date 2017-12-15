@@ -187,7 +187,7 @@
       </div>
     </div>
   </div>
-  <div class="contentBox padMd clrP clrBr clrSh3">
+  <div class="contentBox padMd clrP clrBr clrSh3 TODO">
     <h2 class="h4 clrT"><%= ob.polyT('settings.advancedTab.services.sectionName') %></h2>
     <hr class="clrBr" />
     <div class="tabFormWrapper clrS">
@@ -195,17 +195,17 @@
         <div class="flexRow gutterH">
           <div class="col3">
             <label>
-              <%= ob.polyT('settings.advancedTab.services.validatedMods') %>
+              <%= ob.polyT('settings.advancedTab.services.verifiedMods') %>
             </label>
-            <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.services.validatedModsHelper') %></div>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.services.verifiedModsHelper') %></div>
           </div>
           <div class="col9">
-            <% if (ob.errors['validatedModsProvider']) print(ob.formErrorTmpl({ errors: ob.errors['validatedModsProvider'] })) %>
-            <input class="clrP clrBr rowTn js-validatedModsProvider"
+            <% if (ob.errors['verifiedModsProvider']) print(ob.formErrorTmpl({ errors: ob.errors['verifiedModsProvider'] })) %>
+            <input class="clrP clrBr rowTn js-verifiedModsProvider"
                    data-persistence-location="local"
-                   type="text" name="validatedModsProvider"
-                   value="<%= ob.validatedModsProvider %>">
-            <a class="txSm js-restoreDefaultValidatedModProvider"><%= ob.polyT('settings.advancedTab.services.restoreDefault') %></a>
+                   type="text" name="verifiedModsProvider"
+                   value="<%= ob.verifiedModsProvider %>">
+            <a class="txSm js-restoreDefaultverifiedModProvider"><%= ob.polyT('settings.advancedTab.services.restoreDefault') %></a>
           </div>
         </div>
       </form>

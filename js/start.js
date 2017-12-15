@@ -30,7 +30,7 @@ import Profile from './models/profile/Profile';
 import Settings from './models/Settings';
 import WalletBalance from './models/wallet/WalletBalance';
 import Followers from './collections/Followers';
-import ValidatedMods from './collections/ValidatedMods';
+import VerifiedMods from './collections/VerifiedMods';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import './utils/listingData';
@@ -271,8 +271,8 @@ let walletBalanceFetch;
 let walletBalanceFetchFailed;
 let searchProvidersFetch;
 let searchProvidersFetchFailed;
-let validatedModsFetch;
-let validatedModsFetchFailed;
+let verifiedModsFetch;
+let verifiedModsFetchFailed;
 
 function fetchStartupData() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFailed ?
@@ -282,11 +282,11 @@ function fetchStartupData() {
     app.walletBalance.fetch() : walletBalanceFetch;
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetchFailed ?
     app.searchProviders.fetch() : searchProvidersFetch;
-  validatedModsFetch = !validatedModsFetch || validatedModsFetchFailed ?
-    app.validatedMods.fetch() : validatedModsFetch;
+  verifiedModsFetch = !verifiedModsFetch || verifiedModsFetchFailed ?
+    app.verifiedMods.fetch() : verifiedModsFetch;
 
   $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch,
-    validatedModsFetch)
+    verifiedModsFetch)
     .progress((...args) => {
       const state = args[1];
 
@@ -299,18 +299,17 @@ function fetchStartupData() {
           walletBalanceFetchFailed = true;
         } else if (jqXhr === searchProvidersFetch) {
           searchProvidersFetchFailed = true;
-        } else if (jqXhr === validatedModsFetch) {
-          validatedModsFetchFailed = true;
+        } else if (jqXhr === verifiedModsFetch) {
+          verifiedModsFetchFailed = true;
         }
       }
     })
     .done(() => {
-      console.log(app.validatedMods)
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
       if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed ||
-        validatedModsFetchFailed) {
+        verifiedModsFetchFailed) {
         let title = '';
 
         if (ownFollowingFailed) {
@@ -320,7 +319,7 @@ function fetchStartupData() {
         } else if (searchProvidersFetchFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
         } else {
-          title = app.polyglot.t('startUp.dialogs.unableToGetValidatedMods.title');
+          title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
         }
 
         const retryFetchStarupDataDialog = new Dialog({
@@ -404,7 +403,7 @@ function start() {
 
     app.searchProviders = new SearchProvidersCol();
 
-    app.validatedMods = new ValidatedMods();
+    app.verifiedMods = new VerifiedMods();
 
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {

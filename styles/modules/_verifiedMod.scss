@@ -1,0 +1,16 @@
+.verifiedMod {
+  position: absolute;
+
+  .badge {
+    height: $thumbTn;
+    width: $thumbTn;
+    background-size: contain;
+    background-position: center;
+  }
+  .badge+.arrowBoxWrapper {
+    display: none;
+  }
+  .badge:hover+.arrowBoxWrapper {
+    display: block;
+  }
+}

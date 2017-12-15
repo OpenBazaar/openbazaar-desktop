@@ -102,8 +102,8 @@
       "unableToGetSearchProviders": {
         "title": "Unable to load search providers."
       },
-      "unableToGetValidatedMods": {
-        "title": "Unable to load validated moderators."
+      "unableToGetVerifiedMods": {
+        "title": "Unable to load verified moderators."
       }
     },
     "startupLoadingModal": {
@@ -490,8 +490,8 @@
       },
       "services": {
         "sectionName": "Services",
-        "validatedMods": "Validated Moderators",
-        "validatedModsHelper": "The service used to validate moderators.",
+        "verifiedMods": "Verified Moderators",
+        "verifiedModsHelper": "The service used to verify moderators.",
         "restoreDefault": "Restore default service."
       },
       "server": {
@@ -1743,7 +1743,7 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "validatedModsProvider": "This is not a valid url for a validated moderators provider."
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",

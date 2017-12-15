@@ -43,7 +43,7 @@ export default class extends baseVw {
       'click .js-showConnectionManagement': 'showConnectionManagement',
       'click .js-purge': 'clickPurge',
       'click .js-blockData': 'clickBlockData',
-      'click .js-restoreDefaultValidatedModProvider': 'clickRestoreDefaultValidatedModProvider',
+      'click .js-restoreDefaultVerifiedModProvider': 'clickRestoreDefaultVerifiedModProvider',
     };
   }
 
@@ -148,9 +148,9 @@ export default class extends baseVw {
       });
   }
 
-  clickRestoreDefaultValidatedModProvider() {
-    const defaultVal = this.localSettings.defaults().validatedModsProvider;
-    this.getCachedEl('.js-validatedModsProvider').val(defaultVal);
+  clickRestoreDefaultVerifiedModProvider() {
+    const defaultVal = this.localSettings.defaults().verifiedModsProvider;
+    this.getCachedEl('.js-verifiedModsProvider').val(defaultVal);
   }
 
 
