@@ -28,7 +28,7 @@
           <div class="clrT2 tx6"><%= ob.polyT('connectionManagement.configurationForm.helperServerType') %></div>
         </div>
         <div class="col9">
-          <div class="btnStrip">
+          <div class="btnStrip allowOverflow">
             <div class="btnRadio">
               <input type="radio"
                      name="serverType"
@@ -37,7 +37,7 @@
                      data-field-builtin
                      data-field-standalone
                      <% if (ob.builtIn === true) { %>checked<% } %>>
-              <label class="gutterHSm" for="serverConfigBuiltin"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeBuiltin') %></span><span class="toolTip" data-tip=""><i class="ion-help-circled"></i></span></label>
+              <label class="gutterHSm" for="serverConfigBuiltin"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeBuiltin') %></span><span class="toolTip" data-tip="<%= ob.polyT('connectionManagement.configurationForm.serverTypeBuiltinTip') %>"><i class="ion-help-circled"></i></span></label>
             </div>
             <div class="btnRadio">
               <input type="radio"
@@ -47,7 +47,7 @@
                      data-field-builtin
                      data-field-standalone                     
                      <% if (ob.builtIn === false) { %>checked<% } %>>
-              <label class="gutterHSm" for="serverConfigStandalone"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeStandalone') %></span><span class="toolTip" data-tip=""><i class="ion-help-circled"></i></span></label>
+              <label class="gutterHSm" for="serverConfigStandalone"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeStandalone') %></span><span class="toolTip" data-tip="<%= ob.polyT('connectionManagement.configurationForm.serverTypeStandaloneTip') %>"><i class="ion-help-circled"></i></span></label>
             </div>
           </div>
         </div>        
@@ -101,7 +101,13 @@
             <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" value="<%= ob.zcashBinaryPath %>" data-field-builtin />
             <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
           </div>
-          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.zcashBinaryHelper') %></div>
+          <div class="clrT2 tx6">
+            <%= ob.polyT('walletSetup.zcashBinaryHelper',
+              {
+                fullNodeLink: `<a href="https://z.cash/download.html">${ob.polyT('walletSetup.fullNodeLink')}</a>`,
+              })
+            %>
+          </div>
         </div>        
       </div>
     </div>

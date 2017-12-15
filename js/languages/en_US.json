@@ -33,7 +33,8 @@
     "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
     "curInUseTip": "You already have a built-in server with this wallet currency.",
     "zcashBinaryLabel": "Zcash Binary",
-    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node here. Once installed, enter the path to your zcashd binary above. Learn more",
+    "fullNodeLink": "here",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
     "zcashBinaryPlaceholder": "/path/to/zcashd",
     "btnBrowse": "Browse",
     "btnNext": "Next"
@@ -769,7 +770,9 @@
       "lblServerType": "Type",
       "helperServerType": "Select your server type",
       "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
       "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "Are you sure?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",

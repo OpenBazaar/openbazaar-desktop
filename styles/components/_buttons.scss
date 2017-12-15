@@ -234,7 +234,10 @@
 
 .btnStrip {
   //creates a set of buttons with no gaps between them
-  overflow: hidden; // clear the floats to avoid layout issues.
+
+  &:not(.allowOverflow) {
+    overflow: hidden; // clear the floats to avoid layout issues.
+  }
 
   & > .btn {
     border-radius: 0;
@@ -259,6 +262,8 @@
   &:last-child {
     margin-right: 0;
   }
+
+  overflow: visible;
 }
 
 *[class *= "ion-"]:before {
