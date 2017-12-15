@@ -682,12 +682,22 @@ app.serverConfigs.fetch().done(() => {
   // Migrate any old "built in" configurations containing the 'default' flag to
   // use the new 'builtIn' flag.
   app.serverConfigs.forEach(serverConfig => {
-    if (typeof serverConfig.get('default') !== 'undefined') {
-      serverConfig.unset('default');
-      serverConfig.save({
-        builtIn: true,
-        walletCurrency: 'BTC',
-      });
+    const isDefault = serverConfig.get('default');
+    const data = {
+      builtIn: !!isDefault,
+      default: undefined,
+    };
+
+    if (isDefault) {
+      data.walletCurrency = 'BTC';
+    }
+
+    const configSave = serverConfig.save(data);
+
+    if (!configSave) {
+      // developer error or wonky data
+      console.error('There was an error migrating the server config, ' +
+        `${serverConfig.get('name')}, from the 'default' to the 'built-in' style.`);
     }
   });
 

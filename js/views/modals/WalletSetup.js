@@ -75,7 +75,6 @@ export default class extends BaseModal {
   }
 
   render() {
-    super.render();
     loadTemplate('modals/walletSetup.html', t => {
       this.$el.html(t({
         cryptoCurs: this.cryptoCurs,
