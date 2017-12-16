@@ -41,7 +41,6 @@ export default class extends baseVw {
     this.inUseCryptos = app.serverConfigs.filter(config => config.get('builtIn'))
       .map(config => config.get('walletCurrency'));
 
-    // remote.getGlobal('isBundledApp');
     this.isBundledApp = remote.getGlobal('isBundledApp');
     if (this.model.isNew() && this.isBundledApp) {
       this.model.set('builtIn', true);
