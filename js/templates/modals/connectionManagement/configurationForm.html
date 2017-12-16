@@ -21,7 +21,7 @@
   <% } %>  
 
   <form class="padMdKids padStack <% if (ob.useTor) print('useTor') %>">
-    <% if (ob.isNew) { %>
+    <% if (ob.isNew && ob.isBundledApp) { %>
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('connectionManagement.configurationForm.lblServerType') %></label>

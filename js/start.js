@@ -683,13 +683,12 @@ app.serverConfigs.fetch().done(() => {
   // use the new 'builtIn' flag.
   app.serverConfigs.forEach(serverConfig => {
     const isDefault = serverConfig.get('default');
-    const data = {
-      builtIn: !!isDefault,
-      default: undefined,
-    };
+    serverConfig.unset('default');
+    const data = {};
 
-    if (isDefault) {
+    if (typeof isDefault === 'boolean') {
       data.walletCurrency = 'BTC';
+      data.builtIn = !!isDefault;
     }
 
     const configSave = serverConfig.save(data);
