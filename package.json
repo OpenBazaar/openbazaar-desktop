@@ -1,7 +1,7 @@
 {
   "name": "openbazaar-desktop",
   "productName": "OpenBazaar Desktop Client",
-  "version": "2.0.18",
+  "version": "2.0.20",
   "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
@@ -51,7 +51,7 @@
     "electron-winstaller": "2.5.2",
     "jsdom": "9.4.1",
     "mocha": "^2.5.3",
-    "node-sass": "^3.13.0",
+    "node-sass": "^4.7.2",
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.2.0",
     "sinon": "^1.17.6"

@@ -1,14 +1,15 @@
 import $ from 'jquery';
-import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
-import RatingsStrip from '../../RatingsStrip';
+import app from '../../app';
+import loadTemplate from '../../utils/loadTemplate';
+import baseVw from '../baseVw';
+import RatingsStrip from '../RatingsStrip';
 import moment from 'moment';
 import 'trunk8';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
+    this.options = options;
 
     this.ratingStrips = {};
   }
@@ -36,9 +37,10 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/listingDetail/review.html', (t) => {
+    loadTemplate('reviews/review.html', (t) => {
       this.$el.html(t({
         moment,
+        showListingData: this.options.showListingData,
         ...this.model.toJSON(),
       }));
 

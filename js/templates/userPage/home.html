@@ -2,7 +2,7 @@
   <div class="col4 gutterVMd2">
     <div class="userCard js-userCard">
     </div>
-    <% if(ob.moderator && ob.modInfo) { %>
+    <% if(ob.moderator && ob.moderatorInfo) { %>
     <div class="contentBox padMd2 clrBr clrP clrSh2 js-moderatorInfo">
       <div class="flexVBot gutterH rowLg snipKids">
         <div class="tx4 flexExpand"><strong><%= ob.polyT('userPage.moderator') %></strong></div>
@@ -13,8 +13,8 @@
         </div>
       </div>
       <div class="tx2 clrT2 txCtr rowMd">
-        <% var amount = ob.convertAndFormatCurrency(ob.modInfo.fee.fixedFee.amount, ob.modInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-        <%= ob.polyT(`userPage.${ob.modInfo.fee.feeType}`, { amount: amount, percentage: ob.modInfo.fee.percentage }) %>
+        <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+        <%= ob.polyT(`userPage.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
       </div>
       <div class="flexHCent">
         <%= ob.processingButton({

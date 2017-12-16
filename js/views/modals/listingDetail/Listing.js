@@ -13,7 +13,7 @@ import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
-import Reviews from './Reviews';
+import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
@@ -109,6 +109,10 @@ export default class extends BaseModal {
 
     this.reviews = this.createChild(Reviews, {
       async: true,
+      showListingData: true,
+      initialState: {
+        isFetchingRatings: true,
+      },
     });
 
     this.boundDocClick = this.onDocumentClick.bind(this);
@@ -152,7 +156,7 @@ export default class extends BaseModal {
     this.rating.fetched = true;
     this.rating.render();
     this.reviews.reviewIDs = pData.ratings || [];
-    this.reviews.render();
+    this.reviews.setState({ isFetchingRatings: false });
   }
 
   onClickEditListing() {
