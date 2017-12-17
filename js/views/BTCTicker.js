@@ -20,7 +20,8 @@ export default class extends baseVw {
   }
 
   getCurrentPrice() {
-    return getExchangeRate(this.localCurrency);
+    return ['BTC', 'TBTC'].indexOf(this.localCurrency) !== -1 ?
+      1 : getExchangeRate(this.localCurrency);
   }
 
   updatePrice() {

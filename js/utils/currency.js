@@ -241,11 +241,13 @@ export function convertCurrency(amount, fromCur, toCur) {
     return amount;
   }
 
-  if (!exchangeRates[fromCurCaps]) {
+  // Don't check for BTC and TBTC, they aren't in the exchange data
+  if (fromCurCaps !== 'BTC' && fromCurCaps !== 'TBTC' && !exchangeRates[fromCurCaps]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
   }
 
-  if (!exchangeRates[toCurCaps]) {
+  // Don't check for BTC and TBTC, they aren't in the exchange data
+  if (toCurCaps !== 'BTC' && toCurCaps !== 'TBTC' && !exchangeRates[toCurCaps]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
