@@ -8,13 +8,18 @@ export default class extends baseView {
     if (!options.listing || !(options.listing instanceof Listing)) {
       throw new Error('Please provide a listing model.');
     }
-    if (!options.state) {
-      throw new Error('Please provide a state object.');
-    }
 
-    super(options);
-    this.options = options;
-    this.state = options.state;
+    const opts = {
+      ...options,
+      initialState: {
+        phase: 'pay',
+        confirmOpen: false,
+        ...options.initialState || {},
+      },
+    };
+
+    super(opts);
+    this.options = opts;
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
@@ -34,42 +39,27 @@ export default class extends baseView {
   }
 
   onDocumentClick(e) {
-    if (this.state.phase === 'confirm' && !($.contains(this.$confirmPay[0], e.target))) {
-      this.state.phase = 'pay';
-      this.render();
+    if (this.getState().confirmOpen &&
+      !($.contains(this.getCachedEl('.js-confirmPay')[0], e.target))) {
+      this.setState({ confirmOpen: false });
     }
   }
 
   clickPayBtn(e) {
     e.stopPropagation();
-    this.state.phase = 'confirm';
-    this.render();
+    this.setState({ confirmOpen: true });
   }
 
   clickConfirmBtn() {
-    this.state.phase = 'pay';
-    this.$payBtn.addClass('processing');
-    this.$confirmPay.addClass('hide');
     this.trigger('purchase');
   }
 
   closeConfirmPay() {
-    this.state.phase = 'pay';
-    this.render();
+    this.setState({ confirmOpen: false });
   }
 
   clickCloseBtn() {
     this.trigger('close');
-  }
-
-  get $payBtn() {
-    return this._$payBtn ||
-      (this._$payBtn = this.$('.js-payBtn'));
-  }
-
-  get $confirmPay() {
-    return this._$confirmPay ||
-      (this._$confirmPay = this.$('.js-confirmPay'));
   }
 
   remove() {
@@ -78,14 +68,12 @@ export default class extends baseView {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/purchase/actionBtn.html', t => {
       this.$el.html(t({
-        phase: this.state.phase,
+        ...this.getState(),
         listing: this.options.listing,
       }));
-
-      this._$payBtn = null;
-      this._$confirmPay = null;
     });
 
     return this;

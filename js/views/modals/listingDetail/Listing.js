@@ -437,9 +437,7 @@ export default class extends BaseModal {
       removeOnClose: true,
       showCloseButton: false,
       initialState: {
-        isFetching: true,
-        fetchError: '',
-        fetchFailed: false,
+        phase: 'pay',
       },
     })
       .render()

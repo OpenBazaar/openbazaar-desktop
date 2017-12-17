@@ -1,8 +1,8 @@
 <div class="posR">
-  <% if (ob.phase === 'pay' || ob.phase === 'confirm') { %>
+  <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
     <% const initPay = ob.listing.shippingOptions && ob.listing.shippingOptions.length ? 'disabled' : ''; %>
     <%= ob.processingButton({
-      className: `btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn ${initPay}`,
+      className: `btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn ${initPay} ${ob.phase}`,
       btnText: ob.polyT('purchase.pay')
     }) %>
   <% } else if (ob.phase ==='pending') { %>
@@ -14,7 +14,7 @@
       <%= ob.polyT('purchase.close') %>
     </button>
   <% } %>
-  <% if (ob.phase === 'confirm') { %>
+  <% if (ob.confirmOpen) { %>
     <div id="confirmPay" class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 js-confirmPay">
       <div class="flexColRows gutterVSm padLg">
         <h3>
@@ -37,7 +37,7 @@
   <% } %>
 </div>
 <div class="padSm txSm txCtr clrT2">
-  <% if (ob.phase === 'pay' || ob.phase === 'confirm') { %>
+  <% if (ob.phase === 'pay') { %>
     <span class="js-payNote"><%= ob.polyT('purchase.payNote') %></span>
   <% } else if (ob.phase ==='pending') { %>
     <span class="js-pendingNote"><%= ob.polyT('purchase.pendingNote') %></span>

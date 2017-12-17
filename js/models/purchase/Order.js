@@ -34,6 +34,8 @@ export default class extends BaseModel {
 
   addAddress(sAddr) {
     // this will convert and set an address from the settings
+    if (!sAddr) throw new Error('You must provide a valid address object.');
+
     const company = sAddr.get('company');
     const shipTo = `${sAddr.get('name')}${company ? `, ${company}` : ''}`;
     const address = `${sAddr.get('addressLineOne')} ${sAddr.get('addressLineTwo')}`;

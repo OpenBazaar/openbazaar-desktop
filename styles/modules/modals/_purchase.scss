@@ -20,24 +20,6 @@
     display: none;
   }
 
-  &[data-phase='pay'] {
-    .showIfPay {
-      display: block;
-    }
-  }
-
-  &[data-phase='pending'] {
-    .showIfPending {
-      display: block;
-    }
-  }
-
-  &[data-phase='complete'] {
-    .showIfComplete {
-      display: block;
-    }
-  }
-
   .pending {
     .QR {
       display: block;
@@ -54,6 +36,10 @@
 
     .copyNotification {
       top: -0.6em
+    }
+
+    .clickable {
+      cursor: pointer;
     }
   }
 
