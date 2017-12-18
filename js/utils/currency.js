@@ -300,7 +300,7 @@ export function convertCurrency(amount, fromCur, toCur) {
   }
 
   if (!isToServerCur && !exchangeRates[toCurCaps]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
+    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
   const fromRate = isFromServerCur ? 1 : getExchangeRate(fromCurCaps);
