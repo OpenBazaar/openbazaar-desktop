@@ -39,7 +39,6 @@ export default class extends BaseModal {
     this._tab = opts.initialTab;
     this.options = opts;
     this.tabViewCache = {};
-    this.firstOrderSyncComplete = false;
 
     if (!this.model) {
       throw new Error('Please provide an Order model.');
