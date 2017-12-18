@@ -39,6 +39,7 @@ export default class extends BaseModal {
     this._tab = opts.initialTab;
     this.options = opts;
     this.tabViewCache = {};
+    this.firstOrderSyncComplete = false;
 
     if (!this.model) {
       throw new Error('Please provide an Order model.');
@@ -125,20 +126,31 @@ export default class extends BaseModal {
 
   onFirstOrderSync() {
     this.stopListening(this.model, null, this.onOrderRequest);
+    const featuredProfileState = { isFetching: false };
+    let featuredProfileFetch;
 
     if (this.type === 'case') {
-      this.featuredProfileFetch =
-        this.model.get('buyerOpened') ? this.getBuyerProfile() : this.getVendorProfile();
+      if (this.model.get('buyerOpened')) {
+        featuredProfileFetch = this.getBuyerProfile();
+        this.featuredProfilePeerId = featuredProfileState.peerID = this.buyerId;
+      } else {
+        featuredProfileFetch = this.getVendorProfile();
+        this.featuredProfilePeerId = featuredProfileState.peerID = this.vendorId;
+      }
     } else if (this.type === 'sale') {
-      this.featuredProfileFetch = this.getBuyerProfile();
+      featuredProfileFetch = this.getBuyerProfile();
+      this.featuredProfilePeerId = featuredProfileState.peerID = this.buyerId;
     } else {
-      this.featuredProfileFetch = this.getVendorProfile();
+      featuredProfileFetch = this.getVendorProfile();
+      this.featuredProfilePeerId = featuredProfileState.peerID = this.vendorId;
     }
 
-    this.featuredProfileFetch.done(profile => {
+    featuredProfileFetch.done(profile => {
       this.featuredProfileMd = profile;
-      this.featuredProfile.setModel(this.featuredProfileMd);
-    }).always(() => this.featuredProfile.setState({ isFetching: false }));
+      if (this.featuredProfile) this.featuredProfile.setModel(this.featuredProfileMd);
+    });
+
+    if (this.featuredProfile) this.featuredProfile.setState(featuredProfileState);
   }
 
   onClickRetryFetch() {
@@ -170,6 +182,11 @@ export default class extends BaseModal {
   get participantIds() {
     if (!this._participantIds) {
       let contract = this.model.get('contract');
+
+      if (!contract) {
+        throw new Error('Unable to determine the participant IDs. The contract is not ' +
+          'available. The order model has likely not been synced yet.');
+      }
 
       if (this.type === 'case') {
         contract = this.model.get('buyerOpened') ?
@@ -496,7 +513,8 @@ export default class extends BaseModal {
       this.featuredProfile = this.createChild(ProfileBox, {
         model: this.featuredProfileMd || null,
         initialState: {
-          isFetching: this.featuredProfileFetch && this.featuredProfileFetch.state() === 'pending',
+          isFetching: !this.featuredProfilePeerId,
+          peerID: this.featuredProfilePeerId,
         },
       });
       this.$('.js-featuredProfile').html(this.featuredProfile.render().el);
