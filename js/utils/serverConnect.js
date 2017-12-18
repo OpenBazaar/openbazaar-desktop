@@ -218,8 +218,8 @@ export default function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 7,
-    minAttemptSpacing: 3000,
+    attempts: 10,
+    minAttemptSpacing: 5000,
     maxAttemptTime: 5000,
     ...options,
   };
