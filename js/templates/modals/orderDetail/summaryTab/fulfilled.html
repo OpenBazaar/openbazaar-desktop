@@ -19,7 +19,7 @@
           <% } %>
         </div>
       <% } %>
-      <div class="rowTn"><%= ob.noteFromLabel %></div>
+      <div class="rowTn txB"><%= ob.noteFromLabel %></div>
       <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
     </div>
   </div>
@@ -40,7 +40,7 @@
       <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.passwordLabel') %></div>
       <div class="row"><%= digitalDelivery.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div> 
       <% } %>
-      <div class="rowTn"><%= ob.noteFromLabel %></div>
+      <div class="rowTn txB"><%= ob.noteFromLabel %></div>
       <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>      
     </div>
   </div>
@@ -48,7 +48,7 @@
   <div class="flex gutterH clrT">
     <div class="statusIconCol clrT"><span class="clrBr ion-ios-body"></span></div>
     <div class="flexExpand tx5">
-      <div class="rowTn"><%= ob.noteFromLabel %></div>
+      <div class="rowTn txB"><%= ob.noteFromLabel %></div>
       <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
     </div>
   </div>  
