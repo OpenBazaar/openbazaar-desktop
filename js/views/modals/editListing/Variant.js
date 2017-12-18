@@ -94,7 +94,6 @@ export default class extends BaseView {
         valueField: 'value',
         options: variantOptions,
         items: variantItems,
-        createOnBlur: true,
         create: input => ({
           name: input,
           value: input,
