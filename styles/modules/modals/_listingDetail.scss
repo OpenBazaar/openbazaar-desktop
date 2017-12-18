@@ -44,7 +44,8 @@
       }
 
       .tagWrapper {
-
+        overflow: auto; // clear floats
+        
         .tag {
           float: left;
           margin: 0 $padSm $padSm 0;
