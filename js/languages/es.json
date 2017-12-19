@@ -726,7 +726,7 @@
       "saveConfirm": {
         "title": "¿Estás seguro?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
-        "btnCancel": "No, cancel",
+        "btnCancel": "No, cancelar",
         "btnConfirm": "Sí, proceder"
       }
     }
@@ -843,8 +843,8 @@
     "shipTo": "Enviar a:",
     "noShippingFound": "Este listado no puede ser enviado al país seleccionado.",
     "localPickup": "La opción es sólo para recogida local.",
-    "deliveryTime": "Delivery Time",
-    "priceFirst": "Price (first item)",
+    "deliveryTime": "Tiempo de Entrega",
+    "priceFirst": "Precio (primer ítem)",
     "priceSecond": "Price (additional item)",
     "allCountries": "Cualquier país",
     "returnToStore": "Volver a la tienda",
@@ -974,7 +974,7 @@
     "btnAddReturnPolicy": "Añadir política de devolución",
     "btnTermsAndConditions": "Añadir términos y condiciones",
     "btnAddCoupon": "Agregar Cupón",
-    "primaryPhoto": "PRIMARY PHOTO",
+    "primaryPhoto": "FOTO PRINCIPAL",
     "viewListingLink": "Ver Listado",
     "shippingOptions": {
       "optionHeading": "Opción de envío #%{listPosition}",
@@ -995,7 +995,7 @@
         "namePlaceholder": "ej. Estándar, Express, 24 horas",
         "estimatedDeliveryLabel": "Tiempo de entrega estimado",
         "estimatedDeliveryPlaceholder": "ej. 5-7 días",
-        "priceLabel": "Price (first item)",
+        "priceLabel": "Precio (primer ítem)",
         "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Agregar Servicio"
@@ -1224,8 +1224,8 @@
       "listing": "Listado",
       "coupon": "Cupón",
       "shipping": "Envío",
-      "firstItem": "First Item",
-      "additionalItems": "Each Additional Item",
+      "firstItem": "Primer Ítem",
+      "additionalItems": "Cada Ítem Adicional",
       "options": "Opciones",
       "subtotal": "Subtotal (%{quantity})",
       "shippingTotal": "Total Shipping",
@@ -1355,8 +1355,8 @@
       "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
       "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
       "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
-      "buyerContractHeading": "Buyer Contract:",
-      "vendorContractHeading": "Vendor Contract:"
+      "buyerContractHeading": "Contrato del Comprador:",
+      "vendorContractHeading": "Contrato del Vendedor:"
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
@@ -1399,7 +1399,7 @@
         "buyerOrderAccepted": "¡Gracias por tu compra!",
         "modOrderAccepted": "The vendor order has accepted the order.",
         "refundBtn": "Refund",
-        "fulfillBtn": "Fulfill Order",
+        "fulfillBtn": "Completar Orden",
         "refundConfirm": {
           "title": "¿Estás seguro?",
           "body": "The original amount in bitcoin will be returned to the buyer",
@@ -1490,7 +1490,7 @@
       }
     },
     "fulfillOrderTab": {
-      "heading": "Fulfill Order",
+      "heading": "Completar Orden",
       "shippingCarrierLabel": "Shipping Carrier",
       "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
       "trackingLabel": "Tracking #",
@@ -1554,7 +1554,7 @@
     "copyToClipboard": "Copiar al portapapeles"
   },
   "profileModelErrors": {
-    "provideName": "You must provide a name.",
+    "provideName": "Debe indicar un nombre.",
     "provideValidHexColor": "Please provide a valid hex color.",
     "locationTooLong": "The location exceeds the maximum allowable length.",
     "shortDescriptionTooLong": "The short description cannot exceed %{count} characters."
@@ -1621,7 +1621,7 @@
   },
   "couponModelErrors": {
     "provideDiscountCode": "Introduzca código del cupón.",
-    "provideDiscountAmount": "Please provide a discount value.",
+    "provideDiscountAmount": "Indique un valor de descuento.",
     "percentageLow": "El valor del porcentaje debe ser mayor a cero.",
     "percentageHigh": "No puede definir un porcentaje mayor o igual a 100%" ,
     "priceLow": "El precio debe ser mayor a cero.",
@@ -1692,7 +1692,7 @@
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",
-    "provideUrl": "Please provide a file url.",
+    "provideUrl": "Indique un URL.",
     "invalidUrl": "Introduzca un URL válido."
   },
   "errorPage": {
@@ -1730,7 +1730,7 @@
     "provideResolution": "Por favor explique su decisión."
   },
   "searchProviderModelErrors": {
-    "invalidName": "The name must be a string.",
+    "invalidName": "El nombre debe ser una cadena de caracteres.",
     "invalidLogo": "The logo URL must be a valid URL.",
     "invalidsearch": "You must provide a valid search URL.",
     "invalidlistings": "You must provide a valid listings search URL",
@@ -2253,7 +2253,7 @@
     "fi-FI": "Finlandés (Finlandia)",
     "fo": "Faroese",
     "fo-FO": "Faroese (Faroe Islands)",
-    "fr": "French",
+    "fr": "Francés",
     "fr-BE": "French (Belgium)",
     "fr-CA": "French (Canada)",
     "fr-CH": "French (Switzerland)",
@@ -2279,11 +2279,11 @@
     "id-ID": "Indonesian (Indonesia)",
     "is": "Icelandic",
     "is-IS": "Icelandic (Iceland)",
-    "it": "Italian",
+    "it": "Italiano",
     "it-CH": "Italian (Switzerland)",
-    "it-IT": "Italian (Italy)",
-    "ja": "Japanese",
-    "ja-JP": "Japanese (Japan)",
+    "it-IT": "Italiano (Italia)",
+    "ja": "Japonés",
+    "ja-JP": "Japonés (Japón)",
     "ka": "Georgian",
     "ka-GE": "Georgian (Georgia)",
     "kk": "Kazakh",
@@ -2323,20 +2323,20 @@
     "ns-ZA": "Northern Sotho (South Africa)",
     "pa": "Punjabi",
     "pa-IN": "Punjabi (India)",
-    "pl": "Polish",
-    "pl-PL": "Polish (Poland)",
+    "pl": "Polaco",
+    "pl-PL": "Polaco (Polonia)",
     "ps": "Pashto",
     "ps-AR": "Pashto (Afghanistan)",
-    "pt": "Portuguese",
-    "pt-BR": "Portuguese (Brazil)",
-    "pt-PT": "Portuguese (Portugal)",
+    "pt": "Portugués",
+    "pt-BR": "Portugués (Brasil)",
+    "pt-PT": "Portugués (Portugal)",
     "qu": "Quechua",
     "qu-BO": "Quechua (Bolivia)",
     "qu-EC": "Quechua (Ecuador)",
-    "qu-PE": "Quechua (Peru)",
-    "ro": "Romanian",
+    "qu-PE": "Quechua (Perú)",
+    "ro": "Rumano",
     "ro-RO": "Romanian (Romania)",
-    "ru": "Russian",
+    "ru": "Ruso",
     "ru-RU": "Russian (Russia)",
     "sa": "Sanskrit",
     "sa-IN": "Sanskrit (India)",
@@ -2344,7 +2344,7 @@
     "se-FI": "Sami (Inari) (Finland)",
     "se-NO": "Sami (Southern) (Norway)",
     "se-SE": "Sami (Southern) (Sweden)",
-    "sk": "Slovak",
+    "sk": "Eslovaco",
     "sk-SK": "Slovak (Slovakia)",
     "sl": "Slovenian",
     "sl-SI": "Slovenian (Slovenia)",
@@ -2352,7 +2352,7 @@
     "sq-AL": "Albanian (Albania)",
     "sr-BA": "Serbian (Cyrillic) (Bosnia and Herzegovina)",
     "sr-SP": "Serbian (Cyrillic) (Serbia and Montenegro)",
-    "sv": "Swedish",
+    "sv": "Sueco",
     "sv-FI": "Swedish (Finland)",
     "sv-SE": "Swedish (Sweden)",
     "sw": "Swahili",
@@ -2388,7 +2388,7 @@
     "zh-CN": "Chino (S)",
     "zh-HK": "Chino (Hong Kong)",
     "zh-MO": "Chino (Macau)",
-    "zh-SG": "Chinese (Singapore)",
+    "zh-SG": "Chino (Singapur)",
     "zh-TW": "Chino (T)",
     "zu": "Zulú",
     "zu-ZA": "Zulu (South Africa)"

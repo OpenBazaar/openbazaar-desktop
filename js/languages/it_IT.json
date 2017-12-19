@@ -331,7 +331,7 @@
       "copyright": "Copyright &copy; 2016 OpenBazaar Developers",
       "paragraphs": {
         "permission": "\nL'autorizzazione è concessa gratuitamente a qualsiasi persona che ottiene una copia di questo software e dei file di documenti associati (il \"software\"), per trattare il software senza restrizioni, inclusi, senza limitazione, i diritti di utilizzare, copiare, modificare, unire, pubblicare, distribuire, sublicenziare e/o vendere copie del software e consentire alle persone a cui è fornito il software, a seconda delle seguenti condizioni:",
-        "inclusion": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+        "inclusion": "L'avvertenza sul copyright e sul permesso nell'utilizzo del software deve essere riportata in tutte le copie o porzioni significative del software",
         "indemnity": "IL SOFTWARE È FORNITO COSÌ COM'È, SENZA ALCUNA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, TRA CUI LA GARANZIA DI COMMERCIABILITÀ DEL PRODOTTO, L'IDONEITÀ PER SCOPI PARTICOLARI E LA CONTRAFFAZIONE. IN NESSUN CASO GLI AUTORI O I DETENTORI DEI DIRITTI D'AUTORE DEL SOFTWARE SARANNO RITENUTI RESPONSABILI PER RICHIESTE DI RISARCIMENTI, DANNI O ALTRE RESPONSABILITÀ, SIA IN CASO DI DISPOSIZIONE DI CONTRATTO, DI TORTO O COMUNQUE DERIVANTI DA O IN CONNESSIONE CON IL SOFTWARE, O L'UTILIZZO DI ALTRE ATTIVITÀ NEL SOFTWARE."
       }
     },
@@ -440,7 +440,7 @@
       "sectionName": "Avanzate",
       "helperVisualEffects": "Transitions, Easing, Opacity",
       "helperWindowControls": "Espandi, riduci e chiudi finestra",
-      "helperSaveMetaData": "Store additional transaction information",
+      "helperSaveMetaData": "Includi informazioni aggiuntive sulle transazione",
       "helperDefaultFee": "La priorità è suggerita per le transazioni più veloci",
       "smtp": {
         "sectionName": "Integrazione Email (SMTP)",
@@ -488,7 +488,7 @@
         "purge": "Elimina i file condivisi",
         "purgeHelper": "Cancella i file nella cache condivisi con altri",
         "purgeBtn": "Elimina files",
-        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
+        "purgeToolTip": "OpenBazaar condivide il contenuto nella tua cache con altri utenti. Se hai visto immagini o altre cose che non vuoi che altri vedano, questo pulsante cancellerà i dati nella cache. Questo non eliminerà i file che possiedi.",
         "purgeError": "C'è stato un errore. È possibile che i file nella cache non siano stati eliminati.",
         "purgeComplete": "I file che avevi nella cache sono stati eliminati.",
         "blockData": "Blocca dati",
@@ -676,8 +676,8 @@
       "errorAuthFailed": "%{errorPreface} Connessione a %{serverName} fallita. Username o password sono sbagliati. %{links}",
       "errorAuthFailedBuiltInServer": "%{errorPreface} Connessione a %{serverName} fallita. Il cookie di autenticazioni è invalido. %[links]",
       "editLink": "modifica",
-      "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
-      "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
+      "errorTorNotConfigured": "Per favore, %{editLink} la %{serverName} configurazione per confermare se vuoi usare Tor. %{links}",
+      "errorTorNotAvailable": "Tor non è stato trovato. Per favore, %{editLink} la %{serverName} configurazione per confermare se vuoi usare Tor. %{links}",
       "cancelConnAttempt": "Cancella",
       "connectAttemptMsg": "Tentativo di connessione a %{serverName}. %{cancelConnAttempt}"
     },
@@ -710,13 +710,13 @@
       "name": "Nome",
       "placeholderName": "Inserisci un nome...",
       "placeholderServerIp": "The IP to your server (or localhost)",
-      "placeholderUsername": "The username to your server",
-      "placeholderPassword": "The password to your server",
-      "placeholderPort": "The port to your server",
+      "placeholderUsername": "Server username",
+      "placeholderPassword": "Server password",
+      "placeholderPort": "Server port",
       "torLabel": "Tor",
       "useTor": "Utilizza Tor",
-      "configureTorMessage": "Tor has been detected. If you would like to use Tor, please check the \"Use Tor\" box below and specify your \"Tor SOCKS5 proxy\" setting. Click Save to confirm your decision.",
-      "torNotAvailableMessage": "Tor was not detected. If you would like to proceed without Tor, uncheck \"Use Tor\" below and click Save. Otherwise start up Tor and then retry connecting.",
+      "configureTorMessage": "Tor è stato rilevato. Se vuoi usare Tor, per favore spunta il box 'Utilizza Tor' sotto e specifica l'impostazione \"Tor SOCKS5 proxy\". Clicca su salva per confermare le modifiche.",
+      "torNotAvailableMessage": "Tor non è stato rilevato. Se vuoi continuare senza Tor, per favore toglie la spunta dal box 'Utilizza Tor' sotto. Clicca su salva per confermare le modifiche. Altrimenti, lancia Tor e prova a connetterti di nuovo.",
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
       "torPwLabel": "Tor Password",
@@ -725,7 +725,7 @@
       "torServerWarning": "%{warning} Per rimanere anonimo, è importante che Tor sia attivo anche sul server.",
       "saveConfirm": {
         "title": "Sei sicuro?",
-        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
+        "body": "Quando ti connetti ad un server remoto, è raccomandabile avere SSL attivo.",
         "btnCancel": "No, indietro",
         "btnConfirm": "Sì, procedi"
       }
@@ -752,7 +752,7 @@
       "title": "Ricevi denaro",
       "needBitcoin": "Hai bisogno di Bitcoin?",
       "btnCancel": "Cancella",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnFundViaShapeshift": "Paga con Shapeshift"
     },
     "sendMoney": {
       "toLabel": "A",
@@ -766,7 +766,7 @@
     },
     "spendConfirmBox": {
       "heading": "Sei sicuro?",
-      "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+      "body": "Una commissione per il network sarà inclusa. Ammonta circa a %{fiatBtcPairing}",
       "errorHeading": "Non è stato possibile inviare il pagamento",
       "bodyInsufficientFunds": "Non hai abbastanza fondi. Assicurati di averne abbastanza per pagare la tassa di transazione",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
@@ -787,8 +787,8 @@
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",
           "body": "Aggiungi %{fiatBtcPairing}%{asterisk} al costo della transazione e effettua di nuovo la transazione.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
-          "fetchError": "There was an error obtaining the estimated fees: %{err}",
+          "insufficientFundsBody": "Hai bisogno almeno di %{fiatBtcPairing}%{asterisk} nel tuo portafoglio per ritentare la transazione con una commissione più alta.",
+          "fetchError": "C'è stato un errore nella stima delle commissioni: %{err}",
           "subText": "%{asterisk}prezzo stimato",
           "btnCancel": "Cancella",
           "btnConfirmSend": "Manda",
@@ -843,9 +843,9 @@
     "shipTo": "Spedisci a:",
     "noShippingFound": "Il contenuto di questo annuncio non può essere spedito al Paese selezionato.",
     "localPickup": "Questa opzione è solamente per il ritiro a mano.",
-    "deliveryTime": "Delivery Time",
-    "priceFirst": "Price (first item)",
-    "priceSecond": "Price (additional item)",
+    "deliveryTime": "Tempo di consegna",
+    "priceFirst": "Prezzo (primo pezzo)",
+    "priceSecond": "Prezzo (pezzi successivi)",
     "allCountries": "Tutti i Paesi",
     "returnToStore": "Ritorna al negozio",
     "goToStore": "Vai al negozio",
@@ -856,16 +856,16 @@
       "btnConfirm": "Sì, cancella"
     },
     "review": {
-      "title": "%{time} by %{name}",
+      "title": "%{time} da %{name}",
       "loadMore": "Carica di più",
       "noReviews": "Non ci sono recensioni",
       "showMore": "Mostra di più",
       "showLess": "Mostra di meno"
     },
     "errors": {
-      "fetchRatings": "Ratings Could Not Be Loaded.",
+      "fetchRatings": "Non è stato possibile caricare le recensioni.",
       "fetchReviews": "C'è stato un problema nel caricamento delle recensioni. %{error}",
-      "loadReview": "Review %{id} failed due to %{error}",
+      "loadReview": "Recensione %{id} fallita a causa di %{error}",
       "noPurchaseTitle": "Il contenuto di questo annuncio non può essere acquistato",
       "zeroPriceMsg": "Non puoi effettuare un acquisto con un prezzo pari o inferiore a zero"
     }
@@ -911,7 +911,7 @@
     "reasonOtherPlaceholder": "Spiega perché...",
     "submit": "Invia",
     "errorTitle": "La tua segnalazione non è stata ultimata a causa di un errore.",
-    "error404": "The report url returned a 404 error, it could not be reached.",
+    "error404": "L'indirizzo dà errore 404, non è stato possibile raggiungerlo.",
     "postSubmitMsg": "La tua segnalazione è stata accolta. I motori di ricerca hanno politiche differenti per quanto riguarda le segnalazioni. Potresti vedere l'annuncio nei risultati di ricerca fin quando decideranno di rimuoverlo.",
     "closeBtn": "Chiudi"
   },
@@ -928,8 +928,8 @@
       "tagsDetailed": "Tags (per far scoprire il tuo annuncio)",
       "category": "Categoria",
       "categoryDetailed": "Categoria (per organizzare il tuo negozio)",
-      "variants": "Variants",
-      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
+      "variants": "Varianti",
+      "variantsDetailed": "Varianti (aggiungi le taglie, i colori, i materiali disponibili, ecc.)",
       "inventory": "Iventario",
       "returnPolicy": "Politica di reso",
       "termsAndConditions": "Termini e condizioni",
@@ -995,8 +995,8 @@
         "namePlaceholder": "es. Ordinaria, Veloce",
         "estimatedDeliveryLabel": "Tempo di consegna stimato",
         "estimatedDeliveryPlaceholder": "es. 5-7 giorni",
-        "priceLabel": "Price (first item)",
-        "additionalItemPriceLabel": "Price (additional item)",
+        "priceLabel": "Prezzo (primo pezzo)",
+        "additionalItemPriceLabel": "Prezzo (pezzi successivi)",
         "pricePlaceholder": "0.00",
         "addService": "+ Aggiungi Servizio"
       },
@@ -1018,13 +1018,13 @@
       }
     },
     "variants": {
-      "btnAddVariant": "Add Variant",
+      "btnAddVariant": "Aggiungi variante",
       "btnDeleteVariant": "Elimina",
-      "addVariant": "+ Add Variant",
+      "addVariant": "+ Aggiungi variante",
       "titleLabel": "Titolo",
-      "titlePlaceholder": "e.g. Size, Color, Material, etc",
+      "titlePlaceholder": "es. Taglia, Colore, Materiale",
       "choicesLabel": "Scelte",
-      "choicesPlaceholder": "e.g. Small, Medium, Large, etc",
+      "choicesPlaceholder": "es. Grande, medio, piccolo",
       "toolTip": {
         "delete": "Elimina"
       }
@@ -1067,7 +1067,7 @@
     "searchBtn": "Cerca",
     "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggerimenti",
-    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} annuncio</b> trovato per <b>\"%{term}\"</b> |||| <b>%{totalResults} annunci</b> trovati per <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} annunci",
     "sortBy": "Ordina per",
     "changeProvider": "Close and Choose a New Search Provider",
