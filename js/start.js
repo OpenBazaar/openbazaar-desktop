@@ -100,7 +100,13 @@ app.pageNav = new PageNav({
 });
 $('#pageNavContainer').append(app.pageNav.render().el);
 
+let externalRoute = remote.getGlobal('externalRoute');
+
 app.router = new ObRouter();
+
+// Clear the external route flag as soon as it's used so it's not re-used
+// on app refreshes.
+app.router.on('route', () => (externalRoute = null));
 
 // create our status bar view
 app.statusBar = new StatusBar();
@@ -519,8 +525,6 @@ function start() {
 
           // set the profile data for the feedback mechanism
           setFeedbackOptions();
-
-          const externalRoute = remote.getGlobal('externalRoute');
 
           if (externalRoute) {
             // handle opening the app from an an external ob link
