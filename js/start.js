@@ -791,11 +791,8 @@ ipcRenderer.on('updateReadyForInstall', (e, opts) => updateReady(opts));
 ipcRenderer.on('consoleMsg', (e, msg) => console.log(msg));
 
 // manage publishing sockets
-// todo: break the publishing socket startup functionality
-// into its own micro-module in js/startup/
 let publishingStatusMsg;
 let publishingStatusMsgRemoveTimer;
-let unpublishedContent = false;
 let retryPublishTimeout;
 
 function setPublishingStatus(msg) {
@@ -853,8 +850,6 @@ serverConnectEvents.on('connected', (connectedEvent) => {
           msg: app.polyglot.t('publish.statusPublishing'),
           type: 'message',
         });
-
-        unpublishedContent = true;
       } else if (e.jsonData.status === 'error publishing') {
         setPublishingStatus({
           msg: app.polyglot.t('publish.statusPublishFailed', {
@@ -862,15 +857,11 @@ serverConnectEvents.on('connected', (connectedEvent) => {
           }),
           type: 'warning',
         });
-
-        unpublishedContent = true;
       } else if (e.jsonData.status === 'publish complete') {
         setPublishingStatus({
           msg: app.polyglot.t('publish.statusPublishComplete'),
           type: 'message',
         });
-
-        unpublishedContent = false;
 
         publishingStatusMsgRemoveTimer = setTimeout(() => {
           publishingStatusMsg.remove();

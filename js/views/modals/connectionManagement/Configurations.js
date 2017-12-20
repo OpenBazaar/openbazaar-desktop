@@ -56,9 +56,6 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'waiting-for-local-server-stop', e => {
-      console.log('moo');
-      window.moo = e;
-      
       this.statusBarMessage.setState({
         status: 'connecting',
         msg: app.polyglot.t('connectionManagement.statusBar.waitForServerStopMsg', {
