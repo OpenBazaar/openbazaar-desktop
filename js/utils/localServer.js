@@ -49,13 +49,16 @@ export default class LocalServer {
 
   start(commandLineArgs = []) {
     if (this.pendingStop) {
-      this._lastStartCommandLineArgs = commandLineArgs;
+      console.log(`pending stop block ${commandLineArgs}`);
+      // this._lastStartCommandLineArgs = commandLineArgs;
       this.pendingStop.once('exit', () => this.startAfterStop(commandLineArgs));
       const debugInfo = 'Attempt to start server while an existing one' +
         ' is the process of shutting down. Will start after shut down is complete.';
       this.log(debugInfo);
       return;
     }
+
+    console.log(`they start me with ${commandLineArgs}`);
 
     if (this.isRunning) {
       if (_.isEqual(commandLineArgs, this._lastStartCommandLineArgs)) {

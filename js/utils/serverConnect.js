@@ -30,12 +30,31 @@ const events = {
 
 export { events };
 
+const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
+
 const serverCurStartArgMap = {
   BCH: '--bitcoincash',
   ZEC: '--zcash',
 };
 
-const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
+const defaultLocalServerStartArgs = () => {
+  const ls = getLocalServer();
+  return ls && ls.lastStartCommandLineArgs || [];
+};
+
+/**
+ * Will convert an array of command line arguments for the local server into the
+ * crypto currency they start the server in.
+ */
+const serverStartArgsToCoin = (args = defaultLocalServerStartArgs()) => {
+  let walletCur = 'BTC';
+
+  Object.keys(serverCurStartArgMap).forEach(cur => {
+    if (args.indexOf(serverCurStartArgMap[cur]) !== -1) walletCur = cur;
+  });
+
+  return walletCur;
+};
 
 let currentConnection = null;
 let debugLog = '';
@@ -218,7 +237,8 @@ export default function connect(server, options = {}) {
     ` at ${server.get('serverIp')}.`);
 
   const opts = {
-    attempts: 10,
+    // attempts: 10,
+    attempts: 100,
     minAttemptSpacing: 5000,
     maxAttemptTime: 5000,
     ...options,
@@ -308,18 +328,13 @@ export default function connect(server, options = {}) {
 
   // If we're not connecting to the local bundled server or it's running for a different coin,
   // then let's ensure it's stopped.
-  if (
-    (!server.get('builtIn') && localServer && localServer.isRunning) ||
-    (
-      server.get('builtIn') && localServer &&
-      localServer.lastStartCommandLineArgs.indexOf(serverCurStartArgMap[serverCurrency]) === -1
-    )
-  ) {
-    deferred.notify({
-      status: 'stopping-local-server',
-      localServer,
-    });
+  console.log(`we'd like a server up with ${serverCurrency}`);
+  console.log(`the current server is started with ${serverStartArgsToCoin()}`);
 
+  if (localServer && localServer.isRunning &&
+    (!server.get('builtIn') || serverCurrency !== serverStartArgsToCoin())) {
+    deferred.notify({ status: 'stopping-local-server' });
+    console.log('stopping the local server');
     localServer.stop();
   }
 
@@ -332,169 +347,194 @@ export default function connect(server, options = {}) {
 
   const innerConnect = () => {
     const innerConnectDeferred = $.Deferred();
+
     let socketConnectAttempt = null;
     const connectCancel = (reason) => {
       innerConnectDeferred.reject(reason || 'canceled');
       if (socketConnectAttempt) socketConnectAttempt.cancel();
     };
 
-    // This is called when either the client Tor proxy has been set or once we've determined
-    // it's not needed.
-    const onClientTorProxyChecked = () => {
-      // This flag means that we want the server to be running in a certain tor mode
-      // (tor on or tor off), buts it's already running in the opposite mode.
-      const serverRunningIncompatibleWithTor = server.get('builtIn') &&
-        localServer.isRunning && (server.get('useTor') !==
-          (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
+    // todo: abstract these TIME TO the OUT Shenanners
+    setTimeout(() => innerConnectDeferred.notify('connecting'));
 
-      if (serverRunningIncompatibleWithTor) {
-        // The idea is you will probably be starting the server with multiple attempts. So
-        // if we stop the server now, on a subsequent attempt we'll re-start it in the
-        // desired mode.
-        localServer.stop();
-        innerConnectDeferred.reject('incompatible-tor-mode');
+    // If we're connecting to the built in server and the existing local server instance is
+    // stopping, we'll do nothing until the existing instance stops completely (may be a minute
+    // or two)
+    let willWaitForLocalServerStop = false;
+
+    if (server.get('builtIn') && localServer.isStopping) {
+      willWaitForLocalServerStop = true;
+      const stoppingServer = app.serverConfigs
+        .findWhere({ walletCurrency: serverStartArgsToCoin() });
+      setTimeout(() =>
+        innerConnectDeferred.notify('waiting-for-local-server-stop', { stoppingServer }));
+      innerLog('Waiting for the local server started with ' +
+        `"${localServer.lastStartCommandLineArgs}" to stop.`);
+      console.log('Waiting for the local server started with ' +
+        `"${localServer.lastStartCommandLineArgs}" to stop.`);
+    } else {
+      console.log('proceeding onwards...');
+
+      if (willWaitForLocalServerStop) {
+        setTimeout(() => innerConnectDeferred.notify('local-server-stopped'));
       }
 
-      if (server.get('builtIn') &&
-        (!localServer.isRunning || localServer.isStopping)) {
-        const onTorChecked = () => {
-          const onLocalServerStart = () => {
-            socketConnectAttempt = socketConnect(socket)
-              .done(() => {
-                innerConnectDeferred.resolve('connected');
-              }).fail((reason, e) => {
-                if (reason === 'canceled') {
-                  innerConnectDeferred.reject('canceled');
-                } else {
-                  innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+      // This is called when either the client Tor proxy has been set or once we've determined
+      // it's not needed.
+      const onClientTorProxyChecked = () => {
+        // This flag means that we want the server to be running in a certain tor mode
+        // (tor on or tor off), buts it's already running in the opposite mode.
+        const serverRunningIncompatibleWithTor = server.get('builtIn') &&
+          localServer.isRunning && (server.get('useTor') !==
+            (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
+
+        if (serverRunningIncompatibleWithTor) {
+          // The idea is you will probably be starting the server with multiple attempts. So
+          // if we stop the server now, on a subsequent attempt we'll re-start it in the
+          // desired mode.
+          localServer.stop();
+          innerConnectDeferred.reject('incompatible-tor-mode');
+        }
+
+        if (server.get('builtIn') &&
+          (!localServer.isRunning || localServer.isStopping)) {
+          const onTorChecked = () => {
+            const onLocalServerStart = () => {
+              socketConnectAttempt = socketConnect(socket)
+                .done(() => {
+                  innerConnectDeferred.resolve('connected');
+                }).fail((reason, e) => {
+                  if (reason === 'canceled') {
+                    innerConnectDeferred.reject('canceled');
+                  } else {
+                    innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+                  }
+                });
+            };
+
+            let commandLineArgs = ['-v'];
+
+            if (serverCurrency !== 'BTC') {
+              const serverCoinArg = serverCurStartArgMap[serverCurrency];
+
+              if (serverCoinArg) {
+                commandLineArgs.push(serverCoinArg);
+
+                if (serverCurrency === 'ZEC') {
+                  commandLineArgs.push(server.get('zcashBinaryPath'));
                 }
-              });
+              }
+            }
+
+            if (server.get('useTor')) commandLineArgs.push('--tor');
+            const torPw = server.get('torPassword');
+            if (torPw) {
+              commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
+            }
+            innerConnectDeferred.notify('starting-local-server');
+            localServer.start(commandLineArgs);
+
+            // Remove any previous start handlers that this module may have bound. Not
+            // removing them all, because other modules bind to 'start' and we don't
+            // want to remove their handlers.
+            _localServerStartHandlers.forEach(handler => localServer.off('start', handler));
+            _localServerStartHandlers = [onLocalServerStart];
+
+            localServer.on('start', onLocalServerStart);
           };
 
-          let commandLineArgs = ['-v'];
+          if (server.get('confirmedTor') && !server.get('useTor')) {
+            onTorChecked();
+          } else {
+            const getServerStatusPid = localServer.getServerStatus();
 
-          if (serverCurrency !== 'BTC') {
-            const serverCoinArg = serverCurStartArgMap[serverCurrency];
-
-            if (serverCoinArg) {
-              commandLineArgs.push(serverCoinArg);
-
-              if (serverCurrency === 'ZEC') {
-                commandLineArgs.push(server.get('zcashBinaryPath'));
+            localServer.on('getServerStatusSuccess', data => {
+              if (data.pid === getServerStatusPid) {
+                if (data.torAvailable && !server.get('useTor')) {
+                  innerConnectDeferred.reject('tor-not-configured');
+                } else if (!data.torAvailable && server.get('useTor')) {
+                  innerConnectDeferred.reject('tor-not-available');
+                } else {
+                  onTorChecked();
+                }
               }
-            }
+            });
+
+            localServer.on('getServerStatusFail', data => {
+              if (data.pid === getServerStatusPid) {
+                innerConnectDeferred.reject('unable-to-get-server-status');
+              }
+            });
           }
-
-          if (server.get('useTor')) commandLineArgs.push('--tor');
-          const torPw = server.get('torPassword');
-          if (torPw) {
-            commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
-          }
-          innerConnectDeferred.notify('starting-local-server');
-          localServer.start(commandLineArgs);
-
-          // Remove any previous start handlers that this module may have bound. Not
-          // removing them all, because other modules bind to 'start' and we don't
-          // want to remove their handlers.
-          _localServerStartHandlers.forEach(handler => localServer.off('start', handler));
-          _localServerStartHandlers = [onLocalServerStart];
-
-          localServer.on('start', () => onLocalServerStart());
-        };
-
-        if (server.get('confirmedTor') && !server.get('useTor')) {
-          onTorChecked();
         } else {
-          const getServerStatusPid = localServer.getServerStatus();
-
-          localServer.on('getServerStatusSuccess', data => {
-            if (data.pid === getServerStatusPid) {
-              if (data.torAvailable && !server.get('useTor')) {
-                innerConnectDeferred.reject('tor-not-configured');
-              } else if (!data.torAvailable && server.get('useTor')) {
-                innerConnectDeferred.reject('tor-not-available');
+          socketConnectAttempt = socketConnect(socket)
+            .done(() => {
+              if (server.needsAuthentication()) {
+                innerConnectDeferred.notify('authenticating');
+                authenticate(server)
+                  .done(() => innerConnectDeferred.resolve('connected'))
+                  .fail((reason, e) => {
+                    innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
+                  });
               } else {
-                onTorChecked();
+                innerConnectDeferred.resolve('connected');
               }
-            }
-          });
-
-          localServer.on('getServerStatusFail', data => {
-            if (data.pid === getServerStatusPid) {
-              innerConnectDeferred.reject('unable-to-get-server-status');
-            }
-          });
+            }).fail((reason, e) => {
+              if (reason === 'canceled') {
+                innerConnectDeferred.reject('canceled');
+              } else {
+                innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+              }
+            });
         }
-      } else {
-        socketConnectAttempt = socketConnect(socket)
-          .done(() => {
-            if (server.needsAuthentication()) {
-              innerConnectDeferred.notify('authenticating');
-              authenticate(server)
-                .done(() => innerConnectDeferred.resolve('connected'))
-                .fail((reason, e) => {
-                  innerConnectDeferred.reject('authentication-failed', { failedAuthEvent: e });
-                });
-            } else {
-              innerConnectDeferred.resolve('connected');
+      };
+
+      // Putting a timeout, because we want to return the promise before sending any
+      // progress (i.e. notify()) events.
+      setTimeout(() => {
+        if (server.get('builtIn') && !localServer) {
+          // This should never happen to normal users. The only way it would is if you are a dev
+          // and mucking with localStorage and / or fudging the source for the app to masquerade
+          // as a bundled app.
+          throw new Error('A configuration for a built-in server should only be used on ' +
+            ' the bundled app.');
+        }
+
+        if (server.get('useTor')) {
+          innerConnectDeferred.notify('setting-tor-proxy');
+          innerLog(`Activating a proxy at socks5://${server.get('torProxy')}`);
+          const setProxyId = guid();
+
+          const onProxySet = (e, id) => {
+            if (id === setProxyId) {
+              innerConnectDeferred.notify('tor-proxy-set');
+              onClientTorProxyChecked();
             }
-          }).fail((reason, e) => {
-            if (reason === 'canceled') {
-              innerConnectDeferred.reject('canceled');
-            } else {
-              innerConnectDeferred.reject('socket-connect-failed', { socketCloseEvent: e });
+          };
+
+          ipcRenderer.send('set-proxy', setProxyId, `socks5://${server.get('torProxy')}`);
+          _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
+          ipcRenderer.on('proxy-set', onProxySet);
+          _proxySetHandlers = [onProxySet];
+        } else {
+          innerConnectDeferred.notify('clearing-tor-proxy');
+          innerLog('Clearing any proxy that may be set.');
+          const setProxyId = guid();
+          ipcRenderer.send('set-proxy', setProxyId, '');
+
+          const onProxySet = (e, id) => {
+            if (id === setProxyId) {
+              innerConnectDeferred.notify('tor-proxy-cleared');
+              onClientTorProxyChecked();
             }
-          });
-      }
-    };
+          };
 
-    // Putting a timeout, because we want to return the promise before sending any
-    // progress (i.e. notify()) events.
-    setTimeout(() => {
-      if (server.get('builtIn') && !localServer) {
-        // This should never happen to normal users. The only way it would is if you are a dev
-        // and mucking with localStorage and / or fudging the source for the app to masquerade
-        // as a bundled app.
-        throw new Error('A configuration for a built-in server should only be used on ' +
-          ' the bundled app.');
-      }
-
-      innerConnectDeferred.notify('connecting');
-
-      if (server.get('useTor')) {
-        innerConnectDeferred.notify('setting-tor-proxy');
-        innerLog(`Activating a proxy at socks5://${server.get('torProxy')}`);
-        const setProxyId = guid();
-
-        const onProxySet = (e, id) => {
-          if (id === setProxyId) {
-            innerConnectDeferred.notify('tor-proxy-set');
-            onClientTorProxyChecked();
-          }
-        };
-
-        ipcRenderer.send('set-proxy', setProxyId, `socks5://${server.get('torProxy')}`);
-        _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
-        ipcRenderer.on('proxy-set', onProxySet);
-        _proxySetHandlers = [onProxySet];
-      } else {
-        innerConnectDeferred.notify('clearing-tor-proxy');
-        innerLog('Clearing any proxy that may be set.');
-        const setProxyId = guid();
-        ipcRenderer.send('set-proxy', setProxyId, '');
-
-        const onProxySet = (e, id) => {
-          if (id === setProxyId) {
-            innerConnectDeferred.notify('tor-proxy-cleared');
-            onClientTorProxyChecked();
-          }
-        };
-
-        _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
-        ipcRenderer.on('proxy-set', onProxySet);
-        _proxySetHandlers = [onProxySet];
-      }
-    });
+          _proxySetHandlers.forEach(handler => ipcRenderer.removeListener('proxy-set', handler));
+          ipcRenderer.on('proxy-set', onProxySet);
+          _proxySetHandlers = [onProxySet];
+        }
+      });
+    }
 
     const promise = innerConnectDeferred.promise();
     promise.cancel = connectCancel;
@@ -526,11 +566,14 @@ export default function connect(server, options = {}) {
             reason = status;
           }
 
+          console.log('Im a done with YOU');
+
           reject({
             reason,
             ...data,
           });
         } else {
+          console.log('lets keep trying slick willy');
           const delay = opts.minAttemptSpacing - (Date.now() - connectAttemptStartTime);
 
           nextAttemptTimeout = setTimeout(() => {

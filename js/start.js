@@ -127,6 +127,15 @@ function fetchConfig() {
   $.get(app.getServerUrl('ob/config')).done((...args) => {
     fetchConfigDeferred.resolve(...args);
   }).fail(xhr => {
+    const curConn = getCurrentConnection();
+
+    if (!curConn || curConn.status === 'disconnected') {
+      // the connection management modal should be up with relevant info
+      console.error('The server config fetch failed. Looks like the connection to the ' +
+        'server was lost.');
+      return;
+    }
+
     const retryConfigDialog = new Dialog({
       title: app.polyglot.t('startUp.dialogs.retryConfig.title'),
       message: xhr && xhr.responseJSON && xhr.responseJSON.reason ||
@@ -297,10 +306,14 @@ function fetchStartupData() {
       fetchStartupDataDeferred.resolve();
     })
     .fail((jqXhr) => {
-      // If the calls fails with an empty xhr, it's because we lost the connection to the
-      // server. In that case we'll no-op here since the connection management modal will be
-      // displayed with relevant info.
-      if (!jqXhr) return;
+      const curConn = getCurrentConnection();
+
+      if (!curConn || curConn.status === 'disconnected') {
+        // the connection management modal should be up with relevant info
+        console.error('The startup data fetches failed. Looks like the connection to the ' +
+          'server was lost.');
+        return;
+      }
 
       if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed) {
         let title = '';

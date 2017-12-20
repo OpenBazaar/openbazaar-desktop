@@ -36,6 +36,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(serverConnectEvents, 'connecting', e => {
+      this.$statusBarOuterWrap.removeClass('hide');
       this.statusBarMessage.setState({
         status: 'connecting',
         msg: app.polyglot.t('connectionManagement.statusBar.connectAttemptMsg', {
@@ -51,6 +52,17 @@ export default class extends baseVw {
         } else {
           configVw.setState({ status: 'not-connected' });
         }
+      });
+    });
+
+    this.listenTo(serverConnectEvents, 'waiting-for-local-server-stop', e => {
+      this.statusBarMessage.setState({
+        status: 'connecting',
+        msg: app.polyglot.t('connectionManagement.statusBar.waitForServerStopMsg', {
+          serverName: e.stoppingServer.get('name'),
+          cancelConnAttempt: '<a class="js-cancelLink">' +
+            `${app.polyglot.t('connectionManagement.statusBar.cancelConnAttempt')}</a>`,
+        }),
       });
     });
 
@@ -202,7 +214,7 @@ export default class extends baseVw {
       status: 'connect-attempt-failed',
       msg,
     });
-    this.$statusBarOuterWrap.removeClass('hide');
+    // this.$statusBarOuterWrap.removeClass('hide');
 
     this.getConfigVw(e.server.id)
       .setState({ status: 'connect-attempt-failed' });
