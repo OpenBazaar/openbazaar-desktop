@@ -238,7 +238,7 @@ export default function connect(server, options = {}) {
 
   let opts = {
     attempts: 10,
-    minAttemptSpacing: 5000,
+    minAttemptSpacing: 3500,
     maxAttemptTime: 5000,
     ...options,
   };

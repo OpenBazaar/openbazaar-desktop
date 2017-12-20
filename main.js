@@ -583,6 +583,8 @@ app.on('activate', () => {
   if (mainWindow) mainWindow.show();
 });
 
+global.clearExternalRoute = () => (global.externalRoute = null);
+
 const handleObLink = (route) => {
   if (!route || typeof route !== 'string') {
     throw new Error('Please provide a route as a string.');

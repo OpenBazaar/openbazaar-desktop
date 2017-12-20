@@ -260,7 +260,7 @@ function onboard() {
     .open();
 
   onboarding.on('onboarding-complete', () => {
-    location.hash = `${app.profile.id}/home`;
+    location.hash = `${app.profile.id}`;
     onboardDeferred.resolve();
     onboarding.remove();
   });
@@ -443,8 +443,8 @@ function ensureValidSettingsCurrency() {
   return ensureValidSettingsCurDeferred.promise();
 }
 
- // let's start our flow - do we need onboarding?,
- // fetching app-wide models...
+// let's start our flow - do we need onboarding?,
+// fetching app-wide models...
 function start() {
   fetchConfig().done((data) => {
     // This is the server config as returned by ob/config. It has nothing to do with
@@ -530,8 +530,13 @@ function start() {
             // the user's profile.
             const href = location.href.replace(/(javascript:|#).*$/, '');
             location.replace(`${href}#${app.profile.id}`);
+          } else if (curConn.server &&
+            curConn.server.id !== localStorage.serverIdAtLastStart) {
+            // When switching servers, we'll land on the user page of the new node
+            location.hash = `#${app.profile.id}`;
           }
 
+          localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
           Backbone.history.start();
 
           // load chat
@@ -614,7 +619,7 @@ serverConnectEvents.on('connected', () => {
   });
 
   if (connectedAtLeastOnce) {
-    // location.reload();
+    location.reload();
   } else {
     connectedAtLeastOnce = true;
     app.connectionManagmentModal.close();
