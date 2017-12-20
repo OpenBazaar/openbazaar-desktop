@@ -588,7 +588,7 @@ export default function connect(server, options = {}) {
           nextAttemptTimeout = setTimeout(() => {
             attempt += 1;
             connectAttempt = attemptConnection();
-          }, delay < 0 ? 0 : delay + 5000);
+          }, delay < 0 ? 0 : delay);
         }
       })
       .always(() => clearTimeout(maxTimeTimeout));

@@ -614,7 +614,7 @@ serverConnectEvents.on('connected', () => {
   });
 
   if (connectedAtLeastOnce) {
-    location.reload();
+    // location.reload();
   } else {
     connectedAtLeastOnce = true;
     app.connectionManagmentModal.close();
@@ -881,34 +881,26 @@ serverConnectEvents.on('connected', (connectedEvent) => {
   });
 });
 
-let unpublishedConfirm;
-
 ipcRenderer.on('close-attempt', (e) => {
-  if (!unpublishedContent) {
-    e.sender.send('close-confirmed');
-  } else {
-    if (unpublishedConfirm) return;
+  const localServer = remote.getGlobal('localServer');
 
-    unpublishedConfirm = new Dialog({
-      title: app.polyglot.t('publish.unpublishedConfirmTitle'),
-      message: app.polyglot.t('publish.unpublishedConfirmBody'),
-      buttons: [{
-        text: app.polyglot.t('publish.unpublishedConfirmYes'),
-        fragment: 'yes',
-      }, {
-        text: app.polyglot.t('publish.unpublishedConfirmNo'),
-        fragment: 'no',
-      }],
-      dismissOnOverlayClick: false,
-      dismissOnEscPress: false,
-      showCloseButton: false,
-    }).on('click-yes', () => e.sender.send('close-confirmed'))
-    .on('click-no', () => {
-      unpublishedConfirm.close();
-      unpublishedConfirm = null;
-    })
-    .render()
-    .open();
+  if (localServer.isRunning) {
+    localServer.once('exit', () => e.sender.send('close-confirmed'));
+    localServer.stop();
+  }
+
+  if (localServer.isStopping) {
+    app.pageNav.navigable = false;
+    openSimpleMessage(
+      app.polyglot.t('localServerShutdownDialog.title'),
+      app.polyglot.t('localServerShutdownDialog.body'),
+      {
+        showCloseButton: false,
+        dismissOnEscPress: false,
+      }
+    ).$el.css('z-index', '9999999'); // always on tippity-top
+  } else {
+    e.sender.send('close-confirmed');
   }
 });
 

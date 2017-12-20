@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Unpublished Content",
-    "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
-    "unpublishedConfirmYes": "Yes",
-    "unpublishedConfirmNo": "No",
     "failedRetryTitle": "There was an error retrying the publish.",
     "statusPublishing": "Publishing updates to network…",
     "retryLink": "Retry",
     "statusPublishFailed": "Publishing failed. %{retryLink}",
     "statusPublishComplete": "Publishing complete."
+  },
+  "localServerShutdownDialog": {
+    "title": "Shutting down the built-in server",
+    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
   },
   "follow": {
     "typeFollow": "following",
