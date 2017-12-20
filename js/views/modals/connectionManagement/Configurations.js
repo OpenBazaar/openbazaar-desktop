@@ -35,7 +35,7 @@ export default class extends baseVw {
       }
     });
 
-    this.listenTo(serverConnectEvents, 'connecting', e => {
+    this.listenTo(serverConnectEvents, 'connecting local-server-stopped', e => {
       this.$statusBarOuterWrap.removeClass('hide');
       this.statusBarMessage.setState({
         status: 'connecting',
@@ -60,8 +60,6 @@ export default class extends baseVw {
         status: 'connecting',
         msg: app.polyglot.t('connectionManagement.statusBar.waitForServerStopMsg', {
           serverName: e.stoppingServer.get('name'),
-          cancelConnAttempt: '<a class="js-cancelLink">' +
-            `${app.polyglot.t('connectionManagement.statusBar.cancelConnAttempt')}</a>`,
         }),
       });
     });
