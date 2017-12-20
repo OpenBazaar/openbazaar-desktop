@@ -3,7 +3,7 @@
 <%
   const listingCurrency = ob.listing.metadata.pricingCurrency;
   const viewingCurrency = ob.displayCurrency;
-  const isBTC = viewingCurrency === 'BTC';
+  const isBTC = viewingCurrency === 'PHR';
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
     const basePrice = ob.convertCurrency(priceObj.price, listingCurrency, viewingCurrency);

@@ -116,7 +116,7 @@ export default class extends baseVw {
   }
 
   fetchFeeEstimate() {
-    const amount = convertCurrency(this.model.get('amount'), this.model.get('currency'), 'BTC');
+    const amount = convertCurrency(this.model.get('amount'), this.model.get('currency'), 'PHR');
     this.sendConfirmBox.fetchFeeEstimate(amount);
   }
 

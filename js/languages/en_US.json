@@ -156,7 +156,7 @@
       "notifications": "Notifications",
       "nav": "Navigation",
       "close": "Close",
-      "currentPrice": "Current Bitcoin price"
+      "currentPrice": "Current Phore price"
     },
     "serversMenu": {
       "newServer": "New Server",
@@ -372,10 +372,10 @@
       "sectionName": "General",
       "bitcoinUnit": "Bitcoin Unit",
       "bitcoinUnitTypes": {
-        "BTC": "BTC",
-        "MBTC": "mBTC",
-        "UBTC": "µBTC",
-        "SATOSHI": "Satoshi (sat)"
+        "PHR": "PHR",
+        "mPHR": "mPHR",
+        "uPHR": "µPHR",
+        "pSAT": "Satoshi"
       },
       "statusSaving": "Saving general settings…",
       "statusSaveComplete": "General settings saved.",
@@ -745,7 +745,7 @@
     "fundsHeader": "Funds",
     "btnReceiveMoney": "Receive Money",
     "btnSendMoney": "Send Money",
-    "btcCurrencyLabel": "Bitcoin",
+    "btcCurrencyLabel": "Phore",
     "valueInCurrencyLabel": "Value in %{currency}",
     "transactionsLabel": "Transactions",
     "receiveMoney": {
@@ -756,7 +756,7 @@
     },
     "sendMoney": {
       "toLabel": "To",
-      "toPlaceholder": "Enter a Bitcoin Address",
+      "toPlaceholder": "Enter a Phore Address",
       "amountLabel": "Amount",
       "noteLabel": "Note",
       "notePlaceholder": "Only seen by you",
@@ -1738,10 +1738,10 @@
     "invalidtorlistings": "You must provide a valid Tor listings search URL."
   },
   "bitcoinCurrencyUnits": {
-    "BTC": "BTC",
-    "MBTC": "mBTC",
-    "UBTC": "µBTC",
-    "SATOSHI": "sat"
+    "PHR": "PHR",
+    "mPHR": "mPHR",
+    "uPHR": "µPHR",
+    "pSAT": "pSAT"
   },
   "bitcoinCurrencyFormat": {
     "shortBTC": "%{symbol}%{amount}",
@@ -2025,7 +2025,7 @@
     "BOB": "Boliviano",
     "BRL": "Brazilian Real",
     "BSD": "Bahamian Dollar",
-    "BTC": "Bitcoin",
+    "PHR": "Phore",
     "BTN": "Ngultrum",
     "BWP": "Pula",
     "BYR": "Belarussian Ruble",

@@ -74,12 +74,10 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             <div class="flexColRows gutterVSm">
               <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <div class="contentBox pad clrP clrBr flexVCent">
-                <i class="btcIcon margRSm"></i>
+                <i class="phrIcon margRSm"></i>
                 <div class="flexExpand">
-                  <%= ob.polyT('currencies.BTC') %>
+                  <%= ob.polyT('currencies.PHR') %>
                 </div>
-                <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
-                <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
               </div>
               <% if (ob.hasModerators) { %>
                 <div class="js-moderatedOption">
@@ -97,7 +95,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                 </p>
                 <p class="tx5b hide js-modsNotAllowed">
                   <%
-                  const minModPrice = ob.convertAndFormatCurrency(ob.minModPrice, 'BTC', ob.displayCurrency);
+                  const minModPrice = ob.convertAndFormatCurrency(ob.minModPrice, 'PHR', ob.displayCurrency);
                   %>
                   <strong><%= ob.polyT('purchase.tooLowForMods', { minModPrice }) %></strong>
                 </p>
@@ -213,4 +211,3 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
 <% } else { %>
   <div class="loadingPurchase clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
 <% } %>
-

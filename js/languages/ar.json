@@ -372,10 +372,10 @@
       "sectionName": "عام",
       "bitcoinUnit": "وحدة بيتكوين.",
       "bitcoinUnitTypes": {
-        "BTC": "BTC",
-        "MBTC": "mBTC",
-        "UBTC": "µBTC",
-        "SATOSHI": "ساتوشي (sat)"
+        "PHR": "PHR",
+        "mPHR": "mPHR",
+        "uPHR": "µPHR",
+        "pSAT": "Satoshi"
       },
       "statusSaving": "جار حفظ الإعدادات العامة ...",
       "statusSaveComplete": "تم حفظ الإعدادات العامة.",
@@ -745,7 +745,7 @@
     "fundsHeader": "Funds",
     "btnReceiveMoney": "استلام أموال",
     "btnSendMoney": "ارسل أموال",
-    "btcCurrencyLabel": "بيتكوين",
+    "btcCurrencyLabel": "Phore",
     "valueInCurrencyLabel": "القيمة بـ %{currency}",
     "transactionsLabel": "العمليات التجارية",
     "receiveMoney": {
@@ -1738,10 +1738,10 @@
     "invalidtorlistings": "يجب وضع رابط بحث قوائم Tor صالح"
   },
   "bitcoinCurrencyUnits": {
-    "BTC": "BTC",
-    "MBTC": "mBTC",
-    "UBTC": "µBTC",
-    "SATOSHI": "sat"
+    "PHR": "PHR",
+    "mPHR": "mPHR",
+    "uPHR": "µPHR",
+    "pSAT": "pSAT"
   },
   "bitcoinCurrencyFormat": {
     "shortBTC": "%{symbol}%{amount}",
@@ -2025,7 +2025,7 @@
     "BOB": "بوليفي",
     "BRL": "ريال برازيلي",
     "BSD": "الدولار البهامي",
-    "BTC": "بيتكوين",
+    "PHR": "Phore",
     "BTN": "بوتاني",
     "BWP": "بولا",
     "BYR": "روبل بيلاروسي",

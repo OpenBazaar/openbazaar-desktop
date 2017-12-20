@@ -29,7 +29,7 @@ class Spend extends BaseModel {
     const amount = this.get('amount');
 
     if (typeof amount === 'number') {
-      btcAmount = convertCurrency(amount, this.get('currency'), 'BTC');
+      btcAmount = convertCurrency(amount, this.get('currency'), 'PHR');
     }
 
     return btcAmount;
@@ -79,7 +79,7 @@ class Spend extends BaseModel {
     if (method === 'create' || method === 'update') {
       let amount = options.attrs.amount;
 
-      if (options.attrs.currency !== 'BTC') {
+      if (options.attrs.currency !== 'PHR') {
         amount = this.amountInBitcoin;
       }
 
@@ -116,7 +116,7 @@ export default Spend;
  */
 export function spend(fields) {
   const attrs = {
-    currency: app && app.settings && app.settings.get('localCurrency') || 'BTC',
+    currency: app && app.settings && app.settings.get('localCurrency') || 'PHR',
     feeLevel: app &&
       app.localSettings && app.localSettings.get('defaultTransactionFee') || 'PRIORITY',
     memo: '',

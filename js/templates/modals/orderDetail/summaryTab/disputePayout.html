@@ -4,12 +4,12 @@
 
   ['buyer', 'vendor', 'moderator'].forEach(type => {
     priceLines[type] = ob.convertAndFormatCurrency(ob.payout[`${type}Output`].amount,
-      'BTC', ob.userCurrency, { useBtcSymbol: false });
+      'PHR', ob.userCurrency, { useBtcSymbol: false });
 
-    if (ob.userCurrency !== 'BTC') {
+    if (ob.userCurrency !== 'PHR') {
       priceLines[type] = ob.polyT('fiatBtcPairing', {
         fiatAmount: priceLines[type],
-        btcAmount: ob.formatCurrency(ob.payout[`${type}Output`].amount, 'BTC', { useBtcSymbol: false }),
+        btcAmount: ob.formatCurrency(ob.payout[`${type}Output`].amount, 'PHR', { useBtcSymbol: false }),
       });
     }
 

@@ -15,7 +15,7 @@ export default class extends BaseVw {
 
     this._state = {
       buyerName: '',
-      userCurrency: app.settings.get('localCurrency') || 'BTC',
+      userCurrency: app.settings.get('localCurrency') || 'PHR',
       ...options.initialState || {},
     };
   }

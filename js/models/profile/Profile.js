@@ -130,7 +130,7 @@ export default class Profile extends BaseModel {
     if (response.moderatorInfo && response.moderatorInfo.fee &&
       response.moderatorInfo.fee.fixedFee) {
       const amount = response.moderatorInfo.fee.fixedFee.amount;
-      const isBtc = response.moderatorInfo.fee.fixedFee.currencyCode === 'BTC';
+      const isBtc = response.moderatorInfo.fee.fixedFee.currencyCode === 'PHR';
 
       response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(amount, isBtc);
     }
@@ -194,7 +194,7 @@ export default class Profile extends BaseModel {
           options.attrs.moderatorInfo.fee.fixedFee &&
           options.attrs.moderatorInfo.fee.fixedFee.amount) {
           const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
-          const isBTC = options.attrs.moderatorInfo.fee.fixedFee.currencyCode === 'BTC';
+          const isBTC = options.attrs.moderatorInfo.fee.fixedFee.currencyCode === 'PHR';
           options.attrs.moderatorInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
         }
       }

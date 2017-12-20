@@ -49,7 +49,7 @@ export default class extends Model {
       defaultTransactionFee: 'NORMAL',
       language,
       listingsGridViewType: 'grid',
-      bitcoinUnit: 'BTC',
+      bitcoinUnit: 'PHR',
       searchProvider: 'https://search.ob1.io/search/listings',
       dontShowTorExternalLinkWarning: false,
     };
@@ -64,7 +64,7 @@ export default class extends Model {
   }
 
   get bitcoinUnits() {
-    return ['BTC', 'MBTC', 'UBTC', 'SATOSHI'];
+    return ['PHR', 'mPHR', 'uPHR', 'pSAT'];
   }
 
 

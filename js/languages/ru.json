@@ -372,10 +372,10 @@
       "sectionName": "Главное",
       "bitcoinUnit": "Bitcoin Unit",
       "bitcoinUnitTypes": {
-        "BTC": "BTC",
-        "MBTC": "mBTC",
-        "UBTC": "µBTC",
-        "SATOSHI": "Satoshi (sat)"
+        "PHR": "PHR",
+        "mPHR": "mPHR",
+        "uPHR": "µPHR",
+        "pSAT": "Satoshi"
       },
       "statusSaving": "Сохранение основных настроек...",
       "statusSaveComplete": "Основные настройки сохранены.",
@@ -745,7 +745,7 @@
     "fundsHeader": "Средства",
     "btnReceiveMoney": "Принять деньги",
     "btnSendMoney": "Отослать деньги",
-    "btcCurrencyLabel": "Биткойн",
+    "btcCurrencyLabel": "Phore",
     "valueInCurrencyLabel": "Стоимость в %{currency}",
     "transactionsLabel": "Операции",
     "receiveMoney": {
@@ -1738,10 +1738,10 @@
     "invalidtorlistings": "Необходимо указать допустимый URL-адрес поиска в списках Tor."
   },
   "bitcoinCurrencyUnits": {
-    "BTC": "BTC",
-    "MBTC": "mBTC",
-    "UBTC": "µBTC",
-    "SATOSHI": "sat"
+    "PHR": "PHR",
+    "mPHR": "mPHR",
+    "uPHR": "µPHR",
+    "pSAT": "pSAT"
   },
   "bitcoinCurrencyFormat": {
     "shortBTC": "%{symbol}%{amount}",
@@ -2025,7 +2025,7 @@
     "BOB": "Боливиано",
     "BRL": "Бразильский реал",
     "BSD": "Багамский доллар",
-    "BTC": "Биткойн",
+    "PHR": "Phore",
     "BTN": "Нгултрум",
     "BWP": "Пула",
     "BYR": "Белорусский рубль",

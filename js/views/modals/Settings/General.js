@@ -46,7 +46,7 @@ export default class extends baseVw {
   }
 
   onChangeCurrencySelect(e) {
-    if (e.target.value === 'BTC') {
+    if (e.target.value === 'PHR') {
       this.$bitcoinUnitField.removeClass('hide');
     } else {
       this.$bitcoinUnitField.addClass('hide');

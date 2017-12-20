@@ -151,39 +151,39 @@ describe('the currency utility module', () => {
     });
 
     it('properly localizes a BTC amount', () => {
-      expect(cur.formatCurrency(523, 'BTC'))
+      expect(cur.formatCurrency(523, 'PHR'))
         .to
         .equal('₿523');
 
-      expect(cur.formatCurrency(523.987, 'BTC'))
+      expect(cur.formatCurrency(523.987, 'PHR'))
         .to
         .equal('₿523.987');
 
-      expect(cur.formatCurrency(523.12, 'BTC'))
+      expect(cur.formatCurrency(523.12, 'PHR'))
         .to
         .equal('₿523.12');
-      expect(cur.formatCurrency(523.12345678, 'BTC'))
+      expect(cur.formatCurrency(523.12345678, 'PHR'))
         .to
         .equal('₿523.12345678');
     });
 
     it('properly localizes a BTC amount with the correct bitcoin units', () => {
-      expect(cur.formatCurrency(523.3456, 'BTC', {
-        btcUnit: 'BTC',
+      expect(cur.formatCurrency(523.3456, 'PHR', {
+        btcUnit: 'PHR',
       })).to
         .equal('₿523.3456');
 
-      expect(cur.formatCurrency(523.3456, 'BTC', {
+      expect(cur.formatCurrency(523.3456, 'PHR', {
         btcUnit: 'MBTC',
       })).to
         .equal(`523,345.6 ${app.polyglot.phrases['bitcoinCurrencyUnits.MBTC']}`);
 
-      expect(cur.formatCurrency(523.3456, 'BTC', {
+      expect(cur.formatCurrency(523.3456, 'PHR', {
         btcUnit: 'UBTC',
       })).to
         .equal(`523,345,600 ${app.polyglot.phrases['bitcoinCurrencyUnits.UBTC']}`);
 
-      expect(cur.formatCurrency(523.3456, 'BTC', {
+      expect(cur.formatCurrency(523.3456, 'PHR', {
         btcUnit: 'SATOSHI',
       })).to
         .equal(`52,334,560,000 ${app.polyglot.phrases['bitcoinCurrencyUnits.SATOSHI']}`);
@@ -221,13 +221,13 @@ describe('the currency utility module', () => {
       });
 
       it('which will convert from a fiat currency to BTC', () => {
-        expect(cur.convertCurrency(500, 'USD', 'BTC'))
+        expect(cur.convertCurrency(500, 'USD', 'PHR'))
           .to
           .equal(0.6661337596589395);
       });
 
       it('which will convert from BTC to a fiat currency', () => {
-        expect(cur.convertCurrency(500, 'BTC', 'USD'))
+        expect(cur.convertCurrency(500, 'PHR', 'USD'))
           .to
           .equal(375300);
       });
@@ -241,7 +241,7 @@ describe('the currency utility module', () => {
 
       it('which correctly handles being called with BTC as both' +
         'the from and to currency', () => {
-        expect(cur.convertCurrency(500, 'BTC', 'BTC'))
+        expect(cur.convertCurrency(500, 'PHR', 'PHR'))
           .to
           .equal(500);
       });
@@ -257,14 +257,14 @@ describe('the currency utility module', () => {
 
       it('which will convert between a fiat currency and BTC and properly localize ' +
         'the resulting value', () => {
-        expect(cur.convertAndFormatCurrency(500, 'USD', 'BTC', { locale: 'en-US' }))
+        expect(cur.convertAndFormatCurrency(500, 'USD', 'PHR', { locale: 'en-US' }))
           .to
           .equal('₿0.66613376');
       });
 
       it('which will convert between BTC and a fiat currency properly localize ' +
         'the resulting value', () => {
-        expect(cur.convertAndFormatCurrency(500, 'BTC', 'USD', { locale: 'en-US' }))
+        expect(cur.convertAndFormatCurrency(500, 'PHR', 'USD', { locale: 'en-US' }))
           .to
           .equal('$375,300.00');
       });

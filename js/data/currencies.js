@@ -7,8 +7,8 @@ const currencies = [
     code: 'AFN',
   },
   {
-    name: 'Bitcoin',
-    code: 'BTC',
+    name: 'Phore',
+    code: 'PHR',
   },
   {
     name: 'Euro',

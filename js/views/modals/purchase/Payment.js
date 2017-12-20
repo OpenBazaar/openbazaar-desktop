@@ -117,7 +117,7 @@ export default class extends BaseVw {
       spend({
         address: this.paymentAddress,
         amount: this.balanceRemaining,
-        currency: 'BTC',
+        currency: 'PHR',
       })
         .fail(jqXhr => {
           this.showSpendError(jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
@@ -167,7 +167,7 @@ export default class extends BaseVw {
 
   get amountDueLine() {
     return app.polyglot.t('purchase.pendingSection.pay',
-      { amountBTC: formatCurrency(this.balanceRemaining, 'BTC') });
+      { amountBTC: formatCurrency(this.balanceRemaining, 'PHR') });
   }
 
   get qrDataUri() {

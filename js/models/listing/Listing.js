@@ -164,19 +164,19 @@ export default class extends BaseModel {
         if (options.attrs.item.price) {
           const price = options.attrs.item.price;
           options.attrs.item.price = decimalToInteger(price,
-            options.attrs.metadata.pricingCurrency === 'BTC');
+            options.attrs.metadata.pricingCurrency === 'PHR');
         }
 
         options.attrs.shippingOptions.forEach(shipOpt => {
           shipOpt.services.forEach(service => {
             if (typeof service.price === 'number') {
               service.price = decimalToInteger(service.price,
-                options.attrs.metadata.pricingCurrency === 'BTC');
+                options.attrs.metadata.pricingCurrency === 'PHR');
             }
 
             if (typeof service.additionalItemPrice === 'number') {
               service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
-                options.attrs.metadata.pricingCurrency === 'BTC');
+                options.attrs.metadata.pricingCurrency === 'PHR');
             }
           });
         });
@@ -184,7 +184,7 @@ export default class extends BaseModel {
         options.attrs.coupons.forEach(coupon => {
           if (typeof coupon.priceDiscount === 'number') {
             coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
-              options.attrs.metadata.pricingCurrency === 'BTC');
+              options.attrs.metadata.pricingCurrency === 'PHR');
           }
         });
         // END - convert price fields
@@ -212,7 +212,7 @@ export default class extends BaseModel {
           options.attrs.item.skus.forEach(sku => {
             if (typeof sku.surcharge === 'number') {
               sku.surcharge = decimalToInteger(sku.surcharge,
-                options.attrs.metadata.pricingCurrency === 'BTC');
+                options.attrs.metadata.pricingCurrency === 'PHR');
             }
           });
         }
@@ -298,7 +298,7 @@ export default class extends BaseModel {
       if (parsedResponse.item) {
         const price = parsedResponse.item.price;
         const isBtc = parsedResponse.metadata &&
-          parsedResponse.metadata.pricingCurrency === 'BTC';
+          parsedResponse.metadata.pricingCurrency === 'PHR';
 
         if (price) {
           parsedResponse.item.price = integerToDecimal(price, isBtc);
@@ -311,7 +311,7 @@ export default class extends BaseModel {
             shipOpt.services.forEach((service, serviceIndex) => {
               const price = service.price;
               const isBtc = parsedResponse.metadata &&
-                parsedResponse.metadata.pricingCurrency === 'BTC';
+                parsedResponse.metadata.pricingCurrency === 'PHR';
 
               if (typeof price === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
@@ -350,7 +350,7 @@ export default class extends BaseModel {
           if (typeof coupon.priceDiscount === 'number') {
             const price = parsedResponse.coupons[couponIndex].priceDiscount;
             const isBtc = parsedResponse.metadata &&
-              parsedResponse.metadata.pricingCurrency === 'BTC';
+              parsedResponse.metadata.pricingCurrency === 'PHR';
 
             parsedResponse.coupons[couponIndex].priceDiscount =
               integerToDecimal(price, isBtc);
@@ -380,7 +380,7 @@ export default class extends BaseModel {
           // convert the surcharge
           const surcharge = sku.surcharge;
           const isBtc = parsedResponse.metadata &&
-            parsedResponse.metadata.pricingCurrency === 'BTC';
+            parsedResponse.metadata.pricingCurrency === 'PHR';
 
           if (surcharge) {
             sku.surcharge = integerToDecimal(surcharge, isBtc);

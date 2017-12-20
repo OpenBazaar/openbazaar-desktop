@@ -372,10 +372,10 @@
       "sectionName": "Geral",
       "bitcoinUnit": "Unidade Bitcoin",
       "bitcoinUnitTypes": {
-        "BTC": "BTC",
-        "MBTC": "mBTC",
-        "UBTC": "µBTC",
-        "SATOSHI": "Satoshi (sat)"
+        "PHR": "PHR",
+        "mPHR": "mPHR",
+        "uPHR": "µPHR",
+        "pSAT": "Satoshi"
       },
       "statusSaving": "Salvando configurações gerais…",
       "statusSaveComplete": "Configurações gerais salvas.",
@@ -745,7 +745,7 @@
     "fundsHeader": "Saldo",
     "btnReceiveMoney": "Receber Dinheiro",
     "btnSendMoney": "Enviar Dinheiro",
-    "btcCurrencyLabel": "Bitcoin",
+    "btcCurrencyLabel": "Phore",
     "valueInCurrencyLabel": "Valor em %{currency}",
     "transactionsLabel": "Transações",
     "receiveMoney": {
@@ -1738,10 +1738,10 @@
     "invalidtorlistings": "Você precisa fornecer uma URL de Tor válida"
   },
   "bitcoinCurrencyUnits": {
-    "BTC": "BTC",
-    "MBTC": "mBTC",
-    "UBTC": "µBTC",
-    "SATOSHI": "sat"
+    "PHR": "PHR",
+    "mPHR": "mPHR",
+    "uPHR": "µPHR",
+    "pSAT": "pSAT"
   },
   "bitcoinCurrencyFormat": {
     "shortBTC": "%{symbol}%{amount}",
@@ -2025,7 +2025,7 @@
     "BOB": "Boliviano",
     "BRL": "Real brasileiro",
     "BSD": "Dólar bahamense",
-    "BTC": "Bitcoin",
+    "PHR": "Phore",
     "BTN": "Ngultrum",
     "BWP": "Pula",
     "BYR": "Rublo bielorrusso",

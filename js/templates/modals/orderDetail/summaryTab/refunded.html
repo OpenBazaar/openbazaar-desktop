@@ -8,12 +8,12 @@
     <div class="flexExpand tx5">
       <%
         let priceFrag = ob.convertAndFormatCurrency(ob.value,
-          'BTC', ob.userCurrency, { useBtcSymbol: false });
+          'PHR', ob.userCurrency, { useBtcSymbol: false });
 
-        if (ob.userCurrency !== 'BTC') {
+        if (ob.userCurrency !== 'PHR') {
           priceFrag = ob.polyT('fiatBtcPairing', {
             fiatAmount: priceFrag,
-            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+            btcAmount: ob.formatCurrency(ob.value, 'PHR', { useBtcSymbol: false }),
           });
         }
 

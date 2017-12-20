@@ -29,16 +29,16 @@
   images are added */
 }
 
-.btcIcon {
+.phrIcon {
   width: 16px;
   height: 16px;
   background-size: contain;
   display: inline-block;
-  background-image: url('../../imgs/btcIcon128.png');
+  background-image: url('../../imgs/phrIcon128.png');
 }
 
 .shapeShiftIcon {
-  @extend .btcIcon;
+  @extend .phrIcon;
 }
 
 .copyNotification {

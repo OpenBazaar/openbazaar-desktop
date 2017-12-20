@@ -372,10 +372,10 @@
       "sectionName": "Allgemein",
       "bitcoinUnit": "Bitcoin-Einheit",
       "bitcoinUnitTypes": {
-        "BTC": "BTC",
-        "MBTC": "mBTC",
-        "UBTC": "µBTC",
-        "SATOSHI": "Satoshi (Sat)"
+        "PHR": "PHR",
+        "mPHR": "mPHR",
+        "uPHR": "µPHR",
+        "pSAT": "Satoshi"
       },
       "statusSaving": "Allgemeine Einstellungen werden gespeichert …",
       "statusSaveComplete": "Allgemeine Einstellungen wurden gespeichert.",
@@ -745,7 +745,7 @@
     "fundsHeader": "Guthaben",
     "btnReceiveMoney": "Geld empfangen",
     "btnSendMoney": "Geld senden",
-    "btcCurrencyLabel": "Bitcoin",
+    "btcCurrencyLabel": "Phore",
     "valueInCurrencyLabel": "Wert in %{currency}",
     "transactionsLabel": "Transaktionen",
     "receiveMoney": {
@@ -1738,10 +1738,10 @@
     "invalidtorlistings": "Sie müssen eine gültige Tor Artikel Such URL bereitstellen"
   },
   "bitcoinCurrencyUnits": {
-    "BTC": "BTC",
-    "MBTC": "mBTC",
-    "UBTC": "µBTC",
-    "SATOSHI": "Sat"
+    "PHR": "PHR",
+    "mPHR": "mPHR",
+    "uPHR": "µPHR",
+    "pSAT": "pSAT"
   },
   "bitcoinCurrencyFormat": {
     "shortBTC": "%{symbol}%{amount}",
@@ -2025,7 +2025,7 @@
     "BOB": "Boliviano",
     "BRL": "Brasilianischer Real",
     "BSD": "Bahama-Dollar",
-    "BTC": "Bitcoin",
+    "PHR": "Phore",
     "BTN": "Ngultrum",
     "BWP": "Pula",
     "BYR": "Weißrussischer Rubel",

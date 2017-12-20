@@ -19,7 +19,7 @@ export default class extends BaseVw {
       amountShort: 0,
       balanceRemaining: 0,
       payee: '',
-      userCurrency: app.settings.get('localCurrency') || 'BTC',
+      userCurrency: app.settings.get('localCurrency') || 'PHR',
       showAcceptRejectButtons: false,
       showCancelButton: false,
       acceptInProgress: false,

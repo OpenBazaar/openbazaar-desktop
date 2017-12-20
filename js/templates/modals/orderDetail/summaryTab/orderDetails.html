@@ -23,12 +23,12 @@
   // first item.
   var item = ob.order.items[0];
 
-  var priceText = ob.formatCurrency(ob.order.payment.amount, 'BTC',
+  var priceText = ob.formatCurrency(ob.order.payment.amount, 'PHR',
      { useBtcSymbol: false });
 
-  if (ob.userCurrency !== 'BTC') {
+  if (ob.userCurrency !== 'PHR') {
     priceText = ob.polyT('fiatBtcPairing', {
-      fiatAmount: ob.convertAndFormatCurrency(ob.order.payment.amount, 'BTC',
+      fiatAmount: ob.convertAndFormatCurrency(ob.order.payment.amount, 'PHR',
         ob.userCurrency),
       btcAmount: priceText,
     });

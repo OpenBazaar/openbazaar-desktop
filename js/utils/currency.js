@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
-import bitcoinConvert from 'bitcoin-convert';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
 
@@ -103,7 +102,7 @@ export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
-      app.localSettings.get('bitcoinUnit') || 'BTC',
+      app.localSettings.get('bitcoinUnit') || 'PHR',
     useBtcSymbol: true,
     ...options,
   };
@@ -126,28 +125,33 @@ export function formatCurrency(amount, currency, options) {
 
   let formattedCurrency;
 
-  if (currency.toUpperCase() === 'BTC' || currency.toUpperCase() === 'TBTC') {
+  if (currency.toUpperCase() === 'PHR') {
     let curSymbol;
     let bitcoinConvertUnit;
 
+    let mul = 1;
+
     switch (opts.btcUnit) {
-      case 'MBTC':
-        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.MBTC');
-        bitcoinConvertUnit = 'mBTC';
+      case 'mPHR':
+        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.mPHR');
+        bitcoinConvertUnit = 'mPHR';
+        mul = 1000;
         break;
-      case 'UBTC':
-        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.UBTC');
-        bitcoinConvertUnit = 'μBTC';
+      case 'uPHR':
+        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.uPHR');
+        bitcoinConvertUnit = 'μPHR';
+        mul = 100000;
         break;
-      case 'SATOSHI':
-        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.SATOSHI');
-        bitcoinConvertUnit = 'Satoshi';
+      case 'pSAT':
+        curSymbol = app.polyglot.t('bitcoinCurrencyUnits.pSAT');
+        bitcoinConvertUnit = 'pSAT';
+        mul = 1e8;
         break;
       default:
         // The default is BTC. Using the ₿ char for the Bitcoin symbol which will be
         // replaced by the real Bitcoin symbol coming from the Bitcoin_Regular font file.
-        curSymbol = opts.useBtcSymbol ? btcSymbol : 'BTC';
-        bitcoinConvertUnit = 'BTC';
+        curSymbol = 'PHR';
+        bitcoinConvertUnit = 'PHR';
     }
 
     // going to use USD just to know the localized placement of the $, which we'll swap
@@ -155,15 +159,15 @@ export function formatCurrency(amount, currency, options) {
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 8,
-    }).format(bitcoinConvert(amount, 'BTC', bitcoinConvertUnit));
+    }).format(amount * mul);
 
     let btcUnit = opts.btcUnit;
 
-    if (opts.btcUnit === 'BTC') {
+    if (opts.btcUnit === 'PHR') {
       btcUnit = opts.useBtcSymbol ? 'shortBTC' : 'longBTC';
     }
 
-    formattedCurrency = app.polyglot.t(`bitcoinCurrencyFormat.${btcUnit}`, {
+    formattedCurrency = app.polyglot.t(`bitcoinCurrencyFormat.longBTC`, {
       amount: formattedAmount,
       symbol: curSymbol,
     });
@@ -249,9 +253,9 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
-  const fromRate = fromCurCaps === 'BTC' || fromCurCaps === 'TBTC' ?
+  const fromRate = fromCurCaps === 'PHR' || fromCurCaps === 'TBTC' ?
       1 : getExchangeRate(fromCurCaps);
-  const toRate = toCurCaps === 'BTC' || toCurCaps === 'TBTC' ? 1 : getExchangeRate(toCurCaps);
+  const toRate = toCurCaps === 'PHR' || toCurCaps === 'TBTC' ? 1 : getExchangeRate(toCurCaps);
 
   return (amount / fromRate) * toRate;
 }
@@ -263,7 +267,7 @@ export function convertCurrency(amount, fromCur, toCur) {
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
-    btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
+    btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'PHR',
     skipConvertIfNoExchangeRateData: true,
     ...options,
   };

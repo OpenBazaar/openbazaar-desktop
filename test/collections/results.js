@@ -14,7 +14,7 @@ const fakeResults1 = {
         data: {
           price: {
             amount: 1,
-            currencyCode: 'btc',
+            currencyCode: 'PHR',
           },
         },
         relationships: {

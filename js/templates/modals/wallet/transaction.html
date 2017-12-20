@@ -18,7 +18,7 @@
   <div class="flexExpand tx5">
     <%
       let priceFrag = ob.convertAndFormatCurrency(ob.value < 0 ? ob.value * -1 : ob.value,
-        'BTC', ob.userCurrency, { useBtcSymbol: false });
+        'PHR', ob.userCurrency, { useBtcSymbol: false });
 
       if (ob.value > 0) {
         priceFrag = `+${priceFrag}`;
@@ -26,10 +26,10 @@
         priceFrag = `-${priceFrag}`;
       }
 
-      if (ob.userCurrency !== 'BTC') {
+      if (ob.userCurrency !== 'PHR') {
         priceFrag = ob.polyT('fiatBtcPairing', {
           fiatAmount: priceFrag,
-          btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
+          btcAmount: ob.formatCurrency(ob.value, 'PHR', { useBtcSymbol: false }),
         });
       }
 
@@ -96,13 +96,13 @@
     <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchError || '' }) %></p>
     <a class="js-retryFeeFetch clrTEm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnRetry') %></a>
   <% } else if (typeof ob.estimatedFee === 'number') {
-    let estimatedFeeCombo = ob.convertAndFormatCurrency(ob.estimatedFee, 'BTC',
+    let estimatedFeeCombo = ob.convertAndFormatCurrency(ob.estimatedFee, 'PHR',
       ob.userCurrency, { useBtcSymbol: false });
 
-    if (ob.userCurrency !== 'BTC') {
+    if (ob.userCurrency !== 'PHR') {
       estimatedFeeCombo = ob.polyT('fiatBtcPairing', {
         fiatAmount: estimatedFeeCombo,
-        btcAmount: ob.formatCurrency(ob.estimatedFee, 'BTC', { useBtcSymbol: false }),
+        btcAmount: ob.formatCurrency(ob.estimatedFee, 'PHR', { useBtcSymbol: false }),
       });
     }
 
