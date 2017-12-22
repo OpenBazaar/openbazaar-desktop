@@ -12,19 +12,20 @@ const currencies = [
     minDisplayDecimals: 0,
     maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
-    feeBumpTransactionSize: 154,
+    // Not allowing fee bump on BTC right now given the fees.
+    // feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
     icon: 'imgs/cryptoIcons/btcIcon128.png',
     url: 'https://bitcoin.org/',
     needCoinLink: 'https://openbazaar.org/bitcoin',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
-        `https://testnet.blockexplorer.com/address/${address}` :
+        `https://www.blocktrail.com/tBTC/address/${address}` :
         `https://blockchain.info/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
-        `https://testnet.blockexplorer.com/tx/${txid}` :
+        `https://www.blocktrail.com/tBTC/tx/${txid}` :
         `https://blockchain.info/tx/${txid}`
     ),
     canShapeShiftInto: true,

@@ -82,7 +82,7 @@ export default class extends baseVw {
       })
       .done(data => {
         this.trigger('retrySuccess', { data });
-        this.model.set('canBumpFee', false);
+        this.model.set('feeBumped', true);
       });
   }
 
