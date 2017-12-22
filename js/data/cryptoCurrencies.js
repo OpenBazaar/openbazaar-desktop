@@ -55,7 +55,7 @@ const currencies = [
     maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
-    qrCodeText: address => `${address}`,
+    qrCodeText: address => address,
     icon: 'imgs/cryptoIcons/bchIcon128.png',
     url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (

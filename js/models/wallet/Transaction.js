@@ -79,7 +79,7 @@ export default class extends BaseModel {
           { address: returnVal.memo.slice(12) });
       }
 
-      // The UI has more stringent logic to determine when fe bumping is possible. This model will
+      // The UI has more stringent logic to determine when fee bumping is possible. This model will
       // provide a allowFeeBump flag to indicate when it's allowed. The canBumpFee flag from the
       // server is just used to determine whether the fee was already bumped or not.
       returnVal.feeBumped = returnVal.value > 0 && !returnVal.canBumpFee;
