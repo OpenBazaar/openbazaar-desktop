@@ -56,7 +56,6 @@
 
         .uploadItems {
           display: table; // clear the floats
-
           li {
             background-repeat: no-repeat;
             background-position: center center;
@@ -240,12 +239,32 @@
         .inventoryTableWrap {
           overflow: auto;
           max-height: 500px;
+          position: relative;
         }
 
         table {
           border-spacing: 0;
           border-collapse: collapse;
           width: 100%;
+
+          thead tr td {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0px;
+            padding: 0px;
+            margin:0px;
+            border: none;
+            z-index:5;
+          }
+
+          thead tr td .stickyDiv {
+            width: inherit;
+            height: inherit;
+            background-color: white;
+            border: 1px solid grey;
+            border-right: none;
+            padding: $pad;
+          }
 
           th {
             text-align: left;

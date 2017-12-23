@@ -3,15 +3,15 @@
 <% } else { %>
 <div class="inventoryTableWrap">
   <table>
-    <tr>
+    <thead>
       <% ob.columns.forEach(column => { %>
-      <th class="clrBr"><%= column %></th>
+      <td class="clrBr"><div class="stickyDiv"><%= column %></div></td>
       <% }) %>
-      <th class="clrBr">Surcharge</th>
-      <th class="clrBr">Total Price</th>
-      <th class="clrBr">Sku</th>
-      <th class="clrBr quantityCol">Quantity</th>
-    </tr>
+      <td class="clrBr"><div class="stickyDiv">Surcharge</div></td>
+      <td class="clrBr"><div class="stickyDiv">Total Price</div></td>
+      <td class="clrBr"><div class="stickyDiv">Sku</div></td>
+      <td class="clrBr quantityCol"><div class="stickyDiv">Quantity</div></td>
+    </thead>
   </table>
 </div>
 <div class="clrT2 txSm padSm"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
