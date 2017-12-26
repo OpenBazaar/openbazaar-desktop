@@ -1,6 +1,6 @@
 const path = require('path');
 
-module.exports = function (grunt) {
+module.exports = function setup(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -9,7 +9,7 @@ module.exports = function (grunt) {
         productName: 'OpenBazaar',
         name: 'openbazaar2',
         arch: 'amd64',
-        version: '2.0.0',
+        version: '2.0.18p',
         bin: 'openbazaar2',
         maintainer: 'OpenBazaar <project@openbazaar.org>',
         rename(dest) {

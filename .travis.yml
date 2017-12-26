@@ -8,12 +8,9 @@ cache:
   - node_modules
   - "/usr/local/Cellar"
 node_js:
-- '5'
+- '6'
 before_script:
-- openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .travis/cert.p12.enc -d -a -out ./.travis/cert.p12
-- openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.cert.spc
-- openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.pvk
--  if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh" ; fi
+- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh" ; fi
 script:
 - npm run lint
 - npm run test
@@ -23,26 +20,20 @@ deploy:
   api_key: "$GITHUB_TOKEN"
   file_glob: true
   file:
-    - "dist/win32/*.exe"
-    - "dist/win32/*.nupkg"
-    - "dist/win32/RELEASES"
-    - "dist/win64/*.exe"
-    - "dist/win64/*.nupkg"
-    - "dist/win64/RELEASES-x64"
-    - "dist/osx/*.dmg"
-    - "dist/osx/*.zip"
-    - "dist/linux32/*.deb"
-    - "dist/linux64/*.deb"
-    - "dist/linux32/*.rpm"
-    - "dist/linux64/*.rpm"
+  - dist/win32/*.exe
+  - dist/win32/*.nupkg
+  - dist/win32/RELEASES
+  - dist/win64/*.exe
+  - dist/win64/*.nupkg
+  - dist/win64/RELEASES-x64
+  - dist/osx/*.dmg
+  - dist/osx/*.zip
+  - dist/linux32/*.deb
+  - dist/linux64/*.deb
+  - dist/linux32/*.rpm
+  - dist/linux64/*.rpm
   skip_cleanup: true
   all_branches: true
-  on:
-    tags: true
 env:
   global:
-  - secure: KGmmWJO60jaOeLIogqOH88oWTDWBZxXz1hLu3100Y4LeSruaoyV3GzRTIcUrmIdUiceKitFlTO4y1Xxc98fj7aajh2QkF1XpCQ4lz38RtJcjsnUfnDYN93G2hr+NZsCIR+oUYh5/2IfCeiCHoiN+DwCzI6Roao4NIdytTTnFY6REc8R5sxdvsHJqGiiEK5DFqsaG3d8Vx9pXRRwO/8GExOACJZ0h/FuDebvssTalAUK2NLTWFpxQqH8AVu7ofQHexunS24swX6IF+r/hSuExH/oYM8VFTDfCsjmIiQaFrKk+b31a6tuimBWED6ezFxeOL7TEyHfsY7kM4cP5/bUyU2kwDXT7YRPCgjgwMScTRUe2Zm0xWegq4C6m5uuuwEglYklhVBkq3lGAkXjDDQTmVdMXGHtKWg7DIxVjw5tTQNzkJUoauDoz+q3r2EV+rAaNuHWXPZ8uA2Ip4GAidDjjnqiuwxQcG9wy8zFj7V31/TDEfPjRXIoxEAevB2toyXZ2Vxa9/F56SdXCdCl0G7aC+5IT0nRQ3Lz4vjqwwseOGsQk2SVwAJ3QV5as1mBiXjT78rDrTYeTNOWXKeqrsYEyS7A9vmsUZUYOaKEIl4ugOi5tB1GC+qOkJ2FHHXKZaKW/on7CScFXAXeA8eT+DxicukGfauQaNINP6wSciJCpHSE=
-  - secure: La8+tLDr/Kb22A/k2M+lpxArsKJIpvX3LesiH2ZEz6vPCkzQ7siRQlRSflP0TuiOvX81WsPzdo1iH544oDl0J2vm5L5hSa/FVYPGEkvOiS1o1of5Pl5ThCzHBWn6Vezz9z3Uvzc31JqkbI0r8mMKePezE2kHH+JkKno/PwTwhfueYBvjVr3s7EYi3Nqo7EcgzvKx6SORsn+Co69idAy4nWURoIyhBb70VsCzIqwOGaSOLdzW5PP7CBrtKmDrlWYdS+Z11y+tcqmTsjJihu5qnfO2ddcC27menx5wbG9N+nD6h+rTzthssRlMeNaqQP/iCGIrPDzMNQXwRH6GxnEmTP++lb5CnYNbkT8hgseJ50mdLJ6oaAY/JSGvXaCVG7t6dmjVKntl5NEbmirs44TusQNX7BGUwDRbl0k4qWaZxNKJp20vMJrKKM32l52vK2DkF7jaQIK5dSuQoY6/EaJPim8VkI6hvn8FhxssmRIxBivUaJukzw2GZQLsEVy9Q372DVcEFIHZwMcQPXAh7K1Cxgs05hAYGO2pYKHSQmQDXZuFxKEZN/zKfsTes0KqZGYEsSj9DkfzcQG8NydSUA55PTPktblMdQ7+JYw4UZUREi/xEhLygYBQUEWvCa0O90iDLucDWDxklN0EH6kKNsTBVsTUiDeUOUG0IRUSqYfSipk=
-  - secure: fQ4K2OvSakz0Fk+9X/WWFpPOFoK7IjpI7vAqhEhbH7X2q0iXQUZv1476e3wVQWYlwzks8NlLP4oPXzJm6xooh+1ftxh3q1qlyQlowZKvyqDx/IjOVlZXZoaivqCEwXSmkxH2MG5OL3hjhZr2MG8cai2nbcXPXiUDktGVZm4rJRtbvknPK5TZUMjs9YttvDKy35fa28gdFcXWzKOFerqHIibNzE4CtmAbBhJLgSxopJp3yUrhKhnwEnOA4A3xwFZTARmT02Kfu8y4hOwwylbmysDNT1zWZ9+aNRaB2jvw9DEIevtzcyrmYfTZdbY18nj3O+9Wg8qYPo7YrrSA0pK5NwO9qf5ldxKU4ThfNSMONHgAzZDibXKg9q+axr49PBgNze0YO6T3/ktMIqpP9UPuchrsDMBk54msyqH02drJhQ3FyNLX63Ljt5w20kUks2mQdd/az/NSNGcjH26hDiKUROd7SXTr+cPOOXd0vi/VN1F3AouGVeoaaLm62N0UIv/w+npxn/XDKJE9InHfiGc77KUpysEaA9ydOJ7+WnNSzdGv45pIo87z+/zm6m9yeI/G8IPgo54IHSyLEshLD4azo/egzBkihYPkztX0z2SnMgL9+ph6908R0oy9GV1HgfFzMvwFfR8a4iY/mSkQtaSb5xoAUz1MxxwFel3cQGKXOgU=
-  - secure: i9WollMSh2QLEneqifPXPEvOX8Ec6Fb2l1zd+QJwEn0PlHgbDAlY5a0WECPyBYhK6ldRCYZU73MC3goH2bzK4W2i8+jaWXEIIfEh+gx5Hp1V8TmLzkegSWl4A4/+Z5OHw5zbowwYRIKtTvxoT4zpPfuiwfS8GJyn1VIxJ7tD4RyBf/ruM6p0hLeiml4tVt+JCx0hvR5qhZDOEz/Dysa/e/3PzotYmUtofxHBQg4ItzMVtiQSBDdxN6GGXVYYvTHJ/+WqeKepziojajhleHL6Yufp+iIrT5+moAU1CKCir1uI3kVIyqMT27q/14Qh9EikBEarnhM+dv9z9XZQ2hs7eHZhKVBx0rAIoR0VReiU+bPqXQBc6to8b7xaW3WpTRD5l6kSE9nhO8c1/u27nHqH9REFh2wqzQPRgTMkaNe7TX+MV0VxDkqLLKS5LNzxzW8jjI+m6RXs+OIg4NesKOAqLCS6vD8Z6gRmvQqEMBe7wCUH1W71E3U2CuGOuqdnxPvOabc48ojX0fGtmaKmINIgOBcru9V7SXeDabrmFbVLlbSSUePnGoC32LO2MgiroiiIlzr9TRkDauCZB4fWfS7YGS6IMYdgPUWvEViLCDlNIDudJLfEGZgaBELMHUJSGO7A6Zi4JHWEhwZ12WsZnwEfUUBspQzkh3Nt6OofQYn7Bbw=
-  - secure: JvB92ziCZhA5o1nrw/DxmFWnCcdVnpR+7UcAAMuV7+UdLk5cUFryuEo2BJ7YN1BWXpDgQ7iPULPAWAZRO7vKny7LVJYlo9vFIcsSdbnS+rl5Z1OTtuto8KPNIEPISzBEL8iTH25hXvT1jgbyovf4q1Xl+nUW/3BjBAttktZrP7jnpQZBfWnLxPrZ+lRfBeoIp7cxzB/BEg1hG6/YkRfvBu7Ov/erA3L0IOXehcjgXZvg10raOGUSxgSvHS4Va4lX5E1N6k4qtD79LhS6SV7e4QOi1Dhd4aeeUZtYBrSo/AqsXsrULGtbePeFJMH+Y1M3zjIRBOWQcWMjgxlNh5H/StVJSzsODU6++ubZ6zqB3sQTaT1jQYXJUmoSgnykp6H+ikufSlasWZWvTm5gyJ5nd3Kn1CsP2iB2SCV+w6l7eUnjsyb2R9CPG8j/5m1wYx5iGC/9Ot2lAVCwrPRYuw6gLUOO6BVCV3Kz+tBPFtdAP7jpfl6jhlKCtmkovRY+As3zKU+uEHGqB26J5kIp/apiU6czHvHTa4pRbaXgULhegpDE2ccT62Q8Z8O1U3bmZG5cVEGQHhjMrYW1Y3HchfdJ/jhIRSQopFK4WE+BJV0YP1qiMh3WqCFdhCyQrRGGGWBqrfkNuTyNjMCBmThLTIE+kd3XZyXeokFbfxcDSf7Wu90=
+  - secure: QOLIgDAmXZab6HZHnZK0wrbhoblEY7A8ddVK34dm+/lIxtt0E504O+xidsSgKSUJhehHSlBwd9TlI01AIuznBlfSCq9pvzaM/F+ppidN4mk6XE0ymFJMgpS5E2+CGiz1/CpOLK2GkF3Mf1nOHLNDL3UvysE60cZcqwZV+lL8kI+Z61TUy7JfK6Ev77WIheuumVIm3ybnVH5vPdkLVi/nxR1qL3xPB7HVC/fZF7s1D3qaMijO1rK0pHBvgQ7JCF09Bq6WyEdTITlsXfY5ttMi7Szfu6NuiXtn646jsGeVOswCUR18BlzjWNUgrvmfqPhY6FMaKRe0L+tTlNkoZKixLQ2PrvRlpY/9PdTrjXh6izOnzzXY5AqFW7Tt3tAAU8y3LLOoMeUn4cB7rtqr2X5q1T75yTp61H6kTMUDX2nmXWCKMgcu4QtciW5rC1LCvU2FN5Y2WE+wlFyiqMw85krmFt8PHMsi+NRVGAFaI5CMRoi8eFXK9mZeUgDe1wFKPSyvElerE+NCc7pKSTVJxkFLdV/htHo6MGYXKxGQOVwN9CJjDKlKN6pd5u/7PLq7vp+5LaVpefKzJQZvFZy9x39aP0H2yOsDeNKROfmbOc/k3/1lCVGYiisPeVxLNrth9b0c1mBEg3bqWv0aLa329mP/YjQeOjlqFsBkSfeEoxdO7yw=

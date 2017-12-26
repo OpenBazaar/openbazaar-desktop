@@ -2,7 +2,7 @@
   "productName": "OpenBazaar",
   "name": "openbazaar2",
   "description": "Decentralized Peer to Peer Marketplace for Bitcoin",
-  "version": "2.0.12",
+  "version": "2.0.18p",
   "bin": "openbazaar2",
   "maintainer": "OpenBazaar <project@openbazaar.org>",
   "arch": "amd64",

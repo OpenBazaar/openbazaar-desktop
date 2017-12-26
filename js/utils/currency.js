@@ -127,31 +127,25 @@ export function formatCurrency(amount, currency, options) {
 
   if (currency.toUpperCase() === 'PHR') {
     let curSymbol;
-    let bitcoinConvertUnit;
 
     let mul = 1;
-
     switch (opts.btcUnit) {
       case 'mPHR':
         curSymbol = app.polyglot.t('bitcoinCurrencyUnits.mPHR');
-        bitcoinConvertUnit = 'mPHR';
         mul = 1000;
         break;
       case 'uPHR':
         curSymbol = app.polyglot.t('bitcoinCurrencyUnits.uPHR');
-        bitcoinConvertUnit = 'μPHR';
-        mul = 100000;
+        mul = 1000000;
         break;
       case 'pSAT':
         curSymbol = app.polyglot.t('bitcoinCurrencyUnits.pSAT');
-        bitcoinConvertUnit = 'pSAT';
         mul = 1e8;
         break;
       default:
         // The default is BTC. Using the ₿ char for the Bitcoin symbol which will be
         // replaced by the real Bitcoin symbol coming from the Bitcoin_Regular font file.
         curSymbol = 'PHR';
-        bitcoinConvertUnit = 'PHR';
     }
 
     // going to use USD just to know the localized placement of the $, which we'll swap
@@ -161,13 +155,7 @@ export function formatCurrency(amount, currency, options) {
       maximumFractionDigits: 8,
     }).format(amount * mul);
 
-    let btcUnit = opts.btcUnit;
-
-    if (opts.btcUnit === 'PHR') {
-      btcUnit = opts.useBtcSymbol ? 'shortBTC' : 'longBTC';
-    }
-
-    formattedCurrency = app.polyglot.t(`bitcoinCurrencyFormat.longBTC`, {
+    formattedCurrency = app.polyglot.t('bitcoinCurrencyFormat.longBTC', {
       amount: formattedAmount,
       symbol: curSymbol,
     });

@@ -11,7 +11,7 @@
 
 
 ELECTRONVER=1.7.8
-NODEJSVER=5.1.1
+NODEJSVER=6
 
 OS="${1}"
 
@@ -82,7 +82,7 @@ case "$TRAVIS_OS_NAME" in
     electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/ 
+    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
     cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
     mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
     rm -rf dist/${APPNAME}-linux-ia32/resources/app/.travis
@@ -152,7 +152,7 @@ case "$TRAVIS_OS_NAME" in
 
     # Retrieve Latest Server Binaries
     cd temp/
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
+    curl https://api.github.com/repos/phoreproject/openbazaar-go/releases > release.txt
     cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
@@ -183,10 +183,6 @@ case "$TRAVIS_OS_NAME" in
     grunt create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-ia32 --outdir=dist/win32
     mv dist/win32/OpenBazaar2ClientSetup.exe dist/win32/OpenBazaar2Client-$PACKAGE_VERSION-Setup-32.exe
 
-    echo 'Sign the installer'
-    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
-    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaarClient $PACKAGE_VERSION" dist/win32/OpenBazaar2Client-$PACKAGE_VERSION-Setup-32.exe
-
     # WINDOWS 64
     echo 'Building Windows 64-bit Installer...'
     mkdir dist/win64
@@ -213,10 +209,6 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Installer...'
     grunt create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-x64 --outdir=dist/win64
     mv dist/win64/OpenBazaar2ClientSetup.exe dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
-
-    echo 'Sign the installer'
-    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
-    signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaarClient $PACKAGE_VERSION" dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
     # OSX
     echo 'Building OSX Installer'

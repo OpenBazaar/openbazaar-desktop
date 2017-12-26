@@ -153,40 +153,40 @@ describe('the currency utility module', () => {
     it('properly localizes a BTC amount', () => {
       expect(cur.formatCurrency(523, 'PHR'))
         .to
-        .equal('₿523');
+        .equal('523 PHR');
 
       expect(cur.formatCurrency(523.987, 'PHR'))
         .to
-        .equal('₿523.987');
+        .equal('523.987 PHR');
 
       expect(cur.formatCurrency(523.12, 'PHR'))
         .to
-        .equal('₿523.12');
+        .equal('523.12 PHR');
       expect(cur.formatCurrency(523.12345678, 'PHR'))
         .to
-        .equal('₿523.12345678');
+        .equal('523.12345678 PHR');
     });
 
     it('properly localizes a BTC amount with the correct bitcoin units', () => {
       expect(cur.formatCurrency(523.3456, 'PHR', {
         btcUnit: 'PHR',
       })).to
-        .equal('₿523.3456');
+        .equal('523.3456 PHR');
 
       expect(cur.formatCurrency(523.3456, 'PHR', {
-        btcUnit: 'MBTC',
+        btcUnit: 'mPHR',
       })).to
-        .equal(`523,345.6 ${app.polyglot.phrases['bitcoinCurrencyUnits.MBTC']}`);
+        .equal(`523,345.6 ${app.polyglot.phrases['bitcoinCurrencyUnits.mPHR']}`);
 
       expect(cur.formatCurrency(523.3456, 'PHR', {
-        btcUnit: 'UBTC',
+        btcUnit: 'uPHR',
       })).to
-        .equal(`523,345,600 ${app.polyglot.phrases['bitcoinCurrencyUnits.UBTC']}`);
+        .equal(`523,345,600 ${app.polyglot.phrases['bitcoinCurrencyUnits.uPHR']}`);
 
       expect(cur.formatCurrency(523.3456, 'PHR', {
-        btcUnit: 'SATOSHI',
+        btcUnit: 'pSAT',
       })).to
-        .equal(`52,334,560,000 ${app.polyglot.phrases['bitcoinCurrencyUnits.SATOSHI']}`);
+        .equal(`52,334,560,000 ${app.polyglot.phrases['bitcoinCurrencyUnits.pSAT']}`);
     });
   });
 
@@ -202,7 +202,7 @@ describe('the currency utility module', () => {
           // like a bug, but it will allow us to test that if we call our conversion
           // functions to convert from or to BTC, it will ignore that BTC exchange rate
           // and use an implied 1.
-          BTC: 1.02,
+          PHR: 1.02,
           PLN: 3148.48,
           USD: 750.6,
         });
@@ -259,7 +259,7 @@ describe('the currency utility module', () => {
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'USD', 'PHR', { locale: 'en-US' }))
           .to
-          .equal('₿0.66613376');
+          .equal('0.66613376 PHR');
       });
 
       it('which will convert between BTC and a fiat currency properly localize ' +
