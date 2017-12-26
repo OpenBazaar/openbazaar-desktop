@@ -412,8 +412,7 @@ export default function connect(server, options = {}) {
           innerConnectReject('incompatible-tor-mode');
         }
 
-        if (server.get('builtIn') &&
-          (!localServer.isRunning || localServer.isStopping)) {
+        if (server.get('builtIn') && !localServer.isRunning) {
           const onTorChecked = () => {
             const onLocalServerStart = () => {
               socketConnectAttempt = socketConnect(socket)

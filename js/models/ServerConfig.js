@@ -194,7 +194,7 @@ export default class extends BaseModel {
   needsAuthentication() {
     let needsAuth = false;
 
-    if (!this.isLocalServer() || this.get('builtIn')) {
+    if (!this.isLocalServer()) {
       needsAuth = true;
     } else {
       if (this.get('username') || this.get('password')) {
