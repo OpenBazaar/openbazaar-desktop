@@ -34,6 +34,8 @@ deploy:
   - dist/linux64/*.rpm
   skip_cleanup: true
   all_branches: true
+  on:
+    tags: true
 env:
   global:
   - secure: udFem4PbHoVMJzp/bDgE2x+/3uY+c9llv4RMkVRru3Y/QaVjVg6c1K2uovmUhdmo0/YjzlOhGlHHpA/klxHy5Yc7Ba3cahlnaugMeCHWEUnOuX2BwzFc051PPce5SpKqLGZTHSK8PQtFYiuirgnaN8Y3YZ1R7h4lfiFVHN76KYVmB+nFojaykYA0tnZKT/wWQnsE6H/+ApxAHTPKjAktUbc2a5ojrdj84I+fWYstDm72u3ykRiUilJVA8WJ8tnuhTenNoGkzNda4pbyKcEe2UnswhEOukDuYn6V34ifYFx3uWlS9laRjsmNudaNmiLIw1Gx5l5IVgy1/QBWBAfJCmgq8Shs0FjbI87uvU0w4D8k92dp2wC6MKtFuiMbVb/1xBnV5h8dtfO/oE1/xHX4xBRiJdosLeyO8C3sRRIi36QQJS4HE7D+AJ0pbjxjuJuJir2gAldo+YnRpD2yZY8eOgmttOZuD5g9CZpRF4J0lru/HOgDGJ48NCr99/069dzGtV2QCMwhIrVU7rDVqI/fub5cZW9KQHOMd0oDHjEHv87WSPF7s6/XmPsHFaBNQLsVvoe3WDrZ0AMiTFbyH0tdVO3so+lB00b3RBM8GsqTIJ9GO61rAnmir7iCYjOW1PlT/0O3s4aGde2LP0UwqO23MwvTmE7LMNlXhbHhn9OY5QPY=
