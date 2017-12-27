@@ -102,7 +102,7 @@ export default class extends BaseView {
           option: data => `<div>${data.name}</div>`,
           item: data => `<div>${data.name}</div>`,
         },
-      });
+      }).on('change', () => this.trigger('choiceChange', { view: this }));
     });
 
     return this;
