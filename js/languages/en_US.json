@@ -812,7 +812,8 @@
       "notePlaceholder": "Only seen by you",
       "sendBtn": "Send",
       "clear": "Clear",
-      "sendPaymentFailDialogTitle": "Unable to send payment"
+      "sendPaymentFailDialogTitle": "Unable to send payment",
+      "errorInvalidAddress": "The payment address is not valid."
     },
     "spendConfirmBox": {
       "heading": "Are you sure?",
