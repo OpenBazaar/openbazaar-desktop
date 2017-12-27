@@ -1,0 +1,17 @@
+<div class="topControls flex"></div>
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <h1><%= ob.polyT('editListing.unsupportedCurrencyDialog.title') %></h1>
+  <p><%= ob.polyT('editListing.unsupportedCurrencyDialog.body', { cur: ob.unsupportedCurrency }) %></p>
+  <div class="flexCent row">
+    <div class="col6">
+      <select class="clrBr clrP js-currencyList">
+        <% ob.curList.forEach((currency) => { %>
+          <option value="<%= currency.code %>" <% if (currency.code === ob.userCurrency) print('selected') %>><%= `${currency.code} - ${ob.polyT(`currencies.${currency.code}`)}` %></option>
+        <% }); %>
+      </select>
+    </div>
+  </div>
+  <div class="flexCent">
+    <button class="btn clrP clrBr js-okCurrencySet"><%= ob.polyT('editListing.unsupportedCurrencyDialog.btnOk') %></button> 
+  </div>  
+</div>

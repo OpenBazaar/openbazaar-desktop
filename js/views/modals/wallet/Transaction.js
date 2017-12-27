@@ -4,6 +4,7 @@ import moment from 'moment';
 import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../utils/';
 import { getFees } from '../../../utils/fees';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -81,7 +82,7 @@ export default class extends baseVw {
       })
       .done(data => {
         this.trigger('retrySuccess', { data });
-        this.model.set('canBumpFee', false);
+        this.model.set('feeBumped', true);
       });
   }
 
@@ -147,7 +148,8 @@ export default class extends baseVw {
       this.setState({
         fetchingEstimatedFee: false,
         // server doubles the fee when bumping
-        estimatedFee: (154 * fees.priority * 2) / 100000000,
+        estimatedFee: (getServerCurrency().feeBumpTransactionSize * fees.priority * 2) /
+          getServerCurrency().baseUnit,
       });
     }).fail(xhr => {
       if (this.isRemoved()) return;

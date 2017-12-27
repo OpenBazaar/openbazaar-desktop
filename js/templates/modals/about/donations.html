@@ -1,3 +1,4 @@
+<% const serverCur = ob.currencyMod.getServerCurrency().code %>
 <div class="flex padGi">
   <img class="flexNoShrink" src="<%= ob.qrCodeDataURI %>">
   <div id=donation-dashboard class="padMd flexCol">
@@ -6,7 +7,13 @@
         <%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %>
       </h2>
       <div class="clrT2 donationAddress posR">
-        <span class="js-copyAddress"><%= ob.obDonationAddress %></span>
+        <% if (serverCur !== 'BTC') { %>
+          <p><%= ob.polyT('about.donationsTab.bitcoinIntroLine') %></p>
+        <% } %>
+        <p class="js-copyAddress rowSm"><%= ob.obDonationAddress %></p>
+        <% if (serverCur !== 'BTC') { %>
+          <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.bchWarning') %></p>
+        <% } %>
         <div class="js-copyNotification copyNotification clrT clrBr clrP">
           <%= ob.polyT('copiedToClipboardShort') %>
         </div>

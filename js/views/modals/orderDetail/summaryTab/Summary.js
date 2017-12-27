@@ -3,6 +3,7 @@ import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
+import { getServerCurrency } from '../../../../data/cryptoCurrencies';
 import {
   completingOrder,
   events as orderEvents,
@@ -405,8 +406,9 @@ export default class extends BaseVw {
       balanceRemaining = this.orderPriceBtc - totalPaid;
     }
 
-    // round to 8 decimal places
-    return Math.round(balanceRemaining * 100000000) / 100000000;
+    // round based on the coins base units
+    const cryptoBaseUnit = getServerCurrency().baseUnit;
+    return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
   }
 
   shouldShowPayForOrderSection() {

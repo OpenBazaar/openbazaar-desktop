@@ -1,5 +1,6 @@
 import app from '../../app';
 import { integerToDecimal } from '../../utils/currency';
+import { getServerCurrency } from '../../data/cryptoCurrencies';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -7,7 +8,8 @@ export default class extends BaseModel {
     return {
       confirmations: 0,
       height: 0,
-      canBumpFee: true,
+      feeBumped: false,
+      allowFeeBump: false,
       memo: '',
     };
   }
@@ -46,14 +48,12 @@ export default class extends BaseModel {
         attrs.status = 'UNCONFIRMED';
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) > stuckTime) {
         attrs.status = 'STUCK';
+        attrs.allowFeeBump = !attrs.feeBumped && attrs.value > 0 &&
+          typeof getServerCurrency().feeBumpTransactionSize === 'number';
       } else if (confirmations > 0 && confirmations <= 5) {
         attrs.status = 'PENDING';
       } else if (confirmations > 5) {
         attrs.status = 'CONFIRMED';
-      }
-
-      if (height !== 0) {
-        attrs.canBumpFee = false;
       }
     }
 
@@ -79,10 +79,17 @@ export default class extends BaseModel {
           { address: returnVal.memo.slice(12) });
       }
 
+      // The UI has more stringent logic to determine when fee bumping is possible. This model will
+      // provide a allowFeeBump flag to indicate when it's allowed. The canBumpFee flag from the
+      // server is just used to determine whether the fee was already bumped or not.
+      returnVal.feeBumped = returnVal.value > 0 && !returnVal.canBumpFee;
+      delete returnVal.canBumpFee;
+
       returnVal = {
         ...returnVal,
-        // Convert satoshi to BTC
-        value: integerToDecimal(returnVal.value, true),
+        // Convert from base units
+        value: integerToDecimal(returnVal.value,
+          app.serverConfig.cryptoCurrency),
       };
     }
 

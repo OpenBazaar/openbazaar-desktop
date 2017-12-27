@@ -20,6 +20,16 @@
       background-position: center;
     }
 
+    .infoArea {
+      position: relative;
+      
+      .toolTip {
+        &::after, &::before {
+          z-index: 2;
+        }
+      }
+    }
+
     .listingIcons {
       position: absolute;
       top: 8px;

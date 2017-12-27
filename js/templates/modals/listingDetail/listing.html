@@ -43,7 +43,13 @@
     <div class="flex gutterHLg">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
       <h2 class="txUnb flexNoShrink js-price">
-        <%= ob.convertAndFormatCurrency(ob.item.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+        <%= 
+          ob.currencyMod.formattedCurrency(
+            ob.item.price,
+            ob.metadata.pricingCurrency,
+            ob.displayCurrency
+          )
+        %>
       </h2>
     </div>
     <div class="flex gutterHLg">
@@ -76,9 +82,34 @@
                 </div>
               </div>
             <% }); %>
-            <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn">
+            <%
+              let tip;
+              let buyNowClass = 'disabled';
+              let unpurchaseable = true;
+              const serverCur = ob.currencyMod.getServerCurrency();
+              const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
+
+              if (ob.metadata.acceptedCurrencies.indexOf(serverCurCode) === -1) {
+                tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
+                  {
+                    acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
+                    serverCur: serverCurCode,
+                  });
+              } else if (ob.currencyValidity !== 'VALID') {
+                tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
+                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
+                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+              } else {
+                buyNowClass = '';
+                unpurchaseable = false;
+              }
+
+              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;              
+            %>
+            <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT('listingDetail.buyNow') %>
             </button>
+            <%= unpurchaseable ? unpurchasableMarkup : '' %>
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
               <% if(ob.shipsFreeToMe) { %>
@@ -99,12 +130,25 @@
         </div>
         <hr class="rowLg">
         <h5><%= ob.polyT('listingDetail.tags') %></h5>
-        <div class="tagWrapper">
+        <div class="tagWrapper rowLg">
           <% ob.item.tags.forEach(function(tag){
           print(`<a class="btn tag clrSh2 clrBr" href="#search?q=${tag}">#${ob.parseEmojis(tag)}</a>`);
           }); %>
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>
+        <h5>Payments Accepted</h5>
+        <ul class="unstyled">
+          <% ob.metadata.acceptedCurrencies.forEach(cur => {
+            const curData = ob.currencyMod.getCryptoCurByCode(cur);
+            if (curData) { %>
+              <li class="flexVCent gutterHSm borderBottom clrBr">
+                <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
+                <%= ob.currencyMod.cryptoIcon({ code: curData.code }) %>
+                <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
+              </li>
+            <% }            
+          }) %>
+        </ul>
       </div>
     </div>
   </div>

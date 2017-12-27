@@ -37,7 +37,7 @@
       <div class="rowDivV clrBrBk"></div>
       <div class="flexExpand">
         <div class="flexCol flexCent">
-          <% var amount = ob.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+          <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
           <div><%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %></div>
           <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.serviceCharge') %></div>
         </div>

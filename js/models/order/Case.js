@@ -28,7 +28,8 @@ export default class extends BaseModel {
 
       // convert price fields
       response.buyerContract.buyerOrder.payment.amount =
-        integerToDecimal(response.buyerContract.buyerOrder.payment.amount, true);
+        integerToDecimal(response.buyerContract.buyerOrder.payment.amount,
+          app.serverConfig.cryptoCurrency);
     }
 
     if (response.vendorContract) {
@@ -39,7 +40,8 @@ export default class extends BaseModel {
 
       // convert price fields
       response.vendorContract.buyerOrder.payment.amount =
-        integerToDecimal(response.vendorContract.buyerOrder.payment.amount, true);
+        integerToDecimal(response.vendorContract.buyerOrder.payment.amount,
+          app.serverConfig.cryptoCurrency);
 
       if (response.resolution) {
         response.resolution.payout.buyerOutput =
@@ -66,11 +68,14 @@ export default class extends BaseModel {
         }
 
         response.resolution.payout.buyerOutput.amount =
-          integerToDecimal(response.resolution.payout.buyerOutput.amount || 0, true);
+          integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
+            app.serverConfig.cryptoCurrency);
         response.resolution.payout.vendorOutput.amount =
-          integerToDecimal(response.resolution.payout.vendorOutput.amount || 0, true);
+          integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
+            app.serverConfig.cryptoCurrency);
         response.resolution.payout.moderatorOutput.amount =
-          integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0, true);
+          integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
+            app.serverConfig.cryptoCurrency);
       }
     }
 

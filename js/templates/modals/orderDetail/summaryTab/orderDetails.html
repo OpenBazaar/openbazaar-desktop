@@ -22,17 +22,6 @@
   // For now we're only supporting one item per order, so we'll hard-code a reference to the
   // first item.
   var item = ob.order.items[0];
-
-  var priceText = ob.formatCurrency(ob.order.payment.amount, 'BTC',
-     { useBtcSymbol: false });
-
-  if (ob.userCurrency !== 'BTC') {
-    priceText = ob.polyT('fiatBtcPairing', {
-      fiatAmount: ob.convertAndFormatCurrency(ob.order.payment.amount, 'BTC',
-        ob.userCurrency),
-      btcAmount: priceText,
-    });
-  }
 %>
 <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.heading') %></h2>
 <span class="clrT2 tx5b"><%= ob.moment(ob.order.timestamp).format('lll') %></span>
@@ -113,7 +102,15 @@
               </div>
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
-                <div><%= priceText %></div>
+                <div>
+                  <%=
+                    ob.currencyMod.pairedCurrency(
+                      ob.order.payment.amount,
+                      ob.currencyMod.getServerCurrency().code,
+                      ob.userCurrency
+                    )
+                  %>
+                </div>
               </div>
             </div>
           </div>

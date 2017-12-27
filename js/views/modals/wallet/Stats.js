@@ -35,10 +35,10 @@ export default class extends baseVw {
   }
 
   // Normally, we'd user the currency module to format currency, but
-  // this is a unique case where we want to format a BTC price without
-  // the BTC symbol, so we'll create a custom function. If we find other
+  // this is a unique case where we want to format a crypto price without
+  // the currency symbol, so we'll create a custom function. If we find other
   // areas in the app need this, we can integrate it into the currency module.
-  formatUnitlessBtc(amount) {
+  formatUnitlessCryptoAmount(amount) {
     if (typeof amount !== 'number') {
       throw new Error('Please provide a number.');
     }
@@ -50,10 +50,12 @@ export default class extends baseVw {
   }
 
   render() {
+    const state = this.getState();
+
     loadTemplate('modals/wallet/stats.html', (t) => {
       this.$el.html(t({
-        ...this._state,
-        formatUnitlessBtc: this.formatUnitlessBtc,
+        ...state,
+        formatUnitlessCryptoAmount: this.formatUnitlessCryptoAmount,
       }));
     });
 

@@ -6,7 +6,10 @@ import app from '../../../app';
 import '../../../lib/select2';
 import '../../../utils/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import { convertAndFormatCurrency } from '../../../utils/currency';
+import {
+  getCurrencyValidity,
+  renderFormattedCurrency,
+} from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import { getTranslatedCountries } from '../../../data/countries';
@@ -365,9 +368,9 @@ export default class extends BaseModal {
     const _totalPrice = this.model.get('item').get('price') + surcharge;
     if (_totalPrice !== this.totalPrice) {
       this.totalPrice = _totalPrice;
-      const adjPrice = convertAndFormatCurrency(this.totalPrice,
+      const adjPrice = renderFormattedCurrency(this.totalPrice,
         this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
-      this.getCachedEl('.js-price').text(adjPrice);
+      this.getCachedEl('.js-price').html(adjPrice);
     }
   }
 
@@ -534,6 +537,9 @@ export default class extends BaseModal {
         defaultCountry: this.defaultCountry,
         vendor: this.vendor,
         openedFromStore: this.options.openedFromStore,
+        currencyValidity: getCurrencyValidity(
+          this.model.get('metadata').get('pricingCurrency')
+        ),
       }));
 
       super.render();

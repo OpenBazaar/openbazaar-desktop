@@ -7,21 +7,12 @@
     left: 50%; //don't adjust for the chat sidebar
   }
 
-  &.startupLoadingModal {
-    // Positioning this in a way in which the spinner will remain centered and the .infoContent
-    // will be displayed below it. The reason for that is because the standard loadingModal is
-    // shown right after the startupLoadingModal and this will ensure the spinners of each modal
-    // line up so there is no jump going from one modal to the next.
-    .infoContent {
-      @include center();
-      margin-top: $spinnerLg / 2 + 15;
-      color: black !important;
+  .content {
+    @include center();
+    margin-top: $spinnerLg / 2 + 15;
 
-      .loadingMessage {
-        &.fadeInAnim {
-          @include fadeIn(1s ease);
-        }
-      }
+    .fadeInContent {
+      @include fadeIn(1s ease);
     }
   }
 }

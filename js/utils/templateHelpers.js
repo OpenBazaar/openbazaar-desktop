@@ -1,14 +1,27 @@
 import $ from 'jquery';
 import app from '../app';
-import { formatCurrency, convertAndFormatCurrency, convertCurrency, formatPrice } from './currency';
+import {
+  formatCurrency,
+  convertAndFormatCurrency,
+  convertCurrency,
+  formatPrice,
+  getCurrencyValidity,
+  renderFormattedCurrency,
+  renderPairedCurrency,
+} from './currency';
+import {
+  getServerCurrency,
+  renderCryptoIcon,
+  getBlockChainTxUrl,
+  getBlockChainAddressUrl,
+  getCurrencyByCode as getCryptoCurByCode,
+} from '../data/cryptoCurrencies';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
-import {
-  splitIntoRows, getBlockChainBaseUrl, getBlockChainTxUrl, getBlockChainAddressUrl,
-} from './';
+import { splitIntoRows } from './';
 import { tagsDelimiter } from '../utils/selectize';
 import is from 'is_js';
 
@@ -51,11 +64,23 @@ export function formatRating(average, count) {
 
 export const getServerUrl = app.getServerUrl.bind(app);
 
-export {
+const currencyExport = {
   formatPrice,
   formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
+  getCurrencyValidity,
+  getServerCurrency,
+  getCryptoCurByCode,
+  formattedCurrency: renderFormattedCurrency,
+  pairedCurrency: renderPairedCurrency,
+  cryptoIcon: renderCryptoIcon,
+  getBlockChainTxUrl,
+  getBlockChainAddressUrl,
+};
+
+export {
+  currencyExport as currencyMod,
   isHiRez,
   isLargeWidth,
   isSmallHeight,
@@ -63,9 +88,6 @@ export {
   getListingBgImage,
   upToFixed,
   splitIntoRows,
-  getBlockChainBaseUrl,
-  getBlockChainTxUrl,
-  getBlockChainAddressUrl,
   is,
   tagsDelimiter,
 };

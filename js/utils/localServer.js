@@ -49,7 +49,6 @@ export default class LocalServer {
 
   start(commandLineArgs = []) {
     if (this.pendingStop) {
-      this._lastStartCommandLineArgs = commandLineArgs;
       this.pendingStop.once('exit', () => this.startAfterStop(commandLineArgs));
       const debugInfo = 'Attempt to start server while an existing one' +
         ' is the process of shutting down. Will start after shut down is complete.';
@@ -67,7 +66,7 @@ export default class LocalServer {
     }
 
     this._isRunning = true;
-    let serverStartArgs = ['start', ...commandLineArgs];
+    let serverStartArgs = ['start', '-t', ...commandLineArgs];
 
     // wire in our auth cookie
     if (global.authCookie) {

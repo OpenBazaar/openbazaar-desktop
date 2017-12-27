@@ -7,26 +7,22 @@
     <div class="statusIconCol clrT"><span class="clrBr ion-ios-rewind"></span></div>
     <div class="flexExpand tx5">
       <%
-        let priceFrag = ob.convertAndFormatCurrency(ob.value,
-          'BTC', ob.userCurrency, { useBtcSymbol: false });
-
-        if (ob.userCurrency !== 'BTC') {
-          priceFrag = ob.polyT('fiatBtcPairing', {
-            fiatAmount: priceFrag,
-            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
-          });
-        }
+        const priceFrag = ob.currencyMod.pairedCurrency(
+          ob.value,
+          ob.currencyMod.getServerCurrency().code,
+          ob.userCurrency
+        );
 
         let infoLine = '';
 
         if (ob.buyerName) {
           infoLine = ob.polyT(`orderDetail.summaryTab.payment.refundedTo`, {
-            fiatBtcPairing: priceFrag,
+            currencyPairing: priceFrag,
             payeeName: ob.buyerName,
           });
         } else {
           infoLine = ob.polyT(`orderDetail.summaryTab.payment.refunded`, {
-            fiatBtcPairing: priceFrag,
+            currencyPairing: priceFrag,
           });        
         }
       %>
@@ -47,7 +43,7 @@
         %>
         <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
         <div class="" style="flex-shrink: 0;max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
+          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
         </div>
       </div>
     </div>

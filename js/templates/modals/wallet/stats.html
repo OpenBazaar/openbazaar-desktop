@@ -11,26 +11,29 @@
     }
   };
 
-  const formattedBtc = ob.formatUnitlessBtc(ob.balance);
-  const btcTextSize = getTextSize(formattedBtc);
-  const formattedFiat = ob.convertAndFormatCurrency(ob.balance, 'BTC', ob.userCurrency);
+  const serverCur = ob.currencyMod.getServerCurrency().code;
+  const formattedCrypto = ob.formatUnitlessCryptoAmount(ob.balance);
+  const cryptoTextSize = getTextSize(formattedCrypto);
+  const formattedFiat = ob.currencyMod.convertAndFormatCurrency(ob.balance, serverCur, ob.userCurrency);
+  const userCurrencyValidity = ob.currencyMod.getCurrencyValidity(ob.userCurrency);
+
   const fiatTextSize = getTextSize(formattedFiat);
 %>
 <div class="rowLg flexColRows gutterV">
   <div>
-    <div class="clrTEmph1 <%= btcTextSize %> txB"><%= formattedBtc %></div>
-    <div><%= ob.polyT('wallet.btcCurrencyLabel') %></div>
+    <div class="clrTEmph1 <%= cryptoTextSize %> txB"><%= formattedCrypto %></div>
+    <div><%= ob.polyT(`cryptoCurrencies.${serverCur}`) %></div>
   </div>
-  <% if (ob.userCurrency !== 'BTC') { %>
-  <div>
-    <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
-    <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: ob.userCurrency }) %></div>
-  </div>
+  <% if (userCurrencyValidity === 'VALID' && ob.userCurrency !== serverCur) { %>
+    <div>
+      <div class="clrTEmph1 <%= fiatTextSize %> txB"><%= formattedFiat %></div>
+      <div><%= ob.polyT('wallet.valueInCurrencyLabel', { currency: ob.userCurrency }) %></div>
+    </div>
   <% } %>
   <div>
     <% if (typeof ob.transactionCount !== 'undefined') { %>
-    <div class="clrTEmph1 tx2 txB"><%= ob.transactionCount %></div>
-    <div><%= ob.polyT('wallet.transactionsLabel') %></div>
+      <div class="clrTEmph1 tx2 txB"><%= ob.transactionCount %></div>
+      <div><%= ob.polyT('wallet.transactionsLabel') %></div>
     <% } %>
   </div>            
 </div>

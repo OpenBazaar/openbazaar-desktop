@@ -25,7 +25,7 @@
       <div class="reportOverlay overlayPanel padSm js-reportBtnWrapper"></div>
     <% } %>
   </div>
-  <div class="pad clrBr borderTop posR">
+  <div class="pad clrBr borderTop infoArea">
     <% if (ob.vendor) { %>
       <a class="userIconWrapper js-userIcon" href="#<%= `${ob.vendor.peerID}/store` %>">
         <% const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : ''; %>
@@ -50,7 +50,16 @@
         <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
       </div>
       <div class="txB">
-        <%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %>
+        <%= 
+          ob.currencyMod.formattedCurrency(
+            ob.price.amount,
+            ob.price.currencyCode,
+            ob.displayCurrency,
+            {
+              toolTipClass: 'toolTipTop',
+            }
+          )
+        %>
       </div>
     </div>
   </div>
@@ -81,7 +90,18 @@
       </div>
       <% } %>
       <div class="priceCol flexNoShrink">
-        <span class="txB"><%= ob.convertAndFormatCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></span>
+        <span class="txB">
+          <%= 
+            ob.currencyMod.formattedCurrency(
+              ob.price.amount,
+              ob.price.currencyCode,
+              ob.displayCurrency,
+              {
+                toolTipClass: 'toolTipTop',
+              }
+            )
+          %>
+        </span>
       </div>
       <div class="flexNoShrink">
         <a class='btn clrP clrBr'><%= ob.polyT('listingCard.btnDetails') %></a>

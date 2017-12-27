@@ -313,8 +313,16 @@
 }
 //elements should have standard spacing between them vertically. There shouldn't be more than a few row classes.
 
+#ov1 .pad0 {
+  padding: 0;
+}
+
 #ov1 .padTop0 {
   padding-top: 0;
+}
+
+#ov1 .padBot0 {
+  padding-bottom: 0;
 }
 
 .rowTn {

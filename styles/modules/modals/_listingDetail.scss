@@ -44,7 +44,8 @@
       }
 
       .tagWrapper {
-
+        overflow: auto; // clear floats
+        
         .tag {
           float: left;
           margin: 0 $padSm $padSm 0;
@@ -52,6 +53,13 @@
           font-weight: 400;
           padding: 0 $pad;
         }
+      }
+
+      .acceptedCurName {
+        // line height makes the text not vertically centered - want to preserve line height in
+        // the unlikely case a crypto name is so long that it needs to wrap
+        position: relative;
+        top: 1px;
       }
 
       .descriptionSection {
