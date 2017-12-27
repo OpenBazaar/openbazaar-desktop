@@ -558,9 +558,18 @@ export default class extends BaseVw {
       },
     });
 
-    this.vendor.getProfile()
-      .done(profile =>
-        this.fulfilled.setState({ storeName: profile.get('name') }));
+    if (app.profile.id === this.vendor.id) {
+      this.fulfilled.setState({ noteFromLabel:
+        app.polyglot.t('orderDetail.summaryTab.fulfilled.yourNoteLabel') });
+    } else {
+      this.vendor.getProfile()
+        .done(profile => {
+          this.fulfilled.setState({
+            noteFromLabel: app.polyglot.t('orderDetail.summaryTab.fulfilled.noteFromStoreLabel',
+              { store: profile.get('name') }),
+          });
+        });
+    }
 
     this.$subSections.prepend(this.fulfilled.render().el);
 

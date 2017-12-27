@@ -94,7 +94,6 @@ export default class extends BaseView {
         valueField: 'value',
         options: variantOptions,
         items: variantItems,
-        createOnBlur: true,
         create: input => ({
           name: input,
           value: input,
@@ -103,7 +102,7 @@ export default class extends BaseView {
           option: data => `<div>${data.name}</div>`,
           item: data => `<div>${data.name}</div>`,
         },
-      });
+      }).on('change', () => this.trigger('choiceChange', { view: this }));
     });
 
     return this;
