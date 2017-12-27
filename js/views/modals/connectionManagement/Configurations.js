@@ -35,7 +35,8 @@ export default class extends baseVw {
       }
     });
 
-    this.listenTo(serverConnectEvents, 'connecting', e => {
+    this.listenTo(serverConnectEvents, 'connecting local-server-stopped', e => {
+      this.$statusBarOuterWrap.removeClass('hide');
       this.statusBarMessage.setState({
         status: 'connecting',
         msg: app.polyglot.t('connectionManagement.statusBar.connectAttemptMsg', {
@@ -51,6 +52,15 @@ export default class extends baseVw {
         } else {
           configVw.setState({ status: 'not-connected' });
         }
+      });
+    });
+
+    this.listenTo(serverConnectEvents, 'waiting-for-local-server-stop', e => {
+      this.statusBarMessage.setState({
+        status: 'connecting',
+        msg: app.polyglot.t('connectionManagement.statusBar.waitForServerStopMsg', {
+          serverName: e.stoppingServer.get('name'),
+        }),
       });
     });
 
@@ -111,7 +121,7 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-btnNew': 'onNewClick',
-      'click .js-editDefaultConfig': 'onClickEditDefaultConfig',
+      'click .js-editServer': 'onClickEditServer',
     };
   }
 
@@ -151,7 +161,7 @@ export default class extends baseVw {
     } else if (e.reason === 'tor-not-configured') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotConfigured', {
         serverName: e.server.get('name'),
-        editLink: '<a class="js-editDefaultConfig">' +
+        editLink: `<a class="js-editServer" data-server-id="${e.server.id}">` +
           `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
         links,
       });
@@ -162,13 +172,13 @@ export default class extends baseVw {
         // open, we won't auto send them to the config form, since it may interrupt something else
         // they may be doing.
         this.trigger('editConfig', {
-          model: this.collection.defaultConfig,
+          model: this.collection.activeServer,
         });
       }
     } else if (e.reason === 'tor-not-available') {
       msg = app.polyglot.t('connectionManagement.statusBar.errorTorNotAvailable', {
         serverName: e.server.get('name'),
-        editLink: '<a class="js-editDefaultConfig">' +
+        editLink: `<a class="js-editServer" data-server-id="${e.server.id}">` +
           `${app.polyglot.t('connectionManagement.statusBar.editLink')}</a>`,
         links,
       });
@@ -179,7 +189,7 @@ export default class extends baseVw {
         // open, we won't auto send them to the config form, since it may interrupt something else
         // they may be doing.
         this.trigger('editConfig', {
-          model: this.collection.defaultConfig,
+          model: this.collection.activeServer,
         });
       }
     } else if (eventName === 'disconnected') {
@@ -202,7 +212,7 @@ export default class extends baseVw {
       status: 'connect-attempt-failed',
       msg,
     });
-    this.$statusBarOuterWrap.removeClass('hide');
+    // this.$statusBarOuterWrap.removeClass('hide');
 
     this.getConfigVw(e.server.id)
       .setState({ status: 'connect-attempt-failed' });
@@ -212,10 +222,15 @@ export default class extends baseVw {
     this.trigger('newClick');
   }
 
-  onClickEditDefaultConfig() {
-    this.trigger('editConfig', {
-      model: this.collection.defaultConfig,
-    });
+  onClickEditServer(e) {
+    const serverId = e.target.getAttribute('data-server-id');
+
+    if (serverId !== null) {
+      const model = this.collection.get(serverId);
+      if (model) {
+        this.trigger('editConfig', { model });
+      }
+    }
   }
 
   onConfigConnectClick(e) {

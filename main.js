@@ -181,6 +181,12 @@ function createWindow() {
         shell.openExternal('https://docs.openbazaar.org');
       },
     },
+    {
+      label: 'Support',
+      click() {
+        shell.openExternal('https://openbazaar.org/support');
+      },
+    },
   ];
 
   if (isBundledApp) {
@@ -621,7 +627,7 @@ ipcMain.on('active-server-set', (e, server) => {
         `Basic ${new Buffer(`${un}:${pw}`).toString('base64')}`;
     }
 
-    if (global.authCookie && server.default) {
+    if (global.authCookie && server.builtIn) {
       details.requestHeaders.Cookie = `OpenBazaar_Auth_Cookie=${global.authCookie}`;
     }
 

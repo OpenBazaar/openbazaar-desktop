@@ -91,6 +91,50 @@
   }
 
   .configurationForm {
+    form {
+      label {
+        line-height: 2rem;
+        margin-bottom: $padTn;
+      }
+
+      .torDetails {
+        display: none;
+      }
+
+      .useTorCheckboxSection {
+        margin-bottom: $padMd;
+      }
+
+      &.useTor {
+        .torDetails {
+          display: block;
+        }
+
+        .useTorCheckboxSection {
+          margin-bottom: 0;
+        }        
+      }
+
+      .currencyRadio {
+        .btnRadio.inUse {
+          pointer-events: none;
+          cursor: default;
+
+          .inUseText {
+            i {
+              pointer-events: auto;
+            }
+          }
+
+          input,
+          label::before,
+          .coinInfo {
+            @include disabled();
+          }
+        }
+      }
+    }
+        
     .torMessage {
       margin-top: 15px;
       padding-left: 33px;

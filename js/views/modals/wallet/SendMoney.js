@@ -39,8 +39,13 @@ export default class extends baseVw {
       ...this.model.toJSON(),
       feeLevel: app.localSettings.get('defaultTransactionFee'),
     }).fail(jqXhr => {
-      openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'),
-        jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
+      let reason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+
+      if (reason === 'ERROR_INVALID_ADDRESS') {
+        reason = app.polyglot.t('wallet.sendMoney.errorInvalidAddress');
+      }
+
+      openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'), reason);
     }).always(() => {
       this.saveInProgress = false;
     })

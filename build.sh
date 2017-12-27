@@ -14,6 +14,12 @@ ELECTRONVER=1.7.8
 NODEJSVER=5.1.1
 
 OS="${1}"
+if [ -z "${2}" ]; then
+SERVERTAG='latest'
+else
+SERVERTAG=tags/${2}
+fi
+echo "Building with openbazaar-go/$SERVERTAG"
 
 # Get Version
 PACKAGE_VERSION=$(cat package.json \
@@ -63,6 +69,9 @@ case "$TRAVIS_OS_NAME" in
     npm install -g --save-dev electron-installer-debian --silent
     npm install -g --save-dev electron-installer-redhat --silent
 
+    # Install libgconf2-4
+    sudo apt-get install libgconf2-4
+
     # Install rpmbuild
     sudo apt-get install rpm
 
@@ -72,8 +81,8 @@ case "$TRAVIS_OS_NAME" in
     # Retrieve Latest Server Binaries
     sudo apt-get install jq
     cd temp/
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases/$SERVERTAG > release.txt
+    cat release.txt | jq -r ".assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
     APPNAME="openbazaar2"
@@ -82,9 +91,10 @@ case "$TRAVIS_OS_NAME" in
     electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
+    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/ 
     cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
     mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
+    rm -rf dist/${APPNAME}-linux-ia32/resources/app/.travis
     chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
@@ -102,6 +112,7 @@ case "$TRAVIS_OS_NAME" in
     mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
     cp -rf temp/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go
     mv dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
+    rm -rf dist/${APPNAME}-linux-x64/resources/app/.travis
     chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
 
     echo 'Create debian archive'
@@ -150,8 +161,8 @@ case "$TRAVIS_OS_NAME" in
 
     # Retrieve Latest Server Binaries
     cd temp/
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases/$SERVERTAG > release.txt
+    cat release.txt | jq -r ".assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
     # WINDOWS 32

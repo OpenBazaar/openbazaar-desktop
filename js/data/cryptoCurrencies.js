@@ -3,6 +3,9 @@ import app from '../app';
 import bitcoreLib from 'bitcore-lib';
 import bech32 from 'bech32';
 
+// If a currency does not support fee bumping or you want to disable it, do not provide a
+// feeBumpTransactionSize setting.
+
 const currencies = [
   {
     code: 'BTC',
@@ -12,18 +15,20 @@ const currencies = [
     minDisplayDecimals: 0,
     maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
-    feeBumpTransactionSize: 154,
+    // Not allowing fee bump on BTC right now given the fees.
+    // feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
     icon: 'imgs/cryptoIcons/btcIcon128.png',
+    url: 'https://bitcoin.org/',
     needCoinLink: 'https://openbazaar.org/bitcoin',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
-        `https://testnet.blockexplorer.com/address/${address}` :
+        `https://www.blocktrail.com/tBTC/address/${address}` :
         `https://blockchain.info/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
-        `https://testnet.blockexplorer.com/tx/${txid}` :
+        `https://www.blocktrail.com/tBTC/tx/${txid}` :
         `https://blockchain.info/tx/${txid}`
     ),
     canShapeShiftInto: true,
@@ -53,8 +58,9 @@ const currencies = [
     maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
-    qrCodeText: address => `${address}`,
+    qrCodeText: address => address,
     icon: 'imgs/cryptoIcons/bchIcon128.png',
+    url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/address/${address}` :
@@ -77,6 +83,7 @@ const currencies = [
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
     icon: 'imgs/cryptoIcons/zecIcon128.png',
+    url: 'https://z.cash',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://explorer.testnet.z.cash/address/${address}` :
@@ -175,17 +182,20 @@ export function getServerCurrency() {
 }
 
 /**
- * Will render the icon of the connected servers crypto currency. If there is not currenctly
- * an icon for that currency, it will render an empty string.
+ * Will render the icon for the crypto currency provided in options.code. If not provided, it will
+ * attempt to use the server currency. If the currency ends up not having an icon, a blank string
+ * will be returned.
  */
 export function renderCryptoIcon(options = {}) {
-  if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
-    throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
+  let code = options.code;
+
+  if (!code) {
+    const serverCur = getServerCurrency();
+    code = serverCur && serverCur.code || '';
   }
 
-  const serverCur = getServerCurrency();
   const opts = {
-    code: serverCur && serverCur.code || '',
+    code,
     className: '',
     attrs: {},
     ...options,

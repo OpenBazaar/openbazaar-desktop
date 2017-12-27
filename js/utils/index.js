@@ -55,11 +55,18 @@ export function splitIntoRows(items, itemsPerRow) {
 }
 
 // http://stackoverflow.com/a/2686098/632806
-// todo: unit test
-export function abbrNum(_number, _decPlaces = 1) {
+export function abbrNum(_number, _maxDecPlaces = 1) {
   // 2 decimal places => 100, 3 => 1000, etc
-  const decPlaces = Math.pow(10, _decPlaces);
-  let number = _number;
+  const decPlaces = Math.pow(10, _maxDecPlaces);
+  const isNegative = _number < 0;
+  let number = Math.abs(_number);
+  let processed = false;
+  let lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang();
+
+  if (!lang) {
+    console.warn('Unable to get the languages from the local settings. Using en-US.');
+    lang = 'en-US';
+  }
 
   // Enumerate number abbreviations
   const abbrev = ['thousand', 'million', 'billion', 'trillion'];
@@ -81,19 +88,17 @@ export function abbrNum(_number, _decPlaces = 1) {
         i++;
       }
 
-      let lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang();
-
-      if (!lang) {
-        console.warn('Unable to get the languages from the local settings. Using en-US.');
-        lang = 'en-US';
-      }
-
-      number = new Intl.NumberFormat(lang).format(number);
+      number = new Intl.NumberFormat(lang).format(isNegative ? number * -1 : number);
       number = app.polyglot.t(`abbreviatedNumbers.${abbrev[i]}`, { number });
 
       // We are done... stop
+      processed = true;
       break;
     }
+  }
+
+  if (!processed) {
+    number = new Intl.NumberFormat(lang).format(isNegative ? number * -1 : number);
   }
 
   return number;
@@ -196,4 +201,36 @@ export function deparam(queryStr = '') {
   }
 
   return parsed;
+}
+
+// https://github.com/mmalecki/mode-to-permissions/blob/master/lib/mode-to-permissions.js
+export function fileModeToPermissions(fileMode) {
+  let mode = fileMode;
+
+  if (typeof mode === 'object') {
+    // Accept `fs.Stats`.
+    mode = mode.mode;
+  }
+
+  const owner = mode >> 6;
+  const group = (mode << 3) >> 6;
+  const others = (mode << 6) >> 6;
+
+  return {
+    read: {
+      owner: !!(owner & 4),
+      group: !!(group & 4),
+      others: !!(others & 4),
+    },
+    write: {
+      owner: !!(owner & 2),
+      group: !!(group & 2),
+      others: !!(others & 2),
+    },
+    execute: {
+      owner: !!(owner & 1),
+      group: !!(group & 1),
+      others: !!(others & 1),
+    },
+  };
 }

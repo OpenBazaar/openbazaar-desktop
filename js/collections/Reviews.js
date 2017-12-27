@@ -1,5 +1,5 @@
 import { Collection } from 'backbone';
-import BaseModel from '../../models/BaseModel';
+import BaseModel from '../models/BaseModel';
 
 
 export default class extends Collection {

@@ -1,0 +1,26 @@
+.mainContent {
+  padding: $padMd 0;
+
+  form {
+    label {
+      line-height: 2rem;
+      margin-bottom: $padTn;
+    }
+  }
+}
+
+// This is used both in the Wallet Setup modal and the server Configuration Form
+.walletSetupForm {
+  .currencyRadio {
+    & > div {
+      padding: $padSm $padMd;
+      border-style: solid;
+      border-width: 1px;
+      border-bottom-width: 0;
+
+      &:last-child {
+        border-bottom-width: 1px;
+      }
+    }
+  }
+}

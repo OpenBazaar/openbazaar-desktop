@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Unpublished Content",
-    "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
-    "unpublishedConfirmYes": "Yes",
-    "unpublishedConfirmNo": "No",
     "failedRetryTitle": "There was an error retrying the publish.",
     "statusPublishing": "Publishing updates to network…",
     "retryLink": "Retry",
     "statusPublishFailed": "Publishing failed. %{retryLink}",
     "statusPublishComplete": "Publishing complete."
+  },
+  "localServerShutdownDialog": {
+    "title": "Shutting down the built-in server",
+    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
   },
   "follow": {
     "typeFollow": "following",
@@ -25,6 +25,19 @@
   "feeChangeWidget": {
     "btnChange": "change",
     "label": "%{cur} fee:"
+  },
+  "walletSetup": {
+    "heading": "OpenBazaar Wallet Setup",
+    "currencyLabel": "Currency",
+    "currencyHelper": "Choose a currency for your Wallet",
+    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
+    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "zcashBinaryLabel": "Zcash Binary",
+    "fullNodeLink": "here",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "zcashBinaryPlaceholder": "/path/to/zcashd",
+    "btnBrowse": "Browse",
+    "btnNext": "Next"
   },
   "unsupportedCryptoCurDialog": {
     "title": "Unsupported Currency",
@@ -161,6 +174,7 @@
     "sales": "Sales",
     "cases": "Cases",
     "settings": "Settings",
+    "help": "Help",
     "toolTip": {
       "back": "Back",
       "forward": "Forward",
@@ -222,7 +236,8 @@
       "home": "Home",
       "store": "Store",
       "following": "Following",
-      "followers": "Followers"
+      "followers": "Followers",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "No One is Following %{name} Yet",
@@ -267,7 +282,8 @@
       "categoryFilter": {
         "heading": "Category",
         "showMore": "%{smart_count} more… |||| %{smart_count} more…",
-        "showLess": "less"
+        "showLess": "less",
+        "all": "All"
       },
       "toolTip": {
         "contentView": "Toggle view"
@@ -279,6 +295,12 @@
       "following": "Following",
       "followers": "Followers"
     }
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "%{smart_count} review |||| %{smart_count} reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "Loading…",
@@ -371,6 +393,12 @@
         "or": "or",
         "codeCTA": "get involved."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {
@@ -682,7 +710,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Built-in Server",
+    "builtInServerName": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
@@ -695,7 +723,8 @@
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Cancel",
-      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}",
+      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
     },
     "configurations": {
       "tabName": "Configurations",
@@ -739,6 +768,12 @@
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Warning:",
       "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "lblServerType": "Type",
+      "helperServerType": "Select your server type",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
+      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "Are you sure?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
@@ -777,7 +812,8 @@
       "notePlaceholder": "Only seen by you",
       "sendBtn": "Send",
       "clear": "Clear",
-      "sendPaymentFailDialogTitle": "Unable to send payment"
+      "sendPaymentFailDialogTitle": "Unable to send payment",
+      "errorInvalidAddress": "The payment address is not valid."
     },
     "spendConfirmBox": {
       "heading": "Are you sure?",
@@ -1614,7 +1650,10 @@
     "invalidIp": "This does not appear to be a valid IP address.",
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
+    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideZcashBinaryPath": "Please provide a value.",
+    "invalidZcashBinaryPath": "The provided path must be to be a valid exectuable file."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",

@@ -62,7 +62,8 @@
   //a vertical divider. Use when you need to separate things without adding a border to one of them
   //use a color class for the background color
   width: 1px;
-  height: 100%;
+  flex-shrink: 0;
+  align-self: stretch;
 }
 
 .rowDivH {
@@ -312,8 +313,16 @@
 }
 //elements should have standard spacing between them vertically. There shouldn't be more than a few row classes.
 
+#ov1 .pad0 {
+  padding: 0;
+}
+
 #ov1 .padTop0 {
   padding-top: 0;
+}
+
+#ov1 .padBot0 {
+  padding-bottom: 0;
 }
 
 .rowTn {

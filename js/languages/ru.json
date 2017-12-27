@@ -1,6 +1,6 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Сбой Публикации",
+    "unpublishedConfirmTitle": "Неопубликованный материал",
     "unpublishedConfirmBody": "У вас есть не опубликованный материал. Последняя не сохраненная информация будет не доступна для других пользователей, если вы закончите сейчас. Вы уверены что хотите закончить?",
     "unpublishedConfirmYes": "Да",
     "unpublishedConfirmNo": "Нет",
@@ -51,7 +51,6 @@
   "addressBarPlaceholder": "Напишите @handle, OpenBazaar ID или ищите по ключевому слову",
   "testnet": "Режим Тестирования",
   "testnetTooltip": "В Режиме Тестирования используются testnet монеты, которые предназначены только для режима тестирования.",
-  "betaTooltip": "OpenBazaar в настоящее время находится в стадии бета-тестирования. Обязательно создайте резервную копию своего кошелька и будьте осторожны при трате больших сумм.",
   "tabMenuHeading": "МЕНЮ",
   "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
   "copiedToClipboard": "Скопировано в буфер",
@@ -69,7 +68,8 @@
   "connectedPeersPage": {
     "heading": "Подключенные участники",
     "totalPeers": "%{totalPeers} Найдено",
-    "noResults": "Никто не подключен"
+    "noResults": "Никто не подключен",
+    "loadMore": "Загрузить больше"
   },
   "emojis": {
     "groups": {
@@ -109,6 +109,7 @@
     }
   },
   "notifications": {
+    "title": "Уведомления",
     "noResults": "Уведомления не найдены.",
     "text": {
       "order": "%{buyerName} совершил покупку %{listingTitle}.",
@@ -218,7 +219,7 @@
       "followingFetchError": "Не удается получить следующий список.",
       "btnRetry": "Обновить"
     },
-    "getFollowingError": "There was an error when determining if this user follows you.",
+    "getFollowingError": "Произошла ошибка при определении, подписан ли данный пользователь на Вас.",
     "modAddError": "Произошла ошибка при добавлении этого модератора.  %{errMsg}",
     "modRemoveError": " Произошла ошибка при удалении модератора. %{errMsg}",
     "storeWelcomeCalloutTitle": "Добро пожаловать в ваш магазин!",
@@ -310,6 +311,7 @@
     "client": "Клиент",
     "server": "Сервер",
     "btnUpdateCheck": "Проверить обновления",
+    "downloadLatest": "Download Latest",
     "donationsTab": {
       "linkText": "Пожертвования",
       "sectionHeader": "Пожертвования ",
@@ -431,7 +433,8 @@
       "statusAddingAddress": "Добавление адреса %{name}…",
       "statusAddAddressComplete": "Адрес %{name} добавлен.",
       "statusAddAddressFailed": "Не удалось добавить адрес %{name}.",
-      "addAddressErrorAlertTitle": "Не удалось добавить адрес %{name}"
+      "addAddressErrorAlertTitle": "Не удалось добавить адрес %{name}",
+      "btnDelete": "Удалить"
     },
     "advancedTab": {
       "sectionName": "Сервер",
@@ -625,7 +628,7 @@
       "accountPlaceholder": "Facebook",
       "usernamePlaceholder": "Handle или ссылка на страницу",
       "add": "+ Добавить аккаунт социальной сети",
-      "limitError": "You can't have more than %{max} social account. |||| You can't have more than %{max} social accounts."
+      "limitError": "Вы не можете иметь более чем %{max} аккаунтов социальных сетей. |||| Вы не можете иметь более чем %{max} аккаунтов социальных сетей."
     },
     "themesSection": "Тема",
     "standardThemes": "Стандартные темы",
@@ -645,7 +648,7 @@
       "state": "Страна / Область / Регион",
       "country": "Страна",
       "postalCode": "Почтовый индекс ",
-      "notes": "Delivery Notes"
+      "notes": "Накладные"
     },
     "statusSaving": "Сохранение настроек...",
     "statusSaveFailed": "Ошибка при сохранении настроек.",
@@ -670,13 +673,13 @@
       "viewLocalServerDebugLogLink": "Журнал отладки",
       "errorConnectionLost": "%{errorPreface} Соединение с %{serverName} было потеряно. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Ошибка соединения с %{serverName}. Сервер не отвечает. %{links}",
-      "errorAuthFailed": "%{errorPreface} Failed to connect to %{serverName}. The username and / or password are incorrect. %{links}",
+      "errorAuthFailed": "%{errorPreface} не удалось подключиться к %{serverName}. Неверный логин и/или пароль. %{links}",
       "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
       "editLink": "изменить",
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Отмена",
-      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Попытка подключения к %{serverName}. %{cancelConnAttempt}"
     },
     "configurations": {
       "tabName": "Конфигурация",
@@ -689,7 +692,7 @@
       "statusConnected": "Подключено",
       "deleteConfirm": {
         "heading": "Вы уверены?",
-        "body": "The server configuration will be deleted. This will not delete the actual server.",
+        "body": "Конфигурация сервера будет удалена. Это не приведет к удалению работающего сервера.",
         "btnCancel": "Отмена",
         "btnDelete": "Yes, delete"
       }
@@ -743,13 +746,13 @@
     "btnReceiveMoney": "Принять деньги",
     "btnSendMoney": "Отослать деньги",
     "btcCurrencyLabel": "Биткойн",
-    "valueInCurrencyLabel": "Value in %{currency}",
+    "valueInCurrencyLabel": "Стоимость в %{currency}",
     "transactionsLabel": "Операции",
     "receiveMoney": {
       "title": "Принять деньги",
       "needBitcoin": "Нужны Биткоины?",
       "btnCancel": "Отмена",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnFundViaShapeshift": "Оплатить с помощью ShapeShift"
     },
     "sendMoney": {
       "toLabel": "Для",
@@ -797,8 +800,8 @@
       },
       "noTransactionsPlaceholder": "У Вас нет транзакций.",
       "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
-      "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
-      "recoverySeedLink": "backup your wallet recovery seed",
+      "backupWalletWarningTitle": "Резервное копирование фразы восстановления кошелька",
+      "recoverySeedLink": "сохраните Вашу фразу восстановления кошелька",
       "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
     }
   },
@@ -825,7 +828,7 @@
     "type": "Тип: %{type}",
     "condition": "Состояние: %{condition}",
     "tags": "Теги",
-    "noTags": "No tags entered",
+    "noTags": "Теги не указаны.",
     "buyNow": "КУПИТЬ СЕЙЧАС",
     "description": "Описание",
     "noDescription": "Описание не указано",
@@ -840,12 +843,15 @@
     "shipTo": "Отправка в:",
     "noShippingFound": "Этот товар не поставляется в выбранную страну.",
     "localPickup": "This option is for local pickup only.",
+    "deliveryTime": "Срок доставки",
+    "priceFirst": "Price (first item)",
+    "priceSecond": "Price (additional item)",
     "allCountries": "Любая страна",
     "returnToStore": "Возврат в магазин",
     "goToStore": "Перейти в магазин",
     "confirmDelete": {
       "title": "Вы уверены?",
-      "body": "Once it's deleted, it's gone forever.",
+      "body": "После удаления это исчезнет навсегда.",
       "btnCancel": "Отмена",
       "btnConfirm": "Да, Удалить"
     },
@@ -870,41 +876,41 @@
     "deleting": "Удаление...",
     "deleted": "Удалено ",
     "editListingTooltip": "Редактировать товар",
-    "cloneListingTooltip": "Clone listing",
-    "deleteListingTooltip": "Delete listing",
+    "cloneListingTooltip": "Дублировать товар",
+    "deleteListingTooltip": "Удалить товар.",
     "confirmDelete": {
       "title": "Вы уверены?",
-      "body": "Once it's deleted, it's gone forever.",
+      "body": "После удаления это исчезнет навсегда.",
       "btnCancel": "Отмена",
       "btnConfirm": "Да, Удалить"
     },
     "editFetchErrorDialog": {
-      "title": "There was an error retrieving the listing.",
-      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
+      "title": "Произошла ошибка загрузки товара.",
+      "bodyNotFound": "Листинг не найден. Он мог быть удален создателем."
     }
   },
   "listingDelete": {
-    "deletingListing": "Deleting listing %{listing}…",
-    "deletedListing": "Listing %{listing} deleted.",
-    "deletedFailedStatusMsg": "Unable to delete listing %{listing}.",
-    "deletedFailedDialogTitle": "Unable to delete listing",
-    "deletedFailedDialogBody": "There was an error deleting listing %{listing}.",
-    "deletedFailedDialogBodyWithReason": "There was an error deleting listing %{listing}: %{reason}",
+    "deletingListing": "Удаление товара %{listing}…",
+    "deletedListing": "Товар %{listing} удален.",
+    "deletedFailedStatusMsg": "Невозможно удалить товар %{listing}.",
+    "deletedFailedDialogTitle": "Не удается удалить товар",
+    "deletedFailedDialogBody": "Произошла ошибка при удалении товара %{listing}.",
+    "deletedFailedDialogBodyWithReason": "Произошла ошибка при удалении товара %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} was not found. It was likely already deleted.",
     "deleteFailedBtnOk": "Ок"
   },
   "listingReport": {
-    "btnTip": "Report this listing",
+    "btnTip": "Пожаловаться на товар",
     "btnTipReported": "This listing was reported",
-    "title": "Report Listing",
-    "message": "Why are you reporting this listing?",
-    "reasonOffensive": "Offensive Content",
+    "title": "Пожаловаться на листинг",
+    "message": "Какова причина жалобы ?",
+    "reasonOffensive": "Неприличное содержание",
     "reasonFraud": "Fraudulent or Inaccurate",
-    "reasonIllegal": "Illegal in my Area",
-    "reasonOther": "Other",
-    "reasonOtherPlaceholder": "Explain why...",
+    "reasonIllegal": "Нелегальный на моей территории",
+    "reasonOther": "Другой",
+    "reasonOtherPlaceholder": "Объясните почему...",
     "submit": "Подтвердить",
-    "errorTitle": "Your report could not be submitted due to an error.",
+    "errorTitle": "Ваша жалоба не была опубликована из-за ошибки.",
     "error404": "The report url returned a 404 error, it could not be reached.",
     "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
     "closeBtn": "Закрыть"
@@ -912,6 +918,7 @@
   "editListing": {
     "nsfwYes": "Да",
     "nsfwNo": "Нет",
+    "nsfwLabel": "Контент для взрослых (NSFW, 18+, и т. д.)",
     "sectionNames": {
       "general": "Общий",
       "photos": "Фотографии",
@@ -920,7 +927,7 @@
       "tags": "Теги",
       "tagsDetailed": "Tags (For getting your listing discovered)",
       "category": "Категория",
-      "categoryDetailed": "Category (For organizing your store)",
+      "categoryDetailed": "Категория (Для организации Вашего магазина)",
       "variants": "Варианты",
       "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
       "inventory": "Inventory",
@@ -936,13 +943,13 @@
     "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Something descriptive that clearly explains what you're selling",
-    "helperType": "Choose from 3 types",
+    "helperType": "Выберите из трех видов",
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
-    "helperSKU": "A unique identifier for your listing",
+    "helperSKU": "Уникальный идентификатор для Вашего листинга",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
-    "helperPrice": "Set your price in Dollars, Yuan, Bitcoin, anything",
+    "helperPrice": "Укажите Вашу цену в долларах, юанях, биткоинах, других валютах",
     "helperCondition": "The overall condition of your listing",
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "Добавьте больше тегов. Введите имя тега, нажмите enter, повторите.",
@@ -950,7 +957,7 @@
     "helperReturnPolicy": "Если оставить пустым, будет отображаться \"Политика возвратов не указана\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
     "createListingLabel": "Создать товар",
-    "editListingLabel": "Edit Listing",
+    "editListingLabel": "Редактировать товар",
     "title": "Название",
     "type": "Тип",
     "visibility": "Обзор",
@@ -967,12 +974,12 @@
     "btnAddReturnPolicy": "Добавить политику возвратов",
     "btnTermsAndConditions": "Добавить условия",
     "btnAddCoupon": "Добавить Купон",
-    "primaryPhoto": "Основное фото",
+    "primaryPhoto": "Главное фото",
     "viewListingLink": "Просмотр товара",
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
       "shippingDestinations": "Destinations",
-      "regionsPlaceholder": "Enter countries…",
+      "regionsPlaceholder": "Введите страны...",
       "nameLabel": "Option Title",
       "namePlaceholder": "e.g. USA Shipping, International, etc",
       "typeLabel": "Тип",
@@ -988,7 +995,8 @@
         "namePlaceholder": "e.g. Standard, Express, Overnight",
         "estimatedDeliveryLabel": "Est. Delivery Time",
         "estimatedDeliveryPlaceholder": "например, 5-7 дней",
-        "priceLabel": "Цена",
+        "priceLabel": "Price (first item)",
+        "additionalItemPriceLabel": "Price (additional item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Добавить услугу"
       },
@@ -1010,9 +1018,9 @@
       }
     },
     "variants": {
-      "btnAddVariant": "Add Variant",
+      "btnAddVariant": "Добавить вариант",
       "btnDeleteVariant": "Удалить",
-      "addVariant": "+ Add Variant",
+      "addVariant": "+ Добавить вариант",
       "titleLabel": "Название",
       "titlePlaceholder": "например, размер, цвет, материал и т. д.",
       "choicesLabel": "Ассортимент",
@@ -1026,16 +1034,19 @@
       "trackSelectOption": "Track Inventory",
       "doNotTrackHelperText": "Consumers can purchase as much as they'd like",
       "trackByFixedHelperText": "The quantity will decrement until it reaches 0. It will then display as sold out.",
-      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination"
+      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
+      "quantity": "Количество"
     },
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, и т. д.",
       "unlimitedQuantityLabel": "unlimited",
-      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice."
+      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
+      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
-      "title": "You have unsaved changes",
+      "title": "Имеются несохраненные изменения",
       "bodyCreate": "You have unsaved changes while creating a listing. Are you sure you want to close?",
       "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
       "btnYes": "Да",
@@ -1055,7 +1066,7 @@
     "title": "Сёрфинг",
     "searchBtn": "Поиск",
     "searchPlaceholder": "Введите поисковый запрос или #тег.",
-    "suggestions": "Suggestions",
+    "suggestions": "Предложения",
     "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} listings",
     "sortBy": "Сортировать по",
@@ -1100,7 +1111,7 @@
     },
     "infoScreen": {
       "nameLbl": "Имя",
-      "placeholderName": "Set your name",
+      "placeholderName": "Введите свое имя",
       "descriptionLbl": "Описание",
       "descriptionHelper": "(%{count} максимальное количество символов)",
       "placeholderDescription": "Скажите что-нибудь интересное...",
@@ -1121,7 +1132,7 @@
   },
   "purchase": {
     "purchaseDataChangedPopin": "The data for this listing has changed.",
-    "returnToListing": "Return To Listing",
+    "returnToListing": "Вернуться к товару",
     "optional": "необязательно",
     "shippingTitle": "Доставка",
     "paymentTypeTitle": "Способ платежа",
@@ -1136,7 +1147,7 @@
     "emailPlaceholder": "name@email.com",
     "emailNote": "Альтернативный способ связи с Вами.",
     "couponCode": "Код купона",
-    "couponCodePlaceholder": "Enter code",
+    "couponCodePlaceholder": "Введите код",
     "applyCode": "Применить",
     "code": "\"%{code}\" applied to order",
     "codeErrors": {
@@ -1163,7 +1174,7 @@
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Выберите этого модератора",
     "confirmPayment": {
-      "title": "Everything look good?",
+      "title": "Все выглядит хорошо ?",
       "msg": "If yes, please proceed to the final step.",
       "confirm": "Да",
       "cancel": "Отмена"
@@ -1199,7 +1210,7 @@
       "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
       "send": "Отправить",
       "share": {
-        "title": "Share with friends",
+        "title": "Поделитесь с друзьями",
         "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
         "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
         "postToTwitter": "Опубликовать в Twitter",
@@ -1213,9 +1224,12 @@
       "listing": "Объявление",
       "coupon": "Купон",
       "shipping": "Доставка",
+      "firstItem": "First Item",
+      "additionalItems": "Each Additional Item",
       "options": "Параметры",
-      "subtotal": "Subtotal",
-      "total": "Total (%{quantity})"
+      "subtotal": "Subtotal (%{quantity})",
+      "shippingTotal": "Total Shipping",
+      "total": "Суммарно"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1269,7 +1283,7 @@
       "disputeOpen": "Спор открыт",
       "disputePending": "Dispute Pending",
       "disputeClosed": "Спор закрыт",
-      "completed": "Completed"
+      "completed": "Завершено"
     },
     "sort": {
       "label": "Сортировать по",
@@ -1277,7 +1291,9 @@
       "dateAsc": "Новейший",
       "dateDesc": "Старейший "
     },
-    "placeholderSearch": "Search by Order #, Title or Vendor",
+    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
+    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
     "resetFilters": "Reset filters",
     "transactionsTable": {
       "headers": {
@@ -1297,12 +1313,12 @@
         "PARTIALLY_FULFILLED": "Partially Fulfilled",
         "FULFILLED": "Fulfilled",
         "COMPLETED": "Complete",
-        "CANCELED": "Canceled",
+        "CANCELED": "Отменен",
         "DECLINED": "Declined",
         "REFUNDED": "Возмещено",
         "DISPUTED": "Оспорено",
         "DECIDED": "Decided",
-        "RESOLVED": "Resolved",
+        "RESOLVED": "Решено",
         "PAYMENT_FINALIZED": "Payment Finalized"
       },
       "btnReject": "Отклонить",
@@ -1452,11 +1468,11 @@
           "accepted": "Принято",
           "fulfilled": "Fulfilled",
           "complete": "Complete",
-          "canceled": "Canceled",
+          "canceled": "Отменен",
           "declined": "Declined",
           "refunded": "Возмещено",
           "decided": "Decided",
-          "resolved": "Resolved",
+          "resolved": "Решено",
           "disputed": "Оспорено"
         },
         "heading": "Детали заказа",
@@ -1468,7 +1484,7 @@
         "copyAddress": "Копировать",
         "viewOnMap": "View on map",
         "memo": "Напоминание",
-        "addressNotes": "Delivery Notes",
+        "addressNotes": "Накладные",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "Артикул"
       }
@@ -1557,7 +1573,7 @@
   "smtpModelErrors": {
     "username": {
       "caseEmpty": "Укажите имя пользователя.",
-      "noWhitespace": "The username cannot contain spaces."
+      "noWhitespace": "Имя пользователя не может содержать пробелы."
     },
     "password": "Укажите корректный пароль.",
     "serverAddress": "Укажите корректный URL.",
@@ -1591,7 +1607,7 @@
     "badConditionType": "Данный тип состояния не доступен.",
     "descriptionTooLong": "Описание превышает максимально допустимую длину.",
     "provideAmount": "Пожалуйста, укажите цену.",
-    "provideNumericAmount": "Пожалуйста, укажите цену цифрами.",
+    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "Цена должна быть больше 0",
     "imageRequired": "Укажите хотя бы одно изображение",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
@@ -1609,7 +1625,7 @@
     "percentageLow": "Процентное значение должно быть больше нуля.",
     "percentageHigh": "Вы не можете установить процент выше или равный 100%" ,
     "priceLow": "Цена должна быть больше нуля.",
-    "provideNumericDiscountAmount": "Укажите сумму скидки цифрами.",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
@@ -1623,7 +1639,7 @@
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Пожалуйста, укажите цену.",
     "provideNumericAmount": "Пожалуйста, укажите цену цифрами.",
-    "provideAmountGreaterThanZero": "Цена должна быть больше 0."
+    "provideNonNegativePrice": "The price must be greater than or equal to 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Пожалуйста, предоставьте описание.",
@@ -1634,14 +1650,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage.",
+    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "percentageLow": "Вы не можете установить процентную ставку ниже нуля.",
     "percentageHigh": "Вы не можете установить процент гонорара выше 100%",
     "percentageDecimals": "You cannot set a fee percentage to more than 2 decimal places."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Укажите количество.",
@@ -1661,12 +1677,12 @@
   "spendModelErrors": {
     "provideAddress": "Пожалуйста укажите адрес.",
     "invalidAddress": "Предоставленный адрес не является действительным bitcoin адресом.",
-    "provideAmountNumber": "Укажите количество цифрами.",
+    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "Сумма должна быть больше нуля.",
     "insufficientFunds": "У вас недостаточно средств для отправки такой суммы. Обязательно учтите плату за транзакцию."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "The quantity must be 1 or more",
+    "mustHaveQuantity": "Количество должно быть 1 или больше",
     "quantityMustBeNumber": "The quantity must be a valid number",
     "noItems": "You must make at least one purchase.",
     "missingAddress": "Please choose a valid shipping address.",
@@ -1682,7 +1698,7 @@
   "errorPage": {
     "userNotFoundTitle": "Этот пользователь не может быть найден",
     "userNotFoundMsg": "%{user} не найден в сети. Убедитесь, что используете правильный дескриптор или peerID.",
-    "listingNotFoundTitle": "This Listing Could Not Be Found",
+    "listingNotFoundTitle": "Этот листинг не найден",
     "listingNotFoundLink": "Нажмите здесь, чтобы просмотреть другие объявления в этом магазине.",
     "listingNotFoundMsg": "%{listing} could not be found.",
     "pageNotFoundTitle": "Эта страница не может быть найдена",
@@ -2182,17 +2198,17 @@
     "cy-GB": "Welsh (United Kingdom)",
     "da": "Danish",
     "da-DK": "Danish (Denmark)",
-    "de": "German",
+    "de": "Немецкий",
     "de-AT": "German (Austria)",
     "de-CH": "German (Switzerland)",
-    "de-DE": "German (Germany)",
-    "de-LI": "German (Liechtenstein)",
-    "de-LU": "German (Luxembourg)",
+    "de-DE": "Немецкий (Германия)",
+    "de-LI": "Немецкий (Лихтенштейн) ",
+    "de-LU": "Немецкий (Люксембург)",
     "dv": "Divehi",
     "dv-MV": "Divehi (Maldives)",
     "el": "Greek",
     "el-GR": "Greek (Greece)",
-    "en": "English",
+    "en": "Английский",
     "en-AU": "English (Australia)",
     "en-BZ": "English (Belize)",
     "en-CA": "English (Canada)",
@@ -2206,8 +2222,8 @@
     "en-US": "English (United States)",
     "en-ZA": "English (South Africa)",
     "en-ZW": "English (Zimbabwe)",
-    "eo": "Esperanto",
-    "es": "Spanish",
+    "eo": "Эсперанто",
+    "es": "Испанский",
     "es-AR": "Spanish (Argentina)",
     "es-BO": "Spanish (Bolivia)",
     "es-CL": "Spanish (Chile)",
@@ -2215,7 +2231,7 @@
     "es-CR": "Spanish (Costa Rica)",
     "es-DO": "Spanish (Dominican Republic)",
     "es-EC": "Spanish (Ecuador)",
-    "es-ES": "Spanish (Spain)",
+    "es-ES": "Испанский (Испания)",
     "es-GT": "Spanish (Guatemala)",
     "es-HN": "Spanish (Honduras)",
     "es-MX": "Spanish (Mexico)",
@@ -2231,7 +2247,7 @@
     "et-EE": "Estonian (Estonia)",
     "eu": "Basque",
     "eu-ES": "Basque (Spain)",
-    "fa": "Farsi",
+    "fa": "Фарси",
     "fa-IR": "Farsi (Iran)",
     "fi": "Финский",
     "fi-FI": "Финский (Финляндия)",
@@ -2339,8 +2355,8 @@
     "sv": "Шведский",
     "sv-FI": "Шведский (Финляндия)",
     "sv-SE": "Шведский (Швеция)",
-    "sw": "Swahili",
-    "sw-KE": "Swahili (Kenya)",
+    "sw": "Суахили",
+    "sw-KE": "Суахили (Кения)",
     "syr": "Сирийский",
     "syr-SY": "Сирийский (Сирия)",
     "ta": "Tamil",

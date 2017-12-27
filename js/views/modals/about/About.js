@@ -7,6 +7,7 @@ import BaseModal from '../BaseModal';
 import Story from './Story';
 import Contributors from './Contributors';
 import Donations from './Donations';
+import Help from './Help';
 import License from './License';
 import BTCTicker from '../../BTCTicker';
 
@@ -14,6 +15,7 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
+      initialTab: 'Story',
       ...options,
     };
 
@@ -26,9 +28,10 @@ export default class extends BaseModal {
       Contributors,
       Donations,
       License,
+      Help,
     };
 
-    this.currentTabName = 'Story';
+    this.currentTabName = opts.initialTab;
     this.isBundledApp = remote.getGlobal('isBundledApp');
     this.updatesSupported = remote.getGlobal('updatesSupported');
   }
@@ -53,6 +56,10 @@ export default class extends BaseModal {
 
   selectTab(tabViewName) {
     let tabView = this.tabViewCache[tabViewName];
+
+    if (!tabView && !this.tabViews[tabViewName]) {
+      throw new Error('You are attempting to select an invalid tab.');
+    }
 
     this.$('.js-tab.clrT.active').removeClass('clrT active');
     this.$(`.js-tab[data-tab="${tabViewName}"]`).addClass('clrT active');
