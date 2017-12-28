@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import { remote } from 'electron';
-import '../../utils/velocity';
+import '../../utils/lib/velocity';
 import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';

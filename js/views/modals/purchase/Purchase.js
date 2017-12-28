@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import '../../../lib/select2';
-import '../../../utils/velocity';
+import '../../../utils/lib/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';

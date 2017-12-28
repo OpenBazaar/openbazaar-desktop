@@ -1,5 +1,5 @@
 import { Collection } from 'backbone';
-import LocalStorageSync from '../utils/backboneLocalStorage';
+import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import ServerConfig from '../models/ServerConfig';
 
 export default class extends Collection {

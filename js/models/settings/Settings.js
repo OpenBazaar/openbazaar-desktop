@@ -1,7 +1,7 @@
 import _ from 'underscore';
-import app from '../app';
-import BaseModel from './BaseModel';
-import ShippingAddresses from '../collections/ShippingAddresses';
+import app from '../../app';
+import BaseModel from '../BaseModel';
+import ShippingAddresses from '../../collections/ShippingAddresses';
 import SMTPSettings from './SMTPSettings';
 
 export default class extends BaseModel {

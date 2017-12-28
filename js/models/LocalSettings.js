@@ -1,5 +1,5 @@
 import { remote } from 'electron';
-import LocalStorageSync from '../utils/backboneLocalStorage';
+import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import { Model } from 'backbone';
 import is from 'is_js';
 import { feeLevels } from '../utils/fees';

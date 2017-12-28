@@ -5,7 +5,7 @@ import $ from 'jquery';
 import '../../../lib/whenAll.jquery';
 import { openSimpleMessage } from '../SimpleMessage';
 import 'cropit';
-import { installRichEditor } from '../../../utils/trumbowyg';
+import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import SocialAccounts from './SocialAccounts';
 
 export default class extends baseVw {

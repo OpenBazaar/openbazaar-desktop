@@ -4,7 +4,7 @@ import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
 import '../../../lib/select2';
-import '../../../utils/velocity';
+import '../../../utils/lib/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import {
   getCurrencyValidity,

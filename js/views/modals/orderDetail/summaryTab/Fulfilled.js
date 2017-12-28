@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
-import '../../../../utils/velocity';
+import '../../../../utils/lib/velocity';
 import app from '../../../../app';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';

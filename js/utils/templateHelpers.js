@@ -22,7 +22,7 @@ import {
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows } from './';
-import { tagsDelimiter } from '../utils/selectize';
+import { tagsDelimiter } from '../utils/lib/selectize';
 import is from 'is_js';
 
 export function polyT(...args) {

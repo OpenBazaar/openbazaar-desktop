@@ -1,6 +1,6 @@
 import app from '../../../../app';
 import { clipboard } from 'electron';
-import '../../../../utils/velocity';
+import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import { getServerCurrency } from '../../../../data/cryptoCurrencies';

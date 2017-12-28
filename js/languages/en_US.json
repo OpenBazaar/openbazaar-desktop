@@ -644,6 +644,9 @@
         "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "Blocked"
+    },
     "optional": "optional",
     "language": "Language",
     "country": "Country",

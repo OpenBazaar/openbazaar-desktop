@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { remote } from 'electron';
-import LocalStorageSync from '../utils/backboneLocalStorage';
+import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
 import { getCurrencyByCode as getCryptoCurByCode } from '../data/cryptoCurrencies';
 import { fileModeToPermissions } from '../utils';
