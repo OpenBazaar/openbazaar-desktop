@@ -3,6 +3,7 @@ import { clipboard } from 'electron';
 import '../../../../utils/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
+import { getServerCurrency } from '../../../../data/cryptoCurrencies';
 import {
   completingOrder,
   events as orderEvents,
@@ -405,8 +406,9 @@ export default class extends BaseVw {
       balanceRemaining = this.orderPriceBtc - totalPaid;
     }
 
-    // round to 8 decimal places
-    return Math.round(balanceRemaining * 100000000) / 100000000;
+    // round based on the coins base units
+    const cryptoBaseUnit = getServerCurrency().baseUnit;
+    return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
   }
 
   shouldShowPayForOrderSection() {
@@ -556,9 +558,18 @@ export default class extends BaseVw {
       },
     });
 
-    this.vendor.getProfile()
-      .done(profile =>
-        this.fulfilled.setState({ storeName: profile.get('name') }));
+    if (app.profile.id === this.vendor.id) {
+      this.fulfilled.setState({ noteFromLabel:
+        app.polyglot.t('orderDetail.summaryTab.fulfilled.yourNoteLabel') });
+    } else {
+      this.vendor.getProfile()
+        .done(profile => {
+          this.fulfilled.setState({
+            noteFromLabel: app.polyglot.t('orderDetail.summaryTab.fulfilled.noteFromStoreLabel',
+              { store: profile.get('name') }),
+          });
+        });
+    }
 
     this.$subSections.prepend(this.fulfilled.render().el);
 

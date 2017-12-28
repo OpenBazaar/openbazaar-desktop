@@ -6,6 +6,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import { convertCurrency } from '../../../utils/currency';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -186,7 +187,9 @@ export default class extends BaseModal {
       .done((data, status, xhr) => {
         if (xhr.statusText === 'abort') return;
         const feePerByte = data[app.localSettings.get('defaultTransactionFee').toLowerCase()];
-        const estFee = feePerByte * 184 / 100000000;
+        const serverCurrency = getServerCurrency();
+        const estFee = feePerByte *
+          serverCurrency.averageModeratedTransactionSize / serverCurrency.baseUnit;
         this.minModPrice = estFee * 10;
         this.setState({
           isFetching: false,
@@ -473,12 +476,9 @@ export default class extends BaseModal {
   }
 
   isModAllowed() {
-    let btcTotal = this.total;
     const cur = this.listing.get('metadata').get('pricingCurrency');
-    if (cur !== 'BTC') {
-      btcTotal = convertCurrency(btcTotal, cur, 'BTC');
-    }
-    const allowModeration = (btcTotal >= this.minModPrice) && !!this.moderatorIDs.length;
+    const total = convertCurrency(this.total, cur, getServerCurrency().code);
+    const allowModeration = (total >= this.minModPrice) && !!this.moderatorIDs.length;
     this.moderationOn(allowModeration);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }

@@ -1,3 +1,4 @@
+<% const serverCurCode = ob.currencyMod.getServerCurrency().code %>
 <div class="flex gutterHSm clrT <% if (ob.status === 'CONFIRMED') print('confirmedTransaction') %>">
   <%
     let statusIcon = 'ion-ios-checkmark-empty';
@@ -17,38 +18,30 @@
   <div class="statusIconCol <%= statusIconClasses %>"><span class="<%= statusIcon %>"></span></div>
   <div class="flexExpand tx5">
     <%
-      let priceFrag = ob.convertAndFormatCurrency(ob.value < 0 ? ob.value * -1 : ob.value,
-        'BTC', ob.userCurrency, { useBtcSymbol: false });
+      let priceFrag = ob.currencyMod.pairedCurrency(
+        Math.abs(ob.value),
+        serverCurCode,
+        ob.userCurrency
+      );
 
-      if (ob.value > 0) {
-        priceFrag = `+${priceFrag}`;
-      } else if (ob.value < 0) {
-        priceFrag = `-${priceFrag}`;
-      }
-
-      if (ob.userCurrency !== 'BTC') {
-        priceFrag = ob.polyT('fiatBtcPairing', {
-          fiatAmount: priceFrag,
-          btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
-        });
-      }
+      priceFrag = ob.value < 0 ? `-${priceFrag}` : `+${priceFrag}`;
 
       let infoLine = '';
 
       if (ob.value > 0) {
         infoLine = ob.polyT('wallet.transactions.transaction.incomingText', {
-          fiatBtcPairing: `<span class="txB">${priceFrag}</span>`,
+          currencyPairing: `<span class="txB">${priceFrag}</span>`,
         });
       } else {
-        const fiatBtcPairing = `<span class="txB">${priceFrag}</span>`;
+        const currencyPairing = `<span class="txB">${priceFrag}</span>`;
 
         if (ob.address) {
           infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
-            fiatBtcPairing,
+            currencyPairing,
             address: `<span class="toAddress noOverflow clrTEmph1">${ob.address}</span>`,
           });
         } else {
-          infoLine = fiatBtcPairing;
+          infoLine = currencyPairing;
         }
       }
     %>
@@ -76,8 +69,8 @@
   <div class="col">
     <div class="flexHRight">
       <div class="btnStrip">
-        <a class="btn clrP clrBr clrSh2" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
-        <% if (ob.canBumpFee && ob.status === 'STUCK') { %>
+        <a class="btn clrP clrBr clrSh2" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
+        <% if (ob.allowFeeBump) { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
             btnText: ob.polyT('wallet.transactions.transaction.retryTransactionBtn')
@@ -96,26 +89,22 @@
     <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchError || '' }) %></p>
     <a class="js-retryFeeFetch clrTEm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnRetry') %></a>
   <% } else if (typeof ob.estimatedFee === 'number') {
-    let estimatedFeeCombo = ob.convertAndFormatCurrency(ob.estimatedFee, 'BTC',
-      ob.userCurrency, { useBtcSymbol: false });
-
-    if (ob.userCurrency !== 'BTC') {
-      estimatedFeeCombo = ob.polyT('fiatBtcPairing', {
-        fiatAmount: estimatedFeeCombo,
-        btcAmount: ob.formatCurrency(ob.estimatedFee, 'BTC', { useBtcSymbol: false }),
-      });
-    }
+    let estimatedFeeCombo = ob.currencyMod.pairedCurrency(
+      ob.estimatedFee,
+      serverCurCode,
+      ob.userCurrency
+    );
 
     insufficientFunds = ob.walletBalance.confirmed < ob.estimatedFee;
   %>
     <% if (!insufficientFunds) { %>
       <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.body', {
-        fiatBtcPairing: estimatedFeeCombo,
+        currencyPairing: estimatedFeeCombo,
         asterisk: '<span>*</span>',
       }) %></p>
     <% } else { %>
       <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.insufficientFundsBody', {
-        fiatBtcPairing: estimatedFeeCombo,
+        currencyPairing: estimatedFeeCombo,
         asterisk: '<span>*</span>',
       }) %></p>
     <% } %>

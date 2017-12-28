@@ -11,39 +11,43 @@ describe('the currency utility module', () => {
   before(function () {
     app.polyglot = new Polyglot();
     app.polyglot.extend(enUsTranslations);
+    app.serverConfig = {
+      ...(app.serverConfig || {}),
+      cryptoCurrency: 'BTC',
+    };
   });
 
   it('correctly converts a fiat amount from an integer to decimal', () => {
-    expect(cur.integerToDecimal(123)).to.equal(1.23);
+    expect(cur.integerToDecimal(123, 'USD')).to.equal(1.23);
   });
 
   it('correctly converts a BTC price from an integer to a decimal', () => {
-    expect(cur.integerToDecimal(271453590, true)).to.equal(2.71453590);
+    expect(cur.integerToDecimal(271453590, 'BTC')).to.equal(2.71453590);
   });
 
   it('correctly converts a fiat amount from a decimal to an integer', () => {
-    expect(cur.decimalToInteger(1.23)).to.equal(123);
+    expect(cur.decimalToInteger(1.23, 'USD')).to.equal(123);
   });
 
   it('correctly converts a fiat amount from a decimal to an integer' +
     ' rounding to the hundreds place.', () => {
-    expect(cur.decimalToInteger(1.23678)).to.equal(124);
+    expect(cur.decimalToInteger(1.23678, 'USD')).to.equal(124);
   });
 
   it('correctly converts a BTC price from a decimal to an integer', () => {
-    expect(cur.decimalToInteger(2.71, true)).to.equal(271000000);
+    expect(cur.decimalToInteger(2.71, 'BTC')).to.equal(271000000);
   });
 
-  it('correctly formats a non-BTC price to 2 decimal place', () => {
-    expect(cur.formatPrice(2.713546, false)).to.equal('2.71');
-    expect(cur.formatPrice(2.7189, false)).to.equal('2.72');
-    expect(cur.formatPrice(2, false)).to.equal('2.00');
+  it('correctly formats a non-crypto price to 2 decimal place', () => {
+    expect(cur.formatPrice(2.713546, 'USD')).to.equal('2.71');
+    expect(cur.formatPrice(2.7189, 'USD')).to.equal('2.72');
+    expect(cur.formatPrice(2, 'USD')).to.equal('2.00');
   });
 
   it('correctly formats a BTC price up to 8 decimal places without any insignificant zeros', () => {
-    expect(cur.formatPrice(2.713546, true)).to.equal('2.713546');
-    expect(cur.formatPrice(2.718925729, true)).to.equal('2.71892573');
-    expect(cur.formatPrice(2, true)).to.equal('2');
+    expect(cur.formatPrice(2.713546, 'BTC')).to.equal('2.713546');
+    expect(cur.formatPrice(2.718925729, 'BTC')).to.equal('2.71892573');
+    expect(cur.formatPrice(2, 'BTC')).to.equal('2');
   });
 
   describe('has a function to localize currency (formatCurrency) that', () => {
@@ -51,7 +55,7 @@ describe('the currency utility module', () => {
       let errorThrown = false;
 
       try {
-        cur.formatCurrency('500.23', 'USD', 'en-US');
+        cur.formatCurrency('500.23', 'USD');
       } catch (e) {
         errorThrown = true;
       }
@@ -61,7 +65,7 @@ describe('the currency utility module', () => {
       errorThrown = false;
 
       try {
-        cur.formatCurrency(NaN, 'USD', 'en-US');
+        cur.formatCurrency(NaN, 'USD');
       } catch (e) {
         errorThrown = true;
       }
@@ -73,7 +77,7 @@ describe('the currency utility module', () => {
       let errorThrown = false;
 
       try {
-        cur.formatCurrency(500, 5, 'en-US');
+        cur.formatCurrency(500, 5);
       } catch (e) {
         errorThrown = true;
       }
@@ -83,7 +87,7 @@ describe('the currency utility module', () => {
       errorThrown = false;
 
       try {
-        cur.formatCurrency(500, null, 'en-US');
+        cur.formatCurrency(500, null);
       } catch (e) {
         errorThrown = true;
       }
@@ -91,7 +95,7 @@ describe('the currency utility module', () => {
       expect(errorThrown).to.equal(true);
 
       try {
-        cur.formatCurrency(500, false, 'en-US');
+        cur.formatCurrency(500, false);
       } catch (e) {
         errorThrown = true;
       }
@@ -176,17 +180,32 @@ describe('the currency utility module', () => {
       expect(cur.formatCurrency(523.3456, 'BTC', {
         btcUnit: 'MBTC',
       })).to
-        .equal(`523,345.6 ${app.polyglot.phrases['bitcoinCurrencyUnits.MBTC']}`);
+        .equal(
+          app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
+            amount: '523,345.6',
+            code: app.polyglot.t('bitcoinCurrencyUnits.MBTC'),
+          })
+        );
 
       expect(cur.formatCurrency(523.3456, 'BTC', {
         btcUnit: 'UBTC',
       })).to
-        .equal(`523,345,600 ${app.polyglot.phrases['bitcoinCurrencyUnits.UBTC']}`);
+        .equal(
+          app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
+            amount: '523,345,600',
+            code: app.polyglot.t('bitcoinCurrencyUnits.UBTC'),
+          })
+        );
 
       expect(cur.formatCurrency(523.3456, 'BTC', {
         btcUnit: 'SATOSHI',
       })).to
-        .equal(`52,334,560,000 ${app.polyglot.phrases['bitcoinCurrencyUnits.SATOSHI']}`);
+        .equal(
+          app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
+            amount: '52,334,560,000',
+            code: app.polyglot.t('bitcoinCurrencyUnits.SATOSHI'),
+          })
+        );
     });
   });
 

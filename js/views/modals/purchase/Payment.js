@@ -6,6 +6,7 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';
@@ -18,7 +19,8 @@ import { launchWallet } from '../../../utils/modalManager';
 export default class extends BaseVw {
   constructor(options = {}) {
     if (typeof options.balanceRemaining !== 'number') {
-      throw new Error('Please provide the balance remaining in BTC as a number.');
+      throw new Error('Please provide the balance remaining (in the server\'s' +
+        ' currency) as a number.');
     }
 
     if (!options.paymentAddress) {
@@ -46,7 +48,8 @@ export default class extends BaseVw {
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
-            const amount = integerToDecimal(e.jsonData.notification.fundingTotal, true);
+            const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
+              app.serverConfig.cryptoCurrency);
             if (amount >= this.balanceRemaining) {
               this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);
@@ -117,7 +120,7 @@ export default class extends BaseVw {
       spend({
         address: this.paymentAddress,
         amount: this.balanceRemaining,
-        currency: 'BTC',
+        currency: getServerCurrency().code,
       })
         .fail(jqXhr => {
           this.showSpendError(jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
@@ -134,7 +137,8 @@ export default class extends BaseVw {
 
   clickPayFromAlt() {
     const amount = this.balanceRemaining;
-    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.paymentAddress}&amp;output=BTC&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812&amount=${amount}`;
+    const serverCur = getServerCurrency().code;
+    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.getState().address}&output=${serverCur}&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812&amount=${amount}`;
     const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
     shapeshiftWin.loadURL(shapeshiftURL);
   }
@@ -167,7 +171,7 @@ export default class extends BaseVw {
 
   get amountDueLine() {
     return app.polyglot.t('purchase.pendingSection.pay',
-      { amountBTC: formatCurrency(this.balanceRemaining, 'BTC') });
+      { amountBTC: formatCurrency(this.balanceRemaining, getServerCurrency().code) });
   }
 
   get qrDataUri() {

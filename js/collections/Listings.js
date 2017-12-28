@@ -52,7 +52,7 @@ export default class extends Collection {
 
 
       updatedListing.price.amount =
-        integerToDecimal(priceObj.amount, priceObj.currencyCode === 'BTC');
+        integerToDecimal(priceObj.amount, priceObj.currencyCode);
 
       parsedResponse.push(updatedListing);
     });

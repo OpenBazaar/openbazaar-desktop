@@ -71,7 +71,7 @@ export function launchSettingsModal(modalOptions = {}) {
     settingsModal.on('modal-will-remove', () => (settingsModal = null));
   }
 
-  return aboutModal;
+  return settingsModal;
 }
 
 export function launchDebugLogModal(modalOptions = {}) {

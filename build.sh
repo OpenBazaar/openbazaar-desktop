@@ -14,6 +14,12 @@ ELECTRONVER=1.7.8
 NODEJSVER=5.1.1
 
 OS="${1}"
+if [ -z "${2}" ]; then
+SERVERTAG='latest'
+else
+SERVERTAG=tags/${2}
+fi
+echo "Building with openbazaar-go/$SERVERTAG"
 
 # Get Version
 PACKAGE_VERSION=$(cat package.json \
@@ -75,8 +81,8 @@ case "$TRAVIS_OS_NAME" in
     # Retrieve Latest Server Binaries
     sudo apt-get install jq
     cd temp/
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases/$SERVERTAG > release.txt
+    cat release.txt | jq -r ".assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
     APPNAME="openbazaar2"
@@ -155,8 +161,8 @@ case "$TRAVIS_OS_NAME" in
 
     # Retrieve Latest Server Binaries
     cd temp/
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases/$SERVERTAG > release.txt
+    cat release.txt | jq -r ".assets[].browser_download_url" | xargs -n 1 curl -L -O
     cd ..
 
     # WINDOWS 32

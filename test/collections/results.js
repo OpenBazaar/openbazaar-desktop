@@ -1,5 +1,6 @@
+import app from '../../js/app';
 import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import { describe, it, before } from 'mocha';
 import Results from '../../js/collections/Results';
 import ListingShort from '../../js/models/listing/ListingShort';
 import Profile from '../../js/models/profile/Profile';
@@ -54,6 +55,13 @@ const fakeResults1 = {
 };
 
 describe('the Results collection', () => {
+  before(function () {
+    // creating a dummy polyglot t function, so certain modules expecting it don't bomb
+    app.polyglot = {
+      t: (str) => str,
+    };
+  });
+
   it('sets a total parameter based on the parsed results', () => {
     const resCol = new Results();
     resCol.add(resCol.parse(fakeResults1));

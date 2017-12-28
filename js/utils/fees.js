@@ -44,7 +44,8 @@ function watchTransactions() {
  * of the wallet.
  *
  * @param {string} feeLevel - The fee level
- * @param {amount} number - The amount of the transaction in Bitcoin.
+ * @param {amount} number - The amount of the transaction in the servers currency -
+ *   not in base units. (e.g. for BTC, provide a BTC amount, not Satoshi)
  * @return {object} An jQuery promise which on success will resolve with the fee
  *   in Bitcoin. If the call fails, the deferred will fail and pass on the args the
  *   xhr fail handler receives.
@@ -81,10 +82,13 @@ export function estimateFee(feeLevel, amount) {
       createdAt: Date.now(),
     });
 
-    const queryArgs = `feeLevel=${feeLevel}&amount=${decimalToInteger(amount, true)}`;
+    const queryArgs =
+      `feeLevel=${feeLevel}&amount=${decimalToInteger(amount, app.serverConfig.cryptoCurrency)}`;
     $.get(app.getServerUrl(`wallet/estimatefee/?${queryArgs}`))
       .done((...args) => {
-        deferred.resolve(integerToDecimal(args[0].estimatedFee, true), ...args.slice(1));
+        deferred.resolve(
+          integerToDecimal(args[0].estimatedFee, app.serverConfig.cryptoCurrency), ...args.slice(1)
+        );
       }).fail((xhr, ...args) => {
         deferred.reject(xhr, ...args);
 

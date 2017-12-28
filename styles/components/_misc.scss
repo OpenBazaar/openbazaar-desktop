@@ -29,16 +29,17 @@
   images are added */
 }
 
-.btcIcon {
+.cryptoIcon {
   width: 16px;
   height: 16px;
   background-size: contain;
   display: inline-block;
-  background-image: url('../../imgs/btcIcon128.png');
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .shapeShiftIcon {
-  @extend .btcIcon;
+  @extend .cryptoIcon;
 }
 
 .copyNotification {

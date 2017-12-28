@@ -20,14 +20,26 @@
           <% if (fShp) { %>
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
-            <%= ob.convertAndFormatCurrency(service.price, ob.pricingCurrency, ob.displayCurrency) %>
+            <%= 
+              ob.currencyMod.formattedCurrency(
+                service.price,
+                ob.pricingCurrency,
+                ob.displayCurrency
+              )
+            %>
           <% } %>
         </td>
         <td>
           <% if (service.additionalItemPrice === 0) { %>
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
-            <%= ob.convertAndFormatCurrency(service.additionalItemPrice, ob.pricingCurrency, ob.displayCurrency) %>
+            <%= 
+              ob.currencyMod.formattedCurrency(
+                service.additionalItemPrice,
+                ob.pricingCurrency,
+                ob.displayCurrency
+              )
+            %>
           <% } %>
         </td>
       </tr>

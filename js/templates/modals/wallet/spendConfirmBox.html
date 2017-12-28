@@ -26,20 +26,15 @@
         <a class="js-sendConfirmRetry"><%= ob.polyT('wallet.spendConfirmBox.btnRetry') %></a>
       <% } %>
     <% } else if (typeof ob.fee === 'number') {
-      let feeText = ob.formatCurrency(ob.fee, 'BTC',
-        { useBtcSymbol: false });
-
-      if (ob.displayCurrency !== 'BTC') {
-        feeText = ob.polyT('fiatBtcPairing', {
-          fiatAmount: ob.convertAndFormatCurrency(ob.fee, 'BTC',
-            ob.displayCurrency),
-          btcAmount: feeText,
-        });
-      }
+      let feeText = ob.currencyMod.pairedCurrency(
+        ob.fee,
+        ob.currencyMod.getServerCurrency().code,
+        ob.displayCurrency
+      );      
     %>
       <p class="clrT2">
         <%= ob.polyT('wallet.spendConfirmBox.body', {
-          fiatBtcPairing: feeText,
+          currencyPairing: feeText,
         }) %>
       </p>
     <% } %>

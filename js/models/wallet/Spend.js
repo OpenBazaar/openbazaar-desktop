@@ -1,5 +1,5 @@
-import { isValidBitcoinAddress } from '../../utils/';
-import { decimalToInteger, convertCurrency } from '../../utils/currency';
+import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/currency';
+import { getServerCurrency } from '../../data/cryptoCurrencies';
 import { getWallet } from '../../utils/modalManager';
 import app from '../../app';
 import BaseModel from '../BaseModel';
@@ -24,15 +24,15 @@ class Spend extends BaseModel {
     ];
   }
 
-  get amountInBitcoin() {
-    let btcAmount = 0;
+  get amountInServerCur() {
+    let cryptoAmount = 0;
     const amount = this.get('amount');
 
     if (typeof amount === 'number') {
-      btcAmount = convertCurrency(amount, this.get('currency'), 'BTC');
+      cryptoAmount = convertCurrency(amount, this.get('currency'), getServerCurrency().code);
     }
 
-    return btcAmount;
+    return cryptoAmount;
   }
 
   validate(attrs) {
@@ -44,15 +44,29 @@ class Spend extends BaseModel {
 
     if (!attrs.address) {
       addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
-    } else if (!isValidBitcoinAddress(attrs.address)) {
-      addError('address', app.polyglot.t('spendModelErrors.invalidAddress'));
+    } else if (typeof getServerCurrency().isValidAddress === 'function' &&
+      !getServerCurrency().isValidAddress(attrs.address)) {
+      addError('address', app.polyglot.t('spendModelErrors.invalidAddress',
+        { cur: getServerCurrency().name }));
+    }
+
+    const exchangeRateAvailable = typeof getExchangeRate(attrs.currency) === 'number';
+
+    if (!attrs.currency) {
+      addError('currency', 'Please provide a currency.');
+    } else if (!exchangeRateAvailable) {
+      addError('currency', app.polyglot.t('spendModelErrors.missingExchangeRateData', {
+        cur: attrs.currency,
+        serverCur: getServerCurrency().code,
+      }));
     }
 
     if (typeof attrs.amount !== 'number') {
       addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
     } else if (attrs.amount <= 0) {
       addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-    } else if (this.amountInBitcoin >= app.walletBalance.get('confirmed')) {
+    } else if (exchangeRateAvailable &&
+      this.amountInServerCur >= app.walletBalance.get('confirmed')) {
       addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
     }
 
@@ -62,10 +76,6 @@ class Spend extends BaseModel {
 
     if (attrs.memo && typeof attrs.memo !== 'string') {
       addError('memo', 'If provided, the memo should be a string.');
-    }
-
-    if (!attrs.currency) {
-      addError('currency', 'Please provide a currency.');
     }
 
     if (Object.keys(errObj).length) return errObj;
@@ -79,11 +89,11 @@ class Spend extends BaseModel {
     if (method === 'create' || method === 'update') {
       let amount = options.attrs.amount;
 
-      if (options.attrs.currency !== 'BTC') {
-        amount = this.amountInBitcoin;
+      if (options.attrs.currency !== getServerCurrency().code) {
+        amount = this.amountInServerCur;
       }
 
-      options.attrs.amount = decimalToInteger(amount, true);
+      options.attrs.amount = decimalToInteger(amount, getServerCurrency().code);
       delete options.attrs.currency;
     }
 

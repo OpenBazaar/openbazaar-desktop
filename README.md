@@ -1,6 +1,6 @@
 # OpenBazaar Client v2
 
-This is the refrence client for the OpenBazaar network. It is an interface for your OpenBazaar node, to use it you will need to run an [OpenBazaar node](https://github.com/OpenBazaar/openbazaar-go) either locally or on a remote server.
+This is the reference client for the OpenBazaar network. It is an interface for your OpenBazaar node, to use it you will need to run an [OpenBazaar node](https://github.com/OpenBazaar/openbazaar-go) either locally or on a remote server.
 
 For full installable versions of the OpenBazaar app, with the server and client bundled together, go to [the OpenBazaar download page.](https://www.openbazaar.org/download/)
 
@@ -56,7 +56,7 @@ You can also look for issues with the [bug label](https://github.com/OpenBazaar/
 
 Contributions are expected to match the coding style already present in this repo, and must pass es-lint with no errors.
 
-Constributions that make visual changes are also expected to match the repo's current style.
+Contributions that make visual changes are also expected to match the repo's current style.
 
 ## License
 This project is licensed under the MIT License. You can view [LICENSE.MD](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/LICENSE) for more details.

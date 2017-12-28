@@ -16,7 +16,7 @@
               <div>
                 <div class="tx5 rowSm txB"><%= option.name %>: <%= service.name %></div>
                 <div class="tx5b clrT2 txUnb">
-                  <% const price = ob.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+                  <% const price = ob.currencyMod.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
                   <% if (service.estimatedDelivery) print(ob.polyT('purchase.serviceDetails', { price, delivery: service.estimatedDelivery })) %>
                 </div>
               </div>

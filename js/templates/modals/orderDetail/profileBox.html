@@ -1,8 +1,4 @@
-<% if (ob.isFetching) { %>
-  <div class="center">
-    <%= ob.spinner({ className: 'spinnerMd' }) %>
-  </div>
-<% } else { %>
+<% if (!ob.isFetching) { %>
   <%
     let featuredProfileAvatarStyle = ob.getAvatarBgImage(ob.avatarHashes,
       {

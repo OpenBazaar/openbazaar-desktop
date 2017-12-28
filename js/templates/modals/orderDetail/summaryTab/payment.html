@@ -27,21 +27,17 @@
     <div class="statusIconCol <%= statusIconClass %>"><span class="clrBr <%= statusIcon %>"></span></div>
     <div class="flexExpand tx5">
       <%
-        let priceFrag = ob.convertAndFormatCurrency(ob.value,
-          'BTC', ob.userCurrency, { useBtcSymbol: false });
-
-        if (ob.userCurrency !== 'BTC') {
-          priceFrag = ob.polyT('fiatBtcPairing', {
-            fiatAmount: priceFrag,
-            btcAmount: ob.formatCurrency(ob.value, 'BTC', { useBtcSymbol: false }),
-          });
-        }
+        const priceFrag = ob.currencyMod.pairedCurrency(
+          ob.value,
+          ob.currencyMod.getServerCurrency().code,
+          ob.userCurrency
+        );
 
         let infoLine = '';
 
         if (ob.payee) {
           infoLine = ob.polyT(`orderDetail.summaryTab.payment.amountTo`, {
-            fiatBtcPairing: priceFrag,
+            currencyPairing: priceFrag,
             payeeName: ob.payee,
           });
         } else {
@@ -67,7 +63,7 @@
         %>
         <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
         <div class="" style="flex-shrink: 0;max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
+          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
         </div>
         <% 
           let subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
@@ -100,7 +96,7 @@
                 <a class="txU tx6 js-rejectOrder <% if (ob.acceptInProgress) print('disabled') %>"><%= ob.polyT('orderDetail.summaryTab.payment.rejectBtn') %></a>
                 <div class="js-rejectConfirm confirmBox rejectConfirm tx5 arrowBoxTop clrBr clrP clrT <% if (!ob.rejectConfirmOn) print('hide') %>">
                   <div class="tx3 txB rowSm"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.title') %></div>
-                  <p><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.body') %></p>
+                  <p><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.body', { cur: ob.currencyMod.getServerCurrency().name }) %></p>
                   <hr class="clrBr row" />
                   <div class="flexHRight flexVCent gutterHLg buttonBar">
                     <a class="js-rejectConfirmCancel"><%= ob.polyT('orderDetail.summaryTab.payment.rejectConfirm.btnCancel') %></a>

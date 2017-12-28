@@ -1,0 +1,36 @@
+
+<%
+  const price = ob.price; // required
+
+  // If you only need to format a price and not convert, just provide the same currency code for both
+  // the from and to currencies.
+  const fromCur = ob.fromCur; // required
+  const toCur = ob.toCur; // required
+
+  const toolTipBaseClass = ob.toolTipBaseClass || 'toolTip';
+  const toolTipClass = ob.toolTipClass || '';
+  const toolTipFullClass = `${toolTipBaseClass} ${toolTipClass}`;
+  const iconBaseClass = ob.iconBaseClass || 'ion-alert-circled clrTAlert';
+  const iconClass = ob.iconClass || '';
+  const iconFullClass = `${iconBaseClass} ${iconClass}`;
+
+  const showTooltipOnUnrecognizedCur = ob.showTooltipOnUnrecognizedCur || true;
+
+  const fromCurValidity = ob.currencyMod.getCurrencyValidity(fromCur);
+  const toCurValidity = ob.currencyMod.getCurrencyValidity(toCur);
+
+  let tip;
+
+  if (fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
+    tip = ob.polyT('formattedCurrency.unrecognizedCurrencyTip');
+  }
+%>
+
+<%
+  if (fromCurValidity !== 'UNRECOGNIZED_CURRENCY') {
+    print(ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur));
+  }
+%>
+<% if (fromCurValidity === 'UNRECOGNIZED_CURRENCY' && showTooltipOnUnrecognizedCur) { %>
+&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= tip %>"><span class="<%= iconFullClass %>"></span></span>
+<% } %>

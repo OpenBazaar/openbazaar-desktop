@@ -18,7 +18,7 @@
 <div class="rowLg">
   <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.payment.firstPaymentHeading') %></h2>
   <div class="border clrBr padMd">
-    <a href="<%= ob.getBlockChainAddressUrl(ob.paymentAddress, ob.isTestnet) %>" class="clrTEm"><%= ob.polyT('orderDetail.summaryTab.payment.viewPaymentDetails', {
+    <a href="<%= ob.currencyMod.getBlockChainAddressUrl(ob.paymentAddress, ob.isTestnet) %>" class="clrTEm"><%= ob.polyT('orderDetail.summaryTab.payment.viewPaymentDetails', {
       icon: '<span class="ion-android-open clrT2"></span>',
     }) %></a>
   </div>

@@ -1,4 +1,5 @@
 import { integerToDecimal } from '../../utils/currency';
+import app from '../../app';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -9,8 +10,8 @@ export default class extends BaseModel {
   parse(response = {}) {
     return {
       ...response,
-      // Convert satoshi to BTC
-      value: integerToDecimal(response.value, true),
+      // Convert from base units
+      value: integerToDecimal(response.value, app.serverConfig.cryptoCurrency),
     };
   }
 }

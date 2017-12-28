@@ -130,9 +130,9 @@ export default class Profile extends BaseModel {
     if (response.moderatorInfo && response.moderatorInfo.fee &&
       response.moderatorInfo.fee.fixedFee) {
       const amount = response.moderatorInfo.fee.fixedFee.amount;
-      const isBtc = response.moderatorInfo.fee.fixedFee.currencyCode === 'BTC';
+      const cur = response.moderatorInfo.fee.fixedFee.currencyCode;
 
-      response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(amount, isBtc);
+      response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(amount, cur);
     }
 
     if (response.handle && response.handle.startsWith('@')) {
@@ -194,8 +194,8 @@ export default class Profile extends BaseModel {
           options.attrs.moderatorInfo.fee.fixedFee &&
           options.attrs.moderatorInfo.fee.fixedFee.amount) {
           const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
-          const isBTC = options.attrs.moderatorInfo.fee.fixedFee.currencyCode === 'BTC';
-          options.attrs.moderatorInfo.fee.fixedFee.amount = decimalToInteger(amount, isBTC);
+          const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
+          options.attrs.moderatorInfo.fee.fixedFee.amount = decimalToInteger(amount, cur);
         }
       }
     }
