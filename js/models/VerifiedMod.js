@@ -14,8 +14,8 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    console.log(response);
     // if the response is not an object, assume it is a peerID and convert it
+    // this accounts for providers that only give a list of ids
     const parsedResponse = (!!response) && (response.constructor === Object) ? response :
       { peerID: response };
     return parsedResponse;

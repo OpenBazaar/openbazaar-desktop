@@ -54,7 +54,6 @@ export default class extends Collection {
       }
       mod.data = response.data;
     });
-    console.log(parsedResponse)
     return parsedResponse;
   }
 }
