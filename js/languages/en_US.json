@@ -317,6 +317,11 @@
     "tipModAdd": "Add as moderator",
     "tipModRemove": "Remove as moderator"
   },
+  "verifiedMod": {
+    "title": "Verified Moderator",
+    "link": "Learn More",
+    "typeName": "Type: %{name}"
+  },
   "moderatorCard": {
     "view": "View",
     "FIXED": "%{amount}**",

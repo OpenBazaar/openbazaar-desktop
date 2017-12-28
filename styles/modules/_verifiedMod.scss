@@ -19,6 +19,10 @@
     .arrowBox {
       top: 100%;
       border-width: 2px;
+      font-size: $tx5;
+      text-align: left;
+      padding: $padMd $padLg;
+      width: 220px;
 
       &:before {
         background: $alert2Background;

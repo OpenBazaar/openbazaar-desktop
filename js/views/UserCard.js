@@ -216,6 +216,8 @@ export default class extends BaseVw {
         ...(this.model && this.model.toJSON() || {}),
       }));
 
+      super.render();
+
       this._$followBtn = null;
       this._$modBtn = null;
 
