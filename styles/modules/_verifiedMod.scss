@@ -12,5 +12,13 @@
   }
   .badge:hover+.arrowBoxWrapper {
     display: block;
+    height: $pad;
+    width: $thumbTn;
+    position: absolute;
+
+    .arrowBox {
+      top: 100%;
+      border-width: 2px;
+    }
   }
 }

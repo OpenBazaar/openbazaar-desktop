@@ -1,8 +1,14 @@
-<div class="badge <% print(ob.arrowClass) %>"
-     style="background-image: url(<%= ob.type.badge %>);"
-     tabindex="0">test</div>
+<%
+   const badge = ob.type.badge || '../imgs/verifiedModeratorBadge.png';
+   const arrowClass = ob.arrowClass || 'arrowBoxCenteredTop';
+%>
+
+<div class="badge"
+     style="background-image: url(<%= badge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"
+     tabindex="0">
+</div>
 <div class="arrowBoxWrapper">
-  <div class="confirmBox arrowBox clP clrBr">Arrow box</div>
+  <div class="confirmBox arrowBox <% print(arrowClass) %> clrP clrBr">Arrow box</div>
 </div>
 
 <% console.log(ob) %>

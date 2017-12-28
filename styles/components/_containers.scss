@@ -282,9 +282,11 @@
     background-color: inherit;
     width: 25px;
     height: 25px;
-    border-style: solid;
-    border-width: 1px;
     border-color: inherit;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-right-width: 1px;
+    border-right-style: solid;
   }
 }
 
@@ -311,10 +313,23 @@
 }
 
 .arrowBoxCenteredTop {
-  // this will have an arror centered on the x and y of the parent
+  // this will have an arrow centered on the x and y of the parent
   @extend .arrowBoxTop;
-  left: 20px; // width of the rotated square/hypotenuse of the arrow
+  left: 13px;
   transform: translateX(-50%);
+}
+
+.arrowBoxRightTop {
+  // this will have an arror on the right side of box
+  @extend .arrowBoxTop;
+  right: -20px;
+
+  &::before {
+    left: auto;
+    right: 4px;
+    transform: translate(-50%, -50%) rotate(-135deg);
+    -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  }
 }
 
 .toolTip:not(.processing) {

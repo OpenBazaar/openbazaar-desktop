@@ -22,6 +22,8 @@ $emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
 $selection: #5897fb;
 $error: red;
 $alert: #fecf33;
+$alert2: #e9831e; // used for verified moderators and other medium level signals to the user
+$alert2Gradient: linear-gradient(to top, #fffaf6, #fff4e9);
 
 $overlay: adjust-color($secondary, $alpha: -0.04);
 

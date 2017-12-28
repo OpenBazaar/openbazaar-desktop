@@ -227,7 +227,7 @@ export default class extends BaseVw {
       if (verifiedMod) {
         this.verifiedMod = new VerifiedMod({
           model: verifiedMod,
-          arrowClass: 'arrowBoxTop',
+          arrowClass: 'arrowBoxRightTop',
         });
         this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
       }

@@ -27,13 +27,13 @@ export default class extends Collection {
         {
           name: 'standard',
           description: 'blah blah blah',
-          badge: 'http://www.pvhc.net/img8/niexjjzstcseuzdzkvoq.png'
+          //badge: 'http://www.pvhc.net/img8/niexjjzstcseuzdzkvoq.png'
         },
         {
           name: 'advanced',
           description: 'blah blah blah',
           badge: 'https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Download-Computer-256.png'
-        }
+        },
       ],
       moderators: [
         {
