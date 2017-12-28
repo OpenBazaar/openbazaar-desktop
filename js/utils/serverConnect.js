@@ -339,10 +339,10 @@ export default function connect(server, options = {}) {
       // the user did not pass in override options regarding connection timeouts, we'll bump up the
       // defaults to give the shutting down server more time (it may take up to a few minutes).
       opts = {
-        attempts: 36, // works out to 3 minutes total
+        ...opts,
+        attempts: 60, // works out to 5 minutes total
         minAttemptSpacing: 5000,
         maxAttemptTime: 5000,
-        ...opts,
       };
     }
   }
