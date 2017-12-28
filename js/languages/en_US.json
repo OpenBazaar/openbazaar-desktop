@@ -110,6 +110,7 @@
     "dialogs": {
       "btnRetry": "Retry",
       "btnManageConnections": "Manage Connections",
+      "btnContinue": "Continue",
       "retryConfig": {
         "title": "Unable to obtain your server config."
       },
@@ -129,7 +130,8 @@
         "title": "Unable to load search providers."
       },
       "unableToGetVerifiedMods": {
-        "title": "Unable to load verified moderators."
+        "title": "Unable to load verified moderators.",
+        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
     "connectMessaging": {
@@ -1823,7 +1825,7 @@
   "cryptoCurrencyFormat": {
     "curSymbolAmount": "%{symbol}%{amount}",
     "curCodeAmount": "%{amount} %{code}"
-  },  
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

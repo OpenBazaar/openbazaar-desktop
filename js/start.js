@@ -331,15 +331,12 @@ function fetchStartupData() {
 
       if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed) {
         let title = '';
-
         if (ownFollowingFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
         } else if (walletBalanceFetchFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        } else if (searchProvidersFetchFailed) {
-          title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
         } else {
-          title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
+          title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
         }
 
         const retryFetchStarupDataDialog = new Dialog({
@@ -366,8 +363,41 @@ function fetchStartupData() {
           setTimeout(() => fetchStartupData(), 300);
         }).on('click-manageConnections', () =>
           app.connectionManagmentModal.open())
-        .render()
-        .open();
+          .render()
+          .open();
+      } else if (verifiedModsFetchFailed) {
+        const title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
+        const reason = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '404';
+        const message = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.msg', { reason });
+
+        const verifiedModErrorDialog = new Dialog({
+          title,
+          message,
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: app.polyglot.t('startUp.dialogs.btnContinue'),
+              fragment: 'continue',
+            },
+          ],
+          dismissOnOverlayClick: false,
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }).on('click-retry', () => {
+          verifiedModErrorDialog.close();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => fetchStartupData(), 300);
+        }).on('click-continue', () => {
+          verifiedModErrorDialog.close();
+          fetchStartupDataDeferred.resolve();
+        })
+          .render()
+          .open();
       } else {
         // We don't care if the exchange rate fetch failed, because
         // the exchangeRateSyncer will display a status message about it
