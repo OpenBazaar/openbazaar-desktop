@@ -280,11 +280,12 @@
     content: '';
     position: absolute;
     background-color: inherit;
+    box-sizing: border-box;
     width: 25px;
     height: 25px;
     border-color: inherit;
-    border-top-width: 1px;
-    border-top-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
     border-right-width: 1px;
     border-right-style: solid;
   }
@@ -326,9 +327,7 @@
 
   &::before {
     left: auto;
-    right: 4px;
-    transform: translate(-50%, -50%) rotate(-135deg);
-    -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
+    right: 5px;
   }
 }
 

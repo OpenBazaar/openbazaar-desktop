@@ -177,7 +177,7 @@ input[type=range][class~="clrS"] {
   }
 }
 
-.clrBrAlert2: {
+.clrBrAlert2 {
   border-color: $alert2;
 }
 
@@ -201,7 +201,11 @@ input[type=range][class~="clrS"] {
   }
 }
 
-.clrBAlert2Grad: {
+.clrBAlert2 {
+  background: $alert2Background;
+}
+
+.clrBAlert2Grad {
   background: $alert2Gradient;
 }
 
