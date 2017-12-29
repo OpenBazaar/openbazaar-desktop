@@ -37,7 +37,7 @@ import './utils/exchangeRateSyncer';
 import './utils/listingData';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
-import { fixLinuxZoomIssue, handleLinks } from './startup';
+import { fixLinuxZoomIssue, handleLinks, handleServerShutdownRequests } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
 import WalletSetup from './views/modals/WalletSetup';
@@ -45,6 +45,7 @@ import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 
 fixLinuxZoomIssue();
+handleServerShutdownRequests();
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());
@@ -884,12 +885,12 @@ serverConnectEvents.on('connected', (connectedEvent) => {
 ipcRenderer.on('close-attempt', (e) => {
   const localServer = remote.getGlobal('localServer');
 
-  if (localServer.isRunning) {
+  if (localServer && localServer.isRunning) {
     localServer.once('exit', () => e.sender.send('close-confirmed'));
     localServer.stop();
   }
 
-  if (localServer.isStopping) {
+  if (localServer && localServer.isStopping) {
     app.pageNav.navigable = false;
     openSimpleMessage(
       app.polyglot.t('localServerShutdownDialog.title'),

@@ -85,7 +85,8 @@ if (handleStartupEvent()) {
 }
 
 
-const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
+// const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
+const serverPath = '/Users/rob/develop/openbazaar/v2/server/';
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
   'openbazaard' : 'openbazaard.exe';
 const isBundledApp = fs.existsSync(serverPath + serverFilename);
@@ -94,6 +95,7 @@ let localServer;
 
 if (isBundledApp) {
   global.localServer = localServer = new LocalServer({
+    getMainWindow: () => mainWindow,
     serverPath,
     serverFilename,
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
