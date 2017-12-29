@@ -35,7 +35,6 @@
     "zcashBinaryLabel": "Zcash Binary",
     "fullNodeLink": "here",
     "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "zcashBinaryPlaceholder": "/path/to/zcashd",
     "btnBrowse": "Browse",
     "btnNext": "Next"
   },
