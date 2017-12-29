@@ -180,7 +180,7 @@ export default class LocalServer {
     this.log('Shutting down server');
     console.log('Shutting down server');
 
-    if (false && platform() === 'darwin' || platform() === 'linux') {
+    if (platform() === 'darwin' || platform() === 'linux') {
       this.serverSubProcess.kill('SIGINT');
     } else {
       const mw = this._getMainWindow();

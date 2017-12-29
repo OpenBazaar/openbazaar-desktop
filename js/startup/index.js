@@ -80,7 +80,6 @@ export function handleLinks() {
 
 /**
  * This function will accept requests from the main process to shutdown the OB server daemon.
- * It will return true if it's able to send the shutdown request to server, otherwise false.
  * This should only be called on the bundled app on windows. For Linux and OSX, the localServer
  * module is able to shut down the daemon via OS signals.
  */
