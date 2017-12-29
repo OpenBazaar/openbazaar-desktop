@@ -110,7 +110,5 @@ export function handleServerShutdownRequests() {
         { reason: e.toString() });
       return;
     }
-
-    return;
   });
 }
