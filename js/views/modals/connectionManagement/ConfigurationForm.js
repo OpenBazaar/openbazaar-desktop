@@ -99,9 +99,6 @@ export default class extends baseVw {
     this.setModelFromForm();
     this.model.set({}, { validate: true });
 
-    console.log('moo');
-    window.moo = this.model;
-
     if (this.model.validationError) {
       this.render();
       return;
