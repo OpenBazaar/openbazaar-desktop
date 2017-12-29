@@ -1,11 +1,8 @@
 import fs from 'fs';
-import { platform } from 'os';
-import { normalize as normalizePath } from 'path';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import is from 'is_js';
 import { getCurrencyByCode as getCryptoCurByCode } from '../data/cryptoCurrencies';
-import { fileModeToPermissions } from '../utils';
 import app from '../app';
 import BaseModel from './BaseModel';
 
@@ -160,19 +157,14 @@ export default class extends BaseModel {
 
       if (attrs.zcashBinaryPath) {
         let fsStat;
-        let path = attrs.zcashBinaryPath;
-
-        if (platform() === 'win32') {
-          path = path.replace(/\\/g, '\\\\');
-        }
 
         try {
-          fsStat = fs.statSync(normalizePath(path));
+          fsStat = fs.statSync(attrs.zcashBinaryPath);
         } catch (e) {
           // pass
         }
 
-        if (!fsStat || !fsStat.isFile() || !fileModeToPermissions(fsStat).execute.owner) {
+        if (!fsStat || !fsStat.isFile()) {
           addError('zcashBinaryPath',
             app.polyglot.t('serverConfigModelErrors.invalidZcashBinaryPath'));
         }

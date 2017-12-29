@@ -1654,7 +1654,7 @@
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
     "provideWalletCurrency": "Please select a wallet currency.",
     "provideZcashBinaryPath": "Please provide a value.",
-    "invalidZcashBinaryPath": "The provided path must be to be a valid exectuable file."
+    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
