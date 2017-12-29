@@ -167,7 +167,7 @@ export default class extends BaseModel {
         }
 
         try {
-          fsStat = fs.statSync(normalizePath(attrs.zcashBinaryPath));
+          fsStat = fs.statSync(normalizePath(path));
         } catch (e) {
           // pass
         }
