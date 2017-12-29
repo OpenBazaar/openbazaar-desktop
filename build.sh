@@ -172,7 +172,6 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Installer...'
     grunt create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-ia32 --outdir=dist/win32
     mv dist/win32/OpenBazaar2Setup.exe dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
-    mv dist/win64/RELEASES dist/win32/RELEASES
 
     #### CLIENT ONLY
     echo 'Running Electron Packager...'
@@ -199,7 +198,6 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Installer...'
     grunt create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
     mv dist/win64/OpenBazaar2Setup.exe dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
-    mv dist/win64/RELEASES dist/win64/RELEASES-x64
 
     #### CLIENT ONLY
     echo 'Running Electron Packager...'
