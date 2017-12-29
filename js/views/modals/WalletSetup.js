@@ -36,7 +36,7 @@ export default class extends BaseModal {
   }
 
   onClickBrowseZcashBinary() {
-    remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory'] }, e => {
+    remote.dialog.showOpenDialog({ properties: ['openFile'] }, e => {
       this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
     });
   }

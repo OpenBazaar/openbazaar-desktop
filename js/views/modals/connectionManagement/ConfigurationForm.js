@@ -155,8 +155,10 @@ export default class extends baseVw {
   }
 
   onClickBrowseZcashBinary() {
-    remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory'] }, e => {
-      this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
+    remote.dialog.showOpenDialog({ properties: ['openFile'] }, e => {
+      if (e) {
+        this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
+      }
     });
   }
 

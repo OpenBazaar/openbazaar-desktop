@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { normalize as normalizePath } from 'path';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
 import is from 'is_js';
@@ -160,7 +161,7 @@ export default class extends BaseModel {
         let fsStat;
 
         try {
-          fsStat = fs.statSync(attrs.zcashBinaryPath);
+          fsStat = fs.statSync(normalizePath(attrs.zcashBinaryPath));
         } catch (e) {
           // pass
         }
