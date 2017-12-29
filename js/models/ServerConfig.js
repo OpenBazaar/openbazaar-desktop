@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { platform } from 'os';
 import { normalize as normalizePath } from 'path';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/backboneLocalStorage';
@@ -159,6 +160,11 @@ export default class extends BaseModel {
 
       if (attrs.zcashBinaryPath) {
         let fsStat;
+        let path = attrs.zcashBinaryPath;
+
+        if (platform() === 'win32') {
+          path = path.replace(/\\/g, '\\\\');
+        }
 
         try {
           fsStat = fs.statSync(normalizePath(attrs.zcashBinaryPath));
