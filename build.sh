@@ -256,7 +256,6 @@ case "$TRAVIS_OS_NAME" in
       cp OpenBazaar2-mac-$PACKAGE_VERSION.zip ../osx/
       cp OpenBazaar2-$PACKAGE_VERSION.dmg ../osx/
     else
-      cd ../../
       codesign --force --sign "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
       cd dist/OpenBazaar2Client-darwin-x64/
       zip -q -r OpenBazaar2Client-mac-$PACKAGE_VERSION.zip OpenBazaar2Client.app
