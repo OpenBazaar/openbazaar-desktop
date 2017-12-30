@@ -315,7 +315,7 @@ function fetchStartupData() {
     .fail((jqXhr) => {
       const curConn = getCurrentConnection();
 
-      if (!curConn || curConn.status === 'disconnected') {
+      if (!jqXhr || !curConn || curConn.status !== 'connected') {
         // the connection management modal should be up with relevant info
         console.error('The startup data fetches failed. Looks like the connection to the ' +
           'server was lost.');
