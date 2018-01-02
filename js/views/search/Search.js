@@ -283,54 +283,6 @@ export default class extends baseVw {
                 }
               }
             }
-            data.options.test = {
-              type: 'checkbox',
-              label: 'test',
-              options: [
-                {
-                  value: 'one',
-                  label: 'test one',
-                  checked: false,
-                  default: false,
-                },
-                {
-                  value: 'two',
-                  label: 'test two',
-                  checked: false,
-                  default: false,
-                },
-                {
-                  value: 'three',
-                  label: 'test three',
-                  checked: false,
-                  default: true,
-                },
-              ],
-            };
-            data.options.foo = {
-              type: 'checkbox',
-              label: 'foo',
-              options: [
-                {
-                  value: 'one',
-                  label: 'foo one',
-                  checked: false,
-                  default: false,
-                },
-                {
-                  value: 'two',
-                  label: 'foo two',
-                  checked: false,
-                  default: true,
-                },
-                {
-                  value: 'three',
-                  label: 'foo three',
-                  checked: false,
-                  default: true,
-                },
-              ],
-            };
             // update the defaults but do not save them
             if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
               this.sProvider.save(update, { urlTypes });
