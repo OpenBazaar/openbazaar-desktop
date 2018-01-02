@@ -84,8 +84,9 @@ export default class extends baseVw {
 
     const params = {};
 
-    for (const param of queryParams.entries()) {
-      params[param[0]] = param[1];
+    for (const key of queryParams.keys()) {
+      const val = queryParams.getAll(key);
+      params[key] = val.length === 1 ? val[0] : val;
     }
 
     // use the parameters from the query unless they were overridden in the options
@@ -153,7 +154,8 @@ export default class extends baseVw {
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    let filters = $.param(this.filters);
+    // if the DOM is ready, use the form values. Otherwise use the values from the query.
+    let filters = this.$filters ? this.$filters.serialize() : $.param(this.filters);
     filters = filters ? `&${filters}` : '';
     const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
     this.callSearchProvider(newURL);
@@ -388,13 +390,7 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
-  changeFilter(e) {
-    const targ = $(e.target);
-    if (targ[0].type === 'checkbox') {
-      this.filters[targ.prop('name')] = String(targ[0].checked);
-    } else {
-      this.filters[targ.prop('name')] = targ.val();
-    }
+  changeFilter() {
     this.serverPage = 0;
     this.processTerm(this.term);
   }

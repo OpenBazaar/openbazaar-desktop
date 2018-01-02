@@ -81,9 +81,13 @@
                 <div class="flexCol">
                 <% _.each(val.options, function(option, index) {
                   let checked = '';
-                  checked = option.checked ? 'checked' : '';
+                  if (ob.filterVals.hasOwnProperty(key) && ob.filterVals[key].indexOf(option.value) > -1) {
+                    checked = 'checked';
+                  } else {
+                    checked = option.checked ? 'checked' : '';
+                  }
                   var parsedLabel = ob.parseEmojis(option.label);
-                  print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}.${option.value}">`);
+                  print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}" value="${option.value}">`);
                   print(`<label for="${key + index}">${parsedLabel}</label>`);
                 }); %>
                 </div>
