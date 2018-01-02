@@ -96,13 +96,13 @@ export default class extends baseVw {
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
 
     // all parameters not specified above are assumed to be filters
-    const filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
+    const filterParams = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
 
     // if not passed in, set the user's values for nsfw and the currency
-    this.filters = {
+    this.filterParams = {
       nsfw: String(app.settings.get('showNsfw')),
       acceptedCurrencies: app.serverConfig.cryptoCurrency,
-      ...filters,
+      ...filterParams,
     };
 
     this.processTerm(this.term);
@@ -161,7 +161,7 @@ export default class extends baseVw {
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
     // if the DOM is ready, use the form values. Otherwise use the values from the query.
-    let filters = this.$filters ? this.$filters.serialize() : $.param(this.filters);
+    let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
     filters = filters ? `&${filters}` : '';
     const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
     this.callSearchProvider(newURL);
@@ -283,6 +283,54 @@ export default class extends baseVw {
                 }
               }
             }
+            data.options.test = {
+              type: 'checkbox',
+              label: 'test',
+              options: [
+                {
+                  value: 'one',
+                  label: 'test one',
+                  checked: false,
+                  default: false,
+                },
+                {
+                  value: 'two',
+                  label: 'test two',
+                  checked: false,
+                  default: false,
+                },
+                {
+                  value: 'three',
+                  label: 'test three',
+                  checked: false,
+                  default: true,
+                },
+              ],
+            };
+            data.options.foo = {
+              type: 'checkbox',
+              label: 'foo',
+              options: [
+                {
+                  value: 'one',
+                  label: 'foo one',
+                  checked: false,
+                  default: false,
+                },
+                {
+                  value: 'two',
+                  label: 'foo two',
+                  checked: false,
+                  default: true,
+                },
+                {
+                  value: 'three',
+                  label: 'foo three',
+                  checked: false,
+                  default: true,
+                },
+              ],
+            };
             // update the defaults but do not save them
             if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
               this.sProvider.save(update, { urlTypes });
@@ -443,7 +491,7 @@ export default class extends baseVw {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
         sortBySelected: this.sortBySelected,
-        filterVals: this.filters,
+        filterParams: this.filterParams,
         errTitle,
         errMsg,
         providerLocked: this.sProvider.get('locked'),
