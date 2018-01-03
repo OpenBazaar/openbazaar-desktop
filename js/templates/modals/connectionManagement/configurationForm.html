@@ -98,7 +98,7 @@
         <div class="col9">
           <% if (ob.errors.zcashBinaryPath) print(ob.formErrorTmpl({ errors: ob.errors.zcashBinaryPath })) %>
           <div class="flex gutterH rowSm">
-            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" value="<%= ob.zcashBinaryPath %>" data-field-builtin />
+            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.zcashBinaryPlaceholder %>" value="<%= ob.zcashBinaryPath %>" data-field-builtin />
             <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
           </div>
           <div class="clrT2 tx6">

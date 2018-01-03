@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { remote } from 'electron';
+import { platform } from 'os';
 import openSimpleMessage from '../SimpleMessage';
 import { getCurrentConnection } from '../../../utils/serverConnect';
 import { getTranslatedCurrencies } from '../../../data/cryptoCurrencies';
@@ -20,6 +21,7 @@ export default class extends baseVw {
     }
 
     const curConn = getCurrentConnection();
+    this.platform = platform();
     this.showConfigureTorMessage = false;
     this.showTorUnavailableMessage = false;
 
@@ -155,8 +157,10 @@ export default class extends baseVw {
   }
 
   onClickBrowseZcashBinary() {
-    remote.dialog.showOpenDialog({ properties: ['openFile', 'openDirectory'] }, e => {
-      this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
+    remote.dialog.showOpenDialog({ properties: ['openFile'] }, e => {
+      if (e) {
+        this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
+      }
     });
   }
 
@@ -238,6 +242,9 @@ export default class extends baseVw {
         inUseCrypto: this.inUseCryptos,
         isNew: this.model.isNew(),
         isBundledApp: this.isBundledApp,
+        zcashBinaryPlaceholder: this.platform === 'win32' ?
+          'C:\\path\\to\\zcashd.exe' :
+          '/path/to/zcashd',
       }));
 
       this._$formFields = null;

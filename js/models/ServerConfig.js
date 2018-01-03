@@ -3,7 +3,6 @@ import { remote } from 'electron';
 import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
 import { getCurrencyByCode as getCryptoCurByCode } from '../data/cryptoCurrencies';
-import { fileModeToPermissions } from '../utils';
 import app from '../app';
 import BaseModel from './BaseModel';
 
@@ -165,7 +164,7 @@ export default class extends BaseModel {
           // pass
         }
 
-        if (!fsStat || !fsStat.isFile() || !fileModeToPermissions(fsStat).execute.owner) {
+        if (!fsStat || !fsStat.isFile()) {
           addError('zcashBinaryPath',
             app.polyglot.t('serverConfigModelErrors.invalidZcashBinaryPath'));
         }

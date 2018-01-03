@@ -325,24 +325,50 @@ export default function connect(server, options = {}) {
     if (connectAttempt) connectAttempt.cancel();
   };
 
-  // If we're not connecting to the local bundled server or it's running for a different coin,
-  // then let's ensure it's stopped.
+  if (server.get('builtIn') && !localServer) {
+    // This should never happen to normal users. The only way it would is if you are a dev
+    // and mucking with localStorage and / or fudging the source for the app to masquerade
+    // as a bundled app.
+    throw new Error('A configuration for a built-in server should only be used on ' +
+      ' the bundled app.');
+  }
+
+  const curLocalServerCoin = serverStartArgsToCoin();
+  let curLocalServerZecBinaryPath = null;
+
+  if (localServer) {
+    if (curLocalServerCoin === 'ZEC') {
+      const zecIndex = localServer.lastStartCommandLineArgs
+        .indexOf(serverCurStartArgMap.ZEC);
+
+      if (zecIndex !== -1 &&
+        typeof localServer.lastStartCommandLineArgs[zecIndex + 1] === 'string') {
+        curLocalServerZecBinaryPath = localServer.lastStartCommandLineArgs[zecIndex + 1];
+      }
+    }
+  }
+
+  // If we're not connecting to the local bundled server or it's running with incompatible
+  // command line arguments, let's ensure it's stopped.
   if (localServer && localServer.isRunning &&
-    (!server.get('builtIn') || serverCurrency !== serverStartArgsToCoin())) {
+    (
+      !server.get('builtIn') || serverCurrency !== serverStartArgsToCoin() ||
+      (serverCurrency === 'ZEC' && server.get('zcashBinaryPath') !== curLocalServerZecBinaryPath)
+    )) {
     deferred.notify({ status: 'stopping-local-server' });
     localServer.stop();
 
-    if (server.get('builtIn') && serverCurrency !== serverStartArgsToCoin() &&
-      options.attempts === undefined && options.minAttemptSpacing === undefined &&
+    if (server.get('builtIn') && options.attempts === undefined &&
+      options.minAttemptSpacing === undefined &&
       options.maxAttemptTime === undefined) {
       // If we need to wait for a bundled server to shut down before starting a new instance and
       // the user did not pass in override options regarding connection timeouts, we'll bump up the
       // defaults to give the shutting down server more time (it may take up to a few minutes).
       opts = {
-        attempts: 36, // works out to 3 minutes total
+        ...opts,
+        attempts: 60, // works out to 5 minutes total
         minAttemptSpacing: 5000,
         maxAttemptTime: 5000,
-        ...opts,
       };
     }
   }
@@ -503,14 +529,6 @@ export default function connect(server, options = {}) {
             });
         }
       };
-
-      if (server.get('builtIn') && !localServer) {
-        // This should never happen to normal users. The only way it would is if you are a dev
-        // and mucking with localStorage and / or fudging the source for the app to masquerade
-        // as a bundled app.
-        throw new Error('A configuration for a built-in server should only be used on ' +
-          ' the bundled app.');
-      }
 
       if (server.get('useTor')) {
         innerConnectNotify('setting-tor-proxy');
