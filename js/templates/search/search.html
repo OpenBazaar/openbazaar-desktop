@@ -46,7 +46,7 @@
         <div class="flexColWide gutterV">
           <% _.each(ob.options, function(val, key) { %>
             <div class="contentBox pad clrP clrBr clrSh2">
-              <h4 class="rowSm"><%= val.label %></h4>
+              <div class="rowSm txB tx5b"><%= val.label %></div>
               <% if (val.type ==='dropdown') { %>
                 <select name="<%= key %>" class="select2Small">
                 <%
