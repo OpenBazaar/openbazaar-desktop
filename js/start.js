@@ -215,6 +215,8 @@ function isOnboardingNeeded() {
       }
     })
     .done(() => {
+      console.log('bn');
+      window.bn = app.settings.get('blockedNodes');
       onboardingNeededDeferred.resolve(false);
     })
     .fail((xhr, e) => {
