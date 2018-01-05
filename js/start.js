@@ -42,16 +42,6 @@ import Onboarding from './views/modals/onboarding/Onboarding';
 import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
-import * as block from './utils/block';
-
-console.log('block');
-window.block = block;
-
-block.events.on('all', (name, data) => {
-  const peerIds = data && data.peerIds || false;
-  console.log(`got a ${name} event with ${peerIds && peerIds.length ? peerIds.join(', ') : ''}`);
-  // console.log(`bn's now be ${app.settings.get('blockedNodes')}`);
-});
 
 fixLinuxZoomIssue();
 handleServerShutdownRequests();
@@ -225,8 +215,6 @@ function isOnboardingNeeded() {
       }
     })
     .done(() => {
-      console.log('bn');
-      window.bn = app.settings.get('blockedNodes');
       onboardingNeededDeferred.resolve(false);
     })
     .fail((xhr, e) => {

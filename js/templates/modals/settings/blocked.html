@@ -4,7 +4,7 @@
   </div>
   <hr class="clrBr rowLg" />
 
-  <div class="flexColWide tx5 rowMd posR <% if (ob.blocked.length) print('padKids borderStackedAll') %>" style="min-height: 250px">
+  <div class="flexColWide tx5 rowMd blockedListWrap <% if (ob.blocked.length) print('padKids borderStackedAll') %>">
   <%  if (ob.blocked.length) {
         ob.blocked.forEach(peerId => { %>
           <div class="clrBr" data-peerid="<%= peerId %>">

@@ -2,41 +2,26 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import { unblock, block, events as blockEvents } from '../../../utils/block';
+import { unblock, isUnblocking, events as blockEvents } from '../../../utils/block';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super();
+    const calcBlockedList = () => app.settings.get('blockedNodes')
+      .filter(peerId => !isUnblocking(peerId));
 
-    blockEvents.on('blocking unblocking', data => {
-      data.peerIds.forEach(peerId => {
-        this.$el.find(`[data-peerid=${peerId}] button`)
-          .css('color', 'red');
-      });
+    super({
+      ...options,
+      initialState: {
+        blocked: calcBlockedList(),
+      },
     });
 
-    blockEvents.on('blockFail unblockFail', data => {
-      data.peerIds.forEach(peerId => {
-        this.$el.find(`[data-peerid=${peerId}] button`)
-          .css('color', 'black');
-      });
-    });
+    this.listenTo(blockEvents, 'unblocking unblockFail blocked',
+      () => this.setState({ blocked: calcBlockedList() }));
+  }
 
-    blockEvents.on('blocked', data => {
-      data.peerIds.forEach(peerId => {
-        this.$el.find(`[data-peerid=${peerId}] button`)
-          .text('unblock')
-          .css('color', 'black');
-      });
-    });
-
-    blockEvents.on('unblocked', data => {
-      data.peerIds.forEach(peerId => {
-        this.$el.find(`[data-peerid=${peerId}] button`)
-          .text('block')
-          .css('color', 'black');
-      });
-    });
+  className() {
+    return 'settingsBlocked';
   }
 
   events() {
@@ -53,18 +38,14 @@ export default class extends baseVw {
       throw new Error('Unable to unblock because the peerId data attribute is not set.');
     }
 
-    if (app.settings.get('blockedNodes').includes(peerId)) {
-      unblock(peerId);
-    } else {
-      block(peerId);
-    }
+    unblock(peerId);
   }
 
   render() {
     super.render();
     loadTemplate('modals/settings/blocked.html', (t) => {
       this.$el.html(t({
-        blocked: app.settings.get('blockedNodes'),
+        ...this.getState(),
       }));
     });
 
