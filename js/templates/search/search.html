@@ -50,11 +50,12 @@
               <% if (val.type ==='dropdown') { %>
                 <select name="<%= key %>" class="select2Small">
                 <%
-                  // if one has a selected value use it. Otherwise use the default.
+                  // if any option has a selected value use the first one. Otherwise use the first default.
                   let selectedIndex = val.options.findIndex(opt => opt.checked);
                   selectedIndex = selectedIndex === -1 ? val.options.findIndex(opt => opt.default) : selectedIndex;
                   _.each(val.options, function(option, ind) {
                     const selected = selectedIndex === ind ? 'selected' : '';
+                    // parsing the label for emojis isn't needed here because the select list is replaced by selectize.js
                     print(`<option ${selected} value="${option.value}">${option.label}</option>`);
                   });
                   %>
@@ -62,7 +63,7 @@
               <% } else if (val.type ==='radio') { %>
                 <div class="flexCol">
                 <%
-                  // if one has a checked value, check it. Otherwise use the default.
+                  // if any options has a checked value, check the first one. Otherwise use the first default.
                   let checkedIndex = val.options.findIndex(opt => opt.checked);
                   checkedIndex = checkedIndex === -1 ? val.options.findIndex(opt => opt.default) : checkedIndex;
                   _.each(val.options, function(option, ind) {

@@ -85,6 +85,8 @@ export default class extends baseVw {
     const params = {};
 
     for (const key of queryParams.keys()) {
+      // checkbox params are represented by the same key multiple times. Convert them into a
+      // single key with an array of values
       const val = queryParams.getAll(key);
       params[key] = val.length === 1 ? val[0] : val;
     }
@@ -98,6 +100,7 @@ export default class extends baseVw {
     // all parameters not specified above are assumed to be filters
     const filterParams = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
 
+    // set an initial set of filters for the first query
     // if not passed in, set the user's values for nsfw and the currency
     this.filterParams = {
       nsfw: String(app.settings.get('showNsfw')),
@@ -160,7 +163,7 @@ export default class extends baseVw {
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    // if the DOM is ready, use the form values. Otherwise use the values from the query.
+    // if the DOM is ready, use the form values. Otherwise use the values set in the constructor.
     let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
     filters = filters ? `&${filters}` : '';
     const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
@@ -283,6 +286,54 @@ export default class extends baseVw {
                 }
               }
             }
+            data.options.test = {
+              type: 'checkbox',
+              label: 'test',
+              options: [
+                {
+                  value: 'one',
+                  label: 'test one',
+                  checked: false,
+                  default: false,
+                },
+                {
+                  value: 'two',
+                  label: 'test two',
+                  checked: false,
+                  default: false,
+                },
+                {
+                  value: 'three',
+                  label: 'test three',
+                  checked: false,
+                  default: true,
+                },
+              ],
+            };
+            data.options.foo = {
+              type: 'checkbox',
+              label: 'foo',
+              options: [
+                {
+                  value: 'one',
+                  label: 'foo one',
+                  checked: false,
+                  default: false,
+                },
+                {
+                  value: 'two',
+                  label: 'foo two',
+                  checked: false,
+                  default: true,
+                },
+                {
+                  value: 'three',
+                  label: 'foo three',
+                  checked: false,
+                  default: true,
+                },
+              ],
+            };
             // update the defaults but do not save them
             if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
               this.sProvider.save(update, { urlTypes });
