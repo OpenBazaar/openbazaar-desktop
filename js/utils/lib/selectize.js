@@ -8,7 +8,7 @@
 // likely want to pass this variable in.
 export const tagsDelimiter = '<=!=>';
 
-import '../lib/selectize';
+import '../../lib/selectize';
 
 // hack to work around the circular dependance issue and expose the
 // tags delimiter to the '../lib/selectize' module. Only that module

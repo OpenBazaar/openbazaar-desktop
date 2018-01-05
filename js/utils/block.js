@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { Model, Events } from 'backbone';
+import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import app from '../app';
 
 const events = {
@@ -20,6 +21,8 @@ function checkAppSettings() {
 
 let latestSettingsSave;
 let lastSentBlockedNodes = [];
+let pendingBlocks = [];
+let pendingUnblocks = [];
 
 function blockUnblock(_block, peerIds) {
   if (typeof _block !== 'boolean') {
@@ -28,6 +31,14 @@ function blockUnblock(_block, peerIds) {
 
   if (typeof peerIds !== 'string' && !Array.isArray(peerIds)) {
     throw new Error('Either provide a single peerId as a string or an array of peerId strings.');
+  }
+
+  if (Array.isArray(peerIds)) {
+    peerIds.forEach(peerId => {
+      if (typeof peerId !== 'string') {
+        throw new Error('If providing an array of peerIds, each item must be a string.');
+      }
+    });
   }
 
   if (_block && app.profile && peerIds.includes(app.profile.id)) {
@@ -39,24 +50,27 @@ function blockUnblock(_block, peerIds) {
   const peerIdList =
     typeof peerIds === 'string' ? [peerIds] : peerIds;
 
-  const prevBlocked = app.settings.get('blockedNodes');
-
   let blockedNodes; // if _block is false, semantically this means unblockedNodes
 
   if (_block) {
-    blockedNodes = lastSentBlockedNodes = [
+    blockedNodes = [
       ...(
         latestSettingsSave && latestSettingsSave.state() === 'pending' ?
-          lastSentBlockedNodes : prevBlocked
+          lastSentBlockedNodes : app.settings.get('blockedNodes')
       ),
       ...peerIdList,
     ];
+    pendingBlocks = [...pendingBlocks, ...peerIdList];
+    pendingUnblocks = pendingUnblocks.filter(peerId => !peerIdList.includes(peerId));
   } else {
     const filterList = latestSettingsSave && latestSettingsSave.state() === 'pending' ?
-      lastSentBlockedNodes : prevBlocked;
-    blockedNodes = lastSentBlockedNodes =
-      filterList.filter(peerId => !peerIdList.includes(peerId));
+      lastSentBlockedNodes : app.settings.get('blockedNodes');
+    blockedNodes = filterList.filter(peerId => !peerIdList.includes(peerId));
+    pendingUnblocks = [...pendingUnblocks, ...peerIdList];
+    pendingBlocks = pendingBlocks.filter(peerId => !peerIdList.includes(peerId));
   }
+
+  lastSentBlockedNodes = [...blockedNodes];
 
   latestSettingsSave = $.ajax({
     type: 'PATCH',
@@ -65,31 +79,87 @@ function blockUnblock(_block, peerIds) {
     dataType: 'json',
   }).done(() => {
     app.settings.set('blockedNodes', blockedNodes);
-    events.trigger(_block ? 'blocked' : 'unblocked', { peerIds: peerIdList });
-  }).fail(xhr => {
-    let failedPeerIds = [];
+    const blocked = [];
+    const unblocked = [];
 
-    if (xhr === latestSettingsSave) {
-      failedPeerIds = [...peerIdList];
-    } else {
-      if (_block) {
-        failedPeerIds = peerIdList.filter(peerId => !lastSentBlockedNodes.includes(peerId));
-      } else {
-        failedPeerIds = peerIdList.filter(peerId => lastSentBlockedNodes.includes(peerId));
+    pendingBlocks = pendingBlocks.filter(peerId => {
+      if (blockedNodes.includes(peerId)) {
+        blocked.push(peerId);
+        return false;
       }
+
+      return true;
+    });
+
+    pendingUnblocks = pendingUnblocks.filter(peerId => {
+      if (!blockedNodes.includes(peerId)) {
+        unblocked.push(peerId);
+        return false;
+      }
+
+      return true;
+    });
+
+    if (blocked.length) {
+      events.trigger('blocked', { peerIds: blocked });
     }
 
-    if (failedPeerIds.length) {
-      const reason = xhr.responseJSON && xhr.responseJSON.reason || '';
+    if (unblocked.length) {
+      events.trigger('unblocked', { peerIds: unblocked });
+    }
+  }).fail(xhr => {
+    if (latestSettingsSave && latestSettingsSave.state() === 'pending') return;
+
+    const reason = xhr.responseJSON && xhr.responseJSON.reason || '';
+    const bn = app.settings.get('blockedNodes');
+    const failedBlocks = pendingBlocks.filter(peerId => !bn.includes(peerId));
+    const failedUnblocks = pendingUnblocks.filter(peerId => bn.includes(peerId));
+    pendingBlocks = [];
+    pendingUnblocks = [];
+
+    if (failedBlocks.length) {
       events.trigger('blockFail', {
-        peerIds: failedPeerIds,
+        peerIds: failedBlocks,
         reason,
       });
-      alert(`Block has failed for ${failedPeerIds.join(', ')} with reason '${reason}'`);
+    }
+
+    if (failedUnblocks.length) {
+      events.trigger('unblockFail', {
+        peerIds: failedUnblocks,
+        reason,
+      });
+    }
+
+    if (failedBlocks.length || failedUnblocks.length) {
+      let title;
+      let body;
+
+      if (failedBlocks.length && failedUnblocks.length) {
+        title = app.polyglot.t('block.errorModal.titleUnableToBlockUnblock');
+        body = `${app.polyglot.t('block.errorModal.blockFailedListHeading')}<br /><br />` +
+          `<div class="txCtr">${failedBlocks.join('<br />')}</div><br />` +
+          `${app.polyglot.t('block.errorModal.unblockFailedListHeading')}<br /><br />` +
+          `<div class="txCtr">${failedUnblocks.join('<br />')}</div>`;
+      } else if (failedUnblocks.length) {
+        title = app.polyglot.t('block.errorModal.titleUnableToUnblock');
+        body = `${app.polyglot.t('block.errorModal.unblockFailedListHeading')}<br /><br />` +
+          `<div class="txCtr">${failedUnblocks.join('<br />')}</div>`;
+      } else {
+        title = app.polyglot.t('block.errorModal.titleUnableToBlock');
+        body = `${app.polyglot.t('block.errorModal.blockFailedListHeading')}<br /><br />` +
+          `<div class="txCtr">${failedBlocks.join('<br />')}</div>`;
+      }
+
+      if (reason) {
+        body += `<br />${app.polyglot.t('block.errorModal.reason', { reason })}`;
+      }
+
+      openSimpleMessage(title, '', { messageHtml: body });
     }
   });
 
-  return latestSettingsSave; // for now BLAH blAh BliZZle.
+  events.trigger(_block ? 'blocking' : 'unblocking', { peerIds: peerIdList });
 }
 
 export function block(peerIds) {
