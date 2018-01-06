@@ -2,20 +2,17 @@
 
 <div class="contentBox padMd clrP clrBr clrSh3">
   <section>
-    <h1 class="txCtr h3 pad"><%= ob.polyT('torExternalLinkWarning.heading') %></h1>
+    <h1 class="txCtr h3 pad"><i class="ion-eye-disabled"></i>You blocked this user</h1>
     <hr class="clrBr rowHg" />
-    <p><%= ob.polyT('torExternalLinkWarning.body') %></p>
+    <p></p>
     <div class="contentBox pad clrS clrBr row"><%= ob.url %></div>
-    <p class="rowHg"><%= ob.polyT('torExternalLinkWarning.areYouSureToProceed') %></p>
+    <p class="rowHg">This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.</p>
+    <p>Would you like to unblock and view their page?</p>
     <hr class="clrBr row" />
     <div class="flexVCent">
-      <div class="flexNoShrink tx5">
-        <input type="checkbox" class="centerLabel" id="dontShowTorExternalLinkWarning">
-        <label for="dontShowTorExternalLinkWarning"><%= ob.polyT('torExternalLinkWarning.doNotShowAgain') %></label>
-      </div>
       <div class="flexExpand flexHRight flexVCent gutterHMd">
-        <a class="clrT2 js-cancel"><%= ob.polyT('torExternalLinkWarning.btnCancel') %></a>
-        <button class="btn clrP clrBr js-confirm"><%= ob.polyT('torExternalLinkWarning.btnProceed') %></button>
+        <a class="clrT2 js-cancel">Cancel</a>
+        <button class="btn clrP clrBr js-btnUnblock">Yes, unblock</button>
       </div>
     </div>
   </section>
