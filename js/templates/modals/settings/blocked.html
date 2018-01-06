@@ -11,13 +11,13 @@
             <div class="flexVCent">
               <div class="flexExpand"><a class="clrT" href="<%= peerId %>"><%= peerId %></a></div>
               <div>
-                <button class="btn clrP clrBr tx5b js-unblock">Unblock</button>
+                <button class="btn clrP clrBr tx5b js-unblock"><%= ob.polyT('settings.blockedTab.btnUnblock') %></button>
               </div>
             </div>
           </div>
         <% })
       } else { %>
-        <p class="center txCtr">You are not blocking anyone.</p>
+        <p class="center txCtr"><%= ob.polyT('settings.blockedTab.emptyBlockList') %></p>
    <% } %>
   </div>
 </div>
