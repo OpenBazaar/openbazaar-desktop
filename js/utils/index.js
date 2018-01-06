@@ -127,8 +127,6 @@ export function isMultihash(_string) {
   }
 }
 
-window.isSilly = isMultihash;
-
 // applies a template to select2 to turn text emojis into images
 export function selectEmojis(option) {
   return $(`<span class="select2ImgOpt">${twemoji.parse(option.text,
