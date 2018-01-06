@@ -654,7 +654,9 @@
       }
     },
     "blockedTab": {
-      "sectionName": "Blocked"
+      "sectionName": "Blocked",
+      "btnUnblock": "Unblock",
+      "emptyBlockList": "You are not blocking anyone."
     },
     "optional": "optional",
     "language": "Language",

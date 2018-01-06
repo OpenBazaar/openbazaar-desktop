@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import { Model, Events } from 'backbone';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
+import { isMultihash } from '../utils';
 import app from '../app';
 
 const events = {
@@ -24,31 +25,40 @@ let lastSentBlockedNodes = [];
 let pendingBlocks = [];
 let pendingUnblocks = [];
 
+// FYI - The extra complexity in this method is due to the fact that for the block API
+// you are sending the full list rather than individual items you want to unblock / unblock
+// and that gets interesting if you kick off a subsequent request while a previous is still
+// pending and, for example, the previous may fail whereas the subsequent (which includes
+// the block/unblock from the previous) may succeed. Fun times :)
 function blockUnblock(_block, peerIds) {
   if (typeof _block !== 'boolean') {
     throw new Error('Please provide _block as a boolean.');
   }
 
-  if (typeof peerIds !== 'string' && !Array.isArray(peerIds)) {
-    throw new Error('Either provide a single peerId as a string or an array of peerId strings.');
+  if (!isMultihash(peerIds) && !Array.isArray(peerIds)) {
+    throw new Error('Either provide a single peerId as a multihash or an array of peerId ' +
+      'multihashes.');
   }
 
   if (Array.isArray(peerIds)) {
     peerIds.forEach(peerId => {
-      if (typeof peerId !== 'string') {
-        throw new Error('If providing an array of peerIds, each item must be a string.');
+      if (!isMultihash(peerId)) {
+        throw new Error('If providing an array of peerIds, each item must be a multihash.');
       }
     });
   }
 
-  if (_block && app.profile && peerIds.includes(app.profile.id)) {
+  checkAppSettings();
+
+  let peerIdList =
+    typeof peerIds === 'string' ? [peerIds] : peerIds;
+
+  if (_block && app.profile && peerIdList.includes(app.profile.id)) {
     throw new Error('You cannot block your own node.');
   }
 
-  checkAppSettings();
-
-  const peerIdList =
-    typeof peerIds === 'string' ? [peerIds] : peerIds;
+  // de-dupe peerId list
+  peerIdList = Array.from(new Set(peerIdList));
 
   let blockedNodes; // if _block is false, semantically this means unblockedNodes
 
