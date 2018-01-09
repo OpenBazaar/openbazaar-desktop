@@ -16,11 +16,19 @@ export default class extends Collection {
     return app.localSettings.get('verifiedModsProvider');
   }
 
+  get data() {
+    return this._data;
+  }
+
+  set data(data) {
+    this._data = data;
+  }
+
   parse(response) {
     const fakeMods = {
       data: {
-        name: 'name of provider',
-        description: 'description',
+        name: 'OpenBasketModService',
+        description: 'Some description of the moderator verification service that could be any arbitrary length so we had better watch out for that for certain and not let it get too long eh?',
         link: 'url to the provider'
       },
       types: [
@@ -47,12 +55,13 @@ export default class extends Collection {
       ]
     };
     response = fakeMods;
+    this.data = response.data;
+    this.data.defaultBadge = _.find(response.types, type => type.badge).badge;
     const parsedResponse = response.moderators ? response.moderators : [];
     parsedResponse.forEach((mod) => {
       if (response.types && response.types.length && mod.type) {
         mod.type = _.findWhere(response.types, { name: mod.type });
       }
-      mod.data = response.data;
     });
     return parsedResponse;
   }

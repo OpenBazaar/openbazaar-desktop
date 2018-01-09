@@ -319,7 +319,8 @@
   "verifiedMod": {
     "title": "Verified Moderator",
     "link": "Learn More",
-    "typeName": "Type: %{name}"
+    "typeName": "Type: %{name}",
+    "listingDescription": "You can purchase this listing with a trusted moderator, verified by %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "View",
