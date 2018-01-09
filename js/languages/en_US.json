@@ -1222,6 +1222,7 @@
     "memoPlaceholder": "Provide additional details for the vendor here (optional).",
     "pay": "PAY >",
     "payNote": "Clicking pay will advance you to the final step.",
+    "scamWarning": "WARNING: Protect against scams",
     "pending": "Pending…",
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "close",
