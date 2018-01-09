@@ -43,6 +43,11 @@ import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 
+import { block } from './utils/block';
+
+console.log('block');
+window.block = block;
+
 fixLinuxZoomIssue();
 handleServerShutdownRequests();
 

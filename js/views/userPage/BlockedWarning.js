@@ -1,3 +1,4 @@
+import { unblock } from '../../utils/block';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from '../modals/BaseModal';
 
@@ -5,10 +6,16 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
+      showCloseButton: false,
       ...options,
     };
 
+    if (typeof options.peerId !== 'string') {
+      throw new Error('Please provide the peerId of the blocked user as a string.');
+    }
+
     super(opts);
+    this.options = opts;
   }
 
   className() {
@@ -18,17 +25,19 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-cancel': 'onCancelClick',
-      'click .js-confirm': 'onConfirmClick',
+      'click .js-btnUnblock': 'onUnblockClick',
       ...super.events(),
     };
   }
 
   onCancelClick() {
     this.close();
+    this.trigger('canceled');
   }
 
-  onConfirmClick() {
-    this.trigger('confirmClick');
+  onUnblockClick() {
+    this.close();
+    unblock(this.options.peerId);
   }
 
   render() {

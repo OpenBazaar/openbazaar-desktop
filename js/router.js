@@ -6,7 +6,8 @@ import { getPageContainer } from './utils/selectors';
 import { isPromise } from './utils/object';
 import './lib/whenAll.jquery';
 import app from './app';
-import { getOpenModals } from './views/modals/BaseModal';
+import { getOpenModals, events as baseModalEvents } from './views/modals/BaseModal';
+import { events as blockEvents, isBlocked } from './utils/block';
 import UserPage from './views/userPage/UserPage';
 import Search from './views/search/Search';
 import Transactions from './views/transactions/Transactions';
@@ -14,6 +15,8 @@ import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
+import BlockedWarning from './views/userPage/BlockedWarning';
+import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -62,7 +65,7 @@ export default class ObRouter extends Router {
     return 1000;
   }
 
-  // FYI - There is a scenrio where the prevHash will be inaccurate. More details in
+  // FYI - There is a scenario where the prevHash will be inaccurate. More details in
   // the confirmPromises when() fail handler in execute().
   setPrevHash(prevHash = this._curHash) {
     this._prevHash = prevHash;
@@ -380,6 +383,58 @@ export default class ObRouter extends Router {
 
         listingFetch = listing.fetch();
       }
+    }
+
+    if (isBlocked(guid)) {
+      const blockedWarningModal = new BlockedWarning({ peerId: guid })
+        .render()
+        .open();
+
+      const onOpenModal = modal => {
+        if (!(modal instanceof ConnectionManagement)) {
+          // The user page might end up loading a modal (e.g. listing detail),
+          // but we want the blocked warning to be on top.
+          blockedWarningModal.bringToTop();
+        }
+      };
+
+      let unblocking = false;
+      const onUnblock = () => {
+        unblocking = true;
+        blockedWarningModal.close();
+      };
+
+      const cleanUpBlockedModal = () => {
+        if (!unblocking) {
+          // means it was cancelled - will go back to previous page
+          const prevHash = this.prevHash.endsWith('/') ?
+            this.prevHash.slice(0, this.prevHash.length - 1) : this.prevHash;
+          const locationHash = location.hash.endsWith('/') ?
+            location.hash.slice(0, location.hash.length - 1) : location.hash;
+
+          if (prevHash === locationHash) {
+            // means there is no previous page - will go to our own node page
+            this.navigate(`${app.profile.id}`, {
+              replace: true,
+              trigger: true,
+            });
+          } else {
+            this.navigate(`${this.prevHash.slice(1)}`, {
+              replace: true,
+              trigger: true,
+            });
+          }
+        }
+        baseModalEvents.off(null, onOpenModal);
+        blockEvents.off(null, onUnblock);
+      };
+
+      baseModalEvents.on('open', onOpenModal);
+      blockedWarningModal.on('close', cleanUpBlockedModal);
+      blockEvents.once('unblocking', onUnblock);
+
+      // explicity canceled navs back.
+      // move unblocking unblocked events to warning modal and upon them fire the 'unblocking' event
     }
 
     const onWillRoute = () => {
