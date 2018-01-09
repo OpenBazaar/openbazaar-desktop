@@ -21,7 +21,8 @@ import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
-import VerifiedMod from "../../components/VerifiedMod";
+import VerifiedMod from '../../components/VerifiedMod';
+import VerifiedModModel from '../../../models/VerifiedMod';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -526,6 +527,9 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
+    const mods = this.model.get('moderators');
+    const hasVerifiedMods = _.intersection(app.verifiedMods.pluck('peerID'), mods).length > 0;
+
     loadTemplate('modals/listingDetail/listing.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -541,6 +545,8 @@ export default class extends BaseModal {
         currencyValidity: getCurrencyValidity(
           this.model.get('metadata').get('pricingCurrency')
         ),
+        hasVerifiedMods,
+        verifiedModsData: app.verifiedMods.data,
       }));
 
       super.render();
@@ -583,17 +589,6 @@ export default class extends BaseModal {
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
       this.adjustPriceBySku();
-      
-      const mods = this.model.get('moderators');
-      const verifiedMod = _.intersection(app.verifiedMods.pluck('peerID'), mods);
-      console.log(verifiedMod);
-      if (verifiedMod.length) {
-        this.verifiedMod = new VerifiedMod({
-          model: verifiedMod,
-          arrowClass: 'arrowBoxRightTop',
-        });
-        this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
-      }
     });
 
     return this;
