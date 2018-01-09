@@ -36,7 +36,7 @@
     </div>
   <% } %>
 </div>
-<div class="padSm txSm txCtr clrT2">
+<div class="padSm flexColRows gutterVSm txSm txCtr clrT2">
   <% if (ob.phase === 'pay' || ob.phase === 'confirm') { %>
     <span class="js-payNote"><%= ob.polyT('purchase.payNote') %></span>
   <% } else if (ob.phase ==='pending') { %>
@@ -44,9 +44,5 @@
   <% } else if (ob.phase ==='complete') { %>
     <span class="js-closeNote"><%= ob.polyT('purchase.closeNote') %></span>
   <% } %>
-</div>
-<div class="padSm txSm txCtr">
-  <span>
-    <a class="clrTErr txU" href="https://scamprevention.openbazaar.org"><%= ob.polyT('purchase.scamWarning') %></a>
-  </span>
+  <a class="clrTErr txU" href="https://scamprevention.openbazaar.org"><%= ob.polyT('purchase.scamWarning') %></a>
 </div>
