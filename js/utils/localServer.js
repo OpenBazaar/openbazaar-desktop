@@ -1,3 +1,4 @@
+import { ipcMain } from 'electron';
 import _ from 'underscore';
 import { EOL, platform } from 'os';
 import { Events } from 'backbone';
@@ -18,15 +19,32 @@ export default class LocalServer {
       throw new Error('Please provide an error log path.');
     }
 
+    if (!options.getMainWindow || typeof options.getMainWindow !== 'function') {
+      throw new Error('Please provide a function that, if available, returns a mainWindow ' +
+        'instance.');
+    }
+
     _.extend(this, Events);
     this.serverPath = options.serverPath;
     this.serverFilename = options.serverFilename;
     this.errorLogPath = options.errorLogPath;
+    this._getMainWindow = options.getMainWindow;
     this._isRunning = false;
     this._isStopping = false;
     this._debugLog = '';
     this._lastStartCommandLineArgs = [];
     this.startAfterStop = (...args) => this.start(...args);
+
+    ipcMain.on('server-shutdown-fail', (e, data = {}) => {
+      if (this.isStopping && this.serverSubProcess) {
+        const reasonInsert = data.reason ? ` (${data.reason})` : '';
+        const logMsg = `The server shutdown via api request failed${reasonInsert}. ` +
+          'Will forcibly shutdown.';
+
+        this.log(logMsg);
+        this._forceKill();
+      }
+    });
   }
 
   get isRunning() {
@@ -48,8 +66,8 @@ export default class LocalServer {
   }
 
   start(commandLineArgs = []) {
-    if (this.pendingStop) {
-      this.pendingStop.once('exit', () => this.startAfterStop(commandLineArgs));
+    if (this.isStopping) {
+      this.serverSubProcess.once('exit', () => this.startAfterStop(commandLineArgs));
       const debugInfo = 'Attempt to start server while an existing one' +
         ' is the process of shutting down. Will start after shut down is complete.';
       this.log(debugInfo);
@@ -66,7 +84,7 @@ export default class LocalServer {
     }
 
     this._isRunning = true;
-    let serverStartArgs = ['start', '-t', ...commandLineArgs];
+    let serverStartArgs = ['start', ...commandLineArgs];
 
     // wire in our auth cookie
     if (global.authCookie) {
@@ -132,20 +150,32 @@ export default class LocalServer {
     return;
   }
 
+  _forceKill() {
+    if (platform() !== 'win32') {
+      throw new Error('For non windows OSs, use childProcess.kill and pass in a signal.');
+    }
+
+    if (!this.isStopping) {
+      throw new Error('A force kill should only be attempted if you tried stopping via this.stop ' +
+        'and it failed.');
+    }
+
+    if (this.serverSubProcess) {
+      this.log('Forcibly shutting down the server via taskkill.');
+      childProcess.spawn('taskkill', ['/pid', this.serverSubProcess.pid, '/f', '/t']);
+    }
+  }
+
   stop() {
     if (!this.isRunning) return;
 
-    if (this.pendingStop) {
-      this.pendingStop.removeListener('exit', this.startAfterStop);
+    if (this.isStopping) {
+      this.serverSubProcess.removeListener('exit', this.startAfterStop);
       return;
     }
 
     this._isStopping = true;
-    this.pendingStop = this.serverSubProcess;
-    this.pendingStop.once('exit', () => {
-      this.pendingStop = null;
-      this._isStopping = false;
-    });
+    this.serverSubProcess.once('exit', () => (this._isStopping = false));
 
     this.log('Shutting down server');
     console.log('Shutting down server');
@@ -153,7 +183,13 @@ export default class LocalServer {
     if (platform() === 'darwin' || platform() === 'linux') {
       this.serverSubProcess.kill('SIGINT');
     } else {
-      this.childProcess.spawn('taskkill', ['/pid', this.serverSubProcess.pid, '/f', '/t']);
+      const mw = this._getMainWindow();
+
+      if (mw) {
+        mw.webContents.send('server-shutdown');
+      } else {
+        this._forceKill();
+      }
     }
   }
 
