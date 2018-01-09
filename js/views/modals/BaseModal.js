@@ -192,6 +192,7 @@ export default class BaseModal extends baseVw {
 
   bringToTop() {
     if (this.isOpen()) {
+      this.__trigger('brought-to-top');
       getAppFrame()[0].removeChild(this.el);
       getAppFrame().append(this.el);
     }

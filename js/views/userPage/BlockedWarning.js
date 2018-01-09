@@ -1,4 +1,4 @@
-import { unblock } from '../../utils/block';
+import { events as blockEvents, unblock } from '../../utils/block';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from '../modals/BaseModal';
 
@@ -7,6 +7,7 @@ export default class extends BaseModal {
     const opts = {
       removeOnClose: true,
       showCloseButton: false,
+      dismissOnEscPress: false,
       ...options,
     };
 
@@ -16,6 +17,10 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
+
+    this.listenTo(blockEvents, 'unblocked unblocking', data => {
+      if (data.peerIds.includes(options.peerId)) this.close();
+    });
   }
 
   className() {
@@ -31,13 +36,13 @@ export default class extends BaseModal {
   }
 
   onCancelClick() {
-    this.close();
     this.trigger('canceled');
+    this.close();
   }
 
   onUnblockClick() {
-    this.close();
     unblock(this.options.peerId);
+    this.close();
   }
 
   render() {

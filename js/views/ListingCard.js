@@ -3,6 +3,7 @@ import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
+import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
@@ -10,6 +11,7 @@ import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
 import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
+import BlockedWarning from './userPage/BlockedWarning';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -180,10 +182,10 @@ export default class extends baseVw {
       app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
         this.ownerGuid);
 
-      app.loadingModal.open();
-
-      this.fetchFullListing()
-        .done(jqXhr => {
+      const listingFetch = this.fetchFullListing();
+      const loadListing = () => {
+        app.loadingModal.open();
+        listingFetch.done(jqXhr => {
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
           const listingDetail = new ListingDetail({
@@ -210,6 +212,27 @@ export default class extends baseVw {
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
+      };
+
+      if (isBlocked(this.ownerGuid) && !isUnblocking(this.ownerGuid)) {
+        const blockedWarningModal = new BlockedWarning({ peerId: this.ownerGuid })
+          .render()
+          .open();
+
+        this.listenTo(blockedWarningModal, 'canceled', () => {
+          app.router.navigate(routeOnOpen);
+        });
+
+        const onUnblock = () => loadListing();
+
+        this.listenTo(blockEvents, 'unblocking unblocked', onUnblock);
+
+        this.listenTo(blockedWarningModal, 'close', () => {
+          this.stopListening(null, null, onUnblock);
+        });
+      } else {
+        loadListing();
+      }
     }
   }
 
