@@ -127,7 +127,6 @@ export default class extends BaseModal {
     this.stopListening(this.model, null, this.onOrderRequest);
     const featuredProfileState = { isFetching: false };
     let featuredProfileFetch;
-    console.log(this.model.toJSON())
 
     if (this.type === 'case') {
       if (this.model.get('buyerOpened')) {
