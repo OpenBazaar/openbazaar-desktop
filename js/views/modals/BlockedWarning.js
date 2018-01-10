@@ -46,7 +46,7 @@ export default class extends BaseModal {
   }
 
   render() {
-    loadTemplate('userPage/blockedWarning.html', t => {
+    loadTemplate('modals/blockedWarning.html', t => {
       this.$el.html(t({}));
       super.render();
     });

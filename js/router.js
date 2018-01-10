@@ -15,7 +15,7 @@ import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
-import BlockedWarning from './views/userPage/BlockedWarning';
+import BlockedWarning from './views/modals/BlockedWarning';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {

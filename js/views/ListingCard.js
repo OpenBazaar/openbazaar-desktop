@@ -11,7 +11,7 @@ import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
 import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
-import BlockedWarning from './userPage/BlockedWarning';
+import BlockedWarning from './modals/BlockedWarning';
 
 export default class extends baseVw {
   constructor(options = {}) {

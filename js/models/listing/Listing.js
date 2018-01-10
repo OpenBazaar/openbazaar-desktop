@@ -304,6 +304,16 @@ export default class extends BaseModel {
         if (price) {
           parsedResponse.item.price = integerToDecimal(price, cur);
         }
+
+        // TEMP TEMP TEMP TEMP
+        // TEMP TEMP TEMP TEMP
+        // TEMP TEMP TEMP TEMP
+        // TEMP TEMP TEMP TEMP
+        // TEMP TEMP TEMP TEMP
+        // TEMP TEMP TEMP
+        // TEMP TEMP
+        // TEMP
+        parsedResponse.item.nsfw = true;
       }
 
       if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
