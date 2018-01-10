@@ -13,6 +13,7 @@ export default class extends BaseModal {
     };
 
     super(opts);
+    this.listenTo(app.settings, 'change:showNsfw', this.onChangeNsfw);
   }
 
   className() {
@@ -32,8 +33,13 @@ export default class extends BaseModal {
     this.close();
   }
 
+  onChangeNsfw(md, showNsfw) {
+    if (showNsfw) this.close();
+  }
+
   onProceedClick() {
     if (this.getCachedEl('.js-checkboxNsfw').is(':checked')) {
+      this.stopListening(app.settings, null, this.onChangeNsfw);
       app.settings.set('showNsfw', true);
       $.ajax({
         type: 'PATCH',

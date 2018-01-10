@@ -12,6 +12,7 @@ import ListingDetail from './modals/listingDetail/Listing';
 import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
+import BlockIconBtn from './components/BlockIconBtn';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -82,6 +83,12 @@ export default class extends baseVw {
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
+
+    this.listenTo(blockEvents, 'blocked unblocked', data => {
+      if (data.peerIds.includes(this.ownerGuid)) {
+        this.setBlockedClass();
+      }
+    });
   }
 
   className() {
@@ -236,6 +243,10 @@ export default class extends baseVw {
     }
   }
 
+  setBlockedClass() {
+    this.$el.toggleClass('blocked', isBlocked(this.ownerGuid));
+  }
+
   fetchFullListing(options = {}) {
     const opts = {
       showErrorOnFetchFail: true,
@@ -340,17 +351,29 @@ export default class extends baseVw {
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
         displayCurrency: app.settings.get('localCurrency'),
+        isBlocked,
+        isUnblocking,
       }));
     });
 
     this._$btnEdit = null;
     this._$btnDelete = null;
 
+    this.setBlockedClass();
+
     if (this.reportBtn) this.reportBtn.remove();
     if (this.reportsUrl) {
       this.reportBtn = this.createChild(ReportBtn);
       this.listenTo(this.reportBtn, 'startReport', this.startReport);
-      this.$('.js-reportBtnWrapper').append(this.reportBtn.render().el);
+      this.getCachedEl('.js-reportBtnWrapper').append(this.reportBtn.render().el);
+    }
+
+    if (!this.ownListing) {
+      this.getCachedEl('.js-blockBtnWrapper').html(
+        new BlockIconBtn({ peerId: this.ownerGuid })
+          .render()
+          .el
+      );
     }
 
     return this;

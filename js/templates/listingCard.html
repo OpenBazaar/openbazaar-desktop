@@ -1,6 +1,25 @@
 <% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent posR">
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
+    <div class="blockedOverlay overlayPanel clrP">
+      <div class="flexCent">
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <div>
+          <div class="flexCol flexHCent">
+            <i class="ion-eye-disabled tx1"></i>
+            <div>You blocked this user</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <% if (ob.ownListing) { %>
       <div class="editOverlay overlayPanel pad">
         <div class="overlayPanelInner"></div>
@@ -22,7 +41,12 @@
         </div>
       </div>
     <% } else { %>
-      <div class="reportOverlay overlayPanel padSm js-reportBtnWrapper"></div>
+      <div class="additionalOverlay overlayPanel padSm">
+        <div class="flex gutterHSm">
+          <div class="js-reportBtnWrapper"></div>
+          <div class="js-blockBtnWrapper"></div>
+        </div>
+      </div>
     <% } %>
   </div>
   <div class="pad clrBr borderTop infoArea">
@@ -38,6 +62,11 @@
         <% } %>>
         </div>
       </a>
+      <div class="userIconWrapper blockedAvatarOverlay">
+        <div class="userIcon disc clrBr2 clrSh1 clrP">
+          <i class="ion-eye-disabled"></i>
+        </div>
+      </div>
     <% } %>
     <div class="rowSm">
       <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
@@ -109,6 +138,19 @@
     </div>
   </div>
 
+  <div class="blockedOverlay overlayPanel clrP">
+    <div class="flexCent">
+      <% // TRANSLATE %>
+      <% // TRANSLATE %>
+      <% // TRANSLATE %>
+      <div>
+        <div class="flexCol flexHCent">
+          <i class="ion-eye-disabled tx4"></i>
+          <div>You blocked this user</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <% if (ob.ownListing) { %>
     <div class="editOverlay overlayPanel pad">
       <div class="overlayPanelInner"></div>
@@ -129,6 +171,13 @@
         </div>
       </div>
     </div>
+  <% } else { %>
+    <div class="additionalOverlay overlayPanel padSm">
+      <div class="gutterHSm">
+        <div class="js-reportBtnWrapper"></div>
+        <div class="js-blockBtnWrapper"></div>
+      </div>
+    </div>    
   <% } %>
 <% } %>
 <div class="deleteOverlay overlayPanel">

@@ -198,7 +198,7 @@ export function isBlocking(peerId) {
   checkAppSettings();
 
   return latestSettingsSave && latestSettingsSave.state() === 'pending' &&
-    lastSentBlockedNodes.includes(peerId);
+    lastSentBlockedNodes.includes(peerId) || false;
 }
 
 export function isUnblocking(peerId) {
@@ -210,5 +210,5 @@ export function isUnblocking(peerId) {
 
   return latestSettingsSave && latestSettingsSave.state() === 'pending' &&
     !lastSentBlockedNodes.includes(peerId) &&
-    app.settings.get('blockedNodes').includes(peerId);
+    app.settings.get('blockedNodes').includes(peerId) || false;
 }

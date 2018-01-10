@@ -26,6 +26,10 @@
     "btnChange": "change",
     "label": "%{cur} fee:"
   },
+  "blockButton": {
+    "tipBlock": "Block this user",
+    "tipUnblock": "Unblock this user"
+  },
   "walletSetup": {
     "heading": "OpenBazaar Wallet Setup",
     "currencyLabel": "Currency",
