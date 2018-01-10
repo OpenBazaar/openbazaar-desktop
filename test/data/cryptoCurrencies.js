@@ -108,9 +108,9 @@ describe('the crypto currencies data module', () => {
       });
     });
 
-    it('that requires the canShapeShiftInto to be a boolean', () => {
+    it('that requires the canShapeShiftIntoWallet to be a boolean', () => {
       currencies.forEach(cur => {
-        expect(typeof cur.canShapeShiftInto).to.equal('boolean');
+        expect(typeof cur.canShapeShiftIntoWallet).to.equal('boolean');
       });
     });
 
