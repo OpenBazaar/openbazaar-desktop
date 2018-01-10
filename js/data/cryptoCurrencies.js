@@ -31,7 +31,8 @@ const currencies = [
         `https://www.blocktrail.com/tBTC/tx/${txid}` :
         `https://blockchain.info/tx/${txid}`
     ),
-    canShapeShiftInto: true,
+    canShapeShiftIntoWallet: true,
+    canShapeShiftIntoPurchase: false,
     isValidAddress: address => {
       if (typeof address !== 'string') {
         throw new Error('Please provide a string.');
@@ -71,7 +72,8 @@ const currencies = [
         `https://www.blocktrail.com/tBCC/tx/${txid}` :
         `https://blockdozer.com/insight/tx/${txid}`
     ),
-    canShapeShiftInto: true,
+    canShapeShiftIntoWallet: true,
+    canShapeShiftIntoPurchase: false,
   },
   {
     code: 'ZEC',
@@ -94,7 +96,8 @@ const currencies = [
         `https://explorer.testnet.z.cash/tx/${txid}` :
         `https://explorer.zcha.in/transactions/${txid}`
     ),
-    canShapeShiftInto: true,
+    canShapeShiftIntoWallet: true,
+    canShapeShiftIntoPurchase: false,
   },
 ];
 
