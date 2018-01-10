@@ -114,6 +114,12 @@ describe('the crypto currencies data module', () => {
       });
     });
 
+    it('that requires the canShapeShiftIntoPurchase to be a boolean', () => {
+      currencies.forEach(cur => {
+        expect(typeof cur.canShapeShiftIntoPurchase).to.equal('boolean');
+      });
+    });
+
     // isValidAddress
     it('that, if provided, requires isValidAddress to be a function', () => {
       currencies.forEach(cur => {
