@@ -127,6 +127,7 @@ export default class extends BaseModal {
     this.stopListening(this.model, null, this.onOrderRequest);
     const featuredProfileState = { isFetching: false };
     let featuredProfileFetch;
+    console.log(this.model.toJSON())
 
     if (this.type === 'case') {
       if (this.model.get('buyerOpened')) {
@@ -181,11 +182,6 @@ export default class extends BaseModal {
   get participantIds() {
     if (!this._participantIds) {
       let contract = this.model.get('contract');
-
-      if (!contract) {
-        throw new Error('Unable to determine the participant IDs. The contract is not ' +
-          'available. The order model has likely not been synced yet.');
-      }
 
       if (this.type === 'case') {
         contract = this.model.get('buyerOpened') ?
