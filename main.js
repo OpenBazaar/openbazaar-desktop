@@ -176,11 +176,20 @@ function createWindow() {
 
   let helpSubmenu = [
     {
+      label: 'Website',
+      click() {
+        shell.openExternal('https://openbazaar.org');
+      },
+    },
+    // until the documentation page is updated, don't show it
+    /*
+    {
       label: 'Documentation',
       click() {
         shell.openExternal('https://docs.openbazaar.org');
       },
     },
+    */
     {
       label: 'Support',
       click() {
