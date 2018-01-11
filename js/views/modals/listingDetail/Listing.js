@@ -30,6 +30,7 @@ export default class extends BaseModal {
     }
 
     const opts = {
+      checkNsfw: true,
       removeOnClose: false,
       ...options,
     };
@@ -530,7 +531,9 @@ export default class extends BaseModal {
 
     let nsfwWarning;
 
-    if (!this.rendered && this.model.get('item').get('nsfw') &&
+    if (!this.rendered &&
+      this.options.checkNsfw &&
+      this.model.get('item').get('nsfw') &&
       !this.model.isOwnListing && !app.settings.get('showNsfw')) {
       nsfwWarning = new NsfwWarning()
         .render()

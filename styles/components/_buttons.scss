@@ -238,19 +238,28 @@
   &:not(.allowOverflow) {
     overflow: hidden; // clear the floats to avoid layout issues.
   }
-
-  & > .btn {
+  
+  .btn {
     border-radius: 0;
+  }
+
+  & > * {
     float: left; //float left will collapse the button and position it correctly
   }
-  & > .btn:not(:last-child):not(:hover) {   // on hover use the normal border width
+
+  & > .btn:not(:last-child):not(:hover),
+  & > *:not(:last-child):not(:hover) .btn {   // on hover use the normal border width
     border-right-color: transparent;
   }
-  & > .btn:first-child {
+
+  & > .btn:first-child,
+  & > *:first-child .btn, {
     border-top-left-radius: $corner;
     border-bottom-left-radius: $corner;
   }
-  & > .btn:last-child {
+
+  & > .btn:last-child,
+  & > *:last-child .btn {
     border-top-right-radius: $corner;
     border-bottom-right-radius: $corner;
   }

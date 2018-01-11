@@ -5,46 +5,47 @@ import baseVw from '../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    if (typeof options.peerId !== 'string') {
-      throw new Error('Please provide a peerId as a string.');
+    if (typeof options.targetId !== 'string') {
+      throw new Error('Please provide a targetId as a string.');
     }
 
-    if (app.profile.id === options.peerId) {
+    if (app.profile.id === options.targetId) {
       throw new Error('Blocking is not available on your own node.');
     }
 
     const opts = {
+      ...options,
       initialState: {
-        tooltipClass: 'toolTipNoWrap toolTipTop',
-        isBlocking: block.isBlocking(options.peerId) ||
-          block.isUnblocking(options.peerId),
-        isBlocked: block.isBlocked(options.peerId),
+        useIcon: false,
+        tooltipClass: options.useIcon ? 'toolTipNoWrap toolTipTop' : '',
+        isBlocking: block.isBlocking(options.targetId) ||
+          block.isUnblocking(options.targetId),
+        isBlocked: block.isBlocked(options.targetId),
         ...(options && options.initialState || {}),
       },
-      ...options,
     };
 
     super(opts);
-    this.peerId = options.peerId;
+    this.targetId = options.targetId;
 
     this.listenTo(block.events, 'unblocking blocking', data => {
-      if (!data.peerIds.includes(options.peerId)) return;
+      if (!data.peerIds.includes(options.targetId)) return;
       this.setState({ isBlocking: true });
     });
 
     this.listenTo(block.events, 'blocked unblocked blockFail unblockFail',
       data => {
-        if (!data.peerIds.includes(options.peerId)) return;
+        if (!data.peerIds.includes(options.targetId)) return;
         this.setState({ isBlocking: false });
       });
 
     this.listenTo(block.events, 'blocked', data => {
-      if (!data.peerIds.includes(options.peerId)) return;
+      if (!data.peerIds.includes(options.targetId)) return;
       this.setState({ isBlocked: true });
     });
 
     this.listenTo(block.events, 'unblocked', data => {
-      if (!data.peerIds.includes(options.peerId)) return;
+      if (!data.peerIds.includes(options.targetId)) return;
       this.setState({ isBlocked: false });
     });
   }
@@ -59,15 +60,15 @@ export default class extends baseVw {
     e.stopPropagation();
 
     if (this.getState().isBlocked) {
-      block.unblock(this.peerId);
+      block.unblock(this.targetId);
     } else {
-      block.block(this.peerId);
+      block.block(this.targetId);
     }
   }
 
 
   render() {
-    loadTemplate('components/blockIconBtn.html', (t) => {
+    loadTemplate('components/blockBtn.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
       }));

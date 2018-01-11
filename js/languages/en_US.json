@@ -28,7 +28,9 @@
   },
   "blockButton": {
     "tipBlock": "Block this user",
-    "tipUnblock": "Unblock this user"
+    "tipUnblock": "Unblock this user",
+    "btnTxtBlock": "Block",
+    "btnTxtUnblock": "Unblock"
   },
   "walletSetup": {
     "heading": "OpenBazaar Wallet Setup",

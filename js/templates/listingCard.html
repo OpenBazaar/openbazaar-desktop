@@ -1,25 +1,6 @@
 <% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent posR">
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
-    <div class="blockedOverlay overlayPanel clrP">
-      <div class="flexCent">
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <div>
-          <div class="flexCol flexHCent">
-            <i class="ion-eye-disabled tx1"></i>
-            <div>You blocked this user</div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="nsfwOverlay overlayPanel clrP">
       <div class="flexCent">
         <% // TRANSLATE %>
@@ -42,6 +23,25 @@
         </div>
       </div>
     </div>
+    <div class="blockedOverlay overlayPanel clrP">
+      <div class="flexCent">
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <div>
+          <div class="flexCol flexHCent">
+            <i class="ion-eye-disabled tx1"></i>
+            <div>You blocked this user</div>
+          </div>
+        </div>
+      </div>
+    </div>    
     <% if (ob.ownListing) { %>
       <div class="editOverlay overlayPanel pad">
         <div class="overlayPanelInner"></div>

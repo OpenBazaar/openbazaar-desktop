@@ -12,7 +12,7 @@ import ListingDetail from './modals/listingDetail/Listing';
 import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
-import BlockIconBtn from './components/BlockIconBtn';
+import BlockBtn from './components/BlockBtn';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -206,6 +206,7 @@ export default class extends baseVw {
             closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
+            checkNsfw: !this.userClickedShowNsfw,
           }).render()
             .open();
 
@@ -389,7 +390,10 @@ export default class extends baseVw {
 
     if (!this.ownListing) {
       this.getCachedEl('.js-blockBtnWrapper').html(
-        new BlockIconBtn({ peerId: this.ownerGuid })
+        new BlockBtn({
+          targetId: this.ownerGuid,
+          initialState: { useIcon: true },
+        })
           .render()
           .el
       );
