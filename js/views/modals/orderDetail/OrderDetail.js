@@ -182,15 +182,15 @@ export default class extends BaseModal {
     if (!this._participantIds) {
       let contract = this.model.get('contract');
 
-      if (!contract) {
-        throw new Error('Unable to determine the participant IDs. The contract is not ' +
-          'available. The order model has likely not been synced yet.');
-      }
-
       if (this.type === 'case') {
         contract = this.model.get('buyerOpened') ?
           this.model.get('buyerContract') :
           this.model.get('vendorContract');
+      }
+
+      if (!contract) {
+        throw new Error('Unable to determine the participant IDs. The contract is not ' +
+          'available. The order model has likely not been synced yet.');
       }
 
       const contractJSON = contract.toJSON();
