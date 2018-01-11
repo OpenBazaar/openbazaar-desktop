@@ -82,6 +82,7 @@ export default class extends baseVw {
     this.reportsUrl = opts.reportsUrl;
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
+    this.userClickedShowNsfw = false;
     $(document).on('click', this.boundDocClick);
 
     this.listenTo(blockEvents, 'blocked unblocked', data => {
@@ -89,6 +90,8 @@ export default class extends baseVw {
         this.setBlockedClass();
       }
     });
+
+    this.listenTo(app.settings, 'change:showNsfw', () => this.setHideNsfwClass());
   }
 
   className() {
@@ -109,6 +112,7 @@ export default class extends baseVw {
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
+      'click .js-showNsfw': 'onClickShowNsfw',
       click: 'onClick',
     };
   }
@@ -243,8 +247,22 @@ export default class extends baseVw {
     }
   }
 
+  onClickShowNsfw(e) {
+    e.stopPropagation();
+    this.userClickedShowNsfw = true;
+    this.setHideNsfwClass();
+  }
+
   setBlockedClass() {
     this.$el.toggleClass('blocked', isBlocked(this.ownerGuid));
+  }
+
+  setHideNsfwClass() {
+    this.$el.toggleClass('hideNsfw',
+      this.model.get('nsfw') &&
+      !this.userClickedShowNsfw &&
+      !app.settings.get('showNsfw')
+    );
   }
 
   fetchFullListing(options = {}) {
@@ -360,6 +378,7 @@ export default class extends baseVw {
     this._$btnDelete = null;
 
     this.setBlockedClass();
+    this.setHideNsfwClass();
 
     if (this.reportBtn) this.reportBtn.remove();
     if (this.reportsUrl) {

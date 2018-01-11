@@ -20,6 +20,28 @@
         </div>
       </div>
     </div>
+    <div class="nsfwOverlay overlayPanel clrP">
+      <div class="flexCent">
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <div>
+          <div class="flexCol flexHCent gutterV">
+            <div class="flexHCent gutterHSm tx3">
+              <%= ob.parseEmojis('😲') %>
+              <%= ob.parseEmojis('😱') %>
+            </div>
+            <button class="btn clrP clrBr tx6 js-showNsfw">Show Mature Content</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <% if (ob.ownListing) { %>
       <div class="editOverlay overlayPanel pad">
         <div class="overlayPanelInner"></div>
@@ -62,6 +84,11 @@
         <% } %>>
         </div>
       </a>
+      <div class="userIconWrapper nsfwAvatarOverlay">
+        <div class="userIcon disc clrBr2 clrSh1 clrP tx3">
+          <%= ob.parseEmojis('😲') %>
+        </div>
+      </div>      
       <div class="userIconWrapper blockedAvatarOverlay">
         <div class="userIcon disc clrBr2 clrSh1 clrP">
           <i class="ion-eye-disabled"></i>
@@ -102,8 +129,9 @@
   <div class="listViewContent">
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
-      <div class="flexNoShrink">
+      <div class="flexNoShrink posR">
         <div class="listingImage posR" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
+        <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
         <div class="rowTn">
@@ -173,9 +201,14 @@
     </div>
   <% } else { %>
     <div class="additionalOverlay overlayPanel padSm">
-      <div class="gutterHSm">
+      <div class="flex gutterHSm">
         <div class="js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <% // TRANSLATE %>
+        <button class="btn clrP clrBr iconBtnSm btnShowNsfw js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="Show mature content"><i class="ion-unlocked"></i></button>
       </div>
     </div>    
   <% } %>

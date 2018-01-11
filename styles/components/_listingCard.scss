@@ -79,6 +79,10 @@
     }
   }
 
+  .nsfwOverlay, .nsfwAvatarOverlay {
+    display: none;
+  }
+
   .editOverlay {
     .btn {
       z-index: 1;
@@ -93,6 +97,10 @@
     .editOverlay {
       display: flex;
     }
+  }
+
+  .btnShowNsfw {
+    display: none;
   }
 
   .reportBtnShell {
@@ -206,12 +214,29 @@
   }
 
   &.blocked {
-    .blockedOverlay {
+    .blockedOverlay, .blockedAvatarOverlay {
+      display: block;
+    }
+  }
+
+  &.hideNsfw {
+    .nsfwOverlay, .nsfwAvatarOverlay {
       display: block;
     }
 
-    .blockedAvatarOverlay {
-      display: block;
+    .additionalOverlay {
+      // don't cover the Show Mature Content button
+      bottom: initial;
+
+      .btnShowNsfw {
+        display: block;
+      }
+    }    
+
+    .listingsGridListView & {
+      .listingImage {
+        opacity: 0;
+      }
     }
   }
 }
