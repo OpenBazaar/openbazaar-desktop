@@ -7,6 +7,7 @@ import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getSocket } from '../../utils/serverConnect';
 import { setUnreadChatMsgCount, launchNativeNotification } from '../../utils/notification';
+import { events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
 import loadTemplate from '../../utils/loadTemplate';
 import Profile, { getCachedProfiles } from '../../models/profile/Profile';
@@ -57,6 +58,18 @@ export default class extends baseVw {
       }, 300);
     });
 
+    this.listenTo(this.collection, 'remove', md => {
+      if (this.conversation && md.get('peerId') === this.conversation.guid) {
+        this.conversation.close();
+        this.conversation.remove();
+        this.conversation = null;
+
+        if (!this.collection.length) {
+          this.close();
+        }
+      }
+    });
+
     this.listenTo(this.collection, 'update change:unread', () => {
       setUnreadChatMsgCount(this.collection.totalUnreadCount);
     });
@@ -66,6 +79,9 @@ export default class extends baseVw {
     if (this.socket) {
       this.listenTo(this.socket, 'message', this.onSocketMessage);
     }
+
+    this.listenTo(blockEvents, 'blocked',
+      data => this.collection.remove(data.peerIds));
   }
 
   className() {
@@ -277,19 +293,7 @@ export default class extends baseVw {
 
     this.listenTo(this.conversation, 'deleting',
       (e) => {
-        e.request.done(() => {
-          this.collection.remove(e.guid);
-
-          if (this.conversation && this.conversation.guid === e.guid) {
-            this.conversation.close();
-            this.conversation.remove();
-            this.conversation = null;
-
-            if (!this.collection.length) {
-              this.close();
-            }
-          }
-        });
+        e.request.done(() => this.collection.remove(e.guid));
       });
 
     this.$chatConvoContainer

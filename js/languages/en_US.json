@@ -222,7 +222,8 @@
       },
       "typingIndicator": "%{user} is typing…",
       "deleteConvoErrorTitle": "Unable to delete conversation",
-      "deletingOverlayText": "Deleting conversation…"
+      "deletingOverlayText": "Deleting conversation…",
+      "blockingOverlayText": "Blocking…"
     }
   },
   "userPage": {
