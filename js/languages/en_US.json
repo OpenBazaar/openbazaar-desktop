@@ -297,7 +297,7 @@
   },
   "reputation": {
     "averageRating": "overall rating",
-    "totalReviews": "%{smart_count} review |||| %{smart_count} reviews",
+    "totalReviews": "review |||| reviews",
     "noTitle": "Listing title not found"
 
   },
@@ -1222,6 +1222,7 @@
     "memoPlaceholder": "Provide additional details for the vendor here (optional).",
     "pay": "PAY >",
     "payNote": "Clicking pay will advance you to the final step.",
+    "scamWarning": "WARNING: Protect against scams",
     "pending": "Pending…",
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "close",
@@ -1813,7 +1814,7 @@
   "cryptoCurrencyFormat": {
     "curSymbolAmount": "%{symbol}%{amount}",
     "curCodeAmount": "%{amount} %{code}"
-  },  
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
