@@ -166,7 +166,10 @@ export default class extends baseVw {
     // if the DOM is ready, use the form values. Otherwise use the values set in the constructor.
     let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
     filters = filters ? `&${filters}` : '';
-    const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
+    const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
+    const newParams = newURL.searchParams;
+    if (!newParams.has('nsfw')) newParams.append('nsfw', app.settings.get('showNsfw'));
+    if (!newParams.has('acceptedCurrencies')) newParams.append('acceptedCurrencies', app.serverConfig.cryptoCurrency);
     this.callSearchProvider(newURL);
   }
 
