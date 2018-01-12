@@ -15,6 +15,7 @@ import Suggestions from './Suggestions';
 import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import { getServerCurrency } from '../../data/cryptoCurrencies';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -99,7 +100,7 @@ export default class extends baseVw {
     // if not passed in, set the user's values for nsfw and the currency
     this.filters = {
       nsfw: String(app.settings.get('showNsfw')),
-      acceptedCurrencies: app.serverConfig.cryptoCurrency,
+      acceptedCurrencies: getServerCurrency().code,
       ...filters,
     };
 
