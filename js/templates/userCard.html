@@ -15,20 +15,21 @@
       <% } %>>
     </a>
     <% if (!ob.hideControls) { %>
-      <div class="userControls">
+      <div class="userControls flexHRight gutterHSm">
         <% if (!ob.ownGuid) { %>
           <% if (ob.moderator) { %>
             <%= ob.processingButton({
-            className: `iconBtn clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
+            className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
             btnText: '<i class="ion-briefcase"></i>',
             attrs: `data-tip="${ob.getModTip(ob.ownMod)}"`,
             }) %>
           <% } %>
           <%= ob.processingButton({
-            className: `iconBtn clrP clrBr toolTipNoWrap toolTipTop js-follow ${ob.followedByYou ? 'active' : ''}`,
+            className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-follow ${ob.followedByYou ? 'active' : ''}`,
             btnText: '<i class="ion-person-stalker"></i>',
             attrs: `data-tip="${ob.getFollowTip(ob.followedByYou)}"`,
           }) %>
+          <div class="js-blockBtnContainer"></div>
         <% } %>
       </div>
     <% } %>

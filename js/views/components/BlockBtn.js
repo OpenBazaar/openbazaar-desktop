@@ -17,7 +17,8 @@ export default class extends baseVw {
       ...options,
       initialState: {
         useIcon: false,
-        tooltipClass: options.useIcon ? 'toolTipNoWrap toolTipTop' : '',
+        tooltipClass: options.initialState && options.initialState.useIcon ?
+          'toolTipNoWrap toolTipTop' : '',
         isBlocking: block.isBlocking(options.targetId) ||
           block.isUnblocking(options.targetId),
         isBlocked: block.isBlocked(options.targetId),

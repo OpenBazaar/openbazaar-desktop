@@ -7,6 +7,7 @@ import { followedByYou, followUnfollow } from '../utils/follow';
 import Profile, { getCachedProfiles } from '../models/profile/Profile';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
+import BlockedBtn from './components/BlockBtn';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -201,6 +202,7 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('userCard.html', (t) => {
       this.$el.html(t({
         loading: this.loading,
@@ -217,6 +219,18 @@ export default class extends BaseVw {
 
       this._$followBtn = null;
       this._$modBtn = null;
+
+      if (this.guid !== app.profile.id) {
+        this.getCachedEl('.js-blockBtnContainer')
+          .html(
+            new BlockedBtn({
+              targetId: this.guid,
+              initialState: {
+                useIcon: true,
+              },
+            }).render().el
+          );
+      }
 
       if (!this.fetched) this.loadUser();
       /* the view should be rendered when it is created and before it has data, so it can occupy
