@@ -42,7 +42,7 @@
   "nsfwWarning": {
     "heading": "Mature content",
     "paragraph1": "This listing contains photos and/or content that may not be suitable for children or for people in work environments. If you’re sensitive to mature content, please click cancel to return to the previous screen.",
-    "paragraph1": "Are you sure you want to proceed?",
+    "paragraph2": "Are you sure you want to proceed?",
     "nsfwOffLabel": "Always display mature content",
     "btnCancel": "Cancel",
     "btnProceed": "Yes, proceed"
