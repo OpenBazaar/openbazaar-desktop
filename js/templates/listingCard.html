@@ -3,41 +3,23 @@
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
     <div class="nsfwOverlay overlayPanel clrP">
       <div class="flexCent">
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
         <div>
           <div class="flexCol flexHCent gutterV">
             <div class="flexHCent gutterHSm tx3">
               <%= ob.parseEmojis('😲') %>
               <%= ob.parseEmojis('😱') %>
             </div>
-            <button class="btn clrP clrBr tx6 js-showNsfw">Show Mature Content</button>
+            <button class="btn clrP clrBr tx6 js-showNsfw"><%= ob.polyT('listingCard.confirmDelete.btnShowMatureContent') %></button>
           </div>
         </div>
       </div>
     </div>
     <div class="blockedOverlay overlayPanel clrP">
       <div class="flexCent">
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
         <div>
           <div class="flexCol flexHCent">
             <i class="ion-eye-disabled tx1"></i>
-            <div>You blocked this user</div>
+            <div><%= ob.polyT('listingCard.confirmDelete.blockedUser') %></div>
           </div>
         </div>
       </div>
@@ -168,13 +150,10 @@
 
   <div class="blockedOverlay overlayPanel clrP">
     <div class="flexCent">
-      <% // TRANSLATE %>
-      <% // TRANSLATE %>
-      <% // TRANSLATE %>
       <div>
         <div class="flexCol flexHCent">
           <i class="ion-eye-disabled tx4"></i>
-          <div>You blocked this user</div>
+          <div><%= ob.polyT('listingCard.blockedUser') %></div>
         </div>
       </div>
     </div>
@@ -204,11 +183,7 @@
       <div class="flex gutterHSm">
         <div class="js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <% // TRANSLATE %>
-        <button class="btn clrP clrBr iconBtnSm btnShowNsfw js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="Show mature content"><i class="ion-unlocked"></i></button>
+        <button class="btn clrP clrBr iconBtnSm btnShowNsfw js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
       </div>
     </div>    
   <% } %>

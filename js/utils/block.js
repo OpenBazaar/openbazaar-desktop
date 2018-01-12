@@ -29,7 +29,7 @@ let pendingUnblocks = [];
 // you are sending the full list rather than individual items you want to unblock / unblock
 // and that gets interesting if you kick off a subsequent request while a previous is still
 // pending and, for example, the previous may fail whereas the subsequent (which includes
-// the block/unblock from the previous) may succeed. Fun times :)
+// the block/unblock from the previous) may succeed.
 function blockUnblock(_block, peerIds) {
   if (typeof _block !== 'boolean') {
     throw new Error('Please provide _block as a boolean.');

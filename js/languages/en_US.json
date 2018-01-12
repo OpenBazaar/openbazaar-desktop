@@ -965,7 +965,10 @@
     "editFetchErrorDialog": {
       "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
-    }
+    },
+    "btnShowMatureContent": "Show Mature Content",
+    "tipShowMatureContent": "Show Mature Content",
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
