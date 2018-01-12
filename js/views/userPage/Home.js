@@ -13,7 +13,7 @@ export default class extends BaseVw {
     super(options);
     this.options = options;
     this.ownPage = options.ownPage;
-    this.userCard = this.createChild(UserCard, { model: this.model, hideControls: true });
+    this.userCard = this.createChild(UserCard, { model: this.model });
     this.settings = app.settings.clone();
 
     this.listenTo(this.settings, 'sync', () => {
