@@ -325,7 +325,8 @@
       "store": "Store",
       "following": "Following",
       "followers": "Followers"
-    }
+    },
+    "blockedUserOverlayText": "You blocked this user"
   },
   "reputation": {
     "averageRating": "overall rating",
@@ -341,7 +342,8 @@
     "tipFollow": "Follow",
     "tipUnfollow": "Unfollow",
     "tipModAdd": "Add as moderator",
-    "tipModRemove": "Remove as moderator"
+    "tipModRemove": "Remove as moderator",
+    "blockedUserOverlayText": "You blocked this user"
   },
   "moderatorCard": {
     "view": "View",

@@ -6,14 +6,20 @@
     <% } else { %>
       style="background-image: url('../imgs/defaultHeader.png')"
     <% } %>>
-    <a class="userIcon disc clrBr2 clrSh1"
-      <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
-      <% if (avatarHash) { %>
-        style="background-image: url(<%= ob.getServerUrl(`ob/images/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
-      <% } else { %>
-       style="background-image: url('../imgs/defaultAvatar.png')"
-      <% } %>>
-    </a>
+    <div class="blockedOverlay clrP flexCent tx5">
+      <div><%= ob.polyT('userShort.blockedUserOverlayText') %></div>
+    </div>    
+    <div class="userIconWrap">
+      <a class="userIcon disc clrBr2 clrSh1"
+        <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
+        <% if (avatarHash) { %>
+          style="background-image: url(<%= ob.getServerUrl(`ob/images/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
+        <% } else { %>
+         style="background-image: url('../imgs/defaultAvatar.png')"
+        <% } %>>
+      </a>
+      <div class="blockedAvatarOverlay disc clrBr2 clrSh1 clrP clrT"><i class="ion-eye-disabled center"></i></div>
+    </div>
     <% if (!ob.hideControls) { %>
       <div class="userControls flexHRight gutterHSm">
         <% if (!ob.ownGuid) { %>
