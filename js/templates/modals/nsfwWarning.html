@@ -4,21 +4,21 @@
   <h1 class="h3 pad flexCent gutterHSm">
     <div><%= ob.parseEmojis('😲') %></div>
     <div><%= ob.parseEmojis('😱') %></div>
-    <div>Mature content</div>
+    <div><%= ob.polyT('nsfwWarning.heading') %></div>
   </h1>
   <hr class="clrBr rowHg" />
-  <p>This listing contains photos and/or content that may not be suitable for children or for people in work environments. If you’re sensitive to mature content, please click cancel to return to the previous screen.</p>
-  <p class="rowHg">Are you sure you want to proceed?</p>
+  <p><%= ob.polyT('nsfwWarning.paragraph1') %></p>
+  <p class="rowHg"><%= ob.polyT('nsfwWarning.paragraph2') %></p>
   <hr class="clrBr rowMd" />
   <div class="flexVCent gutterH">
     <div class="flexExpand gutterHSm">
-      <input class="centerLabel js-checkboxNsfw" type="checkbox" id="NSFW_ON" />
-      <label for="NSFW_ON" class="lineHeight1">Always display mature content</label>
+      <input class="centerLabel js-checkboxNsfw" type="checkbox" id="NSFW_OFF" />
+      <label for="NSFW_OFF" class="lineHeight1"><%= ob.polyT('nsfwWarning.nsfwOffLabel') %></label>
     </div>
     <div class="flexNoShrink">
       <div class="flexHRight flexVCent gutterHMd">
-        <a class="clrT2 js-cancel">Cancel</a>
-        <button class="btn clrP clrBr js-btnProceed">Yes, proceed</button>
+        <a class="clrT2 js-cancel"><%= ob.polyT('nsfwWarning.btnCancel') %></a>
+        <button class="btn clrP clrBr js-btnProceed"><%= ob.polyT('nsfwWarning.btnProceed') %></button>
       </div>
     </div>
   </div>

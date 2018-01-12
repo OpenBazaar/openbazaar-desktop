@@ -32,6 +32,21 @@
     "btnTxtBlock": "Block",
     "btnTxtUnblock": "Unblock"
   },
+  "blockedWarning": {
+    "heading": "You blocked this user",
+    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph2": "Would you like to unblock and view their page?",
+    "btnCancel": "Cancel",
+    "btnUnblock": "Yes, unblock"
+  },
+  "nsfwWarning": {
+    "heading": "Mature content",
+    "paragraph1": "This listing contains photos and/or content that may not be suitable for children or for people in work environments. If you’re sensitive to mature content, please click cancel to return to the previous screen.",
+    "paragraph1": "Are you sure you want to proceed?",
+    "nsfwOffLabel": "Always display mature content",
+    "btnCancel": "Cancel",
+    "btnProceed": "Yes, proceed"
+  },
   "walletSetup": {
     "heading": "OpenBazaar Wallet Setup",
     "currencyLabel": "Currency",
