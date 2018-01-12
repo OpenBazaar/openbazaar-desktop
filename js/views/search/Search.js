@@ -15,6 +15,7 @@ import Suggestions from './Suggestions';
 import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import { getServerCurrency } from '../../data/cryptoCurrencies';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -104,7 +105,7 @@ export default class extends baseVw {
     // if not passed in, set the user's values for nsfw and the currency
     this.filterParams = {
       nsfw: String(app.settings.get('showNsfw')),
-      acceptedCurrencies: app.serverConfig.cryptoCurrency,
+      acceptedCurrencies: getServerCurrency().code,
       ...filterParams,
     };
 
@@ -156,7 +157,7 @@ export default class extends baseVw {
    * This will create a url with the term and other query parameters
    * @param {string} term
    */
-  processTerm(term) {
+  processTerm(term, reset) {
     this.term = term || '';
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
@@ -165,11 +166,15 @@ export default class extends baseVw {
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
     // if the DOM is ready, use the form values. Otherwise use the values set in the constructor.
     let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
-    filters = filters ? `&${filters}` : '';
+    filters = !filters || reset ? '' : `&${filters}`;
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     const newParams = newURL.searchParams;
-    if (!newParams.has('nsfw')) newParams.append('nsfw', app.settings.get('showNsfw'));
-    if (!newParams.has('acceptedCurrencies')) newParams.append('acceptedCurrencies', app.serverConfig.cryptoCurrency);
+    if (!newParams.has('nsfw')) {
+      newParams.append('nsfw', app.settings.get('showNsfw'));
+    }
+    if (!newParams.has('acceptedCurrencies')) {
+      newParams.append('acceptedCurrencies', app.serverConfig.cryptoCurrency);
+    }
     this.callSearchProvider(newURL);
   }
 
@@ -187,11 +192,12 @@ export default class extends baseVw {
     }
     this.sProvider = md;
     this.queryProvider = false;
+    this.serverPage = 0;
     if (this.mustSelectDefault) {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
     }
-    this.processTerm(this.term);
+    this.processTerm(this.term, true);
   }
 
   deleteProvider(md = this.sProvider) {
