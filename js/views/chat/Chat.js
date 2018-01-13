@@ -58,18 +58,6 @@ export default class extends baseVw {
       }, 300);
     });
 
-    this.listenTo(this.collection, 'remove', md => {
-      if (this.conversation && md.get('peerId') === this.conversation.guid) {
-        this.conversation.close();
-        this.conversation.remove();
-        this.conversation = null;
-
-        if (!this.collection.length) {
-          this.close();
-        }
-      }
-    });
-
     this.listenTo(this.collection, 'update change:unread', () => {
       setUnreadChatMsgCount(this.collection.totalUnreadCount);
     });
@@ -81,7 +69,12 @@ export default class extends baseVw {
     }
 
     this.listenTo(blockEvents, 'blocked',
-      data => this.collection.remove(data.peerIds));
+      data => {
+        this.collection.remove(data.peerIds);
+        if (this.conversation && data.peerIds.includes(this.conversation.guid)) {
+          this.removeConvo();
+        }
+      });
   }
 
   className() {
@@ -293,7 +286,12 @@ export default class extends baseVw {
 
     this.listenTo(this.conversation, 'deleting',
       (e) => {
-        e.request.done(() => this.collection.remove(e.guid));
+        e.request.done(() => {
+          this.collection.remove(e.guid);
+          if (this.conversation && this.conversation.guid === e.guid) {
+            this.removeConvo();
+          }
+        });
       });
 
     this.$chatConvoContainer
@@ -334,6 +332,18 @@ export default class extends baseVw {
   closeConversation() {
     this.clearActiveChatHead();
     if (this.conversation) this.conversation.close();
+  }
+
+  removeConvo() {
+    if (this.conversation) {
+      this.conversation.close();
+      this.conversation.remove();
+      this.conversation = null;
+
+      if (!this.collection.length) {
+        this.close();
+      }
+    }
   }
 
   clearActiveChatHead() {
