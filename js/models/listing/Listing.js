@@ -292,6 +292,8 @@ export default class extends BaseModel {
     const parsedResponse = response.listing;
 
     if (parsedResponse) {
+      parsedResponse.item.nsfw = true;
+      
       // set the hash
       parsedResponse.hash = response.hash;
 

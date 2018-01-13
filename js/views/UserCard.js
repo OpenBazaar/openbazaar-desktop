@@ -199,7 +199,7 @@ export default class extends BaseVw {
   }
 
   setBlockedClass() {
-    this.$el.toggleClass('isBlocked', isBlocked(this.model.id));
+    this.$el.toggleClass('isBlocked', isBlocked(this.guid));
   }
 
   get $followBtn() {

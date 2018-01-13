@@ -33,6 +33,8 @@ export default class extends BaseModel {
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
       parsedResponse.categories : [];
 
+    parsedResponse.nsfw = true;
+    
     return parsedResponse;
   }
 

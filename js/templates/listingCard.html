@@ -19,7 +19,7 @@
         <div>
           <div class="flexCol flexHCent">
             <i class="ion-eye-disabled tx1"></i>
-            <div>You blocked this user</div>
+            <div><%= ob.polyT('listingCard.blockedUser') %></div>
           </div>
         </div>
       </div>
@@ -49,7 +49,9 @@
         <div class="flex gutterHSm">
           <div class="js-reportBtnWrapper"></div>
           <div class="js-blockBtnWrapper"></div>
-          <button class="iconBtnSm clrP clrBr toolTipNoWrap toolTipTop" data-tip="Hide mature content"><i class="ion-locked"></i></button>
+          <% if (ob.nsfw) { %>
+            <button class="iconBtnSm clrP clrBr toolTipNoWrap toolTipTop btnHideNsfw js-hideNsfw" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
+          <% } %>
         </div>
       </div>
     <% } %>
@@ -185,6 +187,9 @@
         <div class="js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
         <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
+        <% if (ob.nsfw) { %>
+          <button class="btn clrP clrBr iconBtnSm btnHideNsfw clrSh1 js-hideNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
+        <% } %>        
       </div>
     </div>    
   <% } %>

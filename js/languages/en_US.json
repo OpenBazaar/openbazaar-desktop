@@ -985,6 +985,7 @@
     },
     "btnShowMatureContent": "Show Mature Content",
     "tipShowMatureContent": "Show Mature Content",
+    "tipHideMatureContent": "Hide Mature Content",
     "blockedUser": "You blocked this user"
   },
   "listingDelete": {

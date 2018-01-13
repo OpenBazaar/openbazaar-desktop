@@ -82,7 +82,9 @@ export default class extends baseVw {
     this.reportsUrl = opts.reportsUrl;
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
-    this.userClickedShowNsfw = false;
+    // This should be initialized as null, so we could determine whether the user
+    // never set this (null), or explicitly clicked to show / hide nsfw (true / false)
+    this._userClickedShowNsfw = null;
     $(document).on('click', this.boundDocClick);
 
     this.listenTo(blockEvents, 'blocked unblocked', data => {
@@ -91,7 +93,10 @@ export default class extends baseVw {
       }
     });
 
-    this.listenTo(app.settings, 'change:showNsfw', () => this.setHideNsfwClass());
+    this.listenTo(app.settings, 'change:showNsfw', () => {
+      this._userClickedShowNsfw = null;
+      this.setHideNsfwClass();
+    });
   }
 
   className() {
@@ -113,6 +118,7 @@ export default class extends baseVw {
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
       'click .js-showNsfw': 'onClickShowNsfw',
+      'click .js-hideNsfw': 'onClickHideNsfw',
       click: 'onClick',
     };
   }
@@ -206,7 +212,7 @@ export default class extends baseVw {
             closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
-            checkNsfw: !this.userClickedShowNsfw,
+            checkNsfw: !this._userClickedShowNsfw,
           }).render()
             .open();
 
@@ -250,7 +256,13 @@ export default class extends baseVw {
 
   onClickShowNsfw(e) {
     e.stopPropagation();
-    this.userClickedShowNsfw = true;
+    this._userClickedShowNsfw = true;
+    this.setHideNsfwClass();
+  }
+
+  onClickHideNsfw(e) {
+    e.stopPropagation();
+    this._userClickedShowNsfw = false;
     this.setHideNsfwClass();
   }
 
@@ -260,9 +272,13 @@ export default class extends baseVw {
 
   setHideNsfwClass() {
     this.$el.toggleClass('hideNsfw',
-      this.model.get('nsfw') &&
-      !this.userClickedShowNsfw &&
-      !app.settings.get('showNsfw')
+      // explicitly checking for false, since null means something different
+      this._userClickedShowNsfw === false ||
+      (
+        this.model.get('nsfw') &&
+        !this._userClickedShowNsfw &&
+        !app.settings.get('showNsfw')
+      )
     );
   }
 
@@ -380,6 +396,7 @@ export default class extends baseVw {
 
     this.setBlockedClass();
     this.setHideNsfwClass();
+    this.$el.toggleClass('isNsfw', this.model.get('nsfw'));
 
     if (this.reportBtn) this.reportBtn.remove();
     if (this.reportsUrl) {
