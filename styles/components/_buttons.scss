@@ -238,7 +238,7 @@
   &:not(.allowOverflow) {
     overflow: hidden; // clear the floats to avoid layout issues.
   }
-  
+
   .btn {
     border-radius: 0;
   }
@@ -253,7 +253,7 @@
   }
 
   & > .btn:first-child,
-  & > *:first-child .btn, {
+  & > *:first-child .btn {
     border-top-left-radius: $corner;
     border-bottom-left-radius: $corner;
   }
