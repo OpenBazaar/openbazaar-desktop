@@ -213,6 +213,26 @@
   }
 }
 
+// similar to borderStacked, but will give borders on all side instead of just the bottom.
+.borderStackedAll {
+  & > * {
+    // use on parent element to separate stacked child containers. The element should also have the clrBr class.
+    @extend .border;
+    border-bottom: none;
+
+    &:last-child {
+      border-bottom: {
+        width: 1px;
+        style: solid;
+      }
+    }
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
 .contentBox {
   //used to contain content, usually main sections of the page
   @extend .box;

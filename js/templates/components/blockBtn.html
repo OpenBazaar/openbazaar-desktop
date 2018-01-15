@@ -1,0 +1,16 @@
+<%
+  const tipText = ob.isBlocked ?
+    ob.polyT('blockButton.tipUnblock') : ob.polyT('blockButton.tipBlock');
+  let textClassName = ob.isBlocked ? 'ion-eye' : 'ion-eye-disabled';
+  textClassName = ob.useIcon ? textClassName : '';
+  let btnText = ob.isBlocked ?
+    ob.polyT('blockButton.btnTxtUnblock') : ob.polyT('blockButton.btnTxtBlock');
+  btnText = ob.useIcon ? '' : btnText;
+%>
+
+<%= ob.processingButton({
+  className: `clrP clrBr js-block ${ob.useIcon && 'iconBtnSm tx3' || 'btn'} ${ob.isBlocking ? 'processing' : ''} ${ob.tooltipClass}`,
+  attrs: `data-tip="${tipText}"`,
+  textClassName,
+  btnText,
+}) %>

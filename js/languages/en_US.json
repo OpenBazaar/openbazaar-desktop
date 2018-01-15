@@ -26,6 +26,27 @@
     "btnChange": "change",
     "label": "%{cur} fee:"
   },
+  "blockButton": {
+    "tipBlock": "Block this user",
+    "tipUnblock": "Unblock this user",
+    "btnTxtBlock": "Block",
+    "btnTxtUnblock": "Unblock"
+  },
+  "blockedWarning": {
+    "heading": "You blocked this user",
+    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph2": "Would you like to unblock and view their page?",
+    "btnCancel": "Cancel",
+    "btnUnblock": "Yes, unblock"
+  },
+  "nsfwWarning": {
+    "heading": "Mature content",
+    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "paragraph2": "Are you sure you want to proceed?",
+    "nsfwOffLabel": "Always display mature content",
+    "btnCancel": "Cancel",
+    "btnProceed": "Yes, proceed"
+  },
   "walletSetup": {
     "heading": "OpenBazaar Wallet Setup",
     "currencyLabel": "Currency",
@@ -52,6 +73,16 @@
     "heading": "Stop!",
     "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
     "line2": "Please close this window now."
+  },
+  "block": {
+    "errorModal": {
+      "titleUnableToBlock": "Unable to block",
+      "titleUnableToUnblock": "Unable to unblock",
+      "titleUnableToBlockUnblock": "Unable to block / unblock",
+      "blockFailedListHeading": "Unable to block the following users:",
+      "unblockFailedListHeading": "Unable to unblock the following users:",
+      "reason": "Reason: %{reason}"
+    }
   },
   "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Restart Now",
@@ -206,7 +237,8 @@
       },
       "typingIndicator": "%{user} is typing…",
       "deleteConvoErrorTitle": "Unable to delete conversation",
-      "deletingOverlayText": "Deleting conversation…"
+      "deletingOverlayText": "Deleting conversation…",
+      "blockingOverlayText": "Blocking…"
     }
   },
   "userPage": {
@@ -293,7 +325,8 @@
       "store": "Store",
       "following": "Following",
       "followers": "Followers"
-    }
+    },
+    "blockedUserOverlayText": "You blocked this user"
   },
   "reputation": {
     "averageRating": "overall rating",
@@ -309,7 +342,8 @@
     "tipFollow": "Follow",
     "tipUnfollow": "Unfollow",
     "tipModAdd": "Add as moderator",
-    "tipModRemove": "Remove as moderator"
+    "tipModRemove": "Remove as moderator",
+    "blockedUserOverlayText": "You blocked this user"
   },
   "moderatorCard": {
     "view": "View",
@@ -643,6 +677,11 @@
         "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "Blocked",
+      "btnUnblock": "Unblock",
+      "emptyBlockList": "You are not blocking anyone."
+    },
     "optional": "optional",
     "language": "Language",
     "country": "Country",
@@ -943,7 +982,11 @@
     "editFetchErrorDialog": {
       "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
-    }
+    },
+    "btnShowMatureContent": "Show Mature Content",
+    "tipShowMatureContent": "Show Mature Content",
+    "tipHideMatureContent": "Hide Mature Content",
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",

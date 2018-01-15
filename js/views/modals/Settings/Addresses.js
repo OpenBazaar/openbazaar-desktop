@@ -4,7 +4,7 @@ import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../SimpleMessage';
 import AddressesForm from './AddressesForm';
 import AddressesList from './AddressesList';
-import ShippingAddress from '../../../models/ShippingAddress';
+import ShippingAddress from '../../../models/settings/ShippingAddress';
 
 export default class extends baseVw {
   constructor(options = {}) {

@@ -256,24 +256,38 @@
     }
   }
 
-  .deletingOverlay {
+  .deletingOverlay, .blockingOverlay {
     display: none;
     font-size: $tx4;
 
     & > div {
       @include center();
-      width: 100%;
+      width: 95%;
       text-align: center;
+    }
+  }
+
+  &.isDeleting, &.isBlocking {
+    .subMenuTrigger {
+      @include disabled;
+    }
+
+    .subMenu {
+      display: none;
     }
   }
 
   &.isDeleting {
     .deletingOverlay {
       display: block;
+      opacity: 1;
     }
+  }
 
-    .deleteConvoMenuItem {
-      @include disabled;
+  &.isBlocking {
+    .blockingOverlay {
+      display: block;
+      opacity: 1;
     }
   }
 
@@ -327,8 +341,7 @@
     bottom: 0;
     right: 0;
     left: 0;
-    background-color: white;
-    opacity: 0.7;
+    opacity: 0.8;
     z-index: 1;
   }
 

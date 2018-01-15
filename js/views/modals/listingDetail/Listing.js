@@ -4,7 +4,7 @@ import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
 import '../../../lib/select2';
-import '../../../utils/velocity';
+import '../../../utils/lib/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import {
   getCurrencyValidity,
@@ -21,6 +21,7 @@ import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
+import NsfwWarning from '../NsfwWarning';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -29,6 +30,7 @@ export default class extends BaseModal {
     }
 
     const opts = {
+      checkNsfw: true,
       removeOnClose: false,
       ...options,
     };
@@ -120,6 +122,8 @@ export default class extends BaseModal {
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
+
+    this.rendered = false;
   }
 
   className() {
@@ -525,6 +529,18 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
+    let nsfwWarning;
+
+    if (!this.rendered &&
+      this.options.checkNsfw &&
+      this.model.get('item').get('nsfw') &&
+      !this.model.isOwnListing && !app.settings.get('showNsfw')) {
+      nsfwWarning = new NsfwWarning()
+        .render()
+        .open();
+      this.listenTo(nsfwWarning, 'canceled', () => this.close());
+    }
+
     loadTemplate('modals/listingDetail/listing.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -542,6 +558,7 @@ export default class extends BaseModal {
         ),
       }));
 
+      if (nsfwWarning) this.$el.addClass('hide');
       super.render();
 
       this.$('.js-rating').append(this.rating.render().$el);
@@ -582,7 +599,16 @@ export default class extends BaseModal {
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
       this.adjustPriceBySku();
+
+      if (nsfwWarning) {
+        setTimeout(() => {
+          nsfwWarning.bringToTop();
+          this.$el.removeClass('hide');
+        });
+      }
     });
+
+    this.rendered = true;
 
     return this;
   }

@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import '../../../utils/selectize';
+import '../../../utils/lib/selectize';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';

@@ -1,0 +1,25 @@
+<div class="topControls flex"></div>
+
+<section class="contentBox padMd clrP clrBr clrSh3">
+  <h1 class="h3 pad flexCent gutterHSm">
+    <div><%= ob.parseEmojis('😲') %></div>
+    <div><%= ob.parseEmojis('😱') %></div>
+    <div><%= ob.polyT('nsfwWarning.heading') %></div>
+  </h1>
+  <hr class="clrBr rowHg" />
+  <p><%= ob.polyT('nsfwWarning.paragraph1') %></p>
+  <p class="rowHg"><%= ob.polyT('nsfwWarning.paragraph2') %></p>
+  <hr class="clrBr rowMd" />
+  <div class="flexVCent gutterH">
+    <div class="flexExpand gutterHSm">
+      <input class="centerLabel js-checkboxNsfw" type="checkbox" id="NSFW_OFF" />
+      <label for="NSFW_OFF" class="lineHeight1"><%= ob.polyT('nsfwWarning.nsfwOffLabel') %></label>
+    </div>
+    <div class="flexNoShrink">
+      <div class="flexHRight flexVCent gutterHMd">
+        <a class="clrT2 js-cancel"><%= ob.polyT('nsfwWarning.btnCancel') %></a>
+        <button class="btn clrP clrBr clrSh1 js-btnProceed"><%= ob.polyT('nsfwWarning.btnProceed') %></button>
+      </div>
+    </div>
+  </div>
+</section>

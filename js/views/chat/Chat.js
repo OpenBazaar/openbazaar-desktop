@@ -1,12 +1,13 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import { remote } from 'electron';
-import '../../utils/velocity';
+import '../../utils/lib/velocity';
 import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { isScrolledIntoView } from '../../utils/dom';
 import { getSocket } from '../../utils/serverConnect';
 import { setUnreadChatMsgCount, launchNativeNotification } from '../../utils/notification';
+import { events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
 import loadTemplate from '../../utils/loadTemplate';
 import Profile, { getCachedProfiles } from '../../models/profile/Profile';
@@ -66,6 +67,14 @@ export default class extends baseVw {
     if (this.socket) {
       this.listenTo(this.socket, 'message', this.onSocketMessage);
     }
+
+    this.listenTo(blockEvents, 'blocked',
+      data => {
+        this.collection.remove(data.peerIds);
+        if (this.conversation && data.peerIds.includes(this.conversation.guid)) {
+          this.removeConvo();
+        }
+      });
   }
 
   className() {
@@ -279,15 +288,8 @@ export default class extends baseVw {
       (e) => {
         e.request.done(() => {
           this.collection.remove(e.guid);
-
           if (this.conversation && this.conversation.guid === e.guid) {
-            this.conversation.close();
-            this.conversation.remove();
-            this.conversation = null;
-
-            if (!this.collection.length) {
-              this.close();
-            }
+            this.removeConvo();
           }
         });
       });
@@ -330,6 +332,18 @@ export default class extends baseVw {
   closeConversation() {
     this.clearActiveChatHead();
     if (this.conversation) this.conversation.close();
+  }
+
+  removeConvo() {
+    if (this.conversation) {
+      this.conversation.close();
+      this.conversation.remove();
+      this.conversation = null;
+
+      if (!this.collection.length) {
+        this.close();
+      }
+    }
   }
 
   clearActiveChatHead() {

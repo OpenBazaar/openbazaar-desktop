@@ -1,6 +1,7 @@
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { followedByYou, followUnfollow } from '../../utils/follow';
+import BlockBtn from './BlockBtn';
 
 import BaseVw from '../baseVw';
 
@@ -9,6 +10,7 @@ export default class extends BaseVw {
     if (!options.targetID) throw new Error('You must provide a targetID');
 
     const opts = {
+      ...options,
       initialState: {
         following: followedByYou(options.targetID),
         isFollowing: false,
@@ -16,7 +18,6 @@ export default class extends BaseVw {
         btnClasses: 'clrP clrBr',
         ...options.initialState || {},
       },
-      ...options,
     };
 
     super(opts);
@@ -56,6 +57,7 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
     const state = this.getState();
     loadTemplate('components/socialBtns.html', (t) => {
       this.$el.html(t({
@@ -63,6 +65,13 @@ export default class extends BaseVw {
         ...state,
       }));
     });
+
+    this.getCachedEl('.js-blockBtnContainer')
+      .html(
+        new BlockBtn({ targetId: this.options.targetID })
+          .render()
+          .el
+      );
 
     return this;
   }

@@ -1,6 +1,22 @@
 .miniprofile {
-
   .clickable {
     cursor: pointer;
+  }
+
+  .userIconWrap {
+    position: relative;
+
+    .blockedAvatarOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+    }
+  }
+
+  &.isBlocked {
+    .blockedAvatarOverlay {
+      display: block;
+    }
   }
 }

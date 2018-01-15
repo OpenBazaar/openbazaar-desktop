@@ -1,6 +1,6 @@
-import _ from 'underscore';
 import app from '../app';
 import { followsYou } from '../utils/follow';
+import { isBlocked, events as blockEvents } from '../utils/block';
 import baseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
 
@@ -48,6 +48,12 @@ export default class extends baseVw {
         }
       });
     }
+
+    this.listenTo(blockEvents, 'blocked unblocked', data => {
+      if (data.peerIds.includes(this.model.id)) {
+        this.setBlockedClass();
+      }
+    });
   }
 
   className() {
@@ -64,25 +70,8 @@ export default class extends baseVw {
     this.options.onClickRating();
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
+  setBlockedClass() {
+    this.$el.toggleClass('isBlocked', isBlocked(this.model.id));
   }
 
   render() {
@@ -91,6 +80,8 @@ export default class extends baseVw {
         ...this._state,
         ...this.model.toJSON(),
       }));
+
+      this.setBlockedClass();
     });
 
     return this;

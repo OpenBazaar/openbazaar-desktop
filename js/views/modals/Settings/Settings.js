@@ -9,6 +9,7 @@ import Store from './Store';
 import Addresses from './Addresses';
 import Advanced from './advanced/Advanced';
 import Moderation from './Moderation';
+import Blocked from './Blocked';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -31,6 +32,7 @@ export default class extends BaseModal {
       Addresses,
       Advanced,
       Moderation,
+      Blocked,
     };
 
     this.listenTo(app.router, 'will-route', () => {

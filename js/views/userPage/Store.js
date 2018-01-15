@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import '../../lib/select2';
-import '../../utils/velocityUiPack.js';
+import '../../utils/lib/velocityUiPack.js';
 import { getTranslatedCountries } from '../../data/countries';
 import app from '../../app';
 import { getContentFrame } from '../../utils/selectors';

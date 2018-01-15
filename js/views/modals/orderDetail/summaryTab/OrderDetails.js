@@ -5,7 +5,7 @@ import moment from 'moment';
 import { getCountryByDataName } from '../../../../data/countries';
 import { convertAndFormatCurrency } from '../../../../utils/currency';
 import { clipboard } from 'electron';
-import '../../../../utils/velocity';
+import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import ModFragment from '../ModFragment';
 import { checkValidParticipantObject } from '../OrderDetail.js';

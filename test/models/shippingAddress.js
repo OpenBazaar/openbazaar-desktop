@@ -1,7 +1,7 @@
 import app from '../../js/app';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
-import ShippingAddress from '../../js/models/ShippingAddress';
+import ShippingAddress from '../../js/models/settings/ShippingAddress';
 
 describe('the Shipping Address model', () => {
   before(function () {

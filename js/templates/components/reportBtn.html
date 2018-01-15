@@ -2,7 +2,7 @@
   const tipText = ob.reported ? ob.polyT('listingReport.btnTipReported') : ob.polyT('listingReport.btnTip');
 %>
 
-<div class="reportBtnShell toolTipNoWrap js-reportBtn"  data-tip="<%= tipText %>">
+<div class="reportBtnShell toolTipNoWrap  toolTipTop js-reportBtn"  data-tip="<%= tipText %>">
   <button class="iconBtnTn clrP clrBr tx2 <% if(ob.reported) print('reported') %>">
     <i class="ion-ios-flag <% if(ob.reported) print('clrTErr') %>"></i>
   </button>
