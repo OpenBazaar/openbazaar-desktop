@@ -57,7 +57,7 @@ export function formatRating(average, count) {
   const avIsNum = typeof average === 'number';
   const countIsNum = typeof count === 'number';
   const ratingAverage = avIsNum ? average.toFixed(1) : '?';
-  const ratingCount = countIsNum ? ` (${count})` : '(?)';
+  const ratingCount = countIsNum ? ` (${count})` : ' (?)';
   const error = !avIsNum || !countIsNum ? ` ${app.polyglot.t('ratings.invalid')}` : '';
   return `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}${error}`;
 }
