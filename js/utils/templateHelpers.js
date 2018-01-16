@@ -60,9 +60,9 @@ export function formatRating(average, count, skipCount) {
   const ratingAverage = avIsNum ? average.toFixed(1) : '?';
   let ratingCount = countIsNum ? ` (${count})` : ' (?)';
   if (skipCount) ratingCount = '';
-  const error = !avIsNum || (!countIsNum && !skipCount) ? ' ⚠' : '';
-  const cl = !avIsNum || (!countIsNum && !skipCount) ? 'class="clrTErr"' : '';
-  return `<span ${cl}>${parseEmojis('⭐')} ${ratingAverage}${ratingCount}${error}</span>`;
+  const error = !avIsNum || (!countIsNum && !skipCount) ?
+    ' <i class="ion-alert-circled clrTErr"></i>' : '';
+  return `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}${error}`;
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);

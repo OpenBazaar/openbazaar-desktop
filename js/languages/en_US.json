@@ -1858,9 +1858,6 @@
     "curSymbolAmount": "%{symbol}%{amount}",
     "curCodeAmount": "%{amount} %{code}"
   },
-  "ratings": {
-    "invalid": "Error"
-  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",
