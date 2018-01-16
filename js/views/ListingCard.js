@@ -3,6 +3,7 @@ import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
+import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
@@ -10,6 +11,8 @@ import baseVw from './baseVw';
 import ListingDetail from './modals/listingDetail/Listing';
 import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
+import BlockedWarning from './modals/BlockedWarning';
+import BlockBtn from './components/BlockBtn';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -79,7 +82,21 @@ export default class extends baseVw {
     this.reportsUrl = opts.reportsUrl;
     this.deleteConfirmOn = false;
     this.boundDocClick = this.onDocumentClick.bind(this);
+    // This should be initialized as null, so we could determine whether the user
+    // never set this (null), or explicitly clicked to show / hide nsfw (true / false)
+    this._userClickedShowNsfw = null;
     $(document).on('click', this.boundDocClick);
+
+    this.listenTo(blockEvents, 'blocked unblocked', data => {
+      if (data.peerIds.includes(this.ownerGuid)) {
+        this.setBlockedClass();
+      }
+    });
+
+    this.listenTo(app.settings, 'change:showNsfw', () => {
+      this._userClickedShowNsfw = null;
+      this.setHideNsfwClass();
+    });
   }
 
   className() {
@@ -100,6 +117,8 @@ export default class extends baseVw {
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
+      'click .js-showNsfw': 'onClickShowNsfw',
+      'click .js-hideNsfw': 'onClickHideNsfw',
       click: 'onClick',
     };
   }
@@ -180,10 +199,10 @@ export default class extends baseVw {
       app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
         this.ownerGuid);
 
-      app.loadingModal.open();
-
-      this.fetchFullListing()
-        .done(jqXhr => {
+      const listingFetch = this.fetchFullListing();
+      const loadListing = () => {
+        app.loadingModal.open();
+        listingFetch.done(jqXhr => {
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
           const listingDetail = new ListingDetail({
@@ -193,6 +212,7 @@ export default class extends baseVw {
             closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
+            checkNsfw: !this._userClickedShowNsfw,
           }).render()
             .open();
 
@@ -210,7 +230,56 @@ export default class extends baseVw {
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
+      };
+
+      if (isBlocked(this.ownerGuid) && !isUnblocking(this.ownerGuid)) {
+        const blockedWarningModal = new BlockedWarning({ peerId: this.ownerGuid })
+          .render()
+          .open();
+
+        this.listenTo(blockedWarningModal, 'canceled', () => {
+          app.router.navigate(routeOnOpen);
+        });
+
+        const onUnblock = () => loadListing();
+
+        this.listenTo(blockEvents, 'unblocking unblocked', onUnblock);
+
+        this.listenTo(blockedWarningModal, 'close', () => {
+          this.stopListening(null, null, onUnblock);
+        });
+      } else {
+        loadListing();
+      }
     }
+  }
+
+  onClickShowNsfw(e) {
+    e.stopPropagation();
+    this._userClickedShowNsfw = true;
+    this.setHideNsfwClass();
+  }
+
+  onClickHideNsfw(e) {
+    e.stopPropagation();
+    this._userClickedShowNsfw = false;
+    this.setHideNsfwClass();
+  }
+
+  setBlockedClass() {
+    this.$el.toggleClass('blocked', isBlocked(this.ownerGuid));
+  }
+
+  setHideNsfwClass() {
+    this.$el.toggleClass('hideNsfw',
+      // explicitly checking for false, since null means something different
+      this._userClickedShowNsfw === false ||
+      (
+        this.model.get('nsfw') &&
+        !this._userClickedShowNsfw &&
+        !app.settings.get('showNsfw')
+      )
+    );
   }
 
   fetchFullListing(options = {}) {
@@ -317,17 +386,34 @@ export default class extends baseVw {
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
         displayCurrency: app.settings.get('localCurrency'),
+        isBlocked,
+        isUnblocking,
       }));
     });
 
     this._$btnEdit = null;
     this._$btnDelete = null;
 
+    this.setBlockedClass();
+    this.setHideNsfwClass();
+    this.$el.toggleClass('isNsfw', this.model.get('nsfw'));
+
     if (this.reportBtn) this.reportBtn.remove();
     if (this.reportsUrl) {
       this.reportBtn = this.createChild(ReportBtn);
       this.listenTo(this.reportBtn, 'startReport', this.startReport);
-      this.$('.js-reportBtnWrapper').append(this.reportBtn.render().el);
+      this.getCachedEl('.js-reportBtnWrapper').append(this.reportBtn.render().el);
+    }
+
+    if (!this.ownListing) {
+      this.getCachedEl('.js-blockBtnWrapper').html(
+        new BlockBtn({
+          targetId: this.ownerGuid,
+          initialState: { useIcon: true },
+        })
+          .render()
+          .el
+      );
     }
 
     return this;

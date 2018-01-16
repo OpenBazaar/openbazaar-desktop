@@ -1,5 +1,5 @@
 import { remote, ipcRenderer, clipboard } from 'electron';
-import '../../utils/velocity';
+import '../../utils/lib/velocity';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
 

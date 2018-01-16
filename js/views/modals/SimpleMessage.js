@@ -23,6 +23,7 @@ class SimpleMessage extends BaseModal {
     this.options = opts;
     this.title = options.title;
     this.message = options.message;
+    this.messageHtml = options.messageHtml;
   }
 
   className() {
@@ -48,6 +49,7 @@ class SimpleMessage extends BaseModal {
       this.$el.html(t({
         title: this.title,
         message: this.message,
+        messageHtml: this.messageHtml,
       }));
 
       super.render();

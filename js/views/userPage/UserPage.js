@@ -7,6 +7,7 @@ import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
 import { launchEditListingModal, launchSettingsModal } from '../../utils/modalManager';
+import { isBlocked, events as blockEvents } from '../../utils/block';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
@@ -62,6 +63,12 @@ export default class extends baseVw {
       }
 
       if (this.followingCount === 0 && !this.ownPage) this.followingCount = 1;
+    });
+
+    this.listenTo(blockEvents, 'blocked unblocked', data => {
+      if (data.peerIds.includes(this.model.id)) {
+        this.setBlockedClass();
+      }
     });
   }
 
@@ -155,6 +162,10 @@ export default class extends baseVw {
       this._followerCount = count;
       this.getCachedEl('.js-followerCount').text(count);
     }
+  }
+
+  setBlockedClass() {
+    this.$el.toggleClass('isBlocked', isBlocked(this.model.id));
   }
 
   updateHeader() {
@@ -344,6 +355,8 @@ export default class extends baseVw {
         addTabToHistory: false,
         listing: this.options.listing,
       });
+
+      this.setBlockedClass();
     });
 
     return this;

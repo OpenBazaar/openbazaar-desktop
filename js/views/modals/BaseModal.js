@@ -1,10 +1,17 @@
 import _ from 'underscore';
 import $ from 'jquery';
+import { Events } from 'backbone';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 import { getHtml, getAppFrame } from '../../utils/selectors';
 import { isPromise } from '../../utils/object';
 import app from '../../app';
+
+const staticEvents = {
+  ...Events,
+};
+
+export { staticEvents as events };
 
 export default class BaseModal extends baseVw {
   constructor(options = {}) {
@@ -90,6 +97,15 @@ export default class BaseModal extends baseVw {
     this.close();
   }
 
+  __trigger(event, ...args) {
+    if (typeof event !== 'string') {
+      throw new Error('Please provide an event name as a string.');
+    }
+
+    staticEvents.trigger(event, this, ...args);
+    this.trigger(event, ...args);
+  }
+
   isOpen() {
     return this._open;
   }
@@ -100,7 +116,7 @@ export default class BaseModal extends baseVw {
       getAppFrame().append(this.el);
       BaseModal.__openModals.push(this);
       this._open = true;
-      this.trigger('open');
+      this.__trigger('open');
     } else {
       this.bringToTop();
     }
@@ -139,7 +155,7 @@ export default class BaseModal extends baseVw {
       if (!BaseModal.__openModals.length) getHtml().removeClass('modalOpen');
       getAppFrame()[0].removeChild(this.el);
       this._open = false;
-      this.trigger('close');
+      this.__trigger('close');
     }
 
     if (this.__options.removeOnClose) {
@@ -176,13 +192,14 @@ export default class BaseModal extends baseVw {
 
   bringToTop() {
     if (this.isOpen()) {
+      this.__trigger('brought-to-top');
       getAppFrame()[0].removeChild(this.el);
       getAppFrame().append(this.el);
     }
   }
 
   remove() {
-    this.trigger('modal-will-remove');
+    this.__trigger('modal-will-remove');
     if (this.isOpen()) this.close(true);
     super.remove();
 

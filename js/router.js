@@ -7,6 +7,7 @@ import { isPromise } from './utils/object';
 import './lib/whenAll.jquery';
 import app from './app';
 import { getOpenModals } from './views/modals/BaseModal';
+import { isBlocked, isUnblocking, events as blockEvents } from './utils/block';
 import UserPage from './views/userPage/UserPage';
 import Search from './views/search/Search';
 import Transactions from './views/transactions/Transactions';
@@ -14,6 +15,7 @@ import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
+import BlockedWarning from './views/modals/BlockedWarning';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -62,7 +64,7 @@ export default class ObRouter extends Router {
     return 1000;
   }
 
-  // FYI - There is a scenrio where the prevHash will be inaccurate. More details in
+  // FYI - There is a scenario where the prevHash will be inaccurate. More details in
   // the confirmPromises when() fail handler in execute().
   setPrevHash(prevHash = this._curHash) {
     this._prevHash = prevHash;
@@ -355,6 +357,49 @@ export default class ObRouter extends Router {
 
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
       this.pageNotFound();
+      return;
+    }
+
+    if (isBlocked(guid) && !isUnblocking(guid)) {
+      app.loadingModal.close();
+      const blockedWarningModal = new BlockedWarning({ peerId: guid })
+        .render()
+        .open();
+
+      const onBlockWarningCanceled = () => {
+        const prevHash = this.prevHash.endsWith('/') ?
+          this.prevHash.slice(0, this.prevHash.length - 1) : this.prevHash;
+        const locationHash = location.hash.endsWith('/') ?
+          location.hash.slice(0, location.hash.length - 1) : location.hash;
+
+        if (prevHash === locationHash) {
+          // means there is no previous page - will go to our own node page
+          this.navigate(`${app.profile.id}`, {
+            replace: true,
+            trigger: true,
+          });
+        } else {
+          this.navigate(`${this.prevHash.slice(1)}`, {
+            replace: true,
+            trigger: true,
+          });
+        }
+      };
+
+      const onUnblock = data => {
+        if (data.peerIds.includes(guid)) {
+          app.loadingModal.open();
+          this.user(guid, state, ...args);
+        }
+      };
+
+      const cleanUpBlockedModal = () => {
+        blockEvents.off(null, onUnblock);
+      };
+
+      blockedWarningModal.on('canceled', onBlockWarningCanceled);
+      blockEvents.on('unblocking unblocked', onUnblock);
+      blockedWarningModal.on('close', cleanUpBlockedModal);
       return;
     }
 
