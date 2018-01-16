@@ -50,16 +50,19 @@ export function parseEmojis(text, className = '', attrs = {}) {
 
 /**
  * If the average is a number, show the last 2 digits and trim any trailing zeroes.
- * Don't show the count if the count is invalid, x (0) would be inaccurate and confusing.
- * If the average is invalid or 0, don't show anything.
  * @param {number} average - the average rating
  * @param {number} count - the number of ratings
+ * @param {boolean) skipCount = a count wasn't sent, don't show it or test it for validity
  */
-export function formatRating(average, count) {
+export function formatRating(average, count, skipCount) {
   const avIsNum = typeof average === 'number';
-  const ratingAverage = avIsNum ? average.toFixed(1) : '';
-  const ratingCount = typeof count === 'number' ? ` (${count})` : '';
-  return avIsNum && average > 0 ? `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}` : '';
+  const countIsNum = typeof count === 'number';
+  const ratingAverage = avIsNum ? average.toFixed(1) : '?';
+  let ratingCount = countIsNum ? ` (${count})` : ' (?)';
+  if (skipCount) ratingCount = '';
+  const error = !avIsNum || (!countIsNum && !skipCount) ?
+    ' <i class="ion-alert-circled clrTErr"></i>' : '';
+  return `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}${error}`;
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);
