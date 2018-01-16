@@ -807,7 +807,8 @@ export default class extends BaseVw {
       this.$el.html(t({
         id: this.model.id,
         isCase: this.isCase(),
-        isTestnet: app.testnet,
+        isTestnet: app.serverConfig.testnet,
+        paymentAddress: this.paymentAddress,
         ...this.model.toJSON(),
       }));
       this._$copiedToClipboard = null;
