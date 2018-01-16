@@ -91,7 +91,7 @@ export default class extends baseVw {
       const address = this.getState().address;
 
       if (address) {
-        qrDataUri = qr(`bitcoin:${address}`,
+        qrDataUri = qr(getServerCurrency().qrCodeText(address),
           { type: 6, size: 5, level: 'Q' });
       }
 
