@@ -244,15 +244,14 @@
 
         table {
           border-spacing: 0;
-          border-collapse: collapse;
-          width: 100%;
+          width: auto;
 
           thead tr td {
             position: -webkit-sticky;
             position: sticky;
             top: 0px;
             padding: 0px;
-            margin:0px;
+            margin: 0px;
             border: none;
             z-index:5;
           }
@@ -260,10 +259,8 @@
           thead tr td .stickyDiv {
             width: inherit;
             height: inherit;
-            background-color: white;
-            border: 1px solid grey;
-            border-right: none;
             padding: $pad;
+            font-weight: bold;
           }
 
           th {
