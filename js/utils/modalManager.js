@@ -32,9 +32,13 @@ export function launchEditListingModal(modalOptions = {}) {
     }
   }
 
-  const editListingModal = new EditListing(modalOptions)
-    .render()
-    .open();
+  const editListingModal = new EditListing(modalOptions);
+  // use a timeout to prevent the editModal from being undefined when the view listing
+  // function is set due to the override of the open method
+  setTimeout(() => {
+    editListingModal.render().open();
+  });
+
 
   return editListingModal;
 }
