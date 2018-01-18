@@ -72,11 +72,8 @@ export default class extends BaseVw {
         const acceptedState = {
           showFulfillButton: false,
           infoText: app.polyglot.t('orderDetail.summaryTab.accepted.vendorReceived'),
+          showRefundButton: false,
         };
-
-        if (state !== 'DISPUTED') {
-          acceptedState.showRefundButton = false;
-        }
 
         this.accepted.setState(acceptedState);
       }
@@ -468,7 +465,6 @@ export default class extends BaseVw {
       showRefundButton: isVendor && [
         'AWAITING_FULFILLMENT',
         'PARTIALLY_FULFILLED',
-        'DISPUTED',
       ].indexOf(orderState) > -1,
       showFulfillButton: canFulfill,
     };
