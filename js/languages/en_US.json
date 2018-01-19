@@ -838,7 +838,6 @@
     "clone": "Clone",
     "editListingReturnText": "Return to listing",
     "freeShippingBanner": "Free Shipping",
-    "soldOutBanner": "Sold Out",
     "listingDataChangedPopin": "Listing data has changed.",
     "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
     "type": "Type: %{type}",
@@ -889,7 +888,6 @@
   "listingCard": {
     "btnDetails": "Details",
     "freeShippingBanner": "Free Shipping",
-    "soldOutBanner": "Sold Out",
     "deleting": "Deleting…",
     "deleted": "Deleted",
     "editListingTooltip": "Edit listing",
