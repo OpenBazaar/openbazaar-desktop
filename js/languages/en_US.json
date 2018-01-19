@@ -242,7 +242,6 @@
       "listingDataChangedPopin": "Listing data has changed.",
       "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
       "freeShippingBanner": "Free Shipping",
-      "soldOutBanner": "Sold Out",
       "sortOpts": {
         "priceAsc": "Price low to high",
         "priceDesc": "Price high to low",
