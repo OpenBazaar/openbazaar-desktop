@@ -27,6 +27,7 @@ $alert2Background: #fffaf6;
 $alert2Gradient: linear-gradient(to top, #fffaf6, #fff4e9);
 
 $overlay: adjust-color($secondary, $alpha: -0.04);
+$overlayP: hsla(0,0%,100%,0.8); // the primary color with some opacity
 
 // typography
 $baseFontSize: 10px;

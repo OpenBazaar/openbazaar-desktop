@@ -3,6 +3,12 @@
     <h1><%= ob.title %></h1>
   </div>
   <div class="msgWrap">
-    <p><%= ob.message %></p>
+    <%
+      if (ob.messageHtml) {
+        print(ob.messageHtml)
+      } else {
+    %>
+      <p><%= ob.message %></p>
+    <% } %>
   </div>
 </div>

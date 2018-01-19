@@ -15,6 +15,7 @@ import Suggestions from './Suggestions';
 import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import { getServerCurrency } from '../../data/cryptoCurrencies';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -43,7 +44,7 @@ export default class extends baseVw {
         'toys',
       ];
 
-    // in the future the may be more possible types
+    // in the future there may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
     this.sProvider = app.searchProviders[`default${this.torString}Provider`];
@@ -94,9 +95,14 @@ export default class extends baseVw {
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
     // all parameters not specified above are assumed to be filters
-    this.filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
-    // if the nsfw filter is not set, use the value from settings
-    this.filters.nsfw = this.filters.nsfw || String(app.settings.get('showNsfw'));
+    const filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
+    // set an initial set of filters for the first query
+    // if not passed in, set the user's values for nsfw and the currency
+    this.filters = {
+      nsfw: String(app.settings.get('showNsfw')),
+      acceptedCurrencies: getServerCurrency().code,
+      ...filters,
+    };
 
     this.processTerm(this.term);
   }

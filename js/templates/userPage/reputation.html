@@ -2,7 +2,7 @@
   <div class="contentBox flexRow flexVCent gutterH pad clrP clrBr statsBox">
     <% if (!ob.isFetching) { %>
       <div class="col6 txCtr">
-        <div class="repBg"><%= ob.formatRating(ob.average) %></div>
+        <div class="repBg"><%= ob.formatRating(ob.average, '', true) %></div>
         <div class="tx2b"><%= ob.polyT('reputation.averageRating') %></div>
       </div>
       <div class="rowDivV clrBrBk"></div>

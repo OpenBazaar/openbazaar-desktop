@@ -1,6 +1,6 @@
 import app from '../../app';
 import is from 'is_js';
-import LocalStorageSync from '../../utils/backboneLocalStorage';
+import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {

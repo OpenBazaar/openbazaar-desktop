@@ -1,6 +1,6 @@
 import app from '../../../../app';
 import { clipboard } from 'electron';
-import '../../../../utils/velocity';
+import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
 import { getServerCurrency } from '../../../../data/cryptoCurrencies';
@@ -807,7 +807,8 @@ export default class extends BaseVw {
       this.$el.html(t({
         id: this.model.id,
         isCase: this.isCase(),
-        isTestnet: app.testnet,
+        isTestnet: app.serverConfig.testnet,
+        paymentAddress: this.paymentAddress,
         ...this.model.toJSON(),
       }));
       this._$copiedToClipboard = null;

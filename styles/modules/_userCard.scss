@@ -13,16 +13,6 @@
     background-size: cover;
     background-position: center;
 
-    .userIcon {
-      position: absolute;
-      bottom: 8px;
-      left: 10px;
-      border-width: 2px;
-      border-style: solid;
-      width: 50px;
-      height: 50px;
-    }
-
     .userControls {
       position: absolute;
       bottom: 8px;
@@ -37,6 +27,43 @@
       right: $padSm;
       top: $padSm;
     }
+
+    .blockedOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: none;
+
+      & > * {
+        // don't let long translations go under the avatar
+        max-width: 180px;
+      }
+    }
+
+    .userIconWrap {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+
+      .userIcon {
+        border-width: 2px;
+        border-style: solid;
+      }
+
+      .blockedAvatarOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+      }
+
+      .userIcon, .blockedAvatarOverlay {
+        width: 50px;
+        height: 50px;
+      }
+    }
   }
 
   .content {
@@ -47,6 +74,20 @@
 
     .contentTop {
       height: 86px;
+    }
+  }
+
+  &.isBlocked {
+    .blockedOverlay {
+      display: flex;
+    }
+
+    .shortHeader {
+      .userIconWrap {
+        .blockedAvatarOverlay {
+          display: block;
+        }
+      }
     }
   }
 }

@@ -1,18 +1,15 @@
 <div class="clrBr clrP flexVCent gutterH padSm convoHeader" style="height: 50px">
   <div class="flexExpand js-convoProfileHeaderContainer"></div>
   <div class="btnStrip flexNoShrink">
-    <a class="ion-android-more-vertical iconBtn js-subMenuTrigger"></a>
+    <a class="ion-android-more-vertical iconBtn subMenuTrigger js-subMenuTrigger"></a>
     <a class="ion-ios-close-empty iconBtn js-closeConvo"></a>
   </div>
 </div>
 <div class="posR flexExpand">
   <div class="overlay hide js-messagesOverlay"></div>
-  <div class="overlay deletingOverlay js-deletingOverlay">
-    <div><%= ob.polyT('chat.conversation.deletingOverlayText') %></div>
-  </div>
   <div class="subMenu boxList clrBr clrP clrSh1 hide js-subMenu">
     <a class="clrT" href="<%= ob.guid %>"><%= ob.polyT('chat.conversation.subMenu.viewPage') %></a>
-    <a class="clrT js-blockUser TODO"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
+    <a class="clrT js-blockUser"><%= ob.polyT('chat.conversation.subMenu.blockUser') %></a>
     <a class="clrT js-deleteConversation deleteConvoMenuItem"><%= ob.polyT('chat.conversation.subMenu.deleteConvo') %></a>
   </div>
   <div class="convoMessagesWindow tx6 js-convoMessagesWindow">
@@ -32,4 +29,10 @@
     <textarea class="clrP tx6 js-inputMessage" placeholder="<%= ob.polyT('chat.conversation.messageInputPlaceholder') %>" maxlength="<%= ob.maxMessageLength %>" rows="1"></textarea>
     <button class="btn clrP emojiMenuTrigger js-emojiMenuTrigger"><%= ob.parseEmojis('😀') %></button>
   </div>
+</div>
+<div class="overlay clrPOverlay deletingOverlay">
+  <div><%= ob.polyT('chat.conversation.deletingOverlayText') %></div>
+</div>
+<div class="overlay clrPOverlay blockingOverlay">
+  <div><%= ob.polyT('chat.conversation.blockingOverlayText') %></div>
 </div>

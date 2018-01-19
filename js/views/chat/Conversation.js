@@ -1,11 +1,12 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import '../../utils/velocity';
+import '../../utils/lib/velocity';
 import app from '../../app';
 import { getBody } from '../../utils/selectors';
 import { getSocket } from '../../utils/serverConnect';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import { insertAtCursor } from '../../utils/dom';
+import { block, isBlocking, events as blockEvents } from '../../utils/block';
 import emojis from '../../data/emojis';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
@@ -90,6 +91,16 @@ export default class extends baseVw {
 
     this.boundOnFocusin = this.onFocusIn.bind(this);
     this.$el.on('focusin', this.boundOnFocusin);
+
+    this.listenTo(blockEvents, 'blocking', data => {
+      if (!data.peerIds.includes(this.guid)) return;
+      this.$el.addClass('isBlocking');
+    });
+
+    this.listenTo(blockEvents, 'blockFail blocked', data => {
+      if (!data.peerIds.includes(this.guid)) return;
+      this.$el.removeClass('isBlocking');
+    });
   }
 
   get messagesPerPage() {
@@ -144,7 +155,7 @@ export default class extends baseVw {
   }
 
   onClickBlockUser() {
-    alert('coming soon...');
+    block(this.guid);
   }
 
   onClickSubMenuLink() {
@@ -673,6 +684,7 @@ export default class extends baseVw {
         profile: this.profile,
       });
 
+      this.$el.toggleClass('isBlocking', isBlocking(this.guid));
       this.$('.js-convoMessagesContainer').html(this.convoMessages.render().el);
       this.throttleScrollHandler();
     });

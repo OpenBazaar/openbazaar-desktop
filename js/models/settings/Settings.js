@@ -1,7 +1,7 @@
 import _ from 'underscore';
-import app from '../app';
-import BaseModel from './BaseModel';
-import ShippingAddresses from '../collections/ShippingAddresses';
+import app from '../../app';
+import BaseModel from '../BaseModel';
+import ShippingAddresses from '../../collections/ShippingAddresses';
 import SMTPSettings from './SMTPSettings';
 
 export default class extends BaseModel {
@@ -66,5 +66,18 @@ export default class extends BaseModel {
     }
 
     return super.sync(method, model, options);
+  }
+
+  parse(response = {}) {
+    if (Array.isArray(response.blockedNodes)) {
+      // de-dupe
+      response.blockedNodes = Array.from(new Set(response.blockedNodes));
+
+      // do not allow own node to be in the blocked list
+      response.blockedNodes = response.blockedNodes
+        .filter(peerId => peerId !== app.profile.id);
+    }
+
+    return response;
   }
 }

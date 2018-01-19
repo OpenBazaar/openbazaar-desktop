@@ -41,6 +41,7 @@
       z-index: 1;
       top: -#{$thumb / 2};
       right: 8px;
+
     }
 
     .trimWidth {
@@ -70,6 +71,18 @@
     }
   }
 
+  .blockedAvatarOverlay {
+    display: none;
+
+    i {
+      font-size: 1.9rem;
+    }
+  }
+
+  .nsfwOverlay, .nsfwAvatarOverlay {
+    display: none;
+  }
+
   .editOverlay {
     .btn {
       z-index: 1;
@@ -86,8 +99,19 @@
     }
   }
 
+  .btnShowNsfw {
+    display: none;
+  }
+
+  .reportBtnShell {
+    button {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
   &:hover {
-    .reportOverlay {
+    .additionalOverlay {
       display: flex;
     }
   }
@@ -186,6 +210,37 @@
 
     .freeShipCol {
       padding-right: 20px;
+    }
+  }
+
+  &.blocked {
+    .blockedOverlay, .blockedAvatarOverlay {
+      display: block;
+    }
+  }
+
+  &.hideNsfw {
+    .nsfwOverlay, .nsfwAvatarOverlay {
+      display: block;
+    }
+
+    .additionalOverlay {
+      // don't cover the Show Mature Content button
+      bottom: initial;
+
+      .btnShowNsfw {
+        display: block;
+      }
+    }    
+
+    .listingsGridListView & {
+      .listingImage {
+        opacity: 0;
+      }
+    }
+
+    .btnHideNsfw {
+      display: none;
     }
   }
 }
