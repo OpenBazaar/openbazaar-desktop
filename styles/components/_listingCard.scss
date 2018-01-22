@@ -22,7 +22,7 @@
 
     .infoArea {
       position: relative;
-      
+
       .toolTip {
         &::after, &::before {
           z-index: 2;
@@ -84,6 +84,13 @@
   }
 
   .editOverlay {
+    // collapse the overlay so it doesn't block the verified moderator badge
+    top: auto;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
+
     .btn {
       z-index: 1;
     }
@@ -110,9 +117,24 @@
     }
   }
 
+  .additionalOverlay {
+    top: auto;
+  }
+
   &:hover {
     .additionalOverlay {
       display: flex;
+    }
+  }
+
+  .verifiedModWrapper {
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    .verifiedMod {
+      right: $padSm;
+      top: $padSm;
     }
   }
 
@@ -178,6 +200,39 @@
       height: 45px;
       background-size: cover;
     }
+
+    .verifiedModWrapper {
+      position: static;
+      bottom: 0;
+
+      .verifiedMod {
+        position: static;
+
+        .badge {
+          height: 1em;
+          width: 1em;
+        }
+
+        .arrowBoxWrapper {
+          width: 1em;
+
+          .arrowBox {
+            right: -25px;
+            top: auto;
+            // calc from the bottom of the arrowBoxWrapper plus its height plus the badge height
+            // plus a buffer so it doesn't flicker when you move the mouse over the arrowBox
+            bottom: calc(100% + 10px + 1em + 5px);
+
+
+
+            &::before {
+              top: 100%;
+              transform: translate(-50%,-50%) rotate(45deg);
+            }
+          }
+        }
+      }
+    }
   }
 
   // Some assumptions here:
@@ -225,13 +280,10 @@
     }
 
     .additionalOverlay {
-      // don't cover the Show Mature Content button
-      bottom: initial;
-
       .btnShowNsfw {
         display: block;
       }
-    }    
+    }
 
     .listingsGridListView & {
       .listingImage {

@@ -32,3 +32,12 @@
     }
   }
 }
+
+.listingCard .gridViewContent .listViewContent .verifiedModWrapper .verifiedMod {
+  position: static;
+
+  .badge {
+    height: 1em;
+    width: 1em;
+  }
+}

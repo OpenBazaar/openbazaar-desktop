@@ -13,6 +13,7 @@ import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
 import BlockBtn from './components/BlockBtn';
+import VerifiedMod from './components/VerifiedMod';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -414,6 +415,18 @@ export default class extends baseVw {
           .render()
           .el
       );
+    }
+
+    const moderators = this.model.get('moderators') || ['QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ'];
+    const verifiedMods = app.verifiedMods.pluck('peerID').filter((mod) => moderators.includes(mod));
+    const verifiedMod = verifiedMods[0];
+    if (verifiedMod) {
+      this.verifiedMod = new VerifiedMod({
+        model: app.verifiedMods.get(verifiedMod),
+        arrowClass: 'arrowBoxRightTop',
+        data: app.verifiedMods.data,
+      });
+      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     }
 
     return this;
