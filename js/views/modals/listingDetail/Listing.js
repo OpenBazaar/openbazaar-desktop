@@ -21,8 +21,6 @@ import SocialBtns from '../../components/SocialBtns';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
-import VerifiedMod from '../../components/VerifiedMod';
-import VerifiedModModel from '../../../models/VerifiedMod';
 import NsfwWarning from '../NsfwWarning';
 
 export default class extends BaseModal {
