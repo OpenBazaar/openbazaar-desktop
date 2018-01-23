@@ -469,8 +469,9 @@
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
       "saveErrorAlertTitle": "Unable to save general settings",
-      "searchProvider": "Search Provider",
-      "restoreDefaultProvider": "Restore default"
+      "verifiedMods": "Verified Moderators",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": "Restore default"
     },
     "pageTab": {
       "helperAbout": "Displays on your Home page",
@@ -557,12 +558,6 @@
         "testSmtpFail": "The integration test was not successful.",
         "testSmtpFailWithError": "The integration test was not successful: %{err}",
         "testSmtpCancel": "Cancel"
-      },
-      "services": {
-        "sectionName": "Services",
-        "verifiedMods": "Verified Moderators",
-        "verifiedModsHelper": "The service used to verify moderators.",
-        "restoreDefault": "Restore default service."
       },
       "server": {
         "sectionName": "Server",

@@ -128,6 +128,23 @@
           </div>
         </div>
       </div>
+      <div class="flexRow gutterH TODO">
+        <% // The design was changed to remove this after it was added, it will be used at some point in the future %>
+        <div class="col3">
+          <label><%= ob.polyT('settings.generalTab.verifiedMods') %></label>
+          <div class="clrT2 txSm">
+            <a class="txU js-restoreDefaultverifiedModProvider"><%= ob.polyT('settings.generalTab.restoreDefault') %></a>
+          </div>
+        </div>
+        <div class="col9">
+          <% if (ob.errors['verifiedModsProvider']) print(ob.formErrorTmpl({ errors: ob.errors['verifiedModsProvider'] })) %>
+          <input class="clrP clrBr rowTn js-verifiedModsProvider"
+                 data-persistence-location="local"
+                 type="text" name="verifiedModsProvider"
+                 value="<%= ob.verifiedModsProvider %>">
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 

@@ -42,6 +42,7 @@ export default class extends baseVw {
     return {
       'click .js-save': 'save',
       'change #settingsCurrencySelect': 'onChangeCurrencySelect',
+      'click .js-restoreDefaultVerifiedModProvider': 'clickRestoreDefaultVerifiedModProvider',
     };
   }
 
@@ -51,6 +52,12 @@ export default class extends baseVw {
     } else {
       this.$bitcoinUnitField.addClass('hide');
     }
+  }
+
+  clickRestoreDefaultVerifiedModProvider() {
+    // this is currently hidden in the template because it was taken out of the design for now
+    const defaultVal = this.localSettings.defaults().verifiedModsProvider;
+    this.getCachedEl('.js-verifiedModsProvider').val(defaultVal);
   }
 
   getFormData(fields = this.$settingsFields) {
