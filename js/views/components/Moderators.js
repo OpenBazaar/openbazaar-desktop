@@ -1,12 +1,12 @@
 import $ from 'jquery';
-import loadTemplate from '../../../utils/loadTemplate';
-import app from '../../../app';
-import { getSocket } from '../../../utils/serverConnect';
-import { openSimpleMessage } from '../SimpleMessage';
-import Moderators from '../../../collections/purchase/Moderators';
-import Moderator from '../../../models/profile/Profile';
-import baseVw from '../../baseVw';
-import ModCard from '../../ModeratorCard';
+import loadTemplate from '../../utils/loadTemplate';
+import app from '../../app';
+import { getSocket } from '../../utils/serverConnect';
+import { openSimpleMessage } from '../modals/SimpleMessage';
+import Moderators from '../../collections/Moderators';
+import Moderator from '../../models/profile/Profile';
+import baseVw from '../baseVw';
+import ModCard from '../ModeratorCard';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -19,24 +19,47 @@ export default class extends baseVw {
     if (!options.notSelected) {
       throw new Error('Please provide a default not selected state.');
     }
+
     const opts = {
       // set defaults
       apiPath: 'fetchprofiles',
       async: true,
       useCache: true,
       moderatorIDs: [],
+      excludeIDs: [],
       method: 'POST',
       include: '',
       purchase: false,
       singleSelect: false,
       selectFirst: false,
       radioStyle: false,
+      verifiedOnly: false,
       // defaults will be overwritten by passed in options
       ...options,
     };
 
-    if (opts.apiPath === 'moderators' && opts.moderatorIDs.length) {
-      throw new Error('If you provide a list of IDs, the path should not be moderators.');
+    if (!opts.apiPath || ['fetchprofiles', 'moderators'].indexOf(opts.apiPath) === -1) {
+      throw new Error('The apiPath must be either fetchproviles or moderators');
+    }
+    if (opts.apiPath === 'moderators') {
+
+      if (opts.moderatorIDs.length) {
+        throw new Error('If the apiPath is moderators, a list of IDs is not used.');
+      }
+      if (opts.include && opts.include !== 'profile') {
+        throw new Error('The only valid option currently for include is profile');
+      }
+    }
+    if (opts.apiPath === 'fetchprofiles') {
+      if (opts.include) {
+        throw new Error('If the apiPath is fetchprofiles, the include parameter is not used.');
+      }
+      if (opts.moderatorIDs.length < 1) {
+        throw new Error('If the apiPath is fetchprofiles, provide a list of moderator IDs');
+      }
+    }
+    if (typeof opts.async !== 'boolean') {
+      throw new Error('The value of async must be a boolean');
     }
 
     if (opts.apiPath === 'moderators') {
@@ -48,14 +71,20 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
     this.moderatorsCol = new Moderators();
-    this.listenTo(this.moderatorsCol, 'add', (model, collection, colOpts) => {
-      this.addMod(model, collection, colOpts);
+    this.listenTo(this.moderatorsCol, 'add', (model) => {
+      this.addMod(model);
     });
     this.modCards = [];
   }
 
   className() {
     return 'moderatorsList';
+  }
+
+
+  removeNotFetched(ID) {
+    this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
+    this.checkNotFetched();
   }
 
   getModeratorsByID(IDs = this.options.moderatorIDs) {
@@ -67,7 +96,7 @@ export default class extends baseVw {
 
     if (this.fetch && this.fetch.state() === 'pending') return;
 
-    this.notFetchedYet = IDs;
+    this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
     if (IDs.length) {
       this.$moderatorsStatus.removeClass('hide');
@@ -93,7 +122,7 @@ export default class extends baseVw {
                   const eventData = event.jsonData;
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
-                    if (this.options.moderatorIDs.indexOf(eventData.peerId) !== -1) {
+                    if (IDs.indexOf(eventData.peerId) !== -1) {
                       // don't add errored moderators
                       this.removeNotFetched(eventData.peerId);
                     }
@@ -104,8 +133,7 @@ export default class extends baseVw {
                       // if the moderator has an invalid currency, remove them from the list
                       const buyerCur = app.serverConfig.cryptoCurrency;
                       const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
-                      const validCur = modCurs.indexOf(buyerCur) > -1;
-                      if (validCur) {
+                      if (modCurs.indexOf(buyerCur) > -1) {
                         this.moderatorsCol.add(new Moderator(eventData.profile, { parse: true }));
                       } else {
                         // remove the invalid moderator from the notFetched list
@@ -127,7 +155,7 @@ export default class extends baseVw {
                 return new Moderator(mappedProfile, { parse: true });
               });
               this.moderatorsCol.add(formattedMods);
-              this.notFetchedYet = [];
+              this.unfetchedMods = [];
               this.checkNotFetched();
             }
           })
@@ -141,13 +169,8 @@ export default class extends baseVw {
     }
   }
 
-  removeNotFetched(ID) {
-    this.notFetchedYet = this.notFetchedYet.filter(peerID => peerID !== ID);
-    this.checkNotFetched();
-  }
-
   checkNotFetched() {
-    const nfYet = this.notFetchedYet.length;
+    const nfYet = this.unfetchedMods.length;
     // if at least one mod has loaded, remove the spinner
     if (nfYet < this.fetchingMods.length) {
       this.$moderatorsWrapper.removeClass('processing');
@@ -166,7 +189,7 @@ export default class extends baseVw {
     }
   }
 
-  addMod(model, collection, opts) {
+  addMod(model) {
     if (model) {
       const cardState = this.options.cardState;
       const newModView = this.createChild(ModCard, {
@@ -175,7 +198,6 @@ export default class extends baseVw {
         notSelected: this.options.notSelected,
         cardState,
         radioStyle: this.options.radioStyle,
-        ...opts,
       });
       this.listenTo(newModView, 'changeModerator', (data) => {
         // if only one moderator should be selected, deselect the other moderators
@@ -232,6 +254,8 @@ export default class extends baseVw {
       this.$moderatorsWrapper = this.$('.js-moderatorsWrapper');
       this.$moderatorsStatus = this.$('.js-moderatorsStatus');
       this.$moderatorStatusText = this.$('.js-moderatorStatusInner');
+
+      this.moderatorsCol.forEach(mod => this.addMod(mod));
     });
 
     return this;

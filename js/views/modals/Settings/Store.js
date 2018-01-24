@@ -6,7 +6,8 @@ import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
 import { getGuid, isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
-import Moderators from '../../../collections/Moderators';
+import Moderators from '../../../collections/Moderators_old';
+//import Moderators from '../../components/Moderators';
 import ModCard from '../../ModeratorCard';
 import { openSimpleMessage } from '../SimpleMessage';
 

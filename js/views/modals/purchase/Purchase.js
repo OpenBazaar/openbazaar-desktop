@@ -14,7 +14,7 @@ import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
 import Purchase from '../../../models/purchase/Purchase';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
-import Moderators from './Moderators';
+import Moderators from '../../components/Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
@@ -228,13 +228,10 @@ export default class extends BaseModal {
     this.close();
   }
 
-  clickModerated(e) {
-    const checked = $(e.target).prop('checked');
-    this.getCachedEl('.js-moderator').toggleClass('hide', !checked);
-    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !checked);
-    this.order.moderated = checked;
-
-    if (checked) {
+  applyModeration(bool) {
+    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
+    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
+    if (bool) {
       // re-select the previously selected moderator, if any
       for (const mod of this.moderators.modCards) {
         if (mod.model.id === this._oldMod || this.moderators.selectedIDs[0]) {
@@ -245,26 +242,22 @@ export default class extends BaseModal {
     } else {
       // deselect all the moderators after storing any selected moderator
       this._oldMod = this.moderators.selectedIDs[0];
-      this.moderators.noneSelected = true;
       this.moderators.deselectOthers();
       this.order.set('moderator', '');
     }
+    this.moderators.noneSelected = !bool;
+    this.order.moderated = bool;
   }
 
-  disableModerators() {
-    this.getCachedEl('#purchaseModerated').prop('checked', false);
-    this.moderators.deselectOthers();
-    this.order.set('moderator', '');
+  clickModerated(e) {
+    const checked = $(e.target).prop('checked');
+    this.applyModeration(checked);
   }
 
   moderationOn(bool) {
-    this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
-    this.getCachedEl('.js-moderator').toggleClass('hide', !bool);
-    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !bool);
-    if (!bool) this.disableModerators();
-    this.order.moderated = bool;
     this.getCachedEl('#purchaseModerated').prop('checked', bool);
-    this.moderators.noneSelected = !bool;
+    this.getCachedEl('.js-moderatedOption').toggleClass('disabled', !bool);
+    this.applyModeration(bool);
   }
 
   onNoValidModerators() {
