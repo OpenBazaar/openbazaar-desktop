@@ -83,8 +83,8 @@
                   let checked = '';
                   checked = option.checked ? 'checked' : '';
                   var parsedLabel = ob.parseEmojis(option.label);
-                  print(`<input type="checkbox" ${checked} id="${option.name}" name="${option.name}">`);
-                  print(`<label for="${option.name}">${parsedLabel}</label>`);
+                  print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}.${option.value}">`);
+                  print(`<label for="${key + index}">${parsedLabel}</label>`);
                 }); %>
                 </div>
               <% } %>
