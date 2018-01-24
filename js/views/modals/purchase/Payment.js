@@ -175,7 +175,8 @@ export default class extends BaseVw {
   }
 
   get qrDataUri() {
-    const btcURL = `bitcoin:${this.paymentAddress}?amount=${this.balanceRemaining}`;
+    const address = getServerCurrency().qrCodeText(this.paymentAddress);
+    const btcURL = `${address}?amount=${this.balanceRemaining}`;
     return qr(btcURL, { type: 8, size: 5, level: 'Q' });
   }
 
