@@ -13,6 +13,7 @@ import Providers from './SearchProviders';
 import ProviderMd from '../../models/search/SearchProvider';
 import Suggestions from './Suggestions';
 import defaultSearchProviders from '../../data/defaultSearchProviders';
+import '../../lib/select2';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import { getServerCurrency } from '../../data/cryptoCurrencies';
@@ -169,11 +170,9 @@ export default class extends baseVw {
     filters = !filters || reset ? '' : `&${filters}`;
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     const newParams = newURL.searchParams;
+    // if there is no nsfw filter on the page, still send the default value to the provider
     if (!newParams.has('nsfw')) {
       newParams.append('nsfw', app.settings.get('showNsfw'));
-    }
-    if (!newParams.has('acceptedCurrencies')) {
-      newParams.append('acceptedCurrencies', app.serverConfig.cryptoCurrency);
     }
     this.callSearchProvider(newURL);
   }
