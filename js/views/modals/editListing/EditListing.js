@@ -836,7 +836,7 @@ export default class extends BaseModal {
       try {
         cur = this._origModel.unparsedResponse.listing.metadata.pricingCurrency;
       } catch (e) {
-        return;
+        return this;
       }
 
       if (getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
@@ -854,6 +854,7 @@ export default class extends BaseModal {
         });
       }
     }
+    return this;
   }
 
   get trackInventoryBy() {
