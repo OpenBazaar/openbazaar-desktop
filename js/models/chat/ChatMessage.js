@@ -2,7 +2,6 @@ import $ from 'jquery';
 import moment from 'moment';
 import is from 'is_js';
 import { getEmojiByName } from '../../data/emojis';
-import { isMultihash } from '../../utils';
 import sanitizeHtml from 'sanitize-html';
 import twemoji from 'twemoji';
 import app from '../../app';
@@ -51,16 +50,11 @@ export function processMessage(message) {
           const w = word.trim();
           if (wordsToAnchorify.includes(w)) return;
 
-          // Certain words are valid multihashes (e.g. that)
-          // const isGuid = isMultihash(w) && w.length > 15;
-          const isGuid = isMultihash(w) && w.length > 15;
-
           if ((w.startsWith('@') && w.length > 1) ||
             (w.startsWith('ob://') && w.length > 5) ||
             (w.startsWith('http://') && w.length >= 11) ||
             (w.startsWith('https://') && w.length >= 12) ||
-            (w.startsWith('www.') && w.length >= 8) ||
-            isGuid) {
+            (w.startsWith('www.') && w.length >= 8)) {
             wordsToAnchorify.push(w);
           }
         });
