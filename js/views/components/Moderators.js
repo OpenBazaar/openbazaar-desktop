@@ -10,7 +10,7 @@ import ModCard from '../ModeratorCard';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    if (!options.fetchErrorTitle || !options.fetchErrorMsg) {
+    if (!options.fetchErrorTitle) {
       throw new Error('Please provide error text for the moderator fetch.');
     }
     if (!options.cardState) {
@@ -42,7 +42,6 @@ export default class extends baseVw {
       throw new Error('The apiPath must be either fetchproviles or moderators');
     }
     if (opts.apiPath === 'moderators') {
-
       if (opts.moderatorIDs.length) {
         throw new Error('If the apiPath is moderators, a list of IDs is not used.');
       }
@@ -50,13 +49,8 @@ export default class extends baseVw {
         throw new Error('The only valid option currently for include is profile');
       }
     }
-    if (opts.apiPath === 'fetchprofiles') {
-      if (opts.include) {
-        throw new Error('If the apiPath is fetchprofiles, the include parameter is not used.');
-      }
-      if (opts.moderatorIDs.length < 1) {
-        throw new Error('If the apiPath is fetchprofiles, provide a list of moderator IDs');
-      }
+    if (opts.apiPath === 'fetchprofiles' && opts.include) {
+      throw new Error('If the apiPath is fetchprofiles, the include parameter is not used.');
     }
     if (typeof opts.async !== 'boolean') {
       throw new Error('The value of async must be a boolean');
@@ -129,16 +123,16 @@ export default class extends baseVw {
                   } else if (eventData.id === socketID) {
                     // don't add profiles that are not moderators. The ID list may have peerIDs
                     // that are out of date, and are no longer moderators.
-                    if (eventData.profile.moderator && eventData.profile.moderatorInfo) {
-                      // if the moderator has an invalid currency, remove them from the list
-                      const buyerCur = app.serverConfig.cryptoCurrency;
-                      const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
-                      if (modCurs.indexOf(buyerCur) > -1) {
-                        this.moderatorsCol.add(new Moderator(eventData.profile, { parse: true }));
-                      } else {
-                        // remove the invalid moderator from the notFetched list
-                        this.removeNotFetched(eventData.peerId);
-                      }
+                    const validMod = eventData.profile.moderator && eventData.profile.moderatorInfo;
+                    // if the moderator has an invalid currency, remove them from the list
+                    const buyerCur = app.serverConfig.cryptoCurrency;
+                    const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
+                    const validCur = modCurs.indexOf(buyerCur) > -1;
+                    // if the moderator is on the list of IDs to exclude, remove them
+                    const notExcluded = this.options.excludeIDs.indexOf(eventData.peerID) === -1;
+
+                    if (!!validMod && validCur && notExcluded) {
+                      this.moderatorsCol.add(new Moderator(eventData.profile, { parse: true }));
                     } else {
                       // remove the invalid moderator from the notFetched list
                       this.removeNotFetched(eventData.peerId);

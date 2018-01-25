@@ -6,9 +6,9 @@ import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
 import { getGuid, isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
-import Moderators from '../../../collections/Moderators_old';
-//import Moderators from '../../components/Moderators';
-import ModCard from '../../ModeratorCard';
+//import Moderators from '../../../collections/Moderators_old';
+import Moderators from '../../components/Moderators';
+//import ModCard from '../../ModeratorCard';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
@@ -39,23 +39,36 @@ export default class extends baseVw {
       (md, resp, opts) => app.settings.set(this.settings.toJSON(opts.attrs)));
 
     this.currentMods = this.settings.get('storeModerators');
+    console.log(app.polyglot.t('settings.storeTab.errors.selectedModsTitle'))
 
-    this.modsSelected = new Moderators(null, {
-      apiPath: 'fetchprofiles',
+    this.modsSelected = new Moderators({
       async: true,
+      moderatorIDs: this.currentMods,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
+      cardState: 'selected',
+      notSelected: 'deselected',
     });
 
-    this.modsByID = new Moderators(null, {
-      apiPath: 'fetchprofiles',
-      async: true,
+    this.modsByID = new Moderators({
+      async: false,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
+      cardState: 'selected',
+      notSelected: 'deselected',
     });
 
-    this.modsAvailable = new Moderators(null, {
+    this.modsAvailable = new Moderators({
+      apiPath: 'moderators',
       async: true,
+      method: 'GET',
       include: 'profile',
-      excludeCollection: this.modsSelected,
+      excludeIDs: this.modsSelected,
+      // excludeCollection: this.modsSelected,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
+      cardState: 'selected',
+      notSelected: 'deselected',
     });
 
+    /*
     this.modFetches = [];
     this.modViewCache = [];
 
@@ -123,6 +136,7 @@ export default class extends baseVw {
     this.listenTo(this.modsAvailable, 'doneLoading', () => {
       this.doneLoading(this.$modListAvailable);
     });
+    */
   }
 
   events() {
@@ -133,6 +147,7 @@ export default class extends baseVw {
     };
   }
 
+  /*
   fetchAvailableModerators() {
     this.$modListAvailable.addClass('processing');
     const fetch = this.modsAvailable.fetch()
@@ -188,6 +203,7 @@ export default class extends baseVw {
     // if all moderators have loaded, clear any processing class
     target.removeClass('processing');
   }
+  */
 
   clickSubmitModByID() {
     const modID = this.$submitModByIDInput.val();
@@ -400,93 +416,11 @@ export default class extends baseVw {
     }
   }
 
-  get $btnSave() {
-    return this._$btnSave ||
-      (this._$btnSave = this.$('.js-save'));
-  }
-
-  get $modListSelected() {
-    return this._$modListSelected ||
-      (this._$modListSelected = this.$('.js-modListSelected'));
-  }
-
-  get $modListSelectedInner() {
-    return this._$modListSelectedInner ||
-      (this._$modListSelectedInner = this.$('.js-modListSelectedInner'));
-  }
-
-  get $modListByID() {
-    return this._$modListByID ||
-      (this._$modListByID = this.$('.js-modListByID'));
-  }
-
-  get $modListByIDInner() {
-    return this._$modListByIDInner ||
-      (this._$modListByIDInner = this.$('.js-modListByIDInner'));
-  }
-
-  get $modListAvailable() {
-    return this._$modListAvailable ||
-      (this._$modListAvailable = this.$('.js-modListAvailable'));
-  }
-
-  get $modListAvailableInner() {
-    return this._$modListAvailableInner ||
-      (this._$modListAvailableInner = this.$('.js-modListAvailableInner'));
-  }
-
-  get $submitModByIDInput() {
-    return this._$submitModByIDInput ||
-      (this._$submitModByIDInput = this.$('.js-submitModByIDInput'));
-  }
-
-  get $submitModByID() {
-    return this._$submitModByID ||
-        (this._$submitModByID = this.$('.js-submitModByID'));
-  }
-
-  get $submitModByIDInputError() {
-    return this._$submitModByIDInputError ||
-        (this._$submitModByIDInputError = this.$('.js-submitModByIDInputError'));
-  }
-
-  get $submitModByIDInputErrorText() {
-    return this._$submitModByIDInputErrorText ||
-        (this._$submitModByIDInputErrorText = this.$submitModByIDInputError.find('.js-errorText'));
-  }
-
-  get $selectedModsError() {
-    return this._$selectedModsError ||
-        (this._$selectedModsError = this.$('.js-selectedModsError'));
-  }
-
-  get $selectedModsErrorText() {
-    return this._$selectedModsErrorText ||
-        (this._$selectedModsErrorText = this.$selectedModsError.find('.js-errorText'));
-  }
-
-  get $selectedModsAsyncError() {
-    return this._$selectedModsAsyncError ||
-        (this._$selectedModsAsyncError = this.$('.js-selectedModsAsyncError'));
-  }
-
-  get $selectedModsAsyncErrorText() {
-    return this._$selectedModsAsyncErrorText ||
-        (this._$selectedModsAsyncErrorText = this.$selectedModsAsyncError.find('.js-errorText'));
-  }
-
-  remove() {
-    this.modFetches.forEach(fetch => fetch.abort());
-    this.modsSelected.destroy();
-    this.modsByID.destroy();
-    this.modsAvailable.destroy();
-    super.remove();
-  }
-
   render() {
+    super.render();
+
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
-        originalMods: this.settings.get('storeModerators').length > 0,
         errors: {
           ...(this.profile.validationError || {}),
           ...(this.settings.validationError || {}),
@@ -495,47 +429,12 @@ export default class extends baseVw {
         ...this.settings.toJSON(),
       }));
 
-      this.$profileFormFields = this.$('.js-profileField');
-      this._$btnSave = null;
-      this._$modListSelected = null;
-      this._$modListByID = null;
-      this._$modListAvailable = null;
-      this._$modListSelectedInner = null;
-      this._$modListByIDInner = null;
-      this._$modListAvailableInner = null;
-      this._$submitModByIDInput = null;
-      this._$submitModByID = null;
-      this._$submitModByIDInputError = null;
-      this._$submitModByIDInputErrorText = null;
-      this._$selectedModsError = null;
-      this._$selectedModsErrorText = null;
-      this._$selectedModsAsyncError = null;
-      this._$selectedModsAsyncErrorText = null;
-
-      // if mods are already available, add them now
-      this.modsSelected.each((mod) => {
-        this.addModToList(mod, this.modsSelected, this.$modListSelectedInner, {
-          cardState: 'selected',
-          notSelected: 'deselected',
-        });
-      });
-      if (this.modsSelected.notFetchedYet.length) this.$modListSelected.addClass('processing');
-
-      this.modsByID.each((mod) => {
-        this.addModToList(mod, this.modsByID, this.$modListByIDInner, {
-          cardState: 'unselected',
-          notSelected: 'unselected',
-        });
-      });
-      if (this.modsByID.notFetchedYet.length) this.$modListByID.addClass('processing');
-
-      this.modsAvailable.each((mod) => {
-        this.addModToList(mod, this.modsAvailable, this.$modListAvailableInner, {
-          cardState: 'unselected',
-          notSelected: 'unselected',
-        });
-      });
-      if (this.modsAvailable.notFetchedYet.length) this.$modListAvailable.addClass('processing');
+      this.modsSelected.delegateEvents();
+      this.$('.js-modListSelected').append(this.modsSelected.render().el);
+      if (!this.modsSelected.fetch ||
+        (this.modsSelected.fetch && this.modsSelected.fetch.state() !== 'pending')) {
+        this.modsSelected.getModeratorsByID();
+      }
     });
 
     return this;
