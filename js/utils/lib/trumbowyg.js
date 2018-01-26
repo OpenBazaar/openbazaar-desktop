@@ -5,11 +5,11 @@ $.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
 
 export const editorOptions = {
   btns: [
+    ['undo', 'redo'],
     ['formatting'],
-    ['bold', 'italic'],
-    ['link'],
+    ['strong', 'em', 'del'],
     ['insertImage'],
-    'btnGrp-lists',
+    ['unorderedList', 'orderedList'],
     ['horizontalRule'],
   ],
 };
