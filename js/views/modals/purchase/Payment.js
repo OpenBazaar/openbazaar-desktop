@@ -67,7 +67,6 @@ export default class extends BaseVw {
   set balanceRemaining(amount) {
     if (amount !== this._balanceRemaining) {
       this._balanceRemaining = amount;
-      this.confirmWallet.render();
       this.$amountDueLine.html(this.amountDueLine);
       this.$qrCodeImg.attr('src', this.qrDataUri);
     }
