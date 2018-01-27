@@ -397,6 +397,27 @@
         display: none;
       }
     }
+
+    .timeoutInfo {
+      margin-top: 27px;
+      position: relative;
+
+      .headerIconWrap {
+        border-style: solid;
+        border-width: 1px;
+        border-radius: 50%;
+        @include center(true, false);
+        transform: translate(-50%, -50%);
+
+        i {
+          font-size: $tx2b;
+        }
+      }
+
+      .innerContent {
+        padding-top: 25px;
+      }
+    }
   }
 
   .fulfillOrderTab, .disputeOrderTab, .resolveDisputeTab {

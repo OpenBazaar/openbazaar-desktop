@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/lib/velocity';
@@ -8,7 +9,7 @@ import {
   completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
-import Transactions from '../../../../collections/Transactions';
+import Transactions from '../../../../collections/order/Transactions';
 import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
@@ -258,6 +259,10 @@ export default class extends BaseVw {
         }
       });
     }
+
+    setTimeout(() => {
+      console.log(`the funded block height is ${this.fundedBlockHeight}`);
+    }, 500);
   }
 
   className() {
@@ -386,22 +391,20 @@ export default class extends BaseVw {
     return state;
   }
 
+  // Semantics are off here - this is really the price of the order in the crypto
+  // currency it was purchased in.
   get orderPriceBtc() {
     return this.contract.get('buyerOrder').payment.amount;
   }
 
-  getBalanceRemaining() {
+  getBalanceRemaining(cl = this.paymentsCollection) {
     if (this.isCase()) {
       throw new Error('Cases do not have any transaction data.');
     }
 
-    let balanceRemaining = 0;
-
-    if (this.model.get('state') === 'AWAITING_PAYMENT') {
-      const totalPaid = this.paymentsCollection
-        .reduce((total, transaction) => total + transaction.get('value'), 0);
-      balanceRemaining = this.orderPriceBtc - totalPaid;
-    }
+    const totalPaid = cl
+      .reduce((total, transaction) => total + transaction.get('value'), 0);
+    const balanceRemaining = this.orderPriceBtc - totalPaid;
 
     // round based on the coins base units
     const cryptoBaseUnit = getServerCurrency().baseUnit;
@@ -433,7 +436,7 @@ export default class extends BaseVw {
 
   /**
    * Returns a modified version of the transactions from the Order model by filtering out
-   * any negative payments (money moving from the multisig to the vendor).
+   * any negative payments (e.g. money moving from the multisig to the vendor, refunds).
    */
   get paymentsCollection() {
     if (this.isCase()) {
@@ -444,6 +447,69 @@ export default class extends BaseVw {
       this.model.get('paymentAddressTransactions')
         .filter(payment => (payment.get('value') > 0))
       );
+  }
+
+  /**
+   * Returns the block height in which this order became fully funded. If the order is
+   * not fully funded or the transaction(s) that would make it fully funded haven't
+   * confirmed, it will return 0.
+   */
+  get fundedBlockHeight() {
+    if (this.isCase()) {
+      throw new Error('Unable to determine becayse cases do not have any transaction data.');
+    }
+
+    let height = 0;
+
+    const models = this.paymentsCollection
+      .filter(payment => {
+        const paymentHeight = payment.get('height');
+        return typeof paymentHeight === 'number' && paymentHeight > 0;
+      })
+      .sort((a, b) => (a.get('height') - b.get('height')));
+
+    _.every(models, (payment, pIndex) => {
+      if (this.getBalanceRemaining(new Transactions(models.slice(0, pIndex + 1))) <= 0) {
+        height = payment.get('height');
+        return false;
+      }
+
+      return true;
+    });
+
+    return height;
+  }
+
+  /**
+   * Returns whether the order is in a state where a dispute can be opened.
+   */
+  isOrderDisputable(options = {}) {
+    const opts = {
+      considerTimout: true,
+      ...options,
+    };
+    const orderState = this.model.get('state');
+    // let isTimedout = false;
+
+    // if (this.getBalanceRemaining() <= 0) {
+
+    // }
+
+    if (this.buyer.id === app.profile.id) {
+      return this.moderator.id &&
+        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
+    } else if (this.vendor.id === app.profile.id) {
+      return this.moderator.id &&
+        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
+    }
+
+    return false;
+  }
+
+  shouldShowTimeoutInfoSection() {
+    // const orderState = this.model.get('state');
+    return this.isOrderDisputable ||
+      this.model.get('state') === 'DISPUTED';
   }
 
   renderAcceptedView() {
