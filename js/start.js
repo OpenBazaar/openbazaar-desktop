@@ -162,7 +162,7 @@ function fetchConfig() {
     }).on('click-retry', () => {
       retryConfigDialog.close();
 
-      // slight of hand to ensure the loading modal has a chance to at
+      // sleight of hand to ensure the loading modal has a chance to at
       // least briefly show before another potential failure
       setTimeout(() => {
         fetchConfig();
