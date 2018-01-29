@@ -35,7 +35,7 @@ export default class extends BaseModel {
         app.polyglot.t('resolveDisputeModelErrors.providePercentageAsNumber'));
     } else if (attrs.vendorPercentage < 0 || attrs.vendorPercentage > 100) {
       addError('vendorPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.vendorPercentageOutOfRange'));
+        app.polyglot.t('resolveDisputeModelErrors.percentageOutOfRange'));
     } else {
       vendorPercentageOk = true;
     }
@@ -48,7 +48,7 @@ export default class extends BaseModel {
         app.polyglot.t('resolveDisputeModelErrors.providePercentageAsNumber'));
     } else if (attrs.buyerPercentage < 0 || attrs.buyerPercentage > 100) {
       addError('buyerPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.buyerPercentageOutOfRange'));
+        app.polyglot.t('resolveDisputeModelErrors.percentageOutOfRange'));
     } else {
       buyerPercentageOk = true;
     }
