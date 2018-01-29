@@ -367,7 +367,9 @@
     "termsOfService": "Terms of Service",
     "addAsModeratorButton": "Add as Moderator",
     "disclaimer": "**The moderator service charge only applies when a dispute arises.",
-    "languages": "Languages"
+    "languages": "Languages",
+    "currenciesSupported": "Currencies Supported",
+    "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
     "linkText": "About OpenBazaar",
@@ -917,6 +919,7 @@
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
     "tags": "Tags",
+    "paymentsAccepted": "Payments Accepted",
     "noTags": "No tags entered",
     "buyNow": "BUY NOW",
     "description": "Description",
