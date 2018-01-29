@@ -8,7 +8,7 @@
     <% } %>>
     <div class="blockedOverlay clrP flexCent tx5">
       <div><%= ob.polyT('userShort.blockedUserOverlayText') %></div>
-    </div>    
+    </div>
     <div class="userIconWrap">
       <a class="userIcon disc clrBr2 clrSh1"
         <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
@@ -23,7 +23,7 @@
     <% if (!ob.hideControls) { %>
       <div class="userControls flexHRight gutterHSm">
         <% if (!ob.ownGuid) { %>
-          <% if (ob.moderator) { %>
+          <% if (ob.moderator && ob.moderatorInfo.acceptedCurrencies.indexOf(ob.currencyMod.getServerCurrency().code) !== -1) { %>
             <%= ob.processingButton({
             className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
             btnText: '<i class="ion-briefcase"></i>',

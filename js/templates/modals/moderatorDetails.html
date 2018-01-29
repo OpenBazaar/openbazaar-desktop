@@ -44,10 +44,25 @@
       </div>
     </div>
     <div class="contentBox mDetailBox padMd clrP clrBr clrSh3 tx5">
+      <div class="rowMd">
+        <h4><%= ob.polyT('moderatorDetails.currenciesSupported') %></h4>
+        <ul class="unstyled">
+          <% ob.moderatorInfo.acceptedCurrencies.forEach(cur => {
+            const curData = ob.currencyMod.getCryptoCurByCode(cur);
+            if (curData) { %>
+              <li class="flexVCent gutterHSm clrBr">
+                <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
+                <%= ob.currencyMod.cryptoIcon({ code: curData.code }) %>
+                <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
+              </li>
+            <% }
+          }) %>
+        </ul>
+      </div>
       <div class="rowLg">
         <h4><%= ob.polyT('moderatorDetails.languages') %></h4>
         <% ob.modLanguages.forEach(lang => { %>
-        <div class="rowSm txSm"><%= lang %></div>
+          <div class="rowSm txSm"><%= lang %></div>
         <% }); %>
       </div>
       <div class="row">
@@ -57,13 +72,19 @@
       </div>
       <div class="flexCol flexHCent gutterV">
         <% if (ob.cardState !== 'selected' && (!ob.ownMod || ob.purchase)) { %>
-          <button class="btn clrP clrBr js-addAsModerator">
-            <% if (ob.purchase) { %>
-              <%= ob.polyT('purchase.chooseModerator') %>
-            <% } else { %>
-              <%= ob.polyT('moderatorDetails.addAsModeratorButton') %>
-            <% } %>
-          </button>
+          <% if (ob.moderatorInfo.acceptedCurrencies.indexOf(ob.currencyMod.getServerCurrency().code) !== -1) { %>
+            <button class="btn clrP clrBr js-addAsModerator">
+              <% if (ob.purchase) { %>
+                <%= ob.polyT('purchase.chooseModerator') %>
+              <% } else { %>
+                <%= ob.polyT('moderatorDetails.addAsModeratorButton') %>
+              <% } %>
+            </button>
+          <% } else { %>
+            <strong>
+              <%= ob.polyT('moderatorDetails.noCoinSupport', { coin: ob.currencyMod.getServerCurrency().code }) %>
+            </strong>
+          <% } %>
         <% } %>
         <div>
           <em class="tx6 clrT2"><%= ob.polyT('moderatorDetails.disclaimer') %></em>
