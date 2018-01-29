@@ -72,7 +72,11 @@
       </div>
       <div class="flexCol flexHCent gutterV">
         <% if (ob.cardState !== 'selected' && (!ob.ownMod || ob.purchase)) { %>
-          <% if (ob.moderatorInfo.acceptedCurrencies.indexOf(ob.currencyMod.getServerCurrency().code) !== -1) { %>
+          <%
+          const curSupported = ob.moderatorInfo.acceptedCurrencies.includes(
+            ob.currencyMod.getServerCurrency().isTestnet ?   ob.currencyMod.getServerCurrency().testnetCode :   ob.currencyMod.getServerCurrency().code
+          );
+          if (curSupported) { %>
             <button class="btn clrP clrBr js-addAsModerator">
               <% if (ob.purchase) { %>
                 <%= ob.polyT('purchase.chooseModerator') %>
