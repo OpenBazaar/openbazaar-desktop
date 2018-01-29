@@ -24,6 +24,7 @@ import OrderComplete from './OrderComplete';
 import DisputeStarted from './DisputeStarted';
 import DisputePayout from './DisputePayout';
 import DisputeAcceptance from './DisputeAcceptance';
+import TimeoutInfo from './TimeoutInfo';
 import PayForOrder from '../../../modals/purchase/Payment';
 
 export default class extends BaseVw {
@@ -259,10 +260,6 @@ export default class extends BaseVw {
         }
       });
     }
-
-    setTimeout(() => {
-      console.log(`the funded block height is ${this.fundedBlockHeight}`);
-    }, 500);
   }
 
   className() {
@@ -481,19 +478,12 @@ export default class extends BaseVw {
   }
 
   /**
-   * Returns whether the order is in a state where a dispute can be opened.
+   * Based on the order state, returns whether a dispute can be opened on the order. This
+   * does not factor in the transaction timeout, which may disallow a dispute from being
+   * opened, even though it's allowed based on the state.
    */
-  isOrderDisputable(options = {}) {
-    const opts = {
-      considerTimout: true,
-      ...options,
-    };
+  get isOrderStateDisputable() {
     const orderState = this.model.get('state');
-    // let isTimedout = false;
-
-    // if (this.getBalanceRemaining() <= 0) {
-
-    // }
 
     if (this.buyer.id === app.profile.id) {
       return this.moderator.id &&
@@ -506,10 +496,23 @@ export default class extends BaseVw {
     return false;
   }
 
-  shouldShowTimeoutInfoSection() {
-    // const orderState = this.model.get('state');
-    return this.isOrderDisputable ||
-      this.model.get('state') === 'DISPUTED';
+  renderTimeoutInfoView() {
+    const orderState = this.model.get('state');
+    const shouldShow = this.isOrderStateDisputable ||
+      orderState === 'DISPUTED';
+
+    if (!shouldShow) {
+      if (this.timeoutInfo) this.timeoutInfo.remove();
+      return;
+    }
+
+    // what if it's already there?
+    if (this.timeoutInfo) this.timeoutInfo.remove();
+    // temp handler of above
+
+    this.timeoutInfo = this.createChild(TimeoutInfo, {});
+    this.getCachedEl('.js-timeoutInfoContainer')
+      .html(this.timeoutInfo.render().el);
   }
 
   renderAcceptedView() {
@@ -893,6 +896,8 @@ export default class extends BaseVw {
       if (this.shouldShowPayForOrderSection()) {
         this.renderPayForOrder();
       }
+
+      this.renderTimeoutInfoView();
 
       if (!this.isCase()) {
         if (this.payments) this.payments.remove();
