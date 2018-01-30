@@ -73,10 +73,8 @@ case "$TRAVIS_OS_NAME" in
       # Retrieve Latest Server Binaries
       sudo apt-get install jq
       cd temp/
-      curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-      cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
-      curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/phoreproject/phore/releases > release.txt
-      cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+      curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/phoreproject/openbazaar-go/releases | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+      curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/phoreproject/phore/releases | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
       mkdir phore32 phore64
       tar -xf phore-*-i686-pc-linux-gnu.tar.gz -C phore32
       tar -xf phore-*-x86_64-linux-gnu.tar.gz -C phore64
