@@ -16,7 +16,7 @@ More information is available in the [server Tor documentation](https://github.c
 Check your JS console. If you are **not** seeing any red `WebSocket...` errors:
 
 1. Ensure your server is running.
-2. In the config file, ensure Addresses.Gateway has your server's IP embedded in it. For example, if your server ip is `123.45.6.78`, the `Gateway` value would be `/ip4/123.45.6.78/tcp/4002`.
+2. In the config file, ensure Addresses.Gateway has your server's IP embedded in it. For example, if your server ip is `123.45.6.78`, the `Gateway` value would be `/ip4/123.45.6.78/tcp/5002`.
 3. In the client, ensure the port set in the server configuration UI matches the port value you set above:
 
 ![](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/imgs/connectionIssues/setPortInUi.png)
@@ -80,4 +80,3 @@ It is likely one of two things:
 ---
 
 If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. Not having done the last bullet point in that section is the stumbling block for most Linux users.
-

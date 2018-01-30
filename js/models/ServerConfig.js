@@ -16,7 +16,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       serverIp: 'localhost',
-      port: 4002,
+      port: 5002,
       SSL: false,
       default: false,
       useTor: false,
