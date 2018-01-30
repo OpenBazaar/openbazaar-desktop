@@ -69,7 +69,7 @@ case "$TRAVIS_OS_NAME" in
     # Ensure fakeroot is installed
     sudo apt-get install fakeroot
 
-    if [ -n "$CLIENT_VERSION" ]; then
+    if [ -z "$CLIENT_VERSION" ]; then
       # Retrieve Latest Server Binaries
       sudo apt-get install jq
       cd temp/

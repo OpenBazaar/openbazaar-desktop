@@ -90,7 +90,6 @@ const serverFilename = process.platform === 'darwin' || process.platform === 'li
   'openbazaard' : 'openbazaard.exe';
 const daemonFilename = process.platform === 'darwin' || process.platform === 'linux' ?
   'phored' : 'phored.exe';
-console.log(serverPath + serverFilename);
 const isBundledApp = fs.existsSync(serverPath + serverFilename);
 global.isBundledApp = isBundledApp;
 let localServer;
