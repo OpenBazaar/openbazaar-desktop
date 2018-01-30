@@ -69,79 +69,83 @@ case "$TRAVIS_OS_NAME" in
     # Ensure fakeroot is installed
     sudo apt-get install fakeroot
 
-    # Retrieve Latest Server Binaries
-    sudo apt-get install jq
-    cd temp/
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
-    curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/phoreproject/phore/releases > release.txt
-    cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
-    mkdir phore32 phore64
-    tar -xf phore-*-i686-pc-linux-gnu.tar.gz -C phore32
-    tar -xf phore-*-x86_64-linux-gnu.tar.gz -C phore64
-    cd ..
+    if [ -n "$CLIENT_VERSION" ]; then
+      # Retrieve Latest Server Binaries
+      sudo apt-get install jq
+      cd temp/
+      curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/OpenBazaar/openbazaar-go/releases > release.txt
+      cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+      curl -u $GITHUB_USER:$GITHUB_TOKEN -s https://api.github.com/repos/phoreproject/phore/releases > release.txt
+      cat release.txt | jq -r ".[0].assets[].browser_download_url" | xargs -n 1 curl -L -O
+      mkdir phore32 phore64
+      tar -xf phore-*-i686-pc-linux-gnu.tar.gz -C phore32
+      tar -xf phore-*-x86_64-linux-gnu.tar.gz -C phore64
+      cd ..
+    fi
 
-    APPNAME="openbazaar2"
+    if [ -z "$CLIENT_VERSION" ]; then
+      APPNAME="openbazaar2"
 
-    echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
+      echo "Packaging Electron application"
+      electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
-    echo 'Move go server to electron app'
-    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
-    cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
-    mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
-    mv temp/phore32/phore*/bin/phored dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
-    rm -rf dist/${APPNAME}-linux-ia32/resources/app/.travis
-    chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
-    chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/phored
+      echo 'Move go server to electron app'
+      mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
+      cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
+      mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
+      mv temp/phore32/phore*/bin/phored dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
+      rm -rf dist/${APPNAME}-linux-ia32/resources/app/.travis
+      chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
+      chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/phored
 
-    echo 'Create debian archive'
-    electron-installer-debian --config .travis/config_ia32.json
+      echo 'Create debian archive'
+      electron-installer-debian --config .travis/config_ia32.json
 
-    echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_ia32.json
+      echo 'Create RPM archive'
+      electron-installer-redhat --config .travis/config_ia32.json
 
-    echo 'Building Linux 64-bit Installer....'
+      echo 'Building Linux 64-bit Installer....'
 
-    echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
+      echo "Packaging Electron application"
+      electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
-    echo 'Move go server to electron app'
-    mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
-    cp -rf temp/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go
-    mv dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
-    mv temp/phore64/phore*/bin/phored dist/${APPNAME}-linux-x64/resources/openbazaar-go/
-    rm -rf dist/${APPNAME}-linux-x64/resources/app/.travis
-    chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
-    chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/phored
+      echo 'Move go server to electron app'
+      mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
+      cp -rf temp/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go
+      mv dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaar-go-linux-amd64 dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
+      mv temp/phore64/phore*/bin/phored dist/${APPNAME}-linux-x64/resources/openbazaar-go/
+      rm -rf dist/${APPNAME}-linux-x64/resources/app/.travis
+      chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/openbazaard
+      chmod +x dist/${APPNAME}-linux-x64/resources/openbazaar-go/phored
 
-    echo 'Create debian archive'
-    electron-installer-debian --config .travis/config_amd64.json
+      echo 'Create debian archive'
+      electron-installer-debian --config .travis/config_amd64.json
 
-    echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_amd64.json
+      echo 'Create RPM archive'
+      electron-installer-redhat --config .travis/config_amd64.json
+    else
+      APPNAME="openbazaar2client"
 
-    APPNAME="openbazaar2client"
+      echo "Packaging Electron application"
+      electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
-    echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
+      echo 'Create debian archive'
+      electron-installer-debian --config .travis/config_ia32.client.json
 
-    echo 'Create debian archive'
-    electron-installer-debian --config .travis/config_ia32.client.json
+      echo 'Create RPM archive'
+      electron-installer-redhat --config .travis/config_ia32.client.json
 
-    echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_ia32.client.json
+      echo 'Building Linux 64-bit Installer....'
 
-    echo 'Building Linux 64-bit Installer....'
+      echo "Packaging Electron application"
+      electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
 
-    echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
+      echo 'Create debian archive'
+      electron-installer-debian --config .travis/config_amd64.client.json
 
-    echo 'Create debian archive'
-    electron-installer-debian --config .travis/config_amd64.client.json
-
-    echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_amd64.client.json
+      echo 'Create RPM archive'
+      electron-installer-redhat --config .travis/config_amd64.client.json
+    fi
 
     ;;
 

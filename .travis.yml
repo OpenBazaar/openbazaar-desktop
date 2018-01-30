@@ -3,6 +3,8 @@ sudo: true
 matrix:
   include:
     - os: linux
+    - os: linux
+      env: CLIENT_VERSION=1
     - os: osx
     - os: osx
       env: CLIENT_VERSION=1
