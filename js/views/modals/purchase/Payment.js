@@ -67,7 +67,6 @@ export default class extends BaseVw {
   set balanceRemaining(amount) {
     if (amount !== this._balanceRemaining) {
       this._balanceRemaining = amount;
-      this.confirmWallet.render();
       this.$amountDueLine.html(this.amountDueLine);
       this.$qrCodeImg.attr('src', this.qrDataUri);
     }
@@ -175,7 +174,8 @@ export default class extends BaseVw {
   }
 
   get qrDataUri() {
-    const btcURL = `bitcoin:${this.paymentAddress}?amount=${this.balanceRemaining}`;
+    const address = getServerCurrency().qrCodeText(this.paymentAddress);
+    const btcURL = `${address}?amount=${this.balanceRemaining}`;
     return qr(btcURL, { type: 8, size: 5, level: 'Q' });
   }
 

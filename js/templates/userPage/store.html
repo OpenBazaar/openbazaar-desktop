@@ -27,10 +27,10 @@
   <div class="flex">
     <div class="col storeFilters <% if (!ob.listingCount) print('disabled') %>">
       <div class="clrP clrBr padMd clrT clrSh2 contentBox">
-        <div class="txB row"><%= ob.polyT('userPage.store.shippingFilter.heading') %></div>
-        <div class="flexVCent tx5 rowSm">
+        <div class="txB rowSm"><%= ob.polyT('userPage.store.shippingFilter.heading') %></div>
+        <div class="flexVCent rowSm">
           <label class="margRSm" for="shipsToSelect"><%= ob.polyT('userPage.store.shippingFilter.shipsTo') %>:</label>
-          <select class="tx6 select2Small js-shipsToSelect" style="width: 133px">
+          <select class="tx6 select2Small js-shipsToSelect" style="width: 133px" id="shipsToSelect">
             <option value="any" <% if (ob.shipsToSelected === 'any') print('selected') %>><%= ob.polyT('userPage.store.shipsToFilterAny') %></option>
             <% ob.countryList.forEach((country) => { %>
             <option value="<%= country.dataName %>" <% if (country.dataName === ob.shipsToSelected) print('selected') %>><%= country.name %></option>

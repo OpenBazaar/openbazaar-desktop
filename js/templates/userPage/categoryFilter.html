@@ -1,29 +1,25 @@
-<div class="txB tx4 row"><%= ob.polyT('userPage.store.categoryFilter.heading') %></div>
-<div class="rowSm">
-  <div class="btnRadio">
-    <input type="radio"
-           name="filterShippingCategory"
-           value="all"
-           id="filterShippingCategoryAll"
-           data-var-type="boolean"
-           <% if (ob.selected === 'all') print('checked') %>>
-    <label for="filterShippingCategoryAll"><%= ob.polyT('userPage.store.categoryFilter.all') %></label>
-  </div>
+<div class="txB rowSm"><%= ob.polyT('userPage.store.categoryFilter.heading') %></div>
+<div class="btnRadio">
+  <input type="radio"
+         name="filterShippingCategory"
+         value="all"
+         id="filterShippingCategoryAll"
+         data-var-type="boolean"
+         <% if (ob.selected === 'all') print('checked') %>>
+  <label for="filterShippingCategoryAll"><%= ob.polyT('userPage.store.categoryFilter.all') %></label>
 </div>
 
 <%
   ob.categories.slice(0, ob.maxInitiallyVisibleCats - 1).forEach((cat, index) => {
     var flatCat = cat.replace(/\s/g, '-'); // remove spaces
 %>
-<div class="rowSm">
-  <div class="btnRadio">
-    <input type="radio"
-           name="filterShippingCategory"
-           value="<%= cat %>"
-           id="<%= `filterShippingCategory${flatCat}` %>"
-           <% if (ob.selected === cat) print('checked') %>>
-    <label for="<%= `filterShippingCategory${flatCat}` %>"><%= cat %></label>
-  </div>
+<div class="btnRadio">
+  <input type="radio"
+         name="filterShippingCategory"
+         value="<%= cat %>"
+         id="<%= `filterShippingCategory${flatCat}` %>"
+         <% if (ob.selected === cat) print('checked') %>>
+  <label for="<%= `filterShippingCategory${flatCat}` %>"><%= cat %></label>
 </div>
 <% }) %>
 
@@ -35,17 +31,15 @@
       ob.categories.slice(ob.maxInitiallyVisibleCats - 1).forEach((cat, index) => {
         var flatCat = cat.replace(/\s/g, '-'); // remove spaces
     %>
-    <div class="rowSm">
-      <div class="btnRadio">
-        <input type="radio"
-               name="filterShippingCategory"
-               value="<%= cat %>"
-               id="<%= `filterShippingCategory${flatCat}` %>"
-               <% if (ob.selected === cat) print('checked') %>>
-        <label for="<%= `filterShippingCategory${flatCat}` %>"><%= cat %></label>
-      </div>
+    <div class="btnRadio">
+      <input type="radio"
+             name="filterShippingCategory"
+             value="<%= cat %>"
+             id="<%= `filterShippingCategory${flatCat}` %>"
+             <% if (ob.selected === cat) print('checked') %>>
+      <label for="<%= `filterShippingCategory${flatCat}` %>"><%= cat %></label>
     </div>
-    <% }) %>  
+    <% }) %>
   </div>
   <a class="js-showMoreLess clrT tx6 txU showMore"><%= ob.polyT('userPage.store.categoryFilter.showMore', (ob.categories.length + 1) - ob.maxInitiallyVisibleCats) %></a>
   <a class="js-showMoreLess clrT tx6 txU showLess"><%= ob.polyT('userPage.store.categoryFilter.showLess') %></a>

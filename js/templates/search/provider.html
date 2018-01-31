@@ -1,5 +1,7 @@
 <%
-  const bkg = `${ob.logo ? `url(${ob.logo}), ` : ''}url(../imgs/defaultProvider.png)`;
+  const logo = ob.logo ? `url(${ob.logo}),` : '';
+  const local = ob.localLogo ? `url(${ob.localLogo}),` : '';
+  const bkg = `${logo}${local}url(../imgs/defaultProvider.png)`;
 %>
 
 <button
