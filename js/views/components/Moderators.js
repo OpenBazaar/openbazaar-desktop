@@ -34,6 +34,7 @@ export default class extends baseVw {
       selectFirst: false,
       radioStyle: false,
       showInvalid: false,
+      wrapperClasses: '',
       // defaults will be overwritten by passed in options
       ...options,
     };
@@ -79,6 +80,25 @@ export default class extends baseVw {
   removeNotFetched(ID) {
     this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
     this.checkNotFetched();
+  }
+
+  processMod(profile) {
+    // don't add profiles that are not moderators unless showInvalid is true. The ID list may have
+    // peerIDs that are out of date, and are no longer moderators.
+    const validMod = profile.moderator && profile.moderatorInfo;
+    // if the moderator has an invalid currency, remove them from the list
+    const buyerCur = app.serverConfig.cryptoCurrency;
+    const modCurs = profile.moderatorInfo && profile.moderatorInfo.acceptedCurrencies || [];
+    const validCur = modCurs.includes(buyerCur);
+    // if the moderator is on the list of IDs to exclude, remove them
+    const excluded = this.options.excludeIDs.includes(profile.peerID);
+
+    if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
+      this.moderatorsCol.add(new Moderator(profile, { parse: true }));
+    } else {
+      // remove the invalid moderator from the notFetched list
+      this.removeNotFetched(profile.peerId);
+    }
   }
 
   getModeratorsByID(IDs = this.options.moderatorIDs) {
@@ -129,34 +149,23 @@ export default class extends baseVw {
                       }
                     }
                   } else if (eventData.id === socketID) {
-                    // don't add profiles that are not moderators. The ID list may have peerIDs
-                    // that are out of date, and are no longer moderators.
-                    const validMod = eventData.profile.moderator && eventData.profile.moderatorInfo;
-                    // if the moderator has an invalid currency, remove them from the list
-                    const buyerCur = app.serverConfig.cryptoCurrency;
-                    const modCurs = eventData.profile.moderatorInfo.acceptedCurrencies;
-                    const validCur = modCurs.indexOf(buyerCur) > -1;
-                    // if the moderator is on the list of IDs to exclude, remove them
-                    const notExcluded = this.options.excludeIDs.indexOf(eventData.peerID) === -1;
-
-                    if ((!!validMod && validCur || this.options.showInvalid) && notExcluded) {
-                      this.moderatorsCol.add(new Moderator(eventData.profile, { parse: true }));
-                    } else {
-                      // remove the invalid moderator from the notFetched list
-                      this.removeNotFetched(eventData.peerId);
-                    }
+                    this.processMod(eventData.profile);
                   }
                 });
               } else {
                 throw new Error('There is no connection to the server to listen to.');
               }
             } else {
+              /*
               const formattedMods = data.map((mod) => {
                 const mappedProfile = mod.profile;
                 mappedProfile.id = mod.peerId;
                 return new Moderator(mappedProfile, { parse: true });
               });
               this.moderatorsCol.add(formattedMods);
+              */
+              console.log(data)
+              data.forEach(mod => this.processMod(mod.profile));
               this.unfetchedMods = [];
               this.checkNotFetched();
             }
@@ -250,6 +259,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('modals/purchase/moderators.html', t => {
       this.$el.html(t({
+        wrapperClasses: this.options.wrapperClasses,
       }));
 
       super.render();

@@ -4,7 +4,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
-import { getGuid, isMultihash } from '../../../utils';
+import { isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
 //import Moderators from '../../../collections/Moderators_old';
 import Moderators from '../../components/Moderators';
@@ -57,6 +57,7 @@ export default class extends baseVw {
       cardState: 'unselected',
       notSelected: 'unselected',
       showInvalid: true,
+      wrapperClasses: 'noMin',
     });
 
     this.modsAvailable = new Moderators({
@@ -208,13 +209,16 @@ export default class extends baseVw {
   }
   */
 
-
+  showModByIDError(msg) {
+    this.getCachedEl('.js-submitModByIDInputError').removeClass('hide');
+    this.getCachedEl('.js-submitModByIDInputErrorText').text(msg);
+  }
+  
   clickSubmitModByID() {
-    const $idError = this.getCachedEl('.js-submitModByIDInputError');
     let modID = this.getCachedEl('.js-submitModByIDInput').val();
     const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
 
-    $idError.addClass('hide');
+    this.getCachedEl('.js-submitModByIDInputError').addClass('hide');
 
     if (modID) {
       // trim unwanted copy and paste characters
@@ -223,14 +227,24 @@ export default class extends baseVw {
       modID = modID.trim();
       //this.$submitModByID.addClass('processing');
       //this.processIDorHandle(modID);
-      this.modsByID.getModeratorsByID([modID]);
-      this.getCachedEl('.js-modListByID').removeClass('hide');
+      if (isMultihash(modID)) {
+        if (!this.currentMods.includes(modID)) {
+          this.modsByID.getModeratorsByID([modID]);
+          this.getCachedEl('.js-modListByID').removeClass('hide');
+        } else {
+          const dupeGUID = app.polyglot.t('settings.storeTab.errors.dupeGUID', { guid: modID });
+          this.showModByIDError(dupeGUID);
+        }
+      } else {
+        const notGUID = app.polyglot.t('settings.storeTab.errors.notGUID', { guid: modID });
+        this.showModByIDError(notGUID);
+      }
     } else {
-      $idError.removeClass('hide');
-      this.getCachedEl('.js-submitModByIDInputErrorText').text(blankError);
+      this.showModByIDError(blankError);
     }
   }
 
+  /*
   processIDorHandle(modID) {
     if (isMultihash(modID)) {
       this.loadModByID(modID);
@@ -250,7 +264,8 @@ export default class extends baseVw {
           });
     }
   }
-
+  */
+  /*
   modNotFoundInSelected(guid, handle) {
     const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
     const msg = app.polyglot.t('settings.storeTab.errors.modNotFound',
@@ -266,7 +281,8 @@ export default class extends baseVw {
 
     openSimpleMessage(title, msg);
   }
-
+    */
+  /*
   loadModByID(guid, handle = '') {
     const addedError = app.polyglot.t('settings.storeTab.errors.modAlreadyAdded');
     const badModError = app.polyglot.t('settings.storeTab.errors.modNotFound',
@@ -290,13 +306,8 @@ export default class extends baseVw {
       this.showModByIDError(addedError);
     }
   }
-
-  showModByIDError(msg) {
-    this.$submitModByIDInputError.removeClass('hide');
-    this.$submitModByIDInputErrorText.text(msg);
-    this.$submitModByID.removeClass('processing');
-  }
-
+  */
+  /*
   showSelectedModsAsyncError(id) {
     this.selectedModsAsyncInvalidList.push(id);
     const msg = app.polyglot.t('settings.storeTab.errors.modsAreInvalidAsync',
@@ -304,7 +315,8 @@ export default class extends baseVw {
     this.$selectedModsAsyncError.removeClass('hide');
     this.$selectedModsAsyncErrorText.text(msg);
   }
-
+  */
+  /*
   showSelectedModsError(id) {
     this.selectedModsInvalidList.push(id);
     const msg = app.polyglot.t('settings.storeTab.errors.modsAreInvalid',
@@ -312,6 +324,7 @@ export default class extends baseVw {
     this.$selectedModsError.removeClass('hide');
     this.$selectedModsErrorText.text(msg);
   }
+  */
 
   changeMod(data) {
     if (data.selected) {

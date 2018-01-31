@@ -27,8 +27,6 @@ export default class extends BaseVw {
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
     }
-
-    console.log(this.model)
   }
 
   className() {
