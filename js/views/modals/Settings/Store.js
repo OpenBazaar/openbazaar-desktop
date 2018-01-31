@@ -47,13 +47,16 @@ export default class extends baseVw {
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
       notSelected: 'deselected',
+      showInvalid: true,
     });
 
     this.modsByID = new Moderators({
       async: false,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
-      cardState: 'selected',
-      notSelected: 'deselected',
+      excludeIDs: this.currentMods,
+      cardState: 'unselected',
+      notSelected: 'unselected',
+      showInvalid: true,
     });
 
     this.modsAvailable = new Moderators({
@@ -61,11 +64,11 @@ export default class extends baseVw {
       async: true,
       method: 'GET',
       include: 'profile',
-      excludeIDs: this.modsSelected,
+      excludeIDs: this.currentMods,
       // excludeCollection: this.modsSelected,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
-      cardState: 'selected',
-      notSelected: 'deselected',
+      cardState: 'unselected',
+      notSelected: 'unselected',
     });
 
     /*
@@ -205,18 +208,26 @@ export default class extends baseVw {
   }
   */
 
+
   clickSubmitModByID() {
-    const modID = this.$submitModByIDInput.val();
+    const $idError = this.getCachedEl('.js-submitModByIDInputError');
+    let modID = this.getCachedEl('.js-submitModByIDInput').val();
     const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
 
-    this.$submitModByIDInputError.addClass('hide');
+    $idError.addClass('hide');
 
     if (modID) {
-      this.$submitModByID.addClass('processing');
-      this.processIDorHandle(modID);
+      // trim unwanted copy and paste characters
+      modID = modID.replace('ob://', '');
+      modID = modID.split('/')[0];
+      modID = modID.trim();
+      //this.$submitModByID.addClass('processing');
+      //this.processIDorHandle(modID);
+      this.modsByID.getModeratorsByID([modID]);
+      this.getCachedEl('.js-modListByID').removeClass('hide');
     } else {
-      this.$submitModByIDInputError.removeClass('hide');
-      this.$submitModByIDInputErrorText.text(blankError);
+      $idError.removeClass('hide');
+      this.getCachedEl('.js-submitModByIDInputErrorText').text(blankError);
     }
   }
 
@@ -435,6 +446,17 @@ export default class extends baseVw {
         (this.modsSelected.fetch && this.modsSelected.fetch.state() !== 'pending')) {
         this.modsSelected.getModeratorsByID();
       }
+
+      this.modsByID.delegateEvents();
+      const modsByIDFetch = !this.modsByID.fetch ||
+        (this.modsByID.fetch && this.modsByID.fetch.state() !== 'pending');
+      // if the view is empty and not fetching hide it
+      this.getCachedEl('.js-modListByID')
+        .append(this.modsByID.render().el)
+        .toggleClass('hide', modsByIDFetch);
+
+      this.modsAvailable.delegateEvents();
+      this.$('.js-modListAvailable').append(this.modsAvailable.render().el);
     });
 
     return this;

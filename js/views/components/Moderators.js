@@ -33,7 +33,7 @@ export default class extends baseVw {
       singleSelect: false,
       selectFirst: false,
       radioStyle: false,
-      verifiedOnly: false,
+      showInvalid: false,
       // defaults will be overwritten by passed in options
       ...options,
     };
@@ -82,6 +82,10 @@ export default class extends baseVw {
   }
 
   getModeratorsByID(IDs = this.options.moderatorIDs) {
+    if (!Array.isArray(IDs)) {
+      throw new Error('Please provide the list of moderators as an array.');
+    }
+
     const op = this.options;
     const includeString = op.include ? `&include=${op.include}` : '';
     const urlString =
@@ -118,7 +122,11 @@ export default class extends baseVw {
                     // errors don't have a message id, check to see if the peerID matches
                     if (IDs.indexOf(eventData.peerId) !== -1) {
                       // don't add errored moderators
-                      this.removeNotFetched(eventData.peerId);
+                      if (this.options.showInvalid) {
+                        this.moderatorsCol.add(new Moderator(eventData, { parse: true }));
+                      } else {
+                        this.removeNotFetched(eventData.peerId);
+                      }
                     }
                   } else if (eventData.id === socketID) {
                     // don't add profiles that are not moderators. The ID list may have peerIDs
@@ -131,7 +139,7 @@ export default class extends baseVw {
                     // if the moderator is on the list of IDs to exclude, remove them
                     const notExcluded = this.options.excludeIDs.indexOf(eventData.peerID) === -1;
 
-                    if (!!validMod && validCur && notExcluded) {
+                    if ((!!validMod && validCur || this.options.showInvalid) && notExcluded) {
                       this.moderatorsCol.add(new Moderator(eventData.profile, { parse: true }));
                     } else {
                       // remove the invalid moderator from the notFetched list
