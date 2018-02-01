@@ -12,14 +12,14 @@
   <div class="flexExpand">
     <div class="flexVCent">
       <div class="flexExpand">
-        <div class="rowSm">
+        <div class="rowSm clickable js-amountRow">
           <span class="h1 js-amountDueLine"><%= ob.amountDueLine %></span>
           <button class="btnTxtOnly txUnb flipBtn js-copyAmount">
             <span class="clrTEm unFlipped"><%= ob.polyT('purchase.pendingSection.copy') %></span>
             <span class="flipped"><%= ob.polyT('purchase.pendingSection.copied') %></span>
           </button>
         </div>
-        <div class="tx5 rowMd">
+        <div class="tx5 rowMd clickable js-amountRow">
           <% const pAddress = ob.paymentAddress.length > 34 ? `${ob.paymentAddress.slice(0, 34)}…` : ob.paymentAddress; %>
           <span <% if (ob.paymentAddress.length > 34) print(`class="toolTipNoWrap toolTipTop" data-tip="${ob.paymentAddress}"`) %>><%= ob.polyT('purchase.pendingSection.to', { address: pAddress }) %></span>
           <button class="btnTxtOnly txUnb flipBtn js-copyAddress">

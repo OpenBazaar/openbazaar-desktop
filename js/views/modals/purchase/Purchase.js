@@ -5,8 +5,8 @@ import '../../../utils/lib/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
-import { convertCurrency } from '../../../utils/currency';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
+// import { convertCurrency } from '../../../utils/currency';
+// import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -122,7 +122,7 @@ export default class extends BaseModal {
     });
 
     // on the initial load, fetch the fees
-    this.getFees();
+    // this.getFees();
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -175,6 +175,7 @@ export default class extends BaseModal {
     }
   }
 
+  /*
   getFees() {
     if (this.fetchFees && this.fetchFees.state() === 'pending') {
       return this.fetchFees;
@@ -212,6 +213,7 @@ export default class extends BaseModal {
   clickRetryFee() {
     this.getFees();
   }
+  */
 
   goToListing() {
     app.router.navigate(`${this.vendor.peerID}/store/${this.listing.get('slug')}`,
@@ -475,6 +477,7 @@ export default class extends BaseModal {
     return priceTotal;
   }
 
+  /*
   isModAllowed() {
     const cur = this.listing.get('metadata').get('pricingCurrency');
     const total = convertCurrency(this.total, cur, getServerCurrency().code);
@@ -482,9 +485,10 @@ export default class extends BaseModal {
     this.moderationOn(allowModeration);
     this.getCachedEl('.js-modsNotAllowed').toggleClass('hide', allowModeration);
   }
+  */
 
   refreshPrices() {
-    this.isModAllowed();
+    // this.isModAllowed();
     this.receipt.updatePrices(this.prices);
   }
 
@@ -520,7 +524,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
-    if (this.fetchFees) this.fetchFees.abort();
+    // if (this.fetchFees) this.fetchFees.abort();
     super.remove();
   }
 
@@ -537,7 +541,6 @@ export default class extends BaseModal {
         variants: this.variants,
         items: this.order.get('items').toJSON(),
         prices: this.prices,
-        minModPrice: this.minModPrice,
         displayCurrency: app.settings.get('localCurrency'),
         hasModerators: !!this.moderatorIDs.length,
       }));
@@ -582,7 +585,8 @@ export default class extends BaseModal {
       this.feeChange = this.createChild(FeeChange);
       this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
 
-      this.isModAllowed();
+      // this.isModAllowed();
+      this.moderationOn(!!this.moderatorIDs.length);
     });
 
     return this;
