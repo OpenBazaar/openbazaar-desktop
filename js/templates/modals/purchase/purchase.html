@@ -57,7 +57,7 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
           <% } %>
           <div class="pad flexNoShrink">
             <b>
-              <%= ob.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+              <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
             </b>
           </div>
         </div>
@@ -73,9 +73,10 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
           <div class="flexColRows gutterVSm">
             <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
             <div class="contentBox pad clrP clrBr flexVCent">
+              <%= ob.currencyMod.cryptoIcon({ className: 'margRSm'}) %>
               <i class="btcIcon margRSm"></i>
               <div class="flexExpand">
-                <%= ob.polyT('currencies.BTC') %>
+                <%= ob.polyT(`cryptoCurrencies.${ob.currencyMod.getServerCurrency().code}`) %>
               </div>
               <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
               <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>

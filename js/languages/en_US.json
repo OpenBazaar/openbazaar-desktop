@@ -1345,8 +1345,7 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "zeroPrice": "You cannot purchase a listing with a total price of zero."
     }
   },
   "moderators": {
