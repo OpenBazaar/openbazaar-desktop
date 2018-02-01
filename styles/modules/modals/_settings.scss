@@ -115,6 +115,14 @@
     }
   }
 
+  .settingsStore {
+     .noModsAdded {
+       min-height: 175px;
+       border-width: 1px;
+       border-style: solid;
+     }
+  }
+
   .settingsAdvanced {
     .walletSeed {
       .seedWarnings {

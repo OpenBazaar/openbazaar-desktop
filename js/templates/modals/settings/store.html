@@ -52,7 +52,7 @@
             <div class="flexColRows gutterV">
               <div>
                 <h5><%= ob.polyT('settings.storeTab.selectedModerators') %></h5>
-                <div class="contentBox clrBr clrP js-modListSelected"></div>
+                <div class="js-modListSelected"></div>
               </div>
               <ul class="unstyled errorList hide js-submitModByIDInputError">
                 <li><i class="ion-alert-circled"></i><span class="js-submitModByIDInputErrorText"></span> </li>
@@ -67,30 +67,23 @@
                 btnText: ob.polyT('settings.storeTab.moderatoryByIDSubmit')
                 }) %>
               </div>
-              <div>
-                <div class="contentBox boxProcessingFaded modBox modBoxByID clrBr clrP js-modListByID"><!-- unhide when adding moderator-->
-                  <div class="js-modListByIDInner"></div>
-                  <%= ob.spinner() %>
-                </div>
-              </div>
+              <div class="js-modListByID"></div>
+
               <hr class="clrBr unleaded">
               <div>
                 <div class="rowLg"><% // just a spacer %></div>
               </div>
               <div>
                 <h5><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
-                <div class="contentBox boxProcessingFaded modBox clrBr clrP js-modListAvailable">
-                  <div class="js-modListAvailableInner"></div>
-                  <%= ob.spinner() %>
-                  <div class="noModsAdded js-noModsAdded">
-                    <button class="btn clrP clrBr hideOnProcessing js-browseMods">
-                       <%= ob.polyT('settings.storeTab.browseModerators') %>
-                    </button>
-                  </div>
-                  <button class="btnTxt tx6 clrT2 txU browseMore js-browseMods">
-                    <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
+                <div class="js-modListAvailable"></div>
+                <div class="noModsAdded clrBr js-noModsAdded">
+                  <button class="btn clrP clrBr browseMods js-browseMods">
+                     <%= ob.polyT('settings.storeTab.browseModerators') %>
                   </button>
                 </div>
+                <button class="btnTxt tx6 clrT2 txU browseMore js-browseMods">
+                  <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
+                </button>
               </div>
             </div><% // end of flex inside col9 %>
             <% if (ob.errors.storeModerators) print('<div class="row"></div>  ' + ob.formErrorTmpl({ errors: ob.errors.storeModerators })) %>

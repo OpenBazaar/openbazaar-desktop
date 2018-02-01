@@ -213,7 +213,7 @@ export default class extends baseVw {
     this.getCachedEl('.js-submitModByIDInputError').removeClass('hide');
     this.getCachedEl('.js-submitModByIDInputErrorText').text(msg);
   }
-  
+
   clickSubmitModByID() {
     let modID = this.getCachedEl('.js-submitModByIDInput').val();
     const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
