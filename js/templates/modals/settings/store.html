@@ -74,16 +74,18 @@
                 <div class="rowLg"><% // just a spacer %></div>
               </div>
               <div>
-                <h5><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
+                <div class="flexVCent">
+                  <h5 class="flexExpand"><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
+                  <button class="btnTxt tx6 clrT2 txU browseMore hide js-browseMore">
+                    <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
+                  </button>
+                </div>
                 <div class="js-modListAvailable"></div>
-                <div class="noModsAdded clrBr js-noModsAdded">
+                <div class="noModsAdded clrBr flexCent js-noModsAdded">
                   <button class="btn clrP clrBr browseMods js-browseMods">
                      <%= ob.polyT('settings.storeTab.browseModerators') %>
                   </button>
                 </div>
-                <button class="btnTxt tx6 clrT2 txU browseMore js-browseMods">
-                  <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
-                </button>
               </div>
             </div><% // end of flex inside col9 %>
             <% if (ob.errors.storeModerators) print('<div class="row"></div>  ' + ob.formErrorTmpl({ errors: ob.errors.storeModerators })) %>

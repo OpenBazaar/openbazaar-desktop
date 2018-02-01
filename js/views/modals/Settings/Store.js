@@ -70,6 +70,7 @@ export default class extends baseVw {
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       cardState: 'unselected',
       notSelected: 'unselected',
+      hideSpinner: true,
     });
 
     /*
@@ -146,9 +147,17 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-browseMods': 'fetchAvailableModerators',
+      'click .js-browseMore': 'fetchAvailableModerators',
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
     };
+  }
+
+  fetchAvailableModerators() {
+    this.modsAvailable.getModeratorsByID();
+    this.getCachedEl('.js-modListAvailable').removeClass('hide');
+    this.getCachedEl('.js-noModsAdded').addClass('hide');
+    this.getCachedEl('.js-browseMore').removeClass('hide');
   }
 
   /*
@@ -469,7 +478,12 @@ export default class extends baseVw {
         .toggleClass('hide', modsByIDFetch);
 
       this.modsAvailable.delegateEvents();
-      this.$('.js-modListAvailable').append(this.modsAvailable.render().el);
+      const modsAvailableFetch = !this.modsAvailable.fetch ||
+        (this.modsAvailable.fetch && this.modsAvailable.fetch.state() !== 'pending');
+      // if the view is empty and not fetching hide it
+      this.getCachedEl('.js-modListAvailable')
+        .append(this.modsAvailable.render().el)
+        .toggleClass('hide', modsAvailableFetch);
     });
 
     return this;

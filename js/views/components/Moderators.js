@@ -29,12 +29,13 @@ export default class extends baseVw {
       excludeIDs: [],
       method: 'POST',
       include: '',
-      purchase: false,
+      purchase: false, // if this is a child of a purchase, pass to child moderator views
       singleSelect: false,
       selectFirst: false,
       radioStyle: false,
       showInvalid: false,
       wrapperClasses: '',
+      hideSpinner: false, // don't block loading moderators with a spinner
       // defaults will be overwritten by passed in options
       ...options,
     };
@@ -124,7 +125,7 @@ export default class extends baseVw {
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || this.options.method === 'GET') {
-      this.$moderatorsWrapper.addClass('processing');
+      if (!this.options.hideSpinner) this.$moderatorsWrapper.addClass('processing');
       this.fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
@@ -175,7 +176,7 @@ export default class extends baseVw {
             const failReason = xhr.responseJSON ? `\n\n${xhr.responseJSON.reason}` : '';
             const msg = `${this.options.fetchErrorMsg}${failReason}`;
             openSimpleMessage(this.options.fetchErrorTitle, msg);
-            this.$moderatorsWrapper.removeClass('processing');
+            if (!this.options.hideSpinner) this.$moderatorsWrapper.removeClass('processing');
           });
     }
   }
@@ -184,7 +185,7 @@ export default class extends baseVw {
     const nfYet = this.unfetchedMods.length;
     // if at least one mod has loaded, remove the spinner
     if (nfYet < this.fetchingMods.length) {
-      this.$moderatorsWrapper.removeClass('processing');
+      if (!this.options.hideSpinner) this.$moderatorsWrapper.removeClass('processing');
     }
     if (nfYet === 0) {
       // all ids have been fetced
@@ -260,6 +261,7 @@ export default class extends baseVw {
     loadTemplate('modals/purchase/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
+        hideSpinner: this.options.hideSpinner,
       }));
 
       super.render();
