@@ -1,11 +1,58 @@
-<div class="timeoutInfo rowLg">
-  <div class="headerIconWrap discSm clrP clrBr">
-    <i class="ion-android-alarm-clock"></i>
-  </div>
-  <div class="innerContent border clrBr padMd">
+<%
+  const isCase = ob.ownPeerId !== ob.buyer && ob.ownPeerId !== ob.vendor;
+%>
+
+<div class="headerIconWrap discSm clrP clrBr">
+  <i class="ion-android-alarm-clock"></i>
+</div>
+<div class="innerContent border clrBr padMd">
+<%
+  let timeRemaining;
+  
+  if (ob.blockRemaining) {
+    timeRemaining = ob.blockRemaining * ob.blockTime; // seconds
+  }
+
+  let message;
+  let messageClass = 'txCtr';
+  let tip;
+  let tipClass = '';
+
+  if (!isCase) {
+    tip = ob.ownPeerId === ob.buyer ?
+      'Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.' :
+      'Once the clock expires, you can claim payment and finalize the order without support from the moderator.';  
+
+    if (ob.invalidEscrowTimeout) {
+      message = 'Invalid escrow timeout in contract. Unable to determine how much time is remaining to open a dispute.';
+      messageClass = 'txCtr clrTErr';
+    } else if (!ob.isFundingConfirmed) {
+      message = `This order can be disputed for <b>${ob.blocksRemaining} blocks</b> or approximately <b>${ob.timeRemaining}</b>. The clock will start when the funding payment is confirmed.`;
+    } else if (ob.blocksRemaining <= 0) {
+      if (ob.ownPeerId === ob.buyer) {
+        message = 'Time is up! A dispute can no longer be opened on this order.';
+        tip = 'You and the vendor are given approximately 45 days to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.';
+      } else {
+        // it's the vendor
+        message = 'Time is up! Claim payment for this order whenever you’re ready.';
+        tip = 'You and the buyer are given approximately 45 days to open a dispute. Since a dispute was not opened, you can now claim the payment.';        
+      }
+
+      if (ob.ownPeerId === ob.buyer && ob.isCompletable) {
+          message = 'Time is up! A dispute can no longer be opened on this order. Please complete the order below whenever you’re ready.';
+      }
+    }
+  }
+%>
+
+  <% if (ob.awaitingBlockHeight) { %>
+  <div class="txCtr">Obtaining current block height...</div>
+  <% } else if (!isCase) { %>
     <div class="flexCol flexCent gutterVSm">
-      <p>This order can be disputed for <b>123 blocks</b> or approximately <b>45 days</b>.</p>
-      <button class="btn clrP clrBr">Howdy Player</button>
+      <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
+      <% if (ob.showDisputeBtn) { %>
+      <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph">Dispute Order</button>
+      <% } %>
     </div>
-  </div>
+  <% } %>
 </div>

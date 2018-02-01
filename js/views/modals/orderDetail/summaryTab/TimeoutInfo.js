@@ -8,8 +8,13 @@ export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.orderId = options.orderId;
+
     this._state = {
-      currentHeight: 0,
+      awaitingBlockHeight: false,
+      showDisputeBtn: false,
+      isFundingConfirmed: false,
+      blocksRemaining: 0,
+      invalidEscrowTimeout: false,
       ...options.initialState || {},
     };
 

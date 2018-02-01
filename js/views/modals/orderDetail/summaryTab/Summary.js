@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import app from '../../../../app';
 import { clipboard } from 'electron';
+import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getSocket } from '../../../../utils/serverConnect';
@@ -46,6 +47,9 @@ export default class extends BaseVw {
     }
 
     this.contract = contract;
+
+    console.log('moo');
+    window.moo = contract;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -452,8 +456,10 @@ export default class extends BaseVw {
    * confirmed, it will return 0.
    */
   get fundedBlockHeight() {
+    // return 0;
+
     if (this.isCase()) {
-      throw new Error('Unable to determine becayse cases do not have any transaction data.');
+      throw new Error('Unable to determine because cases do not have any transaction data.');
     }
 
     let height = 0;
@@ -486,10 +492,10 @@ export default class extends BaseVw {
     const orderState = this.model.get('state');
 
     if (this.buyer.id === app.profile.id) {
-      return this.moderator.id &&
+      return this.moderator &&
         ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
     } else if (this.vendor.id === app.profile.id) {
-      return this.moderator.id &&
+      return this.moderator &&
         ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
     }
 
@@ -497,22 +503,108 @@ export default class extends BaseVw {
   }
 
   renderTimeoutInfoView() {
+    const cryptoCur = getServerCurrency();
     const orderState = this.model.get('state');
-    const shouldShow = this.isOrderStateDisputable ||
-      orderState === 'DISPUTED';
+    const shouldShow = (this.isOrderStateDisputable ||
+      orderState === 'DISPUTED') && cryptoCur.hasEscrowTimeout;
 
     if (!shouldShow) {
       if (this.timeoutInfo) this.timeoutInfo.remove();
       return;
     }
 
-    // what if it's already there?
-    if (this.timeoutInfo) this.timeoutInfo.remove();
-    // temp handler of above
+    const height = app.walletBalance.get('height');
+    // TODO: set these as defaults in the View
+    // TODO
+    // TODO
+    let state = {
+      ownPeerId: app.profile.id,
+      buyer: this.buyer.id,
+      vendor: this.vendor.id,
+      moderator: this.moderator && this.moderator.id || undefined,
+      awaitingBlockHeight: false,
+      invalidEscrowTimeout: false,
+      isFundingConfirmed: false,
+      blockTime: cryptoCur.blockTime,
+      isCompletable: orderState === 'FULFILLED' && this.buyer.id === app.profile.id,
+      showDisputeBtn: false,
+      showDiscussBtn: false,
+    };
 
-    this.timeoutInfo = this.createChild(TimeoutInfo, {});
-    this.getCachedEl('.js-timeoutInfoContainer')
-      .html(this.timeoutInfo.render().el);
+    if (!height) {
+      state.awaitingBlockHeight = true;
+    } else {
+      let escrowTimeoutHours;
+
+      try {
+        escrowTimeoutHours = this.contract.get('vendorListings')
+          .at(0)
+          .get('metadata')
+          .get('escrowTimeoutHours');
+        escrowTimeoutHours = parseInt(escrowTimeoutHours, 10);
+      } catch (e) {
+        // pass - will be handled by setting invalidEscrowTimeout below
+      }
+
+      if (typeof escrowTimeoutHours !== 'number' || isNaN(escrowTimeoutHours)) {
+        // contract probably forged
+        // state.invalidEscrowTimeout = true;
+        state = {
+          ...state,
+          invalidEscrowTimeout: true,
+          showDisputeBtn: this.isOrderStateDisputable,
+        };
+      } else {
+        if (this.isCase()) {
+          // pass for now
+        } else {
+          const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
+          const blocksRemaining = this.fundedBlockHeight ?
+            blocksPerTimeout - (app.walletBalance.get('height') - this.fundedBlockHeight) :
+            blocksPerTimeout;
+          const secondsRemaining = blocksRemaining * cryptoCur.blockTime;
+          const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
+
+          console.log(`is order state disputable: ${this.isOrderStateDisputable}`);
+          console.log(`the current height is ${app.walletBalance.get('height')}`);
+          console.log(`the funded block height is ${this.fundedBlockHeight}`);
+          console.log(`the blocks in a timeout are ${blocksPerTimeout}`);
+
+          // temporarily upping the moment threshold of number of days before month is used,
+          // so 45 is represented as '45 days' instead of '1 month'.
+          moment.relativeTimeThreshold('d', 300);
+
+          const timeRemaining =
+            moment(Date.now()).from(moment(Date.now() + secondsRemaining), true);
+
+          state = {
+            ...state,
+            isFundingConfirmed: !!this.fundedBlockHeight,
+            blocksRemaining,
+            timeRemaining,
+            showDisputeBtn: this.isOrderStateDisputable && blocksRemaining > 0,
+          };
+
+          moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
+        }
+      }
+    }
+
+    console.dir(state);
+
+    if (this.timeoutInfo) {
+      this.timeoutInfo.setState(state);
+    } else {
+      this.timeoutInfo = this.createChild(TimeoutInfo, {
+        initialState: state,
+      });
+
+      this.getCachedEl('.js-timeoutInfoContainer')
+        .html(this.timeoutInfo.render().el);
+
+      this.listenTo(app.walletBalance, 'change:height',
+        () => this.renderTimeoutInfoView());
+    }
   }
 
   renderAcceptedView() {

@@ -79,6 +79,8 @@ export default class extends BaseModel {
       }
     }
 
+    response.state = 'DISPUTED';
+
     return response;
   }
 }

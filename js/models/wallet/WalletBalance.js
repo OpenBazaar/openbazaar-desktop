@@ -10,6 +10,7 @@ export default class extends BaseModel {
   parse(response) {
     // Convert from base units
     return {
+      ...response,
       confirmed: integerToDecimal(response.confirmed, app.serverConfig.cryptoCurrency),
       unconfirmed: integerToDecimal(response.unconfirmed, app.serverConfig.cryptoCurrency),
     };
