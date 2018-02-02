@@ -1651,7 +1651,8 @@
     "failedCompleteHeading": "There was an error completing the order.",
     "failedOpenDisputeHeading": "There was an error completing the order.",
     "failedResolveHeading": "There was an error resolving the order.",
-    "failedAcceptPayoutHeading": "There was an error accepting the payout."
+    "failedAcceptPayoutHeading": "There was an error accepting the payout.",
+    "failedReleaseEscrowHeading": "There was an error claiming the payment."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",

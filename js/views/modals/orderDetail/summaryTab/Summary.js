@@ -93,6 +93,8 @@ export default class extends BaseVw {
       if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
         this.renderPaymentFinalized();
       }
+
+      this.renderTimeoutInfoView();
     });
 
     if (!this.isCase()) {
@@ -150,6 +152,10 @@ export default class extends BaseVw {
         this.model.set('state', 'REFUNDED');
         this.model.fetch();
       }
+    });
+
+    this.listenTo(orderEvents, 'releaseEscrowComplete', e => {
+      if (e.id === this.model.id) this.model.fetch();
     });
 
     this.listenTo(this.contract, 'change:vendorOrderFulfillment', () => {
@@ -526,7 +532,8 @@ export default class extends BaseVw {
       invalidEscrowTimeout: false,
       isFundingConfirmed: false,
       blockTime: cryptoCur.blockTime,
-      isCompletable: orderState === 'FULFILLED' && this.buyer.id === app.profile.id,
+      isCompletable: orderState === 'FULFILLED',
+      isPaymentClaimable: false,
       showDisputeBtn: false,
       showDiscussBtn: false,
     };
@@ -583,6 +590,8 @@ export default class extends BaseVw {
             blocksRemaining,
             timeRemaining,
             showDisputeBtn: this.isOrderStateDisputable && blocksRemaining > 0,
+            isPaymentClaimable: ['FULFILLED', 'DISPUTED'].includes(orderState) &&
+              blocksRemaining <= 0,
           };
 
           moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
@@ -596,11 +605,16 @@ export default class extends BaseVw {
       this.timeoutInfo.setState(state);
     } else {
       this.timeoutInfo = this.createChild(TimeoutInfo, {
+        orderId: this.model.id,
         initialState: state,
       });
 
       this.getCachedEl('.js-timeoutInfoContainer')
         .html(this.timeoutInfo.render().el);
+
+      this.listenTo(this.timeoutInfo, 'clickDispureOrder', () => {
+        this.trigger('clickDispureOrder');
+      });
 
       this.listenTo(app.walletBalance, 'change:height',
         () => this.renderTimeoutInfoView());

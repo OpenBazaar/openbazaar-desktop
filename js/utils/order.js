@@ -20,6 +20,7 @@ const completePosts = {};
 const openDisputePosts = {};
 const resolvePosts = {};
 const acceptPayoutPosts = {};
+const releaseEscrowPosts = {};
 
 function confirmOrder(orderId, reject = false) {
   if (!orderId) {
@@ -84,7 +85,7 @@ function confirmOrder(orderId, reject = false) {
 export { events };
 
 export function acceptingOrder(orderId) {
-  return acceptPosts[orderId] || false;
+  return !!acceptPosts[orderId] || false;
 }
 
 export function acceptOrder(orderId) {
@@ -92,7 +93,7 @@ export function acceptOrder(orderId) {
 }
 
 export function rejectingOrder(orderId) {
-  return rejectPosts[orderId] || false;
+  return !!rejectPosts[orderId] || false;
 }
 
 export function rejectOrder(orderId) {
@@ -100,7 +101,7 @@ export function rejectOrder(orderId) {
 }
 
 export function cancelingOrder(orderId) {
-  return cancelPosts[orderId] || false;
+  return !!cancelPosts[orderId] || false;
 }
 
 export function cancelOrder(orderId) {
@@ -150,7 +151,7 @@ export function cancelOrder(orderId) {
 }
 
 export function fulfillingOrder(orderId) {
-  return fulfillPosts[orderId] || false;
+  return !!fulfillPosts[orderId] || false;
 }
 
 export function fulfillOrder(contractType = 'PHYSICAL_GOOD', isLocalPickup = false, data = {}) {
@@ -205,7 +206,7 @@ export function fulfillOrder(contractType = 'PHYSICAL_GOOD', isLocalPickup = fal
 }
 
 export function refundingOrder(orderId) {
-  return refundPosts[orderId] || false;
+  return !!refundPosts[orderId] || false;
 }
 
 export function refundOrder(orderId) {
@@ -259,7 +260,7 @@ export function refundOrder(orderId) {
  * will return an object containing the post xhr and the data that's being saved.
  */
 export function completingOrder(orderId) {
-  return completePosts[orderId] || false;
+  return !!completePosts[orderId] || false;
 }
 
 export function completeOrder(orderId, data = {}) {
@@ -319,7 +320,7 @@ export function completeOrder(orderId, data = {}) {
  * that's being saved.
  */
 export function openingDispute(orderId) {
-  return openDisputePosts[orderId] || false;
+  return !!openDisputePosts[orderId] || false;
 }
 
 export function openDispute(orderId, data = {}) {
@@ -379,7 +380,7 @@ export function openDispute(orderId, data = {}) {
  * being saved.
  */
 export function resolvingDispute(orderId) {
-  return resolvePosts[orderId] || false;
+  return !!resolvePosts[orderId] || false;
 }
 
 export function resolveDispute(orderId, data = {}) {
@@ -434,7 +435,7 @@ export function resolveDispute(orderId, data = {}) {
 }
 
 export function acceptingPayout(orderId) {
-  return acceptPayoutPosts[orderId] || false;
+  return !!acceptPayoutPosts[orderId] || false;
 }
 
 export function acceptPayout(orderId) {
@@ -475,6 +476,56 @@ export function acceptPayout(orderId) {
 
     acceptPayoutPosts[orderId] = post;
     events.trigger('acceptingPayout', {
+      id: orderId,
+      xhr: post,
+    });
+  }
+
+  return post;
+}
+
+export function releasingEscrow(orderId) {
+  return !!releaseEscrowPosts[orderId] || false;
+}
+
+export function releaseEscrow(orderId) {
+  if (!orderId) {
+    throw new Error('Please provide an orderId');
+  }
+
+  let post = releaseEscrowPosts[orderId];
+
+  if (!post) {
+    post = $.post({
+      url: app.getServerUrl('ob/releaseescrow'),
+      data: JSON.stringify({
+        orderId,
+      }),
+      dataType: 'json',
+      contentType: 'application/json',
+    }).always(() => {
+      delete releaseEscrowPosts[orderId];
+    }).done(() => {
+      events.trigger('releaseEscrowComplete', {
+        id: orderId,
+        xhr: post,
+      });
+    })
+    .fail(xhr => {
+      events.trigger('releaseEscrowFail', {
+        id: orderId,
+        xhr: post,
+      });
+
+      const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+      openSimpleMessage(
+        app.polyglot.t('orderUtil.failedReleaseEscrowHeading'),
+        failReason
+      );
+    });
+
+    releaseEscrowPosts[orderId] = post;
+    events.trigger('releasingEscrow', {
       id: orderId,
       xhr: post,
     });
