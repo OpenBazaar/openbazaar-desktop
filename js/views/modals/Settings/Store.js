@@ -6,9 +6,7 @@ import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
 import { isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
-//import Moderators from '../../../collections/Moderators_old';
 import Moderators from '../../components/Moderators';
-//import ModCard from '../../ModeratorCard';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
@@ -39,7 +37,6 @@ export default class extends baseVw {
       (md, resp, opts) => app.settings.set(this.settings.toJSON(opts.attrs)));
 
     this.currentMods = this.settings.get('storeModerators');
-    console.log(app.polyglot.t('settings.storeTab.errors.selectedModsTitle'))
 
     this.modsSelected = new Moderators({
       async: true,
@@ -60,6 +57,8 @@ export default class extends baseVw {
       wrapperClasses: 'noMin',
     });
 
+    this.listenTo(this.modsByID, 'noModsFound', (opts) => this.noModsFound(opts.guids));
+
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
       async: true,
@@ -72,76 +71,6 @@ export default class extends baseVw {
       notSelected: 'unselected',
       hideSpinner: true,
     });
-
-    /*
-    this.modFetches = [];
-    this.modViewCache = [];
-
-    if (this.currentMods.length) {
-      // fetch the already selected moderators
-      this.selectedModsInvalidList = [];
-      this.selectedModsAsyncInvalidList = [];
-      const fetch = this.modsSelected.fetch({ fetchList: this.currentMods });
-      this.modFetches.push(fetch);
-    }
-
-    this.listenTo(this.modsSelected, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListSelectedInner, {
-        cardState: 'selected',
-        notSelected: 'deselected',
-      });
-    });
-
-    this.listenTo(this.modsSelected, 'asyncError', (opts) => {
-      this.showSelectedModsAsyncError(opts.id);
-    });
-
-    this.listenTo(this.modsSelected, 'doneLoading', () => {
-      this.doneLoading(this.$modListSelected);
-    });
-
-    this.listenTo(this.modsSelected, 'invalidMod', (opts) => {
-      // one of the current mods is no longer valid, remove it and show an error
-      const data = { guid: opts.id };
-      this.changeMod(data);
-      this.showSelectedModsError(opts.id);
-    });
-
-    this.listenTo(this.modsByID, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListByIDInner, {
-        cardState: 'unselected',
-        notSelected: 'unselected',
-      });
-    });
-
-    this.listenTo(this.modsByID, 'asyncError', (opts) => {
-      this.modNotFound(opts.id);
-    });
-
-    this.listenTo(this.modsByID, 'doneLoading', () => {
-      this.doneLoading(this.$modListByID);
-    });
-
-    this.listenTo(this.modsByID, 'invalidMod', (opts) => {
-      this.showModByIDError(app.polyglot.t('settings.storeTab.errors.modIsInvalid',
-          { guid: opts.id }));
-    });
-
-    this.listenTo(this.modsAvailable, 'add', (model, collection) => {
-      this.addModToList(model, collection, this.$modListAvailableInner, {
-        cardState: 'unselected',
-        notSelected: 'unselected',
-      });
-    });
-
-    this.listenTo(this.modsAvailable, 'asyncError', (opts) => {
-      this.modNotFound(opts.id);
-    });
-
-    this.listenTo(this.modsAvailable, 'doneLoading', () => {
-      this.doneLoading(this.$modListAvailable);
-    });
-    */
   }
 
   events() {
@@ -153,70 +82,21 @@ export default class extends baseVw {
     };
   }
 
+  noModsFound(guids) {
+    const modsNotFound = app.polyglot.t('settings.storeTab.errors.modsNotFound',
+      { guids, smart_count: guids.length });
+    this.showModByIDError(modsNotFound);
+    if (this.modsByID.modCount === 0) {
+      this.getCachedEl('.js-modListAvailable').addClass('hide');
+    }
+  }
+
   fetchAvailableModerators() {
     this.modsAvailable.getModeratorsByID();
     this.getCachedEl('.js-modListAvailable').removeClass('hide');
     this.getCachedEl('.js-noModsAdded').addClass('hide');
     this.getCachedEl('.js-browseMore').removeClass('hide');
   }
-
-  /*
-  fetchAvailableModerators() {
-    this.$modListAvailable.addClass('processing');
-    const fetch = this.modsAvailable.fetch()
-      .fail((...args) => {
-        if (this.isRemoved()) return;
-        const title = app.polyglot.t('settings.storeTab.errors.availableModsFailed');
-        const message = args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
-        openSimpleMessage(title, message);
-      })
-      .always(() => {
-        if (this.isRemoved()) return;
-        // remove the processing class after a long enough time. If it's still visible
-        // there are probably no moderators coming.
-        setTimeout(() => this.$modListAvailable.removeClass('processing'), 20000);
-      });
-    this.modFetches.push(fetch);
-  }
-
-  addModToList(model, collection, target, opts = {}) {
-    let newModView;
-
-    // if DOM is available, set DOM state
-    if (target) {
-      target.parent().toggleClass('hasMods', !!collection.length);
-    }
-
-    if (model) {
-      const docFrag = $(document.createDocumentFragment());
-      // check to see if view already exists
-      const cachedView = _.find(this.modViewCache, (mod) => mod.model.id === model.id);
-      // if view hasn't already been created, create it now
-      if (!cachedView) {
-        newModView = this.createChild(ModCard, {
-          model,
-          ...opts,
-        });
-        this.listenTo(newModView, 'changeModerator', (data) => this.changeMod(data));
-      } else {
-        newModView = cachedView;
-        newModView.delegateEvents();
-        // when cards are moved betwen lists, set their options to fit the target list
-        newModView.cardState = opts.cardState || 'unselected';
-        newModView.notSelected = opts.notSelected || 'unselected';
-      }
-      // if the view already exists and is in the DOM, this will move it
-      docFrag.append(newModView.render().$el);
-      target.append(docFrag);
-      this.modViewCache.push(newModView);
-    }
-  }
-
-  doneLoading(target) {
-    // if all moderators have loaded, clear any processing class
-    target.removeClass('processing');
-  }
-  */
 
   showModByIDError(msg) {
     this.getCachedEl('.js-submitModByIDInputError').removeClass('hide');
@@ -234,8 +114,7 @@ export default class extends baseVw {
       modID = modID.replace('ob://', '');
       modID = modID.split('/')[0];
       modID = modID.trim();
-      //this.$submitModByID.addClass('processing');
-      //this.processIDorHandle(modID);
+
       if (isMultihash(modID)) {
         if (!this.currentMods.includes(modID)) {
           this.modsByID.getModeratorsByID([modID]);
@@ -252,88 +131,6 @@ export default class extends baseVw {
       this.showModByIDError(blankError);
     }
   }
-
-  /*
-  processIDorHandle(modID) {
-    if (isMultihash(modID)) {
-      this.loadModByID(modID);
-      this.$submitModByID.removeClass('processing');
-    } else {
-      // assume id is a handle
-      const handle = modID.charAt(0) === '0' ? modID.slice(1) : modID;
-      getGuid(handle)
-          .done((guid) => {
-            this.loadModByID(guid);
-          })
-          .fail(() => {
-            this.modNotFound(modID, handle);
-          })
-          .always(() => {
-            this.$submitModByID.removeClass('processing');
-          });
-    }
-  }
-  */
-  /*
-  modNotFoundInSelected(guid, handle) {
-    const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
-    const msg = app.polyglot.t('settings.storeTab.errors.modNotFound',
-        { guidOrHandle: handle || guid });
-
-    openSimpleMessage(title, msg);
-  }
-
-  modNotFound(guid, handle) {
-    const title = app.polyglot.t('settings.storeTab.errors.modNotFoundTitle');
-    const msg = app.polyglot.t('settings.storeTab.errors.modNotFound',
-        { guidOrHandle: handle || guid });
-
-    openSimpleMessage(title, msg);
-  }
-    */
-  /*
-  loadModByID(guid, handle = '') {
-    const addedError = app.polyglot.t('settings.storeTab.errors.modAlreadyAdded');
-    const badModError = app.polyglot.t('settings.storeTab.errors.modNotFound',
-        { guidOrHandle: handle || guid });
-
-    this.$submitModByIDInputError.addClass('hide');
-
-    if (this.currentMods.indexOf(guid) === -1) {
-      this.$modListByID.addClass('processing');
-      const fetch = this.modsByID.fetch({ fetchList: [guid] })
-          .done(() => {
-            this.$submitModByIDInput.val('');
-          })
-          .fail(() => {
-            if (this.isRemoved()) return;
-            this.showModByIDError(badModError);
-            this.$modListByID.removeClass('processing');
-          });
-      this.modFetches.push(fetch);
-    } else {
-      this.showModByIDError(addedError);
-    }
-  }
-  */
-  /*
-  showSelectedModsAsyncError(id) {
-    this.selectedModsAsyncInvalidList.push(id);
-    const msg = app.polyglot.t('settings.storeTab.errors.modsAreInvalidAsync',
-        { guids: this.selectedModsAsyncInvalidList.join(', ') });
-    this.$selectedModsAsyncError.removeClass('hide');
-    this.$selectedModsAsyncErrorText.text(msg);
-  }
-  */
-  /*
-  showSelectedModsError(id) {
-    this.selectedModsInvalidList.push(id);
-    const msg = app.polyglot.t('settings.storeTab.errors.modsAreInvalid',
-        { guids: this.selectedModsInvalidList.join(', ') });
-    this.$selectedModsError.removeClass('hide');
-    this.$selectedModsErrorText.text(msg);
-  }
-  */
 
   changeMod(data) {
     if (data.selected) {

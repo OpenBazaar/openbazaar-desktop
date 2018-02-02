@@ -157,18 +157,10 @@ export default class extends baseVw {
                 throw new Error('There is no connection to the server to listen to.');
               }
             } else {
-              /*
-              const formattedMods = data.map((mod) => {
-                const mappedProfile = mod.profile;
-                mappedProfile.id = mod.peerId;
-                return new Moderator(mappedProfile, { parse: true });
-              });
-              this.moderatorsCol.add(formattedMods);
-              */
-              console.log(data)
               data.forEach(mod => this.processMod(mod.profile));
               this.unfetchedMods = [];
               this.checkNotFetched();
+              if (!data.length) this.trigger('noModsFound', { guids: IDs });
             }
           })
           .fail((xhr) => {
@@ -224,6 +216,11 @@ export default class extends baseVw {
         newModView.changeSelectState('selected');
       }
     }
+  }
+
+  get modCount() {
+    // return the number of visible cards. The collection may have unshown invalid moderators.
+    return this.modCards.length;
   }
 
   get selectedIDs() {

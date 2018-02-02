@@ -669,14 +669,13 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
-        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
+        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
         "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
         "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
         "availableModsTitle": "Available Moderators Could Not Be Loaded",
-        "modAlreadyAdded": "You have already added that moderator.",
         "modIsBlank": "You must add a moderator ID or handle",
         "notGUID": "%{guid} is not a valid peer ID",
-        "dupeGUID": "%{guid} is currently a selected moderator, you can't add them twice.",
+        "dupeGUID": "You have already added %{guid}, you can't add them twice.",
         "modIsInvalid": "%{guid} is not a valid moderator.",
         "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
         "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
