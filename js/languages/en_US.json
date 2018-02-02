@@ -674,7 +674,7 @@
         "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "You must add a moderator ID or handle",
         "notGUID": "%{guid} is not a valid peer ID",
-        "dupeGUID": "You have already added %{guid}, you can't add them twice.",
+        "dupeGUID": "You have already added %{guid}, you can't add them twice."
       }
     },
     "blockedTab": {

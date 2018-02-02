@@ -69,7 +69,7 @@ export default class extends BaseVw {
     if (cardState !== this.cardState) {
       this.cardState = cardState;
       this.$selectBtn.attr('data-state', cardState);
-      this.trigger('changeModerator', {
+      this.trigger('modSelectChange', {
         selected: cardState === 'selected',
         guid: this.model.id,
       });

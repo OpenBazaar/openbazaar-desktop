@@ -1,8 +1,4 @@
-<div class="moderatorsWrapper boxProcessingFaded clrBr <% print(ob.wrapperClasses) %> js-moderatorsWrapper">
-  <% if (!ob.hideSpinner) { %>
-    <%= ob.spinner() %>
-  <% } %>
-</div>
+<div class="moderatorsWrapper clrBr <% print(ob.wrapperClasses) %> js-moderatorsWrapper"></div>
 <div class="moderatorsStatus flexVCent flexHCent gutterHTn tx6 js-moderatorsStatus">
   <%= ob.spinner({ className: 'spinnerTxt' }) %>
   <span class="clrT4 js-moderatorStatusInner"></span>

@@ -76,12 +76,12 @@
               <div>
                 <div class="flexVCent">
                   <h5 class="flexExpand"><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
-                  <button class="btnTxt tx6 clrT2 txU browseMore hide js-browseMore">
+                  <button class="btnTxt tx6 clrT2 txU browseMore <% if (!ob.modsAvailable.length) print('hide') %> js-browseMore">
                     <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
                   </button>
                 </div>
                 <div class="js-modListAvailable"></div>
-                <div class="noModsAdded clrBr flexCent js-noModsAdded">
+                <div class="noModsAdded clrBr flexCent <% if (ob.modsAvailable.length) print('hide') %> js-noModsAdded">
                   <button class="btn clrP clrBr browseMods js-browseMods">
                      <%= ob.polyT('settings.storeTab.browseModerators') %>
                   </button>

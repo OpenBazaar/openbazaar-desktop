@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
@@ -35,7 +36,6 @@ export default class extends baseVw {
       radioStyle: false,
       showInvalid: false,
       wrapperClasses: '',
-      hideSpinner: false, // don't block loading moderators with a spinner
       // defaults will be overwritten by passed in options
       ...options,
     };
@@ -67,9 +67,11 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
     this.moderatorsCol = new Moderators();
-    this.listenTo(this.moderatorsCol, 'add', (model) => {
-      this.addMod(model);
+    this.listenTo(this.moderatorsCol, 'add', model => {
+      const view = this.addMod(model);
+      this.$moderatorsWrapper.append(view.render().$el);
     });
+    this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => this.removeMod(md, cl, rOpts));
     this.modCards = [];
   }
 
@@ -102,10 +104,16 @@ export default class extends baseVw {
     }
   }
 
-  getModeratorsByID(IDs = this.options.moderatorIDs) {
-    if (!Array.isArray(IDs)) {
+  getModeratorsByID(IDparam = this.options.moderatorIDs) {
+    if (!Array.isArray(IDparam)) {
       throw new Error('Please provide the list of moderators as an array.');
     }
+
+    let IDs = IDparam;
+
+    // don't get any that have already been added
+    IDs = _.without(IDs, this.allIDs);
+
 
     const op = this.options;
     const includeString = op.include ? `&include=${op.include}` : '';
@@ -125,7 +133,6 @@ export default class extends baseVw {
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || this.options.method === 'GET') {
-      if (!this.options.hideSpinner) this.$moderatorsWrapper.addClass('processing');
       this.fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
@@ -168,17 +175,16 @@ export default class extends baseVw {
             const failReason = xhr.responseJSON ? `\n\n${xhr.responseJSON.reason}` : '';
             const msg = `${this.options.fetchErrorMsg}${failReason}`;
             openSimpleMessage(this.options.fetchErrorTitle, msg);
-            if (!this.options.hideSpinner) this.$moderatorsWrapper.removeClass('processing');
           });
     }
   }
 
+  removeModeratorsByID(IDs = []) {
+    this.moderatorsCol.remove(IDs);
+  }
+
   checkNotFetched() {
     const nfYet = this.unfetchedMods.length;
-    // if at least one mod has loaded, remove the spinner
-    if (nfYet < this.fetchingMods.length) {
-      if (!this.options.hideSpinner) this.$moderatorsWrapper.removeClass('processing');
-    }
     if (nfYet === 0) {
       // all ids have been fetced
       this.$moderatorsStatus.addClass('hide');
@@ -193,28 +199,39 @@ export default class extends baseVw {
     }
   }
 
+  renderMod(view) {
+
+  }
+
   addMod(model) {
-    if (model) {
-      const cardState = this.options.cardState;
-      const newModView = this.createChild(ModCard, {
-        model,
-        purchase: this.options.purchase,
-        notSelected: this.options.notSelected,
-        cardState,
-        radioStyle: this.options.radioStyle,
-      });
-      this.listenTo(newModView, 'changeModerator', (data) => {
-        // if only one moderator should be selected, deselect the other moderators
-        if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
-      });
-      this.$moderatorsWrapper.append(newModView.render().$el);
-      this.removeNotFetched(model.id);
-      this.modCards.push(newModView);
-      // if required, select the first  moderator
-      if (this.options.selectFirst && !this.firstSelected && !this.noneSelected) {
-        this.firstSelected = true;
-        newModView.changeSelectState('selected');
-      }
+    if (!model) throw new Error('Please provide a moderator model.');
+
+    const cardState = this.options.cardState;
+    const newModView = this.createChild(ModCard, {
+      model,
+      purchase: this.options.purchase,
+      notSelected: this.options.notSelected,
+      cardState,
+      radioStyle: this.options.radioStyle,
+    });
+    this.listenTo(newModView, 'modSelectChange', (data) => {
+      // if only one moderator should be selected, deselect the other moderators
+      if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
+    });
+    this.$moderatorsWrapper.append(newModView.render().$el);
+    this.removeNotFetched(model.id);
+    this.modCards.push(newModView);
+    // if required, select the first  moderator
+    if (this.options.selectFirst && !this.firstSelected && !this.noneSelected) {
+      this.firstSelected = true;
+      newModView.changeSelectState('selected');
+    }
+    return newModView;
+  }
+
+  removeMod(md, cl, opts) {
+    if (md) {
+      this.modCards.splice(opts.index, 1)[0].remove();
     }
   }
 
@@ -223,10 +240,24 @@ export default class extends baseVw {
     return this.modCards.length;
   }
 
+  get allIDs() {
+    return this.moderatorsCol.pluck('peerID');
+  }
+
   get selectedIDs() {
     const IDs = [];
     this.modCards.forEach((mod) => {
       if (mod.cardState === 'selected') {
+        IDs.push(mod.model.id);
+      }
+    });
+    return IDs;
+  }
+
+  get unselectedIDs() {
+    const IDs = [];
+    this.modCards.forEach((mod) => {
+      if (mod.cardState !== 'selected') {
         IDs.push(mod.model.id);
       }
     });
@@ -258,7 +289,6 @@ export default class extends baseVw {
     loadTemplate('modals/purchase/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
-        hideSpinner: this.options.hideSpinner,
       }));
 
       super.render();
@@ -266,7 +296,10 @@ export default class extends baseVw {
       this.$moderatorsStatus = this.$('.js-moderatorsStatus');
       this.$moderatorStatusText = this.$('.js-moderatorStatusInner');
 
-      this.moderatorsCol.forEach(mod => this.addMod(mod));
+      this.modCards.forEach(mod => {
+        mod.delegateEvents();
+        this.$moderatorsWrapper.append(mod.render().$el);
+      });
     });
 
     return this;
