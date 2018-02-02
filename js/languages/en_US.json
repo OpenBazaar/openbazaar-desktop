@@ -1467,7 +1467,6 @@
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "notApplicable": "n/a",
-      "vendorFinalizedPayment": "You have manually finalized the order.",
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",

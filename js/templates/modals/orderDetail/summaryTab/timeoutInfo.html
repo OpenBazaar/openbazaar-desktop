@@ -21,11 +21,16 @@
   if (!isCase) {
     tip = ob.ownPeerId === ob.buyer ?
       'Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.' :
-      'Once the clock expires and the order is fulfillled, you can claim payment and finalize the order without support from the moderator.';  
+      'Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator.';  
 
     if (ob.invalidEscrowTimeout) {
       message = 'Invalid escrow timeout in contract. Unable to determine how much time is remaining to open a dispute.';
       messageClass = 'txCtr clrTErr';
+    } else if (ob.isPaymentFinalized) {
+      message = ob.ownPeerId === ob.buyer ?
+        'The vendor has claimed the payment. Please complete the order below whenever you’re ready.' :
+        'You have claimed the payment.'
+      tipClass = 'hide';
     } else if (!ob.isFundingConfirmed) {
       message = `This order can be disputed for <b>${ob.blocksRemaining} blocks</b> or approximately <b>${ob.timeRemaining}</b>. The clock will start when the funding payment is confirmed.`;
     } else if (ob.blocksRemaining <= 0) {
@@ -39,7 +44,7 @@
           tip = 'You and the buyer are given approximately 45 days to open a dispute. Since a dispute was not opened, you can now claim the payment.';
         } else {
           message = 'Time is up! A dispute can no longer be opened on this order.';
-          tipClass = 'hide'
+          tipClass = 'hide';
         }
       }
 
@@ -59,7 +64,7 @@
     <div class="flexCol flexCent gutterVSm">
       <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
       <% if (ob.showDisputeBtn) { %>
-        <button class="btn tx5b clrErr clrBrDec1 clrTOnEmp js-disputeOrder">Dispute Order</button>
+        <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph js-disputeOrder">Dispute Order</button>
       <% } %>
       <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
         <%= ob.processingButton({

@@ -90,10 +90,6 @@ export default class extends BaseVw {
         this.completeOrderForm = null;
       }
 
-      if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
-        this.renderPaymentFinalized();
-      }
-
       this.renderTimeoutInfoView();
     });
 
@@ -270,6 +266,17 @@ export default class extends BaseVw {
         }
       });
     }
+
+    this.listenTo(orderEvents, 'releaseEscrowComplete', e => {
+      if (e.id === this.orderId) {
+        this.model.set('state', 'PAYMENT_FINALIZED');
+      }
+    });
+
+    setTimeout(() => {
+      this.model.set('state', 'PAYMENT_FINALIZED');
+      console.log('slick willy willy');
+    }, 1500);
   }
 
   className() {
@@ -315,10 +322,17 @@ export default class extends BaseVw {
       ],
     };
 
+    // (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)
+
+    // case 'PAYMENT_FINALIZED':
+    //   state.currentState = 1;
+    //   state.disputeState = 0;
+    //   break;
+
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED' ||
-      (orderState === 'COMPLETED' && this.contract.get('dispute') !== undefined) ||
-      (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)) {
+      (['COMPLETED', 'PAYMENT_FINALIZED'].includes(orderState) &&
+        this.contract.get('dispute') !== undefined)) {
       if (!this.isCase()) {
         state.states = [
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
@@ -338,10 +352,6 @@ export default class extends BaseVw {
             break;
           case 'COMPLETED':
             state.currentState = 4;
-            state.disputeState = 0;
-            break;
-          case 'PAYMENT_FINALIZED':
-            state.currentState = 1;
             state.disputeState = 0;
             break;
           default:
@@ -371,6 +381,15 @@ export default class extends BaseVw {
       ];
       state.currentState = 2;
       state.disputeState = 0;
+    } else if (orderState === 'DECLINED' || orderState === 'CANCELED' ||
+      orderState === 'REFUNDED') {
+      state.states = [
+        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.paid'),
+        app.polyglot.t(
+          `orderDetail.summaryTab.orderDetails.progressBarStates.${orderState.toLowerCase()}`),
+      ];
+      state.currentState = 2;
+      state.disputeState = 0;
     } else {
       switch (orderState) {
         case 'PENDING':
@@ -389,6 +408,15 @@ export default class extends BaseVw {
           break;
         case 'PAYMENT_FINALIZED':
           state.currentState = 1;
+
+          if (this.contract.get('vendorOrderConfirmation')) {
+            state.currentState = 2;
+          }
+
+          if (this.contract.get('vendorOrderFulfillment')) {
+            state.currentState = 3;
+          }
+
           break;
         default:
           state.currentState = 0;
@@ -512,7 +540,7 @@ export default class extends BaseVw {
     const cryptoCur = getServerCurrency();
     const orderState = this.model.get('state');
     const shouldShow = (this.isOrderStateDisputable ||
-      orderState === 'DISPUTED') && cryptoCur.hasEscrowTimeout;
+      ['DISPUTED', 'PAYMENT_FINALIZED'].includes(orderState)) && cryptoCur.hasEscrowTimeout;
 
     if (!shouldShow) {
       if (this.timeoutInfo) this.timeoutInfo.remove();
@@ -534,12 +562,17 @@ export default class extends BaseVw {
       blockTime: cryptoCur.blockTime,
       isCompletable: orderState === 'FULFILLED',
       isPaymentClaimable: false,
+      isPaymentFinalized: false,
       showDisputeBtn: false,
       showDiscussBtn: false,
     };
 
     if (!height) {
+      // temporary, this will not be needed once this server issue is completed:
+      // https://github.com/OpenBazaar/openbazaar-go/issues/843
       state.awaitingBlockHeight = true;
+    } else if (orderState === 'PAYMENT_FINALIZED') {
+      state.isPaymentFinalized = true;
     } else {
       let escrowTimeoutHours;
 
@@ -958,11 +991,6 @@ export default class extends BaseVw {
       });
   }
 
-  renderPaymentFinalized() {
-    this.getCachedEl('.js-paymentFinalizedMsg')
-      .toggleClass('hide', this.model.get('state') !== 'PAYMENT_FINALIZED');
-  }
-
   get $subSections() {
     return this._$subSections ||
       (this._$subSections = this.$('.js-subSections'));
@@ -989,8 +1017,6 @@ export default class extends BaseVw {
         initialState: this.progressBarState,
       });
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
-
-      this.renderPaymentFinalized();
 
       if (this.orderDetails) this.orderDetails.remove();
       this.orderDetails = this.createChild(OrderDetails, {
