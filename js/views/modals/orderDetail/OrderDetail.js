@@ -21,7 +21,6 @@ import Contract from './Contract';
 import FulfillOrder from './FulfillOrder';
 import DisputeOrder from './DisputeOrder';
 import ResolveDispute from './ResolveDispute';
-import ActionBar from './ActionBar.js';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -55,12 +54,6 @@ export default class extends BaseModal {
 
     this.listenTo(orderEvents, 'fulfillOrderComplete', () => {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
-    });
-
-    this.listenTo(this.model, 'change:state', () => {
-      if (this.actionBar) {
-        this.actionBar.setState(this.actionBarButtonState);
-      }
     });
 
     this.listenTo(orderEvents, 'openDisputeComplete', () => {
@@ -468,27 +461,6 @@ export default class extends BaseModal {
     return count;
   }
 
-  /**
-   * Returns whether different action bar buttons should be displayed or not
-   * based upon the order state.
-   */
-  get actionBarButtonState() {
-    const orderState = this.model.get('state');
-    let showDisputeOrderButton = false;
-
-    if (this.buyerId === app.profile.id) {
-      showDisputeOrderButton = this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
-    } else if (this.vendorId === app.profile.id) {
-      showDisputeOrderButton = this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
-    }
-
-    return {
-      showDisputeOrderButton,
-    };
-  }
-
   get $unreadChatMessagesBadge() {
     return this._$unreadChatMessagesBadge ||
       (this._$unreadChatMessagesBadge = this.$('.js-unreadChatMessagesBadge'));
@@ -522,14 +494,6 @@ export default class extends BaseModal {
 
       if (!state.isFetching && !state.fetchError) {
         this.selectTab(this.activeTab);
-
-        if (this.actionBar) this.actionBar.remove();
-        this.actionBar = this.createChild(ActionBar, {
-          orderId: this.model.id,
-          initialState: this.actionBarButtonState,
-        });
-        this.$('.js-actionBarContainer').html(this.actionBar.render().el);
-        this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
       }
     });
 
