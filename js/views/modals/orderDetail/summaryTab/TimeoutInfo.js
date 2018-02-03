@@ -42,15 +42,20 @@ export default class extends BaseVw {
     return {
       'click .js-disputeOrder': 'onClickDisputeOrder',
       'click .js-claimPayment': 'onClickClaimPayment',
+      'click .js-discussOrder': 'onClickDiscussOrder',
     };
   }
 
   onClickDisputeOrder() {
-    this.trigger('clickDispureOrder');
+    this.trigger('clickDisputeOrder');
   }
 
   onClickClaimPayment() {
     releaseEscrow(this.orderId);
+  }
+
+  onClickDiscussOrder() {
+    this.trigger('clickDiscussOrder');
   }
 
   render() {

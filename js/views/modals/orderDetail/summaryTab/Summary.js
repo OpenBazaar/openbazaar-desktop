@@ -272,11 +272,6 @@ export default class extends BaseVw {
         this.model.set('state', 'PAYMENT_FINALIZED');
       }
     });
-
-    setTimeout(() => {
-      this.model.set('state', 'PAYMENT_FINALIZED');
-      console.log('slick willy willy');
-    }, 1500);
   }
 
   className() {
@@ -561,10 +556,12 @@ export default class extends BaseVw {
       isFundingConfirmed: false,
       blockTime: cryptoCur.blockTime,
       isCompletable: orderState === 'FULFILLED',
+      isDisputed: orderState === 'DISPUTED',
+      hasDisputeEscrowExpired: false,
       isPaymentClaimable: false,
       isPaymentFinalized: false,
       showDisputeBtn: false,
-      showDiscussBtn: false,
+      showDiscussBtn: orderState === 'DISPUTED',
     };
 
     if (!height) {
@@ -645,8 +642,12 @@ export default class extends BaseVw {
       this.getCachedEl('.js-timeoutInfoContainer')
         .html(this.timeoutInfo.render().el);
 
-      this.listenTo(this.timeoutInfo, 'clickDispureOrder', () => {
-        this.trigger('clickDispureOrder');
+      this.listenTo(this.timeoutInfo, 'clickDisputeOrder', () => {
+        this.trigger('clickDisputeOrder');
+      });
+
+      this.listenTo(this.timeoutInfo, 'clickDiscussOrder', () => {
+        this.trigger('clickDiscussOrder');
       });
 
       this.listenTo(app.walletBalance, 'change:height',

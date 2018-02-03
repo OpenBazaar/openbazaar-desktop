@@ -26,6 +26,10 @@
     if (ob.invalidEscrowTimeout) {
       message = 'Invalid escrow timeout in contract. Unable to determine how much time is remaining to open a dispute.';
       messageClass = 'txCtr clrTErr';
+    } else if (ob.isDisputed) {
+      if (!ob.hasDisputeEscrowExpired) {
+        message = 
+      }
     } else if (ob.isPaymentFinalized) {
       message = ob.ownPeerId === ob.buyer ?
         'The vendor has claimed the payment. Please complete the order below whenever you’re ready.' :
@@ -71,7 +75,10 @@
           className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
           btnText: 'Claim Payment'
         }) %>        
-      <% } %>      
+      <% } %>
+      <% if (ob.showDiscussBtn) { %>
+        <button class="btn tx5b clrP clrBr js-discussOrder">Discuss Order</button>
+      <% } %>
     </div>
   <% } %>
 </div>

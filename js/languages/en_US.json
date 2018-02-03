@@ -1467,6 +1467,8 @@
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "notApplicable": "n/a",
+      "vendorFinalizedPayment": "You have claimed the payment.",
+      "vendorFinalizedPaymentBuyerView": "The vendor has claimed the payment.",
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",

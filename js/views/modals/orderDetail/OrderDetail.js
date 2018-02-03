@@ -332,8 +332,10 @@ export default class extends BaseModal {
       () => this.selectTab('fulfillOrder'));
     this.listenTo(view, 'clickResolveDispute',
       () => this.selectTab('resolveDispute'));
-    this.listenTo(view, 'clickDispureOrder',
+    this.listenTo(view, 'clickDisputeOrder',
       () => this.selectTab('disputeOrder'));
+    this.listenTo(view, 'clickDiscussOrder',
+      () => this.selectTab('discussion'));
 
     return view;
   }
