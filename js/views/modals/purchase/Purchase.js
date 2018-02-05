@@ -223,7 +223,7 @@ export default class extends BaseModal {
 
 
   onNoValidModerators() {
-   // this.moderationOn(false);
+    this.order.moderated = false;
     this.setState({ noValidModerators: true });
   }
 

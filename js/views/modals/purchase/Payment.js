@@ -170,7 +170,7 @@ export default class extends BaseVw {
 
   get amountDueLine() {
     return app.polyglot.t('purchase.pendingSection.pay',
-      { amountBTC: formatCurrency(this.balanceRemaining, 'BTC') });
+      { amountBTC: formatCurrency(this.balanceRemaining, getServerCurrency().code) });
   }
 
   get qrDataUri() {
