@@ -48,8 +48,9 @@ export default class extends BaseVw {
 
     this.contract = contract;
 
-    console.log('moo');
+    console.log('moo poo');
     window.moo = contract;
+    window.poo = this.model;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -531,16 +532,27 @@ export default class extends BaseVw {
     return false;
   }
 
+  setDisputeCountdownTimeout(...args) {
+    clearTimeout(this.disputeCountdownTimeout);
+    this.disputeCountdownTimeout = setTimeout(...args);
+  }
+
   renderTimeoutInfoView() {
     const cryptoCur = getServerCurrency();
     const orderState = this.model.get('state');
     const shouldShow = (this.isOrderStateDisputable ||
       ['DISPUTED', 'PAYMENT_FINALIZED'].includes(orderState)) && cryptoCur.hasEscrowTimeout;
+    const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
 
     if (!shouldShow) {
       if (this.timeoutInfo) this.timeoutInfo.remove();
+      clearTimeout(this.disputeCountdownTimeout);
       return;
     }
+
+    // temporarily upping the moment threshold of number of days before month is used,
+    // so in the escrow timeouts 45 is represented as '45 days' instead of '1 month'.
+    moment.relativeTimeThreshold('d', 364);
 
     const height = app.walletBalance.get('height');
     // TODO: set these as defaults in the View
@@ -550,9 +562,10 @@ export default class extends BaseVw {
       ownPeerId: app.profile.id,
       buyer: this.buyer.id,
       vendor: this.vendor.id,
+      // buyer: this.vendor.id,
+      // vendor: this.buyer.id,
       moderator: this.moderator && this.moderator.id || undefined,
       awaitingBlockHeight: false,
-      invalidEscrowTimeout: false,
       isFundingConfirmed: false,
       blockTime: cryptoCur.blockTime,
       isCompletable: orderState === 'FULFILLED',
@@ -572,6 +585,7 @@ export default class extends BaseVw {
       state.isPaymentFinalized = true;
     } else {
       let escrowTimeoutHours;
+      let disputeStartTime;
 
       try {
         escrowTimeoutHours = this.contract.get('vendorListings')
@@ -583,36 +597,71 @@ export default class extends BaseVw {
         // pass - will be handled by setting invalidEscrowTimeout below
       }
 
-      if (typeof escrowTimeoutHours !== 'number' || isNaN(escrowTimeoutHours)) {
+      if (orderState === 'DISPUTED') {
+        try {
+          disputeStartTime = this.contract.get('dispute').timestamp;
+        } catch (e) {
+          // pass - will be handled below
+        }
+      }
+
+      if (
+        (typeof escrowTimeoutHours !== 'number' || isNaN(escrowTimeoutHours)) ||
+        (orderState === 'DISPUTED' && !Date.parse(disputeStartTime))
+      ) {
         // contract probably forged
-        // state.invalidEscrowTimeout = true;
         state = {
           ...state,
-          invalidEscrowTimeout: true,
+          invalidContractData: true,
           showDisputeBtn: this.isOrderStateDisputable,
         };
       } else {
         if (this.isCase()) {
           // pass for now
+        } else if (orderState === 'DISPUTED') {
+          escrowTimeoutHours = 3 * 24;
+          const msSinceDisputeStart = Date.now() - (new Date(disputeStartTime)).getTime();
+          const msRemaining = (escrowTimeoutHours * 60 * 60 * 1000) -
+            msSinceDisputeStart;
+          const hasDisputeEscrowExpired = msRemaining <= 0;
+
+          state = {
+            ...state,
+            hasDisputeEscrowExpired,
+            timeRemaining: hasDisputeEscrowExpired ? 0 :
+              moment(Date.now()).from(moment(Date.now() + msRemaining), true),
+            totalTime: moment(Date.now())
+              .from(
+                moment(Date.now() + (escrowTimeoutHours * 60 * 60 * 1000)),
+                  true
+              ),
+            isPaymentClaimable: hasDisputeEscrowExpired,
+            showDiscussBtn: !hasDisputeEscrowExpired,
+          };
+
+          let checkBackInMs = 5000;
+
+          if (msRemaining > 1000 * 60 * 60 * 24) {
+            // greater than a day
+            checkBackInMs = 1000 * 60 * 60 * 20;
+          } else if (msRemaining > 1000 * 60 * 60) {
+            // greater than a hour
+            checkBackInMs = 1000 * 60 * 60;
+          }
+
+          this.setDisputeCountdownTimeout(
+            () => this.renderTimeoutInfoView(),
+            checkBackInMs
+          );
         } else {
           const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = this.fundedBlockHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - this.fundedBlockHeight) :
             blocksPerTimeout;
-          const secondsRemaining = blocksRemaining * cryptoCur.blockTime;
-          const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
-
-          console.log(`is order state disputable: ${this.isOrderStateDisputable}`);
-          console.log(`the current height is ${app.walletBalance.get('height')}`);
-          console.log(`the funded block height is ${this.fundedBlockHeight}`);
-          console.log(`the blocks in a timeout are ${blocksPerTimeout}`);
-
-          // temporarily upping the moment threshold of number of days before month is used,
-          // so 45 is represented as '45 days' instead of '1 month'.
-          moment.relativeTimeThreshold('d', 300);
+          const msRemaining = blocksRemaining * cryptoCur.blockTime;
 
           const timeRemaining =
-            moment(Date.now()).from(moment(Date.now() + secondsRemaining), true);
+            moment(Date.now()).from(moment(Date.now() + msRemaining), true);
 
           state = {
             ...state,
@@ -620,14 +669,14 @@ export default class extends BaseVw {
             blocksRemaining,
             timeRemaining,
             showDisputeBtn: this.isOrderStateDisputable && blocksRemaining > 0,
-            isPaymentClaimable: ['FULFILLED', 'DISPUTED'].includes(orderState) &&
-              blocksRemaining <= 0,
+            isPaymentClaimable: orderState === 'FULFILLED' && blocksRemaining <= 0,
           };
-
-          moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
         }
       }
     }
+
+    // restore the days timeout threshold
+    moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
 
     console.dir(state);
 
@@ -998,6 +1047,7 @@ export default class extends BaseVw {
   }
 
   remove() {
+    clearTimeout(this.disputeCountdownTimeout);
     super.remove();
   }
 

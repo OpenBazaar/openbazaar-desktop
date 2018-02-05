@@ -23,12 +23,23 @@
       'Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.' :
       'Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator.';  
 
-    if (ob.invalidEscrowTimeout) {
-      message = 'Invalid escrow timeout in contract. Unable to determine how much time is remaining to open a dispute.';
+    if (ob.invalidContractData) {
+      message = ob.isDisputed ?
+        'The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.' :
+        'The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.';        
       messageClass = 'txCtr clrTErr';
+      tipClass = 'hide';
     } else if (ob.isDisputed) {
       if (!ob.hasDisputeEscrowExpired) {
-        message = 
+        message = `The order is being disputed. The moderator has approximately ${ob.timeRemaining} to process the dispute and make a decision.`;
+        tip = ob.ownPeerId === ob.buyer ?
+          `Once a dispute is opened, the moderator has approximately ${ob.totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.` :
+          `Once a dispute is opened, the moderator has approximately ${ob.totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.`;
+      } else {
+        message = ob.ownPeerId === ob.buyer ?
+          'Time is up! The moderator failed to make a decision in time. The vendor can now claim the funds.' :
+          'Time is up! The moderator failed to make a decision in time. You can now claim the funds.';
+        tipClass = 'hide';
       }
     } else if (ob.isPaymentFinalized) {
       message = ob.ownPeerId === ob.buyer ?
@@ -67,18 +78,20 @@
   <% } else if (!isCase) { %>
     <div class="flexCol flexCent gutterVSm">
       <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
-      <% if (ob.showDisputeBtn) { %>
-        <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph js-disputeOrder">Dispute Order</button>
-      <% } %>
-      <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
-        <%= ob.processingButton({
-          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
-          btnText: 'Claim Payment'
-        }) %>        
-      <% } %>
-      <% if (ob.showDiscussBtn) { %>
-        <button class="btn tx5b clrP clrBr js-discussOrder">Discuss Order</button>
-      <% } %>
+      <div class="flexCent gutterH">
+        <% if (ob.showDisputeBtn) { %>
+          <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph js-disputeOrder">Dispute Order</button>
+        <% } %>
+        <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
+            btnText: 'Claim Payment'
+          }) %>        
+        <% } %>
+        <% if (ob.showDiscussBtn) { %>
+          <button class="btn tx5b clrP clrBr js-discussOrder">Discuss Order</button>
+        <% } %>
+      </div>
     </div>
   <% } %>
 </div>
