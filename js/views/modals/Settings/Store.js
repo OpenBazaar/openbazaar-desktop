@@ -108,7 +108,6 @@ export default class extends baseVw {
 
   clickSubmitModByID() {
     let modID = this.getCachedEl('.js-submitModByIDInput').val();
-    const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
 
     this.getCachedEl('.js-submitModByIDInputError').addClass('hide');
 
@@ -120,8 +119,13 @@ export default class extends baseVw {
 
       if (isMultihash(modID)) {
         if (!this.currentMods.includes(modID)) {
-          this.modsByID.getModeratorsByID([modID]);
-          this.getCachedEl('.js-modListByID').removeClass('hide');
+          if (modID !== app.profile.id) {
+            this.modsByID.getModeratorsByID([modID]);
+            this.getCachedEl('.js-modListByID').removeClass('hide');
+          } else {
+            const ownGUID = app.polyglot.t('settings.storeTab.errors.ownGUID', { guid: modID });
+            this.showModByIDError(ownGUID);
+          }
         } else {
           const dupeGUID = app.polyglot.t('settings.storeTab.errors.dupeGUID', { guid: modID });
           this.showModByIDError(dupeGUID);
@@ -131,6 +135,7 @@ export default class extends baseVw {
         this.showModByIDError(notGUID);
       }
     } else {
+      const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
       this.showModByIDError(blankError);
     }
   }

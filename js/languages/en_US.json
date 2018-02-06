@@ -674,6 +674,7 @@
         "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "You must add a moderator ID or handle",
         "notGUID": "%{guid} is not a valid peer ID",
+        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
         "dupeGUID": "%{guid} is one of your current moderators."
       }
     },

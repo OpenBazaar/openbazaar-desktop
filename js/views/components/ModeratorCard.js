@@ -1,9 +1,9 @@
-import BaseVw from './baseVw';
-import loadTemplate from '../utils/loadTemplate';
-import app from '../app';
-import Profile from '../models/profile/Profile';
-import { launchModeratorDetailsModal } from '../utils/modalManager';
-import { getLangByCode } from '../data/languages';
+import BaseVw from '../baseVw';
+import loadTemplate from '../../utils/loadTemplate';
+import app from '../../app';
+import Profile from '../../models/profile/Profile';
+import { launchModeratorDetailsModal } from '../../utils/modalManager';
+import { getLangByCode } from '../../data/languages';
 
 
 export default class extends BaseVw {
@@ -87,7 +87,7 @@ export default class extends BaseVw {
         });
     }
 
-    loadTemplate('moderatorCard.html', (t) => {
+    loadTemplate('components/moderatorCard.html', (t) => {
       this.$el.html(t({
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),

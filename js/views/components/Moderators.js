@@ -7,7 +7,7 @@ import { openSimpleMessage } from '../modals/SimpleMessage';
 import Moderators from '../../collections/Moderators';
 import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
-import ModCard from '../ModeratorCard';
+import ModCard from './ModeratorCard';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -114,8 +114,8 @@ export default class extends baseVw {
     const buyerCur = app.serverConfig.cryptoCurrency;
     const modCurs = profile.moderatorInfo && profile.moderatorInfo.acceptedCurrencies || [];
     const validCur = modCurs.includes(buyerCur);
-    // if the moderator is on the list of IDs to exclude, remove them
-    const excluded = this.excludeIDs.includes(profile.peerID);
+    // if the moderator is on the list of IDs to exclude, or is yourself, remove them
+    const excluded = this.excludeIDs.includes(profile.peerID) || profile.peerID === app.profile.id;
 
     if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
@@ -130,10 +130,8 @@ export default class extends baseVw {
       throw new Error('Please provide the list of moderators as an array.');
     }
 
-    let IDs = IDparam;
-
     // don't get any that have already been added
-    IDs = _.without(IDs, this.allIDs);
+    const IDs = _.without(IDparam, this.allIDs);
 
 
     const op = this.options;
