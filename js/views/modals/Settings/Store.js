@@ -198,7 +198,6 @@ export default class extends baseVw {
 
           const newSelected = _.without(this.currentMods, ...this.modsSelected.selectedIDs);
           if (newSelected.length) this.modsSelected.getModeratorsByID(newSelected);
-
         })
         .fail((...args) => {
           // if at least one save fails, the save has failed.

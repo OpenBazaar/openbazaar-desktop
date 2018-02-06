@@ -86,7 +86,7 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
-    this.excludeIDs = opts.excludeIDs
+    this.excludeIDs = opts.excludeIDs;
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
       const view = this.addMod(model);
