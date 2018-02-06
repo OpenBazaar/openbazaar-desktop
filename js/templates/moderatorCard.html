@@ -1,9 +1,10 @@
 <%
    // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
    const loaded = !!ob.name;
+   const isDisabled = (!ob.valid && !ob.controlsOnInvalid) || !loaded ? 'disabled' : '';
 %>
 
-<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <% if(!ob.valid) print('disabled'); if(!loaded) print('disabled');%>">
+<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <%= isDisabled %>">
   <% if (ob.radioStyle) { %>
     <div class="flexNoShrink">
       <div class="btnRadio">
@@ -59,7 +60,7 @@
     <% } %>
   </div>
   <div class="flexNoShrink">
-    <% if (ob.valid) { %>
+    <% if (ob.valid || ob.controlsOnInvalid) { %>
       <div class="flexCol gutterV">
         <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
           <%= ob.polyT('moderatorCard.view') %>

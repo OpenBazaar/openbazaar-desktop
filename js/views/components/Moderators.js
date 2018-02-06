@@ -21,8 +21,28 @@ export default class extends baseVw {
       throw new Error('Please provide a default not selected state.');
     }
 
+    /**
+     * @namespace
+     * @property {string}  apiPath           - Current options are fetchprofiles and moderators.
+     * @property {boolean} async             - Return profiles via websocket.
+     * @property {boolean} useCache          - Use cached data for faster speed.
+     * @property {array}   moderatorIDs      - list of moderators to retrieve. If none get all.
+     * @property {array}   excludeIDs        - list of moderators to not use.
+     * @property {string}  method            - POST or GET
+     * @property {string}  include           - If apiPath is moderator, set to 'profile' or only the
+     *                                         peerIDs of each moderator are returned.
+     * @property {boolean} purchase          - If this is used in a purchase, pass this to the
+     *                                         child moderator card views.
+     * @property {boolean} singleSelect      - Allow only one moderator to be selected at a time.
+     * @property {boolean} selectFirst       - Pre-select the first moderator.
+     * @property {boolean} radioStyle        - Show the moderator cards with radio buttons.
+     * @property {boolean} showInvalid       - Show invalid moderator cards.
+     * @property {boolean} controlsOnInvalid - Show controls on invalid cards so they can be removed
+     *                                         or otherwise acted on.
+     * @property {string}  wrapperClasses    - Add classes to the card container.
+     */
+
     const opts = {
-      // set defaults
       apiPath: 'fetchprofiles',
       async: true,
       useCache: true,
@@ -30,13 +50,13 @@ export default class extends baseVw {
       excludeIDs: [],
       method: 'POST',
       include: '',
-      purchase: false, // if this is a child of a purchase, pass to child moderator views
+      purchase: false,
       singleSelect: false,
       selectFirst: false,
       radioStyle: false,
       showInvalid: false,
+      controlsOnInvalid: false,
       wrapperClasses: '',
-      // defaults will be overwritten by passed in options
       ...options,
     };
 
@@ -47,8 +67,8 @@ export default class extends baseVw {
       if (opts.moderatorIDs.length) {
         throw new Error('If the apiPath is moderators, a list of IDs is not used.');
       }
-      if (opts.include && opts.include !== 'profile') {
-        throw new Error('The only valid option currently for include is profile');
+      if (!opts.include || opts.include !== 'profile') {
+        throw new Error('If the apiPath is moderators, include must be set to profile.');
       }
     }
     if (opts.apiPath === 'fetchprofiles' && opts.include) {
@@ -66,6 +86,7 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
+    this.excludeIDs = opts.excludeIDs
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
       const view = this.addMod(model);
@@ -94,7 +115,7 @@ export default class extends baseVw {
     const modCurs = profile.moderatorInfo && profile.moderatorInfo.acceptedCurrencies || [];
     const validCur = modCurs.includes(buyerCur);
     // if the moderator is on the list of IDs to exclude, remove them
-    const excluded = this.options.excludeIDs.includes(profile.peerID);
+    const excluded = this.excludeIDs.includes(profile.peerID);
 
     if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
@@ -186,7 +207,7 @@ export default class extends baseVw {
   checkNotFetched() {
     const nfYet = this.unfetchedMods.length;
     if (nfYet === 0) {
-      // all ids have been fetced
+      // all ids have been fetched
       this.$moderatorsStatus.addClass('hide');
       this.$moderatorStatusText.text('');
       // check if none of the loaded moderators are valid
@@ -199,9 +220,6 @@ export default class extends baseVw {
     }
   }
 
-  renderMod(view) {
-
-  }
 
   addMod(model) {
     if (!model) throw new Error('Please provide a moderator model.');
@@ -213,6 +231,7 @@ export default class extends baseVw {
       notSelected: this.options.notSelected,
       cardState,
       radioStyle: this.options.radioStyle,
+      controlsOnInvalid: this.options.controlsOnInvalid,
     });
     this.listenTo(newModView, 'modSelectChange', (data) => {
       // if only one moderator should be selected, deselect the other moderators
@@ -233,6 +252,14 @@ export default class extends baseVw {
     if (md) {
       this.modCards.splice(opts.index, 1)[0].remove();
     }
+  }
+
+  get excludeIDs() {
+    return this._excludeIDs;
+  }
+
+  set excludeIDs(IDs) {
+    this._excludeIDs = IDs;
   }
 
   get modCount() {
@@ -286,7 +313,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/purchase/moderators.html', t => {
+    loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
       }));

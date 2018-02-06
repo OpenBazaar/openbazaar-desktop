@@ -40,15 +40,18 @@ export default class extends baseVw {
 
     this.modsSelected = new Moderators({
       async: true,
+      useCache: false,
       moderatorIDs: this.currentMods,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
       notSelected: 'deselected',
       showInvalid: true,
+      controlsOnInvalid: true,
     });
 
     this.modsByID = new Moderators({
       async: false,
+      useCache: false,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       excludeIDs: this.currentMods,
       cardState: 'unselected',
@@ -61,6 +64,7 @@ export default class extends baseVw {
 
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
+      useCache: false,
       async: true,
       method: 'GET',
       include: 'profile',
@@ -187,10 +191,14 @@ export default class extends baseVw {
           this.modsSelected.removeModeratorsByID(this.modsSelected.unselectedIDs);
           this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
           this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
+
           // add new moderators to the selected collection
           this.currentMods = this.settings.get('storeModerators');
+          this.modsByID.excludeIDs = this.currentMods;
+
           const newSelected = _.without(this.currentMods, ...this.modsSelected.selectedIDs);
-          this.modsSelected.getModeratorsByID(newSelected);
+          if (newSelected.length) this.modsSelected.getModeratorsByID(newSelected);
+
         })
         .fail((...args) => {
           // if at least one save fails, the save has failed.
