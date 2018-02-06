@@ -208,7 +208,7 @@ export default class extends baseVw {
         text: app.polyglot.t('transactions.filters.fulfilled'),
         checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
         className: 'filter',
-        targetState: [5],
+        targetState: [5, 13],
       },
       {
         id: 'filterRefunded',
