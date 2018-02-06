@@ -562,8 +562,6 @@ export default class extends BaseVw {
       ownPeerId: app.profile.id,
       buyer: this.buyer.id,
       vendor: this.vendor.id,
-      // buyer: this.vendor.id,
-      // vendor: this.buyer.id,
       moderator: this.moderator && this.moderator.id || undefined,
       awaitingBlockHeight: false,
       isFundingConfirmed: false,
@@ -621,6 +619,10 @@ export default class extends BaseVw {
         };
       } else {
         let hasDisputeEscrowExpired;
+        state.totalTime = moment(Date.now())
+          .from(
+            moment(Date.now() + (escrowTimeoutHours * 60 * 60 * 1000)), true
+          );
 
         if (this.isCase() || orderState === 'DISPUTED') {
           // escrowTimeoutHours = 3 * 24;
@@ -630,18 +632,11 @@ export default class extends BaseVw {
             msSinceDisputeStart;
           hasDisputeEscrowExpired = msRemaining <= 0;
 
-          console.log(`the ms remaining is ${msRemaining}`);
-
           state = {
             ...state,
             hasDisputeEscrowExpired,
             timeRemaining: hasDisputeEscrowExpired ? 0 :
               moment(Date.now()).from(moment(Date.now() + msRemaining), true),
-            totalTime: moment(Date.now())
-              .from(
-                moment(Date.now() + (escrowTimeoutHours * 60 * 60 * 1000)),
-                  true
-              ),
             showDiscussBtn: !hasDisputeEscrowExpired,
           };
 
@@ -678,6 +673,7 @@ export default class extends BaseVw {
             isPaymentClaimable: hasDisputeEscrowExpired,
           };
         } else {
+          // escrowTimeoutHours = 30 * 24;
           const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = this.fundedBlockHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - this.fundedBlockHeight) :
@@ -701,8 +697,6 @@ export default class extends BaseVw {
 
     // restore the days timeout threshold
     moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
-
-    console.dir(state);
 
     if (this.timeoutInfo) {
       this.timeoutInfo.setState(state);

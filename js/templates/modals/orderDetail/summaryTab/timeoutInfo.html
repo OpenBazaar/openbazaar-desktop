@@ -36,7 +36,7 @@
 
     if (ob.isDisputed) {
       if (!ob.hasDisputeEscrowExpired) {
-        message = `The order is being disputed. The moderator has approximately ${ob.timeRemaining} to process the dispute and make a decision.`;
+        message = `The order is being disputed. The moderator has approximately <b>${ob.timeRemaining}</b> to process the dispute and make a decision.`;
         tip = ob.ownPeerId === ob.buyer ?
           `Once a dispute is opened, the moderator has approximately ${ob.totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.` :
           `Once a dispute is opened, the moderator has approximately ${ob.totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.`;
@@ -56,12 +56,12 @@
     } else if (ob.blocksRemaining <= 0) {
       if (ob.ownPeerId === ob.buyer) {
         message = 'Time is up! A dispute can no longer be opened on this order.';
-        tip = 'You and the vendor are given approximately 45 days to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.';
+        tip = 'You and the vendor are given approximately ${ob.totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.';
       } else {
         // it's the vendor
         if (ob.isPaymentClaimable) {
           message = 'Time is up! Claim payment for this order whenever you’re ready.';
-          tip = 'You and the buyer are given approximately 45 days to open a dispute. Since a dispute was not opened, you can now claim the payment.';
+          tip = 'You and the buyer are given approximately ${ob.totalTime} to open a dispute. Since a dispute was not opened, you can now claim the payment.';
         } else {
           message = 'Time is up! A dispute can no longer be opened on this order.';
           tipClass = 'hide';
@@ -79,8 +79,8 @@
     // mod looking at case
     if (!ob.hasDisputeEscrowExpired) {
       message = ob.buyerOpened ?
-        `The buyer is disputing this order. You have ${ob.timeRemaining} to process the dispute and make a decision.` :
-        `The vendor is disputing this order. You have ${ob.timeRemaining} to process the dispute and make a decision.`;
+        `The buyer is disputing this order. You have <b>${ob.timeRemaining}</b> to process the dispute and make a decision.` :
+        `The vendor is disputing this order. You have <b>${ob.timeRemaining}</b> to process the dispute and make a decision.`;
     } else {
       message = 'Time is up! You failed to make a decision in time. The vendor can now claim the funds.';
     }

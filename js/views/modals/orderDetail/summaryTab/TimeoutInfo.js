@@ -17,8 +17,17 @@ export default class extends BaseVw {
     this.orderId = options.orderId;
 
     this._state = {
-      isClaimingPayment: releasingEscrow(this.orderId),
+      awaitingBlockHeight: false,
+      isFundingConfirmed: false,
+      isCompletable: false,
+      isDisputed: false,
+      hasDisputeEscrowExpired: false,
+      isPaymentClaimable: false,
+      isPaymentFinalized: false,
+      showDisputeBtn: false,
+      showDiscussBtn: false,
       showResolveDisputeBtn: false,
+      isClaimingPayment: releasingEscrow(this.orderId),      
       ...options.initialState || {},
     };
 
