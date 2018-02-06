@@ -48,10 +48,6 @@ export default class extends BaseVw {
 
     this.contract = contract;
 
-    console.log('moo poo');
-    window.moo = contract;
-    window.poo = this.model;
-
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
 
@@ -555,9 +551,6 @@ export default class extends BaseVw {
     moment.relativeTimeThreshold('d', 364);
 
     const height = app.walletBalance.get('height');
-    // TODO: set these as defaults in the View
-    // TODO
-    // TODO
     let state = {
       ownPeerId: app.profile.id,
       buyer: this.buyer.id,
@@ -691,6 +684,9 @@ export default class extends BaseVw {
             showDisputeBtn: this.isOrderStateDisputable && blocksRemaining > 0,
             isPaymentClaimable: orderState === 'FULFILLED' && blocksRemaining <= 0,
           };
+
+          this.listenToOnce(app.walletBalance, 'change:height',
+            () => this.renderTimeoutInfoView());
         }
       }
     }
@@ -719,9 +715,6 @@ export default class extends BaseVw {
 
       this.listenTo(this.timeoutInfo, 'clickResolveDispute',
         () => this.trigger('clickResolveDispute'));
-
-      this.listenTo(app.walletBalance, 'change:height',
-        () => this.renderTimeoutInfoView());
     }
   }
 
