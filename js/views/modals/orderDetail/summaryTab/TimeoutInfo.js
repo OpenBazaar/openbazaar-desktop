@@ -18,6 +18,7 @@ export default class extends BaseVw {
 
     this._state = {
       isClaimingPayment: releasingEscrow(this.orderId),
+      showResolveDisputeBtn: false,
       ...options.initialState || {},
     };
 
@@ -32,6 +33,12 @@ export default class extends BaseVw {
         this.setState({ isClaimingPayment: false });
       }
     });
+
+    this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
+      this.setState({
+        showResolveDisputeBtn: false,
+      });
+    });
   }
 
   className() {
@@ -43,6 +50,7 @@ export default class extends BaseVw {
       'click .js-disputeOrder': 'onClickDisputeOrder',
       'click .js-claimPayment': 'onClickClaimPayment',
       'click .js-discussOrder': 'onClickDiscussOrder',
+      'click .js-resolveDispute': 'onClickResolveDispute',
     };
   }
 
@@ -56,6 +64,10 @@ export default class extends BaseVw {
 
   onClickDiscussOrder() {
     this.trigger('clickDiscussOrder');
+  }
+
+  onClickResolveDispute() {
+    this.trigger('clickResolveDispute');
   }
 
   render() {

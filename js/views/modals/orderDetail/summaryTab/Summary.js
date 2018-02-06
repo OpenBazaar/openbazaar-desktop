@@ -575,6 +575,7 @@ export default class extends BaseVw {
       isPaymentFinalized: false,
       showDisputeBtn: false,
       showDiscussBtn: orderState === 'DISPUTED',
+      showResolveDisputeBtn: false,
     };
 
     if (!height) {
@@ -599,7 +600,9 @@ export default class extends BaseVw {
 
       if (orderState === 'DISPUTED') {
         try {
-          disputeStartTime = this.contract.get('dispute').timestamp;
+          disputeStartTime = this.isCase() ?
+            this.model.get('timestamp') :
+            this.contract.get('dispute').timestamp;
         } catch (e) {
           // pass - will be handled below
         }
@@ -614,16 +617,20 @@ export default class extends BaseVw {
           ...state,
           invalidContractData: true,
           showDisputeBtn: this.isOrderStateDisputable,
+          showResolveDisputeBtn: this.isCase(),
         };
       } else {
-        if (this.isCase()) {
-          // pass for now
-        } else if (orderState === 'DISPUTED') {
-          escrowTimeoutHours = 3 * 24;
+        let hasDisputeEscrowExpired;
+
+        if (this.isCase() || orderState === 'DISPUTED') {
+          // escrowTimeoutHours = 3 * 24;
+          // escrowTimeoutHours = 30 * 24;
           const msSinceDisputeStart = Date.now() - (new Date(disputeStartTime)).getTime();
           const msRemaining = (escrowTimeoutHours * 60 * 60 * 1000) -
             msSinceDisputeStart;
-          const hasDisputeEscrowExpired = msRemaining <= 0;
+          hasDisputeEscrowExpired = msRemaining <= 0;
+
+          console.log(`the ms remaining is ${msRemaining}`);
 
           state = {
             ...state,
@@ -635,24 +642,41 @@ export default class extends BaseVw {
                 moment(Date.now() + (escrowTimeoutHours * 60 * 60 * 1000)),
                   true
               ),
-            isPaymentClaimable: hasDisputeEscrowExpired,
             showDiscussBtn: !hasDisputeEscrowExpired,
           };
 
-          let checkBackInMs = 5000;
+          if (!hasDisputeEscrowExpired) {
+            let checkBackInMs = 1000; // every second
 
-          if (msRemaining > 1000 * 60 * 60 * 24) {
-            // greater than a day
-            checkBackInMs = 1000 * 60 * 60 * 20;
-          } else if (msRemaining > 1000 * 60 * 60) {
-            // greater than a hour
-            checkBackInMs = 1000 * 60 * 60;
+            if (msRemaining > 1000 * 60 * 60 * 24) {
+              // greater than a day
+              checkBackInMs = 1000 * 60 * 60 * 20;
+            } else if (msRemaining > 1000 * 60 * 60) {
+              // greater than a hour
+              checkBackInMs = 1000 * 60 * 60;
+            } else if (msRemaining > 1000 * 60) {
+              // greater than 1 minute
+              checkBackInMs = 5000;
+            }
+
+            this.setDisputeCountdownTimeout(
+              () => this.renderTimeoutInfoView(),
+              checkBackInMs
+            );
           }
+        }
 
-          this.setDisputeCountdownTimeout(
-            () => this.renderTimeoutInfoView(),
-            checkBackInMs
-          );
+        if (this.isCase()) {
+          state = {
+            ...state,
+            buyerOpened: this.model.get('buyerOpened'),
+            showResolveDisputeBtn: !hasDisputeEscrowExpired,
+          };
+        } else if (orderState === 'DISPUTED') {
+          state = {
+            ...state,
+            isPaymentClaimable: hasDisputeEscrowExpired,
+          };
         } else {
           const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = this.fundedBlockHeight ?
@@ -698,6 +722,9 @@ export default class extends BaseVw {
       this.listenTo(this.timeoutInfo, 'clickDiscussOrder', () => {
         this.trigger('clickDiscussOrder');
       });
+
+      this.listenTo(this.timeoutInfo, 'clickResolveDispute',
+        () => this.trigger('clickResolveDispute'));
 
       this.listenTo(app.walletBalance, 'change:height',
         () => this.renderTimeoutInfoView());
@@ -879,9 +906,6 @@ export default class extends BaseVw {
         .done(profile =>
           this.disputeStarted.setState({ disputerName: profile.get('name') }));
     }
-
-    this.listenTo(this.disputeStarted, 'clickResolveDispute',
-      () => this.trigger('clickResolveDispute'));
 
     this.$subSections.prepend(this.disputeStarted.render().el);
   }

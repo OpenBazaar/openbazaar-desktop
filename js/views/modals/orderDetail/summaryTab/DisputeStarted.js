@@ -1,8 +1,5 @@
 import _ from 'underscore';
 import moment from 'moment';
-import {
-  events as orderEvents,
-} from '../../../../utils/order';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -13,33 +10,12 @@ export default class extends BaseVw {
     this._state = {
       disputerName: '',
       claim: '',
-      showResolveButton: true,
       ...options.initialState || {},
     };
-
-    this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
-      this.setState({
-        showResolveButton: false,
-      });
-    });
   }
 
   className() {
     return 'disputeStartedEvent rowLg';
-  }
-
-  events() {
-    return {
-      'click .js-resolveDispute': 'onClickResolveDispute',
-    };
-  }
-
-  onClickResolveDispute() {
-    this.trigger('clickResolveDispute');
-  }
-
-  getState() {
-    return this._state;
   }
 
   setState(state, replace = false, renderOnChange = true) {

@@ -18,18 +18,23 @@
   let tip;
   let tipClass = '';
 
-  if (!isCase) {
+  if (ob.invalidContractData) {
+    if (ob.moderator) {
+      message = 'The contract contains invalid data. Unable to determine how much time is remaining for you to make a decision on the dispute.';
+    } else {
+      message = ob.isDisputed ?
+        'The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.' :
+        'The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.';        
+    }
+
+    messageClass = 'txCtr clrTErr';
+    tipClass = 'hide';    
+  } else if (!isCase) {
     tip = ob.ownPeerId === ob.buyer ?
       'Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.' :
       'Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator.';  
 
-    if (ob.invalidContractData) {
-      message = ob.isDisputed ?
-        'The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.' :
-        'The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.';        
-      messageClass = 'txCtr clrTErr';
-      tipClass = 'hide';
-    } else if (ob.isDisputed) {
+    if (ob.isDisputed) {
       if (!ob.hasDisputeEscrowExpired) {
         message = `The order is being disputed. The moderator has approximately ${ob.timeRemaining} to process the dispute and make a decision.`;
         tip = ob.ownPeerId === ob.buyer ?
@@ -70,12 +75,23 @@
       // time is left to open a dispute
       message = `This order can be disputed for <b>${ob.blocksRemaining} blocks</b> or approximately <b>${ob.timeRemaining}</b>.`;
     }
+  } else {
+    // mod looking at case
+    if (!ob.hasDisputeEscrowExpired) {
+      message = ob.buyerOpened ?
+        `The buyer is disputing this order. You have ${ob.timeRemaining} to process the dispute and make a decision.` :
+        `The vendor is disputing this order. You have ${ob.timeRemaining} to process the dispute and make a decision.`;
+    } else {
+      message = 'Time is up! You failed to make a decision in time. The vendor can now claim the funds.';
+    }
+
+    tipClass = 'hide';
   }
 %>
 
   <% if (ob.awaitingBlockHeight) { %>
   <div class="txCtr">Obtaining current block height...</div>
-  <% } else if (!isCase) { %>
+  <% } else { %>
     <div class="flexCol flexCent gutterVSm">
       <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
       <div class="flexCent gutterH">
@@ -86,10 +102,16 @@
           <%= ob.processingButton({
             className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
             btnText: 'Claim Payment'
-          }) %>        
+          }) %>
         <% } %>
         <% if (ob.showDiscussBtn) { %>
           <button class="btn tx5b clrP clrBr js-discussOrder">Discuss Order</button>
+        <% } %>
+        <% if (ob.showResolveDisputeBtn) { %>
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute ${ob.isResolvingDispute ? 'processing' : ''}`,
+            btnText: 'Resolve Dispute'
+          }) %>
         <% } %>
       </div>
     </div>
