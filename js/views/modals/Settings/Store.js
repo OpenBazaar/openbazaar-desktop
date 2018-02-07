@@ -72,7 +72,7 @@ export default class extends baseVw {
       cardState: 'unselected',
       notSelected: 'unselected',
     });
-    }
+  }
 
   events() {
     return {

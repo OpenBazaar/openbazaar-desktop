@@ -8,7 +8,6 @@ import { getLangByCode } from '../../data/languages';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-
     const opts = {
       cardState: 'unselected',
       notSelected: 'unselected',
