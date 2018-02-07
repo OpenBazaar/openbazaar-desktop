@@ -437,7 +437,6 @@ export default class extends BaseModal {
         { timeoutAmount: this.contract.escrowTimeoutHoursVerbose }
       );
 
-
     const view = this.createChild(DisputeOrder, {
       model,
       contractType,

@@ -50,7 +50,7 @@ const currencies = [
         }
       }
     },
-    hasEscrowTimeout: true,
+    supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
   },
   {
@@ -76,7 +76,7 @@ const currencies = [
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
-    hasEscrowTimeout: true,
+    supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
   },
   {
@@ -102,7 +102,7 @@ const currencies = [
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
-    hasEscrowTimeout: false,
+    supportsEscrowTimeout: false,
     blockTime: 1000 * 60 * 2.5,
   },
 ];

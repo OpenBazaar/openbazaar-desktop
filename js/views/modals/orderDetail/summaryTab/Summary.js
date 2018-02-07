@@ -534,7 +534,7 @@ export default class extends BaseVw {
   shouldShowTimeoutInfoView() {
     return (this.isOrderStateDisputable ||
       ['DISPUTED', 'PAYMENT_FINALIZED'].includes(this.model.get('state'))) &&
-        getServerCurrency().hasEscrowTimeout;
+        getServerCurrency().supportsEscrowTimeout;
   }
 
   renderTimeoutInfoView() {

@@ -120,7 +120,6 @@ describe('the crypto currencies data module', () => {
       });
     });
 
-    // isValidAddress
     it('that, if provided, requires isValidAddress to be a function', () => {
       currencies.forEach(cur => {
         if (cur.isValidAddress !== undefined) {
@@ -143,6 +142,20 @@ describe('the crypto currencies data module', () => {
           }
 
           expect(typeof isValid === 'boolean' || exceptionThrown).to.equal(true);
+        }
+      });
+    });
+
+    it('that requires supportsEscrowTimeout to be a boolean', () => {
+      currencies.forEach(cur => {
+        expect(typeof cur.supportsEscrowTimeout).to.equal('boolean');
+      });
+    });
+
+    it('that, if provided, requires blockTime to be a number', () => {
+      currencies.forEach(cur => {
+        if (cur.blockTime !== undefined) {
+          expect(typeof cur.blockTime).to.equal('number');
         }
       });
     });
