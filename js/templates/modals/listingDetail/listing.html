@@ -136,19 +136,19 @@
           }); %>
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>
-        <h5>Payments Accepted</h5>
-        <div class="borderStacked rowLg">
+        <h5><%= ob.polyT('listingDetail.paymentsAccepted') %></h5>
+        <ul class="unstyled">
           <% ob.metadata.acceptedCurrencies.forEach(cur => {
             const curData = ob.currencyMod.getCryptoCurByCode(cur);
             if (curData) { %>
-              <div class="flexVCent gutterHSm borderBottom clrBr">
+              <ul class="flexVCent gutterHSm borderBottom clrBr">
                 <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
                 <%= ob.currencyMod.cryptoIcon({ code: curData.code }) %>
                 <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
-              </div>
+              </li>
             <% }
           }) %>
-        </div>
+        </ul>
         <% if (ob.hasVerifiedMods) { %>
           <div class="verifiedMod">
             <div class="confirmBox clrBrAlert2 clrBAlert2Grad">

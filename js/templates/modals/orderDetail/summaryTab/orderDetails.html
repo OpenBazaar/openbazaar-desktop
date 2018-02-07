@@ -120,8 +120,23 @@
       <div class="flexRow gutterH">
         <div class="col6">
           <div class="gutterVTn">
+            <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shippingOption') %></div>
+            <div><%= item.shippingOption.name ? item.shippingOption.name : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+          </div>
+        </div>
+        <div class="col6">
+          <div class="gutterVTn">
+            <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shippingService') %></div>
+            <div><%= item.shippingOption.service ? item.shippingOption.service : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+          </div>
+        </div>
+      </div>
+      <hr class="clrBr" />
+      <div class="flexRow gutterH">
+        <div class="col6">
+          <div class="gutterVTn">
             <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.memo') %></div>
-            <div><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+            <div class="memo"><%= item.memo ? ob.parseEmojis(item.memo) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
           </div>
         </div>
         <div class="col6">

@@ -133,6 +133,17 @@
         flex-basis: 228px;
         margin-right: $padMd;
 
+        .contentBox {
+          font-size: $tx5b;
+
+          input[type="radio"] + label {
+            font-size: $tx5b;
+            line-height: 1.3em;
+            min-height: 1.3em;
+            padding: 0.3em 0px;
+          }
+        }
+
         & > * {
           margin-bottom: $pad;
 

@@ -163,7 +163,7 @@ function fetchConfig() {
     }).on('click-retry', () => {
       retryConfigDialog.close();
 
-      // slight of hand to ensure the loading modal has a chance to at
+      // sleight of hand to ensure the loading modal has a chance to at
       // least briefly show before another potential failure
       setTimeout(() => {
         fetchConfig();
@@ -339,7 +339,7 @@ function fetchStartupData() {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
         }
 
-        const retryFetchStarupDataDialog = new Dialog({
+        const retryFetchStartupDataDialog = new Dialog({
           title,
           message: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
           buttons: [
@@ -356,7 +356,7 @@ function fetchStartupData() {
           dismissOnEscPress: false,
           showCloseButton: false,
         }).on('click-retry', () => {
-          retryFetchStarupDataDialog.close();
+          retryFetchStartupDataDialog.close();
 
           // slight of hand to ensure the loading modal has a chance to at
           // least briefly show before another potential failure

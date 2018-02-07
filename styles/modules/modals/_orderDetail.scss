@@ -124,6 +124,7 @@
 
             & > span {
               word-break: break-word;
+              white-space: pre-wrap;
             }
 
             img {
@@ -330,6 +331,10 @@
         position: absolute;
         transform: translateY(-2px);
         font-size: $tx6;
+      }
+
+      .memo {
+        white-space: pre-wrap;
       }
     }
 

@@ -13,6 +13,7 @@ import Providers from './SearchProviders';
 import ProviderMd from '../../models/search/SearchProvider';
 import Suggestions from './Suggestions';
 import defaultSearchProviders from '../../data/defaultSearchProviders';
+import '../../lib/select2';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import { getServerCurrency } from '../../data/cryptoCurrencies';
@@ -85,8 +86,11 @@ export default class extends baseVw {
 
     const params = {};
 
-    for (const param of queryParams.entries()) {
-      params[param[0]] = param[1];
+    for (const key of queryParams.keys()) {
+      // checkbox params are represented by the same key multiple times. Convert them into a
+      // single key with an array of values
+      const val = queryParams.getAll(key);
+      params[key] = val.length === 1 ? val[0] : val;
     }
 
     // use the parameters from the query unless they were overridden in the options
@@ -94,14 +98,16 @@ export default class extends baseVw {
     this.pageSize = options.pageSize || params.ps || 24;
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
+
     // all parameters not specified above are assumed to be filters
-    const filters = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
+    const filterParams = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
+
     // set an initial set of filters for the first query
     // if not passed in, set the user's values for nsfw and the currency
-    this.filters = {
+    this.filterParams = {
       nsfw: String(app.settings.get('showNsfw')),
       acceptedCurrencies: getServerCurrency().code,
-      ...filters,
+      ...filterParams,
     };
 
     this.processTerm(this.term);
@@ -152,16 +158,22 @@ export default class extends baseVw {
    * This will create a url with the term and other query parameters
    * @param {string} term
    */
-  processTerm(term) {
+  processTerm(term, reset) {
     this.term = term || '';
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    let filters = $.param(this.filters);
-    filters = filters ? `&${filters}` : '';
-    const newURL = `${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`;
+    // if the DOM is ready, use the form values. Otherwise use the values set in the constructor.
+    let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
+    filters = !filters || reset ? '' : `&${filters}`;
+    const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
+    const newParams = newURL.searchParams;
+    // if there is no nsfw filter on the page, still send the default value to the provider
+    if (!newParams.has('nsfw')) {
+      newParams.append('nsfw', app.settings.get('showNsfw'));
+    }
     this.callSearchProvider(newURL);
   }
 
@@ -179,11 +191,12 @@ export default class extends baseVw {
     }
     this.sProvider = md;
     this.queryProvider = false;
+    this.serverPage = 0;
     if (this.mustSelectDefault) {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
     }
-    this.processTerm(this.term);
+    this.processTerm(this.term, true);
   }
 
   deleteProvider(md = this.sProvider) {
@@ -394,13 +407,7 @@ export default class extends baseVw {
     this.processTerm(this.term);
   }
 
-  changeFilter(e) {
-    const targ = $(e.target);
-    if (targ[0].type === 'checkbox') {
-      this.filters[targ.prop('name')] = String(targ[0].checked);
-    } else {
-      this.filters[targ.prop('name')] = targ.val();
-    }
+  changeFilter() {
     this.serverPage = 0;
     this.processTerm(this.term);
   }
@@ -447,7 +454,7 @@ export default class extends baseVw {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
         sortBySelected: this.sortBySelected,
-        filterVals: this.filters,
+        filterParams: this.filterParams,
         errTitle,
         errMsg,
         providerLocked: this.sProvider.get('locked'),

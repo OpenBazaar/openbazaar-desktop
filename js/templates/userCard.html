@@ -8,7 +8,7 @@
     <% } %>>
     <div class="blockedOverlay clrP flexCent tx5">
       <div><%= ob.polyT('userShort.blockedUserOverlayText') %></div>
-    </div>    
+    </div>
     <div class="userIconWrap">
       <a class="userIcon disc clrBr2 clrSh1"
         <% var avatarHash = ob.avatarHashes ? ob.isHiRez() ? ob.avatarHashes.small : ob.avatarHashes.tiny : ''; %>
@@ -23,12 +23,16 @@
     <% if (!ob.hideControls) { %>
       <div class="userControls flexHRight gutterHSm">
         <% if (!ob.ownGuid) { %>
-          <% if (ob.moderator) { %>
-            <%= ob.processingButton({
-            className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
-            btnText: '<i class="ion-briefcase"></i>',
-            attrs: `data-tip="${ob.getModTip(ob.ownMod)}"`,
-            }) %>
+          <%
+            const curSupported = ob.moderator && ob.moderatorInfo.acceptedCurrencies.includes(
+              ob.currencyMod.getServerCurrency().isTestnet ?   ob.currencyMod.getServerCurrency().testnetCode :   ob.currencyMod.getServerCurrency().code
+            );
+            if (curSupported) { %>
+              <%= ob.processingButton({
+              className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
+              btnText: '<i class="ion-briefcase"></i>',
+              attrs: `data-tip="${ob.getModTip(ob.ownMod)}"`,
+              }) %>
           <% } %>
           <%= ob.processingButton({
             className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-follow ${ob.followedByYou ? 'active' : ''}`,

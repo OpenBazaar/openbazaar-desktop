@@ -46,30 +46,31 @@
         <div class="flexColWide gutterV">
           <% _.each(ob.options, function(val, key) { %>
             <div class="contentBox pad clrP clrBr clrSh2">
-              <h4 class="rowSm"><%= val.label %></h4>
+              <div class="rowSm txB tx5b"><%= val.label %></div>
               <% if (val.type ==='dropdown') { %>
                 <select name="<%= key %>" class="select2Small">
-                <% _.each(val.options, function(option) {
-                  let selected = '';
-                  if (ob.filterVals.hasOwnProperty(key)) {
-                    selected = option.value === ob.filterVals[key] ? 'selected' : '';
-                  } else {
-                    selected = option.default ? 'selected' : '';
-                  }
-                  print(`<option ${selected} value="${option.value}">${option.label}</option>`);
-                }); %>
+                <%
+                  // if any option has a selected value use the first one. Otherwise use the first default.
+                  let selectedIndex = val.options.findIndex(opt => opt.checked);
+                  selectedIndex = selectedIndex === -1 ? val.options.findIndex(opt => opt.default) : selectedIndex;
+                  _.each(val.options, function(option, ind) {
+                    const selected = selectedIndex === ind ? 'selected' : '';
+                    // parsing the label for emojis isn't needed here because the select list is replaced by select2.js
+                    print(`<option ${selected} value="${option.value}">${option.label}</option>`);
+                  });
+                  %>
                 </select>
               <% } else if (val.type ==='radio') { %>
                 <div class="flexCol">
-                <% _.each(val.options, function(option, ind) { %>
+                <%
+                  // if any options has a checked value, check the first one. Otherwise use the first default.
+                  let checkedIndex = val.options.findIndex(opt => opt.checked);
+                  checkedIndex = checkedIndex === -1 ? val.options.findIndex(opt => opt.default) : checkedIndex;
+                  _.each(val.options, function(option, ind) {
+                %>
                   <div class="btnRadio clrBr">
                      <%
-                      let checked = '';
-                      if (ob.filterVals.hasOwnProperty(key)) {
-                        checked = option.value === ob.filterVals[key] ? 'checked' : '';
-                      } else {
-                        checked = option.default ? 'checked' : '';
-                      }
+                      const checked = checkedIndex === ind ? 'checked' : '';
                       var parsedLabel = ob.parseEmojis(option.label);
                       print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
                       print(`<label for="${key + ind}">${parsedLabel}</label>`);
@@ -79,13 +80,19 @@
                 </div>
               <% } else if (val.type ==='checkbox') { %>
                 <div class="flexCol">
-                <% _.each(val.options, function(option, index) {
-                  let checked = '';
-                  checked = option.checked ? 'checked' : '';
-                  var parsedLabel = ob.parseEmojis(option.label);
-                  print(`<input type="checkbox" ${checked} id="${option.name}" name="${option.name}">`);
-                  print(`<label for="${option.name}">${parsedLabel}</label>`);
-                }); %>
+                <%
+                  const anyChecked = val.options.filter(opt => opt.checked);
+                  val.options.forEach((option, index) => {
+                    let checked = '';
+                    // if none of the checkboxes have a checked value, use the default values
+                    if (option.checked || !anyChecked.length && option.default) {
+                      checked = 'checked';
+                    }
+                    var parsedLabel = ob.parseEmojis(option.label);
+                    print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}" value="${option.value}">`);
+                    print(`<label for="${key + index}">${parsedLabel}</label>`);
+                  });
+                %>
                 </div>
               <% } %>
             </div>
