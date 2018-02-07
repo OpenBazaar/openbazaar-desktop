@@ -170,11 +170,6 @@ export default class extends baseVw {
     let filters = $.param({ ...this.filterParams, ...formData });
     filters = !filters || reset ? '' : `&${filters}`;
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
-    const newParams = newURL.searchParams;
-    // if there is no nsfw filter on the page, still send the default value to the provider
-    if (!newParams.has('nsfw')) {
-      newParams.append('nsfw', app.settings.get('showNsfw'));
-    }
     this.callSearchProvider(newURL);
   }
 
