@@ -50,6 +50,10 @@ export default class extends BaseVw {
     this.contract = options.contract;
     delete options.contract;
 
+    if (typeof options.isOrderStateDisputable !== 'function') {
+      throw new Error('Please provide a function indicating if the order state is disputable.');
+    }
+
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
 
@@ -507,23 +511,8 @@ export default class extends BaseVw {
     return height;
   }
 
-  /**
-   * Based on the order state, returns whether a dispute can be opened on the order. This
-   * does not factor in the transaction timeout, which may disallow a dispute from being
-   * opened, even though it's allowed based on the state.
-   */
   get isOrderStateDisputable() {
-    const orderState = this.model.get('state');
-
-    if (this.buyer.id === app.profile.id) {
-      return this.moderator &&
-        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
-    } else if (this.vendor.id === app.profile.id) {
-      return this.moderator &&
-        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
-    }
-
-    return false;
+    return this.options.isOrderStateDisputable();
   }
 
   setDisputeCountdownTimeout(...args) {

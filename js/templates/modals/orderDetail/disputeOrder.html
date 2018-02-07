@@ -22,7 +22,9 @@
       <% if (ob.errors['claim']) print(ob.formErrorTmpl({ errors: ob.errors['claim'] })) %>
     <textarea rows="6" name="claim" class="clrBr clrP clrSh2 row" id="fulfillOrderNote" placeholder="<%= ob.polyT(`orderDetail.disputeOrderTab.reasonPlaceholder`) %>"><%= ob.claim %></textarea>
     <p class="clrT2 txSm"><%= ob.polyT(`orderDetail.disputeOrderTab.reasonHelperText`) %></p>
-    <p class="clrT2 txSm"><%= ob.timeoutMessage %></p>
+    <% if (ob.timeoutMessage) { %>
+      <p class="clrT2 txSm"><%= ob.timeoutMessage %></p>
+    <% } %>
     </div>
   </div>
 </form>

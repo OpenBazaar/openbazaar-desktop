@@ -1,21 +1,45 @@
 import _ from 'underscore';
 import moment from 'moment';
+import { getServerCurrency } from '../../../../data/cryptoCurrencies';
+import {
+  events as orderEvents,
+} from '../../../../utils/order';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    const serverCur = getServerCurrency();
     super(options);
 
     this._state = {
       disputerName: '',
       claim: '',
+      showResolveButton: !serverCur.supportsEscrowTimeout,
       ...options.initialState || {},
     };
+
+    if (!serverCur.supportsEscrowTimeout) {
+      this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
+        this.setState({
+          showResolveButton: false,
+        });
+      });
+    }
   }
 
   className() {
     return 'disputeStartedEvent rowLg';
+  }
+
+  events() {
+    return {
+      'click .js-resolveDispute': 'onClickResolveDispute',
+    };
+  }
+
+  onClickResolveDispute() {
+    this.trigger('clickResolveDispute');
   }
 
   setState(state, replace = false, renderOnChange = true) {

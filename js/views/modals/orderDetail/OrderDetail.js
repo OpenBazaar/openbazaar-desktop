@@ -3,6 +3,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import {
   resolvingDispute,
   events as orderEvents,
@@ -21,6 +22,7 @@ import Contract from './Contract';
 import FulfillOrder from './FulfillOrder';
 import DisputeOrder from './DisputeOrder';
 import ResolveDispute from './ResolveDispute';
+import ActionBar from './ActionBar';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -62,6 +64,12 @@ export default class extends BaseModal {
 
     this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
       if (this.activeTab === 'resolveDispute') this.selectTab('summary');
+    });
+
+    this.listenTo(this.model, 'change:state', () => {
+      if (this.actionBar) {
+        this.actionBar.setState(this.actionBarButtonState);
+      }
     });
 
     const socket = getSocket();
@@ -328,6 +336,7 @@ export default class extends BaseModal {
       model: this.model,
       contract: this.contract,
       isCase: this.isCase(),
+      isOrderStateDisputable: () => this.isOrderStateDisputable,
       vendor: {
         id: this.vendorId,
         getProfile: this.getVendorProfile.bind(this),
@@ -432,10 +441,12 @@ export default class extends BaseModal {
     const translationKeySuffix = app.profile.id === this.buyerId ?
       'Buyer' : 'Vendor';
     const timeoutMessage =
-      app.polyglot.t(
-        `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
-        { timeoutAmount: this.contract.escrowTimeoutHoursVerbose }
-      );
+      getServerCurrency().supportsEscrowTimeout ?
+        app.polyglot.t(
+          `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
+          { timeoutAmount: this.contract.escrowTimeoutHoursVerbose }
+        ) :
+        '';
 
     const view = this.createChild(DisputeOrder, {
       model,
@@ -494,6 +505,36 @@ export default class extends BaseModal {
     return count;
   }
 
+  /**
+   * Based on the order state, returns whether a dispute can be opened on the order. This
+   * does not factor in the transaction timeout, which may disallow a dispute from being
+   * opened, even though it's allowed based on the state.
+   */
+  get isOrderStateDisputable() {
+    const orderState = this.model.get('state');
+
+    if (this.buyerId === app.profile.id) {
+      return this.moderatorId &&
+        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
+    } else if (this.vendorId === app.profile.id) {
+      return this.moderatorId &&
+        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns whether different action bar buttons should be displayed or not
+   * based upon the order state.
+   */
+  get actionBarButtonState() {
+    return {
+      showDisputeOrderButton: !getServerCurrency().supportsEscrowTimeout &&
+        this.isOrderStateDisputable,
+    };
+  }
+
   get $unreadChatMessagesBadge() {
     return this._$unreadChatMessagesBadge ||
       (this._$unreadChatMessagesBadge = this.$('.js-unreadChatMessagesBadge'));
@@ -527,6 +568,14 @@ export default class extends BaseModal {
 
       if (!state.isFetching && !state.fetchError) {
         this.selectTab(this.activeTab);
+
+        if (this.actionBar) this.actionBar.remove();
+        this.actionBar = this.createChild(ActionBar, {
+          orderId: this.model.id,
+          initialState: this.actionBarButtonState,
+        });
+        this.$('.js-actionBarContainer').html(this.actionBar.render().el);
+        this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
       }
     });
 
