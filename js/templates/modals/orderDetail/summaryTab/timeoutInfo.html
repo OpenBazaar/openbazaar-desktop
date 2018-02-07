@@ -20,19 +20,19 @@
 
   if (ob.invalidContractData) {
     if (ob.moderator) {
-      message = 'The contract contains invalid data. Unable to determine how much time is remaining for you to make a decision on the dispute.';
+      message = ob.polyT('orderDetail.summaryTab.modInvalidContractData');
     } else {
       message = ob.isDisputed ?
-        'The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.' :
-        'The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.';        
+        ob.polyT('orderDetail.summaryTab.disputedInvalidContractData') :
+        ob.polyT('orderDetail.summaryTab.invalidContractData');
     }
 
     messageClass = 'txCtr clrTErr';
     tipClass = 'hide';    
   } else if (!isCase) {
     tip = ob.ownPeerId === ob.buyer ?
-      'Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.' :
-      'Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator.';  
+      ob.polyT('orderDetail.summaryTab.tipClaimAfterTimeoutBuyer') :
+      ob.polyT('orderDetail.summaryTab.tipClaimAfterTimeoutVendor');
 
     if (ob.isDisputed) {
       if (!ob.hasDisputeEscrowExpired) {

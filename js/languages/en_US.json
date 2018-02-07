@@ -171,7 +171,6 @@
     "text": {
       "order": "%{buyerName} has purchased %{listingTitle}.",
       "payment": "Your payment has been delivered.",
-      "orderConfirmation": "%{vendorName} has accepted your order.",
       "declined": "%{vendorName} has declined your order.",
       "canceled": "%{buyerName} has canceled their order.",
       "refunded": "%{vendorName} has refunded your order.",
@@ -1597,6 +1596,14 @@
         "addressNotes": "Delivery Notes",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "SKU"
+      },
+      "timeoutInfo": {
+        "modInvalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining for you to make a decision on the dispute.",
+        "invalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.",
+        "disputedInvalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.",
+        "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
+        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator."
+        "disputedModOnClock": ""
       }
     },
     "fulfillOrderTab": {
