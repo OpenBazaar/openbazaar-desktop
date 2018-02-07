@@ -26,8 +26,9 @@ export default class extends baseVw {
      * @property {string}  apiPath           - Current options are fetchprofiles and moderators.
      * @property {boolean} async             - Return profiles via websocket.
      * @property {boolean} useCache          - Use cached data for faster speed.
-     * @property {array}   moderatorIDs      - list of moderators to retrieve. If none get all.
-     * @property {array}   excludeIDs        - list of moderators to not use.
+     * @property {array}   moderatorIDs      - list of peerIDs to retrieve. If none get all.
+     * @property {array}   excludeIDs        - list of peerIDs to not use.
+     * @property {array}   limitToIDs        - mods must be on this list of peerIDs.
      * @property {string}  method            - POST or GET
      * @property {string}  include           - If apiPath is moderator, set to 'profile' or only the
      *                                         peerIDs of each moderator are returned.
@@ -40,9 +41,9 @@ export default class extends baseVw {
      * @property {boolean} controlsOnInvalid - Show controls on invalid cards so they can be removed
      *                                         or otherwise acted on.
      * @property {string}  wrapperClasses    - Add classes to the card container.
-     * @property {string} fetchErrorTitle    - A title for the fetch error.
-     * @property {string} cardState          - The initial state for cards that are created.
-     * @property {string} notSelected        - Which not selected state to use on the mod cards.
+     * @property {string}  fetchErrorTitle   - A title for the fetch error.
+     * @property {string}  cardState         - The initial state for cards that are created.
+     * @property {string}  notSelected       - Which not selected state to use on the mod cards.
      */
 
     const opts = {
@@ -51,6 +52,7 @@ export default class extends baseVw {
       useCache: true,
       moderatorIDs: [],
       excludeIDs: [],
+      limitToIDs: [],
       method: 'POST',
       include: '',
       purchase: false,
@@ -92,6 +94,7 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
     this.excludeIDs = opts.excludeIDs;
+    this.limitToIDs = opts.limitToIDs;
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
       const view = this.addMod(model);
@@ -120,8 +123,10 @@ export default class extends baseVw {
     const validCur = modCurs.includes(buyerCur);
     // if the moderator is on the list of IDs to exclude, or is this user, remove them
     const excluded = this.excludeIDs.includes(profile.peerID) || profile.peerID === app.profile.id;
+    const included = this.limitToIDs.length ? this.limitToIDs.includes(profile.peerID) : true;
+    console.log(profile)
 
-    if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
+    if ((!!validMod && validCur || this.options.showInvalid) && !excluded && included) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
     } else {
       // remove the invalid moderator from the notFetched list
@@ -263,6 +268,14 @@ export default class extends baseVw {
 
   set excludeIDs(IDs) {
     this._excludeIDs = IDs;
+  }
+
+  get limitToIDs() {
+    return this._limitToIDs;
+  }
+
+  set limitToIDs(IDs) {
+    this._limitToIDs = IDs;
   }
 
   get modCount() {
