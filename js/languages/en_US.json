@@ -1602,8 +1602,27 @@
         "invalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.",
         "disputedInvalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.",
         "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
-        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator."
-        "disputedModOnClock": ""
+        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator.",
+        "disputedModOnClock": "The order is being disputed. The moderator has approximately %{timeRemaining} to process the dispute and make a decision.",
+        "disputedTipBuyer": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.",
+        "disputedTipVendor": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.",
+        "disputedTimeUpBuyer": "Time is up! The moderator failed to make a decision in time. The vendor can now claim the funds.",
+        "disputedTimeUpVendor": "Time is up! The moderator failed to make a decision in time. You can now claim the funds.",
+        "paymentFinalizedBuyer": "The vendor has claimed the payment. Please complete the order below whenever you’re ready.",
+        "paymentFinalizedVendor": "You have claimed the payment.",
+        "blocksRemaining": "%{blocksRemaining} blocks",
+        "unconfirmedFunding": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}. The clock will start when the funding payment is confirmed.",
+        "escrowExpired": "Time is up! A dispute can no longer be opened on this order.",
+        "tipEscrowExpiredBuyer": "You and the vendor are given approximately %{totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.",
+        "escrowExpiredVendorClaim": "Time is up! Claim payment for this order whenever you’re ready.",
+        "tipEscrowExpiredVendorClaim": "You and the buyer are given approximately %{totalTime} to open a dispute. Since a dispute was not opened, you can now claim the payment.",
+        "escrowExpiredBuyerComplete": "Time is up! A dispute can no longer be opened on this order. Please complete the order below whenever you’re ready.",
+        "escrowTimeRemaining": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}.",
+        "modDisputeEscrowExpiredBuyerOpened": "The buyer is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
+        "modDisputeEscrowExpiredVendorOpened": "The vendor is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
+        "modDisputeEscrowExpired": "Time is up! You failed to make a decision in time. The vendor can now claim the funds.",
+        "btnClaimPayment": "Claim Payment",
+        "btnResolveDispute": "Resolve Dispute"
       }
     },
     "fulfillOrderTab": {

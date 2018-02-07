@@ -20,69 +20,80 @@
 
   if (ob.invalidContractData) {
     if (ob.moderator) {
-      message = ob.polyT('orderDetail.summaryTab.modInvalidContractData');
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modInvalidContractData');
     } else {
       message = ob.isDisputed ?
-        ob.polyT('orderDetail.summaryTab.disputedInvalidContractData') :
-        ob.polyT('orderDetail.summaryTab.invalidContractData');
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedInvalidContractData') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.invalidContractData');
     }
 
     messageClass = 'txCtr clrTErr';
     tipClass = 'hide';    
   } else if (!isCase) {
     tip = ob.ownPeerId === ob.buyer ?
-      ob.polyT('orderDetail.summaryTab.tipClaimAfterTimeoutBuyer') :
-      ob.polyT('orderDetail.summaryTab.tipClaimAfterTimeoutVendor');
+      ob.polyT('orderDetail.summaryTab.timeoutInfo.tipClaimAfterTimeoutBuyer') :
+      ob.polyT('orderDetail.summaryTab.timeoutInfo.tipClaimAfterTimeoutVendor');
 
     if (ob.isDisputed) {
       if (!ob.hasDisputeEscrowExpired) {
-        message = `The order is being disputed. The moderator has approximately <b>${ob.timeRemaining}</b> to process the dispute and make a decision.`;
+        message = ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedModOnClock', { timeRemaining: `<b>${ob.timeRemaining}</b>` });
         tip = ob.ownPeerId === ob.buyer ?
-          `Once a dispute is opened, the moderator has approximately ${ob.totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.` :
-          `Once a dispute is opened, the moderator has approximately ${ob.totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.`;
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTipBuyer', { totalTime: ob.totalTime }) :
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTipVendor', { totalTime: ob.totalTime });
       } else {
         message = ob.ownPeerId === ob.buyer ?
-          'Time is up! The moderator failed to make a decision in time. The vendor can now claim the funds.' :
-          'Time is up! The moderator failed to make a decision in time. You can now claim the funds.';
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTimeUpBuyer') :
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTimeUpVendor');
         tipClass = 'hide';
       }
     } else if (ob.isPaymentFinalized) {
       message = ob.ownPeerId === ob.buyer ?
-        'The vendor has claimed the payment. Please complete the order below whenever you’re ready.' :
-        'You have claimed the payment.'
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyer') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedVendor');
       tipClass = 'hide';
     } else if (!ob.isFundingConfirmed) {
       message = `This order can be disputed for <b>${ob.blocksRemaining} blocks</b> or approximately <b>${ob.timeRemaining}</b>. The clock will start when the funding payment is confirmed.`;
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.unconfirmedFunding', {
+        blocksRemaining: `<b>${ob.polyT('orderDetail.summaryTab.timeoutInfo.blocksRemaining',
+          { blocksRemaining: ob.blocksRemaining })}</b>`,
+        timeRemaining: `<b>ob.timeRemaining</b>`,
+      });
     } else if (ob.blocksRemaining <= 0) {
       if (ob.ownPeerId === ob.buyer) {
-        message = 'Time is up! A dispute can no longer be opened on this order.';
-        tip = 'You and the vendor are given approximately ${ob.totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.';
+        message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpired');
+        tip = ob.polyT('orderDetail.summaryTab.timeoutInfo.tipEscrowExpiredBuyer', { totalTime: ob.totalTime });
       } else {
         // it's the vendor
         if (ob.isPaymentClaimable) {
-          message = 'Time is up! Claim payment for this order whenever you’re ready.';
-          tip = 'You and the buyer are given approximately ${ob.totalTime} to open a dispute. Since a dispute was not opened, you can now claim the payment.';
+          message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpiredVendorClaim');
+          tip = ob.polyT('orderDetail.summaryTab.timeoutInfo.tipEscrowExpiredVendorClaim', { totalTime: ob.totalTime });
         } else {
-          message = 'Time is up! A dispute can no longer be opened on this order.';
+          message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpired');
           tipClass = 'hide';
         }
       }
 
       if (ob.ownPeerId === ob.buyer && ob.isCompletable) {
-          message = 'Time is up! A dispute can no longer be opened on this order. Please complete the order below whenever you’re ready.';
+        message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpiredBuyerComplete');
       }
     } else {
       // time is left to open a dispute
-      message = `This order can be disputed for <b>${ob.blocksRemaining} blocks</b> or approximately <b>${ob.timeRemaining}</b>.`;
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowTimeRemaining', {
+        blocksRemaining: `<b>${ob.polyT('orderDetail.summaryTab.timeoutInfo.blocksRemaining',
+          { blocksRemaining: ob.blocksRemaining })}</b>`,
+        timeRemaining: `<b>${ob.timeRemaining}</b>`,
+      });
     }
   } else {
     // mod looking at case
     if (!ob.hasDisputeEscrowExpired) {
       message = ob.buyerOpened ?
-        `The buyer is disputing this order. You have <b>${ob.timeRemaining}</b> to process the dispute and make a decision.` :
-        `The vendor is disputing this order. You have <b>${ob.timeRemaining}</b> to process the dispute and make a decision.`;
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.modDisputeEscrowExpiredBuyerOpened',
+          { timeRemaining: `<b>${ob.timeRemaining}</b>` }) :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.modDisputeEscrowExpiredVendorOpened',
+          { timeRemaining: `<b>${ob.timeRemaining}</b>` });
     } else {
-      message = 'Time is up! You failed to make a decision in time. The vendor can now claim the funds.';
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modDisputeEscrowExpired');
     }
 
     tipClass = 'hide';
@@ -101,7 +112,7 @@
         <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
           <%= ob.processingButton({
             className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
-            btnText: 'Claim Payment'
+            btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnClaimPayment')
           }) %>
         <% } %>
         <% if (ob.showDiscussBtn) { %>
@@ -110,7 +121,7 @@
         <% if (ob.showResolveDisputeBtn) { %>
           <%= ob.processingButton({
             className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute ${ob.isResolvingDispute ? 'processing' : ''}`,
-            btnText: 'Resolve Dispute'
+            tnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnResolveDispute')
           }) %>
         <% } %>
       </div>
