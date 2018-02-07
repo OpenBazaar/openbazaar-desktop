@@ -104,9 +104,13 @@ export default class extends baseVw {
 
     // set an initial set of filters for the first query
     // if not passed in, set the user's values for nsfw and the currency
-    this.filterParams = {
+    this.defaultParams = {
       nsfw: String(app.settings.get('showNsfw')),
       acceptedCurrencies: getServerCurrency().code,
+    };
+
+    this.filterParams = {
+      ...this.defaultParams,
       ...filterParams,
     };
 
@@ -158,7 +162,7 @@ export default class extends baseVw {
    * This will create a url with the term and other query parameters
    * @param {string} term
    */
-  processTerm(term, reset) {
+  processTerm(term) {
     this.term = term || '';
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
@@ -167,8 +171,8 @@ export default class extends baseVw {
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
     const formData = this.getFormData(this.$filters);
     // keep any parameters that aren't present in the form on the page
-    let filters = $.param({ ...this.filterParams, ...formData });
-    filters = !filters || reset ? '' : `&${filters}`;
+    let filters = $.param({ ...this.defaultParams, ...this.filterParams, ...formData });
+    filters = filters ? `&${filters}` : '';
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     this.callSearchProvider(newURL);
   }
@@ -185,8 +189,6 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    // capture old filters before changing to the new provider
-    this.filterParams = { ...this.filterParams, ...this.getFormData(this.$filters) };
     this.sProvider = md;
     this.queryProvider = false;
     this.serverPage = 0;
@@ -194,6 +196,7 @@ export default class extends baseVw {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
     }
+    this.filterParams = '';
     this.processTerm(this.term);
   }
 
