@@ -27,7 +27,7 @@ export default class extends BaseVw {
       showDisputeBtn: false,
       showDiscussBtn: false,
       showResolveDisputeBtn: false,
-      isClaimingPayment: releasingEscrow(this.orderId),      
+      isClaimingPayment: releasingEscrow(this.orderId),
       ...options.initialState || {},
     };
 
