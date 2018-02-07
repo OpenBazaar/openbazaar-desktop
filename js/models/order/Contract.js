@@ -1,3 +1,4 @@
+import moment from 'moment';
 import BaseModel from '../BaseModel';
 import Listings from '../../collections/order/Listings';
 
@@ -24,6 +25,49 @@ export default class extends BaseModel {
     }
 
     return false;
+  }
+
+  /**
+   * Returns the escrowTimeoutHours field. It will throw an exception if the field
+   * is not avaialable or invalid.
+   */
+  get escrowTimeoutHours() {
+    let escrowTimeoutHours = this.get('vendorListings')
+      .at(0)
+      .get('metadata')
+      .get('escrowTimeoutHours');
+
+    escrowTimeoutHours = parseInt(escrowTimeoutHours, 10);
+
+    if (!escrowTimeoutHours || escrowTimeoutHours < 0) {
+      throw new Error(
+        'The escrowTimeoutHours is in an invalid format. It must be a positive integer.'
+      );
+    }
+
+    return escrowTimeoutHours;
+  }
+
+  /**
+   * Returns the escrowTimeoutHours, in a verbose localized form, for example
+   * '25 days' or '2 hours'.
+   */
+  get escrowTimeoutHoursVerbose() {
+    const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
+
+    // temporarily upping the moment threshold of number of days before month is used,
+    // so in the escrow timeouts 45 is represented as '45 days' instead of '1 month'.
+    moment.relativeTimeThreshold('d', 364);
+
+    const str = moment(Date.now())
+      .from(
+        moment(Date.now() + (this.escrowTimeoutHours * 60 * 60 * 1000)), true
+      );
+
+    // restore the days timeout threshold
+    moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
+
+    return str;
   }
 
   parse(response) {

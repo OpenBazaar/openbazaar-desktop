@@ -40,7 +40,7 @@ export default class extends BaseModal {
     this.tabViewCache = {};
 
     if (!this.model) {
-      throw new Error('Please provide an Order model.');
+      throw new Error('Please provide an Order or Case model.');
     }
 
     this._state = {
@@ -171,6 +171,18 @@ export default class extends BaseModal {
     return this.model instanceof Case ? 'case' : this.model.type;
   }
 
+  get contract() {
+    let contract = this.model.get('contract');
+
+    if (this.isCase()) {
+      contract = this.model.get('buyerOpened') ?
+        this.model.get('buyerContract') :
+        this.model.get('vendorContract');
+    }
+
+    return contract;
+  }
+
   get participantIds() {
     if (!this._participantIds) {
       let contract = this.model.get('contract');
@@ -252,6 +264,10 @@ export default class extends BaseModal {
     return this._tab;
   }
 
+  isCase() {
+    return typeof this.model.get('buyerOpened') !== 'undefined';
+  }
+
   getState() {
     return this._state;
   }
@@ -310,6 +326,8 @@ export default class extends BaseModal {
   createSummaryTabView() {
     const viewData = {
       model: this.model,
+      contract: this.contract,
+      isCase: this.isCase(),
       vendor: {
         id: this.vendorId,
         getProfile: this.getVendorProfile.bind(this),
@@ -403,9 +421,22 @@ export default class extends BaseModal {
   }
 
   createDisputeOrderTabView() {
-    const contractType = this.model.get('contract').type;
+    if (this.isCase()) {
+      throw new Error('This view should not be created on Cases.');
+    }
+
+    const contractType = this.contract.type;
 
     const model = new OrderDispute({ orderId: this.model.id });
+
+    const translationKeySuffix = app.profile.id === this.buyerId ?
+      'Buyer' : 'Vendor';
+    const timeoutMessage =
+      app.polyglot.t(
+        `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
+        { timeoutAmount: this.contract.escrowTimeoutHoursVerbose }
+      );
+
 
     const view = this.createChild(DisputeOrder, {
       model,
@@ -414,6 +445,7 @@ export default class extends BaseModal {
         id: this.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       },
+      timeoutMessage,
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));

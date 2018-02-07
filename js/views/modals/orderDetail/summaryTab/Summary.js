@@ -36,17 +36,19 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
-    let contract;
-
-    if (!this.isCase()) {
-      contract = this.model.get('contract');
-    } else {
-      contract = this.model.get('buyerOpened') ?
-        this.model.get('buyerContract') :
-        this.model.get('vendorContract');
+    if (!options.contract) {
+      throw new Error('Please provide a contract');
     }
 
-    this.contract = contract;
+    if (typeof options.isCase !== 'boolean') {
+      throw new Error('Please provide a boolean indicating whether we are working with ' +
+        'a case, as opposed to an order.');
+    }
+    this.isCase = () => options.isCase;
+    delete options.isCase;
+
+    this.contract = options.contract;
+    delete options.contract;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -269,6 +271,13 @@ export default class extends BaseVw {
         this.model.set('state', 'PAYMENT_FINALIZED');
       }
     });
+
+    this.listenTo(app.walletBalance, 'change:height',
+      () => {
+        if (this.timeoutInfo || this.shouldShowTimeoutInfoView) {
+          this.renderTimeoutInfoView();
+        }
+      });
   }
 
   className() {
@@ -294,10 +303,6 @@ export default class extends BaseVw {
       });
   }
 
-  isCase() {
-    return typeof this.model.get('buyerOpened') !== 'undefined';
-  }
-
   get $copiedToClipboard() {
     return this._$copiedToClipboard ||
       (this._$copiedToClipboard = this.$('.js-copiedToClipboard'));
@@ -313,13 +318,6 @@ export default class extends BaseVw {
         app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete'),
       ],
     };
-
-    // (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)
-
-    // case 'PAYMENT_FINALIZED':
-    //   state.currentState = 1;
-    //   state.disputeState = 0;
-    //   break;
 
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED' ||
@@ -533,15 +531,20 @@ export default class extends BaseVw {
     this.disputeCountdownTimeout = setTimeout(...args);
   }
 
+  shouldShowTimeoutInfoView() {
+    return (this.isOrderStateDisputable ||
+      ['DISPUTED', 'PAYMENT_FINALIZED'].includes(this.model.get('state'))) &&
+        getServerCurrency().hasEscrowTimeout;
+  }
+
   renderTimeoutInfoView() {
     const cryptoCur = getServerCurrency();
     const orderState = this.model.get('state');
-    const shouldShow = (this.isOrderStateDisputable ||
-      ['DISPUTED', 'PAYMENT_FINALIZED'].includes(orderState)) && cryptoCur.hasEscrowTimeout;
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
 
-    if (!shouldShow) {
+    if (!this.shouldShowTimeoutInfoView) {
       if (this.timeoutInfo) this.timeoutInfo.remove();
+      this.timeoutInfo = null;
       clearTimeout(this.disputeCountdownTimeout);
       return;
     }
@@ -576,17 +579,13 @@ export default class extends BaseVw {
     } else if (orderState === 'PAYMENT_FINALIZED') {
       state.isPaymentFinalized = true;
     } else {
-      let escrowTimeoutHours;
       let disputeStartTime;
+      let escrowTimeoutHours;
 
       try {
-        escrowTimeoutHours = this.contract.get('vendorListings')
-          .at(0)
-          .get('metadata')
-          .get('escrowTimeoutHours');
-        escrowTimeoutHours = parseInt(escrowTimeoutHours, 10);
+        escrowTimeoutHours = this.contract.escrowTimeoutHours;
       } catch (e) {
-        // pass - will be handled by setting invalidEscrowTimeout below
+        // pass - will be handled below
       }
 
       if (orderState === 'DISPUTED') {
@@ -600,7 +599,7 @@ export default class extends BaseVw {
       }
 
       if (
-        (typeof escrowTimeoutHours !== 'number' || isNaN(escrowTimeoutHours)) ||
+        !escrowTimeoutHours ||
         (orderState === 'DISPUTED' && !Date.parse(disputeStartTime))
       ) {
         // contract probably forged
@@ -612,14 +611,9 @@ export default class extends BaseVw {
         };
       } else {
         let hasDisputeEscrowExpired;
-        state.totalTime = moment(Date.now())
-          .from(
-            moment(Date.now() + (escrowTimeoutHours * 60 * 60 * 1000)), true
-          );
+        state.totalTime = this.escrowTimeoutHoursVerbose;
 
         if (this.isCase() || orderState === 'DISPUTED') {
-          // escrowTimeoutHours = 3 * 24;
-          // escrowTimeoutHours = 30 * 24;
           const msSinceDisputeStart = Date.now() - (new Date(disputeStartTime)).getTime();
           const msRemaining = (escrowTimeoutHours * 60 * 60 * 1000) -
             msSinceDisputeStart;
@@ -666,7 +660,6 @@ export default class extends BaseVw {
             isPaymentClaimable: hasDisputeEscrowExpired,
           };
         } else {
-          // escrowTimeoutHours = 30 * 24;
           const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = this.fundedBlockHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - this.fundedBlockHeight) :
@@ -684,9 +677,6 @@ export default class extends BaseVw {
             showDisputeBtn: this.isOrderStateDisputable && blocksRemaining > 0,
             isPaymentClaimable: orderState === 'FULFILLED' && blocksRemaining <= 0,
           };
-
-          this.listenToOnce(app.walletBalance, 'change:height',
-            () => this.renderTimeoutInfoView());
         }
       }
     }

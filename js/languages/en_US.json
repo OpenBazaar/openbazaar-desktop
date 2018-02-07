@@ -1637,10 +1637,9 @@
       "reasonPlaceholder": "Please explain your reason for opening a dispute…",
       "reasonHelperText": "Opening a dispute will notify and invite the moderator into the order to help resolve any conflicts",
       "btnCancel": "Cancel",
-      "btnSubmit": "Submit"
-    },
-    "actionBar": {
-      "disputeOrderBtn": "Dispute Order"
+      "btnSubmit": "Submit",
+      "timeoutMessageBuyer": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior the the moderator making a decision, the dispute will end and the vendor will be able to claim the funds.",
+      "timeoutMessageVendor": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior the the moderator making a decision, the dispute will end and you will be able to claim the funds."
     }
   },
   "orderUtil": {
