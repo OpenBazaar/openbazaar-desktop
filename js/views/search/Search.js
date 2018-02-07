@@ -165,8 +165,9 @@ export default class extends baseVw {
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    // if the DOM is ready, use the form values. Otherwise use the values set in the constructor.
-    let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
+    const formData = this.getFormData(this.$filters);
+    // keep any parameters that aren't present in the form on the page
+    let filters = $.param({ ...this.filterParams, ...formData });
     filters = !filters || reset ? '' : `&${filters}`;
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     const newParams = newURL.searchParams;
@@ -196,7 +197,7 @@ export default class extends baseVw {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
     }
-    this.processTerm(this.term, true);
+    this.processTerm(this.term);
   }
 
   deleteProvider(md = this.sProvider) {
