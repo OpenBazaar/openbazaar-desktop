@@ -185,6 +185,8 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
+    // capture old filters before changing to the new provider
+    this.filterParams = { ...this.filterParams, ...this.getFormData(this.$filters) };
     this.sProvider = md;
     this.queryProvider = false;
     this.serverPage = 0;
