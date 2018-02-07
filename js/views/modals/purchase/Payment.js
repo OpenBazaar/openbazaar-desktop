@@ -179,6 +179,13 @@ export default class extends BaseVw {
     return qr(URL, { type: 8, size: 5, level: 'Q' });
   }
 
+  remove() {
+    if (this.hideCopyAmountTimer) {
+      clearTimeout(this.hideCopyAmountTimer);
+    }
+    super.remove();
+  }
+
   render() {
     super.render();
     const displayCurrency = app.settings.get('localCurrency');
