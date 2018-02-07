@@ -40,6 +40,9 @@ export default class extends baseVw {
      * @property {boolean} controlsOnInvalid - Show controls on invalid cards so they can be removed
      *                                         or otherwise acted on.
      * @property {string}  wrapperClasses    - Add classes to the card container.
+     * @property {string} fetchErrorTitle    - A title for the fetch error.
+     * @property {string} cardState          - The initial state for cards that are created.
+     * @property {string} notSelected        - Which not selected state to use on the mod cards.
      */
 
     const opts = {
@@ -57,25 +60,27 @@ export default class extends baseVw {
       showInvalid: false,
       controlsOnInvalid: false,
       wrapperClasses: '',
+      fetchErrorTitle: '',
+      cardState: 'unselected',
+      notSelected: 'unselected',
       ...options,
     };
 
     if (!opts.apiPath || ['fetchprofiles', 'moderators'].indexOf(opts.apiPath) === -1) {
-      throw new Error('The apiPath must be either fetchproviles or moderators');
+      throw new Error('The apiPath must be either fetchprofiles or moderators');
     }
     if (opts.apiPath === 'moderators') {
       if (opts.moderatorIDs.length) {
         throw new Error('If the apiPath is moderators, a list of IDs is not used.');
       }
-      if (!opts.include || opts.include !== 'profile') {
-        throw new Error('If the apiPath is moderators, include must be set to profile.');
-      }
-    }
-    if (opts.apiPath === 'fetchprofiles' && opts.include) {
+    } else if (opts.apiPath === 'fetchprofiles' && opts.include) {
       throw new Error('If the apiPath is fetchprofiles, the include parameter is not used.');
     }
     if (typeof opts.async !== 'boolean') {
       throw new Error('The value of async must be a boolean');
+    }
+    if (!opts.fetchErrorTitle) {
+      throw new Error('Please provide a title for the fetch error.');
     }
 
     if (opts.apiPath === 'moderators') {
@@ -100,7 +105,6 @@ export default class extends baseVw {
     return 'moderatorsList';
   }
 
-
   removeNotFetched(ID) {
     this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
     this.checkNotFetched();
@@ -114,7 +118,7 @@ export default class extends baseVw {
     const buyerCur = app.serverConfig.cryptoCurrency;
     const modCurs = profile.moderatorInfo && profile.moderatorInfo.acceptedCurrencies || [];
     const validCur = modCurs.includes(buyerCur);
-    // if the moderator is on the list of IDs to exclude, or is yourself, remove them
+    // if the moderator is on the list of IDs to exclude, or is this user, remove them
     const excluded = this.excludeIDs.includes(profile.peerID) || profile.peerID === app.profile.id;
 
     if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
@@ -130,17 +134,15 @@ export default class extends baseVw {
       throw new Error('Please provide the list of moderators as an array.');
     }
 
+    if (this.fetch && this.fetch.state() === 'pending') return;
+
     // don't get any that have already been added
     const IDs = _.without(IDparam, this.allIDs);
-
-
     const op = this.options;
     const includeString = op.include ? `&include=${op.include}` : '';
     const urlString =
       `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
     const url = app.getServerUrl(urlString);
-
-    if (this.fetch && this.fetch.state() === 'pending') return;
 
     this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
@@ -151,11 +153,11 @@ export default class extends baseVw {
     }
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
-    if (IDs.length || this.options.method === 'GET') {
+    if (IDs.length || op.method === 'GET') {
       this.fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
-        method: this.options.method,
+        method: op.method,
       })
           .done((data) => {
             if (op.async) {
@@ -167,9 +169,8 @@ export default class extends baseVw {
                   const eventData = event.jsonData;
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
-                    if (IDs.indexOf(eventData.peerId) !== -1) {
-                      // don't add errored moderators
-                      if (this.options.showInvalid) {
+                    if (IDs.includes(eventData.peerId)) {
+                      if (op.showInvalid) {
                         this.moderatorsCol.add(new Moderator(eventData, { parse: true }));
                       } else {
                         this.removeNotFetched(eventData.peerId);
@@ -192,13 +193,17 @@ export default class extends baseVw {
           .fail((xhr) => {
             if (xhr.statusText === 'abort') return;
             const failReason = xhr.responseJSON ? `\n\n${xhr.responseJSON.reason}` : '';
-            const msg = `${this.options.fetchErrorMsg}${failReason}`;
-            openSimpleMessage(this.options.fetchErrorTitle, msg);
+            const msg = `${op.fetchErrorMsg}${failReason}`;
+            openSimpleMessage(op.fetchErrorTitle, msg);
           });
     }
   }
 
-  removeModeratorsByID(IDs = []) {
+  removeModeratorsByID(IDs) {
+    if (!IDs) {
+      throw new Error('You must provide the ID or IDs to remove.');
+    }
+
     this.moderatorsCol.remove(IDs);
   }
 
@@ -208,8 +213,8 @@ export default class extends baseVw {
       // all ids have been fetched
       this.$moderatorsStatus.addClass('hide');
       this.$moderatorStatusText.text('');
-      // check if none of the loaded moderators are valid
-      if (!this.moderatorsCol.length) {
+      // check if there are mods that loaded but none were valid
+      if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
       }
     } else {
@@ -220,14 +225,15 @@ export default class extends baseVw {
 
 
   addMod(model) {
-    if (!model) throw new Error('Please provide a moderator model.');
+    if (!model || !(model instanceof Moderator)) {
+      throw new Error('Please provide a moderator model.');
+    }
 
-    const cardState = this.options.cardState;
     const newModView = this.createChild(ModCard, {
       model,
       purchase: this.options.purchase,
       notSelected: this.options.notSelected,
-      cardState,
+      cardState: this.options.cardState,
       radioStyle: this.options.radioStyle,
       controlsOnInvalid: this.options.controlsOnInvalid,
     });
@@ -235,7 +241,6 @@ export default class extends baseVw {
       // if only one moderator should be selected, deselect the other moderators
       if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
     });
-    this.$moderatorsWrapper.append(newModView.render().$el);
     this.removeNotFetched(model.id);
     this.modCards.push(newModView);
     // if required, select the first  moderator

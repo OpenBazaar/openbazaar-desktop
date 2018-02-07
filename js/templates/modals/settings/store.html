@@ -50,7 +50,7 @@
           </div>
           <div class="col9">
             <div class="flexColRows gutterV">
-              <div>
+              <div class="row">
                 <h5><%= ob.polyT('settings.storeTab.selectedModerators') %></h5>
                 <div class="js-modListSelected"></div>
               </div>
@@ -80,6 +80,9 @@
                     <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
                   </button>
                 </div>
+                <ul class="unstyled errorList hide js-modListAvailableError">
+                  <li><i class="ion-alert-circled"></i><span class="js-modListAvailableErrorText"></span> </li>
+                </ul>
                 <div class="js-modListAvailable"></div>
                 <div class="noModsAdded clrBr flexCent <% if (ob.modsAvailable.length) print('hide') %> js-noModsAdded">
                   <button class="btn clrP clrBr browseMods js-browseMods">
@@ -87,7 +90,7 @@
                   </button>
                 </div>
               </div>
-            </div><% // end of flex inside col9 %>
+            </div>
             <% if (ob.errors.storeModerators) print('<div class="row"></div>  ' + ob.formErrorTmpl({ errors: ob.errors.storeModerators })) %>
           </div>
         </div>

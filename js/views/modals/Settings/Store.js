@@ -66,15 +66,13 @@ export default class extends baseVw {
       apiPath: 'moderators',
       useCache: false,
       async: true,
-      method: 'GET',
-      include: 'profile',
       excludeIDs: this.currentMods,
       // excludeCollection: this.modsSelected,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       cardState: 'unselected',
       notSelected: 'unselected',
     });
-  }
+    }
 
   events() {
     return {

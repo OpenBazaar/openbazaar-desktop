@@ -8,10 +8,19 @@ import { getLangByCode } from '../../data/languages';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
-    this.notSelected = options.notSelected || 'unselected';
-    this.cardState = options.cardState || this.notSelected;
+
+    const opts = {
+      cardState: 'unselected',
+      notSelected: 'unselected',
+      radioStyle: false,
+      controlsOnInvalid: false,
+      ...options,
+    };
+
+    super(opts);
+    this.options = opts;
+    this.notSelected = opts.notSelected;
+    this.cardState = opts.cardState;
 
     /* There are 3 valid card states:
        selected: This mod is pre-selected, or was activated by the user.
@@ -92,8 +101,8 @@ export default class extends BaseVw {
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,
-        radioStyle: !!this.options.radioStyle,
-        controlsOnInvalid: !!this.options.controlsOnInvalid,
+        radioStyle: this.options.radioStyle,
+        controlsOnInvalid: this.options.controlsOnInvalid,
         modLanguages,
         ...this.model.toJSON(),
       }));
