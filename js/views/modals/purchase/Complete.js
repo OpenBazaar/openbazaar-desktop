@@ -50,8 +50,8 @@ export default class extends BaseVw {
     let messageSent = true;
 
     if (save) {
-      this.$send.addClass('disabled');
-      this.$messageSent.removeClass('hide');
+      this.getCachedEl('.js-send').addClass('disabled');
+      this.getCachedEl('.js-messageSent').removeClass('hide');
     } else {
       // Developer error - this shouldn't happen.
       console.error('There was an error saving the chat message.');
@@ -63,14 +63,15 @@ export default class extends BaseVw {
   }
 
   sendMessageInput() {
-    const message = this.$messageInput.val().trim();
+    const $messageInput = this.getCachedEl('#messageInput');
+    const message = $messageInput.val().trim();
     if (message) this.sendMessage(message);
-    this.$messageInput.val('');
+    $messageInput.val('');
   }
 
   keyDownMessageInput(e) {
-    this.$send.toggleClass('disabled', !e.target.value);
-    this.$messageSent.addClass('hide');
+    this.getCachedEl('.js-send').toggleClass('disabled', !e.target.value);
+    this.getCachedEl('.js-messageSent').addClass('hide');
 
     // if the key pressed is not enter, do nothing
     if (e.shiftKey || e.which !== 13) return;
@@ -87,22 +88,9 @@ export default class extends BaseVw {
     if (orderID !== this._orderID) this._orderID = orderID;
   }
 
-  get $messageInput() {
-    return this._$messageInput ||
-      (this._$messageInput = this.$('#messageInput'));
-  }
-
-  get $send() {
-    return this._$send ||
-      (this._$send = this.$('.js-send'));
-  }
-
-  get $messageSent() {
-    return this._$messageSent ||
-      (this._$messageSent = this.$('.js-messageSent'));
-  }
-
   render() {
+    super.render();
+
     loadTemplate('modals/purchase/complete.html', t => {
       this.$el.html(t({
         displayCurrency: app.settings.get('localCurrency'),
@@ -112,10 +100,6 @@ export default class extends BaseVw {
         orderID: this.orderID,
         vendorName: this.options.vendor.name,
       }));
-
-      this._$messageInput = null;
-      this._$send = null;
-      this._$messageSent = null;
     });
 
     return this;

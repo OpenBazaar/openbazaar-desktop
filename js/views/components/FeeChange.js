@@ -40,7 +40,7 @@ export default class extends baseVw {
   render() {
     loadTemplate('components/feeChange.html', (t) => {
       this.$el.html(t({
-        ...this._state,
+        ...this.getState(),
       }));
     });
 
