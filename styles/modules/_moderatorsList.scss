@@ -17,6 +17,25 @@
     padding-top: $pad;
     text-align: center;
   }
+
+
+  .moderatorsWrapper.showVerifiedOnly .moderatorCard {
+    .moderatorCardInner {
+      display: none;
+
+      &.verified {
+        display: flex;
+      }
+    }
+
+    .moderatorCardSeperator {
+      display: none;
+
+      &.verified {
+        display: block;
+      }
+    }
+  }
 }
 
 

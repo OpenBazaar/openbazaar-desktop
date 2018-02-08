@@ -4,6 +4,7 @@
    const isDisabled = (!ob.valid && !ob.controlsOnInvalid) || !loaded ? 'disabled' : '';
 console.log(ob.verified)
    const verified = ob.verified ? 'verified' : '';
+console.log(verified)
 %>
 
 <div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <%= isDisabled %> <%= verified %>">
@@ -79,4 +80,4 @@ console.log(ob.verified)
     <% } %>
   </div>
 </div>
-<div class="moderatorCardSeperator clrBr"></div>
+<div class="moderatorCardSeperator clrBr <%= verified %>"></div>

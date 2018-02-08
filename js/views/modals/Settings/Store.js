@@ -67,6 +67,7 @@ export default class extends baseVw {
       useCache: false,
       async: true,
       excludeIDs: this.currentMods,
+      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       cardState: 'unselected',
       notSelected: 'unselected',
@@ -139,7 +140,7 @@ export default class extends baseVw {
   }
 
   onClickVerifiedOnly(e) {
-    const checked = $(e.target).prop('checked');
+    this.modsAvailable.showVerifiedOnly($(e.target).prop('checked'));
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
@@ -195,14 +196,19 @@ export default class extends baseVw {
           });
 
           // remove changed moderators
-          this.modsSelected.removeModeratorsByID(this.modsSelected.unselectedIDs);
+          const removedSelected = this.modsSelected.unselectedIDs;
+          this.modsSelected.removeModeratorsByID(removedSelected);
           this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
           this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
 
-          // add new moderators to the selected collection
           this.currentMods = this.settings.get('storeModerators');
           this.modsByID.excludeIDs = this.currentMods;
+          this.modsAvailable.excludeIDs = this.currentMods;
 
+          // add removed moderators to the available collection
+          this.modsAvailable.getModeratorsByID(removedSelected);
+
+          // add new moderators to the selected collection
           const newSelected = _.without(this.currentMods, ...this.modsSelected.selectedIDs);
           if (newSelected.length) this.modsSelected.getModeratorsByID(newSelected);
         })

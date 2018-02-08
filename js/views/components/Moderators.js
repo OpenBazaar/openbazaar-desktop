@@ -28,6 +28,7 @@ export default class extends baseVw {
      * @property {boolean} useCache          - Use cached data for faster speed.
      * @property {array}   moderatorIDs      - list of peerIDs to retrieve. If none get all.
      * @property {array}   excludeIDs        - list of peerIDs to not use.
+     * @property {boolean} showVerifiedOnly - show only validated moderatiors or all moderators.
      * @property {string}  method            - POST or GET
      * @property {string}  include           - If apiPath is moderator, set to 'profile' or only the
      *                                         peerIDs of each moderator are returned.
@@ -51,6 +52,7 @@ export default class extends baseVw {
       useCache: true,
       moderatorIDs: [],
       excludeIDs: [],
+      showVerifiedOnly: false,
       method: 'POST',
       include: '',
       purchase: false,
@@ -95,7 +97,7 @@ export default class extends baseVw {
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
       const view = this.addMod(model);
-      this.$moderatorsWrapper.append(view.render().$el);
+      this.getCachedEl('.js-moderatorsWrapper').append(view.render().$el);
     });
     this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => this.removeMod(md, cl, rOpts));
     this.modCards = [];
@@ -147,8 +149,8 @@ export default class extends baseVw {
     this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
     if (IDs.length) {
-      this.$moderatorsStatus.removeClass('hide');
-      this.$moderatorStatusText.text(app.polyglot.t('moderators.moderatorsLoading',
+      this.getCachedEl('.js-moderatorsStatus').removeClass('hide');
+      this.getCachedEl('.js-moderatorStatusInner').text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: IDs.length, total: IDs.length }));
     }
 
@@ -211,14 +213,15 @@ export default class extends baseVw {
     const nfYet = this.unfetchedMods.length;
     if (nfYet === 0) {
       // all ids have been fetched
-      this.$moderatorsStatus.addClass('hide');
-      this.$moderatorStatusText.text('');
+      this.getCachedEl('.js-moderatorsStatus').addClass('hide');
+      this.getCachedEl('.js-moderatorStatusInner').text('');
       // check if there are mods that loaded but none were valid
       if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
       }
     } else {
-      this.$moderatorStatusText.text(app.polyglot.t('moderators.moderatorsLoading',
+      this.getCachedEl('.js-moderatorStatusInner')
+        .text(app.polyglot.t('moderators.moderatorsLoading',
           { remaining: nfYet, total: this.fetchingMods.length }));
     }
   }
@@ -302,6 +305,10 @@ export default class extends baseVw {
     });
   }
 
+  showVerifiedOnly(bool) {
+    this.getCachedEl('.js-moderatorsWrapper').toggleClass('showVerifiedOnly', bool);
+  }
+
   get noneSelected() {
     return this._noneSelected;
   }
@@ -316,19 +323,21 @@ export default class extends baseVw {
   }
 
   render() {
+    let wrapperClasses = this.options.wrapperClasses;
+    const wrapperComma = wrapperClasses ? ', ' : '';
+    const showValidated = this.options.showVerifiedOnly ? 'showVerifiedOnly' : '';
+    wrapperClasses = `${wrapperClasses}${wrapperComma}${showValidated}`;
+
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
-        wrapperClasses: this.options.wrapperClasses,
+        wrapperClasses,
       }));
 
       super.render();
-      this.$moderatorsWrapper = this.$('.js-moderatorsWrapper');
-      this.$moderatorsStatus = this.$('.js-moderatorsStatus');
-      this.$moderatorStatusText = this.$('.js-moderatorStatusInner');
 
       this.modCards.forEach(mod => {
         mod.delegateEvents();
-        this.$moderatorsWrapper.append(mod.render().$el);
+        this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
       });
     });
 
