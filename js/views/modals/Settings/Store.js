@@ -79,6 +79,7 @@ export default class extends baseVw {
       'click .js-browseMore': 'fetchAvailableModerators',
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
+      'click #verifiedOnly': 'onClickVerifiedOnly',
     };
   }
 
@@ -135,6 +136,10 @@ export default class extends baseVw {
       const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
       this.showModByIDError(blankError);
     }
+  }
+
+  onClickVerifiedOnly(e) {
+    const checked = $(e.target).prop('checked');
   }
 
   getProfileFormData(subset = this.$profileFormFields) {

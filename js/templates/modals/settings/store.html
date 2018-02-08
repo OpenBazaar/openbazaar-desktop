@@ -73,12 +73,11 @@
               <div>
                 <div class="rowLg"><% // just a spacer %></div>
               </div>
-              <div>
-                <div class="flexVCent">
+              <div class="row">
+                <div class="flexVCentClearMarg tx5 rowTn">
                   <h5 class="flexExpand"><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
-                  <button class="btnTxt tx6 clrT2 txU browseMore <% if (!ob.modsAvailable.length) print('hide') %> js-browseMore">
-                    <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
-                  </button>
+                  <input type="checkbox" id="verifiedOnly" checked>
+                  <label class="tx5b" for="verifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
                 </div>
                 <ul class="unstyled errorList hide js-modListAvailableError">
                   <li><i class="ion-alert-circled"></i><span class="js-modListAvailableErrorText"></span> </li>
@@ -90,6 +89,14 @@
                   </button>
                 </div>
               </div>
+                <div class="tx6 clrT2 row">
+                  <%= ob.polyT('settings.storeTab.disclaimer') %>
+                </div>
+                <div class="flexHCent">
+                  <button class="btnTxt tx6 clrT2 txU browseMore <% if (!ob.modsAvailable.length) print('hide') %> js-browseMore">
+                    <%= ob.polyT('settings.storeTab.browseMoreModerators') %>
+                  </button>
+                </div>
             </div>
             <% if (ob.errors.storeModerators) print('<div class="row"></div>  ' + ob.formErrorTmpl({ errors: ob.errors.storeModerators })) %>
           </div>

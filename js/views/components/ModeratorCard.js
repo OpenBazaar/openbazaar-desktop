@@ -98,7 +98,7 @@ export default class extends BaseVw {
         });
     }
 
-    const verifiedMod = app.verifiedMods.get(this.guid);
+    const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
 
     loadTemplate('components/moderatorCard.html', (t) => {
       this.$el.html(t({

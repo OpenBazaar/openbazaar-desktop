@@ -358,9 +358,9 @@
   },
   "moderatorCard": {
     "view": "View",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "The information for this moderator failed to load.",
     "invalid": "This user is not currently a moderator.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
@@ -669,9 +669,11 @@
       "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
       "moderatorByIDPlaceholder": "Enter a @handle or ID",
       "moderatoryByIDSubmit": "Find",
-      "availableModerators": "Available Moderators on the Network",
+      "availableModerators": "Available Moderators",
       "browseModerators": "Browse Moderators",
-      "browseMoreModerators": "Load More Moderators",
+      "browseMoreModerators": "Load More",
+      "verifiedOnly": "Verified moderators only",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Loading",
       "status": {
         "saving": "Saving store settings...",
