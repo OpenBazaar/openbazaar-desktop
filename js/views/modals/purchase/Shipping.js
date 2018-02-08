@@ -21,7 +21,11 @@ export default class extends baseView {
     this.listenTo(this.shippingOptions, 'shippingOptionSelected', ((opts) => {
       this.trigger('shippingOptionSelected', opts);
     }));
-    this.listenTo(app.settings.get('shippingAddresses'), 'update', () => this.render());
+    this.listenTo(app.settings.get('shippingAddresses'), 'update', (col) => {
+      // if all the addresses were deleted, update with blank values
+      if (!col.models.length) this.trigger('shippingOptionSelected', { name: '', service: '' });
+      this.render();
+    });
   }
 
   className() {

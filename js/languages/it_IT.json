@@ -1,10 +1,10 @@
 {
   "publish": {
     "unpublishedConfirmTitle": "Contenuto non pubblicato",
-    "unpublishedConfirmBody": "You have unpublished content. If you close now your latest data will not be viewable by others. Are you sure you want to close?",
+    "unpublishedConfirmBody": "Hai dei contenuti che non sono ancora stati pubblicati. Se chiudi i tuoi ultimi dati non saranno visibili agli altri. Sei sicuro di voler chiudere?",
     "unpublishedConfirmYes": "Sì",
     "unpublishedConfirmNo": "No",
-    "failedRetryTitle": "There was an error retrying the publish.",
+    "failedRetryTitle": "Si e` verificato un errore durante il tentativo di riprovare a pubblicare il contenuto.",
     "statusPublishing": "Sto pubblicando gli aggiornamenti...",
     "retryLink": "Riprova",
     "statusPublishFailed": "Pubblicazione fallita. %{retryLink}",
@@ -43,7 +43,7 @@
     "notAvailable": "Non ci sono aggiornamenti disponibili.",
     "cancel": "Cancella",
     "ready": {
-      "title": "L'aggiornamento è pronto.",
+      "title": "L'aggiornamento è pronto",
       "msg": "L'aggiornamento è stato scaricato. Clicca sotto per installarlo."
     },
     "install": "Installa ora"
@@ -311,7 +311,7 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Controlla gli aggiornamenti",
-    "downloadLatest": "Download Latest",
+    "downloadLatest": "Scarica l'ultima versione",
     "donationsTab": {
       "linkText": "Donazioni",
       "sectionHeader": "Donazioni",
@@ -720,7 +720,7 @@
       "torProxyLabel": "Tor SOCKS5 proxy",
       "torProxyPlaceholder": "127.0.0.1:9150",
       "torPwLabel": "Tor Password",
-      "torPwPlaceholder": "The unhashed Tor control password",
+      "torPwPlaceholder": "La password in chiaro di Tor control",
       "warning": "Attenzione:",
       "torServerWarning": "%{warning} Per rimanere anonimo, è importante che Tor sia attivo anche sul server.",
       "saveConfirm": {
@@ -785,7 +785,7 @@
         "viewDetailsBtn": "Vedi dettagli",
         "retryTransactionBtn": "Aumenta Tassa",
         "retryPaymentConfirmBox": {
-          "title": "Retry Payment",
+          "title": "Riprova il pagamento",
           "body": "Aggiungi %{fiatBtcPairing}%{asterisk} al costo della transazione e effettua di nuovo la transazione.",
           "insufficientFundsBody": "Hai bisogno almeno di %{fiatBtcPairing}%{asterisk} nel tuo portafoglio per ritentare la transazione con una commissione più alta.",
           "fetchError": "C'è stato un errore nella stima delle commissioni: %{err}",
@@ -794,7 +794,7 @@
           "btnConfirmSend": "Manda",
           "btnRetry": "Indietro"
         },
-        "retryFailDialogTitle": "Unable to retry payment",
+        "retryFailDialogTitle": "Impossibile riprovare il pagamento",
         "retryFailInsufficientFunds": "Non hai fondi sufficienti a completare la transazione.",
         "feeBumpOf": "Fee bump of %{address}"
       },
@@ -943,8 +943,8 @@
     "placeholderReturnPolicy": "Qual è la tua politica di reso? Fino a quanti giorni dopo il prodotto può essere restituito? Chi paga per la spedizione (nel caso sia necessaria)? Ecc. ",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Inserisci una descrizione che spieghi chiaramente cosa stai vendendo",
-    "helperType": "Choose from 3 types",
-    "helperShipping": "Ship wherever you'd like!",
+    "helperType": "Scegli tra 3 tipologie",
+    "helperShipping": "Spedisci ovunque desideri!",
     "helperPhotos": "Includi massimo %{maxPhotos} immagini",
     "helperSKU": "A unique identifier for your listing",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
@@ -953,7 +953,7 @@
     "helperCondition": "Le condizioni generali di ciò che stai vendendo",
     "helperNSFW": "Spunta 'sì' se l'annuncio contiene contenuti per adulti",
     "helperTags": "Aggiungi i tags. Inserisci un tag, premi invio, ripeti.",
-    "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
+    "helperCategories": "L'annidamento delle categorie non è supportato (Es. Calzature > Stivali attualmente non funziona). Inserisci un nome per la categoria, premi invio, ripeti.",
     "helperReturnPolicy": "Se lasciato bianco, l'annuncio mostrerà 'Non è stata specificata alcuna Politica di Reso'",
     "helperTerms": "Se lasciato bianco, l'annuncio mostrerà 'Non sono stati specificati i Termini e Condizioni'",
     "createListingLabel": "Crea Annuncio",
@@ -974,7 +974,7 @@
     "btnAddReturnPolicy": "Aggiungi Politica di Reso",
     "btnTermsAndConditions": "Aggiungi Termini e Condizioni",
     "btnAddCoupon": "Aggiungi Codice Promozionale",
-    "primaryPhoto": "PRIMARY PHOTO",
+    "primaryPhoto": "FOTO PRIMARIA",
     "viewListingLink": "Vedi Elenco",
     "shippingOptions": {
       "optionHeading": "Opzioni di Spedizione #%{listPosition}",
@@ -1042,7 +1042,7 @@
       "placeholderSKU": "SKU, ID, etc",
       "unlimitedQuantityLabel": "illimitato",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
-      "unableToCalcTotalPrice": "Unable to calculate",
+      "unableToCalcTotalPrice": "Impossibile da calcolare",
       "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
     },
     "confirmCloseDialog": {
@@ -1065,23 +1065,23 @@
   "search": {
     "title": "Scopri",
     "searchBtn": "Cerca",
-    "searchPlaceholder": "Enter a search term or #tag.",
+    "searchPlaceholder": "Cerca qualcosa o usa i #tag",
     "suggestions": "Suggerimenti",
     "resultsFound": "<b>%{totalResults} annuncio</b> trovato per <b>\"%{term}\"</b> |||| <b>%{totalResults} annunci</b> trovati per <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} annunci",
     "sortBy": "Ordina per",
-    "changeProvider": "Close and Choose a New Search Provider",
+    "changeProvider": "Chiudi e Scegli un Nuovo Motore di Ricerca",
     "useDefault": "Cerca \"%{term}\" usando %{defaultProvider}",
     "noResults": "Nessun annuncio coincide con i criteri di ricerca.",
-    "addTitle": "Add search provider",
-    "addPlaceholder":"URL for the search provider",
-    "addTorPlaceholder": "Tor URL for the search provider (optional)",
+    "addTitle": "Aggiungi un motore di ricerca",
+    "addPlaceholder":"URL per il motore di ricerca",
+    "addTorPlaceholder": "Tor URL per il motore di ricerca (opzionale)",
     "addBtn": "Aggiungi",
     "cancel": "Cancella",
     "deleteProviderBtn": "Elimina motore di ricerca",
     "makeDefaultBtn": "Imposta come predefinito",
     "makeDefaultBtnHelper": "Il motore di ricerca predefinito viene utilizzato per gli URL inseriti nella barra dell'indirizzo.",
-    "addQueryProviderBtn": "Add search provider",
+    "addQueryProviderBtn": "Aggiungi un motore di ricerca",
     "chooseDefaultTitle": "Seleziona come motore di ricerca predefinito",
     "chooseDefaultMsg": "Questo motore di ricerca sarà quello predefinito finchè questa impostazione non sarà cambiata.",
     "providers": {
@@ -1089,10 +1089,10 @@
         "myPage": "Mia Pagina"
     },
     "errors": {
-      "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
+      "searchFailTitle": "La ricerca di %{provider} e` fallita. Scegli un altro motore di ricerca tra quelli sopra",
       "searchFailReason": "Il motore di ricerca ha restituito il seguente messaggio: %{error}",
-      "connection": "You are no longer connected to your node. Reconnect to continue searching",
-      "addError": "This provider cannot be added. Check your data and try again.",
+      "connection": "Non sei piu` connesso al tuo nodo. Riconnettiti per continuare la ricerca.",
+      "addError": "Questo motore di ricerca non puo` essere aggiunto. Controlla i dati e riprova.",
       "locked": "I motori di ricerca predefiniti non possono essere eliminati",
       "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
     }
@@ -1105,7 +1105,7 @@
     "introScreen": {
       "connectionLbl": "Connessione:",
       "btnChange": "Cambia",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn Bitcoin.",
+      "introLine": "Un mercato libero. Nessuna tassa. Nessuna restrizione. Guadagna Bitcoin.",
       "tagLine": "Compra e vendi liberamente.",
       "btnGetStarted": "Inizia"
     },
@@ -1145,7 +1145,7 @@
     "informationTitle": "Informazioni aggiuntive",
     "emailAddress": "Indirizzo email o Numero di telefono",
     "emailPlaceholder": "nome@email.com",
-    "emailNote": "An alternate way to reach you.",
+    "emailNote": "Un modo alternativo per contattarti.",
     "couponCode": "Codice Promozionale",
     "couponCodePlaceholder": "Inserisci un codice promozionale",
     "applyCode": "Applica",
@@ -1153,11 +1153,11 @@
     "codeErrors": {
       "invalid": "\"%{code}\" non è un codice valido",
       "duplicate": "Puoi aggiungere \"%{code}\" solo una volta",
-      "excessive": "You cannot apply discounts that total 100% or more.",
+      "excessive": "Non puoi applicare sconti pari al 100% o piu`.",
       "blank": "Devi inserire un codice"
     },
     "removeCode": "rimuovi",
-    "memo": "Memo",
+    "memo": "Promemoria",
     "memoPlaceholder": "Inserisci ulteriori dettagli per il venditore qui (opzionale).",
     "pay": "PAGA >",
     "payNote": "Cliccando su 'paga' verrai reindirizzato allo step finale.",
@@ -1169,7 +1169,7 @@
     "quantity": "Quantità",
     "useShapeShift": "oppure utilizza Shapeshift al prossimo step",
     "moderatedPayment": "Pagamento moderato",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
+    "tooLowForMods": "Secondo la corrente fee stimata, l'opzione di pagamento moderata non e` disponibili per ordini sotto i %{minModPrice}. Al suo posto sara` utilizzato un pagamento diretto.",
     "noValidModerators": "Nessun moderatore è disponibile per quest'ordine",
     "moderationDisclaimer": "Il tuo pagamento verrà ritenuto in modo sicuro in un Escrow. Se dovessero esserci dei problemi, potrai aprire una disputa con un moderatore. **La tassa del moderatore viene applicata solo quando viene aperta una disputa.",
     "chooseModerator": "Scegli questo moderatore",
@@ -1187,16 +1187,16 @@
       "payFromWallet": "Paga dal portafoglio",
       "payWithAlt": "Paga con altcoins",
       "note1": "Se hai bisogno di aiuto per iniziare con Bitcoin,  leggi  %{link}.",
-      "note1Link": "Need Bitcoin? on OpenBazaar.org",
+      "note1Link": "Hai bisogno di Bitcoin? In OpenBazaar.org",
       "note2": "Il tuo pagamento verrà ritenuto in modo sicuro in un Escrow. Se dovessero esserci dei problemi, potrai aprire una disputa con un moderatore.",
       "note3": "**La tassa del moderatore viene applicata solo quando viene aperta una disputa.",
-      "note4": "Once you have paid, it may take a bit for the interface to update.",
+      "note4": "Una volta pagato, l'interfaccia avra` bisogno un po` di tempo per aggiornarsi.",
       "btnConfirmedPay": "Sì, paga",
       "altcoinNote": "<b>Altcoins</b> saranno disponibili quando ShapeShift implementerà la Segregated Witness.",
-      "altcoinLink": "You can still fund your OB wallet with altcoins.",
+      "altcoinLink": "Puoi usare anche le altcoins per il tuo wallet OB.",
       "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
-      "walletLink": "You can send funds to your OB wallet instead.",
-      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
+      "walletLink": "Oppure puoi inviare i tuoi fondi al tuo wallet OB.",
+      "feeNote": "<b>Ricordati di includere qualunque tassa</b>. quando invii i tuoi fondi al tuo wallet OpenBazaar"
     },
     "completeSection": {
       "paymentSent": "Pagamento inviato!",
@@ -1228,7 +1228,7 @@
       "additionalItems": "Each Additional Item",
       "options": "Opzioni",
       "subtotal": "Subtotal (%{quantity})",
-      "shippingTotal": "Total Shipping",
+      "shippingTotal": "Totale spedizioni",
       "total": "Totale"
     },
     "errors": {
@@ -1264,7 +1264,7 @@
       "heading": "Acquisti",
       "countTransactions": "%{smart_count} acquisto |||| %{smart_count} acquisti",
       "countTransactionsFound": "%{countTransactions} trovate",
-      "unableToFetch": "Unable to obtain your purchases.",
+      "unableToFetch": "Impossibile elencare i tuoi acquisti.",
       "noResults": "Nessun acquisto trovato",
       "returnToFromOrder": "Ritorno agli acquisti"
     },
@@ -1272,13 +1272,13 @@
       "heading": "Casi",
       "countTransactions": "%{smart_count} caso |||| %{smart_count} casi",
       "countTransactionsFound": "%{countTransactions} trovate",
-      "noResults": "No cases found",
+      "noResults": "Nessun risultato trovato",
       "returnToFromOrder": "Return to cases"
     },
     "filters": {
       "purchasing": "Purchasing",
       "ready": "Ready To Process",
-      "fulfilled": "Fulfilled",
+      "fulfilled": "Completato",
       "refunded": "Rimborsato",
       "disputeOpen": "Dispute aperte",
       "disputePending": "Dispute Pending",
@@ -1287,17 +1287,17 @@
     },
     "sort": {
       "label": "Ordina per",
-      "unread": "Unread",
+      "unread": "Non letto",
       "dateAsc": "Recenti",
       "dateDesc": "Più vecchi"
     },
-    "placeholderSearchSales": "Search by Order #, Title or Buyer",
-    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
-    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
+    "placeholderSearchSales": "Cerca per Numero d'Ordine, Titolo o Acquirente",
+    "placeholderSearchPurchases": "Cerca per Numero d'Ordine, Titolo o Venditore",
+    "placeholderSearchCases": "Cerca per Numero d'Ordine, Titolo, Acquirente o Venditore",
     "resetFilters": "Azzera filtri",
     "transactionsTable": {
       "headers": {
-        "orderId": "Order ID",
+        "orderId": "ID dell'ordine",
         "date": "Data",
         "listing": "Annunci",
         "buyer": "Acquirente",
@@ -1311,15 +1311,15 @@
         "AWAITING_PICKUP": "In attesa di ritiro",
         "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
         "PARTIALLY_FULFILLED": "Partially Fulfilled",
-        "FULFILLED": "Fulfilled",
+        "FULFILLED": "Completato",
         "COMPLETED": "Completato",
         "CANCELED": "Cancellato",
         "DECLINED": "Declinato",
         "REFUNDED": "Rimborsato",
-        "DISPUTED": "Disputed",
+        "DISPUTED": "Contestato",
         "DECIDED": "Deciso",
         "RESOLVED": "Risolto",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Pagamento Completato"
       },
       "btnReject": "Rifiuta",
       "btnAccept": "Accetta",
@@ -1359,9 +1359,9 @@
       "vendorContractHeading": "Vendor Contract:"
     },
     "summaryTab": {
-      "orderNumber": "Order #: %{orderId}",
+      "orderNumber": "Ordine #: %{orderId}",
       "copyLink": "Copia",
-      "notApplicable": "n/a",
+      "notApplicable": "Vuoto",
       "vendorFinalizedPayment": "You have manually finalized the order.",
       "payment": {
         "firstPaymentHeading": "Dettagli del pagamento",
@@ -1399,7 +1399,7 @@
         "buyerOrderAccepted": "Grazie per il tuo acquisto!",
         "modOrderAccepted": "Il venditore ha accettato l'ordine",
         "refundBtn": "Rimborso",
-        "fulfillBtn": "Fulfill Order",
+        "fulfillBtn": "Completa l'ordine",
         "refundConfirm": {
           "title": "Sei sicuro?",
           "body": "La quantità originale in Bitcoin verrà restituita all'acquirente",
@@ -1408,13 +1408,13 @@
         }
       },
       "fulfilled": {
-        "heading": "Fulfilled",
+        "heading": "Completato",
         "shippedByLabel": "Ordine spedito via:",
         "trackingNumberLabel": "Tracciamento #:",
         "noteFromLabel": "Note from %{store}:",
         "copyLink": "Copia",
         "digitalReadyForDlHeading": "I file digitali sono pronti per essere scaricati",
-        "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
+        "digitalReadyForDlText": "I file sono stati spediti. Scaricali quando sei pronto",
         "urlLabel": "File URL",
         "passwordLabel": "Password"
       },
@@ -1466,14 +1466,14 @@
         "progressBarStates": {
           "paid": "Pagato",
           "accepted": "Accettato",
-          "fulfilled": "Fulfilled",
+          "fulfilled": "Completato",
           "complete": "Completato",
           "canceled": "Cancellato",
           "declined": "Declinato",
           "refunded": "Rimborsato",
           "decided": "Deciso",
           "resolved": "Risolto",
-          "disputed": "Disputed"
+          "disputed": "Contestato"
         },
         "heading": "Order Details",
         "shipToHeading": "Spedisci a",
@@ -1483,17 +1483,17 @@
         "moderatorHeading": "Moderatore",
         "copyAddress": "Copia",
         "viewOnMap": "Vedi sulla mappa",
-        "memo": "Memo",
+        "memo": "Promemoria",
         "addressNotes": "Note alla consegna",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "SKU"
       }
     },
     "fulfillOrderTab": {
-      "heading": "Fulfill Order",
+      "heading": "Completa l'ordine",
       "shippingCarrierLabel": "Shipping Carrier",
-      "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
-      "trackingLabel": "Tracking #",
+      "shippingCarrierPlaceholder": "UPS, FedEx, DHL, ecc..",
+      "trackingLabel": "Codice di monitoraggio",
       "trackingPlaceholder": "opzionale",
       "fileUrlLabel": "File URL",
       "fileUrlPlaceholder": "Link to file(s)",
@@ -1508,7 +1508,7 @@
     "resolveDisputeTab": {
       "heading": "Risolvi Disputa",
       "buyerAmountLabel": "Buyer Amount",
-      "vendorAmountLabel": "Vendor Amount",
+      "vendorAmountLabel": "Totale venditore",
       "commentLabel": "Commenti",
       "commentPlaceholder": "Spiega la tua decisione",
       "btnCancel": "Cancella",
@@ -1521,7 +1521,7 @@
       }
     },
     "disputeOrderTab": {
-      "heading": "Dispute Order",
+      "heading": "Contesta ordine",
       "moderatorLabel": "Moderatore",
       "reasonLabel": "Ragione",
       "reasonPlaceholder": "Spiega le tue ragioni per l'apertura di una disputa.",
@@ -1530,15 +1530,15 @@
       "btnSubmit": "Invia"
     },
     "actionBar": {
-      "disputeOrderBtn": "Dispute Order"
+      "disputeOrderBtn": "Contesta ordine"
     }
   },
   "orderUtil": {
-    "failedAcceptHeading": "There was an error accepting the order.",
-    "failedRejectHeading": "There was an error rejecting the order.",
-    "failedCancelHeading": "There was an error canceling the order.",
-    "failedFulfillHeading": "There was an error fulfilling the order.",
-    "failedRefundHeading": "There was an error refunding the order.",
+    "failedAcceptHeading": "C'e` stato un errore nell'accettare l'ordine.",
+    "failedRejectHeading": "C'e` stato un errore nel rifiutare l'ordine.",
+    "failedCancelHeading": "C'e` stato un errore durante la cancellazione dell'ordine.",
+    "failedFulfillHeading": "C'e` stato un errore durante il completamento dell'ordine.",
+    "failedRefundHeading": "C'e` stato un errore durante il rimborso dell'ordine.",
     "failedCompleteHeading": "There was an error completing the order.",
     "failedOpenDisputeHeading": "There was an error completing the order.",
     "failedResolveHeading": "There was an error resolving the order.",
@@ -1588,7 +1588,7 @@
     "invalidIp": "Sembra che questo indirizzo IP non sia valido.",
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Per favore fornisci un numero tra 0 e 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+    "invalidTorProxy": "Il valore non sembra avere il formato corretto. Dovrebbe essere indirizzo-ip:porta, e. 127.0.0.1:9150. La porta deve essere compresa tra 0 e 65535."
   },
   "shippingAddressModelErrors": {
     "provideName": "Per favore fornisci un nome.",
@@ -1634,12 +1634,12 @@
     "provideService": "Please provide at least one shipping service."
   },
   "serviceModelErrors": {
-    "provideName": "Please provide a service name.",
+    "provideName": "Fornisci un nome al servizio.",
     "provideEstDeliveryTime": "Please provide an estimated delivery time.",
     "provideService": "Please provide at least on shipping service.",
     "provideAmount": "Inserisci un prezzo.",
     "provideNumericAmount": "Per favore fornisci il prezzo come numero.",
-    "provideNonNegativePrice": "The price must be greater than or equal to 0."
+    "provideNonNegativePrice": "Il prezzo dev'essere maggiore o uguale a 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Inserisci una descrizione.",

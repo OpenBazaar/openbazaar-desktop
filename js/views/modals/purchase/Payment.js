@@ -67,8 +67,8 @@ export default class extends BaseVw {
   set balanceRemaining(amount) {
     if (amount !== this._balanceRemaining) {
       this._balanceRemaining = amount;
-      this.$amountDueLine.html(this.amountDueLine);
-      this.$qrCodeImg.attr('src', this.qrDataUri);
+      this.getCachedEl('.js-amountDueLine').html(this.amountDueLine);
+      this.getCachedEl('.js-qrCodeImg').attr('src', this.qrDataUri);
     }
   }
 
@@ -84,8 +84,8 @@ export default class extends BaseVw {
     return {
       'click .js-payFromWallet': 'clickPayFromWallet',
       'click .js-payFromAlt': 'clickPayFromAlt',
-      'click .js-copyAmount': 'copyAmount',
-      'click .js-copyAddress': 'copyAddress',
+      'click .js-amountRow': 'copyAmount',
+      'click .js-addressRow': 'copyAddress',
       'click .js-fundWallet': 'clickFundWallet',
     };
   }
@@ -145,23 +145,23 @@ export default class extends BaseVw {
   copyAmount() {
     clipboard.writeText(String(this.balanceRemaining));
 
-    this.$copyAmount.addClass('active');
+    this.getCachedEl('.js-copyAmount').addClass('active');
     if (this.hideCopyAmountTimer) {
       clearTimeout(this.hideCopyAmountTimer);
     }
     this.hideCopyAmountTimer = setTimeout(
-      () => this.$copyAmount.removeClass('active'), 3000);
+      () => this.getCachedEl('.js-copyAmount').removeClass('active'), 3000);
   }
 
   copyAddress() {
     clipboard.writeText(String(this.paymentAddress));
 
-    this.$copyAddress.addClass('active');
+    this.getCachedEl('.js-copyAddress').addClass('active');
     if (this.hideCopyAddressTimer) {
       clearTimeout(this.hideCopyAddressTimer);
     }
     this.hideCopyAddressTimer = setTimeout(
-      () => this.$copyAddress.removeClass('active'), 3000);
+      () => this.getCachedEl('.js-copyAddress').removeClass('active'), 3000);
   }
 
   clickFundWallet() {
@@ -175,28 +175,15 @@ export default class extends BaseVw {
 
   get qrDataUri() {
     const address = getServerCurrency().qrCodeText(this.paymentAddress);
-    const btcURL = `${address}?amount=${this.balanceRemaining}`;
-    return qr(btcURL, { type: 8, size: 5, level: 'Q' });
+    const URL = `${address}?amount=${this.balanceRemaining}`;
+    return qr(URL, { type: 8, size: 5, level: 'Q' });
   }
 
-  get $copyAmount() {
-    return this._$copyAmount ||
-      (this._$copyAmount = this.$('.js-copyAmount'));
-  }
-
-  get $copyAddress() {
-    return this._$copyAddress ||
-      (this._$copyAddress = this.$('.js-copyAddress'));
-  }
-
-  get $amountDueLine() {
-    return this._$amountDueLine ||
-      (this._$amountDueLine = this.$('.js-amountDueLine'));
-  }
-
-  get $qrCodeImg() {
-    return this._$qrCodeImg ||
-      (this._$qrCodeImg = this.$('.js-qrCodeImg'));
+  remove() {
+    if (this.hideCopyAmountTimer) {
+      clearTimeout(this.hideCopyAmountTimer);
+    }
+    super.remove();
   }
 
   render() {
@@ -214,11 +201,6 @@ export default class extends BaseVw {
           isModerated: this.isModerated,
         }));
       });
-
-      this._$copyAmount = null;
-      this._$copyAddress = null;
-      this._$amountDueLine = null;
-      this._$qrCodeImg = null;
 
       this.spendConfirmBox = this.createChild(SpendConfirmBox, {
         initialState: {
