@@ -417,12 +417,16 @@ export default class extends baseVw {
       );
     }
 
-    const moderators = this.model.get('moderators');
-    const verifiedMods = app.verifiedMods.pluck('peerID').filter((mod) => moderators.includes(mod));
-    const verifiedModID = verifiedMods[0];
-    if (verifiedModID) {
+    const moderators = this.model.get('moderators') || ['QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ']; // this is test code, the server doesn't return moderators here yet
+    // TODO: remove the test code above
+    const verifiedIDs = app.verifiedMods.pluck('peerID').filter((mod) => moderators.includes(mod));
+    const verifiedID = verifiedIDs[0];
+
+    if (this.verifiedMod) this.verifiedMod.remove();
+
+    if (verifiedID) {
       this.verifiedMod = new VerifiedMod({
-        model: app.verifiedMods.get(verifiedModID),
+        model: app.verifiedMods.get(verifiedID),
         arrowClass: 'arrowBoxRightTop',
         data: app.verifiedMods.data,
       });

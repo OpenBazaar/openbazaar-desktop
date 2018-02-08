@@ -86,6 +86,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     let modLanguages = [];
     if (this.model.isModerator) {
       modLanguages = this.model.get('moderatorInfo')
@@ -113,6 +115,7 @@ export default class extends BaseVw {
       this.$selectBtn = this.$('.js-selectBtn');
 
       if (verifiedMod) {
+        console.log("true")
         this.verifiedMod = new VerifiedMod({
           model: verifiedMod,
           data: app.verifiedMods.data,
