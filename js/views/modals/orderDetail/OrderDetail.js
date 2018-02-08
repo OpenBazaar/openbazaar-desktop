@@ -17,7 +17,7 @@ import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
-import Contract from './Contract';
+import ContractTab from './contractTab/ContractTab';
 import FulfillOrder from './FulfillOrder';
 import DisputeOrder from './DisputeOrder';
 import ResolveDispute from './ResolveDispute';
@@ -376,7 +376,7 @@ export default class extends BaseModal {
   }
 
   createContractTabView() {
-    const view = this.createChild(Contract, {
+    const view = this.createChild(ContractTab, {
       model: this.model,
     });
 

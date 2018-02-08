@@ -19,6 +19,24 @@ export default class extends BaseModel {
     };
   }
 
+  // FYI: If the contract hasn't arrived, using this logic, it will be considered invalid.
+  isContractValid(buyer = true) {
+    const errors = buyer ?
+      this.get('buyerContractValidationErrors') :
+      this.get('vendorContractValidationErrors');
+
+    return !errors ||
+      (Array.isArray(errors) && !errors.length);
+  }
+
+  get isBuyerContractValid() {
+    return this.isContractValid();
+  }
+
+  get isVendorContractValid() {
+    return this.isContractValid(false);
+  }
+
   parse(response = {}) {
     if (response.buyerContract) {
       // Since we modify the data on parse (particularly in some nested models),

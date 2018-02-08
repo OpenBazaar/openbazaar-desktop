@@ -1,0 +1,18 @@
+<% if (ob.heading) { %>
+  <div class="tx4 txB row"><%= ob.heading %></div>
+<% } %>
+
+<%
+  if (ob.errors && ob.errors.length) {
+%>
+  <p class="clrTErr"><span class="ion-ios-close-empty tx1 margRSm"></span>The contract has the following validation errors:</p>
+  <ul>
+<%
+    ob.errors.forEach(err => {
+      print(`<li class="clrTErr">${err}</li>`)
+    });
+%>
+  </ul>
+<% } %>
+
+<div class="border clrBr clrP clrT js-jsonContractContainer"></div>
