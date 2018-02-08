@@ -14,10 +14,24 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
-    console.log('boo');
-    window.boo = this.model;
-
     this.options = opts || {};
+
+    if (this.isCase &&
+      (!this.model.get('vendorContract') ||
+        !this.model.get('buyerContract'))) {
+      const needBuyer = !this.model.get('buyerOpened');
+      const changeField = `${needBuyer ? 'buyer' : 'vendor'}Contract`;
+      this.listenToOnce(this.model, `change:${changeField}`, () => {
+        const rawContract = this.model.get(`raw${needBuyer ? 'Buyer' : 'Vendor'}Contract`);
+
+        if (!this.model.bothContractsValid) this.renderContract(rawContract);
+        this.renderStatus();
+
+        if (this.model.bothContractsValid) {
+          this[`${needBuyer ? 'vendor' : 'buyer'}ContractVw`].setState({ heading: '' });
+        }
+      });
+    }
   }
 
   className() {
@@ -43,78 +57,19 @@ export default class extends BaseVw {
     return this.model.get('buyerOpened') !== undefined;
   }
 
-  // render() {
-  //   const isCase = this.model.get('buyerOpened') !== undefined;
-  //   const vendorContractErrors = this.model.get('vendorContractValidationErrors');
-  //   const buyerContractErrors = this.model.get('buyerContractValidationErrors');
-  //   const templateData = {
-  //     capitalize,
-  //     buyerOpened: this.model.get('buyerOpened'),
-  //     isCase,
-  //     vendorContractVerified: !vendorContractErrors ||
-  //       (Array.isArray(vendorContractErrors) && !vendorContractErrors.length),
-  //     buyerContractVerified: !buyerContractErrors ||
-  //       (Array.isArray(buyerContractErrors) && !buyerContractErrors.length),
-  //   };
-  //   let contract;
-  //   let buyerContract;
-  //   let vendorContract;
-
-
-  //   if (!isCase) {
-  //     contract = this.model.get('rawContract');
-  //   } else {
-  //     if (this.model.get('buyerOpened')) {
-  //       // Only the contract of whoever opened the case is guaranteed to be available.
-  //       // The other will be available when the party comes online.
-  //       buyerContract = this.model.get('rawBuyerContract');
-  //       vendorContract = this.model.get('rawVendorContract');
-  //       templateData.otherContractAvailable = !!this.model.get('vendorContract');
-  //     } else {
-  //       vendorContract = this.model.get('rawVendorContract');
-  //       buyerContract = this.model.get('rawBuyerContract');
-  //       templateData.otherContractAvailable = !!this.model.get('buyerContract');
-  //     }
-  //   }
-
-  //   loadTemplate('modals/orderDetail/contract.html', t => {
-  //     this.$el.html(t(templateData));
-
-  //     if (contract) {
-  //       this.$('.js-jsonContractContainer')
-  //         .append(renderjson.set_show_to_level(1)(contract));
-  //     } else {
-  //       if (buyerContract) {
-  //         this.$('.js-jsonBuyerContractContainer')
-  //           .append(renderjson.set_show_to_level(1)(buyerContract));
-  //       }
-
-  //       if (vendorContract) {
-  //         this.$('.js-jsonVendorContractContainer')
-  //           .append(renderjson.set_show_to_level(1)(vendorContract));
-  //       }
-  //     }
-  //   });
-
-  //   return this;
-  // }
-
   renderStatus() {
     let msg = '';
-    const buyerContractArrived = !!this.model.get('buyerContract');
-    const vendorContractArrived = !!this.model.get('vendorContract');
 
     if (this.isCase) {
-      if (buyerContractArrived && this.model.isBuyerContractValid &&
-        vendorContractArrived && this.model.isVendorContractValid) {
-        msg = '<p class="clrTEm flexVCent"><span class="ion-ios-checkmark-outline tx1 margRSm">' +
+      if (this.model.bothContractsValid) {
+        msg = '<p class="clrTEm flexVCent"><span class="ion-ios-checkmark-outline margRSm">' +
           '</span>Both the buyer\'s and vendor\'s contracts have been verified as authentic.</p>';
-      } else if (!vendorContractArrived) {
-        msg = '<p class="clrTErr flexVCent"><span class="ion-android-warning tx1 margRSm">' +
+      } else if (!this.model.get('vendorContract')) {
+        msg = '<p class="clrTErr flexVCent"><span class="ion-android-warning margRSm">' +
           '</span>The vendor\'s contract has not yet arrived. It will be sent over the next ' +
           'time they come online.</p>';
-      } else if (!buyerContractArrived) {
-        msg = '<p class="clrTErr flexVCent"><span class="ion-android-warning tx1 margRSm">' +
+      } else if (!this.model.get('buyerContract')) {
+        msg = '<p class="clrTErr flexVCent"><span class="ion-android-warning margRSm">' +
           '</span>The buyer\'s contract has not yet arrived. It will be sent over the next ' +
           'time they come online.</p>';
       }
@@ -122,6 +77,32 @@ export default class extends BaseVw {
 
     this.getCachedEl('.js-statusContainer')
       .html(msg);
+  }
+
+  renderContract(contract) {
+    if (!contract) {
+      throw new Error('Please provide a contract.');
+    }
+
+    const isBuyerContract = contract === this.model.get('rawBuyerContract');
+    let heading = '';
+
+    if (!this.model.bothContractsValid) {
+      heading = isBuyerContract ? 'Buyer contract:' : 'Vendor contract:';
+    }
+
+    const view = this[`${isBuyerContract ? 'buyer' : 'vendor'}ContractVw`] =
+      this.createChild(Contract, {
+        contract,
+        initialState: {
+          heading,
+          errors: isBuyerContract ?
+            this.model.get('buyerContractValidationErrors') || [] :
+            this.model.get('vendorContractValidationErrors') || [],
+        },
+      });
+
+    this.$el.append(view.render().el);
   }
 
   render() {
@@ -134,6 +115,26 @@ export default class extends BaseVw {
           contract: this.model.get('rawContract'),
         });
         this.$el.append(this.contractVw.render().el);
+      } else {
+        const contracts = [
+          this.model.get('buyerOpened') ?
+            this.model.get('rawBuyerContract') :
+            this.model.get('rawVendorContract'),
+        ];
+
+        if (!this.model.bothContractsValid) {
+          // If the second contract has arrived, we'll show them individually since one or
+          // both have validation errors.
+          if (this.model.get('buyerOpened')) {
+            if (this.model.get('vendorContract')) {
+              contracts.push(this.model.get('rawVendorContract'));
+            }
+          } else if (this.model.get('buyerContract')) {
+            contracts.push(this.model.get('rawBuyerContract'));
+          }
+        }
+
+        contracts.forEach(contract => this.renderContract(contract));
       }
     });
 

@@ -21,12 +21,16 @@ export default class extends BaseModel {
 
   // FYI: If the contract hasn't arrived, using this logic, it will be considered invalid.
   isContractValid(buyer = true) {
+    const hasContractArrived = buyer ?
+      !!this.get('buyerContract') :
+      !!this.get('vendorContract');
     const errors = buyer ?
       this.get('buyerContractValidationErrors') :
       this.get('vendorContractValidationErrors');
 
-    return !errors ||
-      (Array.isArray(errors) && !errors.length);
+    return hasContractArrived &&
+      (!errors ||
+        (Array.isArray(errors) && !errors.length));
   }
 
   get isBuyerContractValid() {
@@ -35,6 +39,10 @@ export default class extends BaseModel {
 
   get isVendorContractValid() {
     return this.isContractValid(false);
+  }
+
+  get bothContractsValid() {
+    return this.isBuyerContractValid && this.isVendorContractValid;
   }
 
   parse(response = {}) {
@@ -95,6 +103,16 @@ export default class extends BaseModel {
           integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
             app.serverConfig.cryptoCurrency);
       }
+
+      // response.buyerContractValidationErrors = ['the pickles are sour.', 'i miss you chica.'];
+      // response.vendorContractValidationErrors = ['the billy is armstrong.', 'How can it be any way but oh no oh no, no mo, yes sirree bobbers.'];
+
+
+
+      // response.buyerOpened = false;
+      // response.moo = response.buyerContract;
+      // response.vendorContract = response.moo;
+      // delete response.buyerContract;
     }
 
     return response;
