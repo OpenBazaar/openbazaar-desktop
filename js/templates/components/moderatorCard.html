@@ -2,9 +2,10 @@
    // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
    const loaded = !!ob.name;
    const isDisabled = (!ob.valid && !ob.controlsOnInvalid) || !loaded ? 'disabled' : '';
+   const verified = ob.verified ? verified : '';
 %>
 
-<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <%= isDisabled %>">
+<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <%= isDisabled %> <%= verified %>">
   <% if (ob.radioStyle) { %>
     <div class="flexNoShrink">
       <div class="btnRadio">
@@ -47,6 +48,7 @@
         <div>
           <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
         </div>
+        <div class="js-verifiedMod"></div>
       </div>
     <% } else { %>
       <div class="flexCol gutterVSm clrTErr">

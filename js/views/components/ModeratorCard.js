@@ -2,6 +2,7 @@ import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';
+import VerifiedMod from './VerifiedMod';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
 import { getLangByCode } from '../../data/languages';
 
@@ -95,6 +96,8 @@ export default class extends BaseVw {
         });
     }
 
+    const verifiedMod = app.verifiedMods.get(this.guid);
+
     loadTemplate('components/moderatorCard.html', (t) => {
       this.$el.html(t({
         cardState: this.cardState,
@@ -102,11 +105,20 @@ export default class extends BaseVw {
         valid: this.model.isModerator,
         radioStyle: this.options.radioStyle,
         controlsOnInvalid: this.options.controlsOnInvalid,
+        verified: !!verifiedMod,
         modLanguages,
         ...this.model.toJSON(),
       }));
 
       this.$selectBtn = this.$('.js-selectBtn');
+
+      if (verifiedMod) {
+        this.verifiedMod = new VerifiedMod({
+          model: verifiedMod,
+          data: app.verifiedMods.data,
+        });
+        this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+      }
     });
 
     return this;

@@ -417,12 +417,12 @@ export default class extends baseVw {
       );
     }
 
-    const moderators = this.model.get('moderators') || ['QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ'];
+    const moderators = this.model.get('moderators');
     const verifiedMods = app.verifiedMods.pluck('peerID').filter((mod) => moderators.includes(mod));
-    const verifiedMod = verifiedMods[0];
-    if (verifiedMod) {
+    const verifiedModID = verifiedMods[0];
+    if (verifiedModID) {
       this.verifiedMod = new VerifiedMod({
-        model: app.verifiedMods.get(verifiedMod),
+        model: app.verifiedMods.get(verifiedModID),
         arrowClass: 'arrowBoxRightTop',
         data: app.verifiedMods.data,
       });

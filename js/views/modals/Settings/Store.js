@@ -67,7 +67,6 @@ export default class extends baseVw {
       useCache: false,
       async: true,
       excludeIDs: this.currentMods,
-      // excludeCollection: this.modsSelected,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       cardState: 'unselected',
       notSelected: 'unselected',

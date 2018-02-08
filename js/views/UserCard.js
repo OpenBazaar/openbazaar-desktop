@@ -252,6 +252,8 @@ export default class extends BaseVw {
       /* the view should be rendered when it is created and before it has data, so it can occupy
        space in the DOM while the data is being fetched. */
 
+      if (this.verifiedMod) this.verifiedMod.remove();
+
       const verifiedMod = app.verifiedMods.get(this.guid);
       if (verifiedMod) {
         this.verifiedMod = new VerifiedMod({
