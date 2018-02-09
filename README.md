@@ -58,6 +58,12 @@ Contributions are expected to match the coding style already present in this rep
 
 Contributions that make visual changes are also expected to match the repo's current style.
 
+If you want to help with translations, please request to join the translation team at [https://www.transifex.com/ob1/openbazaar](https://www.transifex.com/ob1/openbazaar).
+
+You can request new languages there, and contribute to the translation of existing languages.
+
+New languages are usually added when they reach 80% or more completion, and not removed from the client unless they fall below 60% for several releases.
+
 ## License
 This project is licensed under the MIT License. You can view [LICENSE.MD](https://github.com/OpenBazaar/openbazaar-desktop/blob/master/LICENSE) for more details.
 
