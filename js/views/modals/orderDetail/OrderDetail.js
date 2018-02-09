@@ -21,7 +21,8 @@ import ContractTab from './contractTab/ContractTab';
 import FulfillOrder from './FulfillOrder';
 import DisputeOrder from './DisputeOrder';
 import ResolveDispute from './ResolveDispute';
-import ActionBar from './ActionBar.js';
+import ActionBar from './ActionBar';
+import ContractMenuItem from './ContractMenuItem';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -69,6 +70,12 @@ export default class extends BaseModal {
 
     this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
       if (this.activeTab === 'resolveDispute') this.selectTab('summary');
+    });
+
+    this.listenTo(this.model, 'otherContractArrived', () => {
+      if (this.contractMenuItem) {
+        this.contractMenuItem.setState(this.contractMenuItemState);
+      }
     });
 
     const socket = getSocket();
@@ -487,6 +494,48 @@ export default class extends BaseModal {
     };
   }
 
+  get contractMenuItemState() {
+    console.log('moo');
+    window.moo = this.model;
+
+    const isCase = typeof this.model.get('buyerOpened');
+    let tip = '';
+
+    if (isCase && !this.model.bothContractsValid) {
+      const buyerContractAvailableAndInvalid =
+        this.model.get('buyerContract') && !this.model.isBuyerContractValid;
+      const vendorContractAvailableAndInvalid =
+        this.model.get('vendorContract') && !this.model.isVendorContractValid;
+
+      if (buyerContractAvailableAndInvalid && vendorContractAvailableAndInvalid) {
+        tip = 'Both the buyer and vendor contracts have validation errors.';
+      } else {
+        // "contract" here means the contract we're guaranteed to have
+        const isContractValid = this.model.get('buyerOpened') ?
+          this.model.isBuyerContractValid : this.model.isVendorContractValid;
+        const otherContract = this.model.get('buyerOpened') ?
+          this.model.get('vendorContract') : this.model.get('buyerContract');
+
+        if (!isContractValid) {
+          tip = `The ${this.model.get('buyerOpened') ? 'buyers' : 'vendors'} contract has ` +
+            'validation errors.';
+        }
+
+        if (!otherContract) {
+          tip += `${tip ? ' ' : ''}The ` +
+            `${this.model.get('buyerOpened') ? 'vendor\'s' : 'buyer\'s'} contract ` +
+              ' has not yet arrived.';
+        } else if (!this.model.isContractValid(!this.model.get('buyerOpened'))) {
+          tip += `${tip ? ' ' : ''}The ` +
+            `${this.model.get('buyerOpened') ? 'vendor\'s' : 'buyer\'s'} contract ` +
+              ' has validation errors.';
+        }
+      }
+    }
+
+    return { tip };
+  }
+
   get $unreadChatMessagesBadge() {
     return this._$unreadChatMessagesBadge ||
       (this._$unreadChatMessagesBadge = this.$('.js-unreadChatMessagesBadge'));
@@ -528,6 +577,15 @@ export default class extends BaseModal {
         });
         this.$('.js-actionBarContainer').html(this.actionBar.render().el);
         this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
+
+        if (this.contractMenuItem) this.contractMenuItem.remove();
+        this.contractMenuItem = this.createChild(ContractMenuItem, {
+          initialState: {
+            ...this.contractMenuItemState,
+          },
+        });
+        this.getCachedEl('[data-tab="contract"]')
+          .replaceWith(this.contractMenuItem.render().el);
       }
     });
 

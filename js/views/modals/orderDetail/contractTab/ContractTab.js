@@ -19,16 +19,15 @@ export default class extends BaseVw {
     if (this.isCase &&
       (!this.model.get('vendorContract') ||
         !this.model.get('buyerContract'))) {
-      const needBuyer = !this.model.get('buyerOpened');
-      const changeField = `${needBuyer ? 'buyer' : 'vendor'}Contract`;
-      this.listenToOnce(this.model, `change:${changeField}`, () => {
-        const rawContract = this.model.get(`raw${needBuyer ? 'Buyer' : 'Vendor'}Contract`);
+      this.listenTo(this.model, 'otherContractArrived', (md, data) => {
+        const rawContract = this.model.get(`raw${data.buyerArrived ? 'Buyer' : 'Vendor'}Contract`);
 
+        console.log(`whatters: ${this.model.bothContractsValid}`);
         if (!this.model.bothContractsValid) this.renderContract(rawContract);
         this.renderStatus();
 
         if (this.model.bothContractsValid) {
-          this[`${needBuyer ? 'vendor' : 'buyer'}ContractVw`].setState({ heading: '' });
+          this[`${data.buyerArrived ? 'vendor' : 'buyer'}ContractVw`].setState({ heading: '' });
         }
       });
     }

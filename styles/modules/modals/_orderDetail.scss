@@ -35,6 +35,16 @@
         vertical-align: top;
       }
     }
+
+    .contractMenuItem {
+      text-decoration: none;
+      cursor: default;
+
+      .contractLabel:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 
   .mainContent {

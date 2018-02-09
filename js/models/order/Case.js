@@ -46,6 +46,34 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
+    // response.buyerContractValidationErrors = ['the pickles are sour.', 'i miss you chica.'];
+    // response.vendorContractValidationErrors = ['the billy is armstrong.', 'How can it be any way but oh no oh no, no mo, yes sirree bobbers.'];
+
+
+    // response.buyerOpened = false;
+    // response.moo = response.buyerContract;
+    // response.vendorContract = response.moo;
+    // response.rawBuyerContract = JSON.parse(JSON.stringify(response.buyerContract));
+    // delete response.buyerContract;
+
+    // response.moo = response.vendorContract;
+    // response.vendorContract = response.moo;
+    // response.rawVendorContract = JSON.parse(JSON.stringify(response.vendorContract));
+    // delete response.vendorContract;
+
+    // If only one contract has arrived, we'll fire an event when the other one comes
+    if (!this._otherContractEventBound &&
+      (
+        (response.buyerOpened && !response.vendorContract) ||
+        (!response.buyerOpened && !response.buyerContract)
+      )
+    ) {
+      const needBuyer = !response.buyerContract;
+      this._otherContractEventBound = true;
+      this.once(`change:${needBuyer ? 'buyer' : 'vendor'}Contract`,
+        () => this.trigger('otherContractArrived', this, { buyerArrived: needBuyer }));
+    }
+
     if (response.buyerContract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
@@ -103,16 +131,6 @@ export default class extends BaseModel {
           integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
             app.serverConfig.cryptoCurrency);
       }
-
-      // response.buyerContractValidationErrors = ['the pickles are sour.', 'i miss you chica.'];
-      // response.vendorContractValidationErrors = ['the billy is armstrong.', 'How can it be any way but oh no oh no, no mo, yes sirree bobbers.'];
-
-
-
-      // response.buyerOpened = false;
-      // response.moo = response.buyerContract;
-      // response.vendorContract = response.moo;
-      // delete response.buyerContract;
     }
 
     return response;
