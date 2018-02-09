@@ -8,6 +8,7 @@ import Moderators from '../../collections/Moderators';
 import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ModCard from './ModeratorCard';
+import ModeratorStatus from './ModeratorsStatus';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -101,6 +102,14 @@ export default class extends baseVw {
     });
     this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => this.removeMod(md, cl, rOpts));
     this.modCards = [];
+
+    // create a moderator status view. It should retain it's state between renders of this view.
+    this.moderatorStatus = new ModeratorStatus({
+      initialState: {
+        showSpinner: opts.method === 'POST',
+        mode: opts.method === 'POST' ? 'loading' : 'loaded',
+      }
+    });
   }
 
   className() {
@@ -125,6 +134,7 @@ export default class extends baseVw {
 
     if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
+      this.removeNotFetched(profile.peerId);
     } else {
       // remove the invalid moderator from the notFetched list
       this.removeNotFetched(profile.peerId);
@@ -148,11 +158,11 @@ export default class extends baseVw {
 
     this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
-    if (IDs.length) {
-      this.getCachedEl('.js-moderatorsStatus').removeClass('hide');
-      this.getCachedEl('.js-moderatorStatusInner').text(app.polyglot.t('moderators.moderatorsLoading',
-          { remaining: IDs.length, total: IDs.length }));
-    }
+
+    this.moderatorStatus.setState({
+      hidden: false,
+      total: IDs.length,
+    });
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || op.method === 'GET') {
@@ -210,19 +220,26 @@ export default class extends baseVw {
   }
 
   checkNotFetched() {
+    console.log('check not fetched')
     const nfYet = this.unfetchedMods.length;
-    if (nfYet === 0) {
-      // all ids have been fetched
-      this.getCachedEl('.js-moderatorsStatus').addClass('hide');
-      this.getCachedEl('.js-moderatorStatusInner').text('');
+    if (nfYet === 0 && this.fetchingMods.length) {
+      // all ids have been fetched and ids existed to fetch
+      this.moderatorStatus.setState({
+        hidden: true,
+      });
       // check if there are mods that loaded but none were valid
       if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
       }
     } else {
-      this.getCachedEl('.js-moderatorStatusInner')
-        .text(app.polyglot.t('moderators.moderatorsLoading',
-          { remaining: nfYet, total: this.fetchingMods.length }));
+      // either ids are still fetching, or this is an open fetch with no set ids
+      console.log(this.fetchingMods.length)
+      console.log(nfYet)
+      console.log(this.modCount)
+      this.moderatorStatus.setState({
+        loaded: this.fetchingMods.length - nfYet,
+        total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
+      });
     }
   }
 
@@ -339,6 +356,8 @@ export default class extends baseVw {
         mod.delegateEvents();
         this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
       });
+
+      this.getCachedEl('.js-statusWrapper').append(this.moderatorStatus.render().$el);
     });
 
     return this;

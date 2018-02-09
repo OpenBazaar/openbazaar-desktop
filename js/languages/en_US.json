@@ -1362,7 +1362,8 @@
     }
   },
   "moderators": {
-    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
+    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators.",
+    "moderatorsLoaded": "%{total} moderators loaded."
   },
   "transactions": {
     "sales": {
