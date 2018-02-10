@@ -49,7 +49,6 @@ export default class extends BaseModel {
     // response.buyerContractValidationErrors = ['the pickles are sour.', 'i miss you chica.'];
     // response.vendorContractValidationErrors = ['the billy is armstrong.', 'How can it be any way but oh no oh no, no mo, yes sirree bobbers.'];
 
-
     // response.buyerOpened = false;
     // response.moo = response.buyerContract;
     // response.vendorContract = response.moo;
@@ -71,7 +70,7 @@ export default class extends BaseModel {
       const needBuyer = !response.buyerContract;
       this._otherContractEventBound = true;
       this.once(`change:${needBuyer ? 'buyer' : 'vendor'}Contract`,
-        () => this.trigger('otherContractArrived', this, { buyerArrived: needBuyer }));
+        () => this.trigger('otherContractArrived', this, { isBuyer: needBuyer }));
     }
 
     if (response.buyerContract) {

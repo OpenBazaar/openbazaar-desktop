@@ -17,6 +17,12 @@ export default class extends BaseVw {
       throw new Error('Please provide an OrderFulfillment model.');
     }
 
+    if (!options.case) {
+      throw new Error('Please provide a Case model.');
+    }
+
+    this.case = options.case;
+
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
 
@@ -41,6 +47,12 @@ export default class extends BaseVw {
     this.listenTo(orderEvents, 'resolvingDispute', this.onResolvingDispute);
     this.listenTo(orderEvents, 'resolveDisputeComplete resolveDisputeFail',
       this.onResolveDisputeAlways);
+    this.listenTo(this.model, 'otherContractArrived', (md, data) => {
+      this.getCachedEl(`.js-${data.isBuyer ? 'buyer' : 'vendor'}ContractUnarrivedMsg`)
+        .remove();
+      this.getCachedEl(`js-input"${data.isBuyer ? 'Buyer' : 'Vendor'}Wrap"`)
+        .removeClass('disabled');
+    });
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
@@ -133,6 +145,8 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         resolvingDispute: resolvingDispute(this.model.id),
+        hasBuyerContractArrived: this.case.get('buyerContract'),
+        hasVendorContractArrived: this.case.get('vendorContract'),
       };
 
       if (this.buyerProfile) {

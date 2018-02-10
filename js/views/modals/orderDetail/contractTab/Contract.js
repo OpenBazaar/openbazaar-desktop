@@ -43,7 +43,7 @@ export default class extends BaseVw {
       }));
 
       this.$('.js-jsonContractContainer')
-        .html(renderjsonEl || renderjson.set_show_to_level(1)(this.contract));
+        .html(renderjsonEl || renderjson.set_show_to_level('1')(this.contract));
     });
 
     this.rendered = true;
