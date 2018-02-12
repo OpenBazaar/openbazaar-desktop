@@ -1,7 +1,7 @@
 .moderatorCard {
   cursor: pointer;
 
-  .moderatorCardInner {
+  .moderatorCardInner .moderatorCardContent {
     padding: $padMd;
 
     .moderatorCardMiddle {
@@ -50,11 +50,5 @@
         margin: 0;
       }
     }
-  }
-
-  .moderatorCardSeperator {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    margin: 0 $padMd;
   }
 }

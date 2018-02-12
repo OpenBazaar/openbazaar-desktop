@@ -39,7 +39,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'moderatorCard';
+    return 'moderatorCard clrBr';
   }
 
   events() {
@@ -113,7 +113,6 @@ export default class extends BaseVw {
       }));
 
       if (verifiedMod) {
-        console.log("true")
         this.verifiedMod = new VerifiedMod({
           model: verifiedMod,
           data: app.verifiedMods.data,

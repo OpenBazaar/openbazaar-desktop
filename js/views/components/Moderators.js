@@ -220,7 +220,6 @@ export default class extends baseVw {
   }
 
   checkNotFetched() {
-    console.log('check not fetched')
     const nfYet = this.unfetchedMods.length;
     if (nfYet === 0 && this.fetchingMods.length) {
       // all ids have been fetched and ids existed to fetch
@@ -233,9 +232,6 @@ export default class extends baseVw {
       }
     } else {
       // either ids are still fetching, or this is an open fetch with no set ids
-      console.log(this.fetchingMods.length)
-      console.log(nfYet)
-      console.log(this.modCount)
       this.moderatorStatus.setState({
         loaded: this.fetchingMods.length - nfYet,
         total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
