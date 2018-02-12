@@ -10,10 +10,10 @@ export default class extends BaseVw {
         loaded: 0,
         total: 0,
         mode: 'loaded',
+        ...(options && options.initialState || {}),
       },
       ...options,
-      ...(options && options.initialState || {}),
-    };
+     };
 
     super(opts);
     this.options = opts;
