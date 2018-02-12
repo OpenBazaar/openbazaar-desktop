@@ -367,7 +367,9 @@
     "termsOfService": "Terms of Service",
     "addAsModeratorButton": "Add as Moderator",
     "disclaimer": "**The moderator service charge only applies when a dispute arises.",
-    "languages": "Languages"
+    "languages": "Languages",
+    "currenciesSupported": "Currencies Supported",
+    "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
     "linkText": "About OpenBazaar",
@@ -917,6 +919,7 @@
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
     "tags": "Tags",
+    "paymentsAccepted": "Payments Accepted",
     "noTags": "No tags entered",
     "buyNow": "BUY NOW",
     "description": "Description",
@@ -1274,7 +1277,6 @@
     "quantity": "Quantity",
     "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "No valid moderators are available for this order.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
@@ -1343,8 +1345,7 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "zeroPrice": "You cannot purchase a listing with a total price of zero."
     }
   },
   "moderators": {

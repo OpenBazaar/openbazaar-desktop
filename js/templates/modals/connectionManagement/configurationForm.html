@@ -18,7 +18,7 @@
   <div class="border clrBrError clrTErr padMd flex torMessage">
     <%= ob.polyT('connectionManagement.configurationForm.torNotAvailableMessage') %>
   </div>
-  <% } %>  
+  <% } %>
 
   <form class="padMdKids padStack <% if (ob.useTor) print('useTor') %>">
     <% if (ob.isNew && ob.isBundledApp) { %>
@@ -45,12 +45,12 @@
                      value="STAND_ALONE"
                      id="serverConfigStandalone"
                      data-field-builtin
-                     data-field-standalone                     
+                     data-field-standalone
                      <% if (ob.builtIn === false) { %>checked<% } %>>
               <label class="gutterHSm" for="serverConfigStandalone"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeStandalone') %></span><span class="toolTip" data-tip="<%= ob.polyT('connectionManagement.configurationForm.serverTypeStandaloneTip') %>"><i class="ion-help-circled"></i></span></label>
             </div>
           </div>
-        </div>        
+        </div>
       </div>
     <% } %>
     <div class="walletSetupForm js-walletSetupForm padMdKids padStack pad0 <% if (!ob.builtIn) print('hide') %>">
@@ -78,6 +78,7 @@
                   <label class="flexVCent" for="walletSetupCurrency<%= cur.code %>">
                     <div class="gutterHSm flexExpand flexVCent coinInfo">
                       <%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
+                      <% if (cur.code === 'ZEC') print('<strong class="clrTErr">BETA</strong>') %>
                     </div>
                     <% if (inUse) { %>
                       <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span>Already in use</span><span class="toolTip" data-tip="<%= ob.polyT('walletSetup.curInUseTip') %>"><i class="ion-help-circled"></i></span></div>
@@ -88,7 +89,7 @@
               <% }) %>
             </div>
             <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
-          </div>        
+          </div>
         </div>
       <% } %>
       <div class="flexRow js-zcashSection padBot0 <% if (ob.walletCurrency !== 'ZEC') print('hide') %>">
@@ -108,7 +109,7 @@
               })
             %>
           </div>
-        </div>        
+        </div>
       </div>
     </div>
     <div class="padMdKids padStack pad0 js-standAloneSection <% if (ob.builtIn) print('hide') %>">
@@ -205,7 +206,7 @@
           warning: `<span class="txB">${ob.polyT('connectionManagement.configurationForm.warning')}</span>`,
         }) %>
       </div>
-      <% } %>    
+      <% } %>
       <div class="flexRow">
         <div class="col3">
           <label class="required"><%= ob.polyT('connectionManagement.configurationForm.torProxyLabel') %></label>
