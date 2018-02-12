@@ -197,7 +197,7 @@ export default class extends baseVw {
 
           // remove changed moderators
           const removedSelected = this.modsSelected.unselectedIDs;
-          this.modsSelected.removeModeratorsByID(removedSelected);
+          const removedModels = this.modsSelected.removeModeratorsByID(removedSelected);
           this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
           this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
 
@@ -206,7 +206,7 @@ export default class extends baseVw {
           this.modsAvailable.excludeIDs = this.currentMods;
 
           // add removed moderators to the available collection
-          this.modsAvailable.getModeratorsByID(removedSelected);
+          this.modsAvailable.moderatorsCol.add(removedModels);
 
           // add new moderators to the selected collection
           const newSelected = _.without(this.currentMods, ...this.modsSelected.selectedIDs);

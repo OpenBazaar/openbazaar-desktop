@@ -215,8 +215,12 @@ export default class extends baseVw {
     if (!IDs) {
       throw new Error('You must provide the ID or IDs to remove.');
     }
-
+    const removed = [];
+    IDs.forEach(id => {
+      removed.push(this.moderatorsCol.get(id));
+    });
     this.moderatorsCol.remove(IDs);
+    return removed;
   }
 
   checkNotFetched() {
