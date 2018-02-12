@@ -60,6 +60,8 @@ export default class extends BaseVw {
     let msg = '';
 
     if (this.isCase) {
+      // Cut a corner with some html embedded here. If the html get more elaborate than this,
+      // we should probably break this out into its own template.
       if (this.model.bothContractsValid) {
         msg = '<p class="clrTEm flexVCent"><span class="ion-ios-checkmark-outline margRSm">' +
           `</span>${app.polyglot.t('orderDetail.contractTab.bothContractsValid')}</p>`;

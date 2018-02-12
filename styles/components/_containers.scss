@@ -400,20 +400,6 @@
       -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
     }
   }
-
-  // &.toolTipRight {
-  //   &::before {
-  //     top: -19px;
-  //     transform: translate(-50%, -100%);
-  //   }
-
-  //   &::after {
-  //     top: 1px;
-  //     right: 0;
-  //     transform: translate(100%, -100%) rotate(-50deg);
-  //     -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
-  //   }
-  // }  
 }
 
 // Use for single line variable width tooltips. Factor in translations and
