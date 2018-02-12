@@ -7,7 +7,7 @@ export default class extends BaseVw {
     const opts = {
       ...options,
       initialState: {
-        heading: 'howdy playa',
+        heading: '',
         errors: [],
         ...options.initialState || {},
       },

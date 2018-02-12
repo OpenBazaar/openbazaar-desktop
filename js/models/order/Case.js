@@ -46,20 +46,6 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    // response.buyerContractValidationErrors = ['the pickles are sour.', 'i miss you chica.'];
-    // response.vendorContractValidationErrors = ['the billy is armstrong.', 'How can it be any way but oh no oh no, no mo, yes sirree bobbers.'];
-
-    // response.buyerOpened = false;
-    // response.moo = response.buyerContract;
-    // response.vendorContract = response.moo;
-    // response.rawBuyerContract = JSON.parse(JSON.stringify(response.buyerContract));
-    // delete response.buyerContract;
-
-    // response.moo = response.vendorContract;
-    // response.vendorContract = response.moo;
-    // response.rawVendorContract = JSON.parse(JSON.stringify(response.vendorContract));
-    // delete response.vendorContract;
-
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
       (
