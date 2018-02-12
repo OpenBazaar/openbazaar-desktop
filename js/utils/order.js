@@ -85,7 +85,7 @@ function confirmOrder(orderId, reject = false) {
 export { events };
 
 export function acceptingOrder(orderId) {
-  return !!acceptPosts[orderId] || false;
+  return !!acceptPosts[orderId];
 }
 
 export function acceptOrder(orderId) {
@@ -93,7 +93,7 @@ export function acceptOrder(orderId) {
 }
 
 export function rejectingOrder(orderId) {
-  return !!rejectPosts[orderId] || false;
+  return !!rejectPosts[orderId];
 }
 
 export function rejectOrder(orderId) {
@@ -101,7 +101,7 @@ export function rejectOrder(orderId) {
 }
 
 export function cancelingOrder(orderId) {
-  return !!cancelPosts[orderId] || false;
+  return !!cancelPosts[orderId];
 }
 
 export function cancelOrder(orderId) {
@@ -151,7 +151,7 @@ export function cancelOrder(orderId) {
 }
 
 export function fulfillingOrder(orderId) {
-  return !!fulfillPosts[orderId] || false;
+  return !!fulfillPosts[orderId];
 }
 
 export function fulfillOrder(contractType = 'PHYSICAL_GOOD', isLocalPickup = false, data = {}) {
@@ -206,7 +206,7 @@ export function fulfillOrder(contractType = 'PHYSICAL_GOOD', isLocalPickup = fal
 }
 
 export function refundingOrder(orderId) {
-  return !!refundPosts[orderId] || false;
+  return !!refundPosts[orderId];
 }
 
 export function refundOrder(orderId) {
@@ -260,7 +260,7 @@ export function refundOrder(orderId) {
  * will return an object containing the post xhr and the data that's being saved.
  */
 export function completingOrder(orderId) {
-  return !!completePosts[orderId] || false;
+  return !!completePosts[orderId];
 }
 
 export function completeOrder(orderId, data = {}) {
@@ -320,7 +320,7 @@ export function completeOrder(orderId, data = {}) {
  * that's being saved.
  */
 export function openingDispute(orderId) {
-  return !!openDisputePosts[orderId] || false;
+  return !!openDisputePosts[orderId];
 }
 
 export function openDispute(orderId, data = {}) {
@@ -380,7 +380,7 @@ export function openDispute(orderId, data = {}) {
  * being saved.
  */
 export function resolvingDispute(orderId) {
-  return !!resolvePosts[orderId] || false;
+  return !!resolvePosts[orderId];
 }
 
 export function resolveDispute(orderId, data = {}) {
@@ -435,7 +435,7 @@ export function resolveDispute(orderId, data = {}) {
 }
 
 export function acceptingPayout(orderId) {
-  return !!acceptPayoutPosts[orderId] || false;
+  return !!acceptPayoutPosts[orderId];
 }
 
 export function acceptPayout(orderId) {
@@ -485,7 +485,7 @@ export function acceptPayout(orderId) {
 }
 
 export function releasingEscrow(orderId) {
-  return !!releaseEscrowPosts[orderId] || false;
+  return !!releaseEscrowPosts[orderId];
 }
 
 export function releaseEscrow(orderId) {

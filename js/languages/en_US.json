@@ -1598,11 +1598,11 @@
         "skuLabel": "SKU"
       },
       "timeoutInfo": {
-        "modInvalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining for you to make a decision on the dispute.",
-        "invalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining to open a dispute.",
-        "disputedInvalidContractData": "The contract contains invalid data. Unable to determine how much time is remaining for the moderator to make a decision on the dispute.",
+        "modInvalidContractData": "The contract contains invalid data. The time remaining for you to make a decision on the dispute cannot be determined.",
+        "invalidContractData": "The contract contains invalid data. The time remaining to open a dispute cannot be determined.",
+        "disputedInvalidContractData": "The contract contains invalid data. The time remaining for the moderator to make a decision on the dispute cannot be determined.",
         "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
-        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfillled you can claim payment and finalize the order without support from the moderator.",
+        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfilled you can claim payment and finalize the order without support from the moderator.",
         "disputedModOnClock": "The order is being disputed. The moderator has approximately %{timeRemaining} to process the dispute and make a decision.",
         "disputedTipBuyer": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.",
         "disputedTipVendor": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.",
@@ -1613,7 +1613,7 @@
         "blocksRemaining": "%{blocksRemaining} blocks",
         "unconfirmedFunding": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}. The clock will start when the funding payment is confirmed.",
         "escrowExpired": "Time is up! A dispute can no longer be opened on this order.",
-        "tipEscrowExpiredBuyer": "You and the vendor are given approximately %{totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.",
+        "tipEscrowExpiredBuyer": "You and the vendor were given approximately %{totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.",
         "escrowExpiredVendorClaim": "Time is up! Claim payment for this order whenever you’re ready.",
         "tipEscrowExpiredVendorClaim": "You and the buyer are given approximately %{totalTime} to open a dispute. Since a dispute was not opened, you can now claim the payment.",
         "escrowExpiredBuyerComplete": "Time is up! A dispute can no longer be opened on this order. Please complete the order below whenever you’re ready.",
@@ -1622,7 +1622,9 @@
         "modDisputeEscrowExpiredVendorOpened": "The vendor is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
         "modDisputeEscrowExpired": "Time is up! You failed to make a decision in time. The vendor can now claim the funds.",
         "btnClaimPayment": "Claim Payment",
-        "btnResolveDispute": "Resolve Dispute"
+        "btnResolveDispute": "Resolve Dispute",
+        "btnDiscussOrder": "Discuss Order",
+        "btnDisputeOrder": "Dispute Order"
       }
     },
     "fulfillOrderTab": {
@@ -1664,8 +1666,8 @@
       "reasonHelperText": "Opening a dispute will notify and invite the moderator into the order to help resolve any conflicts",
       "btnCancel": "Cancel",
       "btnSubmit": "Submit",
-      "timeoutMessageBuyer": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior the the moderator making a decision, the dispute will end and the vendor will be able to claim the funds.",
-      "timeoutMessageVendor": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior the the moderator making a decision, the dispute will end and you will be able to claim the funds."
+      "timeoutMessageBuyer": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior to the the moderator making a decision, the dispute will end and the vendor will be able to claim the funds.",
+      "timeoutMessageVendor": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior to the the moderator making a decision, the dispute will end and you will be able to claim the funds."
     },
     "actionBar": {
       "disputeOrderBtn": "Dispute Order"

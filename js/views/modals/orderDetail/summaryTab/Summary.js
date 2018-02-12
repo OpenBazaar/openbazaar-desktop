@@ -44,7 +44,9 @@ export default class extends BaseVw {
       throw new Error('Please provide a boolean indicating whether we are working with ' +
         'a case, as opposed to an order.');
     }
-    this.isCase = () => options.isCase;
+
+    const isCase = options.isCase;
+    this.isCase = () => isCase;
     delete options.isCase;
 
     this.contract = options.contract;
@@ -151,10 +153,6 @@ export default class extends BaseVw {
         this.model.set('state', 'REFUNDED');
         this.model.fetch();
       }
-    });
-
-    this.listenTo(orderEvents, 'releaseEscrowComplete', e => {
-      if (e.id === this.model.id) this.model.fetch();
     });
 
     this.listenTo(this.contract, 'change:vendorOrderFulfillment', () => {
@@ -271,8 +269,9 @@ export default class extends BaseVw {
     }
 
     this.listenTo(orderEvents, 'releaseEscrowComplete', e => {
-      if (e.id === this.orderId) {
+      if (e.id === this.model.id) {
         this.model.set('state', 'PAYMENT_FINALIZED');
+        this.model.fetch();
       }
     });
 
@@ -366,17 +365,7 @@ export default class extends BaseVw {
             state.currentState = 1;
         }
       }
-    } else if (orderState === 'DECLINED' || orderState === 'CANCELED' ||
-      orderState === 'REFUNDED') {
-      state.states = [
-        app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.paid'),
-        app.polyglot.t(
-          `orderDetail.summaryTab.orderDetails.progressBarStates.${orderState.toLowerCase()}`),
-      ];
-      state.currentState = 2;
-      state.disputeState = 0;
-    } else if (orderState === 'DECLINED' || orderState === 'CANCELED' ||
-      orderState === 'REFUNDED') {
+    } else if (['DECLINED', 'CANCELED', 'REFUNDED'].includes(orderState)) {
       state.states = [
         app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.paid'),
         app.polyglot.t(
@@ -577,7 +566,7 @@ export default class extends BaseVw {
         // pass - will be handled below
       }
 
-      if (orderState === 'DISPUTED') {
+      if (orderState === 'DISPUTED' || this.isCase()) {
         try {
           disputeStartTime = this.isCase() ?
             this.model.get('timestamp') :
@@ -624,7 +613,7 @@ export default class extends BaseVw {
               checkBackInMs = 1000 * 60 * 60 * 20;
             } else if (msRemaining > 1000 * 60 * 60) {
               // greater than a hour
-              checkBackInMs = 1000 * 60 * 60;
+              checkBackInMs = 1000 * 60 * 55;
             } else if (msRemaining > 1000 * 60) {
               // greater than 1 minute
               checkBackInMs = 5000;
