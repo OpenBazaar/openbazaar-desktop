@@ -13,14 +13,12 @@
     </div>
     <div class="col9">
       <% if (ob.errors['buyerPercentage']) print(ob.formErrorTmpl({ errors: ob.errors['buyerPercentage'] })) %>
-      <% if (!ob.hasBuyerContractArrived) { %>
-        <p class="js-buyerContractUnarrivedMsg clrTErr"><i class="ion-alert-circled"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.buyerContractUnavailable`) %></p>
-      <% } %>      
       <div class="flex gutterH">
-        <div class="inputBuyerAmountWrap flexNoShrink js-inputBuyerWrap <% if (!ob.hasBuyerContractArrived) print('disabled') %>">
+        <div class="inputBuyerAmountWrap flexNoShrink">
           <input type="text" class="clrBr clrSh2" name="buyerPercentage" id="resolveDisputeBuyerAmount" value="<%= ob.buyerPercentage %>" placeholder="" data-var-type="number" />
           <div class="js-buyerAvatar avatar disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></div>
         </div>
+        <p class="buyerContractUnarrivedMsg"><i class="ion-alert-circled margRSm clrTAlert"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.buyerContractUnavailable`) %> <span class="toolTip clrT" data-tip="<%= ob.polyT(`orderDetail.resolveDisputeTab.buyerContractUnavailableTip`) %>"><i class="ion-help-circled"></i></span></p>
       </div>
     </div>
   </div>
@@ -31,15 +29,12 @@
     </div>
     <div class="col9">
       <% if (ob.errors['vendorPercentage']) print(ob.formErrorTmpl({ errors: ob.errors['vendorPercentage'] })) %>
-      <% print(ob.formErrorTmpl({ errors: ['When the west end cries for Larrysa, the moment is awe struck so divine.'] })) %>
       <div class="flex gutterH">
-        <div class="inputVendorAmountWrap js-inputVendorWrap flexNoShrink <% if (!ob.hasVendorContractArrived) print('disabled') %>">
+        <div class="inputVendorAmountWrap js-inputVendorWrap flexNoShrink">
           <input type="text" class="clrBr clrSh2" name="vendorPercentage" id="resolveDisputeVendorAmount" value="<%= ob.vendorPercentage %>" placeholder="" data-var-type="number" />
           <div class="js-vendorAvatar avatar disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></div>
         </div>
-        <% if (!ob.hasVendorContractArrived) { %>
-          <p class="js-vendorContractUnarrivedMsg clrTErr"><i class="ion-alert-circled"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.vendorContractUnavailable`) %></p>
-        <% } %>
+        <p class="vendorContractUnarrivedMsg"><i class="ion-alert-circled margRSm clrTAlert"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.vendorContractUnavailable`) %> <span class="toolTip clrT" data-tip="<%= ob.polyT(`orderDetail.resolveDisputeTab.vendorContractUnavailableTip`) %>"><i class="ion-help-circled"></i></span></p>
       </div>
     </div>
   </div>

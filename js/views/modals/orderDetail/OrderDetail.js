@@ -483,7 +483,11 @@ export default class extends BaseModal {
       };
     }
 
-    const model = new ResolveDisputeMd(modelAttrs);
+    const model = new ResolveDisputeMd(modelAttrs, {
+      buyerContractArrived: () => this.model.get('buyerContract'),
+      vendorContractArrived: () => this.model.get('vendorContract'),
+    });
+
     const view = this.createChild(ResolveDispute, {
       model,
       case: this.model,
