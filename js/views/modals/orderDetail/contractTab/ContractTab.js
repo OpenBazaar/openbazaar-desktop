@@ -1,3 +1,4 @@
+import app from '../../../../app';
 import BaseVw from '../../../baseVw';
 import loadTemplate from '../../../../utils/loadTemplate';
 import Contract from './Contract';
@@ -61,15 +62,13 @@ export default class extends BaseVw {
     if (this.isCase) {
       if (this.model.bothContractsValid) {
         msg = '<p class="clrTEm flexVCent"><span class="ion-ios-checkmark-outline margRSm">' +
-          '</span>Both the buyer\'s and vendor\'s contracts have been verified as authentic.</p>';
+          `</span>${app.polyglot.t('orderDetail.contractTab.bothContractsValid')}</p>`;
       } else if (!this.model.get('vendorContract')) {
-        msg = '<p class="clrTErr flexVCent"><span class="ion-android-warning margRSm">' +
-          '</span>The vendor\'s contract has not yet arrived. It will be sent over the next ' +
-          'time they come online.</p>';
+        msg = '<p class="flexVCent"><span class="ion-android-warning margRSm clrTAlert">' +
+          `</span>${app.polyglot.t('orderDetail.contractTab.vendorContractNotArrived')}</p>`;
       } else if (!this.model.get('buyerContract')) {
-        msg = '<p class="clrTErr flexVCent"><span class="ion-android-warning margRSm">' +
-          '</span>The buyer\'s contract has not yet arrived. It will be sent over the next ' +
-          'time they come online.</p>';
+        msg = '<p class="flexVCent"><span class="ion-android-warning margRSm clrTAlert">' +
+          `</span>${app.polyglot.t('orderDetail.contractTab.buyerContractNotArrived')}</p>`;
       }
     }
 
@@ -86,7 +85,9 @@ export default class extends BaseVw {
     let heading = '';
 
     if (!this.model.bothContractsValid) {
-      heading = isBuyerContract ? 'Buyer contract:' : 'Vendor contract:';
+      heading = isBuyerContract ?
+        app.polyglot.t('orderDetail.contractTab.contractHeadingBuyer') :
+        app.polyglot.t('orderDetail.contractTab.contractHeadingVendor');
     }
 
     const view = this[`${isBuyerContract ? 'buyer' : 'vendor'}ContractVw`] =

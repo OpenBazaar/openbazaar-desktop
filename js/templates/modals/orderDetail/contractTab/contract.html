@@ -5,7 +5,7 @@
 <%
   if (ob.errors && ob.errors.length) {
 %>
-  <p class="clrTErr txUnl rowSm"><span class="ion-alert-circled padSm"></span>The contract has the following validation errors. It may have been forged.</p>
+  <p class="txUnl rowSm clrTErr"><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.contractTab.contractErrorHeading') %></p>
   <ul class="row">
 <%
     ob.errors.forEach(err => {

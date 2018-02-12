@@ -7,7 +7,7 @@ export default class extends BaseVw {
       ...options,
       initialState: {
         tip: '',
-        tipClass: 'toolTip clrTErr',
+        tipClass: 'toolTip clrTAlert',
         tipIconClass: 'ion-alert-circled padSm',
         ...options.initialState || {},
       },

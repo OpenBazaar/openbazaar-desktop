@@ -549,27 +549,25 @@ export default class extends BaseModal {
         this.model.get('vendorContract') && !this.model.isVendorContractValid;
 
       if (buyerContractAvailableAndInvalid && vendorContractAvailableAndInvalid) {
-        tip = 'Both the buyer and vendor contracts have validation errors.';
+        tip = app.polyglot.t('orderDetail.contractMenuItem.tipBothContractsHaveError');
       } else {
         // "contract" here means the contract we're guaranteed to have
         const isContractValid = this.model.get('buyerOpened') ?
           this.model.isBuyerContractValid : this.model.isVendorContractValid;
         const otherContract = this.model.get('buyerOpened') ?
           this.model.get('vendorContract') : this.model.get('buyerContract');
+        const type = this.model.get('buyerOpened') ? 'Buyer' : 'Vendor';
 
         if (!isContractValid) {
-          tip = `The ${this.model.get('buyerOpened') ? 'buyers' : 'vendors'} contract has ` +
-            'validation errors.';
+          tip = app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`);
         }
 
         if (!otherContract) {
-          tip += `${tip ? ' ' : ''}The ` +
-            `${this.model.get('buyerOpened') ? 'vendor\'s' : 'buyer\'s'} contract ` +
-              ' has not yet arrived.';
+          tip += `${tip ? ' ' : ''}` +
+            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasNotArrived`)}`;
         } else if (!this.model.isContractValid(!this.model.get('buyerOpened'))) {
-          tip += `${tip ? ' ' : ''}The ` +
-            `${this.model.get('buyerOpened') ? 'vendor\'s' : 'buyer\'s'} contract ` +
-              ' has validation errors.';
+          tip += `${tip ? ' ' : ''}` +
+            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`)}`;
         }
       }
     }

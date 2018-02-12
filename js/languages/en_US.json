@@ -1461,7 +1461,20 @@
       "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
       "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
       "buyerContractHeading": "Buyer Contract:",
-      "vendorContractHeading": "Vendor Contract:"
+      "vendorContractHeading": "Vendor Contract:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Both the buyer's and vendor's contracts have been verified as authentic.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "contractHeadingVendor": "Vendor's contract:",
+      "contractHeadingBuyer": "Buyer's contract:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",      
+      "tipVendorContractHasError": "The vendor's contract has validation errors.",
+      "tipBuyerContractNotArrived": "The buyer's contract has validation errors.",
+      "tipVendorContractHasNotArrived": "The vendor's contract has validation errors."
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
