@@ -15,36 +15,28 @@ export default class extends baseVw {
     if (!options.fetchErrorTitle) {
       throw new Error('Please provide error text for the moderator fetch.');
     }
-    if (!options.cardState) {
-      throw new Error('Please provide a default card state.');
-    }
-    if (!options.notSelected) {
-      throw new Error('Please provide a default not selected state.');
-    }
 
     /**
-     * @namespace
-     * @property {string}  apiPath           - Current options are fetchprofiles and moderators.
-     * @property {boolean} async             - Return profiles via websocket.
-     * @property {boolean} useCache          - Use cached data for faster speed.
-     * @property {array}   moderatorIDs      - list of peerIDs to retrieve. If none get all.
-     * @property {array}   excludeIDs        - list of peerIDs to not use.
-     * @property {boolean} showVerifiedOnly - show only validated moderatiors or all moderators.
-     * @property {string}  method            - POST or GET
-     * @property {string}  include           - If apiPath is moderator, set to 'profile' or only the
-     *                                         peerIDs of each moderator are returned.
-     * @property {boolean} purchase          - If this is used in a purchase, pass this to the
-     *                                         child moderator card views.
-     * @property {boolean} singleSelect      - Allow only one moderator to be selected at a time.
-     * @property {boolean} selectFirst       - Pre-select the first moderator.
-     * @property {boolean} radioStyle        - Show the moderator cards with radio buttons.
-     * @property {boolean} showInvalid       - Show invalid moderator cards.
-     * @property {boolean} controlsOnInvalid - Show controls on invalid cards so they can be removed
-     *                                         or otherwise acted on.
-     * @property {string}  wrapperClasses    - Add classes to the card container.
-     * @property {string}  fetchErrorTitle   - A title for the fetch error.
-     * @property {string}  cardState         - The initial state for cards that are created.
-     * @property {string}  notSelected       - Which not selected state to use on the mod cards.
+     * @param {string}  apiPath           - Current options are fetchprofiles and moderators.
+     * @param {boolean} async             - Return profiles via websocket.
+     * @param {boolean} useCache          - Use cached data for faster speed.
+     * @param {array}   moderatorIDs      - list of moderators to retrieve. If none get all.
+     * @param {array}   excludeIDs        - list of moderators to not use.
+     * @param {string}  method            - POST or GET
+     * @param {string}  include           - If apiPath is moderator, set to 'profile' or only the
+     *                                      peerIDs of each moderator are returned.
+     * @param {boolean} purchase          - If this is used in a purchase, pass this to the
+     *                                      child moderator card views.
+     * @param {boolean} singleSelect      - Allow only one moderator to be selected at a time.
+     * @param {boolean} selectFirst       - Pre-select the first moderator.
+     * @param {boolean} radioStyle        - Show the moderator cards with radio buttons.
+     * @param {boolean} showInvalid       - Show invalid moderator cards.
+     * @param {boolean} controlsOnInvalid - Show controls on invalid cards so they can be removed
+     *                                      or otherwise acted on.
+     * @param {string}  wrapperClasses    - Add classes to the card container.
+     * @param {string} fetchErrorTitle    - A title for the fetch error.
+     * @param {string} cardState          - The initial state for cards that are created.
+     * @param {string} notSelected        - Which not selected state to use on the mod cards.
      */
 
     const opts = {
@@ -63,7 +55,6 @@ export default class extends baseVw {
       showInvalid: false,
       controlsOnInvalid: false,
       wrapperClasses: '',
-      fetchErrorTitle: '',
       cardState: 'unselected',
       notSelected: 'unselected',
       ...options,
