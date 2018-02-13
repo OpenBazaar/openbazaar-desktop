@@ -76,7 +76,7 @@ export default class extends BaseVw {
   changeSelectState(cardState) {
     if (cardState !== this.cardState) {
       this.cardState = cardState;
-      this.$selectBtn.attr('data-state', cardState);
+      this.getCachedEl('.js-selectBtn').attr('data-state', cardState);
       this.trigger('modSelectChange', {
         selected: cardState === 'selected',
         guid: this.model.id,
@@ -85,6 +85,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     let modLanguages = [];
     if (this.model.isModerator) {
       modLanguages = this.model.get('moderatorInfo')
@@ -105,8 +107,6 @@ export default class extends BaseVw {
         modLanguages,
         ...this.model.toJSON(),
       }));
-
-      this.$selectBtn = this.$('.js-selectBtn');
     });
 
     return this;
