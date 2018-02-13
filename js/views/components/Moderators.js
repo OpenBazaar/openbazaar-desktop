@@ -88,8 +88,13 @@ export default class extends baseVw {
     this.excludeIDs = opts.excludeIDs;
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
-      const view = this.addMod(model);
-      this.getCachedEl('.js-moderatorsWrapper').append(view.render().$el);
+      const modCard = this.addMod(model);
+      this.getCachedEl('.js-moderatorsWrapper').append(modCard.render().$el);
+      // if required, select the first  moderator
+      if (opts.selectFirst && !this.firstSelected && !this.noneSelected) {
+        this.firstSelected = true;
+        modCard.changeSelectState('selected');
+      }
     });
     this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => this.removeMod(md, cl, rOpts));
     this.modCards = [];
@@ -240,7 +245,7 @@ export default class extends baseVw {
       throw new Error('Please provide a moderator model.');
     }
 
-    const newModView = this.createChild(ModCard, {
+    const modCard = this.createChild(ModCard, {
       model,
       purchase: this.options.purchase,
       notSelected: this.options.notSelected,
@@ -248,18 +253,13 @@ export default class extends baseVw {
       radioStyle: this.options.radioStyle,
       controlsOnInvalid: this.options.controlsOnInvalid,
     });
-    this.listenTo(newModView, 'modSelectChange', (data) => {
+    this.listenTo(modCard, 'modSelectChange', (data) => {
       // if only one moderator should be selected, deselect the other moderators
       if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
     });
     this.removeNotFetched(model.id);
-    this.modCards.push(newModView);
-    // if required, select the first  moderator
-    if (this.options.selectFirst && !this.firstSelected && !this.noneSelected) {
-      this.firstSelected = true;
-      newModView.changeSelectState('selected');
-    }
-    return newModView;
+    this.modCards.push(modCard);
+    return modCard;
   }
 
   removeMod(md, cl, opts) {
