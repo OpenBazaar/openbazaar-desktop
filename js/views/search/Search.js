@@ -104,9 +104,13 @@ export default class extends baseVw {
 
     // set an initial set of filters for the first query
     // if not passed in, set the user's values for nsfw and the currency
-    this.filterParams = {
+    this.defaultParams = {
       nsfw: String(app.settings.get('showNsfw')),
       acceptedCurrencies: getServerCurrency().code,
+    };
+
+    this.filterParams = {
+      ...this.defaultParams,
       ...filterParams,
     };
 
@@ -158,22 +162,18 @@ export default class extends baseVw {
    * This will create a url with the term and other query parameters
    * @param {string} term
    */
-  processTerm(term, reset) {
+  processTerm(term) {
     this.term = term || '';
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    // if the DOM is ready, use the form values. Otherwise use the values set in the constructor.
-    let filters = this.$filters ? this.$filters.serialize() : $.param(this.filterParams);
-    filters = !filters || reset ? '' : `&${filters}`;
+    const formData = this.getFormData(this.$filters);
+    // keep any parameters that aren't present in the form on the page
+    let filters = $.param({ ...this.defaultParams, ...this.filterParams, ...formData });
+    filters = filters ? `&${filters}` : '';
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
-    const newParams = newURL.searchParams;
-    // if there is no nsfw filter on the page, still send the default value to the provider
-    if (!newParams.has('nsfw')) {
-      newParams.append('nsfw', app.settings.get('showNsfw'));
-    }
     this.callSearchProvider(newURL);
   }
 
@@ -196,7 +196,8 @@ export default class extends baseVw {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
     }
-    this.processTerm(this.term, true);
+    this.filterParams = '';
+    this.processTerm(this.term);
   }
 
   deleteProvider(md = this.sProvider) {

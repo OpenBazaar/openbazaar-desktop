@@ -98,7 +98,7 @@ if (isBundledApp) {
     serverFilename,
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
     // IMPORTANT: From the main process, only bind events to the localServer instance
-    // unsing the functions in the mainProcLocalServerEvents module. The reasons for that
+    // using the functions in the mainProcLocalServerEvents module. The reasons for that
     // will be explained in the module.
   });
 
