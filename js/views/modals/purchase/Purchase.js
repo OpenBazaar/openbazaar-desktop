@@ -12,7 +12,7 @@ import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
 import Purchase from '../../../models/purchase/Purchase';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
-import Moderators from './Moderators';
+import Moderators from '../../components/Moderators';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
