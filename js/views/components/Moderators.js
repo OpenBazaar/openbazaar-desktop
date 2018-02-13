@@ -11,33 +11,33 @@ import ModCard from './ModeratorCard';
 import ModeratorStatus from './ModeratorsStatus';
 
 export default class extends baseVw {
+  /**
+   * @param {string}  options.apiPath           - Current options are fetchprofiles and moderators.
+   * @param {boolean} options.async             - Return profiles via websocket.
+   * @param {boolean} options.useCache          - Use cached data for faster speed.
+   * @param {array}   options.moderatorIDs      - list of moderators to retrieve. If none get all.
+   * @param {array}   options.excludeIDs        - list of moderators to not use.
+   * @param {string}  options.method            - POST or GET
+   * @param {string}  options.include           - If apiPath is moderator, set to 'profile' or only
+   *                                              the peerIDs of each moderator are returned.
+   * @param {boolean} options.purchase          - If this is used in a purchase, pass this to the
+   *                                              child moderator card views.
+   * @param {boolean} options.singleSelect      - Allow only one moderator to be selected at a time.
+   * @param {boolean} options.selectFirst       - Pre-select the first moderator.
+   * @param {boolean} options.radioStyle        - Show the moderator cards with radio buttons.
+   * @param {boolean} options.showInvalid       - Show invalid moderator cards.
+   * @param {boolean} options.controlsOnInvalid - Show controls on invalid cards so they can be
+   *                                              removed or otherwise acted on.
+   * @param {string}  options.wrapperClasses    - Add classes to the card container.
+   * @param {string}  options.fetchErrorTitle   - A title for the fetch error.
+   * @param {string}  options.cardState         - The initial state for cards that are created.
+   * @param {string}  options.notSelected       - Which not selected state to use on the mod cards.
+   */
+
   constructor(options = {}) {
     if (!options.fetchErrorTitle) {
       throw new Error('Please provide error text for the moderator fetch.');
     }
-
-    /**
-     * @param {string}  apiPath           - Current options are fetchprofiles and moderators.
-     * @param {boolean} async             - Return profiles via websocket.
-     * @param {boolean} useCache          - Use cached data for faster speed.
-     * @param {array}   moderatorIDs      - list of moderators to retrieve. If none get all.
-     * @param {array}   excludeIDs        - list of moderators to not use.
-     * @param {string}  method            - POST or GET
-     * @param {string}  include           - If apiPath is moderator, set to 'profile' or only the
-     *                                      peerIDs of each moderator are returned.
-     * @param {boolean} purchase          - If this is used in a purchase, pass this to the
-     *                                      child moderator card views.
-     * @param {boolean} singleSelect      - Allow only one moderator to be selected at a time.
-     * @param {boolean} selectFirst       - Pre-select the first moderator.
-     * @param {boolean} radioStyle        - Show the moderator cards with radio buttons.
-     * @param {boolean} showInvalid       - Show invalid moderator cards.
-     * @param {boolean} controlsOnInvalid - Show controls on invalid cards so they can be removed
-     *                                      or otherwise acted on.
-     * @param {string}  wrapperClasses    - Add classes to the card container.
-     * @param {string} fetchErrorTitle    - A title for the fetch error.
-     * @param {string} cardState          - The initial state for cards that are created.
-     * @param {string} notSelected        - Which not selected state to use on the mod cards.
-     */
 
     const opts = {
       apiPath: 'fetchprofiles',
