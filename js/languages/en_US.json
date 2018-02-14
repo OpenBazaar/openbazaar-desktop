@@ -1385,8 +1385,8 @@
       "ready": "Ready To Process",
       "fulfilled": "Fulfilled",
       "refunded": "Refunded",
+      "disputes": "Disputes",
       "disputeOpen": "Dispute Open",
-      "disputePending": "Dispute Pending",
       "disputeClosed": "Dispute Closed",
       "completed": "Completed"
     },
