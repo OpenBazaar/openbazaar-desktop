@@ -1,14 +1,23 @@
 <%
    const badge = ob.type.badge || '../imgs/verifiedModeratorBadge.png';
    const arrowClass = ob.arrowClass || 'arrowBoxCenteredTop';
+   const color = ob.verified ? 'clrBrAlert2 clrBAlert2Grad' : 'clrP clrBr';
+   const style = `${arrowClass} ${color}`;
+   const text = ob.verified ? 'Verified' : 'Unverified';
 %>
 
+<% if (ob.verified) { %>
 <div class="badge"
-     style="background-image: url(<%= badge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"
-     tabindex="0">
+    style="background-image: url(<%= badge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"
+  tabindex="0">
 </div>
+<% } else { %>
+  <div class="warning">
+    <%= ob.parseEmojis('⚠') %>
+  </div>
+<% } %>
 <div class="arrowBoxWrapper">
-  <div class="confirmBox arrowBox <% print(arrowClass) %> clrBrAlert2 clrBAlert2Grad">
+  <div class="confirmBox arrowBox <% print(style) %>">
     <div class="flexVCent flexHCent gutterHSm row">
       <div class="badge" style="background-image: url(<%= badge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
       <div class="tx4 txB"><%= ob.polyT('verifiedMod.title') %></div>
@@ -25,3 +34,6 @@
     </div>
   </div>
 </div>
+<% if (ob.showText) { %>
+  <div><%= text %></div>
+<% } %>

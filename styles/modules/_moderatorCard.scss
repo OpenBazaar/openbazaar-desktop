@@ -6,11 +6,14 @@
 
     .moderatorCardMiddle {
       flex-grow: 1;
-      overflow: hidden;
       font-size: $tx5b;
 
       .moreLink {
         float: right;
+      }
+
+      .detailsRow {
+        align-items: center;
       }
     }
 
@@ -48,6 +51,42 @@
 
       .fauxRadioBtn {
         margin: 0;
+      }
+    }
+
+    .verifiedWrapper {
+      height: 1.2em;
+      position: relative;
+      overflow: visible;
+
+      .verifiedMod {
+        position: relative;
+        height: 1.2em;
+
+        .badge {
+          position: relative;
+          top: -4px;
+          float: left;
+          margin-right: 5px;
+        }
+
+        .warning {
+          float: left;
+          margin-right: 5px;
+        }
+
+        .arrowBoxWrapper {
+          height: inherit;
+
+          .arrowBox {
+            top: 150%;
+            left: 50%;
+          }
+        }
+
+        .warning+ .arrowBoxWrapper {
+          width: 1em;
+        }
       }
     }
   }

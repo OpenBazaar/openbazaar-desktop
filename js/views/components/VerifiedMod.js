@@ -4,15 +4,18 @@ import VerifiedMod from '../../models/VerifiedMod';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    if (!options.model || !(options.model instanceof VerifiedMod)) {
-      throw new Error('Please provide a valid VerifiedMod model.');
-    }
     const opts = {
       arrowClass: '',
+      type: {},
+      data: {},
+      showText: false,
       ...options,
     };
+
     super(opts);
     this.options = opts;
+    // if no model is passed in, show the non-verified state instead
+    this.verified = options.model && options.model instanceof VerifiedMod;
   }
 
   className() {
@@ -30,7 +33,8 @@ export default class extends BaseVw {
     loadTemplate('/components/verifiedMod.html', (t) => {
       this.$el.html(t({
         ...this.options,
-        ...this.model.toJSON(),
+        ...(this.model ? this.model : {}),
+        verified: this.verified,
       }));
     });
 
