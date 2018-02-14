@@ -525,8 +525,9 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
-    const mods = this.model.get('moderators');
-    const hasVerifiedMods = _.intersection(app.verifiedMods.pluck('peerID'), mods).length > 0;
+    const hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+    const defaultBadge = app.verifiedMods.defaultBadge(this.model.get('moderators'));
+    console.log(defaultBadge)
     let nsfwWarning;
 
     if (!this.rendered &&
@@ -556,6 +557,7 @@ export default class extends BaseModal {
         ),
         hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
+        defaultBadge,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');

@@ -419,7 +419,7 @@ export default class extends baseVw {
 
     const moderators = this.model.get('moderators') || ['QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ']; // this is test code, the server doesn't return moderators here yet
     // TODO: remove the test code above
-    const verifiedIDs = app.verifiedMods.pluck('peerID').filter((mod) => moderators.includes(mod));
+    const verifiedIDs = app.verifiedMods.matched(moderators);
     const verifiedID = verifiedIDs[0];
 
     if (this.verifiedMod) this.verifiedMod.remove();

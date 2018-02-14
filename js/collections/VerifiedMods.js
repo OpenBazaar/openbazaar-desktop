@@ -24,12 +24,31 @@ export default class extends Collection {
     this._data = data;
   }
 
+  /**
+   * Return a list of verified moderators that match the ids passed in
+   * @param IDs {array} - a list of IDs
+   */
+  matched(IDs) {
+    return this.filter(mod => IDs.includes(mod.get('peerID')));
+  }
+
+  /**
+   * Return a badge to use to represent the verified moderators available on a listing.
+   * If no moderator has a badge url, return the default badge url.
+   * @param IDs {array} - a list of IDs
+   */
+  defaultBadge(IDs) {
+    const modelWithBadge = _.find(this.matched(IDs), mod => mod.get('type').badge);
+    return modelWithBadge && modelWithBadge.get('type').badge ||
+      '../imgs/verifiedModeratorBadgeDefault.png';
+  }
+
   parse(response) {
     const fakeMods = {
       data: {
-        name: 'OpenBasketModService',
+        name: 'OB1 Official Blah Blah',
         description: 'Some description of the moderator verification service that could be any arbitrary length so we had better watch out for that for certain and not let it get too long eh?',
-        link: 'url to the provider'
+        link: ''
       },
       types: [
         {
@@ -51,13 +70,26 @@ export default class extends Collection {
         {
           peerID: 'QmXFMkpBBpL4zcYAArVAecLyypFrRzp2Co4q9oXUtzF7XF',
           type: 'advanced'
+        },
+        {
+          peerID: 'QmfGL6dWz8NHwcD9aedL4Y73veqrBQ5Qw7EpQHa3EZ3t4c',
+          type: 'advanced'
         }
       ]
     };
     response = fakeMods;
     this.data = response.data;
-    this.data.defaultBadge = _.find(response.types, type => type.badge).badge;
+    this.data.url = this.url(); // backup for templates if the link is missing
     const parsedResponse = response.moderators ? response.moderators : [];
+    /*
+       Embed the type in each moderator so it's easier to use elsewhere. It should look like:
+       peerID: string,
+       type: {
+         name: string,
+         description: string,
+         badge: url string,
+         }
+     */
     parsedResponse.forEach((mod) => {
       if (response.types && response.types.length && mod.type) {
         mod.type = _.findWhere(response.types, { name: mod.type });

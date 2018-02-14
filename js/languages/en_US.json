@@ -351,7 +351,10 @@
     "blockedUserOverlayText": "You blocked this user"
   },
   "verifiedMod": {
+    "verified": "Verified",
+    "unverified": "Unverified",
     "title": "Verified Moderator",
+    "body": "This moderator has been verified by %{providerName} as a trusted moderator.",
     "link": "Learn More",
     "typeName": "Type: %{name}",
     "listingDescription": "You can purchase this listing with a trusted moderator, verified by %{name}. %{link}"

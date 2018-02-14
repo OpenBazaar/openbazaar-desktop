@@ -153,12 +153,15 @@
           <div class="verifiedMod">
             <div class="confirmBox clrBrAlert2 clrBAlert2Grad">
               <div class="flexVCent flexHCent gutterHSm row">
-                <div class="badge" style="background-image: url(<%= ob.verifiedModsData.defaultBadge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
+                <div class="badge" style="background-image: url(<%= ob.defaultBadge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
                 <div class="tx5 txB"><%= ob.polyT('verifiedMod.title') %></div>
               </div>
               <div class="flexColRows gutterVSm tx5b">
-                <% const verifiedModLink = `<a class="txU noWrap" href="${ob.verifiedModsData.link}">${ob.polyT('verifiedMod.link')}</a>`; %>
-                <div><%= ob.polyT('verifiedMod.listingDescription', { name: ob.verifiedModsData.name, link: verifiedModLink }) %></div>
+                <%
+                   const providerName = `<b>${ob.verifiedModsData.name}</b>`;
+                   const verifiedModLink = `<a class="txU noWrap" href="${ob.verifiedModsData.link}">${ob.polyT('verifiedMod.link')}</a>`;
+                %>
+                <div><%= ob.polyT('verifiedMod.listingDescription', { name: providerName, link: verifiedModLink }) %></div>
               </div>
             </div>
           </div>
