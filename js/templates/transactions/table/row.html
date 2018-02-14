@@ -81,7 +81,8 @@
 </td>
 <td class="clrBr gutterH statusCol">
   <%
-    if (ob.state === 'PENDING') {
+    if (ob.state === 'PENDING' ||
+      (ob.type === 'purchases' && ob.state === 'PROCESSING_ERROR')) {
       if (ob.type === 'sales') {
         if (ob.rejectOrderInProgress) {
       %>
@@ -91,15 +92,17 @@
           <%= ob.spinner({ className: 'spinnerSm center' }) %>
         </span>
       <%          
-          } else {
+        } else {
       %>
         <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
-      <%  } %>
+      <% } %>
         <%= ob.processingButton({
           className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
           btnText: ob.polyT('transactions.transactionsTable.btnAccept')
         }) %>
     <% } else if (!ob.moderated) {
+        // Only non-moderated purchase can be canceled. They must be in either the PENDING ||
+        // PROCESSING_ERROR states.
         if (ob.cancelOrderInProgress) {
     %>
         <span class="posR">
