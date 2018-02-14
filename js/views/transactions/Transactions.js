@@ -233,6 +233,13 @@ export default class extends baseVw {
         className: 'filter',
         targetState: [6, 7, 8],
       },
+      {
+        id: 'filterError',
+        text: app.polyglot.t('transactions.filters.error'),
+        checked: [14].includes(this.salesPurchasesDefaultFilter.states),
+        className: 'filter',
+        targetState: [14],
+      },
     ];
   }
 

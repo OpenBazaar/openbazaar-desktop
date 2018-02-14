@@ -1388,7 +1388,8 @@
       "disputes": "Disputes",
       "disputeOpen": "Dispute Open",
       "disputeClosed": "Dispute Closed",
-      "completed": "Completed"
+      "completed": "Completed",
+      "error": "Errors"
     },
     "sort": {
       "label": "Sort By",
