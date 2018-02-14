@@ -71,17 +71,28 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
         <% } %>
         <section class="contentBox padMd clrP clrBr clrSh3">
           <div class="flexColRows gutterVSm">
-            <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
-            <div class="contentBox pad clrP clrBr flexVCent">
-              <%= ob.currencyMod.cryptoIcon({ className: 'margRSm'}) %>
-              <i class="btcIcon margRSm"></i>
-              <div class="flexExpand">
-                <%= ob.polyT(`cryptoCurrencies.${ob.currencyMod.getServerCurrency().code}`) %>
-              </div>
-              <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
-              <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
+            <div class="flexVCentClearMarg">
+              <h2 class="h4 flexExpand"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
+              <% if (ob.showModerators) { %>
+                <input type="checkbox" id="verifiedOnly" checked>
+                <label class="tx5b" for="verifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
+              <% } %>
             </div>
-            <% if (ob.showModerators) { %>
+            <% if (ob.showModerators && !ob.noValidModerators) { %>
+              <div class="js-moderated-errors"></div>
+              <div class="js-moderatorsWrapper"></div>
+              <% if (ob.noValidModerators) { %>
+                <p class="clrTErr">
+                <%= ob.polyT('purchase.noValidModerators') %>
+              </p>
+              <% } %>
+              <% if (ob.noVerifiedModerators) { %>
+                <p class="clrTErr">
+                  <%= ob.polyT('purchase.noVerifiedModerators') %>
+                </p>
+              <% } %>
+              <hr class="clrBr row">
+            <% } %>
               <div class="js-moderatedOption <% if (ob.noValidModerators) print('disabled'); %>">
                 <input
                     type="checkbox"
@@ -90,25 +101,11 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
                 <% if (ob.moderated && !ob.noValidModerators) print('checked') %>
                 >
                 <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
-                <p class="clrT2 tx6">
-                  <%= ob.polyT('purchase.moderationDisclaimer') %>
-                </p>
               </div>
-              <% if (ob.noValidModerators) { %>
-                <p class="clrTErr">
-                  <%= ob.polyT('purchase.noValidModerators') %>
-                </p>
-              <% } %>
-            <% } %>
+
           </div>
+
         </section>
-      <% if (ob.showModerators && !ob.noValidModerators) { %>
-        <section class="contentBox padMd clrP clrBr clrSh3 js-moderator">
-          <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
-          <div class="js-moderated-errors"></div>
-          <div class="js-moderatorsWrapper"></div>
-        </section>
-      <% } %>
       <section class="contentBox padMd clrP clrBr clrSh3">
         <h2 class="h4">
           <%= ob.polyT('purchase.informationTitle') %>

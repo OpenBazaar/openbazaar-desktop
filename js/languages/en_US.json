@@ -1299,10 +1299,8 @@
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
-    "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "Moderated Payment",
     "noValidModerators": "No valid moderators are available for this order.",
-    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",

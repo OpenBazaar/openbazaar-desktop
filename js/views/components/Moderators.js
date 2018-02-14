@@ -154,6 +154,7 @@ export default class extends baseVw {
 
     this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
+    this.verifiedMods = app.verifiedMods.matched(IDs);
 
     this.moderatorStatus.setState({
       hidden: false,
@@ -229,6 +230,10 @@ export default class extends baseVw {
       // check if there are mods that loaded but none were valid
       if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
+      }
+      // check if no valid verified mods where loaded
+      if (this.verifiedMods.length && !this.modCount.length) {
+        this.trigger('noValidVerifiedModerators');
       }
     } else {
       // either ids are still fetching, or this is an open fetch with no set ids

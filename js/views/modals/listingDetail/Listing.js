@@ -527,7 +527,6 @@ export default class extends BaseModal {
 
     const hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
     const defaultBadge = app.verifiedMods.defaultBadge(this.model.get('moderators'));
-    console.log(defaultBadge)
     let nsfwWarning;
 
     if (!this.rendered &&

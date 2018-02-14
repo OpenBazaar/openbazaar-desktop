@@ -6,6 +6,6 @@
     <% const remaining = ob.total - ob.loaded; %>
     <span class="clrT4"><%= ob.polyT('moderators.moderatorsLoading', { remaining, total: ob.total }) %></span>
   <% } else if (ob.mode === 'loaded') { %>
-    <span class="clrT4"><%= ob.polyT('moderators.moderatorsLoaded', { total: ob.total }) %></span>
+    <span class="clrT4"><%= ob.polyT('moderators.moderatorsLoaded', { total: ob.total, verifiedTotal: ob.verifiedTotal }) %></span>
   <% } %>
 </div>

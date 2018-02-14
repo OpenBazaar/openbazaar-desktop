@@ -115,6 +115,7 @@ export default class extends BaseModal {
     this.moderators.render();
     this.moderators.getModeratorsByID();
     this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
+    this.listenTo(this.moderators, 'noValidVerifiedModerators', () => this.onNoVerfiedModerators());
 
     if (this.listing.get('shippingOptions').length) {
       this.shipping = this.createChild(Shipping, {
@@ -225,6 +226,11 @@ export default class extends BaseModal {
   onNoValidModerators() {
     this.order.moderated = false;
     this.setState({ noValidModerators: true });
+  }
+
+  onNoVerfiedModerators() {
+    this.order.moderated = false;
+    this.setState({ noVerifiedModerators: true });
   }
 
   changeQuantityInput(e) {
@@ -447,6 +453,7 @@ export default class extends BaseModal {
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         moderated: this.order.moderated,
+        noVerifiedModerators: !app.verifiedMods.matched(this.moderatorIDs).length,
       }));
 
       super.render();
