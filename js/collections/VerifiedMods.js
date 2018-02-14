@@ -54,7 +54,7 @@ export default class extends Collection {
         {
           name: 'standard',
           description: 'blah blah blah',
-          //badge: 'http://www.pvhc.net/img8/niexjjzstcseuzdzkvoq.png'
+          badge: 'http://www.pvhc.net/img8/niexjjzstcseuzdzkvoq.png'
         },
         {
           name: 'advanced',
