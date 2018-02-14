@@ -835,8 +835,9 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
-          isOrderCancelable: () => this.model.get('state') === 'PENDING' &&
-            !this.moderator && this.buyer.id === app.profile.id,
+          isOrderCancelable: () =>
+            ['PENDING', 'PROCESSING_ERROR'].includes(this.model.get('state')) &&
+              !this.moderator && this.buyer.id === app.profile.id,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });
