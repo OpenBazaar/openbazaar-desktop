@@ -1425,7 +1425,8 @@
         "DISPUTED": "Disputed",
         "DECIDED": "Decided",
         "RESOLVED": "Resolved",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Payment Finalized",
+        "PROCESSING_ERROR": "Error"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
