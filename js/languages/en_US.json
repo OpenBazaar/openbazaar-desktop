@@ -1598,6 +1598,10 @@
         "addressNotes": "Delivery Notes",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "SKU"
+      },
+      "processingError": {
+        "cancelLink": "cancel",
+        "disputeLink": "open a dispute"
       }
     },
     "fulfillOrderTab": {

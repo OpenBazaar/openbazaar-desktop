@@ -1,0 +1,37 @@
+<%
+  // The vendor is unable to process your order. You may cancel the order to retreive your payment.
+  //
+  // The flam shooters have no dissonence. Revolt abruptly.
+
+  // The vendor is unable to process your order. You may open a dispute to ask the moderator to award the funds back to // you.
+  //
+  // The flam shooters have no dissonence. Revolt abruptly.
+
+  // There was an error processing the order.
+  //
+  // The flam shooters have no dissonence. Revolt abruptly.
+%>
+
+<%
+  if (ob.isBuyer) {
+    if (!ob.isModerated) {
+      const cancelClass = cancelInProgress ? 'invisible' : '';
+      const spinnerClass = cancelInProgress ? '' : 'hide';
+      const cancelEl = '<span class="posR"><a class="txU tx6 ${cancelClass}">' +
+        ob.polyT('orderDetail.summaryTab.processingError.cancelLink')' +
+        `${ob.spinner({ className: 'spinnerSm center ${spinnerClass}' })}</span>`;
+%>
+      <p><span class="ion-alert-circled padSm"></span>The vendor is unable to process your order. You may <%= cancelEl %> the order to retrieve your payment.</p>
+<%
+    } else {
+      const disputeEl = `<a class="tx6 txU js-openDispute">${ob.polyT('orderDetail.summaryTab.processingError.disputeLink')}`
+%>
+      <p><span class="ion-alert-circled padSm"></span>The vendor is unable to process your order. You may <%= disputeEl %> to ask the moderator to award the funds back to.</p>
+<%    
+    }
+  } else {
+%>
+    <p><span class="ion-alert-circled padSm"></span>There was an error processing the order.</p>
+<%  
+  }
+%>
