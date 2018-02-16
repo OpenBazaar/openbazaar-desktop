@@ -233,13 +233,7 @@ export default class extends BaseModal {
     this.order.moderated = false;
   }
 
-  //onNoVerfiedModerators() {
-    //this.order.moderated = false;
-    //this.getCachedEl('#verifiedOnly').prop('checked', false);
-  //}
-
   togVerifiedModerators(bool) {
-    console.log(bool)
     this.order.moderated = false;
     this.getCachedEl('#verifiedOnly').prop('checked', bool);
   }
