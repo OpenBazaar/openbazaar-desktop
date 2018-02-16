@@ -226,7 +226,7 @@
 
   &.centeredBelow {
     // The container that you want the spendConfirmBox to be
-    // centered below must be relatively positioned.
+    // centered below must be non-statically positioned.
     .sendConfirm {
       margin-top: 10px;
       position: absolute;
