@@ -1300,7 +1300,6 @@
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
     "moderatedPayment": "Moderated Payment",
-    "noValidModerators": "No valid moderators are available for this order.",
     "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",
@@ -1372,7 +1371,12 @@
   },
   "moderators": {
     "moderatorsLoading": "Loading %{remaining} out of %{total} moderators.",
-    "moderatorsLoaded": "%{total} moderators loaded."
+    "moderatorsLoaded": "%{total} moderators loaded.",
+    "noValidModerators": "No Valid Moderators Available.",
+    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
+    "noVerifiedModerators": "No Verified Moderators Available",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Show Unverified Moderators"
   },
   "transactions": {
     "sales": {

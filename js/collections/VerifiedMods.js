@@ -48,7 +48,7 @@ export default class extends Collection {
       data: {
         name: 'OB1 Official Blah Blah',
         description: 'Some description of the moderator verification service that could be any arbitrary length so we had better watch out for that for certain and not let it get too long eh?',
-        link: ''
+        link: 'http://www.link.com'
       },
       types: [
         {
@@ -64,16 +64,20 @@ export default class extends Collection {
       ],
       moderators: [
         {
-          peerID: 'QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ',
+          peerID: 'xQmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ',
           type: 'standard'
         },
         {
-          peerID: 'QmXFMkpBBpL4zcYAArVAecLyypFrRzp2Co4q9oXUtzF7XF',
+          peerID: 'xQmXFMkpBBpL4zcYAArVAecLyypFrRzp2Co4q9oXUtzF7XF',
           type: 'advanced'
         },
         {
-          peerID: 'QmfGL6dWz8NHwcD9aedL4Y73veqrBQ5Qw7EpQHa3EZ3t4c',
+          peerID: 'xQmfGL6dWz8NHwcD9aedL4Y73veqrBQ5Qw7EpQHa3EZ3t4c',
           type: 'advanced'
+        },
+        {
+          peerID: 'QmSxrDKfmZgJmg9bZYsgiCyAZXkPkmvv7qJxMZBQ1WY7eL', // not valid
+          type: 'standard'
         }
       ]
     };

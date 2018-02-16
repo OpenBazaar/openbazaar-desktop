@@ -1,8 +1,7 @@
 .moderatorCard {
-  cursor: pointer;
-
   .moderatorCardInner .moderatorCardContent {
     padding: $padMd;
+    cursor: pointer;
 
     .moderatorCardMiddle {
       flex-grow: 1;

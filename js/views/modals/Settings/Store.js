@@ -140,7 +140,7 @@ export default class extends baseVw {
   }
 
   onClickVerifiedOnly(e) {
-    this.modsAvailable.showVerifiedOnly($(e.target).prop('checked'));
+    this.modsAvailable.togVerifiedShown($(e.target).prop('checked'));
   }
 
   getProfileFormData(subset = this.$profileFormFields) {

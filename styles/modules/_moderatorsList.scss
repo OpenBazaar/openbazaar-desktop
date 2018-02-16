@@ -30,6 +30,10 @@
           border-style: solid;
         }
       }
+
+      &.moderatorsMessage .moderatorCardInner {
+        height: 100%;
+      }
     }
   }
 
@@ -48,10 +52,12 @@
     .moderatorCardInner {
       .moderatorCardContent {
         display: none;
+        cursor: none;
       }
 
       &.verified .moderatorCardContent {
         display: flex;
+        cursor: pointer;
       }
     }
   }

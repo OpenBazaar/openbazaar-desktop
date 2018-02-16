@@ -52,7 +52,10 @@ export default class extends BaseModal {
     const moderatorIDs = this.listing.get('moderators') || [];
     const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
-    this.setState({ showModerators: !!this.moderatorIDs.length }, { renderOnChange: false });
+    this.setState({
+      showModerators: !!this.moderatorIDs.length,
+      noVerifiedModerators: !app.verifiedMods.matched(this.moderatorIDs).length,
+    }, { renderOnChange: false });
 
     this.couponObj = [];
 
@@ -102,6 +105,8 @@ export default class extends BaseModal {
 
     this.moderators = this.createChild(Moderators, {
       moderatorIDs: this.moderatorIDs,
+      useCache: false,
+      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
       fetchErrorMsg: app.polyglot.t('purchase.errors.moderatorsMsg'),
       purchase: true,
@@ -115,7 +120,7 @@ export default class extends BaseModal {
     this.moderators.render();
     this.moderators.getModeratorsByID();
     this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
-    this.listenTo(this.moderators, 'noValidVerifiedModerators', () => this.onNoVerfiedModerators());
+    this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
 
     if (this.listing.get('shippingOptions').length) {
       this.shipping = this.createChild(Shipping, {
@@ -154,6 +159,7 @@ export default class extends BaseModal {
       'keyup #couponCode': 'onKeyUpCouponCode',
       'blur #emailAddress': 'blurEmailAddress',
       'blur #memo': 'blurMemo',
+      'click #verifiedOnly': 'onClickVerifiedOnly',
       ...super.events(),
     };
   }
@@ -225,12 +231,22 @@ export default class extends BaseModal {
 
   onNoValidModerators() {
     this.order.moderated = false;
-    this.setState({ noValidModerators: true });
   }
 
-  onNoVerfiedModerators() {
+  //onNoVerfiedModerators() {
+    //this.order.moderated = false;
+    //this.getCachedEl('#verifiedOnly').prop('checked', false);
+  //}
+
+  togVerifiedModerators(bool) {
+    console.log(bool)
     this.order.moderated = false;
-    this.setState({ noVerifiedModerators: true });
+    this.getCachedEl('#verifiedOnly').prop('checked', bool);
+  }
+
+  onClickVerifiedOnly(e) {
+    console.log($(e.target).prop('checked'))
+    this.moderators.togVerifiedShown($(e.target).prop('checked'));
   }
 
   changeQuantityInput(e) {
@@ -439,6 +455,7 @@ export default class extends BaseModal {
   }
 
   render() {
+    console.log('render')
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
     const state = this.getState();
 
@@ -453,7 +470,6 @@ export default class extends BaseModal {
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         moderated: this.order.moderated,
-        noVerifiedModerators: !app.verifiedMods.matched(this.moderatorIDs).length,
       }));
 
       super.render();

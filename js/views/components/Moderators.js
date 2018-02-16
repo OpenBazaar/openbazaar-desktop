@@ -9,6 +9,7 @@ import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ModCard from './ModeratorCard';
 import ModeratorStatus from './ModeratorsStatus';
+import * as block from "../../utils/block";
 
 export default class extends baseVw {
   /**
@@ -104,12 +105,23 @@ export default class extends baseVw {
       initialState: {
         showSpinner: opts.method === 'POST',
         mode: opts.method === 'POST' ? 'loading' : 'loaded',
-      }
+      },
     });
   }
 
   className() {
     return 'moderatorsList';
+  }
+
+  events() {
+    return {
+      'click .js-showUnverified': 'clickShowUnverified',
+    };
+  }
+
+  clickShowUnverified() {
+    this.togVerifiedShown(false);
+    this.trigger('clickShowUnverified');
   }
 
   removeNotFetched(ID) {
@@ -156,9 +168,14 @@ export default class extends baseVw {
     this.fetchingMods = IDs;
     this.verifiedMods = app.verifiedMods.matched(IDs);
 
+    this.setState({
+      noValidModerators: false,
+      noValidVerifiedModerators: !this.verifiedMods.length && this.fetchingMods.length,
+    });
+
     this.moderatorStatus.setState({
       hidden: false,
-      total: IDs.length,
+      total: IDs.length ? IDs.length : this.modCount,
     });
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
@@ -230,10 +247,12 @@ export default class extends baseVw {
       // check if there are mods that loaded but none were valid
       if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
+        this.setState({ noValidModerators: true });
       }
       // check if no valid verified mods where loaded
-      if (this.verifiedMods.length && !this.modCount.length) {
+      if (this.verifiedMods.length && !this.modCount) {
         this.trigger('noValidVerifiedModerators');
+        this.setState({ noValidVerifiedModerators: true });
       }
     } else {
       // either ids are still fetching, or this is an open fetch with no set ids
@@ -318,8 +337,8 @@ export default class extends baseVw {
     });
   }
 
-  showVerifiedOnly(bool) {
-    this.getCachedEl('.js-moderatorsWrapper').toggleClass('showVerifiedOnly', bool);
+  togVerifiedShown(bool) {
+    this.setState({ showVerifiedOnly: bool });
   }
 
   get noneSelected() {
@@ -336,14 +355,11 @@ export default class extends baseVw {
   }
 
   render() {
-    let wrapperClasses = this.options.wrapperClasses;
-    const wrapperComma = wrapperClasses ? ', ' : '';
-    const showValidated = this.options.showVerifiedOnly ? 'showVerifiedOnly' : '';
-    wrapperClasses = `${wrapperClasses}${wrapperComma}${showValidated}`;
-
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
-        wrapperClasses,
+        wrapperClasses: this.options.wrapperClasses,
+        showVerifiedOnly: this.options.showVerifiedOnly,
+        ...this.getState(),
       }));
 
       super.render();
