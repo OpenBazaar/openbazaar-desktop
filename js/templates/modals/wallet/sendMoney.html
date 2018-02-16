@@ -46,12 +46,14 @@
     <div class="flexExpand">
       <div class="flexHRight flexVCent gutterH col11">
         <a class="js-sendMoneyClear flexNoShrink"><%= ob.polyT('wallet.sendMoney.clear') %></a>
-        <%= ob.processingButton({
-          className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
-          btnText: ob.polyT('wallet.sendMoney.sendBtn')
-        }) %>
+        <div class="posR">
+          <%= ob.processingButton({
+            className: `js-btnSend btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.saveInProgress ? 'processing' : ''}`,
+            btnText: ob.polyT('wallet.sendMoney.sendBtn')
+          }) %>
+          <div class="js-sendConfirmContainer"></div>
+        </div>
       </div>
     </div>
   </div>
 </form>
-<div class="js-sendConfirmContainer"></div>

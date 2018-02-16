@@ -372,7 +372,7 @@ export default class extends baseVw {
   remove() {
     if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
-    $(document).off(null, this.boundDocClick);
+    $(document).off('click', this.boundDocClick);
     super.remove();
   }
 

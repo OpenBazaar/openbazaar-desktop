@@ -122,7 +122,7 @@ export default class extends BaseVw {
   }
 
   remove() {
-    $(document).off(null, this.boundOnDocClick);
+    $(document).off('click', this.boundOnDocClick);
     super.remove();
   }
 
