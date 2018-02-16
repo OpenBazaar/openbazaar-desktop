@@ -4,28 +4,38 @@ import loadTemplate from '../../utils/loadTemplate';
 export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
+      ...options,
       initialState: {
         hidden: true,
         showSpinner: true,
+        spinnerTimer: true,
+        showLoadBtn: false,
         loaded: 0,
         total: 0,
         mode: 'loaded',
-        ...(options && options.initialState || {}),
+        className: 'moderatorStatus',
+        ...(options.initialState || {}),
       },
-      ...options,
-     };
+    };
 
     super(opts);
     this.options = opts;
+
+    if (this._state.showSpinner && this._state.spinnerTimer) {
+      // hide the spinner after a delay if the parent doesn't hide it
+      this.spinnerTimout = setTimeout(() => {
+        this.setState({ showSpinner: false });
+      }, 10000);
+    }
   }
 
-  className() {
-    return 'moderatorStatus';
+  remove() {
+    clearTimeout(this.spinnerTimout);
+    super.remove();
   }
 
   render() {
     super.render();
-
     loadTemplate('components/moderatorsStatus.html', (t) => {
       this.$el.html(t({
         ...this.getState(),

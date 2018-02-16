@@ -682,7 +682,6 @@
       "moderatoryByIDSubmit": "Find",
       "availableModerators": "Available Moderators",
       "browseModerators": "Browse Moderators",
-      "browseMoreModerators": "Load More",
       "verifiedOnly": "Verified moderators only",
       "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Loading",
@@ -1376,7 +1375,9 @@
     "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
     "noVerifiedModerators": "No Verified Moderators Available",
     "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
-    "showUnverified": "Show Unverified Moderators"
+    "showUnverified": "Show Unverified Moderators",
+    "browseMoreModerators": "Load More"
+
   },
   "transactions": {
     "sales": {

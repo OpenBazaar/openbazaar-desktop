@@ -9,7 +9,6 @@ import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ModCard from './ModeratorCard';
 import ModeratorStatus from './ModeratorsStatus';
-import * as block from "../../utils/block";
 
 export default class extends baseVw {
   /**
@@ -33,6 +32,8 @@ export default class extends baseVw {
    * @param {string}  options.fetchErrorTitle   - A title for the fetch error.
    * @param {string}  options.cardState         - The initial state for cards that are created.
    * @param {string}  options.notSelected       - Which not selected state to use on the mod cards.
+   * @param {boolean} options.showLoadBtn       - Show the load more button in the status bar.
+   * @param {boolean} options.showSpinner       - Show the spinner in the status bar
    */
 
   constructor(options = {}) {
@@ -43,21 +44,20 @@ export default class extends baseVw {
     const opts = {
       apiPath: 'fetchprofiles',
       async: true,
-      useCache: true,
+      useCache: false,
       moderatorIDs: [],
       excludeIDs: [],
-      showVerifiedOnly: false,
       method: 'POST',
       include: '',
       purchase: false,
       singleSelect: false,
       selectFirst: false,
       radioStyle: false,
-      showInvalid: false,
       controlsOnInvalid: false,
-      wrapperClasses: '',
       cardState: 'unselected',
       notSelected: 'unselected',
+      showLoadBtn: false,
+      showSpinner: true,
       ...options,
     };
 
@@ -89,8 +89,12 @@ export default class extends baseVw {
     this.excludeIDs = opts.excludeIDs;
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
+      // remove placeholder if this is the first moderator added
+      if (!this.modCards.length) this.setState({ placeholder: false });
+
       const modCard = this.addMod(model);
       this.getCachedEl('.js-moderatorsWrapper').append(modCard.render().$el);
+
       // if required, select the first  moderator
       if (opts.selectFirst && !this.firstSelected && !this.noneSelected) {
         this.firstSelected = true;
@@ -101,10 +105,11 @@ export default class extends baseVw {
     this.modCards = [];
 
     // create a moderator status view. It should retain it's state between renders of this view.
-    this.moderatorStatus = new ModeratorStatus({
+    this.moderatorStatus = this.createChild(ModeratorStatus, {
       initialState: {
-        showSpinner: opts.method === 'POST',
         mode: opts.method === 'POST' ? 'loading' : 'loaded',
+        showLoadBtn: opts.showLoadBtn,
+        showSpinner: opts.showSpinner,
       },
     });
   }
@@ -116,12 +121,17 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-showUnverified': 'clickShowUnverified',
+      'click .js-browseMore': 'clickBrowseMore',
     };
   }
 
   clickShowUnverified() {
     this.togVerifiedShown(false);
     this.trigger('clickShowUnverified');
+  }
+
+  clickBrowseMore() {
+    this.getModeratorsByID();
   }
 
   removeNotFetched(ID) {
@@ -175,7 +185,6 @@ export default class extends baseVw {
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || op.method === 'GET') {
-      console.log("show")
       this.moderatorStatus.setState({
         hidden: false,
         loaded: this.modCount,
@@ -343,6 +352,10 @@ export default class extends baseVw {
     this.setState({ showVerifiedOnly: bool });
   }
 
+  togShowLoadBtn(bool) {
+    this.moderatorStatus.setState({ showLoadBtn: bool });
+  }
+
   get noneSelected() {
     return this._noneSelected;
   }
@@ -361,6 +374,7 @@ export default class extends baseVw {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
         showVerifiedOnly: this.options.showVerifiedOnly,
+        placeholder: !this.modCards.length,
         ...this.getState(),
       }));
 

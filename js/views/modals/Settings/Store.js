@@ -39,45 +39,37 @@ export default class extends baseVw {
     this.currentMods = this.settings.get('storeModerators');
 
     this.modsSelected = new Moderators({
-      async: true,
-      useCache: false,
       moderatorIDs: this.currentMods,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
       notSelected: 'deselected',
       showInvalid: true,
       controlsOnInvalid: true,
+      showSpinner: false,
     });
 
     this.modsByID = new Moderators({
       async: false,
-      useCache: false,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       excludeIDs: this.currentMods,
-      cardState: 'unselected',
-      notSelected: 'unselected',
       showInvalid: true,
       wrapperClasses: 'noMin',
+      showSpinner: false,
     });
 
     this.listenTo(this.modsByID, 'noModsFound', (opts) => this.noModsFound(opts.guids));
 
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
-      useCache: false,
-      async: true,
       excludeIDs: this.currentMods,
       showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
-      cardState: 'unselected',
-      notSelected: 'unselected',
     });
   }
 
   events() {
     return {
       'click .js-browseMods': 'fetchAvailableModerators',
-      'click .js-browseMore': 'fetchAvailableModerators',
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
       'click #verifiedOnly': 'onClickVerifiedOnly',
@@ -95,9 +87,9 @@ export default class extends baseVw {
 
   fetchAvailableModerators() {
     this.modsAvailable.getModeratorsByID();
+    this.modsAvailable.togShowLoadBtn('true');
     this.getCachedEl('.js-modListAvailable').removeClass('hide');
     this.getCachedEl('.js-noModsAdded').addClass('hide');
-    this.getCachedEl('.js-browseMore').removeClass('hide');
   }
 
   showModByIDError(msg) {
