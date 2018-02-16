@@ -175,6 +175,7 @@ export default class extends baseVw {
 
     this.moderatorStatus.setState({
       hidden: false,
+      loaded: this.modCount,
       total: IDs.length ? IDs.length : this.modCount,
     });
 
