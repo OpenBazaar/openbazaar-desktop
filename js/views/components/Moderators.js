@@ -173,14 +173,15 @@ export default class extends baseVw {
       noValidVerifiedModerators: !this.verifiedMods.length && this.fetchingMods.length,
     });
 
-    this.moderatorStatus.setState({
-      hidden: false,
-      loaded: this.modCount,
-      total: IDs.length ? IDs.length : this.modCount,
-    });
-
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || op.method === 'GET') {
+      console.log("show")
+      this.moderatorStatus.setState({
+        hidden: false,
+        loaded: this.modCount,
+        total: IDs.length ? IDs.length : this.modCount,
+      });
+
       this.fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),

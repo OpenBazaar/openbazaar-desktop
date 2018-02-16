@@ -1,4 +1,9 @@
 <div class="moderatorsWrapper clrBr <% print(ob.wrapperClasses) %> <% if (ob.showVerifiedOnly) print('showVerifiedOnly') %> js-moderatorsWrapper">
+    <% // placeholder so border collapse doesn't erase the table border when there are no table cells %>
+    <div class="moderatorCard clrBr">
+      <div class="moderatorCardInner">
+      </div>
+    </div>
   <% if (ob.noValidModerators) { %>
   <p class="clrTErr">
     <%= ob.polyT('moderators.noValidModerators') %>
@@ -6,7 +11,7 @@
   </p>
   <% } %>
   <% if (ob.noValidVerifiedModerators && ob.showVerifiedOnly) { %>
-  <div class="moderatorCard moderatorsMessage">
+  <div class="moderatorCard moderatorsMessage clrBr">
     <div class="moderatorCardInner">
       <div class="flexCent">
         <div class="flexColRows flexHCent gutterVTn">
