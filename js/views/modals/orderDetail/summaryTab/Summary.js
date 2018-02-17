@@ -24,6 +24,7 @@ import DisputeStarted from './DisputeStarted';
 import DisputePayout from './DisputePayout';
 import DisputeAcceptance from './DisputeAcceptance';
 import PayForOrder from '../../../modals/purchase/Payment';
+import ProcessingError from './ProcessingError';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -397,11 +398,9 @@ export default class extends BaseVw {
 
     let balanceRemaining = 0;
 
-    if (this.model.get('state') === 'AWAITING_PAYMENT') {
-      const totalPaid = this.paymentsCollection
-        .reduce((total, transaction) => total + transaction.get('value'), 0);
-      balanceRemaining = this.orderPriceBtc - totalPaid;
-    }
+    const totalPaid = this.paymentsCollection
+      .reduce((total, transaction) => total + transaction.get('value'), 0);
+    balanceRemaining = this.orderPriceBtc - totalPaid;
 
     // round based on the coins base units
     const cryptoBaseUnit = getServerCurrency().baseUnit;
@@ -409,7 +408,12 @@ export default class extends BaseVw {
   }
 
   shouldShowPayForOrderSection() {
-    return this.buyer.id === app.profile.id && this.getBalanceRemaining() > 0;
+    // TODO todo TODO
+    // todo ToDo
+    // Should we show this for PROCESSING_ERROR?????
+    return this.buyer.id === app.profile.id &&
+      this.getBalanceRemaining() > 0 &&
+      ['AWAITING_PAYMENT', 'PROCESSING_ERROR'].includes(this.model.get('state'));
   }
 
   shouldShowAcceptedSection() {
@@ -788,6 +792,33 @@ export default class extends BaseVw {
       .toggleClass('hide', this.model.get('state') !== 'PAYMENT_FINALIZED');
   }
 
+  renderProcessingError() {
+    // todo: will the state progress beyond this, for example if canceled.
+    const shouldShow = this.model.get('state') === 'PROCESSING_ERROR';
+
+    if (!shouldShow && this.processingError) {
+      this.processingError.remove();
+      this.processingError = null;
+      return;
+    }
+
+    const state = {
+      isBuyer: this.buyer.id === app.profile.id,
+      errors: this.contract.get('errors') || [],
+    };
+
+    if (!this.processingError) {
+      this.processingError = this.createChild(ProcessingError, {
+        orderId: this.model.id,
+        initialState: state,
+      });
+      this.getCachedEl('.js-processingErrorContainer')
+        .html(this.processingError.render().el);
+    } else {
+      this.processingError.setState(state);
+    }
+  }
+
   get $subSections() {
     return this._$subSections ||
       (this._$subSections = this.$('.js-subSections'));
@@ -846,6 +877,7 @@ export default class extends BaseVw {
 
       if (this.shouldShowAcceptedSection()) this.renderAcceptedView();
       this.renderSubSections();
+      this.renderProcessingError();
     });
 
     return this;

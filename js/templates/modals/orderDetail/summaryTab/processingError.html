@@ -18,7 +18,7 @@
       const cancelClass = cancelInProgress ? 'invisible' : '';
       const spinnerClass = cancelInProgress ? '' : 'hide';
       const cancelEl = '<span class="posR"><a class="txU tx6 ${cancelClass}">' +
-        ob.polyT('orderDetail.summaryTab.processingError.cancelLink')' +
+        ob.polyT('orderDetail.summaryTab.processingError.cancelLink') +
         `${ob.spinner({ className: 'spinnerSm center ${spinnerClass}' })}</span>`;
 %>
       <p><span class="ion-alert-circled padSm"></span>The vendor is unable to process your order. You may <%= cancelEl %> the order to retrieve your payment.</p>
@@ -31,7 +31,12 @@
     }
   } else {
 %>
-    <p><span class="ion-alert-circled padSm"></span>There was an error processing the order.</p>
+    <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.vendorUnableToProcess') %></p>
+    <ul>
+      <% ob.errors.forEach(err => { %>
+        <li><%= err %></li>
+      <% }); %>
+    </ul>
 <%  
   }
 %>

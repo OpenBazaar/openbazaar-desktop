@@ -1601,7 +1601,8 @@
       },
       "processingError": {
         "cancelLink": "cancel",
-        "disputeLink": "open a dispute"
+        "disputeLink": "open a dispute",
+        "vendorUnableToProcess": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {

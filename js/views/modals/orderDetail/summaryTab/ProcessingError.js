@@ -18,6 +18,7 @@ export default class extends BaseVw {
         isBuyer: false,
         isModerated: false,
         cancelInProgress: cancelingOrder(options.orderId),
+        errors: [],
         ...options.initialState || {},
       },
     };
@@ -40,7 +41,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'clrTErr';
+    return 'rowLg clrTErr';
   }
 
   events() {
