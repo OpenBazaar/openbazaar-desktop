@@ -88,6 +88,8 @@ export default class extends BaseVw {
       if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
         this.renderPaymentFinalized();
       }
+
+      this.renderProcessingError();
     });
 
     if (!this.isCase()) {

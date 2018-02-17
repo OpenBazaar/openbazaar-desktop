@@ -177,6 +177,7 @@
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
       "orderComplete": "%{buyerName} has left feedback on their order.",
+      "processingError": "%{vendorName} was unable to process your order due to an error.",
       "disputeOpen": "%{disputerName} has opened a dispute with you.",
       "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
