@@ -64,15 +64,15 @@ export default class extends Collection {
       ],
       moderators: [
         {
-          peerID: 'xQmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ',
+          peerID: 'QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ',
           type: 'standard'
         },
         {
-          peerID: 'xQmXFMkpBBpL4zcYAArVAecLyypFrRzp2Co4q9oXUtzF7XF',
+          peerID: 'QmXFMkpBBpL4zcYAArVAecLyypFrRzp2Co4q9oXUtzF7XF',
           type: 'advanced'
         },
         {
-          peerID: 'xQmfGL6dWz8NHwcD9aedL4Y73veqrBQ5Qw7EpQHa3EZ3t4c',
+          peerID: 'QmfGL6dWz8NHwcD9aedL4Y73veqrBQ5Qw7EpQHa3EZ3t4c',
           type: 'advanced'
         },
         {

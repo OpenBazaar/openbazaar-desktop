@@ -20,17 +20,20 @@ export default class extends BaseVw {
 
     super(opts);
     this.options = opts;
+  }
 
-    if (this._state.showSpinner && this._state.spinnerTimer) {
-      // hide the spinner after a delay if the parent doesn't hide it
-      this.spinnerTimout = setTimeout(() => {
-        this.setState({ showSpinner: false });
-      }, 10000);
-    }
+  events() {
+    return {
+      'click .js-browseMore': 'clickBrowseMore',
+    };
+  }
+
+  clickBrowseMore() {
+    this.trigger('browseMore');
   }
 
   remove() {
-    clearTimeout(this.spinnerTimout);
+    clearTimeout(this.loadingTimer);
     super.remove();
   }
 
@@ -40,6 +43,12 @@ export default class extends BaseVw {
       this.$el.html(t({
         ...this.getState(),
       }));
+      if (this._state.showSpinner && this._state.spinnerTimer) {
+        // hide the spinner after a delay if the parent doesn't hide it
+        this.spinnerTimout = setTimeout(() => {
+          this.setState({ showSpinner: false });
+        }, 10000);
+      }
     });
 
     return this;

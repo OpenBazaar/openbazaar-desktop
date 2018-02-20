@@ -9,7 +9,7 @@
     <span class="clrT4"><%= ob.polyT('moderators.moderatorsLoaded', { total: ob.total, verifiedTotal: ob.verifiedTotal }) %></span>
   <% } %>
   <% if (ob.showLoadBtn) { %>
-      <button class="btnAsLink tx6 clrT2 browseMore js-browseMore">
+      <button class="btnAsLink tx6 clrT2 browseMore js-browseMore <% if(ob.showSpinner) print('disabled') %>">
         <%= ob.polyT('moderators.browseMoreModerators') %>
       </button>
   <% } %>

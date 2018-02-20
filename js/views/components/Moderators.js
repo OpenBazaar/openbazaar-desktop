@@ -8,7 +8,7 @@ import Moderators from '../../collections/Moderators';
 import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ModCard from './ModeratorCard';
-import ModeratorStatus from './ModeratorsStatus';
+import ModeratorsStatus from './ModeratorsStatus';
 
 export default class extends baseVw {
   /**
@@ -105,13 +105,14 @@ export default class extends baseVw {
     this.modCards = [];
 
     // create a moderator status view. It should retain it's state between renders of this view.
-    this.moderatorStatus = this.createChild(ModeratorStatus, {
+    this.moderatorsStatus = this.createChild(ModeratorsStatus, {
       initialState: {
         mode: opts.method === 'POST' ? 'loading' : 'loaded',
         showLoadBtn: opts.showLoadBtn,
         showSpinner: opts.showSpinner,
       },
     });
+    this.listenTo(this.moderatorsStatus, 'browseMore', () => this.onBrowseMore());
   }
 
   className() {
@@ -121,7 +122,6 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-showUnverified': 'clickShowUnverified',
-      'click .js-browseMore': 'clickBrowseMore',
     };
   }
 
@@ -130,7 +130,7 @@ export default class extends baseVw {
     this.trigger('clickShowUnverified');
   }
 
-  clickBrowseMore() {
+  onBrowseMore() {
     this.getModeratorsByID();
   }
 
@@ -185,10 +185,11 @@ export default class extends baseVw {
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || op.method === 'GET') {
-      this.moderatorStatus.setState({
+      this.moderatorsStatus.setState({
         hidden: false,
         loaded: this.modCount,
         total: IDs.length ? IDs.length : this.modCount,
+        showSpinner: op.showSpinner, //unhides the spinner if it's been hidden by the timer
       });
 
       this.fetch = $.ajax({
@@ -252,7 +253,7 @@ export default class extends baseVw {
     const nfYet = this.unfetchedMods.length;
     if (nfYet === 0 && this.fetchingMods.length) {
       // all ids have been fetched and ids existed to fetch
-      this.moderatorStatus.setState({
+      this.moderatorsStatus.setState({
         hidden: true,
       });
       // check if there are mods that loaded but none were valid
@@ -267,7 +268,7 @@ export default class extends baseVw {
       }
     } else {
       // either ids are still fetching, or this is an open fetch with no set ids
-      this.moderatorStatus.setState({
+      this.moderatorsStatus.setState({
         loaded: this.fetchingMods.length - nfYet,
         total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
       });
@@ -353,7 +354,7 @@ export default class extends baseVw {
   }
 
   togShowLoadBtn(bool) {
-    this.moderatorStatus.setState({ showLoadBtn: bool });
+    this.moderatorsStatus.setState({ showLoadBtn: bool });
   }
 
   get noneSelected() {
@@ -385,7 +386,8 @@ export default class extends baseVw {
         this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
       });
 
-      this.getCachedEl('.js-statusWrapper').append(this.moderatorStatus.render().$el);
+      this.moderatorsStatus.delegateEvents();
+      this.getCachedEl('.js-statusWrapper').append(this.moderatorsStatus.render().$el);
     });
 
     return this;
