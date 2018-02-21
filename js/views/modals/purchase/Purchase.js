@@ -121,7 +121,7 @@ export default class extends BaseModal {
     this.moderators.getModeratorsByID();
     this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
     this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
-    this.listenTo(this.moderators, 'cardSelect', (data) => this.onCardSelect(data));
+    this.listenTo(this.moderators, 'cardSelect', () => this.onCardSelect());
 
     if (this.listing.get('shippingOptions').length) {
       this.shipping = this.createChild(Shipping, {
@@ -205,7 +205,6 @@ export default class extends BaseModal {
 
     this.order.moderated = false;
     this.moderators.deselectOthers();
-    this.order.set('moderator', '');
     this.render();
   }
 
@@ -215,16 +214,22 @@ export default class extends BaseModal {
   }
 
   togVerifiedModerators(bool) {
-    this.getCachedEl('#verifiedOnly').prop('checked', bool);
+    // if hiding unverified mods, deselect the selected mod if it is unverified and switch to
+    // direct payment
+    const selected = this.moderators.selectedIDs;
+    if (bool && selected.length && !app.verifiedMods.matched(selected).length) {
+      this.moderators.deselectMod(selected[0]);
+      this.order.moderated = false;
+    }
+    this.moderators.togVerifiedShown(bool);
+    this.setState({ showOnlyVerified: bool });
   }
 
   onClickVerifiedOnly(e) {
-    const checked = $(e.target).prop('checked');
-    this.moderators.togVerifiedShown(checked);
-    this.setState({ showOnlyVerified: checked });
+    this.togVerifiedModerators($(e.target).prop('checked'));
   }
 
-  onCardSelect(data) {
+  onCardSelect() {
     this.order.moderated = true;
     this.render();
   }
@@ -435,7 +440,6 @@ export default class extends BaseModal {
   }
 
   render() {
-    console.log('render')
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
     const state = this.getState();
 

@@ -298,7 +298,7 @@ export default class extends baseVw {
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
       if (data.selected) {
-        this.trigger('cardSelect', { data });
+        this.trigger('cardSelect');
         this.noneSelected = false;
         // if only one moderator should be selected, deselect the other moderators
         if (this.options.singleSelect) this.deselectOthers(data.guid);
@@ -352,10 +352,17 @@ export default class extends baseVw {
     return IDs;
   }
 
+  deselectMod(guid) {
+    if (!guid) throw new Error('You must provide a guid.');
+
+    const mod = this.modCards.filter(card => card.model.get('peerID') === guid);
+    if (mod.length) mod[0].changeSelectState(this.options.notSelected);
+  }
+
   deselectOthers(guid = '') {
-    this.modCards.forEach((mod) => {
-      if (mod.model.get('peerID') !== guid) {
-        mod.changeSelectState(this.options.notSelected);
+    this.modCards.forEach((card) => {
+      if (card.model.get('peerID') !== guid) {
+        card.changeSelectState(this.options.notSelected);
       }
     });
     this.noneSelected = !guid;
