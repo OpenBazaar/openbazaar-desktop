@@ -5,17 +5,13 @@ import Contract from './Contract';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const opts = {
-      ...options,
-    };
-
-    super(opts);
+    super(options);
 
     if (!this.model) {
       throw new Error('Please provide a model.');
     }
 
-    this.options = opts || {};
+    this.options = options || {};
 
     if (this.isCase &&
       (!this.model.get('vendorContract') ||

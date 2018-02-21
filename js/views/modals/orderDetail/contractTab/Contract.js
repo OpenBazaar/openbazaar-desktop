@@ -20,7 +20,7 @@ export default class extends BaseVw {
     }
 
     this.contract = options.contract;
-    this.options = opts || {};
+    this.options = opts;
   }
 
   tagName() {
