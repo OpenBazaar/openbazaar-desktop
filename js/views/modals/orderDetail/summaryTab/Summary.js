@@ -250,6 +250,8 @@ export default class extends BaseVw {
       // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
       // accepts, the buyer will get this and vice versa).
       'disputeAccepted',
+      // Socket received by buyer when the vendor has an error processing an offline order.
+      'processingError',
     ];
 
     if (serverSocket) {
@@ -410,9 +412,6 @@ export default class extends BaseVw {
   }
 
   shouldShowPayForOrderSection() {
-    // TODO todo TODO
-    // todo ToDo
-    // Should we show this for PROCESSING_ERROR?????
     return this.buyer.id === app.profile.id &&
       this.getBalanceRemaining() > 0 &&
       ['AWAITING_PAYMENT', 'PROCESSING_ERROR'].includes(this.model.get('state'));
@@ -798,9 +797,12 @@ export default class extends BaseVw {
     // todo: will the state progress beyond this, for example if canceled.
     const shouldShow = this.model.get('state') === 'PROCESSING_ERROR';
 
-    if (!shouldShow && this.processingError) {
-      this.processingError.remove();
-      this.processingError = null;
+    if (!shouldShow) {
+      if (this.processingError) {
+        this.processingError.remove();
+        this.processingError = null;
+      }
+
       return;
     }
 

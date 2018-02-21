@@ -15,8 +15,8 @@
 <%
   if (ob.isBuyer) {
     if (!ob.isModerated) {
-      const cancelClass = cancelInProgress ? 'invisible' : '';
-      const spinnerClass = cancelInProgress ? '' : 'hide';
+      const cancelClass = ob.cancelInProgress ? 'invisible' : '';
+      const spinnerClass = ob.cancelInProgress ? '' : 'hide';
       const cancelEl = '<span class="posR"><a class="txU tx6 ${cancelClass}">' +
         ob.polyT('orderDetail.summaryTab.processingError.cancelLink') +
         `${ob.spinner({ className: 'spinnerSm center ${spinnerClass}' })}</span>`;

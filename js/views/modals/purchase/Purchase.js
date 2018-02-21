@@ -296,7 +296,7 @@ export default class extends BaseModal {
     }
 
     // TODO TEMP TEMP temp TeMp TeMp TeMp TeMp
-    // this.order.set('address', '');
+    this.order.set('address', '');
 
     // set the moderator
     const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
