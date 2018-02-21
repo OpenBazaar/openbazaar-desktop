@@ -34,6 +34,7 @@ export default class extends baseVw {
    * @param {string}  options.notSelected       - Which not selected state to use on the mod cards.
    * @param {boolean} options.showLoadBtn       - Show the load more button in the status bar.
    * @param {boolean} options.showSpinner       - Show the spinner in the status bar
+   * @param {boolean} options.showVerifiedOnly  - Show only verified moderators
    */
 
   constructor(options = {}) {
@@ -97,8 +98,14 @@ export default class extends baseVw {
 
       // if required, select the first  moderator
       if (opts.selectFirst && !this.firstSelected && !this.noneSelected) {
-        this.firstSelected = true;
-        modCard.changeSelectState('selected');
+        let selectIt = true;
+        // if only verified mods are shown, only select the first verified mod
+        if (opts.showVerifiedOnly) selectIt = !!app.verifiedMods.get(model.get('peerID'));
+
+        if (selectIt) {
+          this.firstSelected = true;
+          modCard.changeSelectState('selected');
+        }
       }
     });
     this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => this.removeMod(md, cl, rOpts));
@@ -290,8 +297,12 @@ export default class extends baseVw {
       controlsOnInvalid: this.options.controlsOnInvalid,
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
-      // if only one moderator should be selected, deselect the other moderators
-      if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
+      if (data.selected) {
+        this.trigger('cardSelect', { data });
+        this.noneSelected = false;
+        // if only one moderator should be selected, deselect the other moderators
+        if (this.options.singleSelect) this.deselectOthers(data.guid);
+      }
     });
     this.removeNotFetched(model.id);
     this.modCards.push(modCard);
@@ -347,6 +358,7 @@ export default class extends baseVw {
         mod.changeSelectState(this.options.notSelected);
       }
     });
+    this.noneSelected = !guid;
   }
 
   togVerifiedShown(bool) {

@@ -53,8 +53,8 @@ export default class extends BaseModal {
     const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
     this.setState({
-      showModerators: !!this.moderatorIDs.length,
-      noVerifiedModerators: !app.verifiedMods.matched(this.moderatorIDs).length,
+      showModerators: this.moderatorIDs.length,
+      showOnlyVerified: true,
     }, { renderOnChange: false });
 
     this.couponObj = [];
@@ -63,7 +63,7 @@ export default class extends BaseModal {
       {},
       {
         shippable,
-        moderated: !!(this.moderatorIDs && this.moderatorIDs.length),
+        moderated: this.moderatorIDs.length && app.verifiedMods.matched(this.moderatorIDs).length,
       });
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
@@ -121,6 +121,7 @@ export default class extends BaseModal {
     this.moderators.getModeratorsByID();
     this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
     this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
+    this.listenTo(this.moderators, 'cardSelect', (data) => this.onCardSelect(data));
 
     if (this.listing.get('shippingOptions').length) {
       this.shipping = this.createChild(Shipping, {
@@ -152,7 +153,7 @@ export default class extends BaseModal {
       'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
       'click .js-retryFee': 'clickRetryFee',
-      'click #purchaseModerated': 'clickModerated',
+      'click .js-directPayment': 'clickDirectPurchase',
       'change #purchaseQuantity': 'changeQuantityInput',
       'click .js-newAddress': 'clickNewAddress',
       'click .js-applyCoupon': 'applyCoupon',
@@ -199,48 +200,33 @@ export default class extends BaseModal {
     this.close();
   }
 
-  clickModerated(e) {
-    const checked = $(e.target).prop('checked');
-    this.getCachedEl('.js-moderator').toggleClass('hide', !checked);
-    this.getCachedEl('.js-moderatorNote').toggleClass('hide', !checked);
-    this.order.moderated = checked;
+  clickDirectPurchase() {
+    if (!this.order.moderated) return;
 
-    if (checked) {
-      // re-select the previously selected moderator, if any
-      for (const mod of this.moderators.modCards) {
-        if (mod.model.id === this._oldMod || this.moderators.selectedIDs[0]) {
-          mod.changeSelectState('selected');
-          break;
-        }
-      }
-    } else {
-      // deselect all the moderators after storing any selected moderator
-      this._oldMod = this.moderators.selectedIDs[0];
-      this.moderators.noneSelected = true;
-      this.moderators.deselectOthers();
-      this.order.set('moderator', '');
-    }
+    this.order.moderated = false;
+    this.moderators.deselectOthers();
+    this.order.set('moderator', '');
+    this.render();
   }
-
-  moderationOn(bool) {
-    this.order.moderated = bool;
-    this.moderators.noneSelected = !bool;
-    this.setState({ showModerators: bool });
-  }
-
 
   onNoValidModerators() {
     this.order.moderated = false;
+    this.render();
   }
 
   togVerifiedModerators(bool) {
-    this.order.moderated = false;
     this.getCachedEl('#verifiedOnly').prop('checked', bool);
   }
 
   onClickVerifiedOnly(e) {
-    console.log($(e.target).prop('checked'))
-    this.moderators.togVerifiedShown($(e.target).prop('checked'));
+    const checked = $(e.target).prop('checked');
+    this.moderators.togVerifiedShown(checked);
+    this.setState({ showOnlyVerified: checked });
+  }
+
+  onCardSelect(data) {
+    this.order.moderated = true;
+    this.render();
   }
 
   changeQuantityInput(e) {

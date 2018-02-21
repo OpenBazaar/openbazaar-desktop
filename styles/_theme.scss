@@ -185,6 +185,10 @@ input[type=range][class~="clrS"] {
   border-color: $alert2;
 }
 
+.clrBrInvis {
+  @include borderColor(transparent, transparent);
+}
+
 .clrBAtt1 {
   background-color: $emphasis1;
 }

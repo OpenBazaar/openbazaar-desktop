@@ -416,9 +416,7 @@ export default class extends baseVw {
           .el
       );
     }
-
-    const moderators = this.model.get('moderators');
-    // TODO: remove the test code above
+    const moderators = this.model.get('moderators') || [];
     const verifiedIDs = app.verifiedMods.matched(moderators);
     const verifiedID = verifiedIDs[0];
 
