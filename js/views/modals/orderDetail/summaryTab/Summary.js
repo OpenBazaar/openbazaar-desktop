@@ -308,7 +308,9 @@ export default class extends BaseVw {
       ],
     };
 
-    if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
+    if (false && this.vendorProcessingError && this.buyer.id === app.profile.id) {
+
+    } else if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED' ||
       (orderState === 'COMPLETED' && this.contract.get('dispute') !== undefined) ||
       (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)) {
@@ -395,6 +397,11 @@ export default class extends BaseVw {
     return this.contract.get('buyerOrder').payment.amount;
   }
 
+  get isPartiallyFunded() {
+    const balanceRemaining = this.getBalanceRemaining();
+    return balanceRemaining > 0 && balanceRemaining < this.orderPriceBtc;
+  }
+
   getBalanceRemaining() {
     if (this.isCase()) {
       throw new Error('Cases do not have any transaction data.');
@@ -409,24 +416,6 @@ export default class extends BaseVw {
     // round based on the coins base units
     const cryptoBaseUnit = getServerCurrency().baseUnit;
     return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
-  }
-
-  shouldShowPayForOrderSection() {
-    return this.buyer.id === app.profile.id &&
-      this.getBalanceRemaining() > 0 &&
-      ['AWAITING_PAYMENT', 'PROCESSING_ERROR'].includes(this.model.get('state'));
-  }
-
-  shouldShowAcceptedSection() {
-    let bool = false;
-
-    // Show the accepted section if the order has been accepted and its fully funded.
-    if (this.contract.get('vendorOrderConfirmation')
-      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
-      bool = true;
-    }
-
-    return bool;
   }
 
   get paymentAddress() {
@@ -449,6 +438,43 @@ export default class extends BaseVw {
       this.model.get('paymentAddressTransactions')
         .filter(payment => (payment.get('value') > 0))
       );
+  }
+
+  /**
+   * Returns a boolean indicating whether the vendor had an error when processing
+   * the order. This is different from just checking for the PROCESSING_ERROR state,
+   * in that it will return true even after the order moves on from that state.
+   */
+  get vendorProcessingError() {
+    return this.model.get('state') === 'PROCESSING_ERROR' ||
+      Array.isArray(this.contract.get('errors'));
+  }
+
+  get isOrderCancelable() {
+    return this.buyer.id === app.profile.id &&
+      !this.moderator &&
+      (
+        this.model.get('state') === 'PROCESSING_ERROR' &&
+          this.isPartiallyFunded || !this.getBalanceRemaining()
+      );
+  }
+
+  shouldShowPayForOrderSection() {
+    return this.buyer.id === app.profile.id &&
+      this.getBalanceRemaining() > 0 &&
+      ['AWAITING_PAYMENT', 'PROCESSING_ERROR'].includes(this.model.get('state'));
+  }
+
+  shouldShowAcceptedSection() {
+    let bool = false;
+
+    // Show the accepted section if the order has been accepted and its fully funded.
+    if (this.contract.get('vendorOrderConfirmation')
+      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
+      bool = true;
+    }
+
+    return bool;
   }
 
   renderAcceptedView() {
@@ -794,10 +820,7 @@ export default class extends BaseVw {
   }
 
   renderProcessingError() {
-    // todo: will the state progress beyond this, for example if canceled.
-    const shouldShow = this.model.get('state') === 'PROCESSING_ERROR';
-
-    if (!shouldShow) {
+    if (!this.vendorProcessingError) {
       if (this.processingError) {
         this.processingError.remove();
         this.processingError = null;
@@ -806,8 +829,11 @@ export default class extends BaseVw {
       return;
     }
 
+    const isBuyer = this.buyer.id === app.profile.id;
     const state = {
-      isBuyer: this.buyer.id === app.profile.id,
+      isBuyer,
+      isOrderCancelable: this.isOrderCancelable,
+      isModerated: !!this.moderator,
       errors: this.contract.get('errors') || [],
     };
 
@@ -870,9 +896,7 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
-          isOrderCancelable: () =>
-            ['PENDING', 'PROCESSING_ERROR'].includes(this.model.get('state')) &&
-              !this.moderator && this.buyer.id === app.profile.id,
+          isOrderCancelable: () => this.isOrderCancelable,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });

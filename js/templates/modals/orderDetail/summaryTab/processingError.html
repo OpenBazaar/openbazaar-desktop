@@ -15,13 +15,21 @@
 <%
   if (ob.isBuyer) {
     if (!ob.isModerated) {
-      const cancelClass = ob.cancelInProgress ? 'invisible' : '';
-      const spinnerClass = ob.cancelInProgress ? '' : 'hide';
-      const cancelEl = '<span class="posR"><a class="txU tx6 ${cancelClass}">' +
-        ob.polyT('orderDetail.summaryTab.processingError.cancelLink') +
-        `${ob.spinner({ className: 'spinnerSm center ${spinnerClass}' })}</span>`;
 %>
-      <p><span class="ion-alert-circled padSm"></span>The vendor is unable to process your order. You may <%= cancelEl %> the order to retrieve your payment.</p>
+      <% 
+        if (!ob.errors.length) {
+          const message = !ob.isOrderCancelable ?
+            'The vendor was unable to process your order.' :
+            'The vendor was unable to process your order. You may cancel the order to retrieve your payment.';
+      %>
+
+        <p><span class="ion-alert-circled padSm"></span><%= message %></p>
+      <% } else { %>
+        <p><span class="ion-alert-circled padSm"></span>The vendor was unable to process the order due to the following errors:</p>
+        <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
+        <% if (ob.isOrderCancelable) %>
+          <p>You may cancel the order to retrieve your payment</p>
+        <% }%> 
 <%
     } else {
       const disputeEl = `<a class="tx6 txU js-openDispute">${ob.polyT('orderDetail.summaryTab.processingError.disputeLink')}`
