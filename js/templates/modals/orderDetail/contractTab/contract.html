@@ -1,0 +1,18 @@
+<% if (ob.heading) { %>
+  <h1 class="tx4 txB row"><%= ob.heading %></h1>
+<% } %>
+
+<%
+  if (ob.errors && ob.errors.length) {
+%>
+  <p class="txUnl rowSm clrTErr"><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.contractTab.contractErrorHeading') %></p>
+  <ul class="row">
+<%
+    ob.errors.forEach(err => {
+      print(`<li class="clrTErr rowSm">${err}</li>`)
+    });
+%>
+  </ul>
+<% } %>
+
+<div class="border clrBr clrP clrT rowLg js-jsonContractContainer"></div>

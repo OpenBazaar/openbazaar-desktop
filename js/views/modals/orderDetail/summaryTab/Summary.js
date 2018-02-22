@@ -2,7 +2,6 @@ import app from '../../../../app';
 import { clipboard } from 'electron';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { getSocket } from '../../../../utils/serverConnect';
 import { getServerCurrency } from '../../../../data/cryptoCurrencies';
 import {
   completingOrder,
@@ -213,50 +212,6 @@ export default class extends BaseVw {
 
       this.listenTo(this.model, 'change:resolution',
         () => this.renderDisputePayoutView());
-    }
-
-    const serverSocket = getSocket();
-    const notificationTypes = [
-      // A notification for the buyer that a payment has come in for the order. Let's refetch
-      // our model so we have the data for the new transaction and can show it in the UI.
-      // As of now, the buyer only gets these notifications and this is the only way to be
-      // aware of partial payments in realtime.
-      'payment',
-      // A notification the vendor will get when an offline order has been canceled
-      'cancel',
-      // A notification the vendor will get when an order has been fully funded
-      'order',
-      // A notification the buyer will get when the vendor has rejected an offline order.
-      'declined',
-      // A notification the buyer will get when the vendor has accepted an offline order.
-      'orderConfirmation',
-      // A notification the buyer will get when the vendor has refunded their order.
-      'refund',
-      // A notification the buyer will get when the vendor has fulfilled their order.
-      'fulfillment',
-      // A notification the vendor will get when the buyer has completed an order.
-      'orderComplete',
-      // When a party opens a dispute the mod and the other party will get this notification
-      'disputeOpen',
-      // Sent to the moderator when the other party (the one that didn't open the dispute) sends
-      // their copy of the contract (which would occur if they were onffline when the dispute was
-      // opened and have since come online).
-      'disputeUpdate',
-      // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
-      'disputeClose',
-      // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
-      // accepts, the buyer will get this and vice versa).
-      'disputeAccepted',
-    ];
-
-    if (serverSocket) {
-      serverSocket.on('message', e => {
-        if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {
-          if (notificationTypes.indexOf(e.jsonData.notification.type) > -1) {
-            this.model.fetch();
-          }
-        }
-      });
     }
   }
 

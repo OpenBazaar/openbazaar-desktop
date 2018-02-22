@@ -19,7 +19,46 @@ export default class extends BaseModel {
     };
   }
 
+  // FYI: If the contract hasn't arrived, using this logic, it will be considered invalid.
+  isContractValid(buyer = true) {
+    const hasContractArrived = buyer ?
+      !!this.get('buyerContract') :
+      !!this.get('vendorContract');
+    const errors = buyer ?
+      this.get('buyerContractValidationErrors') :
+      this.get('vendorContractValidationErrors');
+
+    return hasContractArrived &&
+      (!errors ||
+        (Array.isArray(errors) && !errors.length));
+  }
+
+  get isBuyerContractValid() {
+    return this.isContractValid();
+  }
+
+  get isVendorContractValid() {
+    return this.isContractValid(false);
+  }
+
+  get bothContractsValid() {
+    return this.isBuyerContractValid && this.isVendorContractValid;
+  }
+
   parse(response = {}) {
+    // If only one contract has arrived, we'll fire an event when the other one comes
+    if (!this._otherContractEventBound &&
+      (
+        (response.buyerOpened && !response.vendorContract) ||
+        (!response.buyerOpened && !response.buyerContract)
+      )
+    ) {
+      const needBuyer = !response.buyerContract;
+      this._otherContractEventBound = true;
+      this.once(`change:${needBuyer ? 'buyer' : 'vendor'}Contract`,
+        () => this.trigger('otherContractArrived', this, { isBuyer: needBuyer }));
+    }
+
     if (response.buyerContract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
