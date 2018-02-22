@@ -1464,7 +1464,20 @@
       "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
       "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
       "buyerContractHeading": "Buyer Contract:",
-      "vendorContractHeading": "Vendor Contract:"
+      "vendorContractHeading": "Vendor Contract:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Both the buyer's and vendor's contracts have been verified as authentic.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "contractHeadingVendor": "Vendor's contract:",
+      "contractHeadingBuyer": "Buyer's contract:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",      
+      "tipVendorContractHasError": "The vendor's contract has validation errors.",
+      "tipBuyerContractNotArrived": "The buyer's contract has validation errors.",
+      "tipVendorContractHasNotArrived": "The vendor's contract has validation errors."
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
@@ -1626,6 +1639,10 @@
       "heading": "Resolve Dispute",
       "buyerAmountLabel": "Buyer Amount",
       "vendorAmountLabel": "Vendor Amount",
+      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",      
       "commentLabel": "Comment",
       "commentPlaceholder": "Explain your decision...",
       "btnCancel": "Cancel",
@@ -1846,6 +1863,8 @@
     "provideAmount": "Please provide an amount.",
     "percentageOutOfRange": "The amount must be between 0 and 100.",
     "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "vendorPercentageMustBe100": "Until the buyer's contract arrives, this value must be 100.",
+    "buyerPercentageMustBe100": "Until the vendor's contract arrives, this value must be 100.",
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."

@@ -17,11 +17,12 @@ import BaseModal from '../BaseModal';
 import ProfileBox from './ProfileBox';
 import Summary from './summaryTab/Summary';
 import Discussion from './Discussion';
-import Contract from './Contract';
+import ContractTab from './contractTab/ContractTab';
 import FulfillOrder from './FulfillOrder';
 import DisputeOrder from './DisputeOrder';
 import ResolveDispute from './ResolveDispute';
-import ActionBar from './ActionBar.js';
+import ActionBar from './ActionBar';
+import ContractMenuItem from './ContractMenuItem';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -69,6 +70,12 @@ export default class extends BaseModal {
 
     this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
       if (this.activeTab === 'resolveDispute') this.selectTab('summary');
+    });
+
+    this.listenTo(this.model, 'otherContractArrived', () => {
+      if (this.contractMenuItem) {
+        this.contractMenuItem.setState(this.contractMenuItemState);
+      }
     });
 
     const socket = getSocket();
@@ -166,6 +173,47 @@ export default class extends BaseModal {
   }
 
   onSocketMessage(e) {
+    const notificationTypes = [
+      // A notification for the buyer that a payment has come in for the order. Let's refetch
+      // our model so we have the data for the new transaction and can show it in the UI.
+      // As of now, the buyer only gets these notifications and this is the only way to be
+      // aware of partial payments in realtime.
+      'payment',
+      // A notification the vendor will get when an offline order has been canceled
+      'cancel',
+      // A notification the vendor will get when an order has been fully funded
+      'order',
+      // A notification the buyer will get when the vendor has rejected an offline order.
+      'declined',
+      // A notification the buyer will get when the vendor has accepted an offline order.
+      'orderConfirmation',
+      // A notification the buyer will get when the vendor has refunded their order.
+      'refund',
+      // A notification the buyer will get when the vendor has fulfilled their order.
+      'fulfillment',
+      // A notification the vendor will get when the buyer has completed an order.
+      'orderComplete',
+      // When a party opens a dispute the mod and the other party will get this notification
+      'disputeOpen',
+      // Sent to the moderator when the other party (the one that didn't open the dispute) sends
+      // their copy of the contract (which would occur if they were onffline when the dispute was
+      // opened and have since come online).
+      'disputeUpdate',
+      // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
+      'disputeClose',
+      // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
+      // accepts, the buyer will get this and vice versa).
+      'disputeAccepted',
+      // Socket received by buyer when the vendor has an error processing an offline order.
+      'processingError',
+    ];
+
+    if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {
+      if (notificationTypes.indexOf(e.jsonData.notification.type) > -1) {
+        this.model.fetch();
+      }
+    }
+
     if (e.jsonData.message &&
        e.jsonData.message.subject === this.model.id &&
        this.activeTab !== 'discussion') {
@@ -376,7 +424,7 @@ export default class extends BaseModal {
   }
 
   createContractTabView() {
-    const view = this.createChild(Contract, {
+    const view = this.createChild(ContractTab, {
       model: this.model,
     });
 
@@ -437,9 +485,14 @@ export default class extends BaseModal {
       };
     }
 
-    const model = new ResolveDisputeMd(modelAttrs);
+    const model = new ResolveDisputeMd(modelAttrs, {
+      buyerContractArrived: () => this.model.get('buyerContract'),
+      vendorContractArrived: () => this.model.get('vendorContract'),
+    });
+
     const view = this.createChild(ResolveDispute, {
       model,
+      case: this.model,
       vendor: {
         id: this.vendorId,
         getProfile: this.getVendorProfile.bind(this),
@@ -491,6 +544,43 @@ export default class extends BaseModal {
     };
   }
 
+  get contractMenuItemState() {
+    const isCase = typeof this.model.get('buyerOpened') !== 'undefined';
+    let tip = '';
+
+    if (isCase && !this.model.bothContractsValid) {
+      const buyerContractAvailableAndInvalid =
+        this.model.get('buyerContract') && !this.model.isBuyerContractValid;
+      const vendorContractAvailableAndInvalid =
+        this.model.get('vendorContract') && !this.model.isVendorContractValid;
+
+      if (buyerContractAvailableAndInvalid && vendorContractAvailableAndInvalid) {
+        tip = app.polyglot.t('orderDetail.contractMenuItem.tipBothContractsHaveError');
+      } else {
+        // "contract" here means the contract we're guaranteed to have
+        const isContractValid = this.model.get('buyerOpened') ?
+          this.model.isBuyerContractValid : this.model.isVendorContractValid;
+        const otherContract = this.model.get('buyerOpened') ?
+          this.model.get('vendorContract') : this.model.get('buyerContract');
+        const type = this.model.get('buyerOpened') ? 'Buyer' : 'Vendor';
+
+        if (!isContractValid) {
+          tip = app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`);
+        }
+
+        if (!otherContract) {
+          tip += `${tip ? ' ' : ''}` +
+            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasNotArrived`)}`;
+        } else if (!this.model.isContractValid(!this.model.get('buyerOpened'))) {
+          tip += `${tip ? ' ' : ''}` +
+            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`)}`;
+        }
+      }
+    }
+
+    return { tip };
+  }
+
   get $unreadChatMessagesBadge() {
     return this._$unreadChatMessagesBadge ||
       (this._$unreadChatMessagesBadge = this.$('.js-unreadChatMessagesBadge'));
@@ -532,6 +622,15 @@ export default class extends BaseModal {
         });
         this.$('.js-actionBarContainer').html(this.actionBar.render().el);
         this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
+
+        if (this.contractMenuItem) this.contractMenuItem.remove();
+        this.contractMenuItem = this.createChild(ContractMenuItem, {
+          initialState: {
+            ...this.contractMenuItemState,
+          },
+        });
+        this.getCachedEl('[data-tab="contract"]')
+          .replaceWith(this.contractMenuItem.render().el);
       }
     });
 
