@@ -112,10 +112,11 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
       }));
 
-      this.verifiedMod = new VerifiedMod({
+      if (this.verifiedMod) this.verifiedMod.remove();
+      this.verifiedMod = this.createChild(VerifiedMod, {
         model: verifiedMod,
         data: app.verifiedMods.data,
-        showText: true,
+        showShortText: true,
       });
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });

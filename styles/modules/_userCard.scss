@@ -24,8 +24,28 @@
     }
 
     .verifiedMod {
+      position: absolute;
       right: $padSm;
       top: $padSm;
+
+      .badgeText {
+        display: none;
+      }
+
+      .tooltipWrapper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        .arrowBoxWrapper {
+          height: $thumbTn;
+          width: $thumbTn;
+
+          .arrowBox {
+            top: 36px; // height of the badge + height of the arrowtip
+          }
+        }
+      }
     }
 
     .blockedOverlay {

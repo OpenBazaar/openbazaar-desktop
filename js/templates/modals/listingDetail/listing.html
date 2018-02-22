@@ -137,11 +137,11 @@
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>
         <h5><%= ob.polyT('listingDetail.paymentsAccepted') %></h5>
-        <ul class="unstyled">
+        <ul class="unstyled row">
           <% ob.metadata.acceptedCurrencies.forEach(cur => {
             const curData = ob.currencyMod.getCryptoCurByCode(cur);
             if (curData) { %>
-              <ul class="flexVCent gutterHSm borderBottom clrBr">
+              <li class="flexVCent gutterHSm clrBr">
                 <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
                 <%= ob.currencyMod.cryptoIcon({ code: curData.code }) %>
                 <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
@@ -150,21 +150,21 @@
           }) %>
         </ul>
         <% if (ob.hasVerifiedMods) { %>
-          <div class="verifiedMod">
-            <div class="confirmBox clrBrAlert2 clrBAlert2Grad">
-              <div class="flexVCent flexHCent gutterHSm row">
-                <div class="badge" style="background-image: url(<%= ob.defaultBadge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
-                <div class="tx5 txB"><%= ob.polyT('verifiedMod.verified.title') %></div>
-              </div>
-              <div class="flexColRows gutterVSm tx5b">
-                <%
-                   const providerName = `<b>${ob.verifiedModsData.name}</b>`;
-                   const verifiedModLink = `<a class="txU noWrap" href="${ob.verifiedModsData.link}">${ob.polyT('verifiedMod.link')}</a>`;
-                %>
-                <div><%= ob.polyT('verifiedMod.listingDescription', { name: providerName, link: verifiedModLink }) %></div>
-              </div>
+        <div class="verifiedMod">
+          <div class="confirmBox clrBrAlert2 clrBAlert2Grad">
+            <div class="flexVCent flexHCent gutterHSm row">
+              <div class="badge" style="background-image: url(<%= ob.defaultBadge %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
+              <div class="tx5 txB"><%= ob.polyT('verifiedMod.verified.title') %></div>
+            </div>
+            <div class="flexColRows gutterVSm tx5b">
+              <%
+              const providerName = `<b>${ob.verifiedModsData.name}</b>`;
+              const verifiedModLink = `<a class="txU noWrap" href="${ob.verifiedModsData.link}">${ob.polyT('verifiedMod.link')}</a>`;
+              %>
+              <div><%= ob.polyT('verifiedMod.listingDescription', { name: providerName, link: verifiedModLink }) %></div>
             </div>
           </div>
+        </div>
         <% } %>
       </div>
     </div>

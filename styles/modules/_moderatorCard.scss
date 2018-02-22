@@ -59,14 +59,12 @@
       overflow: visible;
 
       .verifiedMod {
-        position: relative;
         height: 1.2em;
 
-        .badge {
-          position: relative;
-          top: -4px;
-          float: left;
+        & > .badge {
           margin-right: 5px;
+          position: relative;
+          top: -1px;
         }
 
         .warning {
@@ -74,12 +72,22 @@
           margin-right: 5px;
         }
 
-        .arrowBoxWrapper {
-          height: inherit;
+        .tooltipWrapper {
 
-          .arrowBox {
-            top: 150%;
-            left: 50%;
+          .arrowBoxWrapper {
+            height: inherit;
+            width: 12px; // the same as the info icon
+            right: 0;
+
+            .arrowBox {
+              top: 11px;
+              left: 50%;
+
+              & > .badge {
+                top: -2px;
+                position: relative;
+              }
+            }
           }
         }
 

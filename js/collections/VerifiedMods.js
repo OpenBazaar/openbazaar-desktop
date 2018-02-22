@@ -44,44 +44,6 @@ export default class extends Collection {
   }
 
   parse(response) {
-    const fakeMods = {
-      data: {
-        name: 'OB1 Official Blah Blah',
-        description: 'Some description of the moderator verification service that could be any arbitrary length so we had better watch out for that for certain and not let it get too long eh?',
-        link: 'http://www.link.com'
-      },
-      types: [
-        {
-          name: 'standard',
-          description: 'blah blah blah',
-          badge: 'http://www.pvhc.net/img8/niexjjzstcseuzdzkvoq.png'
-        },
-        {
-          name: 'advanced',
-          description: 'blah blah blah',
-          badge: 'https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Download-Computer-256.png'
-        },
-      ],
-      moderators: [
-        {
-          peerID: 'QmVFNEj1rv2d3ZqSwhQZW2KT4zsext4cAMsTZRt5dAQqFJ',
-          type: 'standard'
-        },
-        {
-          peerID: 'QmXFMkpBBpL4zcYAArVAecLyypFrRzp2Co4q9oXUtzF7XF',
-          type: 'advanced'
-        },
-        {
-          peerID: 'QmfGL6dWz8NHwcD9aedL4Y73veqrBQ5Qw7EpQHa3EZ3t4c',
-          type: 'advanced'
-        },
-        {
-          peerID: 'QmSxrDKfmZgJmg9bZYsgiCyAZXkPkmvv7qJxMZBQ1WY7eL', // not valid
-          type: 'standard'
-        }
-      ]
-    };
-    response = fakeMods;
     this.data = response.data;
     this.data.url = this.url(); // backup for templates if the link is missing
     const parsedResponse = response.moderators ? response.moderators : [];

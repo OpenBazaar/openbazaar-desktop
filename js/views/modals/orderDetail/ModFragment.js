@@ -1,6 +1,8 @@
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
+import VerifiedMod from '../../components/VerifiedMod';
+import app from '../../../app';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -36,10 +38,22 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     loadTemplate('modals/orderDetail/modFragment.html', t => {
       this.$el.html(t({
         ...this._state,
       }));
+
+      const verifiedMod = app.verifiedMods.get(this._state.peerID);
+      console.log(verifiedMod)
+      if (this.verifiedMod) this.verifiedMod.remove();
+      this.verifiedMod = this.createChild(VerifiedMod, {
+        model: verifiedMod,
+        data: app.verifiedMods.data,
+        showShortText: true,
+      });
+      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
 
     return this;

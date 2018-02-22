@@ -1,5 +1,7 @@
 .verifiedMod {
-  position: absolute;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
 
   .badge {
     height: $thumbTn;
@@ -7,26 +9,34 @@
     background-size: contain;
     background-position: center;
   }
-  .arrowBoxWrapper {
-    display: none;
+
+  .tooltipWrapper .iconWrapper {
+    display: inline;
+    position: relative;
+
+    .arrowBoxWrapper {
+      display: none;
+    }
   }
-  &:hover .arrowBoxWrapper {
-    display: block;
-    height: $pad;
-    width: $thumbTn;
-    position: absolute;
 
-    .arrowBox {
-      border-width: 2px;
-      font-size: $tx5;
-      text-align: left;
-      padding: $padMd $padLg;
-      width: 220px;
+  &:hover .tooltipWrapper .iconWrapper {
 
-      &:before {
-        background: $alert2Background;
-        border-right-width: 2px;
-        border-bottom-width: 2px;
+    .arrowBoxWrapper {
+      display: block;
+      position: absolute;
+
+      .arrowBox {
+        border-width: 2px;
+        font-size: $tx5;
+        text-align: left;
+        padding: $padMd $padLg;
+        width: 220px;
+
+        &:before {
+          background: $alert2Background;
+          border-right-width: 2px;
+          border-bottom-width: 2px;
+        }
       }
     }
   }

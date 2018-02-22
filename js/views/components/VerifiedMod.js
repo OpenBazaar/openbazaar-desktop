@@ -9,7 +9,6 @@ export default class extends BaseVw {
       arrowClass: '',
       type: {},
       data: {},
-      showText: false,
       ...options,
     };
 
