@@ -50,7 +50,7 @@ export default class extends Model {
       language,
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
-      verifiedModsProvider: 'https://search.ob1.io/trusted_moderators',
+      verifiedModsProvider: 'https://search.ob1.io/verified_moderators',
       dontShowTorExternalLinkWarning: false,
     };
   }
