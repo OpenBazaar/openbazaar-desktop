@@ -45,6 +45,7 @@ export default class extends BaseVw {
     }
 
     this.contract = contract;
+    this._totalPaid = null;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -94,6 +95,8 @@ export default class extends BaseVw {
 
     if (!this.isCase()) {
       this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
+        this._totalPaid = null;
+
         if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
           this.payForOrder.remove();
           this.payForOrder = null;
@@ -395,9 +398,26 @@ export default class extends BaseVw {
     return this.contract.get('buyerOrder').payment.amount;
   }
 
+  get totalPaid() {
+    if (this._totalPaid === null) {
+      this._totalPaid = this.paymentsCollection
+      .reduce((total, transaction) => total + transaction.get('value'), 0);
+    }
+
+    return this._totalPaid;
+  }
+
   get isPartiallyFunded() {
     const balanceRemaining = this.getBalanceRemaining();
     return balanceRemaining > 0 && balanceRemaining < this.orderPriceBtc;
+  }
+
+  /**
+   * Returns a boolean indicating whether the order has been partially or fully
+   * funded.
+   */
+  get isFunded() {
+    return this.isPartiallyFunded || this.getBalanceRemaining === 0;
   }
 
   getBalanceRemaining() {
@@ -405,11 +425,7 @@ export default class extends BaseVw {
       throw new Error('Cases do not have any transaction data.');
     }
 
-    let balanceRemaining = 0;
-
-    const totalPaid = this.paymentsCollection
-      .reduce((total, transaction) => total + transaction.get('value'), 0);
-    balanceRemaining = this.orderPriceBtc - totalPaid;
+    const balanceRemaining = this.orderPriceBtc - this.totalPaid;
 
     // round based on the coins base units
     const cryptoBaseUnit = getServerCurrency().baseUnit;
@@ -453,12 +469,8 @@ export default class extends BaseVw {
 
     return this.buyer.id === app.profile.id &&
       !this.moderator &&
-        (
-          (
-            orderState === 'PROCESSING_ERROR' &&
-              (this.isPartiallyFunded || !this.getBalanceRemaining())
-          ) || orderState === 'PENDING'
-        );
+      ['PROCESSING_ERROR', 'PENDING'].includes(orderState) &&
+      this.isFunded;
   }
 
   shouldShowPayForOrderSection() {
@@ -842,7 +854,8 @@ export default class extends BaseVw {
       // TODO: factor in escrow timeout
       isDisputable: isBuyer &&
         this.moderator &&
-        this.model.get('state') === 'PROCESSING_ERROR',
+        this.model.get('state') === 'PROCESSING_ERROR' &&
+        this.isFunded,
       errors: this.contract.get('errors') || [],
     };
 

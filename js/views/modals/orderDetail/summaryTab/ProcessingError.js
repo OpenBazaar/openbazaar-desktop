@@ -18,6 +18,7 @@ export default class extends BaseVw {
         isBuyer: false,
         isModerated: false,
         isOrderCancelable: false,
+        isDisputable: false,
         errors: [],
         ...options.initialState || {},
       },

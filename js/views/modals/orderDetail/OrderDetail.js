@@ -477,6 +477,7 @@ export default class extends BaseModal {
     if (this.buyerId === app.profile.id) {
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
       // todo: when escrow timeout code is ready, include this in the timeoutInfoView
+      // also ensure order is funded if processing error
       showDisputeOrderButton = this.moderatorId &&
         ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED',
           'PROCESSING_ERROR'].indexOf(orderState) > -1;
