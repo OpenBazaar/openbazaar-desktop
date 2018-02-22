@@ -1,18 +1,4 @@
 <%
-  // The vendor is unable to process your order. You may cancel the order to retreive your payment.
-  //
-  // The flam shooters have no dissonence. Revolt abruptly.
-
-  // The vendor is unable to process your order. You may open a dispute to ask the moderator to award the funds back to // you.
-  //
-  // The flam shooters have no dissonence. Revolt abruptly.
-
-  // There was an error processing the order.
-  //
-  // The flam shooters have no dissonence. Revolt abruptly.
-%>
-
-<%
   if (ob.isBuyer) {
     if (!ob.isModerated) {
 %>
@@ -27,17 +13,31 @@
       <% } else { %>
         <p><span class="ion-alert-circled padSm"></span>The vendor was unable to process the order due to the following errors:</p>
         <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
-        <% if (ob.isOrderCancelable) %>
+        <% if (ob.isOrderCancelable) { %>
           <p>You may cancel the order to retrieve your payment</p>
-        <% }%> 
-<%
+        <%
+           }
+        }
+
     } else {
-      const disputeEl = `<a class="tx6 txU js-openDispute">${ob.polyT('orderDetail.summaryTab.processingError.disputeLink')}`
+      if (!ob.errors.length) {
+        const message = !ob.isDisputable ?
+          'The vendor was unable to process your order.' :
+          'The vendor was unable to process your order. You may open a dispute to ask the moderator to award the funds back to you.';
 %>
-      <p><span class="ion-alert-circled padSm"></span>The vendor is unable to process your order. You may <%= disputeEl %> to ask the moderator to award the funds back to.</p>
+          <p><span class="ion-alert-circled padSm"></span><%= message %></p>
 <%    
+      } else { %>
+        <p><span class="ion-alert-circled padSm"></span>The vendor was unable to process the order due to the following errors:</p>
+        <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
+        <% if (ob.isDisputable) { %>
+          <p>You may open a dispute to ask the moderator to award the funds back to you.</p>
+        <%
+           }
+      }
     }
   } else {
+  // it's the vendor
 %>
     <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.vendorUnableToProcess') %></p>
     <ul>

@@ -308,9 +308,7 @@ export default class extends BaseVw {
       ],
     };
 
-    if (false && this.vendorProcessingError && this.buyer.id === app.profile.id) {
-
-    } else if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
+    if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED' ||
       (orderState === 'COMPLETED' && this.contract.get('dispute') !== undefined) ||
       (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)) {
@@ -451,12 +449,16 @@ export default class extends BaseVw {
   }
 
   get isOrderCancelable() {
+    const orderState = this.model.get('state');
+
     return this.buyer.id === app.profile.id &&
       !this.moderator &&
-      (
-        this.model.get('state') === 'PROCESSING_ERROR' &&
-          this.isPartiallyFunded || !this.getBalanceRemaining()
-      );
+        (
+          (
+            orderState === 'PROCESSING_ERROR' &&
+              (this.isPartiallyFunded || !this.getBalanceRemaining())
+          ) || orderState === 'PENDING'
+        );
   }
 
   shouldShowPayForOrderSection() {
@@ -834,6 +836,13 @@ export default class extends BaseVw {
       isBuyer,
       isOrderCancelable: this.isOrderCancelable,
       isModerated: !!this.moderator,
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // TODO: factor in escrow timeout
+      isDisputable: isBuyer &&
+        this.moderator &&
+        this.model.get('state') === 'PROCESSING_ERROR',
       errors: this.contract.get('errors') || [],
     };
 
