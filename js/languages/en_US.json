@@ -1619,7 +1619,7 @@
         "youMayCancel": "You may cancel the order to retrieve your payment.",
         "youMayDispute": "You may cancel the order to retrieve your payment.",
         "procErrBuyer": "The vendor was unable to process your order. You may cancel the order to retrieve your payment.",
-        "procErrVendorNoMsg": "There was an error processing the order."
+        "procErrVendorNoMsg": "There was an error processing the order.",
         "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
