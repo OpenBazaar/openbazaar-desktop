@@ -94,13 +94,7 @@ export default class extends baseVw {
     this.modFetches = [];
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
-      console.log("add------------------")
-      console.log(model)
-      // remove placeholder if this is the first moderator added
-      if (!this.modCards.length) this.setState({ placeholder: false });
-
       const modCard = this.addMod(model);
-      this.getCachedEl('.js-moderatorsWrapper').append(modCard.render().$el);
       this.removeNotFetched(model.get('peerId'));
 
       // if required, select the first  moderator
@@ -114,12 +108,10 @@ export default class extends baseVw {
           modCard.changeSelectState('selected');
         }
       }
+      this.render();
     });
     this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => {
-      console.log("remove index: "+rOpts.index)
-      console.log(this.modCards)
       this.modCards.splice(rOpts.index, 1)[0].remove();
-      console.log(this.modCards)
       this.render();
     });
     this.modCards = [];
@@ -180,7 +172,6 @@ export default class extends baseVw {
   }
 
   getModeratorsByID(opts) {
-    console.log(opts)
     const op = {
       ...this.options,
       ...opts,
@@ -410,8 +401,6 @@ export default class extends baseVw {
         placeholder: !this.modCards.length,
         ...this.getState(),
       }));
-
-      console.log(this.modCards)
 
       super.render();
       this.modCards.forEach(mod => {
