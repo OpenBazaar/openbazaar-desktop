@@ -95,7 +95,6 @@ export default class extends baseVw {
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
       const modCard = this.addMod(model);
-      this.removeNotFetched(model.get('peerId'));
 
       // if required, select the first  moderator
       if (opts.selectFirst && !this.firstSelected && !this.noneSelected) {
@@ -165,6 +164,7 @@ export default class extends baseVw {
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
+      this.removeNotFetched(profile.peerId);
     } else {
       // remove the invalid moderator from the notFetched list
       this.removeNotFetched(profile.peerId);
@@ -314,7 +314,6 @@ export default class extends baseVw {
         if (this.options.singleSelect) this.deselectOthers(data.guid);
       }
     });
-    this.removeNotFetched(model.id);
     this.modCards.push(modCard);
     return modCard;
   }
