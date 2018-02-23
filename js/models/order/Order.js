@@ -45,7 +45,7 @@ export default class extends BaseModel {
    */
   get vendorProcessingError() {
     const contract = this.get('contract');
-    return contract && Array.isArray(this.contract.get('errors'));
+    return contract && Array.isArray(contract.get('errors'));
   }
 
   parse(response = {}) {

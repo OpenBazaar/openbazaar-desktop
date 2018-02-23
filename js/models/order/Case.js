@@ -37,11 +37,12 @@ export default class extends BaseModel {
       );
   }
 
-  // FYI:
-  // - If the contract hasn't arrived, using this logic, it will be considered invalid.
-  // - If the vendor had an error processing the order and the buyers contract is verified
-  //   as authentic, the vendor's contract will be considered valid even though it will not
-  //   be sent over, since the mod will only be allowed to send the funds to the buyer.
+  /**
+   * - If the contract hasn't arrived, using this logic, it will be considered invalid.
+   * - If the vendor had an error processing the order and the buyer's contract is verified
+   *   as authentic, the vendor's contract will be considered valid even though it will not
+   *   be sent over, since the mod will only be allowed to send the funds to the buyer.
+   */
   isContractValid(buyer = true) {
     const hasContractArrived = buyer ?
       !!this.get('buyerContract') :
