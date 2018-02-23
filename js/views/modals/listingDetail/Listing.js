@@ -518,7 +518,7 @@ export default class extends BaseModal {
     if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
-    $(document).off(null, this.boundDocClick);
+    $(document).off('click', this.boundDocClick);
     super.remove();
   }
 

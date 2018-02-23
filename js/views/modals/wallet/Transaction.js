@@ -175,7 +175,7 @@ export default class extends baseVw {
 
   remove() {
     if (this.retryPost) this.retryPost.abort();
-    $(document).off(null, this.boundDocClick);
+    $(document).off('click', this.boundDocClick);
     this.timeAgoInterval.cancel();
     clearTimeout(this.copiedIndicatorTimeout);
     super.remove();
