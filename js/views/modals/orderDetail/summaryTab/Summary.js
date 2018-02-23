@@ -273,8 +273,15 @@ export default class extends BaseVw {
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.decided'),
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.resolved'),
-          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete'),
         ];
+
+        if (!this.model.vendorProcessingError) {
+          // You can't complete an order and leave a review when the vendor had a processing error.
+          // In that case the flow ends at resolved.
+          state.states.push(
+            app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete')
+          );
+        }
 
         switch (orderState) {
           case 'DECIDED':
@@ -405,14 +412,6 @@ export default class extends BaseVw {
       this.model.get('paymentAddressTransactions')
         .filter(payment => (payment.get('value') > 0))
       );
-  }
-
-  get isOrderCancelable() {
-    const orderState = this.model.get('state');
-
-    return this.buyer.id === app.profile.id &&
-      ['PROCESSING_ERROR', 'PENDING'].includes(orderState) &&
-      this.isFunded;
   }
 
   shouldShowPayForOrderSection() {
@@ -690,7 +689,9 @@ export default class extends BaseVw {
 
     this.$subSections.prepend(this.disputeAcceptance.render().el);
 
-    if (this.model.get('state') === 'RESOLVED' && this.buyer.id === app.profile.id) {
+    if (this.model.get('state') === 'RESOLVED' &&
+      this.buyer.id === app.profile.id &&
+      !this.model.vendorProcessingError) {
       this.renderCompleteOrderForm();
     }
   }
@@ -788,7 +789,10 @@ export default class extends BaseVw {
     const isBuyer = this.buyer.id === app.profile.id;
     const state = {
       isBuyer,
-      isOrderCancelable: !this.moderator && this.isOrderCancelable,
+      isOrderCancelable: this.buyer.id === app.profile.id &&
+        !this.moderator &&
+        ['PROCESSING_ERROR', 'PENDING'].includes(this.model.get('state')) &&
+        this.isFunded,
       isModerated: !!this.moderator,
       isCase: this.isCase,
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
@@ -861,7 +865,8 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
-          isOrderCancelable: () => this.isOrderCancelable,
+          isOrderCancelable: () => this.model.get('state') === 'PENDING' &&
+            !this.moderator && this.buyer.id === app.profile.id,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });
