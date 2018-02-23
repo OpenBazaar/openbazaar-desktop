@@ -70,11 +70,6 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    delete response.vendorContract;
-    // delete response.vendorContractValidationErrors;
-    // response.vendorContractValidationErrors = ['sizzle sizzle fart fart'];
-    // response.buyerContractValidationErrors = ['Can you feel the funk tonight'];
-
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
       !this.vendorProcessingError &&

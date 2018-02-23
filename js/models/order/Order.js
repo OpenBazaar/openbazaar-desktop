@@ -49,8 +49,6 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    // response.contract.errors = [];
-
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
