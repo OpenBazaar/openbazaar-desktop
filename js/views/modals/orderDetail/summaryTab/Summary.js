@@ -370,7 +370,7 @@ export default class extends BaseVw {
    * funded.
    */
   get isFunded() {
-    return this.isPartiallyFunded || this.getBalanceRemaining === 0;
+    return this.isPartiallyFunded || this.getBalanceRemaining() === 0;
   }
 
   getBalanceRemaining() {
@@ -411,7 +411,6 @@ export default class extends BaseVw {
     const orderState = this.model.get('state');
 
     return this.buyer.id === app.profile.id &&
-      !this.moderator &&
       ['PROCESSING_ERROR', 'PENDING'].includes(orderState) &&
       this.isFunded;
   }
@@ -789,7 +788,7 @@ export default class extends BaseVw {
     const isBuyer = this.buyer.id === app.profile.id;
     const state = {
       isBuyer,
-      isOrderCancelable: this.isOrderCancelable,
+      isOrderCancelable: !this.moderator && this.isOrderCancelable,
       isModerated: !!this.moderator,
       isCase: this.isCase,
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
