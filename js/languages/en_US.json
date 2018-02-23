@@ -1458,17 +1458,14 @@
     },
     "contractTab": {
       "heading": "Contract (JSON)",
-      "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
-      "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
-      "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
-      "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
-      "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
       "buyerContractHeading": "Buyer Contract:",
       "vendorContractHeading": "Vendor Contract:",
       "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
       "bothContractsValid": "Both the buyer's and vendor's contracts have been verified as authentic.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
       "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
       "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
       "contractHeadingVendor": "Vendor's contract:",
       "contractHeadingBuyer": "Buyer's contract:"
     },
@@ -1476,8 +1473,8 @@
       "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
       "tipBuyerContractHasError": "The buyer's contract has validation errors.",      
       "tipVendorContractHasError": "The vendor's contract has validation errors.",
-      "tipBuyerContractNotArrived": "The buyer's contract has validation errors.",
-      "tipVendorContractHasNotArrived": "The vendor's contract has validation errors."
+      "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
+      "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
@@ -1641,6 +1638,7 @@
       "vendorAmountLabel": "Vendor Amount",
       "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
       "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
       "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
       "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",      
       "commentLabel": "Comment",

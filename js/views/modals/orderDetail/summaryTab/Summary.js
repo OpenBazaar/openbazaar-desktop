@@ -407,16 +407,6 @@ export default class extends BaseVw {
       );
   }
 
-  /**
-   * Returns a boolean indicating whether the vendor had an error when processing
-   * the order. This is different from just checking for the PROCESSING_ERROR state,
-   * in that it will return true even after the order moves on from that state.
-   */
-  get vendorProcessingError() {
-    return this.model.get('state') === 'PROCESSING_ERROR' ||
-      Array.isArray(this.contract.get('errors'));
-  }
-
   get isOrderCancelable() {
     const orderState = this.model.get('state');
 
@@ -787,7 +777,7 @@ export default class extends BaseVw {
   }
 
   renderProcessingError() {
-    if (!this.vendorProcessingError || this.moderator) {
+    if (!this.model.vendorProcessingError) {
       if (this.processingError) {
         this.processingError.remove();
         this.processingError = null;
@@ -801,6 +791,7 @@ export default class extends BaseVw {
       isBuyer,
       isOrderCancelable: this.isOrderCancelable,
       isModerated: !!this.moderator,
+      isCase: this.isCase,
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!

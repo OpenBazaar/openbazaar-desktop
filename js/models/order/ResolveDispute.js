@@ -13,9 +13,15 @@ export default class extends BaseModel {
         'whether the vendor\'s contract is available.');
     }
 
+    if (typeof options.vendorProcessingError !== 'function') {
+      throw new Error('Please provide a function that returns a boolean indicating ' +
+        'whether the vendor had an error processing the order.');
+    }
+
     super(attrs, options);
     this.buyerContractArrived = options.buyerContractArrived;
     this.vendorContractArrived = options.vendorContractArrived;
+    this.vendorProcessingError = options.vendorProcessingError;
   }
 
   defaults() {
@@ -43,7 +49,7 @@ export default class extends BaseModel {
     let vendorPercentageOk = false;
     let buyerPercentageOk = false;
 
-    if (this.vendorContractArrived()) {
+    if (this.vendorContractArrived() && !this.vendorProcessingError) {
       if (typeof attrs.vendorPercentage === 'undefined' || attrs.vendorPercentage === '') {
         addError('vendorPercentage',
           app.polyglot.t('resolveDisputeModelErrors.provideAmount'));

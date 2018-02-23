@@ -488,6 +488,7 @@ export default class extends BaseModal {
     const model = new ResolveDisputeMd(modelAttrs, {
       buyerContractArrived: () => this.model.get('buyerContract'),
       vendorContractArrived: () => this.model.get('vendorContract'),
+      vendorProcessingError: () => this.model.get('processingError'),
     });
 
     const view = this.createChild(ResolveDispute, {
@@ -563,6 +564,7 @@ export default class extends BaseModal {
         const otherContract = this.model.get('buyerOpened') ?
           this.model.get('vendorContract') : this.model.get('buyerContract');
         const type = this.model.get('buyerOpened') ? 'Buyer' : 'Vendor';
+        const otherType = this.model.get('buyerOpened') ? 'Vendor' : 'Buyer';
 
         if (!isContractValid) {
           tip = app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`);
@@ -570,7 +572,7 @@ export default class extends BaseModal {
 
         if (!otherContract) {
           tip += `${tip ? ' ' : ''}` +
-            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasNotArrived`)}`;
+            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${otherType}ContractNotArrived`)}`;
         } else if (!this.model.isContractValid(!this.model.get('buyerOpened'))) {
           tip += `${tip ? ' ' : ''}` +
             `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`)}`;

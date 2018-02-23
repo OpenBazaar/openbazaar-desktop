@@ -53,19 +53,33 @@ export default class extends BaseVw {
   }
 
   renderStatus() {
+    const iconBaseClass = 'margRSm flexNoShrink';
     let msg = '';
 
     if (this.isCase) {
       // Cut a corner with some html embedded here. If the html get more elaborate than this,
       // we should probably break this out into its own template.
       if (this.model.bothContractsValid) {
-        msg = '<p class="clrTEm flexVCent"><span class="ion-ios-checkmark-outline margRSm">' +
-          `</span>${app.polyglot.t('orderDetail.contractTab.bothContractsValid')}</p>`;
+        const icon = `<span class="${iconBaseClass} tx1 ion-ios-checkmark-outline"></span>`;
+        const msgText = !this.model.vendorProcessingError ?
+          app.polyglot.t('orderDetail.contractTab.bothContractsValid') :
+          app.polyglot.t('orderDetail.contractTab.validBuyerVendorProcessingError');
+        const msgHtml = `<span>${msgText}</span>`;
+        msg = `<p class="clrTEm flexVCent">${icon}${msgHtml}</p>`;
       } else if (!this.model.get('vendorContract')) {
-        msg = '<p class="flexVCent"><span class="ion-android-warning margRSm clrTAlert">' +
-          `</span>${app.polyglot.t('orderDetail.contractTab.vendorContractNotArrived')}</p>`;
+        const icon = `<span class="${iconBaseClass} clrTAlert ion-android-warning"></span>`;
+        const processingErrorKey =
+          'orderDetail.contractTab.vendorContractNotArrivedPotentialProcErr';
+        const buyerContract = this.model.get('buyerContract');
+        const buyerShowsVendorProcErr =
+          buyerContract && Array.isArray(buyerContract.get('errors'));
+        const msgText = !buyerShowsVendorProcErr ?
+          app.polyglot.t('orderDetail.contractTab.vendorContractNotArrived') :
+          app.polyglot.t(processingErrorKey);
+        const msgHtml = `<span>${msgText}</span>`;
+        msg = `<p class="flexVCent">${icon}${msgHtml}</p>`;
       } else if (!this.model.get('buyerContract')) {
-        msg = '<p class="flexVCent"><span class="ion-android-warning margRSm clrTAlert">' +
+        msg = `<p class="flexVCent"><span class="${iconBaseClass} clrTAlert ion-android-warning">` +
           `</span>${app.polyglot.t('orderDetail.contractTab.buyerContractNotArrived')}</p>`;
       }
     }

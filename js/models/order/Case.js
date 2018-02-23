@@ -19,7 +19,29 @@ export default class extends BaseModel {
     };
   }
 
-  // FYI: If the contract hasn't arrived, using this logic, it will be considered invalid.
+  /**
+   * Returns a boolean indicating whether the vendor had an error when processing
+   * the order. Since this relies on data from the buyers contract, if the contract is
+   * not verified as authentic, false will be returned even if the data suggests
+   * otherwise. We don't want to prevent funds from being awared to the vendor based
+   * on potentially forged data from the buyer's contract.
+   */
+  get vendorProcessingError() {
+    const contract = this.get('buyerContract');
+    const contractErrors = this.get('buyerContractValidationErrors');
+    return contract &&
+      Array.isArray(contract.get('errors')) &&
+      (
+        !contractErrors ||
+        !(Array.isArray(contractErrors) && contractErrors.length)
+      );
+  }
+
+  // FYI:
+  // - If the contract hasn't arrived, using this logic, it will be considered invalid.
+  // - If the vendor had an error processing the order and the buyers contract is verified
+  //   as authentic, the vendor's contract will be considered valid even though it will not
+  //   be sent over, since the mod will only be allowed to send the funds to the buyer.
   isContractValid(buyer = true) {
     const hasContractArrived = buyer ?
       !!this.get('buyerContract') :
@@ -30,7 +52,8 @@ export default class extends BaseModel {
 
     return hasContractArrived &&
       (!errors ||
-        (Array.isArray(errors) && !errors.length));
+        (Array.isArray(errors) && !errors.length)) ||
+      !buyer && this.vendorProcessingError;
   }
 
   get isBuyerContractValid() {
@@ -46,8 +69,14 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
+    delete response.vendorContract;
+    // delete response.vendorContractValidationErrors;
+    // response.vendorContractValidationErrors = ['sizzle sizzle fart fart'];
+    // response.buyerContractValidationErrors = ['Can you feel the funk tonight'];
+
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
+      !this.vendorProcessingError &&
       (
         (response.buyerOpened && !response.vendorContract) ||
         (!response.buyerOpened && !response.buyerContract)
@@ -81,41 +110,25 @@ export default class extends BaseModel {
       response.vendorContract.buyerOrder.payment.amount =
         integerToDecimal(response.vendorContract.buyerOrder.payment.amount,
           app.serverConfig.cryptoCurrency);
+    }
 
-      if (response.resolution) {
-        response.resolution.payout.buyerOutput =
-          response.resolution.payout.buyerOutput || {};
-        response.resolution.payout.vendorOutput =
-          response.resolution.payout.vendorOutput || {};
-        response.resolution.payout.moderatorOutput =
-          response.resolution.payout.moderatorOutput || {};
+    if (response.resolution) {
+      response.resolution.payout.buyerOutput =
+        response.resolution.payout.buyerOutput || {};
+      response.resolution.payout.vendorOutput =
+        response.resolution.payout.vendorOutput || {};
+      response.resolution.payout.moderatorOutput =
+        response.resolution.payout.moderatorOutput || {};
 
-        // Temporary to account for server bug:
-        // https://github.com/OpenBazaar/openbazaar-go/issues/548
-        // Sometimes the payment amounts are coming back as enormously inflated strings.
-        // For now, we'll just make them dummy values.
-        if (typeof response.resolution.payout.buyerOutput.amount === 'string') {
-          response.resolution.payout.buyerOutput.amount = 25000;
-        }
-
-        if (typeof response.resolution.payout.vendorOutput.amount === 'string') {
-          response.resolution.payout.vendorOutput.amount = 12000;
-        }
-
-        if (typeof response.resolution.payout.moderatorOutput.amount === 'string') {
-          response.resolution.payout.moderatorOutput.amount = 6000;
-        }
-
-        response.resolution.payout.buyerOutput.amount =
-          integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
-            app.serverConfig.cryptoCurrency);
-        response.resolution.payout.vendorOutput.amount =
-          integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
-            app.serverConfig.cryptoCurrency);
-        response.resolution.payout.moderatorOutput.amount =
-          integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
-            app.serverConfig.cryptoCurrency);
-      }
+      response.resolution.payout.buyerOutput.amount =
+        integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
+          app.serverConfig.cryptoCurrency);
+      response.resolution.payout.vendorOutput.amount =
+        integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
+          app.serverConfig.cryptoCurrency);
+      response.resolution.payout.moderatorOutput.amount =
+        integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
+          app.serverConfig.cryptoCurrency);
     }
 
     return response;
