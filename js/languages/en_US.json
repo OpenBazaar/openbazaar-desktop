@@ -1580,8 +1580,7 @@
         "genericVendorAcceptedPayout": "The vendor accepted the dispute payout",
         "userAcceptedPayout": "%{name} accepted the dispute payout",
         "orderCompleteWhenYouReview": "The order will be complete when you leave a review.",
-        "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review.",
-        "orderCompleteProcessingError": "hill bills"
+        "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review."
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1614,12 +1613,12 @@
       "processingError": {
         "cancelLink": "cancel",
         "disputeLink": "open a dispute",
-        "procErrBuyerNoMsg": "The vendor was unable to process your order.",
-        "procErrBuyerNoMsgCancelable": "The vendor was unable to process your order. You may cancel the order to retrieve your payment.",
-        "procErrBuyerNoMsgDisputable": "The vendor was unable to process your order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyerNoMsg": "The vendor was unable to process the order.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
         "youMayCancel": "You may cancel the order to retrieve your payment.",
         "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
-        "procErrBuyer": "The vendor was unable to process your order due to the following errors:",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
         "procErrVendorNoMsg": "There was an error processing the order.",
         "procErrVendor": "You were unable to process the order due to the following errors:"
       }

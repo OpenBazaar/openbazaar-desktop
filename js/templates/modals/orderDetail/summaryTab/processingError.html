@@ -1,5 +1,5 @@
 <%
-  if (ob.isBuyer) {
+  if (ob.isBuyer || ob.isModerator) {
     if (!ob.isModerated) {
 %>
       <% 
@@ -30,7 +30,7 @@
       } else { %>
         <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrBuyer') %></p>
         <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
-        <% if (ob.isDisputable) { %>
+        <% if (ob.isDisputable && !ob.isModerator) { %>
           <p><%= ob.polyT('orderDetail.summaryTab.processingError.youMayDispute') %></p>
         <%
            }

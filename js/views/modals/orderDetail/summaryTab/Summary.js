@@ -89,6 +89,13 @@ export default class extends BaseVw {
         this.renderPaymentFinalized();
       }
 
+      if (state === 'PROCESSING_ERROR') {
+        if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
+          this.payForOrder.remove();
+          this.payForOrder = null;
+        }
+      }
+
       this.renderProcessingError();
     });
 
@@ -684,6 +691,7 @@ export default class extends BaseVw {
         timestamp: data.timestamp,
         acceptedByBuyer: closer.id === this.buyer.id,
         buyerViewing: app.profile.id === this.buyer.id,
+        vendorProcessingError: this.model.vendorProcessingError,
       },
     });
 
@@ -796,6 +804,7 @@ export default class extends BaseVw {
     const isBuyer = this.buyer.id === app.profile.id;
     const state = {
       isBuyer,
+      isModerator: !!(this.moderator && this.moderator.id),
       isOrderCancelable: this.isOrderCancelable,
       isModerated: !!this.moderator,
       isCase: this.isCase,

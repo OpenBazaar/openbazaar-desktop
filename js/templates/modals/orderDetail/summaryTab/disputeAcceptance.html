@@ -20,9 +20,16 @@
             ob.polyT('orderDetail.summaryTab.disputeAcceptance.genericVendorAcceptedPayout');
         }
 
-        const subText = ob.buyerViewing ?
-          ob.polyT('orderDetail.summaryTab.disputeAcceptance.orderCompleteWhenYouReview') :
-          ob.polyT('orderDetail.summaryTab.disputeAcceptance.orderCompleteWhenBuyerReviews');
+        let subText = '';
+
+        if (!ob.vendorProcessingError) {
+          // Since the text indicates the order will be complete after leaving a review and you
+          // can't leave a review if the vendor has an error processing the order, we'll omit the
+          // text in that case.
+          let subText = ob.buyerViewing ?
+            ob.polyT('orderDetail.summaryTab.disputeAcceptance.orderCompleteWhenYouReview') :
+            ob.polyT('orderDetail.summaryTab.disputeAcceptance.orderCompleteWhenBuyerReviews');
+        }
       %>
       <div class="rowTn txB"><%= introLine %></div>
       <div><%= subText %></div>
