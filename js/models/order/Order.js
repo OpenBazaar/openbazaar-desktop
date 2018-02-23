@@ -49,6 +49,8 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
+    // response.contract.errors = [];
+
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
@@ -66,22 +68,6 @@ export default class extends BaseModel {
           response.contract.disputeResolution.payout.vendorOutput || {};
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
-
-        // Temporary to account for server bug:
-        // https://github.com/OpenBazaar/openbazaar-go/issues/548
-        // Sometimes the payment amounts are coming back as enormously inflated strings.
-        // For now, we'll just make them dummy values.
-        if (typeof response.contract.disputeResolution.payout.buyerOutput.amount === 'string') {
-          response.contract.disputeResolution.payout.buyerOutput.amount = 25000;
-        }
-
-        if (typeof response.contract.disputeResolution.payout.vendorOutput.amount === 'string') {
-          response.contract.disputeResolution.payout.vendorOutput.amount = 12000;
-        }
-
-        if (typeof response.contract.disputeResolution.payout.moderatorOutput.amount === 'string') {
-          response.contract.disputeResolution.payout.moderatorOutput.amount = 6000;
-        }
 
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(

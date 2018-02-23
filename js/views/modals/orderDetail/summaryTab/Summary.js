@@ -414,10 +414,17 @@ export default class extends BaseVw {
       );
   }
 
+  get isOrderCancelable() {
+    return this.buyer.id === app.profile.id &&
+      !this.moderator &&
+      ['PROCESSING_ERROR', 'PENDING'].includes(this.model.get('state')) &&
+      this.isFunded;
+  }
+
   shouldShowPayForOrderSection() {
     return this.buyer.id === app.profile.id &&
       this.getBalanceRemaining() > 0 &&
-      ['AWAITING_PAYMENT', 'PROCESSING_ERROR'].includes(this.model.get('state'));
+      !this.model.vendorProcessingError;
   }
 
   shouldShowAcceptedSection() {
@@ -789,10 +796,7 @@ export default class extends BaseVw {
     const isBuyer = this.buyer.id === app.profile.id;
     const state = {
       isBuyer,
-      isOrderCancelable: this.buyer.id === app.profile.id &&
-        !this.moderator &&
-        ['PROCESSING_ERROR', 'PENDING'].includes(this.model.get('state')) &&
-        this.isFunded,
+      isOrderCancelable: this.isOrderCancelable,
       isModerated: !!this.moderator,
       isCase: this.isCase,
       // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
@@ -865,8 +869,7 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
-          isOrderCancelable: () => this.model.get('state') === 'PENDING' &&
-            !this.moderator && this.buyer.id === app.profile.id,
+          isOrderCancelable: () => this.isOrderCancelable,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });

@@ -81,8 +81,7 @@
 </td>
 <td class="clrBr gutterH statusCol">
   <%
-    if (ob.state === 'PENDING' ||
-      (ob.type === 'purchases' && ob.state === 'PROCESSING_ERROR')) {
+    if (ob.state === 'PENDING') {
       if (ob.type === 'sales') {
         if (ob.rejectOrderInProgress) {
       %>
@@ -101,8 +100,8 @@
           btnText: ob.polyT('transactions.transactionsTable.btnAccept')
         }) %>
     <% } else if (!ob.moderated) {
-        // Only non-moderated purchase can be canceled. They must be in either the PENDING ||
-        // PROCESSING_ERROR states.
+        // Only non-moderated purchase can be canceled. We are not allowing PROCESSING_ERROR orders to be canceled here because
+        // they need to be funded and we don't know if they are. If funded, they can be canceled on the Order Detail overlay.
         if (ob.cancelOrderInProgress) {
     %>
         <span class="posR">
