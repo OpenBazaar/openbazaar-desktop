@@ -32,7 +32,6 @@ import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
 import WalletBalance from './models/wallet/WalletBalance';
 import Followers from './collections/Followers';
-import VerifiedMods from './collections/VerifiedMods';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
@@ -43,6 +42,7 @@ import Onboarding from './views/modals/onboarding/Onboarding';
 import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
+import VerifiedMods from './collections/VerifiedMods';
 
 fixLinuxZoomIssue();
 handleServerShutdownRequests();
@@ -127,6 +127,8 @@ handleLinks();
 
 // add the feedback mechanism
 addFeedback();
+
+app.verifiedMods = new VerifiedMods();
 
 const fetchConfigDeferred = $.Deferred();
 
@@ -275,6 +277,39 @@ function onboard() {
   return onboardDeferred.promise();
 }
 
+function fetchVerifiedMods() {
+  return app.verifiedMods.fetch()
+    .fail((jqXhr) => {
+      const title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
+      const reason = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '404';
+      const message = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.msg', { reason });
+
+      const verifiedModErrorDialog = new Dialog({
+        title,
+        message,
+        buttons: [
+          {
+            text: app.polyglot.t('startUp.dialogs.btnRetry'),
+            fragment: 'retry',
+          },
+          {
+            text: app.polyglot.t('startUp.dialogs.btnContinue'),
+            fragment: 'continue',
+          },
+        ],
+        dismissOnOverlayClick: false,
+        dismissOnEscPress: false,
+        showCloseButton: false,
+      }).on('click-retry', () => {
+        verifiedModErrorDialog.close();
+      }).on('click-continue', () => {
+        verifiedModErrorDialog.close();
+      })
+        .render()
+        .open();
+    });
+}
+
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
 let ownFollowingFailed;
@@ -295,7 +330,7 @@ function fetchStartupData() {
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetchFailed ?
     app.searchProviders.fetch() : searchProvidersFetch;
   verifiedModsFetch = !verifiedModsFetch || verifiedModsFetchFailed ?
-    app.verifiedMods.fetch() : verifiedModsFetch;
+    fetchVerifiedMods() : verifiedModsFetch;
 
   $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch,
     verifiedModsFetch)
@@ -311,13 +346,12 @@ function fetchStartupData() {
           walletBalanceFetchFailed = true;
         } else if (jqXhr === searchProvidersFetch) {
           searchProvidersFetchFailed = true;
-        } else if (jqXhr === verifiedModsFetch) {
-          verifiedModsFetchFailed = true;
         }
       }
     })
     .done(() => {
       fetchStartupDataDeferred.resolve();
+      setInterval(() => fetchVerifiedMods(), 360000);
     })
     .fail((jqXhr) => {
       const curConn = getCurrentConnection();
@@ -331,6 +365,7 @@ function fetchStartupData() {
 
       if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed) {
         let title = '';
+
         if (ownFollowingFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
         } else if (walletBalanceFetchFailed) {
@@ -363,41 +398,8 @@ function fetchStartupData() {
           setTimeout(() => fetchStartupData(), 300);
         }).on('click-manageConnections', () =>
           app.connectionManagmentModal.open())
-          .render()
-          .open();
-      } else if (verifiedModsFetchFailed) {
-        const title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
-        const reason = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '404';
-        const message = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.msg', { reason });
-
-        const verifiedModErrorDialog = new Dialog({
-          title,
-          message,
-          buttons: [
-            {
-              text: app.polyglot.t('startUp.dialogs.btnRetry'),
-              fragment: 'retry',
-            },
-            {
-              text: app.polyglot.t('startUp.dialogs.btnContinue'),
-              fragment: 'continue',
-            },
-          ],
-          dismissOnOverlayClick: false,
-          dismissOnEscPress: false,
-          showCloseButton: false,
-        }).on('click-retry', () => {
-          verifiedModErrorDialog.close();
-
-          // slight of hand to ensure the loading modal has a chance to at
-          // least briefly show before another potential failure
-          setTimeout(() => fetchStartupData(), 300);
-        }).on('click-continue', () => {
-          verifiedModErrorDialog.close();
-          fetchStartupDataDeferred.resolve();
-        })
-          .render()
-          .open();
+        .render()
+        .open();
       } else {
         // We don't care if the exchange rate fetch failed, because
         // the exchangeRateSyncer will display a status message about it
@@ -552,8 +554,6 @@ function start() {
 
     app.walletBalance = new WalletBalance();
     app.searchProviders = new SearchProvidersCol();
-
-    app.verifiedMods = new VerifiedMods();
 
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
