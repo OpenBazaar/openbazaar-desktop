@@ -1,9 +1,3 @@
-// import $ from 'jquery';
-// import {
-//   cancelingOrder,
-//   cancelOrder,
-//   events as orderEvents,
-// } from '../../../../utils/order';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -32,12 +26,6 @@ export default class extends BaseVw {
   className() {
     return 'rowLg clrTErr';
   }
-
-  // events() {
-  //   return {
-  //     'click .js-cancelOrder': 'onClickCancelOrder',
-  //   };
-  // }
 
   render() {
     loadTemplate('modals/orderDetail/summaryTab/processingError.html', (t) => {

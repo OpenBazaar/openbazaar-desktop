@@ -5,16 +5,16 @@
       <% 
         if (!ob.errors.length) {
           const message = !ob.isOrderCancelable ?
-            'The vendor was unable to process your order.' :
-            'The vendor was unable to process your order. You may cancel the order to retrieve your payment.';
+            ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsg') :
+            ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsgCancelable');
       %>
 
         <p><span class="ion-alert-circled padSm"></span><%= message %></p>
       <% } else { %>
-        <p><span class="ion-alert-circled padSm"></span>The vendor was unable to process the order due to the following errors:</p>
+        <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrBuyer') %></p>
         <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
         <% if (ob.isOrderCancelable) { %>
-          <p>You may cancel the order to retrieve your payment</p>
+          <p><%= ob.polyT('orderDetail.summaryTab.processingError.youMayCancel') %></p>
         <%
            }
         }
@@ -22,16 +22,16 @@
     } else {
       if (!ob.errors.length) {
         const message = !ob.isDisputable ?
-          'The vendor was unable to process your order.' :
-          'The vendor was unable to process your order. You may open a dispute to ask the moderator to award the funds back to you.';
+          ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsg') :
+          ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsgDisputable');
 %>
           <p><span class="ion-alert-circled padSm"></span><%= message %></p>
 <%    
       } else { %>
-        <p><span class="ion-alert-circled padSm"></span>The vendor was unable to process the order due to the following errors:</p>
+        <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrBuyer') %></p>
         <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
         <% if (ob.isDisputable) { %>
-          <p>You may open a dispute to ask the moderator to award the funds back to you.</p>
+          <p><%= ob.polyT('orderDetail.summaryTab.processingError.youMayDispute') %></p>
         <%
            }
       }
@@ -39,12 +39,16 @@
   } else {
   // it's the vendor
 %>
-    <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.vendorUnableToProcess') %></p>
-    <ul>
-      <% ob.errors.forEach(err => { %>
-        <li><%= err %></li>
-      <% }); %>
-    </ul>
+    <% if (!ob.errors.length) { %>
+      <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrVendorNoMsg') %></p>
+    <% } else { %>  
+      <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrVendor') %></p>
+      <ul>
+        <% ob.errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }); %>
+      </ul>
+    <% } %>
 <%  
   }
 %>
