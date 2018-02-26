@@ -76,7 +76,7 @@
               <div class="row">
                 <div class="flexVCentClearMarg tx5 rowTn">
                   <h5 class="flexExpand"><%= ob.polyT('settings.storeTab.availableModerators') %></h5>
-                  <input type="checkbox" id="verifiedOnly" checked>
+                  <input type="checkbox" id="verifiedOnly" <% if (ob.showVerifiedOnly) print('checked') %>>
                   <label class="tx5b" for="verifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
                 </div>
                 <ul class="unstyled errorList hide js-modListAvailableError">

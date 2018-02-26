@@ -11,10 +11,16 @@ import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super({
+    const opts = {
       className: 'settingsStore',
       ...options,
-    });
+      initialState: {
+        showVerifiedOnly: true,
+      },
+      ...(options.initialState || {}),
+    };
+    super(opts);
+    this.options = opts;
 
     this.profile = app.profile.clone();
 
@@ -56,12 +62,12 @@ export default class extends baseVw {
       showSpinner: false,
     });
 
-    this.listenTo(this.modsByID, 'noModsFound', (opts) => this.noModsFound(opts.guids));
+    this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsFound(mOpts.guids));
 
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
       excludeIDs: this.currentMods,
-      showVerifiedOnly: true,
+      showVerifiedOnly: this.getState().showVerifiedOnly,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
     });
@@ -139,7 +145,7 @@ export default class extends baseVw {
   }
 
   onClickVerifiedOnly(e) {
-    this.modsAvailable.togVerifiedShown($(e.target).prop('checked'));
+    this.setState({ showVerifiedOnly: $(e.target).prop('checked') });
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
@@ -196,7 +202,8 @@ export default class extends baseVw {
 
           // move the changed moderators
           this.currentMods = this.settings.get('storeModerators');
-          const remSel = this.modsSelected.removeModeratorsByID(this.modsSelected.unselectedIDs);
+          const unSel = this.modsSelected.unselectedIDs;
+          const remSel = this.modsSelected.removeModeratorsByID(unSel);
           const remByID = this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
           const remAvail = this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
 
@@ -215,7 +222,14 @@ export default class extends baseVw {
           this.modsAvailable.moderatorsStatus.setState({
             hidden: false,
             total: this.modsAvailable.modCount,
+            showSpinner: false,
           });
+
+          // If any of the mods moved to the available collect are unverified, show them
+          if (app.verifiedMods.matched(unSel).length !== unSel.length) {
+            // Don't render when changing the state, the render is in the always handler
+            this.setState({ showVerifiedOnly: false }, { renderOnChange: false });
+          }
         })
         .fail((...args) => {
           // if at least one save fails, the save has failed.
@@ -253,6 +267,7 @@ export default class extends baseVw {
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
         modsAvailable: this.modsAvailable.allIDs,
+        ...this.getState(),
         errors: {
           ...(this.profile.validationError || {}),
           ...(this.settings.validationError || {}),
@@ -273,6 +288,7 @@ export default class extends baseVw {
         .toggleClass('hide', !this.modsByID.allIDs.length);
 
       this.modsAvailable.delegateEvents();
+      this.modsAvailable.setState({ showVerifiedOnly: this.getState().showVerifiedOnly });
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);
