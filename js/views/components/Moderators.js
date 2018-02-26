@@ -43,6 +43,7 @@ export default class extends baseVw {
     }
 
     const opts = {
+      className: 'moderatorsList',
       apiPath: 'fetchprofiles',
       async: true,
       useCache: false,
@@ -127,10 +128,6 @@ export default class extends baseVw {
 
     // listen to the websocket for moderator data
     this.serverSocket = getSocket();
-  }
-
-  className() {
-    return 'moderatorsList';
   }
 
   events() {

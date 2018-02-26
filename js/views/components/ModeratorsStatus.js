@@ -4,6 +4,7 @@ import loadTemplate from '../../utils/loadTemplate';
 export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
+      className: 'moderatorStatus',
       ...options,
       initialState: {
         hidden: true,
@@ -13,7 +14,6 @@ export default class extends BaseVw {
         loaded: 0,
         total: 0,
         mode: 'loaded',
-        className: 'moderatorStatus',
         ...(options.initialState || {}),
       },
     };
