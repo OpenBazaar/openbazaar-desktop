@@ -161,10 +161,10 @@ export default class extends baseVw {
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
-      this.removeNotFetched(profile.peerId);
+      this.removeNotFetched(profile.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
-      this.removeNotFetched(profile.peerId);
+      this.removeNotFetched(profile.peerID);
     }
   }
 
