@@ -63,6 +63,7 @@ export default class extends baseVw {
       excludeIDs: this.currentMods,
       showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
+      showLoadBtn: true,
     });
   }
 
@@ -94,7 +95,6 @@ export default class extends baseVw {
     });
     // get random mods via GET
     this.modsAvailable.getModeratorsByID();
-    this.modsAvailable.togShowLoadBtn('true');
     this.getCachedEl('.js-modListAvailable').removeClass('hide');
     this.getCachedEl('.js-noModsAdded').addClass('hide');
   }
@@ -196,19 +196,26 @@ export default class extends baseVw {
 
           // move the changed moderators
           this.currentMods = this.settings.get('storeModerators');
-          const removedSelected = this.modsSelected.unselectedIDs;
-          const removedModels = this.modsSelected.removeModeratorsByID(removedSelected);
-
+          const remSel = this.modsSelected.removeModeratorsByID(this.modsSelected.unselectedIDs);
           const remByID = this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
-          this.modsSelected.moderatorsCol.add(remByID);
-          this.modsByID.excludeIDs = this.currentMods;
-
           const remAvail = this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
-          this.modsSelected.moderatorsCol.add(remAvail);
-          this.modsAvailable.excludeIDs = this.currentMods;
 
-          // add removed moderators to the available collection
-          this.modsAvailable.moderatorsCol.add(removedModels);
+          this.modsByID.excludeIDs = this.currentMods;
+          this.modsByID.moderatorsStatus.setState({
+            hidden: true,
+          });
+
+          this.modsSelected.moderatorsCol.add([...remByID, ...remAvail]);
+          this.modsSelected.moderatorsStatus.setState({
+            hidden: true,
+          });
+
+          this.modsAvailable.excludeIDs = this.currentMods;
+          this.modsAvailable.moderatorsCol.add(remSel);
+          this.modsAvailable.moderatorsStatus.setState({
+            hidden: false,
+            total: this.modsAvailable.modCount,
+          });
         })
         .fail((...args) => {
           // if at least one save fails, the save has failed.

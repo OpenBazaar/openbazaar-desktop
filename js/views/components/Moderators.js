@@ -375,10 +375,6 @@ export default class extends baseVw {
     this.setState({ showVerifiedOnly: bool });
   }
 
-  togShowLoadBtn(bool) {
-    this.moderatorsStatus.setState({ showLoadBtn: bool });
-  }
-
   get noneSelected() {
     return this._noneSelected;
   }
