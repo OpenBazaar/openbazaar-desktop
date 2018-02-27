@@ -42,7 +42,7 @@ export default class extends Collection {
   }
 
   parse(response) {
-    this.data = response.data;
+    this.data = response.data || {};
     this.data.url = this.url(); // backup for templates if the link is missing
     const parsedResponse = response.moderators ? response.moderators : [];
     /*
