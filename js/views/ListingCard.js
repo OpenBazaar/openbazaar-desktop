@@ -428,6 +428,7 @@ export default class extends baseVw {
         arrowClass: 'arrowBoxRightTop',
         data: app.verifiedMods.data,
         showLongText: true,
+        genericText: true,
       });
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     }

@@ -368,6 +368,7 @@
     "link": "Learn More",
     "type": "Type: ",
     "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a trusted moderator, verified by %{name}.",
     "listingDescription": "You can purchase this listing with a trusted moderator, verified by %{name}. %{link}"
   },
   "moderatorCard": {
