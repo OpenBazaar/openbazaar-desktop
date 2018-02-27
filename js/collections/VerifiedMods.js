@@ -55,6 +55,7 @@ export default class extends Collection {
          }
      */
     parsedResponse.forEach((mod) => {
+      mod.type = {};
       if (response.types && response.types.length && mod.type) {
         mod.type = _.findWhere(response.types, { name: mod.type }) || {};
       }
