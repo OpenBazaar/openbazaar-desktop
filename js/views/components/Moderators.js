@@ -46,7 +46,7 @@ export default class extends baseVw {
       className: 'moderatorsList',
       apiPath: 'fetchprofiles',
       async: true,
-      useCache: false,
+      useCache: true,
       moderatorIDs: [],
       excludeIDs: [],
       method: 'POST',
