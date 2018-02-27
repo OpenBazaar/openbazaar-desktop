@@ -59,6 +59,11 @@ export default class extends Collection {
     parsedResponse.forEach((mod) => {
       if (response.types && response.types.length && mod.type) {
         mod.type = _.findWhere(response.types, { name: mod.type });
+      } else {
+        // if no valid type data is available, use the generic badge icon
+        mod.type = {
+          badge: '../imgs/verifiedModeratorBadge.png',
+        };
       }
     });
     return parsedResponse;

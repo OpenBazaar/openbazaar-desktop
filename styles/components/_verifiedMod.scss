@@ -8,6 +8,8 @@
     width: $thumbTn;
     background-size: contain;
     background-position: center;
+    position: relative;
+    top: -2px; // visually center relative to text
   }
 
   .tooltipWrapper .iconWrapper {
@@ -39,14 +41,5 @@
         }
       }
     }
-  }
-}
-
-.listingCard .gridViewContent .listViewContent .verifiedModWrapper .verifiedMod {
-  position: static;
-
-  .badge {
-    height: 1em;
-    width: 1em;
   }
 }

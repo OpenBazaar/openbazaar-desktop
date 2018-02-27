@@ -137,6 +137,10 @@
       left: $padSm;
       top: $padSm;
 
+      & > .badge {
+        top: 0;
+      }
+
       .badgeText {
         display: none;
       }
@@ -228,9 +232,10 @@
       .verifiedMod {
         position: static;
 
-        .badge {
+        & > .badge {
           height: 1em;
           width: 1em;
+          top: 0;
           margin-right: 0.3em;
         }
 
