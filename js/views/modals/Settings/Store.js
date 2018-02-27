@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
@@ -26,21 +25,21 @@ export default class extends baseVw {
 
     // Sync our clone with any changes made to the global profile.
     this.listenTo(app.profile, 'someChange',
-      (md, opts) => this.profile.set(opts.setAttrs));
+      (md, pOpts) => this.profile.set(pOpts.setAttrs));
 
     // Sync the global profile with any changes we save via our clone.
     this.listenTo(this.profile, 'sync',
-      (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+      (md, resp, pOpts) => app.profile.set(this.profile.toJSON(pOpts.attrs)));
 
     this.settings = app.settings.clone();
 
     // Sync our clone with any changes made to the global settings model.
     this.listenTo(app.settings, 'someChange',
-      (md, opts) => this.settings.set(opts.setAttrs));
+      (md, sOpts) => this.settings.set(sOpts.setAttrs));
 
     // Sync the global settings model with any changes we save via our clone.
     this.listenTo(this.settings, 'sync',
-      (md, resp, opts) => app.settings.set(this.settings.toJSON(opts.attrs)));
+      (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
 
     this.currentMods = this.settings.get('storeModerators');
 
