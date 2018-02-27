@@ -38,7 +38,6 @@ export default class extends BaseVw {
   }
 
   render() {
-    super.render();
     loadTemplate('components/moderatorsStatus.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
