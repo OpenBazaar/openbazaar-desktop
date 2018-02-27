@@ -4,6 +4,11 @@ import app from '../app';
 import Mod from '../models/VerifiedMod';
 
 export default class extends Collection {
+  constructor(...args) {
+    super(...args);
+    this.data = {};
+  }
+
   model(attrs, options) {
     return new Mod(attrs, options);
   }
