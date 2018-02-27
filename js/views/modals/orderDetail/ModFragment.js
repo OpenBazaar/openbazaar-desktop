@@ -46,7 +46,6 @@ export default class extends BaseVw {
       }));
 
       const verifiedMod = app.verifiedMods.get(this._state.peerID);
-      console.log(verifiedMod)
       if (this.verifiedMod) this.verifiedMod.remove();
       this.verifiedMod = this.createChild(VerifiedMod, {
         model: verifiedMod,
