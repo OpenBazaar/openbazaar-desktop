@@ -34,13 +34,11 @@ export default class extends Collection {
 
   /**
    * Return a badge to use to represent the verified moderators available on a listing.
-   * If no moderator has a badge url, return the default badge url.
    * @param IDs {array} - a list of IDs
    */
   defaultBadge(IDs) {
     const modelWithBadge = _.find(this.matched(IDs), mod => mod.get('type').badge);
-    return modelWithBadge && modelWithBadge.get('type').badge ||
-      '../imgs/verifiedModeratorBadgeDefault.png';
+    return modelWithBadge.get('type').badge;
   }
 
   parse(response) {
@@ -58,13 +56,9 @@ export default class extends Collection {
      */
     parsedResponse.forEach((mod) => {
       if (response.types && response.types.length && mod.type) {
-        mod.type = _.findWhere(response.types, { name: mod.type });
-      } else {
-        // if no valid type data is available, use the generic badge icon
-        mod.type = {
-          badge: '../imgs/verifiedModeratorBadge.png',
-        };
+        mod.type = _.findWhere(response.types, { name: mod.type }) || {};
       }
+      mod.type.badge = mod.type.badge || '../imgs/verifiedModeratorBadge.png';
     });
     return parsedResponse;
   }
