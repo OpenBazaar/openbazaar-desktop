@@ -61,10 +61,13 @@
       .verifiedMod {
         height: 1.2em;
 
+        .badge {
+          position: relative;
+          top: -2px;
+        }
+
         & > .badge {
           margin-right: 5px;
-          position: relative;
-          top: -1px;
         }
 
         .warning {
@@ -82,11 +85,6 @@
             .arrowBox {
               top: 11px;
               left: 50%;
-
-              & > .badge {
-                top: -2px;
-                position: relative;
-              }
             }
           }
         }
