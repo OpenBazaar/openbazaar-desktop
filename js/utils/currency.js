@@ -408,7 +408,7 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
 export function renderPairedCurrency(price, fromCur, toCur) {
   const fromCurValidity = getCurrencyValidity(fromCur);
 
-  if (!price || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
+  if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
     // Sometimes when prices are in an unsupported currency, they will be
     // saved as empty strings or undefined. We'll ignore those an just render an
     // empty string.

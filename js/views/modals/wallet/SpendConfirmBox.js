@@ -25,7 +25,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'spendConfirmBox';
+    return 'spendConfirmBox centeredBelow';
   }
 
   events() {
@@ -39,7 +39,7 @@ export default class extends baseVw {
 
   onDocumentClick(e) {
     if (this.getState().show &&
-      !($.contains(this.$el, e.target) ||
+      !($.contains(this.el, e.target) ||
         e.target === this.el)) {
       this.setState({ show: false });
     }
@@ -108,7 +108,7 @@ export default class extends baseVw {
   }
 
   remove() {
-    $(document).off(null, this.boundDocumentClick);
+    $(document).off('click', this.boundDocumentClick);
     super.remove();
   }
 

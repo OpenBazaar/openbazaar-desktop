@@ -1,0 +1,6 @@
+<%
+  const tipHtml = ob.tip ?
+    `<span class='${ob.tipClass || ""}' data-tip="${ob.tip}"><span class="${ob.tipIconClass}"></span></button>` :
+    '';
+%>
+<span class="contractLabel"><%= ob.polyT('orderDetail.navMenu.contract') %></span><% if (tipHtml) print(tipHtml) %>

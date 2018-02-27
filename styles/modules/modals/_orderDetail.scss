@@ -35,6 +35,16 @@
         vertical-align: top;
       }
     }
+
+    .contractMenuItem {
+      text-decoration: none;
+      cursor: default;
+
+      .contractLabel:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 
   .mainContent {
@@ -476,9 +486,36 @@
       }
     }
 
+    .vendorContractUnarrivedMsg,
+    .buyerContractUnarrivedMsg {
+      display: none;
+    }
+
     label[for=resolveDisputeBuyerAmount],
     label[for=resolveDisputeVendorAmount] {
       line-height: 2rem;
     }
+
+    @mixin contractUnavailable($field) {
+      label[for=resolveDispute#{capitalize($field)}Amount]::after {
+        display: none;
+      }
+
+      .input#{capitalize($field)}AmountWrap {
+        @include disabled;
+      }
+
+      .#{$field}ContractUnarrivedMsg {
+        display: block;
+      }
+    }    
+
+    &.vendorContractUnavailable {
+      @include contractUnavailable(vendor);
+    }
+
+    &.buyerContractUnavailable {
+      @include contractUnavailable(buyer);
+    }    
   }
 }
