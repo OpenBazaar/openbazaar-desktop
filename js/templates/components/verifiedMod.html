@@ -39,10 +39,10 @@
           <% if (ob.verified) { %>
           <div class="clamp3"><%= ob.data.description %></div>
           <% if (ob.type && ob.type.name) { %>
-          <div><%= ob.polyT('verifiedMod.typeName', { name: ob.type.name }) %></div>
+          <div><%= ob.polyT('verifiedMod.typeCombined', { type: `<b>${ob.polyT('verifiedMod.type')}</b>`, name: ob.type.name }) %></div>
           <% } %>
           <% if (ob.type && ob.type.description) { %>
-          <div class="clamp3"><%= ob.type.description %></div>
+          <div class="clamp3"><i><%= ob.type.description %></i></div>
           <% } %>
           <a class="txU" href="<%= ob.data.link %>"><%= ob.polyT('verifiedMod.link') %></a>
           <% } %>
