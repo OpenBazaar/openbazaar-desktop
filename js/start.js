@@ -293,7 +293,7 @@ function fetchVerifiedMods() {
             fragment: 'retry',
           },
           {
-            text: app.polyglot.t('startUp.dialogs.btnContinue'),
+            text: app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.btnClose'),
             fragment: 'continue',
           },
         ],
@@ -301,7 +301,7 @@ function fetchVerifiedMods() {
         dismissOnEscPress: false,
         showCloseButton: false,
       }).on('click-retry', () => {
-        verifiedModErrorDialog.close();
+        fetchVerifiedMods();
       }).on('click-continue', () => {
         verifiedModErrorDialog.close();
       })
@@ -330,7 +330,7 @@ function fetchStartupData() {
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetchFailed ?
     app.searchProviders.fetch() : searchProvidersFetch;
   verifiedModsFetch = !verifiedModsFetch || verifiedModsFetchFailed ?
-    fetchVerifiedMods() : verifiedModsFetch;
+    app.verifiedMods.fetch() : verifiedModsFetch;
 
   $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch,
     verifiedModsFetch)
@@ -346,6 +346,8 @@ function fetchStartupData() {
           walletBalanceFetchFailed = true;
         } else if (jqXhr === searchProvidersFetch) {
           searchProvidersFetchFailed = true;
+        } else if (jqXhr === verifiedModsFetch) {
+          verifiedModsFetchFailed = true;
         }
       }
     })
@@ -356,35 +358,51 @@ function fetchStartupData() {
     .fail((jqXhr) => {
       const curConn = getCurrentConnection();
 
-      if (!jqXhr || !curConn || curConn.status !== 'connected') {
+      // Check to see if the server is not connected. the search providers and verified moderators
+      // can return an undefined jqXhr if their external endpoints are down while the app itself is
+      // still functional.
+      if ((ownFollowingFailed || walletBalanceFetchFailed) &&
+        (!jqXhr || !curConn || curConn.status !== 'connected')) {
         // the connection management modal should be up with relevant info
         console.error('The startup data fetches failed. Looks like the connection to the ' +
           'server was lost.');
         return;
       }
 
-      if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed) {
+
+      if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed ||
+        verifiedModsFetchFailed) {
         let title = '';
+        let msg = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '404';
+        let btnText = app.polyglot.t('startUp.dialogs.btnManageConnections');
+        let btnFrag = 'manageConnections';
 
         if (ownFollowingFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
         } else if (walletBalanceFetchFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        } else {
+        } else if (searchProvidersFetchFailed) {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
+          btnText = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.btnClose');
+          btnFrag = 'continue';
+        } else {
+          title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
+          msg = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.msg', { reason: msg });
+          btnText = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.btnClose');
+          btnFrag = 'continue';
         }
 
         const retryFetchStartupDataDialog = new Dialog({
           title,
-          message: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '',
+          message: msg,
           buttons: [
             {
               text: app.polyglot.t('startUp.dialogs.btnRetry'),
               fragment: 'retry',
             },
             {
-              text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
-              fragment: 'manageConnections',
+              text: btnText,
+              fragment: btnFrag,
             },
           ],
           dismissOnOverlayClick: false,
@@ -398,6 +416,12 @@ function fetchStartupData() {
           setTimeout(() => fetchStartupData(), 300);
         }).on('click-manageConnections', () =>
           app.connectionManagmentModal.open())
+          .on('click-continue', () => {
+            retryFetchStartupDataDialog.close();
+            fetchStartupDataDeferred.resolve();
+            // reload the verified moderators once an hour
+            setInterval(() => fetchVerifiedMods(), 360000);
+          })
         .render()
         .open();
       } else {

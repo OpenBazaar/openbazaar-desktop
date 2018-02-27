@@ -157,10 +157,12 @@
         "title": "Unable to get wallet balance."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Unable to load search providers.",
+        "btnClose": "Continue Without Search Providers"
       },
       "unableToGetVerifiedMods": {
         "title": "Unable to load verified moderators.",
+        "btnClose": "Continue",
         "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
