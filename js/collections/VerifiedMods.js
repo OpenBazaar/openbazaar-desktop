@@ -82,7 +82,6 @@ export default class extends Collection {
          description: string,
          badge: url string,
          }
-       If the type is missing, the grey default badge will be show in the template.
      */
     parsedResponse.forEach((mod) => {
       if (response.types && response.types.length && mod.type) {
