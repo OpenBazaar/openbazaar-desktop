@@ -2,6 +2,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  white-space: normal; // prevent inheriting no wraps from parent elements
 
   .badge {
     height: $thumbTn;

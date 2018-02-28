@@ -356,7 +356,7 @@
     "verified": {
       "label": "Verified",
       "title": "Verified Moderator",
-      "body": "This moderator has been verified by %{providerName}."
+      "body": "This moderator has been verified by %{providerName}. %{link}"
     },
     "unverified": {
       "label": "Unverified",
@@ -368,8 +368,7 @@
     "link": "Learn More",
     "type": "Type: ",
     "typeCombined": "%{type}%{name}",
-    "genericDescription": "You can purchase this listing with a moderator verified by %{name}.",
-    "listingDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "View",

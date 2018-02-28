@@ -8,6 +8,7 @@
    const shortText = ob.polyT(`verifiedMod.${type}.label`);
    const longText = ob.polyT(`verifiedMod.${type}.title`);
    const not = `<b>${ob.polyT('verifiedMod.unverified.not')}</b>`;
+   const link = `<a class="txU noWrap" href="${ob.data.link}">${ob.polyT('verifiedMod.link')}</a>`;
 %>
 
 <% print(ob.verified ? badgeFrag : warnFrag) %>
@@ -36,12 +37,17 @@
         </div>
         <div class="flexColRows gutterVSm tx5 txUnb">
           <% if (!ob.genericText) { %>
-            <div class="clamp3"><%= ob.polyT(`verifiedMod.${type}.body`, { providerName: `<b>${ob.data.name}</b>`, not }) %></div>
+            <div>
+              <% // The link will be ignored if the phrase is for an unverified moderator %>
+              <%= ob.polyT(`verifiedMod.${type}.body`, { providerName: `<b>${ob.data.name}</b>`, not, link }) %>
+            </div>
           <% } %>
           <% if (ob.verified) { %>
             <% if (ob.genericText) { %>
               <% const genericName = `<b>${ob.data.name}</b>`; %>
-              <div><%= ob.polyT('verifiedMod.genericDescription', { name: genericName }) %></div>
+              <div>
+                <%= ob.polyT('verifiedMod.genericDescription', { name: genericName, link }) %>
+              </div>
             <% } else { %>
               <div class="clamp3"><%= ob.data.description %></div>
               <% if (ob.type && ob.type.name && ob.type.length > 1) { %>
@@ -52,7 +58,6 @@
                 <div class="clamp3"><%= ob.type.description %></div>
               <% } %>
             <% } %>
-            <a class="txU" href="<%= ob.data.link %>"><%= ob.polyT('verifiedMod.link') %></a>
           <% } %>
         </div>
       </div>
