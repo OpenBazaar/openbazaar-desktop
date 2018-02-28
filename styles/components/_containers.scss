@@ -58,7 +58,7 @@
   // - override with your own positioning values (top, right, etc...)
   display: block;
   position: absolute;
-  width: 245px;
+  width: $confirmBoxWidth;
   z-index: 1;
   padding: $pad;
   border-style: solid;
@@ -304,6 +304,16 @@
     border-right-width: 1px;
     border-right-style: solid;
   }
+
+  &::after {
+    /* this fills the gap between the parent and the tooltip so it doesn't close if the mouse
+       moves down from the parent element. */
+    content: '';
+    position: absolute;
+    background-color: transparent;
+    width: $confirmBoxWidth + $pad + $pad;
+    height: 25px;
+  }
 }
 
 .arrowBoxTop {
@@ -315,6 +325,10 @@
     transform: translate(-50%, -50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
   }
+
+  &::after{
+    top: -25px;
+  }
 }
 
 .arrowBoxBottom {
@@ -325,6 +339,10 @@
     left: 50%;
     transform: translate(calc(-25% - 6px), 50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
+  }
+
+  &::after {
+    left: 0;
   }
 }
 
