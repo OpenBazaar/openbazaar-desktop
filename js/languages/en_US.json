@@ -356,7 +356,7 @@
     "verified": {
       "label": "Verified",
       "title": "Verified Moderator",
-      "body": "This moderator has been verified by %{providerName} as a trusted moderator."
+      "body": "This moderator has been verified by %{providerName}."
     },
     "unverified": {
       "label": "Unverified",
@@ -368,8 +368,8 @@
     "link": "Learn More",
     "type": "Type: ",
     "typeCombined": "%{type}%{name}",
-    "genericDescription": "You can purchase this listing with a trusted moderator, verified by %{name}.",
-    "listingDescription": "You can purchase this listing with a trusted moderator, verified by %{name}. %{link}"
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}.",
+    "listingDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "View",
@@ -1506,7 +1506,7 @@
     },
     "contractMenuItem": {
       "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
-      "tipBuyerContractHasError": "The buyer's contract has validation errors.",      
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",
       "tipVendorContractHasError": "The vendor's contract has validation errors.",
       "tipBuyerContractNotArrived": "The buyer's contract has validation errors.",
       "tipVendorContractHasNotArrived": "The vendor's contract has validation errors."
@@ -1669,7 +1669,7 @@
       "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
       "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
       "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
-      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",      
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Comment",
       "commentPlaceholder": "Explain your decision...",
       "btnCancel": "Cancel",
