@@ -6,7 +6,7 @@ import Mod from '../models/VerifiedMod';
 export default class extends Collection {
   constructor(...args) {
     super(...args);
-    this.data = {};
+    this._data = {};
   }
 
   model(attrs, options) {
@@ -23,10 +23,6 @@ export default class extends Collection {
 
   get data() {
     return this._data;
-  }
-
-  set data(data) {
-    this._data = data;
   }
 
   /**
@@ -71,8 +67,8 @@ export default class extends Collection {
       ]
     }
      */
-    this.data = response.data || {};
-    this.data.url = this.url(); // backup for templates if the link is missing
+    this._data = response.data || {};
+    this._data.url = this.url(); // backup for templates if the link is missing
     const parsedResponse = response.moderators ? response.moderators : [];
     /*
        Embed the type in each moderator so it's easier to use elsewhere. It should look like:
