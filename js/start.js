@@ -312,76 +312,62 @@ function fetchVerifiedMods() {
 
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
-let ownFollowingFailed;
 let exchangeRatesFetch;
 let walletBalanceFetch;
-let walletBalanceFetchFailed;
 let searchProvidersFetch;
-let searchProvidersFetchFailed;
 let verifiedModsFetch;
-let verifiedModsFetchFailed;
 
 function fetchStartupData() {
-  ownFollowingFetch = !ownFollowingFetch || ownFollowingFailed ?
+  ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch.state() === 'rejected' ?
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = exchangeRatesFetch || fetchExchangeRates();
-  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetchFailed ?
+  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch.state() === 'rejected' ?
     app.walletBalance.fetch() : walletBalanceFetch;
-  searchProvidersFetch = !searchProvidersFetch || searchProvidersFetchFailed ?
+  searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch.state() === 'rejected' ?
     app.searchProviders.fetch() : searchProvidersFetch;
-  verifiedModsFetch = !verifiedModsFetch || verifiedModsFetchFailed ?
+  verifiedModsFetch = !verifiedModsFetch || verifiedModsFetch.state() === 'rejected' ?
     app.verifiedMods.fetch() : verifiedModsFetch;
 
   $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch,
     verifiedModsFetch)
-    .progress((...args) => {
-      const state = args[1];
-
-      if (state !== 'success') {
-        const jqXhr = args[0];
-
-        if (jqXhr === ownFollowingFetch) {
-          ownFollowingFailed = true;
-        } else if (jqXhr === walletBalanceFetch) {
-          walletBalanceFetchFailed = true;
-        } else if (jqXhr === searchProvidersFetch) {
-          searchProvidersFetchFailed = true;
-        } else if (jqXhr === verifiedModsFetch) {
-          verifiedModsFetchFailed = true;
-        }
-      }
-    })
     .done(() => {
       fetchStartupDataDeferred.resolve();
       setInterval(() => fetchVerifiedMods(), 360000);
     })
-    .fail((jqXhr) => {
+    .fail((...args) => {
       const curConn = getCurrentConnection();
 
-      // Check to see if the server is not connected. the search providers and verified moderators
-      // can return an undefined jqXhr if their external endpoints are down while the app itself is
-      // still functional.
-      if ((ownFollowingFailed || walletBalanceFetchFailed) &&
-        (!jqXhr || !curConn || curConn.status !== 'connected')) {
+      if (!curConn || curConn.status !== 'connected') {
         // the connection management modal should be up with relevant info
         console.error('The startup data fetches failed. Looks like the connection to the ' +
           'server was lost.');
         return;
       }
 
+      const ownFollowingFailArgs = args[0];
+      const exchangeRatesFailArgs = args[1];
+      const walletBalanceFailArgs = args[2];
+      const searchProvidersFailArgs = args[3];
 
-      if (ownFollowingFailed || walletBalanceFetchFailed || searchProvidersFetchFailed ||
-        verifiedModsFetchFailed) {
+      // Find any that failed aside from the exchangeRateFetch. We don't care if the
+      // exchange rate fetch failed, because the exchangeRateSyncer will display a
+      // status message about it and the app will gracefully handle not having exchange
+      // rates.
+      const failed = args.filter(failArgs => failArgs && failArgs !== exchangeRatesFailArgs);
+
+      if (failed.length) {
+        const firstFailedXhr = failed[0][0];
         let title = '';
-        let msg = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || '404';
+        let msg = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
+          firstFailedXhr.status || '';
         let btnText = app.polyglot.t('startUp.dialogs.btnManageConnections');
         let btnFrag = 'manageConnections';
 
-        if (ownFollowingFailed) {
+        if (ownFollowingFailArgs) {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
-        } else if (walletBalanceFetchFailed) {
+        } else if (walletBalanceFailArgs) {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        } else if (searchProvidersFetchFailed) {
+        } else if (searchProvidersFailArgs) {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
           btnText = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.btnClose');
           btnFrag = 'continue';
@@ -416,18 +402,15 @@ function fetchStartupData() {
           setTimeout(() => fetchStartupData(), 300);
         }).on('click-manageConnections', () =>
           app.connectionManagmentModal.open())
-          .on('click-continue', () => {
-            retryFetchStartupDataDialog.close();
-            fetchStartupDataDeferred.resolve();
-            // reload the verified moderators once an hour
-            setInterval(() => fetchVerifiedMods(), 360000);
-          })
+        .on('click-continue', () => {
+          retryFetchStartupDataDialog.close();
+          fetchStartupDataDeferred.resolve();
+          // reload the verified moderators once an hour
+          setInterval(() => fetchVerifiedMods(), 360000);
+        })
         .render()
         .open();
       } else {
-        // We don't care if the exchange rate fetch failed, because
-        // the exchangeRateSyncer will display a status message about it
-        // and the app will gracefully handle not having exchange rates.
         fetchStartupDataDeferred.resolve();
       }
     });
