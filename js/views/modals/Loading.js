@@ -22,7 +22,7 @@ export default class extends BaseModal {
   }
 
   open(contentView) {
-    // Since this modal is used as a single chared instance across the app, the contentView
+    // Since this modal is used as a single shared instance across the app, the contentView
     // will be cleared on each open so one user of the modal doesn't impose their contentView
     // on another.
     if (!contentView) {
