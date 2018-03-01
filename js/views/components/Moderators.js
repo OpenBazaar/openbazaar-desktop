@@ -119,7 +119,7 @@ export default class extends baseVw {
     // create a moderator status view. It should retain it's state between renders of this view.
     this.moderatorsStatus = this.createChild(ModeratorsStatus, {
       initialState: {
-        mode: opts.method === 'POST' ? 'loading' : 'loaded',
+        mode: opts.method === 'GET' ? 'loaded' : '',
         showLoadBtn: opts.showLoadBtn,
         showSpinner: opts.showSpinner,
       },

@@ -1374,7 +1374,7 @@
     }
   },
   "moderators": {
-    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators.",
+    "moderatorsLoading": "Loading moderators…",
     "moderatorsLoaded": "%{total} moderators loaded.",
     "noValidModerators": "No Valid Moderators Available.",
     "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
