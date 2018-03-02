@@ -13,10 +13,6 @@ export default class extends baseVw {
     const opts = {
       className: 'settingsStore',
       ...options,
-      initialState: {
-        showVerifiedOnly: true,
-      },
-      ...(options.initialState || {}),
     };
     super(opts);
     this.options = opts;
@@ -42,6 +38,7 @@ export default class extends baseVw {
       (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
 
     this.currentMods = this.settings.get('storeModerators');
+    this._showVerifiedOnly = true;
 
     this.modsSelected = new Moderators({
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
@@ -66,7 +63,7 @@ export default class extends baseVw {
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
       excludeIDs: this.currentMods,
-      showVerifiedOnly: this.getState().showVerifiedOnly,
+      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
     });
@@ -144,7 +141,7 @@ export default class extends baseVw {
   }
 
   onClickVerifiedOnly(e) {
-    this.setState({ showVerifiedOnly: $(e.target).prop('checked') });
+    this.showVerifiedOnly = $(e.target).prop('checked');
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
@@ -226,8 +223,8 @@ export default class extends baseVw {
 
           // If any of the mods moved to the available collect are unverified, show them
           if (app.verifiedMods.matched(unSel).length !== unSel.length) {
-            // Don't render when changing the state, the render is in the always handler
-            this.setState({ showVerifiedOnly: false }, { renderOnChange: false });
+            // Don't render, the render is in the always handler
+            this._showVerifiedOnly = false;
           }
         })
         .fail((...args) => {
@@ -260,13 +257,18 @@ export default class extends baseVw {
     }
   }
 
+  set showVerifiedOnly(bool) {
+    this._showVerifiedOnly = bool;
+    this.modsAvailable.setState({ showVerifiedOnly: bool });
+  }
+
   render() {
     super.render();
 
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
         modsAvailable: this.modsAvailable.allIDs,
-        ...this.getState(),
+        showVerifiedOnly: this._showVerifiedOnly,
         errors: {
           ...(this.profile.validationError || {}),
           ...(this.settings.validationError || {}),
@@ -287,7 +289,7 @@ export default class extends baseVw {
         .toggleClass('hide', !this.modsByID.allIDs.length);
 
       this.modsAvailable.delegateEvents();
-      this.modsAvailable.setState({ showVerifiedOnly: this.getState().showVerifiedOnly });
+      this.modsAvailable.setState({ showVerifiedOnly: this._showVerifiedOnly });
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);
