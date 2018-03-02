@@ -14,7 +14,11 @@
           </a>
         </div>
       </div>
+        <a  href="#<%= ob.peerID ? `${ob.peerID}` : ''%>">
+             <div class="brandLogo navBtn" style="background-image: url('../imgs/phrIcon128.png');"></div>
+        </a>
       <div>
+
         <div class="flexVCent iconPad">
           <a class="iconBtn js-navBack toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.back') %>">
             <i class="ion-chevron-left"></i>

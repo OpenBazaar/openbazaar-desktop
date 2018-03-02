@@ -1,6 +1,7 @@
 // colors
 $primary: hsl(0,0%,100%);
 $secondary: adjust-color($primary, $lightness: -6%);
+$colorbase: #35a059;
 
 $text: hsl(0,0,14.8);
 $text2: adjust-color($text, $lightness: +32%);
@@ -8,22 +9,30 @@ $text3: adjust-color($text, $lightness: +59%);
 $text4: adjust-color($text, $lightness: +65%);
 $textOnEmph: rgb(255, 255, 255);
 $textOnSelection: rgb(255, 255, 255);
+$scroll: rgb(60, 51, 51);
+$navIcon: #5ece8d;
+$navIconHover: #00ff6b;
+$navBg: #1c2228;
+$navText: #f9f9f9;
+$searchBg: rgba(59, 67, 74, 0.74);
 
-$border: adjust-color($primary, $lightness: -14%);
+$border: #1c2228;
 $border2: adjust-color($primary, $lightness: 100%);
 $border3: adjust-color($text, $lightness: 35%);
 $border4: adjust-color($text, $lightness: 70%);
 $border5: adjust-color($text, $lightness: 90%);
+$borderTooltip: rgba(10, 10, 10, 0.28);
 $focusedBorder: rgb(0, 0, 0);
-$emphasis1: hsl(116.5, 66.3, 41);
+$emphasis1: $colorbase;
 $emphasis1Disabled: adjust_color($emphasis1, $saturation: -50%, $lightness: +40%);
 $emphasis2: adjust-color($emphasis1, $lightness: +20%);
 $emphasisGradient: linear-gradient(180deg, $emphasis2, $emphasis1);
+
 $selection: #5897fb;
 $error: red;
 $alert: #fecf33;
 
-$overlay: adjust-color($secondary, $alpha: -0.04);
+$overlay: rgba(23, 22, 22, 0.96);
 
 // typography
 $baseFontSize: 10px;

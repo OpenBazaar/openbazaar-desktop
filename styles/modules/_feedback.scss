@@ -1,6 +1,8 @@
 #doorbell-button {
   right: $scrollbar + $pad;
   @include chatOpeningTransition(right);
+    
+    background:#35a059;
 
   .chatOpen & {
     right: $scrollbar + $pad + $chatOpen;

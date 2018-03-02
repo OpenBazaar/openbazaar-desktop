@@ -1,6 +1,14 @@
+#appFrame #pageNavContainer .clrBr {background: $navBg;}
+
+.brandLogo {
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
 .pageNav {
   -webkit-app-region: drag;
   position: relative;
+  color: $navText;
 
   .navBar {
     border-bottom-width: 1px;
@@ -68,6 +76,7 @@
       font-size: $tx5;
       line-height: 1em; //allow dragging on area above and below the text input in the address bar
       text-indent: 18px;
+      background-color: $searchBg;
     }
 
     .bookmarkPage {
@@ -79,7 +88,12 @@
       border-width: 2px;
       border-style: solid;
       margin: 5px 0 5px 5px;
+      border-color: $navIcon;
     }
+      
+      #AvatarBtn:hover{
+          border-color:$navIconHover;
+      }
 
     #testnetFlag {
       font-size: $tx6;
@@ -331,6 +345,7 @@
 
         & > * {
           flex-shrink: 0;
+          color: $navText;
           box-sizing: border-box;
           padding-right: $padSm;
           word-break: break-all;
@@ -376,6 +391,8 @@
 
       .listItem {
         display: flex;
+        color: $navText;
+
       }
 
       .serverList {
@@ -383,6 +400,8 @@
           & > span {
             padding-left: 15px;
             position: relative;
+            color: $navText;
+
 
             .connectedIcon {
               position: absolute;

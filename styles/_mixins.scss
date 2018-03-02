@@ -123,7 +123,7 @@
   .iconWallet {
     path,
     rect {
-      fill: $col1;
+      fill: #5ece8d;
     }
   }
 
@@ -147,7 +147,7 @@
 
 @mixin borderColor($col1, $col2: $border2) {
   /* generates the border color rules */
-  border-color: $col1;
+  border-color: rgba(86, 71, 71, 0.38);
 
   &:hover,
   &:focus {

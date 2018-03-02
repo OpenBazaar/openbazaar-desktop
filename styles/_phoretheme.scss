@@ -146,10 +146,6 @@ input[type=range][class~="clrS"] {
   @include borderColor($text, $text2);
 }
 
-.iconBtn {
-    color: $navIcon !important;
-}
-
 .clrBrDec1 {
   // decorative border with a shadow to create a faint outline
   border-color: $textOnEmph;
@@ -206,7 +202,7 @@ input[type=range][class~="clrS"] {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $scroll;
+  background: $text3;
 
   &:hover {
     background: $text4;
@@ -336,14 +332,14 @@ input[type=range][class~="clrS"] {
 
 .toolTip {
   &:before {
-    background-color: $colorbase;
+    background-color: $primary;
     border-color: $border;
     color: $text;
     box-shadow: 0 1px 2px rgba(0,0,0,0.4);
   }
 
   &:after {
-    background-color: $colorbase;
+    background-color: $primary;
     border-color: $border;
   }
 }
