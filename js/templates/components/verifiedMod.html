@@ -1,10 +1,11 @@
 <%
    const badgeFrag = `<div class="badge" style="background-image: url(${ob.type.badge || ''}), url('../imgs/verifiedModeratorBadgeDefault.png');" tabindex="0"></div>`;
-   const bodyPhrase = ob.inOrder ? 'bodyOrder' : 'body';
+   const warnFrag = `<div class="warning"><i class="ion-alert-circled clrTAlert"></i></div>`;
    const arrowClass = ob.arrowClass || 'arrowBoxCenteredTop';
    const color = ob.verified ? 'clrBrAlert2 clrBAlert2Grad' : 'clrP clrBr';
    const style = `${arrowClass} ${color}`;
    const type = ob.verified ? 'verified' : 'unverified';
+   const bodyPhrase = ob.inOrder ? 'bodyOrder' : 'body';
    const shortText = ob.polyT(`verifiedMod.${type}.label`);
    const longText = ob.polyT(`verifiedMod.${type}.title`);
    const not = `<b>${ob.polyT('verifiedMod.unverified.not')}</b>`;
