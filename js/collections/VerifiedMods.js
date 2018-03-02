@@ -69,7 +69,7 @@ export default class extends Collection {
      */
     this._data = response.data || {};
     this._data.url = this.url(); // backup for templates if the link is missing
-    const parsedResponse = response.moderators ? response.moderators : [];
+    const parsedMods = response.moderators ? response.moderators : [];
     /*
        Embed the type in each moderator so it's easier to use elsewhere. It should look like:
        peerID: string,
@@ -79,9 +79,11 @@ export default class extends Collection {
          badge: url string,
          }
      */
-    parsedResponse.forEach((mod) => {
+    const parsedResponse = [];
+    parsedMods.forEach((mod) => {
       if (response.types && response.types.length && mod.type) {
-        mod.type = _.findWhere(response.types, { name: mod.type }) || {};
+        mod.type = _.findWhere(response.types, { name: mod.type });
+        if (mod.type) parsedResponse.push(mod);
       }
     });
     return parsedResponse;
