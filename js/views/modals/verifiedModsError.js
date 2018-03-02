@@ -12,6 +12,7 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
+    this._reason = opts.reason;
   }
 
   set reason(r) {
@@ -46,6 +47,7 @@ export default class extends BaseModal {
   render() {
     loadTemplate('modals/verifiedModsError.html', (t) => {
       this.$el.html(t({
+        reason: this._reason || '404',
         ...this.options,
       }));
       super.render();
