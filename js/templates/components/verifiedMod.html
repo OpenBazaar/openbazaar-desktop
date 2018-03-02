@@ -1,6 +1,6 @@
 <%
    const badgeFrag = `<div class="badge" style="background-image: url(${ob.type.badge || ''}), url('../imgs/verifiedModeratorBadgeDefault.png');" tabindex="0"></div>`;
-   const warnFrag = `<div class="warning">${ob.parseEmojis('⚠')}</div>`;
+   const bodyPhrase = ob.inOrder ? 'bodyOrder' : 'body';
    const arrowClass = ob.arrowClass || 'arrowBoxCenteredTop';
    const color = ob.verified ? 'clrBrAlert2 clrBAlert2Grad' : 'clrP clrBr';
    const style = `${arrowClass} ${color}`;
@@ -39,7 +39,7 @@
           <% if (!ob.genericText) { %>
             <div>
               <% // The link will be ignored if the phrase is for an unverified moderator %>
-              <%= ob.polyT(`verifiedMod.${type}.body`, { providerName: `<b>${ob.data.name}</b>`, not, link }) %>
+              <%= ob.polyT(`verifiedMod.${type}.${bodyPhrase}`, { providerName: `<b>${ob.data.name}</b>`, not, link }) %>
             </div>
           <% } %>
           <% if (ob.verified) { %>

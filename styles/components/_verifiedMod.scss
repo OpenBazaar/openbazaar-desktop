@@ -13,6 +13,12 @@
     top: -2px; // visually center relative to text
   }
 
+  .warning {
+    float: left;
+    margin-right: 4px;
+    font-size: 1.7rem;
+  }
+
   .tooltipWrapper .iconWrapper {
     display: inline;
     position: relative;

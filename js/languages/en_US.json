@@ -357,13 +357,14 @@
     "verified": {
       "label": "Verified",
       "title": "Verified Moderator",
-      "body": "This moderator has been verified by %{providerName}. %{link}"
+      "body": "This moderator is verified by %{providerName}. %{link}"
     },
     "unverified": {
       "label": "Unverified",
       "title": "Unverified Moderator",
       "not": "NOT",
-      "body": "This moderator has %{not} been verified. Proceed with caution or choose a verified moderator."
+      "body": "This moderator is %{not} verified by %{providerName}. Proceed with caution or choose a verified moderator.",
+      "bodyOrder": "This moderator is %{not} verified by %{providerName}."
     },
 
     "link": "Learn More",

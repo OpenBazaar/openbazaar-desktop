@@ -51,6 +51,7 @@ export default class extends BaseVw {
         model: verifiedMod,
         data: app.verifiedMods.data,
         showShortText: true,
+        inOrder: true,
       });
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
