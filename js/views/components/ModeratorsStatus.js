@@ -42,7 +42,7 @@ export default class extends BaseVw {
       this.$el.html(t({
         ...this.getState(),
       }));
-      if (this.spinnerTimeout) clearTimeout(this.spinnerTimeout);
+      clearTimeout(this.spinnerTimeout);
       if (this._state.showSpinner && this._state.spinnerTimer) {
         // hide the spinner after a delay if the parent doesn't hide it
         this.spinnerTimeout = setTimeout(() => {

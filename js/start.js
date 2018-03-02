@@ -278,27 +278,35 @@ function onboard() {
   return onboardDeferred.promise();
 }
 
-const verifiedModsErrorDialog = new VerifiedModsError();
+let verifiedModsErrorDialog;
 
 function fetchVerifiedMods() {
   return app.verifiedMods.fetch()
     .done(() => {
-      verifiedModsErrorDialog.close();
+      if (verifiedModsErrorDialog) verifiedModsErrorDialog.close();
     })
     .fail((jqXhr) => {
-      verifiedModsErrorDialog.reason = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason ||
-        '404';
-      verifiedModsErrorDialog.toggleRetryProcessing(false);
-      verifiedModsErrorDialog.render().open();
-      // the DOM isn't ready when the view is instantiated, so events must be delegated
-      verifiedModsErrorDialog.delegateEvents();
+      const state = {
+        fetching: false,
+        reason: jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason || jqXhr.status,
+      };
+      if (verifiedModsErrorDialog) {
+        verifiedModsErrorDialog
+          .setState(state)
+          .open();
+      } else {
+        verifiedModsErrorDialog = new VerifiedModsError({ initialState: state });
+        verifiedModsErrorDialog.on('modal-will-remove', () => {
+          verifiedModsErrorDialog = null;
+        });
+        verifiedModsErrorDialog.on('retry', () => {
+          verifiedModsErrorDialog.setState({ fetching: true });
+          fetchVerifiedMods();
+        });
+        verifiedModsErrorDialog.render().open();
+      }
     });
 }
-verifiedModsErrorDialog.on('retry', () => {
-  fetchVerifiedMods();
-  verifiedModsErrorDialog.toggleRetryProcessing(true);
-});
-
 
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
@@ -306,8 +314,6 @@ let exchangeRatesFetch;
 let walletBalanceFetch;
 let searchProvidersFetch;
 let verifiedModsFetch;
-const verifiedModsInterval = 3600000;
-const verifiedModsStartUpDialog = new VerifiedModsError();
 
 function fetchStartupData() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch.state() === 'rejected' ?
@@ -325,8 +331,6 @@ function fetchStartupData() {
     verifiedModsFetch)
     .done(() => {
       fetchStartupDataDeferred.resolve();
-      verifiedModsStartUpDialog.close();
-      setInterval(() => fetchVerifiedMods(), verifiedModsInterval);
     })
     .fail((...args) => {
       const curConn = getCurrentConnection();
@@ -338,12 +342,10 @@ function fetchStartupData() {
         return;
       }
 
-      // If one call fails on a retry, the non-failed calls still have arguments, and need to be
-      // checked for success. The exchangeRates is discarded, so it doesn't need to be checked.
-      const ownFollowingFailArgs = args[0][1] !== 'success' ? args[4] : '';
+      const ownFollowingFailArgs = args[0];
       const exchangeRatesFailArgs = args[1];
-      const walletBalanceFailArgs = args[2][1] !== 'success' ? args[4] : '';
-      const verifiedModsFailArgs = args[4][1] !== 'success' ? args[4] : '';
+      const walletBalanceFailArgs = args[2];
+      const searchProvidersFailArgs = args[3];
 
       // Find any that failed aside from the exchangeRateFetch. We don't care if the
       // exchange rate fetch failed, because the exchangeRateSyncer will display a
@@ -354,7 +356,7 @@ function fetchStartupData() {
       if (failed.length) {
         const firstFailedXhr = failed[0][0];
         let title = '';
-        const message = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
+        let msg = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
           firstFailedXhr.status || '';
         let btnText = app.polyglot.t('startUp.dialogs.btnManageConnections');
         let btnFrag = 'manageConnections';
@@ -363,59 +365,47 @@ function fetchStartupData() {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
         } else if (walletBalanceFailArgs) {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        } else {
+        } else if (searchProvidersFailArgs) {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
           btnText = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.btnClose');
           btnFrag = 'continue';
-        }
-
-        if (verifiedModsFailArgs) {
-          verifiedModsStartUpDialog.reason = message || '404';
-          verifiedModsStartUpDialog.render().open(); // open or bring to top if already open
-          verifiedModsStartUpDialog.on('retry', () => {
-            verifiedModsStartUpDialog.toggleRetryProcessing(true);
-            // delay so spinner is shown at least briefly before failing
-            setTimeout(() => fetchStartupData(), 300);
-          });
-          verifiedModsStartUpDialog.on('continue', () => {
-            fetchStartupDataDeferred.resolve();
-            // reload the verified moderators once an hour
-            setInterval(() => fetchVerifiedMods(), verifiedModsInterval);
-          });
         } else {
-          const retryFetchStartupDataDialog = new Dialog({
-            title,
-            message,
-            buttons: [
-              {
-                text: app.polyglot.t('startUp.dialogs.btnRetry'),
-                fragment: 'retry',
-              },
-              {
-                text: btnText,
-                fragment: btnFrag,
-              },
-            ],
-            dismissOnOverlayClick: false,
-            dismissOnEscPress: false,
-            showCloseButton: false,
-          }).on('click-retry', () => {
-            retryFetchStartupDataDialog.close();
-
-            // slight of hand to ensure the loading modal has a chance to at
-            // least briefly show before another potential failure
-            setTimeout(() => fetchStartupData(), 300);
-          }).on('click-manageConnections', () =>
-            app.connectionManagmentModal.open())
-            .on('click-continue', () => {
-              retryFetchStartupDataDialog.close();
-              fetchStartupDataDeferred.resolve();
-              // reload the verified moderators once an hour
-              setInterval(() => fetchVerifiedMods(), verifiedModsInterval);
-            })
-            .render()
-            .open();
+          title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
+          msg = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.msg', { reason: msg });
+          btnText = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.btnClose');
+          btnFrag = 'continue';
         }
+
+        const retryFetchStartupDataDialog = new Dialog({
+          title,
+          message: msg,
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: btnText,
+              fragment: btnFrag,
+            },
+          ],
+          dismissOnOverlayClick: false,
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }).on('click-retry', () => {
+          retryFetchStartupDataDialog.close();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => fetchStartupData(), 300);
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
+        .on('click-continue', () => {
+          retryFetchStartupDataDialog.close();
+          fetchStartupDataDeferred.resolve();
+        })
+        .render()
+        .open();
       } else {
         fetchStartupDataDeferred.resolve();
       }
@@ -567,6 +557,7 @@ function start() {
 
     app.walletBalance = new WalletBalance();
     app.searchProviders = new SearchProvidersCol();
+    setInterval(() => fetchVerifiedMods(), 1000 * 60 * 60);
 
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {

@@ -5,18 +5,16 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const opts = {
       removeOnClose: true,
-      showCloseButton: true,
-      dismissOnEscPress: true,
       ...options,
+      initialState: {
+        fetching: false,
+        reason: '',
+        ...(options.initialState || {}),
+      },
     };
 
     super(opts);
     this.options = opts;
-    this._reason = opts.reason;
-  }
-
-  set reason(r) {
-    this._reason = r;
   }
 
   className() {
@@ -40,15 +38,10 @@ export default class extends BaseModal {
     this.close();
   }
 
-  toggleRetryProcessing(bool) {
-    this.getCachedEl('.js-retry').toggleClass('processing', bool);
-  }
-
   render() {
     loadTemplate('modals/verifiedModsError.html', (t) => {
       this.$el.html(t({
-        reason: this._reason || '404',
-        ...this.options,
+        ...this.getState(),
       }));
       super.render();
     });
