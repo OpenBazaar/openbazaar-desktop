@@ -185,6 +185,7 @@
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
       "orderComplete": "%{buyerName} has left feedback on their order.",
+      "processingError": "%{vendorName} was unable to process your order due to an error.",
       "disputeOpen": "%{disputerName} has opened a dispute with you.",
       "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
@@ -1421,10 +1422,11 @@
       "ready": "Ready To Process",
       "fulfilled": "Fulfilled",
       "refunded": "Refunded",
+      "disputes": "Disputes",
       "disputeOpen": "Dispute Open",
-      "disputePending": "Dispute Pending",
       "disputeClosed": "Dispute Closed",
-      "completed": "Completed"
+      "completed": "Completed",
+      "error": "Errors"
     },
     "sort": {
       "label": "Sort By",
@@ -1460,7 +1462,8 @@
         "DISPUTED": "Disputed",
         "DECIDED": "Decided",
         "RESOLVED": "Resolved",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Payment Finalized",
+        "PROCESSING_ERROR": "Error"
       },
       "btnReject": "Reject",
       "btnAccept": "Accept",
@@ -1491,17 +1494,14 @@
     },
     "contractTab": {
       "heading": "Contract (JSON)",
-      "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
-      "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
-      "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
-      "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
-      "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
       "buyerContractHeading": "Buyer Contract:",
       "vendorContractHeading": "Vendor Contract:",
       "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
       "bothContractsValid": "Both the buyer's and vendor's contracts have been verified as authentic.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
       "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
       "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
       "contractHeadingVendor": "Vendor's contract:",
       "contractHeadingBuyer": "Buyer's contract:"
     },
@@ -1509,8 +1509,8 @@
       "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
       "tipBuyerContractHasError": "The buyer's contract has validation errors.",
       "tipVendorContractHasError": "The vendor's contract has validation errors.",
-      "tipBuyerContractNotArrived": "The buyer's contract has validation errors.",
-      "tipVendorContractHasNotArrived": "The vendor's contract has validation errors."
+      "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
+      "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
@@ -1645,6 +1645,18 @@
         "addressNotes": "Delivery Notes",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "SKU"
+      },
+      "processingError": {
+        "cancelLink": "cancel",
+        "disputeLink": "open a dispute",
+        "procErrBuyerNoMsg": "The vendor was unable to process the order.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayCancel": "You may cancel the order to retrieve your payment.",
+        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
+        "procErrVendorNoMsg": "There was an error processing the order.",
+        "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {
@@ -1669,6 +1681,7 @@
       "vendorAmountLabel": "Vendor Amount",
       "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
       "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
       "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
       "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Comment",

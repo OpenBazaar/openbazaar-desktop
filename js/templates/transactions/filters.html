@@ -26,7 +26,8 @@
 %>
 
 <%
-  const rows = ob.splitIntoRows(ob.filters, ob.maxPerRow || 4);
+  const maxPerRow = ob.maxPerRow || 4;
+  const rows = ob.splitIntoRows(ob.filters, maxPerRow || 4);
 %>
 
 <div class="filters rowHg <%= ob.className %>">
@@ -46,8 +47,15 @@
         <input type="checkbox" id="<%= filter.id %>" <% if (filter.checked) print('checked') %> data-state="<%= JSON.stringify(filter.targetState)%>" <%= attrs %>>
         <label class="tx5b" for="<%= filter.id %>"><%= filter.text %></label>
       </div>
-    </div>    
-    <% }) %>
+    </div>
+    <%
+      });
+
+      // If necessary, add in spacers.
+      for(let i = 0; i < (maxPerRow - row.length); i++) {
+    %>
+      <div class="col3"></div>
+    <% } %>
   </div>
   <% }) %>
 </div>

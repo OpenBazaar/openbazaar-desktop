@@ -148,8 +148,6 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         resolvingDispute: resolvingDispute(this.model.id),
-        hasBuyerContractArrived: this.case.get('buyerContract'),
-        hasVendorContractArrived: this.case.get('vendorContract'),
       };
 
       if (this.buyerProfile) {
@@ -165,6 +163,7 @@ export default class extends BaseVw {
       this.$el.html(t(templateData));
       this.$el.toggleClass('vendorContractUnavailable', !this.case.get('vendorContract'));
       this.$el.toggleClass('buyerContractUnavailable', !this.case.get('buyerContract'));
+      this.$el.toggleClass('vendorProcessingError', this.case.vendorProcessingError);
       this.rendered = true;
     });
 

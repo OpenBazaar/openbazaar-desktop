@@ -38,6 +38,16 @@ export default class extends BaseModel {
     };
   }
 
+  /**
+   * Returns a boolean indicating whether the vendor had an error when processing
+   * the order. This is different from just checking for the PROCESSING_ERROR state,
+   * in that it will return true even after the order moves on from that state.
+   */
+  get vendorProcessingError() {
+    const contract = this.get('contract');
+    return contract && Array.isArray(contract.get('errors'));
+  }
+
   parse(response = {}) {
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
@@ -56,22 +66,6 @@ export default class extends BaseModel {
           response.contract.disputeResolution.payout.vendorOutput || {};
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
-
-        // Temporary to account for server bug:
-        // https://github.com/OpenBazaar/openbazaar-go/issues/548
-        // Sometimes the payment amounts are coming back as enormously inflated strings.
-        // For now, we'll just make them dummy values.
-        if (typeof response.contract.disputeResolution.payout.buyerOutput.amount === 'string') {
-          response.contract.disputeResolution.payout.buyerOutput.amount = 25000;
-        }
-
-        if (typeof response.contract.disputeResolution.payout.vendorOutput.amount === 'string') {
-          response.contract.disputeResolution.payout.vendorOutput.amount = 12000;
-        }
-
-        if (typeof response.contract.disputeResolution.payout.moderatorOutput.amount === 'string') {
-          response.contract.disputeResolution.payout.moderatorOutput.amount = 6000;
-        }
 
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(
