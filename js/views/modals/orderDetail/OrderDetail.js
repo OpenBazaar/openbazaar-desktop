@@ -204,6 +204,8 @@ export default class extends BaseModal {
       // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
       // accepts, the buyer will get this and vice versa).
       'disputeAccepted',
+      // Socket received by buyer when the vendor has an error processing an offline order.
+      'processingError',
     ];
 
     if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {
@@ -486,6 +488,7 @@ export default class extends BaseModal {
     const model = new ResolveDisputeMd(modelAttrs, {
       buyerContractArrived: () => this.model.get('buyerContract'),
       vendorContractArrived: () => this.model.get('vendorContract'),
+      vendorProcessingError: () => this.model.get('processingError'),
     });
 
     const view = this.createChild(ResolveDispute, {
@@ -526,8 +529,12 @@ export default class extends BaseModal {
     let showDisputeOrderButton = false;
 
     if (this.buyerId === app.profile.id) {
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // todo: when escrow timeout code is ready, include this in the timeoutInfoView
+      // also ensure order is funded if processing error
       showDisputeOrderButton = this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].indexOf(orderState) > -1;
+        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED',
+          'PROCESSING_ERROR'].indexOf(orderState) > -1;
     } else if (this.vendorId === app.profile.id) {
       showDisputeOrderButton = this.moderatorId &&
         ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
@@ -557,6 +564,7 @@ export default class extends BaseModal {
         const otherContract = this.model.get('buyerOpened') ?
           this.model.get('vendorContract') : this.model.get('buyerContract');
         const type = this.model.get('buyerOpened') ? 'Buyer' : 'Vendor';
+        const otherType = this.model.get('buyerOpened') ? 'Vendor' : 'Buyer';
 
         if (!isContractValid) {
           tip = app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`);
@@ -564,7 +572,7 @@ export default class extends BaseModal {
 
         if (!otherContract) {
           tip += `${tip ? ' ' : ''}` +
-            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasNotArrived`)}`;
+            `${app.polyglot.t(`orderDetail.contractMenuItem.tip${otherType}ContractNotArrived`)}`;
         } else if (!this.model.isContractValid(!this.model.get('buyerOpened'))) {
           tip += `${tip ? ' ' : ''}` +
             `${app.polyglot.t(`orderDetail.contractMenuItem.tip${type}ContractHasError`)}`;

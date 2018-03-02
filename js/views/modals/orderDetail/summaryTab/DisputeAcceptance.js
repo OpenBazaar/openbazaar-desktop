@@ -11,6 +11,7 @@ export default class extends BaseVw {
       closerName: '',
       closerAvatarHashes: {},
       buyerViewing: false,
+      vendorProcessingError: false,
       ...options.initialState || {},
     };
   }

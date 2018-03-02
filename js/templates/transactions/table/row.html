@@ -91,15 +91,17 @@
           <%= ob.spinner({ className: 'spinnerSm center' }) %>
         </span>
       <%          
-          } else {
+        } else {
       %>
         <a class="txU tx6 js-rejectOrder <% if (ob.acceptOrderInProgress) print('disabled') %>"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
-      <%  } %>
+      <% } %>
         <%= ob.processingButton({
           className: `js-acceptOrder btnAcceptOrder btn clrBAttGrad clrBrDec1 clrTOnEmph ${ob.acceptOrderInProgress ? 'processing' : ''} ${ob.rejectOrderInProgress ? 'disabled' : ''}`,
           btnText: ob.polyT('transactions.transactionsTable.btnAccept')
         }) %>
     <% } else if (!ob.moderated) {
+        // Only non-moderated purchase can be canceled. We are not allowing PROCESSING_ERROR orders to be canceled here because
+        // they need to be funded and we don't know if they are. If funded, they can be canceled on the Order Detail overlay.
         if (ob.cancelOrderInProgress) {
     %>
         <span class="posR">

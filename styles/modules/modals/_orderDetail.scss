@@ -459,7 +459,8 @@
     }
 
     .vendorContractUnarrivedMsg,
-    .buyerContractUnarrivedMsg {
+    .buyerContractUnarrivedMsg,
+    .vendorProcErrContractUnarrivedMsg {
       display: none;
     }
 
@@ -488,6 +489,18 @@
 
     &.buyerContractUnavailable {
       @include contractUnavailable(buyer);
-    }    
+    }
+
+    &.vendorProcessingError {
+      @include contractUnavailable(vendor);
+      
+      .vendorProcErrContractUnarrivedMsg {
+        display: block;
+      }
+
+      .vendorContractUnarrivedMsg {
+        display: none;
+      }
+    }
   }
 }
