@@ -162,6 +162,7 @@
       },
       "unableToGetVerifiedMods": {
         "title": "Unable to load verified moderators.",
+        "btnRetry": "Retry",
         "btnClose": "Continue",
         "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
