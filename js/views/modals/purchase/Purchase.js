@@ -214,13 +214,6 @@ export default class extends BaseModal {
   }
 
   togVerifiedModerators(bool) {
-    // if hiding unverified mods, deselect the selected mod if it is unverified and switch to
-    // direct payment
-    const selected = this.moderators.selectedIDs;
-    if (bool && selected.length && !app.verifiedMods.matched(selected).length) {
-      this.moderators.deselectMod(selected[0]);
-      this.order.moderated = false;
-    }
     this.moderators.togVerifiedShown(bool);
     this.setState({ showOnlyVerified: bool });
   }
@@ -231,7 +224,9 @@ export default class extends BaseModal {
 
   onCardSelect() {
     this.order.moderated = true;
-    this.render();
+    const selected = this.moderators.selectedIDs;
+    const unselected = selected.length && !app.verifiedMods.matched(selected).length;
+    this.setState({ unverifedSelected: unselected });
   }
 
   changeQuantityInput(e) {

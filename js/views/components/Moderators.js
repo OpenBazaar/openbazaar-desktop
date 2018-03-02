@@ -305,10 +305,10 @@ export default class extends baseVw {
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
       if (data.selected) {
-        this.trigger('cardSelect');
         this.noneSelected = false;
         // if only one moderator should be selected, deselect the other moderators
         if (this.options.singleSelect) this.deselectOthers(data.guid);
+        this.trigger('cardSelect');
       }
     });
     this.modCards.push(modCard);
