@@ -557,7 +557,6 @@ function start() {
 
     app.walletBalance = new WalletBalance();
     app.searchProviders = new SearchProvidersCol();
-    setInterval(() => fetchVerifiedMods(), 1000 * 60 * 60);
 
     onboardIfNeeded().done(() => {
       fetchStartupData().done(() => {
@@ -607,6 +606,8 @@ function start() {
           getChatContainer()
               .on('mouseenter', () => getBody().addClass('chatHover'))
               .on('mouseleave', () => getBody().removeClass('chatHover'));
+
+          setInterval(() => fetchVerifiedMods(), 1000 * 60 * 60);
 
           // have our walletBalance model update from the walletUpdate socket event
           const serverSocket = getSocket();
