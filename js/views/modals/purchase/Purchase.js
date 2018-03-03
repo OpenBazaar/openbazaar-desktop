@@ -205,6 +205,7 @@ export default class extends BaseModal {
 
     this.order.moderated = false;
     this.moderators.deselectOthers();
+    this.moderators.noneSelected = true;
     this.render();
   }
 
@@ -226,7 +227,8 @@ export default class extends BaseModal {
     this.order.moderated = true;
     const selected = this.moderators.selectedIDs;
     const unselected = selected.length && !app.verifiedMods.matched(selected).length;
-    this.setState({ unverifedSelected: unselected });
+    this.setState({ unverifedSelected: unselected }, { renderOnChange: false });
+    this.render(); // always render even if the state didn't change
   }
 
   changeQuantityInput(e) {
