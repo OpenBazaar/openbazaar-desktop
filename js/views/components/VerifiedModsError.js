@@ -1,5 +1,5 @@
 import loadTemplate from '../../utils/loadTemplate';
-import BaseModal from './BaseModal';
+import BaseModal from '../modals/BaseModal';
 
 export default class extends BaseModal {
   constructor(options = {}) {
