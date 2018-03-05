@@ -221,13 +221,13 @@ export function deparam(queryStr = '') {
 export function getBlockChainBaseUrl(isTestnet = false) {
   return isTestnet ?
     'https://testnet.blockexplorer.com/' :
-    'https://blockchain.info/';
+    'https://chainz.cryptoid.info/phr/';
 }
 
 export function getBlockChainTxUrl(txid, isTestnet) {
-  return `${getBlockChainBaseUrl(isTestnet)}tx/${txid}`;
+  return `${getBlockChainBaseUrl(isTestnet)}tx.dws?${txid}.htm`;
 }
 
 export function getBlockChainAddressUrl(address, isTestnet) {
-  return `${getBlockChainBaseUrl(isTestnet)}address/${address}`;
+  return `${getBlockChainBaseUrl(isTestnet)}address.dws?${address}.htm`;
 }
