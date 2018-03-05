@@ -194,7 +194,9 @@ function isOnboardingNeeded() {
   settingsFetch = !settingsFetch || settingsFailed ?
     app.settings.fetch() : settingsFetch;
 
-  $.whenAll(profileFetch, settingsFetch)
+  const fetches = [profileFetch, settingsFetch];
+
+  $.whenAll(fetches.slice())
     .progress((...args) => {
       const state = args[1];
 
@@ -221,8 +223,9 @@ function isOnboardingNeeded() {
     .done(() => {
       onboardingNeededDeferred.resolve(false);
     })
-    .fail((xhr, e) => {
-      const jqXhr = xhr && xhr.length ? xhr[0] : xhr || e;
+    .fail(() => {
+      const jqXhr = fetches.find(
+        fetch => fetch.state() === 'rejected');
 
       if (profileFailed || settingsFailed) {
         const retryOnboardingModelsDialog = new Dialog({
@@ -258,7 +261,6 @@ function isOnboardingNeeded() {
       }
     });
 
-  // onboardingNeededDeferred.resolve(true);
   return onboardingNeededDeferred.promise();
 }
 
@@ -327,12 +329,19 @@ function fetchStartupData() {
   verifiedModsFetch = !verifiedModsFetch || verifiedModsFetch.state() === 'rejected' ?
     app.verifiedMods.fetch() : verifiedModsFetch;
 
-  $.whenAll(ownFollowingFetch, exchangeRatesFetch, walletBalanceFetch, searchProvidersFetch,
-    verifiedModsFetch)
+  const fetches = [
+    ownFollowingFetch,
+    exchangeRatesFetch,
+    walletBalanceFetch,
+    searchProvidersFetch,
+    verifiedModsFetch,
+  ];
+
+  $.whenAll(fetches.slice())
     .done(() => {
       fetchStartupDataDeferred.resolve();
     })
-    .fail((...args) => {
+    .fail(() => {
       const curConn = getCurrentConnection();
 
       if (!curConn || curConn.status !== 'connected') {
@@ -342,30 +351,26 @@ function fetchStartupData() {
         return;
       }
 
-      const ownFollowingFailArgs = args[0];
-      const exchangeRatesFailArgs = args[1];
-      const walletBalanceFailArgs = args[2];
-      const searchProvidersFailArgs = args[3];
-
       // Find any that failed aside from the exchangeRateFetch. We don't care if the
       // exchange rate fetch failed, because the exchangeRateSyncer will display a
       // status message about it and the app will gracefully handle not having exchange
       // rates.
-      const failed = args.filter(failArgs => failArgs && failArgs !== exchangeRatesFailArgs);
+      const failed = fetches.filter(
+        xhr => xhr.state() === 'rejected' && xhr !== exchangeRatesFetch);
 
       if (failed.length) {
-        const firstFailedXhr = failed[0][0];
+        const firstFailedXhr = failed[0];
         let title = '';
         let msg = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
           firstFailedXhr.status || '';
         let btnText = app.polyglot.t('startUp.dialogs.btnManageConnections');
         let btnFrag = 'manageConnections';
 
-        if (ownFollowingFailArgs) {
+        if (ownFollowingFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
-        } else if (walletBalanceFailArgs) {
+        } else if (walletBalanceFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        } else if (searchProvidersFailArgs) {
+        } else if (searchProvidersFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
           btnText = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.btnClose');
           btnFrag = 'continue';
