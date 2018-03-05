@@ -1,6 +1,7 @@
 .moderatorsList {
   .moderatorsWrapper {
     display: table;
+    table-layout: fixed;
     width: 100%;
     min-height: 127px;
     border-width: 1px;
