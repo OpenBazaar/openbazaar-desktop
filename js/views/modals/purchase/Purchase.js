@@ -205,7 +205,6 @@ export default class extends BaseModal {
 
     this.order.moderated = false;
     this.moderators.deselectOthers();
-    this.moderators.noneSelected = true;
     this.render();
   }
 
@@ -226,8 +225,8 @@ export default class extends BaseModal {
   onCardSelect() {
     this.order.moderated = true;
     const selected = this.moderators.selectedIDs;
-    const unselected = selected.length && !app.verifiedMods.matched(selected).length;
-    this.setState({ unverifedSelected: unselected }, { renderOnChange: false });
+    const unverifedSelected = selected.length && !app.verifiedMods.matched(selected).length;
+    this.setState({ unverifedSelected }, { renderOnChange: false });
     this.render(); // always render even if the state didn't change
   }
 
