@@ -6,7 +6,7 @@ import baseVw from '../../baseVw';
 import { clipboard } from 'electron';
 import qr from 'qr-encode';
 
-const obDonationAddress = '3QxbMjed45NLXnkUg9yYHRgbKCeLyZa4La';
+const obDonationAddress = '3EN8kP3yW9MGvyiRMtGqKavQ9wYg4BspzR';
 const qrCodeDataURI = qr(`bitcoin:${obDonationAddress}`, { type: 6, size: 6, level: 'Q' });
 const donationCountFloor = 500;
 let hiderTimer;
