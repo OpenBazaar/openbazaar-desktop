@@ -74,7 +74,7 @@ export default class extends baseVw {
       'click .js-browseMods': 'fetchAvailableModerators',
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
-      'click #verifiedOnly': 'onClickVerifiedOnly',
+      'click .js-storeVerifiedOnly': 'onClickVerifiedOnly',
     };
   }
 

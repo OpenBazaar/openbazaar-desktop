@@ -74,8 +74,8 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
             <div class="flexVCentClearMarg">
               <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <% if (ob.showModerators) { %>
-                <input type="checkbox" id="verifiedOnly" <% if(ob.showOnlyVerified) print('checked') %>>
-                <label class="tx5b <% if (ob.unverifedSelected) print('disabled') %>" for="verifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
+                <input type="checkbox" id="purchaseVerifiedOnly" class="js-purchaseVerifiedOnly"<% if(ob.showOnlyVerified) print('checked') %>>
+                <label class="tx5b <% if (ob.unverifedSelected) print('disabled') %>" for="purchaseVerifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
               <% } %>
             </div>
             <% if (ob.showModerators && !ob.noValidModerators) { %>

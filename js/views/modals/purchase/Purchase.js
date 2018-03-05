@@ -160,7 +160,7 @@ export default class extends BaseModal {
       'keyup #couponCode': 'onKeyUpCouponCode',
       'blur #emailAddress': 'blurEmailAddress',
       'blur #memo': 'blurMemo',
-      'click #verifiedOnly': 'onClickVerifiedOnly',
+      'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
       ...super.events(),
     };
   }
