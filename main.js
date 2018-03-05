@@ -25,7 +25,7 @@ function isOSWin64() {
 
 const plat = process.platform === 'win32' ? `${isOSWin64() ? 'win64' : 'win32'}` : process.platform;
 
-const feedURL = `https://updates2.openbazaar.org:5001/update/${plat}/${version}`;
+const feedURL = `https://hazel-server-imflzbzzpa.now.sh/update/${plat}/${version}`;
 
 global.serverLog = '';
 
@@ -194,7 +194,7 @@ function createWindow() {
           if (updatesSupported) {
             checkForUpdates();
           } else {
-            shell.openExternal('https://www.openbazaar.org/download/');
+            shell.openExternal('https://github.com/phoreproject/openbazaar-desktop/releases');
           }
         },
       },
