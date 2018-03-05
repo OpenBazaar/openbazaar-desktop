@@ -88,8 +88,6 @@ if (handleStartupEvent()) {
 const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
 const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
   'openbazaard' : 'openbazaard.exe';
-const daemonFilename = process.platform === 'darwin' || process.platform === 'linux' ?
-  'phored' : 'phored.exe';
 const isBundledApp = fs.existsSync(serverPath + serverFilename);
 global.isBundledApp = isBundledApp;
 let localServer;
@@ -98,7 +96,6 @@ if (isBundledApp) {
   global.localServer = localServer = new LocalServer({
     serverPath,
     serverFilename,
-    daemonFilename,
     errorLogPath: `${__dirname}${path.sep}..${path.sep}..${path.sep}error.log`,
     // IMPORTANT: From the main process, only bind events to the localServer instance
     // unsing the functions in the mainProcLocalServerEvents module. The reasons for that

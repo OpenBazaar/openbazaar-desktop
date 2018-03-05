@@ -21,7 +21,6 @@ export default class LocalServer {
     _.extend(this, Events);
     this.serverPath = options.serverPath;
     this.serverFilename = options.serverFilename;
-    this.daemonFilename = options.daemonFilename;
     this.errorLogPath = options.errorLogPath;
     this._isRunning = false;
     this._isStopping = false;
@@ -69,8 +68,6 @@ export default class LocalServer {
 
     this._isRunning = true;
     let serverStartArgs = ['start',
-      '--runseparatewallet',
-      `--daemonlocation=${this.serverPath + this.daemonFilename}`,
       ...commandLineArgs,
     ];
 
