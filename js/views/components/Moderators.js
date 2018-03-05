@@ -311,7 +311,12 @@ export default class extends baseVw {
         this.trigger('cardSelect');
       }
     });
-    this.modCards.push(modCard);
+    // add verified mods to the beginning
+    if (app.verifiedMods.get(model.get('peerID'))) {
+      this.modCards.unshift(modCard);
+    } else {
+      this.modCards.push(modCard);
+    }
     return modCard;
   }
 
