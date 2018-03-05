@@ -862,7 +862,7 @@ export default class extends BaseModal {
 
     // If the inventoryManagement has been rendered, we'll let it's drop-down
     // determine whether we are tracking inventory. Otherwise, we'll get the info
-    // form the model.
+    // from the model.
     if (this.inventoryManagement) {
       trackBy = this.inventoryManagement.getState().trackBy;
     } else {
@@ -893,14 +893,13 @@ export default class extends BaseModal {
     const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection, ' +
       '.js-variantInventorySection';
 
-    return this._$formFields ||
-      (this._$formFields = this.$(
+    return this.$(
         `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
         `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
         `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
         `.js-formSectionsContainer > section:not(${excludes}) ` +
           'textarea[name]:not([class*="trumbowyg"])'
-      ));
+      );
   }
 
   get $currencySelect() {
@@ -1078,7 +1077,6 @@ export default class extends BaseModal {
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;
-      this._$formFields = null;
       this._$currencySelect = null;
       this._$priceInput = null;
       this._$conditionWrap = null;

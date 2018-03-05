@@ -31,27 +31,6 @@ export default class extends baseVw {
     this.trigger('changeManagementType', { value: e.target.value });
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = state;
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   render() {
     loadTemplate('modals/editListing/inventoryManagement.html', (t) => {
       this.$el.html(t({
