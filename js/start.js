@@ -43,7 +43,7 @@ import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 import VerifiedMods from './collections/VerifiedMods';
-import VerifiedModsError from './views/modals/VerifiedModsError';
+import VerifiedModsError from './views/modals/VerifiedModsFetchError';
 
 fixLinuxZoomIssue();
 handleServerShutdownRequests();
