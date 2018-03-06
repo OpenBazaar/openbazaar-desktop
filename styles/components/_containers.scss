@@ -349,7 +349,7 @@
 .arrowBoxCenteredTop {
   // this will have an arrow centered on the x and y of the parent
   @extend .arrowBoxTop;
-  left: 13px;
+  left: 50%;
   transform: translateX(-50%);
 }
 
