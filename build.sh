@@ -142,6 +142,7 @@ case "$TRAVIS_OS_NAME" in
   "osx")
 
     brew update
+    brew install jq
     brew link jq
     curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
     chmod +x /tmp/7za
@@ -151,6 +152,7 @@ case "$TRAVIS_OS_NAME" in
     brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
     brew install freetype graphicsmagick
     brew link xz
+    brew install mono
     brew link mono
 
     # Retrieve Latest Server Binaries
@@ -164,8 +166,8 @@ case "$TRAVIS_OS_NAME" in
 
     if [ -z "$CLIENT_VERSION" ]; then
       echo 'Running Electron Packager...'
-      electron-packager . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
 
+      electron-packager . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
       echo 'Copying server binary into application folder...'
       cp -rf temp/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/
       cp -rf temp/libwinpthread-1.win32.dll dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll
