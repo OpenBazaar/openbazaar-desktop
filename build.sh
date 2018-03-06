@@ -145,7 +145,7 @@ case "$TRAVIS_OS_NAME" in
     brew link jq
     curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
     chmod +x /tmp/7za
-    curl -L https://dl.bintray.com/develar/bin/wine-2.0.1-mac-10.12-1.7z -o /tmp/wine.7z
+    curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
     /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
 
     brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
