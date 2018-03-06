@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
@@ -11,74 +10,71 @@ import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super({
+    const opts = {
       className: 'settingsStore',
       ...options,
-    });
+    };
+    super(opts);
+    this.options = opts;
 
     this.profile = app.profile.clone();
 
     // Sync our clone with any changes made to the global profile.
     this.listenTo(app.profile, 'someChange',
-      (md, opts) => this.profile.set(opts.setAttrs));
+      (md, pOpts) => this.profile.set(pOpts.setAttrs));
 
     // Sync the global profile with any changes we save via our clone.
     this.listenTo(this.profile, 'sync',
-      (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+      (md, resp, pOpts) => app.profile.set(this.profile.toJSON(pOpts.attrs)));
 
     this.settings = app.settings.clone();
 
     // Sync our clone with any changes made to the global settings model.
     this.listenTo(app.settings, 'someChange',
-      (md, opts) => this.settings.set(opts.setAttrs));
+      (md, sOpts) => this.settings.set(sOpts.setAttrs));
 
     // Sync the global settings model with any changes we save via our clone.
     this.listenTo(this.settings, 'sync',
-      (md, resp, opts) => app.settings.set(this.settings.toJSON(opts.attrs)));
+      (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
 
     this.currentMods = this.settings.get('storeModerators');
+    this._showVerifiedOnly = true;
 
     this.modsSelected = new Moderators({
-      async: true,
-      useCache: false,
-      moderatorIDs: this.currentMods,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
       notSelected: 'deselected',
       showInvalid: true,
       controlsOnInvalid: true,
+      showSpinner: false,
     });
 
     this.modsByID = new Moderators({
       async: false,
-      useCache: false,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       excludeIDs: this.currentMods,
-      cardState: 'unselected',
-      notSelected: 'unselected',
       showInvalid: true,
       wrapperClasses: 'noMin',
+      showSpinner: false,
     });
 
-    this.listenTo(this.modsByID, 'noModsFound', (opts) => this.noModsFound(opts.guids));
+    this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsFound(mOpts.guids));
 
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
-      useCache: false,
-      async: true,
       excludeIDs: this.currentMods,
+      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
-      cardState: 'unselected',
-      notSelected: 'unselected',
+      showLoadBtn: true,
     });
   }
 
   events() {
     return {
       'click .js-browseMods': 'fetchAvailableModerators',
-      'click .js-browseMore': 'fetchAvailableModerators',
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
+      'click .js-storeVerifiedOnly': 'onClickVerifiedOnly',
     };
   }
 
@@ -92,10 +88,17 @@ export default class extends baseVw {
   }
 
   fetchAvailableModerators() {
+    // get the verified mods via POST
+    this.modsAvailable.getModeratorsByID({
+      moderatorIDs: app.verifiedMods.pluck('peerID'),
+      useCache: true,
+      method: 'POST',
+      apiPath: 'fetchprofiles',
+    });
+    // get random mods via GET
     this.modsAvailable.getModeratorsByID();
     this.getCachedEl('.js-modListAvailable').removeClass('hide');
     this.getCachedEl('.js-noModsAdded').addClass('hide');
-    this.getCachedEl('.js-browseMore').removeClass('hide');
   }
 
   showModByIDError(msg) {
@@ -117,7 +120,7 @@ export default class extends baseVw {
       if (isMultihash(modID)) {
         if (!this.currentMods.includes(modID)) {
           if (modID !== app.profile.id) {
-            this.modsByID.getModeratorsByID([modID]);
+            this.modsByID.getModeratorsByID({ moderatorIDs: [modID] });
             this.getCachedEl('.js-modListByID').removeClass('hide');
           } else {
             const ownGUID = app.polyglot.t('settings.storeTab.errors.ownGUID', { guid: modID });
@@ -135,6 +138,10 @@ export default class extends baseVw {
       const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
       this.showModByIDError(blankError);
     }
+  }
+
+  onClickVerifiedOnly(e) {
+    this.showVerifiedOnly = $(e.target).prop('checked');
   }
 
   getProfileFormData(subset = this.$profileFormFields) {
@@ -189,17 +196,36 @@ export default class extends baseVw {
             type: 'confirmed',
           });
 
-          // remove changed moderators
-          this.modsSelected.removeModeratorsByID(this.modsSelected.unselectedIDs);
-          this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
-          this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
-
-          // add new moderators to the selected collection
+          // move the changed moderators
           this.currentMods = this.settings.get('storeModerators');
-          this.modsByID.excludeIDs = this.currentMods;
+          const unSel = this.modsSelected.unselectedIDs;
+          const remSel = this.modsSelected.removeModeratorsByID(unSel);
+          const remByID = this.modsByID.removeModeratorsByID(this.modsByID.selectedIDs);
+          const remAvail = this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
 
-          const newSelected = _.without(this.currentMods, ...this.modsSelected.selectedIDs);
-          if (newSelected.length) this.modsSelected.getModeratorsByID(newSelected);
+          this.modsByID.excludeIDs = this.currentMods;
+          this.modsByID.moderatorsStatus.setState({
+            hidden: true,
+          });
+
+          this.modsSelected.moderatorsCol.add([...remByID, ...remAvail]);
+          this.modsSelected.moderatorsStatus.setState({
+            hidden: true,
+          });
+
+          this.modsAvailable.excludeIDs = this.currentMods;
+          this.modsAvailable.moderatorsCol.add(remSel);
+          this.modsAvailable.moderatorsStatus.setState({
+            hidden: false,
+            total: this.modsAvailable.modCount,
+            showSpinner: false,
+          });
+
+          // If any of the mods moved to the available collect are unverified, show them
+          if (app.verifiedMods.matched(unSel).length !== unSel.length) {
+            // Don't render, the render is in the always handler
+            this._showVerifiedOnly = false;
+          }
         })
         .fail((...args) => {
           // if at least one save fails, the save has failed.
@@ -231,12 +257,18 @@ export default class extends baseVw {
     }
   }
 
+  set showVerifiedOnly(bool) {
+    this._showVerifiedOnly = bool;
+    this.modsAvailable.setState({ showVerifiedOnly: bool });
+  }
+
   render() {
     super.render();
 
     loadTemplate('modals/settings/store.html', (t) => {
       this.$el.html(t({
         modsAvailable: this.modsAvailable.allIDs,
+        showVerifiedOnly: this._showVerifiedOnly,
         errors: {
           ...(this.profile.validationError || {}),
           ...(this.settings.validationError || {}),
@@ -247,8 +279,8 @@ export default class extends baseVw {
 
       this.modsSelected.delegateEvents();
       this.$('.js-modListSelected').append(this.modsSelected.render().el);
-      if (!this.modsSelected.fetch) {
-        this.modsSelected.getModeratorsByID();
+      if (!this.modsSelected.modFetches.length) {
+        this.modsSelected.getModeratorsByID({ moderatorIDs: this.currentMods });
       }
 
       this.modsByID.delegateEvents();
@@ -257,6 +289,7 @@ export default class extends baseVw {
         .toggleClass('hide', !this.modsByID.allIDs.length);
 
       this.modsAvailable.delegateEvents();
+      this.modsAvailable.setState({ showVerifiedOnly: this._showVerifiedOnly });
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);

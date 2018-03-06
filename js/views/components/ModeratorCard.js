@@ -2,6 +2,7 @@ import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';
+import VerifiedMod from './VerifiedMod';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
 import { getLangByCode } from '../../data/languages';
 
@@ -38,7 +39,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'moderatorCard';
+    return 'moderatorCard clrBr';
   }
 
   events() {
@@ -76,7 +77,7 @@ export default class extends BaseVw {
   changeSelectState(cardState) {
     if (cardState !== this.cardState) {
       this.cardState = cardState;
-      this.getCachedEl('.js-selectBtn').attr('data-state', cardState);
+      this.render();
       this.trigger('modSelectChange', {
         selected: cardState === 'selected',
         guid: this.model.id,
@@ -97,6 +98,8 @@ export default class extends BaseVw {
         });
     }
 
+    const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
+
     loadTemplate('components/moderatorCard.html', (t) => {
       this.$el.html(t({
         cardState: this.cardState,
@@ -104,9 +107,18 @@ export default class extends BaseVw {
         valid: this.model.isModerator,
         radioStyle: this.options.radioStyle,
         controlsOnInvalid: this.options.controlsOnInvalid,
+        verified: !!verifiedMod,
         modLanguages,
         ...this.model.toJSON(),
       }));
+
+      if (this.verifiedMod) this.verifiedMod.remove();
+      this.verifiedMod = this.createChild(VerifiedMod, {
+        model: verifiedMod,
+        data: app.verifiedMods.data,
+        showShortText: true,
+      });
+      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
 
     return this;

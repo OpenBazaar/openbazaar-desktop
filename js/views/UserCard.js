@@ -8,6 +8,7 @@ import Profile, { getCachedProfiles } from '../models/profile/Profile';
 import { isBlocked, events as blockEvents } from '../utils/block';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
+import VerifiedMod from './components/VerifiedMod';
 import BlockedBtn from './components/BlockBtn';
 
 export default class extends BaseVw {
@@ -228,6 +229,8 @@ export default class extends BaseVw {
         ...(this.model && this.model.toJSON() || {}),
       }));
 
+      super.render();
+
       this._$followBtn = null;
       this._$modBtn = null;
 
@@ -248,6 +251,18 @@ export default class extends BaseVw {
       if (!this.fetched) this.loadUser();
       /* the view should be rendered when it is created and before it has data, so it can occupy
        space in the DOM while the data is being fetched. */
+
+      if (this.verifiedMod) this.verifiedMod.remove();
+
+      const verifiedMod = app.verifiedMods.get(this.guid);
+      if (verifiedMod) {
+        this.verifiedMod = new VerifiedMod({
+          model: verifiedMod,
+          arrowClass: 'arrowBoxRightTop',
+          data: app.verifiedMods.data,
+        });
+        this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+      }
     });
 
     return this;

@@ -71,44 +71,47 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
         <% } %>
         <section class="contentBox padMd clrP clrBr clrSh3">
           <div class="flexColRows gutterVSm">
-            <h2 class="h4 required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
-            <div class="contentBox pad clrP clrBr flexVCent">
-              <%= ob.currencyMod.cryptoIcon({ className: 'margRSm'}) %>
-              <i class="btcIcon margRSm"></i>
-              <div class="flexExpand">
-                <%= ob.polyT(`cryptoCurrencies.${ob.currencyMod.getServerCurrency().code}`) %>
-              </div>
-              <div class="tx6 clrT2 margRSm"><%= ob.polyT('purchase.useShapeShift') %></div>
-              <i class="shapeShiftIcon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
-            </div>
-            <% if (ob.showModerators) { %>
-              <div class="js-moderatedOption <% if (ob.noValidModerators) print('disabled'); %>">
-                <input
-                    type="checkbox"
-                    name="moderated"
-                    id="purchaseModerated"
-                <% if (ob.moderated && !ob.noValidModerators) print('checked') %>
-                >
-                <label for="purchaseModerated"><%= ob.polyT('purchase.moderatedPayment') %></label>
-                <p class="clrT2 tx6">
-                  <%= ob.polyT('purchase.moderationDisclaimer') %>
-                </p>
-              </div>
-              <% if (ob.noValidModerators) { %>
-                <p class="clrTErr">
-                  <%= ob.polyT('purchase.noValidModerators') %>
-                </p>
+            <div class="flexVCentClearMarg">
+              <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
+              <% if (ob.showModerators) { %>
+                <input type="checkbox" id="purchaseVerifiedOnly" class="js-purchaseVerifiedOnly"<% if(ob.showOnlyVerified) print('checked') %>>
+                <label class="tx5b <% if (ob.unverifedSelected) print('disabled') %>" for="purchaseVerifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
               <% } %>
+            </div>
+            <% if (ob.showModerators && !ob.noValidModerators) { %>
+              <div class="js-moderated-errors"></div>
+              <div class="js-moderatorsWrapper"></div>
+              <% if (!ob.noValidModerators) { %>
+                <div>
+                  <div class="clrT2 tx6 rowMd"><%= ob.polyT('purchase.moderatorsDisclaimer') %></div>
+                </div>
+              <% } %>
+              <hr class="clrBr row">
             <% } %>
+            <% // duplicate the moderator card html to make sure everything aligns %>
+            <div class="moderatorsList">
+              <div class="moderatorsWrapper fauxModeratorsWrapper">
+                <div class="moderatorCard clrBrInvis js-directPayment">
+                  <div class="moderatorCardInner">
+                    <div class="flexRow gutterH moderatorCardContent">
+                      <div class="flexNoShrink">
+                        <div class="btnRadio">
+                          <div tabindex="0" class="fauxRadioBtn <% if (!ob.moderated) print('active') %>"></div>
+                        </div>
+                      </div>
+                      <div class="moderatorCardMiddle">
+                        <div class="flex rowSm">
+                          <b><%= ob.polyT('purchase.directPayment') %></b>
+                        </div>
+                        <div class="clrT2"><%= ob.polyT('purchase.directPaymentDetails') %></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
-      <% if (ob.showModerators && !ob.noValidModerators) { %>
-        <section class="contentBox padMd clrP clrBr clrSh3 js-moderator">
-          <h2 class="h4"><%= ob.polyT('purchase.moderatorTitle') %></h2>
-          <div class="js-moderated-errors"></div>
-          <div class="js-moderatorsWrapper"></div>
-        </section>
-      <% } %>
       <section class="contentBox padMd clrP clrBr clrSh3">
         <h2 class="h4">
           <%= ob.polyT('purchase.informationTitle') %>

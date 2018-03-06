@@ -58,7 +58,7 @@
   // - override with your own positioning values (top, right, etc...)
   display: block;
   position: absolute;
-  width: 245px;
+  width: $confirmBoxWidth;
   z-index: 1;
   padding: $pad;
   border-style: solid;
@@ -295,11 +295,24 @@
     content: '';
     position: absolute;
     background-color: inherit;
+    box-sizing: border-box;
     width: 25px;
     height: 25px;
-    border-style: solid;
-    border-width: 1px;
     border-color: inherit;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-right-width: 1px;
+    border-right-style: solid;
+  }
+
+  &::after {
+    /* this fills the gap between the parent and the tooltip so it doesn't close if the mouse
+       moves down from the parent element. */
+    content: '';
+    position: absolute;
+    background-color: transparent;
+    width: $confirmBoxWidth + $pad + $pad;
+    height: 25px;
   }
 }
 
@@ -312,6 +325,10 @@
     transform: translate(-50%, -50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
   }
+
+  &::after{
+    top: -25px;
+  }
 }
 
 .arrowBoxBottom {
@@ -323,13 +340,28 @@
     transform: translate(calc(-25% - 6px), 50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
   }
+
+  &::after {
+    left: 0;
+  }
 }
 
 .arrowBoxCenteredTop {
-  // this will have an arror centered on the x and y of the parent
+  // this will have an arrow centered on the x and y of the parent
   @extend .arrowBoxTop;
-  left: 20px; // width of the rotated square/hypotenuse of the arrow
+  left: 13px;
   transform: translateX(-50%);
+}
+
+.arrowBoxRightTop {
+  // this will have an arror on the right side of box
+  @extend .arrowBoxTop;
+  right: -20px;
+
+  &::before {
+    left: auto;
+    right: 5px;
+  }
 }
 
 .toolTip:not(.processing) {

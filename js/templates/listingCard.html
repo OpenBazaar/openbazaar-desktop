@@ -23,7 +23,7 @@
           </div>
         </div>
       </div>
-    </div>    
+    </div>
     <% if (ob.ownListing) { %>
       <div class="editOverlay overlayPanel pad">
         <div class="overlayPanelInner"></div>
@@ -73,7 +73,7 @@
         <div class="userIcon disc clrBr2 clrSh1 clrP tx3">
           <%= ob.parseEmojis('😲') %>
         </div>
-      </div>      
+      </div>
       <div class="userIconWrapper blockedAvatarOverlay">
         <div class="userIcon disc clrBr2 clrSh1 clrP">
           <i class="ion-eye-disabled"></i>
@@ -91,7 +91,7 @@
         <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
       </div>
       <div class="txB">
-        <%= 
+        <%=
           ob.currencyMod.formattedCurrency(
             ob.price.amount,
             ob.price.currencyCode,
@@ -109,6 +109,7 @@
     <span class="clrE1 clrTOnEmph phraseBox"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
     <% } %>
   </div>
+  <div class="verifiedModWrapper js-verifiedMod"></div>
 </div>
 <% } else { %>
   <div class="listViewContent">
@@ -122,8 +123,11 @@
         <div class="rowTn">
           <a class="clrT clamp3"><%= ob.title %></a>
         </div>
-        <div class="tx5b">
-          <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+        <div class="flexVCent gutterHSm tx5b">
+          <div class=" flexNoShrink">
+            <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+          </div>
+          <div class="verifiedModWrapper js-verifiedMod"></div>
         </div>
       </div>
       <% if (ob.shipsFreeToMe) { %>
@@ -133,7 +137,7 @@
       <% } %>
       <div class="priceCol flexNoShrink">
         <span class="txB">
-          <%= 
+          <%=
             ob.currencyMod.formattedCurrency(
               ob.price.amount,
               ob.price.currencyCode,
@@ -189,9 +193,9 @@
         <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
         <% if (ob.nsfw) { %>
           <button class="btn clrP clrBr iconBtnSm btnHideNsfw clrSh1 js-hideNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
-        <% } %>        
+        <% } %>
       </div>
-    </div>    
+    </div>
   <% } %>
 <% } %>
 <div class="deleteOverlay overlayPanel">

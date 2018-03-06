@@ -3,9 +3,10 @@
     `<a class="clrTEm" href="#${ob.peerId}">${ob.handle && `@${ob.handle}` || `${ob.peerId.slice(0, ob.maxPeerIdLength)}…`}</a>`;
 %>
 
-<div class="flexVCent gutterHSm">
+<div class="flexVCent gutterHSm rowTn">
   <% if (ob.showAvatar) { %>
   <div class="avatar clrBr2 clrSh1 disc" style="<%= ob.getAvatarBgImage(ob.avatarHashes || {}) %>"></div>
   <% } %>
   <div><%= ob.name %><% print(modLink ? ` ${modLink}` : '') %></div>
 </div>
+<div class="js-verifiedMod"></div>

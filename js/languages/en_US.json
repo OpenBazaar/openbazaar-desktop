@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Retry",
       "btnManageConnections": "Manage Connections",
+      "btnContinue": "Continue",
       "retryConfig": {
         "title": "Unable to obtain your server config."
       },
@@ -156,7 +157,14 @@
         "title": "Unable to get wallet balance."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Unable to load search providers.",
+        "btnClose": "Continue Without Search Providers"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Unable to load verified moderators.",
+        "btnRetry": "Retry",
+        "btnClose": "Continue",
+        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
     "connectMessaging": {
@@ -346,11 +354,30 @@
     "tipModRemove": "Remove as moderator",
     "blockedUserOverlayText": "You blocked this user"
   },
+  "verifiedMod": {
+    "verified": {
+      "label": "Verified",
+      "title": "Verified Moderator",
+      "body": "This moderator is verified by %{providerName}. %{link}"
+    },
+    "unverified": {
+      "label": "Unverified",
+      "title": "Unverified Moderator",
+      "not": "NOT",
+      "body": "This moderator is %{not} verified by %{providerName}. Proceed with caution or choose a verified moderator.",
+      "bodyOrder": "This moderator is %{not} verified by %{providerName}."
+    },
+
+    "link": "Learn More",
+    "type": "Type: ",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+  },
   "moderatorCard": {
     "view": "View",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "The information for this moderator failed to load.",
     "invalid": "This user is not currently a moderator.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
@@ -461,8 +488,9 @@
       "statusSaveComplete": "General settings saved.",
       "statusSaveFailed": "Unable to save general settings.",
       "saveErrorAlertTitle": "Unable to save general settings",
-      "searchProvider": "Search Provider",
-      "restoreDefaultProvider": "Restore default"
+      "verifiedMods": "Verified Moderators",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": "Restore default"
     },
     "pageTab": {
       "helperAbout": "Displays on your Home page",
@@ -658,9 +686,10 @@
       "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
       "moderatorByIDPlaceholder": "Enter a @handle or ID",
       "moderatoryByIDSubmit": "Find",
-      "availableModerators": "Available Moderators on the Network",
+      "availableModerators": "Available Moderators",
       "browseModerators": "Browse Moderators",
-      "browseMoreModerators": "Load More Moderators",
+      "verifiedOnly": "Verified moderators only",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Loading",
       "status": {
         "saving": "Saving store settings...",
@@ -1275,10 +1304,9 @@
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
-    "useShapeShift": "Or use ShapeShift in the next step",
-    "moderatedPayment": "Moderated Payment",
-    "noValidModerators": "No valid moderators are available for this order.",
-    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
+    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "directPayment": "Direct Payment",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust, you will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",
@@ -1349,7 +1377,15 @@
     }
   },
   "moderators": {
-    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
+    "moderatorsLoading": "Loading moderators…",
+    "moderatorsLoaded": "%{total} moderators loaded.",
+    "noValidModerators": "No Valid Moderators Available.",
+    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
+    "noVerifiedModerators": "No Verified Moderators Available",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Show Unverified Moderators",
+    "browseMoreModerators": "Load More"
+
   },
   "transactions": {
     "sales": {
@@ -1471,7 +1507,7 @@
     },
     "contractMenuItem": {
       "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
-      "tipBuyerContractHasError": "The buyer's contract has validation errors.",      
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",
       "tipVendorContractHasError": "The vendor's contract has validation errors.",
       "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
       "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
@@ -1647,7 +1683,7 @@
       "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
       "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
       "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
-      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",      
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Comment",
       "commentPlaceholder": "Explain your decision...",
       "btnCancel": "Cancel",
@@ -1862,7 +1898,7 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider"
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",

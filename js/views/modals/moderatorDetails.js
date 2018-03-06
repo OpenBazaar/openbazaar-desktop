@@ -4,6 +4,7 @@ import Profile from '../../models/profile/Profile';
 import SocialBtns from '../components/SocialBtns';
 import BaseModal from './BaseModal';
 import { getLangByCode } from '../../data/languages';
+import VerifiedMod from '../components/VerifiedMod';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -44,6 +45,8 @@ export default class extends BaseModal {
         return langData && langData.name || lang;
       });
 
+    const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
+
     loadTemplate('modals/moderatorDetails.html', (t) => {
       this.$el.html(t({
         followedByYou: this.followedByYou,
@@ -68,6 +71,14 @@ export default class extends BaseModal {
         },
       });
       this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+
+      if (this.verifiedMod) this.verifiedMod.remove();
+      this.verifiedMod = this.createChild(VerifiedMod, {
+        model: verifiedMod,
+        data: app.verifiedMods.data,
+        showLongText: true,
+      });
+      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
 
     return this;

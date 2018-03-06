@@ -1,5 +1,41 @@
 .moderatorDetails {
   .contentBox.mDetailBox {
     min-height: 90px;
+
+    .verifiedWrapper {
+      display: flex;
+      align-self: stretch;
+      flex-grow: 1;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      border-width: 1px;
+      border-style: solid;
+
+      .verifiedMod {
+        display: block;
+        bottom: 0;
+        font-weight: 700;
+        font-size: $tx5b;
+
+        & > .badge {
+          margin: 0 auto $padTn auto;
+        }
+
+        .tooltipWrapper {
+
+          .arrowBoxWrapper {
+            right: 0;
+            bottom: 0;
+            width: 11px;
+
+            .arrowBox {
+              top: 16px; // height of the i icon plus a little
+              left: 50%;
+            }
+          }
+        }
+      }
+    }
   }
 }

@@ -2,78 +2,81 @@
    // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
    const loaded = !!ob.name;
    const isDisabled = (!ob.valid && !ob.controlsOnInvalid) || !loaded ? 'disabled' : '';
+   const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
 
-<div class="moderatorCardInner js-moderatorCard flexRow gutterH clrP <%= isDisabled %>">
-  <% if (ob.radioStyle) { %>
-    <div class="flexNoShrink">
-      <div class="btnRadio">
-        <% const act = ob.cardState === 'selected' ? 'active' : 'inactive'; %>
-        <% // the card state may be set on render or set on the fly by the view %>
-        <div tabindex="0" class="fauxRadioBtn js-selectBtn <%= act %>" data-state="<%= ob.cardState %>">
-        </div>
-      </div>
-    </div>
-  <% } %>
-  <div class="flexNoShrink">
-    <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
-  </div>
-  <div class="moderatorCardMiddle">
-    <% if (loaded && ob.valid) { %>
-      <div class="flex snipKids gutterHSm rowSm">
-        <strong class="txt5"><%= ob.name %></strong>
-        <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
-      </div>
-      <div class="row clrT2">
-        <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
-        <% if (ob.modLanguages && ob.modLanguages.length) { %>
-          <div class="txSm">
-            <% if (ob.modLanguages.length > 1) {
-                 print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
-               } else { %>
-              <%= ob.modLanguages[0] %>
-            <% } %>
+<div class="moderatorCardInner js-moderatorCard clrP <%= isDisabled %> <%= style %>">
+  <div class="flexRow gutterH moderatorCardContent">
+    <% if (ob.radioStyle) { %>
+      <div class="flexNoShrink">
+        <div class="btnRadio">
+          <% const act = ob.cardState === 'selected' ? 'active' : 'inactive'; %>
+          <% // the card state may be set on render or set on the fly by the view %>
+          <div tabindex="0" class="fauxRadioBtn js-selectBtn <%= act %>" data-state="<%= ob.cardState %>">
           </div>
-        <% } %>
-      </div>
-      <div class="flex snipKids gutterH tx5">
-        <div class="flexNoShrink TODO">
-          <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
         </div>
-        <div class="flexNoShrink">
-          <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-          <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
-        </div>
-        <div>
-          <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
-        </div>
-      </div>
-    <% } else { %>
-      <div class="flexCol gutterVSm clrTErr">
-        <strong class="txt5"><%= ob.peerID %></strong>
-        <% if (ob.valid) { %>
-        <span><%= ob.polyT('moderatorCard.failed') %></span>
-        <% } else { %>
-        <span><%= ob.polyT('moderatorCard.invalid') %></span>
-        <% } %>
       </div>
     <% } %>
-  </div>
-  <div class="flexNoShrink">
-    <% if (ob.valid || ob.controlsOnInvalid) { %>
-      <div class="flexCol gutterV">
-        <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
-          <%= ob.polyT('moderatorCard.view') %>
-        </button>
-        <% if (!ob.radioStyle) { %>
-          <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
-            <i class="ion-checkmark showIfSelected clrTEmph1"></i>
-            <i class="ion-close showIfDeselected clrTErr"></i>
-            <i class="ion-checkmark showIfUnselected clrTEmph1Disabled"></i>
+    <div class="flexNoShrink">
+      <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
+    </div>
+    <div class="moderatorCardMiddle">
+      <% if (loaded && ob.valid) { %>
+        <div class="flex snipKids gutterHSm rowSm">
+          <strong class="txt5"><%= ob.name %></strong>
+          <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
+        </div>
+        <div class="row">
+          <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
+          <% if (ob.modLanguages && ob.modLanguages.length) { %>
+            <div class="txSm">
+              <% if (ob.modLanguages.length > 1) {
+                   print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
+                 } else { %>
+                <%= ob.modLanguages[0] %>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+        <div class="flex snipKids gutterH tx5 detailsRow">
+          <div class="flexNoShrink TODO">
+            <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
+          </div>
+          <div class="flexNoShrink">
+            <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+            <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
+          </div>
+          <div>
+            <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
+          </div>
+          <div class="flexExpand flexNoShrink verifiedWrapper js-verifiedMod"></div>
+        </div>
+      <% } else { %>
+        <div class="flexCol gutterVSm clrTErr">
+          <strong class="txt5"><%= ob.peerID %></strong>
+          <% if (ob.valid) { %>
+          <span><%= ob.polyT('moderatorCard.failed') %></span>
+          <% } else { %>
+          <span><%= ob.polyT('moderatorCard.invalid') %></span>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+    <div class="flexNoShrink">
+      <% if (ob.valid || ob.controlsOnInvalid) { %>
+        <div class="flexCol gutterV">
+          <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
+            <%= ob.polyT('moderatorCard.view') %>
           </button>
-        <% } %>
-      </div>
-    <% } %>
+          <% if (!ob.radioStyle) { %>
+            <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
+              <i class="ion-checkmark showIfSelected clrTEmph1"></i>
+              <i class="ion-close showIfDeselected clrTErr"></i>
+              <i class="ion-checkmark showIfUnselected clrTEmph1Disabled"></i>
+            </button>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
   </div>
 </div>
-<div class="moderatorCardSeperator clrBr"></div>

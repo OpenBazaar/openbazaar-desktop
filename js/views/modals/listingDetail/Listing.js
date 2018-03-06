@@ -525,6 +525,8 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
+    const hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+    const defaultBadge = app.verifiedMods.defaultBadge(this.model.get('moderators'));
     let nsfwWarning;
 
     if (!this.rendered &&
@@ -552,6 +554,9 @@ export default class extends BaseModal {
         currencyValidity: getCurrencyValidity(
           this.model.get('metadata').get('pricingCurrency')
         ),
+        hasVerifiedMods,
+        verifiedModsData: app.verifiedMods.data,
+        defaultBadge,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');

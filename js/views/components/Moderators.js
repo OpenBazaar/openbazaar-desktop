@@ -8,6 +8,7 @@ import Moderators from '../../collections/Moderators';
 import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
 import ModCard from './ModeratorCard';
+import ModeratorsStatus from './ModeratorsStatus';
 
 export default class extends baseVw {
   /**
@@ -31,6 +32,9 @@ export default class extends baseVw {
    * @param {string}  options.fetchErrorTitle   - A title for the fetch error.
    * @param {string}  options.cardState         - The initial state for cards that are created.
    * @param {string}  options.notSelected       - Which not selected state to use on the mod cards.
+   * @param {boolean} options.showLoadBtn       - Show the load more button in the status bar.
+   * @param {boolean} options.showSpinner       - Show the spinner in the status bar
+   * @param {boolean} options.showVerifiedOnly  - Show only verified moderators
    */
 
   constructor(options = {}) {
@@ -39,6 +43,7 @@ export default class extends baseVw {
     }
 
     const opts = {
+      className: 'moderatorsList',
       apiPath: 'fetchprofiles',
       async: true,
       useCache: true,
@@ -50,11 +55,11 @@ export default class extends baseVw {
       singleSelect: false,
       selectFirst: false,
       radioStyle: false,
-      showInvalid: false,
       controlsOnInvalid: false,
-      wrapperClasses: '',
       cardState: 'unselected',
       notSelected: 'unselected',
+      showLoadBtn: false,
+      showSpinner: true,
       ...options,
     };
 
@@ -84,22 +89,60 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
     this.excludeIDs = opts.excludeIDs;
+    this.unfetchedMods = [];
+    this.fetchingMods = [];
+    this.verifiedMods = [];
+    this.modFetches = [];
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
       const modCard = this.addMod(model);
-      this.$moderatorsWrapper.append(modCard.render().$el);
+
       // if required, select the first  moderator
       if (opts.selectFirst && !this.firstSelected && !this.noneSelected) {
-        this.firstSelected = true;
-        modCard.changeSelectState('selected');
+        let selectIt = true;
+        // if only verified mods are shown, only select the first verified mod
+        if (opts.showVerifiedOnly) selectIt = !!app.verifiedMods.get(model.get('peerID'));
+
+        if (selectIt) {
+          this.firstSelected = true;
+          modCard.changeSelectState('selected');
+        }
       }
+      this.render();
     });
-    this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => this.removeMod(md, cl, rOpts));
+    this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => {
+      this.modCards.splice(rOpts.index, 1)[0].remove();
+      this.render();
+    });
     this.modCards = [];
+
+    // create a moderator status view. It should retain it's state between renders of this view.
+    this.moderatorsStatus = this.createChild(ModeratorsStatus, {
+      initialState: {
+        mode: opts.method === 'GET' ? 'loaded' : '',
+        showLoadBtn: opts.showLoadBtn,
+        showSpinner: opts.showSpinner,
+      },
+    });
+    this.listenTo(this.moderatorsStatus, 'browseMore', () => this.onBrowseMore());
+
+    // listen to the websocket for moderator data
+    this.serverSocket = getSocket();
   }
 
-  className() {
-    return 'moderatorsList';
+  events() {
+    return {
+      'click .js-showUnverified': 'clickShowUnverified',
+    };
+  }
+
+  clickShowUnverified() {
+    this.togVerifiedShown(false);
+    this.trigger('clickShowUnverified');
+  }
+
+  onBrowseMore() {
+    this.getModeratorsByID();
   }
 
   removeNotFetched(ID) {
@@ -115,28 +158,29 @@ export default class extends baseVw {
     const buyerCur = app.serverConfig.cryptoCurrency;
     const modCurs = profile.moderatorInfo && profile.moderatorInfo.acceptedCurrencies || [];
     const validCur = modCurs.includes(buyerCur);
-    // if the moderator is on the list of IDs to exclude, or is this user, remove them
-    const excluded = this.excludeIDs.includes(profile.peerID) || profile.peerID === app.profile.id;
 
-    if ((!!validMod && validCur || this.options.showInvalid) && !excluded) {
+    if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(profile, { parse: true }));
-      this.removeNotFetched(profile.peerId);
+      this.removeNotFetched(profile.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
-      this.removeNotFetched(profile.peerId);
+      this.removeNotFetched(profile.peerID);
     }
   }
 
-  getModeratorsByID(IDparam = this.options.moderatorIDs) {
-    if (!Array.isArray(IDparam)) {
+  getModeratorsByID(opts) {
+    const op = {
+      ...this.options,
+      ...opts,
+    };
+
+    if (!Array.isArray(op.moderatorIDs)) {
       throw new Error('Please provide the list of moderators as an array.');
     }
 
-    if (this.fetch && this.fetch.state() === 'pending') return;
-
-    // don't get any that have already been added
-    const IDs = _.without(IDparam, this.allIDs);
-    const op = this.options;
+    // don't get any that have already been added or excluded, or the user's own id.
+    const excluded = [...this.allIDs, ...op.excludeIDs, app.profile.id];
+    const IDs = _.without(op.moderatorIDs, excluded);
     const includeString = op.include ? `&include=${op.include}` : '';
     const urlString =
       `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
@@ -144,15 +188,23 @@ export default class extends baseVw {
 
     this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
-    if (IDs.length) {
-      this.$moderatorsStatus.removeClass('hide');
-      this.$moderatorStatusText.text(app.polyglot.t('moderators.moderatorsLoading',
-          { remaining: IDs.length, total: IDs.length }));
-    }
+    this.verifiedMods = app.verifiedMods.matched(IDs);
+
+    this.setState({
+      noValidModerators: false,
+      noValidVerifiedModerators: !this.verifiedMods.length && this.fetchingMods.length,
+    });
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (IDs.length || op.method === 'GET') {
-      this.fetch = $.ajax({
+      this.moderatorsStatus.setState({
+        hidden: false,
+        loaded: this.modCount,
+        total: IDs.length ? IDs.length : this.modCount,
+        showSpinner: op.showSpinner, //unhides the spinner if it's been hidden by the timer
+      });
+
+      const fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
         method: op.method,
@@ -160,10 +212,8 @@ export default class extends baseVw {
           .done((data) => {
             if (op.async) {
               const socketID = data.id;
-              // listen to the websocket for moderator data
-              const serverSocket = getSocket();
-              if (serverSocket) {
-                this.listenTo(serverSocket, 'message', (event) => {
+              if (this.serverSocket) {
+                this.listenTo(this.serverSocket, 'message', (event) => {
                   const eventData = event.jsonData;
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
@@ -174,7 +224,7 @@ export default class extends baseVw {
                         this.removeNotFetched(eventData.peerId);
                       }
                     }
-                  } else if (eventData.id === socketID) {
+                  } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
                     this.processMod(eventData.profile);
                   }
                 });
@@ -182,7 +232,9 @@ export default class extends baseVw {
                 throw new Error('There is no connection to the server to listen to.');
               }
             } else {
-              data.forEach(mod => this.processMod(mod.profile));
+              data.forEach(mod => {
+                if (!excluded.includes(mod.peerId)) this.processMod(mod.profile);
+              });
               this.unfetchedMods = [];
               this.checkNotFetched();
               if (!data.length) this.trigger('noModsFound', { guids: IDs });
@@ -194,6 +246,7 @@ export default class extends baseVw {
             const msg = `${op.fetchErrorMsg}${failReason}`;
             openSimpleMessage(op.fetchErrorTitle, msg);
           });
+      this.modFetches.push(fetch);
     }
   }
 
@@ -201,23 +254,38 @@ export default class extends baseVw {
     if (!IDs) {
       throw new Error('You must provide the ID or IDs to remove.');
     }
-
+    // collect the models so they can be returned to the caller
+    const removed = [];
+    IDs.forEach(id => {
+      removed.push(this.moderatorsCol.get(id));
+    });
     this.moderatorsCol.remove(IDs);
+    return removed;
   }
 
   checkNotFetched() {
     const nfYet = this.unfetchedMods.length;
-    if (nfYet === 0) {
-      // all ids have been fetched
-      this.$moderatorsStatus.addClass('hide');
-      this.$moderatorStatusText.text('');
+    if (nfYet === 0 && this.fetchingMods.length) {
+      // all ids have been fetched and ids existed to fetch
+      this.moderatorsStatus.setState({
+        hidden: true,
+      });
       // check if there are mods that loaded but none were valid
       if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
+        this.setState({ noValidModerators: true });
+      }
+      // check if no valid verified mods where loaded
+      if (this.verifiedMods.length && !this.modCount) {
+        this.trigger('noValidVerifiedModerators');
+        this.setState({ noValidVerifiedModerators: true });
       }
     } else {
-      this.$moderatorStatusText.text(app.polyglot.t('moderators.moderatorsLoading',
-          { remaining: nfYet, total: this.fetchingMods.length }));
+      // either ids are still fetching, or this is an open fetch with no set ids
+      this.moderatorsStatus.setState({
+        loaded: this.fetchingMods.length - nfYet, // not shown if open fetch
+        total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
+      });
     }
   }
 
@@ -236,18 +304,20 @@ export default class extends baseVw {
       controlsOnInvalid: this.options.controlsOnInvalid,
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
-      // if only one moderator should be selected, deselect the other moderators
-      if (this.options.singleSelect && data.selected) this.deselectOthers(data.guid);
+      if (data.selected) {
+        this.noneSelected = false;
+        // if only one moderator should be selected, deselect the other moderators
+        if (this.options.singleSelect) this.deselectOthers(data.guid);
+        this.trigger('cardSelect');
+      }
     });
-    this.removeNotFetched(model.id);
-    this.modCards.push(modCard);
-    return modCard;
-  }
-
-  removeMod(md, cl, opts) {
-    if (md) {
-      this.modCards.splice(opts.index, 1)[0].remove();
+    // add verified mods to the beginning
+    if (app.verifiedMods.get(model.get('peerID'))) {
+      this.modCards.unshift(modCard);
+    } else {
+      this.modCards.push(modCard);
     }
+    return modCard;
   }
 
   get excludeIDs() {
@@ -287,12 +357,24 @@ export default class extends baseVw {
     return IDs;
   }
 
+  deselectMod(guid) {
+    if (!guid) throw new Error('You must provide a guid.');
+
+    const mod = this.modCards.filter(card => card.model.get('peerID') === guid);
+    if (mod.length) mod[0].changeSelectState(this.options.notSelected);
+  }
+
   deselectOthers(guid = '') {
-    this.modCards.forEach((mod) => {
-      if (mod.model.get('peerID') !== guid) {
-        mod.changeSelectState(this.options.notSelected);
+    this.modCards.forEach((card) => {
+      if (card.model.get('peerID') !== guid) {
+        card.changeSelectState(this.options.notSelected);
       }
     });
+    this.noneSelected = !guid;
+  }
+
+  togVerifiedShown(bool) {
+    this.setState({ showVerifiedOnly: bool });
   }
 
   get noneSelected() {
@@ -304,7 +386,7 @@ export default class extends baseVw {
   }
 
   remove() {
-    if (this.fetch) this.fetch.abort();
+    this.modFetches.forEach(fetch => fetch.abort());
     super.remove();
   }
 
@@ -312,17 +394,19 @@ export default class extends baseVw {
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
+        showVerifiedOnly: this.options.showVerifiedOnly,
+        placeholder: !this.modCards.length,
+        ...this.getState(),
       }));
 
       super.render();
-      this.$moderatorsWrapper = this.$('.js-moderatorsWrapper');
-      this.$moderatorsStatus = this.$('.js-moderatorsStatus');
-      this.$moderatorStatusText = this.$('.js-moderatorStatusInner');
-
       this.modCards.forEach(mod => {
         mod.delegateEvents();
-        this.$moderatorsWrapper.append(mod.render().$el);
+        this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
       });
+
+      this.moderatorsStatus.delegateEvents();
+      this.getCachedEl('.js-statusWrapper').append(this.moderatorsStatus.render().$el);
     });
 
     return this;
