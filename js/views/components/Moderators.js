@@ -113,7 +113,6 @@ export default class extends baseVw {
     this.listenTo(this.moderatorsCol, 'remove', (md) => {
       const removeIndex = this.modCards.findIndex(card => card.model === md);
       this.modCards.splice(removeIndex, 1)[0].remove();
-      this.render();
     });
     this.modCards = [];
 
