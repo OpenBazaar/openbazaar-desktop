@@ -39,7 +39,7 @@ npm install npm-run-all -g --silent
 npm install grunt-cli -g --silent
 npm install grunt --save-dev --silent
 npm install grunt-electron-installer --save-dev --silent
-npm install
+npm install --verbose
 
 echo 'Building OpenBazaar app...'
 npm run build
