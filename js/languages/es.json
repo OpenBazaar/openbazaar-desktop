@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Contenido sin publicar",
-    "unpublishedConfirmBody": "Tiene contenido sin publicar. Si cierra ahora, sus últimos datos no estaran disponibles para las demás personas. ¿Está seguro que quiere cerrarla?",
-    "unpublishedConfirmYes": "Sí",
-    "unpublishedConfirmNo": "No",
     "failedRetryTitle": "Hubo un error al reintentar publicar.",
     "statusPublishing": "Publicando actualizaciones en la red...",
     "retryLink": "Reintentar",
     "statusPublishFailed": "Publicación fallida.  %{re-intente el enlace}",
     "statusPublishComplete": "Publicación completada."
+  },
+  "localServerShutdownDialog": {
+    "title": "Cerrando el servidor incorporado",
+    "body": "El servidor incorporado se está cerrando. Esto puede tomar unos minutos. Durante el cierre, se realizan tareas de limpieza importantes. Es importante no interrumpir este proceso. Cuando el proceso finalice, la aplicación se cerrará."
   },
   "follow": {
     "typeFollow": "siguiendo",
@@ -23,13 +23,66 @@
     "ECONOMIC": "Económico"
   },
   "feeChangeWidget": {
-    "label": "Comisión Bitcoin:",
-    "btnChange": "cambiar"
+    "btnChange": "cambiar",
+    "label": "%{cur} fee:"
+  },
+  "blockButton": {
+    "tipBlock": "Block this user",
+    "tipUnblock": "Unblock this user",
+    "btnTxtBlock": "Bloquear",
+    "btnTxtUnblock": "Desbloquear"
+  },
+  "blockedWarning": {
+    "heading": "You blocked this user",
+    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph2": "Would you like to unblock and view their page?",
+    "btnCancel": "Cancelar",
+    "btnUnblock": "Yes, unblock"
+  },
+  "nsfwWarning": {
+    "heading": "Mature content",
+    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "paragraph2": "¿Está seguro de que quiere proceder?",
+    "nsfwOffLabel": "Always display mature content",
+    "btnCancel": "Cancelar",
+    "btnProceed": "Sí, proceder"
+  },
+  "walletSetup": {
+    "heading": "OpenBazaar Wallet Setup",
+    "currencyLabel": "Moneda",
+    "currencyHelper": "Elija una moneda para su billetera",
+    "currencyHelper2": "Acepte y envíe pagos en la moneda seleccionada arriba. Elija sabiamente, actualmente no es posible cambiar su moneda una vez que se realiza una selección.",
+    "curInUseTip": "Ya tiene un servidor integrado con esta moneda de billetera.",
+    "zcashBinaryLabel": "Zcash Binary",
+    "fullNodeLink": "here",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "btnBrowse": "Browse",
+    "btnNext": "Siguiente"
+  },
+  "unsupportedCryptoCurDialog": {
+    "title": "Unsupported Currency",
+    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
+    "connectLink": "connect"
+  },
+  "setValidCurDialog": {
+    "title": "Moneda local inválida",
+    "body": "Actualmente, su moneda local está configurada en% {currency}, que no es compatible con este cliente. Seleccione y guarde una moneda diferente en% {settingsLink}.",
+    "settingsLink": "settings"
   },
   "consoleWarning": {
     "heading": "Detener!",
     "line1": "Esta es una consola para desarrolladores. Si alguien te pidió que la abras, es posible que estén intentando poner en peligro tu cuenta y/o fondos.",
     "line2": "Cerrar esta ventana ahora"
+  },
+  "block": {
+    "errorModal": {
+      "titleUnableToBlock": "Unable to block",
+      "titleUnableToUnblock": "Unable to unblock",
+      "titleUnableToBlockUnblock": "Unable to block / unblock",
+      "blockFailedListHeading": "Unable to block the following users:",
+      "unblockFailedListHeading": "Unable to unblock the following users:",
+      "reason": "Reason: %{reason}"
+    }
   },
   "resyncBlockchainError": "Hubo un error recargando las transacciones.",
   "restartNow": "Reiniciar ahora",
@@ -48,11 +101,14 @@
     },
     "install": "Instalar ahora"
   },
+  "formattedCurrency": {
+    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+  },
   "addressBarPlaceholder": "Escriba una @manija, OpenBazaar ID o término de búsqueda.",
   "testnet": "Modo de prueba.",
   "testnetTooltip": "\"Modo de prueba\" utiliza monedas/divisas de la red-de-prueba, las cuales son utilizadas con propósito de prueba solamente.",
   "tabMenuHeading": "MENÚ",
-  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
   "copiedToClipboard": "Copiado al sujetapapeles.",
   "copiedToClipboardShort": "Copiado",
   "refreshAlertPopInMessage": {
@@ -103,9 +159,10 @@
         "title": "No se pudo cargar los proveedores de búsqueda"
       }
     },
-    "startupLoadingModal": {
-      "canceLink": "Cancelar ",
-      "connectAttemptMsg": "Conectandose a %{serverName}. %{cancelLink}"
+    "connectMessaging": {
+      "cancelLink": "Cancelar ",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
     }
   },
   "notifications": {
@@ -147,6 +204,7 @@
     "sales": "Ventas",
     "cases": "Casos",
     "settings": "Ajustes",
+    "help": "Help",
     "toolTip": {
       "back": "Atr&aacute;s",
       "forward": "Adelante",
@@ -156,7 +214,7 @@
       "notifications": "Notificaciones",
       "nav": "Navegación",
       "close": "Cerrar",
-      "currentPrice": "Precio actual del bitcoin"
+      "currentPrice": "Current %{cur} price"
     },
     "serversMenu": {
       "newServer": "Nuevo Servidor",
@@ -179,7 +237,8 @@
       },
       "typingIndicator": "%{user} está escribiendo...",
       "deleteConvoErrorTitle": "No se pudo borrar la conversación",
-      "deletingOverlayText": "Borrando conversación..."
+      "deletingOverlayText": "Borrando conversación...",
+      "blockingOverlayText": "Blocking…"
     }
   },
   "userPage": {
@@ -208,7 +267,8 @@
       "home": "Casa",
       "store": "Tienda",
       "following": "Siguiendo a",
-      "followers": "Seguidores"
+      "followers": "Seguidores",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "Nadie está siguiendo a ${name} aún",
@@ -253,7 +313,8 @@
       "categoryFilter": {
         "heading": "Categoría ",
         "showMore": "%{smart_count} más… |||| %{smart_count} más…",
-        "showLess": "menos"
+        "showLess": "menos",
+        "all": "Todo"
       },
       "toolTip": {
         "contentView": "Cambiar vista"
@@ -264,7 +325,14 @@
       "store": "Tienda",
       "following": "Siguiendo",
       "followers": "Seguidores"
-    }
+    },
+    "blockedUserOverlayText": "You blocked this user"
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "review |||| reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "Cargando...",
@@ -274,7 +342,8 @@
     "tipFollow": "Seguir",
     "tipUnfollow": "Dejar de seguir",
     "tipModAdd": "Añadir como moderador",
-    "tipModRemove": "Remover como moderador"
+    "tipModRemove": "Remover como moderador",
+    "blockedUserOverlayText": "You blocked this user"
   },
   "moderatorCard": {
     "view": "Ver",
@@ -298,7 +367,9 @@
     "termsOfService": "Términos de servicio",
     "addAsModeratorButton": "Añadir como Moderador",
     "disclaimer": "**El costo del servicio de moderación solo aplica cuando surge una disputa.",
-    "languages": "Lenguajes"
+    "languages": "Lenguajes",
+    "currenciesSupported": "Currencies Supported",
+    "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
     "linkText": "Acerca de OpenBazaar",
@@ -318,6 +389,8 @@
       "btnCopyAddress": "Copiar dirección",
       "btnOpenInWallet" : "Abrir en monedero",
       "bannerCountDonations": "¡%{donationCountFloor}+ donaciones recibidas!",
+      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
+      "bchWarning": "No envíe Bitcoin Cash a esta dirección.",
       "unableToOpenInWallet": {
         "title": "No se pudo abrir en monedero",
         "body": "No se pudo abrir la dirección en el monedero porque un pago está en proceso de envío. Espere hasta que el envío se complete e intente de nuevo."
@@ -355,6 +428,12 @@
         "or": "o",
         "codeCTA": "involucrarse."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {
@@ -514,7 +593,7 @@
       "transaction": {
         "sectionName": "Transacciones",
         "saveMetadata": "Guardar Metadatos",
-        "defaultFee": "Comisión de la red Bitcoin",
+        "defaultFee": "%{cur} Fee",
         "low": "Económico",
         "medium": "Normal",
         "high": "Prioridad"
@@ -600,6 +679,11 @@
         "modsAreInvalidAsync": "Las siguientes modificaciones no han sido encontradas en el network.  Siguen grabadas en su lista de moderadores, pero la información para ellos no está disponible. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "Bloqueado",
+      "btnUnblock": "Desbloquear",
+      "emptyBlockList": "You are not blocking anyone."
+    },
     "optional": "opcional",
     "language": "Idioma",
     "country": "País",
@@ -666,7 +750,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Servidor integrado",
+    "builtInServerName": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "¿Necesitas ayuda?",
@@ -679,7 +763,8 @@
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Cancelar",
-      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Attempting to connect to %{serverName}. %{cancelConnAttempt}",
+      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
     },
     "configurations": {
       "tabName": "Configuraciones",
@@ -723,6 +808,12 @@
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Advertencia:",
       "torServerWarning": "%{warning} Para ser anónimo, es critico que también arranque el servidor en modo Tor.",
+      "lblServerType": "Tipo",
+      "helperServerType": "Select your server type",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
+      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "¿Estás seguro?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
@@ -745,28 +836,28 @@
     "fundsHeader": "Fondos",
     "btnReceiveMoney": "Recibir Dinero",
     "btnSendMoney": "Enviar Dinero",
-    "btcCurrencyLabel": "Bitcoin",
     "valueInCurrencyLabel": "Valor en %{currency}",
     "transactionsLabel": "Transacciones",
     "receiveMoney": {
       "title": "Recibir Dinero",
-      "needBitcoin": "¿Necesitas Bitcoin?",
       "btnCancel": "Cancelar",
-      "btnFundViaShapeshift": "Agregar fondos via ShapeShift"
+      "btnFundViaShapeshift": "Agregar fondos via ShapeShift",
+      "needCoinLink": "Need %{cur}?"
     },
     "sendMoney": {
       "toLabel": "Para",
-      "toPlaceholder": "Ingresa una Dirección Bitcoin",
+      "toPlaceholder": "Enter a %{cur} Address",
       "amountLabel": "Monto",
       "noteLabel": "Nota",
       "notePlaceholder": "Sólo visto por ti",
       "sendBtn": "Enviar",
       "clear": "Limipar",
-      "sendPaymentFailDialogTitle": "No se puede enviar el pago"
+      "sendPaymentFailDialogTitle": "No se puede enviar el pago",
+      "errorInvalidAddress": "The payment address is not valid."
     },
     "spendConfirmBox": {
       "heading": "¿Estás seguro?",
-      "body": "Un cargo por la red sera incluido, actulmente estimado en %{fiatBtcPairing}",
+      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
       "errorHeading": "No se puede enviar el pago",
       "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
       "bodyDustAmount": "El importe de la transacción es muy bajo y está debajo del importe mínimo de la red.",
@@ -779,15 +870,15 @@
     "transactions": {
       "header": "Transacciones",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} a %{address}",
-        "incomingText": "%{fiatBtcPairing} recibido",
+        "outgoingText": "%{currencyPairing} to %{address}",
+        "incomingText": "%{currencyPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "Ver detalles",
         "retryTransactionBtn": "Aumentar tarifa",
         "retryPaymentConfirmBox": {
           "title": "Reintentar pago",
-          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}precio estimado",
           "btnCancel": "Cancelar",
@@ -828,6 +919,7 @@
     "type": "Tipo: %{type}",
     "condition": "Condición: %{condition}",
     "tags": "Etiquetas",
+    "paymentsAccepted": "Payments Accepted",
     "noTags": "No se han introducido etiquetas",
     "buyNow": "COMPRAR AHORA",
     "description": "Descripción",
@@ -849,6 +941,12 @@
     "allCountries": "Cualquier país",
     "returnToStore": "Volver a la tienda",
     "goToStore": "Ir a tienda",
+    "unableToPurchase": {
+      "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
+      "unrecognizedCur": "The item is priced in an unrecognized currency.",
+      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
+      "unpurchaseable": "This listing is not purchasable."
+    },
     "confirmDelete": {
       "title": "¿Estás seguro?",
       "body": "Una vez eliminado, no se puede recuperar.",
@@ -887,7 +985,11 @@
     "editFetchErrorDialog": {
       "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
-    }
+    },
+    "btnShowMatureContent": "Show Mature Content",
+    "tipShowMatureContent": "Show Mature Content",
+    "tipHideMatureContent": "Hide Mature Content",
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "Borrando publicación %{listing}…",
@@ -949,13 +1051,13 @@
     "helperSKU": "Un identificador único para su publicación",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Inventorio Variable",
-    "helperPrice": "Pongo su precio en Dolares, Yuan, Bitcoin, lo que sea",
     "helperCondition": "La condición general de tu publicación",
     "helperNSFW": "Marque si la publicación es NSFW",
     "helperTags": "Agregar varias etiquetas. Introduzca nombre de etiqueta, presione intro, repita.",
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
     "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
     "createListingLabel": "Nuevo Listado",
     "editListingLabel": "Editar listado",
     "title": "Título",
@@ -976,6 +1078,11 @@
     "btnAddCoupon": "Agregar Cupón",
     "primaryPhoto": "FOTO PRINCIPAL",
     "viewListingLink": "Ver Listado",
+    "unsupportedCurrencyDialog": {
+      "title": "Unrecognized currency",
+      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "btnOk": "OK"
+    },
     "shippingOptions": {
       "optionHeading": "Opción de envío #%{listPosition}",
       "shippingDestinations": "Destinos",
@@ -1105,7 +1212,7 @@
     "introScreen": {
       "connectionLbl": "Conexión:",
       "btnChange": "Cambiar",
-      "introLine": "Un mercado libre. Sin tasas. Sin restricciones. Gana Bitcoin.",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
       "tagLine": "Compra y vende libremente",
       "btnGetStarted": "Comenzar"
     },
@@ -1123,7 +1230,7 @@
     },
     "tosScreen": {
       "heading": "Términos de servicio",
-      "tos": "OpenBazaar es una red para comerciar bienes y servicios directamente entre la gente - utilizando Bitcoin - sin ninguna organización central que controle la plataforma. Esto significa que usted es responsable de su propia actividad en la red..\n\nLo usuarios de OpenBazaar no son anónimos por defecto. La mayoría de las comunicaciones entre las partes son cifradas, pero las direcciones IP son públicas y pueden ser asociadas con su actividad en la red. Partes maliciosas podrían utilizar esta información contra usted; proteger su privacidad es su propia responsabilidad.\n\nLos usuarios de OpenBazaar se deben adherir a las leyes su propia jurisdicción local así como a su sentido común. Los desarrolladores de OpenBazaar no condonan - y no son responsables - de ningún uso de la plataforma para actividades ilegales.\n\nLa comunidad de desarrolladores de OpenBazaar ha trabajado duro para entregar al mundo una plataforma de comercio libre. Pero como ocurre con cualquier software, se encontrarán bugs. Los desarrolladores no son responsables de ninguna pérdida monetaria que pueda asociarse a problemas con su software.\n\nUsing OpenBazaar usted se responsabiliza de sus propias acciones en la red de OpenBazaar."
+      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
     }
   },
   "pageControls": {
@@ -1161,6 +1268,7 @@
     "memoPlaceholder": "Proporcione detalles adicionales para el vendedor aquí (opcional).",
     "pay": "PAGAR >",
     "payNote": "Hacer click en pagar le llevará al paso final.",
+    "scamWarning": "WARNING: Protect against scams",
     "pending": "Pendiente...",
     "pendingNote": "Por favor pague la orden para completar su transaccion",
     "close": "cerrar",
@@ -1169,7 +1277,7 @@
     "quantity": "Cantidad",
     "useShapeShift": "O use ShapeShift en el siguiente paso",
     "moderatedPayment": "Pago Moderado",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
+    "tooLowForMods": "Según la tarifa estimada actual, la opción de pago moderado no está disponible para pedidos bajo% {minModPrice}. Se usará un pago directo en su lugar.",
     "noValidModerators": "No hay moderadores validos disponibles para esta orden.",
     "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
     "chooseModerator": "Eligir este moderador",
@@ -1366,9 +1474,9 @@
       "payment": {
         "firstPaymentHeading": "Detalles del Pago",
         "paymentHeading": "Payment Details #%{paymentNumber}",
-        "amountTo": "%{fiatBtcPairing} to %{payeeName}",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "amountTo": "%{currencyPairing} to %{payeeName}",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "paidInFull": "Pagado Completo",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "cancelBtn": "Cancelar",
@@ -1378,7 +1486,7 @@
         "veryManyConfirmationsCount": "%{countText} confirmations",
         "rejectConfirm": {
           "title": "¿Estás seguro?",
-          "body": "La cantidad original en bitcoin será devuelta al comprador",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Cancelar",
           "btnConfirm": "Sí, Rechazar"
         },
@@ -1386,8 +1494,8 @@
       },
       "refund": {
         "heading": "Fondos Devueltos",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "confirmationsCount": "%{smart_count} confirmation |||| %{smart_count} confirmations",
         "veryManyConfirmationsCount": "%{countText} confirmations"
       },
@@ -1402,7 +1510,7 @@
         "fulfillBtn": "Completar Orden",
         "refundConfirm": {
           "title": "¿Estás seguro?",
-          "body": "La cantidad original en bitcoin será devuelta al comprador",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Cancelar",
           "btnConfirm": "Sí, reembolso"
         }
@@ -1411,7 +1519,9 @@
         "heading": "Completada",
         "shippedByLabel": "Order Shipped via:",
         "trackingNumberLabel": "Tracking #:",
-        "noteFromLabel": "Note from %{store}:",
+        "yourNoteLabel": "Your note:",
+        "noteFromVendorLabel": "Note from the vendor:",
+        "noteFromStoreLabel": "Note from %{store}:",
         "copyLink": "Copiar",
         "digitalReadyForDlHeading": "¡Los archivos digitales están listos para descargar!",
         "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
@@ -1483,6 +1593,8 @@
         "moderatorHeading": "Moderador",
         "copyAddress": "Copiar",
         "viewOnMap": "Ver en mapa",
+        "shippingOption": "Shipping Option",
+        "shippingService": "Shipping Service",
         "memo": "Memo",
         "addressNotes": "Notas de Entrega",
         "alternateContact": "Información de contacto adicional",
@@ -1588,7 +1700,10 @@
     "invalidIp": "Esta no parece ser una dirección IP válida.",
     "providePortAsNumber": "Introduzca un puerto como un número.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
+    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideZcashBinaryPath": "Introduzca un valor.",
+    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
@@ -1676,10 +1791,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "Por favor provea una dirección.",
-    "invalidAddress": "La dirección proveída no parece ser una dirección valida de bitcoin.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "La cantidad deber ser mayor que cero.",
-    "insufficientFunds": "No tiene fondos suficientes para enviar esa cantidad. Asegúrese de contar con el cargo de la transacción."
+    "insufficientFunds": "No tiene fondos suficientes para enviar esa cantidad. Asegúrese de contar con el cargo de la transacción.",
+    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "La cantidad debe ser 1 o más.",
@@ -1735,20 +1851,17 @@
     "invalidsearch": "You must provide a valid search URL.",
     "invalidlistings": "You must provide a valid listings search URL",
     "invalidtorsearch": "You must provide a valid Tor search URL",
-    "invalidtorlistings": "You must provide a valid Tor listings search URL."
+    "invalidtorlistings": "Debe proporcionar una URL válida de búsqueda de listados Tor."
   },
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "µBTC",
+    "UBTC": "μBTC",
     "SATOSHI": "sat"
   },
-  "bitcoinCurrencyFormat": {
-    "shortBTC": "%{symbol}%{amount}",
-    "longBTC": "%{amount} %{symbol}",
-    "MBTC": "%{amount} %{symbol}",
-    "UBTC": "%{amount} %{symbol}",
-    "SATOSHI": "%{amount} %{symbol}"
+  "cryptoCurrencyFormat": {
+    "curSymbolAmount": "%{symbol}%{amount}",
+    "curCodeAmount": "%{amount} %{code}"
   },
   "countries": {
     "AFGHANISTAN": "Afganistán",
@@ -2025,7 +2138,6 @@
     "BOB": "Boliviano",
     "BRL": "Real brasileño",
     "BSD": "Dólar bahameño",
-    "BTC": "Bitcoin",
     "BTN": "Ngultrum",
     "BWP": "Pula",
     "BYR": "Rublo bielorruso",
@@ -2162,6 +2274,11 @@
     "ZAR": "Rand",
     "ZMW": "Kwacha zambiano",
     "ZWL": "Dólar zimbabuense"
+  },
+  "cryptoCurrencies": {
+    "BTC": "Bitcoin",
+    "BCH": "Bitcoin Cash",
+    "ZEC": "Zcash"
   },
   "languages": {
     "af": "Afrikaans",

@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "محتوى غير منشور",
-    "unpublishedConfirmBody": "لديك محتوى غير منشور. إذا أغلقت الآن، فلن يتمكن الآخرون من مشاهدة أحدث بياناتك. هل تريد بالتأكيد إغلاق؟",
-    "unpublishedConfirmYes": "نعم",
-    "unpublishedConfirmNo": "لا",
     "failedRetryTitle": "حدث خطأ أثناء إعادة محاولة النشر.",
     "statusPublishing": "جار نشر التحديثات إلى الشبكة ...",
     "retryLink": "إعادة المحاولة",
     "statusPublishFailed": "فشل النشر. %{retryLink}",
     "statusPublishComplete": "اكتمل النشر."
+  },
+  "localServerShutdownDialog": {
+    "title": "Shutting down the built-in server",
+    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
   },
   "follow": {
     "typeFollow": "متابع",
@@ -23,13 +23,66 @@
     "ECONOMIC": "اقتصادي"
   },
   "feeChangeWidget": {
-    "label": "رسوم بيتكوين:",
-    "btnChange": "تغيير"
+    "btnChange": "تغيير",
+    "label": "%{cur} fee:"
+  },
+  "blockButton": {
+    "tipBlock": "Block this user",
+    "tipUnblock": "Unblock this user",
+    "btnTxtBlock": "احجب",
+    "btnTxtUnblock": "فك الحجب"
+  },
+  "blockedWarning": {
+    "heading": "You blocked this user",
+    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph2": "Would you like to unblock and view their page?",
+    "btnCancel": "إلغاء",
+    "btnUnblock": "Yes, unblock"
+  },
+  "nsfwWarning": {
+    "heading": "Mature content",
+    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "paragraph2": "هل أنت متأكد أنك تريد المتابعة؟",
+    "nsfwOffLabel": "Always display mature content",
+    "btnCancel": "إلغاء",
+    "btnProceed": "نعم, تابع"
+  },
+  "walletSetup": {
+    "heading": "OpenBazaar Wallet Setup",
+    "currencyLabel": "العملة",
+    "currencyHelper": "Choose a currency for your Wallet",
+    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
+    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "zcashBinaryLabel": "Zcash Binary",
+    "fullNodeLink": "here",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "btnBrowse": "Browse",
+    "btnNext": "التالي"
+  },
+  "unsupportedCryptoCurDialog": {
+    "title": "Unsupported Currency",
+    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
+    "connectLink": "connect"
+  },
+  "setValidCurDialog": {
+    "title": "Invalid Local Currency",
+    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
+    "settingsLink": "settings"
   },
   "consoleWarning": {
     "heading": "إيقاف!",
     "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
     "line2": "الرجاء أغلق هذه النافذة الآن."
+  },
+  "block": {
+    "errorModal": {
+      "titleUnableToBlock": "Unable to block",
+      "titleUnableToUnblock": "Unable to unblock",
+      "titleUnableToBlockUnblock": "Unable to block / unblock",
+      "blockFailedListHeading": "Unable to block the following users:",
+      "unblockFailedListHeading": "Unable to unblock the following users:",
+      "reason": "Reason: %{reason}"
+    }
   },
   "resyncBlockchainError": "حدث خطأ أثناء إعادة تحميل التحويلات.",
   "restartNow": "أعد التشغيل الآن",
@@ -48,11 +101,14 @@
     },
     "install": "التثبيت الآن"
   },
+  "formattedCurrency": {
+    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+  },
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "وضع الاختبار",
   "testnetTooltip": "يستخدم وضع الاختبار عملات testnet، والتي تهدف لأغراض الاختبار فقط.",
   "tabMenuHeading": "قائمة",
-  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
   "copiedToClipboard": "تم النسخ إلى الحافظة",
   "copiedToClipboardShort": "تم النسخ",
   "refreshAlertPopInMessage": {
@@ -103,9 +159,10 @@
         "title": "غير قادر على تحميل مزودات البحث."
       }
     },
-    "startupLoadingModal": {
-      "canceLink": "إلغاء",
-      "connectAttemptMsg": "جار الاتصال ب %{serverName}. %{canceLink}"
+    "connectMessaging": {
+      "cancelLink": "إلغاء",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
     }
   },
   "notifications": {
@@ -147,6 +204,7 @@
     "sales": "مبيعات",
     "cases": "الحالات",
     "settings": "إعدادات",
+    "help": "Help",
     "toolTip": {
       "back": "إلى الخلف",
       "forward": "إلى الأمام",
@@ -156,7 +214,7 @@
       "notifications": "إشعارات",
       "nav": "جهت یابی",
       "close": "أغلق",
-      "currentPrice": "سعر بيتكوين الحالي"
+      "currentPrice": "Current %{cur} price"
     },
     "serversMenu": {
       "newServer": "خادم جديد",
@@ -179,7 +237,8 @@
       },
       "typingIndicator": "%{user} يكتب…",
       "deleteConvoErrorTitle": "يتعذر حذف المحادثة",
-      "deletingOverlayText": "جار حذف المحادثة ..."
+      "deletingOverlayText": "جار حذف المحادثة ...",
+      "blockingOverlayText": "Blocking…"
     }
   },
   "userPage": {
@@ -208,7 +267,8 @@
       "home": "الرئيسية",
       "store": "متجر",
       "following": "متابعة",
-      "followers": "متابعون"
+      "followers": "متابعون",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "لا أحد يتابع %{name} بعد",
@@ -253,7 +313,8 @@
       "categoryFilter": {
         "heading": "التصنيف",
         "showMore": "%{smart_count} المزيد... |||| %{smart_count} المزيد...",
-        "showLess": "أقل"
+        "showLess": "أقل",
+        "all": "الكل"
       },
       "toolTip": {
         "contentView": "ثبت الإظهار"
@@ -264,7 +325,14 @@
       "store": "متجر",
       "following": "متابعة",
       "followers": "متابعون"
-    }
+    },
+    "blockedUserOverlayText": "You blocked this user"
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "review |||| reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "جار التحميل…",
@@ -274,7 +342,8 @@
     "tipFollow": "تابع",
     "tipUnfollow": "إلغاء متابعة",
     "tipModAdd": "إضافة كمشرف",
-    "tipModRemove": "إزالة كمشرف"
+    "tipModRemove": "إزالة كمشرف",
+    "blockedUserOverlayText": "You blocked this user"
   },
   "moderatorCard": {
     "view": "عرض",
@@ -298,7 +367,9 @@
     "termsOfService": "شروط الخدمة",
     "addAsModeratorButton": "إضافة كمشرف",
     "disclaimer": "** لا ينطبق رسم خدمة المشرف إلا عندما ينشأ نزاع.",
-    "languages": "اللغات"
+    "languages": "اللغات",
+    "currenciesSupported": "Currencies Supported",
+    "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
     "linkText": "حول أوبن بازار",
@@ -318,6 +389,8 @@
       "btnCopyAddress": "نسخ العنوان",
       "btnOpenInWallet" : "فتح في المحفظة",
       "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
+      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
+      "bchWarning": "Do not send Bitcoin Cash to this address.",
       "unableToOpenInWallet": {
         "title": "تعذر الفتح في المحفظة",
         "body": "تعذر فتح العنوان في المحفظة لأن هناك عملية دفع قيد الإرسال. يرجى الانتظار حتى يكتمل الإرسال والمحاولة مرة أخرى."
@@ -355,6 +428,12 @@
         "or": "أو",
         "codeCTA": "شارك."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {
@@ -514,7 +593,7 @@
       "transaction": {
         "sectionName": "العمليات التجارية",
         "saveMetadata": "حفظ البيانات الوصفية",
-        "defaultFee": "رسوم بيتكوين",
+        "defaultFee": "%{cur} Fee",
         "low": "اقتصادي",
         "medium": "Normal",
         "high": "أفضلية"
@@ -600,6 +679,11 @@
         "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "تم الحجب",
+      "btnUnblock": "فك الحجب",
+      "emptyBlockList": "You are not blocking anyone."
+    },
     "optional": "اختياري",
     "language": "اللغات",
     "country": "البلد",
@@ -666,7 +750,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "مخدم مدمج Built-in",
+    "builtInServerName": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "خطأ:",
       "needHelpLink": "بحاجة لمساعدة؟",
@@ -679,7 +763,8 @@
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "إلغاء",
-      "connectAttemptMsg": "محاولة الاتصال بـ %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "محاولة الاتصال بـ %{serverName}. %{cancelConnAttempt}",
+      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
     },
     "configurations": {
       "tabName": "تكوينات",
@@ -723,6 +808,12 @@
       "torPwPlaceholder": "كلمة المرور الغير مرمزة لتحكم Tor",
       "warning": "تحذير:",
       "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "lblServerType": "النوع",
+      "helperServerType": "Select your server type",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
+      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "هل أنت متأكد؟",
         "body": "عند الاتصال بمخدم عن بعد, يفضل بشدة أن تكون SSL في وضعية التشغيل.",
@@ -745,28 +836,28 @@
     "fundsHeader": "Funds",
     "btnReceiveMoney": "استلام أموال",
     "btnSendMoney": "ارسل أموال",
-    "btcCurrencyLabel": "بيتكوين",
     "valueInCurrencyLabel": "القيمة بـ %{currency}",
     "transactionsLabel": "العمليات التجارية",
     "receiveMoney": {
       "title": "استلام أموال",
-      "needBitcoin": "بحاجة بيتكوين؟",
       "btnCancel": "إلغاء",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnFundViaShapeshift": "Fund via ShapeShift",
+      "needCoinLink": "Need %{cur}?"
     },
     "sendMoney": {
       "toLabel": "إلى",
-      "toPlaceholder": "ضع عنوان Bitcoin",
+      "toPlaceholder": "Enter a %{cur} Address",
       "amountLabel": "كمية",
       "noteLabel": "ملاحظة",
       "notePlaceholder": "يرى فقط من قبلك",
       "sendBtn": "ارسل",
       "clear": "مسح",
-      "sendPaymentFailDialogTitle": "تعذر إرسال الدفعة"
+      "sendPaymentFailDialogTitle": "تعذر إرسال الدفعة",
+      "errorInvalidAddress": "The payment address is not valid."
     },
     "spendConfirmBox": {
       "heading": "هل أنت متأكد؟",
-      "body": "A network fee will be included, currently estimated at %{fiatBtcPairing}",
+      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
       "errorHeading": "تعذر إرسال الدفعة",
       "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
@@ -779,15 +870,15 @@
     "transactions": {
       "header": "العمليات التجارية",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} إلى %{address}",
-        "incomingText": "تم استلام %{fiatBtcPairing}",
+        "outgoingText": "%{currencyPairing} to %{address}",
+        "incomingText": "%{currencyPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "عرض التفاصيل",
         "retryTransactionBtn": "زيادة الرسوم",
         "retryPaymentConfirmBox": {
           "title": "إعادة محاولة دفع",
-          "body": "Add %{fiatBtcPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "fetchError": "حدث خطأ أثناء تحميل الرسوم المقدرة: %{err}",
           "subText": "%{asterisk}السعر المقدر",
           "btnCancel": "إلغاء",
@@ -828,6 +919,7 @@
     "type": "النوع: %{type}",
     "condition": "الحالة: %{condition}",
     "tags": "وسوم Tags",
+    "paymentsAccepted": "Payments Accepted",
     "noTags": "لم يتم ادخال وسوم Tag",
     "buyNow": "اشتري الآن",
     "description": "وصف",
@@ -849,6 +941,12 @@
     "allCountries": "أي بلد",
     "returnToStore": "العودة إلى المتجر",
     "goToStore": "اذهب إلى متجر",
+    "unableToPurchase": {
+      "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
+      "unrecognizedCur": "The item is priced in an unrecognized currency.",
+      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
+      "unpurchaseable": "This listing is not purchasable."
+    },
     "confirmDelete": {
       "title": "هل أنت متأكد؟",
       "body": "عندما يتم الحذف, لا يمكن الاسترداد أبدا",
@@ -887,7 +985,11 @@
     "editFetchErrorDialog": {
       "title": "حدث خطأ أثناء استرداد القائمة.",
       "bodyNotFound": "لم يتم العثور على القائمة. قد تكون حذفت من قبل المالك؟"
-    }
+    },
+    "btnShowMatureContent": "Show Mature Content",
+    "tipShowMatureContent": "Show Mature Content",
+    "tipHideMatureContent": "Hide Mature Content",
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "جاري حذف قائمة %{listing}.",
@@ -949,13 +1051,13 @@
     "helperSKU": "معرف خاص بقائمتك",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "المخزون المتغير",
-    "helperPrice": "ضع سعرك بالدولار ,الوان الصيني ,بيتكوين ,أي شيء",
     "helperCondition": "الحالة العامة لقائمتك",
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "إضافة العديد من العلامات. أدخل اسم العلامة، ثم اضغط على إدخال، كرر.",
     "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
     "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
     "createListingLabel": "إنشاء قائمة",
     "editListingLabel": "تعديل قائمة",
     "title": "عنوان",
@@ -976,6 +1078,11 @@
     "btnAddCoupon": "إضافة قسيمة",
     "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "عرض قائمة",
+    "unsupportedCurrencyDialog": {
+      "title": "Unrecognized currency",
+      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "btnOk": "OK"
+    },
     "shippingOptions": {
       "optionHeading": "خيارات الشحن #%{listPosition}",
       "shippingDestinations": "الوجهات",
@@ -1105,7 +1212,7 @@
     "introScreen": {
       "connectionLbl": "إتصال:",
       "btnChange": "تغيير",
-      "introLine": "سوق حرة. لا رسوم. لا قيود. كسب بيتكوين.",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
       "tagLine": "شراء وبيع بحرية",
       "btnGetStarted": "البدء"
     },
@@ -1123,7 +1230,7 @@
     },
     "tosScreen": {
       "heading": "شروط الخدمة",
-      "tos": "أوبن بازار هي شبكة لتجارة السلع والخدمات مباشرة بين الناس - باستخدام بيتكوين - من دون أي منظمة مركزية تتحكم بالمنصة. وهذا يعني أنك مسؤول عن النشاط الخاص بك على الشبكة.  مستخدمين أوبن بازار ليسو مجهولون بالحالة الافتراضية, يتم تشفير معظم الاتصالات بين الأطراف، ولكن عناوين الشبكة عامة ويمكن ربطها بالنشاط على الشبكة. يمكن للأطراف الخبيثة استخدام هذه المعلومات ضدك ؛ وحماية خصوصيتك هي مسؤولية خاصة بك, يجب على مستخدمين أوبن بازار التقيد بالقوانين المعمول بها محليا وكذلك مراجعة ضمائرهم.  مطورين أوبن بازار لا تتغاضى - وغير مسؤولة عن - أي استخدام غير مشروع للمنصة. مجتمع مطورين أوبن بازار عمل بجد لتقديم منصة مجانية للتجارة إلى العالم. ولكن كما هو الحال مع أي برنامج، سيتم العثور على أخطاء.  المطورون ليسو مسؤولون عن أي خسارة نقدية مرتبطة بمشاكل في البرنامج.  باستخدامك برنامج أوبن بازار أنت مسؤول عن النشاطات الخاصة بك على شبكة أوبن بازار."
+      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
     }
   },
   "pageControls": {
@@ -1161,6 +1268,7 @@
     "memoPlaceholder": "أعطي تفاصيل إضافية للمورد هنا (اختياري).",
     "pay": "PAY >",
     "payNote": "سوف ينقلك الضغط على دفع إلى الخطوة النهائية.",
+    "scamWarning": "WARNING: Protect against scams",
     "pending": "قيد الانتظار...",
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "أغلق",
@@ -1366,9 +1474,9 @@
       "payment": {
         "firstPaymentHeading": "بيانات الدفع",
         "paymentHeading": "تفاصيل الدفعة #%{paymentNumber}",
-        "amountTo": "%{fiatBtcPairing} to %{payeeName}",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "amountTo": "%{currencyPairing} to %{payeeName}",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "paidInFull": "مدفوعة بالكامل",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "cancelBtn": "إلغاء",
@@ -1378,7 +1486,7 @@
         "veryManyConfirmationsCount": "%{countText} تأكيدات",
         "rejectConfirm": {
           "title": "هل أنت متأكد؟",
-          "body": "The original amount in bitcoin will be returned to the buyer",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "إلغاء",
           "btnConfirm": "نعم, أرفض"
         },
@@ -1386,8 +1494,8 @@
       },
       "refund": {
         "heading": "مسترجع",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "confirmationsCount": "%{smart_count} تأكيد |||| %{smart_count} تأكيدات",
         "veryManyConfirmationsCount": "%{countText} تأكيدات"
       },
@@ -1402,7 +1510,7 @@
         "fulfillBtn": "الوفاء بالطلبات",
         "refundConfirm": {
           "title": "هل أنت متأكد؟",
-          "body": "The original amount in bitcoin will be returned to the buyer",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "إلغاء",
           "btnConfirm": "نعم، استرداد"
         }
@@ -1411,7 +1519,9 @@
         "heading": "استيفاء",
         "shippedByLabel": "يتم شحن الطلب عبر:",
         "trackingNumberLabel": "Tracking #:",
-        "noteFromLabel": "ملاحظة من %{store}:",
+        "yourNoteLabel": "Your note:",
+        "noteFromVendorLabel": "Note from the vendor:",
+        "noteFromStoreLabel": "ملاحظة من %{store}:",
         "copyLink": "نسخ",
         "digitalReadyForDlHeading": "الملفات الرقمية جاهزة للتحميل!",
         "digitalReadyForDlText": "تم تسليم الملفات. ابدء التحميل عندما تكون مستعدا.",
@@ -1483,6 +1593,8 @@
         "moderatorHeading": "مشرف",
         "copyAddress": "نسخ",
         "viewOnMap": "اظهر على الخريطة",
+        "shippingOption": "Shipping Option",
+        "shippingService": "Shipping Service",
         "memo": "Memo",
         "addressNotes": "ملاحظات التوصيل",
         "alternateContact": "معلومات اتصال إضافية",
@@ -1588,7 +1700,10 @@
     "invalidIp": "لا يبدو هذا عنوان IP صالح.",
     "providePortAsNumber": "يرجى وضع رقم المنفذ.",
     "provideValidPortRange": "يرجى وضع رقم بين 0 و 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
+    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideZcashBinaryPath": "يرجى وضع قيمة",
+    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
   },
   "shippingAddressModelErrors": {
     "provideName": "يرجى وضع اسم.",
@@ -1676,10 +1791,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "يرجى وضع عنوان.",
-    "invalidAddress": "العنوان المقدم لايبدو أنه عنوان bitcoin صالح.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "الكمية يجب أن تكون أكبر من صفر",
-    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee."
+    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee.",
+    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "يجب أن تكون الكمية 1 أو أكثر",
@@ -1740,15 +1856,12 @@
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "µBTC",
+    "UBTC": "μBTC",
     "SATOSHI": "sat"
   },
-  "bitcoinCurrencyFormat": {
-    "shortBTC": "%{symbol}%{amount}",
-    "longBTC": "%{amount} %{symbol}",
-    "MBTC": "%{amount} %{symbol}",
-    "UBTC": "%{amount} %{symbol}",
-    "SATOSHI": "%{amount} %{symbol}"
+  "cryptoCurrencyFormat": {
+    "curSymbolAmount": "%{symbol}%{amount}",
+    "curCodeAmount": "%{amount} %{code}"
   },
   "countries": {
     "AFGHANISTAN": "افغانستان",
@@ -2025,7 +2138,6 @@
     "BOB": "بوليفي",
     "BRL": "ريال برازيلي",
     "BSD": "الدولار البهامي",
-    "BTC": "بيتكوين",
     "BTN": "بوتاني",
     "BWP": "بولا",
     "BYR": "روبل بيلاروسي",
@@ -2162,6 +2274,11 @@
     "ZAR": "راند",
     "ZMW": "زامبيا كواشا",
     "ZWL": "الدولار الزيمبابوي"
+  },
+  "cryptoCurrencies": {
+    "BTC": "بيتكوين",
+    "BCH": "Bitcoin Cash",
+    "ZEC": "Zcash"
   },
   "languages": {
     "af": "Afrikaans",
