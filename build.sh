@@ -39,7 +39,7 @@ npm install npm-run-all -g --silent
 npm install grunt-cli -g --silent
 npm install grunt --save-dev --silent
 npm install grunt-electron-installer --save-dev --silent
-npm install --verbose
+npm install
 
 echo 'Building OpenBazaar app...'
 npm run build
@@ -141,7 +141,7 @@ case "$TRAVIS_OS_NAME" in
 
   "osx")
 
-    brew update
+    brew update > /dev/null
     brew install jq
     brew link jq
     curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
