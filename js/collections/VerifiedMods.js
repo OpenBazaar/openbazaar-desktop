@@ -34,7 +34,7 @@ export default class extends Collection {
   }
 
   /**
-   * Return a badge to use to represent the verified moderators available on a listing.
+   * Return a badge object to use to represent the verified moderators available on a listing.
    * If none of the moderators are verified, return false.
    * @param IDs {array} - a list of IDs
    */
@@ -56,7 +56,12 @@ export default class extends Collection {
         {
           name: 'standard (required)',
           description: 'description of this type of moderator (optional)',
-          badge: 'url to the badge image'
+          badge: {
+            large: "url",
+            medium: "url",
+            small: "url",
+            tiny: "url"
+          }
         }
       ],
       moderators: [
