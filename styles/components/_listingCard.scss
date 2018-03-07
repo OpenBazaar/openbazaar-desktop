@@ -84,12 +84,7 @@
   }
 
   .editOverlay {
-    // collapse the overlay so it doesn't block the verified moderator badge
     top: auto;
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0 auto;
 
     .btn {
       z-index: 1;

@@ -425,7 +425,6 @@ export default class extends baseVw {
     if (verifiedID) {
       this.verifiedMod = new VerifiedMod({
         model: app.verifiedMods.get(verifiedID),
-        arrowClass: 'arrowBoxRightTop',
         data: app.verifiedMods.data,
         showLongText: true,
         genericText: true,
