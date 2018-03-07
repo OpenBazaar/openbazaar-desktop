@@ -110,8 +110,9 @@ export default class extends baseVw {
       }
       this.render();
     });
-    this.listenTo(this.moderatorsCol, 'remove', (md, cl, rOpts) => {
-      this.modCards.splice(rOpts.index, 1)[0].remove();
+    this.listenTo(this.moderatorsCol, 'remove', (md) => {
+      const removeIndex = this.modCards.findIndex(card => card.model === md);
+      this.modCards.splice(removeIndex, 1)[0].remove();
       this.render();
     });
     this.modCards = [];
