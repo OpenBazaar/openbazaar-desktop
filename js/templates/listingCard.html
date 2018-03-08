@@ -47,7 +47,7 @@
     <% } else { %>
       <div class="additionalOverlay overlayPanel padSm">
         <div class="flex gutterHSm">
-          <div class="js-reportBtnWrapper"></div>
+          <div class="hideIfEmpty js-reportBtnWrapper"></div>
           <div class="js-blockBtnWrapper"></div>
           <% if (ob.nsfw) { %>
             <button class="iconBtnSm clrP clrBr toolTipNoWrap toolTipTop btnHideNsfw js-hideNsfw" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
@@ -188,7 +188,7 @@
   <% } else { %>
     <div class="additionalOverlay overlayPanel padSm">
       <div class="flex gutterHSm">
-        <div class="js-reportBtnWrapper"></div>
+        <div class="hideIfEmpty js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
         <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
         <% if (ob.nsfw) { %>
