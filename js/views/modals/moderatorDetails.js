@@ -55,6 +55,7 @@ export default class extends BaseModal {
         purchase: this.options.purchase,
         cardState: this.options.cardState,
         modLanguages,
+        verifiedMod,
         ...this.model.toJSON(),
       }));
       super.render();

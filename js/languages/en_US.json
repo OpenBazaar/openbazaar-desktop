@@ -358,7 +358,8 @@
     "verified": {
       "label": "Verified",
       "title": "Verified Moderator",
-      "body": "This moderator is verified by %{providerName}. %{link}"
+      "body": "This moderator is verified by %{providerName}. %{link}",
+      "bodyOrder": "This moderator is verified by %{providerName}. %{link}"
     },
     "unverified": {
       "label": "Unverified",

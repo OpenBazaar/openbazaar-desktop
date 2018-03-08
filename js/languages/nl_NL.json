@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Ongepubliceerde inhoud",
-    "unpublishedConfirmBody": "Je hebt ongepubliceerde inhoud. Als u nu afsluit dan is uw laatste data niet zichtbaar voor anderen. Weet u zeker dat u af wilt sluiten?",
-    "unpublishedConfirmYes": "Ja",
-    "unpublishedConfirmNo": "Nee",
     "failedRetryTitle": "Er trad een probleem op, er wordt opnieuw geprobeerd te publiceren.",
     "statusPublishing": "Updates worden naar het netwerk gepubliceerd",
     "retryLink": "Probeer opnieuw",
     "statusPublishFailed": "Publiceren mislukt %{retryLink}",
     "statusPublishComplete": "Publiceren afgerond"
+  },
+  "localServerShutdownDialog": {
+    "title": "Shutting down the built-in server",
+    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
   },
   "follow": {
     "typeFollow": "volgen",
@@ -23,13 +23,66 @@
     "ECONOMIC": "Economisch"
   },
   "feeChangeWidget": {
-    "label": "Bitcoin fee:",
-    "btnChange": "change"
+    "btnChange": "change",
+    "label": "%{cur} fee:"
+  },
+  "blockButton": {
+    "tipBlock": "Block this user",
+    "tipUnblock": "Unblock this user",
+    "btnTxtBlock": "Blokkeer",
+    "btnTxtUnblock": "Deblokker"
+  },
+  "blockedWarning": {
+    "heading": "You blocked this user",
+    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph2": "Would you like to unblock and view their page?",
+    "btnCancel": "Annuleer",
+    "btnUnblock": "Yes, unblock"
+  },
+  "nsfwWarning": {
+    "heading": "Mature content",
+    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "paragraph2": "Weet je zeker dat je door wilt gaan?",
+    "nsfwOffLabel": "Always display mature content",
+    "btnCancel": "Annuleer",
+    "btnProceed": "Ja, ga door"
+  },
+  "walletSetup": {
+    "heading": "OpenBazaar Wallet Setup",
+    "currencyLabel": "Valuta",
+    "currencyHelper": "Choose a currency for your Wallet",
+    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
+    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "zcashBinaryLabel": "Zcash Binary",
+    "fullNodeLink": "here",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "btnBrowse": "Browse",
+    "btnNext": "Volgende"
+  },
+  "unsupportedCryptoCurDialog": {
+    "title": "Unsupported Currency",
+    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
+    "connectLink": "connect"
+  },
+  "setValidCurDialog": {
+    "title": "Invalid Local Currency",
+    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
+    "settingsLink": "settings"
   },
   "consoleWarning": {
     "heading": "Stop!",
     "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
     "line2": "Please close this window now."
+  },
+  "block": {
+    "errorModal": {
+      "titleUnableToBlock": "Unable to block",
+      "titleUnableToUnblock": "Unable to unblock",
+      "titleUnableToBlockUnblock": "Unable to block / unblock",
+      "blockFailedListHeading": "Unable to block the following users:",
+      "unblockFailedListHeading": "Unable to unblock the following users:",
+      "reason": "Reason: %{reason}"
+    }
   },
   "resyncBlockchainError": "There was an error reloading transactions.",
   "restartNow": "Nu Herstarten",
@@ -48,11 +101,14 @@
     },
     "install": "Nu installeren"
   },
+  "formattedCurrency": {
+    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+  },
   "addressBarPlaceholder": "Type een @handle, OpenBazaar ID of zoek term",
   "testnet": "Test Modus",
   "testnetTooltip": "Test Modus gebruikt testnet coins, deze zijn slechts bedoelt voor testdoeleinden.",
   "tabMenuHeading": "MENU",
-  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
   "copiedToClipboard": "Naar klembord gekopieerd",
   "copiedToClipboardShort": "Gekopieerd",
   "refreshAlertPopInMessage": {
@@ -103,9 +159,10 @@
         "title": "Kan zoekmachines niet laden"
       }
     },
-    "startupLoadingModal": {
-      "canceLink": "annuleren",
-      "connectAttemptMsg": "Verbinden met %{serverName}. %{canceLink}"
+    "connectMessaging": {
+      "cancelLink": "annuleren",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
     }
   },
   "notifications": {
@@ -147,6 +204,7 @@
     "sales": "Verkopen",
     "cases": "Voorvallen",
     "settings": "Instellingen",
+    "help": "Help",
     "toolTip": {
       "back": "Terug",
       "forward": "Verder",
@@ -156,7 +214,7 @@
       "notifications": "Notificaties",
       "nav": "Navigatie",
       "close": "Sluit",
-      "currentPrice": "Huidige Bitcoin prijs"
+      "currentPrice": "Current %{cur} price"
     },
     "serversMenu": {
       "newServer": "Nieuwe Server",
@@ -179,7 +237,8 @@
       },
       "typingIndicator": "%{user} is aan het typen...",
       "deleteConvoErrorTitle": "Kan gesprek niet verwijderen",
-      "deletingOverlayText": "Gesprek verwijderen..."
+      "deletingOverlayText": "Gesprek verwijderen...",
+      "blockingOverlayText": "Blocking…"
     }
   },
   "userPage": {
@@ -208,7 +267,8 @@
       "home": "Home",
       "store": "Winkel",
       "following": "Volgend",
-      "followers": "Volgers"
+      "followers": "Volgers",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "Niemand volgt %{name} nog",
@@ -253,7 +313,8 @@
       "categoryFilter": {
         "heading": "Categorie",
         "showMore": "%{smart_count} meer... |||| %{smart_count} meer...",
-        "showLess": "minder"
+        "showLess": "minder",
+        "all": "Alles"
       },
       "toolTip": {
         "contentView": "Omschakelen van weergave"
@@ -264,7 +325,14 @@
       "store": "Winkel",
       "following": "Volgend",
       "followers": "Volgers"
-    }
+    },
+    "blockedUserOverlayText": "You blocked this user"
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "review |||| reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "Aan het laden...",
@@ -274,7 +342,8 @@
     "tipFollow": "Volg",
     "tipUnfollow": "Stop met volgen",
     "tipModAdd": "Toevoegen als moderator",
-    "tipModRemove": "Verwijderen als moderator"
+    "tipModRemove": "Verwijderen als moderator",
+    "blockedUserOverlayText": "You blocked this user"
   },
   "moderatorCard": {
     "view": "Bekijk",
@@ -298,7 +367,9 @@
     "termsOfService": "Leveringsvoorwaarden",
     "addAsModeratorButton": "Voeg toe als Moderator",
     "disclaimer": "**De moderator servicekosten zijn alleen van toepassing in het geval van een geschil.",
-    "languages": "Talen"
+    "languages": "Talen",
+    "currenciesSupported": "Currencies Supported",
+    "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
     "linkText": "Over OpenBazaar",
@@ -318,6 +389,8 @@
       "btnCopyAddress": "Kopieer adres",
       "btnOpenInWallet" : "Open in Wallet",
       "bannerCountDonations": "%{donationCountFloor}+ Donaties ontvangen!",
+      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
+      "bchWarning": "Do not send Bitcoin Cash to this address.",
       "unableToOpenInWallet": {
         "title": "Kan niet openen in wallet",
         "body": "Kan het adres niet openen in de wallet omdat een betaling wordt verzonden. Wacht tot verzending afgerond is en probeer opnieuw."
@@ -355,6 +428,12 @@
         "or": "of",
         "codeCTA": "draag een steentje bij."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {
@@ -514,7 +593,7 @@
       "transaction": {
         "sectionName": "Transactions",
         "saveMetadata": "Metadata opslaan",
-        "defaultFee": "Bitcoin Fee",
+        "defaultFee": "%{cur} Fee",
         "low": "Economisch",
         "medium": "Normaal",
         "high": "Prioriteit"
@@ -600,6 +679,11 @@
         "modsAreInvalidAsync": "De volgende moderators konden niet gevonden worden op het netwerk. Ze worden nog steeds opgeslagen in jouw lijst van moderators, maar er is geen informatie over hen beschikbaar. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "Geblokkeerd",
+      "btnUnblock": "Deblokker",
+      "emptyBlockList": "You are not blocking anyone."
+    },
     "optional": "Optioneel",
     "language": "Taal",
     "country": "Land",
@@ -666,7 +750,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Ingebouwde server",
+    "builtInServerName": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "Foutmelding",
       "needHelpLink": "Hulp nodig?",
@@ -679,7 +763,8 @@
       "errorTorNotConfigured": "Graag %{editLink} de %{serverName} configuratie om te bevestigen of je Tor wilt gebruiken of niet. %{links}",
       "errorTorNotAvailable": "Tor was niet gevonden. Graag %{editLink} de %{serverName} configuratie om Tor niet te gebruiken of te starten. %{links}",
       "cancelConnAttempt": "Annuleer",
-      "connectAttemptMsg": "Proberen verbinding te maken met %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Proberen verbinding te maken met %{serverName}. %{cancelConnAttempt}",
+      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
     },
     "configurations": {
       "tabName": "Instellingen",
@@ -723,6 +808,12 @@
       "torPwPlaceholder": "Unhashed Tor control wachtwoord",
       "warning": "Waarschuwing:",
       "torServerWarning": "%{warning} Om anoniem te zijn, moet de server ook in Tor mode gestart  worden.",
+      "lblServerType": "Type",
+      "helperServerType": "Select your server type",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
+      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "Weet u het zeker?",
         "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
@@ -745,28 +836,28 @@
     "fundsHeader": "Vermogen (coins)",
     "btnReceiveMoney": "Ontvang geld",
     "btnSendMoney": "Stuur geld",
-    "btcCurrencyLabel": "Bitcoin",
     "valueInCurrencyLabel": "Waarde in %{currency}",
     "transactionsLabel": "Transactions",
     "receiveMoney": {
       "title": "Ontvang geld",
-      "needBitcoin": "Bitcoin nodig?",
       "btnCancel": "Annuleer",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnFundViaShapeshift": "Fund via ShapeShift",
+      "needCoinLink": "Need %{cur}?"
     },
     "sendMoney": {
       "toLabel": "Naar",
-      "toPlaceholder": "Voer een Bitcoin adres in",
+      "toPlaceholder": "Enter a %{cur} Address",
       "amountLabel": "Hoeveelheid",
       "noteLabel": "Notitie",
       "notePlaceholder": "Alleen voor jou zichtbaar",
       "sendBtn": "Verzend",
       "clear": "Leegmaken",
-      "sendPaymentFailDialogTitle": "Kan betaling niet verzenden"
+      "sendPaymentFailDialogTitle": "Kan betaling niet verzenden",
+      "errorInvalidAddress": "The payment address is not valid."
     },
     "spendConfirmBox": {
       "heading": "Weet u het zeker?",
-      "body": "Een netwerk toeslag wordt toegevoegd, op dit moment isdit ongeveer %{fiatBtcPairing}",
+      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
       "errorHeading": "Kan betaling niet verzenden",
       "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
@@ -779,15 +870,15 @@
     "transactions": {
       "header": "Transactions",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} naar %{address}",
-        "incomingText": "%{fiatBtcPairing} ontvangen",
+        "outgoingText": "%{currencyPairing} to %{address}",
+        "incomingText": "%{currencyPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} bevestiging) |||| %{timeAgo} (%{confirmationsCount} bevestigingen)",
         "viewDetailsBtn": "Bekijk Details",
         "retryTransactionBtn": "Verhoog toeslag",
         "retryPaymentConfirmBox": {
           "title": "Betaling opnieuw proberen",
-          "body": "Voet %{fiatBtcPairing}%{asterisk} toe aan de fee en verstuur de transactie opnieuw.",
-          "insufficientFundsBody": "Je hebt tenminste %{fiatBtcPairing}%{asterisk} nodig in je wallet om deze transactie opnieuw te versturen met een hogere fee.",
+          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk} geschatte prijs",
           "btnCancel": "Annuleer",
@@ -828,6 +919,7 @@
     "type": "Type: %{type}",
     "condition": "Conditie: %{condition}",
     "tags": "Tags",
+    "paymentsAccepted": "Payments Accepted",
     "noTags": "Geen tags opgevoerd",
     "buyNow": "KOOP NU",
     "description": "Beschrijving",
@@ -849,6 +941,12 @@
     "allCountries": "Alle landen",
     "returnToStore": "Terug naar winkel",
     "goToStore": "Naar winkel",
+    "unableToPurchase": {
+      "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
+      "unrecognizedCur": "The item is priced in an unrecognized currency.",
+      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
+      "unpurchaseable": "This listing is not purchasable."
+    },
     "confirmDelete": {
       "title": "Weet u het zeker?",
       "body": "Eenmaal verwijderd, kan dit niet teruggehaald worden.",
@@ -887,7 +985,11 @@
     "editFetchErrorDialog": {
       "title": "There was an error retrieving the listing.",
       "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
-    }
+    },
+    "btnShowMatureContent": "Show Mature Content",
+    "tipShowMatureContent": "Show Mature Content",
+    "tipHideMatureContent": "Hide Mature Content",
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "Verwijderen van verkoopartikel %{listing}",
@@ -949,13 +1051,13 @@
     "helperSKU": "Een unieke identificator voor je verkoopartikel",
     "helperSKUWithVariants": "In geval van uitvoeringen kunnen verhandelbare eenheden opgegeven worden in de %{variantInventoryLink} sectie",
     "variantInventoryLink": "Variatie voorraad",
-    "helperPrice": "Zet je prijs in Dollars, Yuan, Bitcoin, of iets anders",
     "helperCondition": "De staat van je verkoopartikel",
     "helperNSFW": "Markeer ja als dit verkoopartikel niet geschikt is voor op het werk (Not suitable for work)",
     "helperTags": "Voeg veel tags toe. Voer een tag naam in en druk enter, herhaal.",
     "helperCategories": "Categorie nesting wordt niet ondersteund (b.v. Schoenen > Laarzen werkt op dit moment niet). Voer een categorienaam in, druk op enter, herhaal.",
     "helperReturnPolicy": "Wanneer leeg gelaten, wordt het verkoopartikel weergegeven  als \"Geen terugstuur beleid opgevoerd\" ",
     "helperTerms": "Wanneer leeg gelaten, wordt het verkoopartikel weergegeven als \"Geen verkoopvoorwaarden opgevoerd\" ",
+    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
     "createListingLabel": "Creeer Aanbieding",
     "editListingLabel": "Wijzig verkoopartikel",
     "title": "Titel",
@@ -976,6 +1078,11 @@
     "btnAddCoupon": "Voeg coupon toe",
     "primaryPhoto": "PRIMARY PHOTO",
     "viewListingLink": "Bekijk Aanbieding",
+    "unsupportedCurrencyDialog": {
+      "title": "Unrecognized currency",
+      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "btnOk": "OK"
+    },
     "shippingOptions": {
       "optionHeading": "Verzend Optie #%{listPosition}",
       "shippingDestinations": "Bestemming",
@@ -1105,7 +1212,7 @@
     "introScreen": {
       "connectionLbl": "Verbinding:",
       "btnChange": "Verander",
-      "introLine": "Een vrije marktplaats. Geen kosten. Geen beperkingen. Verdien Bitcoin.",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
       "tagLine": "Vrije koop en verkoop ",
       "btnGetStarted": "Begin"
     },
@@ -1123,7 +1230,7 @@
     },
     "tosScreen": {
       "heading": "Leveringsvoorwaarden",
-      "tos": "OpenBazaar is een netwerk voor het verhandelen van goederen en services, direct van koper naar verkoper - gebruik makend van Bitcoin - zonder een centrale organisatie die het platform controleert. Dit betekent dat je zelf verantwoordelijk bent voor je activiteit op het netwerk.\n\nOpenBazaar gebruikers zijn standaard niet anoniem. De meeste communicatie tussen partijen is encrypted, maar IP adressen zijn publiek zichtbaar en kunnen geassocieerd worden met activiteit  op het netwerk. Malafide partijen kunnen deze informatie tegen jouw gebruiken; jouw privacy beschermen is jouw eigen verantwoordelijkheid.\n\nOpenBazaar gebruikers moeten zelf relevante wetgeving in acht nemen evenals hun geweten. De OpenBazaar ontwikkelaars geven geen goedkeuring aan - en zijn niet verantwoordelijk voor - het gebruik van het platform voor illegale activiteiten. \n\nDe OpenBazaar community van developers  heeft hard gewerkt om de wereld een gratis platform te bieden voor vrije handel. Maar zoals met elke software zullen bugs gevonden worden. De developers zijn niet verantwoordelijk voor financiele verliezen geassocieerd met problemen in de software. Bij gebruik van OpenBazaar ben je zelf verantwoordelijk voor je eigen acties op het OpenBazaar netwerk."
+      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
     }
   },
   "pageControls": {
@@ -1161,6 +1268,7 @@
     "memoPlaceholder": "Voeg hier aanvullende details toe voor de verkoper (optioneel).",
     "pay": "BETAAL >",
     "payNote": "Door op betaal te klikken, zul je naar de laatste stap van het proces gaan.",
+    "scamWarning": "WARNING: Protect against scams",
     "pending": "In afwachting...",
     "pendingNote": "Aub de order betalen om de transactie af te ronden.",
     "close": "sluiten",
@@ -1366,9 +1474,9 @@
       "payment": {
         "firstPaymentHeading": "Betalingsgegevens",
         "paymentHeading": "Betalingsgegevens #%{paymentNumber}",
-        "amountTo": "%{fiatBtcPairing} naar %{payeeName}",
-        "refundedTo": "%{fiatBtcPairing} gerestitutioneerd aan %{payeeName}",
-        "refunded": "%{fiatBtcPairing} gerestitutioneerd",
+        "amountTo": "%{currencyPairing} to %{payeeName}",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "paidInFull": "Volledig betaald",
         "underpaidAmountShort": "Nog niet volledig betaald (%{amountShort} benodigd)",
         "cancelBtn": "Annuleer",
@@ -1378,7 +1486,7 @@
         "veryManyConfirmationsCount": "%{countText} bevestigingen",
         "rejectConfirm": {
           "title": "Weet u het zeker?",
-          "body": "De originele hoeveelheid in bitcoin zal worden terugbetaald aan de koper",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Annuleer",
           "btnConfirm": "Ja, afwijzen"
         },
@@ -1386,8 +1494,8 @@
       },
       "refund": {
         "heading": "Refunded",
-        "refundedTo": "%{fiatBtcPairing} gerestitutioneerd aan %{payeeName} ",
-        "refunded": "%{fiatBtcPairing} gerestitutioneerd ",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "confirmationsCount": "%{smart_count} bevestiging |||| %{smart_count} bevestigingen",
         "veryManyConfirmationsCount": "%{countText} bevestigingen "
       },
@@ -1402,7 +1510,7 @@
         "fulfillBtn": "Order voldoen",
         "refundConfirm": {
           "title": "Weet u het zeker?",
-          "body": "De originele hoeveelheid in bitcoin zal worden terugbetaald aan de koper ",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Annuleer",
           "btnConfirm": "Ja, restitueren"
         }
@@ -1411,7 +1519,9 @@
         "heading": "Voldaan",
         "shippedByLabel": "De order was verstuurd via:",
         "trackingNumberLabel": "Tracking #:",
-        "noteFromLabel": "Opmerking van %{store}:",
+        "yourNoteLabel": "Your note:",
+        "noteFromVendorLabel": "Note from the vendor:",
+        "noteFromStoreLabel": "Opmerking van %{store}:",
         "copyLink": "Kopieer",
         "digitalReadyForDlHeading": "Digitale gegevens zijn klaar voor download!",
         "digitalReadyForDlText": "De bestanden zijn afgeleverd. Download wanneer je wilt.",
@@ -1483,6 +1593,8 @@
         "moderatorHeading": "Moderator",
         "copyAddress": "Kopieer",
         "viewOnMap": "Bekijk op kaart",
+        "shippingOption": "Shipping Option",
+        "shippingService": "Shipping Service",
         "memo": "Memo",
         "addressNotes": "Afgifte notities",
         "alternateContact": "Verdere contactgegevens",
@@ -1588,7 +1700,10 @@
     "invalidIp": "Dit lijkt geen geldig IP adres te zijn.",
     "providePortAsNumber": "Geef de poort op als nummer",
     "provideValidPortRange": "Geef een nummer op tussen 0 en 65535.",
-    "invalidTorProxy": "De waarde lijkt niet in het juiste formaat opgevoerd te zijn.het zou in het ip-adres:poort formaat moeten zijn, b.v. 127.0.0.1:9150. De poort moet een nummer zijn tussen 0 en 65535."
+    "invalidTorProxy": "De waarde lijkt niet in het juiste formaat opgevoerd te zijn.het zou in het ip-adres:poort formaat moeten zijn, b.v. 127.0.0.1:9150. De poort moet een nummer zijn tussen 0 en 65535.",
+    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideZcashBinaryPath": "Geef een waarde op",
+    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
   },
   "shippingAddressModelErrors": {
     "provideName": "Voer een naam in.",
@@ -1676,10 +1791,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "Voer adres in.",
-    "invalidAddress": "Het opgegeven adres lijkt geen geldig Bitcoin adres te zijn.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "Bedrag moet  groter zijn dan nul.",
-    "insufficientFunds": "U heeft onvoldoende saldo om dit bedrag te versturen. Houdt rekening met de transactie toeslag."
+    "insufficientFunds": "U heeft onvoldoende saldo om dit bedrag te versturen. Houdt rekening met de transactie toeslag.",
+    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "Hoeveelheid moet 1 of meer zijn.",
@@ -1740,15 +1856,12 @@
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "µBTC",
+    "UBTC": "μBTC",
     "SATOSHI": "sat"
   },
-  "bitcoinCurrencyFormat": {
-    "shortBTC": "%{symbol}%{amount}",
-    "longBTC": "%{amount} %{symbol}",
-    "MBTC": "%{amount} %{symbol} ",
-    "UBTC": "%{amount} %{symbol} ",
-    "SATOSHI": "%{amount} %{symbol} "
+  "cryptoCurrencyFormat": {
+    "curSymbolAmount": "%{symbol}%{amount}",
+    "curCodeAmount": "%{amount} %{code}"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
@@ -2025,7 +2138,6 @@
     "BOB": "Boliviaanse boliviano",
     "BRL": "Braziliaanse Real",
     "BSD": " Bahamaanse Dollar",
-    "BTC": "Bitcoin",
     "BTN": "Bhutaanse Ngultrum",
     "BWP": "Botswana Pula",
     "BYR": "Wit-Russische Roebel",
@@ -2162,6 +2274,11 @@
     "ZAR": "Rand",
     "ZMW": "Zambiaanse Kwacha",
     "ZWL": "Zimbabwaanse Dollar"
+  },
+  "cryptoCurrencies": {
+    "BTC": "Bitcoin",
+    "BCH": "Bitcoin Cash",
+    "ZEC": "Zcash"
   },
   "languages": {
     "af": "Afrikaans",
