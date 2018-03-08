@@ -292,7 +292,10 @@
       height: 100%;
       box-sizing: border-box;
       align-items: center;
-      padding-left: 13px; // position the first button in the middle of the thumbnail
+    }
+
+    .additionalOverlay {
+      padding-left: 13px; // make the left padding 
     }
 
     // This isn't ideal, but there's inconistent spacing / widths of cols, plus there's variable
