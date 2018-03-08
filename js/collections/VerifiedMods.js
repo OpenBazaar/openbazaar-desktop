@@ -49,7 +49,10 @@ export default class extends Collection {
    */
   defaultBadge(IDs) {
     const modelWithBadge = _.find(this.matched(IDs), mod => mod.get('type').badge);
-    return modelWithBadge && modelWithBadge.get('type').badge || this.localBadge;
+    return {
+      ...this.localBadge,
+      ...(modelWithBadge && modelWithBadge.get('type').badge || {}),
+    };
   }
 
   parse(response) {
