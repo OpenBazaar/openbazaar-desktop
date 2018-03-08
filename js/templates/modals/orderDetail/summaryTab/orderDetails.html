@@ -16,7 +16,10 @@
           .replace('/n', '')
           .replace(/\s/g, '+');
       });
-    var mapUrl = `https://www.google.com/maps/place/${addressParts.join(',')}`;
+
+    let queryString = encodeURIComponent(addressParts.join(','));
+
+    var mapUrl = `https://www.google.com/maps/place/${queryString}`;
   }
 
   // For now we're only supporting one item per order, so we'll hard-code a reference to the
