@@ -1,3 +1,5 @@
+<% const modBorder = ob.verifiedMod ? 'clrBrAlert2 clrBAlert2Grad' : 'clrBrInvis' %>
+
 <div class="topControls flex js-closeClickTarget"></div>
 <div class="js-closeClickTarget">
   <div class="flexColRows gutterV">
@@ -43,7 +45,7 @@
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
-      <div class="box verifiedWrapper clrBrAlert2 clrBAlert2Grad js-verifiedMod"></div>
+      <div class="box verifiedWrapper <%= modBorder %> js-verifiedMod"></div>
     </div>
     <div class="contentBox mDetailBox padMd2 clrP clrBr clrSh3 tx5">
       <div class="rowMd">

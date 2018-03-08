@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Contenuto non pubblicato",
-    "unpublishedConfirmBody": "Hai dei contenuti che non sono ancora stati pubblicati. Se chiudi i tuoi ultimi dati non saranno visibili agli altri. Sei sicuro di voler chiudere?",
-    "unpublishedConfirmYes": "Sì",
-    "unpublishedConfirmNo": "No",
-    "failedRetryTitle": "Si e` verificato un errore durante il tentativo di riprovare a pubblicare il contenuto.",
+    "failedRetryTitle": "Si è verificato un errore durante il tentativo di riprovare a pubblicare il contenuto.",
     "statusPublishing": "Sto pubblicando gli aggiornamenti...",
     "retryLink": "Riprova",
     "statusPublishFailed": "Pubblicazione fallita. %{retryLink}",
     "statusPublishComplete": "Pubblicazione completata."
+  },
+  "localServerShutdownDialog": {
+    "title": "Spegnendo il server locale",
+    "body": "Il server locale si sta spegnendo. Questo potrebbe richiedere alcuni minuti. Durante lo spegnimento vengono eseguite importanti funzioni di correzione e pulizia. È importante che non venga interrotto questo processo. Quando il processo si sarà concluso, l'app di chiuderà da sola."
   },
   "follow": {
     "typeFollow": "segui",
@@ -23,13 +23,66 @@
     "ECONOMIC": "Economica"
   },
   "feeChangeWidget": {
-    "label": "Tassa in Bitcoin:",
-    "btnChange": "cambia"
+    "btnChange": "cambia",
+    "label": "%{cur} tassa:"
+  },
+  "blockButton": {
+    "tipBlock": "Blocca questo utente",
+    "tipUnblock": "Sblocca questo utente",
+    "btnTxtBlock": "Blocca",
+    "btnTxtUnblock": "Sblocca"
+  },
+  "blockedWarning": {
+    "heading": "Hai bloccato questo utente",
+    "paragraph1": "Questo utente al momento è nella tua lista degli utenti bloccati. Non puoi vedere la loro pagina o annunci mentre sono bloccati. Gli utenti bloccati, inoltre, non possono scriverti messaggi o piazzare un ordine nel tuo negozio.",
+    "paragraph2": "Vuoi sbloccare e vedere la loro pagina?",
+    "btnCancel": "Annulla",
+    "btnUnblock": "Si, sblocca"
+  },
+  "nsfwWarning": {
+    "heading": "Contenuto per adulti",
+    "paragraph1": "Questo annuncio è stato contrassegnato contenere contenuti per adulti. Potrebbe essere offensivo per alcune persone. Se non vuoi visualizzarlo, per piacere clicca annulla per tornare alla schermata precedente.",
+    "paragraph2": "Sei sicuro di voler procedere?",
+    "nsfwOffLabel": "Mostra sempre contenuto per adulti",
+    "btnCancel": "Cancella",
+    "btnProceed": "Sì, procedi"
+  },
+  "walletSetup": {
+    "heading": "Impostazione Portafoglio OpenBazaar",
+    "currencyLabel": "Valuta",
+    "currencyHelper": "Scegli una valuta per il tuo Portafoglio",
+    "currencyHelper2": "Accetta e invia pagamenti nella valuta selezionata qui sopra. Per piacere sceglila saggiamente, al momento non è possibile cambiare la tua valuta una volta che hai fatto la tua scelta.",
+    "curInUseTip": "Tu possiedi già un server locale con questa valuta del portafoglio.",
+    "zcashBinaryLabel": "Binario Zcash",
+    "fullNodeLink": "qui",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "btnBrowse": "Cerca",
+    "btnNext": "Prossimo"
+  },
+  "unsupportedCryptoCurDialog": {
+    "title": "Valuta non supportata",
+    "body": "Non siamo in grado di procedere perché il server sta utilizzando una crypto valuta (%{curCode}) che questo client non supporta. Si prega %{connectLink} a un server diverso.",
+    "connectLink": "connetti"
+  },
+  "setValidCurDialog": {
+    "title": "Valuta Locale non Valida",
+    "body": "La tua valuto locale è %{currency}, la quale non è supportata su questo client. Si prega di selezionare e salvare una valuta diversa in %{settingsLink}.",
+    "settingsLink": "impostazioni"
   },
   "consoleWarning": {
     "heading": "Stop!",
     "line1": "Questa è una console per sviluppatori. Se qualcuno ti ha chiesto di aprire questa finestra, è possibile che l'obiettivo sia compromettere il tuo account.",
     "line2": "Adesso puoi chiudere questa finestra."
+  },
+  "block": {
+    "errorModal": {
+      "titleUnableToBlock": "Impossibile bloccare",
+      "titleUnableToUnblock": "Impossibile sbloccare",
+      "titleUnableToBlockUnblock": "Impossibile bloccare / sbloccare",
+      "blockFailedListHeading": "Impossibile bloccare i seguenti utenti:",
+      "unblockFailedListHeading": "Impossibile sbloccare i seguenti utenti:",
+      "reason": "Motivo: %[reason]"
+    }
   },
   "resyncBlockchainError": "C'e' stato un errore durante il ricaricamento delle transazioni.",
   "restartNow": "Riavvia ora",
@@ -48,11 +101,14 @@
     },
     "install": "Installa ora"
   },
+  "formattedCurrency": {
+    "unrecognizedCurrencyTip": "Impossibile fornire informazioni sul prezzo perché il prezzo è in una valuta non riconosciuta."
+  },
   "addressBarPlaceholder": "Digita uno pseudonimo, un ID Open Baazar o una parola",
   "testnet": "Modalità Test",
   "testnetTooltip": "La Modalità Test utilizza delle monete di prova, che sono da intendere tali. ",
   "tabMenuHeading": "MENÙ",
-  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
   "copiedToClipboard": "Copiato negli appunti",
   "copiedToClipboardShort": "Copiato",
   "refreshAlertPopInMessage": {
@@ -103,9 +159,10 @@
         "title": "Non è stato possibile caricare i motori di ricerca."
       }
     },
-    "startupLoadingModal": {
-      "canceLink": "cancella",
-      "connectAttemptMsg": "Connessione a %{serverName}. %{canceLink}"
+    "connectMessaging": {
+      "cancelLink": "cancella",
+      "connectAttemptMsg": "Connessione a %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Inizializzazione del binario zcash. Questo potrebbe richiedere alcuni minuti %{cancelLink}"
     }
   },
   "notifications": {
@@ -147,6 +204,7 @@
     "sales": "Vendite",
     "cases": "Casi",
     "settings": "Impostazioni",
+    "help": "Aiuto",
     "toolTip": {
       "back": "Indietro",
       "forward": "Inoltra",
@@ -156,7 +214,7 @@
       "notifications": "Notifiche",
       "nav": "Navigazione",
       "close": "Chiudi",
-      "currentPrice": "Prezzo Bitcoin attuale"
+      "currentPrice": "Prezzo %{cur} attuale"
     },
     "serversMenu": {
       "newServer": "Aggiungi server",
@@ -179,7 +237,8 @@
       },
       "typingIndicator": "%{user} sta scrivendo...",
       "deleteConvoErrorTitle": "Impossibile cancellare la conversazione",
-      "deletingOverlayText": "Cancellando la conversazione..."
+      "deletingOverlayText": "Cancellando la conversazione...",
+      "blockingOverlayText": "Bloccando..."
     }
   },
   "userPage": {
@@ -208,7 +267,8 @@
       "home": "Home",
       "store": "Negozio",
       "following": "Segui",
-      "followers": "Seguaci"
+      "followers": "Seguaci",
+      "reputation": "Reputazione"
     },
     "followTab": {
       "noFollowers": "Nessuno sta ancora seguendo %{name}",
@@ -253,7 +313,8 @@
       "categoryFilter": {
         "heading": "Categoria",
         "showMore": "%{smart_count} più… |||| %{smart_count} più…",
-        "showLess": "meno"
+        "showLess": "meno",
+        "all": "Tutti"
       },
       "toolTip": {
         "contentView": "Toggle view"
@@ -264,7 +325,14 @@
       "store": "Negozio",
       "following": "Chi si segue",
       "followers": "Seguaci"
-    }
+    },
+    "blockedUserOverlayText": "Hai bloccato questo utente"
+  },
+  "reputation": {
+    "averageRating": "valutazione complessiva",
+    "totalReviews": "review |||| reviews",
+    "noTitle": "Titolo annuncio non trovato"
+
   },
   "userShort": {
     "userLoading": "Caricamento...",
@@ -274,7 +342,8 @@
     "tipFollow": "Segui",
     "tipUnfollow": "Non seguire",
     "tipModAdd": "Aggiungi come moderatore",
-    "tipModRemove": "Rimuovi dal ruolo di moderatore"
+    "tipModRemove": "Rimuovi dal ruolo di moderatore",
+    "blockedUserOverlayText": "Hai bloccato questo utente"
   },
   "moderatorCard": {
     "view": "Vedi",
@@ -298,7 +367,9 @@
     "termsOfService": "Termini di servizio",
     "addAsModeratorButton": "Aggiungi come Moderatore",
     "disclaimer": "**La tassa del moderatore viene applicata solo quando insorge una disputa.",
-    "languages": "Lingue"
+    "languages": "Lingue",
+    "currenciesSupported": "Valute supportate",
+    "noCoinSupport": "Questo moderatore non supporta %{coin}."
   },
   "about": {
     "linkText": "Riguardo a OpenBazaar",
@@ -318,6 +389,8 @@
       "btnCopyAddress": "Copia indirizzo",
       "btnOpenInWallet" : "Apri nel portafoglio",
       "bannerCountDonations": "%{donationCountFloor}+ Donazioni ricevute!",
+      "bitcoinIntroLine": "Donazioni in Bitcoin possono essere inviate al seguente indirizzo:",
+      "bchWarning": "Non inviare Bitcoin Cash a questo indirizzo.",
       "unableToOpenInWallet": {
         "title": "Non è stato possibile aprire l'indirizzo con il wallet.",
         "body": "Non è stato possibile aprire l'indirizzo con il portafoglio perché è in corso un pagamento. Aspetta fin quando il pagamento è completato e prova di nuovo."
@@ -355,6 +428,12 @@
         "or": "o",
         "codeCTA": "Partecipa"
       }
+    },
+    "helpTab": {
+      "linkText": "Aiuto",
+      "sectionHeader": "Aiuto",
+      "supportLink": "Pagina di supporto su OpenBazaar.org",
+      "text": "Hai bisogno di aiuto col software OpenBazaar? Si prega di visitare %{supportLink}. Ci sono molte guide and FAQs che dovrebbero aiutarti a risolvere il tuo problema."
     }
   },
   "settings": {
@@ -396,7 +475,7 @@
       "helperTextColor": "Copy, About, Descriptions",
       "helperHighlightColor": "Notifications, Alerts, Badges",
       "helperHighlightTextColor": "Color within Notifications",
-      "placeholderAbout": "Write whatever you would like on your page…",
+      "placeholderAbout": "Scrivi quello che desideri nella tua pagina...",
       "placeholderName": "Nome della tua pagina",
       "placeholderHandle": "Inserisci il tuo @handle",
       "placeholderLocation": "Inserisci la tua posizione",
@@ -514,7 +593,7 @@
       "transaction": {
         "sectionName": "Transazioni",
         "saveMetadata": "Salva metadati",
-        "defaultFee": "Costo della transazione Bitcoin",
+        "defaultFee": "%{cur} Tassa:",
         "low": "Economica",
         "medium": "Normale",
         "high": "Priorità"
@@ -600,6 +679,11 @@
         "modsAreInvalidAsync": "I seguenti moderatori non sono stati trovati nella rete. Sono ancora salvati nella tua lista di moderatori, ma le informazioni non sono disponibili. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "Bloccato",
+      "btnUnblock": "Sblocca",
+      "emptyBlockList": "Non stai bloccando nessuno."
+    },
     "optional": "On",
     "language": "Lingua",
     "country": "Nazione",
@@ -666,7 +750,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Server integrato",
+    "builtInServerName": "Server Locale - %{cur}",
     "statusBar": {
       "errorPreface": "Errore:",
       "needHelpLink": "Serve aiuto?",
@@ -679,7 +763,8 @@
       "errorTorNotConfigured": "Per favore, %{editLink} la %{serverName} configurazione per confermare se vuoi usare Tor. %{links}",
       "errorTorNotAvailable": "Tor non è stato trovato. Per favore, %{editLink} la %{serverName} configurazione per confermare se vuoi usare Tor. %{links}",
       "cancelConnAttempt": "Cancella",
-      "connectAttemptMsg": "Tentativo di connessione a %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Tentativo di connessione a %{serverName}. %{cancelConnAttempt}",
+      "waitForServerStopMsg": "Spegnendo %{serverName}.. Questo potrebbe richiedere alcuni minuti."
     },
     "configurations": {
       "tabName": "Configurazioni",
@@ -723,6 +808,12 @@
       "torPwPlaceholder": "La password in chiaro di Tor control",
       "warning": "Attenzione:",
       "torServerWarning": "%{warning} Per rimanere anonimo, è importante che Tor sia attivo anche sul server.",
+      "lblServerType": "Tipo",
+      "helperServerType": "Seleziona il tuo tipo di server",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "Questo server è creato e controllato dall'app in questo computer, e funzione solo quando questa app è attiva. Questa è la scelta raccomandata per la maggior parte degli utenti.",
+      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "Questo server è installato manualmente e controllato da linea di comando. Potrebbe essere installato in un computer remoto. Deve essere già attivo prima che tu ti connetta.",
       "saveConfirm": {
         "title": "Sei sicuro?",
         "body": "Quando ti connetti ad un server remoto, è raccomandabile avere SSL attivo.",
@@ -745,28 +836,28 @@
     "fundsHeader": "Fondi",
     "btnReceiveMoney": "Ricevi denaro",
     "btnSendMoney": "Invia Denaro",
-    "btcCurrencyLabel": "Bitcoin",
     "valueInCurrencyLabel": "Valore in %{currency}",
     "transactionsLabel": "Transazioni",
     "receiveMoney": {
       "title": "Ricevi denaro",
-      "needBitcoin": "Hai bisogno di Bitcoin?",
       "btnCancel": "Cancella",
-      "btnFundViaShapeshift": "Paga con Shapeshift"
+      "btnFundViaShapeshift": "Paga con Shapeshift",
+      "needCoinLink": "Hai bisogno di %{cur}?"
     },
     "sendMoney": {
       "toLabel": "A",
-      "toPlaceholder": "Inserisci un indirizzo Bitcoin",
+      "toPlaceholder": "Inserisci  un indirizzo %{cur}?",
       "amountLabel": "Quantità",
       "noteLabel": "Nota",
       "notePlaceholder": "Visto solo da te",
       "sendBtn": "Invia",
       "clear": "Cancella",
-      "sendPaymentFailDialogTitle": "Non è stato possibile inviare il pagamento"
+      "sendPaymentFailDialogTitle": "Non è stato possibile inviare il pagamento",
+      "errorInvalidAddress": "L'indirizzo per il pagamento non è valido."
     },
     "spendConfirmBox": {
       "heading": "Sei sicuro?",
-      "body": "Una commissione per il network sarà inclusa. Ammonta circa a %{fiatBtcPairing}",
+      "body": "Una tassa di rete sarà inclusa, attualmente stimata a %{currencyPairing}",
       "errorHeading": "Non è stato possibile inviare il pagamento",
       "bodyInsufficientFunds": "Non hai abbastanza fondi. Assicurati di averne abbastanza per pagare la tassa di transazione",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
@@ -779,15 +870,15 @@
     "transactions": {
       "header": "Transazioni",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} a %{address}",
-        "incomingText": "%{fiatBtcPairing} ricevuti",
+        "outgoingText": "%{currencyPairing} a %{address}",
+        "incomingText": "%{currencyPairing} ricevuta",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "Vedi dettagli",
         "retryTransactionBtn": "Aumenta Tassa",
         "retryPaymentConfirmBox": {
           "title": "Riprova il pagamento",
-          "body": "Aggiungi %{fiatBtcPairing}%{asterisk} al costo della transazione e effettua di nuovo la transazione.",
-          "insufficientFundsBody": "Hai bisogno almeno di %{fiatBtcPairing}%{asterisk} nel tuo portafoglio per ritentare la transazione con una commissione più alta.",
+          "body": "Aggiungi %{currencyPairing}%{asterisk} alla tassa e invia nuovamente la transazione.",
+          "insufficientFundsBody": "Hai bisogno almeno di %{currencyPairing}%{asterisk} nel tuo portafogli per inviare nuovamente la transazione con una tassa più alta.",
           "fetchError": "C'è stato un errore nella stima delle commissioni: %{err}",
           "subText": "%{asterisk}prezzo stimato",
           "btnCancel": "Cancella",
@@ -828,6 +919,7 @@
     "type": "Tipo: %{type}",
     "condition": "Condizioni: %{condition}",
     "tags": "Tags",
+    "paymentsAccepted": "Pagamenti Accettati",
     "noTags": "Non hai inserito tags",
     "buyNow": "COMPRA ORA",
     "description": "Descrizione",
@@ -849,6 +941,12 @@
     "allCountries": "Tutti i Paesi",
     "returnToStore": "Ritorna al negozio",
     "goToStore": "Vai al negozio",
+    "unableToPurchase": {
+      "incompatibleCrypto": "L'annuncio accetta %{acceptedCurrencies}, laddove il tuo portafogli supporta transazioni %{serverCur}.",
+      "unrecognizedCur": "L'oggetto ha un prezzo in una valuta non riconosciuta.",
+      "noExchangeRateInfo": "L'oggetto ha un prezzo in una valuta per la quale i dati sul tasso di cambio non sono attualmente disponibili.",
+      "unpurchaseable": "Questo annuncio non può essere acquistato."
+    },
     "confirmDelete": {
       "title": "Sei sicuro?",
       "body": "Una volta che viene eliminato, non potrà più essere recuperato. ",
@@ -887,7 +985,11 @@
     "editFetchErrorDialog": {
       "title": "C'è stato un errore nel recupero dell'annuncio.",
       "bodyNotFound": "L'annuncio non è stato trovato. Potrebbe essere stato cancellato dal proprietario."
-    }
+    },
+    "btnShowMatureContent": "Mostra contenuti per adulti",
+    "tipShowMatureContent": "Mostra contenuti per adulti",
+    "tipHideMatureContent": "Nascondi contenuti per adulti",
+    "blockedUser": "Hai bloccato questo utente"
   },
   "listingDelete": {
     "deletingListing": "Cancello annuncio %{listing}…",
@@ -941,21 +1043,21 @@
     "placeholderSKU": "SKU, Part Number, ID, etc",
     "placeholderDescription": "Descrivi il contenuto dell'annuncio meglio che puoi. Inserisci foto o video.",
     "placeholderReturnPolicy": "Qual è la tua politica di reso? Fino a quanti giorni dopo il prodotto può essere restituito? Chi paga per la spedizione (nel caso sia necessaria)? Ecc. ",
-    "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
+    "placeholderTerms": "Quali sono i termini e le condizioni dell'annuncio? Quali sono le tue responsabilità come venditore? C'è una garanzia? Quando è la transazione finale? etc",
     "helperTitle": "Inserisci una descrizione che spieghi chiaramente cosa stai vendendo",
     "helperType": "Scegli tra 3 tipologie",
     "helperShipping": "Spedisci ovunque desideri!",
     "helperPhotos": "Includi massimo %{maxPhotos} immagini",
-    "helperSKU": "A unique identifier for your listing",
+    "helperSKU": "Un numero identificativo per il tuo annuncio",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
-    "helperPrice": "Imposta il tuo prezzo in dollari, yuan, Bitcoin o qualsiasi altra valuta",
     "helperCondition": "Le condizioni generali di ciò che stai vendendo",
     "helperNSFW": "Spunta 'sì' se l'annuncio contiene contenuti per adulti",
     "helperTags": "Aggiungi i tags. Inserisci un tag, premi invio, ripeti.",
     "helperCategories": "L'annidamento delle categorie non è supportato (Es. Calzature > Stivali attualmente non funziona). Inserisci un nome per la categoria, premi invio, ripeti.",
     "helperReturnPolicy": "Se lasciato bianco, l'annuncio mostrerà 'Non è stata specificata alcuna Politica di Reso'",
     "helperTerms": "Se lasciato bianco, l'annuncio mostrerà 'Non sono stati specificati i Termini e Condizioni'",
+    "helperPrice": "Imposta il tuo prezzo in Dollari, Yuan, %{cur}, qualsiasi altra",
     "createListingLabel": "Crea Annuncio",
     "editListingLabel": "Modifica Annuncio",
     "title": "Titolo",
@@ -976,11 +1078,16 @@
     "btnAddCoupon": "Aggiungi Codice Promozionale",
     "primaryPhoto": "FOTO PRIMARIA",
     "viewListingLink": "Vedi Elenco",
+    "unsupportedCurrencyDialog": {
+      "title": "Valuta non riconosciuta",
+      "body": "L'annuncio è impostato in una valuta (%{cur}) che questo client non supporta. Si prega di selezionare una nuova valuta qui sotto e cliccare OK. Successivamente, assicurati di ricontrollare i prezzi per assicurarti che siano appropriati per la nuova valuta.",
+      "btnOk": "OK"
+    },
     "shippingOptions": {
       "optionHeading": "Opzioni di Spedizione #%{listPosition}",
       "shippingDestinations": "Destinazioni",
       "regionsPlaceholder": "Inserisci Paesi...",
-      "nameLabel": "Option Title",
+      "nameLabel": "Titolo Opzionale",
       "namePlaceholder": "es. Spedizione in Italia, spedizione internazionale, ecc.",
       "typeLabel": "Tipo",
       "shippingTypes": {
@@ -1030,8 +1137,8 @@
       }
     },
     "inventoryManagement": {
-      "doNotTrackSelectOption": "Do not track inventory",
-      "trackSelectOption": "Track Inventory",
+      "doNotTrackSelectOption": "Non tracciare l'inventario",
+      "trackSelectOption": "Traccia l'inventario",
       "doNotTrackHelperText": "Gli acquirenti possono acquistarne quanti ne vogliono",
       "trackByFixedHelperText": "La quantita diminuisce fino a zero. A quel punto verrà verrà mostrato 'esaurito'.",
       "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
@@ -1043,7 +1150,7 @@
       "unlimitedQuantityLabel": "illimitato",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
       "unableToCalcTotalPrice": "Impossibile da calcolare",
-      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+      "unableToCalcTotalPriceTip": "Sia il prezzo dell'annuncio che il sovrapprezzo devono essere numeri. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0,00\"."
     },
     "confirmCloseDialog": {
       "title": "Hai delle modifiche non salvate",
@@ -1094,7 +1201,7 @@
       "connection": "Non sei piu` connesso al tuo nodo. Riconnettiti per continuare la ricerca.",
       "addError": "Questo motore di ricerca non puo` essere aggiunto. Controlla i dati e riprova.",
       "locked": "I motori di ricerca predefiniti non possono essere eliminati",
-      "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
+      "resetToOriginal": "L'URL del tuo provider di ricerca non è valido. Utilizzeremo invece il provider originale predefinito."
     }
   },
   "onboarding": {
@@ -1105,7 +1212,7 @@
     "introScreen": {
       "connectionLbl": "Connessione:",
       "btnChange": "Cambia",
-      "introLine": "Un mercato libero. Nessuna tassa. Nessuna restrizione. Guadagna Bitcoin.",
+      "introLine": "Un mercato libero. Senza tasse. Senza restrizioni. Guadagna %{cur}.",
       "tagLine": "Compra e vendi liberamente.",
       "btnGetStarted": "Inizia"
     },
@@ -1123,7 +1230,7 @@
     },
     "tosScreen": {
       "heading": "Termini di servizio",
-      "tos": "OpenBazaar è una rete per scambiare beni e servizi direttamente tra persone, usando Bitcoin, senza nessuna organizzazione centrale a controllare ciò che accade. Questo significa che sei responsabile per le tue azioni sul network.\n\nGli utenti di OpenBazaar non sono anonimi per default. La maggior parte delle comunicazioni tra le parti sono crittate, ma gli indirizzi IP sono pubblici e possono essere associati con le varie attività svolte sul network. Persone malintenzionate potrebbero utilizzare le informazioni da te fornite: la protezione della tua privacy è tua responsabilità.\n\nGli utenti di OpenBazaar devono obbedire alle leggi della propria giurisdizione, come anche alla propria coscienza. Gli sviluppatori di OpenBazaar non tollerano né sono responsabili dell'uso della piattaforma per scopi illegali. \n\nLa comunità di sviluppatori di OpenBazaar ha lavorato duro per creare una piattaforma per lo scambio libero. Come in tutti i software, verranno trovati degli errori. Gli sviluppatori non sono responsabili di alcuna perdita monetaria associata a problemi riscontrati nel software. \n\nUtilizzando OpenBazaar, sei responsabile delle tue azioni sulla piattaforma."
+      "tos": "OpenBazaar è una rete per scambiare beni e servizi direttamente tra persone, usando cretto valute, senza nessuna organizzazione centrale a controllare ciò che accade. Questo significa che sei responsabile per le tue azioni sul network.\n\nGli utenti di OpenBazaar non sono anonimi per default. La maggior parte delle comunicazioni tra le parti sono criptate, ma gli indirizzi IP sono pubblici e possono essere associati con le varie attività svolte sul network. Persone malintenzionate potrebbero utilizzare le informazioni da te fornite: la protezione della tua privacy è tua responsabilità.\n\nGli utenti di OpenBazaar devono obbedire alle leggi della propria giurisdizione, come anche alla propria coscienza. Gli sviluppatori di OpenBazaar non tollerano né sono responsabili dell'uso della piattaforma per scopi illegali.\n\nLa comunità di sviluppatori di OpenBazaar ha lavorato duro per creare una piattaforma per lo scambio libero. Come in tutti i software, verranno trovati degli errori. Gli sviluppatori non sono responsabili di alcuna perdita monetaria associata a problemi riscontrati nel software. \nUtilizzando OpenBazaar, sei responsabile delle tue azioni sulla piattaforma."
     }
   },
   "pageControls": {
@@ -1161,8 +1268,9 @@
     "memoPlaceholder": "Inserisci ulteriori dettagli per il venditore qui (opzionale).",
     "pay": "PAGA >",
     "payNote": "Cliccando su 'paga' verrai reindirizzato allo step finale.",
+    "scamWarning": "ATTENZIONE: Proteggiti contro le truffe",
     "pending": "In attesa...",
-    "pendingNote": "Please fund the order to complete your transaction.",
+    "pendingNote": "Si prega di pagare l'ordine per completare la transazione.",
     "close": "chiudi",
     "closeNote": "Il pagamento è stato inviato al venditore.",
     "moderatorNote": "**La tassa del moderatore viene applicata solo quando viene aperta una disputa.",
@@ -1194,7 +1302,7 @@
       "btnConfirmedPay": "Sì, paga",
       "altcoinNote": "<b>Altcoins</b> saranno disponibili quando ShapeShift implementerà la Segregated Witness.",
       "altcoinLink": "Puoi usare anche le altcoins per il tuo wallet OB.",
-      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
+      "walletNote": "<b>Portafogli esterni</b> che non supportano Segregated Witness potrebbero non completare il pagamento per le transazioni.",
       "walletLink": "Oppure puoi inviare i tuoi fondi al tuo wallet OB.",
       "feeNote": "<b>Ricordati di includere qualunque tassa</b>. quando invii i tuoi fondi al tuo wallet OpenBazaar"
     },
@@ -1202,17 +1310,17 @@
       "paymentSent": "Pagamento inviato!",
       "purchases": "Acquisti",
       "progressMessage": "Grazie per il tuo acquisto! Se desideri controllare lo stato del tuo ordine, visita la tua %{link} pagina.",
-      "estimatedProcessing": "Estimated Processing Time: %{time}",
+      "estimatedProcessing": "Tempo di elaborazione stimato: %{time}",
       "noData": "Non specificato",
       "vendorMessage": "Messaggio al venditore (opzionale)",
-      "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
-      "vendorMessageLink": "discussion section of the order details",
+      "vendorMessagePlaceholder": "Fornisci ulteriori dettagli, poni una domanda, lascia un feedback...",
+      "vendorMessageLink": "sezione di discussione dei dettagli dell'ordine",
       "vendorMessageSent": "Condividi su Twitter",
       "send": "Invia",
       "share": {
         "title": "Condividi",
-        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
-        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "body": "Ho appena completato un acquisto su OpenBazaar, il mercato libero senza tasse o restrizioni. Per saperne di più vai a %{link}.",
+        "shareMsg": "Ho appena completato un acquisto su @OpenBazaar, il mercato libero senza tasse o restrizioni.",
         "postToTwitter": "Condividi su Twitter",
         "postToFacebook": "Condividi su Facebook",
         "postToPinterest": "Condividi su Pinterest",
@@ -1224,10 +1332,10 @@
       "listing": "Annunci",
       "coupon": "Codice Promozionale",
       "shipping": "Spedizione",
-      "firstItem": "First Item",
-      "additionalItems": "Each Additional Item",
+      "firstItem": "Primo oggetto",
+      "additionalItems": "Ogni oggetto aggiuntivo",
       "options": "Opzioni",
-      "subtotal": "Subtotal (%{quantity})",
+      "subtotal": "Totale Parziale (%{quantity})",
       "shippingTotal": "Totale spedizioni",
       "total": "Totale"
     },
@@ -1276,8 +1384,8 @@
       "returnToFromOrder": "Return to cases"
     },
     "filters": {
-      "purchasing": "Purchasing",
-      "ready": "Ready To Process",
+      "purchasing": "Aquistando",
+      "ready": "Pronto a processare",
       "fulfilled": "Completato",
       "refunded": "Rimborsato",
       "disputeOpen": "Dispute aperte",
@@ -1331,7 +1439,7 @@
     "navMenu": {
       "summary": "Riepilogo",
       "discussion": "Discussione",
-      "contract": "Contract (JSON)"
+      "contract": "Contratto (JSON)"
     },
     "backToSummary": "Torna al riepilogo",
     "discussionTab": {
@@ -1349,28 +1457,28 @@
       "btnSend": "Manda"
     },
     "contractTab": {
-      "heading": "Contract (JSON)",
-      "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
-      "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
-      "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
-      "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
-      "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
-      "buyerContractHeading": "Buyer Contract:",
-      "vendorContractHeading": "Vendor Contract:"
+      "heading": "Contratto (JSON)",
+      "buyerContractNotAvailable": "Il contratto dell'acquirente non è al momento disponibile finché non tornerà online.",
+      "vendorContractNotAvailable": "Il contratto del venditore non è al momento disponibile finché non tornerà online.",
+      "buyerVendorContractVerified": "Entrambi i contratti dell'acquirente e del venditore sono stati verificati come autentici.",
+      "buyerContractNotAuthentic": "Il contratto dell'acquirente ha errori di validazione. È probabile che sia stato alterato.",
+      "vendorContractNotAuthentic": "Il contratto del venditore ha errori di validazione. È probabile che sia stato alterato.",
+      "buyerContractHeading": "Contratto Acquirente:",
+      "vendorContractHeading": "Contratto Venditore:"
     },
     "summaryTab": {
       "orderNumber": "Ordine #: %{orderId}",
       "copyLink": "Copia",
       "notApplicable": "Vuoto",
-      "vendorFinalizedPayment": "You have manually finalized the order.",
+      "vendorFinalizedPayment": "Hai finalizzato l'ordine manualmente.",
       "payment": {
         "firstPaymentHeading": "Dettagli del pagamento",
         "paymentHeading": "Dettagli del pagamento #%{paymentNumber}",
-        "amountTo": "%{fiatBtcPairing} a %{payeeName}",
-        "refundedTo": "%{fiatBtcPairing} rimborsato a %{payeeName}",
-        "refunded": "%{fiatBtcPairing} rimborsati",
-        "paidInFull": "Paid In Full",
-        "underpaidAmountShort": "Underpaid (%{amountShort} required)",
+        "amountTo": "%{currencyPairing} to %{payeeName}",
+        "refundedTo": "%{currencyPairing} rimborsato a %{payeeName}",
+        "refunded": "%{currencyPairing} rimborsato",
+        "paidInFull": "Pagato in toto",
+        "underpaidAmountShort": "Sottopagato (%{amountShort} required)",
         "cancelBtn": "Cancella",
         "rejectBtn": "Rifiuta",
         "acceptBtn": "Accetta",
@@ -1378,7 +1486,7 @@
         "veryManyConfirmationsCount": "%{countText} conferme",
         "rejectConfirm": {
           "title": "Sei sicuro?",
-          "body": "La quantità originale in Bitcoin verrà restituita all'acquirente",
+          "body": "La somma originale in %{cur} verrà ritornata all'acquirente",
           "btnCancel": "Cancella",
           "btnConfirm": "Sì, rifiuta"
         },
@@ -1386,8 +1494,8 @@
       },
       "refund": {
         "heading": "Rimborsato",
-        "refundedTo": "%{fiatBtcPairing} rimborsato a %{payeeName}",
-        "refunded": "%{fiatBtcPairing} rimborsati",
+        "refundedTo": "%{currencyPairing} rimborsato a %{payeeName}",
+        "refunded": "%{currencyPairing} rimborsato",
         "confirmationsCount": "%{smart_count} conferma |||| %{smart_count} conferme",
         "veryManyConfirmationsCount": "%{countText} conferme"
       },
@@ -1402,7 +1510,7 @@
         "fulfillBtn": "Completa l'ordine",
         "refundConfirm": {
           "title": "Sei sicuro?",
-          "body": "La quantità originale in Bitcoin verrà restituita all'acquirente",
+          "body": "La somma originale in %{cur} verrà ritornata all'acquirente",
           "btnCancel": "Cancella",
           "btnConfirm": "Sì, rimborsa"
         }
@@ -1411,7 +1519,9 @@
         "heading": "Completato",
         "shippedByLabel": "Ordine spedito via:",
         "trackingNumberLabel": "Tracciamento #:",
-        "noteFromLabel": "Note from %{store}:",
+        "yourNoteLabel": "La tua nota:",
+        "noteFromVendorLabel": "Nota dal venditore:",
+        "noteFromStoreLabel": "Note da %{store}:",
         "copyLink": "Copia",
         "digitalReadyForDlHeading": "I file digitali sono pronti per essere scaricati",
         "digitalReadyForDlText": "I file sono stati spediti. Scaricali quando sei pronto",
@@ -1421,7 +1531,7 @@
       "completeOrderForm": {
         "heading": "Completa Ordine",
         "maxReviewChars": "%{max} caratteri massimo",
-        "reviewLabel": "Written Review",
+        "reviewLabel": "Recensioni scritte",
         "anonCheckLabel": "Includi il mio nome (tutti possono vedere)",
         "btnCompleteOrder": "Completa Ordine"
       },
@@ -1459,8 +1569,8 @@
         "genericBuyerAcceptedPayout": "L'acquirente ha accettato il pagamento della disputa.",
         "genericVendorAcceptedPayout": "Il venditore ha accettato il pagamento della disputa.",
         "userAcceptedPayout": "%{name} ha accettato il pagamento della disputa.",
-        "orderCompleteWhenYouReview": "The order will be complete when you leave a review.",
-        "orderCompleteWhenBuyerReviews": "The order will be complete when the buyer leaves a review."
+        "orderCompleteWhenYouReview": "L'ordine sarà completato quando scriverai una recensione.",
+        "orderCompleteWhenBuyerReviews": "L'ordine sarà completato quando il venditore scriverà una recensione."
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1475,7 +1585,7 @@
           "resolved": "Risolto",
           "disputed": "Contestato"
         },
-        "heading": "Order Details",
+        "heading": "Dettagli Ordini",
         "shipToHeading": "Spedisci a",
         "couponHeading": "Codici promozionali",
         "quantityHeading": "Quantità",
@@ -1483,20 +1593,22 @@
         "moderatorHeading": "Moderatore",
         "copyAddress": "Copia",
         "viewOnMap": "Vedi sulla mappa",
+        "shippingOption": "Opzione di Spedizione",
+        "shippingService": "Servizio di Spedizione",
         "memo": "Promemoria",
         "addressNotes": "Note alla consegna",
-        "alternateContact": "Additional Contact Information",
+        "alternateContact": "Ulteriori informazioni di contatto",
         "skuLabel": "SKU"
       }
     },
     "fulfillOrderTab": {
       "heading": "Completa l'ordine",
-      "shippingCarrierLabel": "Shipping Carrier",
+      "shippingCarrierLabel": "Corriere di Spedizione",
       "shippingCarrierPlaceholder": "UPS, FedEx, DHL, ecc..",
       "trackingLabel": "Codice di monitoraggio",
       "trackingPlaceholder": "opzionale",
       "fileUrlLabel": "File URL",
-      "fileUrlPlaceholder": "Link to file(s)",
+      "fileUrlPlaceholder": "Link a file(s)",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Password to file (optional)",
       "noteLabel": "Nota",
@@ -1507,7 +1619,7 @@
     },
     "resolveDisputeTab": {
       "heading": "Risolvi Disputa",
-      "buyerAmountLabel": "Buyer Amount",
+      "buyerAmountLabel": "Somma dell'acquirente",
       "vendorAmountLabel": "Totale venditore",
       "commentLabel": "Commenti",
       "commentPlaceholder": "Spiega la tua decisione",
@@ -1539,15 +1651,15 @@
     "failedCancelHeading": "C'e` stato un errore durante la cancellazione dell'ordine.",
     "failedFulfillHeading": "C'e` stato un errore durante il completamento dell'ordine.",
     "failedRefundHeading": "C'e` stato un errore durante il rimborso dell'ordine.",
-    "failedCompleteHeading": "There was an error completing the order.",
-    "failedOpenDisputeHeading": "There was an error completing the order.",
-    "failedResolveHeading": "There was an error resolving the order.",
-    "failedAcceptPayoutHeading": "There was an error accepting the payout."
+    "failedCompleteHeading": "Si è verificato un errore durante il completamento dell'ordine.",
+    "failedOpenDisputeHeading": "Si è verificato un errore durante il completamento dell'ordine.",
+    "failedResolveHeading": "Si è verificato un errore durante la risoluzione dell'ordine.",
+    "failedAcceptPayoutHeading": "Si è verificato un errore durante l'accettazione del pagamento."
   },
   "exchangeRatesSyncer": {
-    "fetchingRatesStatusMsg": "Fetching exchange rates…",
-    "fetchingRatesSuccessStatusMsg": "Successfully obtained exchange rates.",
-    "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
+    "fetchingRatesStatusMsg": "Recupero tassi di cambio...",
+    "fetchingRatesSuccessStatusMsg": "Tassi di cambio ottenuti correttamente.",
+    "fetchingRatesFailStatusMsg": "Impossibile ottenere tassi di scambio. %{retryLink}",
     "fetchingRatesFailStatusMsgRetryLink": "indietro"
   },
   "debugLog": {
@@ -1568,7 +1680,7 @@
   },
   "socialAccountModelErrors": {
     "provideUsername": "Please provide a handle or link.",
-    "provideType": "Please provide a type (Facebook, Twitter, etc.)."
+    "provideType": "Si prega di fornire un tipo (Facebook, Twitter, etc.)."
   },
   "smtpModelErrors": {
     "username": {
@@ -1586,9 +1698,12 @@
   "serverConfigModelErrors": {
     "provideValue": "Inserisci un valore.",
     "invalidIp": "Sembra che questo indirizzo IP non sia valido.",
-    "providePortAsNumber": "Please provide a port as a number.",
+    "providePortAsNumber": "Si prega di fornire un numero per la porta.",
     "provideValidPortRange": "Per favore fornisci un numero tra 0 e 65535.",
-    "invalidTorProxy": "Il valore non sembra avere il formato corretto. Dovrebbe essere indirizzo-ip:porta, e. 127.0.0.1:9150. La porta deve essere compresa tra 0 e 65535."
+    "invalidTorProxy": "Il valore non sembra avere il formato corretto. Dovrebbe essere indirizzo-ip:porta, e. 127.0.0.1:9150. La porta deve essere compresa tra 0 e 65535.",
+    "provideWalletCurrency": "Si prega di selezionare una valuta del portafogli.",
+    "provideZcashBinaryPath": "Inserisci un valore.",
+    "invalidZcashBinaryPath": "Il percorso fornito deve essere verso un file nel tuo computer."
   },
   "shippingAddressModelErrors": {
     "provideName": "Per favore fornisci un nome.",
@@ -1612,12 +1727,12 @@
     "imageRequired": "Inserisci almeno un'immagine.",
     "tooManyTags": "Hai superato il numero consentito di %{maxTags}  tags.",
     "tooManyCats": "Hai superato il numero consentito di %{maxCats}  categorie.",
-    "duplicateOptionName": "You already have a variant with this name.",
-    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "duplicateOptionName": "Già possiedi una variante con questo nome.",
+    "tooManyOptions": "Non puoi avere più di %{maxOptionCount} opzioni.",
     "provideQuantity": "Inserisci una quantità.",
     "provideNumericQuantity": "Per favore fornisci la quantità come numero.",
     "quantityMustBePositive": "La quantità deve essere superiore a 0.",
-    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+    "duplicateVariantName": "Hai multiple scelte \"%{name}\". I nomi scelti devono essere unici"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Inserisci un codice promozionale",
@@ -1625,18 +1740,18 @@
     "percentageLow": "La percentuale deve essere maggiore di zero.",
     "percentageHigh": "La percentuale non può essere maggiore o uguale a 100%." ,
     "priceLow": "Il prezzo deve essere superiore a 0.",
-    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericDiscountAmount": "Si prega di fornire la somma dello sconto come un numero. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0.00\".",
     "needUniqueDiscountCode": "Hai già un buono sconto con quel codice. Per favore, fornisci un altro codice."
   },
   "shippingOptionModelErrors": {
     "provideName": "Inserisci un titolo.",
     "provideRegion": "Fornisci almeno un indirizzo di spedizione.",
-    "provideService": "Please provide at least one shipping service."
+    "provideService": "Si prega di fornire almeno un servizio di spedizione."
   },
   "serviceModelErrors": {
     "provideName": "Fornisci un nome al servizio.",
-    "provideEstDeliveryTime": "Please provide an estimated delivery time.",
-    "provideService": "Please provide at least on shipping service.",
+    "provideEstDeliveryTime": "Si prega di fornire un tempo di consegna stimato.",
+    "provideService": "Si prega di fornire almeno un servizio di spedizione.",
     "provideAmount": "Inserisci un prezzo.",
     "provideNumericAmount": "Per favore fornisci il prezzo come numero.",
     "provideNonNegativePrice": "Il prezzo dev'essere maggiore o uguale a 0."
@@ -1650,14 +1765,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Imposta un tipo di commissione valido.",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "noPercentage": "Se la tua tassa è in percentuale o fissa più una percentuale, devi impostare una percentuale valida. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0.00\".",
     "percentageLow": "Non puoi impostare la percentuale di tassa al di sotto di 0.",
     "percentageHigh": "Non puoi impostare la percentuale di tassa al di sopra di 100%.",
     "percentageDecimals": "Non puoi impostare la percentuale di tassa con più di 2 cifre dopo la virgola."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "Se la tua commissione è fissa oppure fissa più percentuale, inserisci una valuta valida. ",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+    "noAmount": "Se la tua tassa è fissa o fissa più una percentuale, devi impostare un importo valido per la tua tassa fissa. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Inserisci una quantità.",
@@ -1676,10 +1791,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "Inserisci un indirizzo.",
-    "invalidAddress": "L'indirizzo fornito non sembra essere un indirizzo Bitcoin valido",
-    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideAmountNumber": "Si prega di fornire un importo come un numero. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0.00\".",
     "amountGreaterThanZero": "La quantità deve essere maggiore di zero.",
-    "insufficientFunds": "Non hai abbastanza fondi per inviare la quantità indicata. Assicurati di includere il costo della transazione. "
+    "insufficientFunds": "Non hai abbastanza fondi per inviare la quantità indicata. Assicurati di includere il costo della transazione. ",
+    "missingExchangeRateData": "Non è possibile spendere in %{cur} perché non ci sono dati di tassi di scambio disponibili per questa valuta. Si prega di selezionare un'altra valuta. Se non è disponibile nessun dato per qualsiasi valuta, puoi sempre selezionare %{serverCur}.",
+    "invalidAddress": "L'indirizzo fornito non sembra essere un valido indirizzo %{cur}."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "La quantità deve essere 1 o più",
@@ -1725,8 +1841,8 @@
     "provideAmount": "Per favore fornisci una quantità-",
     "percentageOutOfRange": "La quantità deve essere tra 0 e 100.",
     "providePercentageAsNumber": "Per favore, fornisci la quantità come un numero.",
-    "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
-    "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
+    "totalPercentageOutOfRange": "La somma degli importi dell'acquirente e del venditore non possono eccedere 100.",
+    "totalPercentageTooLow": "La somma degli importi dell'acquirente e del venditore deve essere 100.",
     "provideResolution": "Spiega la tua decisione."
   },
   "searchProviderModelErrors": {
@@ -1740,15 +1856,12 @@
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "µBTC",
+    "UBTC": "μBTC",
     "SATOSHI": "sat"
   },
-  "bitcoinCurrencyFormat": {
-    "shortBTC": "%{symbol}%{amount}",
-    "longBTC": "%{amount} %{symbol}",
-    "MBTC": "%{amount} %{symbol}",
-    "UBTC": "%{amount} %{symbol}",
-    "SATOSHI": "%{amount} %{symbol}"
+  "cryptoCurrencyFormat": {
+    "curSymbolAmount": "%{symbol}%{amount}",
+    "curCodeAmount": "%{amount} %{code}"
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
@@ -2025,7 +2138,6 @@
     "BOB": "Boliviano",
     "BRL": "Real Brasiliano",
     "BSD": "Dollaro delle Bahamas",
-    "BTC": "Bitcoin",
     "BTN": "Ngultrum",
     "BWP": "Pula",
     "BYR": "Rublo Bielorusso",
@@ -2162,6 +2274,11 @@
     "ZAR": "Rand Sudafricano",
     "ZMW": "Kwacha della Zambia",
     "ZWL": "Dollaro dello Zimbabwe"
+  },
+  "cryptoCurrencies": {
+    "BTC": "Bitcoin",
+    "BCH": "Bitcoin Cash",
+    "ZEC": "Zcash"
   },
   "languages": {
     "af": "Afrikaans",
@@ -2313,8 +2430,8 @@
     "ms-MY": "Malese (Malesia)",
     "mt": "Maltese",
     "mt-MT": "Maltese (Malta)",
-    "nb": "Norwegian (Bokm?l)",
-    "nb-NO": "Norwegian (Bokm?l) (Norway)",
+    "nb": "Norvegese (Bokm?l)",
+    "nb-NO": "Norvegese (Bokm?l) (Norvegia)",
     "nl": "Olandese",
     "nl-BE": "Olandese (Belgio)",
     "nl-NL": "Olandese (Olanda)",

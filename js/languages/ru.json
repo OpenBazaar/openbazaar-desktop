@@ -1,14 +1,14 @@
 {
   "publish": {
-    "unpublishedConfirmTitle": "Неопубликованный материал",
-    "unpublishedConfirmBody": "У вас есть не опубликованный материал. Последняя не сохраненная информация будет не доступна для других пользователей, если вы закончите сейчас. Вы уверены что хотите закончить?",
-    "unpublishedConfirmYes": "Да",
-    "unpublishedConfirmNo": "Нет",
     "failedRetryTitle": "Случилась ошибка во время повторной публикации",
     "statusPublishing": "Публикуем обновления в интернет",
     "retryLink": "Повторить",
     "statusPublishFailed": "Публикация сорвалась. %{retryLink}",
     "statusPublishComplete": "Успешно опубликовано. "
+  },
+  "localServerShutdownDialog": {
+    "title": "Shutting down the built-in server",
+    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
   },
   "follow": {
     "typeFollow": "подписаться",
@@ -23,13 +23,66 @@
     "ECONOMIC": "Экономичная"
   },
   "feeChangeWidget": {
-    "label": "Bitcoin комиссия:",
-    "btnChange": "изменить"
+    "btnChange": "изменить",
+    "label": "%{cur} fee:"
+  },
+  "blockButton": {
+    "tipBlock": "Block this user",
+    "tipUnblock": "Unblock this user",
+    "btnTxtBlock": "Блокировка",
+    "btnTxtUnblock": "Разблокировка"
+  },
+  "blockedWarning": {
+    "heading": "You blocked this user",
+    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph2": "Would you like to unblock and view their page?",
+    "btnCancel": "Отмена",
+    "btnUnblock": "Yes, unblock"
+  },
+  "nsfwWarning": {
+    "heading": "Mature content",
+    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "paragraph2": "Вы уверены, что хотите продолжить?",
+    "nsfwOffLabel": "Always display mature content",
+    "btnCancel": "Отмена",
+    "btnProceed": "Да, продолжать"
+  },
+  "walletSetup": {
+    "heading": "OpenBazaar Wallet Setup",
+    "currencyLabel": "Валюта",
+    "currencyHelper": "Choose a currency for your Wallet",
+    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
+    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "zcashBinaryLabel": "Zcash Binary",
+    "fullNodeLink": "here",
+    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "btnBrowse": "Browse",
+    "btnNext": "Далее"
+  },
+  "unsupportedCryptoCurDialog": {
+    "title": "Unsupported Currency",
+    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
+    "connectLink": "connect"
+  },
+  "setValidCurDialog": {
+    "title": "Invalid Local Currency",
+    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
+    "settingsLink": "settings"
   },
   "consoleWarning": {
     "heading": "Стоп!",
     "line1": "Это консоль разработчика. Если кто-то попросил Вас открыть это окно, возможно пытается взломать Ваш аккаунт и/или украсть Ваши средства.",
     "line2": "Пожалуйста, закройте это окно."
+  },
+  "block": {
+    "errorModal": {
+      "titleUnableToBlock": "Unable to block",
+      "titleUnableToUnblock": "Unable to unblock",
+      "titleUnableToBlockUnblock": "Unable to block / unblock",
+      "blockFailedListHeading": "Unable to block the following users:",
+      "unblockFailedListHeading": "Unable to unblock the following users:",
+      "reason": "Reason: %{reason}"
+    }
   },
   "resyncBlockchainError": "Ошибка при перезагрузке транзакций.",
   "restartNow": "Перезапустить сейчас",
@@ -48,11 +101,14 @@
     },
     "install": "Установить Сейчас"
   },
+  "formattedCurrency": {
+    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+  },
   "addressBarPlaceholder": "Напишите @handle, OpenBazaar ID или ищите по ключевому слову",
   "testnet": "Режим Тестирования",
   "testnetTooltip": "В Режиме Тестирования используются testnet монеты, которые предназначены только для режима тестирования.",
   "tabMenuHeading": "МЕНЮ",
-  "fiatBtcPairing": "%{fiatAmount} (%{btcAmount})",
+  "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
   "copiedToClipboard": "Скопировано в буфер",
   "copiedToClipboardShort": "Скопировано",
   "refreshAlertPopInMessage": {
@@ -103,9 +159,10 @@
         "title": "Невозможно загрузить поставщиков поиска."
       }
     },
-    "startupLoadingModal": {
-      "canceLink": "отменить",
-      "connectAttemptMsg": "Подключение к %{serverName}. %{canceLink}"
+    "connectMessaging": {
+      "cancelLink": "отменить",
+      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
     }
   },
   "notifications": {
@@ -147,6 +204,7 @@
     "sales": "Продажи",
     "cases": "История",
     "settings": "Настройки",
+    "help": "Help",
     "toolTip": {
       "back": "Назад",
       "forward": "Вперед",
@@ -156,7 +214,7 @@
       "notifications": "Уведомления",
       "nav": "Навигация",
       "close": "Закрыть",
-      "currentPrice": "Текущая цена Bitcoin"
+      "currentPrice": "Current %{cur} price"
     },
     "serversMenu": {
       "newServer": "Новый сервер",
@@ -179,7 +237,8 @@
       },
       "typingIndicator": "%{user} печатает... ",
       "deleteConvoErrorTitle": "Не удается удалить разговор",
-      "deletingOverlayText": "Удаление разговора..."
+      "deletingOverlayText": "Удаление разговора...",
+      "blockingOverlayText": "Blocking…"
     }
   },
   "userPage": {
@@ -208,7 +267,8 @@
       "home": "Домой",
       "store": "Магазин",
       "following": "Читаемые",
-      "followers": "Подписчики"
+      "followers": "Подписчики",
+      "reputation": "Reputation"
     },
     "followTab": {
       "noFollowers": "Никто не подписан на %{name} пока",
@@ -253,7 +313,8 @@
       "categoryFilter": {
         "heading": "Категория",
         "showMore": "%{smart_count} больше… |||| %{smart_count} больше…",
-        "showLess": "меньше "
+        "showLess": "меньше ",
+        "all": "Все"
       },
       "toolTip": {
         "contentView": "Переключить вид"
@@ -264,7 +325,14 @@
       "store": "Магазин",
       "following": "Читаемые",
       "followers": "Читатели"
-    }
+    },
+    "blockedUserOverlayText": "You blocked this user"
+  },
+  "reputation": {
+    "averageRating": "overall rating",
+    "totalReviews": "review |||| reviews",
+    "noTitle": "Listing title not found"
+
   },
   "userShort": {
     "userLoading": "Загрузка...",
@@ -274,7 +342,8 @@
     "tipFollow": "Подписка",
     "tipUnfollow": "Отписаться",
     "tipModAdd": "Добавить в качестве модератора",
-    "tipModRemove": "Удалить модератора"
+    "tipModRemove": "Удалить модератора",
+    "blockedUserOverlayText": "You blocked this user"
   },
   "moderatorCard": {
     "view": "Просмотр",
@@ -298,7 +367,9 @@
     "termsOfService": "Условия предоставления услуг",
     "addAsModeratorButton": "Добавить в качестве модератора",
     "disclaimer": "** Плата за услуги модератора действует только в случае возникновения спора.",
-    "languages": "Языки"
+    "languages": "Языки",
+    "currenciesSupported": "Currencies Supported",
+    "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
     "linkText": "Об OpenBazaar",
@@ -318,6 +389,8 @@
       "btnCopyAddress": "Скопировать адрес",
       "btnOpenInWallet" : "Открыть в кошельке",
       "bannerCountDonations": "%{donationCountFloor}+ Пожертвования получены!",
+      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
+      "bchWarning": "Do not send Bitcoin Cash to this address.",
       "unableToOpenInWallet": {
         "title": "Невозможно открыть в кошельке",
         "body": "Не удалось открыть этот адрес в кошельке, потому что передаётся платеж . Подождите, пока передача завершится и повторите попытку."
@@ -355,6 +428,12 @@
         "or": "или",
         "codeCTA": "принять участие."
       }
+    },
+    "helpTab": {
+      "linkText": "Help",
+      "sectionHeader": "Help",
+      "supportLink": "Support page on OpenBazaar.org",
+      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
   "settings": {
@@ -514,7 +593,7 @@
       "transaction": {
         "sectionName": "Операции",
         "saveMetadata": "Сохранить метаданные",
-        "defaultFee": "Биткойн сбор",
+        "defaultFee": "%{cur} Fee",
         "low": "Экономичная",
         "medium": "Обычная",
         "high": "Приоритет"
@@ -600,6 +679,11 @@
         "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
       }
     },
+    "blockedTab": {
+      "sectionName": "Чёрный список",
+      "btnUnblock": "Разблокировка",
+      "emptyBlockList": "You are not blocking anyone."
+    },
     "optional": "необязательно",
     "language": "Язык",
     "country": "Страна",
@@ -666,7 +750,7 @@
     }
   },
   "connectionManagement": {
-    "defaultServerName": "Встроенный сервер",
+    "builtInServerName": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "Ошибка:",
       "needHelpLink": "Нужна помощь?",
@@ -679,7 +763,8 @@
       "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
       "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
       "cancelConnAttempt": "Отмена",
-      "connectAttemptMsg": "Попытка подключения к %{serverName}. %{cancelConnAttempt}"
+      "connectAttemptMsg": "Попытка подключения к %{serverName}. %{cancelConnAttempt}",
+      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
     },
     "configurations": {
       "tabName": "Конфигурация",
@@ -723,6 +808,12 @@
       "torPwPlaceholder": "The unhashed Tor control password",
       "warning": "Предупреждение:",
       "torServerWarning": "%{warning} Чтобы быть анонимным, очень важно, чтобы Вы также запустили сервер через Tor.",
+      "lblServerType": "Тип",
+      "helperServerType": "Select your server type",
+      "serverTypeBuiltin": "Built-in (local)",
+      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
+      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "Вы уверены?",
         "body": "При подключении к удаленному серверу настоятельно рекомендуется включить SSL.",
@@ -745,28 +836,28 @@
     "fundsHeader": "Средства",
     "btnReceiveMoney": "Принять деньги",
     "btnSendMoney": "Отослать деньги",
-    "btcCurrencyLabel": "Биткойн",
     "valueInCurrencyLabel": "Стоимость в %{currency}",
     "transactionsLabel": "Операции",
     "receiveMoney": {
       "title": "Принять деньги",
-      "needBitcoin": "Нужны Биткоины?",
       "btnCancel": "Отмена",
-      "btnFundViaShapeshift": "Оплатить с помощью ShapeShift"
+      "btnFundViaShapeshift": "Оплатить с помощью ShapeShift",
+      "needCoinLink": "Need %{cur}?"
     },
     "sendMoney": {
       "toLabel": "Для",
-      "toPlaceholder": "Введите Биткойн адрес",
+      "toPlaceholder": "Enter a %{cur} Address",
       "amountLabel": "Сумма",
       "noteLabel": "Заметка",
       "notePlaceholder": "Видно только Вам",
       "sendBtn": "Отправить",
       "clear": "Очистить",
-      "sendPaymentFailDialogTitle": "Невозможно отправить оплату"
+      "sendPaymentFailDialogTitle": "Невозможно отправить оплату",
+      "errorInvalidAddress": "The payment address is not valid."
     },
     "spendConfirmBox": {
       "heading": "Вы уверены?",
-      "body": "Будет добавлена комиссия сети, в данный момент составляет %{fiatBtcPairing}",
+      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
       "errorHeading": "Невозможно отправить оплату",
       "bodyInsufficientFunds": "У Вас недостаточно средств. Обязательно учтите комиссию за транзакцию.",
       "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
@@ -779,15 +870,15 @@
     "transactions": {
       "header": "Операции",
       "transaction": {
-        "outgoingText": "%{fiatBtcPairing} для %{address}",
-        "incomingText": "получено %{fiatBtcPairing}",
+        "outgoingText": "%{currencyPairing} to %{address}",
+        "incomingText": "%{currencyPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} подтверждение) |||| %{timeAgo} (%{confirmationsCount} подтверждения)",
         "viewDetailsBtn": "Браузер блокчейн",
         "retryTransactionBtn": "Увеличить комиссию",
         "retryPaymentConfirmBox": {
           "title": "Повторный платёж",
-          "body": "Добавьте %{fiatBtcPairing}%{asterisk} к комиссии и повторно отправьте транзакцию.",
-          "insufficientFundsBody": "You need at least %{fiatBtcPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
+          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
           "fetchError": "There was an error obtaining the estimated fees: %{err}",
           "subText": "%{asterisk}estimated price",
           "btnCancel": "Отмена",
@@ -828,6 +919,7 @@
     "type": "Тип: %{type}",
     "condition": "Состояние: %{condition}",
     "tags": "Теги",
+    "paymentsAccepted": "Payments Accepted",
     "noTags": "Теги не указаны.",
     "buyNow": "КУПИТЬ СЕЙЧАС",
     "description": "Описание",
@@ -849,6 +941,12 @@
     "allCountries": "Любая страна",
     "returnToStore": "Возврат в магазин",
     "goToStore": "Перейти в магазин",
+    "unableToPurchase": {
+      "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
+      "unrecognizedCur": "The item is priced in an unrecognized currency.",
+      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
+      "unpurchaseable": "This listing is not purchasable."
+    },
     "confirmDelete": {
       "title": "Вы уверены?",
       "body": "После удаления это исчезнет навсегда.",
@@ -887,7 +985,11 @@
     "editFetchErrorDialog": {
       "title": "Произошла ошибка загрузки товара.",
       "bodyNotFound": "Листинг не найден. Он мог быть удален создателем."
-    }
+    },
+    "btnShowMatureContent": "Show Mature Content",
+    "tipShowMatureContent": "Show Mature Content",
+    "tipHideMatureContent": "Hide Mature Content",
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "Удаление товара %{listing}…",
@@ -949,13 +1051,13 @@
     "helperSKU": "Уникальный идентификатор для Вашего листинга",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
     "variantInventoryLink": "Variant Inventory",
-    "helperPrice": "Укажите Вашу цену в долларах, юанях, биткоинах, других валютах",
     "helperCondition": "The overall condition of your listing",
     "helperNSFW": "Mark yes if the listing is NSFW",
     "helperTags": "Добавьте больше тегов. Введите имя тега, нажмите enter, повторите.",
     "helperCategories": "Вложенность категорий не поддерживается (например, Обувь>Ботинки пока не работает). Введите название категории, нажмите enter, повторите.",
     "helperReturnPolicy": "Если оставить пустым, будет отображаться \"Политика возвратов не указана\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
+    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
     "createListingLabel": "Создать товар",
     "editListingLabel": "Редактировать товар",
     "title": "Название",
@@ -976,6 +1078,11 @@
     "btnAddCoupon": "Добавить Купон",
     "primaryPhoto": "Главное фото",
     "viewListingLink": "Просмотр товара",
+    "unsupportedCurrencyDialog": {
+      "title": "Unrecognized currency",
+      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "btnOk": "OK"
+    },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
       "shippingDestinations": "Destinations",
@@ -1105,7 +1212,7 @@
     "introScreen": {
       "connectionLbl": "Подключение:",
       "btnChange": "Изменить",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn Bitcoin.",
+      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
       "tagLine": "Buy and Sell Freely",
       "btnGetStarted": "Get Started"
     },
@@ -1123,7 +1230,7 @@
     },
     "tosScreen": {
       "heading": "Условия предоставления услуг",
-      "tos": "OpenBazaar is a network for trading goods and services directly between people - using Bitcoin - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
+      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
     }
   },
   "pageControls": {
@@ -1161,6 +1268,7 @@
     "memoPlaceholder": "Provide additional details for the vendor here (optional).",
     "pay": "ОПЛАТА >",
     "payNote": "Clicking pay will advance you to the final step.",
+    "scamWarning": "WARNING: Protect against scams",
     "pending": "В ожидании...",
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "закрыть",
@@ -1366,9 +1474,9 @@
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
-        "amountTo": "%{fiatBtcPairing} to %{payeeName}",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "amountTo": "%{currencyPairing} to %{payeeName}",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "paidInFull": "Paid In Full",
         "underpaidAmountShort": "Underpaid (%{amountShort} required)",
         "cancelBtn": "Отмена",
@@ -1378,7 +1486,7 @@
         "veryManyConfirmationsCount": "%{countText} подтверждений",
         "rejectConfirm": {
           "title": "Вы уверены?",
-          "body": "Первоначальная сумма в bitcoin будет возвращена покупателю.",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Отмена",
           "btnConfirm": "Да, отклонить"
         },
@@ -1386,8 +1494,8 @@
       },
       "refund": {
         "heading": "Возмещено",
-        "refundedTo": "%{fiatBtcPairing} refunded to %{payeeName}",
-        "refunded": "%{fiatBtcPairing} refunded",
+        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
+        "refunded": "%{currencyPairing} refunded",
         "confirmationsCount": "%{smart_count} подтверждение |||| %{smart_count} подтверждения",
         "veryManyConfirmationsCount": "%{countText} подтверждений"
       },
@@ -1402,7 +1510,7 @@
         "fulfillBtn": "Fulfill Order",
         "refundConfirm": {
           "title": "Вы уверены?",
-          "body": "Первоначальная сумма в bitcoin будет возвращена покупателю.",
+          "body": "The original amount in %{cur} will be returned to the buyer",
           "btnCancel": "Отмена",
           "btnConfirm": "Да, вернуть"
         }
@@ -1411,7 +1519,9 @@
         "heading": "Fulfilled",
         "shippedByLabel": "Order Shipped via:",
         "trackingNumberLabel": "Отслеживание #:",
-        "noteFromLabel": "Note from %{store}:",
+        "yourNoteLabel": "Your note:",
+        "noteFromVendorLabel": "Note from the vendor:",
+        "noteFromStoreLabel": "Note from %{store}:",
         "copyLink": "Копировать",
         "digitalReadyForDlHeading": "Цифровые файлы готовы для скачивания!",
         "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
@@ -1483,6 +1593,8 @@
         "moderatorHeading": "Модератор",
         "copyAddress": "Копировать",
         "viewOnMap": "View on map",
+        "shippingOption": "Shipping Option",
+        "shippingService": "Shipping Service",
         "memo": "Напоминание",
         "addressNotes": "Накладные",
         "alternateContact": "Additional Contact Information",
@@ -1588,7 +1700,10 @@
     "invalidIp": "Недопустимый IP-адрес.",
     "providePortAsNumber": "Укажите порт цифрами.",
     "provideValidPortRange": "Укажите число от 0 до 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535."
+    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
+    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideZcashBinaryPath": "Укажите значение.",
+    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
   },
   "shippingAddressModelErrors": {
     "provideName": "Укажите имя.",
@@ -1676,10 +1791,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "Пожалуйста укажите адрес.",
-    "invalidAddress": "Предоставленный адрес не является действительным bitcoin адресом.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "Сумма должна быть больше нуля.",
-    "insufficientFunds": "У вас недостаточно средств для отправки такой суммы. Обязательно учтите плату за транзакцию."
+    "insufficientFunds": "У вас недостаточно средств для отправки такой суммы. Обязательно учтите плату за транзакцию.",
+    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "Количество должно быть 1 или больше",
@@ -1740,15 +1856,12 @@
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "µBTC",
+    "UBTC": "μBTC",
     "SATOSHI": "sat"
   },
-  "bitcoinCurrencyFormat": {
-    "shortBTC": "%{symbol}%{amount}",
-    "longBTC": "%{amount} %{symbol}",
-    "MBTC": "%{amount} %{symbol}",
-    "UBTC": "%{amount} %{symbol}",
-    "SATOSHI": "%{amount} %{symbol}"
+  "cryptoCurrencyFormat": {
+    "curSymbolAmount": "%{symbol}%{amount}",
+    "curCodeAmount": "%{amount} %{code}"
   },
   "countries": {
     "AFGHANISTAN": "Афганистан",
@@ -2025,7 +2138,6 @@
     "BOB": "Боливиано",
     "BRL": "Бразильский реал",
     "BSD": "Багамский доллар",
-    "BTC": "Биткойн",
     "BTN": "Нгултрум",
     "BWP": "Пула",
     "BYR": "Белорусский рубль",
@@ -2162,6 +2274,11 @@
     "ZAR": "Ранд",
     "ZMW": "Замбвийская квача",
     "ZWL": "Зимбабвийский доллар"
+  },
+  "cryptoCurrencies": {
+    "BTC": "Биткойн",
+    "BCH": "Bitcoin Cash",
+    "ZEC": "Zcash"
   },
   "languages": {
     "af": "Afrikaans",
