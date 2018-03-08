@@ -25,6 +25,15 @@ export default class extends Collection {
     return this._data;
   }
 
+  get localBadge() {
+    return {
+      large: '../imgs/verifiedModeratorBadge-large.png',
+      medium: '../imgs/verifiedModeratorBadge-medium.png',
+      small: '../imgs/verifiedModeratorBadge-small.png',
+      tiny: '../imgs/verifiedModeratorBadge-tiny.png',
+    };
+  }
+
   /**
    * Return a list of verified moderators that match the ids passed in
    * @param IDs {array} - a list of IDs
@@ -34,13 +43,16 @@ export default class extends Collection {
   }
 
   /**
-   * Return a badge to use to represent the verified moderators available on a listing.
-   * If none of the moderators are verified, return false.
+   * Return a badge object to use to represent the verified moderators available on a listing.
+   * If none of the moderators have a badge value, return the local badge files.
    * @param IDs {array} - a list of IDs
    */
   defaultBadge(IDs) {
     const modelWithBadge = _.find(this.matched(IDs), mod => mod.get('type').badge);
-    return !!modelWithBadge && modelWithBadge.get('type').badge;
+    return {
+      ...this.localBadge,
+      ...(modelWithBadge && modelWithBadge.get('type').badge || {}),
+    };
   }
 
   parse(response) {
@@ -56,7 +68,12 @@ export default class extends Collection {
         {
           name: 'standard (required)',
           description: 'description of this type of moderator (optional)',
-          badge: 'url to the badge image'
+          badge: {
+            large: "url",
+            medium: "url",
+            small: "url",
+            tiny: "url"
+          }
         }
       ],
       moderators: [
