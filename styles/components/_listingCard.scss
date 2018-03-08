@@ -287,6 +287,14 @@
       display: none;
     }
 
+    .additionalOverlay,
+    .editOverlay {
+      height: 100%;
+      box-sizing: border-box;
+      align-items: center;
+      padding-left: 13px; // position the first button in the middle of the thumbnail
+    }
+
     // This isn't ideal, but there's inconistent spacing / widths of cols, plus there's variable
     // content width on the price (e.g. some currencies may have quite large numbers)
     .priceCol {

@@ -405,6 +405,8 @@ export default class extends baseVw {
       this.listenTo(this.reportBtn, 'startReport', this.startReport);
       this.getCachedEl('.js-reportBtnWrapper').append(this.reportBtn.render().el);
     }
+    // hide unneeded report buttons so their wrapper doesn't affect the button layout
+    this.getCachedEl('.js-reportBtnWrapper').toggleClass('hide', !this.reportsUrl);
 
     if (!this.ownListing) {
       this.getCachedEl('.js-blockBtnWrapper').html(
