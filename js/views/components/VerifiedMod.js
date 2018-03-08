@@ -20,7 +20,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'verifiedMod';
+    return 'verifiedMod js-verifiedMod';
   }
 
   events() {
