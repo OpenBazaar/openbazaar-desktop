@@ -193,7 +193,8 @@ export default class extends baseVw {
 
   onClick(e) {
     if (this.deleteConfirmOn) return;
-    if ($.contains(this.getCachedEl('.js-verifiedMod')[0], e.target)) return;
+    const verifiedIDs = app.verifiedMods.matched(this.model.get('moderators') || []);
+    if (verifiedIDs.length && $.contains(this.getCachedEl('.js-verifiedMod')[0], e.target)) return;
     if (!this.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
