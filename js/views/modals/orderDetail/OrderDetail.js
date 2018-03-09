@@ -84,7 +84,7 @@ export default class extends BaseModal {
       this.listenTo(socket, 'message', this.onSocketMessage);
     }
 
-    // this.model.fetch();
+    this.model.fetch();
   }
 
   className() {
