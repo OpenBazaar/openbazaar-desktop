@@ -395,7 +395,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Terms of Service",
     "addAsModeratorButton": "Add as Moderator",
-    "disclaimer": "**The moderator service charge only applies when a dispute arises.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Languages",
     "currenciesSupported": "Currencies Supported",
     "noCoinSupport": "This moderator does not support %{coin}."
