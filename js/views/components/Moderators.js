@@ -179,7 +179,7 @@ export default class extends baseVw {
     }
 
     // don't get any that have already been added or excluded, or the user's own id.
-    const excluded = [...this.allIDs, ...op.excludeIDs, app.profile.id];
+    const excluded = [...this.allIDs, ...this.excludeIDs, app.profile.id];
     const IDs = _.without(op.moderatorIDs, excluded);
     const includeString = op.include ? `&include=${op.include}` : '';
     const urlString =
