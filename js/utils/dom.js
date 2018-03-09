@@ -78,8 +78,6 @@ export function stripHtml(text) {
  */
 export function handleLinks(el) {
   $(el).on('click', 'a:not([data-bypass])', (e) => {
-    console.log('can you feel the funk?');
-
     const $a = $(e.target).closest('a');
     const openExternally = $a.data('openExternal') !== undefined;
     let href = $a.attr('href');
