@@ -151,6 +151,8 @@ export default class Profile extends BaseModel {
       delete response.headerHashes;
     }
 
+    response.peerID = 'QmWM1V7uCHPzT6iQBSXatQePez8QNPoHrRwtUWRh1Nurne';
+
     return response;
   }
 
