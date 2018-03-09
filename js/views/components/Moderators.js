@@ -313,7 +313,11 @@ export default class extends baseVw {
     });
     // add verified mods to the beginning
     if (app.verifiedMods.get(model.get('peerID'))) {
-      this.modCards.unshift(modCard);
+      const firstUnverifiedIndex = this.modCards.findIndex(card =>
+        !app.verifiedMods.get(card.model.get('peerID')));
+      const insertAtIndex = firstUnverifiedIndex < 0 ?
+        0 : firstUnverifiedIndex;
+      this.modCards.splice(insertAtIndex, 0, modCard);
     } else {
       this.modCards.push(modCard);
     }

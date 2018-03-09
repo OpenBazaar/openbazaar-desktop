@@ -19,6 +19,7 @@ import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { setFeedbackOptions, addFeedback } from './utils/feedback';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
+import { handleLinks } from './utils/dom';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -36,7 +37,7 @@ import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
-import { fixLinuxZoomIssue, handleLinks, handleServerShutdownRequests } from './startup';
+import { fixLinuxZoomIssue, handleServerShutdownRequests } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
 import WalletSetup from './views/modals/WalletSetup';
@@ -124,7 +125,7 @@ app.loadingModal = new LoadingModal({
   removeOnRoute: false,
 }).render().open(startupConnectMessaging);
 
-handleLinks();
+handleLinks(document);
 
 // add the feedback mechanism
 addFeedback();
