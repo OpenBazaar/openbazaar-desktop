@@ -1,3 +1,9 @@
+import app from '../app';
+import { shell } from 'electron';
+import Backbone from 'backbone';
+import TorExternalLinkWarning from '../views/modals/TorExternalLinkWarning';
+import $ from 'jquery';
+
 // todo: check args and write unit test
 // http://stackoverflow.com/a/21627295/632806
 export function isScrolledIntoView(element) {
@@ -62,4 +68,60 @@ export function stripHtml(text) {
   const el = document.createElement('div');
   el.innerHTML = text;
   return el.textContent || el.innerText || '';
+}
+
+/**
+ * For most cases, this handler will be able to identify an external link because
+ * it will be prefaced with an "external" protocol (e.g. http, ftp). An exception
+ * to this is any user based url (e.g. www.espn.com). In that case, add a
+ * 'data-open-external' attribute to the url to force it to be opened externally.
+ */
+export function handleLinks(el) {
+  $(el).on('click', 'a:not([data-bypass])', (e) => {
+    console.log('can you feel the funk?');
+
+    const $a = $(e.target).closest('a');
+    const openExternally = $a.data('openExternal') !== undefined;
+    let href = $a.attr('href');
+
+    // Anchor without href is likely being handled programatically.
+    if (!href) return;
+
+    const link = document.createElement('a');
+    link.setAttribute('href', href);
+
+    if (link.protocol !== location.protocol || openExternally) {
+      if (link.protocol === 'ob:' && !openExternally) {
+        Backbone.history.navigate(href.slice(5), true);
+      } else {
+        // external link
+        const activeServer = app.serverConfigs.activeServer;
+        const localSettings = app.localSettings;
+        const warningOptedOut = app.localSettings &&
+          localSettings.get('dontShowTorExternalLinkWarning');
+
+        if (activeServer && activeServer.get('useTor') && !warningOptedOut) {
+          const warningModal = new TorExternalLinkWarning({ url: href })
+            .render()
+            .open();
+
+          warningModal.on('cancelClick', () => warningModal.close());
+          warningModal.on('confirmClick', () => {
+            shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
+            warningModal.close();
+          });
+        } else {
+          shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
+        }
+      }
+    } else {
+      if (!href.startsWith('#')) {
+        href = `#${href}`;
+      }
+
+      Backbone.history.navigate(href, true);
+    }
+
+    e.preventDefault();
+  });
 }

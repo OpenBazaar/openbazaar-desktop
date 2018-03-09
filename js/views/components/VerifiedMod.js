@@ -2,6 +2,7 @@ import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import VerifiedMod from '../../models/VerifiedMod';
 import app from '../../app';
+import { handleLinks } from '../../utils/dom';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -17,6 +18,8 @@ export default class extends BaseVw {
     // If no model is passed in, show the non-verified state instead
     // For listings, this model might be just the first verified moderator on the listing.
     this.verified = options.model && options.model instanceof VerifiedMod;
+
+    handleLinks(this.el);
   }
 
   className() {
@@ -25,8 +28,12 @@ export default class extends BaseVw {
 
   events() {
     return {
-      'click .js-badge': 'onClickBadge',
+      click: 'onClick',
     };
+  }
+
+  onClick(e) {
+    e.stopPropagation();
   }
 
   render() {

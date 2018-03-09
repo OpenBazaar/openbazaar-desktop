@@ -3,9 +3,9 @@ import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';
 import VerifiedMod from './VerifiedMod';
+import { handleLinks } from '../../utils/dom';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
 import { getLangByCode } from '../../data/languages';
-
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -36,6 +36,8 @@ export default class extends BaseVw {
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
     }
+
+    handleLinks(this.el);
   }
 
   className() {
@@ -45,7 +47,7 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-viewBtn': 'clickModerator',
-      'click .js-moderatorCard': 'clickSelectBtn',
+      click: 'click',
     };
   }
 
@@ -61,7 +63,7 @@ export default class extends BaseVw {
     });
   }
 
-  clickSelectBtn(e) {
+  click(e) {
     e.stopPropagation();
     this.rotateSelectState();
   }
