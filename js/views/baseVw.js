@@ -5,10 +5,6 @@ import { View } from 'backbone';
 
 export default class baseVw extends View {
   constructor(options = {}) {
-    // const opts = {
-    //   handle
-    // };
-
     super(options);
     this._childViews = [];
     this._unregisterFromParent = true;
