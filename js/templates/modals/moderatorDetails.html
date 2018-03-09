@@ -25,23 +25,23 @@
     <div class="contentBox mDetailBox flexRow flexVCent gutterH padMd2 clrP clrBr clrSh3">
       <div class="flexExpand">
         <div class="flexCol flexCent">
-          <div class="txCtr"><%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %></div>
-          <div class="txCtr tx5b clrT2"><%= ob.polyT('moderatorDetails.location') %></div>
+          <div><%= ob.parseEmojis('📍') %> <%= ob.location || ob.polyT('userPage.noLocation') %></div>
+          <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.location') %></div>
         </div>
       </div>
       <div class="rowDivV clrBrBk TODO"></div>
       <div class="flexExpand TODO">
         <div class="flexCol flexCent">
           <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
-          <div class="txCtr tx5b clrT2"><%= ob.polyT('moderatorDetails.recommendations') %></div>
+          <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.recommendations') %></div>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
       <div class="flexExpand">
         <div class="flexCol flexCent">
           <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-          <div class="txCtr"><%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %></div>
-          <div class="txCtr tx5b clrT2"><%= ob.polyT('moderatorDetails.serviceCharge') %></div>
+          <div><%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %></div>
+          <div class="tx5b clrT2"><%= ob.polyT('moderatorDetails.serviceCharge') %></div>
         </div>
       </div>
       <div class="rowDivV clrBrBk"></div>
