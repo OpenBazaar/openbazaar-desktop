@@ -49,7 +49,7 @@ export default class extends BaseModel {
     let vendorPercentageOk = false;
     let buyerPercentageOk = false;
 
-    if (this.vendorContractArrived() && !this.vendorProcessingError) {
+    if (this.vendorContractArrived() && !this.vendorProcessingError()) {
       if (typeof attrs.vendorPercentage === 'undefined' || attrs.vendorPercentage === '') {
         addError('vendorPercentage',
           app.polyglot.t('resolveDisputeModelErrors.provideAmount'));

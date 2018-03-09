@@ -486,9 +486,9 @@ export default class extends BaseModal {
     }
 
     const model = new ResolveDisputeMd(modelAttrs, {
-      buyerContractArrived: () => this.model.get('buyerContract'),
-      vendorContractArrived: () => this.model.get('vendorContract'),
-      vendorProcessingError: () => this.model.get('processingError'),
+      buyerContractArrived: () => !!this.model.get('buyerContract'),
+      vendorContractArrived: () => !!this.model.get('vendorContract'),
+      vendorProcessingError: () => this.model.vendorProcessingError,
     });
 
     const view = this.createChild(ResolveDispute, {
