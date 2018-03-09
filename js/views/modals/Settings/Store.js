@@ -151,7 +151,7 @@ export default class extends baseVw {
 
   getSettingsData() {
     let selected = app.settings.get('storeModerators');
-    // the mods may not have loaded in the interface yet. Subtract only explicitly de-selected ones
+    // The mods may not have loaded in the interface yet. Subtract only explicitly de-selected ones.
     selected = _.without(selected, ...this.modsSelected.unselectedIDs);
     const byID = this.modsByID.selectedIDs;
     const available = this.modsAvailable.selectedIDs;
