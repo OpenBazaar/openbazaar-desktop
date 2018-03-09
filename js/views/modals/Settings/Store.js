@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
@@ -149,7 +150,9 @@ export default class extends baseVw {
   }
 
   getSettingsData() {
-    const selected = this.modsSelected.selectedIDs;
+    let selected = app.settings.get('storeModerators');
+    // the mods may not have loaded in the interface yet. Subtract only explicitly de-selected ones
+    selected = _.without(selected, ...this.modsSelected.unselectedIDs);
     const byID = this.modsByID.selectedIDs;
     const available = this.modsAvailable.selectedIDs;
     return { storeModerators: [...new Set([...selected, ...byID, ...available])] };
