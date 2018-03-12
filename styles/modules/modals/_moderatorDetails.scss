@@ -1,16 +1,25 @@
 .moderatorDetails {
-  .contentBox.mDetailBox {
+  .contentBox.mDetailWrapper {
     min-height: 90px;
+
+    & > .mDetail,
+    & > .verifiedWrapper {
+      min-width: 20%;
+      flex-grow: 1;
+      max-width: 50%;
+      word-break: break-word;
+    }
 
     .verifiedWrapper {
       display: flex;
       align-self: stretch;
-      flex-grow: 1;
+      flex-shrink: 0;
       flex-direction: column;
       justify-content: center;
       text-align: center;
       border-width: 1px;
       border-style: solid;
+      padding: $pad;
 
       .verifiedMod {
         display: block;
