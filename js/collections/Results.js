@@ -37,6 +37,8 @@ export default class extends Collection {
           delete vendor.id;
         }
         updatedResult.vendor = vendor;
+        updatedResult.moderators = relationships.moderators || [];
+
         const priceObj = updatedResult.price || {};
         updatedResult.price.amount =
             integerToDecimal(priceObj.amount, priceObj.currencyCode);

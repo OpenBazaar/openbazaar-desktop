@@ -128,6 +128,20 @@
   @extend .flex;
   height: 100%;
   align-items: center;
+
+  input[type="checkbox"] + label {
+    align-items: center;
+  }
+}
+
+.flexVCentClearMarg {
+  // removes any vertical margins. Useful for centering headlines with other elements.
+  @extend .flexVCent;
+
+  & > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }
 
 .flexVBot {

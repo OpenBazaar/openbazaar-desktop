@@ -14,8 +14,14 @@ export default class extends BaseVw {
     super(options);
 
     if (!this.model) {
-      throw new Error('Please provide an OrderFulfillment model.');
+      throw new Error('Please provide an ResolveDispute model.');
     }
+
+    if (!options.case) {
+      throw new Error('Please provide a Case model.');
+    }
+
+    this.case = options.case;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -41,6 +47,10 @@ export default class extends BaseVw {
     this.listenTo(orderEvents, 'resolvingDispute', this.onResolvingDispute);
     this.listenTo(orderEvents, 'resolveDisputeComplete resolveDisputeFail',
       this.onResolveDisputeAlways);
+    this.listenTo(this.case, 'otherContractArrived', (md, data) => {
+      const type = data.isBuyer ? 'buyer' : 'vendor';
+      this.$el.toggleClass(`${type}ContractUnavailable`, !this.case.get(`${type}Contract`));
+    });
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
@@ -96,10 +106,15 @@ export default class extends BaseVw {
   onClickConfirmedSubmit() {
     const formData = this.getFormData();
     this.model.set(formData);
-    this.model.set({}, { validate: true });
+    this.model.set({
+      buyerPercentage: this.case.get('buyerContract') ?
+        formData.buyerPercentage : 0,
+      vendorPercentage: this.case.get('vendorContract') ?
+        formData.vendorPercentage : 0,
+    }, { validate: true });
 
     if (!this.model.validationError) {
-      resolveDispute(this.model.id, this.model.toJSON());
+      resolveDispute(this.model);
     }
 
     this.render();
@@ -122,7 +137,7 @@ export default class extends BaseVw {
   }
 
   remove() {
-    $(document).off(null, this.boundOnDocClick);
+    $(document).off('click', this.boundOnDocClick);
     super.remove();
   }
 
@@ -146,6 +161,9 @@ export default class extends BaseVw {
       }
 
       this.$el.html(t(templateData));
+      this.$el.toggleClass('vendorContractUnavailable', !this.case.get('vendorContract'));
+      this.$el.toggleClass('buyerContractUnavailable', !this.case.get('buyerContract'));
+      this.$el.toggleClass('vendorProcessingError', this.case.vendorProcessingError);
       this.rendered = true;
     });
 

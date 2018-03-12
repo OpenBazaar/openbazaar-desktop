@@ -115,15 +115,6 @@
         left: calc($padMd / 2);
       }
     }
-
-    .sendMoney {
-      position: relative;
-
-      .sendConfirm {
-        right: -28px;
-        transform: translateY(-7px);
-      }
-    }
   }
 
   .walletTransactions {
@@ -224,8 +215,23 @@
 }
 
 .spendConfirmBox {
-  .spinner {
+  .sendConfirm {
     position: relative;
-    top: -10px;
+
+    .spinner {
+      position: relative;
+      top: -10px;
+    }
+  }
+
+  &.centeredBelow {
+    // The container that you want the spendConfirmBox to be
+    // centered below must be non-statically positioned.
+    .sendConfirm {
+      margin-top: 10px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
 }

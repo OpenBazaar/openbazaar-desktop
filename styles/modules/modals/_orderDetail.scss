@@ -35,6 +35,16 @@
         vertical-align: top;
       }
     }
+
+    .contractMenuItem {
+      text-decoration: none;
+      cursor: default;
+
+      .contractLabel:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
   }
 
   .mainContent {
@@ -333,6 +343,34 @@
         font-size: $tx6;
       }
 
+      .verifiedMod {
+
+        & > .badge {
+          position: relative;
+          top: -1px;
+          margin-right: 0.3em;
+        }
+
+        .tooltipWrapper {
+
+          .arrowBoxWrapper {
+            height: inherit;
+            width: 12px; // the same as the info icon
+            right: 0;
+
+            .arrowBox {
+              top: 11px;
+              left: 50%;
+
+              .badge {
+                top: -2px;
+                position: relative;
+              }
+            }
+          }
+        }
+      }
+
       .memo {
         white-space: pre-wrap;
       }
@@ -469,9 +507,49 @@
       }
     }
 
+    .vendorContractUnarrivedMsg,
+    .buyerContractUnarrivedMsg,
+    .vendorProcErrContractUnarrivedMsg {
+      display: none;
+    }
+
     label[for=resolveDisputeBuyerAmount],
     label[for=resolveDisputeVendorAmount] {
       line-height: 2rem;
+    }
+
+    @mixin contractUnavailable($field) {
+      label[for=resolveDispute#{capitalize($field)}Amount]::after {
+        display: none;
+      }
+
+      .input#{capitalize($field)}AmountWrap {
+        @include disabled;
+      }
+
+      .#{$field}ContractUnarrivedMsg {
+        display: block;
+      }
+    }    
+
+    &.vendorContractUnavailable {
+      @include contractUnavailable(vendor);
+    }
+
+    &.buyerContractUnavailable {
+      @include contractUnavailable(buyer);
+    }
+
+    &.vendorProcessingError {
+      @include contractUnavailable(vendor);
+      
+      .vendorProcErrContractUnarrivedMsg {
+        display: block;
+      }
+
+      .vendorContractUnarrivedMsg {
+        display: none;
+      }
     }
   }
 }

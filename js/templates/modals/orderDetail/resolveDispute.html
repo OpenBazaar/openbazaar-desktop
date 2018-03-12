@@ -11,11 +11,14 @@
       <label for="resolveDisputeBuyerAmount" class="required rowTn"><%= ob.polyT(`orderDetail.resolveDisputeTab.buyerAmountLabel`) %></label>
       <div class="clrT2 tx6 js-buyerName"><%= ob.buyerName %></div>
     </div>
-    <div class="col7">
+    <div class="col9">
       <% if (ob.errors['buyerPercentage']) print(ob.formErrorTmpl({ errors: ob.errors['buyerPercentage'] })) %>
-      <div class="inputBuyerAmountWrap">
-        <input type="text" class="clrBr clrSh2" name="buyerPercentage" id="resolveDisputeBuyerAmount" value="<%= ob.buyerPercentage %>" placeholder="" data-var-type="number" />
-        <div class="js-buyerAvatar avatar disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></div>
+      <div class="flex gutterH">
+        <div class="inputBuyerAmountWrap flexNoShrink">
+          <input type="text" class="clrBr clrSh2" name="buyerPercentage" id="resolveDisputeBuyerAmount" value="<%= ob.buyerPercentage %>" placeholder="" data-var-type="number" />
+          <div class="js-buyerAvatar avatar disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.buyerAvatarHashes) %>"></div>
+        </div>
+        <p class="buyerContractUnarrivedMsg"><i class="ion-alert-circled margRSm clrTAlert"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.buyerContractUnavailable`) %> <span class="toolTip clrT" data-tip="<%= ob.polyT(`orderDetail.resolveDisputeTab.buyerContractUnavailableTip`) %>"><i class="ion-help-circled"></i></span></p>
       </div>
     </div>
   </div>
@@ -24,11 +27,15 @@
       <label for="resolveDisputeVendorAmount" class="required rowTn"><%= ob.polyT(`orderDetail.resolveDisputeTab.vendorAmountLabel`) %></label>
       <div class="clrT2 tx6 js-vendorName"><%= ob.vendorName %></div>
     </div>
-    <div class="col7">
+    <div class="col9">
       <% if (ob.errors['vendorPercentage']) print(ob.formErrorTmpl({ errors: ob.errors['vendorPercentage'] })) %>
-      <div class="inputVendorAmountWrap">
-        <input type="text" class="clrBr clrSh2" name="vendorPercentage" id="resolveDisputeVendorAmount" value="<%= ob.vendorPercentage %>" placeholder="" data-var-type="number" />
-        <div class="js-vendorAvatar avatar disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></div>
+      <div class="flex gutterH">
+        <div class="inputVendorAmountWrap js-inputVendorWrap flexNoShrink">
+          <input type="text" class="clrBr clrSh2" name="vendorPercentage" id="resolveDisputeVendorAmount" value="<%= ob.vendorPercentage %>" placeholder="" data-var-type="number" />
+          <div class="js-vendorAvatar avatar disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.vendorAvatarHashes) %>"></div>
+        </div>
+        <p class="vendorContractUnarrivedMsg"><i class="ion-alert-circled margRSm clrTAlert"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.vendorContractUnavailable`) %> <span class="toolTip clrT" data-tip="<%= ob.polyT(`orderDetail.resolveDisputeTab.vendorContractUnavailableTip`) %>"><i class="ion-help-circled"></i></span></p>
+        <p class="vendorProcErrContractUnarrivedMsg"><i class="ion-alert-circled margRSm clrTAlert"></i><%= ob.polyT(`orderDetail.resolveDisputeTab.vendorContractUnavailableProcErr`) %></p>
       </div>
     </div>
   </div>

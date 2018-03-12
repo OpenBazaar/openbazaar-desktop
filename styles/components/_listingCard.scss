@@ -22,7 +22,7 @@
 
     .infoArea {
       position: relative;
-      
+
       .toolTip {
         &::after, &::before {
           z-index: 2;
@@ -84,6 +84,8 @@
   }
 
   .editOverlay {
+    top: auto;
+
     .btn {
       z-index: 1;
     }
@@ -110,9 +112,48 @@
     }
   }
 
+  .additionalOverlay {
+    top: auto;
+  }
+
   &:hover {
     .additionalOverlay {
       display: flex;
+    }
+  }
+
+  .verifiedModWrapper {
+    position: absolute;
+    top: 0;
+    width: 100%;
+
+    .verifiedMod {
+      position: absolute;
+      left: $padSm;
+      top: $padSm;
+
+      & > .badge {
+        top: 0;
+      }
+
+      .badgeText {
+        display: none;
+      }
+
+      .tooltipWrapper {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+
+        .arrowBoxWrapper {
+          height: $thumbTn;
+          width: $thumbTn;
+
+          .arrowBox {
+            top: 36px; // height of the badge + height of the arrowtip
+          }
+        }
+      }
     }
   }
 
@@ -178,6 +219,50 @@
       height: 45px;
       background-size: cover;
     }
+
+    .verifiedModWrapper {
+      position: static;
+      bottom: 0;
+
+      .verifiedMod {
+        position: static;
+
+        & > .badge {
+          height: 1em;
+          width: 1em;
+          top: 0;
+          margin-right: 0.3em;
+        }
+
+        .tooltipWrapper {
+          position: static;
+          width: auto;
+          height: auto;
+
+          .badgeText {
+            display: inline;
+          }
+
+          .iconWrapper .arrowBoxWrapper {
+            width: 1em;
+            height: 1em;
+            top: 0;
+            right: 0;
+
+            .arrowBox {
+              right: -27px;
+              top: auto;
+              bottom: calc(100% + 14px);
+
+              &::before {
+                top: 100%;
+                transform: translate(-50%, -50%) rotate(45deg);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   // Some assumptions here:
@@ -200,6 +285,17 @@
 
     .gridViewContent {
       display: none;
+    }
+
+    .additionalOverlay,
+    .editOverlay {
+      height: 100%;
+      box-sizing: border-box;
+      align-items: center;
+    }
+
+    .additionalOverlay {
+      padding-left: 13px; // make the left padding match top and bottom
     }
 
     // This isn't ideal, but there's inconistent spacing / widths of cols, plus there's variable
@@ -225,13 +321,10 @@
     }
 
     .additionalOverlay {
-      // don't cover the Show Mature Content button
-      bottom: initial;
-
       .btnShowNsfw {
         display: block;
       }
-    }    
+    }
 
     .listingsGridListView & {
       .listingImage {

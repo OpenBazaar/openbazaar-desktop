@@ -1,0 +1,69 @@
+<%
+   const badgeFrag = `<div class="badge" style="background-image: url(${ob.type.badge && ob.type.badge.tiny || ''}), url('../imgs/verifiedModeratorBadgeDefault-tiny.png');" tabindex="0"></div>`;
+   const warnFrag = `<div class="warning"><i class="ion-alert-circled clrTAlert"></i></div>`;
+   const arrowClass = ob.arrowClass || 'arrowBoxCenteredTop';
+   const color = ob.verified ? 'clrBrAlert2 clrBAlert2Grad' : 'clrP clrBr';
+   const style = `${arrowClass} ${color}`;
+   const type = ob.verified ? 'verified' : 'unverified';
+   const bodyPhrase = ob.inOrder ? 'bodyOrder' : 'body';
+   const shortText = ob.polyT(`verifiedMod.${type}.label`);
+   const longText = ob.polyT(`verifiedMod.${type}.title`);
+   const not = `<b>${ob.polyT('verifiedMod.unverified.not')}</b>`;
+   const link = `<a class="txU noWrap" href="${ob.data.link}">${ob.polyT('verifiedMod.link')}</a>`;
+%>
+
+<% print(ob.verified ? badgeFrag : warnFrag) %>
+
+<div class="tooltipWrapper clrT">
+  <% if (ob.showShortText || ob.showLongText) { %>
+    <b class="badgeText">
+      <% if (ob.showShortText) { %>
+        <%= shortText %>
+      <% } else { %>
+        <%= longText %>
+      <% } %>
+    </b>
+  <% } %>
+  <div class="iconWrapper">
+    <% if (ob.showShortText || ob.showLongText) { %>
+      <i class="ion-information-circled clrT2 posR badgeText"></i>
+    <% } %>
+    <div class="arrowBoxWrapper clrT">
+      <div class="confirmBox arrowBox <% print(style) %>">
+        <div class="flexVCent flexHCent gutterHTn row">
+          <% print(ob.verified ? badgeFrag : warnFrag) %>
+          <div class="tx4 txB">
+            <%= ob.polyT(`verifiedMod.${type}.title`) %>
+          </div>
+        </div>
+        <div class="flexColRows gutterVSm tx5 txUnb">
+          <% if (!ob.genericText) { %>
+            <div>
+              <% // The link will be ignored if the phrase is for an unverified moderator %>
+              <%= ob.polyT(`verifiedMod.${type}.${bodyPhrase}`, { providerName: `<b>${ob.data.name}</b>`, not, link }) %>
+            </div>
+          <% } %>
+          <% if (ob.verified) { %>
+            <% if (ob.genericText) { %>
+              <% const genericName = `<b>${ob.data.name}</b>`; %>
+              <div>
+                <%= ob.polyT('verifiedMod.genericDescription', { name: genericName, link }) %>
+              </div>
+            <% } else { %>
+              <div class="clamp3"><%= ob.data.description %></div>
+              <% if (ob.type && ob.type.name && ob.type.length > 1) { %>
+                <% const type = `<b>${ob.polyT('verifiedMod.type')}</b>`; %>
+                <div><%= ob.polyT('verifiedMod.typeCombined', { type, name: ob.type.name }) %></div>
+              <% } %>
+              <% if (ob.type && ob.type.description && ob.type.length > 1) { %>
+                <div class="clamp3"><%= ob.type.description %></div>
+              <% } %>
+            <% } %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

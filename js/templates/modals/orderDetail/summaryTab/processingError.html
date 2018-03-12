@@ -1,0 +1,54 @@
+<%
+  if (ob.isBuyer || ob.isModerator) {
+    if (!ob.isModerated) {
+%>
+      <% 
+        if (!ob.errors.length) {
+          const message = !ob.isOrderCancelable ?
+            ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsg') :
+            ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsgCancelable');
+      %>
+
+        <p><span class="ion-alert-circled padSm"></span><%= message %></p>
+      <% } else { %>
+        <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrBuyer') %></p>
+        <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
+        <% if (ob.isOrderCancelable) { %>
+          <p><%= ob.polyT('orderDetail.summaryTab.processingError.youMayCancel') %></p>
+        <%
+           }
+        }
+
+    } else {
+      if (!ob.errors.length) {
+        const message = !ob.isDisputable ?
+          ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsg') :
+          ob.polyT('orderDetail.summaryTab.processingError.procErrBuyerNoMsgDisputable');
+%>
+          <p><span class="ion-alert-circled padSm"></span><%= message %></p>
+<%    
+      } else { %>
+        <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrBuyer') %></p>
+        <ul class="row"><% ob.errors.forEach(err => print(`<li>${err}</li>`)) %></ul>
+        <% if (ob.isDisputable && !ob.isModerator) { %>
+          <p><%= ob.polyT('orderDetail.summaryTab.processingError.youMayDispute') %></p>
+        <%
+           }
+      }
+    }
+  } else {
+  // it's the vendor
+%>
+    <% if (!ob.errors.length) { %>
+      <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrVendorNoMsg') %></p>
+    <% } else { %>  
+      <p><span class="ion-alert-circled padSm"></span><%= ob.polyT('orderDetail.summaryTab.processingError.procErrVendor') %></p>
+      <ul>
+        <% ob.errors.forEach(err => { %>
+          <li><%= err %></li>
+        <% }); %>
+      </ul>
+    <% } %>
+<%  
+  }
+%>

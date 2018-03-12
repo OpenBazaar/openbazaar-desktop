@@ -13,6 +13,7 @@ import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
 import BlockBtn from './components/BlockBtn';
+import VerifiedMod from './components/VerifiedMod';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -372,7 +373,7 @@ export default class extends baseVw {
   remove() {
     if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
-    $(document).off(null, this.boundDocClick);
+    $(document).off('click', this.boundDocClick);
     super.remove();
   }
 
@@ -414,6 +415,21 @@ export default class extends baseVw {
           .render()
           .el
       );
+    }
+    const moderators = this.model.get('moderators') || [];
+    const verifiedIDs = app.verifiedMods.matched(moderators);
+    const verifiedID = verifiedIDs[0];
+
+    if (this.verifiedMod) this.verifiedMod.remove();
+
+    if (verifiedID) {
+      this.verifiedMod = new VerifiedMod({
+        model: app.verifiedMods.get(verifiedID),
+        data: app.verifiedMods.data,
+        showLongText: true,
+        genericText: true,
+      });
+      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     }
 
     return this;

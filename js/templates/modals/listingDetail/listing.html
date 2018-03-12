@@ -43,7 +43,7 @@
     <div class="flex gutterHLg">
       <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
       <h2 class="txUnb flexNoShrink js-price">
-        <%= 
+        <%=
           ob.currencyMod.formattedCurrency(
             ob.item.price,
             ob.metadata.pricingCurrency,
@@ -104,7 +104,7 @@
                 unpurchaseable = false;
               }
 
-              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;              
+              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT('listingDetail.buyNow') %>
@@ -136,19 +136,36 @@
           }); %>
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>
-        <h5>Payments Accepted</h5>
-        <ul class="unstyled">
+        <h5><%= ob.polyT('listingDetail.paymentsAccepted') %></h5>
+        <ul class="unstyled row">
           <% ob.metadata.acceptedCurrencies.forEach(cur => {
             const curData = ob.currencyMod.getCryptoCurByCode(cur);
             if (curData) { %>
-              <li class="flexVCent gutterHSm borderBottom clrBr">
+              <li class="flexVCent gutterHSm clrBr">
                 <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
                 <%= ob.currencyMod.cryptoIcon({ code: curData.code }) %>
                 <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
               </li>
-            <% }            
+            <% }
           }) %>
         </ul>
+        <% if (ob.hasVerifiedMods) { %>
+        <div class="verifiedMod">
+          <div class="confirmBox clrBrAlert2 clrBAlert2Grad">
+            <div class="flexVCent flexHCent gutterHTn rowTn">
+              <div class="badge" style="background-image: url(<%= ob.defaultBadge.tiny %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
+              <div class="tx5 txB"><%= ob.polyT('verifiedMod.verified.title') %></div>
+            </div>
+            <div class="flexColRows gutterVSm tx5b">
+              <%
+              const providerName = `<b>${ob.verifiedModsData.name}</b>`;
+              const verifiedModLink = `<a class="txU noWrap" href="${ob.verifiedModsData.link}">${ob.polyT('verifiedMod.link')}</a>`;
+              %>
+              <div><%= ob.polyT('verifiedMod.genericDescription', { name: providerName, link: verifiedModLink }) %></div>
+            </div>
+          </div>
+        </div>
+        <% } %>
       </div>
     </div>
   </div>

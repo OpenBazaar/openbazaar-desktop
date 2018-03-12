@@ -1,0 +1,50 @@
+.verifiedMod {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  white-space: normal; // prevent inheriting no wraps from parent elements
+
+  .badge {
+    height: $thumbTn;
+    width: $thumbTn;
+    background-size: contain;
+    background-position: center;
+    position: relative;
+    top: -2px; // visually center relative to text
+  }
+
+  .warning {
+    margin-right: 4px;
+    font-size: 1.7rem;
+  }
+
+  .tooltipWrapper .iconWrapper {
+    display: inline;
+    position: relative;
+
+    .arrowBoxWrapper {
+      display: none;
+    }
+  }
+
+  &:hover .tooltipWrapper .iconWrapper {
+
+    .arrowBoxWrapper {
+      display: block;
+      position: absolute;
+
+      .arrowBox {
+        border-width: 2px;
+        font-size: $tx5;
+        text-align: left;
+        padding: $padMd $padLg;
+
+        &:before {
+          background: $alert2Background;
+          border-right-width: 2px;
+          border-bottom-width: 2px;
+        }
+      }
+    }
+  }
+}

@@ -1,17 +1,66 @@
 .moderatorsList {
   .moderatorsWrapper {
-    min-height: 175px;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    min-height: 127px;
     border-width: 1px;
     border-style: solid;
+    border-collapse: collapse;
 
-    .moderatorCard:last-child .moderatorCardSeperator {
-      display: none;
+    &.noMin {
+      min-height: 0;
+    }
+
+    .moderatorCard {
+      display: table-row;
+      border-style: solid;
+      border-width: 1px;
+      border-collapse: collapse;
+
+      .moderatorCardInner {
+        display: table-cell;
+
+        &.verified {
+          /* when all rows have borders but only the verified cells have borders, the rules for
+             border-collapse will make the verified card borders overrule the unverified row
+             borders, so all 4 sides of verified cards are the right color.
+           */
+          border-width: 1px;
+          border-style: solid;
+        }
+      }
+
+      &.moderatorsMessage .moderatorCardInner {
+        height: 100%;
+      }
     }
   }
 
   .moderatorsStatus {
-    padding-top: $pad;
+    padding: $pad;
     text-align: center;
+    border-width: 1px;
+    border-style: solid;
+    border-top: none;
+  }
+
+
+  .moderatorsWrapper.showVerifiedOnly .moderatorCard {
+    // don't hide the table row, or the border of the table will disappear due to border-collapse.
+    border-width: 0;
+
+    .moderatorCardInner {
+      .moderatorCardContent {
+        display: none;
+        cursor: none;
+      }
+
+      &.verified .moderatorCardContent {
+        display: flex;
+        cursor: pointer;
+      }
+    }
   }
 }
 

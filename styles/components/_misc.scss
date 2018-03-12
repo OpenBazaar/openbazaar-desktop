@@ -124,3 +124,7 @@
     }
   }
 }
+
+.hideIfEmpty:empty {
+  display: none;
+}

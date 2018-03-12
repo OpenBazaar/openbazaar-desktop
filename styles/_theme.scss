@@ -181,6 +181,14 @@ input[type=range][class~="clrS"] {
   }
 }
 
+.clrBrAlert2 {
+  border-color: $alert2;
+}
+
+.clrBrInvis {
+  @include borderColor(transparent, transparent);
+}
+
 .clrBAtt1 {
   background-color: $emphasis1;
 }
@@ -199,6 +207,14 @@ input[type=range][class~="clrS"] {
       }
     }
   }
+}
+
+.clrBAlert2 {
+  background: $alert2Background;
+}
+
+.clrBAlert2Grad {
+  background: $alert2Gradient;
 }
 
 ::-webkit-scrollbar-track {
@@ -319,7 +335,7 @@ input[type=range][class~="clrS"] {
         border-color: $border;
         background-color: $primary;
       }
-    } 
+    }
   }
 
   .selectize-dropdown-content {

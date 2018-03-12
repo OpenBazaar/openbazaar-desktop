@@ -11,36 +11,12 @@
   #confirmPay {
     padding: 0;
     top: calc(100% + #{$padSm});
-    left: -$bar;
   }
 
   .showIfPay,
   .showIfPending,
   .showIfComplete {
     display: none;
-  }
-
-  &[data-phase='pay'] {
-    .showIfPay {
-      display: block;
-
-      .cryptoIcon {
-        position: relative;
-        top: -1px;
-      }
-    }
-  }
-
-  &[data-phase='pending'] {
-    .showIfPending {
-      display: block;
-    }
-  }
-
-  &[data-phase='complete'] {
-    .showIfComplete {
-      display: block;
-    }
   }
 
   .pending {
@@ -53,12 +29,12 @@
       }
     }
 
-    .confirmBox {
-      top: calc(100% + #{$pad});
-    }
-
     .copyNotification {
       top: -0.6em
+    }
+
+    .clickable {
+      cursor: pointer;
     }
   }
 
@@ -113,5 +89,9 @@
     top: 0;
     width: 100%;
     height: 100%;
+  }
+
+  .moderatorsList .moderatorsWrapper.fauxModeratorsWrapper {
+    min-height: 0;
   }
 }

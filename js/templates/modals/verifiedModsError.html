@@ -1,0 +1,13 @@
+<div class="contentBox padMd clrP clrBr clrSh3">
+  <h1><%= ob.polyT('startUp.dialogs.unableToGetVerifiedMods.title') %></h1>
+  <div class="rowMd innerMessage">
+    <%= ob.polyT('startUp.dialogs.unableToGetVerifiedMods.msg', { reason: ob.reason }) %>
+  </div>
+  <div class="buttonWrap gutterH">
+    <%= ob.processingButton({
+    className: `btn clrP clrBr js-retry ${ob.fetching ? 'processing' : ''}`,
+    btnText: ob.polyT('startUp.dialogs.unableToGetVerifiedMods.btnRetry')
+    }) %>
+    <a class="btn clrP clrBr js-continue"><%= ob.polyT('startUp.dialogs.unableToGetVerifiedMods.btnClose') %></a>
+  </div>
+</div>

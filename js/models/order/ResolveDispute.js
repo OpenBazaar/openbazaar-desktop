@@ -2,6 +2,28 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
+  constructor(attrs = {}, options = {}) {
+    if (typeof options.buyerContractArrived !== 'function') {
+      throw new Error('Please provide a function that returns a boolean indicating ' +
+        'whether the buyer\'s contract is available.');
+    }
+
+    if (typeof options.vendorContractArrived !== 'function') {
+      throw new Error('Please provide a function that returns a boolean indicating ' +
+        'whether the vendor\'s contract is available.');
+    }
+
+    if (typeof options.vendorProcessingError !== 'function') {
+      throw new Error('Please provide a function that returns a boolean indicating ' +
+        'whether the vendor had an error processing the order.');
+    }
+
+    super(attrs, options);
+    this.buyerContractArrived = options.buyerContractArrived;
+    this.vendorContractArrived = options.vendorContractArrived;
+    this.vendorProcessingError = options.vendorProcessingError;
+  }
+
   defaults() {
     return {
       resolution: '',
@@ -27,30 +49,50 @@ export default class extends BaseModel {
     let vendorPercentageOk = false;
     let buyerPercentageOk = false;
 
-    if (typeof attrs.vendorPercentage === 'undefined' || attrs.vendorPercentage === '') {
-      addError('vendorPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.provideAmount'));
-    } else if (typeof attrs.vendorPercentage !== 'number') {
-      addError('vendorPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.providePercentageAsNumber'));
-    } else if (attrs.vendorPercentage < 0 || attrs.vendorPercentage > 100) {
-      addError('vendorPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.vendorPercentageOutOfRange'));
+    if (this.vendorContractArrived() && !this.vendorProcessingError()) {
+      if (typeof attrs.vendorPercentage === 'undefined' || attrs.vendorPercentage === '') {
+        addError('vendorPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.provideAmount'));
+      } else if (typeof attrs.vendorPercentage !== 'number') {
+        addError('vendorPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.providePercentageAsNumber'));
+      } else if (attrs.vendorPercentage < 0 || attrs.vendorPercentage > 100) {
+        addError('vendorPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.percentageOutOfRange'));
+      } else if (!this.buyerContractArrived() && attrs.vendorPercentage !== 100) {
+        addError('vendorPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.vendorPercentageMustBe100'));
+      } else {
+        vendorPercentageOk = true;
+      }
     } else {
-      vendorPercentageOk = true;
+      if (attrs.vendorPercentage !== 0) {
+        addError('vendorPercentage',
+          'The vendor amount must be zero if their contract is not available.');
+      }
     }
 
-    if (typeof attrs.buyerPercentage === 'undefined' || attrs.buyerPercentage === '') {
-      addError('buyerPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.provideAmount'));
-    } else if (typeof attrs.buyerPercentage !== 'number') {
-      addError('buyerPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.providePercentageAsNumber'));
-    } else if (attrs.buyerPercentage < 0 || attrs.buyerPercentage > 100) {
-      addError('buyerPercentage',
-        app.polyglot.t('resolveDisputeModelErrors.buyerPercentageOutOfRange'));
+    if (this.buyerContractArrived()) {
+      if (typeof attrs.buyerPercentage === 'undefined' || attrs.buyerPercentage === '') {
+        addError('buyerPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.provideAmount'));
+      } else if (typeof attrs.buyerPercentage !== 'number') {
+        addError('buyerPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.providePercentageAsNumber'));
+      } else if (attrs.buyerPercentage < 0 || attrs.buyerPercentage > 100) {
+        addError('buyerPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.percentageOutOfRange'));
+      } else if (!this.vendorContractArrived() && attrs.buyerPercentage !== 100) {
+        addError('buyerPercentage',
+          app.polyglot.t('resolveDisputeModelErrors.buyerPercentageMustBe100'));
+      } else {
+        buyerPercentageOk = true;
+      }
     } else {
-      buyerPercentageOk = true;
+      if (attrs.buyerPercentage !== 0) {
+        addError('buyerPercentage',
+          'The buyer amount must be zero if their contract is not available.');
+      }
     }
 
     if (vendorPercentageOk && buyerPercentageOk) {

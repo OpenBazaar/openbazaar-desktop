@@ -4,7 +4,6 @@ import { clipboard } from 'electron';
 import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { getSocket } from '../../../../utils/serverConnect';
 import { getServerCurrency } from '../../../../data/cryptoCurrencies';
 import {
   completingOrder,
@@ -27,6 +26,7 @@ import DisputePayout from './DisputePayout';
 import DisputeAcceptance from './DisputeAcceptance';
 import TimeoutInfo from './TimeoutInfo';
 import PayForOrder from '../../../modals/purchase/Payment';
+import ProcessingError from './ProcessingError';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -45,8 +45,7 @@ export default class extends BaseVw {
         'a case, as opposed to an order.');
     }
 
-    const isCase = options.isCase;
-    this.isCase = () => isCase;
+    this.isCase = () => options.isCase;
     delete options.isCase;
 
     this.contract = options.contract;
@@ -55,6 +54,8 @@ export default class extends BaseVw {
     if (typeof options.isOrderStateDisputable !== 'function') {
       throw new Error('Please provide a function indicating if the order state is disputable.');
     }
+
+    this._totalPaid = null;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -95,11 +96,25 @@ export default class extends BaseVw {
         this.completeOrderForm = null;
       }
 
+      if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
+        this.renderPaymentFinalized();
+      }
+
+      if (state === 'PROCESSING_ERROR') {
+        if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
+          this.payForOrder.remove();
+          this.payForOrder = null;
+        }
+      }
+
+      this.renderProcessingError();
       this.renderTimeoutInfoView();
     });
 
     if (!this.isCase()) {
       this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
+        this._totalPaid = null;
+
         if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
           this.payForOrder.remove();
           this.payForOrder = null;
@@ -224,50 +239,6 @@ export default class extends BaseVw {
         () => this.renderDisputePayoutView());
     }
 
-    const serverSocket = getSocket();
-    const notificationTypes = [
-      // A notification for the buyer that a payment has come in for the order. Let's refetch
-      // our model so we have the data for the new transaction and can show it in the UI.
-      // As of now, the buyer only gets these notifications and this is the only way to be
-      // aware of partial payments in realtime.
-      'payment',
-      // A notification the vendor will get when an offline order has been canceled
-      'cancel',
-      // A notification the vendor will get when an order has been fully funded
-      'order',
-      // A notification the buyer will get when the vendor has rejected an offline order.
-      'declined',
-      // A notification the buyer will get when the vendor has accepted an offline order.
-      'orderConfirmation',
-      // A notification the buyer will get when the vendor has refunded their order.
-      'refund',
-      // A notification the buyer will get when the vendor has fulfilled their order.
-      'fulfillment',
-      // A notification the vendor will get when the buyer has completed an order.
-      'orderComplete',
-      // When a party opens a dispute the mod and the other party will get this notification
-      'disputeOpen',
-      // Sent to the moderator when the other party (the one that didn't open the dispute) sends
-      // their copy of the contract (which would occur if they were onffline when the dispute was
-      // opened and have since come online).
-      'disputeUpdate',
-      // Notification to the vendor and buyer when a mod has made a decision on an open dispute.
-      'disputeClose',
-      // Notification the other party will receive when a dispute payout is accepted (e.g. if vendor
-      // accepts, the buyer will get this and vice versa).
-      'disputeAccepted',
-    ];
-
-    if (serverSocket) {
-      serverSocket.on('message', e => {
-        if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {
-          if (notificationTypes.indexOf(e.jsonData.notification.type) > -1) {
-            this.model.fetch();
-          }
-        }
-      });
-    }
-
     this.listenTo(orderEvents, 'releaseEscrowComplete', e => {
       if (e.id === this.model.id) {
         this.model.set('state', 'PAYMENT_FINALIZED');
@@ -331,8 +302,15 @@ export default class extends BaseVw {
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.decided'),
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.resolved'),
-          app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete'),
         ];
+
+        if (!this.model.vendorProcessingError) {
+          // You can't complete an order and leave a review when the vendor had a processing error.
+          // In that case the flow ends at resolved.
+          state.states.push(
+            app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.complete')
+          );
+        }
 
         switch (orderState) {
           case 'DECIDED':
@@ -415,34 +393,39 @@ export default class extends BaseVw {
     return this.contract.get('buyerOrder').payment.amount;
   }
 
-  getBalanceRemaining(cl = this.paymentsCollection) {
+
+  get totalPaid() {
+    if (this._totalPaid === null) {
+      this._totalPaid = this.paymentsCollection
+      .reduce((total, transaction) => total + transaction.get('value'), 0);
+    }
+
+    return this._totalPaid;
+  }
+
+  get isPartiallyFunded() {
+    const balanceRemaining = this.getBalanceRemaining();
+    return balanceRemaining > 0 && balanceRemaining < this.orderPriceBtc;
+  }
+
+  /**
+   * Returns a boolean indicating whether the order has been partially or fully
+   * funded.
+   */
+  get isFunded() {
+    return this.isPartiallyFunded || this.getBalanceRemaining() === 0;
+  }
+
+  getBalanceRemaining() {
     if (this.isCase()) {
       throw new Error('Cases do not have any transaction data.');
     }
 
-    const totalPaid = cl
-      .reduce((total, transaction) => total + transaction.get('value'), 0);
-    const balanceRemaining = this.orderPriceBtc - totalPaid;
+    const balanceRemaining = this.orderPriceBtc - this.totalPaid;
 
     // round based on the coins base units
     const cryptoBaseUnit = getServerCurrency().baseUnit;
     return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
-  }
-
-  shouldShowPayForOrderSection() {
-    return this.buyer.id === app.profile.id && this.getBalanceRemaining() > 0;
-  }
-
-  shouldShowAcceptedSection() {
-    let bool = false;
-
-    // Show the accepted section if the order has been accepted and its fully funded.
-    if (this.contract.get('vendorOrderConfirmation')
-      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
-      bool = true;
-    }
-
-    return bool;
   }
 
   get paymentAddress() {
@@ -473,8 +456,6 @@ export default class extends BaseVw {
    * confirmed, it will return 0.
    */
   get fundedBlockHeight() {
-    // return 0;
-
     if (this.isCase()) {
       throw new Error('Unable to determine because cases do not have any transaction data.');
     }
@@ -684,6 +665,31 @@ export default class extends BaseVw {
       this.listenTo(this.timeoutInfo, 'clickResolveDispute',
         () => this.trigger('clickResolveDispute'));
     }
+  }
+
+  get isOrderCancelable() {
+    return this.buyer.id === app.profile.id &&
+      !this.moderator &&
+      ['PROCESSING_ERROR', 'PENDING'].includes(this.model.get('state')) &&
+      this.isFunded;
+  }
+
+  shouldShowPayForOrderSection() {
+    return this.buyer.id === app.profile.id &&
+      this.getBalanceRemaining() > 0 &&
+      !this.model.vendorProcessingError;
+  }
+
+  shouldShowAcceptedSection() {
+    let bool = false;
+
+    // Show the accepted section if the order has been accepted and its fully funded.
+    if (this.contract.get('vendorOrderConfirmation')
+      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
+      bool = true;
+    }
+
+    return bool;
   }
 
   renderAcceptedView() {
@@ -928,6 +934,7 @@ export default class extends BaseVw {
         timestamp: data.timestamp,
         acceptedByBuyer: closer.id === this.buyer.id,
         buyerViewing: app.profile.id === this.buyer.id,
+        vendorProcessingError: this.model.vendorProcessingError,
       },
     });
 
@@ -940,7 +947,9 @@ export default class extends BaseVw {
 
     this.$subSections.prepend(this.disputeAcceptance.render().el);
 
-    if (this.model.get('state') === 'RESOLVED' && this.buyer.id === app.profile.id) {
+    if (this.model.get('state') === 'RESOLVED' &&
+      this.buyer.id === app.profile.id &&
+      !this.model.vendorProcessingError) {
       this.renderCompleteOrderForm();
     }
   }
@@ -1020,6 +1029,46 @@ export default class extends BaseVw {
       });
   }
 
+  renderProcessingError() {
+    if (!this.model.vendorProcessingError) {
+      if (this.processingError) {
+        this.processingError.remove();
+        this.processingError = null;
+      }
+
+      return;
+    }
+
+    const isBuyer = this.buyer.id === app.profile.id;
+    const state = {
+      isBuyer,
+      isModerator: !!(this.moderator && this.moderator.id),
+      isOrderCancelable: this.isOrderCancelable,
+      isModerated: !!this.moderator,
+      isCase: this.isCase,
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
+      // TODO: factor in escrow timeout
+      isDisputable: isBuyer &&
+        this.moderator &&
+        this.model.get('state') === 'PROCESSING_ERROR' &&
+        this.isFunded,
+      errors: this.contract.get('errors') || [],
+    };
+
+    if (!this.processingError) {
+      this.processingError = this.createChild(ProcessingError, {
+        orderId: this.model.id,
+        initialState: state,
+      });
+      this.getCachedEl('.js-processingErrorContainer')
+        .html(this.processingError.render().el);
+    } else {
+      this.processingError.setState(state);
+    }
+  }
+
   get $subSections() {
     return this._$subSections ||
       (this._$subSections = this.$('.js-subSections'));
@@ -1068,8 +1117,7 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
-          isOrderCancelable: () => this.model.get('state') === 'PENDING' &&
-            !this.moderator && this.buyer.id === app.profile.id,
+          isOrderCancelable: () => this.isOrderCancelable,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });
@@ -1078,6 +1126,7 @@ export default class extends BaseVw {
 
       if (this.shouldShowAcceptedSection()) this.renderAcceptedView();
       this.renderSubSections();
+      this.renderProcessingError();
     });
 
     return this;

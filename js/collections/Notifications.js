@@ -119,6 +119,15 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t('notifications.text.orderComplete', {
       buyerName,
     });
+  } else if (attrs.type === 'processingError') {
+    const vendorName = opts.native ?
+      getName(attrs.vendorHandle, attrs.vendorId) :
+      `<a class="clrTEm" href="#${attrs.vendorId}">` +
+        `${getName(attrs.vendorHandle, attrs.vendorId)}</a>`;
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.processingError', {
+      vendorName,
+    });
   } else if (attrs.type === 'disputeOpen') {
     if (attrs.disputeeId === app.profile.id) {
       // notif received by disputee

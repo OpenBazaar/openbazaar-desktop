@@ -383,13 +383,18 @@ export function resolvingDispute(orderId) {
   return !!resolvePosts[orderId];
 }
 
-export function resolveDispute(orderId, data = {}) {
-  if (!orderId) {
-    throw new Error('Please provide an orderId');
+export function resolveDispute(model) {
+  if (!(model instanceof ResolveDispute)) {
+    throw new Error('model must be provided as an instance of a ResolveDispute model.');
   }
 
+  if (!model.id) {
+    throw new Error('The model must have an id set.');
+  }
+
+  const orderId = model.id;
+
   if (!resolvePosts[orderId]) {
-    const model = new ResolveDispute(data);
     const save = model.save();
 
     if (!save) {

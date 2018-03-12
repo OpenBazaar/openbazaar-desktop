@@ -1,16 +1,18 @@
 .moderatorCard {
-  cursor: pointer;
-
-  .moderatorCardInner {
+  .moderatorCardInner .moderatorCardContent {
     padding: $padMd;
+    cursor: pointer;
 
     .moderatorCardMiddle {
       flex-grow: 1;
-      overflow: hidden;
       font-size: $tx5b;
 
       .moreLink {
         float: right;
+      }
+
+      .detailsRow {
+        align-items: center;
       }
     }
 
@@ -50,11 +52,37 @@
         margin: 0;
       }
     }
-  }
 
-  .moderatorCardSeperator {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    margin: 0 $padMd;
+    .verifiedWrapper {
+      height: 1.2em;
+      position: relative;
+      overflow: visible;
+
+      .verifiedMod {
+        height: 1.2em;
+
+        & > .badge {
+          margin-right: 5px;
+        }
+
+        .tooltipWrapper {
+
+          .arrowBoxWrapper {
+            height: inherit;
+            width: 12px; // the same as the info icon
+            right: 0;
+
+            .arrowBox {
+              top: 11px;
+              left: 50%;
+            }
+          }
+        }
+
+        .warning+ .arrowBoxWrapper {
+          width: 1em;
+        }
+      }
+    }
   }
 }

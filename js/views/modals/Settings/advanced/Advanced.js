@@ -147,7 +147,6 @@ export default class extends baseVw {
       });
   }
 
-
   save() {
     this.localSettings.set(this.getFormData(this.$localFields));
     this.localSettings.set({}, { validate: true });
