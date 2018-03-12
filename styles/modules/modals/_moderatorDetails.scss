@@ -6,11 +6,8 @@
     & > .verifiedWrapper {
       min-width: 20%;
       flex-grow: 1;
-    }
-
-    & > .mDetail > * {
-      max-width: 100%;
-      overflow: hidden;
+      max-width: 50%;
+      word-break: break-word;
     }
 
     .verifiedWrapper {
