@@ -751,8 +751,7 @@
     "receiveMoney": {
       "title": "استلام أموال",
       "needBitcoin": "بحاجة بيتكوين؟",
-      "btnCancel": "إلغاء",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnCancel": "إلغاء"
     },
     "sendMoney": {
       "toLabel": "إلى",
@@ -1167,7 +1166,6 @@
     "closeNote": "تم إرسال دفعتك إلى المورد.",
     "moderatorNote": "* لا تنطبق رسوم خدمة المشرف إلا إذا تم فتح نزاع.",
     "quantity": "كمية",
-    "useShapeShift": "Or use ShapeShift in the next step",
     "moderatedPayment": "تم الإشراف على الدفع",
     "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "لا يتوفر مشرفون مناسبون لهذا الطلب.",
@@ -1192,7 +1190,6 @@
       "note3": "* لا تنطبق رسوم خدمة المشرف إلا إذا تم فتح نزاع.",
       "note4": "بمجرد الدفع، قد يستغرق الأمر قليلا لتحديث الواجهة.",
       "btnConfirmedPay": "نعم, ادفع",
-      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
       "altcoinLink": "لا يزال بإمكانك تمويل محفظة أوبن بازار OB الخاصة بك بعملة altcoins..",
       "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
       "walletLink": "You can send funds to your OB wallet instead.",

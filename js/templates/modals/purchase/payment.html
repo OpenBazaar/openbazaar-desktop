@@ -25,7 +25,7 @@
           </button>
         </div>
         <div class="flexRow gutterH rowLg">
-          <div class="col6">
+          <div class="col12">
             <%= ob.processingButton({
               className: 'btn btnThin width100 clrP clrBr clrSh2 js-payFromWallet',
               textClassName: 'flexCent',
@@ -33,17 +33,8 @@
             }) %>
             <div class="js-confirmWalletContainer"></div>
           </div>
-          <div class="col6">
-            <button class="btn btnThin width100 clrP clrBr clrSh2 disabled js-payFromAlt">
-              <i class="shapeShiftIcon icon" style="background-image: url('../imgs/shapeShiftIcon.png');"></i>
-              <%= ob.polyT('purchase.pendingSection.payWithAlt') %>
-            </button>
-          </div>
         </div>
         <div class="txBase clrT2">
-          <p>
-            <%= ob.polyT('purchase.pendingSection.altcoinNote') %> <button class="btnAsLink js-fundWallet"><%= ob.polyT('purchase.pendingSection.altcoinLink') %></button>
-          </p>
           <p>
             <%= ob.polyT('purchase.pendingSection.walletNote') %> <button class="btnAsLink js-fundWallet"><%= ob.polyT('purchase.pendingSection.walletLink') %></button>
           </p>

@@ -10,7 +10,7 @@ import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';
 import qr from 'qr-encode';
-import { clipboard, remote } from 'electron';
+import { clipboard } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { launchWallet } from '../../../utils/modalManager';
@@ -130,13 +130,6 @@ export default class extends BaseVw {
       this.showSpendError(e.message || '');
       this.getCachedEl('.js-payFromWallet').removeClass('processing');
     }
-  }
-
-  clickPayFromAlt() {
-    const amount = this.balanceRemaining;
-    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.paymentAddress}&amp;output=BTC&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812&amount=${amount}`;
-    const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
-    shapeshiftWin.loadURL(shapeshiftURL);
   }
 
   copyAmount() {

@@ -751,8 +751,7 @@
     "receiveMoney": {
       "title": "Ricevi denaro",
       "needBitcoin": "Hai bisogno di Bitcoin?",
-      "btnCancel": "Cancella",
-      "btnFundViaShapeshift": "Fund via ShapeShift"
+      "btnCancel": "Cancella"
     },
     "sendMoney": {
       "toLabel": "A",
@@ -1167,7 +1166,6 @@
     "closeNote": "Il pagamento è stato inviato al venditore.",
     "moderatorNote": "**La tassa del moderatore viene applicata solo quando viene aperta una disputa.",
     "quantity": "Quantità",
-    "useShapeShift": "oppure utilizza Shapeshift al prossimo step",
     "moderatedPayment": "Pagamento moderato",
     "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
     "noValidModerators": "Nessun moderatore è disponibile per quest'ordine",
@@ -1192,7 +1190,6 @@
       "note3": "**La tassa del moderatore viene applicata solo quando viene aperta una disputa.",
       "note4": "Once you have paid, it may take a bit for the interface to update.",
       "btnConfirmedPay": "Sì, paga",
-      "altcoinNote": "<b>Altcoins</b> saranno disponibili quando ShapeShift implementerà la Segregated Witness.",
       "altcoinLink": "You can still fund your OB wallet with altcoins.",
       "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
       "walletLink": "You can send funds to your OB wallet instead.",

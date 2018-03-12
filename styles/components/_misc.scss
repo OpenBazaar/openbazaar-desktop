@@ -37,10 +37,6 @@
   background-image: url('../../imgs/phrIcon128.png');
 }
 
-.shapeShiftIcon {
-  @extend .phrIcon;
-}
-
 .copyNotification {
   font-weight: bold;
   font-size: $baseFontSize;

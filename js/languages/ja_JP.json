@@ -800,7 +800,6 @@
     "receiveMoney": {
       "title": "通貨を受け取る",
       "btnCancel": "キャンセル",
-      "btnFundViaShapeshift": "ShapeShiftで資金を得る",
       "needCoinLink": "%{cur} が必要ですか？"
     },
     "sendMoney": {
@@ -1232,7 +1231,6 @@
     "closeNote": "支払いは出品者へと送られています。",
     "moderatorNote": "*仲裁者への手数料は紛争が行われた場合のみ適用されます。",
     "quantity": "数量",
-    "useShapeShift": "もしくは次で ShapeShift を利用ください",
     "moderatedPayment": "仲介型支払い",
     "tooLowForMods": "現在の想定手数料では、 %{minModPrice} 以下の注文では仲介型支払いが利用できません。代わりに直接支払いを利用します。",
     "noValidModerators": "この注文で利用できる仲裁者がいません。",
@@ -1257,7 +1255,6 @@
       "note3": "*仲裁者手数料は紛争の発生時のみ生じます。",
       "note4": "支払いを行えば、少しの時間でインターフェースに更新されます。",
       "btnConfirmedPay": "支払う",
-      "altcoinNote": "<b>アルトコイン</b> はShapeShift がSegwit を導入した際に有効になります。",
       "altcoinLink": "アルトコインをOBのウォレットへ入金出来ます。",
       "walletNote": "SegWit に対応しない <b>外部ウォレット</b> は送金支払いにおいてサポートされないかもしれません。",
       "walletLink": "資金はOBウォレットにも送金できます。",
