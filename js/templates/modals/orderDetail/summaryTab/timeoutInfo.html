@@ -7,12 +7,6 @@
 </div>
 <div class="innerContent border clrBr padMd">
 <%
-  let timeRemaining;
-  
-  if (ob.blockRemaining) {
-    timeRemaining = ob.blockRemaining * ob.blockTime; // seconds
-  }
-
   let message;
   let messageClass = 'txCtr';
   let tip;
@@ -52,11 +46,10 @@
         ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedVendor');
       tipClass = 'hide';
     } else if (!ob.isFundingConfirmed) {
-      message = `This order can be disputed for <b>${ob.blocksRemaining} blocks</b> or approximately <b>${ob.timeRemaining}</b>. The clock will start when the funding payment is confirmed.`;
       message = ob.polyT('orderDetail.summaryTab.timeoutInfo.unconfirmedFunding', {
         blocksRemaining: `<b>${ob.polyT('orderDetail.summaryTab.timeoutInfo.blocksRemaining',
           { blocksRemaining: ob.blocksRemaining })}</b>`,
-        timeRemaining: `<b>ob.timeRemaining</b>`,
+        timeRemaining: `<b>${ob.timeRemaining}</b>`,
       });
     } else if (ob.blocksRemaining <= 0) {
       if (ob.ownPeerId === ob.buyer) {

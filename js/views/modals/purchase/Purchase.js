@@ -298,6 +298,12 @@ export default class extends BaseModal {
       this.order.addAddress(this.shipping.selectedAddress);
     }
 
+    // TODO TODO TODO TODO temp temp
+    // TODO TODO TODO TODO temp temp
+    // TODO TODO TODO TODO temp temp
+    // TODO TODO TODO TODO temp temp
+    this.order.set('address', '');
+
     // set the moderator
     const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
     this.order.set({ moderator });

@@ -139,17 +139,17 @@ export default class extends BaseModal {
     if (this.type === 'case') {
       if (this.model.get('buyerOpened')) {
         featuredProfileFetch = this.getBuyerProfile();
-        this.featuredProfilePeerId = featuredProfileState.peerID = this.buyerId;
+        this.featuredProfilePeerId = featuredProfileState.peerID = this.model.buyerId;
       } else {
         featuredProfileFetch = this.getVendorProfile();
-        this.featuredProfilePeerId = featuredProfileState.peerID = this.vendorId;
+        this.featuredProfilePeerId = featuredProfileState.peerID = this.model.vendorId;
       }
     } else if (this.type === 'sale') {
       featuredProfileFetch = this.getBuyerProfile();
-      this.featuredProfilePeerId = featuredProfileState.peerID = this.buyerId;
+      this.featuredProfilePeerId = featuredProfileState.peerID = this.model.buyerId;
     } else {
       featuredProfileFetch = this.getVendorProfile();
-      this.featuredProfilePeerId = featuredProfileState.peerID = this.vendorId;
+      this.featuredProfilePeerId = featuredProfileState.peerID = this.model.vendorId;
     }
 
     featuredProfileFetch.done(profile => {
@@ -227,68 +227,17 @@ export default class extends BaseModal {
     return this.model instanceof Case ? 'case' : this.model.type;
   }
 
-  get contract() {
-    let contract = this.model.get('contract');
-
-    if (this.isCase()) {
-      contract = this.model.get('buyerOpened') ?
-        this.model.get('buyerContract') :
-        this.model.get('vendorContract');
-    }
-
-    return contract;
-  }
-
-  get participantIds() {
-    if (!this._participantIds) {
-      let contract = this.model.get('contract');
-
-      if (this.type === 'case') {
-        contract = this.model.get('buyerOpened') ?
-          this.model.get('buyerContract') :
-          this.model.get('vendorContract');
-      }
-
-      if (!contract) {
-        throw new Error('Unable to determine the participant IDs. The contract is not ' +
-          'available. The order model has likely not been synced yet.');
-      }
-
-      const contractJSON = contract.toJSON();
-
-      this._participantIds = {
-        buyer: contractJSON.buyerOrder.buyerID.peerID,
-        vendor: contractJSON.vendorListings[0].vendorID.peerID,
-        moderator: contractJSON.buyerOrder.payment.moderator,
-      };
-    }
-
-    return this._participantIds;
-  }
-
-  get buyerId() {
-    return this.participantIds.buyer;
-  }
-
-  get vendorId() {
-    return this.participantIds.vendor;
-  }
-
-  get moderatorId() {
-    return this.participantIds.moderator;
-  }
-
   _getParticipantProfile(participantType) {
-    const idKey = `${participantType}Id`;
+    const peerId = this.model[`${participantType}Id`];
     const profileKey = `_${participantType}Profile`;
 
     if (!this[profileKey]) {
-      if (this[idKey] === app.profile.id) {
+      if (peerId === app.profile.id) {
         const deferred = $.Deferred();
         deferred.resolve(app.profile);
         this[profileKey] = deferred.promise();
       } else {
-        this[profileKey] = getCachedProfiles([this[idKey]])[0];
+        this[profileKey] = getCachedProfiles([peerId])[0];
       }
     }
 
@@ -318,10 +267,6 @@ export default class extends BaseModal {
 
   get activeTab() {
     return this._tab;
-  }
-
-  isCase() {
-    return typeof this.model.get('buyerOpened') !== 'undefined';
   }
 
   getState() {
@@ -382,22 +327,19 @@ export default class extends BaseModal {
   createSummaryTabView() {
     const viewData = {
       model: this.model,
-      contract: this.contract,
-      isCase: this.isCase(),
-      isOrderStateDisputable: () => this.isOrderStateDisputable,
       vendor: {
-        id: this.vendorId,
+        id: this.model.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
       buyer: {
-        id: this.buyerId,
+        id: this.model.buyerId,
         getProfile: this.getBuyerProfile.bind(this),
       },
     };
 
-    if (this.moderatorId) {
+    if (this.model.moderatorId) {
       viewData.moderator = {
-        id: this.moderatorId,
+        id: this.model.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       };
     }
@@ -420,20 +362,20 @@ export default class extends BaseModal {
     const viewData = {
       orderId: this.model.id,
       buyer: {
-        id: this.buyerId,
+        id: this.model.buyerId,
         getProfile: this.getBuyerProfile.bind(this),
       },
       vendor: {
-        id: this.vendorId,
+        id: this.model.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
       model: this.model,
       amActiveTab: amActiveTab.bind(this),
     };
 
-    if (this.moderatorId) {
+    if (this.model.moderatorId) {
       viewData.moderator = {
-        id: this.moderatorId,
+        id: this.model.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       };
     }
@@ -478,29 +420,27 @@ export default class extends BaseModal {
   }
 
   createDisputeOrderTabView() {
-    if (this.isCase()) {
+    if (this.model.isCase) {
       throw new Error('This view should not be created on Cases.');
     }
 
-    const contractType = this.contract.type;
-
+    const contract = this.model.get('contract');
     const model = new OrderDispute({ orderId: this.model.id });
-
-    const translationKeySuffix = app.profile.id === this.buyerId ?
+    const translationKeySuffix = app.profile.id === this.model.buyerId ?
       'Buyer' : 'Vendor';
     const timeoutMessage =
       getServerCurrency().supportsEscrowTimeout ?
         app.polyglot.t(
           `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
-          { timeoutAmount: this.contract.escrowTimeoutHoursVerbose }
+          { timeoutAmount: contract.escrowTimeoutHoursVerbose }
         ) :
         '';
 
     const view = this.createChild(DisputeOrder, {
       model,
-      contractType,
+      contractType: contract.type,
       moderator: {
-        id: this.moderatorId,
+        id: this.model.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       },
       timeoutMessage,
@@ -534,11 +474,11 @@ export default class extends BaseModal {
       model,
       case: this.model,
       vendor: {
-        id: this.vendorId,
+        id: this.model.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
       buyer: {
-        id: this.buyerId,
+        id: this.model.buyerId,
         getProfile: this.getBuyerProfile.bind(this),
       },
     });
@@ -560,44 +500,20 @@ export default class extends BaseModal {
   }
 
   /**
-   * Based on the order state, returns whether a dispute can be opened on the order. This
-   * does not factor in the transaction timeout, which may disallow a dispute from being
-   * opened, even though it's allowed based on the state.
-   */
-   // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
-   // todo: when escrow timeout code is ready, include this in the timeoutInfoView
-   // also ensure order is funded if processing error
-  get isOrderStateDisputable() {
-    const orderState = this.model.get('state');
-
-    if (this.buyerId === app.profile.id) {
-      return this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED',
-          'PROCESSING_ERROR'].indexOf(orderState) > -1;
-    } else if (this.vendorId === app.profile.id) {
-      return this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
-    }
-
-    return false;
-  }
-
-  /**
    * Returns whether different action bar buttons should be displayed or not
    * based upon the order state.
    */
   get actionBarButtonState() {
     return {
       showDisputeOrderButton: !getServerCurrency().supportsEscrowTimeout &&
-        this.isOrderStateDisputable,
+        this.model.isOrderDisputable,
     };
   }
 
   get contractMenuItemState() {
-    const isCase = typeof this.model.get('buyerOpened') !== 'undefined';
     let tip = '';
 
-    if (isCase && !this.model.bothContractsValid) {
+    if (this.model.isCase && !this.model.bothContractsValid) {
       const buyerContractAvailableAndInvalid =
         this.model.get('buyerContract') && !this.model.isBuyerContractValid;
       const vendorContractAvailableAndInvalid =
