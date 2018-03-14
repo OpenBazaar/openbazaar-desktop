@@ -176,8 +176,16 @@ export default class extends BaseVw {
 
     this.listenTo(orderEvents, 'openDisputeComplete', e => {
       if (e.id === this.model.id) {
-        this.model.set('state', 'DISPUTED');
+        // The timeoutInfoView is expecting a dispute start time when
+        // the order state is DISPUTED. Since we're setting the order state
+        // now, but the server won't provide the dispute start time until
+        // the fetch completes, we'll use a local dispute start time for
+        // that brief gap.
+        this.localDisputeStartTime = (new Date()).toISONString();
+        this.listenToOnce(this.model, 'sync',
+          () => (this.localDisputeStartTime = null));
         this.model.fetch();
+        this.model.set('state', 'DISPUTED');
       }
     });
 
@@ -446,9 +454,12 @@ export default class extends BaseVw {
 
       if (orderState === 'DISPUTED' || isCase) {
         try {
-          disputeStartTime = isCase ?
-            this.model.get('timestamp') :
-            this.contract.get('dispute').timestamp;
+          if (isCase) {
+            disputeStartTime = this.model.get('timestamp');
+          } else {
+            disputeStartTime = this.localDisputeStartTime ||
+              this.contract.get('dispute').timestamp;
+          }
         } catch (e) {
           // pass - will be handled below
         }
@@ -466,7 +477,6 @@ export default class extends BaseVw {
           showResolveDisputeBtn: isCase,
         };
       } else {
-        console.log('milly');
         let hasDisputeEscrowExpired;
         state.totalTime = this.escrowTimeoutHoursVerbose;
 
@@ -518,6 +528,7 @@ export default class extends BaseVw {
           };
         } else {
           const fundedHeight = this.model.fundedBlockHeight;
+          console.log(`the funded hizight is ${fundedHeight}`);
           const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = fundedHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
