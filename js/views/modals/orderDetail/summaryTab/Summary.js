@@ -181,7 +181,7 @@ export default class extends BaseVw {
         // now, but the server won't provide the dispute start time until
         // the fetch completes, we'll use a local dispute start time for
         // that brief gap.
-        this.localDisputeStartTime = (new Date()).toISONString();
+        this.localDisputeStartTime = (new Date()).toISOString();
         this.listenToOnce(this.model, 'sync',
           () => (this.localDisputeStartTime = null));
         this.model.fetch();
@@ -478,12 +478,13 @@ export default class extends BaseVw {
         };
       } else {
         let hasDisputeEscrowExpired;
-        state.totalTime = this.escrowTimeoutHoursVerbose;
+        const totalMs = escrowTimeoutHours * 60 * 60 * 1000;
+        state.totalTime =
+          moment(Date.now()).from(moment(Date.now() + totalMs), true);
 
         if (isCase || orderState === 'DISPUTED') {
           const msSinceDisputeStart = Date.now() - (new Date(disputeStartTime)).getTime();
-          const msRemaining = (escrowTimeoutHours * 60 * 60 * 1000) -
-            msSinceDisputeStart;
+          const msRemaining = totalMs - msSinceDisputeStart;
           hasDisputeEscrowExpired = msRemaining <= 0;
 
           state = {
@@ -528,7 +529,6 @@ export default class extends BaseVw {
           };
         } else {
           const fundedHeight = this.model.fundedBlockHeight;
-          console.log(`the funded hizight is ${fundedHeight}`);
           const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = fundedHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
