@@ -8,6 +8,7 @@ import baseVw from '../../../baseVw';
 import WalletSeed from './WalletSeed';
 import SmtpSettings from './SmtpSettings';
 import ReloadTransactions from './ReloadTransactions';
+import { showMetricsModal } from '../../../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -43,6 +44,7 @@ export default class extends baseVw {
       'click .js-showConnectionManagement': 'showConnectionManagement',
       'click .js-purge': 'clickPurge',
       'click .js-blockData': 'clickBlockData',
+      'click .js-changeSharing': 'clickChangeSharing',
     };
   }
 
@@ -145,6 +147,11 @@ export default class extends baseVw {
           clipboard.writeText(`Best Hash: ${data.bestHash} Height: ${data.height}`);
         });
       });
+  }
+
+  clickChangeSharing() {
+    const metricsModal = showMetricsModal();
+    this.listenTo(metricsModal, 'close', () => this.render());
   }
 
   save() {
@@ -252,6 +259,7 @@ export default class extends baseVw {
         isSyncing: this.resync && this.resync.state() === 'pending',
         isPurging: this.purge && this.purge.state() === 'pending',
         isGettingBlockData: this.blockData && this.blockData.state() === 'pending',
+        shareMetrics: app.localSettings.get('shareMetrics'),
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));

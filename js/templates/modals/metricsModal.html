@@ -1,9 +1,12 @@
-<div class="contentBox padMd clrP clrBr clrSh3">
+<div class="contentBox padLg clrP clrBr clrSh3">
   <h1><%= ob.polyT('metrics.title') %></h1>
   <div class="rowMd innerMessage">
-    <p><%= ob.polyT('metrics.msg') %></p>
+    <div class="rowHg">
+      <p><%= ob.polyT('metrics.msg1') %></p>
+      <p><%= ob.polyT('metrics.msg2') %></p>
+    </div>
     <h4><%= ob.polyT('metrics.listTitle') %></h4>
-    <ul>
+    <ul class="tx5 clrT2 padSmKids">
       <li><%= ob.polyT('metrics.list.pages') %></li>
       <li><%= ob.polyT('metrics.list.clicks') %></li>
       <li><%= ob.polyT('metrics.list.orders') %></li>
@@ -12,7 +15,17 @@
       <li><%= ob.polyT('metrics.list.errors') %></li>
     </ul>
   </div>
-  <div class="buttonWrap gutterH">
+  <div class="flexVCent flexHRight gutterH">
+    <% console.log(ob.shareMetrics) %>
+    <% if (ob.shareMetrics !== undefined) {%>
+      <div class="flexExpand txLft">
+        <% if (ob.shareMetrics) { %>
+          <span class="clrTEmph1"><%= ob.polyT('metrics.sharingIsOn') %></span>
+        <% } else { %>
+          <span class="clrTErr"><%= ob.polyT('metrics.sharingIsOff') %></span>
+        <% } %>
+      </div>
+    <% } %>
     <a class="btn clrP clrBr js-decline"><%= ob.polyT('metrics.declineBtn') %></a>
     <a class="btn clrP clrBr js-share"><%= ob.polyT('metrics.shareBtn') %></a>
   </div>

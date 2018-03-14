@@ -578,6 +578,8 @@ function start() {
           // set the profile data for the feedback mechanism
           setFeedbackOptions();
 
+          if (app.localSettings.get('shareMetrics') !== undefined) addMetrics();
+
           if (externalRoute) {
             // handle opening the app from an an external ob link
             location.hash = `#${externalRoute}`;
@@ -595,8 +597,7 @@ function start() {
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
           Backbone.history.start();
 
-          // TODO put if here
-          showMetricsModal();
+          if (app.localSettings.get('shareMetrics') === undefined) showMetricsModal();
 
           // load chat
           const chatConvos = new ChatHeads();

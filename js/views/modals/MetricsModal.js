@@ -17,7 +17,6 @@ export default class extends BaseModal {
   }
 
   onShareClick() {
-    console.log("share click")
     changeMetrics(true);
     this.close();
   }

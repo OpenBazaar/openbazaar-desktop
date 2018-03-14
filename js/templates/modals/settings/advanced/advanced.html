@@ -258,6 +258,34 @@
       </div>
     </div>
   </div>
+  <div class="contentBox padMd clrP clrBr clrSh3">
+    <h2 class="h4 clrT"><%= ob.polyT('settings.advancedTab.integrations.sectionName') %></h2>
+    <hr class="clrBr" />
+    <div class="tabFormWrapper clrS">
+      <div class="">
+        <form class="box padMdKids padStack clrP clrBr">
+          <div class="flexRow gutterH">
+            <div class="col3">
+              <label>
+                <%= ob.polyT('settings.advancedTab.integrations.sharing') %>
+              </label>
+              <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.integrations.sharingHelper') %></div>
+            </div>
+            <div class="col9 flexVCent gutterH">
+              <div class="flexExpand txLft">
+                <% if (ob.shareMetrics) { %>
+                <span class="clrTEmph1"><%= ob.polyT('settings.advancedTab.integrations.sharingIsOn') %></span>
+                <% } else { %>
+                <span class="clrTErr"><%= ob.polyT('settings.advancedTab.integrations.sharingIsOff') %></span>
+                <% } %>
+              </div>
+              <a class="btn clrP clrBr clrSh2 js-changeSharing flexNoShrink"><%= ob.polyT('settings.advancedTab.integrations.changeBtn') %></a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <div class="contentBox js-contentBoxEmailIntegration padMd clrP clrBr clrSh3">
     <h2 class="h4 clrT"><%= ob.polyT('settings.advancedTab.smtp.sectionName') %></h2>
     <hr class="clrBr" />

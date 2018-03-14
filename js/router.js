@@ -174,6 +174,16 @@ export default class ObRouter extends Router {
       return false;
     }
 
+    if (window.Countly) {
+      console.log(name)
+      window.Countly.q.push(['add_event', {
+        key: 'asyncButtonClick',
+        segmentation: {
+          id: name,
+        },
+      }]);
+    }
+
     this.navigate(this.standardizedRoute(), { replace: true });
 
     // We'll iterate through any open modal which have a confirmClose method
