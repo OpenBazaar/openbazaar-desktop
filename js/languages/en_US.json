@@ -1709,6 +1709,21 @@
       "disputeOrderBtn": "Dispute Order"
     }
   },
+  "metrics": {
+    "title": "Optional Anonymous Metrics Sharing",
+    "msg": "Please help improve the OpenBazaar platform by clicking the 'Share' button below to being sharing anonymous data about your use of OpenBazaar with the development team.\n\nNone of the data collected can be used to identify you, or your actions. No identifiable information about you, your orders, or any transactions, is shared.",
+    "listTitle": "Below is a full list of the anonymous data that will be shared with the development team.",
+    "list": {
+      "pages": "Pages loaded in the client, such as your user page, or the search page.",
+      "clicks": "Clicks on elements. This records only the click, not the content.",
+      "errors": "Errors that occur in the app.",
+      "system": "Basic system data: Operating System, language, and screen resolution.",
+      "node": "Publicly available data: your currency, cryptocurrency, language, vendor status and whether you are a moderator.",
+      "orders": "When orders are made or move from one state to another, it will be recorded with no identifiable information about the content of that order."
+    },
+    "shareBtn": "Share",
+    "declineBtn": "Decline"
+  },
   "orderUtil": {
     "failedAcceptHeading": "There was an error accepting the order.",
     "failedRejectHeading": "There was an error rejecting the order.",

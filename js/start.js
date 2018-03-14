@@ -18,6 +18,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { setFeedbackOptions, addFeedback } from './utils/feedback';
+import { addMetrics, showMetricsModal } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';
 import Chat from './views/chat/Chat.js';
@@ -593,6 +594,9 @@ function start() {
 
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
           Backbone.history.start();
+
+          // TODO put if here
+          showMetricsModal();
 
           // load chat
           const chatConvos = new ChatHeads();
