@@ -9,7 +9,7 @@
    const shortText = ob.polyT(`verifiedMod.${type}.label`);
    const longText = ob.polyT(`verifiedMod.${type}.title`);
    const not = `<b>${ob.polyT('verifiedMod.unverified.not')}</b>`;
-   const link = `<a class="txU noWrap" href="${ob.data.link}">${ob.polyT('verifiedMod.link')}</a>`;
+   const link = `<a class="txU noWrap" href="${ob.data.link}" data-open-external>${ob.polyT('verifiedMod.link')}</a>`;
 %>
 
 <% print(ob.verified ? badgeFrag : warnFrag) %>
