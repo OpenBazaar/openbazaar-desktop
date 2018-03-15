@@ -140,7 +140,7 @@ export default class extends BaseOrder {
         );
     } else if (this.vendorId === app.profile.id) {
       return this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'FULFILLED'].includes(orderState);
+        ['PARTIALLY_FULFILLED', 'FULFILLED'].includes(orderState);
     }
 
     return false;
