@@ -51,56 +51,59 @@
                 <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTitle') %></div>
               </div>
             </div>
-            <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
-                <% if (ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
-                <select id="editContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto">
-                  <% ob.contractTypes.forEach((contractType) => { %>
-                  <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
-                  <% }); %>
-                </select>
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperType') %></div>
-              </div>
-              <div class="col6 simpleFlexCol">
-                <% // hiding until this is ready on the back end %>
-                <div class="hide">
-                  <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
-                  <select id="editListingVisibility" class="clrBr clrP clrSh2 marginTopAuto">
-                    <%
-                      // todo: will translate and implement fully when this field is implemented into the API.
-                    %>
-                    <option value="hidden">Hidden (doesn't display in store)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
-                  <% if (ob.errors['item.price']) print(ob.formErrorTmpl({ errors: ob.errors['item.price'] })) %>
-                <div class="inputSelect marginTopAuto">
-                  <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
-                  <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
-                    <% ob.currencies.forEach((currency) => {%>
-                    <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
+            <div class="js-standardTypeWrap">
+              <div class="flexRow gutterH">
+                <div class="col6 simpleFlexCol">
+                  <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
+                  <% if (ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
+                  <select id="editContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto">
+                    <% ob.contractTypes.forEach((contractType) => { %>
+                    <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                     <% }); %>
                   </select>
+                  <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperType') %></div>
                 </div>
-                <div class="clrT2 txSm padSm"><%= 
-                ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
+                <div class="col6 simpleFlexCol">
+                  <% // hiding until this is ready on the back end %>
+                  <div class="hide">
+                    <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
+                    <select id="editListingVisibility" class="clrBr clrP clrSh2 marginTopAuto">
+                      <%
+                        // todo: will translate and implement fully when this field is implemented into the API.
+                      %>
+                      <option value="hidden">Hidden (doesn't display in store)</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
-                <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
-                <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
-                <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto">
-                  <% ob.conditionTypes.forEach((conditionType) => { %>
-                  <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
-                  <% }); %>
-                </select>
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCondition') %></div>
+              <div class="flexRow gutterH">
+                <div class="col6 simpleFlexCol">
+                  <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
+                    <% if (ob.errors['item.price']) print(ob.formErrorTmpl({ errors: ob.errors['item.price'] })) %>
+                  <div class="inputSelect marginTopAuto">
+                    <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
+                    <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
+                      <% ob.currencies.forEach((currency) => {%>
+                      <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
+                      <% }); %>
+                    </select>
+                  </div>
+                  <div class="clrT2 txSm padSm"><%= 
+                  ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
+                </div>
+                <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
+                  <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
+                  <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
+                  <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto">
+                    <% ob.conditionTypes.forEach((conditionType) => { %>
+                    <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
+                    <% }); %>
+                  </select>
+                  <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCondition') %></div>
+                </div>
               </div>
             </div>
+            <div class="js-cryptoTypeWrap"></div>
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
