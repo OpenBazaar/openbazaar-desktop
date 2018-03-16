@@ -114,7 +114,7 @@ case "$TRAVIS_OS_NAME" in
     electron-installer-debian --config .travis/config_amd64.json
 
     echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_amd64.json
+    electron-installer-redhat --config .travis/config_x86_64.json
 
     APPNAME="openbazaar2client"
 
@@ -136,7 +136,7 @@ case "$TRAVIS_OS_NAME" in
     electron-installer-debian --config .travis/config_amd64.client.json
 
     echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_amd64.client.json
+    electron-installer-redhat --config .travis/config_x86_64.client.json
 
     ;;
 
