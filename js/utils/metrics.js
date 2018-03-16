@@ -1,9 +1,5 @@
 import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
-import $ from "jquery";
-import { shell } from "electron";
-import Backbone from "backbone";
-import TorExternalLinkWarning from "../views/modals/TorExternalLinkWarning";
 
 export function addMetrics() {
   function loadMetrics() {
@@ -30,7 +26,6 @@ export function addMetrics() {
     scriptEl.async = true;
     scriptEl.src = 'https://countly.openbazaar.org/sdk/web/countly.min.js';
     scriptEl.onload = () => window.Countly.init();
-    };
     (document.getElementsByTagName('head')[0]).appendChild(scriptEl);
   }
   if (document.readyState === 'complete') {
